@@ -1,0 +1,167 @@
+
+body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-size:12px;
+}
+
+#cesiumContainer {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+#product {
+    opacity: 0.99;
+    font-family: sans-serif;
+    font-size: 18pt;
+    margin: 10px;
+    padding: 0;
+    color: #fff;
+    width: 180px;
+}
+
+#menu {
+    opacity: 0.95;
+    font-size: 9.5pt;
+    padding: 2px;
+    color: #444;
+    width: 80px;
+}
+
+#controls {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    
+    opacity: 0.95;
+    font-size: 9.5pt;
+    padding: 0px;
+    color: #444;
+    width: 30px;
+}
+
+#settings {
+    position: absolute;
+    top: 62px;
+    right: 3px;
+    
+    opacity: 0.95;
+    font-size: 9.5pt;
+    padding: 0px;
+    color: #444;
+    width: 30px;
+}
+
+#legend {
+    display: block;
+    position:fixed;
+    bottom: 140px;
+    left: 20px;
+    height: 136px;
+    background-color: rgba(0,0,0,0.8);
+    color: #eee;
+    font-family: sans-serif;
+    font-size: 11pt;
+}
+
+#toolbar {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    display: inline;
+    margin: 10px;
+    padding: 0px;
+    background: white;
+}
+
+#logging {
+    position: absolute;
+    bottom: 25px;
+    right: 5px;
+    display: inline;
+    margin: 10px;
+    background: white;
+}
+
+#position {
+    position: absolute;
+    bottom: 25px;
+    right: 40px;
+    width: auto;
+    font-family: sans-serif;
+    font-size: 10.5pt;
+    color: #fff;
+}
+
+#loadingIndicator {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -33px;
+    margin-left: -33px;
+    width: 66px;
+    height: 66px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(../images/ajax-loader.gif);
+}
+
+
+.dialog {
+    display: none;
+    font-family: sans-serif;
+    font-size: 9.5pt;
+    width: 300px;
+    opacity: 0.9;
+}
+
+.list {
+    height:40%;
+    overflow: auto;
+    list-style-type: none; 
+    margin: 10px;
+    width: 100%;
+}
+
+.list .ui-selecting { 
+    background: #FECA40;
+}
+
+.list .ui-selected { 
+    background: #F39814; 
+    color: white; 
+}
+
+li {
+    padding-left: 10px; 
+    margin-left: 10px;
+}
+
+.info {
+    max-height:180px;
+    overflow: auto;
+    width: 90%;
+    margin: 20px;
+}
+
+.data_type { 
+    font-weight: bold;  
+    margin-left: 0px; 
+    margin-top: 8px; 
+    margin-bottom: 5px;
+}
+
+.ui-icon-blank {
+    background-position: -224px -192px;
+}
+
+

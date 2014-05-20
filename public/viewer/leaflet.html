@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">  <!-- Use Chrome Frame in IE -->
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>AusGlobe - Leaflet Example</title>
+    
+    <link rel="stylesheet" href="./AusGlobeViewer.css">
+    
+    <!-- Leaflet Plugins -->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />   
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+    <script src="../third_party/bing.js"></script>
+     
+</head>
+
+<body style="background: #000;">
+
+    <div id="cesiumContainer"></div>
+    
+
+<script id="ausglobe">
+/*global $*/
+(function () {
+    "use strict";
+    
+    var map;
+
+    map = L.map('cesiumContainer', { zoomControl: false }).setView([-27, 135], 5);  
+    new L.Control.Zoom({ position: 'topright' }).addTo(map);
+    
+    map.on("boxzoomend", function(e) {
+        console.log(e.boxZoomBounds);
+    });        
+
+    var bingMaps = true;
+    
+    if (bingMaps) {
+        //Bing Maps Layer
+        var bing = new L.BingLayer('Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk');
+        map.addLayer(bing);
+    }
+    else {
+        //CloudMaps Layer       
+        L.tileLayer('http://{s}.tile.cloudmade.com/cbecc35d0f08402c8d22d80c0f632f89/997/256/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+            maxZoom: 18
+        }).addTo(map);
+    }   
+
+    //  Features - markers, points, lines, polygons
+    L.marker([-33.895, 151.196]).addTo(map)
+        .bindPopup('NICTA')
+        .openPopup(); 
+    
+    var circle = L.circle([-33.895, 151.196], 500, {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5
+    }).addTo(map).bindPopup("I am a circle.");
+
+
+    var myLines = [{
+        "type": "Polygon",
+        "coordinates": [[[151.20, -33.85], [151.25, -33.92], [151.26, -33.9]]]
+    }, {
+        "type": "Polygon",
+        "coordinates": [[[151.14, -33.9], [151.17, -33.85], [151.25, -33.9]]]
+    }];
+
+    var myStyle = {
+        "color": "#ff7800",
+        "weight": 5,
+        "opacity": 0.65
+    };
+
+    // GeoJSON
+    L.geoJson(myLines, {
+        style: myStyle
+    }).addTo(map);
+    
+    // Image Overlays - wms layer is another option
+    var imageUrl = '../images/zombie32.png',
+        imageBounds = [[-35, 145], [-30, 150]];
+    L.imageOverlay(imageUrl, imageBounds).addTo(map);
+    
+    // WMS
+    var abs = L.tileLayer.wms("http://envirohack.research.nicta.com.au/admin_bnds_abs/ows", {
+        layers: 'admin_bnds:ADD_2011_AUST',
+        format: 'image/png',
+        transparent: true,
+        attribution: "ABS Drainage 2011"
+    }).addTo(map);
+        
+}());
+</script>
+</body>
+</html>
+
