@@ -25,13 +25,14 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />   
     <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
     <script src="./third_party/bing.js"></script>
+    <script src="./third_party/esri-leaflet.js"></script>
      
     <!-- Cesium -->
     <script type="text/javascript" src="./cesium/Cesium/Cesium.js"></script>
     <link rel="stylesheet" href="./viewer/CesiumViewer.css" media="screen">
     
     <!-- Our Plugins -->
-    <script src="./ausglobe.min.js"></script>
+    <script src="./ausglobe.js"></script>
 
     <!-- Our UI -->
     <link rel="stylesheet" href="./viewer/AusGlobeViewer.css">
@@ -59,7 +60,7 @@
     console.log('The VisStore is set to:', geoDataManager.visStore);
     
     var viewer = new Cesium.AusGlobeViewer(geoDataManager);
-    
+  
 }());
 </script>
 </body>

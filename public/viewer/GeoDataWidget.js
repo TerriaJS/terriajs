@@ -487,7 +487,7 @@
                         description = sel_list[id];
                     }
                     else {
-                         description = {name: 'User Entered', base_url: url, type: 'WMS', proxy: true};
+                         description = {name: 'User Entered', base_url: url, type: 'WFS', proxy: true};
                     }
                     if (description !== undefined) {
                         console.log('Getting: ' + description.base_url);

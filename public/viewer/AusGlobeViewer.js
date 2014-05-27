@@ -227,6 +227,7 @@
         if (rect_in === undefined) {
             return;
         }
+        //check that we're not too close
         var epsilon = Cesium.Math.EPSILON3;
         var rect = rect_in.clone();
         if ((rect.east - rect.west) < epsilon) {
@@ -756,8 +757,9 @@
             }
             
                 //Bing Maps Layer by default
-            var bing = new L.BingLayer('Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk');
-            map.addLayer(bing);
+            var layer = new L.BingLayer('Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk');
+//            var layer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer');
+            map.addLayer(layer);
 
             document.getElementById('controls').style.visibility = 'hidden';
             document.getElementById('position').style.visibility = 'hidden';
@@ -828,7 +830,13 @@
             
             document.getElementById('controls').style.visibility = 'visible';
             document.getElementById('position').style.visibility = 'visible';
-            
+/*  
+            var esri = new Cesium.ArcGisMapServerImageryProvider({
+                url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
+                proxy: new Cesium.DefaultProxy('/proxy/')
+            });
+            this.scene.globe.imageryLayers.addImageryProvider(esri); 
+*/  
             //remove existing map viewer
             if (this.map !== undefined) {
                 this.map.remove();
