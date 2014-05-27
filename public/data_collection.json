@@ -1,4 +1,72 @@
 {"name":"FSDF Collection", "Layer": [
+  {"name":"Base Maps","base_url":"http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
+
+    {"Name":"REST","Title":"Australian Topography","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
+  ]},
+
+  {"name":"Places","base_url":"http://www.ga.gov.au/gazetteer-australia-wfsg-gws/wfs","proxy":true,"type":"WFS","queryable":"0","Layer": [
+
+    {"Name":"iso19112:SI_LocationInstance","Title":"Gazetteer","count": "1400", "queryable":"1"}
+  ]},
+
+  {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
+
+    {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
+
+    {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
+
+    {"Name":"0","Title":"Magnetic Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Magnetic_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
+
+    {"Name":"AUS_GeoRegions_5M","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/services/earth_science/GA_Surface_Geology_of_Australia/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
+
+    {"Name":"Hillshade 3 second","Title":"Hillshade","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"}
+  ]},
+
+  {"name":"Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":"0","Layer": [
+
+    {"Name":"AHGFWaterbody","Title":"Water Bodies","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"AHGFMappedStream","Title":"Streams & Rivers","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"AHGFContractedCatchment","Title":"Catchments","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"AHGFEstuary","Title":"Estuaries","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"AHGFDam","Title":"Dams","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"bores","Title":"Bore Holes","base_url":"http://envirohack.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"waterholes","Title":"Water Holes","base_url":"http://envirohack.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"RiverRegion","Title":"River Regions","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"AWRADrainageDivision","Title":"Drainage Divisions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+    
+    {"Name":"AHGFAquiferContour","Title":"Aquifer Contours","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+
+    {"Name":"AHGFWaterTableAquifer","Title":"Water Table Aquifer","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"}
+
+  ]},
+
+  {"name":"Infrastructure","base_url":"http://envirohack.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+
+    {"Name":"roads","Title":"Roads","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+
+    {"Name":"railways","Title":"Railways","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+
+   {"Name":"aircraftfacilitypoints","Title":"Airports","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+
+   {"Name":"ferryroutelines","Title":"Ferry Routes","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+
+    {"Name":"pipelines","Title":"Pipelines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+
+    {"Name":"powerlines","Title":"Powerlines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+
+    {"Name":"AHGFContractedCatchment","Title":"Broadband Quality","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+
+    {"Name":"AHGFWaterTableAquifer","Title":"NBN Coverage","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
+  ]},
+  
   {"name":"Boundaries","base_url":"http://envirohack.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"admin_bnds:STE_2011_AUST","Title":"States & Territories","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
@@ -70,66 +138,7 @@
     {"Name":"Cities","Title":"Cities","BoundingBox":{"west":"115.8614","east":"153.43088000000003","south":"-42.88321","north":"-12.45722"},"queryable":"1"},
 
     {"Name":"Populated Places","Title":"Populated Places","BoundingBox":{"west":"113.53647100000002","east":"153.61194","south":"-43.31423","north":"-9.23070000000001"},"queryable":"1"}
-  ]},
-
-  {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
-
-    {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
-
-    {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
-
-    {"Name":"0","Title":"Magnetic Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Magnetic_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
-
-    {"Name":"AUS_GeoRegions_5M","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/services/earth_science/GA_Surface_Geology_of_Australia/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
-
-    {"Name":"Native Vegetation","Title":"Native Vegetation","BoundingBox":{"west":"112.93226000000004","east":"153.63769000000002","south":"-43.65854999999999","north":"-8.933330000000012"},"queryable":"1"},
-    
-    {"Name":"Hillshade 3 second","Title":"Hillshade","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"}
-  ]},
-
-  {"name":"Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":"0","Layer": [
-
-    {"Name":"AHGFWaterbody","Title":"Water Bodies","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"AHGFMappedStream","Title":"Streams & Rivers","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"AHGFContractedCatchment","Title":"Catchments","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"AHGFEstuary","Title":"Estuaries","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"AHGFDam","Title":"Dams","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"Bores","Title":"Bore Holes","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"Waterholes","Title":"Water Holes","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"RiverRegion","Title":"River Regions","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"AWRADrainageDivision","Title":"Drainage Divisions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-    
-    {"Name":"AHGFAquiferContour","Title":"Aquifer Contours","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
-
-    {"Name":"AHGFWaterTableAquifer","Title":"Water Table Aquifer","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"}
-
-  ]},
-
-  {"name":"Infrastructure","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
-
-     {"Name":"Roads","Title":"Roads","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"Railways","Title":"Railways","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-   {"Name":"Aircraft Facilities","Title":"Airports","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-   {"Name":"Ferry Routes","Title":"Ferry Routes","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"Pipelines","Title":"Pipelines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"Powerlines","Title":"Powerlines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"AHGFContractedCatchment","Title":"Broadband Quality","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"AHGFWaterTableAquifer","Title":"NBN Coverage","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
   ]}
+
 ]}
 

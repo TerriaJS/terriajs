@@ -806,7 +806,7 @@ function _gml2coord(posList) {
     var pnts = posList.split(/[ ,]+/);
     var coords = [];
     for (var i = 0; i < pnts.length; i+=2) {
-        coords.push([parseFloat(pnts[i+1]), parseFloat(pnts[i])]);
+        coords.push([parseFloat(pnts[i]), parseFloat(pnts[i+1])]);
     }
     return coords;
 }
@@ -842,8 +842,13 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     console.log('GeoJSON request', request);
     
-    console.log(request);
+    if (layer.proxy) {
+        var proxy = new Cesium.DefaultProxy('/proxy/');
+        request = proxy.getURL(request);
+    }
+
     Cesium.when(Cesium.loadText(request), function (text) {
+        //convert to geojson
         var obj;
         if (text[0] === '{') {
             obj = JSON.parse(text);
@@ -852,6 +857,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
         else {
             obj = $.xml2json(text);         //ESRI WFS
             obj = _EsriGml2GeoJson(obj);
+            console.log(obj);
         }
             //TODO: move render target here from addGeoJsonLayer
         layer = that.addGeoJsonLayer(obj, layer.name+'.geojson', layer);
@@ -869,36 +875,52 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         var params = uri.search(true);
         var layerName = params.layers;
         var url = 'http://' + uri.hostname() + uri.path();
-        var proxy;
-        if (params.proxy) {
+        var provider, proxy;
+        if (layer.proxy) {
             proxy = new Cesium.DefaultProxy('/proxy/');
         }
-        
-        var provider = new Cesium.WebMapServiceImageryProvider({
-            url: url,
-            layers : encodeURIComponent(layerName),
-            parameters: {
-                'format':'image/png',
-                'transparent':'true',
-                'styles': '',
-            },
-            proxy: proxy
-        });
-//        provider.defaultAlpha = 0.7;
+
+        if (layerName === 'REST') {
+            provider = new Cesium.ArcGisMapServerImageryProvider({
+                url: url,
+                proxy: proxy
+            });
+        }
+        else {
+            provider = new Cesium.WebMapServiceImageryProvider({
+                url: url,
+                layers : encodeURIComponent(layerName),
+                parameters: {
+                    'format':'image/png',
+                    'transparent':'true',
+                    'styles': '',
+                },
+                proxy: proxy
+            });
+        }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
     }
     else {
-       //WMS leaflet method of displaying wms data
         var uri = new URI(request);
-        var wmsServer = request.substring(0, request.indexOf('?'));
+        var server = request.substring(0, request.indexOf('?'));
         var params = uri.search(true);
         var layerName = params.layers;
-        L.tileLayer.wms(wmsServer, {
-            layers: layerName,
-            format: 'image/png',
-            transparent: true,
-        }).addTo(layer.map);
-        console.log(layerName, layer.map);
+        if (layer.proxy) {
+            proxy = new Cesium.DefaultProxy('/proxy/');
+            server = proxy.getURL(server);
+        }
+        
+        if (layerName === 'REST') {
+            provider = new L.esri.TiledMapLayer(server);
+        }
+        else {
+            provider = new L.tileLayer.wms(server+'%3f', {
+                layers: layerName,
+                format: 'image/png',
+                transparent: true,
+                });
+        }
+        layer.map.addLayer(provider);
     }
 
     this.add(layer);
@@ -936,16 +958,9 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     
     // Deal with the different data Services
     if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'CKAN' || layer.type === 'GME') {
-        if (layer.proxy) {
-            var proxy = new Cesium.DefaultProxy('/proxy/');
-            request = proxy.getURL(request);
-        }
         this._viewFeature(request, layer);
     }
     else if (layer.type === 'WMS') {
-        if (layer.proxy) {
-            request += '&proxy=true';
-        }
         this._viewMap(request, layer);
     }
     else if (layer.type === 'CSV') {
@@ -973,17 +988,23 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
         return request;
     }
     else if (description.type === 'WFS') {
-        request += '?service=wfs&request=GetFeature&typeName=' + name + '&version=' + description.version + '&srsName=EPSG:4326';
+        description.version = '1.1.0';
+        request += '?service=wfs&request=GetFeature&typeName=' + name + '&version=1.1.0&srsName=EPSG:4326';
+        
+        //HACK to find out if GA esri service
+        if (request.indexOf('www.ga.gov.au') !== -1) {
+            description.esri = true;
+        }
         if (description.esri === undefined) {
             request += '&outputFormat=JSON';
         }
         if (description.count) {
-          if (description.version < 2) {
+//          if (description.version < 2) {
             request += '&maxFeatures=' + description.count;
-          }
-          else {
-            request += '&count=' + description.count;
-          }
+//          }
+//          else {
+//            request += '&count=' + description.count;
+//          }
         }
     }
     else if (description.type === 'REST') {
@@ -1050,9 +1071,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     var layers = [];
     if (description.type === 'WFS') {
         layers = json_gml.FeatureTypeList.FeatureType;
-        if (json_gml.Esri) {
-            description.esri = true;
-        }
     }
     else if (description.type === 'WMS') {
         var layer_src = [json_gml.Capability.Layer];
