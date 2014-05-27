@@ -999,12 +999,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
             request += '&outputFormat=JSON';
         }
         if (description.count) {
-//          if (description.version < 2) {
             request += '&maxFeatures=' + description.count;
-//          }
-//          else {
-//            request += '&count=' + description.count;
-//          }
         }
     }
     else if (description.type === 'REST') {

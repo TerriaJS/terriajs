@@ -1,7 +1,7 @@
-@import url(../cesium/Cesium/Widgets/widgets.css);
-@import url(../cesium/Cesium/Widgets/lighter.css);
+@import url(../cesium/Source/Widgets/widgets.css);
+/*@import url(../cesium/Source/Widgets/lighter.css);*/
 
-body {
+/*body {
     height: 100%;
     width: 100%;
     margin: 0;
@@ -35,3 +35,4 @@ body {
     background-repeat: no-repeat;
     background-image: url(../shared/images/ajax-loader.gif);
 }
+*/

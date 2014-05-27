@@ -26,42 +26,17 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
     <script src="./third_party/bing.js"></script>
     <script src="./third_party/esri-leaflet.js"></script>
-     
-    <!-- Cesium -->
-    <script type="text/javascript" src="./cesium/Cesium/Cesium.js"></script>
-    <link rel="stylesheet" href="./viewer/CesiumViewer.css" media="screen">
-    
-    <!-- Our Plugins -->
-    <script src="./ausglobe.js"></script>
 
-    <!-- Our UI -->
-    <link rel="stylesheet" href="./viewer/AusGlobeViewer.css">
-    <script src="./viewer/AusGlobeViewer.js"></script>
-    <script src="./viewer/GeoDataWidget.js"></script>
-    
+    <!-- Cesium and our UI are pulled in via RequireJS.  Our plugins are pulled in indirectly. -->
+    <link rel="stylesheet" href="viewer/CesiumViewer.css" media="screen">
+    <link rel="stylesheet" href="viewer/AusGlobeViewer.css">
+    <script src="RequireJSConfig.js"></script>
+    <script data-main="ui/main" src="cesium/ThirdParty/requirejs-2.1.9/require.js"></script>
 </head>
 
 <body style="background: #000;">
 
     <div id="cesiumContainer"></div>
     <div id="loadingIndicator" class="loadingIndicator"></div>
-     
-
-<script id="ausglobe">
-/*global $*/
-(function () {
-    "use strict";
-
-        //GeoDataCollection Initialization
-    var geoDataManager = new ausglobe.GeoDataCollection();
-
-    //uncomment this line for local geospace testing
-    geoDataManager.visStore = 'http://localhost:3000';
-    console.log('The VisStore is set to:', geoDataManager.visStore);
-    
-    var viewer = new Cesium.AusGlobeViewer(geoDataManager);
-  
-}());
-</script>
 </body>
 </html>

@@ -3,8 +3,10 @@
 *   A set of UI functionality for working with the various datasets
 */
 
-(function() {
-
+define([
+        'ausglobe'
+    ], function(
+        ausglobe) {
     //---------------------------------------------
     // HTML Data Handling Widget
     //---------------------------------------------
@@ -719,8 +721,5 @@
         });
     }
     
-	Cesium.GeoDataWidget = GeoDataWidget;
-})();
-
-
-
+	return GeoDataWidget;
+});

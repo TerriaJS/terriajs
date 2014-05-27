@@ -1,13 +1,17 @@
 /*
-*   A collection of additional viewer functionality independent
-*   of datasets
-*/
+ *   A collection of additional viewer functionality independent
+ *   of datasets
+ */
 
-
-(function() {
+/*global define*/
+define([
+        'ui/GeoDataWidget'
+    ], function(
+        GeoDataWidget) {
+    //"use strict";
 
     //Initialize the selected viewer - Cesium or Leaflet
-    var AusGlobeViewer = function(GeoDataManager) {
+    var AusGlobeViewer = function(geoDataManager) {
 
         var div = document.createElement('div');
         div.id = 'controls';
@@ -15,7 +19,7 @@
                 <span id="zoom_in" class="zoomin_button" title="Zoom in"></span> \
                 <span id="zoom_out" class="zoomout_button" title="Zoom out"></span>';
         document.body.appendChild(div);
-        
+
         div = document.createElement('div');
         div.id = 'settings';
         div.innerHTML = '<span id="settings" class="settings_button" title="Display Settings"></span>';
@@ -45,13 +49,13 @@
                 </table>';
         document.body.appendChild(div);
 
-        var css = { 'background': '#333333', 
-            'color': '#eeeeee', 
+        var css = { 'background': '#333333',
+            'color': '#eeeeee',
             'border-color': '#555555',
-            'width': '30px', 
-            'height': '30px', 
+            'width': '30px',
+            'height': '30px',
             'border-radius': '1px'
-            };
+        };
         $(".zoomin_button").button({
             text: true,
             icons: { primary: "ui-icon-plus" }
@@ -64,7 +68,7 @@
             text: true,
             icons: { primary: "ui-icon-gear" }
         }).css(css);
-        
+
         var that = this;
         $("#settings").click(function () {
             that._showSettingsDialog();
@@ -75,29 +79,29 @@
         $("#zoom_out").click(function () {
             zoomOut(that.scene);
         });
-        
+
         //TODO: perf test to set environment
-        
+
         var that = this;
-        this.geoDataWidget = new Cesium.GeoDataWidget(GeoDataManager, function (layer) { setCurrentDataset(layer, that); });
-        this.GeoDataManager = GeoDataManager;
+        this.geoDataWidget = new GeoDataWidget(geoDataManager, function (layer) { setCurrentDataset(layer, that); });
+        this.geoDataManager = geoDataManager;
         this.scene = undefined;
         this.viewer = undefined;
         this.map = undefined;
-        
+
         this.webGlSupported = supportsWebgl();
-        
+
         this.selectViewer(this.webGlSupported);
-        
+
         // simple way to capture most ux redraw needs - catch all canvas clicks
         $(document).click(function() {
             if (that.frameChecker !== undefined) {
                 that.frameChecker.forceFrameUpdate();
             }
         });
-            
+
     }
-    
+
     // -------------------------------------------
     // Text Formatting
     // -------------------------------------------
@@ -136,7 +140,7 @@
     //determine the distance from the camera to a point
     function getCameraDistance(scene, pos) {
         var tx_pos = Cesium.Ellipsoid.WGS84.cartographicToCartesian(
-                        Cesium.Cartographic.fromDegrees(pos[0], pos[1], pos[2]));
+            Cesium.Cartographic.fromDegrees(pos[0], pos[1], pos[2]));
         return Cesium.Cartesian3.magnitude(Cesium.Cartesian3.subtract(tx_pos, scene.camera.position));
     };
 
@@ -155,32 +159,32 @@
         var seaLevel = getCameraSeaLevel(scene);
         return camPos.height - seaLevel.height;
     }
-        
-        //Camera extent approx for 2D viewer
+
+    //Camera extent approx for 2D viewer
     function getCameraFocus(scene) {
         //HACK to get current camera focus
         var pos = Cesium.Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
         var focus = scene.camera.pickEllipsoid(pos, Cesium.Ellipsoid.WGS84);
         return focus;
     }
-        //Approximate camera extent approx for 2D viewer
+    //Approximate camera extent approx for 2D viewer
     function getCameraRect(scene) {
         var focus = getCameraFocus(scene);
         var focus_cart = Cesium.Ellipsoid.WGS84.cartesianToCartographic(focus);
         var lat = Cesium.Math.toDegrees(focus_cart.latitude);
         var lon = Cesium.Math.toDegrees(focus_cart.longitude);
-        
+
         var dist = Cesium.Cartesian3.magnitude(Cesium.Cartesian3.subtract(focus, scene.camera.position));
         var offset = dist * 5e-6;
-        
+
         var rect = Cesium.Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
         return rect;
     }
-        
+
     //A very simple camera height checker.
     //TODO: need to create a new camera controller to do this properly
     function checkCameraHeight(scene) {
-           //check camera below 6000 m start checking against surface
+        //check camera below 6000 m start checking against surface
         if (getCameraHeight(scene) >= 6000) {
             return;
         }
@@ -194,18 +198,18 @@
             }
         });
     }
-        
+
     //TODO: need to make this animate
     function zoomCamera(scene, distFactor, pos) {
         var camera = scene.camera;
-            //for now
+        //for now
         if (scene.mode === Cesium.SceneMode.SCENE3D) {
             var cartesian;
             if (pos === undefined) {
                 cartesian = getCameraFocus(scene);
             }
             else {
-                 cartesian = camera.pickEllipsoid(pos, Cesium.Ellipsoid.WGS84);
+                cartesian = camera.pickEllipsoid(pos, Cesium.Ellipsoid.WGS84);
             }
             if (cartesian) {
                 //TODO: zoom to point selected by user
@@ -221,7 +225,7 @@
 
     function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); };
     function zoomOut(scene, pos) { zoomCamera(scene, -3.0/2.0, pos); };
-    
+
     // Move camera to Rectangle
     function updateCameraFromRect(scene, map, rect_in, ms) {
         if (rect_in === undefined) {
@@ -247,7 +251,7 @@
         }
         else if (map !== undefined) {
             var bnds = [[Cesium.Math.toDegrees(rect.south), Cesium.Math.toDegrees(rect.west)],
-                        [Cesium.Math.toDegrees(rect.north), Cesium.Math.toDegrees(rect.east)]];
+                [Cesium.Math.toDegrees(rect.north), Cesium.Math.toDegrees(rect.east)]];
             map.fitBounds(bnds);
         }
     }
@@ -283,15 +287,15 @@
 
     // see if we can skip the draw on this frame
     FrameChecker.prototype.skipFrame = function(scene, date) {
-          //check if can show based on maxFPS
+        //check if can show based on maxFPS
         if (this._showFrame === false) {
             return true;
         }
         this._showFrame = false;
-        
-          //check if anything actually changed
+
+        //check if anything actually changed
         if (this._lastDate) {
-            var bDateSame = this._lastDate.equals(date); 
+            var bDateSame = this._lastDate.equals(date);
             var bCamSame = this._lastCam.equalsEpsilon(scene.camera.viewMatrix, Cesium.Math.EPSILON5);
             if (bDateSame && bCamSame) {
                 this._skipCnt++;
@@ -300,10 +304,10 @@
                 this._skipCnt = 0;
                 if (!bCamSame) {
                     checkCameraHeight(scene);
-               }
+                }
             }
         }
-        
+
         if (this._skipCnt > (this._maxFPS * this._skipCntLim)) {
             this._skipCntLim = 5.0; //then skip after every 5 seconds
             if (this._skipCnt < (this._maxFPS * this._skipCntMax)) {
@@ -316,7 +320,7 @@
         this._lastCam = scene.camera.viewMatrix.clone();
         return false;
     }
-        
+
     // -------------------------------------------
     // DrawExtentHelper from the cesium sample code
     //  modified to always be available on shift-click
@@ -370,7 +374,7 @@
     DrawExtentHelper.prototype.setPolyPts = function (mn, mx) {
         var e = this.getExtent(mn, mx);
         if (e) {
-          this._extentPrimitive.rectangle = e;
+            this._extentPrimitive.rectangle = e;
         }
     };
 
@@ -386,7 +390,7 @@
         var ext;
         if (movement) {
             var cartesian = this._scene.camera.pickEllipsoid(movement.position,
-                    this._ellipsoid);
+                this._ellipsoid);
             if (cartesian) {
                 this._click2 = this._ellipsoid.cartesianToCartographic(cartesian);
             }
@@ -399,7 +403,7 @@
 
     DrawExtentHelper.prototype.handleRegionInter = function (movement) {
         var cartesian = this._scene.camera.pickEllipsoid(movement.endPosition,
-                this._ellipsoid);
+            this._ellipsoid);
         if (cartesian) {
             var cartographic = this._ellipsoid.cartesianToCartographic(cartesian);
             this.setPolyPts(this._click1, cartographic);
@@ -408,7 +412,7 @@
 
     DrawExtentHelper.prototype.handleRegionStart = function (movement) {
         var cartesian = this._scene.camera.pickEllipsoid(movement.position,
-                this._ellipsoid);
+            this._ellipsoid);
         if (cartesian) {
             this.disableInput();
             this.active = true;
@@ -450,23 +454,23 @@
             var that = this;
             this.regionSelect = new DrawExtentHelper(this.scene, function (ext) {
                 if (that.regionPolylines.get(0)) {
-                  that.regionPolylines.remove(that.regionPolylines.get(0));
+                    that.regionPolylines.remove(that.regionPolylines.get(0));
                 }
                 that.geoDataWidget.setExtent(ext);
                 if (ext) {
                     updateCameraFromRect(that.scene, that.map, ext, 1000);
-                      // Display polyline based on ext
+                    // Display polyline based on ext
                     var east = ext.east, west = ext.west, north = ext.north, south = ext.south;
                     var ellipsoid = Cesium.Ellipsoid.WGS84;
                     that.regionPolylines.add({
                         positions : ellipsoid.cartographicArrayToCartesianArray(
-                                [
-                                 new Cesium.Cartographic(west, south),
-                                 new Cesium.Cartographic(west, north),
-                                 new Cesium.Cartographic(east, north),
-                                 new Cesium.Cartographic(east, south),
-                                 new Cesium.Cartographic(west, south)
-                                ]),
+                            [
+                                new Cesium.Cartographic(west, south),
+                                new Cesium.Cartographic(west, north),
+                                new Cesium.Cartographic(east, north),
+                                new Cesium.Cartographic(east, south),
+                                new Cesium.Cartographic(west, south)
+                            ]),
                         width: 3.0,
                         material : Cesium.Material.fromType('Color', {
                             color : new Cesium.Color(0.8, 0.8, 0.0, 0.5)
@@ -569,16 +573,16 @@
         }
         updateTimeline(that.viewer, start, finish);
         updateLegend(tableData);
-        
+
         if (layer.extent !== undefined) {
             updateCameraFromRect(that.scene, that.map, layer.extent, 1000);
         }
     }
 
-    
+
     // Settings dialog
     AusGlobeViewer.prototype._showSettingsDialog = function() {
-    
+
         $("#dialogSettings").dialog({
             title: 'Settings',
             width: 250,
@@ -593,27 +597,27 @@
             }
         });
         list.html('');
-        
+
         var that = this;
 
         var settings = [
-          {
-            text: '3D', 
-            getState: function() { return that._cesiumViewerActive(); }, 
-            setState: function(val) { that.selectViewer(val); },
-          },
-          {
-            text: 'Water Mask', 
-            getState: function() { return true; }, 
-            setState: function(val) { alert('NYI'); },
-          }
+            {
+                text: '3D',
+                getState: function() { return that._cesiumViewerActive(); },
+                setState: function(val) { that.selectViewer(val); },
+            },
+            {
+                text: 'Water Mask',
+                getState: function() { return true; },
+                setState: function(val) { alert('NYI'); },
+            }
 
         ];
         for (var i = 0; i < settings.length; i++) {
             var state = settings[i].getState() ? 'checked' : 'unchecked';
             list.append('<input type="checkbox" name="' + settings[i].text + '" id=' + i + ' '+ state +'><label for=' + i + ' id=' + i + '>' + settings[i].text + '</label><br>');
         }
-          //set state when clicked
+        //set state when clicked
         $('#dialogSettings :checkbox').click(function() {
             var $this = $(this);
             var id = $this[0].id;
@@ -621,7 +625,7 @@
         });
     }
 
-    AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer !== undefined); };  
+    AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer !== undefined); };
 
     AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
@@ -633,7 +637,7 @@
             sceneModePicker: false,
             navigationInstructionsInitiallyVisible: false,
         };
-        
+
         //create CesiumViewer
         var viewer = new Cesium.Viewer(container, options);
         var scene = viewer.scene;
@@ -641,23 +645,23 @@
         var globe = scene.globe;
         var ellipsoid = globe.ellipsoid;
         var camera = scene.camera;
-        
+
         //set to bing with labels and small terrain
         viewer.baseLayerPicker.viewModel.selectedImagery = viewer.baseLayerPicker.viewModel.imageryProviderViewModels[1];
         viewer.baseLayerPicker.viewModel.selectedTerrain = viewer.baseLayerPicker.viewModel.terrainProviderViewModels[2];
-        
-        globe.terrainProvider.hasWaterMask = function () { return false; };    
-        globe.depthTestAgainstTerrain = false    
+
+        globe.terrainProvider.hasWaterMask = function () { return false; };
+        globe.depthTestAgainstTerrain = false
 
 
         //TODO: replace cesium & bing icon with hightlighted text like leaflet to reduce footprint
 //        var creditDisplay = scene.frameState.creditDisplay;
 //        var cesiumCredit = new Cesium.Credit('Cesium', '', 'http://cesiumjs.org/');
-//        creditDisplay.addDefaultCredit(cesiumCredit);      
-              
+//        creditDisplay.addDefaultCredit(cesiumCredit);
+
         //TODO: set based on platform
 //        globe.tileCacheSize *= 2;
-        
+
         // Add double click zoom
         var that = this;
         this.mouseZoomHandler = new Cesium.ScreenSpaceEventHandler(canvas);
@@ -688,7 +692,7 @@
                     var terrainPos = [cartographic];
                     function sampleTerrainSuccess() {
                         var text = cartesianToDegreeString(scene, cartesian);
-               	        text += ' elev <strong>' + terrainPos[0].height.toFixed(1) + '</strong> m';
+                        text += ' elev <strong>' + terrainPos[0].height.toFixed(1) + '</strong> m';
                         document.getElementById('position').innerHTML = text;
                     }
                     //TODO: vary tile level based based on camera height
@@ -702,8 +706,8 @@
                 document.getElementById('position').innerHTML = "";
             }
         }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
-        
-         
+
+
         //Opening scene
         //TODO: based on perf test to see if we can do some animation at startup
         var e = new Cesium.Cartesian3(-5696178.715241763, 5664619.403367736, -4108462.746194852);
@@ -717,66 +721,66 @@
 
     //Check for webgl support
     function supportsWebgl() {
-          //Check for webgl support and if not, then fall back to leaflet
+        //Check for webgl support and if not, then fall back to leaflet
         if (!window.WebGLRenderingContext) {
-           // Browser has no idea what WebGL is. Suggest they
-           // get a new browser by presenting the user with link to
-           // http://get.webgl.org
-           console.log('!!No WebGL support.');
-           return false;
+            // Browser has no idea what WebGL is. Suggest they
+            // get a new browser by presenting the user with link to
+            // http://get.webgl.org
+            console.log('!!No WebGL support.');
+            return false;
         }
-        var canvas = document.createElement( 'canvas' ); 
+        var canvas = document.createElement( 'canvas' );
         var gl = canvas.getContext("webgl");
         if (!gl) {
-          // Browser could not initialize WebGL. User probably needs to
-          // update their drivers or get a new browser. Present a link to
-          // http://get.webgl.org/troubleshooting
-          console.log('!!Unable to successfully create Webgl context.');
-          return false;  
+            // Browser could not initialize WebGL. User probably needs to
+            // update their drivers or get a new browser. Present a link to
+            // http://get.webgl.org/troubleshooting
+            console.log('!!Unable to successfully create Webgl context.');
+            return false;
         }
         return true;
     }
-  
+
     AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         if (!bCesium) {
 
-                //create leaflet viewer
-            map = L.map('cesiumContainer', { zoomControl: false }).setView([-28.5, 135], 5);  
+            //create leaflet viewer
+            map = L.map('cesiumContainer', { zoomControl: false }).setView([-28.5, 135], 5);
             new L.Control.Zoom({ position: 'topright' }).addTo(map);
-            
+
             map.on("boxzoomend", function(e) {
                 console.log(e.boxZoomBounds);
-            });        
+            });
 
             if (this.viewer !== undefined) {
                 var rect = getCameraRect(this.scene);
                 var bnds = [[Cesium.Math.toDegrees(rect.south), Cesium.Math.toDegrees(rect.west)],
-                            [Cesium.Math.toDegrees(rect.north), Cesium.Math.toDegrees(rect.east)]];
+                    [Cesium.Math.toDegrees(rect.north), Cesium.Math.toDegrees(rect.east)]];
                 map.fitBounds(bnds);
             }
-            
-                //Bing Maps Layer by default
+
+            //Bing Maps Layer by default
             var layer = new L.BingLayer('Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk');
 //            var layer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer');
             map.addLayer(layer);
 
             document.getElementById('controls').style.visibility = 'hidden';
             document.getElementById('position').style.visibility = 'hidden';
-                
-                //redisplay data
-            this.map = map;
-            this.GeoDataManager.setViewer({scene: undefined, map: map});
 
-                //shut down existing cesium
+            //redisplay data
+            this.map = map;
+            this.geoDataManager.setViewer({scene: undefined, map: map});
+
+            //shut down existing cesium
             if (this.viewer !== undefined) {
                 this._enableSelectExtent(false);
                 stopTimeline();
 
                 this.mouseOverPosHandler.removeInputAction( Cesium.ScreenSpaceEventType.MOUSE_MOVE );
-                this.mouseZoomHandler.removeInputAction( Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK );                
-                this.mouseZoomHandler.removeInputAction( Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK, Cesium.KeyboardEventModifier.SHIFT );   
-                             
+                this.mouseZoomHandler.removeInputAction( Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
+                this.mouseZoomHandler.removeInputAction( Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK, Cesium.KeyboardEventModifier.SHIFT );
+
                 this.scene.primitives.removeAll();
                 this.viewer.destroy();
                 this.viewer = undefined;
@@ -790,7 +794,7 @@
             this.scene = this.viewer.scene;
             this.frameChecker = new FrameChecker();
             var that = this;
-            
+
             // override the default render loop
             this.scene.base_render = this.scene.render;
             this.scene.render = function(date) {
@@ -798,53 +802,53 @@
                     return;
                 }
                 //render layers
-                if (that.GeoDataManager) {
-                    that.GeoDataManager.update(date);
+                if (that.geoDataManager) {
+                    that.geoDataManager.update(date);
                 }
                 that.scene.base_render(date);
-                
+
                 //capture the scene image right after the render and make
                 //call to the GeoDataManager which saves scene data, which sets an event
                 // which is picked up by the GeoDataWidget to launch the share dialog
                 //TODO: need leaflet version - use extent for camera and placeholder image
-                if (that.GeoDataManager.shareRequest === true) {
+                if (that.geoDataManager.shareRequest === true) {
                     var dataUrl = that.scene.canvas.toDataURL("image/jpeg");
-                    that.GeoDataManager.setShareRequest({
+                    that.geoDataManager.setShareRequest({
                         image: dataUrl,
                         camera: that.scene.camera
                     });
                 }
             };
 
-            
+
             if (this.map !== undefined) {
                 var bnds = this.map.getBounds()
                 var rect = Cesium.Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
                 updateCameraFromRect(this.scene, undefined, rect, 0);
             }
-            
-            this.GeoDataManager.setViewer({scene: this.scene, map: undefined});
+
+            this.geoDataManager.setViewer({scene: this.scene, map: undefined});
 
             this._enableSelectExtent(true);
             stopTimeline(this.viewer);
-            
+
             document.getElementById('controls').style.visibility = 'visible';
             document.getElementById('position').style.visibility = 'visible';
-/*  
-            var esri = new Cesium.ArcGisMapServerImageryProvider({
-                url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
-                proxy: new Cesium.DefaultProxy('/proxy/')
-            });
-            this.scene.globe.imageryLayers.addImageryProvider(esri); 
-*/  
+            /*
+             var esri = new Cesium.ArcGisMapServerImageryProvider({
+             url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
+             proxy: new Cesium.DefaultProxy('/proxy/')
+             });
+             this.scene.globe.imageryLayers.addImageryProvider(esri);
+             */
             //remove existing map viewer
             if (this.map !== undefined) {
                 this.map.remove();
                 this.map = undefined;
             }
-            
+
         }
-    }
-    
-	Cesium.AusGlobeViewer = AusGlobeViewer;
-})();
+    };
+
+    return AusGlobeViewer;
+});

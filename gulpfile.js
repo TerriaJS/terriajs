@@ -5,6 +5,7 @@ var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
 var jasmine = require('gulp-jasmine');
+var exec = require('child_process').exec;
 
 //TODO: figure out if there's any value to this
 //var refresh = require('gulp-livereload');  
@@ -57,11 +58,22 @@ gulp.task('lr-server', function() {
 })
 */
 
-gulp.task('default', function() {  
-    gulp.run('scripts', 'docs');
+gulp.task('build-cesium', function(cb) {
+    return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
+        cwd : 'public/cesium'
+    }, function(err, stdout, stderr) {
+        if (stderr) {
+            console.log('Error while building Cesium: ');
+            console.log(stderr);
+        }
+        cb(err);
+    });
+});
 
-    gulp.watch('src/*.js', function(event) {
-        gulp.run('scripts');
-    })
+gulp.task('default', function() {  
+    gulp.run('build-cesium', 'scripts', 'docs');
+
+    gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
+    gulp.watch('src/*.js', ['scripts']);
 })
 
