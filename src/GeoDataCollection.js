@@ -475,7 +475,11 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     console.log('GeoJSON request', request);
     
-    console.log(request);
+    if (layer.proxy) {
+        var proxy = new Cesium.DefaultProxy('/proxy/');
+        request = proxy.getURL(request);
+    }
+
     Cesium.when(Cesium.loadText(request), function (text) {
         //convert to geojson
         var obj;
@@ -587,16 +591,9 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     
     // Deal with the different data Services
     if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'CKAN' || layer.type === 'GME') {
-        if (layer.proxy) {
-            var proxy = new Cesium.DefaultProxy('/proxy/');
-            request = proxy.getURL(request);
-        }
         this._viewFeature(request, layer);
     }
     else if (layer.type === 'WMS') {
-        if (layer.proxy) {
-            request += '&proxy=true';
-        }
         this._viewMap(request, layer);
     }
     else if (layer.type === 'CSV') {
@@ -625,18 +622,17 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
     }
     else if (description.type === 'WFS') {
         description.version = '1.1.0';
-        request += '?service=wfs&request=GetFeature&typeName=' + name + '&version=' + description.version + '&srsName=EPSG:4326';
-        return request;
+        request += '?service=wfs&request=GetFeature&typeName=' + name + '&version=1.1.0&srsName=EPSG:4326';
+        
+        //HACK to find out if GA esri service
+        if (request.indexOf('www.ga.gov.au') !== -1) {
+            description.esri = true;
+        }
         if (description.esri === undefined) {
             request += '&outputFormat=JSON';
         }
         if (description.count) {
-          if (description.version < 2) {
             request += '&maxFeatures=' + description.count;
-          }
-          else {
-            request += '&count=' + description.count;
-          }
         }
     }
     else if (description.type === 'REST') {
@@ -703,9 +699,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     var layers = [];
     if (description.type === 'WFS') {
         layers = json_gml.FeatureTypeList.FeatureType;
-        if (json_gml.Esri) {
-            description.esri = true;
-        }
     }
     else if (description.type === 'WMS') {
         var layer_src = [json_gml.Capability.Layer];
