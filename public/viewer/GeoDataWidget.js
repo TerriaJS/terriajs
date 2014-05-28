@@ -353,6 +353,7 @@
                         var item = $('#list1 .ui-selected');
                         var idx = item[0].id;
                         var description = sel_list[idx];
+                        description.idx = idx;
                         
                             // Set bbox for call
                         if (data_extent !== undefined) {

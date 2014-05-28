@@ -806,7 +806,7 @@ function _gml2coord(posList) {
     var pnts = posList.split(/[ ,]+/);
     var coords = [];
     for (var i = 0; i < pnts.length; i+=2) {
-        coords.push([parseFloat(pnts[i]), parseFloat(pnts[i+1])]);
+        coords.push([parseFloat(pnts[i+1]), parseFloat(pnts[i])]);
     }
     return coords;
 }
@@ -857,7 +857,13 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
         else {
             obj = $.xml2json(text);         //ESRI WFS
             obj = _EsriGml2GeoJson(obj);
-            console.log(obj);
+                //Hack for gazetteer since the coordinates are flipped
+            if (text.indexOf('gazetter') != -1) {
+                for (var i = 0; i < obj.features.length; i++) {
+                    var pt = obj.features[i].geometry.coordinates; 
+                    var t = pt[0]; pt[0] = pt[1]; pt[1] = t;
+                 }
+            }
         }
             //TODO: move render target here from addGeoJsonLayer
         layer = that.addGeoJsonLayer(obj, layer.name+'.geojson', layer);
@@ -908,13 +914,16 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         if (layer.proxy) {
             proxy = new Cesium.DefaultProxy('/proxy/');
             server = proxy.getURL(server);
+            if (layerName !== 'REST') {
+                server += '%3f';
+            }
         }
         
         if (layerName === 'REST') {
             provider = new L.esri.TiledMapLayer(server);
         }
         else {
-            provider = new L.tileLayer.wms(server+'%3f', {
+            provider = new L.tileLayer.wms(server, {
                 layers: layerName,
                 format: 'image/png',
                 transparent: true,
@@ -988,8 +997,8 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
         return request;
     }
     else if (description.type === 'WFS') {
-        description.version = '1.1.0';
-        request += '?service=wfs&request=GetFeature&typeName=' + name + '&version=1.1.0&srsName=EPSG:4326';
+        description.version = 1.1;
+        request += '?service=wfs&request=GetFeature&typeName=' + name + '&version=' + description.version + '&srsName=EPSG:4326';
         
         //HACK to find out if GA esri service
         if (request.indexOf('www.ga.gov.au') !== -1) {
@@ -999,16 +1008,11 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
             request += '&outputFormat=JSON';
         }
         if (description.count) {
-//          if (description.version < 2) {
             request += '&maxFeatures=' + description.count;
-//          }
-//          else {
-//            request += '&count=' + description.count;
-//          }
         }
     }
     else if (description.type === 'REST') {
-        request += '/'+description.idx;
+        request += '/' + description.idx;
         request += '/query?geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&returnGeometry=true&f=pjson';
     }
     else {
@@ -1021,7 +1025,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
                     Cesium.Math.toDegrees(ext.east), Cesium.Math.toDegrees(ext.north)];
         //crazy ogc bbox rules - first is old lon/lat ordering, second is newer lat/lon ordering
         var version = parseFloat(description.version);
-        if (description.type === 'WFS' && version <= 1.1) {
+        if (description.type === 'WFS' && version < 1.1) {
             request = request + '&bbox='+pos[0]+','+pos[1]+','+pos[2]+','+pos[3];
         }
         else if (description.type === 'REST') {
