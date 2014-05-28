@@ -27,10 +27,10 @@ define([
         this.visViewer = host + uri.pathname();
     
             // Main menu buttons
-        var div = document.createElement('div');
-        div.id = 'product';
-        div.innerHTML = '<p>National Map</p>';
-        document.body.appendChild(div);
+//        var div = document.createElement('div');
+//        div.id = 'product';
+//        div.innerHTML = '<p>National Map</p>';
+//        document.body.appendChild(div);
 
         div = document.createElement('div');
         div.id = 'menu';

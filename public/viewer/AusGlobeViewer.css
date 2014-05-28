@@ -164,4 +164,65 @@ li {
     background-position: -224px -192px;
 }
 
+.ausglobe-title-area {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color:#333333;
+    opacity: 0.9;
+    border: 1px solid #555555;
+    vertical-align: middle;
+}
 
+.ausglobe-title-area:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.ausglobe-title-text {
+    display: inline-block;
+    font-family: sans-serif;
+    font-size: 14pt;
+    font-weight: bold;
+    color: #fff;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+.ausglobe-title-menu {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding-right: 10px;
+}
+
+.ausglobe-title-menu:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.ausglobe-title-menuItem {
+    position: relative;
+    display: inline;
+    color: #9A9A9B;
+    font-size: 10pt;
+    font-family: sans-serif;
+}
+
+.ausglobe-title-menuItem-divider {
+    position: relative;
+    display: inline;
+    color: #9A9A9B;
+    font-size: 10pt;
+    font-family: sans-serif;
+    padding-left: 5px;
+    padding-right: 5px;
+}

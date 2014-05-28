@@ -5,13 +5,19 @@
 
 /*global define*/
 define([
-        'ui/GeoDataWidget'
+        'ui/GeoDataWidget',
+        'ui/TitleWidget'
     ], function(
-        GeoDataWidget) {
+        GeoDataWidget,
+        TitleWidget) {
     //"use strict";
 
     //Initialize the selected viewer - Cesium or Leaflet
     var AusGlobeViewer = function(geoDataManager) {
+
+        var titleWidget = new TitleWidget({
+            container : document.body
+        });
 
         var div = document.createElement('div');
         div.id = 'controls';
