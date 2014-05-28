@@ -5,16 +5,54 @@
 
 /*global define*/
 define([
+        'Cesium/Core/BingMapsApi',
+        'Cesium/Core/Cartesian2',
+        'Cesium/Core/Cartesian3',
+        'Cesium/Core/Cartographic',
         'Cesium/Core/CesiumTerrainProvider',
+        'Cesium/Core/ClockRange',
+        'Cesium/Core/Color',
+        'Cesium/Core/Ellipsoid',
+        'Cesium/Core/EllipsoidTerrainProvider',
+        'Cesium/Core/KeyboardEventModifier',
+        'Cesium/Core/Math',
+        'Cesium/Core/Rectangle',
+        'Cesium/Core/sampleTerrain',
+        'Cesium/Core/ScreenSpaceEventHandler',
+        'Cesium/Core/ScreenSpaceEventType',
         'Cesium/Scene/BingMapsImageryProvider',
         'Cesium/Scene/BingMapsStyle',
+        'Cesium/Scene/CameraFlightPath',
+        'Cesium/Scene/PolylineCollection',
+        'Cesium/Scene/RectanglePrimitive',
+        'Cesium/Scene/SceneMode',
+        'Cesium/ThirdParty/when',
         'Cesium/Widgets/Viewer/Viewer',
         'ui/GeoDataWidget',
         'ui/TitleWidget'
     ], function(
+        BingMapsApi,
+        Cartesian2,
+        Cartesian3,
+        Cartographic,
         CesiumTerrainProvider,
+        ClockRange,
+        Color,
+        Ellipsoid,
+        EllipsoidTerrainProvider,
+        KeyboardEventModifier,
+        CesiumMath,
+        Rectangle,
+        sampleTerrain,
+        ScreenSpaceEventHandler,
+        ScreenSpaceEventType,
         BingMapsImageryProvider,
         BingMapsStyle,
+        CameraFlightPath,
+        PolylineCollection,
+        RectanglePrimitive,
+        SceneMode,
+        when,
         Viewer,
         GeoDataWidget,
         TitleWidget) {
@@ -154,8 +192,8 @@ define([
     function cartographicToDegreeString(scene, cartographic) {
         var strNS = cartographic.latitude < 0 ? 'S' : 'N';
         var strWE = cartographic.longitude < 0 ? 'W' : 'E';
-        var text = 'Lat: ' + Math.abs(Cesium.Math.toDegrees(cartographic.latitude)).toFixed(3) + '&deg; ' + strNS +
-            ' Lon: ' + Math.abs(Cesium.Math.toDegrees(cartographic.longitude)).toFixed(3) + '&deg; ' + strWE;
+        var text = 'Lat: ' + Math.abs(CesiumMath.toDegrees(cartographic.latitude)).toFixed(3) + '&deg; ' + strNS +
+            ' Lon: ' + Math.abs(CesiumMath.toDegrees(cartographic.longitude)).toFixed(3) + '&deg; ' + strWE;
         return text;
     }
 
@@ -167,8 +205,8 @@ define([
     }
 
     function rectangleToDegreeString(scene, rect) {
-        var nw = new Cesium.Cartographic(rect.west, rect.north);
-        var se = new Cesium.Cartographic(rect.east, rect.south);
+        var nw = new Cartographic(rect.west, rect.north);
+        var se = new Cartographic(rect.east, rect.south);
         var text = 'NW: ' + cartographicToDegreeString(scene, nw);
         text += ', SE: ' + cartographicToDegreeString(scene, se);
         return text;
@@ -178,28 +216,28 @@ define([
     // Camera management
     // -------------------------------------------
     function getCameraPos(scene) {
-        var ellipsoid = Cesium.Ellipsoid.WGS84;
+        var ellipsoid = Ellipsoid.WGS84;
         var cam_pos = scene.camera.position;
         return ellipsoid.cartesianToCartographic(cam_pos);
     }
 
     //determine the distance from the camera to a point
     function getCameraDistance(scene, pos) {
-        var tx_pos = Cesium.Ellipsoid.WGS84.cartographicToCartesian(
-            Cesium.Cartographic.fromDegrees(pos[0], pos[1], pos[2]));
-        return Cesium.Cartesian3.magnitude(Cesium.Cartesian3.subtract(tx_pos, scene.camera.position));
+        var tx_pos = Ellipsoid.WGS84.cartographicToCartesian(
+            Cartographic.fromDegrees(pos[0], pos[1], pos[2]));
+        return Cartesian3.magnitude(Cartesian3.subtract(tx_pos, scene.camera.position));
     };
 
 
     function getCameraSeaLevel(scene) {
-        var ellipsoid = Cesium.Ellipsoid.WGS84;
+        var ellipsoid = Ellipsoid.WGS84;
         var cam_pos = scene.camera.position;
         return ellipsoid.cartesianToCartographic(ellipsoid.scaleToGeodeticSurface(cam_pos));
     }
 
 
     function getCameraHeight(scene) {
-        var ellipsoid = Cesium.Ellipsoid.WGS84;
+        var ellipsoid = Ellipsoid.WGS84;
         var cam_pos = scene.camera.position;
         var camPos = getCameraPos(scene);
         var seaLevel = getCameraSeaLevel(scene);
@@ -209,21 +247,21 @@ define([
     //Camera extent approx for 2D viewer
     function getCameraFocus(scene) {
         //HACK to get current camera focus
-        var pos = Cesium.Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
-        var focus = scene.camera.pickEllipsoid(pos, Cesium.Ellipsoid.WGS84);
+        var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
+        var focus = scene.camera.pickEllipsoid(pos, Ellipsoid.WGS84);
         return focus;
     }
     //Approximate camera extent approx for 2D viewer
     function getCameraRect(scene) {
         var focus = getCameraFocus(scene);
-        var focus_cart = Cesium.Ellipsoid.WGS84.cartesianToCartographic(focus);
-        var lat = Cesium.Math.toDegrees(focus_cart.latitude);
-        var lon = Cesium.Math.toDegrees(focus_cart.longitude);
+        var focus_cart = Ellipsoid.WGS84.cartesianToCartographic(focus);
+        var lat = CesiumMath.toDegrees(focus_cart.latitude);
+        var lon = CesiumMath.toDegrees(focus_cart.longitude);
 
-        var dist = Cesium.Cartesian3.magnitude(Cesium.Cartesian3.subtract(focus, scene.camera.position));
+        var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position));
         var offset = dist * 5e-6;
 
-        var rect = Cesium.Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
+        var rect = Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
         return rect;
     }
 
@@ -235,12 +273,12 @@ define([
             return;
         }
         var terrainPos = [getCameraPos(scene)];
-        Cesium.when(Cesium.sampleTerrain(scene.globe.terrainProvider, 5, terrainPos), function() {
+        when(sampleTerrain(scene.globe.terrainProvider, 5, terrainPos), function() {
             terrainPos[0].height += 100;
             if (getCameraHeight(scene) < terrainPos[0].height) {
                 var curCamPos = getCameraPos(scene);
                 curCamPos.height = terrainPos[0].height;
-                scene.camera.position = Cesium.Ellipsoid.WGS84.cartographicToCartesian(curCamPos);
+                scene.camera.position = Ellipsoid.WGS84.cartographicToCartesian(curCamPos);
             }
         });
     }
@@ -249,18 +287,18 @@ define([
     function zoomCamera(scene, distFactor, pos) {
         var camera = scene.camera;
         //for now
-        if (scene.mode === Cesium.SceneMode.SCENE3D) {
+        if (scene.mode === SceneMode.SCENE3D) {
             var cartesian;
             if (pos === undefined) {
                 cartesian = getCameraFocus(scene);
             }
             else {
-                cartesian = camera.pickEllipsoid(pos, Cesium.Ellipsoid.WGS84);
+                cartesian = camera.pickEllipsoid(pos, Ellipsoid.WGS84);
             }
             if (cartesian) {
                 //TODO: zoom to point selected by user
 //                camera.lookAt(camera.position, cartesian, camera.up);
-                var dist = Cesium.Cartesian3.magnitude(Cesium.Cartesian3.subtract(cartesian, camera.position));
+                var dist = Cartesian3.magnitude(Cartesian3.subtract(cartesian, camera.position));
                 camera.moveForward(dist * distFactor);
             }
         }
@@ -278,7 +316,7 @@ define([
             return;
         }
         //check that we're not too close
-        var epsilon = Cesium.Math.EPSILON3;
+        var epsilon = CesiumMath.EPSILON3;
         var rect = rect_in.clone();
         if ((rect.east - rect.west) < epsilon) {
             rect.east += epsilon/2.0;
@@ -289,15 +327,15 @@ define([
             rect.south -= epsilon/2.0;
         }
         if (scene !== undefined && !scene.isDestroyed()) {
-            var flight = Cesium.CameraFlightPath.createAnimationRectangle(scene, {
+            var flight = CameraFlightPath.createAnimationRectangle(scene, {
                 destination : rect,
                 duration: ms
             });
             scene.animations.add(flight);
         }
         else if (map !== undefined) {
-            var bnds = [[Cesium.Math.toDegrees(rect.south), Cesium.Math.toDegrees(rect.west)],
-                [Cesium.Math.toDegrees(rect.north), Cesium.Math.toDegrees(rect.east)]];
+            var bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
+                [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
             map.fitBounds(bnds);
         }
     }
@@ -342,7 +380,7 @@ define([
         //check if anything actually changed
         if (this._lastDate) {
             var bDateSame = this._lastDate.equals(date);
-            var bCamSame = this._lastCam.equalsEpsilon(scene.camera.viewMatrix, Cesium.Math.EPSILON5);
+            var bCamSame = this._lastCam.equalsEpsilon(scene.camera.viewMatrix, CesiumMath.EPSILON5);
             if (bDateSame && bCamSame) {
                 this._skipCnt++;
             }
@@ -376,8 +414,8 @@ define([
         this._scene = scene;
         this._ellipsoid = scene.globe.ellipsoid;
         this._finishHandler = handler;
-        this._mouseHandler = new Cesium.ScreenSpaceEventHandler(this._canvas);
-        this._extentPrimitive = new Cesium.RectanglePrimitive();
+        this._mouseHandler = new ScreenSpaceEventHandler(this._canvas);
+        this._extentPrimitive = new RectanglePrimitive();
         this._extentPrimitive.asynchronous = false;
         this._scene.primitives.add(this._extentPrimitive);
         this.active = false;
@@ -394,7 +432,7 @@ define([
     };
 
     DrawExtentHelper.prototype.getExtent = function (mn, mx) {
-        var e = new Cesium.Rectangle();
+        var e = new Rectangle();
 
         // Re-order so west < east and south < north
         e.west = Math.min(mn.longitude, mx.longitude);
@@ -403,7 +441,7 @@ define([
         e.north = Math.max(mn.latitude, mx.latitude);
 
         // Check for approx equal (shouldn't require abs due to re-order)
-        var epsilon = Cesium.Math.EPSILON6;
+        var epsilon = CesiumMath.EPSILON6;
 
         if (Math.abs(e.east - e.west) < epsilon) {
             e.east += epsilon * 2.0;
@@ -425,9 +463,9 @@ define([
     };
 
     DrawExtentHelper.prototype.setToDegrees = function (w, s, e, n) {
-        var toRad = Cesium.Math.toRadians;
-        var mn = new Cesium.Cartographic(toRad(w), toRad(s));
-        var mx = new Cesium.Cartographic(toRad(e), toRad(n));
+        var toRad = CesiumMath.toRadians;
+        var mn = new Cartographic(toRad(w), toRad(s));
+        var mx = new Cartographic(toRad(e), toRad(n));
         this.setPolyPts(mn, mx);
     };
 
@@ -467,10 +505,10 @@ define([
             this._click1 = this._ellipsoid.cartesianToCartographic(cartesian);
             this._mouseHandler.setInputAction(function (movement) {
                 that.handleRegionStop(movement);
-            }, Cesium.ScreenSpaceEventType.LEFT_UP, Cesium.KeyboardEventModifier.SHIFT);
+            }, ScreenSpaceEventType.LEFT_UP, KeyboardEventModifier.SHIFT);
             this._mouseHandler.setInputAction(function (movement) {
                 that.handleRegionInter(movement);
-            }, Cesium.ScreenSpaceEventType.MOUSE_MOVE, Cesium.KeyboardEventModifier.SHIFT);
+            }, ScreenSpaceEventType.MOUSE_MOVE, KeyboardEventModifier.SHIFT);
         }
     };
 
@@ -482,7 +520,7 @@ define([
         // Now wait for start
         this._mouseHandler.setInputAction(function (movement) {
             that.handleRegionStart(movement);
-        }, Cesium.ScreenSpaceEventType.LEFT_DOWN, Cesium.KeyboardEventModifier.SHIFT);
+        }, ScreenSpaceEventType.LEFT_DOWN, KeyboardEventModifier.SHIFT);
     };
 
     DrawExtentHelper.prototype.destroy = function () {
@@ -495,7 +533,7 @@ define([
     // -------------------------------------------
     AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
         if (bActive) {
-            this.regionPolylines = new Cesium.PolylineCollection();
+            this.regionPolylines = new PolylineCollection();
             this.scene.primitives.add(this.regionPolylines);
             var that = this;
             this.regionSelect = new DrawExtentHelper(this.scene, function (ext) {
@@ -507,19 +545,19 @@ define([
                     updateCameraFromRect(that.scene, that.map, ext, 1000);
                     // Display polyline based on ext
                     var east = ext.east, west = ext.west, north = ext.north, south = ext.south;
-                    var ellipsoid = Cesium.Ellipsoid.WGS84;
+                    var ellipsoid = Ellipsoid.WGS84;
                     that.regionPolylines.add({
                         positions : ellipsoid.cartographicArrayToCartesianArray(
                             [
-                                new Cesium.Cartographic(west, south),
-                                new Cesium.Cartographic(west, north),
-                                new Cesium.Cartographic(east, north),
-                                new Cesium.Cartographic(east, south),
-                                new Cesium.Cartographic(west, south)
+                                new Cartographic(west, south),
+                                new Cartographic(west, north),
+                                new Cartographic(east, north),
+                                new Cartographic(east, south),
+                                new Cartographic(west, south)
                             ]),
                         width: 3.0,
-                        material : Cesium.Material.fromType('Color', {
-                            color : new Cesium.Color(0.8, 0.8, 0.0, 0.5)
+                        material : Material.fromType('Color', {
+                            color : new Color(0.8, 0.8, 0.0, 0.5)
                         })
                     });
                 }
@@ -575,7 +613,7 @@ define([
     function stopTimeline(viewer) {
         hideTimeline();
         if (viewer !== undefined) {
-            viewer.clock.clockRange = Cesium.ClockRange.UNBOUNDED;
+            viewer.clock.clockRange = ClockRange.UNBOUNDED;
             viewer.clock.shouldAnimate = false;
         }
     }
@@ -594,7 +632,7 @@ define([
             clock.currentTime = start;
             clock.stopTime = finish;
             clock.multiplier = start.getSecondsDifference(finish) / 60.0;
-            clock.clockRange = Cesium.ClockRange.LOOP_STOP;
+            clock.clockRange = ClockRange.LOOP_STOP;
             clock.shouldAnimate = true;
             viewer.timeline.zoomTo(clock.startTime, clock.stopTime);
         }
@@ -676,7 +714,7 @@ define([
     AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
         //use our own bing maps key
-        Cesium.BingMapsApi.defaultKey = 'Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk';
+        BingMapsApi.defaultKey = 'Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk';
 
         var options = {
             homeButton: false,
@@ -708,7 +746,7 @@ define([
 
         //TODO: replace cesium & bing icon with hightlighted text like leaflet to reduce footprint
 //        var creditDisplay = scene.frameState.creditDisplay;
-//        var cesiumCredit = new Cesium.Credit('Cesium', '', 'http://cesiumjs.org/');
+//        var cesiumCredit = new Credit('Cesium', '', 'http://cesiumjs.org/');
 //        creditDisplay.addDefaultCredit(cesiumCredit);
 
         //TODO: set based on platform
@@ -716,26 +754,26 @@ define([
 
         // Add double click zoom
         var that = this;
-        this.mouseZoomHandler = new Cesium.ScreenSpaceEventHandler(canvas);
+        this.mouseZoomHandler = new ScreenSpaceEventHandler(canvas);
         this.mouseZoomHandler.setInputAction(
             function (movement) {
                 zoomIn(that.scene, movement.position);
             },
-            Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+            ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
         this.mouseZoomHandler.setInputAction(
             function (movement) {
                 zoomOut(that.scene, movement.position);
             },
-            Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK, Cesium.KeyboardEventModifier.SHIFT);
+            ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
 
         // Show mouse position and height if terrain on
-        this.mouseOverPosHandler = new Cesium.ScreenSpaceEventHandler(canvas);
+        this.mouseOverPosHandler = new ScreenSpaceEventHandler(canvas);
         this.mouseOverPosHandler.setInputAction( function (movement) {
             var terrainProvider = scene.globe.terrainProvider;
             var cartesian = camera.pickEllipsoid(movement.endPosition, ellipsoid);
             if (cartesian) {
-                if (terrainProvider instanceof Cesium.EllipsoidTerrainProvider) {
+                if (terrainProvider instanceof EllipsoidTerrainProvider) {
                     //flat earth
                     document.getElementById('position').innerHTML = cartesianToDegreeString(scene, cartesian);
                 }
@@ -750,22 +788,22 @@ define([
                     //TODO: vary tile level based based on camera height
                     var tileLevel = 5;
                     try {
-                        Cesium.when(Cesium.sampleTerrain(terrainProvider, tileLevel, terrainPos), sampleTerrainSuccess);
+                        when(sampleTerrain(terrainProvider, tileLevel, terrainPos), sampleTerrainSuccess);
                     } catch (e) {};
                 }
             }
             else {
                 document.getElementById('position').innerHTML = "";
             }
-        }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+        }, ScreenSpaceEventType.MOUSE_MOVE);
 
 
         //Opening scene
         //TODO: based on perf test to see if we can do some animation at startup
-        var e = new Cesium.Cartesian3(-5696178.715241763, 5664619.403367736, -4108462.746194852);
-        var v = new Cesium.Cartesian3(0.6306011721197975, -0.6271116358860636, 0.45724518352430904);
-        var u = new Cesium.Cartesian3(-0.3415299812150222, 0.3048158142378301, 0.8890695080602443);
-        camera.lookAt(e, Cesium.Cartesian3.add(e,v), u);
+        var e = new Cartesian3(-5696178.715241763, 5664619.403367736, -4108462.746194852);
+        var v = new Cartesian3(0.6306011721197975, -0.6271116358860636, 0.45724518352430904);
+        var u = new Cartesian3(-0.3415299812150222, 0.3048158142378301, 0.8890695080602443);
+        camera.lookAt(e, Cartesian3.add(e,v), u);
 
         return viewer;
     }
@@ -807,8 +845,8 @@ define([
 
             if (this.viewer !== undefined) {
                 var rect = getCameraRect(this.scene);
-                var bnds = [[Cesium.Math.toDegrees(rect.south), Cesium.Math.toDegrees(rect.west)],
-                    [Cesium.Math.toDegrees(rect.north), Cesium.Math.toDegrees(rect.east)]];
+                var bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
+                    [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
                 map.fitBounds(bnds);
             }
 
@@ -829,9 +867,9 @@ define([
                 this._enableSelectExtent(false);
                 stopTimeline();
 
-                this.mouseOverPosHandler.removeInputAction( Cesium.ScreenSpaceEventType.MOUSE_MOVE );
-                this.mouseZoomHandler.removeInputAction( Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
-                this.mouseZoomHandler.removeInputAction( Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK, Cesium.KeyboardEventModifier.SHIFT );
+                this.mouseOverPosHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
+                this.mouseZoomHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
+                this.mouseZoomHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
 
                 this.scene.primitives.removeAll();
                 this.viewer.destroy();
@@ -875,7 +913,7 @@ define([
 
             if (this.map !== undefined) {
                 var bnds = this.map.getBounds()
-                var rect = Cesium.Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
+                var rect = Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
                 updateCameraFromRect(this.scene, undefined, rect, 0);
             }
 
@@ -887,9 +925,9 @@ define([
             document.getElementById('controls').style.visibility = 'visible';
             document.getElementById('position').style.visibility = 'visible';
             /*
-             var esri = new Cesium.ArcGisMapServerImageryProvider({
+             var esri = new ArcGisMapServerImageryProvider({
              url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
-             proxy: new Cesium.DefaultProxy('/proxy/')
+             proxy: new DefaultProxy('/proxy/')
              });
              this.scene.globe.imageryLayers.addImageryProvider(esri);
              */
