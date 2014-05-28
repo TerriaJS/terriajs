@@ -217,6 +217,14 @@ li {
     font-family: sans-serif;
 }
 
+a.ausglobe-title-menuItem {
+    text-decoration: none;
+}
+
+a.ausglobe-title-menuItem:hover {
+    text-decoration: underline;
+}
+
 .ausglobe-title-menuItem-divider {
     position: relative;
     display: inline;

@@ -16,7 +16,9 @@ define([
      */
     var TitleWidget = function(options) {
         var container = getElement(options.container);
-        var viewModel = new TitleWidgetViewModel();
+        var viewModel = new TitleWidgetViewModel({
+            menuItems : options.menuItems
+        });
 
         var wrapper = document.createElement('div');
         wrapper.className = 'ausglobe-title-area';
@@ -38,9 +40,9 @@ define([
         menuItemDivider.innerText = '|';
         titleMenu.appendChild(menuItemDivider);
 
-        var menuItem = document.createElement('div');
+        var menuItem = document.createElement('a');
         menuItem.className = 'ausglobe-title-menuItem';
-        menuItem.setAttribute('data-bind', 'text: $data');
+        menuItem.setAttribute('data-bind', 'visible: typeof uri !== "undefined", text: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem');
         titleMenu.appendChild(menuItem);
 
         knockout.applyBindings(viewModel, wrapper);

@@ -16,7 +16,29 @@ define([
     var AusGlobeViewer = function(geoDataManager) {
 
         var titleWidget = new TitleWidget({
-            container : document.body
+            container : document.body,
+            menuItems : [
+                {
+                    label : 'Map Information',
+                    uri : 'http://www.nicta.com.au',
+                    target : '_blank'
+                },
+                {
+                    label : 'Help',
+                    uri : 'http://www.nicta.com.au'
+                },
+                {
+                    label : 'Fullscreen',
+                    uri : 'http://www.nicta.com.au'
+                },
+                {
+                    label : 'Share',
+                    uri : 'http://www.nicta.com.au',
+                    callback : function() {
+                        alert('Shared! (not really)');
+                    }
+                }
+            ]
         });
 
         var div = document.createElement('div');
