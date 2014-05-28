@@ -4,9 +4,21 @@
 */
 
 define([
-        'ausglobe'
+        'ausglobe',
+        'Cesium/Core/DeveloperError',
+        'Cesium/Core/loadJson',
+        'Cesium/Core/Math',
+        'Cesium/Core/Rectangle',
+        'Cesium/Core/ScreenSpaceEventType',
+        'Cesium/ThirdParty/when'
     ], function(
-        ausglobe) {
+        ausglobe,
+        DeveloperError,
+        loadJson,
+        CesiumMath,
+        Rectangle,
+        ScreenSpaceEventType,
+        when) {
     //---------------------------------------------
     // HTML Data Handling Widget
     //---------------------------------------------
@@ -60,7 +72,7 @@ define([
         var that = this;
         $("#add_button").click(function () { 
             closeDialogs(); 
-            Cesium.loadJson('./data_collection.json').then(function (obj) {
+            loadJson('./data_collection.json').then(function (obj) {
                 that.showSelectDialog(obj);
             });
         });
@@ -119,7 +131,7 @@ define([
         // -----------------------------
         // Handle mouse click on display object
         // -----------------------------
-    /*    var handler = new Cesium.ScreenSpaceEventHandler(this.scene.canvas);
+    /*    var handler = new ScreenSpaceEventHandler(this.scene.canvas);
         handler.setInputAction(
             function (movement) {
                 var pickedObject = that.scene.pick(movement.position);
@@ -133,7 +145,7 @@ define([
                     showHTMLTextDialog(dlg_title, dlg_text, false);
                 }
             },
-            Cesium.ScreenSpaceEventType.LEFT_CLICK);
+            ScreenSpaceEventType.LEFT_CLICK);
     */
 
         //Drag and drop support
@@ -190,11 +202,11 @@ define([
 
     function loadLocalFile(path) {
         if (typeof path === 'undefined') {
-            throw new Cesium.DeveloperError('path is required');
+            throw new DeveloperError('path is required');
         }
         var reader = new FileReader();
         reader.readAsText(path);
-        var deferred = Cesium.when.defer();
+        var deferred = when.defer();
         reader.onload = function (event) {
             var allText = event.target.result;
             deferred.resolve(allText);
@@ -218,7 +230,7 @@ define([
             var file = files[ndx];
             console.log(' - File Name: ' + file.name);
             if (that.geoDataManager.formatSupported(file.name)) {
-                Cesium.when(loadLocalFile(file), function (text) { 
+                when(loadLocalFile(file), function (text) {
                     if (!that.geoDataManager.loadText(text, file.name)) {
                         alert('This should have been handled but failed.');
                     }
@@ -302,21 +314,21 @@ define([
         if (layer.WGS84BoundingBox) {
             var lc = layer.WGS84BoundingBox.LowerCorner.split(" ");
             var uc = layer.WGS84BoundingBox.UpperCorner.split(" ");
-            rect = Cesium.Rectangle.fromDegrees(parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]));
+            rect = Rectangle.fromDegrees(parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]));
         }
         else if (layer.LatLonBoundingBox) {
             var box = layer.LatLonBoundingBox || layer.BoundingBox;
-            rect = Cesium.Rectangle.fromDegrees(parseFloat(box.minx), parseFloat(box.miny), 
+            rect = Rectangle.fromDegrees(parseFloat(box.minx), parseFloat(box.miny),
                 parseFloat(box.maxx), parseFloat(box.maxy));
         }
         else if (layer.EX_GeographicBoundingBox) {
             var box = layer.EX_GeographicBoundingBox;
-            rect = Cesium.Rectangle.fromDegrees(parseFloat(box.westBoundLongitude), parseFloat(box.southBoundLatitude), 
+            rect = Rectangle.fromDegrees(parseFloat(box.westBoundLongitude), parseFloat(box.southBoundLatitude),
                 parseFloat(box.eastBoundLongitude), parseFloat(box.northBoundLatitude));
         }
         else if (layer.BoundingBox) {
             var box = layer.BoundingBox;
-            rect = Cesium.Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south), 
+            rect = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
                 parseFloat(box.east), parseFloat(box.north));
         }
         return rect;
@@ -409,10 +421,10 @@ define([
                     //capture the layer extent for display and later use
                 data_extent = getOGCLayerExtent(layer);
                 if (data_extent) {
-                    text += '<br>'+Cesium.Math.toDegrees(data_extent.west).toFixed(3)
-                            +', '+Cesium.Math.toDegrees(data_extent.south).toFixed(3)
-                            +'<br>'+Cesium.Math.toDegrees(data_extent.east).toFixed(3)
-                            +', '+Cesium.Math.toDegrees(data_extent.north).toFixed(3);
+                    text += '<br>'+CesiumMath.toDegrees(data_extent.west).toFixed(3)
+                            +', '+CesiumMath.toDegrees(data_extent.south).toFixed(3)
+                            +'<br>'+CesiumMath.toDegrees(data_extent.east).toFixed(3)
+                            +', '+CesiumMath.toDegrees(data_extent.north).toFixed(3);
                 }
                 $('.info').html(text);
             }
@@ -605,7 +617,7 @@ define([
     // share the link handlers
     function fbShare(url, record_url, image_url) {
         //get the record from the server and use it to populate the fields
-        Cesium.when(Cesium.loadJson(record_url), function (obj) {
+        when(loadJson(record_url), function (obj) {
             var winWidth = 640;
             var winHeight = 480;
             var winTop = (screen.height / 2) - (winHeight / 2);
