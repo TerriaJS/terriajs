@@ -193,7 +193,7 @@ define([
         var strNS = cartographic.latitude < 0 ? 'S' : 'N';
         var strWE = cartographic.longitude < 0 ? 'W' : 'E';
         var text = 'Lat: ' + Math.abs(CesiumMath.toDegrees(cartographic.latitude)).toFixed(3) + '&deg; ' + strNS +
-            ' Lon: ' + Math.abs(CesiumMath.toDegrees(cartographic.longitude)).toFixed(3) + '&deg; ' + strWE;
+            ' | Lon: ' + Math.abs(CesiumMath.toDegrees(cartographic.longitude)).toFixed(3) + '&deg; ' + strWE;
         return text;
     }
 
@@ -782,7 +782,7 @@ define([
                     var terrainPos = [cartographic];
                     function sampleTerrainSuccess() {
                         var text = cartesianToDegreeString(scene, cartesian);
-                        text += ' Elev: ' + terrainPos[0].height.toFixed(1) + ' m';
+                        text += ' | Elev: ' + terrainPos[0].height.toFixed(1) + ' m';
                         document.getElementById('position').innerHTML = text;
                     }
                     //TODO: vary tile level based based on camera height
