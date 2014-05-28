@@ -328,23 +328,23 @@ a.ausglobe-title-menuItem:hover {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 0;
-    width: 0;
+    left: -300px;
+    width: 300px;
     background-color: white;
 
-    -webkit-transition: visibility 0s 0.25s, width 0.25s;
-    -moz-transition: visibility 0s 0.25s, width 0.25s;
-    -ms-transition: visibility 0s 0.25s, width 0.25s;
-    -o-transition: visibility 0s 0.25s, width 0.25s;
-    transition: visibility 0s 0.25s, width 0.25s;
+    -webkit-transition: visibility 0s 0.25s, left 0.25s;
+    -moz-transition: visibility 0s 0.25s, left 0.25s;
+    -ms-transition: visibility 0s 0.25s, left 0.25s;
+    -o-transition: visibility 0s 0.25s, left 0.25s;
+    transition: visibility 0s 0.25s, left 0.25s;
 }
 
 .ausglobe-panel-visible {
     visibility: visible;
-    width: 300px;
-    -webkit-transition: width 0.25s;
-    -moz-transition: width 0.25s;
-    -ms-transition: width 0.25s;
-    -o-transition: width 0.25s;
-    transition: width 0.25s;
+    left: 0;
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
 }

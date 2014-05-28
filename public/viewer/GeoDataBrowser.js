@@ -20,6 +20,7 @@ define([
         var dataPanel = document.createElement('div');
         dataPanel.className = 'ausglobe-panel';
         dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }');
+        dataPanel.innerText = 'This is a test of this panel thingy';
         wrapper.appendChild(dataPanel);
 
         var dataButton = document.createElement('div');
