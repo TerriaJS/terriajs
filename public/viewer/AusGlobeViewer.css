@@ -164,8 +164,8 @@ li {
 }
 
 .ausglobe-title-area {
-    position: relative;
-    top: 0;
+    position: absolute;
+    bottom: 0;
     left: 0;
     width: 100%;
     background-color:#333333;

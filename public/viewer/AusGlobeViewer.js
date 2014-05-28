@@ -5,9 +5,11 @@
 
 /*global define*/
 define([
+        'Cesium/Widgets/Viewer/Viewer',
         'ui/GeoDataWidget',
         'ui/TitleWidget'
     ], function(
+        Viewer,
         GeoDataWidget,
         TitleWidget) {
     //"use strict";
@@ -663,11 +665,13 @@ define([
         var options = {
             homeButton: false,
             sceneModePicker: false,
-            navigationInstructionsInitiallyVisible: false,
+            navigationHelpButton: false,
+            geocoder: false,
+            baseLayerPicker: false
         };
 
         //create CesiumViewer
-        var viewer = new Cesium.Viewer(container, options);
+        var viewer = new Viewer(container, options);
         var scene = viewer.scene;
         var canvas = scene.canvas;
         var globe = scene.globe;
