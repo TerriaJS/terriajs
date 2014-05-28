@@ -1,9 +1,11 @@
 /*global define*/
 define([
+        'Cesium/Core/defineProperties',
         'Cesium/Widgets/getElement',
         'ui/TitleWidgetViewModel',
         'knockout'
     ], function(
+        defineProperties,
         getElement,
         TitleWidgetViewModel,
         knockout) {
@@ -29,6 +31,10 @@ define([
         title.setAttribute('data-bind', 'text : title');
         wrapper.appendChild(title);
 
+        this._creditContainer = document.createElement('div');
+        this._creditContainer.className = 'ausglobe-title-credits';
+        wrapper.appendChild(this._creditContainer);
+
         var titleMenu = document.createElement('div');
         titleMenu.className = 'ausglobe-title-menu';
         titleMenu.setAttribute('data-bind', 'foreach: menuItems');
@@ -47,6 +53,14 @@ define([
 
         knockout.applyBindings(viewModel, wrapper);
     };
+
+    defineProperties(TitleWidget.prototype, {
+        creditContainer : {
+            get : function() {
+                return this._creditContainer;
+            }
+        }
+    });
 
     return TitleWidget;
 });

@@ -92,12 +92,16 @@ body {
 
 #position {
     position: absolute;
-    bottom: 25px;
-    right: 40px;
+    bottom: 50px;
+    right: 10px;
     width: auto;
     font-family: "Open Sans" sans-serif;
-    font-size: 10.5pt;
+    font-size: 8.5pt;
     color: #fff;
+    background-color:#333333;
+    opacity: 0.9;
+    border: 1px solid #555555;
+    padding: 3px;
 }
 
 #loadingIndicator {
@@ -187,7 +191,6 @@ li {
     font-family: "Open Sans" sans-serif;
     font-weight: 400;
     font-size: 14pt;
-    font-weight: bold;
     color: #fff;
     margin-left: 10px;
     margin-top: 5px;
@@ -234,3 +237,18 @@ a.ausglobe-title-menuItem:hover {
     padding-left: 5px;
     padding-right: 5px;
 }
+
+.ausglobe-title-credits {
+    position: absolute;
+    font-family: "Open Sans" sans-serif;
+    font-weight: 400;
+    font-size: 7.5pt;
+    color: #fff;
+    top: 0;
+    bottom: 0;
+    left: 200px;
+    right: 400px;
+    overflow: hidden;
+}
+
+.ausglobe-title-credits:o

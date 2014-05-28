@@ -5,10 +5,16 @@
 
 /*global define*/
 define([
+        'Cesium/Core/CesiumTerrainProvider',
+        'Cesium/Scene/BingMapsImageryProvider',
+        'Cesium/Scene/BingMapsStyle',
         'Cesium/Widgets/Viewer/Viewer',
         'ui/GeoDataWidget',
         'ui/TitleWidget'
     ], function(
+        CesiumTerrainProvider,
+        BingMapsImageryProvider,
+        BingMapsStyle,
         Viewer,
         GeoDataWidget,
         TitleWidget) {
@@ -16,6 +22,10 @@ define([
 
     //Initialize the selected viewer - Cesium or Leaflet
     var AusGlobeViewer = function(geoDataManager) {
+
+        this.geoDataManager = geoDataManager;
+
+        var that = this;
 
         var titleWidget = new TitleWidget({
             container : document.body,
@@ -37,11 +47,18 @@ define([
                     label : 'Share',
                     uri : 'http://www.nicta.com.au',
                     callback : function() {
-                        alert('Shared! (not really)');
+                        if (that.scene) {
+                            that.geoDataManager.shareRequest = true;
+                        }
+                        else {
+                            that.geoDataManager.setShareRequest({});
+                        }
                     }
                 }
             ]
         });
+
+        this._titleWidget = titleWidget;
 
         var div = document.createElement('div');
         div.id = 'controls';
@@ -114,7 +131,6 @@ define([
 
         var that = this;
         this.geoDataWidget = new GeoDataWidget(geoDataManager, function (layer) { setCurrentDataset(layer, that); });
-        this.geoDataManager = geoDataManager;
         this.scene = undefined;
         this.viewer = undefined;
         this.map = undefined;
@@ -135,11 +151,11 @@ define([
     // -------------------------------------------
     // Text Formatting
     // -------------------------------------------
-    function cartographictoDegreeString(scene, cartographic) {
+    function cartographicToDegreeString(scene, cartographic) {
         var strNS = cartographic.latitude < 0 ? 'S' : 'N';
         var strWE = cartographic.longitude < 0 ? 'W' : 'E';
-        var text = 'lat <strong>' + Math.abs(Cesium.Math.toDegrees(cartographic.latitude)).toFixed(3) + '</strong> ' + strNS +
-            ' lon <strong>' + Math.abs(Cesium.Math.toDegrees(cartographic.longitude)).toFixed(3) + '</strong> ' + strWE;
+        var text = 'Lat: ' + Math.abs(Cesium.Math.toDegrees(cartographic.latitude)).toFixed(3) + '&deg; ' + strNS +
+            ' Lon: ' + Math.abs(Cesium.Math.toDegrees(cartographic.longitude)).toFixed(3) + '&deg; ' + strWE;
         return text;
     }
 
@@ -147,14 +163,14 @@ define([
         var globe = scene.globe;
         var ellipsoid = globe.ellipsoid;
         var cartographic = ellipsoid.cartesianToCartographic(cartesian);
-        return cartographictoDegreeString(scene, cartographic);
+        return cartographicToDegreeString(scene, cartographic);
     }
 
     function rectangleToDegreeString(scene, rect) {
         var nw = new Cesium.Cartographic(rect.west, rect.north);
         var se = new Cesium.Cartographic(rect.east, rect.south);
-        var text = 'NW: ' + cartographictoDegreeString(scene, nw);
-        text += ', SE: ' + cartographictoDegreeString(scene, se);
+        var text = 'NW: ' + cartographicToDegreeString(scene, nw);
+        text += ', SE: ' + cartographicToDegreeString(scene, se);
         return text;
     }
 
@@ -665,9 +681,18 @@ define([
         var options = {
             homeButton: false,
             sceneModePicker: false,
-            navigationHelpButton: false,
+            navigationInstructionsInitiallyVisible: false,
             geocoder: false,
-            baseLayerPicker: false
+            baseLayerPicker: false,
+            navigationHelpButton: false,
+            imageryProvider : new BingMapsImageryProvider({
+                url : '//dev.virtualearth.net',
+                mapStyle : BingMapsStyle.AERIAL_WITH_LABELS
+            }),
+            terrainProvider : new CesiumTerrainProvider({
+                url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+            }),
+            creditContainer : this._titleWidget.creditContainer
         };
 
         //create CesiumViewer
@@ -678,11 +703,6 @@ define([
         var ellipsoid = globe.ellipsoid;
         var camera = scene.camera;
 
-        //set to bing with labels and small terrain
-        viewer.baseLayerPicker.viewModel.selectedImagery = viewer.baseLayerPicker.viewModel.imageryProviderViewModels[1];
-        viewer.baseLayerPicker.viewModel.selectedTerrain = viewer.baseLayerPicker.viewModel.terrainProviderViewModels[2];
-
-        globe.terrainProvider.hasWaterMask = function () { return false; };
         globe.depthTestAgainstTerrain = false
 
 
@@ -724,7 +744,7 @@ define([
                     var terrainPos = [cartographic];
                     function sampleTerrainSuccess() {
                         var text = cartesianToDegreeString(scene, cartesian);
-                        text += ' elev <strong>' + terrainPos[0].height.toFixed(1) + '</strong> m';
+                        text += ' Elev: ' + terrainPos[0].height.toFixed(1) + ' m';
                         document.getElementById('position').innerHTML = text;
                     }
                     //TODO: vary tile level based based on camera height
