@@ -27,7 +27,14 @@ body {
     width: 180px;
 }
 
-#menu {
+.menu {
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 200px;
+}
+
+.menuItem {
     opacity: 0.95;
     font-size: 9.5pt;
     padding: 2px;
@@ -249,4 +256,87 @@ a.ausglobe-title-menuItem:hover {
     left: 200px;
     right: 400px;
     overflow: hidden;
+}
+
+.ausglobe-left-area {
+    position: absolute;
+    left: 10px;
+    width: 300px;
+    top: 10px;
+    bottom: 80px;
+    pointer-events: none;
+}
+
+.ausglobe-panel-button {
+    pointer-events: auto;
+    position: relative;
+    height: 30px;
+    border: 1px solid #555555;
+    width: 80px;
+    left: 0;
+    opacity: 0.95;
+    font-size: 9.5pt;
+    padding: 2px;
+    background-color: #333333;
+    line-height: 30px;
+    cursor: pointer;
+
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
+}
+
+.ausglobe-panel-button-panel-visible {
+    left: 300px;
+
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
+}
+
+.ausglobe-panel-button-image {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.ausglobe-panel-button-label {
+    position: relative;
+    left: 25px;
+    color: #fff;
+    font-size: 11pt;
+    font-family: "Open Sans" sans-serif;
+}
+
+.ausglobe-panel {
+    visibility: hidden;
+    pointer-events: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    background-color: white;
+
+    -webkit-transition: visibility 0s 0.25s, width 0.25s;
+    -moz-transition: visibility 0s 0.25s, width 0.25s;
+    -ms-transition: visibility 0s 0.25s, width 0.25s;
+    -o-transition: visibility 0s 0.25s, width 0.25s;
+    transition: visibility 0s 0.25s, width 0.25s;
+}
+
+.ausglobe-panel-visible {
+    visibility: visible;
+    width: 300px;
+    -webkit-transition: width 0.25s;
+    -moz-transition: width 0.25s;
+    -ms-transition: width 0.25s;
+    -o-transition: width 0.25s;
+    transition: width 0.25s;
 }

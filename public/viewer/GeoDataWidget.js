@@ -44,20 +44,24 @@ define([
 //        div.innerHTML = '<p>National Map</p>';
 //        document.body.appendChild(div);
 
+        var menu = document.createElement('div');
+        menu.className = 'menu';
+        document.body.appendChild(menu);
+
         div = document.createElement('div');
-        div.id = 'menu';
+        div.className = 'menuItem';
         div.innerHTML = '<span id="add_button" class="menu_button" title="Add maps and data">Data</span>';
-        document.body.appendChild(div);
+        menu.appendChild(div);
         
         div = document.createElement('div');
-        div.id = 'menu';
+        div.className = 'menuItem';
         div.innerHTML = '<span id="mod_button" class="menu_button" title="Edit your maps and data">Edit</span>';
-        document.body.appendChild(div);
+        menu.appendChild(div);
         
         div = document.createElement('div');
-        div.id = 'menu';
+        div.className = 'menuItem';
         div.innerHTML = '<span id="share_button" class="menu_button" title="Share what you\'ve created">Share</span>';
-        document.body.appendChild(div);
+        menu.appendChild(div);
         
         $(".menu_button").button({
             text: true,

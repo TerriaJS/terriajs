@@ -28,6 +28,7 @@ define([
         'Cesium/Scene/SceneMode',
         'Cesium/ThirdParty/when',
         'Cesium/Widgets/Viewer/Viewer',
+        'ui/GeoDataBrowser',
         'ui/GeoDataWidget',
         'ui/TitleWidget'
     ], function(
@@ -54,6 +55,7 @@ define([
         SceneMode,
         when,
         Viewer,
+        GeoDataBrowser,
         GeoDataWidget,
         TitleWidget) {
     //"use strict";
@@ -134,6 +136,10 @@ define([
                 </table>';
         document.body.appendChild(div);
 
+        var leftArea = document.createElement('div');
+        leftArea.className = 'ausglobe-left-area';
+        document.body.appendChild(leftArea);
+
         var css = { 'background': '#333333',
             'color': '#eeeeee',
             'border-color': '#555555',
@@ -172,6 +178,10 @@ define([
         this.scene = undefined;
         this.viewer = undefined;
         this.map = undefined;
+
+        this.geoDataBrowser = new GeoDataBrowser({
+            container : leftArea
+        });
 
         this.webGlSupported = supportsWebgl();
 
