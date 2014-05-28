@@ -260,7 +260,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-left-area {
     position: absolute;
-    left: 10px;
+    left: 0;
     width: 300px;
     top: 10px;
     bottom: 80px;
@@ -286,6 +286,14 @@ a.ausglobe-title-menuItem:hover {
     -ms-transition: left 0.25s;
     -o-transition: left 0.25s;
     transition: left 0.25s;
+}
+
+.ausglobe-panel-button:hover {
+    color: #fff;  /* For text buttons */
+    fill: #fff;   /* For SVG buttons */
+    background: #48b;
+    border-color: #aef;
+    box-shadow: 0 0 8px #fff;
 }
 
 .ausglobe-panel-button-panel-visible {
