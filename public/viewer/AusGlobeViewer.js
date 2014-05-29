@@ -14,6 +14,7 @@ define([
         'Cesium/Core/Color',
         'Cesium/Core/Ellipsoid',
         'Cesium/Core/EllipsoidTerrainProvider',
+        'Cesium/Core/Fullscreen',
         'Cesium/Core/KeyboardEventModifier',
         'Cesium/Core/loadJson',
         'Cesium/Core/Math',
@@ -44,6 +45,7 @@ define([
         Color,
         Ellipsoid,
         EllipsoidTerrainProvider,
+        Fullscreen,
         KeyboardEventModifier,
         loadJson,
         CesiumMath,
@@ -87,7 +89,9 @@ define([
                 },
                 {
                     label : 'Fullscreen',
-                    uri : 'http://www.nicta.com.au'
+                    callback : function() {
+                        Fullscreen.requestFullscreen(document.body);
+                    }
                 },
                 {
                     label : 'Share',
@@ -651,20 +655,18 @@ define([
     //------------------------------------
     // Timeline display on selection
     //------------------------------------
-    function showTimeline() {
-        $('.cesium-viewer-timelineContainer').show();
-        $('.cesium-viewer-animationContainer').show();
+    function showTimeline(viewer) {
+        viewer.timeline.show = true;
+        viewer.animation.show = true;
     }
 
-    function hideTimeline() {
-        $('.cesium-viewer-timelineContainer').hide();
-        $('.cesium-viewer-animationContainer').hide();
+    function hideTimeline(viewer) {
+        viewer.timeline.show = false;
+        viewer.animation.show = false;
     }
-
-    hideTimeline();
 
     function stopTimeline(viewer) {
-        hideTimeline();
+        hideTimeline(viewer);
         if (viewer !== undefined) {
             viewer.clock.clockRange = ClockRange.UNBOUNDED;
             viewer.clock.shouldAnimate = false;
@@ -677,7 +679,7 @@ define([
             stopTimeline(viewer);
             return;
         }
-        showTimeline();
+        showTimeline(viewer);
         //update clock
         if (viewer !== undefined) {
             var clock = viewer.clock;
@@ -776,18 +778,19 @@ define([
             geocoder: false,
             baseLayerPicker: false,
             navigationHelpButton: false,
+            fullscreenButton : false,
             imageryProvider : new BingMapsImageryProvider({
                 url : '//dev.virtualearth.net',
                 mapStyle : BingMapsStyle.AERIAL_WITH_LABELS
             }),
             terrainProvider : new CesiumTerrainProvider({
                 url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
-            }),
-            creditContainer : this._titleWidget.creditContainer
+            })
         };
 
         //create CesiumViewer
         var viewer = new Viewer(container, options);
+
         var scene = viewer.scene;
         var canvas = scene.canvas;
         var globe = scene.globe;

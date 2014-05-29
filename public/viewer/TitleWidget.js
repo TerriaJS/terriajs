@@ -48,7 +48,7 @@ define([
 
         var menuItem = document.createElement('a');
         menuItem.className = 'ausglobe-title-menuItem';
-        menuItem.setAttribute('data-bind', 'visible: typeof uri !== "undefined", text: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem');
+        menuItem.setAttribute('data-bind', 'text: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem');
         titleMenu.appendChild(menuItem);
 
         knockout.applyBindings(viewModel, wrapper);
