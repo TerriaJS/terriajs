@@ -424,7 +424,6 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-accordion-category-item-label {
     display: inline-block;
     position: relative;
-    right: 0;
     font-size: 11pt;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -439,5 +438,17 @@ a.ausglobe-title-menuItem:hover {
     display: inline-block;
     position: relative;
     top: 4px;
+    cursor: pointer;
+}
+
+.ausglobe-accordion-category-item-infoButton {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    font-size: 9pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    color: #0066CC;
     cursor: pointer;
 }
