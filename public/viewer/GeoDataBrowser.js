@@ -24,15 +24,19 @@ define([
             <div class="ausglobe-accordion-item">\
                 <div class="ausglobe-accordion-item-header" data-bind="click: $parent.openItem">\
                     <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
+                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: $root.openIndex === $index()" />\
+                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: $root.openIndex !== $index()" />\
                 </div>\
                 <div class="ausglobe-accordion-item-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-item-content-visible\': $parent.openIndex === $index() }">\
                     <div class="ausglobe-accordion-category">\
-                        <div class="ausglobe-accordion-category-header">\
+                        <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
                             <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                         </div>\
-                        <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer">\
+                        <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
                             <div class="ausglobe-accordion-category-item">\
-                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Name"></div>\
+                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title"></div>\
                             </div>\
                         </div>\
                     </div>\

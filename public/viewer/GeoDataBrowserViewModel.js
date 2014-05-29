@@ -23,6 +23,10 @@ define([
             that.openIndex = that.content.indexOf(item);
         });
 
+        this._toggleCategoryOpen = createCommand(function(item) {
+            item.isOpen(!item.isOpen());
+        });
+
         knockout.track(this, ['showingPanel', 'openIndex']);
     };
 
@@ -36,6 +40,12 @@ define([
         openItem : {
             get : function() {
                 return this._openItem;
+            }
+        },
+
+        toggleCategoryOpen : {
+            get : function() {
+                return this._toggleCategoryOpen;
             }
         }
     });

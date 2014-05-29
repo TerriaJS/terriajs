@@ -32,6 +32,7 @@ define([
         'ui/GeoDataBrowser',
         'ui/GeoDataWidget',
         'ui/TitleWidget',
+        'knockout',
         'knockout.mapping'
     ], function(
         BingMapsApi,
@@ -61,6 +62,7 @@ define([
         GeoDataBrowser,
         GeoDataWidget,
         TitleWidget,
+        knockout,
         komapping) {
     //"use strict";
 
@@ -184,6 +186,13 @@ define([
         this.map = undefined;
 
         var browserContentMapping = {
+            Layer : {
+                create: function (options) {
+                    var layerViewModel = komapping.fromJS(options.data);
+                    layerViewModel.isOpen = knockout.observable(false);
+                    return layerViewModel;
+                }
+            }
         };
 
         var browserContentViewModel = komapping.fromJS([], browserContentMapping);

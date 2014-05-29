@@ -289,7 +289,7 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-panel-button-panel-visible {
-    left: 300px;
+    left: 310px;
 
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
@@ -331,7 +331,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-panel-visible {
     visibility: visible;
-    left: 0;
+    left: 10px;
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
     -ms-transition: left 0.25s;
@@ -343,22 +343,31 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-item-header {
+    position: relative;
     margin: 1px;
     background-color: #E3E4E5;
     cursor: pointer;
 }
 
 .ausglobe-accordion-item-header-label {
+    display: inline-block;
     padding: 10px;
     color: #0066CC;
     font-weight: bold;
     font-size: 12pt
 }
 
+.ausglobe-accordion-item-header-arrow {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
 .ausglobe-accordion-item-content {
     visibility: hidden;
     position: relative;
-    max-height: 0px; /* TODO: set this dynamically based on number of accordion items */
+    max-height: 0px;
     overflow: auto;
 
     -webkit-transition: max-height 0.25s, visibility 0s 0.25s;
@@ -370,7 +379,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-item-content-visible {
     visibility: visible;
-    max-height: 400px;
+    max-height: 400px; /* TODO: set this dynamically based on number of accordion items */
 
     -webkit-transition: max-height 0.25s;
     -moz-transition: max-height 0.25s;
@@ -384,15 +393,27 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-category-header {
+    cursor: pointer;
+}
+
+.ausglobe-accordion-category-header-arrow {
+    display: inline-block;
+    position: relative;
+    top: 5px;
 }
 
 .ausglobe-accordion-category-header-label {
+    display: inline-block;
     color: #0066CC;
     font-size: 11pt;
 }
 
 .ausglobe-accordion-category-content {
+    display: none;
+}
 
+.ausglobe-accordion-category-content-visible {
+    display: inline-block;
 }
 
 .ausglobe-accordion-category-item-label {
