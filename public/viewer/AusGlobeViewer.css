@@ -3,6 +3,7 @@ body {
     margin: 0;
     overflow: hidden;
     font-size:12px;
+    font-family: "Open Sans" sans-serif;
 }
 
 #cesiumContainer {
@@ -14,12 +15,10 @@ body {
     margin: 0;
     overflow: hidden;
     padding: 0;
-    font-family: "Open Sans" sans-serif;
 }
 
 #product {
     opacity: 0.99;
-    font-family: "Open Sans" sans-serif;
     font-size: 18pt;
     margin: 10px;
     padding: 0;
@@ -74,7 +73,6 @@ body {
     height: 136px;
     background-color: rgba(0,0,0,0.8);
     color: #eee;
-    font-family: "Open Sans" sans-serif;
     font-size: 11pt;
 }
 
@@ -102,7 +100,6 @@ body {
     bottom: 50px;
     right: 10px;
     width: auto;
-    font-family: "Open Sans" sans-serif;
     font-size: 8.5pt;
     color: #fff;
     background-color:#333333;
@@ -128,7 +125,6 @@ body {
 
 .dialog {
     display: none;
-    font-family: "Open Sans" sans-serif;
     font-size: 9.5pt;
     width: 300px;
     opacity: 0.9;
@@ -195,7 +191,6 @@ li {
 
 .ausglobe-title-text {
     display: inline-block;
-    font-family: "Open Sans" sans-serif;
     font-weight: 400;
     font-size: 14pt;
     color: #fff;
@@ -224,7 +219,6 @@ li {
     display: inline;
     color: #9A9A9B;
     font-size: 10pt;
-    font-family: "Open Sans" sans-serif;
 }
 
 a.ausglobe-title-menuItem {
@@ -240,14 +234,12 @@ a.ausglobe-title-menuItem:hover {
     display: inline;
     color: #9A9A9B;
     font-size: 10pt;
-    font-family: "Open Sans" sans-serif;
     padding-left: 5px;
     padding-right: 5px;
 }
 
 .ausglobe-title-credits {
     position: absolute;
-    font-family: "Open Sans" sans-serif;
     font-weight: 400;
     font-size: 7.5pt;
     color: #fff;
@@ -319,18 +311,16 @@ a.ausglobe-title-menuItem:hover {
     left: 25px;
     color: #fff;
     font-size: 11pt;
-    font-family: "Open Sans" sans-serif;
 }
 
 .ausglobe-panel {
     visibility: hidden;
-    pointer-events: auto;
     position: absolute;
     top: 0;
-    bottom: 0;
     left: -300px;
     width: 300px;
-    background-color: white;
+    background-color: #FFFFFF;
+    pointer-events: auto;
 
     -webkit-transition: visibility 0s 0.25s, left 0.25s;
     -moz-transition: visibility 0s 0.25s, left 0.25s;
@@ -347,4 +337,50 @@ a.ausglobe-title-menuItem:hover {
     -ms-transition: left 0.25s;
     -o-transition: left 0.25s;
     transition: left 0.25s;
+}
+
+.ausglobe-accordion-item {
+}
+
+.ausglobe-accordion-item-header {
+    margin: 1px;
+    background-color: #E3E4E5;
+}
+
+.ausglobe-accordion-item-header-label {
+    padding: 10px;
+    color: #0066CC;
+    font-weight: bold;
+    font-size: 12pt
+}
+
+.ausglobe-accordion-item-content {
+    visibility: hidden;
+    display: none;
+    padding: 10px;
+    max-height: 400px; /* TODO: set this dynamically based on number of accordion items */
+    overflow: auto;
+}
+
+.ausglobe-accordion-item-content-visible {
+    visibility: visible;
+    display: block;
+}
+
+.ausglobe-accordion-category {
+}
+
+.ausglobe-accordion-category-header {
+}
+
+.ausglobe-accordion-category-header-label {
+    color: #0066CC;
+    font-size: 11pt;
+}
+
+.ausglobe-accordion-category-content {
+
+}
+
+.ausglobe-accordion-category-item-label {
 }

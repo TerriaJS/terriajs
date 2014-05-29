@@ -3,7 +3,8 @@ var require = {
     paths: {
         'Cesium': './cesium/Source',
         'ui': './viewer',
-        'domReady': './cesium/ThirdParty/requirejs-2.1.9/domReady'
+        'domReady': './cesium/ThirdParty/requirejs-2.1.9/domReady',
+        'knockout.mapping': './third_party/knockout.mapping'
     }, map: {
         '*': {
             'knockout': 'Cesium/ThirdParty/knockout'

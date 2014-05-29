@@ -15,6 +15,7 @@ define([
         'Cesium/Core/Ellipsoid',
         'Cesium/Core/EllipsoidTerrainProvider',
         'Cesium/Core/KeyboardEventModifier',
+        'Cesium/Core/loadJson',
         'Cesium/Core/Math',
         'Cesium/Core/Rectangle',
         'Cesium/Core/sampleTerrain',
@@ -30,7 +31,8 @@ define([
         'Cesium/Widgets/Viewer/Viewer',
         'ui/GeoDataBrowser',
         'ui/GeoDataWidget',
-        'ui/TitleWidget'
+        'ui/TitleWidget',
+        'knockout.mapping'
     ], function(
         BingMapsApi,
         Cartesian2,
@@ -42,6 +44,7 @@ define([
         Ellipsoid,
         EllipsoidTerrainProvider,
         KeyboardEventModifier,
+        loadJson,
         CesiumMath,
         Rectangle,
         sampleTerrain,
@@ -57,7 +60,8 @@ define([
         Viewer,
         GeoDataBrowser,
         GeoDataWidget,
-        TitleWidget) {
+        TitleWidget,
+        komapping) {
     //"use strict";
 
     //Initialize the selected viewer - Cesium or Leaflet
@@ -179,8 +183,28 @@ define([
         this.viewer = undefined;
         this.map = undefined;
 
+        var browserContentMapping = {
+        };
+
+        var browserContentViewModel = komapping.fromJS([], browserContentMapping);
+
+        var test = {
+            name : 'Test',
+            Layer : [
+                {
+                    name : 'Sub-test',
+                    Layer : []
+                }
+            ]
+        };
+
+        when(loadJson('./data_collection.json'), function(dataCollection) {
+            komapping.fromJS([dataCollection, test], browserContentMapping, browserContentViewModel);
+        });
+
         this.geoDataBrowser = new GeoDataBrowser({
-            container : leftArea
+            container : leftArea,
+            content : browserContentViewModel
         });
 
         this.webGlSupported = supportsWebgl();
