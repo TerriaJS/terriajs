@@ -172,7 +172,7 @@ li {
 
 .ausglobe-title-area {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
     background-color:#333333;
@@ -254,7 +254,7 @@ a.ausglobe-title-menuItem:hover {
     position: absolute;
     left: 0;
     width: 300px;
-    top: 10px;
+    top: 50px;
     bottom: 80px;
     pointer-events: none;
 }
