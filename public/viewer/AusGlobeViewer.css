@@ -345,6 +345,7 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-accordion-item-header {
     margin: 1px;
     background-color: #E3E4E5;
+    cursor: pointer;
 }
 
 .ausglobe-accordion-item-header-label {
@@ -356,18 +357,30 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-item-content {
     visibility: hidden;
-    display: none;
-    padding: 10px;
-    max-height: 400px; /* TODO: set this dynamically based on number of accordion items */
+    position: relative;
+    max-height: 0px; /* TODO: set this dynamically based on number of accordion items */
     overflow: auto;
+
+    -webkit-transition: max-height 0.25s, visibility 0s 0.25s;
+    -moz-transition: max-height 0.25s, visibility 0s 0.25s;
+    -ms-transition: max-height 0.25s, visibility 0s 0.25s;
+    -o-transition: max-height 0.25s, visibility 0s 0.25s;
+    transition: max-height 0.25s, visibility 0s 0.25s;
 }
 
 .ausglobe-accordion-item-content-visible {
     visibility: visible;
-    display: block;
+    max-height: 400px;
+
+    -webkit-transition: max-height 0.25s;
+    -moz-transition: max-height 0.25s;
+    -ms-transition: max-height 0.25s;
+    -o-transition: max-height 0.25s;
+    transition: max-height 0.25s;
 }
 
 .ausglobe-accordion-category {
+    padding: 10px;
 }
 
 .ausglobe-accordion-category-header {
