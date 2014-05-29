@@ -185,10 +185,20 @@ define([
         this.viewer = undefined;
         this.map = undefined;
 
+        var categoryMapping = {
+            Layer : {
+                create : function(options) {
+                    var layerViewModel = komapping.fromJS(options.data);
+                    layerViewModel.isEnabled = knockout.observable(false);
+                    return layerViewModel;
+                }
+            }
+        };
+
         var browserContentMapping = {
             Layer : {
-                create: function (options) {
-                    var layerViewModel = komapping.fromJS(options.data);
+                create : function(options) {
+                    var layerViewModel = komapping.fromJS(options.data, categoryMapping);
                     layerViewModel.isOpen = knockout.observable(false);
                     return layerViewModel;
                 }

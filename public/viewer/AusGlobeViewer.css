@@ -410,6 +410,8 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-category-content {
     display: none;
+    position: relative;
+    width: 100%;
 }
 
 .ausglobe-accordion-category-content-visible {
@@ -417,4 +419,13 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-category-item-label {
+    position: relative;
+    right: 0;
+    font-size: 11pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.ausglobe-accordion-category-item-enabled {
+    background-color: #CCDDD8;
 }

@@ -27,6 +27,10 @@ define([
             item.isOpen(!item.isOpen());
         });
 
+        this._toggleItemEnabled = createCommand(function(item) {
+            item.isEnabled(!item.isEnabled());
+        });
+
         knockout.track(this, ['showingPanel', 'openIndex']);
     };
 
@@ -46,6 +50,12 @@ define([
         toggleCategoryOpen : {
             get : function() {
                 return this._toggleCategoryOpen;
+            }
+        },
+
+        toggleItemEnabled : {
+            get : function() {
+                return this._toggleItemEnabled;
             }
         }
     });

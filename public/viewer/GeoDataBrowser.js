@@ -35,7 +35,7 @@ define([
                             <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                         </div>\
                         <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
-                            <div class="ausglobe-accordion-category-item">\
+                            <div class="ausglobe-accordion-category-item" data-bind="click: $root.toggleItemEnabled, css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
                                 <div class="ausglobe-accordion-category-item-label" data-bind="text: Title"></div>\
                             </div>\
                         </div>\
