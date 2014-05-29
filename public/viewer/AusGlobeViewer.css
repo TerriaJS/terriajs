@@ -418,7 +418,12 @@ a.ausglobe-title-menuItem:hover {
     display: inline-block;
 }
 
+.ausglobe-accordion-category-item {
+    cursor: pointer;
+}
+
 .ausglobe-accordion-category-item-label {
+    display: inline-block;
     position: relative;
     right: 0;
     font-size: 11pt;
@@ -428,4 +433,10 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-category-item-enabled {
     background-color: #CCDDD8;
+}
+
+.ausglobe-accordion-category-item-checkbox {
+    display: inline-block;
+    position: relative;
+    top: 4px;
 }
