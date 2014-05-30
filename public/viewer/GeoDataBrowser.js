@@ -11,7 +11,7 @@ define([
     var GeoDataBrowser = function(options) {
         var container = getElement(options.container);
 
-        this._viewModel = new GeoDataBrowserViewModel(options.content);
+        this._viewModel = new GeoDataBrowserViewModel(options.content, options.dataManager);
 
         var wrapper = document.createElement('div');
         container.appendChild(wrapper);

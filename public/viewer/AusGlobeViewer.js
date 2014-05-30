@@ -12,6 +12,7 @@ define([
         'Cesium/Core/CesiumTerrainProvider',
         'Cesium/Core/ClockRange',
         'Cesium/Core/Color',
+        'Cesium/Core/combine',
         'Cesium/Core/Ellipsoid',
         'Cesium/Core/EllipsoidTerrainProvider',
         'Cesium/Core/Fullscreen',
@@ -43,6 +44,7 @@ define([
         CesiumTerrainProvider,
         ClockRange,
         Color,
+        combine,
         Ellipsoid,
         EllipsoidTerrainProvider,
         Fullscreen,
@@ -192,8 +194,12 @@ define([
         var categoryMapping = {
             Layer : {
                 create : function(options) {
-                    var layerViewModel = komapping.fromJS(options.data);
+                    var parent = komapping.toJS(options.parent);
+                    var data = combine(options.data, parent);
+
+                    var layerViewModel = komapping.fromJS(data);
                     layerViewModel.isEnabled = knockout.observable(false);
+
                     return layerViewModel;
                 }
             }
@@ -227,7 +233,8 @@ define([
 
         this.geoDataBrowser = new GeoDataBrowser({
             container : leftArea,
-            content : browserContentViewModel
+            content : browserContentViewModel,
+            dataManager : geoDataManager
         });
 
         this.webGlSupported = supportsWebgl();
