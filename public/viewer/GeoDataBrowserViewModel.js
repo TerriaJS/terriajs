@@ -20,7 +20,7 @@ define([
         this.content = options.content;
 
         this._dataManager = options.dataManager;
-        this._map = options.map;
+        this.map = options.map;
 
         this.showingPanel = false;
         this.openIndex = 0;
@@ -99,7 +99,7 @@ define([
         }
 
         //pass leaflet map object if exists
-        layer.map = viewModel._map;
+        layer.map = viewModel.map;
         layer.proxy = description.proxy;
 
         item.layer = layer;
