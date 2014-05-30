@@ -61,6 +61,10 @@ define([
                     layer.url = that._dataManager.getOGCFeatureURL(description);
                 }
 
+                //pass leaflet map object if exists
+                layer.map = that.map;
+                layer.proxy = description.proxy;
+
                 that._dataManager.sendLayerRequest(layer);
             } else {
 

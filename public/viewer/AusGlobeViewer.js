@@ -13,6 +13,7 @@ define([
         'Cesium/Core/ClockRange',
         'Cesium/Core/Color',
         'Cesium/Core/combine',
+        'Cesium/Core/defined',
         'Cesium/Core/Ellipsoid',
         'Cesium/Core/EllipsoidTerrainProvider',
         'Cesium/Core/Fullscreen',
@@ -45,6 +46,7 @@ define([
         ClockRange,
         Color,
         combine,
+        defined,
         Ellipsoid,
         EllipsoidTerrainProvider,
         Fullscreen,
@@ -668,13 +670,15 @@ define([
     }
 
     function hideTimeline(viewer) {
-        viewer.timeline.show = false;
-        viewer.animation.show = false;
+        if (defined(viewer)) {
+            viewer.timeline.show = false;
+            viewer.animation.show = false;
+        }
     }
 
     function stopTimeline(viewer) {
-        hideTimeline(viewer);
-        if (viewer !== undefined) {
+        if (defined(viewer)) {
+            hideTimeline(viewer);
             viewer.clock.clockRange = ClockRange.UNBOUNDED;
             viewer.clock.shouldAnimate = false;
         }
