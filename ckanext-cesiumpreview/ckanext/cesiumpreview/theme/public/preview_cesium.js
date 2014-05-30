@@ -4,8 +4,8 @@ ckan.module('cesiumpreview', function (jQuery, _) {
     initialize: function () {
       var self = this;
 	  
-      var vis_server = 'http://localhost';  //local
-//      var vis_server = 'http://geospace.research.nicta.com.au/AusGlobe.html';
+//      var vis_server = 'http://localhost';  //local
+      var vis_server='http://nationalmap.research.nicta.com.au/';
       var ckan_server = '';   //local
 //      var ckan_server = 'http://ckan.research.nicta.com.au:5000';
       var data_url = preload_resource['url'] + '?hack.geojson';
