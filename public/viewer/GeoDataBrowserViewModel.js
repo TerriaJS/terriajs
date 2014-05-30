@@ -16,10 +16,11 @@ define([
         komapping) {
     "use strict";
 
-    var GeoDataBrowserViewModel = function(contentViewModel, dataManager) {
-        this.content = contentViewModel;
+    var GeoDataBrowserViewModel = function(options) {
+        this.content = options.content;
 
-        this._dataManager = dataManager;
+        this._dataManager = options.dataManager;
+        this._map = options.map;
 
         this.showingPanel = false;
         this.openIndex = 0;
@@ -41,33 +42,9 @@ define([
             item.isEnabled(!item.isEnabled());
 
             if (item.isEnabled()) {
-                var description = komapping.toJS(item);
-                var layer = new ausglobe.GeoData({
-                    name: description.Name,
-                    type: description.type,
-                    extent: getOGCLayerExtent(description)
-                });
-
-                if (defined(description.url)) {
-                    layer.url = description.url;
-                } else if (description.type === 'CKAN') {
-                    for (var i = 0; i < description.resources.length; i++) {
-                        if (description.resources[i].format.toUpperCase() === 'JSON') {
-                            layer.url = description.resources[i].url;
-                        }
-                    }
-                } else {
-                    // description.count = 100;
-                    layer.url = that._dataManager.getOGCFeatureURL(description);
-                }
-
-                //pass leaflet map object if exists
-                layer.map = that.map;
-                layer.proxy = description.proxy;
-
-                that._dataManager.sendLayerRequest(layer);
+                enableItem(that, item);
             } else {
-
+                disableItem(that, item);
             }
         });
 
@@ -99,6 +76,41 @@ define([
             }
         }
     });
+
+    function enableItem(viewModel, item) {
+        var description = komapping.toJS(item);
+        var layer = new ausglobe.GeoData({
+            name: description.Name,
+            type: description.type,
+            extent: getOGCLayerExtent(description)
+        });
+
+        if (defined(description.url)) {
+            layer.url = description.url;
+        } else if (description.type === 'CKAN') {
+            for (var i = 0; i < description.resources.length; i++) {
+                if (description.resources[i].format.toUpperCase() === 'JSON') {
+                    layer.url = description.resources[i].url;
+                }
+            }
+        } else {
+            // description.count = 100;
+            layer.url = viewModel._dataManager.getOGCFeatureURL(description);
+        }
+
+        //pass leaflet map object if exists
+        layer.map = viewModel._map;
+        layer.proxy = description.proxy;
+
+        item.layer = layer;
+
+        viewModel._dataManager.sendLayerRequest(layer);
+    }
+
+    function disableItem(viewModel, item) {
+        var index = viewModel._dataManager.layers.indexOf(item.layer);
+        viewModel._dataManager.remove(index);
+    }
 
     function getOGCLayerExtent(layer) {
         var rect;

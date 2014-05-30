@@ -1,8 +1,10 @@
 define([
+        'Cesium/Core/defineProperties',
         'Cesium/Widgets/getElement',
         'knockout',
         'ui/GeoDataBrowserViewModel'
     ], function(
+        defineProperties,
         getElement,
         knockout,
         GeoDataBrowserViewModel) {
@@ -11,7 +13,11 @@ define([
     var GeoDataBrowser = function(options) {
         var container = getElement(options.container);
 
-        this._viewModel = new GeoDataBrowserViewModel(options.content, options.dataManager);
+        this._viewModel = new GeoDataBrowserViewModel({
+            content : options.content,
+            dataManager : options.dataManager,
+            map : options.map
+        });
 
         var wrapper = document.createElement('div');
         container.appendChild(wrapper);
@@ -55,6 +61,14 @@ define([
 
         knockout.applyBindings(this._viewModel, wrapper);
     };
+
+    defineProperties(GeoDataBrowser.prototype, {
+        viewModel : {
+            get : function() {
+                return this._viewModel;
+            }
+        }
+    });
 
     return GeoDataBrowser;
 });
