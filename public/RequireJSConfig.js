@@ -15,5 +15,6 @@ var require = {
             deps: ['ui/GlobalCesium'],
             exports: 'ausglobe'
         }
-    }
+    },
+    waitSeconds: 60
 };
