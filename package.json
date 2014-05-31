@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "connect": "*",
+    "express": "*",
+    "request": "*",
     "supervisor": "0.4.x"
   },
   "devDependencies": {
