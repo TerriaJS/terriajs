@@ -273,6 +273,7 @@ a.ausglobe-title-menuItem:hover {
     background-color: #333333;
     line-height: 30px;
     cursor: pointer;
+    margin-top: 5px;
 
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
