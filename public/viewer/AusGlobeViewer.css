@@ -290,7 +290,7 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-panel-button-panel-visible {
-    left: 310px;
+    left: 328px;
 
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
@@ -332,7 +332,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-panel-visible {
     visibility: visible;
-    left: 10px;
+    left: 28px;
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
     -ms-transition: left 0.25s;
