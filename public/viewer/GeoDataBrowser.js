@@ -78,13 +78,12 @@ define([
                     <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !imageryIsOpen" />\
                 </div>\
                 <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': imageryIsOpen }">\
-                    <div class="ausglobe-accordion-category">\
-                        <div class="ausglobe-accordion-category-header">\
-                            <div class="ausglobe-accordion-category-header-label">General</div>\
-                        </div>\
-                        <div class="ausglobe-accordion-category-content">\
-                        </div>\
-                    </div>\
+                    <img class="ausglobe-imagery-option" src="images/BingMapsRoads.png" width="73" height="74" />\
+                    <img class="ausglobe-imagery-option" src="images/NASABlackMarble.png" width="73" height="74" />\
+                    <img class="ausglobe-imagery-option" src="images/BingMapsRoads.png" width="73" height="74" />\
+                    <img class="ausglobe-imagery-option" src="images/NASABlackMarble.png" width="73" height="74" />\
+                    <img class="ausglobe-imagery-option" src="images/BingMapsRoads.png" width="73" height="74" />\
+                    <img class="ausglobe-imagery-option" src="images/NASABlackMarble.png" width="73" height="74" />\
                 </div>\
             </div>\
             <div class="ausglobe-accordion-item">\

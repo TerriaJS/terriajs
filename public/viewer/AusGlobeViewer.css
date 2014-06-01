@@ -462,3 +462,8 @@ a.ausglobe-title-menuItem:hover {
     padding-bottom: 10px;
     padding-left: 5px;
 }
+
+.ausglobe-imagery-option {
+    border: 1px solid #E3E4E5;
+    margin: 5px;
+}
