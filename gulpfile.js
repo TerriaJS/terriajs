@@ -49,7 +49,7 @@ gulp.task('lr-server', function() {
 */
 
 gulp.task('build-cesium', function(cb) {
-    return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
+    return exec('"Tools/apache-ant-1.8.2/bin/ant" build combine', {
         cwd : 'public/cesium'
     }, function(err, stdout, stderr) {
         if (stderr) {
@@ -60,9 +60,7 @@ gulp.task('build-cesium', function(cb) {
     });
 });
 
-gulp.task('default', function() {  
-    gulp.run('build-cesium', 'scripts', 'docs');
-
+gulp.task('default', ['build-cesium', 'scripts', 'docs'], function() {
     gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
     gulp.watch('src/**/*.js', ['scripts']);
 })
