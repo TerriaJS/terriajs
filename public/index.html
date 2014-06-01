@@ -29,16 +29,17 @@
     <script src="./third_party/bing.js"></script>
     <script src="./third_party/esri-leaflet.js"></script>
 
-    <!-- Cesium and our UI are pulled in via RequireJS.  Our plugins are pulled in indirectly. -->
     <link rel="stylesheet" href="cesium/Source/Widgets/widgets.css" media="screen">
     <link rel="stylesheet" href="viewer/AusGlobeViewer.css">
-    <script src="RequireJSConfig.js"></script>
-    <script data-main="ui/main" src="cesium/ThirdParty/requirejs-2.1.9/require.js"></script>
+
+    <script src="cesium/Build/Cesium/Cesium.js"></script>
 </head>
 
 <body style="background: #000;">
 
     <div id="cesiumContainer"></div>
     <div id="loadingIndicator" class="loadingIndicator"></div>
+
+    <script src="build/ausglobe.js"></script>
 </body>
 </html>

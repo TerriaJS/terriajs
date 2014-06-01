@@ -13,24 +13,14 @@ var exec = require('child_process').exec;
 //var server = lr();
 
 gulp.task('scripts', function() {  
-    gulp.src(['src/index.js'])
-        .pipe(browserify({ standalone:'ausglobe' }))
+    return gulp.src(['src/viewer/main.js'])
+        .pipe(browserify())
         .pipe(concat('ausglobe.js'))
-        .pipe(gulp.dest('src/build'));
-        
-    gulp.src(['src/build/ausglobe.js'])
+        .pipe(gulp.dest('public/build'))
         .pipe(uglify())
         .pipe(concat('ausglobe.min.js'))
-        .pipe(gulp.dest('src/build'));
+        .pipe(gulp.dest('public/build'));
 
-    gulp.src(['src/copyrightHeader.js', 'src/build/ausglobe.js'])
-        .pipe(concat('ausglobe.js'))
-        .pipe(gulp.dest('public'));
-        
-    gulp.src(['src/copyrightHeader.js', 'src/build/ausglobe.min.js'])
-        .pipe(concat('ausglobe.min.js'))
-        .pipe(gulp.dest('public'));
-        
 //        .pipe(refresh(server))
 })
 
@@ -74,6 +64,6 @@ gulp.task('default', function() {
     gulp.run('build-cesium', 'scripts', 'docs');
 
     gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
-    gulp.watch('src/*.js', ['scripts']);
+    gulp.watch('src/**/*.js', ['scripts']);
 })
 
