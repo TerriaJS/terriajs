@@ -234,6 +234,7 @@ define([
         });
 
         this.geoDataBrowser = new GeoDataBrowser({
+            viewer : this,
             container : leftArea,
             content : browserContentViewModel,
             dataManager : geoDataManager
@@ -897,6 +898,10 @@ define([
         }
         return true;
     }
+
+    AusGlobeViewer.prototype.isCesium = function() {
+        return defined(this.viewer);
+    };
 
     AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 

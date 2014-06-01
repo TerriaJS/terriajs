@@ -1,14 +1,18 @@
 define([
+        'Cesium/Core/CesiumTerrainProvider',
         'Cesium/Core/defined',
         'Cesium/Core/defineProperties',
+        'Cesium/Core/EllipsoidTerrainProvider',
         'Cesium/Core/Rectangle',
         'Cesium/Widgets/createCommand',
         'ausglobe',
         'knockout',
         'knockout.mapping'
     ], function(
+        CesiumTerrainProvider,
         defined,
         defineProperties,
+        EllipsoidTerrainProvider,
         Rectangle,
         createCommand,
         ausglobe,
@@ -19,19 +23,46 @@ define([
     var GeoDataBrowserViewModel = function(options) {
         this.content = options.content;
 
+        this._viewer = options.viewer;
         this._dataManager = options.dataManager;
         this.map = options.map;
 
         this.showingPanel = false;
+        this.showingMapPanel = false;
         this.openIndex = 0;
+        this.openMapIndex = 0;
+
+        this.imageryIsOpen = true;
+        this.viewerSelectionIsOpen = false;
+        this.selectedViewer = 'Terrain';
 
         var that = this;
         this._toggleShowingPanel = createCommand(function() {
             that.showingPanel = !that.showingPanel;
+            if (that.showingPanel) {
+                that.showingMapPanel = false;
+            }
+        });
+
+        this._toggleShowingMapPanel = createCommand(function() {
+            that.showingMapPanel = !that.showingMapPanel;
+            if (that.showingMapPanel) {
+                that.showingPanel = false;
+            }
         });
 
         this._openItem = createCommand(function(item) {
             that.openIndex = that.content.indexOf(item);
+        });
+
+        this._openImagery = createCommand(function() {
+            that.imageryIsOpen = true;
+            that.viewerSelectionIsOpen = false;
+        });
+
+        this._openViewerSelection = createCommand(function() {
+            that.imageryIsOpen = false;
+            that.viewerSelectionIsOpen = true;
         });
 
         this._toggleCategoryOpen = createCommand(function(item) {
@@ -48,7 +79,29 @@ define([
             }
         });
 
-        knockout.track(this, ['showingPanel', 'openIndex']);
+        knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'imageryIsOpen',
+                              'viewerSelectionIsOpen', 'selectedViewer']);
+
+        knockout.getObservable(this, 'selectedViewer').subscribe(function(value) {
+            if (value === '2D') {
+                if (that._viewer.isCesium()) {
+                    that._viewer.selectViewer(false);
+                }
+            } else {
+                if (!that._viewer.isCesium()) {
+                    that._viewer.selectViewer(true);
+                }
+
+                var terrainProvider = that._viewer.scene.globe.terrainProvider;
+                if (value === 'Ellipsoid' && !(terrainProvider instanceof EllipsoidTerrainProvider)) {
+                    that._viewer.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
+                } else if (value === 'Terrain' && !(terrainProvider instanceof CesiumTerrainProvider)) {
+                    that._viewer.scene.globe.terrainProvider = new CesiumTerrainProvider({
+                        url : 'http://cesiumjs.org/stk-terrain/tilesets/world/tiles'
+                    });
+                }
+            }
+        });
     };
 
     defineProperties(GeoDataBrowserViewModel.prototype, {
@@ -58,9 +111,27 @@ define([
             }
         },
 
+        toggleShowingMapPanel : {
+            get : function() {
+                return this._toggleShowingMapPanel;
+            }
+        },
+
         openItem : {
             get : function() {
                 return this._openItem;
+            }
+        },
+
+        openImagery : {
+            get : function() {
+                return this._openImagery;
+            }
+        },
+
+        openViewerSelection : {
+            get : function() {
+                return this._openViewerSelection;
             }
         },
 

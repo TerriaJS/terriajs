@@ -547,7 +547,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             provider = new L.esri.TiledMapLayer(server);
         }
         else {
-            provider = new L.tileLayer.wms(server+'/', {
+            provider = new L.tileLayer.wms(request, {
                 layers: layerName,
                 format: 'image/png',
                 transparent: true,

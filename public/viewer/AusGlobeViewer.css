@@ -219,6 +219,7 @@ li {
     display: inline;
     color: #9A9A9B;
     font-size: 10pt;
+    cursor: pointer;
 }
 
 a.ausglobe-title-menuItem {
@@ -451,4 +452,12 @@ a.ausglobe-title-menuItem:hover {
     padding-right: 10px;
     color: #0066CC;
     cursor: pointer;
+}
+
+.ausglobe-viewer-radio-button {
+    display: block;
+    font-size: 11pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
 }
