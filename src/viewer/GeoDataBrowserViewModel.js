@@ -2,10 +2,13 @@
 
 /*global Cesium,require*/
 
+var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
+var BingMapsStyle = Cesium.BingMapsStyle;
 var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
+var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
 var Rectangle = Cesium.Rectangle;
 var createCommand = Cesium.createCommand;
 
@@ -73,6 +76,55 @@ var GeoDataBrowserViewModel = function(options) {
         }
     });
 
+    function removeBaseLayer() {
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+
+        var previousBaseLayer = imageryLayers.get(0);
+        imageryLayers.remove(previousBaseLayer);
+    }
+
+    function switchToBingMaps(style) {
+        removeBaseLayer();
+
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+        imageryLayers.addImageryProvider(new BingMapsImageryProvider({
+            url : '//dev.virtualearth.net',
+            mapStyle : style
+        }), 0);
+    }
+
+    this._activateBingMapsAerialWithLabels = createCommand(function() {
+        switchToBingMaps(BingMapsStyle.AERIAL_WITH_LABELS);
+    });
+
+    this._activateBingMapsAerial = createCommand(function() {
+        switchToBingMaps(BingMapsStyle.AERIAL);
+    });
+
+    this._activateBingMapsRoads = createCommand(function() {
+        switchToBingMaps(BingMapsStyle.ROAD);
+    });
+
+    this._activateNasaBlackMarble = createCommand(function() {
+        removeBaseLayer();
+
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+        imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+            url : '//cesiumjs.org/tilesets/imagery/blackmarble',
+            credit : '© Analytical Graphics, Inc.'
+        }), 0);
+    });
+
+    this._activateNaturalEarthII = createCommand(function() {
+        removeBaseLayer();
+
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+        imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+            url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
+            credit : '© Analytical Graphics, Inc.'
+        }), 0);
+    });
+
     knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'imageryIsOpen',
                           'viewerSelectionIsOpen', 'selectedViewer']);
 
@@ -138,6 +190,36 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     toggleItemEnabled : {
         get : function() {
             return this._toggleItemEnabled;
+        }
+    },
+
+    activateBingMapsAerialWithLabels : {
+        get : function() {
+            return this._activateBingMapsAerialWithLabels;
+        }
+    },
+
+    activateBingMapsAerial : {
+        get : function() {
+            return this._activateBingMapsAerial;
+        }
+    },
+
+    activateBingMapsRoads : {
+        get : function() {
+            return this._activateBingMapsRoads;
+        }
+    },
+
+    activateNasaBlackMarble : {
+        get : function() {
+            return this._activateNasaBlackMarble;
+        }
+    },
+
+    activateNaturalEarthII : {
+        get : function() {
+            return this._activateNaturalEarthII;
         }
     }
 });

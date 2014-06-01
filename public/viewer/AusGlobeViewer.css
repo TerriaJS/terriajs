@@ -467,3 +467,7 @@ a.ausglobe-title-menuItem:hover {
     border: 1px solid #E3E4E5;
     margin: 5px;
 }
+
+.ausglobe-imagery-label {
+    text-align: center;
+}
