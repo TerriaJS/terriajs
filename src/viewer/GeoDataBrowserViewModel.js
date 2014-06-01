@@ -77,6 +77,11 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     function removeBaseLayer() {
+        if (!defined(that._viewer.viewer)) {
+            var message = 'Base layer selection is not yet implemented for Leaflet.';
+            alert(message);
+            throw message;
+        }
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
 
         var previousBaseLayer = imageryLayers.get(0);
