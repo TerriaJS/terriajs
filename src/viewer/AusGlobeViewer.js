@@ -40,6 +40,7 @@ var knockoutES5 = require('../../public/third_party/knockout-es5.js');
 var GeoDataBrowser = require('./GeoDataBrowser');
 var GeoDataWidget = require('./GeoDataWidget');
 var TitleWidget = require('./TitleWidget');
+var NavigationWidget = require('./NavigationWidget');
 
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
@@ -83,25 +84,27 @@ var AusGlobeViewer = function(geoDataManager) {
 
     this._titleWidget = titleWidget;
 
+    this._navigationWidget = new NavigationWidget(this, document.body);
+
+//    var div = document.createElement('div');
+//    div.id = 'controls';
+//    div.innerHTML = '\
+//            <span id="zoom_in" class="control_button" title="Zoom in"></span> \
+//            <span id="zoom_out" class="control_button" title="Zoom out"></span>';
+//    document.body.appendChild(div);
+
+//    div = document.createElement('div');
+//    div.id = 'settings';
+//    div.innerHTML = '<span id="settings" class="settings_button" title="Display Settings"></span>';
+//    document.body.appendChild(div);
+
+//    div = document.createElement('div');
+//    div.id = 'dialogSettings';
+//    div.class = "dialog";
+//    div.innerHTML = '<div id="list4" class="list"></div>';
+//    document.body.appendChild(div);
+
     var div = document.createElement('div');
-    div.id = 'controls';
-    div.innerHTML = '\
-            <span id="zoom_in" class="zoomin_button" title="Zoom in"></span> \
-            <span id="zoom_out" class="zoomout_button" title="Zoom out"></span>';
-    document.body.appendChild(div);
-
-    div = document.createElement('div');
-    div.id = 'settings';
-    div.innerHTML = '<span id="settings" class="settings_button" title="Display Settings"></span>';
-    document.body.appendChild(div);
-
-    div = document.createElement('div');
-    div.id = 'dialogSettings';
-    div.class = "dialog";
-    div.innerHTML = '<div id="list4" class="list"></div>';
-    document.body.appendChild(div);
-
-    div = document.createElement('div');
     div.id = 'position';
     document.body.appendChild(div);
 
@@ -123,36 +126,29 @@ var AusGlobeViewer = function(geoDataManager) {
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
 
-    var css = { 'background': '#333333',
-        'color': '#eeeeee',
-        'border-color': '#555555',
-        'width': '30px',
-        'height': '30px',
-        'border-radius': '1px'
-    };
-    $(".zoomin_button").button({
-        text: true,
-        icons: { primary: "ui-icon-plus" }
-    }).css(css);
-    $(".zoomout_button").button({
-        text: true,
-        icons: { primary: "ui-icon-minus" }
-    }).css(css);
-    $(".settings_button").button({
-        text: true,
-        icons: { primary: "ui-icon-gear" }
-    }).css(css);
+//    $("#zoom_in").button({
+//        text: true,
+//        icons: { primary: "ui-icon-plus" }
+//    });
+//    $("#zoom_out").button({
+//        text: true,
+//        icons: { primary: "ui-icon-minus" }
+//    });
+//    $("settings_button").button({
+//        text: true,
+//        icons: { primary: "ui-icon-gear" }
+//    }).css(css);
 
     var that = this;
-    $("#settings").click(function () {
-        that._showSettingsDialog();
-    });
-    $("#zoom_in").click(function () {
-        zoomIn(that.scene);
-    });
-    $("#zoom_out").click(function () {
-        zoomOut(that.scene);
-    });
+//    $("#settings").click(function () {
+//        that._showSettingsDialog();
+//    });
+//    $("#zoom_in").click(function () {
+//        zoomIn(that.scene);
+//    });
+//    $("#zoom_out").click(function () {
+//        zoomOut(that.scene);
+//    });
 
     //TODO: perf test to set environment
 
@@ -896,7 +892,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 //            var layer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer');
         map.addLayer(layer);
 
-        document.getElementById('controls').style.visibility = 'hidden';
+        //document.getElementById('controls').style.visibility = 'hidden';
+        this._navigationWidget.show = false;
         document.getElementById('position').style.visibility = 'hidden';
 
         //redisplay data
@@ -965,7 +962,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this._enableSelectExtent(true);
         stopTimeline(this.viewer);
 
-        document.getElementById('controls').style.visibility = 'visible';
+        this._navigationWidget.show = true;
         document.getElementById('position').style.visibility = 'visible';
         /*
          var esri = new ArcGisMapServerImageryProvider({

@@ -39,58 +39,58 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
 //        div.innerHTML = '<p>National Map</p>';
 //        document.body.appendChild(div);
 
-    var menu = document.createElement('div');
-    menu.className = 'menu';
-    document.body.appendChild(menu);
+//    var menu = document.createElement('div');
+//    menu.className = 'menu';
+//    document.body.appendChild(menu);
 
-    var div = document.createElement('div');
-    div.className = 'menuItem';
-    div.innerHTML = '<span id="add_button" class="menu_button" title="Add maps and data">Data</span>';
-    menu.appendChild(div);
+//    var div = document.createElement('div');
+//    div.className = 'menuItem';
+//    div.innerHTML = '<span id="add_button" class="menu_button" title="Add maps and data">Data</span>';
+//    menu.appendChild(div);
+//
+//    div = document.createElement('div');
+//    div.className = 'menuItem';
+//    div.innerHTML = '<span id="mod_button" class="menu_button" title="Edit your maps and data">Edit</span>';
+//    menu.appendChild(div);
+//
+//    div = document.createElement('div');
+//    div.className = 'menuItem';
+//    div.innerHTML = '<span id="share_button" class="menu_button" title="Share what you\'ve created">Share</span>';
+//    menu.appendChild(div);
 
-    div = document.createElement('div');
-    div.className = 'menuItem';
-    div.innerHTML = '<span id="mod_button" class="menu_button" title="Edit your maps and data">Edit</span>';
-    menu.appendChild(div);
-
-    div = document.createElement('div');
-    div.className = 'menuItem';
-    div.innerHTML = '<span id="share_button" class="menu_button" title="Share what you\'ve created">Share</span>';
-    menu.appendChild(div);
-
-    $(".menu_button").button({
-        text: true
-//        icons: { primary: "ui-icon-gear" }
-    }).css({ 'background': '#333333',
-        'color': '#eeeeee',
-        'border-color': '#555555',
-        'width': '80px',
-        'border-radius': '1px'
-        });
-
+//    $(".menu_button").button({
+//        text: true
+////        icons: { primary: "ui-icon-gear" }
+//    }).css({ 'background': '#333333',
+//        'color': '#eeeeee',
+//        'border-color': '#555555',
+//        'width': '80px',
+//        'border-radius': '1px'
+//        });
+//
     var that = this;
-    $("#add_button").click(function () {
-        closeDialogs();
-        loadJson('./data_collection.json').then(function (obj) {
-            that.showSelectDialog(obj);
-        });
-    });
-    $("#mod_button").click(function () {
-        closeDialogs();
-        that.showLayersDialog();
-    });
-    $("#share_button").click(function () {
-        closeDialogs();
-        if (that.scene) {
-            that.geoDataManager.shareRequest = true;
-        }
-        else {
-            that.geoDataManager.setShareRequest({});
-        }
-    });
+//    $("#add_button").click(function () {
+//        closeDialogs();
+//        loadJson('./data_collection.json').then(function (obj) {
+//            that.showSelectDialog(obj);
+//        });
+//    });
+//    $("#mod_button").click(function () {
+//        closeDialogs();
+//        that.showLayersDialog();
+//    });
+//    $("#share_button").click(function () {
+//        closeDialogs();
+//        if (that.scene) {
+//            that.geoDataManager.shareRequest = true;
+//        }
+//        else {
+//            that.geoDataManager.setShareRequest({});
+//        }
+//    });
 
     //Dialogs
-    div = document.createElement('div');
+    var div = document.createElement('div');
     div.id = 'dialogInfo';
     div.class = "dialog";
     document.body.appendChild(div);
