@@ -454,6 +454,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-category-item-enabled {
     background-color: #CCDDD8;
+    cursor: pointer;
 }
 
 .ausglobe-accordion-category-item-checkbox {
