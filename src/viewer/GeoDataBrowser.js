@@ -53,6 +53,7 @@ var GeoDataBrowser = function(options) {
                         <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
                         <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                     </div>\
+                    <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
                     <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
                         <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
                             <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemEnabled, visible: isEnabled()" />\
