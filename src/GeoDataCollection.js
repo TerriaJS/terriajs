@@ -32,11 +32,6 @@ var GeoDataCollection = function() {
     this.GeoDataRemoved = new Cesium.Event();
     this.ViewerChanged = new Cesium.Event();
     this.ShareRequest = new Cesium.Event();
-    
-    //load list of available services for GeoDataCollection
-    Cesium.loadJson('./data_sources.json').then(function (obj) {
-        that.serviceList = obj;
-    });
 }
 
 

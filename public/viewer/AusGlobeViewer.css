@@ -275,7 +275,7 @@ a.ausglobe-title-menuItem:hover {
     position: absolute;
     left: 0;
     width: 300px;
-    top: 50px;
+    top: 100px;
     bottom: 80px;
     pointer-events: none;
 }
@@ -454,6 +454,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-category-item-enabled {
     background-color: #CCDDD8;
+    cursor: pointer;
 }
 
 .ausglobe-accordion-category-item-checkbox {
@@ -490,4 +491,55 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-imagery-label {
     text-align: center;
+}
+
+.ausglobe-search-form {
+    position: absolute;
+    display: inline-block;
+    margin: 0 3px;
+    top: 50px;
+    left: 5px;
+}
+
+.ausglobe-search-form .ausglobe-search-input {
+    border: solid 1px #444;
+    background-color: white;
+    color: black;
+    display: inline-block;
+    vertical-align: middle;
+    width: 250px;
+    height: 32px;
+    margin: 0;
+    padding: 5px;
+    padding-right: 32px;
+    border-radius: 0;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.ausglobe-search-form:hover .ausglobe-search-input {
+    border-color: #aef;
+    box-shadow: 0 0 8px #fff;
+}
+
+.ausglobe-search-form .ausglobe-search-input:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.ausglobe-search-button {
+    background-color: #303336;
+    display: inline-block;
+    position: absolute;
+    cursor: pointer;
+    width: 32px;
+    top: 1px;
+    right: 1px;
+    height: 30px;
+    vertical-align: middle;
+    fill: #edffff;
+}
+
+.ausglobe-search-button:hover {
+    background-color: #48b;
 }

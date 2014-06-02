@@ -41,6 +41,7 @@ var GeoDataBrowser = require('./GeoDataBrowser');
 var GeoDataWidget = require('./GeoDataWidget');
 var TitleWidget = require('./TitleWidget');
 var NavigationWidget = require('./NavigationWidget');
+var SearchWidget = require('./SearchWidget');
 
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
@@ -85,6 +86,11 @@ var AusGlobeViewer = function(geoDataManager) {
     this._titleWidget = titleWidget;
 
     this._navigationWidget = new NavigationWidget(this, document.body);
+
+    this._searchWidget = new SearchWidget({
+        container : document.body,
+        viewer : this
+    });
 
 //    var div = document.createElement('div');
 //    div.id = 'controls';
@@ -164,7 +170,7 @@ var AusGlobeViewer = function(geoDataManager) {
                 var parent = komapping.toJS(options.parent);
                 var data = combine(options.data, parent);
 
-                var layerViewModel = komapping.fromJS(data);
+                var layerViewModel = komapping.fromJS(data, categoryMapping);
                 layerViewModel.isEnabled = knockout.observable(false);
 
                 return layerViewModel;
@@ -177,6 +183,54 @@ var AusGlobeViewer = function(geoDataManager) {
             create : function(options) {
                 var layerViewModel = komapping.fromJS(options.data, categoryMapping);
                 layerViewModel.isOpen = knockout.observable(false);
+                layerViewModel.isLoading = knockout.observable(false);
+
+                if (!defined(layerViewModel.Layer)) {
+                    var layer = undefined;
+                    var layerRequested = false;
+                    var version = knockout.observable(0);
+
+                    layerViewModel.Layer = knockout.computed(function() {
+                        version();
+
+                        if (layerRequested) {
+                            return layer;
+                        }
+
+                        if (!defined(layer)) {
+                            layer = [];
+                        }
+
+                        // Don't request capabilities until the layer is opened.
+                        if (layerViewModel.isOpen()) {
+                            layerViewModel.isLoading(true);
+                            that.geoDataManager.getCapabilities(options.data, function(description) {
+                                var remapped = komapping.fromJS(description, categoryMapping);
+
+                                var layers = remapped.Layer();
+                                for (var i = 0; i < layers.length; ++i) {
+                                    // TODO: handle hierarchy better
+                                    if (defined(layers[i].Layer)) {
+                                        var subLayers = layers[i].Layer();
+                                        for (var j = 0; j < subLayers.length; ++j) {
+                                            layer.push(subLayers[j]);
+                                        }
+                                    } else {
+                                        layer.push(layers[i]);
+                                    }
+                                }
+
+                                version(version() + 1);
+                                layerViewModel.isLoading(false);
+                            });
+
+                            layerRequested = true;
+                        }
+
+                        return layer;
+                    });
+                }
+
                 return layerViewModel;
             }
         }
@@ -184,18 +238,19 @@ var AusGlobeViewer = function(geoDataManager) {
 
     var browserContentViewModel = komapping.fromJS([], browserContentMapping);
 
-    var test = {
-        name : 'Test',
-        Layer : [
-            {
-                name : 'Sub-test',
-                Layer : []
-            }
-        ]
-    };
+    var dataCollectionsPromise = loadJson('./data_collection.json');
+    var otherSourcesPromise = loadJson('./data_sources.json');
 
-    when(loadJson('./data_collection.json'), function(dataCollection) {
-        komapping.fromJS([dataCollection, test], browserContentMapping, browserContentViewModel);
+    when.all([dataCollectionsPromise, otherSourcesPromise], function(sources) {
+        var browserContent = [];
+        browserContent.push(sources[0]);
+
+        var otherSources = sources[1].Layer;
+        for (var i = 0; i < otherSources.length; ++i) {
+            browserContent.push(otherSources[i]);
+        }
+
+        komapping.fromJS(browserContent, browserContentMapping, browserContentViewModel);
     });
 
     this.geoDataBrowser = new GeoDataBrowser({
@@ -343,10 +398,14 @@ function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); };
 function zoomOut(scene, pos) { zoomCamera(scene, -3.0/2.0, pos); };
 
 // Move camera to Rectangle
-function updateCameraFromRect(scene, map, rect_in, ms) {
+AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMilliseconds) {
     if (rect_in === undefined) {
         return;
     }
+
+    var scene = this.scene;
+    var map = this.map;
+
     //check that we're not too close
     var epsilon = CesiumMath.EPSILON3;
     var rect = rect_in.clone();
@@ -361,7 +420,7 @@ function updateCameraFromRect(scene, map, rect_in, ms) {
     if (scene !== undefined && !scene.isDestroyed()) {
         var flight = CameraFlightPath.createAnimationRectangle(scene, {
             destination : rect,
-            duration: ms
+            duration: flightTimeMilliseconds
         });
         scene.animations.add(flight);
     }
@@ -370,7 +429,7 @@ function updateCameraFromRect(scene, map, rect_in, ms) {
             [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
         map.fitBounds(bnds);
     }
-}
+};
 
 
 // -------------------------------------------
@@ -574,7 +633,7 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
             }
             that.geoDataWidget.setExtent(ext);
             if (ext) {
-                updateCameraFromRect(that.scene, that.map, ext, 1000);
+                that.updateCameraFromRect(ext, 1000);
                 // Display polyline based on ext
                 var east = ext.east, west = ext.west, north = ext.north, south = ext.south;
                 var ellipsoid = Ellipsoid.WGS84;
@@ -689,10 +748,6 @@ var setCurrentDataset = function(layer, that) {
     }
     updateTimeline(that.viewer, start, finish);
     updateLegend(tableData);
-
-    if (layer.extent !== undefined) {
-        updateCameraFromRect(that.scene, that.map, layer.extent, 1000);
-    }
 }
 
 
@@ -703,7 +758,7 @@ AusGlobeViewer.prototype._showSettingsDialog = function() {
         title: 'Settings',
         width: 250,
         height: 250,
-        modal: false,
+        modal: false
     });
 
     var list = $('#list4');
@@ -720,12 +775,12 @@ AusGlobeViewer.prototype._showSettingsDialog = function() {
         {
             text: '3D',
             getState: function() { return that._cesiumViewerActive(); },
-            setState: function(val) { that.selectViewer(val); },
+            setState: function(val) { that.selectViewer(val); }
         },
         {
             text: 'Water Mask',
             getState: function() { return true; },
-            setState: function(val) { alert('NYI'); },
+            setState: function(val) { alert('NYI'); }
         }
 
     ];
@@ -953,7 +1008,12 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         if (this.map !== undefined) {
             var bnds = this.map.getBounds()
             var rect = Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
-            updateCameraFromRect(this.scene, undefined, rect, 0);
+
+            //remove existing map viewer
+            this.map.remove();
+            this.map = undefined;
+
+            this.updateCameraFromRect(rect, 0);
         }
 
         this.geoDataManager.setViewer({scene: this.scene, map: undefined});
@@ -971,12 +1031,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
          });
          this.scene.globe.imageryLayers.addImageryProvider(esri);
          */
-        //remove existing map viewer
-        if (this.map !== undefined) {
-            this.map.remove();
-            this.map = undefined;
-        }
-
     }
 };
 
