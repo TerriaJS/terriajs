@@ -4,6 +4,7 @@
 
 var Cartesian2 = Cesium.Cartesian2;
 var Cartesian3 = Cesium.Cartesian3;
+var CesiumMath = Cesium.Math;
 var createCommand = Cesium.createCommand;
 var Ellipsoid = Cesium.Ellipsoid;
 var getElement = Cesium.getElement;
@@ -23,6 +24,9 @@ var NavigationWidget = function(viewer, container) {
     element.innerHTML = '\
         <img src="images/plus.svg" class="navigation-control" data-bind="click: zoomIn" title="Zoom In"></div>\
         <img src="images/minus.svg" class="navigation-control" data-bind="click: zoomOut" title="Zoom Out"></div>\
+        <img src="images/tilt_none.svg" class="navigation-control" data-bind="click: tilt, visible: isTiltExtreme" title="Tilt"></div>\
+        <img src="images/tilt_moderate.svg" class="navigation-control" data-bind="click: tilt, visible: isTiltNone" title="Tilt"></div>\
+        <img src="images/tilt_extreme.svg" class="navigation-control" data-bind="click: tilt, visible: isTiltModerate" title="Tilt"></div>\
     ';
 
     var that = this;
@@ -32,8 +36,28 @@ var NavigationWidget = function(viewer, container) {
         }),
         zoomOut : createCommand(function() {
             zoomOut(that._viewer.scene);
-        })
+        }),
+        tilt : createCommand(function() {
+            if (that._viewModel.isTiltNone) {
+                that._viewModel.isTiltNone = false;
+                that._viewModel.isTiltModerate = true;
+                that._viewer.scene.camera.tilt = CesiumMath.toRadians(80.0);
+            } else if (that._viewModel.isTiltModerate) {
+                that._viewModel.isTiltModerate = false;
+                that._viewModel.isTiltExtreme = true;
+                that._viewer.scene.camera.tilt = CesiumMath.toRadians(45.0);
+            } else if (that._viewModel.isTiltExtreme) {
+                that._viewModel.isTiltExtreme = false;
+                that._viewModel.isTiltNone = true;
+                that._viewer.scene.camera.tilt = CesiumMath.toRadians(90.0);
+            }
+        }),
+        isTiltNone : true,
+        isTiltModerate : false,
+        isTiltExtreme : false
     };
+
+    knockout.track(this._viewModel, ['isTiltNone', 'isTiltModerate', 'isTiltExtreme']);
 
     knockout.applyBindings(this._viewModel, element);
 };

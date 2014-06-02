@@ -60,7 +60,7 @@ gulp.task('build-cesium', function(cb) {
     });
 });
 
-gulp.task('default', ['build-cesium', 'scripts', 'docs'], function() {
+gulp.task('default', ['scripts', 'docs'], function() {
     gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
     gulp.watch('src/**/*.js', ['scripts']);
 })
