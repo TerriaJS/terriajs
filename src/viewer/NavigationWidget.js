@@ -38,14 +38,15 @@ var NavigationWidget = function(viewer, container) {
             zoomOut(that._viewer.scene);
         }),
         tilt : createCommand(function() {
+            console.log(that._viewer.scene.camera.tilt);
             if (that._viewModel.isTiltNone) {
                 that._viewModel.isTiltNone = false;
                 that._viewModel.isTiltModerate = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(80.0);
+                that._viewer.scene.camera.tilt = CesiumMath.toRadians(30.0);
             } else if (that._viewModel.isTiltModerate) {
                 that._viewModel.isTiltModerate = false;
                 that._viewModel.isTiltExtreme = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(45.0);
+                that._viewer.scene.camera.tilt = CesiumMath.toRadians(10.0);
             } else if (that._viewModel.isTiltExtreme) {
                 that._viewModel.isTiltExtreme = false;
                 that._viewModel.isTiltNone = true;
