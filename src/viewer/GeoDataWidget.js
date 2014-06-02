@@ -236,7 +236,7 @@ var dropHandler = function (evt, that) {
             });
         }
         else {
-            if (file.size > 100000) {
+            if (file.size > 1000000) {
                 alert('File is too large to send to conversion service.  Click here for alternative file conversion options.');
             }
             else if (false) {

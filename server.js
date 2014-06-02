@@ -21,7 +21,6 @@ var proxyAllowedHosts = {
     'services.arcgisonline.com' : true,
     'spatialreference.org' : true,
     'www2.landgate.wa.gov.au' : true,
-    'realtime.grofsoft.com' : true,
     'geofabric.bom.gov.au' : true,
     'www.ga.gov.au' : true
 };

@@ -1,3 +1,35 @@
+Base Maps (additional)
+    Australian Topography
+
+Land
+   Gravity
+   Land Cover
+   Magnetic Image
+   Surface Geology
+   Geomorphology
+   Hillshade
+   
+Water
+    Waterbodies
+    Streams & Rivers
+    Catchments
+    Estuaries
+    Boreholes
+    Waterholes
+    Drainage Divisions
+    Aquifer Contours
+    Water Table Aquifers
+
+Infrastructure
+    Roads
+    Railroad
+    Airports
+    Ferry Routes
+    Piplelines
+    Powerlines
+    Broadband Quality
+    NBN Coverage
+    
 Boundaries
     States & Territories (S/T), ste_2011_aust_shape
     Local Government Areas, lga_2011_aust_shape
@@ -37,37 +69,4 @@ Population
     Cities
     Populated Places
 
-Land
-   Gravity
-   Land Cover
-   Magnetic Image
-   Surface Geology
-   Geomorphology
-   Seismic Surveys
-   Vegetation
-   Hillshade
-   
-Water
-    Waterbodies
-    Rivers
-    Streams
-    Waterholes
-    Boreholes
-    Dams
-    Waterfalls
-    Catchments
-    Drainage Divisions
-    Aquifers
-
-Infrastructure
-    Airports
-    Roads
-    Railroad
-    Bridges
-    Ferry Routes
-    Powerlines
-    Piplelines
-    Broadband Quality
-    NBN Coverage
-    
 
