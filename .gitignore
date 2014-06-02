@@ -1,4 +1,5 @@
 docs/
 node_modules/
-src/build
+.idea/
+public/build
 public/doc

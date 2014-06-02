@@ -5,6 +5,7 @@ var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
 var jasmine = require('gulp-jasmine');
+var exec = require('child_process').exec;
 
 //TODO: figure out if there's any value to this
 //var refresh = require('gulp-livereload');  
@@ -12,24 +13,14 @@ var jasmine = require('gulp-jasmine');
 //var server = lr();
 
 gulp.task('scripts', function() {  
-    gulp.src(['src/index.js'])
-        .pipe(browserify({ standalone:'ausglobe' }))
+    return gulp.src(['src/viewer/main.js'])
+        .pipe(browserify())
         .pipe(concat('ausglobe.js'))
-        .pipe(gulp.dest('src/build'));
-        
-    gulp.src(['src/build/ausglobe.js'])
+        .pipe(gulp.dest('public/build'))
         .pipe(uglify())
         .pipe(concat('ausglobe.min.js'))
-        .pipe(gulp.dest('src/build'));
+        .pipe(gulp.dest('public/build'));
 
-    gulp.src(['src/copyrightHeader.js', 'src/build/ausglobe.js'])
-        .pipe(concat('ausglobe.js'))
-        .pipe(gulp.dest('public'));
-        
-    gulp.src(['src/copyrightHeader.js', 'src/build/ausglobe.min.js'])
-        .pipe(concat('ausglobe.min.js'))
-        .pipe(gulp.dest('public'));
-        
 //        .pipe(refresh(server))
 })
 
@@ -57,11 +48,20 @@ gulp.task('lr-server', function() {
 })
 */
 
-gulp.task('default', function() {  
-    gulp.run('scripts', 'docs');
+gulp.task('build-cesium', function(cb) {
+    return exec('"Tools/apache-ant-1.8.2/bin/ant" build combine', {
+        cwd : 'public/cesium'
+    }, function(err, stdout, stderr) {
+        if (stderr) {
+            console.log('Error while building Cesium: ');
+            console.log(stderr);
+        }
+        cb(err);
+    });
+});
 
-    gulp.watch('src/*.js', function(event) {
-        gulp.run('scripts');
-    })
+gulp.task('default', ['scripts', 'docs'], function() {
+    gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
+    gulp.watch('src/**/*.js', ['scripts']);
 })
 

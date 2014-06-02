@@ -6,8 +6,15 @@
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
     <meta name="description" content="NationalMap">
     <meta name="copyright" content="Copyright(c) 2012-2013 National ICT Australia Limited (NICTA).  All rights reserved.">
+<<<<<<< HEAD
     <title>National Map</title>
     
+=======
+    <title>AusGlobe</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+>>>>>>> af41d68d0c998ea9a5949b692847cbe20830857e
     <!-- jQuery -->
     <script src="./third_party/jquery-1.8.3.min.js"></script>
     <link rel="stylesheet" href="./third_party/jquery-ui-1.9.2.custom/css/smoothness/jquery-ui-1.9.2.custom.min.css" />
@@ -26,42 +33,18 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
     <script src="./third_party/bing.js"></script>
     <script src="./third_party/esri-leaflet.js"></script>
-     
-    <!-- Cesium -->
-    <script type="text/javascript" src="./cesium/Cesium/Cesium.js"></script>
-    <link rel="stylesheet" href="./viewer/CesiumViewer.css" media="screen">
-    
-    <!-- Our Plugins -->
-    <script src="./ausglobe.js"></script>
 
-    <!-- Our UI -->
-    <link rel="stylesheet" href="./viewer/AusGlobeViewer.css">
-    <script src="./viewer/AusGlobeViewer.js"></script>
-    <script src="./viewer/GeoDataWidget.js"></script>
-    
+    <link rel="stylesheet" href="cesium/Source/Widgets/widgets.css" media="screen">
+    <link rel="stylesheet" href="viewer/AusGlobeViewer.css">
+
+    <script src="cesium/Build/Cesium/Cesium.js"></script>
 </head>
 
 <body style="background: #000;">
 
     <div id="cesiumContainer"></div>
     <div id="loadingIndicator" class="loadingIndicator"></div>
-     
 
-<script id="ausglobe">
-/*global $*/
-(function () {
-    "use strict";
-
-        //GeoDataCollection Initialization
-    var geoDataManager = new ausglobe.GeoDataCollection();
-
-    //uncomment this line for local geospace testing
-    geoDataManager.visStore = 'http://localhost:3000';
-    console.log('The VisStore is set to:', geoDataManager.visStore);
-    
-    var viewer = new Cesium.AusGlobeViewer(geoDataManager);
-  
-}());
-</script>
+    <script src="build/ausglobe.js"></script>
 </body>
 </html>

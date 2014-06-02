@@ -3,7 +3,12 @@
   "version": "0.0.1",
   "dependencies": {
     "connect": "*",
-    "supervisor": "0.4.x"
+    "express": "*",
+    "knockout": "^3.1.0",
+    "knockout.mapping": "^2.4.2",
+    "request": "*",
+    "supervisor": "0.4.x",
+    "weakmap": "0.0.6"
   },
   "devDependencies": {
     "gulp": "~3.6.2",

@@ -1,4 +1,4 @@
-{"name":"FSDF Collection", "Layer": [
+{"name":"Data Collections", "Layer": [
   {"name":"Base Maps","base_url":"http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"REST","Title":"Australian Topography","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}

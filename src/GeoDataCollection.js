@@ -21,7 +21,7 @@ var GeoDataCollection = function() {
     this.layers = [];
     this.shareRequest = false;
     
-    this.visStore = 'http://geospace.research.nicta.com.au:3000';
+    this.visStore = 'http://nationalmap.research.nicta.com.au:3000';
 
     var that = this;
     
@@ -556,7 +556,11 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             provider = new L.esri.TiledMapLayer(server);
         }
         else {
+<<<<<<< HEAD
             provider = new L.tileLayer.wms(server, {
+=======
+            provider = new L.tileLayer.wms(request, {
+>>>>>>> af41d68d0c998ea9a5949b692847cbe20830857e
                 layers: layerName,
                 format: 'image/png',
                 transparent: true,

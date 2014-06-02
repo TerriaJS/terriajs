@@ -1,9 +1,9 @@
-
 body {
     padding: 0;
     margin: 0;
     overflow: hidden;
     font-size:12px;
+    font-family: "Open Sans" sans-serif;
 }
 
 #cesiumContainer {
@@ -15,12 +15,10 @@ body {
     margin: 0;
     overflow: hidden;
     padding: 0;
-    font-family: sans-serif;
 }
 
 #product {
     opacity: 0.99;
-    font-family: sans-serif;
     font-size: 18pt;
     margin: 10px;
     padding: 0;
@@ -28,7 +26,14 @@ body {
     width: 180px;
 }
 
-#menu {
+.menu {
+    position: absolute;
+    display: block;
+    right: 0;
+    top: 200px;
+}
+
+.menuItem {
     opacity: 0.95;
     font-size: 9.5pt;
     padding: 2px;
@@ -36,16 +41,36 @@ body {
     width: 80px;
 }
 
-#controls {
+.navigation-controls {
     position: absolute;
-    top: 50px;
-    right: 10px;
+    bottom: 100px;
+    right: 20px;
     
     opacity: 0.95;
     font-size: 9.5pt;
     padding: 0px;
     color: #444;
     width: 30px;
+}
+
+.navigation-control {
+    display: inline-block;
+    position:relative;
+    color: #edffff;  /* For text buttons */
+    fill: #edffff;   /* For SVG buttons */
+    background: #333333;
+    border: 1px solid #555555;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.navigation-control:hover {
+    color: #fff;  /* For text buttons */
+    fill: #fff;   /* For SVG buttons */
+    background: #48b;
+    border-color: #aef;
+    box-shadow: 0 0 8px #fff;
 }
 
 #settings {
@@ -68,7 +93,6 @@ body {
     height: 136px;
     background-color: rgba(0,0,0,0.8);
     color: #eee;
-    font-family: sans-serif;
     font-size: 11pt;
 }
 
@@ -93,12 +117,15 @@ body {
 
 #position {
     position: absolute;
-    bottom: 25px;
-    right: 40px;
+    bottom: 50px;
+    right: 10px;
     width: auto;
-    font-family: sans-serif;
-    font-size: 10.5pt;
+    font-size: 8.5pt;
     color: #fff;
+    background-color:#333333;
+    opacity: 0.9;
+    border: 1px solid #555555;
+    padding: 3px;
 }
 
 #loadingIndicator {
@@ -118,7 +145,6 @@ body {
 
 .dialog {
     display: none;
-    font-family: sans-serif;
     font-size: 9.5pt;
     width: 300px;
     opacity: 0.9;
@@ -164,4 +190,304 @@ li {
     background-position: -224px -192px;
 }
 
+.ausglobe-title-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color:#333333;
+    opacity: 0.9;
+    border: 1px solid #555555;
+    vertical-align: middle;
+}
 
+.ausglobe-title-area:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em;
+}
+
+.ausglobe-title-text {
+    display: inline-block;
+    font-weight: 400;
+    font-size: 14pt;
+    color: #fff;
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+.ausglobe-title-menu {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding-right: 10px;
+}
+
+.ausglobe-title-menu:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.ausglobe-title-menuItem {
+    position: relative;
+    display: inline;
+    color: #9A9A9B;
+    font-size: 10pt;
+    cursor: pointer;
+}
+
+a.ausglobe-title-menuItem {
+    text-decoration: none;
+}
+
+a.ausglobe-title-menuItem:hover {
+    text-decoration: underline;
+}
+
+.ausglobe-title-menuItem-divider {
+    position: relative;
+    display: inline;
+    color: #9A9A9B;
+    font-size: 10pt;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.ausglobe-title-credits {
+    position: absolute;
+    font-weight: 400;
+    font-size: 7.5pt;
+    color: #fff;
+    top: 0;
+    bottom: 0;
+    left: 200px;
+    right: 400px;
+    overflow: hidden;
+}
+
+.ausglobe-left-area {
+    position: absolute;
+    left: 0;
+    width: 300px;
+    top: 50px;
+    bottom: 80px;
+    pointer-events: none;
+}
+
+.ausglobe-panel-button {
+    pointer-events: auto;
+    position: relative;
+    height: 30px;
+    border: 1px solid #555555;
+    width: 80px;
+    left: 0;
+    opacity: 0.95;
+    font-size: 9.5pt;
+    padding: 2px;
+    background-color: #333333;
+    line-height: 30px;
+    cursor: pointer;
+    margin-top: 5px;
+
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
+}
+
+.ausglobe-panel-button:hover {
+    color: #fff;  /* For text buttons */
+    fill: #fff;   /* For SVG buttons */
+    background: #48b;
+    border-color: #aef;
+    box-shadow: 0 0 8px #fff;
+}
+
+.ausglobe-panel-button-panel-visible {
+    left: 328px;
+
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
+}
+
+.ausglobe-panel-button-image {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.ausglobe-panel-button-label {
+    position: relative;
+    left: 25px;
+    color: #fff;
+    font-size: 11pt;
+}
+
+.ausglobe-panel {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: -300px;
+    width: 300px;
+    background-color: #FFFFFF;
+    pointer-events: auto;
+
+    -webkit-transition: visibility 0s 0.25s, left 0.25s;
+    -moz-transition: visibility 0s 0.25s, left 0.25s;
+    -ms-transition: visibility 0s 0.25s, left 0.25s;
+    -o-transition: visibility 0s 0.25s, left 0.25s;
+    transition: visibility 0s 0.25s, left 0.25s;
+}
+
+.ausglobe-panel-visible {
+    visibility: visible;
+    left: 28px;
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
+}
+
+.ausglobe-accordion-item {
+}
+
+.ausglobe-accordion-item-header {
+    position: relative;
+    margin: 1px;
+    background-color: #E3E4E5;
+    cursor: pointer;
+}
+
+.ausglobe-accordion-item-header-label {
+    display: inline-block;
+    padding: 10px;
+    color: #0066CC;
+    font-weight: bold;
+    font-size: 12pt
+}
+
+.ausglobe-accordion-item-header-arrow {
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.ausglobe-accordion-item-content {
+    visibility: hidden;
+    position: relative;
+    max-height: 0px;
+    overflow: auto;
+
+    -webkit-transition: max-height 0.25s, visibility 0s 0.25s;
+    -moz-transition: max-height 0.25s, visibility 0s 0.25s;
+    -ms-transition: max-height 0.25s, visibility 0s 0.25s;
+    -o-transition: max-height 0.25s, visibility 0s 0.25s;
+    transition: max-height 0.25s, visibility 0s 0.25s;
+}
+
+.ausglobe-accordion-item-content-visible {
+    visibility: visible;
+    max-height: 400px; /* TODO: set this dynamically based on number of accordion items */
+
+    -webkit-transition: max-height 0.25s;
+    -moz-transition: max-height 0.25s;
+    -ms-transition: max-height 0.25s;
+    -o-transition: max-height 0.25s;
+    transition: max-height 0.25s;
+}
+
+.ausglobe-accordion-category {
+    padding: 10px;
+}
+
+.ausglobe-accordion-category-header {
+    cursor: pointer;
+}
+
+.ausglobe-accordion-category-header-arrow {
+    display: inline-block;
+    position: relative;
+    top: 5px;
+}
+
+.ausglobe-accordion-category-header-label {
+    display: inline-block;
+    color: #0066CC;
+    font-size: 11pt;
+}
+
+.ausglobe-accordion-category-content {
+    display: none;
+    position: relative;
+    width: 100%;
+}
+
+.ausglobe-accordion-category-content-visible {
+    display: inline-block;
+}
+
+.ausglobe-accordion-category-item {
+}
+
+.ausglobe-accordion-category-item-label {
+    display: inline-block;
+    position: relative;
+    font-size: 11pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+}
+
+.ausglobe-accordion-category-item-enabled {
+    background-color: #CCDDD8;
+}
+
+.ausglobe-accordion-category-item-checkbox {
+    display: inline-block;
+    position: relative;
+    top: 4px;
+    cursor: pointer;
+}
+
+.ausglobe-accordion-category-item-infoButton {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    font-size: 9pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    color: #0066CC;
+    cursor: pointer;
+}
+
+.ausglobe-viewer-radio-button {
+    display: block;
+    font-size: 11pt;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+}
+
+.ausglobe-imagery-option {
+    border: 1px solid #E3E4E5;
+    margin: 5px;
+}
+
+.ausglobe-imagery-label {
+    text-align: center;
+}
