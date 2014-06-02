@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="21.25px"
+	 height="21.769px" viewBox="0 0 21.25 21.769" enable-background="new 0 0 21.25 21.769" xml:space="preserve">
+<g id="map">
+	<polyline fill="#0071BC" points="3.779,5.095 11.111,16.673 18.445,5.095 	"/>
+	<polyline fill="none" stroke="#0071BC" stroke-width="3" stroke-miterlimit="10" points="176.292,-34.062 167.863,-24.792 
+		159.529,-34.062 	"/>
+	<polyline fill="none" stroke="#0071BC" stroke-width="3" stroke-miterlimit="10" points="159.529,22.209 167.958,12.939 
+		176.291,22.209 	"/>
+</g>
+</svg>

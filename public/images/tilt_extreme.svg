@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="41px"
+	 height="41.699px" viewBox="0 0 41 41.699" enable-background="new 0 0 41 41.699" xml:space="preserve">
+<g id="zoom_out">
+	<polygon fill="#FFFFFF" points="12.75,18.092 28.25,18.092 35.25,28.595 5.75,28.595 	"/>
+	
+		<rect x="16.375" y="14.365" transform="matrix(0.9712 0.2384 -0.2384 0.9712 5.7827 -3.3824)" fill="#333333" width="1" height="15.701"/>
+	
+		<rect x="17.392" y="23.102" transform="matrix(0.3107 0.9505 -0.9505 0.3107 39.6719 -7.5017)" fill="#333333" width="15.234" height="1.001"/>
+	<rect x="8.681" y="20.874" fill="#333333" width="26.569" height="1"/>
+	<rect x="5.75" y="24.548" fill="#333333" width="29.5" height="1.088"/>
+</g>
+</svg>
