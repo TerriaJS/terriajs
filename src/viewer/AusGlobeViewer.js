@@ -183,6 +183,7 @@ var AusGlobeViewer = function(geoDataManager) {
             create : function(options) {
                 var layerViewModel = komapping.fromJS(options.data, categoryMapping);
                 layerViewModel.isOpen = knockout.observable(false);
+                layerViewModel.isLoading = knockout.observable(false);
 
                 if (!defined(layerViewModel.Layer)) {
                     var layer = undefined;
@@ -202,6 +203,7 @@ var AusGlobeViewer = function(geoDataManager) {
 
                         // Don't request capabilities until the layer is opened.
                         if (layerViewModel.isOpen()) {
+                            layerViewModel.isLoading(true);
                             that.geoDataManager.getCapabilities(options.data, function(description) {
                                 var remapped = komapping.fromJS(description, categoryMapping);
 
@@ -219,6 +221,7 @@ var AusGlobeViewer = function(geoDataManager) {
                                 }
 
                                 version(version() + 1);
+                                layerViewModel.isLoading(false);
                             });
 
                             layerRequested = true;
