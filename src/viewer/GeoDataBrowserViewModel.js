@@ -76,6 +76,13 @@ var GeoDataBrowserViewModel = function(options) {
         }
     });
 
+    this._zoomToItem = createCommand(function(item) {
+        if (!defined(item.layer) || !defined(item.layer.extent)) {
+            return;
+        }
+        that._viewer.updateCameraFromRect(item.layer.extent, 1000);
+    });
+
     function removeBaseLayer() {
         if (!defined(that._viewer.viewer)) {
             var message = 'Base layer selection is not yet implemented for Leaflet.';
@@ -195,6 +202,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     toggleItemEnabled : {
         get : function() {
             return this._toggleItemEnabled;
+        }
+    },
+
+    zoomToItem : {
+        get : function() {
+            return this._zoomToItem;
         }
     },
 
