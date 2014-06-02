@@ -170,7 +170,7 @@ var AusGlobeViewer = function(geoDataManager) {
                 var parent = komapping.toJS(options.parent);
                 var data = combine(options.data, parent);
 
-                var layerViewModel = komapping.fromJS(data);
+                var layerViewModel = komapping.fromJS(data, categoryMapping);
                 layerViewModel.isEnabled = knockout.observable(false);
 
                 return layerViewModel;
@@ -207,7 +207,15 @@ var AusGlobeViewer = function(geoDataManager) {
 
                                 var layers = remapped.Layer();
                                 for (var i = 0; i < layers.length; ++i) {
-                                    layer.push(layers[i]);
+                                    // TODO: handle hierarchy better
+                                    if (defined(layers[i].Layer)) {
+                                        var subLayers = layers[i].Layer();
+                                        for (var j = 0; j < subLayers.length; ++j) {
+                                            layer.push(subLayers[j]);
+                                        }
+                                    } else {
+                                        layer.push(layers[i]);
+                                    }
                                 }
 
                                 version(version() + 1);
