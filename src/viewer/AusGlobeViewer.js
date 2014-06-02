@@ -183,6 +183,43 @@ var AusGlobeViewer = function(geoDataManager) {
             create : function(options) {
                 var layerViewModel = komapping.fromJS(options.data, categoryMapping);
                 layerViewModel.isOpen = knockout.observable(false);
+
+                if (!defined(layerViewModel.Layer)) {
+                    var layer = undefined;
+                    var layerRequested = false;
+                    var version = knockout.observable(0);
+
+                    layerViewModel.Layer = knockout.computed(function() {
+                        version();
+
+                        if (layerRequested) {
+                            return layer;
+                        }
+
+                        if (!defined(layer)) {
+                            layer = [];
+                        }
+
+                        // Don't request capabilities until the layer is opened.
+                        if (layerViewModel.isOpen()) {
+                            that.geoDataManager.getCapabilities(options.data, function(description) {
+                                var remapped = komapping.fromJS(description, categoryMapping);
+
+                                var layers = remapped.Layer();
+                                for (var i = 0; i < layers.length; ++i) {
+                                    layer.push(layers[i]);
+                                }
+
+                                version(version() + 1);
+                            });
+
+                            layerRequested = true;
+                        }
+
+                        return layer;
+                    });
+                }
+
                 return layerViewModel;
             }
         }
@@ -190,18 +227,19 @@ var AusGlobeViewer = function(geoDataManager) {
 
     var browserContentViewModel = komapping.fromJS([], browserContentMapping);
 
-    var test = {
-        name : 'Test',
-        Layer : [
-            {
-                name : 'Sub-test',
-                Layer : []
-            }
-        ]
-    };
+    var dataCollectionsPromise = loadJson('./data_collection.json');
+    var otherSourcesPromise = loadJson('./data_sources.json');
 
-    when(loadJson('./data_collection.json'), function(dataCollection) {
-        komapping.fromJS([dataCollection, test], browserContentMapping, browserContentViewModel);
+    when.all([dataCollectionsPromise, otherSourcesPromise], function(sources) {
+        var browserContent = [];
+        browserContent.push(sources[0]);
+
+        var otherSources = sources[1].Layer;
+        for (var i = 0; i < otherSources.length; ++i) {
+            browserContent.push(otherSources[i]);
+        }
+
+        komapping.fromJS(browserContent, browserContentMapping, browserContentViewModel);
     });
 
     this.geoDataBrowser = new GeoDataBrowser({
