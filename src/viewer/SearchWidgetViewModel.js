@@ -201,68 +201,6 @@ function geocode(viewModel) {
     var cameraPosition = viewModel._viewer.scene.camera.positionWC;
     var cameraPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(cameraPosition);
 
-    var x = {
-        "authenticationResultCode": "ValidCredentials",
-        "brandLogoUri": "http:\/\/dev.virtualearth.net\/Branding\/logo_powered_by.png",
-        "copyright": "Copyright © 2014 Microsoft and its suppliers. All rights reserved. This API cannot be accessed and the content and any results may not be used, reproduced or transmitted in any manner without express written permission from Microsoft Corporation.",
-        "resourceSets": [
-            {
-                "estimatedTotal": 2,
-                "resources": [
-                    {
-                        "__type": "Location:http:\/\/schemas.microsoft.com\/search\/local\/ws\/rest\/v1",
-                        "bbox": [59.998630523681641, -136.48089599609375, 79.00848388671875, -102],
-                        "name": "Northwest Territories",
-                        "point": {
-                            "type": "Point",
-                            "coordinates": [67.2751235961914, -118.86355590820312]
-                        },
-                        "address": {
-                            "adminDistrict": "NT",
-                            "countryRegion": "Canada",
-                            "formattedAddress": "Northwest Territories"
-                        },
-                        "confidence": "High",
-                        "entityType": "AdminDivision1",
-                        "geocodePoints": [
-                            {
-                                "type": "Point",
-                                "coordinates": [67.2751235961914, -118.86355590820312],
-                                "calculationMethod": "Rooftop",
-                                "usageTypes": ["Display"]
-                            }
-                        ],
-                        "matchCodes": ["Good"]
-                    },
-                    {
-                        "__type": "Location:http:\/\/schemas.microsoft.com\/search\/local\/ws\/rest\/v1",
-                        "bbox": [-26.006711959838867, 122.29334259033203, -10.855688095092773, 138.00273132324219],
-                        "name": "Northern Territory",
-                        "point": {
-                            "type": "Point",
-                            "coordinates": [-19.48194694519043, 133.3697509765625]
-                        },
-                        "address": {
-                            "adminDistrict": "NT",
-                            "countryRegion": "Australia",
-                            "formattedAddress": "Northern Territory"
-                        },
-                        "confidence": "High",
-                        "entityType": "AdminDivision1",
-                        "geocodePoints": [
-                            {
-                                "type": "Point",
-                                "coordinates": [-19.48194694519043, 133.3697509765625],
-                                "calculationMethod": "Rooftop",
-                                "usageTypes": ["Display"]
-                            }
-                        ],
-                        "matchCodes": ["Good"]
-                    }
-                ]
-            }
-        ], "statusCode": 200, "statusDescription": "OK", "traceId": "81ab9583ed6742668d6621d88e60ba7e|BN20130532|02.00.151.2000|BN2SCH020180822, BN2SCH020201635"};
-
     var promise = jsonp(viewModel._url + 'REST/v1/Locations?userLocation=' + CesiumMath.toDegrees(cameraPositionCartographic.latitude) + ',' + CesiumMath.toDegrees(cameraPositionCartographic.longitude) , {
         parameters : {
             query : query,
@@ -307,26 +245,32 @@ function geocode(viewModel) {
         var east = bbox[3];
         var rectangle = Rectangle.fromDegrees(west, south, east, north);
 
-        var camera = viewModel._viewer.scene.camera;
-        var position = camera.getRectangleCameraCoordinates(rectangle);
-        if (!defined(position)) {
-            // This can happen during a scene mode transition.
-            return;
+        if (viewModel._viewer.viewer) {
+            // Cesium
+            var camera = viewModel._viewer.scene.camera;
+            var position = camera.getRectangleCameraCoordinates(rectangle);
+            if (!defined(position)) {
+                // This can happen during a scene mode transition.
+                return;
+            }
+
+            var options = {
+                destination: position,
+                duration: viewModel._flightDuration,
+                onComplete: function () {
+                    var screenSpaceCameraController = viewModel._viewer.scene.screenSpaceCameraController;
+                    screenSpaceCameraController.ellipsoid = viewModel._ellipsoid;
+                },
+                endReferenceFrame: Matrix4.IDENTITY,
+                convert: false
+            };
+
+            var flight = CameraFlightPath.createAnimation(viewModel._viewer.scene, options);
+            viewModel._viewer.scene.animations.add(flight);
+        } else {
+            // Leaflet
+            viewModel._viewer.map.fitBounds([[south, west], [north, east]]);
         }
-
-        var options = {
-            destination : position,
-            duration : viewModel._flightDuration,
-            onComplete : function() {
-                var screenSpaceCameraController = viewModel._viewer.scene.screenSpaceCameraController;
-                screenSpaceCameraController.ellipsoid = viewModel._ellipsoid;
-            },
-            endReferenceFrame : Matrix4.IDENTITY,
-            convert : false
-        };
-
-        var flight = CameraFlightPath.createAnimation(viewModel._viewer.scene, options);
-        viewModel._viewer.scene.animations.add(flight);
     }, function() {
         if (geocodeInProgress.cancel) {
             return;
