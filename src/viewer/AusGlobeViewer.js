@@ -41,6 +41,7 @@ var GeoDataBrowser = require('./GeoDataBrowser');
 var GeoDataWidget = require('./GeoDataWidget');
 var TitleWidget = require('./TitleWidget');
 var NavigationWidget = require('./NavigationWidget');
+var SearchWidget = require('./SearchWidget');
 
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
@@ -85,6 +86,11 @@ var AusGlobeViewer = function(geoDataManager) {
     this._titleWidget = titleWidget;
 
     this._navigationWidget = new NavigationWidget(this, document.body);
+
+    this._searchWidget = new SearchWidget({
+        container : document.body,
+        viewer : this
+    });
 
 //    var div = document.createElement('div');
 //    div.id = 'controls';
