@@ -9,6 +9,8 @@ var createCommand = Cesium.createCommand;
 var Ellipsoid = Cesium.Ellipsoid;
 var getElement = Cesium.getElement;
 var SceneMode = Cesium.SceneMode;
+var Matrix4 = Cesium.Matrix4;
+var CameraFlightPath = Cesium.CameraFlightPath;
 
 var knockout = require('knockout');
 
@@ -86,8 +88,18 @@ function zoomCamera(scene, distFactor, pos) {
         if (cartesian) {
             //TODO: zoom to point selected by user
 //                camera.lookAt(camera.position, cartesian, camera.up);
-            var dist = Cartesian3.magnitude(Cartesian3.subtract(cartesian, camera.position));
-            camera.moveForward(dist * distFactor);
+            var direction = Cartesian3.subtract(cartesian, camera.position);
+            var dist = Cartesian3.magnitude(direction);
+
+            var options = {
+                destination: Cartesian3.add(camera.position, Cartesian3.multiplyByScalar(Cartesian3.normalize(direction), dist * distFactor)),
+                duration: 200,
+                endReferenceFrame: Matrix4.IDENTITY,
+                convert: false
+            };
+
+            var flight = CameraFlightPath.createAnimation(scene, options);
+            scene.animations.add(flight);
         }
     }
     else {
