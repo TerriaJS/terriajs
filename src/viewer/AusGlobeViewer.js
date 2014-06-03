@@ -954,7 +954,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //redisplay data
         this.map = map;
         this.geoDataManager.setViewer({scene: undefined, map: map});
-        //this.geoDataBrowser.viewModel.map = map;
+        this.geoDataBrowser.viewModel.map = map;
 
         //shut down existing cesium
         if (this.viewer !== undefined) {
@@ -1017,7 +1017,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }
 
         this.geoDataManager.setViewer({scene: this.scene, map: undefined});
-        //this.geoDataBrowser.viewModel.map = undefined;
+        this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);
         stopTimeline(this.viewer);
