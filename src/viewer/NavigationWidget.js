@@ -108,6 +108,6 @@ function zoomCamera(scene, distFactor, pos) {
 }
 
 function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); };
-function zoomOut(scene, pos) { zoomCamera(scene, -3.0/2.0, pos); };
+function zoomOut(scene, pos) { zoomCamera(scene, -2.0, pos); };
 
 module.exports = NavigationWidget;
