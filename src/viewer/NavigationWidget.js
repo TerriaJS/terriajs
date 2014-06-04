@@ -9,6 +9,13 @@ var createCommand = Cesium.createCommand;
 var Ellipsoid = Cesium.Ellipsoid;
 var getElement = Cesium.getElement;
 var SceneMode = Cesium.SceneMode;
+var Matrix4 = Cesium.Matrix4;
+var CameraFlightPath = Cesium.CameraFlightPath;
+var Ray = Cesium.Ray;
+var IntersectionTests = Cesium.IntersectionTests;
+var defined = Cesium.defined;
+var Tween = Cesium.Tween;
+var defaultValue = Cesium.defaultValue;
 
 var knockout = require('knockout');
 
@@ -32,25 +39,38 @@ var NavigationWidget = function(viewer, container) {
     var that = this;
     this._viewModel = {
         zoomIn : createCommand(function() {
-            zoomIn(that._viewer.scene);
+            var scene = that._viewer.scene
+            var camera = scene.camera;
+            var focus = getCameraFocus(scene);
+            var direction = Cartesian3.subtract(focus, camera.position);
+            var movementVector = Cartesian3.multiplyByScalar(direction, 2.0 / 3.0);
+            var endPosition = Cartesian3.add(camera.position, movementVector);
+
+            flyToPosition(scene, endPosition);
         }),
         zoomOut : createCommand(function() {
-            zoomOut(that._viewer.scene);
+            var scene = that._viewer.scene
+            var camera = scene.camera;
+            var focus = getCameraFocus(scene);
+            var direction = Cartesian3.subtract(focus, camera.position);
+            var movementVector = Cartesian3.multiplyByScalar(direction, -2.0);
+            var endPosition = Cartesian3.add(camera.position, movementVector);
+
+            flyToPosition(scene, endPosition);
         }),
         tilt : createCommand(function() {
-            console.log(that._viewer.scene.camera.tilt);
             if (that._viewModel.isTiltNone) {
                 that._viewModel.isTiltNone = false;
                 that._viewModel.isTiltModerate = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(30.0);
+                animateToTilt(that._viewer.scene, 40.0);
             } else if (that._viewModel.isTiltModerate) {
                 that._viewModel.isTiltModerate = false;
                 that._viewModel.isTiltExtreme = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(10.0);
+                animateToTilt(that._viewer.scene, 10.0);
             } else if (that._viewModel.isTiltExtreme) {
                 that._viewModel.isTiltExtreme = false;
                 that._viewModel.isTiltNone = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(90.0);
+                animateToTilt(that._viewer.scene, 90.0);
             }
         }),
         isTiltNone : true,
@@ -63,39 +83,79 @@ var NavigationWidget = function(viewer, container) {
     knockout.applyBindings(this._viewModel, element);
 };
 
-//Camera extent approx for 2D viewer
+function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
+    durationMilliseconds = defaultValue(durationMilliseconds, 200);
+
+    var startTilt = scene.camera.tilt;
+    var endTilt = CesiumMath.toRadians(targetTiltDegrees);
+
+    var controller = scene.screenSpaceCameraController;
+    controller.enableInputs = false;
+
+    scene.animations.add({
+        duration : durationMilliseconds,
+        easingFunction : Tween.Easing.Sinusoidal.InOut,
+        startValue : {
+            time: 0.0
+        },
+        stopValue : {
+            time : 1.0
+        },
+        onUpdate : function(value) {
+            scene.camera.tilt = CesiumMath.lerp(startTilt, endTilt, value.time);
+        },
+        onComplete : function() {
+            controller.enableInputs = true;
+        },
+        onCancel: function() {
+            controller.enableInputs = true;
+        }
+    });
+}
+
 function getCameraFocus(scene) {
-    //HACK to get current camera focus
-    var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
-    var focus = scene.camera.pickEllipsoid(pos, Ellipsoid.WGS84);
-    return focus;
+    var ray = new Ray(scene.camera.positionWC, scene.camera.directionWC);
+    var intersections = IntersectionTests.rayEllipsoid(ray, Ellipsoid.WGS84);
+    if (defined(intersections)) {
+        return Ray.getPoint(ray, intersections.start);
+    } else {
+        // Camera direction is not pointing at the globe, so use the ellipsoid horizon point as
+        // the focal point.
+        return IntersectionTests.grazingAltitudeLocation(ray, Ellipsoid.WGS84);
+    }
 }
 
-//TODO: need to make this animate
-function zoomCamera(scene, distFactor, pos) {
+function flyToPosition(scene, position, durationMilliseconds) {
     var camera = scene.camera;
-    //for now
-    if (scene.mode === SceneMode.SCENE3D) {
-        var cartesian;
-        if (pos === undefined) {
-            cartesian = getCameraFocus(scene);
-        }
-        else {
-            cartesian = camera.pickEllipsoid(pos, Ellipsoid.WGS84);
-        }
-        if (cartesian) {
-            //TODO: zoom to point selected by user
-//                camera.lookAt(camera.position, cartesian, camera.up);
-            var dist = Cartesian3.magnitude(Cartesian3.subtract(cartesian, camera.position));
-            camera.moveForward(dist * distFactor);
-        }
-    }
-    else {
-        camera.moveForward(camera.getMagnitude() * distFactor);
-    }
-}
+    var startPosition = camera.position;
+    var endPosition = position;
 
-function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); };
-function zoomOut(scene, pos) { zoomCamera(scene, -3.0/2.0, pos); };
+    durationMilliseconds = defaultValue(durationMilliseconds, 200);
+
+    var controller = scene.screenSpaceCameraController;
+    controller.enableInputs = false;
+
+    scene.animations.add({
+        duration : durationMilliseconds,
+        easingFunction : Tween.Easing.Sinusoidal.InOut,
+        startValue : {
+            time: 0.0
+        },
+        stopValue : {
+            time : 1.0
+        },
+        onUpdate : function(value) {
+            scene.camera.position.x = CesiumMath.lerp(startPosition.x, endPosition.x, value.time);
+            scene.camera.position.y = CesiumMath.lerp(startPosition.y, endPosition.y, value.time);
+            scene.camera.position.z = CesiumMath.lerp(startPosition.z, endPosition.z, value.time);
+        },
+        onComplete : function() {
+            controller.enableInputs = true;
+        },
+        onCancel: function() {
+            controller.enableInputs = true;
+        }
+    });
+}
 
 module.exports = NavigationWidget;
