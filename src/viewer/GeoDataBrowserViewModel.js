@@ -259,7 +259,7 @@ function enableItem(viewModel, item) {
             }
         }
     } else {
-        description.count = 10000;
+        description.count = 1000;
         layer.url = viewModel._dataManager.getOGCFeatureURL(description);
     }
 

@@ -1034,7 +1034,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         layer.style.polygon.color = layer.style.line.color;
         layer.style.polygon.fill = false;  //off by default for perf reasons
         layer.style.polygon.fillcolor = layer.style.line.color;
-        layer.style.polygon.fillcolor.alpha = 0.5;
+        layer.style.polygon.fillcolor.alpha = 0.75;
     }
     
     var newDataSource = new Cesium.GeoJsonDataSource();
