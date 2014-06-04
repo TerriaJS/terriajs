@@ -15,6 +15,7 @@ var Ray = Cesium.Ray;
 var IntersectionTests = Cesium.IntersectionTests;
 var defined = Cesium.defined;
 var Tween = Cesium.Tween;
+var defaultValue = Cesium.defaultValue;
 
 var knockout = require('knockout');
 
@@ -38,10 +39,24 @@ var NavigationWidget = function(viewer, container) {
     var that = this;
     this._viewModel = {
         zoomIn : createCommand(function() {
-            zoomIn(that._viewer.scene);
+            var scene = that._viewer.scene
+            var camera = scene.camera;
+            var focus = getCameraFocus(scene);
+            var direction = Cartesian3.subtract(focus, camera.position);
+            var movementVector = Cartesian3.multiplyByScalar(direction, 2.0 / 3.0);
+            var endPosition = Cartesian3.add(camera.position, movementVector);
+
+            flyToPosition(scene, endPosition);
         }),
         zoomOut : createCommand(function() {
-            zoomOut(that._viewer.scene);
+            var scene = that._viewer.scene
+            var camera = scene.camera;
+            var focus = getCameraFocus(scene);
+            var direction = Cartesian3.subtract(focus, camera.position);
+            var movementVector = Cartesian3.multiplyByScalar(direction, -2.0);
+            var endPosition = Cartesian3.add(camera.position, movementVector);
+
+            flyToPosition(scene, endPosition);
         }),
         tilt : createCommand(function() {
             console.log(that._viewer.scene.camera.tilt);
@@ -69,87 +84,49 @@ var NavigationWidget = function(viewer, container) {
     knockout.applyBindings(this._viewModel, element);
 };
 
-//Camera extent approx for 2D viewer
 function getCameraFocus(scene) {
-    //HACK to get current camera focus
     var ray = new Ray(scene.camera.positionWC, scene.camera.directionWC);
     var intersections = IntersectionTests.rayEllipsoid(ray, Ellipsoid.WGS84);
     if (defined(intersections)) {
         return Ray.getPoint(ray, intersections.start);
     } else {
-        // Camera direction is not pointing at the globe.
-        // So use a multiple of the camera height as the focal distance.
-        var cameraPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(scene.camera.positionWC);
-        var height = cameraPositionCartographic.height;
-        return Cartesian3.add(scene.camera.positionWC, Cartesian3.multiplyByScalar(scene.camera.directionWC, height * 2.0));
+        // Camera direction is not pointing at the globe, so use the ellipsoid horizon point as
+        // the focal point.
+        return IntersectionTests.grazingAltitudeLocation(ray, Ellipsoid.WGS84);
     }
 }
 
-//TODO: need to make this animate
-function zoomCamera(scene, distFactor, pos) {
+function flyToPosition(scene, position, durationMilliseconds) {
+    var controller = scene.screenSpaceCameraController;
+    controller.enableInputs = false;
+
     var camera = scene.camera;
-    //for now
-    if (scene.mode === SceneMode.SCENE3D) {
-        var cartesian;
-        if (pos === undefined) {
-            cartesian = getCameraFocus(scene);
+    var startPosition = camera.position;
+    var endPosition = position;
+
+    durationMilliseconds = defaultValue(durationMilliseconds, 200);
+
+    scene.animations.add({
+        duration : durationMilliseconds,
+        easingFunction : Tween.Easing.Sinusoidal.InOut,
+        startValue : {
+            time: 0.0
+        },
+        stopValue : {
+            time : 1.0
+        },
+        onUpdate : function(value) {
+            scene.camera.position.x = CesiumMath.lerp(startPosition.x, endPosition.x, value.time);
+            scene.camera.position.y = CesiumMath.lerp(startPosition.y, endPosition.y, value.time);
+            scene.camera.position.z = CesiumMath.lerp(startPosition.z, endPosition.z, value.time);
+        },
+        onComplete : function() {
+            controller.enableInputs = true;
+        },
+        onCancel: function() {
+            controller.enableInputs = true;
         }
-        else {
-            cartesian = camera.pickEllipsoid(pos, Ellipsoid.WGS84);
-        }
-        if (cartesian) {
-            //TODO: zoom to point selected by user
-//                camera.lookAt(camera.position, cartesian, camera.up);
-            var direction = Cartesian3.subtract(cartesian, camera.position);
-            var dist = Cartesian3.magnitude(direction);
-
-            var controller = scene.screenSpaceCameraController;
-            controller.enableInputs = false;
-
-            /*var options = {
-                destination: Cartesian3.add(camera.position, Cartesian3.multiplyByScalar(Cartesian3.normalize(direction), dist * distFactor)),
-                direction: scene.camera.directionWC,
-                up: scene.camera.upWC,
-                duration: 200,
-                endReferenceFrame: Matrix4.IDENTITY,
-                convert: false
-            };
-
-            var flight = CameraFlightPath.createAnimation(scene, options);*/
-
-            var startPosition = camera.position;
-            var endPosition = Cartesian3.add(camera.position, Cartesian3.multiplyByScalar(Cartesian3.normalize(direction), dist * distFactor));
-            var durationMilliseconds = 200;
-
-            scene.animations.add({
-                duration : durationMilliseconds,
-                easingFunction : Tween.Easing.Sinusoidal.InOut,
-                startValue : {
-                    time: 0.0
-                },
-                stopValue : {
-                    time : 1.0
-                },
-                onUpdate : function(value) {
-                    scene.camera.position.x = CesiumMath.lerp(startPosition.x, endPosition.x, value.time);
-                    scene.camera.position.y = CesiumMath.lerp(startPosition.y, endPosition.y, value.time);
-                    scene.camera.position.z = CesiumMath.lerp(startPosition.z, endPosition.z, value.time);
-                },
-                onComplete : function() {
-                    controller.enableInputs = true;
-                },
-                onCancel: function() {
-                    controller.enableInputs = true;
-                }
-            });
-        }
-    }
-    else {
-        camera.moveForward(camera.getMagnitude() * distFactor);
-    }
+    });
 }
-
-function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); };
-function zoomOut(scene, pos) { zoomCamera(scene, -2.0, pos); };
 
 module.exports = NavigationWidget;
