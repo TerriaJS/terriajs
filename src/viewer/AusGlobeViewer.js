@@ -474,7 +474,7 @@ AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMill
 
     var scene = this.scene;
     var map = this.map;
-
+    
     //check that we're not too close
     var epsilon = CesiumMath.EPSILON3;
     var rect = rect_in.clone();
@@ -817,6 +817,10 @@ var setCurrentDataset = function(layer, that) {
     }
     updateTimeline(that.viewer, start, finish);
     updateLegend(tableData);
+    
+    if (layer.zoomTo && layer.extent !== undefined) {
+        that.updateCameraFromRect(layer.extent, 1000);
+    }
 }
 
 
@@ -1065,7 +1069,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
                 var dataUrl = that.scene.canvas.toDataURL("image/jpeg");
                 that.geoDataManager.setShareRequest({
                     image: dataUrl,
-                    camera: that.scene.camera
+                    camera: getCameraRect(that.scene)
                 });
             }
         };

@@ -8,7 +8,7 @@ var createCommand = Cesium.createCommand;
 var knockout = Cesium.knockout;
 
 var TitleWidgetViewModel = function(options) {
-    this.title = 'National Map';
+    this.title = 'National Map (BETA)';
     this.menuItems = options.menuItems.map(function(item) {
         return {
             label : item.label,

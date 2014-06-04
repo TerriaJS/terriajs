@@ -157,7 +157,9 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     // Event watchers for geoDataManager
     geoDataManager.GeoDataAdded.addEventListener(function(collection, layer) {
         console.log('Vis Layer Added:', layer.name);
+        layer.zoomTo = collection.zoomTo;
         that.setCurrentDataset(layer);
+        collection.zoomTo = false;
     });
 
     geoDataManager.GeoDataRemoved.addEventListener(function(collection, layer) {
@@ -230,9 +232,8 @@ var dropHandler = function (evt, that) {
         console.log(' - File Name: ' + file.name);
         if (that.geoDataManager.formatSupported(file.name)) {
             when(loadLocalFile(file), function (text) {
-                if (!that.geoDataManager.loadText(text, file.name)) {
-                    alert('This should have been handled but failed.');
-                }
+                that.geoDataManager.zoomTo = true;
+                that.geoDataManager.loadText(text, file.name);
             });
         }
         else {
@@ -260,6 +261,7 @@ var dropHandler = function (evt, that) {
                             alert('Error trying to convert: ' + file.name);
                         }
                         else {
+                            that.geoDataManager.zoomTo = true;
                             that.geoDataManager.loadText(response, file.name+'.geojson');
                         }
                     }
@@ -665,7 +667,7 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
             "Cancel": function () {
                 $(this).dialog("close");
             },
-            "Send": function () {
+            "Share": function () {
                 var formEntries = [];
                 $.each($('#dialogShare').serializeArray(), function(i, field) {
                     formEntries[field.name] = field.value;
