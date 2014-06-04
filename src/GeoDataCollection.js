@@ -21,7 +21,7 @@ var GeoDataCollection = function() {
     this.layers = [];
     this.shareRequest = false;
     
-    this.visStore = 'http://geospace.research.nicta.com.au:3000';
+    this.visStore = 'http://nationalmap.research.nicta.com.au:3000';
 
     var that = this;
     
@@ -264,8 +264,15 @@ GeoDataCollection.prototype.loadUrl = function(url) {
         Cesium.when(Cesium.loadJson(url), function(obj) {
             console.log(obj);
             that.visID = obj._id;
-            var cam = JSON.parse(obj.camera);
-            //TODO: need to come up with general cam parameters for 2D/3D
+ 
+            if (obj.camera !== undefined) {
+                var e = JSON.parse(obj.camera);
+                var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
+                that.zoomTo = true;
+                console.log(camLayer);
+                that.GeoDataAdded.raiseEvent(that, camLayer);
+            }
+           
               //loop through layers adding each one
             var layers = that._parse(obj.layers);
             for (var i = 0; i < layers.length; i++) {
@@ -275,6 +282,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     }
     else if (this.dataUrl) {
         Cesium.loadText(this.dataUrl).then(function (text) { 
+            that.zoomTo = true;
             that.loadText(text, that.dataUrl);
         });
     }
@@ -301,10 +309,8 @@ GeoDataCollection.prototype.getShareRequest = function( description ) {
     request.layers = this._stringify();
     request.version = '0.0.01';
     request.image = description.image;
+    request.camera = JSON.stringify(description.camera);
     var cam = description.camera;
-    if (cam !== undefined) {
-        request.camera = JSON.stringify({ e: cam.positionWC, v: cam.directionWC, u: cam.upWC });
-    }
     if (this.visID) {
         request.parent = this.visID;
     }
@@ -350,6 +356,8 @@ GeoDataCollection.prototype.loadText = function(text, srcname) {
     var DataSource;
     var sourceUpperCase = srcname.toUpperCase();
     console.log(sourceUpperCase);
+    
+    var layer;
     
     //TODO: save dataset text for dnd data
 
@@ -399,8 +407,12 @@ GeoDataCollection.prototype.loadText = function(text, srcname) {
     else {
         console.log('There is no handler for this file based on its extension : ' + srcname);
         return false;
-     }
-     return true;
+    }
+    //TODO: fix this hack
+    if (layer !== undefined) {
+        layer.url = srcname;
+    }
+    return true;
 }
 
 
@@ -597,6 +609,15 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
     });
 }
 
+// Show data file based on extension
+GeoDataCollection.prototype._viewData = function(request, layer) {
+    var that = this;
+        //load text here to let me control functions called after
+    Cesium.when(Cesium.loadText(request), function (text) {
+        that.loadText(text, layer.name);
+    });
+}
+
 // Build a layer based on the description
 GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     var request = layer.url;
@@ -612,6 +633,9 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     }
     else if (layer.type === 'CSV') {
         this._viewTable(request, layer);
+    }
+    else if (layer.type === 'DATA') {
+        this._viewData(request, layer);
     }
     else {
         throw new DeveloperError('Creating layer for unsupported service: '+layer.type);
