@@ -30,6 +30,7 @@ var CameraFlightPath = Cesium.CameraFlightPath;
 var PolylineCollection = Cesium.PolylineCollection;
 var RectanglePrimitive = Cesium.RectanglePrimitive;
 var SceneMode = Cesium.SceneMode;
+var Material = Cesium.Material;
 var when = Cesium.when;
 var Viewer = Cesium.Viewer;
 
