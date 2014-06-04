@@ -59,19 +59,18 @@ var NavigationWidget = function(viewer, container) {
             flyToPosition(scene, endPosition);
         }),
         tilt : createCommand(function() {
-            console.log(that._viewer.scene.camera.tilt);
             if (that._viewModel.isTiltNone) {
                 that._viewModel.isTiltNone = false;
                 that._viewModel.isTiltModerate = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(30.0);
+                animateToTilt(that._viewer.scene, 40.0);
             } else if (that._viewModel.isTiltModerate) {
                 that._viewModel.isTiltModerate = false;
                 that._viewModel.isTiltExtreme = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(10.0);
+                animateToTilt(that._viewer.scene, 10.0);
             } else if (that._viewModel.isTiltExtreme) {
                 that._viewModel.isTiltExtreme = false;
                 that._viewModel.isTiltNone = true;
-                that._viewer.scene.camera.tilt = CesiumMath.toRadians(90.0);
+                animateToTilt(that._viewer.scene, 90.0);
             }
         }),
         isTiltNone : true,
@@ -83,6 +82,36 @@ var NavigationWidget = function(viewer, container) {
 
     knockout.applyBindings(this._viewModel, element);
 };
+
+function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
+    durationMilliseconds = defaultValue(durationMilliseconds, 200);
+
+    var startTilt = scene.camera.tilt;
+    var endTilt = CesiumMath.toRadians(targetTiltDegrees);
+
+    var controller = scene.screenSpaceCameraController;
+    controller.enableInputs = false;
+
+    scene.animations.add({
+        duration : durationMilliseconds,
+        easingFunction : Tween.Easing.Sinusoidal.InOut,
+        startValue : {
+            time: 0.0
+        },
+        stopValue : {
+            time : 1.0
+        },
+        onUpdate : function(value) {
+            scene.camera.tilt = CesiumMath.lerp(startTilt, endTilt, value.time);
+        },
+        onComplete : function() {
+            controller.enableInputs = true;
+        },
+        onCancel: function() {
+            controller.enableInputs = true;
+        }
+    });
+}
 
 function getCameraFocus(scene) {
     var ray = new Ray(scene.camera.positionWC, scene.camera.directionWC);
@@ -97,14 +126,14 @@ function getCameraFocus(scene) {
 }
 
 function flyToPosition(scene, position, durationMilliseconds) {
-    var controller = scene.screenSpaceCameraController;
-    controller.enableInputs = false;
-
     var camera = scene.camera;
     var startPosition = camera.position;
     var endPosition = position;
 
     durationMilliseconds = defaultValue(durationMilliseconds, 200);
+
+    var controller = scene.screenSpaceCameraController;
+    controller.enableInputs = false;
 
     scene.animations.add({
         duration : durationMilliseconds,
