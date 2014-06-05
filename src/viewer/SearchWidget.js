@@ -52,7 +52,7 @@ var SearchWidget = function(options) {
     form.setAttribute('data-bind', 'submit: search');
 
     var textBox = document.createElement('input');
-    textBox.type = 'search';
+    textBox.setAttribute('type', 'search');
     textBox.className = 'ausglobe-search-input';
     textBox.setAttribute('placeholder', 'Enter an address or landmark...');
     textBox.setAttribute('data-bind', '\
