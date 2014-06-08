@@ -759,14 +759,12 @@ var updateLegend = function(datavis) {
 // Timeline display on selection
 //------------------------------------
 function showTimeline(viewer) {
-    viewer.timeline.show = true;
-    viewer.animation.show = true;
+    viewer.showTimeControls = true;
 }
 
 function hideTimeline(viewer) {
     if (defined(viewer)) {
-        viewer.timeline.show = false;
-        viewer.animation.show = false;
+        viewer.showTimeControls = false;
     }
 }
 
@@ -887,7 +885,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         }),
         terrainProvider : new CesiumTerrainProvider({
             url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
-        })
+        }),
+        timeControlsInitiallyVisible : false
     };
 
     //create CesiumViewer
