@@ -59,7 +59,7 @@ var GeoDataBrowser = function(options) {
                             <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemEnabled, visible: isEnabled()" />\
                             <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_box.svg" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled()" />\
                             <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
-                            <div class="ausglobe-accordion-category-item-infoButton">info</div>\
+                            <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                         </div>\
                     </div>\
                 </div>\
