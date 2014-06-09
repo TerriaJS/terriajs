@@ -38,6 +38,7 @@ var Tween = Cesium.Tween;
 var Transforms = Cesium.Transforms;
 var Matrix3 = Cesium.Matrix3;
 var Matrix4 = Cesium.Matrix4;
+var viewerDynamicObjectMixin = Cesium.viewerDynamicObjectMixin;
 
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
@@ -759,14 +760,12 @@ var updateLegend = function(datavis) {
 // Timeline display on selection
 //------------------------------------
 function showTimeline(viewer) {
-    viewer.timeline.show = true;
-    viewer.animation.show = true;
+    viewer.showTimeControls = true;
 }
 
 function hideTimeline(viewer) {
     if (defined(viewer)) {
-        viewer.timeline.show = false;
-        viewer.animation.show = false;
+        viewer.showTimeControls = false;
     }
 }
 
@@ -887,11 +886,25 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         }),
         terrainProvider : new CesiumTerrainProvider({
             url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
-        })
+        }),
+        timeControlsInitiallyVisible : false
     };
 
     //create CesiumViewer
     var viewer = new Viewer(container, options);
+    viewer.extend(viewerDynamicObjectMixin);
+
+    var lastHeight = 0;
+    viewer.scene.preRender.addEventListener(function(scene, time) {
+        var container = viewer._container;
+        var height = container.clientHeight;
+
+        if (height !== lastHeight) {
+            viewer.infoBox.viewModel.maxHeight = Math.max(height - 300, 100);
+            lastHeight = height;
+        }
+    });
+
 
     var scene = viewer.scene;
     var canvas = scene.canvas;
@@ -939,6 +952,9 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 var cartographic = ellipsoid.cartesianToCartographic(cartesian);
                 var terrainPos = [cartographic];
                 function sampleTerrainSuccess() {
+                    if (scene.isDestroyed()) {
+                        return;
+                    }
                     var text = cartesianToDegreeString(scene, cartesian);
                     text += ' | Elev: ' + terrainPos[0].height.toFixed(1) + ' m';
                     document.getElementById('position').innerHTML = text;
@@ -998,8 +1014,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     if (!bCesium) {
 
         //create leaflet viewer
-        map = L.map('cesiumContainer', { zoomControl: false }).setView([-28.5, 135], 5);
-        new L.Control.Zoom({ position: 'topright' }).addTo(map);
+        map = L.map('cesiumContainer', {
+            zoomControl: false
+        }).setView([-28.5, 135], 5);
 
         map.on("boxzoomend", function(e) {
             console.log(e.boxZoomBounds);
@@ -1018,7 +1035,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.addLayer(layer);
 
         //document.getElementById('controls').style.visibility = 'hidden';
-        this._navigationWidget.show = false;
+        this._navigationWidget.showTilt = false;
         document.getElementById('position').style.visibility = 'hidden';
 
         //redisplay data
@@ -1092,7 +1109,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this._enableSelectExtent(true);
         stopTimeline(this.viewer);
 
-        this._navigationWidget.show = true;
+        this._navigationWidget.showTilt = true;
         document.getElementById('position').style.visibility = 'visible';
         /*
          var esri = new ArcGisMapServerImageryProvider({

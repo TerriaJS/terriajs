@@ -13,6 +13,7 @@ var Rectangle = Cesium.Rectangle;
 var createCommand = Cesium.createCommand;
 
 var GeoData = require('../GeoData');
+var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
@@ -81,6 +82,13 @@ var GeoDataBrowserViewModel = function(options) {
             return;
         }
         that._viewer.updateCameraFromRect(item.layer.extent, 1000);
+    });
+
+    this._showInfoForItem = createCommand(function(item) {
+        new GeoDataInfoPopup({
+            container : document.body,
+            viewModel : item
+        });
     });
 
     function removeBaseLayer() {
@@ -208,6 +216,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     zoomToItem : {
         get : function() {
             return this._zoomToItem;
+        }
+    },
+
+    showInfoForItem : {
+        get : function() {
+            return this._showInfoForItem;
         }
     },
 
