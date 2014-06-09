@@ -38,6 +38,7 @@ var Tween = Cesium.Tween;
 var Transforms = Cesium.Transforms;
 var Matrix3 = Cesium.Matrix3;
 var Matrix4 = Cesium.Matrix4;
+var viewerDynamicObjectMixin = Cesium.viewerDynamicObjectMixin;
 
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
@@ -891,6 +892,19 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     //create CesiumViewer
     var viewer = new Viewer(container, options);
+    viewer.extend(viewerDynamicObjectMixin);
+
+    var lastHeight = 0;
+    viewer.scene.preRender.addEventListener(function(scene, time) {
+        var container = viewer._container;
+        var height = container.clientHeight;
+
+        if (height !== lastHeight) {
+            viewer.infoBox.viewModel.maxHeight = Math.max(height - 300, 100);
+            lastHeight = height;
+        }
+    });
+
 
     var scene = viewer.scene;
     var canvas = scene.canvas;
