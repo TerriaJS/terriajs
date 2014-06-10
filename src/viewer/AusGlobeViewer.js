@@ -30,6 +30,7 @@ var Matrix3 = Cesium.Matrix3;
 var Matrix4 = Cesium.Matrix4;
 var PolylineCollection = Cesium.PolylineCollection;
 var Rectangle = Cesium.Rectangle;
+var Rectangle = Cesium.Rectangle;
 var RectanglePrimitive = Cesium.RectanglePrimitive;
 var sampleTerrain = Cesium.sampleTerrain;
 var SceneMode = Cesium.SceneMode;
@@ -39,6 +40,7 @@ var Transforms = Cesium.Transforms;
 var Tween = Cesium.Tween;
 var Viewer = Cesium.Viewer;
 var viewerDynamicObjectMixin = Cesium.viewerDynamicObjectMixin;
+var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
 var when = Cesium.when;
 
 var knockout = require('knockout');
@@ -103,24 +105,6 @@ var AusGlobeViewer = function(geoDataManager) {
         viewer : this
     });
 
-//    var div = document.createElement('div');
-//    div.id = 'controls';
-//    div.innerHTML = '\
-//            <span id="zoom_in" class="control_button" title="Zoom in"></span> \
-//            <span id="zoom_out" class="control_button" title="Zoom out"></span>';
-//    document.body.appendChild(div);
-
-//    div = document.createElement('div');
-//    div.id = 'settings';
-//    div.innerHTML = '<span id="settings" class="settings_button" title="Display Settings"></span>';
-//    document.body.appendChild(div);
-
-//    div = document.createElement('div');
-//    div.id = 'dialogSettings';
-//    div.class = "dialog";
-//    div.innerHTML = '<div id="list4" class="list"></div>';
-//    document.body.appendChild(div);
-
     var div = document.createElement('div');
     div.id = 'position';
     document.body.appendChild(div);
@@ -142,29 +126,6 @@ var AusGlobeViewer = function(geoDataManager) {
     var leftArea = document.createElement('div');
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
-
-//    $("#zoom_in").button({
-//        text: true,
-//        icons: { primary: "ui-icon-plus" }
-//    });
-//    $("#zoom_out").button({
-//        text: true,
-//        icons: { primary: "ui-icon-minus" }
-//    });
-//    $("settings_button").button({
-//        text: true,
-//        icons: { primary: "ui-icon-gear" }
-//    }).css(css);
-
-//    $("#settings").click(function () {
-//        that._showSettingsDialog();
-//    });
-//    $("#zoom_in").click(function () {
-//        zoomIn(that.scene);
-//    });
-//    $("#zoom_out").click(function () {
-//        zoomOut(that.scene);
-//    });
 
     //TODO: perf test to set environment
 
@@ -579,7 +540,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     //create CesiumViewer
     var viewer = new Viewer(container, options);
-    viewer.extend(viewerDynamicObjectMixin);
+    //viewer.extend(viewerDynamicObjectMixin);
 
     var lastHeight = 0;
     viewer.scene.preRender.addEventListener(function(scene, time) {
@@ -610,24 +571,24 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     //TODO: set based on platform
 //        globe.tileCacheSize *= 2;
 
-    // Add double click zoom
     var that = this;
-    this.mouseZoomHandler = new ScreenSpaceEventHandler(canvas);
-    this.mouseZoomHandler.setInputAction(
+    
+    var inputHandler = viewer.screenSpaceEventHandler;
+
+    // Add double click zoom
+    inputHandler.setInputAction(
         function (movement) {
             zoomIn(that.scene, movement.position);
         },
         ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
-    this.mouseZoomHandler.setInputAction(
+    inputHandler.setInputAction(
         function (movement) {
             zoomOut(that.scene, movement.position);
         },
         ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
-
     // Show mouse position and height if terrain on
-    this.mouseOverPosHandler = new ScreenSpaceEventHandler(canvas);
-    this.mouseOverPosHandler.setInputAction( function (movement) {
+    inputHandler.setInputAction( function (movement) {
         var terrainProvider = scene.globe.terrainProvider;
         var cartesian = camera.pickEllipsoid(movement.endPosition, ellipsoid);
         if (cartesian) {
@@ -657,6 +618,110 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             document.getElementById('position').innerHTML = "";
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
+
+    // Attempt to pick WMS layers on left click.
+    var extentScratch = new Rectangle();
+    var oldClickAction = inputHandler.getInputAction(ScreenSpaceEventType.LEFT_CLICK);
+    inputHandler.setInputAction(
+        function(movement) {
+            // Find the picked location on the globe.
+            // TODO: this should take terrain into account.
+            var pickedPosition = scene.camera.pickEllipsoid(movement.position, Ellipsoid.WGS84);
+            var pickedLocation = Ellipsoid.WGS84.cartesianToCartographic(pickedPosition);
+
+            // Find the terrain tile containing the picked location.
+            var surface = that.viewer.scene.globe._surface;
+            var pickedTile;
+
+            for (var textureIndex = 0; !defined(pickedTile) && textureIndex < surface._tilesToRenderByTextureCount.length; ++textureIndex) {
+                var tiles = surface._tilesToRenderByTextureCount[textureIndex];
+                if (!defined(tiles)) {
+                    continue;
+                }
+
+                for (var tileIndex = 0; !defined(pickedTile) && tileIndex < tiles.length; ++tileIndex) {
+                    var tile = tiles[tileIndex];
+                    if (Rectangle.contains(tile.rectangle, pickedLocation)) {
+                        pickedTile = tile;
+                    }
+                }
+            }
+
+            if (!defined(pickedTile)) {
+                return;
+            }
+
+            // GetFeatureInfo for all attached imagery tiles containing the pickedLocation.
+            var tileExtent = pickedTile.rectangle;
+            var imageryTiles = pickedTile.imagery;
+            var extent = extentScratch;
+
+            var promises = [];
+            for (var i = 0; i < imageryTiles.length; ++i) {
+                var terrainImagery = imageryTiles[i];
+                var imagery = terrainImagery.readyImagery;
+                var provider = imagery.imageryLayer.imageryProvider;
+                if (!(provider instanceof WebMapServiceImageryProvider)) {
+                    continue;
+                }
+
+                extent.west = CesiumMath.lerp(tileExtent.west, tileExtent.east, terrainImagery.textureCoordinateRectangle.x);
+                extent.south = CesiumMath.lerp(tileExtent.south, tileExtent.north, terrainImagery.textureCoordinateRectangle.y);
+                extent.east = CesiumMath.lerp(tileExtent.west, tileExtent.east, terrainImagery.textureCoordinateRectangle.z);
+                extent.north = CesiumMath.lerp(tileExtent.south, tileExtent.north, terrainImagery.textureCoordinateRectangle.w);
+
+                if (Rectangle.contains(extent, pickedLocation)) {
+                    var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
+                    var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
+                    promises.push(provider.getFeatureInfo(imagery.x, imagery.y, imagery.level, pixelX, pixelY));
+                }
+            }
+
+            when.all(promises, function(results) {
+                function describe(properties, nameProperty) {
+                    var html = '<table class="cesium-geoJsonDataSourceTable">';
+                    for ( var key in properties) {
+                        if (properties.hasOwnProperty(key)) {
+                            if (key === nameProperty) {
+                                continue;
+                            }
+                            var value = properties[key];
+                            if (defined(value)) {
+                                if (typeof value === 'object') {
+                                    html += '<tr><td>' + key + '</td><td>' + describe(value) + '</td></tr>';
+                                } else {
+                                    html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+                                }
+                            }
+                        }
+                    }
+                    html += '</table>';
+                    return html;
+                }
+
+                // Show information for the first selected feature.
+                var feature;
+                var i;
+                for (i = 0; !defined(feature) && i < results.length; ++i) {
+                    if (defined(results[i]) && defined(results[i].features) && results[i].features.length > 0) {
+                        feature = results[i].features[0];
+                    }
+                }
+
+                var infoBoxViewModel = that.viewer.infoBox.viewModel;
+                infoBoxViewModel.descriptionRawHtml = describe(feature.properties);
+                infoBoxViewModel.showInfo = true;
+
+                for (i = 0; i < results.length; ++i) {
+                    console.log(results[i]);
+                }
+            });
+
+            if (defined(oldClickAction)) {
+                oldClickAction(movement);
+            }
+        },
+        ScreenSpaceEventType.LEFT_CLICK);
 
 
     //Opening scene
