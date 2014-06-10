@@ -878,12 +878,20 @@ function supportsWebgl() {
 // Timeline display on selection
 //------------------------------------
 function showTimeline(viewer) {
-    viewer.showTimeControls = true;
+    $('.cesium-viewer-animationContainer').css('visibility', 'visible');
+    $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
+
+    if (defined(viewer)) {
+        viewer.forceResize();
+    }
 }
 
 function hideTimeline(viewer) {
+    $('.cesium-viewer-animationContainer').css('visibility', 'hidden');
+    $('.cesium-viewer-timelineContainer').css('visibility', 'hidden');
+
     if (defined(viewer)) {
-        viewer.showTimeControls = false;
+        viewer.forceResize();
     }
 }
 
