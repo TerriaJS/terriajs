@@ -230,7 +230,7 @@ function geocode(viewModel) {
 
         // Prefer the resource that is in Australia, if any.
         for (var i = 0; i < resourceSet.resources.length; ++i) {
-            var resource = resourceSet.resources[i];
+            resource = resourceSet.resources[i];
             if (defined(resource.address) && resource.address.countryRegion === 'Australia') {
                 resource = resourceSet.resources[i];
                 break;

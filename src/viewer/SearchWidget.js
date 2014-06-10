@@ -1,9 +1,11 @@
 "use strict";
 
 /*global require,Cesium*/
-var getElement = Cesium.getElement;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
+var destroyObject = Cesium.destroyObject;
+var DeveloperError = Cesium.DeveloperError;
+var getElement = Cesium.getElement;
 var SvgPathBindingHandler = Cesium.SvgPathBindingHandler;
 
 var knockout = require('knockout');

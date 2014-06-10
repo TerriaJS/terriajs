@@ -49,7 +49,7 @@ var NavigationWidget = function(viewer, container) {
                 return;
             } else {
                 // Cesium
-                var scene = that._viewer.scene
+                var scene = that._viewer.scene;
                 var camera = scene.camera;
                 var focus = getCameraFocus(scene);
                 var direction = Cartesian3.subtract(focus, camera.position);
@@ -66,7 +66,7 @@ var NavigationWidget = function(viewer, container) {
                 return;
             } else {
                 // Cesium
-                var scene = that._viewer.scene
+                var scene = that._viewer.scene;
                 var camera = scene.camera;
                 var focus = getCameraFocus(scene);
                 var direction = Cartesian3.subtract(focus, camera.position);

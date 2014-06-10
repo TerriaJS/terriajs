@@ -1,5 +1,4 @@
-
-
+/*global require,Cesium*/
 "use strict";
 
 var defaultValue = Cesium.defaultValue;
@@ -21,7 +20,7 @@ var GeoData = function(description) {
     this.extent = defaultValue(description.extent, undefined);
     this.url = defaultValue(description.url, undefined);
     this.style = defaultValue(description.style, undefined);
-}
+};
 
 module.exports = GeoData;
 

@@ -1,3 +1,4 @@
+/*global require,Cesium,$*/
 "use strict";
 
 var Dataset = require('./Dataset');
@@ -282,7 +283,7 @@ TableDataSource.prototype.setLeadTimeByPercent = function (pct) {
         var data = this.dataset;
         this.leadTimeMin = data.getMinTime().getMinutesDifference(data.getMaxTime()) * pct / 100.0;
     }
-}
+};
 
 /**
 * Set the trailing time by percent
@@ -295,7 +296,7 @@ TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
         var data = this.dataset;
         this.trailTimeMin = data.getMinTime().getMinutesDifference(data.getMaxTime()) * pct / 100.0;
     }
-}
+};
 
 
 //TODO: canvas is an easy way to do this, but html5 specific
