@@ -521,6 +521,7 @@ AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer 
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     var options = {
+        dataSources : this.geoDataManager.dataSourceCollection,
         homeButton: false,
         sceneModePicker: false,
         navigationInstructionsInitiallyVisible: false,
@@ -677,6 +678,10 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 }
             }
 
+            if (promises.length === 0) {
+                return;
+            }
+
             when.all(promises, function(results) {
                 function describe(properties, nameProperty) {
                     var html = '<table class="cesium-geoJsonDataSourceTable">';
@@ -699,21 +704,23 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                     return html;
                 }
 
+                var i;
+                for (i = 0; i < results.length; ++i) {
+                    console.log(results[i]);
+                }
+
                 // Show information for the first selected feature.
                 var feature;
-                var i;
                 for (i = 0; !defined(feature) && i < results.length; ++i) {
                     if (defined(results[i]) && defined(results[i].features) && results[i].features.length > 0) {
                         feature = results[i].features[0];
                     }
                 }
 
-                var infoBoxViewModel = that.viewer.infoBox.viewModel;
-                infoBoxViewModel.descriptionRawHtml = describe(feature.properties);
-                infoBoxViewModel.showInfo = true;
-
-                for (i = 0; i < results.length; ++i) {
-                    console.log(results[i]);
+                if (defined(feature)) {
+                    var infoBoxViewModel = that.viewer.infoBox.viewModel;
+                    infoBoxViewModel.descriptionRawHtml = describe(feature.properties);
+                    infoBoxViewModel.showInfo = true;
                 }
             });
 
