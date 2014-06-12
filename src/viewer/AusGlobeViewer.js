@@ -55,6 +55,8 @@ var TitleWidget = require('./TitleWidget');
 //use our own bing maps key
 BingMapsApi.defaultKey = 'Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk';
 
+
+
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
 
@@ -82,13 +84,25 @@ var AusGlobeViewer = function(geoDataManager) {
             },
             {
                 label : 'Share',
-                uri : 'http://www.nicta.com.au',
                 callback : function() {
-                    if (that.scene) {
-                        that.geoDataManager.shareRequest = true;
+                    if (that.map) {
+//                        that.geoDataManager.setShareRequest({});
+                        console.log($('cesiumContainer'));
+                        html2canvas( document.getElementById('cesiumContainer'), {
+						    useCORS: true,
+                            onrendered: function(canvas) {
+                                var dataUrl = canvas.toDataURL("image/jpeg");
+                                var bnds = that.map.getBounds()
+                                var rect = Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
+                                that.geoDataManager.setShareRequest({
+                                    image: dataUrl,
+                                    camera: rect
+                                });
+                            }
+                        })
                     }
-                    else {
-                        that.geoDataManager.setShareRequest({});
+                    else if (that.scene) {
+                        that.geoDataManager.shareRequest = true;
                     }
                 }
             }

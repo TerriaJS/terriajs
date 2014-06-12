@@ -6,13 +6,19 @@ ckan.module('cesiumpreview', function (jQuery, _) {
 	  
 //      var vis_server = 'http://localhost';  //local
       var vis_server='http://nationalmap.research.nicta.com.au/';
-      var ckan_server = '';   //local
-//      var ckan_server = 'http://ckan.research.nicta.com.au:5000';
-      var data_url = preload_resource['url'] + '?hack.geojson';
+      
+      //figure out data format
+      var data_fmt = '';
+      var fmt = preload_resource['format'];
+      if (fmt !== undefined && fmt !== '') {
+         data_fmt = '&format=' + fmt;
+      }
+      
+      var data_url = encodeURIComponent(preload_resource['url']);
       var style = 'height: 600px; width: 100%; border: none;';
       var display = 'allowFullScreen mozAllowFullScreen webkitAllowFullScreen';
 
-      var html = '<iframe src="' + vis_server + '?data_url=' + ckan_server + data_url + '" style="' + style + '" ' + display + '></iframe>';
+      var html = '<iframe src="' + vis_server + '?data_url=' + data_url + data_fmt + '" style="' + style + '" ' + display + '></iframe>';
       
       console.log(html);
       
