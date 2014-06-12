@@ -4,6 +4,8 @@
 var getElement = Cesium.getElement;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
+var destroyObject = Cesium.destroyObject;
+var DeveloperError = Cesium.DeveloperError;
 var SvgPathBindingHandler = Cesium.SvgPathBindingHandler;
 
 var knockout = require('knockout');
@@ -74,25 +76,6 @@ cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, 
     this._container = container;
     this._viewModel = viewModel;
     this._form = form;
-
-    this._onInputBegin = function(e) {
-        if (!container.contains(e.target)) {
-            textBox.blur();
-        }
-    };
-
-    this._onInputEnd = function(e) {
-        if (container.contains(e.target)) {
-            textBox.focus();
-        }
-    };
-
-    //We subscribe to both begin and end events in order to give the text box
-    //focus no matter where on the widget is clicked.
-    document.addEventListener('mousedown', this._onInputBegin, true);
-    document.addEventListener('mouseup', this._onInputEnd, true);
-    document.addEventListener('touchstart', this._onInputBegin, true);
-    document.addEventListener('touchend', this._onInputEnd, true);
 };
 
 defineProperties(SearchWidget.prototype, {
