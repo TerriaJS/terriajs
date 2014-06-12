@@ -1,6 +1,6 @@
 "use strict";
 
-/*global Cesium,require*/
+/*global Cesium,require,alert*/
 
 var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
@@ -87,7 +87,7 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._showInfoForItem = createCommand(function(item) {
-        new GeoDataInfoPopup({
+        var popup = new GeoDataInfoPopup({
             container : document.body,
             viewModel : item
         });
@@ -311,23 +311,25 @@ function disableItem(viewModel, item) {
 
 function getOGCLayerExtent(layer) {
     var rect;
+    var box;
+
     if (layer.WGS84BoundingBox) {
         var lc = layer.WGS84BoundingBox.LowerCorner.split(" ");
         var uc = layer.WGS84BoundingBox.UpperCorner.split(" ");
         rect = Rectangle.fromDegrees(parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]));
     }
     else if (layer.LatLonBoundingBox) {
-        var box = layer.LatLonBoundingBox || layer.BoundingBox;
+        box = layer.LatLonBoundingBox || layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.minx), parseFloat(box.miny),
             parseFloat(box.maxx), parseFloat(box.maxy));
     }
     else if (layer.EX_GeographicBoundingBox) {
-        var box = layer.EX_GeographicBoundingBox;
+        box = layer.EX_GeographicBoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.westBoundLongitude), parseFloat(box.southBoundLatitude),
             parseFloat(box.eastBoundLongitude), parseFloat(box.northBoundLatitude));
     }
     else if (layer.BoundingBox) {
-        var box = layer.BoundingBox;
+        box = layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
             parseFloat(box.east), parseFloat(box.north));
     }
