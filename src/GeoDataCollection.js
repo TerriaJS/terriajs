@@ -254,6 +254,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     this.visStore = uri_params.vis_server;
     this.visID = uri_params.vis_id;
     this.dataUrl = uri_params.data_url;
+    this.dataFormat = uri_params.format;
     
     var that = this;
    
@@ -284,7 +285,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     else if (this.dataUrl) {
         Cesium.loadText(this.dataUrl).then(function (text) { 
             that.zoomTo = true;
-            that.loadText(text, that.dataUrl);
+            that.loadText(text, that.dataUrl, that.dataFormat);
         });
     }
 };
@@ -353,9 +354,12 @@ GeoDataCollection.prototype.formatSupported = function(srcname) {
  * @param {string} srcname The text file name to get the format extension from.
  *
 */
-GeoDataCollection.prototype.loadText = function(text, srcname) {
+GeoDataCollection.prototype.loadText = function(text, srcname, format) {
     var DataSource;
     var sourceUpperCase = srcname.toUpperCase();
+    if (format !== undefined) {
+        sourceUpperCase = (srcname + '.' + format).toUpperCase();
+    }
     console.log(sourceUpperCase);
     
     var layer;
@@ -374,8 +378,9 @@ GeoDataCollection.prototype.loadText = function(text, srcname) {
         layer.extent = getDataSourceExtent(czmlDataSource);
         this.add(layer);
     }
-    else if (endsWith(sourceUpperCase, ".GEOJSON") || //
-            endsWith(sourceUpperCase, ".JSON") || //
+    else if (endsWith(sourceUpperCase, ".GEOJSON") ||
+            endsWith(sourceUpperCase, ".GJSON") ||
+            endsWith(sourceUpperCase, ".JSON") ||
             endsWith(sourceUpperCase, ".TOPOJSON")) {
         layer = new GeoData({ name: srcname, type: 'DATA' });
         this.addGeoJsonLayer(JSON.parse(text), srcname, layer);
