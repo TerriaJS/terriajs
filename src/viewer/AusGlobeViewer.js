@@ -47,6 +47,7 @@ var knockoutES5 = require('../../public/third_party/knockout-es5.js');
 
 var GeoDataBrowser = require('./GeoDataBrowser');
 var GeoDataWidget = require('./GeoDataWidget');
+var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
 var SearchWidget = require('./SearchWidget');
 var TitleWidget = require('./TitleWidget');
@@ -261,6 +262,64 @@ var AusGlobeViewer = function(geoDataManager) {
 
         komapping.fromJS(browserContent, browserContentMapping, browserContentViewModel);
     });
+
+    function noopHandler(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+
+    function dropHandler(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        function loadCollection(json) {
+            var collections;
+            if (json.name === 'National Map Services') {
+                collections = json.Layer;
+            } else {
+                collections = [json];
+            }
+
+            var existingCollection;
+
+            for (var i = 0; i < collections.length; ++i) {
+                var collection = collections[i];
+
+                // Find an existing collection with the same name, if any.
+                var name = collection.name;
+                var existingCollections = browserContentViewModel();
+
+                existingCollection = undefined;
+                for (var j = 0; j < existingCollections.length; ++j) {
+                    if (existingCollections[j].name() === name) {
+                        existingCollection = existingCollections[j];
+                        break;
+                    }
+                }
+
+                if (defined(existingCollection)) {
+                    komapping.fromJS(collection, browserContentMapping, existingCollection);
+                } else {
+                    browserContentViewModel.push(komapping.fromJS(collection, browserContentMapping));
+                }
+            }
+        }
+
+        var files = evt.dataTransfer.files;
+        for (var i = 0; i < files.length; ++i) {
+            var file = files[i];
+            if (file.name.indexOf('.json') === -1) {
+                continue;
+            }
+
+            when(readJson(file), loadCollection);
+        }
+    }
+
+    document.addEventListener("dragenter", noopHandler, false);
+    document.addEventListener("dragexit", noopHandler, false);
+    document.addEventListener("dragover", noopHandler, false);
+    document.addEventListener("drop", dropHandler, false);
 
     this.geoDataBrowser = new GeoDataBrowser({
         viewer : this,
