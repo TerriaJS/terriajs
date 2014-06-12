@@ -1,3 +1,4 @@
+/*global require,Cesium,$*/
 "use strict";
 
 var Variable = require('./Variable');
@@ -46,7 +47,7 @@ Dataset.prototype.getExtent = function () {
         }
     }
     return Cesium.Rectangle.fromDegrees(minpos[0], minpos[1], maxpos[0], maxpos[1]);
-}
+};
 
 Dataset.prototype.getMinVal = function () {
     if (this._variables && this._varID[VarType.SCALAR]) {
@@ -94,31 +95,35 @@ Dataset.prototype._processVariables = function () {
     this._varID = [];
 
     for (var id in this._variables) {
-        var variable = this._variables[id];
-        //guess var type if not set
-        if (variable.type === undefined) {
-            variable.guessVarType(id);
-        }
-        if (variable.type === VarType.TIME) {
-            variable.processTimeVar();            //calculate time variables
-            //if failed then default type to scalar
-            if (variable.time_var === undefined) {
-                variable.type = VarType.SCALAR;
+        if (this._variables.hasOwnProperty(id)) {
+            var variable = this._variables[id];
+            //guess var type if not set
+            if (variable.type === undefined) {
+                variable.guessVarType(id);
             }
-        }
-        if (variable.type !== VarType.TIME) {
-            variable._calculateVarMinMax();            //calculate var min/max
-        }
-        //deal with enumerated variables
-        if (variable.type === VarType.SCALAR && variable.min > variable.max) {
-            variable.type = VarType.ENUM;
-            variable.processEnumVar();            //calculate enum variables
-        }
+            if (variable.type === VarType.TIME) {
+                variable.processTimeVar();            //calculate time variables
+                //if failed then default type to scalar
+                if (variable.time_var === undefined) {
+                    variable.type = VarType.SCALAR;
+                }
+            }
+            if (variable.type !== VarType.TIME) {
+                variable._calculateVarMinMax();            //calculate var min/max
+            }
+            //deal with enumerated variables
+            if (variable.type === VarType.SCALAR && variable.min > variable.max) {
+                variable.type = VarType.ENUM;
+                variable.processEnumVar();            //calculate enum variables
+            }
 
-        //set the varIDs
-        for (var vt in VarType) {
-            if (this._varID[VarType[vt]] === undefined && variable.type === VarType[vt]) {
-                this._varID[VarType[vt]] = id;
+            //set the varIDs
+            for (var vt in VarType) {
+                if (VarType.hasOwnProperty(vt)) {
+                    if (this._varID[VarType[vt]] === undefined && variable.type === VarType[vt]) {
+                        this._varID[VarType[vt]] = id;
+                    }
+                }
             }
         }
     }
@@ -188,7 +193,7 @@ Dataset.prototype.loadText = function (text) {
             onParseValue: $.csv.hooks.castToScalar
         });
     this.loadJson(result);
-}
+};
 
 /**
 * Load a dataset - returns header and optionally variable data

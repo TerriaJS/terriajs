@@ -1,3 +1,4 @@
+/*global require,Cesium*/
 "use strict";
 
 /*!
@@ -200,11 +201,13 @@ Variable.prototype.processEnumVar = function () {
 Variable.prototype.guessVarType = function (name) {
     //functions to try to figure out position and time variables.
     function match_col(name, hints) {
-        var name = name.toLowerCase();
+        name = name.toLowerCase();
         for (var h in hints) {
-            var hint = hints[h].toLowerCase();
-            if (name.indexOf(hint) === 0 || name.indexOf(' ' + hint) !== -1 || name.indexOf('_' + hint) !== -1) {
-                return true;
+            if (hints.hasOwnProperty(h)) {
+                var hint = hints[h].toLowerCase();
+                if (name.indexOf(hint) === 0 || name.indexOf(' ' + hint) !== -1 || name.indexOf('_' + hint) !== -1) {
+                    return true;
+                }
             }
         }
         return false;
