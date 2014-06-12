@@ -288,6 +288,10 @@ var AusGlobeViewer = function(geoDataManager) {
         evt.preventDefault();
 
         function loadCollection(json) {
+            if (!defined(json) || !defined(json.name) || !defined(json.Layer)) {
+                return;
+            }
+
             var collections;
             if (json.name === 'National Map Services') {
                 collections = json.Layer;
