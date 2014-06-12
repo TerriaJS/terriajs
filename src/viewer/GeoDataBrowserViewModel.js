@@ -2,9 +2,11 @@
 
 /*global Cesium,require*/
 
+var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
 var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
+var DefaultProxy = Cesium.DefaultProxy;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
@@ -145,6 +147,16 @@ var GeoDataBrowserViewModel = function(options) {
         }), 0);
     });
 
+    this._activateAustralianTopography = createCommand(function() {
+        removeBaseLayer();
+
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+        imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
+            url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer',
+            proxy : new DefaultProxy('/proxy/')
+        }), 0);
+    });
+
     knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'imageryIsOpen',
                           'viewerSelectionIsOpen', 'selectedViewer']);
 
@@ -252,6 +264,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     activateNaturalEarthII : {
         get : function() {
             return this._activateNaturalEarthII;
+        }
+    },
+
+    activateAustralianTopography : {
+        get : function() {
+            return this._activateAustralianTopography;
         }
     }
 });
