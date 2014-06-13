@@ -51,6 +51,7 @@ body {
     padding: 0px;
     color: #444;
     width: 30px;
+    z-index: 999; // required for IE9
 }
 
 .navigation-control {
