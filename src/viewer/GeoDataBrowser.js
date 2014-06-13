@@ -63,7 +63,8 @@ var GeoDataBrowser = function(options) {
                         </div>\
                     </div>\
                 </div>\
-            </div>';
+            </div>\
+        </div>';
 
     wrapper.appendChild(dataPanel);
 
