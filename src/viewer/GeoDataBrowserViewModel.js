@@ -6,23 +6,25 @@ var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
 var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
+var combine = Cesium.combine;
+var createCommand = Cesium.createCommand;
 var DefaultProxy = Cesium.DefaultProxy;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
-var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
+var loadJson = Cesium.loadJson;
 var Rectangle = Cesium.Rectangle;
-var createCommand = Cesium.createCommand;
+var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
+var when = Cesium.when;
 
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
+var readJson = require('../readJson');
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
 
 var GeoDataBrowserViewModel = function(options) {
-    this.content = options.content;
-
     this._viewer = options.viewer;
     this._dataManager = options.dataManager;
     this.map = options.map;
@@ -30,13 +32,20 @@ var GeoDataBrowserViewModel = function(options) {
     this.showingPanel = false;
     this.showingMapPanel = false;
     this.openIndex = 0;
-    this.openMapIndex = 0;
+    this.addDataIsOpen = false;
+    this.wfsServiceUrl = '';
 
+    this.openMapIndex = 0;
     this.imageryIsOpen = true;
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = 'Terrain';
 
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'addDataIsOpen', 'serviceUrl',
+                          'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
+
     var that = this;
+
+    // Create commands
     this._toggleShowingPanel = createCommand(function() {
         that.showingPanel = !that.showingPanel;
         if (that.showingPanel) {
@@ -53,6 +62,12 @@ var GeoDataBrowserViewModel = function(options) {
 
     this._openItem = createCommand(function(item) {
         that.openIndex = that.content.indexOf(item);
+        that.addDataIsOpen = false;
+    });
+
+    this._openAddData = createCommand(function() {
+        that.openIndex = -1;
+        that.addDataIsOpen = true;
     });
 
     this._openImagery = createCommand(function() {
@@ -91,6 +106,18 @@ var GeoDataBrowserViewModel = function(options) {
             container : document.body,
             viewModel : item
         });
+    });
+
+    this._addWfsService = createCommand(function() {
+        that.content.push(komapping.fromJS({
+            name : 'User Added',
+            Layer : [{
+                name : that.wfsServiceUrl,
+                base_url : that.wfsServiceUrl,
+                type : 'WFS',
+                proxy : true
+            }]
+        }, that._browserContentMapping));
     });
 
     function removeBaseLayer() {
@@ -157,9 +184,7 @@ var GeoDataBrowserViewModel = function(options) {
         }), 0);
     });
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'imageryIsOpen',
-                          'viewerSelectionIsOpen', 'selectedViewer']);
-
+    // Subscribe to a change in the selected viewer (2D/3D) in order to actually switch the viewer.
     knockout.getObservable(this, 'selectedViewer').subscribe(function(value) {
         if (value === '2D') {
             if (that._viewer.isCesium()) {
@@ -180,6 +205,158 @@ var GeoDataBrowserViewModel = function(options) {
             }
         }
     });
+
+    var categoryMapping = {
+        Layer : {
+            create : function(options) {
+                var parent = komapping.toJS(options.parent);
+                var data = combine(options.data, parent);
+
+                var layerViewModel = komapping.fromJS(data, categoryMapping);
+                layerViewModel.isEnabled = knockout.observable(false);
+
+                return layerViewModel;
+            }
+        }
+    };
+
+    this._browserContentMapping = {
+        Layer : {
+            create : function(options) {
+                var layerViewModel = komapping.fromJS(options.data, categoryMapping);
+                layerViewModel.isOpen = knockout.observable(false);
+                layerViewModel.isLoading = knockout.observable(false);
+
+                if (!defined(layerViewModel.Layer)) {
+                    var layer;
+                    var layerRequested = false;
+                    var version = knockout.observable(0);
+
+                    layerViewModel.Layer = knockout.computed(function() {
+                        version();
+
+                        if (layerRequested) {
+                            return layer;
+                        }
+
+                        if (!defined(layer)) {
+                            layer = [];
+                        }
+
+                        // Don't request capabilities until the layer is opened.
+                        if (layerViewModel.isOpen()) {
+                            layerViewModel.isLoading(true);
+                            that._viewer.geoDataManager.getCapabilities(options.data, function(description) {
+                                var remapped = komapping.fromJS(description, categoryMapping);
+
+                                var layers = remapped.Layer();
+                                for (var i = 0; i < layers.length; ++i) {
+                                    // TODO: handle hierarchy better
+                                    if (defined(layers[i].Layer)) {
+                                        var subLayers = layers[i].Layer();
+                                        for (var j = 0; j < subLayers.length; ++j) {
+                                            layer.push(subLayers[j]);
+                                        }
+                                    } else {
+                                        layer.push(layers[i]);
+                                    }
+                                }
+
+                                version(version() + 1);
+                                layerViewModel.isLoading(false);
+                            });
+
+                            layerRequested = true;
+                        }
+
+                        return layer;
+                    });
+                }
+
+                return layerViewModel;
+            }
+        }
+    };
+
+    var browserContentViewModel = komapping.fromJS([], this._browserContentMapping);
+    this.content = browserContentViewModel;
+
+    var dataCollectionsPromise = loadJson('./data_collection.json');
+    var otherSourcesPromise = loadJson('./data_sources.json');
+
+    when.all([dataCollectionsPromise, otherSourcesPromise], function(sources) {
+        var browserContent = [];
+        browserContent.push(sources[0]);
+
+        var otherSources = sources[1].Layer;
+        for (var i = 0; i < otherSources.length; ++i) {
+            browserContent.push(otherSources[i]);
+        }
+
+        komapping.fromJS(browserContent, that._browserContentMapping, browserContentViewModel);
+    });
+
+    function noopHandler(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+
+    function dropHandler(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        function loadCollection(json) {
+            if (!defined(json) || !defined(json.name) || !defined(json.Layer)) {
+                return;
+            }
+
+            var collections;
+            if (json.name === 'National Map Services') {
+                collections = json.Layer;
+            } else {
+                collections = [json];
+            }
+
+            var existingCollection;
+
+            for (var i = 0; i < collections.length; ++i) {
+                var collection = collections[i];
+
+                // Find an existing collection with the same name, if any.
+                var name = collection.name;
+                var existingCollections = browserContentViewModel();
+
+                existingCollection = undefined;
+                for (var j = 0; j < existingCollections.length; ++j) {
+                    if (existingCollections[j].name() === name) {
+                        existingCollection = existingCollections[j];
+                        break;
+                    }
+                }
+
+                if (defined(existingCollection)) {
+                    komapping.fromJS(collection, that._browserContentMapping, existingCollection);
+                } else {
+                    browserContentViewModel.push(komapping.fromJS(collection, that._browserContentMapping));
+                }
+            }
+        }
+
+        var files = evt.dataTransfer.files;
+        for (var i = 0; i < files.length; ++i) {
+            var file = files[i];
+            if (file.name.indexOf('.json') === -1) {
+                continue;
+            }
+
+            when(readJson(file), loadCollection);
+        }
+    }
+
+    document.addEventListener("dragenter", noopHandler, false);
+    document.addEventListener("dragexit", noopHandler, false);
+    document.addEventListener("dragover", noopHandler, false);
+    document.addEventListener("drop", dropHandler, false);
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {
@@ -198,6 +375,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     openItem : {
         get : function() {
             return this._openItem;
+        }
+    },
+
+    openAddData : {
+        get : function() {
+            return this._openAddData;
         }
     },
 
@@ -270,6 +453,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     activateAustralianTopography : {
         get : function() {
             return this._activateAustralianTopography;
+        }
+    },
+
+    addWfsService : {
+        get : function() {
+            return this._addWfsService;
         }
     }
 });
