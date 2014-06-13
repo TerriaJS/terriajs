@@ -20,6 +20,8 @@ var defineProperties = Cesium.defineProperties;
 
 var knockout = require('knockout');
 
+var cartesian3Scratch = new Cartesian3();
+
 var NavigationWidget = function(viewer, container) {
     container = getElement(container);
 
@@ -52,9 +54,9 @@ var NavigationWidget = function(viewer, container) {
                 var scene = that._viewer.scene;
                 var camera = scene.camera;
                 var focus = getCameraFocus(scene);
-                var direction = Cartesian3.subtract(focus, camera.position);
-                var movementVector = Cartesian3.multiplyByScalar(direction, 2.0 / 3.0);
-                var endPosition = Cartesian3.add(camera.position, movementVector);
+                var direction = Cartesian3.subtract(focus, camera.position, cartesian3Scratch);
+                var movementVector = Cartesian3.multiplyByScalar(direction, 2.0 / 3.0, cartesian3Scratch);
+                var endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
 
                 flyToPosition(scene, endPosition);
             }
@@ -69,9 +71,9 @@ var NavigationWidget = function(viewer, container) {
                 var scene = that._viewer.scene;
                 var camera = scene.camera;
                 var focus = getCameraFocus(scene);
-                var direction = Cartesian3.subtract(focus, camera.position);
-                var movementVector = Cartesian3.multiplyByScalar(direction, -2.0);
-                var endPosition = Cartesian3.add(camera.position, movementVector);
+                var direction = Cartesian3.subtract(focus, camera.position, cartesian3Scratch);
+                var movementVector = Cartesian3.multiplyByScalar(direction, -2.0, cartesian3Scratch);
+                var endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
 
                 flyToPosition(scene, endPosition);
             }

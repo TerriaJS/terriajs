@@ -23,6 +23,7 @@ var defined = Cesium.defined;
 var Ellipsoid = Cesium.Ellipsoid;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
 var Fullscreen = Cesium.Fullscreen;
+var JulianDate = Cesium.JulianDate;
 var KeyboardEventModifier = Cesium.KeyboardEventModifier;
 var loadJson = Cesium.loadJson;
 var Material = Cesium.Material;
@@ -737,7 +738,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     var e = new Cartesian3(-5696178.715241763, 5664619.403367736, -4108462.746194852);
     var v = new Cartesian3(0.6306011721197975, -0.6271116358860636, 0.45724518352430904);
     var u = new Cartesian3(-0.3415299812150222, 0.3048158142378301, 0.8890695080602443);
-    camera.lookAt(e, Cartesian3.add(e,v), u);
+    var target = new Cartesian3();
+    camera.lookAt(e, Cartesian3.add(e,v,target), u);
 
     return viewer;
 };
@@ -924,7 +926,7 @@ function updateTimeline(viewer, start, finish) {
         clock.startTime = start;
         clock.currentTime = start;
         clock.stopTime = finish;
-        clock.multiplier = start.getSecondsDifference(finish) / 60.0;
+        clock.multiplier = JulianDate.getSecondsDifference(finish, start) / 60.0;
         clock.clockRange = ClockRange.LOOP_STOP;
         clock.shouldAnimate = true;
         viewer.timeline.zoomTo(clock.startTime, clock.stopTime);
@@ -982,6 +984,8 @@ function rectangleToDegreeString(scene, rect) {
     return text;
 }
 
+var cartesian3Scratch = new Cartesian3();
+
 // -------------------------------------------
 // Camera management
 // -------------------------------------------
@@ -995,7 +999,7 @@ function getCameraPos(scene) {
 function getCameraDistance(scene, pos) {
     var tx_pos = Ellipsoid.WGS84.cartographicToCartesian(
         Cartographic.fromDegrees(pos[0], pos[1], pos[2]));
-    return Cartesian3.magnitude(Cartesian3.subtract(tx_pos, scene.camera.position));
+    return Cartesian3.magnitude(Cartesian3.subtract(tx_pos, scene.camera.position, cartesian3Scratch));
 }
 
 
@@ -1028,7 +1032,7 @@ function getCameraRect(scene) {
     var lat = CesiumMath.toDegrees(focus_cart.latitude);
     var lon = CesiumMath.toDegrees(focus_cart.longitude);
 
-    var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position));
+    var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position, cartesian3Scratch));
     var offset = dist * 5e-6;
 
     var rect = Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
@@ -1112,9 +1116,9 @@ function zoomCamera(scene, distFactor, pos) {
         if (pos === undefined) {
             cartesian = getCameraFocus(scene);
             if (cartesian) {
-                var direction = Cartesian3.subtract(cartesian, camera.position);
-                var movementVector = Cartesian3.multiplyByScalar(direction, distFactor);
-                var endPosition = Cartesian3.add(camera.position, movementVector);
+                var direction = Cartesian3.subtract(cartesian, camera.position, cartesian3Scratch);
+                var movementVector = Cartesian3.multiplyByScalar(direction, distFactor, cartesian3Scratch);
+                var endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
 
                 flyToPosition(scene, endPosition);
             }
