@@ -1,5 +1,12 @@
 "use strict";
 
+// IE9 doesn't have a console object until the debugging tools are opened.
+if (typeof window.console === 'undefined') {
+    window.console = {
+        log : function() {}
+    };
+}
+
 /*global require*/
 var GeoDataCollection = require('../GeoDataCollection');
 var AusGlobeViewer = require('./AusGlobeViewer');
