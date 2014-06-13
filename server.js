@@ -26,7 +26,13 @@ var proxyAllowedHosts = {
 };
 
 app.get('/proxy', function(req, res) {
-    var remoteUrl = Object.keys(req.query)[0];
+    //handle proxy via leaflet
+    if (Object.keys(req.query).length === 1) {
+        var remoteUrl = Object.keys(req.query)[0];
+    }
+    else {
+        var remoteUrl = decodeURIComponent(req.url.substring(8));
+    }
     if (!proxyAllowedHosts[url.parse(remoteUrl).hostname.toLowerCase()]) {
         res.send(400, 'Host it not in list of allowed hosts.');
         return;

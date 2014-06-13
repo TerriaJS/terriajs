@@ -20,7 +20,6 @@ var DeveloperError = Cesium.DeveloperError;
 var GeoDataCollection = function() {
     
     this.layers = [];
-    this.shareRequest = false;
     
     this.visStore = 'http://nationalmap.research.nicta.com.au:3000';
 
@@ -80,7 +79,6 @@ GeoDataCollection.prototype.setViewer = function(obj) {
 *
 */
 GeoDataCollection.prototype.setShareRequest = function(obj) {
-    this.shareRequest = false;
     var request = this.getShareRequest(obj);
     
     this.ShareRequest.raiseEvent(this, request);
@@ -205,7 +203,7 @@ GeoDataCollection.prototype._stringify = function() {
         var obj = {};
         for (var prop in this.layers[i]) {
             if (this.layers[i].hasOwnProperty(prop) && prop !== 'primitive' &&
-                prop !== 'dataSource') {
+                prop !== 'dataSource' && prop !== 'map') {
                 obj[prop] = this.layers[i][prop];
             }
         }
@@ -584,13 +582,14 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
-//        if (layer.proxy) {
-//            proxy = new Cesium.DefaultProxy('/proxy/');
-//            server = proxy.getURL(server);
-//            if (layerName !== 'REST') {
-//                server += '%3f';
-//            }
-//        }
+        //explicitly call proxy so that when we use html2canvas, the proxy is set up
+        if (layer.proxy) {
+            proxy = new Cesium.DefaultProxy('/proxy/');
+            server = proxy.getURL(server);
+            if (layerName !== 'REST') {
+                server += '%3f';
+            }
+        }
         
         if (layerName === 'REST') {
             provider = new L.esri.TiledMapLayer(server);
@@ -609,7 +608,6 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     this.add(layer);
 };
 
-
 // Show csv data
 GeoDataCollection.prototype._viewTable = function(request, layer) {
     var that = this;
@@ -627,7 +625,7 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
             for (var i = 0; i < pointList.length; i++) {
                 dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
             }
-            layer.primitive = L.geoJson(dispPoints).addTo(layer.map);
+            layer = that.addGeoJsonLayer(dispPoints, layer.name+'.geojson', layer);
         }
         that.add(layer);
     });
@@ -804,8 +802,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else if (json_gml.Service) {
         description.version = parseFloat(json_gml.version);
     }
-    
-    console.log(layers);
     
     description.Layer = layers;
 };
@@ -1159,14 +1155,26 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     }
     else {
         var style = {
-            "color": "#ff7800",
-            "weight": 5,
-            "opacity": 0.65
+            "color": layer.style.line.color.toCssColorString(),
+            "weight": layer.style.line.width,
+            "opacity": 0.9
+        };
+
+        var geojsonMarkerOptions = {
+            radius: layer.style.point.size / 2.0,
+            fillColor: layer.style.point.color.toCssColorString(),
+            fillOpacity: 0.9,
+            color: "#000",
+            weight: 1,
+            opacity: 0.9
         };
 
         // GeoJSON
         layer.primitive = L.geoJson(obj, {
-            style: style
+            style: style,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            }
         }).addTo(layer.map);
     }
     return layer;

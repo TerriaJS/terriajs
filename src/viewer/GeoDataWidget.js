@@ -710,31 +710,22 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                                     linkShare(url);
                                     $(this).dialog('close');
                                 },
-/*                                    //TODO: disable if not logged in
+                                    //TODO: disable if not logged in
                                 'Gallery': function () {
                                     url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
                                     window.parent.document.location.assign(url);
                                     $(this).dialog('close');
                                 },
-*/                                    "Close": function () {
+/*                                    "Close": function () {
                                     $(this).dialog("close");
                                 }
-                            });
+*/                            });
 
                        }
                     }
                 }
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
-            },
-            "Print": function () {
-                $(this).dialog("close");
-                var div = document.createElement('div');
-                div.id = 'printScreen';
-                div.innerHTML = "<img src='"+formValues.image+"'/>"
-                document.body.appendChild(div);
-                window.print();
-                document.body.removeChild(div);
             },
             "Cancel": function () {
                 $(this).dialog("close");
