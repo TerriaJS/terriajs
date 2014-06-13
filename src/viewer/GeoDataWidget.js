@@ -664,9 +664,6 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
             of: window
         },
         buttons: {
-            "Cancel": function () {
-                $(this).dialog("close");
-            },
             "Share": function () {
                 var formEntries = [];
                 $.each($('#dialogShare').serializeArray(), function(i, field) {
@@ -729,6 +726,18 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                 }
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
+            },
+            "Print": function () {
+                $(this).dialog("close");
+                var div = document.createElement('div');
+                div.id = 'printScreen';
+                div.innerHTML = "<img src='"+formValues.image+"'/>"
+                document.body.appendChild(div);
+                window.print();
+                document.body.removeChild(div);
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
             }
         }
     });

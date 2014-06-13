@@ -18,7 +18,7 @@ class CesiumPreview(p.SingletonPlugin):
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IResourcePreview, inherit=True)
 
-    Cesium_Formats = ['json', 'gjson', 'geojson', 'czml', 'gml', 'kml']
+    Cesium_Formats = ['json', 'gjson', 'geojson', 'kml', 'czml']
     proxy_is_enabled = False
 
     def update_config(self, config):
@@ -33,7 +33,8 @@ class CesiumPreview(p.SingletonPlugin):
     def can_preview(self, data_dict):
         resource = data_dict['resource']
         format_lower = resource['format'].lower()
-        format_lower = os.path.splitext(resource['url'])[1][1:].lower()
+        if (format_lower == ''):
+            format_lower = os.path.splitext(resource['url'])[1][1:].lower()
         print format_lower
         if format_lower in self.Cesium_Formats:
             if resource['on_same_domain'] or self.proxy_is_enabled:
@@ -44,11 +45,11 @@ class CesiumPreview(p.SingletonPlugin):
                         'quality': 2}
         return {'can_preview': False}
 
-    def setup_template_variables(self, context, data_dict):
-        if (self.proxy_is_enabled
-                and not data_dict['resource']['on_same_domain']):
-            url = proxy.get_proxified_resource_url(data_dict)
-            p.toolkit.c.resource['url'] = url
+#    def setup_template_variables(self, context, data_dict):
+#        if (self.proxy_is_enabled
+#                and not data_dict['resource']['on_same_domain']):
+#            url = proxy.get_proxified_resource_url(data_dict)
+#            p.toolkit.c.resource['url'] = url
 
     def preview_template(self, context, data_dict):
         return 'cesium.html'

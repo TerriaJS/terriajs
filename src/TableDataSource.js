@@ -1,3 +1,4 @@
+/*global require,Cesium,$*/
 "use strict";
 
 var Dataset = require('./Dataset');
@@ -11,6 +12,11 @@ And writes a czml file for it to display
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
 var defaultValue = Cesium.defaultValue;
+var CzmlDataSource = Cesium.CzmlDataSource;
+var Color = Cesium.Color;
+var defineProperties = Cesium.defineProperties;
+var destroyObject = Cesium.destroyObject;
+var JulianDate = Cesium.JulianDate;
 
 var EMPTY_OBJECT = {};
 
@@ -26,11 +32,11 @@ var EMPTY_OBJECT = {};
 var TableDataSource = function () {
 
     //Create a czmlDataSource to piggyback on
-    this.czmlDataSource = new Cesium.CzmlDataSource();
+    this.czmlDataSource = new CzmlDataSource();
     this.dataset = new Dataset();
     this.show = true;
 
-    this.color = Cesium.Color.RED;
+    this.color = Color.RED;
 
     this.pts_max = 10000;
     this.leadTimeMin = 0;
@@ -52,7 +58,7 @@ var TableDataSource = function () {
     this.setColorGradient(defaultGradient);
 };
 
-Cesium.defineProperties(TableDataSource.prototype, {
+defineProperties(TableDataSource.prototype, {
         /**
          * Gets a human-readable name for this instance.
          * @memberof TableDataSource.prototype
@@ -203,9 +209,9 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         rec.position.cartographicDegrees[p] = point.pos[p];
     }
 
-    var start = point.time.addMinutes(-this.leadTimeMin);
-    var finish = point.time.addMinutes(this.trailTimeMin);
-    rec.billboard.show[0].interval = start.toIso8601() + '/' + finish.toIso8601();
+    var start = JulianDate.addMinutes(point.time, -this.leadTimeMin);
+    var finish = JulianDate.addMinutes(point.time, this.trailTimeMin);
+    rec.billboard.show[0].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
     return rec;
 };
 
@@ -280,9 +286,9 @@ TableDataSource.prototype._mapValue2Color = function (pt_val) {
 TableDataSource.prototype.setLeadTimeByPercent = function (pct) {
     if (this.dataset) {
         var data = this.dataset;
-        this.leadTimeMin = data.getMinTime().getMinutesDifference(data.getMaxTime()) * pct / 100.0;
+        this.leadTimeMin = JulianDate.getSecondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
     }
-}
+};
 
 /**
 * Set the trailing time by percent
@@ -293,9 +299,9 @@ TableDataSource.prototype.setLeadTimeByPercent = function (pct) {
 TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
     if (this.dataset) {
         var data = this.dataset;
-        this.trailTimeMin = data.getMinTime().getMinutesDifference(data.getMaxTime()) * pct / 100.0;
+        this.trailTimeMin = JulianDate.getSecondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
     }
-}
+};
 
 
 //TODO: canvas is an easy way to do this, but html5 specific
@@ -338,7 +344,7 @@ TableDataSource.prototype.setColorGradient = function () {
 *
 */
 TableDataSource.prototype.destroy = function () {
-    return Cesium.destroyObject(this);
+    return destroyObject(this);
 };
 
 module.exports = TableDataSource;

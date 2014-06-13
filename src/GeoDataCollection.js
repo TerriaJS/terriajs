@@ -1,4 +1,4 @@
-
+/*global require,Cesium,L,URI,$,toGeoJSON,proj4,proj4_epsg*/
 
 "use strict";
 
@@ -7,6 +7,7 @@ var GeoData = require('./GeoData');
 
 
 var defaultValue = Cesium.defaultValue;
+var DeveloperError = Cesium.DeveloperError;
 
 /**
 * @class GeoDataCollection is a collection of geodata instances
@@ -37,7 +38,7 @@ var GeoDataCollection = function() {
     Cesium.loadJson('./data_sources.json').then(function (obj) {
         that.serviceList = obj;
     });
-}
+};
 
 
 /**
@@ -69,7 +70,7 @@ GeoDataCollection.prototype.setViewer = function(obj) {
         this.layers[i].skip = true;
         this.sendLayerRequest(this.layers[i]);
     }
-}
+};
 
 
 /**
@@ -83,7 +84,7 @@ GeoDataCollection.prototype.setShareRequest = function(obj) {
     var request = this.getShareRequest(obj);
     
     this.ShareRequest.raiseEvent(this, request);
-}
+};
 
 
 GeoDataCollection.prototype._getUniqueLayerName = function(name) {
@@ -103,7 +104,7 @@ GeoDataCollection.prototype._getUniqueLayerName = function(name) {
         }
     }
     return name;
-}
+};
 
 /**
 * Update the GeoDataCollection based on the current time
@@ -115,7 +116,7 @@ GeoDataCollection.prototype.update = function(date) {
     if (this.dataSourceDisplay !== undefined && !this.dataSourceDisplay.isDestroyed()) {
         this.dataSourceDisplay.update(date);
     }
-}
+};
 
 /**
 * Add a new geodata item
@@ -132,7 +133,7 @@ GeoDataCollection.prototype.add = function(layer) {
     this.layers.push(layer);
     this.GeoDataAdded.raiseEvent(this, layer);
     return layer;
-}
+};
 
 /**
 * Get a geodata item based on an id (index)
@@ -142,7 +143,7 @@ GeoDataCollection.prototype.add = function(layer) {
 */
 GeoDataCollection.prototype.get = function(id) {
     return this.layers[id];
-}
+};
 
 /**
 * Remove a geodata item based on an id (index)
@@ -169,7 +170,7 @@ GeoDataCollection.prototype.remove = function(id) {
     
     this.layers.splice(id, 1);
     this.GeoDataRemoved.raiseEvent(this, layer);
-}
+};
 
 
 /**
@@ -192,7 +193,7 @@ GeoDataCollection.prototype.show = function(layer, val) {
     else {
         layer.primitive.show = val;
     }
-}
+};
 
 
 // -------------------------------------------
@@ -203,15 +204,15 @@ GeoDataCollection.prototype._stringify = function() {
     for (var i = 0; i < this.layers.length; i++) {
         var obj = {};
         for (var prop in this.layers[i]) {
-            if (this.layers[i].hasOwnProperty(prop) && prop !== 'primitive' 
-                && prop !== 'dataSource') {
+            if (this.layers[i].hasOwnProperty(prop) && prop !== 'primitive' &&
+                prop !== 'dataSource') {
                 obj[prop] = this.layers[i][prop];
             }
         }
         str_layers.push(obj);
     }
     return JSON.stringify(str_layers);
-}
+};
 
 GeoDataCollection.prototype._parse = function(str_layers) {
     var layers = JSON.parse(str_layers);
@@ -228,7 +229,7 @@ GeoDataCollection.prototype._parse = function(str_layers) {
         obj_layers.push(layer);
     }
     return obj_layers;
-}
+};
 
 
 
@@ -253,6 +254,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     this.visStore = uri_params.vis_server;
     this.visID = uri_params.vis_id;
     this.dataUrl = uri_params.data_url;
+    this.dataFormat = uri_params.format;
     
     var that = this;
    
@@ -260,7 +262,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     //Initialize the view based on vis_id if passed in url
     if (this.visID) {
         //call to server to get json record
-        var url = this.visStore + '/get_rec?vis_id=' + this.visID;
+        url = this.visStore + '/get_rec?vis_id=' + this.visID;
         Cesium.when(Cesium.loadJson(url), function(obj) {
             console.log(obj);
             that.visID = obj._id;
@@ -283,10 +285,10 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     else if (this.dataUrl) {
         Cesium.loadText(this.dataUrl).then(function (text) { 
             that.zoomTo = true;
-            that.loadText(text, that.dataUrl);
+            that.loadText(text, that.dataUrl, that.dataFormat);
         });
     }
-}
+};
 
 
 /**
@@ -315,7 +317,7 @@ GeoDataCollection.prototype.getShareRequest = function( description ) {
         request.parent = this.visID;
     }
     return request;
-}
+};
 
 // -------------------------------------------
 // Handle data sources from text
@@ -341,7 +343,7 @@ GeoDataCollection.prototype.formatSupported = function(srcname) {
         }
     }
     return false;
-}
+};
 
 /**
 * Load text as a geodata item
@@ -352,12 +354,16 @@ GeoDataCollection.prototype.formatSupported = function(srcname) {
  * @param {string} srcname The text file name to get the format extension from.
  *
 */
-GeoDataCollection.prototype.loadText = function(text, srcname) {
+GeoDataCollection.prototype.loadText = function(text, srcname, format) {
     var DataSource;
     var sourceUpperCase = srcname.toUpperCase();
+    if (format !== undefined) {
+        sourceUpperCase = (srcname + '.' + format).toUpperCase();
+    }
     console.log(sourceUpperCase);
     
     var layer;
+    var dom;
     
     //TODO: save dataset text for dnd data
 
@@ -372,8 +378,9 @@ GeoDataCollection.prototype.loadText = function(text, srcname) {
         layer.extent = getDataSourceExtent(czmlDataSource);
         this.add(layer);
     }
-    else if (endsWith(sourceUpperCase, ".GEOJSON") || //
-            endsWith(sourceUpperCase, ".JSON") || //
+    else if (endsWith(sourceUpperCase, ".GEOJSON") ||
+            endsWith(sourceUpperCase, ".GJSON") ||
+            endsWith(sourceUpperCase, ".JSON") ||
             endsWith(sourceUpperCase, ".TOPOJSON")) {
         layer = new GeoData({ name: srcname, type: 'DATA' });
         this.addGeoJsonLayer(JSON.parse(text), srcname, layer);
@@ -382,13 +389,13 @@ GeoDataCollection.prototype.loadText = function(text, srcname) {
         //Convert in browser using toGeoJSON https://github.com/mapbox/togeojson    
     else if (endsWith(sourceUpperCase, ".KML")) {
         layer = new GeoData({ name: srcname, type: 'DATA' });
-        var dom = (new DOMParser()).parseFromString(text, 'text/xml');    
+        dom = (new DOMParser()).parseFromString(text, 'text/xml');    
         this.addGeoJsonLayer(toGeoJSON.kml(dom), srcname, layer);
         this.add(layer);
     } 
     else if (endsWith(sourceUpperCase, ".GPX")) {
         layer = new GeoData({ name: srcname, type: 'DATA' });
-        var dom = (new DOMParser()).parseFromString(text, 'text/xml');    
+        dom = (new DOMParser()).parseFromString(text, 'text/xml');    
         this.addGeoJsonLayer(toGeoJSON.gpx(dom), srcname, layer);
         this.add(layer);
     } 
@@ -398,7 +405,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname) {
         tableDataSource.loadText(text);
         this.dataSourceCollection.add(tableDataSource);
         
-        var layer = new GeoData({name: srcname, type: 'DATA' });
+        layer = new GeoData({name: srcname, type: 'DATA' });
         layer.dataSource = tableDataSource;
         layer.extent = tableDataSource.dataset.getExtent();
         this.add(layer);
@@ -413,7 +420,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname) {
         layer.url = srcname;
     }
     return true;
-}
+};
 
 
 // -------------------------------------------
@@ -425,6 +432,10 @@ function _EsriRestJson2GeoJson(obj) {
     if (obj.geometryType === undefined || obj.features === undefined || obj.type === 'FeatureCollection') {
         return obj;
     }
+
+    var pts;
+    var geom;
+
     obj.type = "FeatureCollection";
     obj.crs = {"type":"EPSG","properties":{"code":"4326"}};
     for (var i = 0; i < obj.features.length; i++) {
@@ -433,18 +444,18 @@ function _EsriRestJson2GeoJson(obj) {
         feature.properties = feature.attributes;
            //TODO: test this on more instances
         if (obj.geometryType === "esriGeometryPoint") {
-            var pts = [feature.geometry.x, feature.geometry.y ];
-            var geom = { "type": "Point", "coordinates": pts };
+            pts = [feature.geometry.x, feature.geometry.y ];
+            geom = { "type": "Point", "coordinates": pts };
             feature.geometry = geom;
         }
         else if (obj.geometryType === "esriGeometryPolyline") {
-            var pts = feature.geometry.paths[0];
-            var geom = { "type": "LineString", "coordinates": pts };
+            pts = feature.geometry.paths[0];
+            geom = { "type": "LineString", "coordinates": pts };
             feature.geometry = geom;
         }
         else if (obj.geometryType === "esriGeometryPolygon") {
-            var pts = feature.geometry.paths[0];
-            var geom = { "type": "Polygon", "coordinates": pts };
+            pts = feature.geometry.paths[0];
+            geom = { "type": "Polygon", "coordinates": pts };
             feature.geometry = geom;
         }
     }
@@ -470,14 +481,27 @@ function _convertFeature(feature, geom_type) {
             
 function _EsriGml2GeoJson(obj) {
     var newObj = {type: "FeatureCollection", crs: {"type":"EPSG","properties":{"code":"4326"}}, features: []};
+
+    function pointFilterFunction(feature) {
+        newObj.features.push(_convertFeature(feature, 'Point'));
+    }
+
+    function lineStringFilterFunction(feature) {
+        newObj.features.push(_convertFeature(feature, 'LineString'));
+    }
+
+    function polygonFilterFunction(feature) {
+        newObj.features.push(_convertFeature(feature, 'Polygon'));
+    }
+
     for (var i = 0; i < obj.featureMember.length; i++) {
            //TODO: get feature properties from non-SHAPE properties
         //feature.properties = feature.attributes;
 
         //Recursively find features and add to FeatureCollection
-        filterValue(obj.featureMember[i], 'Point', function(feature) { newObj.features.push(_convertFeature(feature, 'Point')); });
-        filterValue(obj.featureMember[i], 'LineString', function(feature) { newObj.features.push(_convertFeature(feature, 'LineString')); });
-        filterValue(obj.featureMember[i], 'Polygon', function(feature) { newObj.features.push(_convertFeature(feature, 'Polygon')); });
+        filterValue(obj.featureMember[i], 'Point', pointFilterFunction);
+        filterValue(obj.featureMember[i], 'LineString', lineStringFilterFunction);
+        filterValue(obj.featureMember[i], 'Polygon', polygonFilterFunction);
     }
     return newObj;
 }
@@ -507,7 +531,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
             obj = $.xml2json(text);         //ESRI WFS
             obj = _EsriGml2GeoJson(obj);
                 //Hack for gazetteer since the coordinates are flipped
-            if (text.indexOf('gazetter') != -1) {
+            if (text.indexOf('gazetter') !== -1) {
                 for (var i = 0; i < obj.features.length; i++) {
                     var pt = obj.features[i].geometry.coordinates; 
                     var t = pt[0]; pt[0] = pt[1]; pt[1] = t;
@@ -518,19 +542,22 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
         layer = that.addGeoJsonLayer(obj, layer.name+'.geojson', layer);
         that.add(layer);
     });
-}
+};
 
 
 //TODO: figure out proxy issues
 // Show wms map
 GeoDataCollection.prototype._viewMap = function(request, layer) {
+    var uri = new URI(request);
+    var params = uri.search(true);
+    var layerName = params.layers;
+
+    var provider;
+
     if (layer.map === undefined) {
-        var uri = new URI(request);
         var wmsServer = request.substring(0, request.indexOf('?'));
-        var params = uri.search(true);
-        var layerName = params.layers;
         var url = 'http://' + uri.hostname() + uri.path();
-        var provider, proxy;
+        var proxy;
         if (layer.proxy) {
             proxy = new Cesium.DefaultProxy('/proxy/');
         }
@@ -548,7 +575,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                 parameters: {
                     'format':'image/png',
                     'transparent':'true',
-                    'styles': '',
+                    'styles': ''
                 },
                 proxy: proxy
             });
@@ -556,10 +583,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
     }
     else {
-        var uri = new URI(request);
         var server = request.substring(0, request.indexOf('?'));
-        var params = uri.search(true);
-        var layerName = params.layers;
 //        if (layer.proxy) {
 //            proxy = new Cesium.DefaultProxy('/proxy/');
 //            server = proxy.getURL(server);
@@ -575,15 +599,15 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             provider = new L.tileLayer.wms(server, {
                 layers: layerName,
                 format: 'image/png',
-                transparent: true,
-                });
+                transparent: true
+            });
         }
         layer.primitive = provider;
         layer.map.addLayer(provider);
     }
 
     this.add(layer);
-}
+};
 
 
 // Show csv data
@@ -607,7 +631,7 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
         }
         that.add(layer);
     });
-}
+};
 
 // Show data file based on extension
 GeoDataCollection.prototype._viewData = function(request, layer) {
@@ -616,7 +640,7 @@ GeoDataCollection.prototype._viewData = function(request, layer) {
     Cesium.when(Cesium.loadText(request), function (text) {
         that.loadText(text, layer.name);
     });
-}
+};
 
 // Build a layer based on the description
 GeoDataCollection.prototype.sendLayerRequest = function(layer) {
@@ -640,7 +664,7 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     else {
         throw new DeveloperError('Creating layer for unsupported service: '+layer.type);
     }
-}
+};
 
 
 /**
@@ -699,7 +723,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
     }
     
     return request;
-}
+};
 
 
 function _recurseLayerList(layer_src, layers) {
@@ -733,18 +757,19 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     
     console.log(json_gml);
     
-   //find the array of available layers
+    //find the array of available layers
+    var i;
     var layers = [];
     if (description.type === 'WFS') {
         layers = json_gml.FeatureTypeList.FeatureType;
     }
     else if (description.type === 'WMS') {
         var layer_src = [json_gml.Capability.Layer];
-        _recurseLayerList(layer_src, layers)
+        _recurseLayerList(layer_src, layers);
     }
     else if (description.type === 'REST') {
         var layer = json_gml.layers;
-        for (var i = 0; i < layer.length; i++) {
+        for (i = 0; i < layer.length; i++) {
             if (layer[i].subLayerIds instanceof Array) {
                 continue;
             }
@@ -764,10 +789,9 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     }
     else if (description.type === 'CKAN') {
         layers = json_gml.result.results;
-        for (var i = 0; i < layers.length; i++) {
+        for (i = 0; i < layers.length; i++) {
             layers[i].Name = layers[i].name;
         }
-        description.extent
     }
     else {
         throw new DeveloperError('Getting capabilities for unsupported service: ' + description.type);
@@ -784,7 +808,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     console.log(layers);
     
     description.Layer = layers;
-}
+};
 
 /**
 * Get capabilities from service
@@ -818,7 +842,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
         that.handleCapabilitiesRequest(text, description);
         callback(description);
     });
-}
+};
 
 
 // ----------------
@@ -827,12 +851,14 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
 function createReprojectFunc(proj) {
     return function(coordinates) {
         return myCrsFunction(coordinates, proj);
-    }
+    };
 }
 
 //Add the already supported strings from the projections file
 for (var proj in proj4_epsg ) {
-    Cesium.GeoJsonDataSource.crsNames[proj] = createReprojectFunc(proj);
+    if (proj4_epsg.hasOwnProperty(proj)) {
+        Cesium.GeoJsonDataSource.crsNames[proj] = createReprojectFunc(proj);
+    }
 }
     
 function addProj4String(crs_code, func) {
@@ -851,7 +877,7 @@ function getCrsCode(gjson_obj) {
     }
     var code = gjson_obj.crs.properties.code;
     if (code === '4283') {
-        code === '4236';
+        code = '4326';
     }
     return gjson_obj.crs.type + ':' + code;
 }
@@ -886,7 +912,7 @@ function _mergeRectangle(e0, e1) {
     var east = Math.max(e0.east, e1.east);
     var north = Math.max(e0.north, e1.north);
     return new Cesium.Rectangle(west, south, east, north);
-};
+}
 
 
 /**
@@ -899,16 +925,18 @@ function _mergeRectangle(e0, e1) {
 function getDataSourceExtent(dataSource) {
     var collection = dataSource.dynamicObjects;
     var objects = collection.getObjects();
-    var e0, cartArray;
+    var e0;
     
     var julianDate = new Cesium.JulianDate();
 
+    var cArray;
+
     for (var i = 0; i < objects.length; i++) {
       if (objects[i].vertexPositions) {
-          var cArray = objects[i].vertexPositions.getValue(julianDate);
+          cArray = objects[i].vertexPositions.getValue(julianDate);
       }
       else if (objects[i].position) {
-          var cArray = [objects[i].position.getValue(julianDate)];
+          cArray = [objects[i].position.getValue(julianDate)];
       }
       else {
           continue;
@@ -952,7 +980,7 @@ function reducePointList(pts, epsilon, limit) {
     }
     console.log(pts.length, 'points reduced to', pts_out.length);
     return pts_out;
-};
+}
 
 // Filter a geojson coordinates array structure
 var filterArray = function (pts, func) {
@@ -987,14 +1015,15 @@ var countPnts = function (pts, cnt) {
 // find a member by name in the gml
 function filterValue(obj, prop, func) {
     for (var p in obj) {
-        if (obj.hasOwnProperty(p) === false)
+        if (obj.hasOwnProperty(p) === false) {
             continue;
+        }
         else if (obj[prop] !== undefined) {
-            if (func && (typeof func == "function")) {
+            if (func && (typeof func === 'function')) {
                 (func)(obj[prop]);
             }
         }
-        else if (typeof obj[p] === "object") {
+        else if (typeof obj[p] === 'object') {
             filterValue(obj[p], prop, func);
         }
     }
@@ -1029,7 +1058,7 @@ var point_palette = [
 var palette_idx = 0;
 function getRandomColor(palette) {
     var clr = palette[palette_idx++ % palette.length];
-    return new Cesium.Color(clr[0]/255, clr[1]/255, clr[2]/255, clr[3]/255)
+    return new Cesium.Color(clr[0]/255, clr[1]/255, clr[2]/255, clr[3]/255);
 }
 
 
@@ -1037,7 +1066,7 @@ function getCesiumColor(clr) {
     if (clr instanceof Cesium.Color) {
         return clr;
     }
-    return new Cesium.Color(clr.red, clr.green, clr.blue, clr.alpha)
+    return new Cesium.Color(clr.red, clr.green, clr.blue, clr.alpha);
 }
 
 /**
@@ -1141,7 +1170,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         }).addTo(layer.map);
     }
     return layer;
-}
+};
 
 module.exports = GeoDataCollection;
 

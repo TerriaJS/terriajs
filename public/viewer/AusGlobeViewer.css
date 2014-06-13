@@ -142,6 +142,14 @@ body {
     background-image: url(../images/ajax-loader.gif);
 }
 
+#printScreen {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: auto;
+    height: auto;
+}
 
 .dialog {
     display: none;
@@ -545,4 +553,57 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-search-button:hover {
     background-color: #48b;
+}
+
+.ausglobe-info-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.ausglobe-info {
+    display: inline-block;
+    width: 600px;
+    height: 500px;
+    background-color: white;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+.ausglobe-info-close-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.ausglobe-info h1 {
+    font-size: 12pt;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.ausglobe-info h2 {
+    font-size: 10pt;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 2px;
+    font-weight: bold;
+}
+
+.ausglobe-info-field {
+    position: relative;
+    left: 10px;
+    right: 10px;
 }

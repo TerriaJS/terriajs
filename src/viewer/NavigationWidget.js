@@ -16,47 +16,67 @@ var IntersectionTests = Cesium.IntersectionTests;
 var defined = Cesium.defined;
 var Tween = Cesium.Tween;
 var defaultValue = Cesium.defaultValue;
+var defineProperties = Cesium.defineProperties;
 
 var knockout = require('knockout');
+
+var cartesian3Scratch = new Cartesian3();
 
 var NavigationWidget = function(viewer, container) {
     container = getElement(container);
 
     this._viewer = viewer;
+    this._showTilt = true;
 
     var element = document.createElement('div');
     element.className = 'navigation-controls';
     container.appendChild(element);
 
+    this._element = element;
+
     element.innerHTML = '\
         <img src="images/plus.svg" class="navigation-control" data-bind="click: zoomIn" title="Zoom In"></div>\
         <img src="images/minus.svg" class="navigation-control" data-bind="click: zoomOut" title="Zoom Out"></div>\
-        <img src="images/tilt_none.svg" class="navigation-control" data-bind="click: tilt, visible: isTiltExtreme" title="Tilt"></div>\
-        <img src="images/tilt_moderate.svg" class="navigation-control" data-bind="click: tilt, visible: isTiltNone" title="Tilt"></div>\
-        <img src="images/tilt_extreme.svg" class="navigation-control" data-bind="click: tilt, visible: isTiltModerate" title="Tilt"></div>\
+        <img src="images/tilt_none.svg" class="navigation-control" data-bind="click: tilt, visible: showTilt && isTiltExtreme" title="Tilt"></div>\
+        <img src="images/tilt_moderate.svg" class="navigation-control" data-bind="click: tilt, visible: showTilt && isTiltNone" title="Tilt"></div>\
+        <img src="images/tilt_extreme.svg" class="navigation-control" data-bind="click: tilt, visible: showTilt && isTiltModerate" title="Tilt"></div>\
     ';
 
     var that = this;
     this._viewModel = {
         zoomIn : createCommand(function() {
-            var scene = that._viewer.scene
-            var camera = scene.camera;
-            var focus = getCameraFocus(scene);
-            var direction = Cartesian3.subtract(focus, camera.position);
-            var movementVector = Cartesian3.multiplyByScalar(direction, 2.0 / 3.0);
-            var endPosition = Cartesian3.add(camera.position, movementVector);
+            if (that._viewer.map) {
+                // Leaflet
+                that._viewer.map.zoomIn(1);
+                return;
+            } else {
+                // Cesium
+                var scene = that._viewer.scene;
+                var camera = scene.camera;
+                var focus = getCameraFocus(scene);
+                var direction = Cartesian3.subtract(focus, camera.position, cartesian3Scratch);
+                var movementVector = Cartesian3.multiplyByScalar(direction, 2.0 / 3.0, cartesian3Scratch);
+                var endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
 
-            flyToPosition(scene, endPosition);
+                flyToPosition(scene, endPosition);
+            }
         }),
         zoomOut : createCommand(function() {
-            var scene = that._viewer.scene
-            var camera = scene.camera;
-            var focus = getCameraFocus(scene);
-            var direction = Cartesian3.subtract(focus, camera.position);
-            var movementVector = Cartesian3.multiplyByScalar(direction, -2.0);
-            var endPosition = Cartesian3.add(camera.position, movementVector);
+            if (that._viewer.map) {
+                // Leaflet
+                that._viewer.map.zoomOut(1);
+                return;
+            } else {
+                // Cesium
+                var scene = that._viewer.scene;
+                var camera = scene.camera;
+                var focus = getCameraFocus(scene);
+                var direction = Cartesian3.subtract(focus, camera.position, cartesian3Scratch);
+                var movementVector = Cartesian3.multiplyByScalar(direction, -2.0, cartesian3Scratch);
+                var endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
 
-            flyToPosition(scene, endPosition);
+                flyToPosition(scene, endPosition);
+            }
         }),
         tilt : createCommand(function() {
             if (that._viewModel.isTiltNone) {
@@ -73,15 +93,27 @@ var NavigationWidget = function(viewer, container) {
                 animateToTilt(that._viewer.scene, 90.0);
             }
         }),
+        showTilt : true,
         isTiltNone : true,
         isTiltModerate : false,
         isTiltExtreme : false
     };
 
-    knockout.track(this._viewModel, ['isTiltNone', 'isTiltModerate', 'isTiltExtreme']);
+    knockout.track(this._viewModel, ['showTilt', 'isTiltNone', 'isTiltModerate', 'isTiltExtreme']);
 
     knockout.applyBindings(this._viewModel, element);
 };
+
+defineProperties(NavigationWidget.prototype, {
+    showTilt : {
+        get : function() {
+            return this._viewModel.showTilt;
+        },
+        set : function(value) {
+            this._viewModel.showTilt = value;
+        }
+    }
+});
 
 function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
     durationMilliseconds = defaultValue(durationMilliseconds, 200);
@@ -102,12 +134,21 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
             time : 1.0
         },
         onUpdate : function(value) {
+            if (scene.isDestroyed()) {
+                return;
+            }
             scene.camera.tilt = CesiumMath.lerp(startTilt, endTilt, value.time);
         },
         onComplete : function() {
+            if (controller.isDestroyed()) {
+                return;
+            }
             controller.enableInputs = true;
         },
         onCancel: function() {
+            if (controller.isDestroyed()) {
+                return;
+            }
             controller.enableInputs = true;
         }
     });
@@ -145,14 +186,23 @@ function flyToPosition(scene, position, durationMilliseconds) {
             time : 1.0
         },
         onUpdate : function(value) {
+            if (scene.isDestroyed()) {
+                return;
+            }
             scene.camera.position.x = CesiumMath.lerp(startPosition.x, endPosition.x, value.time);
             scene.camera.position.y = CesiumMath.lerp(startPosition.y, endPosition.y, value.time);
             scene.camera.position.z = CesiumMath.lerp(startPosition.z, endPosition.z, value.time);
         },
         onComplete : function() {
+            if (controller.isDestroyed()) {
+                return;
+            }
             controller.enableInputs = true;
         },
         onCancel: function() {
+            if (controller.isDestroyed()) {
+                return;
+            }
             controller.enableInputs = true;
         }
     });

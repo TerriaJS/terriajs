@@ -1,10 +1,12 @@
 "use strict";
 
-/*global Cesium,require*/
+/*global Cesium,require,alert*/
 
+var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
 var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
+var DefaultProxy = Cesium.DefaultProxy;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
@@ -13,6 +15,7 @@ var Rectangle = Cesium.Rectangle;
 var createCommand = Cesium.createCommand;
 
 var GeoData = require('../GeoData');
+var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
@@ -83,6 +86,13 @@ var GeoDataBrowserViewModel = function(options) {
         that._viewer.updateCameraFromRect(item.layer.extent, 1000);
     });
 
+    this._showInfoForItem = createCommand(function(item) {
+        var popup = new GeoDataInfoPopup({
+            container : document.body,
+            viewModel : item
+        });
+    });
+
     function removeBaseLayer() {
         if (!defined(that._viewer.viewer)) {
             var message = 'Base layer selection is not yet implemented for Leaflet.';
@@ -134,6 +144,16 @@ var GeoDataBrowserViewModel = function(options) {
         imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
             url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
             credit : '© Analytical Graphics, Inc.'
+        }), 0);
+    });
+
+    this._activateAustralianTopography = createCommand(function() {
+        removeBaseLayer();
+
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+        imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
+            url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer',
+            proxy : new DefaultProxy('/proxy/')
         }), 0);
     });
 
@@ -211,6 +231,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
         }
     },
 
+    showInfoForItem : {
+        get : function() {
+            return this._showInfoForItem;
+        }
+    },
+
     activateBingMapsAerialWithLabels : {
         get : function() {
             return this._activateBingMapsAerialWithLabels;
@@ -238,6 +264,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     activateNaturalEarthII : {
         get : function() {
             return this._activateNaturalEarthII;
+        }
+    },
+
+    activateAustralianTopography : {
+        get : function() {
+            return this._activateAustralianTopography;
         }
     }
 });
@@ -279,23 +311,25 @@ function disableItem(viewModel, item) {
 
 function getOGCLayerExtent(layer) {
     var rect;
+    var box;
+
     if (layer.WGS84BoundingBox) {
         var lc = layer.WGS84BoundingBox.LowerCorner.split(" ");
         var uc = layer.WGS84BoundingBox.UpperCorner.split(" ");
         rect = Rectangle.fromDegrees(parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]));
     }
     else if (layer.LatLonBoundingBox) {
-        var box = layer.LatLonBoundingBox || layer.BoundingBox;
+        box = layer.LatLonBoundingBox || layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.minx), parseFloat(box.miny),
             parseFloat(box.maxx), parseFloat(box.maxy));
     }
     else if (layer.EX_GeographicBoundingBox) {
-        var box = layer.EX_GeographicBoundingBox;
+        box = layer.EX_GeographicBoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.westBoundLongitude), parseFloat(box.southBoundLatitude),
             parseFloat(box.eastBoundLongitude), parseFloat(box.northBoundLatitude));
     }
     else if (layer.BoundingBox) {
-        var box = layer.BoundingBox;
+        box = layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
             parseFloat(box.east), parseFloat(box.north));
     }
