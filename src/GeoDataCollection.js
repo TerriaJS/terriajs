@@ -519,7 +519,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     console.log('GeoJSON request', request);
     
-    if (layer.proxy || this._alwaysUseProxy) {
+    if (layer.proxy || this.shouldUseProxy(request)) {
         var proxy = new Cesium.DefaultProxy('/proxy/');
         request = proxy.getURL(request);
     }
@@ -562,7 +562,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     if (layer.map === undefined) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
-        if (layer.proxy || this._alwaysUseProxy) {
+        if (layer.proxy || this.shouldUseProxy(url)) {
             proxy = new Cesium.DefaultProxy('/proxy/');
         }
 
@@ -836,7 +836,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
     
     console.log('CAPABILITIES REQUEST:',request);
-    if (description.proxy || this._alwaysUseProxy) {
+    if (description.proxy || this.shouldUseProxy(request)) {
         var proxy = new Cesium.DefaultProxy('/proxy/');
         request = proxy.getURL(request);
     }
@@ -1174,6 +1174,15 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         }).addTo(layer.map);
     }
     return layer;
+};
+
+GeoDataCollection.prototype.shouldUseProxy = function(url) {
+    if (!this._alwaysUseProxy) {
+        return false;
+    } else if (url.indexOf('http') < 0) {
+        return false;
+    }
+    return true;
 };
 
 module.exports = GeoDataCollection;
