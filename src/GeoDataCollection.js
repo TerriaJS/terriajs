@@ -8,6 +8,7 @@ var GeoData = require('./GeoData');
 
 var defaultValue = Cesium.defaultValue;
 var DeveloperError = Cesium.DeveloperError;
+var FeatureDetection = Cesium.FeatureDetection;
 
 /**
 * @class GeoDataCollection is a collection of geodata instances
@@ -515,7 +516,8 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     console.log('GeoJSON request', request);
     
-    if (layer.proxy) {
+    // IE versions prior to 10 don't support CORS, so always use the proxy.
+    if (layer.proxy || (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10)) {
         var proxy = new Cesium.DefaultProxy('/proxy/');
         request = proxy.getURL(request);
     }

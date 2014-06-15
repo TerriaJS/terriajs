@@ -22,7 +22,8 @@ var proxyAllowedHosts = {
     'spatialreference.org' : true,
     'www2.landgate.wa.gov.au' : true,
     'geofabric.bom.gov.au' : true,
-    'www.ga.gov.au' : true
+    'www.ga.gov.au' : true,
+    'www.googleapis.com' : true
 };
 
 app.get('/proxy', function(req, res) {
