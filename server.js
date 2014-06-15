@@ -23,6 +23,7 @@ var proxyAllowedHosts = {
     'www2.landgate.wa.gov.au' : true,
     'geofabric.bom.gov.au' : true,
     'www.ga.gov.au' : true,
+    'www.googleapis.com' : true,
     'data.gov.au' : true
 };
 

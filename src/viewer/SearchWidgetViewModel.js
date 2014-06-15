@@ -198,10 +198,21 @@ function geocode(viewModel) {
 
     viewModel._isSearchInProgress = true;
 
-    var cameraPosition = viewModel._viewer.scene.camera.positionWC;
-    var cameraPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(cameraPosition);
+    var longitudeDegrees;
+    var latitudeDegrees;
 
-    var promise = jsonp(viewModel._url + 'REST/v1/Locations?userLocation=' + CesiumMath.toDegrees(cameraPositionCartographic.latitude) + ',' + CesiumMath.toDegrees(cameraPositionCartographic.longitude) , {
+    if (viewModel._viewer.scene) {
+        var cameraPosition = viewModel._viewer.scene.camera.positionWC;
+        var cameraPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(cameraPosition);
+        longitudeDegrees = CesiumMath.toDegrees(cameraPositionCartographic.longitude);
+        latitudeDegrees = CesiumMath.toDegrees(cameraPositionCartographic.latitude);
+    } else {
+        var center = viewModel._viewer.map.getCenter();
+        longitudeDegrees = center.lng;
+        latitudeDegrees = center.lat;
+    }
+
+    var promise = jsonp(viewModel._url + 'REST/v1/Locations?userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
         parameters : {
             query : query,
             key : viewModel._key
