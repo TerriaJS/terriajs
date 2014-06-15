@@ -8,6 +8,7 @@ var GeoData = require('./GeoData');
 
 var defaultValue = Cesium.defaultValue;
 var DeveloperError = Cesium.DeveloperError;
+var FeatureDetection = Cesium.FeatureDetection;
 
 /**
 * @class GeoDataCollection is a collection of geodata instances
@@ -33,6 +34,9 @@ var GeoDataCollection = function() {
     this.GeoDataRemoved = new Cesium.Event();
     this.ViewerChanged = new Cesium.Event();
     this.ShareRequest = new Cesium.Event();
+
+    // IE versions prior to 10 don't support CORS, so always use the proxy.
+    this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
     
     //load list of available services for GeoDataCollection
     Cesium.loadJson('./data_sources.json').then(function (obj) {
@@ -515,7 +519,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     console.log('GeoJSON request', request);
     
-    if (layer.proxy) {
+    if (layer.proxy || this.shouldUseProxy(request)) {
         var proxy = new Cesium.DefaultProxy('/proxy/');
         request = proxy.getURL(request);
     }
@@ -553,12 +557,12 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     var layerName = params.layers;
 
     var provider;
+    var proxy;
 
     if (layer.map === undefined) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
-        var proxy;
-        if (layer.proxy) {
+        if (layer.proxy || this.shouldUseProxy(url)) {
             proxy = new Cesium.DefaultProxy('/proxy/');
         }
 
@@ -584,13 +588,13 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
-//        if (layer.proxy) {
-//            proxy = new Cesium.DefaultProxy('/proxy/');
-//            server = proxy.getURL(server);
-//            if (layerName !== 'REST') {
-//                server += '%3f';
-//            }
-//        }
+        // if (layer.proxy || this._alwaysUseProxy) {
+        //    proxy = new Cesium.DefaultProxy('/proxy/');
+        //    server = proxy.getURL(server);
+        //    if (layerName !== 'REST') {
+        //       server += '%3f';
+        //    }
+        // }
         
         if (layerName === 'REST') {
             provider = new L.esri.TiledMapLayer(server);
@@ -832,7 +836,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
     
     console.log('CAPABILITIES REQUEST:',request);
-    if (description.proxy) {
+    if (description.proxy || this.shouldUseProxy(request)) {
         var proxy = new Cesium.DefaultProxy('/proxy/');
         request = proxy.getURL(request);
     }
@@ -1170,6 +1174,15 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         }).addTo(layer.map);
     }
     return layer;
+};
+
+GeoDataCollection.prototype.shouldUseProxy = function(url) {
+    if (!this._alwaysUseProxy) {
+        return false;
+    } else if (url.indexOf('http') < 0) {
+        return false;
+    }
+    return true;
 };
 
 module.exports = GeoDataCollection;
