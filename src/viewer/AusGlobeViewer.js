@@ -46,7 +46,7 @@ var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
 
-var corsProxy = require('./corsProxy');
+var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
 var GeoDataWidget = require('./GeoDataWidget');
 var readJson = require('../readJson');
