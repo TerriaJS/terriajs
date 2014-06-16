@@ -201,23 +201,6 @@ function handleError(e) {
     alert('error loading data: ' + e.what);
 }
 
-function loadLocalFile(path) {
-    if (typeof path === 'undefined') {
-        throw new DeveloperError('path is required');
-    }
-    var reader = new FileReader();
-    reader.readAsText(path);
-    var deferred = when.defer();
-    reader.onload = function (event) {
-        var allText = event.target.result;
-        deferred.resolve(allText);
-    };
-    reader.onerror = function (e) {
-        deferred.reject(e);
-    };
-    return deferred.promise;
-};
-
 var dropHandler = function (evt, that) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -230,46 +213,8 @@ var dropHandler = function (evt, that) {
     for (var ndx = 0; ndx < count; ndx++) {
         var file = files[ndx];
         console.log(' - File Name: ' + file.name);
-        if (that.geoDataManager.formatSupported(file.name)) {
-            when(loadLocalFile(file), function (text) {
-                that.geoDataManager.zoomTo = true;
-                that.geoDataManager.loadText(text, file.name);
-            });
-        }
-        else {
-            if (file.size > 1000000) {
-                alert('File is too large to send to conversion service.  Click here for alternative file conversion options.');
-            }
-            else if (false) {
-                    //TODO: check against list of support extensions
-                alert('File format is not supported by conversion service.  Click here for alternative file conversion options.');
-            }
-            else {
-                if (!confirm('No local format handler.  Click OK to convert via our web service.')) {
-                    return;
-                }
-                // generate form data to submit text for conversion
-                var formData = new FormData();
-                formData.append('input_file', file);
 
-                var xhr = new XMLHttpRequest;
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-                        var response = xhr.responseText;
-                        if (response.substring(0,1) !== '{') {
-                            console.log(response);
-                            alert('Error trying to convert: ' + file.name);
-                        }
-                        else {
-                            that.geoDataManager.zoomTo = true;
-                            that.geoDataManager.loadText(response, file.name+'.geojson');
-                        }
-                    }
-                }
-                xhr.open('POST', that.geoDataManager.visStore + '/convert');
-                xhr.send(formData);
-            }
-        }
+        that.geoDataManager.addFile(file);
     }
 }
 

@@ -46,6 +46,7 @@ var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
 
+var corsProxy = require('./corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
 var GeoDataWidget = require('./GeoDataWidget');
 var readJson = require('../readJson');
@@ -724,6 +725,14 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this._navigationWidget.showTilt = true;
         document.getElementById('position').style.visibility = 'visible';
+
+        /*
+         var esri = new ArcGisMapServerImageryProvider({
+         url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
+         proxy: corsProxy
+         });
+         this.scene.globe.imageryLayers.addImageryProvider(esri);
+         */
     }
 };
 
