@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,Cesium,L,$,alert,console*/
+/*global require,Cesium,L,$,html2canvas,alert,console*/
 var BingMapsApi = Cesium.BingMapsApi;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
@@ -94,14 +94,14 @@ var AusGlobeViewer = function(geoDataManager) {
 						    useCORS: true,
                             onrendered: function(canvas) {
                                 var dataUrl = canvas.toDataURL("image/jpeg");
-                                var bnds = that.map.getBounds()
+                                var bnds = that.map.getBounds();
                                 var rect = Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
                                 that.geoDataManager.setShareRequest({
                                     image: dataUrl,
                                     camera: rect
                                 });
                             }
-                        })
+                        });
                     }
                     else if (that.scene) {
                         that.geoDataManager.shareRequest = true;

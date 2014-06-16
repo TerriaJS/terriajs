@@ -1,3 +1,7 @@
+"use strict";
+
+/*global require*/
+
 var gulp = require('gulp');  
 var browserify = require('gulp-browserify');  
 var concat = require('gulp-concat');  
@@ -22,10 +26,10 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('public/build'));
 
 //        .pipe(refresh(server))
-})
+});
 
 gulp.task('lint', function(){
-    gulp.src('src/*.js')
+    gulp.src('src/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
@@ -63,5 +67,5 @@ gulp.task('build-cesium', function(cb) {
 gulp.task('default', ['scripts', 'docs'], function() {
     gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
     gulp.watch('src/**/*.js', ['scripts']);
-})
+});
 
