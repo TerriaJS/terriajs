@@ -9,13 +9,25 @@ body {
 #cesiumContainer {
     position: absolute;
     top: 0px;
-    left: 0;
+    left: 0px;
     height: 100%;
     width: 100%;
     margin: 0;
     overflow: hidden;
     padding: 0;
     z-index: 999; // required for IE9
+}
+
+#printScreen {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    z-index: 1000; // required for IE9
 }
 
 #product {
@@ -142,16 +154,6 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-image: url(../images/ajax-loader.gif);
-}
-
-#printScreen {
-    display: block;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: auto;
-    height: auto;
-    z-index: 999; // required for IE9
 }
 
 .dialog {

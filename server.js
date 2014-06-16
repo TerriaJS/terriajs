@@ -30,19 +30,6 @@ var proxyAllowedHosts = {
     'data.gov.au' : true
 };
 
-<<<<<<< HEAD
-app.get('/proxy', function(req, res) {
-    //handle proxy via leaflet
-    if (Object.keys(req.query).length === 1) {
-        var remoteUrl = Object.keys(req.query)[0];
-    }
-    else {
-        var remoteUrl = decodeURIComponent(req.url.substring(8));
-    }
-    if (!proxyAllowedHosts[url.parse(remoteUrl).hostname.toLowerCase()]) {
-        res.send(400, 'Host it not in list of allowed hosts.');
-        return;
-=======
 app.get(/^\/proxy\/(.+)$/, function(req, res) {
     var remoteUrl = req.params[0];
     if (remoteUrl.indexOf('http') !== 0) {
@@ -53,7 +40,6 @@ app.get(/^\/proxy\/(.+)$/, function(req, res) {
     var queryStartIndex = url.indexOf('?');
     if (queryStartIndex >= 0) {
         remoteUrl += url.substring(queryStartIndex);
->>>>>>> 9fc18a22de4ed081c807ed793b644d92403f08d8
     }
 
     request.get(remoteUrl).pipe(res);

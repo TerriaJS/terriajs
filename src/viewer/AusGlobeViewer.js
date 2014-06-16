@@ -57,7 +57,7 @@ var TitleWidget = require('./TitleWidget');
 //use our own bing maps key
 BingMapsApi.defaultKey = 'Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk';
 
-
+var win;
 
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
@@ -91,14 +91,30 @@ var AusGlobeViewer = function(geoDataManager) {
                 label : 'Print',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
-                        var div = document.createElement('div');
-                        div.id = 'printScreen';
-                        div.innerHTML = "<img src='"+dataUrl+"'/>"
-                        document.body.appendChild(div);
+/*
+                            //print by putting container in front
+                        var div = document.getElementById('cesiumContainer');
+                        div.style.zIndex = 1000; 
+                        div.style.height = 'auto'; 
+                        div.style.width = 'auto'; 
                         window.print();
-                        document.body.removeChild(div);
+                        div.style.height = '100%'; 
+                        div.style.width = '100%'; 
+                        div.style.zIndex = 999; 
+                            //print by exposing and writing to new div
+                        var div = document.getElementById('printScreen');
+                        div.style.display = 'block';
+                        div.innerHTML = "<img src='"+dataUrl+"'/>";
+                        window.print();
+                        div.style.display = 'none';
+*/                      
+                            //print by opening a new window                
+                        win.document.write("<img src='"+dataUrl+"'/>");
+                        win.print(); 
+//                      win.close(); 
                     };
                     that.captureCanvas();
+                    win = window.open();
                 }
             },
             {
