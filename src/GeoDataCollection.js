@@ -1183,6 +1183,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
             weight: 1,
             opacity: 0.9
         };
+
 /*        
          // icons will show up for leaflet print, but unable to set color
         var geojsonIcon = L.icon({
@@ -1193,8 +1194,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         layer.primitive = L.geoJson(obj, {
             style: style,
             pointToLayer: function (feature, latlng) {
-//                return L.circleMarker(latlng, geojsonMarkerOptions);
-                return L.marker(latlng, {icon: geojsonIcon});
+                return L.circleMarker(latlng, geojsonMarkerOptions);
             }
         }).addTo(layer.map);
     }

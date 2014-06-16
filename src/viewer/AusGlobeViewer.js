@@ -663,6 +663,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.captureCanvas = function() {
             var that = this;
             that.map.attributionControl.removeFrom(that.map);
+/*            //might need to break out to global function and deal with err
+            leafletImage(that.map, function(err, canvas) {
+                var dataUrl = canvas.toDataURL();
+                    that.captureCanvasCallback(dataUrl);
+                    that.map.attributionControl.addTo(that.map);
+            });            
+*/            
             html2canvas( document.getElementById('cesiumContainer'), {
 	            useCORS: true,
                 onrendered: function(canvas) {
