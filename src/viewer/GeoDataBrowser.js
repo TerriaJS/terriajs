@@ -15,7 +15,6 @@ var GeoDataBrowser = function(options) {
 
     this._viewModel = new GeoDataBrowserViewModel({
         viewer : options.viewer,
-        content : options.content,
         dataManager : options.dataManager,
         map : options.map
     });
@@ -37,31 +36,75 @@ var GeoDataBrowser = function(options) {
 
     var dataPanel = document.createElement('div');
     dataPanel.className = 'ausglobe-panel';
-    dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }, foreach: content');
+    dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }');
 
     dataPanel.innerHTML = '\
-        <div class="ausglobe-accordion-item">\
-            <div class="ausglobe-accordion-item-header" data-bind="click: $parent.openItem">\
-                <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: $root.openIndex === $index()" />\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: $root.openIndex !== $index()" />\
-            </div>\
-            <div class="ausglobe-accordion-item-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-item-content-visible\': $parent.openIndex === $index() }">\
-                <div class="ausglobe-accordion-category">\
-                    <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
-                        <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
-                        <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
-                        <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
-                    </div>\
-                    <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
-                    <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
-                        <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
-                            <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemEnabled, visible: isEnabled()" />\
-                            <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_box.svg" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled()" />\
-                            <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
-                            <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+        <div data-bind="foreach: content">\
+            <div class="ausglobe-accordion-item">\
+                <div class="ausglobe-accordion-item-header" data-bind="click: $root.openItem">\
+                    <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
+                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: $root.openIndex === $index()" />\
+                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: $root.openIndex !== $index()" />\
+                </div>\
+                <div class="ausglobe-accordion-item-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-item-content-visible\': $parent.openIndex === $index() }">\
+                    <div class="ausglobe-accordion-category">\
+                        <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
+                            <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
+                        </div>\
+                        <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
+                        <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
+                            <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
+                                <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemEnabled, visible: isEnabled()" />\
+                                <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_box.svg" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled()" />\
+                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
+                                <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+                            </div>\
                         </div>\
                     </div>\
+                </div>\
+            </div>\
+        </div>\
+        <div class="ausglobe-accordion-item">\
+            <div class="ausglobe-accordion-item-header" data-bind="click: openAddData">\
+                <div class="ausglobe-accordion-item-header-label">Add Data</div>\
+                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: addDataIsOpen" />\
+                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !addDataIsOpen" />\
+            </div>\
+            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': addDataIsOpen }">\
+                <div data-bind="foreach: userContent">\
+                    <div class="ausglobe-accordion-category">\
+                        <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
+                            <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
+                        </div>\
+                        <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
+                        <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
+                            <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
+                                <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemEnabled, visible: isEnabled()" />\
+                                <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_box.svg" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled()" />\
+                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
+                                <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>\
+                <div class="ausglobe-accordion-category">\
+                    <div>\
+                        Add data by dragging and dropping it onto the map, or\
+                        <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">Browse and select a file to upload</span>.\
+                    </div>\
+                    <form class="ausglobe-user-service-form" data-bind="submit: addWfsService">\
+                        <label>\
+                            <div>Add a Web Feature Service URL (advanced):</div>\
+                            <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
+                        </label>\
+                        <div>\
+                            <input class="ausglobe-button" type="submit" value="Add" />\
+                        </div>\
+                    </form>\
                 </div>\
             </div>\
         </div>';
