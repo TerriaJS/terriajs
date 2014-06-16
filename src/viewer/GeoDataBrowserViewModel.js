@@ -8,7 +8,6 @@ var BingMapsStyle = Cesium.BingMapsStyle;
 var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
 var combine = Cesium.combine;
 var createCommand = Cesium.createCommand;
-var DefaultProxy = Cesium.DefaultProxy;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
@@ -17,6 +16,7 @@ var Rectangle = Cesium.Rectangle;
 var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
 var when = Cesium.when;
 
+var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var readJson = require('../readJson');
@@ -184,8 +184,21 @@ var GeoDataBrowserViewModel = function(options) {
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
         imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
             url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer',
-            proxy : new DefaultProxy('/proxy/')
+            proxy : corsProxy
         }), 0);
+    });
+
+    this._selectFileToUpload = createCommand(function() {
+        var element = document.getElementById('uploadFile');
+        element.click();
+    });
+
+    this._addUploadedFile = createCommand(function() {
+        var uploadFileElement = document.getElementById('uploadFile');
+        var files = uploadFileElement.files;
+        for (var i = 0; i < files.length; ++i) {
+            that._viewer.geoDataManager.addFile(files[i]);
+        }
     });
 
     // Subscribe to a change in the selected viewer (2D/3D) in order to actually switch the viewer.
@@ -472,9 +485,13 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
 
     selectFileToUpload : {
         get : function() {
-            return function() {
-                alert('Sorry, not yet implemented.');
-            };
+            return this._selectFileToUpload;
+        }
+    },
+
+    addUploadedFile : {
+        get : function() {
+            return this._addUploadedFile;
         }
     }
 });
