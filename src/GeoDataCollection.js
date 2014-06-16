@@ -766,6 +766,12 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     var layers = [];
     if (description.type === 'WFS') {
         layers = json_gml.FeatureTypeList.FeatureType;
+
+        // If the data source name is just its URL, and we have a better title from GetCapabilities, use it.
+        var title = json_gml.ServiceIdentification.Title;
+        if (title && description.name === description.base_url) {
+            description.name = title;
+        }
     }
     else if (description.type === 'WMS') {
         var layer_src = [json_gml.Capability.Layer];

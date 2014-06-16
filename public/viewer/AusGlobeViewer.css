@@ -608,3 +608,36 @@ a.ausglobe-title-menuItem:hover {
     left: 10px;
     right: 10px;
 }
+
+.ausglobe-upload-file-button {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ausglobe-user-service-form {
+    position: relative;
+    padding-top: 10px;
+    width: 100%;
+    min-height: 90px;
+}
+
+.ausglobe-button {
+    position: absolute;
+    display: block;
+    height: 30px;
+    border: 1px solid #555555;
+    width: 80px;
+    right: 0;
+    font-size: 9pt;
+    padding: 2px;
+    background-color: #333333;
+    color: white;
+    line-height: 30px;
+    cursor: pointer;
+    margin-top: 5px;
+    text-align: center
+}
+
+.ausglobe-wfs-url-input {
+    width: 100%;
+}
