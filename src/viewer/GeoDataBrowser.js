@@ -73,10 +73,28 @@ var GeoDataBrowser = function(options) {
                 <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !addDataIsOpen" />\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': addDataIsOpen }">\
+                <div data-bind="foreach: userContent">\
+                    <div class="ausglobe-accordion-category">\
+                        <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
+                            <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
+                        </div>\
+                        <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
+                        <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
+                            <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
+                                <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemEnabled, visible: isEnabled()" />\
+                                <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_box.svg" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled()" />\
+                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
+                                <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+                            </div>\
+                        </div>\
+                    </div>\
+                </div>\
                 <div class="ausglobe-accordion-category">\
                     <div>\
                         Add data by dragging and dropping it onto the globe, or\
-                        <span class="ausglobe-upload-file-button">Browse and select a file to upload</span>.\
+                        <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">Browse and select a file to upload</span>.\
                     </div>\
                     <form class="ausglobe-user-service-form" data-bind="submit: addWfsService">\
                         <label>\

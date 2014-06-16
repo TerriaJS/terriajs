@@ -40,7 +40,7 @@ var GeoDataBrowserViewModel = function(options) {
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = 'Terrain';
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'addDataIsOpen', 'serviceUrl',
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'addDataIsOpen', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -109,15 +109,19 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._addWfsService = createCommand(function() {
-        that.content.push(komapping.fromJS({
-            name : 'User Added',
-            Layer : [{
+        var item = that._browserContentMapping.Layer.create({
+            data : {
                 name : that.wfsServiceUrl,
                 base_url : that.wfsServiceUrl,
                 type : 'WFS',
                 proxy : true
-            }]
-        }, that._browserContentMapping));
+            }
+        });
+        that.userContent.push(item);
+
+        item.isOpen(true);
+
+        that.wfsServiceUrl = '';
     });
 
     function removeBaseLayer() {
@@ -206,13 +210,13 @@ var GeoDataBrowserViewModel = function(options) {
         }
     });
 
-    var categoryMapping = {
+    this._categoryMapping = {
         Layer : {
             create : function(options) {
                 var parent = komapping.toJS(options.parent);
                 var data = combine(options.data, parent);
 
-                var layerViewModel = komapping.fromJS(data, categoryMapping);
+                var layerViewModel = komapping.fromJS(data, that._categoryMapping);
                 layerViewModel.isEnabled = knockout.observable(false);
 
                 return layerViewModel;
@@ -223,7 +227,7 @@ var GeoDataBrowserViewModel = function(options) {
     this._browserContentMapping = {
         Layer : {
             create : function(options) {
-                var layerViewModel = komapping.fromJS(options.data, categoryMapping);
+                var layerViewModel = komapping.fromJS(options.data, that._categoryMapping);
                 layerViewModel.isOpen = knockout.observable(false);
                 layerViewModel.isLoading = knockout.observable(false);
 
@@ -247,7 +251,9 @@ var GeoDataBrowserViewModel = function(options) {
                         if (layerViewModel.isOpen()) {
                             layerViewModel.isLoading(true);
                             that._viewer.geoDataManager.getCapabilities(options.data, function(description) {
-                                var remapped = komapping.fromJS(description, categoryMapping);
+                                var remapped = komapping.fromJS(description, that._categoryMapping);
+
+                                layerViewModel.name(remapped.name());
 
                                 var layers = remapped.Layer();
                                 for (var i = 0; i < layers.length; ++i) {
@@ -295,6 +301,8 @@ var GeoDataBrowserViewModel = function(options) {
 
         komapping.fromJS(browserContent, that._browserContentMapping, browserContentViewModel);
     });
+
+    this.userContent = komapping.fromJS([], this._browserContentMapping);
 
     function noopHandler(evt) {
         evt.stopPropagation();
@@ -459,6 +467,14 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     addWfsService : {
         get : function() {
             return this._addWfsService;
+        }
+    },
+
+    selectFileToUpload : {
+        get : function() {
+            return function() {
+                alert('Sorry, not yet implemented.');
+            };
         }
     }
 });
