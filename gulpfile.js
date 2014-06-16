@@ -2,9 +2,9 @@
 
 /*global require*/
 
-var gulp = require('gulp');  
-var browserify = require('gulp-browserify');  
-var concat = require('gulp-concat');  
+var gulp = require('gulp');
+var browserify = require('gulp-browserify');
+var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
@@ -64,10 +64,9 @@ gulp.task('build-cesium', function(cb) {
     });
 });
 
-gulp.task('default', ['build', 'docs'], function() {
-});
+gulp.task('default', ['build', 'docs']);
 
 gulp.task('watch', function() {
     gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
-    gulp.watch('src/**/*.js', ['build']);
+    gulp.watch('src/**/*.js', ['default']);
 });

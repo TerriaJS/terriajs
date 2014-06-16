@@ -2,23 +2,23 @@
   "name": "ausglobe",
   "version": "0.0.1",
   "dependencies": {
-    "connect": "*",
-    "express": "*",
+    "connect": "^3.0.0",
+    "express": "^4.4.3",
     "knockout": "^3.1.0",
     "knockout.mapping": "^2.4.2",
     "request": "*",
-    "supervisor": "0.4.x",
+    "supervisor": "^0.4.1",
     "weakmap": "0.0.6"
   },
   "devDependencies": {
-    "gulp": "~3.6.2",
+    "gulp": "^3.8.0",
+    "gulp-browserify": "~0.5.0",
     "gulp-concat": "~2.2.0",
+    "gulp-jasmine": "~0.2.0",
+    "gulp-jsdoc": "^0.1.4",
+    "gulp-jshint": "~1.6.1",
     "gulp-rename": "~1.2.0",
     "gulp-uglify": "~0.3.0",
-    "gulp-jshint": "~1.6.1",
-    "gulp-jasmine": "~0.2.0",
-    "gulp-browserify": "~0.5.0",
-    "gulp-jsdoc": "~0.1.4",
     "gulp-watch": "~0.6.5"
   },
   "scripts": {
