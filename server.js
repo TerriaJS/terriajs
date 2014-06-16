@@ -42,7 +42,6 @@ app.get(/^\/proxy\/(.+)$/, function(req, res) {
         remoteUrl += url.substring(queryStartIndex);
     }
 
-    console.log(remoteUrl);
     request.get(remoteUrl).pipe(res);
 });
 
