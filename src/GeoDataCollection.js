@@ -1,14 +1,17 @@
-/*global require,Cesium,L,URI,$,toGeoJSON,proj4,proj4_epsg*/
+/*global require,Cesium,L,URI,$,toGeoJSON,proj4,proj4_epsg,alert,confirm*/
 
 "use strict";
 
+var corsProxy = require('./corsProxy');
 var TableDataSource = require('./TableDataSource');
 var GeoData = require('./GeoData');
+var readText = require('./readText');
 
 
 var defaultValue = Cesium.defaultValue;
 var DeveloperError = Cesium.DeveloperError;
 var FeatureDetection = Cesium.FeatureDetection;
+var when = Cesium.when;
 
 /**
 * @class GeoDataCollection is a collection of geodata instances
@@ -520,8 +523,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     console.log('GeoJSON request', request);
     
     if (layer.proxy || this.shouldUseProxy(request)) {
-        var proxy = new Cesium.DefaultProxy('/proxy/');
-        request = proxy.getURL(request);
+        request = corsProxy.getURL(request);
     }
 
     Cesium.when(Cesium.loadText(request), function (text) {
@@ -563,7 +565,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
         if (layer.proxy || this.shouldUseProxy(url)) {
-            proxy = new Cesium.DefaultProxy('/proxy/');
+            proxy = corsProxy;
         }
 
         if (layerName === 'REST') {
@@ -588,13 +590,9 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
-        // if (layer.proxy || this._alwaysUseProxy) {
-        //    proxy = new Cesium.DefaultProxy('/proxy/');
-        //    server = proxy.getURL(server);
-        //    if (layerName !== 'REST') {
-        //       server += '%3f';
-        //    }
-        // }
+        if (layer.proxy || this.shouldUseProxy(server)) {
+           server = corsProxy.getURL(server);
+        }
         
         if (layerName === 'REST') {
             provider = new L.esri.TiledMapLayer(server);
@@ -843,8 +841,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     
     console.log('CAPABILITIES REQUEST:',request);
     if (description.proxy || this.shouldUseProxy(request)) {
-        var proxy = new Cesium.DefaultProxy('/proxy/');
-        request = proxy.getURL(request);
+        request = corsProxy.getURL(request);
     }
     
     var that = this;
@@ -1189,6 +1186,51 @@ GeoDataCollection.prototype.shouldUseProxy = function(url) {
         return false;
     }
     return true;
+};
+
+GeoDataCollection.prototype.addFile = function(file) {
+    var that = this;
+
+    if (this.formatSupported(file.name)) {
+        when(readText(file), function (text) {
+            that.zoomTo = true;
+            that.loadText(text, file.name);
+        });
+    }
+    else {
+        if (file.size > 1000000) {
+            alert('File is too large to send to conversion service.  Click here for alternative file conversion options.');
+        }
+        else if (false) {
+                //TODO: check against list of support extensions
+            alert('File format is not supported by conversion service.  Click here for alternative file conversion options.');
+        }
+        else {
+            if (!confirm('No local format handler.  Click OK to convert via our web service.')) {
+                return;
+            }
+            // generate form data to submit text for conversion
+            var formData = new FormData();
+            formData.append('input_file', file);
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    var response = xhr.responseText;
+                    if (response.substring(0,1) !== '{') {
+                        console.log(response);
+                        alert('Error trying to convert: ' + file.name);
+                    }
+                    else {
+                        that.zoomTo = true;
+                        that.loadText(response, file.name+'.geojson');
+                    }
+                }
+            };
+            xhr.open('POST', that.geoDataManager.visStore + '/convert');
+            xhr.send(formData);
+        }
+    }
 };
 
 module.exports = GeoDataCollection;

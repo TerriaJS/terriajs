@@ -95,6 +95,7 @@ var GeoDataBrowser = function(options) {
                     <div>\
                         Add data by dragging and dropping it onto the map, or\
                         <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">Browse and select a file to upload</span>.\
+                        <input type="file" style="display: none;" id="uploadFile" data-bind="event: { change: addUploadedFile }"/>\
                     </div>\
                     <form class="ausglobe-user-service-form" data-bind="submit: addWfsService">\
                         <label>\
