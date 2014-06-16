@@ -93,7 +93,7 @@ var GeoDataBrowser = function(options) {
                 </div>\
                 <div class="ausglobe-accordion-category">\
                     <div>\
-                        Add data by dragging and dropping it onto the globe, or\
+                        Add data by dragging and dropping it onto the map, or\
                         <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">Browse and select a file to upload</span>.\
                     </div>\
                     <form class="ausglobe-user-service-form" data-bind="submit: addWfsService">\
