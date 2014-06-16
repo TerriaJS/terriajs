@@ -16,7 +16,7 @@ var exec = require('child_process').exec;
 //var lr = require('tiny-lr');  
 //var server = lr();
 
-gulp.task('scripts', function() {  
+gulp.task('build', function() {
     return gulp.src(['src/viewer/main.js'])
         .pipe(browserify())
         .pipe(concat('ausglobe.js'))
@@ -64,8 +64,10 @@ gulp.task('build-cesium', function(cb) {
     });
 });
 
-gulp.task('default', ['scripts', 'docs'], function() {
-    gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
-    gulp.watch('src/**/*.js', ['scripts']);
+gulp.task('default', ['build', 'docs'], function() {
 });
 
+gulp.task('watch', function() {
+    gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
+    gulp.watch('src/**/*.js', ['build']);
+});
