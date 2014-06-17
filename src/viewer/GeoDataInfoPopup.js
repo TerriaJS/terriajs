@@ -23,8 +23,8 @@ var GeoDataInfoPopup = function(options) {
         <div class="ausglobe-info-field" data-bind="text: info.type"></div>\
         <h2>URL</h2>\
         <div class="ausglobe-info-field" data-bind="text: info.base_url"></div>\
-        <h2 data-bind="visible: info.Name() !== \'REST\'">Layer Name</h2>\
-        <div class="ausglobe-info-field" data-bind="visible: info.Name() !== \'REST\', text: info.Name"></div>\
+        <h2 data-bind="visible: info.Name && info.Name() !== \'REST\'">Layer Name</h2>\
+        <div class="ausglobe-info-field" data-bind="visible: info.Name && info.Name() !== \'REST\', text: info.Name"></div>\
         </div>\
     ';
     wrapper.appendChild(info);

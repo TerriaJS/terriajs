@@ -33,6 +33,7 @@ var GeoDataBrowserViewModel = function(options) {
     this.showingMapPanel = false;
     this.openIndex = 0;
     this.addDataIsOpen = false;
+    this.nowViewingIsOpen = false;
     this.wfsServiceUrl = '';
 
     this.openMapIndex = 0;
@@ -40,7 +41,7 @@ var GeoDataBrowserViewModel = function(options) {
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = 'Terrain';
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'addDataIsOpen', 'wfsServiceUrl',
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'addDataIsOpen', 'nowViewingIsOpen', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -63,11 +64,19 @@ var GeoDataBrowserViewModel = function(options) {
     this._openItem = createCommand(function(item) {
         that.openIndex = that.content.indexOf(item);
         that.addDataIsOpen = false;
+        that.nowViewingIsOpen = false;
     });
 
     this._openAddData = createCommand(function() {
         that.openIndex = -1;
         that.addDataIsOpen = true;
+        that.nowViewingIsOpen = false;
+    });
+
+    this._openNowViewing = createCommand(function() {
+        that.openIndex = -1;
+        that.addDataIsOpen = false;
+        that.nowViewingIsOpen = true;
     });
 
     this._openImagery = createCommand(function() {
@@ -92,6 +101,11 @@ var GeoDataBrowserViewModel = function(options) {
         } else {
             disableItem(that, item);
         }
+    });
+
+    this._toggleItemShown = createCommand(function(item) {
+        item.show(!item.show());
+        that._dataManager.show(item.model, item.show());
     });
 
     this._zoomToItem = createCommand(function(item) {
@@ -223,18 +237,20 @@ var GeoDataBrowserViewModel = function(options) {
         }
     });
 
-    this._categoryMapping = {
-        Layer : {
-            create : function(options) {
-                var parent = komapping.toJS(options.parent);
-                var data = combine(options.data, parent);
+    this._itemMapping = {
+        create : function(options) {
+            var parent = komapping.toJS(options.parent);
+            var data = combine(options.data, parent);
 
-                var layerViewModel = komapping.fromJS(data, that._categoryMapping);
-                layerViewModel.isEnabled = knockout.observable(false);
+            var layerViewModel = komapping.fromJS(data, that._categoryMapping);
+            layerViewModel.isEnabled = knockout.observable(false);
 
-                return layerViewModel;
-            }
+            return layerViewModel;
         }
+    };
+
+    this._categoryMapping = {
+        Layer : this._itemMapping
     };
 
     this._browserContentMapping = {
@@ -316,6 +332,29 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this.userContent = komapping.fromJS([], this._browserContentMapping);
+
+    function getDescription(item) {
+        return item.description;
+    }
+
+    var nowViewingMapping = {
+        create : function(options) {
+            var viewModel = komapping.fromJS(options.data.description);
+            viewModel.show = knockout.observable(options.data.show);
+            viewModel.model = options.data;
+            return viewModel;
+        }
+    };
+
+    this.nowViewing = komapping.fromJS(this._dataManager.layers, nowViewingMapping);
+
+    this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(function() {
+        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+    });
+
+    this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(function() {
+        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+    });
 
     function noopHandler(evt) {
         evt.stopPropagation();
@@ -405,6 +444,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
         }
     },
 
+    openNowViewing : {
+        get : function() {
+            return this._openNowViewing;
+        }
+    },
+
     openImagery : {
         get : function() {
             return this._openImagery;
@@ -426,6 +471,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     toggleItemEnabled : {
         get : function() {
             return this._toggleItemEnabled;
+        }
+    },
+
+    toggleItemShown : {
+        get : function() {
+            return this._toggleItemShown;
         }
     },
 
@@ -499,7 +550,7 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
 function enableItem(viewModel, item) {
     var description = komapping.toJS(item);
     var layer = new GeoData({
-        name: description.Name,
+        name: description.Title,
         type: description.type,
         extent: getOGCLayerExtent(description)
     });
@@ -516,6 +567,8 @@ function enableItem(viewModel, item) {
         description.count = 1000;
         layer.url = viewModel._dataManager.getOGCFeatureURL(description);
     }
+
+    layer.description = description;
 
     //pass leaflet map object if exists
     layer.map = viewModel.map;
