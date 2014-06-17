@@ -103,6 +103,11 @@ var GeoDataBrowserViewModel = function(options) {
         }
     });
 
+    this._toggleItemShown = createCommand(function(item) {
+        item.show(!item.show());
+        that._dataManager.show(item.model, item.show());
+    });
+
     this._zoomToItem = createCommand(function(item) {
         if (!defined(item.layer) || !defined(item.layer.extent)) {
             return;
@@ -336,6 +341,7 @@ var GeoDataBrowserViewModel = function(options) {
         create : function(options) {
             var viewModel = komapping.fromJS(options.data.description);
             viewModel.show = knockout.observable(options.data.show);
+            viewModel.model = options.data;
             return viewModel;
         }
     };
@@ -465,6 +471,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     toggleItemEnabled : {
         get : function() {
             return this._toggleItemEnabled;
+        }
+    },
+
+    toggleItemShown : {
+        get : function() {
+            return this._toggleItemShown;
         }
     },
 
