@@ -586,9 +586,10 @@ function linkShare(url) {
     showHTMLTextDialog("Link to Visualization", str, true);
 }
 
+//Print function based on captured dataUrl
 function printDataUrl(dataUrl) {
 /*
-            //print by putting cesiumContainer in front
+            //print by putting cesiumContainer in front - dataUrl not used
         var div = document.getElementById('cesiumContainer');
         div.style.zIndex = 1000; 
         div.style.height = 'auto'; 
@@ -606,10 +607,10 @@ function printDataUrl(dataUrl) {
         div.style.display = 'none';
 /*      
             //print by opening a new window                
+        var win = window.open();
         win.document.write("<img src='"+dataUrl+"'/>");
         win.print(); 
         win.close(); 
-        win = window.open();
 */
 }
 

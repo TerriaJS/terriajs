@@ -57,8 +57,6 @@ var TitleWidget = require('./TitleWidget');
 //use our own bing maps key
 BingMapsApi.defaultKey = 'Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk';
 
-var win;
-
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
 
@@ -88,7 +86,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     Fullscreen.requestFullscreen(document.body);
                 }
             },
-            {
+            {  //This currently also houses print, but print could be moved here as well
                 label : 'Share',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {

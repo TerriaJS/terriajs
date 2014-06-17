@@ -285,14 +285,12 @@ GeoDataCollection.prototype.loadUrl = function(url) {
         //call to server to get json record
         url = this.visStore + '/get_rec?vis_id=' + this.visID;
         Cesium.when(Cesium.loadJson(url), function(obj) {
-            console.log(obj);
             that.visID = obj._id;
  
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
                 var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
                 that.zoomTo = true;
-                console.log(camLayer);
                 that.GeoDataAdded.raiseEvent(that, camLayer);
             }
            
@@ -534,7 +532,6 @@ function _EsriGml2GeoJson(obj) {
 
 GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
-    console.log('GeoJSON request', request);
     
     if (layer.proxy || this.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
@@ -604,15 +601,6 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
-/*
-       //explicitly call proxy so that when we use html2canvas, the proxy is set up
-        if (layer.proxy) {
-            proxy = new Cesium.DefaultProxy('/proxy/');
-            server = proxy.getURL(server);
-            if (layerName !== 'REST') {
-                server += '%3f';
-            }
-*/
         if (layer.proxy || this.shouldUseProxy(server)) {
            server = corsProxy.getURL(server);
         }
@@ -670,7 +658,7 @@ GeoDataCollection.prototype._viewData = function(request, layer) {
 GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     var request = layer.url;
     
-    console.log('LAYER REQUEST:',request);
+//    console.log('LAYER REQUEST:',request);
     
     // Deal with the different data Services
     if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'CKAN' || layer.type === 'GME') {
@@ -1167,7 +1155,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         var obj_size = JSON.stringify(obj).length;
         var cnt = {tot:0, longest:0};
         filterValue(obj, 'coordinates', function(pts) { countPnts(pts, cnt); });
-        console.log('finished', cnt);
         if (cnt.longest > 100 && cnt.tot > 100000) {
             downsampleGeoJSON(obj);
             console.log('downsampled object from', obj_size, 'bytes to', JSON.stringify(obj).length);
