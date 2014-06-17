@@ -235,7 +235,7 @@ GeoDataCollection.prototype._parseObject = function(obj) {
             return obj;
         }
     }
-}
+};
 
 GeoDataCollection.prototype._parse = function(str_layers) {
     var layers = JSON.parse(str_layers);

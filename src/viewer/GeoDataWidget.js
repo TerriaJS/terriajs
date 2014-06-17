@@ -689,7 +689,7 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                                     url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
                                     window.parent.document.location.assign(url);
                                     $(this).dialog('close');
-                                },
+                                }
 /*                                    "Close": function () {
                                     $(this).dialog("close");
                                 }
@@ -704,7 +704,7 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
             "Print": function () {
                 $(this).dialog("close");
                 printDataUrl(formValues.image);
-            },
+            }
         }
     });
 };

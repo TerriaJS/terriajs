@@ -650,7 +650,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
                     that.captureCanvasCallback(dataUrl);
                     that.map.attributionControl.addTo(that.map);
                 }
-            })
+            });
         };
         
         //shut down existing cesium
@@ -909,7 +909,7 @@ function getCameraRect(scene, map) {
         return Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
     }
     else if (map !== undefined) {
-        var bnds = map.getBounds()
+        var bnds = map.getBounds();
         return Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
     }
 }
