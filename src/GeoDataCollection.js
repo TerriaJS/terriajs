@@ -219,16 +219,32 @@ GeoDataCollection.prototype._stringify = function() {
     return JSON.stringify(str_layers);
 };
 
+// HACK: Parse out the unstringified objects and turn them into Cesium objects
+GeoDataCollection.prototype._parseObject = function(obj) {
+    for (var p in obj) {
+        if (p === 'west') {
+            return new Cesium.Rectangle(obj.west, obj.south, obj.east, obj.north);
+        }
+        else if (p === 'red') {
+            return new Cesium.Color(obj.red, obj.green, obj.blue, obj.alpha);
+        }
+        else if (typeof obj[p] === 'object') {
+            obj[p] = this._parseObject(obj[p]);
+        }
+        else {
+            return obj;
+        }
+    }
+}
+
 GeoDataCollection.prototype._parse = function(str_layers) {
     var layers = JSON.parse(str_layers);
     var obj_layers = [];
     for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
         for (var p in layer) {
-            //TODO: fix this and make it more general if possible
-            if (layer[p].west) {
-                var e = layer[p];
-                layer[p] = new Cesium.Rectangle(e.west, e.south, e.east, e.north);
+            if (typeof layer[p] === 'object') {
+                layer[p] = this._parseObject(layer[p]);
             }
         }
         obj_layers.push(layer);

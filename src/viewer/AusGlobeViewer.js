@@ -66,6 +66,7 @@ var AusGlobeViewer = function(geoDataManager) {
 
     var that = this;
     
+    that.startup = true;
     this.captureCanvas = function() { console.log('capture call unset'); };
     this.captureCanvasCallback = function(dataUrl) { console.log('callback unset'); };
 
@@ -101,20 +102,20 @@ var AusGlobeViewer = function(geoDataManager) {
                         div.style.height = '100%'; 
                         div.style.width = '100%'; 
                         div.style.zIndex = 999; 
-                            //print by exposing and writing to new div
+*/                            //print by exposing and writing to new div
                         var div = document.getElementById('printScreen');
                         div.style.display = 'block';
                         div.innerHTML = "<img src='"+dataUrl+"'/>";
                         window.print();
                         div.style.display = 'none';
-*/                      
+                      
                             //print by opening a new window                
-                        win.document.write("<img src='"+dataUrl+"'/>");
-                        win.print(); 
+//                        win.document.write("<img src='"+dataUrl+"'/>");
+//                        win.print(); 
 //                      win.close(); 
                     };
                     that.captureCanvas();
-                    win = window.open();
+//                    win = window.open();
                 }
             },
             {
@@ -662,6 +663,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.captureCanvas = function() {
             var that = this;
+            if (that.startup) {
+                that.startup = false;
+                alert('There are known problems capturing images with some datasets in 2D mode for printing and sharing.  Please use 3D mode if possible for these operations.');
+            }
             that.map.attributionControl.removeFrom(that.map);
 /*            //might need to break out to global function and deal with err
             leafletImage(that.map, function(err, canvas) {
