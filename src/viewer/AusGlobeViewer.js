@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,Cesium,L,$,alert,console*/
+/*global require,Cesium,L,$,html2canvas,alert,console*/
 var BingMapsApi = Cesium.BingMapsApi;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
@@ -73,11 +73,11 @@ var AusGlobeViewer = function(geoDataManager) {
     var titleWidget = new TitleWidget({
         container : document.body,
         menuItems : [
-//            {
-//                label : 'Map Information',
-//                uri : 'http://www.nicta.com.au',
-//                target : '_blank'
-//            },
+            {
+                label : 'Map Information',
+                uri : 'http://www.nicta.com.au',
+                target : '_blank'
+            },
             {
                 label : 'Help',
                 uri : 'http://www.nicta.com.au'
@@ -86,36 +86,6 @@ var AusGlobeViewer = function(geoDataManager) {
                 label : 'Fullscreen',
                 callback : function() {
                     Fullscreen.requestFullscreen(document.body);
-                }
-            },
-            {
-                label : 'Print',
-                callback : function() {
-                    that.captureCanvasCallback = function (dataUrl) {
-/*
-                            //print by putting container in front
-                        var div = document.getElementById('cesiumContainer');
-                        div.style.zIndex = 1000; 
-                        div.style.height = 'auto'; 
-                        div.style.width = 'auto'; 
-                        window.print();
-                        div.style.height = '100%'; 
-                        div.style.width = '100%'; 
-                        div.style.zIndex = 999; 
-*/                            //print by exposing and writing to new div
-                        var div = document.getElementById('printScreen');
-                        div.style.display = 'block';
-                        div.innerHTML = "<img src='"+dataUrl+"'/>";
-                        window.print();
-                        div.style.display = 'none';
-                      
-                            //print by opening a new window                
-//                        win.document.write("<img src='"+dataUrl+"'/>");
-//                        win.print(); 
-//                      win.close(); 
-                    };
-                    that.captureCanvas();
-//                    win = window.open();
                 }
             },
             {
@@ -665,7 +635,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             var that = this;
             if (that.startup) {
                 that.startup = false;
-                alert('There are known problems capturing images with some datasets in 2D mode for printing and sharing.  Please use 3D mode if possible for these operations.');
+                alert('There are known problems capturing images with some datasets in 2D view.  Please use 3D mode if possible for this operation.');
             }
             that.map.attributionControl.removeFrom(that.map);
 /*            //might need to break out to global function and deal with err

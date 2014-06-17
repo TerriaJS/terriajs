@@ -4,7 +4,7 @@
 */
 "use strict";
 
-/*global require,Cesium*/
+/*global require,Cesium,URI,$,alert,confirm*/
 var GeoData = require('../GeoData');
 
 var DeveloperError = Cesium.DeveloperError;
@@ -92,32 +92,32 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     //Dialogs
     var div = document.createElement('div');
     div.id = 'dialogInfo';
-    div.class = "dialog";
+    div.className = "dialog";
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogServices';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = '<div id="list2" class="list"></div> \
             <div>URL: <br /><input type="text" id="layer_url"></div>';
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogSelect';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = '<div id="list1" class="list"></div> \
             <div id="details" class="info"></div>';
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogLayers';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = '<div id="list3" class="list"></div>';
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogShare';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = ' \
             <form id="modalform" name="modalform"> \
                 <img id="img1" src="./images/default.jpg" width="256"/> \
@@ -183,11 +183,11 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
 
-}
+};
 
 GeoDataWidget.prototype.setExtent = function(ext) {
     this.regionExt = ext;
-}
+};
 
 // -----------------------------
 // Handle file drop for CZML/GeoJSON/CSV
@@ -201,7 +201,7 @@ function handleError(e) {
     alert('error loading data: ' + e.what);
 }
 
-var dropHandler = function (evt, that) {
+function dropHandler(evt, that) {
     evt.stopPropagation();
     evt.preventDefault();
 
@@ -257,23 +257,24 @@ function showHTMLTextDialog(title_text, display_text, b_modal, close_function) {
 
 function getOGCLayerExtent(layer) {
     var rect;
+    var box;
     if (layer.WGS84BoundingBox) {
         var lc = layer.WGS84BoundingBox.LowerCorner.split(" ");
         var uc = layer.WGS84BoundingBox.UpperCorner.split(" ");
         rect = Rectangle.fromDegrees(parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]));
     }
     else if (layer.LatLonBoundingBox) {
-        var box = layer.LatLonBoundingBox || layer.BoundingBox;
+        box = layer.LatLonBoundingBox || layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.minx), parseFloat(box.miny),
             parseFloat(box.maxx), parseFloat(box.maxy));
     }
     else if (layer.EX_GeographicBoundingBox) {
-        var box = layer.EX_GeographicBoundingBox;
+        box = layer.EX_GeographicBoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.westBoundLongitude), parseFloat(box.southBoundLatitude),
             parseFloat(box.eastBoundLongitude), parseFloat(box.northBoundLatitude));
     }
     else if (layer.BoundingBox) {
-        var box = layer.BoundingBox;
+        box = layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
             parseFloat(box.east), parseFloat(box.north));
     }
@@ -359,7 +360,7 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
         selected: function (event, ui) {
             var item = $('#list1 .ui-selected');
             var idx = item[0].id;
-            var layer = sel_list[parseInt(idx)];
+            var layer = sel_list[parseInt(idx, 10)];
             var text = '<b>Selected:</b><br>' + layer.Title;
             if (layer.Abstract !== undefined) {
                 text += '<br>' + layer.Abstract;
@@ -367,10 +368,10 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
                 //capture the layer extent for display and later use
             data_extent = getOGCLayerExtent(layer);
             if (data_extent) {
-                text += '<br>'+CesiumMath.toDegrees(data_extent.west).toFixed(3)
-                        +', '+CesiumMath.toDegrees(data_extent.south).toFixed(3)
-                        +'<br>'+CesiumMath.toDegrees(data_extent.east).toFixed(3)
-                        +', '+CesiumMath.toDegrees(data_extent.north).toFixed(3);
+                text += '<br>' + CesiumMath.toDegrees(data_extent.west).toFixed(3) +
+                        ', ' + CesiumMath.toDegrees(data_extent.south).toFixed(3) +
+                        '<br>' + CesiumMath.toDegrees(data_extent.east).toFixed(3) +
+                        ', ' + CesiumMath.toDegrees(data_extent.north).toFixed(3);
             }
             $('.info').html(text);
         }
@@ -416,7 +417,7 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
             break;
         }
     }
-}
+};
 
 // Pick Service Dialog
 GeoDataWidget.prototype.showServicesDialog = function (services) {
@@ -468,7 +469,7 @@ GeoDataWidget.prototype.showServicesDialog = function (services) {
 
     var sel_list = [];
     for (var n = 0; n < services.Layer.length; n++) {
-        var name = services.Layer[n].name
+        var name = services.Layer[n].name;
         list.append('<p class="data_type"><b>' + name + '</b></p>');
         var layers = services.Layer[n].Layer;
         for (var i = 0; i < layers.length; i++) {
@@ -478,7 +479,7 @@ GeoDataWidget.prototype.showServicesDialog = function (services) {
             sel_list.push(item);
         }
     }
-}
+};
 
 // Update layers dialog
 GeoDataWidget.prototype.showLayersDialog = function () {
@@ -557,7 +558,7 @@ GeoDataWidget.prototype.showLayersDialog = function () {
             that.geoDataManager.show(layer, false);
         }
     });
-}
+};
 
 
 // share the link handlers
@@ -583,6 +584,33 @@ function embedShare(url) {
 function linkShare(url) {
     var str = 'You can use this link to view or share your visualization:<br><a href="' + url + '" target="_blank">' + url + '</a>';
     showHTMLTextDialog("Link to Visualization", str, true);
+}
+
+function printDataUrl(dataUrl) {
+/*
+            //print by putting cesiumContainer in front
+        var div = document.getElementById('cesiumContainer');
+        div.style.zIndex = 1000; 
+        div.style.height = 'auto'; 
+        div.style.width = 'auto'; 
+        window.print();
+        div.style.height = '100%'; 
+        div.style.width = '100%'; 
+        div.style.zIndex = 999; 
+*/
+            //print by exposing and writing to new div
+        var div = document.getElementById('printScreen');
+        div.style.display = 'block';
+        div.innerHTML = "<img src='"+dataUrl+"'/>";
+        window.print();
+        div.style.display = 'none';
+/*      
+            //print by opening a new window                
+        win.document.write("<img src='"+dataUrl+"'/>");
+        win.print(); 
+        win.close(); 
+        win = window.open();
+*/
 }
 
 // Dialog to post current view to server
@@ -618,20 +646,20 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                 // generate form data to submit
                 var formData = new FormData();
                 for (var fld in formValues) {
-                    if (formValues.hasOwnProperty(fld) === false)
-                        continue;
-                    if (formEntries[fld]) {
-                        formData.append(fld, formEntries[fld]);
-                    }
-                    else {
-                        formData.append(fld, formValues[fld]);
+                    if (formValues.hasOwnProperty(fld)) {
+                        if (formEntries[fld]) {
+                            formData.append(fld, formEntries[fld]);
+                        }
+                        else {
+                            formData.append(fld, formValues[fld]);
+                        }
                     }
                 }
                 //TODO: include,resize image here based on user setting
                 // submit and use the returned url provide share links
-                var xhr = new XMLHttpRequest;
+                var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
+                    if (xhr.readyState === 4) {
                         console.log('VisStore response: ' + xhr.responseText);
                         if (xhr.responseText === '') {
                             alert('Unable to send view to the server');
@@ -644,7 +672,7 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                                 'FB': function () {
                                     var record_url = that.geoDataManager.visStore + '/get_rec?vis_id=' + resp.vis_id;
                                     var image_url = that.geoDataManager.visStore + '/images/' + resp.vis_id + '_thumb.jpg';
-                                    fbShare(url, server_url, image_url);
+                                    fbShare(url, record_url, image_url);
                                     $(this).dialog('close');
                                 },
                                 'Embed': function () {
@@ -668,15 +696,16 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
 
                        }
                     }
-                }
+                };
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
             },
-            "Cancel": function () {
+            "Print": function () {
                 $(this).dialog("close");
-            }
+                printDataUrl(formValues.image);
+            },
         }
     });
-}
+};
 
 module.exports = GeoDataWidget;
