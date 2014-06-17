@@ -328,23 +328,26 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.userContent = komapping.fromJS([], this._browserContentMapping);
 
-    function mapFunction(item) {
-        return {
-            name : item.name,
-            show : item.show,
-            url : item.url,
-            extent : item.extent
-        };
+    function getDescription(item) {
+        return item.description;
     }
 
-    this.nowViewing = komapping.fromJS(this._dataManager.layers.map(mapFunction), this._itemMapping);
+    var nowViewingMapping = {
+        create : function(options) {
+            var viewModel = komapping.fromJS(options.data.description);
+            viewModel.show = knockout.observable(options.data.show);
+            return viewModel;
+        }
+    };
+
+    this.nowViewing = komapping.fromJS(this._dataManager.layers, nowViewingMapping);
 
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(function() {
-        komapping.fromJS(that._dataManager.layers.map(mapFunction), that._itemMapping, that.nowViewing);
+        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
     });
 
     this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(function() {
-        komapping.fromJS(that._dataManager.layers.map(mapFunction), that._itemMapping, that.nowViewing);
+        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
     });
 
     function noopHandler(evt) {
@@ -552,6 +555,8 @@ function enableItem(viewModel, item) {
         description.count = 1000;
         layer.url = viewModel._dataManager.getOGCFeatureURL(description);
     }
+
+    layer.description = description;
 
     //pass leaflet map object if exists
     layer.map = viewModel.map;
