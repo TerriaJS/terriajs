@@ -39,6 +39,25 @@ var GeoDataBrowser = function(options) {
     dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }');
 
     dataPanel.innerHTML = '\
+        <div class="ausglobe-accordion-item">\
+            <div class="ausglobe-accordion-item-header" data-bind="click: openNowViewing">\
+                <div class="ausglobe-accordion-item-header-label">Now Viewing</div>\
+                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: nowViewingIsOpen" />\
+                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !nowViewingIsOpen" />\
+            </div>\
+            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': nowViewingIsOpen }">\
+                <div class="ausglobe-accordion-category">\
+                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="foreach: nowViewing">\
+                        <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': show }">\
+                            <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemShown, visible: show" />\
+                            <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_box.svg" data-bind="click: $root.toggleItemShown, visible: !show()" />\
+                            <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
+                            <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+                        </div>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>\
         <div data-bind="foreach: content">\
             <div class="ausglobe-accordion-item">\
                 <div class="ausglobe-accordion-item-header" data-bind="click: $root.openItem">\
