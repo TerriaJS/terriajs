@@ -57,14 +57,16 @@ var TitleWidget = require('./TitleWidget');
 //use our own bing maps key
 BingMapsApi.defaultKey = 'Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk';
 
-
-
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
 
     this.geoDataManager = geoDataManager;
 
     var that = this;
+    
+    that.startup = true;
+    this.captureCanvas = function() { console.log('capture call unset'); };
+    this.captureCanvasCallback = function(dataUrl) { console.log('callback unset'); };
 
     var titleWidget = new TitleWidget({
         container : document.body,
@@ -84,28 +86,16 @@ var AusGlobeViewer = function(geoDataManager) {
                     Fullscreen.requestFullscreen(document.body);
                 }
             },
-            {
+            {  //This currently also houses print, but print could be moved here as well
                 label : 'Share',
                 callback : function() {
-                    if (that.map) {
-//                        that.geoDataManager.setShareRequest({});
-                        console.log($('cesiumContainer'));
-                        html2canvas( document.getElementById('cesiumContainer'), {
-						    useCORS: true,
-                            onrendered: function(canvas) {
-                                var dataUrl = canvas.toDataURL("image/jpeg");
-                                var bnds = that.map.getBounds();
-                                var rect = Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
-                                that.geoDataManager.setShareRequest({
-                                    image: dataUrl,
-                                    camera: rect
-                                });
-                            }
+                    that.captureCanvasCallback = function (dataUrl) {
+                        that.geoDataManager.setShareRequest({
+                            image: dataUrl,
+                            camera: getCameraRect(that.scene, that.map)
                         });
-                    }
-                    else if (that.scene) {
-                        that.geoDataManager.shareRequest = true;
-                    }
+                    };
+                    that.captureCanvas();
                 }
             }
         ]
@@ -207,6 +197,8 @@ var AusGlobeViewer = function(geoDataManager) {
         }
     });
 };
+
+
 
 // -------------------------------------------
 // PERF: skip frames where reasonable - global vars for now
@@ -637,6 +629,30 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.geoDataManager.setViewer({scene: undefined, map: map});
         this.geoDataBrowser.viewModel.map = map;
 
+        this.captureCanvas = function() {
+            var that = this;
+            if (that.startup) {
+                that.startup = false;
+                alert('There are known problems capturing images with some datasets in 2D view.  Please use 3D mode if possible for this operation.');
+            }
+            that.map.attributionControl.removeFrom(that.map);
+/*            //might need to break out to global function and deal with err
+            leafletImage(that.map, function(err, canvas) {
+                var dataUrl = canvas.toDataURL();
+                    that.captureCanvasCallback(dataUrl);
+                    that.map.attributionControl.addTo(that.map);
+            });            
+*/            
+            html2canvas( document.getElementById('cesiumContainer'), {
+	            useCORS: true,
+                onrendered: function(canvas) {
+                    var dataUrl = canvas.toDataURL("image/jpeg");
+                    that.captureCanvasCallback(dataUrl);
+                    that.map.attributionControl.addTo(that.map);
+                }
+            });
+        };
+        
         //shut down existing cesium
         if (this.viewer !== undefined) {
             this._enableSelectExtent(false);
@@ -676,19 +692,19 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             //call to the GeoDataManager which saves scene data, which sets an event
             // which is picked up by the GeoDataWidget to launch the share dialog
             //TODO: need leaflet version - use extent for camera and placeholder image
-            if (that.geoDataManager.shareRequest === true) {
+            if (that.captureCanvasFlag === true) {
+                that.captureCanvasFlag = false;
                 var dataUrl = that.scene.canvas.toDataURL("image/jpeg");
-                that.geoDataManager.setShareRequest({
-                    image: dataUrl,
-                    camera: getCameraRect(that.scene)
-                });
+                that.captureCanvasCallback(dataUrl);
             }
         };
 
+        this.captureCanvas = function() {
+            that.captureCanvasFlag = true;
+        };
 
         if (this.map !== undefined) {
-            bnds = this.map.getBounds();
-            rect = Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
+            rect = getCameraRect(undefined, this.map);
 
             //remove existing map viewer
             this.map.remove();
@@ -705,6 +721,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this._navigationWidget.showTilt = true;
         document.getElementById('position').style.visibility = 'visible';
+
         /*
          var esri = new ArcGisMapServerImageryProvider({
          url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
@@ -879,17 +896,22 @@ function getCameraFocus(scene) {
     return focus;
 }
 //Approximate camera extent approx for 2D viewer
-function getCameraRect(scene) {
-    var focus = getCameraFocus(scene);
-    var focus_cart = Ellipsoid.WGS84.cartesianToCartographic(focus);
-    var lat = CesiumMath.toDegrees(focus_cart.latitude);
-    var lon = CesiumMath.toDegrees(focus_cart.longitude);
+function getCameraRect(scene, map) {
+    if (scene !== undefined) {
+        var focus = getCameraFocus(scene);
+        var focus_cart = Ellipsoid.WGS84.cartesianToCartographic(focus);
+        var lat = CesiumMath.toDegrees(focus_cart.latitude);
+        var lon = CesiumMath.toDegrees(focus_cart.longitude);
 
-    var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position, cartesian3Scratch));
-    var offset = dist * 5e-6;
+        var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position, cartesian3Scratch));
+        var offset = dist * 5e-6;
 
-    var rect = Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
-    return rect;
+        return Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
+    }
+    else if (map !== undefined) {
+        var bnds = map.getBounds();
+        return Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
+    }
 }
 
 //A very simple camera height checker.

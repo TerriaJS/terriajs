@@ -24,7 +24,6 @@ var when = Cesium.when;
 var GeoDataCollection = function() {
     
     this.layers = [];
-    this.shareRequest = false;
     
     this.visStore = 'http://nationalmap.research.nicta.com.au:3000';
 
@@ -87,7 +86,6 @@ GeoDataCollection.prototype.setViewer = function(obj) {
 *
 */
 GeoDataCollection.prototype.setShareRequest = function(obj) {
-    this.shareRequest = false;
     var request = this.getShareRequest(obj);
     
     this.ShareRequest.raiseEvent(this, request);
@@ -212,7 +210,7 @@ GeoDataCollection.prototype._stringify = function() {
         var obj = {};
         for (var prop in this.layers[i]) {
             if (this.layers[i].hasOwnProperty(prop) && prop !== 'primitive' &&
-                prop !== 'dataSource') {
+                prop !== 'dataSource' && prop !== 'map') {
                 obj[prop] = this.layers[i][prop];
             }
         }
@@ -221,16 +219,32 @@ GeoDataCollection.prototype._stringify = function() {
     return JSON.stringify(str_layers);
 };
 
+// HACK: Parse out the unstringified objects and turn them into Cesium objects
+GeoDataCollection.prototype._parseObject = function(obj) {
+    for (var p in obj) {
+        if (p === 'west') {
+            return new Cesium.Rectangle(obj.west, obj.south, obj.east, obj.north);
+        }
+        else if (p === 'red') {
+            return new Cesium.Color(obj.red, obj.green, obj.blue, obj.alpha);
+        }
+        else if (typeof obj[p] === 'object') {
+            obj[p] = this._parseObject(obj[p]);
+        }
+        else {
+            return obj;
+        }
+    }
+};
+
 GeoDataCollection.prototype._parse = function(str_layers) {
     var layers = JSON.parse(str_layers);
     var obj_layers = [];
     for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
         for (var p in layer) {
-            //TODO: fix this and make it more general if possible
-            if (layer[p].west) {
-                var e = layer[p];
-                layer[p] = new Cesium.Rectangle(e.west, e.south, e.east, e.north);
+            if (typeof layer[p] === 'object') {
+                layer[p] = this._parseObject(layer[p]);
             }
         }
         obj_layers.push(layer);
@@ -271,14 +285,12 @@ GeoDataCollection.prototype.loadUrl = function(url) {
         //call to server to get json record
         url = this.visStore + '/get_rec?vis_id=' + this.visID;
         Cesium.when(Cesium.loadJson(url), function(obj) {
-            console.log(obj);
             that.visID = obj._id;
  
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
                 var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
                 that.zoomTo = true;
-                console.log(camLayer);
                 that.GeoDataAdded.raiseEvent(that, camLayer);
             }
            
@@ -520,7 +532,6 @@ function _EsriGml2GeoJson(obj) {
 
 GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
-    console.log('GeoJSON request', request);
     
     if (layer.proxy || this.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
@@ -611,7 +622,6 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     this.add(layer);
 };
 
-
 // Show csv data
 GeoDataCollection.prototype._viewTable = function(request, layer) {
     var that = this;
@@ -629,7 +639,7 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
             for (var i = 0; i < pointList.length; i++) {
                 dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
             }
-            layer.primitive = L.geoJson(dispPoints).addTo(layer.map);
+            layer = that.addGeoJsonLayer(dispPoints, layer.name+'.geojson', layer);
         }
         that.add(layer);
     });
@@ -648,7 +658,7 @@ GeoDataCollection.prototype._viewData = function(request, layer) {
 GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     var request = layer.url;
     
-    console.log('LAYER REQUEST:',request);
+//    console.log('LAYER REQUEST:',request);
     
     // Deal with the different data Services
     if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'CKAN' || layer.type === 'GME') {
@@ -812,8 +822,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else if (json_gml.Service) {
         description.version = parseFloat(json_gml.version);
     }
-    
-    console.log(layers);
     
     description.Layer = layers;
 };
@@ -1147,7 +1155,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         var obj_size = JSON.stringify(obj).length;
         var cnt = {tot:0, longest:0};
         filterValue(obj, 'coordinates', function(pts) { countPnts(pts, cnt); });
-        console.log('finished', cnt);
         if (cnt.longest > 100 && cnt.tot > 100000) {
             downsampleGeoJSON(obj);
             console.log('downsampled object from', obj_size, 'bytes to', JSON.stringify(obj).length);
@@ -1166,14 +1173,32 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     }
     else {
         var style = {
-            "color": "#ff7800",
-            "weight": 5,
-            "opacity": 0.65
+            "color": layer.style.line.color.toCssColorString(),
+            "weight": layer.style.line.width,
+            "opacity": 0.9
         };
 
+        var geojsonMarkerOptions = {
+            radius: layer.style.point.size / 2.0,
+            fillColor: layer.style.point.color.toCssColorString(),
+            fillOpacity: 0.9,
+            color: "#000",
+            weight: 1,
+            opacity: 0.9
+        };
+
+/*        
+         // icons will show up for leaflet print, but unable to set color
+        var geojsonIcon = L.icon({
+            iconUrl: 'images/pow32.png'
+        });
+*/
         // GeoJSON
         layer.primitive = L.geoJson(obj, {
-            style: style
+            style: style,
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            }
         }).addTo(layer.map);
     }
     return layer;

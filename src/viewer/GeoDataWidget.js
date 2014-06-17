@@ -586,6 +586,34 @@ function linkShare(url) {
     showHTMLTextDialog("Link to Visualization", str, true);
 }
 
+//Print function based on captured dataUrl
+function printDataUrl(dataUrl) {
+/*
+            //print by putting cesiumContainer in front - dataUrl not used
+        var div = document.getElementById('cesiumContainer');
+        div.style.zIndex = 1000; 
+        div.style.height = 'auto'; 
+        div.style.width = 'auto'; 
+        window.print();
+        div.style.height = '100%'; 
+        div.style.width = '100%'; 
+        div.style.zIndex = 999; 
+*/
+            //print by exposing and writing to new div
+        var div = document.getElementById('printScreen');
+        div.style.display = 'block';
+        div.innerHTML = "<img src='"+dataUrl+"'/>";
+        window.print();
+        div.style.display = 'none';
+/*      
+            //print by opening a new window                
+        var win = window.open();
+        win.document.write("<img src='"+dataUrl+"'/>");
+        win.print(); 
+        win.close(); 
+*/
+}
+
 // Dialog to post current view to server
 GeoDataWidget.prototype.postViewToServer = function (request) {
     var that = this;
@@ -656,16 +684,16 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                                     linkShare(url);
                                     $(this).dialog('close');
                                 },
-/*                                    //TODO: disable if not logged in
+                                    //TODO: disable if not logged in
                                 'Gallery': function () {
                                     url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
                                     window.parent.document.location.assign(url);
                                     $(this).dialog('close');
-                                },
-*/                                    "Close": function () {
+                                }
+/*                                    "Close": function () {
                                     $(this).dialog("close");
                                 }
-                            });
+*/                            });
 
                        }
                     }
@@ -675,15 +703,7 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
             },
             "Print": function () {
                 $(this).dialog("close");
-                var div = document.createElement('div');
-                div.id = 'printScreen';
-                div.innerHTML = '<img src="' + formValues.image + '"/>';
-                document.body.appendChild(div);
-                window.print();
-                document.body.removeChild(div);
-            },
-            "Cancel": function () {
-                $(this).dialog("close");
+                printDataUrl(formValues.image);
             }
         }
     });
