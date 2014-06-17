@@ -158,6 +158,9 @@ GeoDataCollection.prototype.get = function(id) {
 */
 GeoDataCollection.prototype.remove = function(id) {
     var layer = this.get(id);
+    if (layer === undefined) {
+        return;
+    }
     if (layer.dataSource) {
         if (this.dataSourceCollection.contains(layer.dataSource)) {
             this.dataSourceCollection.remove(layer.dataSource);
@@ -546,6 +549,9 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
         }
         else {
             obj = $.xml2json(text);         //ESRI WFS
+            if (obj.Exception !== undefined) {
+                console.log('Exception returned by the WFS Server:', obj.Exception.ExceptionText);
+            }
             obj = _EsriGml2GeoJson(obj);
                 //Hack for gazetteer since the coordinates are flipped
             if (text.indexOf('gazetter') !== -1) {
@@ -767,7 +773,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         json_gml = $.xml2json(text);
     }
     
-    console.log(json_gml);
+//    console.log(json_gml);
     
     //find the array of available layers
     var i;
@@ -776,7 +782,13 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         layers = json_gml.FeatureTypeList.FeatureType;
 
         // If the data source name is just its URL, and we have a better title from GetCapabilities, use it.
-        var title = json_gml.ServiceIdentification.Title;
+        var title;
+        if (json_gml.ServiceIdentification !== undefined) {
+            title = json_gml.ServiceIdentification.Title;
+        }
+        else if (json_gml.Service !== undefined) { //wfs 1.0
+            title = json_gml.Service.Title;
+        }
         if (title && description.name === description.base_url) {
             description.name = title;
         }
