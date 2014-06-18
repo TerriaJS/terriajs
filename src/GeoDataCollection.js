@@ -26,6 +26,7 @@ var GeoDataCollection = function() {
     this.layers = [];
     
     this.visStore = 'http://nationalmap.research.nicta.com.au:3000';
+//    this.visStore = 'http://geospace.research.nicta.com.au';
 
     var that = this;
     

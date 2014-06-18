@@ -22,9 +22,9 @@
 
     {"Name":"AHGFDam","Title":"Dams","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
 
-    {"Name":"bores","Title":"Bore Holes","base_url":"http://envirohack.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+    {"Name":"bores","Title":"Bore Holes","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
 
-    {"Name":"waterholes","Title":"Water Holes","base_url":"http://envirohack.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+    {"Name":"waterholes","Title":"Water Holes","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
 
     {"Name":"RiverRegion","Title":"River Regions","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
 
@@ -36,7 +36,7 @@
 
   ]},
 
-  {"name":"Infrastructure","base_url":"http://envirohack.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+  {"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"roads","Title":"Roads","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
@@ -55,7 +55,7 @@
     {"Name":"AHGFWaterTableAquifer","Title":"NBN Coverage","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
   ]},
   
-  {"name":"Boundaries","base_url":"http://envirohack.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+  {"name":"Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"admin_bnds:STE_2011_AUST","Title":"States & Territories","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
@@ -76,7 +76,7 @@
     {"Name":"admin_bnds:TR_2011_AUST","Title":"Tourism Regions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
   ]},
 
-  {"name":"Statistical Boundaries","base_url":"http://envirohack.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+  {"name":"Statistical Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"admin_bnds:SA4_2011_AUST","Title":"Statistical Area Level 4 (SA4)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
