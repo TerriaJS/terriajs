@@ -47,12 +47,17 @@ var GeoDataBrowser = function(options) {
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': nowViewingIsOpen }">\
                 <div class="ausglobe-accordion-category">\
-                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="foreach: nowViewing">\
+                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: nowViewing().length > 0, foreach: nowViewing">\
                         <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': show }">\
                             <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_tick.svg" data-bind="click: $root.toggleItemShown, visible: show" />\
                             <img class="ausglobe-accordion-category-item-checkbox" src="images/Check_box.svg" data-bind="click: $root.toggleItemShown, visible: !show()" />\
                             <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
                             <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+                        </div>\
+                    </div>\
+                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: nowViewing().length === 0">\
+                        <div class="ausglobe-accordion-category-item">\
+                            Add data from the collections below.\
                         </div>\
                     </div>\
                 </div>\
@@ -62,10 +67,10 @@ var GeoDataBrowser = function(options) {
             <div class="ausglobe-accordion-item">\
                 <div class="ausglobe-accordion-item-header" data-bind="click: $root.openItem">\
                     <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
-                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: $root.openIndex === $index()" />\
-                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: $root.openIndex !== $index()" />\
+                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: isOpen" />\
+                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !isOpen()" />\
                 </div>\
-                <div class="ausglobe-accordion-item-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-item-content-visible\': $parent.openIndex === $index() }">\
+                <div class="ausglobe-accordion-item-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
                     <div class="ausglobe-accordion-category">\
                         <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
                             <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
@@ -127,7 +132,7 @@ var GeoDataBrowser = function(options) {
                     </form>\
                 </div>\
             </div>\
-        </div>';
+        </div><div></div>';
 
     wrapper.appendChild(dataPanel);
 

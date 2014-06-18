@@ -358,6 +358,8 @@ a.ausglobe-title-menuItem:hover {
     width: 300px;
     background-color: #FFFFFF;
     pointer-events: auto;
+    max-height: 500px;
+    overflow: auto;
 
     -webkit-transition: visibility 0s 0.25s, left 0.25s;
     -moz-transition: visibility 0s 0.25s, left 0.25s;
@@ -405,7 +407,7 @@ a.ausglobe-title-menuItem:hover {
     visibility: hidden;
     position: relative;
     max-height: 0px;
-    overflow: auto;
+    overflow: hidden;
 
     -webkit-transition: max-height 0.25s, visibility 0s 0.25s;
     -moz-transition: max-height 0.25s, visibility 0s 0.25s;
