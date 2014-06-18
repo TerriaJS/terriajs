@@ -418,7 +418,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-item-content-visible {
     visibility: visible;
-    max-height: 400px; /* TODO: set this dynamically based on number of accordion items */
+    max-height: none;
 
     -webkit-transition: max-height 0.25s;
     -moz-transition: max-height 0.25s;

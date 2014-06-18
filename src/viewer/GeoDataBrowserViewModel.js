@@ -341,13 +341,17 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.userContent = komapping.fromJS([], this._collectionListMapping);
 
-    function getDescription(item) {
-        return item.description;
-    }
-
     var nowViewingMapping = {
         create : function(options) {
-            var viewModel = komapping.fromJS(options.data.description);
+            var description = options.data.description;
+            if (!defined(description)) {
+                description = {
+                    Title : options.data.name,
+                    base_url : options.data.url,
+                    type : options.data.type
+                };
+            }
+            var viewModel = komapping.fromJS(description);
             viewModel.show = knockout.observable(options.data.show);
             viewModel.layer = options.data;
             return viewModel;
