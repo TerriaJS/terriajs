@@ -35,7 +35,7 @@ class CesiumPreview(p.SingletonPlugin):
         format_lower = resource['format'].lower()
         if (format_lower == ''):
             format_lower = os.path.splitext(resource['url'])[1][1:].lower()
-        print format_lower
+#        print format_lower
         if format_lower in self.Cesium_Formats:
             if resource['on_same_domain'] or self.proxy_is_enabled:
                 return {'can_preview': True, 'quality': 2}
