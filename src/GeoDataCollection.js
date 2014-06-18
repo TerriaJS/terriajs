@@ -190,11 +190,11 @@ GeoDataCollection.prototype.remove = function(id) {
 *
 */
 GeoDataCollection.prototype.show = function(layer, val) {
-    layer.show = val;
     if (layer === undefined) {
-        console.log('ERROR: layer not found:', id);
+        console.log('ERROR: layer not found.');
         return;
     }
+    layer.show = val;
     if (layer.dataSource) {
         if (val) {
             this.dataSourceCollection.add(layer.dataSource);
