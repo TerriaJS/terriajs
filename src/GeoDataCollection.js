@@ -25,8 +25,7 @@ var GeoDataCollection = function() {
     
     this.layers = [];
     
-    this.visStore = 'http://nationalmap.research.nicta.com.au:3000';
-//    this.visStore = 'http://geospace.research.nicta.com.au';
+    this.visStore = 'http://geospace.research.nicta.com.au';
 
     var that = this;
     
@@ -71,6 +70,7 @@ GeoDataCollection.prototype.setViewer = function(obj) {
     }
     this.ViewerChanged.raiseEvent(this, obj);
     
+    //re-request all the layers on the new map
     for (var i = 0; i < this.layers.length; i++) {
         console.log('Redisplay Layer', this.layers[i].name);
         this.layers[i].map = obj.map;
@@ -88,7 +88,6 @@ GeoDataCollection.prototype.setViewer = function(obj) {
 */
 GeoDataCollection.prototype.setShareRequest = function(obj) {
     var request = this.getShareRequest(obj);
-    
     this.ShareRequest.raiseEvent(this, request);
 };
 
@@ -160,6 +159,7 @@ GeoDataCollection.prototype.get = function(id) {
 GeoDataCollection.prototype.remove = function(id) {
     var layer = this.get(id);
     if (layer === undefined) {
+        console.log('ERROR: layer not found:', id);
         return;
     }
     if (layer.dataSource) {
@@ -191,6 +191,10 @@ GeoDataCollection.prototype.remove = function(id) {
 */
 GeoDataCollection.prototype.show = function(layer, val) {
     layer.show = val;
+    if (layer === undefined) {
+        console.log('ERROR: layer not found:', id);
+        return;
+    }
     if (layer.dataSource) {
         if (val) {
             this.dataSourceCollection.add(layer.dataSource);
@@ -223,7 +227,7 @@ GeoDataCollection.prototype._stringify = function() {
     return JSON.stringify(str_layers);
 };
 
-// HACK: Parse out the unstringified objects and turn them into Cesium objects
+// Parse out the unstringified objects and turn them into Cesium objects
 GeoDataCollection.prototype._parseObject = function(obj) {
     for (var p in obj) {
         if (p === 'west') {
@@ -241,7 +245,7 @@ GeoDataCollection.prototype._parseObject = function(obj) {
     }
 };
 
-GeoDataCollection.prototype._parse = function(str_layers) {
+GeoDataCollection.prototype._parseLayers = function(str_layers) {
     var layers = JSON.parse(str_layers);
     var obj_layers = [];
     for (var i = 0; i < layers.length; i++) {
@@ -283,7 +287,6 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     
     var that = this;
    
-    //TODO: support more than 1 dataurl/visID
     //Initialize the view based on vis_id if passed in url
     if (this.visID) {
         //call to server to get json record
@@ -299,7 +302,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
             }
            
               //loop through layers adding each one
-            var layers = that._parse(obj.layers);
+            var layers = that._parseLayers(obj.layers);
             for (var i = 0; i < layers.length; i++) {
                 that.sendLayerRequest(layers[i]);
             }
@@ -334,7 +337,7 @@ GeoDataCollection.prototype.getShareRequest = function( description ) {
     request.layers = this._stringify();
     request.version = '0.0.01';
     request.image = description.image;
-    request.camera = JSON.stringify(description.camera);
+    request.camera = JSON.stringify(description.camera); //just extent for now
     var cam = description.camera;
     if (this.visID) {
         request.parent = this.visID;
@@ -358,7 +361,7 @@ function endsWith(str, suffix) {
 *
 */
 GeoDataCollection.prototype.formatSupported = function(srcname) {
-    var supported = [".CZML", ".GEOJSON", ".JSON", ".TOPOJSON", ".KML", ".GPX", ".CSV"];
+    var supported = [".CZML", ".GEOJSON", ".GJSON", ".TOPOJSON", ".JSON", ".TOPOJSON", ".KML", ".GPX", ".CSV"];
     var sourceUpperCase = srcname.toUpperCase();
     for (var i = 0; i < supported.length; i++) {
         if (endsWith(sourceUpperCase, supported[i])) {
@@ -447,7 +450,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format) {
 
 
 // -------------------------------------------
-// Convert OGC Data Sources
+// Convert OGC Data Sources to GeoJSON
 // -------------------------------------------
 //Function to intercept and fix up ESRI REST Json to GeoJSON
 //TODO: multipoint, multipolyline, multipolygon
@@ -465,7 +468,6 @@ function _EsriRestJson2GeoJson(obj) {
         var feature = obj.features[i];
         feature.type = "Feature";
         feature.properties = feature.attributes;
-           //TODO: test this on more instances
         if (obj.geometryType === "esriGeometryPoint") {
             pts = [feature.geometry.x, feature.geometry.y ];
             geom = { "type": "Point", "coordinates": pts };
@@ -518,7 +520,7 @@ function _EsriGml2GeoJson(obj) {
     }
 
     for (var i = 0; i < obj.featureMember.length; i++) {
-           //TODO: get feature properties from non-SHAPE properties
+           //TODO: get feature properties from non-SHAPE properties if present
         //feature.properties = feature.attributes;
 
         //Recursively find features and add to FeatureCollection
@@ -569,7 +571,6 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
 };
 
 
-//TODO: figure out proxy issues
 // Show wms map
 GeoDataCollection.prototype._viewMap = function(request, layer) {
     var uri = new URI(request);
@@ -629,7 +630,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     this.add(layer);
 };
 
-// Show csv data
+// Show csv table data
 GeoDataCollection.prototype._viewTable = function(request, layer) {
     var that = this;
         //load text here to let me control functions called after
@@ -652,7 +653,7 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
     });
 };
 
-// Show data file based on extension
+// Load data file based on extension if loaded as DATA layer
 GeoDataCollection.prototype._viewData = function(request, layer) {
     var that = this;
         //load text here to let me control functions called after
@@ -692,6 +693,7 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
 * @memberof GeoDataCollection
 *
 */
+//TODO: !!! call this later so that only wfs server is url
 GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
     console.log('Getting ', description.Name);
     
@@ -888,7 +890,8 @@ for (var proj in proj4_epsg ) {
         Cesium.GeoJsonDataSource.crsNames[proj] = createReprojectFunc(proj);
     }
 }
-    
+
+//TODO: !!! switch this to use our geospace server to get code  
 function addProj4String(crs_code, func) {
     Cesium.loadText('http://spatialreference.org/ref/epsg/'+crs_code.substring(5)+'/proj4/').then(function (proj4Text) {
         console.log('Adding new string for ', crs_code, ': ', proj4Text, ' before loading datasource');
