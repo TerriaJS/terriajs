@@ -105,13 +105,14 @@ var GeoDataBrowserViewModel = function(options) {
 
     this._toggleItemShown = createCommand(function(item) {
         item.show(!item.show());
-        that._dataManager.show(item.model, item.show());
+        that._dataManager.show(item.layer, item.show());
     });
 
     this._zoomToItem = createCommand(function(item) {
         if (!defined(item.layer) || !defined(item.layer.extent)) {
             return;
         }
+
         that._viewer.updateCameraFromRect(item.layer.extent, 1000);
     });
 
@@ -341,7 +342,7 @@ var GeoDataBrowserViewModel = function(options) {
         create : function(options) {
             var viewModel = komapping.fromJS(options.data.description);
             viewModel.show = knockout.observable(options.data.show);
-            viewModel.model = options.data;
+            viewModel.layer = options.data;
             return viewModel;
         }
     };
