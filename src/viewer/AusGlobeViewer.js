@@ -110,30 +110,14 @@ var AusGlobeViewer = function(geoDataManager) {
         viewer : this
     });
 
-//    var div = document.createElement('div');
-//    div.id = 'controls';
-//    div.innerHTML = '\
-//            <span id="zoom_in" class="control_button" title="Zoom in"></span> \
-//            <span id="zoom_out" class="control_button" title="Zoom out"></span>';
-//    document.body.appendChild(div);
+    var pos = document.createElement('div');
+    pos.id = 'position';
+//    pos.className = 'position';
+    document.body.appendChild(pos);
 
-//    div = document.createElement('div');
-//    div.id = 'settings';
-//    div.innerHTML = '<span id="settings" class="settings_button" title="Display Settings"></span>';
-//    document.body.appendChild(div);
-
-//    div = document.createElement('div');
-//    div.id = 'dialogSettings';
-//    div.class = "dialog";
-//    div.innerHTML = '<div id="list4" class="list"></div>';
-//    document.body.appendChild(div);
-
-    var div = document.createElement('div');
-    div.id = 'position';
-    document.body.appendChild(div);
-
-    div = document.createElement('div');
+    var legend = document.createElement('div');
     div.id = 'legend';
+//    div.className = 'legend';
     div.style.visibility = "hidden";
     div.innerHTML += '\
             <table> \
@@ -149,29 +133,6 @@ var AusGlobeViewer = function(geoDataManager) {
     var leftArea = document.createElement('div');
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
-
-//    $("#zoom_in").button({
-//        text: true,
-//        icons: { primary: "ui-icon-plus" }
-//    });
-//    $("#zoom_out").button({
-//        text: true,
-//        icons: { primary: "ui-icon-minus" }
-//    });
-//    $("settings_button").button({
-//        text: true,
-//        icons: { primary: "ui-icon-gear" }
-//    }).css(css);
-
-//    $("#settings").click(function () {
-//        that._showSettingsDialog();
-//    });
-//    $("#zoom_in").click(function () {
-//        zoomIn(that.scene);
-//    });
-//    $("#zoom_out").click(function () {
-//        zoomOut(that.scene);
-//    });
 
     //TODO: perf test to set environment
 
