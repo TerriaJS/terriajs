@@ -132,26 +132,36 @@ var GeoDataBrowserViewModel = function(options) {
         that.wfsServiceUrl = '';
     });
 
+    var currentBaseLayers;
+
     function removeBaseLayer() {
         if (!defined(that._viewer.viewer)) {
             var message = 'Base layer selection is not yet implemented for Leaflet.';
             alert(message);
             throw message;
         }
+
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
 
-        var previousBaseLayer = imageryLayers.get(0);
-        imageryLayers.remove(previousBaseLayer);
+        if (!defined(currentBaseLayers)) {
+            currentBaseLayers = [imageryLayers.get(0)];
+        }
+
+        for (var i = 0; i < currentBaseLayers.length; ++i) {
+            imageryLayers.remove(currentBaseLayers[i]);
+        }
+
+        currentBaseLayers.length = 0;
     }
 
     function switchToBingMaps(style) {
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        imageryLayers.addImageryProvider(new BingMapsImageryProvider({
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new BingMapsImageryProvider({
             url : '//dev.virtualearth.net',
             mapStyle : style
-        }), 0);
+        }), 0));
     }
 
     this._activateBingMapsAerialWithLabels = createCommand(function() {
@@ -170,30 +180,34 @@ var GeoDataBrowserViewModel = function(options) {
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
             url : '//cesiumjs.org/tilesets/imagery/blackmarble',
             credit : '© Analytical Graphics, Inc.'
-        }), 0);
+        }), 0));
     });
 
     this._activateNaturalEarthII = createCommand(function() {
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
             url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
             credit : '© Analytical Graphics, Inc.'
-        }), 0);
+        }), 0));
     });
 
     this._activateAustralianTopography = createCommand(function() {
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+            url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
+            credit : '© Analytical Graphics, Inc.'
+        }), 0));
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
             url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer',
             proxy : corsProxy
-        }), 0);
+        }), 1));
     });
 
     this._selectFileToUpload = createCommand(function() {
