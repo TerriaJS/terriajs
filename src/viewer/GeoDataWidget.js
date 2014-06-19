@@ -618,7 +618,7 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                 };
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
-            },
+            }
         }
     });
 };

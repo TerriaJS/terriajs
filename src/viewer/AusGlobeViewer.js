@@ -116,10 +116,10 @@ var AusGlobeViewer = function(geoDataManager) {
     document.body.appendChild(pos);
 
     var legend = document.createElement('div');
-    div.id = 'legend';
+    legend.id = 'legend';
 //    div.className = 'legend';
-    div.style.visibility = "hidden";
-    div.innerHTML += '\
+    legend.style.visibility = "hidden";
+    legend.innerHTML += '\
             <table> \
                 <td><canvas id="legendCanvas" width="32" height="128"></canvas></td> \
                 <td> <table> \
@@ -128,7 +128,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     </table> \
                 </td> \
             </table>';
-    document.body.appendChild(div);
+    document.body.appendChild(legend);
 
     var leftArea = document.createElement('div');
     leftArea.className = 'ausglobe-left-area';
