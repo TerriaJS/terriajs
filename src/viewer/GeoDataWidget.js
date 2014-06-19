@@ -33,61 +33,7 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     }
     this.visViewer = host + uri.pathname();
 
-        // Main menu buttons
-//        var div = document.createElement('div');
-//        div.id = 'product';
-//        div.innerHTML = '<p>National Map</p>';
-//        document.body.appendChild(div);
-
-//    var menu = document.createElement('div');
-//    menu.className = 'menu';
-//    document.body.appendChild(menu);
-
-//    var div = document.createElement('div');
-//    div.className = 'menuItem';
-//    div.innerHTML = '<span id="add_button" class="menu_button" title="Add maps and data">Data</span>';
-//    menu.appendChild(div);
-//
-//    div = document.createElement('div');
-//    div.className = 'menuItem';
-//    div.innerHTML = '<span id="mod_button" class="menu_button" title="Edit your maps and data">Edit</span>';
-//    menu.appendChild(div);
-//
-//    div = document.createElement('div');
-//    div.className = 'menuItem';
-//    div.innerHTML = '<span id="share_button" class="menu_button" title="Share what you\'ve created">Share</span>';
-//    menu.appendChild(div);
-
-//    $(".menu_button").button({
-//        text: true
-////        icons: { primary: "ui-icon-gear" }
-//    }).css({ 'background': '#333333',
-//        'color': '#eeeeee',
-//        'border-color': '#555555',
-//        'width': '80px',
-//        'border-radius': '1px'
-//        });
-//
     var that = this;
-//    $("#add_button").click(function () {
-//        closeDialogs();
-//        loadJson('./data_collection.json').then(function (obj) {
-//            that.showSelectDialog(obj);
-//        });
-//    });
-//    $("#mod_button").click(function () {
-//        closeDialogs();
-//        that.showLayersDialog();
-//    });
-//    $("#share_button").click(function () {
-//        closeDialogs();
-//        if (that.scene) {
-//            that.geoDataManager.shareRequest = true;
-//        }
-//        else {
-//            that.geoDataManager.setShareRequest({});
-//        }
-//    });
 
     //Dialogs
     var div = document.createElement('div');
@@ -586,34 +532,6 @@ function linkShare(url) {
     showHTMLTextDialog("Link to Visualization", str, true);
 }
 
-//Print function based on captured dataUrl
-function printDataUrl(dataUrl) {
-/*
-            //print by putting cesiumContainer in front - dataUrl not used
-        var div = document.getElementById('cesiumContainer');
-        div.style.zIndex = 1000; 
-        div.style.height = 'auto'; 
-        div.style.width = 'auto'; 
-        window.print();
-        div.style.height = '100%'; 
-        div.style.width = '100%'; 
-        div.style.zIndex = 999; 
-*/
-            //print by exposing and writing to new div
-        var div = document.getElementById('printScreen');
-        div.style.display = 'block';
-        div.innerHTML = "<img src='"+dataUrl+"'/>";
-        window.print();
-        div.style.display = 'none';
-/*      
-            //print by opening a new window                
-        var win = window.open();
-        win.document.write("<img src='"+dataUrl+"'/>");
-        win.print(); 
-        win.close(); 
-*/
-}
-
 // Dialog to post current view to server
 GeoDataWidget.prototype.postViewToServer = function (request) {
     var that = this;
@@ -700,10 +618,6 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                 };
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
-            },
-            "Print": function () {
-                $(this).dialog("close");
-                printDataUrl(formValues.image);
             }
         }
     });

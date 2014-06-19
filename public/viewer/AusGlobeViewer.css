@@ -1,15 +1,18 @@
 body {
-    padding: 0;
+    height: 100%;
+    width: 100%;
     margin: 0;
     overflow: hidden;
+    padding: 0;
+    background: #000;
     font-size:12px;
     font-family: "Open Sans" sans-serif;
 }
 
-#cesiumContainer {
+.fullWindow {
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     height: 100%;
     width: 100%;
     margin: 0;
@@ -18,25 +21,19 @@ body {
     z-index: 999; // required for IE9
 }
 
-#printScreen {
+.loadingIndicator {
+    display: block;
     position: absolute;
-    top: 0px;
-    left: 0px;
-    width: auto;
-    height: auto;
-    margin: 0;
-    overflow: hidden;
-    padding: 0;
-    z-index: 1000; // required for IE9
-}
-
-#product {
-    opacity: 0.99;
-    font-size: 18pt;
-    margin: 10px;
-    padding: 0;
-    color: #fff;
-    width: 180px;
+    top: 50%;
+    left: 50%;
+    margin-top: -33px;
+    margin-left: -33px;
+    width: 66px;
+    height: 66px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(../images/ajax-loader.gif);
+    z-index: 999; // required for IE9
 }
 
 .menu {
@@ -87,18 +84,6 @@ body {
     box-shadow: 0 0 8px #fff;
 }
 
-#settings {
-    position: absolute;
-    top: 62px;
-    right: 3px;
-    
-    opacity: 0.95;
-    font-size: 9.5pt;
-    padding: 0px;
-    color: #444;
-    width: 30px;
-}
-
 #legend {
     display: block;
     position:fixed;
@@ -108,25 +93,7 @@ body {
     background-color: rgba(0,0,0,0.8);
     color: #eee;
     font-size: 11pt;
-}
-
-#toolbar {
-    position: absolute;
-    top: 40px;
-    left: 0;
-    display: inline;
-    margin: 10px;
-    padding: 0px;
-    background: white;
-}
-
-#logging {
-    position: absolute;
-    bottom: 25px;
-    right: 5px;
-    display: inline;
-    margin: 10px;
-    background: white;
+    z-index: 999; // required for IE9
 }
 
 #position {
@@ -140,20 +107,7 @@ body {
     opacity: 0.9;
     border: 1px solid #555555;
     padding: 3px;
-}
-
-#loadingIndicator {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -33px;
-    margin-left: -33px;
-    width: 66px;
-    height: 66px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: url(../images/ajax-loader.gif);
+    z-index: 999; // required for IE9
 }
 
 .dialog {
@@ -647,4 +601,11 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-wfs-url-input {
     width: 100%;
+}
+
+@media print {
+  .fullWindow { position: initial; }
+  .ausglobe-accordion-item, .navigation-controls {display: none; }
+  .ausglobe-left-area, .ausglobe-title-area {display: none; }
+  .ausglobe-search-button, .ausglobe-search-form {display: none; }
 }
