@@ -395,6 +395,8 @@ a.ausglobe-title-menuItem:hover {
     position: relative;
     top: 5px;
     fill: #66CCFF;   /* For SVG buttons */
+    width: 24px;
+    height: 24px;
 }
 
 .ausglobe-accordion-category-header-label {
@@ -444,9 +446,13 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-category-item-checkbox {
+    fill: #66CCFF;
     display: inline-block;
     position: relative;
     top: 4px;
+    left: 0px;
+    height: 24px;
+    width: 24px;
     cursor: pointer;
 }
 
@@ -586,6 +592,13 @@ a.ausglobe-title-menuItem:hover {
     right: 10px;
 }
 
+.ausglobe-add-data-message {
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 10px;
+}
+
 .ausglobe-upload-file-button {
     font-weight: bold;
     cursor: pointer;
@@ -593,9 +606,12 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-user-service-form {
     position: relative;
-    padding-top: 10px;
+    padding: 10px;
     width: 100%;
     min-height: 90px;
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
 }
 
 .ausglobe-button {
@@ -617,6 +633,12 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-wfs-url-input {
     width: 100%;
+}
+
+.ausglobe-accordion-category-loading {
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
 }
 
 @media print {
