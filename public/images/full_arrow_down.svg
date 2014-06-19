@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="21.25px"
-	 height="21.769px" viewBox="0 0 21.25 21.769" enable-background="new 0 0 21.25 21.769" xml:space="preserve">
-<g id="map">
-	<polyline fill="#0071BC" points="3.779,5.095 11.111,16.673 18.445,5.095 	"/>
-	<polyline fill="none" stroke="#0071BC" stroke-width="3" stroke-miterlimit="10" points="176.292,-34.062 167.863,-24.792 
-		159.529,-34.062 	"/>
-	<polyline fill="none" stroke="#0071BC" stroke-width="3" stroke-miterlimit="10" points="159.529,22.209 167.958,12.939 
-		176.291,22.209 	"/>
-</g>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     width="24px" height="24px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+<path d="M8.037,11.166L14.5,22.359c0.825,1.43,2.175,1.43,3,0l6.463-11.194c0.826-1.429,0.15-2.598-1.5-2.598H9.537C7.886,8.568,7.211,9.737,8.037,11.166z" fill="#66CCFF" />
 </svg>

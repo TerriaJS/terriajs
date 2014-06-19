@@ -42,8 +42,6 @@ var GeoDataBrowser = function(options) {
         <div class="ausglobe-accordion-item">\
             <div class="ausglobe-accordion-item-header" data-bind="click: openNowViewing">\
                 <div class="ausglobe-accordion-item-header-label">Now Viewing</div>\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: nowViewingIsOpen" />\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !nowViewingIsOpen" />\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': nowViewingIsOpen }">\
                 <div class="ausglobe-accordion-category">\
@@ -56,7 +54,7 @@ var GeoDataBrowser = function(options) {
                         </div>\
                     </div>\
                     <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: nowViewing().length === 0">\
-                        <div class="ausglobe-accordion-category-item">\
+                        <div class="ausglobe-now-viewing-no-data">\
                             Add data from the collections below.\
                         </div>\
                     </div>\
@@ -67,14 +65,12 @@ var GeoDataBrowser = function(options) {
             <div class="ausglobe-accordion-item">\
                 <div class="ausglobe-accordion-item-header" data-bind="click: $root.openItem">\
                     <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
-                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: isOpen" />\
-                    <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !isOpen()" />\
                 </div>\
                 <div class="ausglobe-accordion-item-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
                     <div class="ausglobe-accordion-category">\
                         <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
-                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
-                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_right.svg" data-bind="visible: !isOpen()" />\
                             <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                         </div>\
                         <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
@@ -93,15 +89,13 @@ var GeoDataBrowser = function(options) {
         <div class="ausglobe-accordion-item">\
             <div class="ausglobe-accordion-item-header" data-bind="click: openAddData">\
                 <div class="ausglobe-accordion-item-header-label">Add Data</div>\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: addDataIsOpen" />\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !addDataIsOpen" />\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': addDataIsOpen }">\
                 <div data-bind="foreach: userContent">\
                     <div class="ausglobe-accordion-category">\
                         <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
-                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_up.svg" data-bind="visible: isOpen()" />\
-                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: !isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_down.svg" data-bind="visible: isOpen()" />\
+                            <img class="ausglobe-accordion-category-header-arrow" src="images/full_arrow_right.svg" data-bind="visible: !isOpen()" />\
                             <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                         </div>\
                         <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\

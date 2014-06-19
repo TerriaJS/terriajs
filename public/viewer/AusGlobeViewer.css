@@ -310,10 +310,11 @@ a.ausglobe-title-menuItem:hover {
     top: 0;
     left: -300px;
     width: 300px;
-    background-color: #FFFFFF;
+    background-color: rgba(0, 0, 0, 0.65);
     pointer-events: auto;
     max-height: 500px;
     overflow: auto;
+    border: 1px solid gray;
 
     -webkit-transition: visibility 0s 0.25s, left 0.25s;
     -moz-transition: visibility 0s 0.25s, left 0.25s;
@@ -337,17 +338,17 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-item-header {
     position: relative;
-    margin: 1px;
-    background-color: #E3E4E5;
+    margin: 2px;
     cursor: pointer;
+    background-color: black;
 }
 
 .ausglobe-accordion-item-header-label {
     display: inline-block;
     padding: 10px;
-    color: #0066CC;
-    font-weight: bold;
-    font-size: 12pt
+    color: #66CCFF;
+    font-weight: 600;
+    font-size: 15px;
 }
 
 .ausglobe-accordion-item-header-arrow {
@@ -382,23 +383,25 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-category {
-    padding: 10px;
 }
 
 .ausglobe-accordion-category-header {
     cursor: pointer;
+    padding: 10px;
 }
 
 .ausglobe-accordion-category-header-arrow {
     display: inline-block;
     position: relative;
     top: 5px;
+    fill: #66CCFF;   /* For SVG buttons */
 }
 
 .ausglobe-accordion-category-header-label {
     display: inline-block;
-    color: #0066CC;
-    font-size: 11pt;
+    color: #66CCFF;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .ausglobe-accordion-category-content {
@@ -412,19 +415,31 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-category-item {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.ausglobe-now-viewing-no-data {
+    color: white;
+    font-style: italic;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 10px;
 }
 
 .ausglobe-accordion-category-item-label {
     display: inline-block;
     position: relative;
-    font-size: 11pt;
+    font-weight: 300;
+    font-size: 14px;
+    color: white;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 5px;
 }
 
 .ausglobe-accordion-category-item-enabled {
-    background-color: #CCDDD8;
+    background-color: rgba(128, 128, 128, 0.65);
     cursor: pointer;
 }
 
@@ -443,7 +458,7 @@ a.ausglobe-title-menuItem:hover {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 10px;
-    color: #0066CC;
+    color: #66CCFF;
     cursor: pointer;
 }
 
@@ -453,6 +468,7 @@ a.ausglobe-title-menuItem:hover {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 5px;
+    color: white;
 }
 
 .ausglobe-imagery-option {
