@@ -160,9 +160,9 @@ li {
     top: 0;
     left: 0;
     width: 100%;
-    background-color:#333333;
-    opacity: 0.9;
-    border: 1px solid #555555;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.65);
+    border: 1px solid gray;
     vertical-align: middle;
     z-index: 999; /* required for IE9 */
 }
@@ -183,6 +183,12 @@ li {
     margin-left: 10px;
     margin-top: 5px;
     margin-bottom: 5px
+}
+
+.ausglobe-title-image {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 15px;
 }
 
 .ausglobe-title-menu {
@@ -241,7 +247,7 @@ a.ausglobe-title-menuItem:hover {
     position: absolute;
     left: 0;
     width: 300px;
-    top: 114px;
+    top: 139px;
     bottom: 80px;
     pointer-events: none;
     z-index: 999; /* required for IE9 */
@@ -479,8 +485,9 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-search-form {
     position: absolute;
-    display: inline-block;
-    top: 50px;
+    /*display: inline-block;*/
+    display: none;
+    top: 75px;
     left: 0;
     z-index: 999; /* required for IE9 */
     background-color: rgba(0, 0, 0, 0.65);
