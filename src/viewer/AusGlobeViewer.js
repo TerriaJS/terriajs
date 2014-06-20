@@ -72,22 +72,19 @@ var AusGlobeViewer = function(geoDataManager) {
         container : document.body,
         menuItems : [
             {
-                label : 'Map Information',
-                uri : 'http://www.nicta.com.au',
-                target : '_blank'
+                label : '<img src="images/refresh.svg" />',
+                callback : function() {
+                    window.refresh();
+                }
             },
             {
-                label : 'Help',
-                uri : 'http://www.nicta.com.au'
-            },
-            {
-                label : 'Fullscreen',
+                label : '<img src="images/fullscreen.svg" />',
                 callback : function() {
                     Fullscreen.requestFullscreen(document.body);
                 }
             },
             {  //This currently also houses print, but print could be moved here as well
-                label : 'Share',
+                label : '<img src="images/share.svg" />',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
                         that.geoDataManager.setShareRequest({
@@ -97,6 +94,16 @@ var AusGlobeViewer = function(geoDataManager) {
                     };
                     that.captureCanvas();
                 }
+            },
+            {
+                label : '<img src="images/info.svg" />',
+                uri : 'http://www.nicta.com.au',
+                target : '_blank'
+            },
+            {
+                label : '<img src="images/help.svg" />',
+                uri : 'http://www.nicta.com.au',
+                target : '_blank'
             }
         ]
     });

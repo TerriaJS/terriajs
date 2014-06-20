@@ -207,15 +207,17 @@ li {
 }
 
 .ausglobe-title-menuItem {
+    display: inline-block;
     position: relative;
-    display: inline;
     color: #9A9A9B;
     font-size: 10pt;
     cursor: pointer;
+    padding: 5px;
 }
 
 a.ausglobe-title-menuItem {
     text-decoration: none;
+    vertical-align: middle;
 }
 
 a.ausglobe-title-menuItem:hover {

@@ -25,8 +25,7 @@ var TitleWidget = function(options) {
         <div class="ausglobe-title-image"><img src="images/nationalmap.svg" height="40" /></div>\
         <div class="ausglobe-title-credits"></div>\
         <div class="ausglobe-title-menu" data-bind="foreach: menuItems">\
-            <div class="ausglobe-title-menuItem-divider" data-bind="visible: $index() > 0">|</div>\
-            <a class="ausglobe-title-menuItem" data-bind="text: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a>\
+            <a class="ausglobe-title-menuItem" data-bind="html: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a>\
         </div>';
     container.appendChild(wrapper);
 

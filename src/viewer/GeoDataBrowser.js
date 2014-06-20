@@ -145,8 +145,6 @@ var GeoDataBrowser = function(options) {
         <div class="ausglobe-accordion-item">\
             <div class="ausglobe-accordion-item-header" data-bind="click: openImagery">\
                 <div class="ausglobe-accordion-item-header-label">Imagery</div>\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: imageryIsOpen" />\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !imageryIsOpen" />\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': imageryIsOpen }">\
                 <img class="ausglobe-imagery-option" src="images/AustralianTopography.png" width="73" height="74" data-bind="click: activateAustralianTopography" />\
@@ -160,8 +158,6 @@ var GeoDataBrowser = function(options) {
         <div class="ausglobe-accordion-item">\
             <div class="ausglobe-accordion-item-header" data-bind="click: openViewerSelection">\
                 <div class="ausglobe-accordion-item-header-label">2D/3D</div>\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_up.svg" data-bind="visible: viewerSelectionIsOpen" />\
-                <img class="ausglobe-accordion-item-header-arrow" src="images/open_arrow_down.svg" data-bind="visible: !viewerSelectionIsOpen" />\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': viewerSelectionIsOpen }">\
                 <label class="ausglobe-viewer-radio-button"><input type="radio" name="viewer" value="2D" data-bind="checked: selectedViewer" /> 2D</label>\
