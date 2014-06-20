@@ -12,6 +12,7 @@ var TitleWidgetViewModel = function(options) {
     this.menuItems = options.menuItems.map(function(item) {
         return {
             label : item.label,
+            svg : item.svg,
             uri : item.uri,
             target : item.target,
             callback : item.callback
