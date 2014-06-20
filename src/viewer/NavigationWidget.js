@@ -35,11 +35,9 @@ var NavigationWidget = function(viewer, container) {
     this._element = element;
 
     element.innerHTML = '\
-        <img src="images/plus.svg" class="navigation-control" data-bind="click: zoomIn" title="Zoom In"></div>\
-        <img src="images/minus.svg" class="navigation-control" data-bind="click: zoomOut" title="Zoom Out"></div>\
-        <img src="images/tilt_none.svg" class="navigation-control" data-bind="click: tilt, visible: showTilt && isTiltExtreme" title="Tilt"></div>\
-        <img src="images/tilt_moderate.svg" class="navigation-control" data-bind="click: tilt, visible: showTilt && isTiltNone" title="Tilt"></div>\
-        <img src="images/tilt_extreme.svg" class="navigation-control" data-bind="click: tilt, visible: showTilt && isTiltModerate" title="Tilt"></div>\
+        <div class="navigation-control" data-bind="click: zoomIn, cesiumSvgPath: { path: _zoomInPath, width: 32, height: 32 }" title="Zoom In"></div>\
+        <div class="navigation-control" data-bind="click: zoomOut, cesiumSvgPath: { path: _zoomOutPath, width: 32, height: 32 }" title="Zoom Out"></div>\
+        <div class="navigation-control" data-bind="click: tilt, visible: showTilt, cesiumSvgPath: { path: _tiltPath, width: 32, height: 32 }" title="Tilt"></div>\
     ';
 
     var that = this;
@@ -96,7 +94,10 @@ var NavigationWidget = function(viewer, container) {
         showTilt : true,
         isTiltNone : true,
         isTiltModerate : false,
-        isTiltExtreme : false
+        isTiltExtreme : false,
+        _zoomInPath : 'M25.979,12.896 19.312,12.896 19.312,6.229 12.647,6.229 12.647,12.896 5.979,12.896 5.979,19.562 12.647,19.562 12.647,26.229 19.312,26.229 19.312,19.562 25.979,19.562z',
+        _zoomOutPath : 'M25.979,12.896,5.979,12.896,5.979,19.562,25.979,19.562z',
+        _tiltPath : 'm 24.369658,18.483707 c -0.07919,-0.08743 -3.345079,-3.906533 -8.714362,-3.906533 -4.254073,0 -7.875754,3.876287 -7.9549405,3.963722 L 5.8328745,16.797144 4.7330624,23.060575 11.089976,21.959662 9.3275276,20.190614 c 0.077536,-0.08029 3.4484614,-2.737982 6.3360174,-2.737982 4.191933,0 6.85238,2.691791 6.929916,2.772077 l -1.664565,1.734404 6.350865,1.100912 -1.099812,-6.263431 -1.810291,1.687113 z m -7.538113,-9.2340238 2.640099,0 -3.656325,-5.8499009 -3.657425,5.8499009 2.474028,0 0,4.3992488 2.199623,0 z m -2.199623,13.7476528 -2.472928,0 3.656875,5.8499 3.656875,-5.8499 -2.641199,0 0,-4.399249 -2.199623,0 z'
     };
 
     knockout.track(this._viewModel, ['showTilt', 'isTiltNone', 'isTiltModerate', 'isTiltExtreme']);

@@ -56,7 +56,6 @@ body {
     bottom: 100px;
     right: 20px;
     
-    opacity: 0.95;
     font-size: 9.5pt;
     padding: 0px;
     color: #444;
@@ -67,10 +66,10 @@ body {
 .navigation-control {
     display: inline-block;
     position:relative;
-    color: #edffff;  /* For text buttons */
-    fill: #edffff;   /* For SVG buttons */
-    background: #333333;
-    border: 1px solid #555555;
+    color: #66CCFF;  /* For text buttons */
+    fill: #2EA1C3;   /* For SVG buttons */
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid gray;
     width: 30px;
     height: 30px;
     cursor: pointer;
@@ -103,9 +102,8 @@ body {
     width: auto;
     font-size: 8.5pt;
     color: #fff;
-    background-color:#333333;
-    opacity: 0.9;
-    border: 1px solid #555555;
+    background-color: rgba(0,0,0,0.8);
+    border: 1px solid gray;
     padding: 3px;
     z-index: 999; /* required for IE9 */
 }
