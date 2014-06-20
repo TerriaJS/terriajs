@@ -584,13 +584,6 @@ function enableItem(viewModel, item) {
     if (defined(description.url)) {
         layer.url = description.url;
     } 
-//    else if (description.type === 'CKAN') {
-//        for (var i = 0; i < description.resources.length; i++) {
-//            if (description.resources[i].format.toUpperCase() === 'JSON') {
-//                layer.url = description.resources[i].url;
-//            }
-//        }
-//    }
     else {
         description.count = 1000;
         layer.url = viewModel._dataManager.getOGCFeatureURL(description);
@@ -598,8 +591,6 @@ function enableItem(viewModel, item) {
 
     layer.description = description;
 
-    //pass leaflet map object if exists
-    layer.map = viewModel.map;
     layer.proxy = description.proxy;
 
     item.layer = layer;
