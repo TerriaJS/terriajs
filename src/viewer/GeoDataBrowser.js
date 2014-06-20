@@ -31,13 +31,13 @@ var GeoDataBrowser = function(options) {
 
     var dataButton = document.createElement('div');
     dataButton.className = 'ausglobe-panel-button';
-    dataButton.innerHTML = '<div class="ausglobe-panel-button-image" data-bind="cesiumSvgPath: { path: $root._dataButton, width: 64, height: 64 }"></div>';
+    dataButton.innerHTML = '<div class="ausglobe-panel-button-image" title="Data" data-bind="cesiumSvgPath: { path: $root._dataButton, width: 64, height: 64 }"></div>';
     dataButton.setAttribute('data-bind', 'click: toggleShowingPanel, css { "ausglobe-panel-button-panel-visible": showingPanel }');
     wrapper.appendChild(dataButton);
 
     var mapButton = document.createElement('div');
     mapButton.className = 'ausglobe-panel-button';
-    mapButton.innerHTML = '<div class="ausglobe-panel-button-image" data-bind="cesiumSvgPath: { path: $root._mapButton, width: 64, height: 64 }"></div>';
+    mapButton.innerHTML = '<div class="ausglobe-panel-button-image" title="Map" data-bind="cesiumSvgPath: { path: $root._mapButton, width: 64, height: 64 }"></div>';
     mapButton.setAttribute('data-bind', 'click: toggleShowingMapPanel, css { "ausglobe-panel-button-panel-visible": showingMapPanel }');
     wrapper.appendChild(mapButton);
 

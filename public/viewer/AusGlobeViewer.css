@@ -18,7 +18,7 @@ body {
     margin: 0;
     overflow: hidden;
     padding: 0;
-    z-index: 999; // required for IE9
+    z-index: 999; /* required for IE9 */
 }
 
 .loadingIndicator {
@@ -33,7 +33,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-image: url(../images/ajax-loader.gif);
-    z-index: 999; // required for IE9
+    z-index: 999; /* required for IE9 */
 }
 
 .menu {
@@ -61,7 +61,7 @@ body {
     padding: 0px;
     color: #444;
     width: 30px;
-    z-index: 999; // required for IE9
+    z-index: 999; /* required for IE9 */
 }
 
 .navigation-control {
@@ -93,7 +93,7 @@ body {
     background-color: rgba(0,0,0,0.8);
     color: #eee;
     font-size: 11pt;
-    z-index: 999; // required for IE9
+    z-index: 999; /* required for IE9 */
 }
 
 #position {
@@ -107,7 +107,7 @@ body {
     opacity: 0.9;
     border: 1px solid #555555;
     padding: 3px;
-    z-index: 999; // required for IE9
+    z-index: 999; /* required for IE9 */
 }
 
 .dialog {
@@ -166,7 +166,7 @@ li {
     opacity: 0.9;
     border: 1px solid #555555;
     vertical-align: middle;
-    z-index: 999; // required for IE9
+    z-index: 999; /* required for IE9 */
 }
 
 .ausglobe-title-area:before {
@@ -243,10 +243,10 @@ a.ausglobe-title-menuItem:hover {
     position: absolute;
     left: 0;
     width: 300px;
-    top: 100px;
+    top: 114px;
     bottom: 80px;
     pointer-events: none;
-    z-index: 999; // required for IE9
+    z-index: 999; /* required for IE9 */
 }
 
 .ausglobe-panel-button {
@@ -482,10 +482,12 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-search-form {
     position: absolute;
     display: inline-block;
-    margin: 0 3px;
     top: 50px;
-    left: 5px;
-    z-index: 999; // required for IE9
+    left: 0;
+    z-index: 999; /* required for IE9 */
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 15px;
+    border: 1px solid gray;
 }
 
 .ausglobe-search-form .ausglobe-search-input {
@@ -515,13 +517,13 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-search-button {
-    background-color: #303336;
+    background-color: #2EA1C3;
     display: inline-block;
     position: absolute;
     cursor: pointer;
     width: 32px;
-    top: 1px;
-    right: 1px;
+    top: 16px;
+    right: 16px;
     height: 30px;
     vertical-align: middle;
     fill: #edffff;
@@ -538,7 +540,7 @@ a.ausglobe-title-menuItem:hover {
     top: 0;
     bottom: 0;
     background-color: rgba(0,0,0,0.8);
-    z-index: 1000; // required for IE9
+    z-index: 1000; /* required for IE9 */
 }
 
 .ausglobe-info {
