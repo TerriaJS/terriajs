@@ -252,17 +252,15 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-panel-button {
     pointer-events: auto;
     position: relative;
-    height: 30px;
-    border: 1px solid #555555;
-    width: 80px;
+    border: 1px solid gray;
+    width: 96px;
+    height: 96px;
     left: 0;
-    opacity: 0.95;
     font-size: 9.5pt;
-    padding: 2px;
-    background-color: #333333;
+    background-color: rgba(0, 0, 0, 0.65);
     line-height: 30px;
     cursor: pointer;
-    margin-top: 5px;
+    fill: #2EA1C3;
 
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
@@ -291,10 +289,11 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-panel-button-image {
     display: inline-block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto;
+    position: relative;
+    left: 24px;
+    top: 24px;
+    width: 48px;
+    height: 48px;
 }
 
 .ausglobe-panel-button-label {
