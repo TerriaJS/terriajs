@@ -212,16 +212,21 @@ li {
     color: #9A9A9B;
     font-size: 10pt;
     cursor: pointer;
-    padding: 5px;
 }
 
 a.ausglobe-title-menuItem {
     text-decoration: none;
     vertical-align: middle;
+    fill: #999EA1;
+    width: 32px;
+    height: 32px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 a.ausglobe-title-menuItem:hover {
     text-decoration: underline;
+    fill: #fff;
 }
 
 .ausglobe-title-menuItem-divider {

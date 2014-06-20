@@ -25,7 +25,8 @@ var TitleWidget = function(options) {
         <div class="ausglobe-title-image"><img src="images/nationalmap.svg" height="40" /></div>\
         <div class="ausglobe-title-credits"></div>\
         <div class="ausglobe-title-menu" data-bind="foreach: menuItems">\
-            <a class="ausglobe-title-menuItem" data-bind="html: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a>\
+            <span data-bind="if: typeof svg !== \'undefined\'"><a class="ausglobe-title-menuItem" data-bind="cesiumSvgPath: { path: svg.path, width: svg.width, height: svg.height }, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a></span>\
+            <span data-bind="if: typeof label !== \'undefined\'"><a class="ausglobe-title-menuItem" data-bind="html: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a></span>\
         </div>';
     container.appendChild(wrapper);
 
