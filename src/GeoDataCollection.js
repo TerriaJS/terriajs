@@ -1019,7 +1019,6 @@ function addProj4Text(code) {
     Cesium.loadText(url).then(function (proj4Text) {
         console.log('Adding new string for ', code, ': ', proj4Text, ' before loading datasource');
         proj4_epsg[code] = proj4Text;
-        Cesium.GeoJsonDataSource.crsNames[code] = createReprojectFunc(code);
     });
 }
 
@@ -1033,11 +1032,11 @@ function reprojectPointList(pts, code) {
         return pntReproject(pts, code);  //point
     }
     var pts_out = [];
-    for (var i = 0; i < pts.length; v++) {
+    for (var i = 0; i < pts.length; i++) {
         pts_out.push(pntReproject(pts[i], code));
     }
     return pts_out;
-};
+}
 
 function reprojectGeoJSON(obj, crs_code) {
     filterValue(obj, 'coordinates', function(obj, prop) { obj[prop] = filterArray(obj[prop], function(pts) {
@@ -1045,7 +1044,7 @@ function reprojectGeoJSON(obj, crs_code) {
         });
     });
     obj.crs.properties.code = '4326';
-};
+}
 
 // -------------------------------------------
 // Reduce the resolution of a point list in degrees
@@ -1111,8 +1110,10 @@ function downsampleGeoJSON(obj) {
     console.log('downsampled object from', obj_size, 'bytes to', JSON.stringify(obj).length);
 }
 
-
+//----------------------------
 // Random color generator
+//----------------------------
+/*
 var line_palette = [
     [204, 197, 24, 255],
     [104, 197, 124, 255],
@@ -1130,11 +1131,46 @@ var point_palette = [
     [200, 0, 200, 255], 
     [200, 200, 200, 255]];
 var palette_idx = 0;
+
 function getRandomColor(palette) {
     var clr = palette[palette_idx++ % palette.length];
     return new Cesium.Color(clr[0]/255, clr[1]/255, clr[2]/255, clr[3]/255);
 }
+*/
 
+var line_palette = {
+    minimumRed : 0.2,
+    minimumGreen : 0.2,
+    minimumBlue : 0.2,
+    maximumRed : 0.7,
+    maximumGreen : 0.7,
+    maximumBlue : 0.7,
+    alpha : 1.0
+};
+var point_palette = {
+    minimumRed : 0.5,
+    minimumGreen : 0.5,
+    minimumBlue : 0.5,
+    maximumRed : 1.0,
+    maximumGreen : 1.0,
+    maximumBlue : 1.0,
+    alpha : 1.0
+};
+
+function getRandomColor(palette, seed) {
+    console.log(seed);
+    if (seed !== undefined) {
+        if (typeof seed === 'string') {
+            var val = 0;
+            for (var i = 0; i < seed.length; i++) {
+                val += seed.charCodeAt(i);
+            }
+            seed = val;
+        }
+        Cesium.Math.setRandomNumberSeed(seed);
+    }
+    return Cesium.Color.fromRandom(palette);
+}
 
 function getCesiumColor(clr) {
     if (clr instanceof Cesium.Color) {
@@ -1142,6 +1178,9 @@ function getCesiumColor(clr) {
     }
     return new Cesium.Color(clr.red, clr.green, clr.blue, clr.alpha);
 }
+
+
+
 
 /**
 * Add a GeoJson object as a geodata datasource
@@ -1152,11 +1191,12 @@ function getCesiumColor(clr) {
 */
 GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     //set default layer styles
+    console.log(layer);
     if (layer.style === undefined) {
         layer.style = {line: {}, point: {}, polygon: {}};
-        layer.style.line.color = getRandomColor(line_palette);
+        layer.style.line.color = getRandomColor(line_palette, layer.name);
         layer.style.line.width = 2;
-        layer.style.point.color = getRandomColor(point_palette);
+        layer.style.point.color = getRandomColor(point_palette, layer.name);
         layer.style.point.size = 10;
         layer.style.polygon.color = layer.style.line.color;
         layer.style.polygon.fill = false;  //off by default for perf reasons
@@ -1252,7 +1292,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
             }
         }).addTo(this.map);
     }
-    return that.add(layer);
+    return this.add(layer);
 };
 
 GeoDataCollection.prototype.shouldUseProxy = function(url) {
