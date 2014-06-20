@@ -669,7 +669,7 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
 //    console.log('LAYER REQUEST:',request);
     
     // Deal with the different data Services
-    if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'CKAN' || layer.type === 'GME') {
+    if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'GME') {
         this._viewFeature(request, layer);
     }
     else if (layer.type === 'WMS') {
@@ -681,6 +681,9 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     else if (layer.type === 'DATA') {
         this._viewData(request, layer);
     }
+//    if (layer.type === 'CKAN') {
+//        this._viewFeature(request, layer);
+//    }
     else {
         throw new DeveloperError('Creating layer for unsupported service: '+layer.type);
     }
@@ -723,7 +726,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
         request += '/query?geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&returnGeometry=true&f=pjson';
     }
     else {
-        throw new Cesium.DeveloperError('Getting feature for unsupported service: '+description.type);
+        return description.url;
     }
     
     if (description.extent) {
@@ -820,12 +823,12 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else if (description.type === 'GME') {
         layers = json_gml.Layer;
     }
-    else if (description.type === 'CKAN') {
-        layers = json_gml.result.results;
-        for (i = 0; i < layers.length; i++) {
-            layers[i].Name = layers[i].name;
-        }
-    }
+//    else if (description.type === 'CKAN') {
+//        layers = json_gml.result.results;
+//        for (i = 0; i < layers.length; i++) {
+//            layers[i].Name = layers[i].name;
+//        }
+ //   }
     else {
         throw new DeveloperError('Getting capabilities for unsupported service: ' + description.type);
     }
@@ -855,9 +858,9 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     else if (description.type === 'REST') {
         request = description.base_url + '?f=pjson';
     }
-    else if (description.type === 'CKAN') {
-        request = description.base_url + '/api/3/action/package_search?q=GeoJSON&rows=50';
-    }
+//    else if (description.type === 'CKAN') {
+//        request = description.base_url + '/api/3/action/package_search?q=GeoJSON&rows=50';
+//    }
     else {
         request = description.base_url + '?service=' + description.type + '&request=GetCapabilities';
     }
