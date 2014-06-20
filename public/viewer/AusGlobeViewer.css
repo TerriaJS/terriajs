@@ -485,8 +485,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-search-form {
     position: absolute;
-    /*display: inline-block;*/
-    display: none;
+    display: inline-block;
     top: 75px;
     left: 0;
     z-index: 999; /* required for IE9 */
