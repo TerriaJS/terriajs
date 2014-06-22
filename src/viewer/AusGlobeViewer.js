@@ -142,11 +142,6 @@ var AusGlobeViewer = function(geoDataManager) {
         viewer : this
     });
 
-    var pos = document.createElement('div');
-    pos.id = 'position';
-//    pos.className = 'position';
-    document.body.appendChild(pos);
-
     var legend = document.createElement('div');
     legend.id = 'legend';
 //    div.className = 'legend';
@@ -542,7 +537,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         if (cartesian) {
             if (terrainProvider instanceof EllipsoidTerrainProvider) {
                 //flat earth
-                document.getElementById('position').innerHTML = cartesianToDegreeString(scene, cartesian);
+                document.getElementById('ausglobe-title-middle').innerHTML = cartesianToDegreeString(scene, cartesian);
             }
             else {
                 var cartographic = ellipsoid.cartesianToCartographic(cartesian);
@@ -557,13 +552,13 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                         }
                         var text = cartesianToDegreeString(scene, cartesian);
                         text += ' | Elev: ' + terrainPos[0].height.toFixed(1) + ' m';
-                        document.getElementById('position').innerHTML = text;
+                        document.getElementById('ausglobe-title-middle').innerHTML = text;
                     });
                 } catch (e) {}
             }
         }
         else {
-            document.getElementById('position').innerHTML = "";
+            document.getElementById('ausglobe-title-middle').innerHTML = "";
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
@@ -612,7 +607,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         //document.getElementById('controls').style.visibility = 'hidden';
         this._navigationWidget.showTilt = false;
-        document.getElementById('position').style.visibility = 'hidden';
+        document.getElementById('ausglobe-title-middle').style.visibility = 'hidden';
 
         //redisplay data
         this.map = map;
@@ -710,7 +705,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         stopTimeline(this.viewer);
 
         this._navigationWidget.showTilt = true;
-        document.getElementById('position').style.visibility = 'visible';
+        document.getElementById('ausglobe-title-middle').style.visibility = 'visible';
 
         /*
          var esri = new ArcGisMapServerImageryProvider({
