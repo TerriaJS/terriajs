@@ -6,7 +6,7 @@ body {
     padding: 0;
     background: #000;
     font-size:12px;
-    font-family: "Open Sans" sans-serif;
+    font-family: "Open Sans", sans-serif;
 }
 
 .fullWindow {
