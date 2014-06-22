@@ -18,6 +18,7 @@ var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
 var ClockRange = Cesium.ClockRange;
 var Color = Cesium.Color;
 var combine = Cesium.combine;
+var Credit = Cesium.Credit;
 var defaultValue = Cesium.defaultValue;
 var defined = Cesium.defined;
 var Ellipsoid = Cesium.Ellipsoid;
@@ -72,22 +73,35 @@ var AusGlobeViewer = function(geoDataManager) {
         container : document.body,
         menuItems : [
             {
-                label : 'Map Information',
-                uri : 'http://www.nicta.com.au',
-                target : '_blank'
-            },
-            {
-                label : 'Help',
-                uri : 'http://www.nicta.com.au'
-            },
-            {
-                label : 'Fullscreen',
+                svg : {
+                    path : 'm 23.1253,20.9122 5.475,-6.675 H 25.0699 C 24.2257,9.0502 19.7377,5.0872 14.3125,5.0872 8.2855,5.0872 3.3997,9.973 3.3997,16 c 0,6.027 4.8858,10.9128 10.9128,10.9128 2.7456,0 5.2476,-1.0218 7.1658,-2.6958 l -2.487,-3.0042 c -1.2414,1.1154 -2.8782,1.8 -4.6794,1.8 -3.873,0 -7.0128,-3.1392 -7.0128,-7.0128 0,-3.8736 3.1392,-7.0128 7.0128,-7.0128 3.2628,0 5.9964,2.2314 6.7782,5.25 h -3.2904 l 5.3256,6.675 z',
+                    width : 32,
+                    height : 32
+                },
                 callback : function() {
-                    Fullscreen.requestFullscreen(document.body);
+                    window.history.go(0);
+                }
+            },
+            {
+                svg : {
+                    path : 'M 30.1,5.5 H 1.9 C 1.2376,5.5 0.7,6.0376 0.7,6.7 v 18.6 c 0,0.6624 0.5376,1.2 1.2,1.2 h 28.2 c 0.6624,0 1.2,-0.5376 1.2,-1.2 V 6.7 c 0,-0.6624 -0.537,-1.2 -1.2,-1.2 z m -12,18 c 0,0.6624 -0.5376,1.2 -1.2,1.2 H 3.7 c -0.6624,0 -1.2,-0.5376 -1.2,-1.2 v -7.2 c 0,-0.6624 0.5376,-1.2 1.2,-1.2 h 13.2 c 0.6624,0 1.2,0.5376 1.2,1.2 v 7.2 z',
+                    width : 32,
+                    height : 32
+                },
+                callback : function() {
+                    if (Fullscreen.fullscreen) {
+                        Fullscreen.exitFullscreen();
+                    } else {
+                        Fullscreen.requestFullscreen(document.body);
+                    }
                 }
             },
             {  //This currently also houses print, but print could be moved here as well
-                label : 'Share',
+                svg : {
+                    path : 'm 22.6786,19.8535 c -0.8256,0 -1.5918,0.2514 -2.229,0.6822 l -7.1958,-4.1694 c 0.0198,-0.1638 0.0492,-0.3252 0.0492,-0.4944 0,-0.2934 -0.0366,-0.5778 -0.096,-0.8532 l 6.9978,-3.7554 c 0.6816,0.5442 1.5342,0.8844 2.4738,0.8844 2.199,0 3.9822,-1.7832 3.9822,-3.9822 0,-2.199 -1.7832,-3.9816 -3.9822,-3.9816 -2.199,0 -3.9816,1.7826 -3.9816,3.9816 0,0.1434 0.0276,0.279 0.042,0.4188 l -7.2198,3.9702 c -0.6306,-0.4182 -1.3854,-0.6648 -2.1978,-0.6648 -2.1996,0 -3.9822,1.7826 -3.9822,3.9822 0,2.1984 1.7826,3.9816 3.9822,3.9816 0.906,0 1.731,-0.3144 2.4,-0.8238 l 7.0398,4.1628 c -0.0342,0.2106 -0.0642,0.4224 -0.0642,0.642 0,2.199 1.7826,3.9816 3.9816,3.9816 2.199,0 3.9822,-1.7826 3.9822,-3.9816 -6e-4,-2.1984 -1.7832,-3.981 -3.9822,-3.981 z',
+                    width : 32,
+                    height : 32
+                },
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
                         that.geoDataManager.setShareRequest({
@@ -97,6 +111,24 @@ var AusGlobeViewer = function(geoDataManager) {
                     };
                     that.captureCanvas();
                 }
+            },
+            {
+                svg : {
+                    path : 'M 16,5.0002 C 9.925,5.0002 5.0002,9.925 5.0002,16 5.0002,22.075 9.925,26.9998 16,26.9998 22.075,26.9998 26.9998,22.075 26.9998,16 26.9998,9.9256 22.075,5.0002 16,5.0002 z m 1.7994,17.2002 h -3 v -7.8 h 3 v 7.8 z m -1.5996,-9.8496 c -0.897,0 -1.6248,-0.7272 -1.6248,-1.6248 0,-0.8976 0.7278,-1.6248 1.6248,-1.6248 0.8976,0 1.6254,0.7272 1.6254,1.6248 0,0.8976 -0.7278,1.6248 -1.6254,1.6248 z',
+                    width : 32,
+                    height : 32
+                },
+                uri : 'http://www.nicta.com.au',
+                target : '_blank'
+            },
+            {
+                svg : {
+                    path : 'M 16,5.0002 C 9.925,5.0002 5.0002,9.925 5.0002,16 5.0002,22.075 9.925,26.9998 16,26.9998 22.075,26.9998 26.9998,22.075 26.9998,16 26.9998,9.9256 22.075,5.0002 16,5.0002 z m 0.1572,17.0004 c -0.7452,0 -1.35,-0.6042 -1.35,-1.35 0,-0.7458 0.6048,-1.35 1.35,-1.35 0.7458,0 1.3506,0.6042 1.3506,1.35 0,0.7458 -0.6048,1.35 -1.3506,1.35 z m 3.486,-7.4106 c -0.1302,0.3228 -0.291,0.5982 -0.4836,0.8268 -0.1926,0.2292 -0.4056,0.4242 -0.6396,0.585 -0.234,0.1614 -0.4548,0.3228 -0.6624,0.4836 -0.2088,0.1614 -0.4758,0.3456 -0.6372,0.5538 -0.162,0.2082 -0.3876,0.468 -0.3876,0.78 v 0.7812 h -1.8 V 17.71 c 0,-0.447 0.048,-0.8214 0.1872,-1.1232 0.1404,-0.3012 0.27,-0.5592 0.4572,-0.7722 0.1872,-0.213 0.3678,-0.3978 0.576,-0.5538 0.2082,-0.156 0.3912,-0.312 0.5682,-0.468 0.177,-0.156 0.315,-0.3276 0.4242,-0.5148 0.1092,-0.1872 0.1566,-0.4212 0.1464,-0.702 0,-0.4782 -0.1182,-0.8322 -0.3522,-1.0608 -0.234,-0.2286 -0.5598,-0.3432 -0.9756,-0.3432 -0.2808,0 -0.5232,0.0546 -0.726,0.1638 -0.2028,0.1092 -0.369,0.255 -0.4992,0.4368 -0.1302,0.1818 -0.2262,0.4956 -0.2886,0.7398 -0.0624,0.2442 -0.093,0.288 -0.093,0.888 h -2.2932 c 0.0102,-0.6 0.1068,-1.1766 0.2886,-1.6446 0.1818,-0.468 0.4368,-0.9234 0.7638,-1.2666 0.3276,-0.3432 0.723,-0.636 1.1862,-0.8286 0.4626,-0.192 0.9798,-0.3006 1.5522,-0.3006 0.738,0 1.3542,0.0948 1.8486,0.2976 0.4932,0.2028 0.891,0.4518 1.1928,0.7536 0.3018,0.3018 0.5172,0.6252 0.6474,0.9732 0.1302,0.348 0.195,0.6726 0.195,0.9744 -6e-4,0.4992 -0.0654,0.909 -0.1956,1.2312 z',
+                    width : 32,
+                    height : 32
+                },
+                uri : 'http://www.nicta.com.au',
+                target : '_blank'
             }
         ]
     });
@@ -481,11 +513,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     globe.depthTestAgainstTerrain = false;
 
-
-    //TODO: replace cesium & bing icon with hightlighted text like leaflet to reduce footprint
-//        var creditDisplay = scene.frameState.creditDisplay;
-//        var cesiumCredit = new Credit('Cesium', '', 'http://cesiumjs.org/');
-//        creditDisplay.addDefaultCredit(cesiumCredit);
+    scene.frameState.creditDisplay.addDefaultCredit(new Credit('CESIUM', undefined, 'http://cesiumjs.org/'));
+    scene.frameState.creditDisplay.addDefaultCredit(new Credit('BING', undefined, 'http://www.bing.com/'));
 
     //TODO: set based on platform
 //        globe.tileCacheSize *= 2;

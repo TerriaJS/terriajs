@@ -20,32 +20,15 @@ var TitleWidget = function(options) {
 
     var wrapper = document.createElement('div');
     wrapper.className = 'ausglobe-title-area';
+    wrapper.innerHTML = '\
+        <div class="ausglobe-title-image"><img src="images/nicta.png" width="60" height="60" /></div>\
+        <div class="ausglobe-title-image"><img src="images/nationalmap.svg" height="40" /></div>\
+        <div class="ausglobe-title-credits"></div>\
+        <div class="ausglobe-title-menu" data-bind="foreach: menuItems">\
+            <span data-bind="if: typeof svg !== \'undefined\'"><a class="ausglobe-title-menuItem" data-bind="cesiumSvgPath: { path: svg.path, width: svg.width, height: svg.height }, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a></span>\
+            <span data-bind="if: typeof label !== \'undefined\'"><a class="ausglobe-title-menuItem" data-bind="html: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a></span>\
+        </div>';
     container.appendChild(wrapper);
-
-    var title = document.createElement('div');
-    title.className = 'ausglobe-title-text';
-    title.setAttribute('data-bind', 'text : title');
-    wrapper.appendChild(title);
-
-    this._creditContainer = document.createElement('div');
-    this._creditContainer.className = 'ausglobe-title-credits';
-    wrapper.appendChild(this._creditContainer);
-
-    var titleMenu = document.createElement('div');
-    titleMenu.className = 'ausglobe-title-menu';
-    titleMenu.setAttribute('data-bind', 'foreach: menuItems');
-    wrapper.appendChild(titleMenu);
-
-    var menuItemDivider = document.createElement('div');
-    menuItemDivider.className = 'ausglobe-title-menuItem-divider';
-    menuItemDivider.setAttribute('data-bind', 'visible: $index() > 0');
-    menuItemDivider.innerText = '|';
-    titleMenu.appendChild(menuItemDivider);
-
-    var menuItem = document.createElement('a');
-    menuItem.className = 'ausglobe-title-menuItem';
-    menuItem.setAttribute('data-bind', 'text: label, attr: { href: uri, target: target }, click: $parent.selectMenuItem');
-    titleMenu.appendChild(menuItem);
 
     knockout.applyBindings(viewModel, wrapper);
 };

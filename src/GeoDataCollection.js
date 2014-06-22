@@ -7,10 +7,10 @@ var TableDataSource = require('./TableDataSource');
 var GeoData = require('./GeoData');
 var readText = require('./readText');
 
-
 var defaultValue = Cesium.defaultValue;
 var DeveloperError = Cesium.DeveloperError;
 var FeatureDetection = Cesium.FeatureDetection;
+var KmlDataSource = Cesium.KmlDataSource;
 var when = Cesium.when;
 
 /**
@@ -363,7 +363,7 @@ function endsWith(str, suffix) {
 *
 */
 GeoDataCollection.prototype.formatSupported = function(srcname) {
-    var supported = [".CZML", ".GEOJSON", ".GJSON", ".TOPOJSON", ".JSON", ".TOPOJSON", ".KML", ".GPX", ".CSV"];
+    var supported = [".CZML", ".GEOJSON", ".GJSON", ".TOPOJSON", ".JSON", ".TOPOJSON", ".KML", ".KMZ", ".GPX", ".CSV"];
     var sourceUpperCase = srcname.toUpperCase();
     for (var i = 0; i < supported.length; i++) {
         if (endsWith(sourceUpperCase, supported[i])) {
@@ -1308,10 +1308,23 @@ GeoDataCollection.prototype.addFile = function(file) {
     var that = this;
 
     if (this.formatSupported(file.name)) {
-        when(readText(file), function (text) {
-            that.zoomTo = true;
-            that.loadText(text, file.name);
-        });
+        if (file.name.match(/.kmz$/i)) {
+            var kmlLayer = new GeoData({ name: file.name, type: 'DATA' });
+
+            var dataSource = new KmlDataSource(corsProxy);
+            when(dataSource.loadKmz(file, file.name), function() {
+                kmlLayer.extent = getDataSourceExtent(dataSource);
+            });
+            this.dataSourceCollection.add(dataSource);
+
+            kmlLayer.primitive = dataSource;
+            this.add(kmlLayer);
+        } else {
+            when(readText(file), function (text) {
+                that.zoomTo = true;
+                that.loadText(text, file.name);
+            });
+        }
     }
     else {
         if (file.size > 1000000) {
