@@ -23,6 +23,7 @@ var TitleWidget = function(options) {
     wrapper.innerHTML = '\
         <div class="ausglobe-title-image"><img src="images/nicta.png" width="60" height="60" /></div>\
         <div class="ausglobe-title-image"><img src="images/nationalmap.svg" height="40" /></div>\
+        <div id="ausglobe-title-middle" class="ausglobe-title-middle"></div>\
         <div class="ausglobe-title-credits"></div>\
         <div class="ausglobe-title-menu" data-bind="foreach: menuItems">\
             <span data-bind="if: typeof svg !== \'undefined\'"><a class="ausglobe-title-menuItem" data-bind="cesiumSvgPath: { path: svg.path, width: svg.width, height: svg.height }, attr: { href: uri, target: target }, click: $parent.selectMenuItem"></a></span>\
@@ -30,13 +31,15 @@ var TitleWidget = function(options) {
         </div>';
     container.appendChild(wrapper);
 
+    this._middeContainer = document.getElementById('ausglobe-title-middle');
+
     knockout.applyBindings(viewModel, wrapper);
 };
 
 defineProperties(TitleWidget.prototype, {
-    creditContainer : {
+    middleContainer : {
         get : function() {
-            return this._creditContainer;
+            return this._middleContainer;
         }
     }
 });
