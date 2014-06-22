@@ -733,7 +733,7 @@ function supportsWebgl() {
         return false;
     }
     var canvas = document.createElement( 'canvas' );
-    var gl = canvas.getContext("webgl");
+    var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     if (!gl) {
         // Browser could not initialize WebGL. User probably needs to
         // update their drivers or get a new browser. Present a link to
