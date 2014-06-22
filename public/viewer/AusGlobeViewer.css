@@ -670,6 +670,10 @@ a.ausglobe-title-menuItem:hover {
     text-decoration: none;
 }
 
+#cesiumContainer .cesium-widget-credits a:link {
+    color: white;
+}
+
 #cesiumContainer .cesium-widget-credits a:visited {
     color: white;
 }
