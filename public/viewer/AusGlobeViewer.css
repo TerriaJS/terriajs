@@ -653,3 +653,39 @@ a.ausglobe-title-menuItem:hover {
   .ausglobe-left-area, .ausglobe-title-area {display: none; }
   .ausglobe-search-button, .ausglobe-search-form {display: none; }
 }
+
+#cesiumContainer .cesium-widget-credits {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #ffffff;
+    font-size: 9px;
+    text-shadow: 0px 0px 1px #000000;
+    padding: 5px;
+    font-family: "Open Sans", sans-serif;
+}
+
+#cesiumContainer .cesium-widget-credits a {
+    text-decoration: none;
+}
+
+#cesiumContainer .cesium-widget-credits a:visited {
+    color: white;
+}
+
+#cesiumContainer .cesium-widget-credits a:hover {
+    text-decoration: underline;
+}
+
+#cesiumContainer .cesium-credit-imageContainer {
+    display: none;
+}
+
+.cesium-credit-text:first-child {
+    font-weight: bolder;
+}
+
+.cesium-credit-text:nth-child(3) {
+    font-weight: bolder;
+}
