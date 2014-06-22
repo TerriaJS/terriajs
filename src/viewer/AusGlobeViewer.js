@@ -18,6 +18,7 @@ var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
 var ClockRange = Cesium.ClockRange;
 var Color = Cesium.Color;
 var combine = Cesium.combine;
+var Credit = Cesium.Credit;
 var defaultValue = Cesium.defaultValue;
 var defined = Cesium.defined;
 var Ellipsoid = Cesium.Ellipsoid;
@@ -512,11 +513,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     globe.depthTestAgainstTerrain = false;
 
-
-    //TODO: replace cesium & bing icon with hightlighted text like leaflet to reduce footprint
-//        var creditDisplay = scene.frameState.creditDisplay;
-//        var cesiumCredit = new Credit('Cesium', '', 'http://cesiumjs.org/');
-//        creditDisplay.addDefaultCredit(cesiumCredit);
+    scene.frameState.creditDisplay.addDefaultCredit(new Credit('CESIUM', undefined, 'http://cesiumjs.org/'));
+    scene.frameState.creditDisplay.addDefaultCredit(new Credit('BING', undefined, 'http://www.bing.com/'));
 
     //TODO: set based on platform
 //        globe.tileCacheSize *= 2;
