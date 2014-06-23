@@ -26,13 +26,6 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     this.map = undefined;
     this.regionExt = undefined;
 
-    var uri = new URI(window.location);
-    var host = 'http://' + uri.hostname();
-    if (uri.port() !== '80') {
-        host += ':' + uri.port();
-    }
-    this.visViewer = host + uri.pathname();
-
     var that = this;
 
     //Dialogs
@@ -67,9 +60,7 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     div.innerHTML = ' \
             <form id="modalform" name="modalform"> \
                 <img id="img1" src="./images/default.jpg" width="256"/> \
-                     Title: <br /><input type="text" name="title" id="title" /><br /> \
-                     Description: <br /><input type="text" name="description" id="description" /><br /> \
-                     Tags: <br /><input type="text" name="tags" id="tags" /> \
+                URL: <br /><input type="text" name="url" id="url"/> \
             </form>';
     document.body.appendChild(div);
 
@@ -123,8 +114,6 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
         console.log('Share Request Event:', request);
         that.postViewToServer(request);
     });
-
-    geoDataManager.loadUrl(window.location);
 
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
@@ -507,47 +496,22 @@ GeoDataWidget.prototype.showLayersDialog = function () {
 };
 
 
-// share the link handlers
-function fbShare(url, record_url, image_url) {
-    //get the record from the server and use it to populate the fields
-    when(loadJson(record_url), function (obj) {
-        var winWidth = 640;
-        var winHeight = 480;
-        var winTop = (screen.height / 2) - (winHeight / 2);
-        var winLeft = (screen.width / 2) - (winWidth / 2);
-        var str1 = encodeURI('http://www.facebook.com/sharer.php?s=100&p[title]=' + obj.title + '&p[summary]=' + obj.description + '&p[url]=' + url + '&p[images][0]=' + image_url);
-        var str2 = 'sharer';
-        var str3 = 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight;
-        window.open(str1, str2, str3);
-    });
-}
-
 function embedShare(url) {
-    var str = '&lt;iframe style="width: 720px; height: 405px; border: none;" src="' + url + '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen&gt;&lt;/iframe&gt;';
-    showHTMLTextDialog("IFrame to Embed in HTML", str, true);
 }
-
-function linkShare(url) {
-    var str = 'You can use this link to view or share your visualization:<br><a href="' + url + '" target="_blank">' + url + '</a>';
-    showHTMLTextDialog("Link to Visualization", str, true);
-}
-
-// Dialog to post current view to server
+// Dialog to share a visualization
 GeoDataWidget.prototype.postViewToServer = function (request) {
     var that = this;
+    
+    var url = that.geoDataManager.getShareRequestURL(request);
 
-    var formValues = request;
-
-    $("#title").attr("value", formValues.title);
-    $("#description").attr("value", formValues.description);
-    $("#tags").attr("value", formValues.tags);
-    $("#img1").attr("src", formValues.image);
+    $("#img1").attr("src", request.image);
+    $("#url").attr("value", url);
 
     //Shows dialog
     $("#dialogShare").dialog({
         title: "Share",
         width: 300,
-        height: 500,
+        height: 400,
         modal: false,
         position: {
             my: "left top",
@@ -556,22 +520,21 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
             of: window
         },
         buttons: {
-            "Share": function () {
-                var formEntries = [];
-                $.each($('#dialogShare').serializeArray(), function(i, field) {
-                    formEntries[field.name] = field.value;
-                });
-
-                // generate form data to submit
+            'Copy': function () {
+                window.prompt("To copy to clipboard: Ctrl+C, Enter", url);
+                $(this).dialog('close');
+            },
+            'Embed': function () {
+                var str = '&lt;iframe style="width: 720px; height: 405px; border: none;" src="' + url;
+                str += '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen&gt;&lt;/iframe&gt;';
+                showHTMLTextDialog("IFrame to Embed in HTML", str, true);
+                $(this).dialog('close');
+            },
+            'GeoSpace': function () {
                 var formData = new FormData();
-                for (var fld in formValues) {
-                    if (formValues.hasOwnProperty(fld)) {
-                        if (formEntries[fld]) {
-                            formData.append(fld, formEntries[fld]);
-                        }
-                        else {
-                            formData.append(fld, formValues[fld]);
-                        }
+                for (var fld in request) {
+                    if (request.hasOwnProperty(fld)) {
+                        formData.append(fld, request[fld]);
                     }
                 }
                 //TODO: include,resize image here based on user setting
@@ -586,40 +549,21 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                         }
                         else {
                             var resp = JSON.parse(xhr.responseText);
-                            var url = that.visViewer + '?vis_id=' + resp.vis_id;
-                            $("#dialogShare").dialog('option', 'buttons', {
-                                'FB': function () {
-                                    var record_url = that.geoDataManager.visStore + '/get_rec?vis_id=' + resp.vis_id;
-                                    var image_url = that.geoDataManager.visStore + '/images/' + resp.vis_id + '_thumb.jpg';
-                                    fbShare(url, record_url, image_url);
-                                    $(this).dialog('close');
-                                },
-                                'Embed': function () {
-                                    embedShare(url);
-                                    $(this).dialog('close');
-                                },
-                                'Link': function () {
-                                    linkShare(url);
-                                    $(this).dialog('close');
-                                },
-                                    //TODO: disable if not logged in
-                                'Gallery': function () {
-                                    url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
-                                    window.parent.document.location.assign(url);
-                                    $(this).dialog('close');
-                                }
-/*                                    "Close": function () {
-                                    $(this).dialog("close");
-                                }
-*/                            });
-
+                            var vis_url = that.geoDataManager.visServer + '?vis_id=' + resp.vis_id;
+                            var geo_url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
+                            var str = 'Shortened Link:<br><a href="' + vis_url + '" target="_blank">' + vis_url + '</a>';
+                            str +=  '<br><br><a href="' + geo_url + '" target="_blank">Go to GeoSpace</a>';
+                            showHTMLTextDialog("Link to Visualization", str, true);
+                            $(this).dialog('close');
                        }
                     }
                 };
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
-            }
+
+             }
         }
+
     });
 };
 

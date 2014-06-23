@@ -217,13 +217,9 @@ GeoDataCollection.prototype.show = function(layer, val) {
 GeoDataCollection.prototype._stringify = function() {
     var str_layers = [];
     for (var i = 0; i < this.layers.length; i++) {
-        var obj = {};
-        for (var prop in this.layers[i]) {
-            if (this.layers[i].hasOwnProperty(prop) && prop !== 'primitive' &&
-                prop !== 'dataSource' && prop !== 'map') {
-                obj[prop] = this.layers[i][prop];
-            }
-        }
+        var layer = this.layers[i];
+        var obj = {name: layer.name, type: layer.type, proxy:layer.proxy,
+                   url: layer.url, extent: layer.extent};
         str_layers.push(obj);
     }
     return JSON.stringify(str_layers);
@@ -277,25 +273,29 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     var uri_params = {
         vis_server: this.visStore,
         vis_id: undefined,
+        vis_str: undefined,
         data_url: undefined
     };
     var overrides = uri.search(true);
     $.extend(uri_params, overrides);
+    
+    this.visServer = uri.protocol() + '://' + uri.host();
 
     this.visStore = uri_params.vis_server;
-    this.visID = uri_params.vis_id;
-    this.dataUrl = uri_params.data_url;
-    this.dataFormat = uri_params.format;
+    var visID = uri_params.vis_id;
+    var visStr = uri_params.vis_str;
+    
+    var dataUrl = uri_params.data_url;
+    var dataFormat = uri_params.format;
     
     var that = this;
-   
+    
     //Initialize the view based on vis_id if passed in url
     if (this.visID) {
         //call to server to get json record
-        url = this.visStore + '/get_rec?vis_id=' + this.visID;
+        url = this.visStore + '/get_rec?vis_id=' + visID;
         Cesium.when(Cesium.loadJson(url), function(obj) {
-            that.visID = obj._id;
- 
+            this.visID = visID;
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
                 var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
@@ -310,7 +310,22 @@ GeoDataCollection.prototype.loadUrl = function(url) {
             }
         });
     }
-    else if (this.dataUrl) {
+    else if (visStr) {
+        var obj = JSON.parse(visStr);
+        if (obj.camera !== undefined) {
+            var e = JSON.parse(obj.camera);
+            var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
+            that.zoomTo = true;
+            that.GeoDataAdded.raiseEvent(that, camLayer);
+        }
+       
+          //loop through layers adding each one
+        var layers = that._parseLayers(obj.layers);
+        for (var i = 0; i < layers.length; i++) {
+            that.sendLayerRequest(layers[i]);
+        }
+    }
+    else if (dataUrl) {
         Cesium.loadText(this.dataUrl).then(function (text) { 
             that.zoomTo = true;
             that.loadText(text, that.dataUrl, that.dataFormat);
@@ -328,24 +343,26 @@ GeoDataCollection.prototype.loadUrl = function(url) {
 GeoDataCollection.prototype.getShareRequest = function( description ) {
     var request = {};
     
-    request.title = '';
-    request.description = '';
-    var tags = [];
-    for (var i = 0; i < this.layers.length; i++) {
-        tags.push(this.layers[i].name);
-    }
-    request.tags = tags.toString();
     //TODO: bundle up datesets for smaller drag and drop data
     request.layers = this._stringify();
-    request.version = '0.0.01';
-    request.image = description.image;
+    request.version = '0.0.02';
     request.camera = JSON.stringify(description.camera); //just extent for now
-    var cam = description.camera;
-    if (this.visID) {
+     if (this.visID) {
         request.parent = this.visID;
     }
+    request.image = description.image;
     return request;
 };
+
+GeoDataCollection.prototype.getShareRequestURL = function( request ) {
+    var img = request.image;
+    request.image = undefined;
+    var requestStr = JSON.stringify(request);
+    var url = this.visServer + '?vis_str=' + encodeURIComponent(requestStr);
+    request.image = img;
+    return url;
+};
+
 
 // -------------------------------------------
 // Handle data sources from text
@@ -393,8 +410,6 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format) {
     var layer;
     var dom;
 
-    console.log(this);
-    
     //TODO: !!! save dataset text for dnd data
 
         //Natively handled data sources in cesium
@@ -1139,12 +1154,12 @@ function getRandomColor(palette) {
 */
 
 var line_palette = {
-    minimumRed : 0.2,
-    minimumGreen : 0.2,
-    minimumBlue : 0.2,
-    maximumRed : 0.7,
-    maximumGreen : 0.7,
-    maximumBlue : 0.7,
+    minimumRed : 0.3,
+    minimumGreen : 0.3,
+    minimumBlue : 0.3,
+    maximumRed : 0.8,
+    maximumGreen : 0.8,
+    maximumBlue : 0.8,
     alpha : 1.0
 };
 var point_palette = {
