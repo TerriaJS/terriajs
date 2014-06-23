@@ -699,6 +699,7 @@ a.ausglobe-title-menuItem:hover {
 
 #cesiumContainer .cesium-infoBox {
     top: 164px;
+    right: 20px;
     border-radius: 0px;
     border: 1px solid gray;
     background-color: rgba(0, 0, 0, 0.65);
