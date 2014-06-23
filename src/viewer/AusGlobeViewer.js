@@ -21,6 +21,7 @@ var combine = Cesium.combine;
 var Credit = Cesium.Credit;
 var defaultValue = Cesium.defaultValue;
 var defined = Cesium.defined;
+var DynamicObject = Cesium.DynamicObject;
 var Ellipsoid = Cesium.Ellipsoid;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
 var Fullscreen = Cesium.Fullscreen;
@@ -492,7 +493,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     //create CesiumViewer
     var viewer = new Viewer(container, options);
-    //viewer.extend(viewerDynamicObjectMixin);
+    viewer.extend(viewerDynamicObjectMixin);
 
     var lastHeight = 0;
     viewer.scene.preRender.addEventListener(function(scene, time) {
@@ -573,6 +574,15 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     var oldClickAction = inputHandler.getInputAction(ScreenSpaceEventType.LEFT_CLICK);
     inputHandler.setInputAction(
         function(movement) {
+            if (defined(oldClickAction)) {
+                oldClickAction(movement);
+            }
+
+            // If something is already selected, don't try to pick WMS features.
+            if (defined(that.viewer.selectedObject)) {
+                return;
+            }
+
             // Find the picked location on the globe.
             // TODO: this should take terrain into account.
             var pickedPosition = scene.camera.pickEllipsoid(movement.position, Ellipsoid.WGS84);
@@ -631,13 +641,22 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             }
 
             when.all(promises, function(results) {
-                function describe(properties, nameProperty) {
+                function findGoodIdProperty(properties) {
+                    for (var key in properties) {
+                        if (properties.hasOwnProperty(key) && properties[key]) {
+                            if (/name/i.test(key) || /title/i.test(key)) {
+                                return properties[key];
+                            }
+                        }
+                    }
+
+                    return undefined;
+                }
+
+                function describe(properties) {
                     var html = '<table class="cesium-geoJsonDataSourceTable">';
                     for ( var key in properties) {
                         if (properties.hasOwnProperty(key)) {
-                            if (key === nameProperty) {
-                                continue;
-                            }
                             var value = properties[key];
                             if (defined(value)) {
                                 if (typeof value === 'object') {
@@ -666,15 +685,23 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 }
 
                 if (defined(feature)) {
-                    var infoBoxViewModel = that.viewer.infoBox.viewModel;
-                    infoBoxViewModel.descriptionRawHtml = describe(feature.properties);
-                    infoBoxViewModel.showInfo = true;
+                    that.viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature));
+                    var description = describe(feature.properties);
+                    that.viewer.selectedObject.description = {
+                        getValue : function() {
+                            return description;
+                        }
+                    };
                 }
             });
 
-            if (defined(oldClickAction)) {
-                oldClickAction(movement);
-            }
+            // Add placeholder information to the infobox so the user knows something is happening.
+            that.viewer.selectedObject = new DynamicObject('Loading...');
+            that.viewer.selectedObject.description = {
+                getValue : function() {
+                    return 'Loading WMS feature information...';
+                }
+            };
         },
         ScreenSpaceEventType.LEFT_CLICK);
 
