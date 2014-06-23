@@ -315,7 +315,7 @@ a.ausglobe-title-menuItem:hover {
     visibility: hidden;
     position: absolute;
     top: 20px;
-    left: -300px;
+    left: -350px;
     width: 300px;
     background-color: rgba(0, 0, 0, 0.65);
     pointer-events: auto;
