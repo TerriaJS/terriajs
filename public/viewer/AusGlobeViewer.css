@@ -703,10 +703,17 @@ a.ausglobe-title-menuItem:hover {
     border-radius: 0px;
     border: 1px solid gray;
     background-color: rgba(0, 0, 0, 0.65);
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
 }
 
 #cesiumContainer .cesium-infoBox-title {
     background-color: black;
+    font-size: 15px;
+    font-weight: 600;
+    color: #66CCFF;
 }
 
 #cesiumContainer button.cesium-infoBox-camera {
