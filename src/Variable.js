@@ -4,8 +4,10 @@
 /*!
  * Copyright(c) 2012-2013 National ICT Australia Limited (NICTA).  All rights reserved.
  */
- 
- 
+
+var destroyObject = Cesium.destroyObject;
+var JulianDate = Cesium.JulianDate;
+
 var VarType = {LON: 0, LAT: 1, ALT: 2, TIME: 3, SCALAR: 4, ENUM: 5 };
 
 /**
@@ -52,10 +54,10 @@ Variable.prototype._calculateTimeMinMax = function () {
     var min_val = vals[0];
     var max_val = vals[0];
     for (var i = 1; i < vals.length; i++) {
-        if (min_val.greaterThan(vals[i])) {
+        if (JulianDate.greaterThan(min_val, vals[i])) {
             min_val = vals[i];
         }
-        if (max_val.lessThan(vals[i])) {
+        if (JulianDate.lessThan(max_val, vals[i])) {
             max_val = vals[i];
         }
     }
@@ -87,29 +89,28 @@ Variable.prototype.processTimeVar = function () {
     }
     //time parsing functions
     function time_string(v) { //  9/2/94 0:56
-        return Cesium.JulianDate.fromDate(new Date(v));
+        return JulianDate.fromDate(new Date(v));
     }
     function time_excel(v) {   // 40544.4533
-        var date = Cesium.JulianDate.fromDate(new Date('January 1, 1970 0:00:00'));
-        date = date.addDays(Math.floor(v) - 25569.0); //account for offset to 1900
-        date = date.addSeconds((v - Math.floor(v)) * 60 * 60 * 24);
+        var date = JulianDate.fromDate(new Date('January 1, 1970 0:00:00'));
+        date = JulianDate.addDays(date, Math.floor(v) - 25569.0); //account for offset to 1900
+        date = JulianDate.addSeconds(date, (v - Math.floor(v)) * 60 * 60 * 24);
         return date;
     }
     function time_utc(v) {   //12321231414434
-        return Cesium.JulianDate.fromDate(Date.setTime(v));
+        return JulianDate.fromDate(Date.setTime(v));
     }
     function time_sosus(v) {   //19912410952050
-        var date = new Cesium.JulianDate(0, 0);
         var date_str = v.toString();
         var year = parseInt(date_str.substring(0, 4), 10);
         var dayofyear = parseInt(date_str.substring(4, 7), 10);
         if (date_str.length !== 14 || year < 1950 || year > 2050 || dayofyear > 366) {
-            return date;
+            return new JulianDate(0.0, 0.0);
         }
         var d = new Date();
         d.setUTCFullYear(year);
         d.setUTCHours(date_str.substring(7, 9), date_str.substring(9, 11), date_str.substring(11, 13));
-        date = Cesium.JulianDate.fromDate(d).addDays(dayofyear);
+        var date = JulianDate.addDays(JulianDate.fromDate(d), dayofyear);
         return date;
     }
     //create new Cessium time variable to attach to the variable
@@ -118,7 +119,7 @@ Variable.prototype.processTimeVar = function () {
     //select time parsing function
     var parseFunc;
     if (parseInt(vals[0], 10) > 500000) {
-        if (time_sosus(vals[0]).getJulianDayNumber() !== 0) {
+        if (time_sosus(vals[0]).dayNumber !== 0) {
             parseFunc = time_sosus;
         }
         else {
@@ -235,7 +236,7 @@ Variable.prototype.guessVarType = function (name) {
 *
 */
 Variable.prototype.destroy = function () {
-    return Cesium.destroyObject(this);
+    return destroyObject(this);
 };
 
 module.exports = Variable;

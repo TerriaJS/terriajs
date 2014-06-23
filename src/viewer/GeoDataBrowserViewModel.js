@@ -2,39 +2,50 @@
 
 /*global Cesium,require,alert*/
 
+var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
 var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
+var combine = Cesium.combine;
+var createCommand = Cesium.createCommand;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
-var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
+var loadJson = Cesium.loadJson;
 var Rectangle = Cesium.Rectangle;
-var createCommand = Cesium.createCommand;
+var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
+var when = Cesium.when;
 
+var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
+var readJson = require('../readJson');
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
 
 var GeoDataBrowserViewModel = function(options) {
-    this.content = options.content;
-
     this._viewer = options.viewer;
     this._dataManager = options.dataManager;
     this.map = options.map;
 
     this.showingPanel = false;
     this.showingMapPanel = false;
-    this.openIndex = 0;
-    this.openMapIndex = 0;
+    this.addDataIsOpen = false;
+    this.nowViewingIsOpen = true;
+    this.wfsServiceUrl = '';
 
+    this.openMapIndex = 0;
     this.imageryIsOpen = true;
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = 'Terrain';
 
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'addDataIsOpen', 'nowViewingIsOpen', 'wfsServiceUrl',
+                          'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
+
     var that = this;
+
+    // Create commands
     this._toggleShowingPanel = createCommand(function() {
         that.showingPanel = !that.showingPanel;
         if (that.showingPanel) {
@@ -50,7 +61,15 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._openItem = createCommand(function(item) {
-        that.openIndex = that.content.indexOf(item);
+        item.isOpen(!item.isOpen());
+    });
+
+    this._openAddData = createCommand(function() {
+        that.addDataIsOpen = !that.addDataIsOpen;
+    });
+
+    this._openNowViewing = createCommand(function() {
+        that.nowViewingIsOpen = !that.nowViewingIsOpen;
     });
 
     this._openImagery = createCommand(function() {
@@ -77,10 +96,16 @@ var GeoDataBrowserViewModel = function(options) {
         }
     });
 
+    this._toggleItemShown = createCommand(function(item) {
+        item.show(!item.show());
+        that._dataManager.show(item.layer, item.show());
+    });
+
     this._zoomToItem = createCommand(function(item) {
         if (!defined(item.layer) || !defined(item.layer.extent)) {
             return;
         }
+
         that._viewer.updateCameraFromRect(item.layer.extent, 1000);
     });
 
@@ -91,26 +116,52 @@ var GeoDataBrowserViewModel = function(options) {
         });
     });
 
+    this._addWfsService = createCommand(function() {
+        var item = createCategory({
+            data : {
+                name : that.wfsServiceUrl,
+                base_url : that.wfsServiceUrl,
+                type : 'WFS',
+                proxy : true
+            }
+        });
+        that.userContent.push(item);
+
+        item.isOpen(true);
+
+        that.wfsServiceUrl = '';
+    });
+
+    var currentBaseLayers;
+
     function removeBaseLayer() {
         if (!defined(that._viewer.viewer)) {
             var message = 'Base layer selection is not yet implemented for Leaflet.';
             alert(message);
             throw message;
         }
+
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
 
-        var previousBaseLayer = imageryLayers.get(0);
-        imageryLayers.remove(previousBaseLayer);
+        if (!defined(currentBaseLayers)) {
+            currentBaseLayers = [imageryLayers.get(0)];
+        }
+
+        for (var i = 0; i < currentBaseLayers.length; ++i) {
+            imageryLayers.remove(currentBaseLayers[i]);
+        }
+
+        currentBaseLayers.length = 0;
     }
 
     function switchToBingMaps(style) {
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        imageryLayers.addImageryProvider(new BingMapsImageryProvider({
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new BingMapsImageryProvider({
             url : '//dev.virtualearth.net',
             mapStyle : style
-        }), 0);
+        }), 0));
     }
 
     this._activateBingMapsAerialWithLabels = createCommand(function() {
@@ -129,25 +180,50 @@ var GeoDataBrowserViewModel = function(options) {
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
             url : '//cesiumjs.org/tilesets/imagery/blackmarble',
             credit : '© Analytical Graphics, Inc.'
-        }), 0);
+        }), 0));
     });
 
     this._activateNaturalEarthII = createCommand(function() {
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
             url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
             credit : '© Analytical Graphics, Inc.'
-        }), 0);
+        }), 0));
     });
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'openIndex', 'imageryIsOpen',
-                          'viewerSelectionIsOpen', 'selectedViewer']);
+    this._activateAustralianTopography = createCommand(function() {
+        removeBaseLayer();
 
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+            url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
+            credit : '© Analytical Graphics, Inc.'
+        }), 0));
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
+            url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer',
+            proxy : corsProxy
+        }), 1));
+    });
+
+    this._selectFileToUpload = createCommand(function() {
+        var element = document.getElementById('uploadFile');
+        element.click();
+    });
+
+    this._addUploadedFile = createCommand(function() {
+        var uploadFileElement = document.getElementById('uploadFile');
+        var files = uploadFileElement.files;
+        for (var i = 0; i < files.length; ++i) {
+            that._viewer.geoDataManager.addFile(files[i]);
+        }
+    });
+
+    // Subscribe to a change in the selected viewer (2D/3D) in order to actually switch the viewer.
     knockout.getObservable(this, 'selectedViewer').subscribe(function(value) {
         if (value === '2D') {
             if (that._viewer.isCesium()) {
@@ -168,6 +244,205 @@ var GeoDataBrowserViewModel = function(options) {
             }
         }
     });
+
+    function createDataSource(options) {
+        var parent = komapping.toJS(options.parent);
+        var data = combine(options.data, parent);
+
+        var viewModel = komapping.fromJS(data, that._categoryMapping);
+        viewModel.isEnabled = knockout.observable(false);
+        return viewModel;
+    }
+
+    this._categoryMapping = {
+        Layer : {
+            create : createDataSource
+        }
+    };
+
+    function createCategory(options) {
+        var viewModel = komapping.fromJS(options.data, that._categoryMapping);
+
+        viewModel.isOpen = knockout.observable(false);
+        viewModel.isLoading = knockout.observable(false);
+
+        if (!defined(viewModel.Layer)) {
+            var layer;
+            var layerRequested = false;
+            var version = knockout.observable(0);
+
+            viewModel.Layer = knockout.computed(function() {
+                version();
+
+                if (layerRequested) {
+                    return layer;
+                }
+
+                if (!defined(layer)) {
+                    layer = [];
+                }
+
+                // Don't request capabilities until the layer is opened.
+                if (viewModel.isOpen()) {
+                    viewModel.isLoading(true);
+                    that._viewer.geoDataManager.getCapabilities(options.data, function(description) {
+                        var remapped = createCategory({
+                            data: description
+                        });
+
+                        viewModel.name(remapped.name());
+
+                        var layers = remapped.Layer();
+                        for (var i = 0; i < layers.length; ++i) {
+                            // TODO: handle hierarchy better
+                            if (defined(layers[i].Layer)) {
+                                var subLayers = layers[i].Layer();
+                                for (var j = 0; j < subLayers.length; ++j) {
+                                    layer.push(subLayers[j]);
+                                }
+                            } else {
+                                layer.push(layers[i]);
+                            }
+                        }
+
+                        version(version() + 1);
+                        viewModel.isLoading(false);
+                    });
+
+                    layerRequested = true;
+                }
+
+                return layer;
+            });
+        }
+
+        return viewModel;
+    }
+
+    this._collectionMapping = {
+        Layer : {
+            create : createCategory
+        }
+    };
+
+    function createCollection(options) {
+        var viewModel = komapping.fromJS(options.data, that._collectionMapping);
+        viewModel.isOpen = knockout.observable(false);
+        return viewModel;
+    }
+
+    this._collectionListMapping = {
+        create : createCollection
+    };
+
+    var browserContentViewModel = komapping.fromJS([], this._collectionListMapping);
+    this.content = browserContentViewModel;
+
+    var dataCollectionsPromise = loadJson('./data_collection.json');
+    var otherSourcesPromise = loadJson('./data_sources.json');
+
+    when.all([dataCollectionsPromise, otherSourcesPromise], function(sources) {
+        var browserContent = [];
+        browserContent.push(sources[0]);
+
+        var otherSources = sources[1].Layer;
+        for (var i = 0; i < otherSources.length; ++i) {
+            browserContent.push(otherSources[i]);
+        }
+
+        komapping.fromJS(browserContent, that._collectionListMapping, browserContentViewModel);
+    });
+
+    this.userContent = komapping.fromJS([], this._collectionListMapping);
+
+    var nowViewingMapping = {
+        create : function(options) {
+            var description = options.data.description;
+            if (!defined(description)) {
+                description = {
+                    Title : options.data.name,
+                    base_url : options.data.url,
+                    type : options.data.type
+                };
+            }
+            var viewModel = komapping.fromJS(description);
+            viewModel.show = knockout.observable(options.data.show);
+            viewModel.layer = options.data;
+            return viewModel;
+        }
+    };
+
+    this.nowViewing = komapping.fromJS(this._dataManager.layers, nowViewingMapping);
+
+    this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(function() {
+        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+    });
+
+    this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(function() {
+        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+    });
+
+    function noopHandler(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+    }
+
+    function dropHandler(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        function loadCollection(json) {
+            if (!defined(json) || !defined(json.name) || !defined(json.Layer)) {
+                return;
+            }
+
+            var collections;
+            if (json.name === 'National Map Services') {
+                collections = json.Layer;
+            } else {
+                collections = [json];
+            }
+
+            var existingCollection;
+
+            for (var i = 0; i < collections.length; ++i) {
+                var collection = collections[i];
+
+                // Find an existing collection with the same name, if any.
+                var name = collection.name;
+                var existingCollections = browserContentViewModel();
+
+                existingCollection = undefined;
+                for (var j = 0; j < existingCollections.length; ++j) {
+                    if (existingCollections[j].name() === name) {
+                        existingCollection = existingCollections[j];
+                        break;
+                    }
+                }
+
+                if (defined(existingCollection)) {
+                    komapping.fromJS(collection, that._collectionListMapping, existingCollection);
+                } else {
+                    browserContentViewModel.push(komapping.fromJS(collection, that._collectionListMapping));
+                }
+            }
+        }
+
+        var files = evt.dataTransfer.files;
+        for (var i = 0; i < files.length; ++i) {
+            var file = files[i];
+            if (file.name.indexOf('.json') === -1) {
+                continue;
+            }
+
+            when(readJson(file), loadCollection);
+        }
+    }
+
+    document.addEventListener("dragenter", noopHandler, false);
+    document.addEventListener("dragexit", noopHandler, false);
+    document.addEventListener("dragover", noopHandler, false);
+    document.addEventListener("drop", dropHandler, false);
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {
@@ -186,6 +461,18 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     openItem : {
         get : function() {
             return this._openItem;
+        }
+    },
+
+    openAddData : {
+        get : function() {
+            return this._openAddData;
+        }
+    },
+
+    openNowViewing : {
+        get : function() {
+            return this._openNowViewing;
         }
     },
 
@@ -210,6 +497,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     toggleItemEnabled : {
         get : function() {
             return this._toggleItemEnabled;
+        }
+    },
+
+    toggleItemShown : {
+        get : function() {
+            return this._toggleItemShown;
         }
     },
 
@@ -253,32 +546,51 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
         get : function() {
             return this._activateNaturalEarthII;
         }
+    },
+
+    activateAustralianTopography : {
+        get : function() {
+            return this._activateAustralianTopography;
+        }
+    },
+
+    addWfsService : {
+        get : function() {
+            return this._addWfsService;
+        }
+    },
+
+    selectFileToUpload : {
+        get : function() {
+            return this._selectFileToUpload;
+        }
+    },
+
+    addUploadedFile : {
+        get : function() {
+            return this._addUploadedFile;
+        }
     }
 });
 
 function enableItem(viewModel, item) {
     var description = komapping.toJS(item);
     var layer = new GeoData({
-        name: description.Name,
+        name: description.Title,
         type: description.type,
         extent: getOGCLayerExtent(description)
     });
 
     if (defined(description.url)) {
         layer.url = description.url;
-    } else if (description.type === 'CKAN') {
-        for (var i = 0; i < description.resources.length; i++) {
-            if (description.resources[i].format.toUpperCase() === 'JSON') {
-                layer.url = description.resources[i].url;
-            }
-        }
-    } else {
+    } 
+    else {
         description.count = 1000;
         layer.url = viewModel._dataManager.getOGCFeatureURL(description);
     }
 
-    //pass leaflet map object if exists
-    layer.map = viewModel.map;
+    layer.description = description;
+
     layer.proxy = description.proxy;
 
     item.layer = layer;

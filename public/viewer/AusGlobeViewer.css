@@ -1,29 +1,39 @@
 body {
-    padding: 0;
+    height: 100%;
+    width: 100%;
     margin: 0;
     overflow: hidden;
+    padding: 0;
+    background: #000;
     font-size:12px;
-    font-family: "Open Sans" sans-serif;
+    font-family: "Open Sans", sans-serif;
 }
 
-#cesiumContainer {
+.fullWindow {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
     height: 100%;
     width: 100%;
     margin: 0;
     overflow: hidden;
     padding: 0;
+    z-index: 999; /* required for IE9 */
 }
 
-#product {
-    opacity: 0.99;
-    font-size: 18pt;
-    margin: 10px;
-    padding: 0;
-    color: #fff;
-    width: 180px;
+.loadingIndicator {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -33px;
+    margin-left: -33px;
+    width: 66px;
+    height: 66px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(../images/ajax-loader.gif);
+    z-index: 999; /* required for IE9 */
 }
 
 .menu {
@@ -46,20 +56,20 @@ body {
     bottom: 100px;
     right: 20px;
     
-    opacity: 0.95;
     font-size: 9.5pt;
     padding: 0px;
     color: #444;
     width: 30px;
+    z-index: 999; /* required for IE9 */
 }
 
 .navigation-control {
     display: inline-block;
     position:relative;
-    color: #edffff;  /* For text buttons */
-    fill: #edffff;   /* For SVG buttons */
-    background: #333333;
-    border: 1px solid #555555;
+    color: #66CCFF;  /* For text buttons */
+    fill: #2EA1C3;   /* For SVG buttons */
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid gray;
     width: 30px;
     height: 30px;
     cursor: pointer;
@@ -73,18 +83,6 @@ body {
     box-shadow: 0 0 8px #fff;
 }
 
-#settings {
-    position: absolute;
-    top: 62px;
-    right: 3px;
-    
-    opacity: 0.95;
-    font-size: 9.5pt;
-    padding: 0px;
-    color: #444;
-    width: 30px;
-}
-
 #legend {
     display: block;
     position:fixed;
@@ -94,25 +92,7 @@ body {
     background-color: rgba(0,0,0,0.8);
     color: #eee;
     font-size: 11pt;
-}
-
-#toolbar {
-    position: absolute;
-    top: 40px;
-    left: 0;
-    display: inline;
-    margin: 10px;
-    padding: 0px;
-    background: white;
-}
-
-#logging {
-    position: absolute;
-    bottom: 25px;
-    right: 5px;
-    display: inline;
-    margin: 10px;
-    background: white;
+    z-index: 999; /* required for IE9 */
 }
 
 #position {
@@ -122,26 +102,11 @@ body {
     width: auto;
     font-size: 8.5pt;
     color: #fff;
-    background-color:#333333;
-    opacity: 0.9;
-    border: 1px solid #555555;
+    background-color: rgba(0,0,0,0.8);
+    border: 1px solid gray;
     padding: 3px;
+    z-index: 999; /* required for IE9 */
 }
-
-#loadingIndicator {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -33px;
-    margin-left: -33px;
-    width: 66px;
-    height: 66px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-image: url(../images/ajax-loader.gif);
-}
-
 
 .dialog {
     display: none;
@@ -195,10 +160,11 @@ li {
     top: 0;
     left: 0;
     width: 100%;
-    background-color:#333333;
-    opacity: 0.9;
-    border: 1px solid #555555;
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.65);
+    border: 1px solid gray;
     vertical-align: middle;
+    z-index: 999; /* required for IE9 */
 }
 
 .ausglobe-title-area:before {
@@ -209,14 +175,22 @@ li {
     margin-right: -0.25em;
 }
 
-.ausglobe-title-text {
+.ausglobe-title-middle {
     display: inline-block;
+    position: absolute;
     font-weight: 400;
-    font-size: 14pt;
+    font-size: 12px;
     color: #fff;
-    margin-left: 10px;
-    margin-top: 5px;
-    margin-bottom: 5px
+    right: 350px;
+    bottom: 10px;
+    color: #aaaaaa;
+    vertical-align: bottom;
+}
+
+.ausglobe-title-image {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 15px;
 }
 
 .ausglobe-title-menu {
@@ -235,8 +209,8 @@ li {
 }
 
 .ausglobe-title-menuItem {
+    display: inline-block;
     position: relative;
-    display: inline;
     color: #9A9A9B;
     font-size: 10pt;
     cursor: pointer;
@@ -244,10 +218,17 @@ li {
 
 a.ausglobe-title-menuItem {
     text-decoration: none;
+    vertical-align: middle;
+    fill: #999EA1;
+    width: 32px;
+    height: 32px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 a.ausglobe-title-menuItem:hover {
     text-decoration: underline;
+    fill: #fff;
 }
 
 .ausglobe-title-menuItem-divider {
@@ -273,27 +254,27 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-left-area {
     position: absolute;
-    left: 0;
+    left: 20px;
     width: 300px;
-    top: 100px;
+    top: 144px;
     bottom: 80px;
     pointer-events: none;
+    z-index: 999; /* required for IE9 */
 }
 
 .ausglobe-panel-button {
     pointer-events: auto;
     position: relative;
-    height: 30px;
-    border: 1px solid #555555;
-    width: 80px;
+    border: 1px solid gray;
+    width: 64px;
+    height: 64px;
     left: 0;
-    opacity: 0.95;
     font-size: 9.5pt;
-    padding: 2px;
-    background-color: #333333;
+    background-color: rgba(0, 0, 0, 0.65);
     line-height: 30px;
     cursor: pointer;
-    margin-top: 5px;
+    fill: #2EA1C3;
+    margin-top: 20px;
 
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
@@ -311,21 +292,16 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-panel-button-panel-visible {
-    left: 328px;
-
-    -webkit-transition: left 0.25s;
-    -moz-transition: left 0.25s;
-    -ms-transition: left 0.25s;
-    -o-transition: left 0.25s;
-    transition: left 0.25s;
+    fill: #fff;
 }
 
 .ausglobe-panel-button-image {
     display: inline-block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    margin: auto;
+    position: relative;
+    left: 16px;
+    top: 16px;
+    width: 32px;
+    height: 32px;
 }
 
 .ausglobe-panel-button-label {
@@ -338,11 +314,14 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-panel {
     visibility: hidden;
     position: absolute;
-    top: 0;
-    left: -300px;
+    top: 20px;
+    left: -350px;
     width: 300px;
-    background-color: #FFFFFF;
+    background-color: rgba(0, 0, 0, 0.65);
     pointer-events: auto;
+    max-height: 500px;
+    overflow: auto;
+    border: 1px solid gray;
 
     -webkit-transition: visibility 0s 0.25s, left 0.25s;
     -moz-transition: visibility 0s 0.25s, left 0.25s;
@@ -353,7 +332,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-panel-visible {
     visibility: visible;
-    left: 28px;
+    left: 84px;
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
     -ms-transition: left 0.25s;
@@ -366,17 +345,17 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-item-header {
     position: relative;
-    margin: 1px;
-    background-color: #E3E4E5;
+    margin: 2px;
     cursor: pointer;
+    background-color: black;
 }
 
 .ausglobe-accordion-item-header-label {
     display: inline-block;
     padding: 10px;
-    color: #0066CC;
-    font-weight: bold;
-    font-size: 12pt
+    color: #66CCFF;
+    font-weight: 600;
+    font-size: 15px;
 }
 
 .ausglobe-accordion-item-header-arrow {
@@ -390,7 +369,7 @@ a.ausglobe-title-menuItem:hover {
     visibility: hidden;
     position: relative;
     max-height: 0px;
-    overflow: auto;
+    overflow: hidden;
 
     -webkit-transition: max-height 0.25s, visibility 0s 0.25s;
     -moz-transition: max-height 0.25s, visibility 0s 0.25s;
@@ -401,7 +380,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-accordion-item-content-visible {
     visibility: visible;
-    max-height: 400px; /* TODO: set this dynamically based on number of accordion items */
+    max-height: none;
 
     -webkit-transition: max-height 0.25s;
     -moz-transition: max-height 0.25s;
@@ -411,23 +390,27 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-category {
-    padding: 10px;
 }
 
 .ausglobe-accordion-category-header {
     cursor: pointer;
+    padding: 10px;
 }
 
 .ausglobe-accordion-category-header-arrow {
     display: inline-block;
     position: relative;
     top: 5px;
+    fill: #66CCFF;   /* For SVG buttons */
+    width: 24px;
+    height: 24px;
 }
 
 .ausglobe-accordion-category-header-label {
     display: inline-block;
-    color: #0066CC;
-    font-size: 11pt;
+    color: #66CCFF;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .ausglobe-accordion-category-content {
@@ -441,26 +424,42 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-accordion-category-item {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.ausglobe-now-viewing-no-data {
+    color: white;
+    font-style: italic;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 10px;
 }
 
 .ausglobe-accordion-category-item-label {
     display: inline-block;
     position: relative;
-    font-size: 11pt;
+    font-weight: 300;
+    font-size: 14px;
+    color: white;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 5px;
 }
 
 .ausglobe-accordion-category-item-enabled {
-    background-color: #CCDDD8;
+    background-color: rgba(128, 128, 128, 0.65);
     cursor: pointer;
 }
 
 .ausglobe-accordion-category-item-checkbox {
+    fill: #66CCFF;
     display: inline-block;
     position: relative;
     top: 4px;
+    left: 0px;
+    height: 24px;
+    width: 24px;
     cursor: pointer;
 }
 
@@ -472,7 +471,7 @@ a.ausglobe-title-menuItem:hover {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 10px;
-    color: #0066CC;
+    color: #66CCFF;
     cursor: pointer;
 }
 
@@ -482,6 +481,7 @@ a.ausglobe-title-menuItem:hover {
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 5px;
+    color: white;
 }
 
 .ausglobe-imagery-option {
@@ -496,9 +496,12 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-search-form {
     position: absolute;
     display: inline-block;
-    margin: 0 3px;
-    top: 50px;
-    left: 5px;
+    top: 80px;
+    left: 20px;
+    z-index: 999; /* required for IE9 */
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 15px;
+    border: 1px solid gray;
 }
 
 .ausglobe-search-form .ausglobe-search-input {
@@ -528,13 +531,13 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-search-button {
-    background-color: #303336;
+    background-color: #2EA1C3;
     display: inline-block;
     position: absolute;
     cursor: pointer;
     width: 32px;
-    top: 1px;
-    right: 1px;
+    top: 16px;
+    right: 16px;
     height: 30px;
     vertical-align: middle;
     fill: #edffff;
@@ -551,6 +554,7 @@ a.ausglobe-title-menuItem:hover {
     top: 0;
     bottom: 0;
     background-color: rgba(0,0,0,0.8);
+    z-index: 1000; /* required for IE9 */
 }
 
 .ausglobe-info {
@@ -595,4 +599,100 @@ a.ausglobe-title-menuItem:hover {
     position: relative;
     left: 10px;
     right: 10px;
+}
+
+.ausglobe-add-data-message {
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
+    padding: 10px;
+}
+
+.ausglobe-upload-file-button {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.ausglobe-user-service-form {
+    position: relative;
+    padding: 10px;
+    width: 100%;
+    min-height: 90px;
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.ausglobe-button {
+    position: absolute;
+    display: block;
+    height: 30px;
+    border: 1px solid #555555;
+    width: 80px;
+    right: 0;
+    font-size: 9pt;
+    padding: 2px;
+    background-color: #333333;
+    color: white;
+    line-height: 30px;
+    cursor: pointer;
+    margin-top: 5px;
+    text-align: center
+}
+
+.ausglobe-wfs-url-input {
+    width: 100%;
+}
+
+.ausglobe-accordion-category-loading {
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
+}
+
+@media print {
+  .fullWindow { position: initial; }
+  .ausglobe-accordion-item, .navigation-controls {display: none; }
+  .ausglobe-left-area, .ausglobe-title-area {display: none; }
+  .ausglobe-search-button, .ausglobe-search-form {display: none; }
+}
+
+#cesiumContainer .cesium-widget-credits {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #ffffff;
+    font-size: 9px;
+    text-shadow: 0px 0px 1px #000000;
+    padding: 5px;
+    font-family: "Open Sans", sans-serif;
+}
+
+#cesiumContainer .cesium-widget-credits a {
+    text-decoration: none;
+}
+
+#cesiumContainer .cesium-widget-credits a:link {
+    color: white;
+}
+
+#cesiumContainer .cesium-widget-credits a:visited {
+    color: white;
+}
+
+#cesiumContainer .cesium-widget-credits a:hover {
+    text-decoration: underline;
+}
+
+#cesiumContainer .cesium-credit-imageContainer {
+    display: none;
+}
+
+.cesium-credit-text:first-child {
+    font-weight: bolder;
+}
+
+.cesium-credit-text:nth-child(3) {
+    font-weight: bolder;
 }

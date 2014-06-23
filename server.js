@@ -1,7 +1,10 @@
+"use strict";
+
 /*global require,__dirname*/
 /*jshint es3:false*/
 var path = require('path');
 var express = require('express');
+var url = require('url');
 
 var mime = express.static.mime;
 mime.define({
@@ -22,14 +25,21 @@ var proxyAllowedHosts = {
     'spatialreference.org' : true,
     'www2.landgate.wa.gov.au' : true,
     'geofabric.bom.gov.au' : true,
-    'www.ga.gov.au' : true
+    'www.ga.gov.au' : true,
+    'www.googleapis.com' : true,
+    'data.gov.au' : true
 };
 
-app.get('/proxy', function(req, res) {
-    var remoteUrl = Object.keys(req.query)[0];
-    if (!proxyAllowedHosts[url.parse(remoteUrl).hostname.toLowerCase()]) {
-        res.send(400, 'Host it not in list of allowed hosts.');
-        return;
+app.get(/^\/proxy\/(.+)$/, function(req, res) {
+    var remoteUrl = req.params[0];
+    if (remoteUrl.indexOf('http') !== 0) {
+        remoteUrl = 'http://' + remoteUrl;
+    }
+
+    var url = req.url;
+    var queryStartIndex = url.indexOf('?');
+    if (queryStartIndex >= 0) {
+        remoteUrl += url.substring(queryStartIndex);
     }
 
     request.get(remoteUrl).pipe(res);

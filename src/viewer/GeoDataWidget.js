@@ -4,7 +4,7 @@
 */
 "use strict";
 
-/*global require,Cesium*/
+/*global require,Cesium,URI,$,alert,confirm*/
 var GeoData = require('../GeoData');
 
 var DeveloperError = Cesium.DeveloperError;
@@ -26,104 +26,41 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     this.map = undefined;
     this.regionExt = undefined;
 
-    var uri = new URI(window.location);
-    var host = 'http://' + uri.hostname();
-    if (uri.port() !== '80') {
-        host += ':' + uri.port();
-    }
-    this.visViewer = host + uri.pathname();
-
-        // Main menu buttons
-//        var div = document.createElement('div');
-//        div.id = 'product';
-//        div.innerHTML = '<p>National Map</p>';
-//        document.body.appendChild(div);
-
-//    var menu = document.createElement('div');
-//    menu.className = 'menu';
-//    document.body.appendChild(menu);
-
-//    var div = document.createElement('div');
-//    div.className = 'menuItem';
-//    div.innerHTML = '<span id="add_button" class="menu_button" title="Add maps and data">Data</span>';
-//    menu.appendChild(div);
-//
-//    div = document.createElement('div');
-//    div.className = 'menuItem';
-//    div.innerHTML = '<span id="mod_button" class="menu_button" title="Edit your maps and data">Edit</span>';
-//    menu.appendChild(div);
-//
-//    div = document.createElement('div');
-//    div.className = 'menuItem';
-//    div.innerHTML = '<span id="share_button" class="menu_button" title="Share what you\'ve created">Share</span>';
-//    menu.appendChild(div);
-
-//    $(".menu_button").button({
-//        text: true
-////        icons: { primary: "ui-icon-gear" }
-//    }).css({ 'background': '#333333',
-//        'color': '#eeeeee',
-//        'border-color': '#555555',
-//        'width': '80px',
-//        'border-radius': '1px'
-//        });
-//
     var that = this;
-//    $("#add_button").click(function () {
-//        closeDialogs();
-//        loadJson('./data_collection.json').then(function (obj) {
-//            that.showSelectDialog(obj);
-//        });
-//    });
-//    $("#mod_button").click(function () {
-//        closeDialogs();
-//        that.showLayersDialog();
-//    });
-//    $("#share_button").click(function () {
-//        closeDialogs();
-//        if (that.scene) {
-//            that.geoDataManager.shareRequest = true;
-//        }
-//        else {
-//            that.geoDataManager.setShareRequest({});
-//        }
-//    });
 
     //Dialogs
     var div = document.createElement('div');
     div.id = 'dialogInfo';
-    div.class = "dialog";
+    div.className = "dialog";
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogServices';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = '<div id="list2" class="list"></div> \
             <div>URL: <br /><input type="text" id="layer_url"></div>';
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogSelect';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = '<div id="list1" class="list"></div> \
             <div id="details" class="info"></div>';
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogLayers';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = '<div id="list3" class="list"></div>';
     document.body.appendChild(div);
 
     div = document.createElement('div');
     div.id = 'dialogShare';
-    div.class = "dialog";
+    div.className = "dialog";
     div.innerHTML = ' \
             <form id="modalform" name="modalform"> \
                 <img id="img1" src="./images/default.jpg" width="256"/> \
-                     Title: <br /><input type="text" name="title" id="title" /><br /> \
-                     Description: <br /><input type="text" name="description" id="description" /><br /> \
-                     Tags: <br /><input type="text" name="tags" id="tags" /> \
+                URL: <br /><input type="text" name="url" id="url"/> \
             </form>';
     document.body.appendChild(div);
 
@@ -178,16 +115,14 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
         that.postViewToServer(request);
     });
 
-    geoDataManager.loadUrl(window.location);
-
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
 
-}
+};
 
 GeoDataWidget.prototype.setExtent = function(ext) {
     this.regionExt = ext;
-}
+};
 
 // -----------------------------
 // Handle file drop for CZML/GeoJSON/CSV
@@ -201,24 +136,7 @@ function handleError(e) {
     alert('error loading data: ' + e.what);
 }
 
-function loadLocalFile(path) {
-    if (typeof path === 'undefined') {
-        throw new DeveloperError('path is required');
-    }
-    var reader = new FileReader();
-    reader.readAsText(path);
-    var deferred = when.defer();
-    reader.onload = function (event) {
-        var allText = event.target.result;
-        deferred.resolve(allText);
-    };
-    reader.onerror = function (e) {
-        deferred.reject(e);
-    };
-    return deferred.promise;
-};
-
-var dropHandler = function (evt, that) {
+function dropHandler(evt, that) {
     evt.stopPropagation();
     evt.preventDefault();
 
@@ -230,46 +148,8 @@ var dropHandler = function (evt, that) {
     for (var ndx = 0; ndx < count; ndx++) {
         var file = files[ndx];
         console.log(' - File Name: ' + file.name);
-        if (that.geoDataManager.formatSupported(file.name)) {
-            when(loadLocalFile(file), function (text) {
-                that.geoDataManager.zoomTo = true;
-                that.geoDataManager.loadText(text, file.name);
-            });
-        }
-        else {
-            if (file.size > 1000000) {
-                alert('File is too large to send to conversion service.  Click here for alternative file conversion options.');
-            }
-            else if (false) {
-                    //TODO: check against list of support extensions
-                alert('File format is not supported by conversion service.  Click here for alternative file conversion options.');
-            }
-            else {
-                if (!confirm('No local format handler.  Click OK to convert via our web service.')) {
-                    return;
-                }
-                // generate form data to submit text for conversion
-                var formData = new FormData();
-                formData.append('input_file', file);
 
-                var xhr = new XMLHttpRequest;
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-                        var response = xhr.responseText;
-                        if (response.substring(0,1) !== '{') {
-                            console.log(response);
-                            alert('Error trying to convert: ' + file.name);
-                        }
-                        else {
-                            that.geoDataManager.zoomTo = true;
-                            that.geoDataManager.loadText(response, file.name+'.geojson');
-                        }
-                    }
-                }
-                xhr.open('POST', that.geoDataManager.visStore + '/convert');
-                xhr.send(formData);
-            }
-        }
+        that.geoDataManager.addFile(file);
     }
 }
 
@@ -312,23 +192,24 @@ function showHTMLTextDialog(title_text, display_text, b_modal, close_function) {
 
 function getOGCLayerExtent(layer) {
     var rect;
+    var box;
     if (layer.WGS84BoundingBox) {
         var lc = layer.WGS84BoundingBox.LowerCorner.split(" ");
         var uc = layer.WGS84BoundingBox.UpperCorner.split(" ");
         rect = Rectangle.fromDegrees(parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]));
     }
     else if (layer.LatLonBoundingBox) {
-        var box = layer.LatLonBoundingBox || layer.BoundingBox;
+        box = layer.LatLonBoundingBox || layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.minx), parseFloat(box.miny),
             parseFloat(box.maxx), parseFloat(box.maxy));
     }
     else if (layer.EX_GeographicBoundingBox) {
-        var box = layer.EX_GeographicBoundingBox;
+        box = layer.EX_GeographicBoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.westBoundLongitude), parseFloat(box.southBoundLatitude),
             parseFloat(box.eastBoundLongitude), parseFloat(box.northBoundLatitude));
     }
     else if (layer.BoundingBox) {
-        var box = layer.BoundingBox;
+        box = layer.BoundingBox;
         rect = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
             parseFloat(box.east), parseFloat(box.north));
     }
@@ -414,7 +295,7 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
         selected: function (event, ui) {
             var item = $('#list1 .ui-selected');
             var idx = item[0].id;
-            var layer = sel_list[parseInt(idx)];
+            var layer = sel_list[parseInt(idx, 10)];
             var text = '<b>Selected:</b><br>' + layer.Title;
             if (layer.Abstract !== undefined) {
                 text += '<br>' + layer.Abstract;
@@ -422,10 +303,10 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
                 //capture the layer extent for display and later use
             data_extent = getOGCLayerExtent(layer);
             if (data_extent) {
-                text += '<br>'+CesiumMath.toDegrees(data_extent.west).toFixed(3)
-                        +', '+CesiumMath.toDegrees(data_extent.south).toFixed(3)
-                        +'<br>'+CesiumMath.toDegrees(data_extent.east).toFixed(3)
-                        +', '+CesiumMath.toDegrees(data_extent.north).toFixed(3);
+                text += '<br>' + CesiumMath.toDegrees(data_extent.west).toFixed(3) +
+                        ', ' + CesiumMath.toDegrees(data_extent.south).toFixed(3) +
+                        '<br>' + CesiumMath.toDegrees(data_extent.east).toFixed(3) +
+                        ', ' + CesiumMath.toDegrees(data_extent.north).toFixed(3);
             }
             $('.info').html(text);
         }
@@ -471,7 +352,7 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
             break;
         }
     }
-}
+};
 
 // Pick Service Dialog
 GeoDataWidget.prototype.showServicesDialog = function (services) {
@@ -523,7 +404,7 @@ GeoDataWidget.prototype.showServicesDialog = function (services) {
 
     var sel_list = [];
     for (var n = 0; n < services.Layer.length; n++) {
-        var name = services.Layer[n].name
+        var name = services.Layer[n].name;
         list.append('<p class="data_type"><b>' + name + '</b></p>');
         var layers = services.Layer[n].Layer;
         for (var i = 0; i < layers.length; i++) {
@@ -533,7 +414,7 @@ GeoDataWidget.prototype.showServicesDialog = function (services) {
             sel_list.push(item);
         }
     }
-}
+};
 
 // Update layers dialog
 GeoDataWidget.prototype.showLayersDialog = function () {
@@ -612,50 +493,25 @@ GeoDataWidget.prototype.showLayersDialog = function () {
             that.geoDataManager.show(layer, false);
         }
     });
-}
+};
 
-
-// share the link handlers
-function fbShare(url, record_url, image_url) {
-    //get the record from the server and use it to populate the fields
-    when(loadJson(record_url), function (obj) {
-        var winWidth = 640;
-        var winHeight = 480;
-        var winTop = (screen.height / 2) - (winHeight / 2);
-        var winLeft = (screen.width / 2) - (winWidth / 2);
-        var str1 = encodeURI('http://www.facebook.com/sharer.php?s=100&p[title]=' + obj.title + '&p[summary]=' + obj.description + '&p[url]=' + url + '&p[images][0]=' + image_url);
-        var str2 = 'sharer';
-        var str3 = 'top=' + winTop + ',left=' + winLeft + ',toolbar=0,status=0,width=' + winWidth + ',height=' + winHeight;
-        window.open(str1, str2, str3);
-    });
-}
 
 function embedShare(url) {
-    var str = '&lt;iframe style="width: 720px; height: 405px; border: none;" src="' + url + '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen&gt;&lt;/iframe&gt;';
-    showHTMLTextDialog("IFrame to Embed in HTML", str, true);
 }
-
-function linkShare(url) {
-    var str = 'You can use this link to view or share your visualization:<br><a href="' + url + '" target="_blank">' + url + '</a>';
-    showHTMLTextDialog("Link to Visualization", str, true);
-}
-
-// Dialog to post current view to server
+// Dialog to share a visualization
 GeoDataWidget.prototype.postViewToServer = function (request) {
     var that = this;
+    
+    var url = that.geoDataManager.getShareRequestURL(request);
 
-    var formValues = request;
-
-    $("#title").attr("value", formValues.title);
-    $("#description").attr("value", formValues.description);
-    $("#tags").attr("value", formValues.tags);
-    $("#img1").attr("src", formValues.image);
+    $("#img1").attr("src", request.image);
+    $("#url").attr("value", url);
 
     //Shows dialog
     $("#dialogShare").dialog({
         title: "Share",
         width: 300,
-        height: 500,
+        height: 400,
         modal: false,
         position: {
             my: "left top",
@@ -664,32 +520,28 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
             of: window
         },
         buttons: {
-            "Cancel": function () {
-                $(this).dialog("close");
+            'Copy': function () {
+                window.prompt("To copy to clipboard: Ctrl+C, Enter", url);
+                $(this).dialog('close');
             },
-            "Share": function () {
-                var formEntries = [];
-                $.each($('#dialogShare').serializeArray(), function(i, field) {
-                    formEntries[field.name] = field.value;
-                });
-
-                // generate form data to submit
+            'Embed': function () {
+                var str = '&lt;iframe style="width: 720px; height: 405px; border: none;" src="' + url;
+                str += '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen&gt;&lt;/iframe&gt;';
+                showHTMLTextDialog("IFrame to Embed in HTML", str, true);
+                $(this).dialog('close');
+            },
+            'GeoSpace': function () {
                 var formData = new FormData();
-                for (var fld in formValues) {
-                    if (formValues.hasOwnProperty(fld) === false)
-                        continue;
-                    if (formEntries[fld]) {
-                        formData.append(fld, formEntries[fld]);
-                    }
-                    else {
-                        formData.append(fld, formValues[fld]);
+                for (var fld in request) {
+                    if (request.hasOwnProperty(fld)) {
+                        formData.append(fld, request[fld]);
                     }
                 }
                 //TODO: include,resize image here based on user setting
                 // submit and use the returned url provide share links
-                var xhr = new XMLHttpRequest;
+                var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
+                    if (xhr.readyState === 4) {
                         console.log('VisStore response: ' + xhr.responseText);
                         if (xhr.responseText === '') {
                             alert('Unable to send view to the server');
@@ -697,41 +549,22 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                         }
                         else {
                             var resp = JSON.parse(xhr.responseText);
-                            var url = that.visViewer + '?vis_id=' + resp.vis_id;
-                            $("#dialogShare").dialog('option', 'buttons', {
-                                'FB': function () {
-                                    var record_url = that.geoDataManager.visStore + '/get_rec?vis_id=' + resp.vis_id;
-                                    var image_url = that.geoDataManager.visStore + '/images/' + resp.vis_id + '_thumb.jpg';
-                                    fbShare(url, server_url, image_url);
-                                    $(this).dialog('close');
-                                },
-                                'Embed': function () {
-                                    embedShare(url);
-                                    $(this).dialog('close');
-                                },
-                                'Link': function () {
-                                    linkShare(url);
-                                    $(this).dialog('close');
-                                },
-/*                                    //TODO: disable if not logged in
-                                'Gallery': function () {
-                                    url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
-                                    window.parent.document.location.assign(url);
-                                    $(this).dialog('close');
-                                },
-*/                                    "Close": function () {
-                                    $(this).dialog("close");
-                                }
-                            });
-
+                            var vis_url = that.geoDataManager.visServer + '?vis_id=' + resp.vis_id;
+                            var geo_url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
+                            var str = 'Shortened Link:<br><a href="' + vis_url + '" target="_blank">' + vis_url + '</a>';
+                            str +=  '<br><br><a href="' + geo_url + '" target="_blank">Go to GeoSpace</a>';
+                            showHTMLTextDialog("Link to Visualization", str, true);
+                            $(this).dialog('close');
                        }
                     }
-                }
+                };
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
-            }
+
+             }
         }
+
     });
-}
+};
 
 module.exports = GeoDataWidget;

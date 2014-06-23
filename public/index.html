@@ -28,6 +28,9 @@
     <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
     <script src="./third_party/bing.js"></script>
     <script src="./third_party/esri-leaflet.js"></script>
+    <script src="./third_party/html2canvas.js"></script>
+
+    <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-image/v0.0.3/leaflet-image.js'></script>  -->
 
     <link rel="stylesheet" href="cesium/Source/Widgets/widgets.css" media="screen">
     <link rel="stylesheet" href="viewer/AusGlobeViewer.css">
@@ -35,9 +38,9 @@
     <script src="cesium/Build/Cesium/Cesium.js"></script>
 </head>
 
-<body style="background: #000;">
+<body>
 
-    <div id="cesiumContainer"></div>
+    <div id="cesiumContainer" class="fullWindow"></div>
     <div id="loadingIndicator" class="loadingIndicator"></div>
 
     <script src="build/ausglobe.js"></script>
