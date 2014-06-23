@@ -619,6 +619,9 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             for (var i = 0; i < imageryTiles.length; ++i) {
                 var terrainImagery = imageryTiles[i];
                 var imagery = terrainImagery.readyImagery;
+                if (!defined(imagery)) {
+                    continue;
+                }
                 var provider = imagery.imageryLayer.imageryProvider;
                 if (!(provider instanceof WebMapServiceImageryProvider)) {
                     continue;
@@ -640,60 +643,79 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 return;
             }
 
-            when.all(promises, function(results) {
-                function findGoodIdProperty(properties) {
-                    for (var key in properties) {
-                        if (properties.hasOwnProperty(key) && properties[key]) {
-                            if (/name/i.test(key) || /title/i.test(key)) {
-                                return properties[key];
-                            }
-                        }
-                    }
+            var nextPromiseIndex = 0;
 
-                    return undefined;
+            function waitForNextLayersResponse() {
+                if (nextPromiseIndex >= promises.length) {
+                    that.viewer.selectedObject = new DynamicObject('None');
+                    that.viewer.selectedObject.description = {
+                        getValue : function() {
+                            return 'No features found.';
+                        }
+                    };
+                    return;
                 }
 
-                function describe(properties) {
-                    var html = '<table class="cesium-geoJsonDataSourceTable">';
-                    for ( var key in properties) {
-                        if (properties.hasOwnProperty(key)) {
-                            var value = properties[key];
-                            if (defined(value)) {
-                                if (typeof value === 'object') {
-                                    html += '<tr><td>' + key + '</td><td>' + describe(value) + '</td></tr>';
-                                } else {
-                                    html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+                when(promises[nextPromiseIndex++], function(result) {
+                    function findGoodIdProperty(properties) {
+                        for (var key in properties) {
+                            if (properties.hasOwnProperty(key) && properties[key]) {
+                                if (/name/i.test(key) || /title/i.test(key)) {
+                                    return properties[key];
                                 }
                             }
                         }
+
+                        return undefined;
                     }
-                    html += '</table>';
-                    return html;
-                }
 
-                var i;
-                for (i = 0; i < results.length; ++i) {
-                    console.log(results[i]);
-                }
-
-                // Show information for the first selected feature.
-                var feature;
-                for (i = 0; !defined(feature) && i < results.length; ++i) {
-                    if (defined(results[i]) && defined(results[i].features) && results[i].features.length > 0) {
-                        feature = results[i].features[0];
-                    }
-                }
-
-                if (defined(feature)) {
-                    that.viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature.properties));
-                    var description = describe(feature.properties);
-                    that.viewer.selectedObject.description = {
-                        getValue : function() {
-                            return description;
+                    function describe(properties) {
+                        var html = '<table class="cesium-geoJsonDataSourceTable">';
+                        for ( var key in properties) {
+                            if (properties.hasOwnProperty(key)) {
+                                var value = properties[key];
+                                if (defined(value)) {
+                                    if (typeof value === 'object') {
+                                        html += '<tr><td>' + key + '</td><td>' + describe(value) + '</td></tr>';
+                                    } else {
+                                        html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+                                    }
+                                }
+                            }
                         }
-                    };
-                }
-            });
+                        html += '</table>';
+                        return html;
+                    }
+
+                    if (!defined(result) || !defined(result.features) || result.features.length === 0) {
+                        waitForNextLayersResponse();
+                        return;
+                    }
+
+                    // Show information for the first selected feature.
+                    var feature = result.features[0];
+                    if (defined(feature)) {
+                        that.viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature.properties));
+                        var description = describe(feature.properties);
+                        that.viewer.selectedObject.description = {
+                            getValue : function() {
+                                return description;
+                            }
+                        };
+                    } else {
+                        that.viewer.selectedObject = new DynamicObject('None');
+                        that.viewer.selectedObject.description = {
+                            getValue : function() {
+                                return 'No features found.';
+                            }
+                        };
+                    }
+                }, function() {
+                    waitForNextLayersResponse();
+                });
+            }
+
+            waitForNextLayersResponse();
 
             // Add placeholder information to the infobox so the user knows something is happening.
             that.viewer.selectedObject = new DynamicObject('Loading...');
