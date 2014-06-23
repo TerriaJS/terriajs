@@ -685,7 +685,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 }
 
                 if (defined(feature)) {
-                    that.viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature));
+                    that.viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature.properties));
                     var description = describe(feature.properties);
                     that.viewer.selectedObject.description = {
                         getValue : function() {
