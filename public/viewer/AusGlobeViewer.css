@@ -696,3 +696,18 @@ a.ausglobe-title-menuItem:hover {
 .cesium-credit-text:nth-child(3) {
     font-weight: bolder;
 }
+
+#cesiumContainer .cesium-infoBox {
+    top: 164px;
+    border-radius: 0px;
+    border: 1px solid gray;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+#cesiumContainer .cesium-infoBox-title {
+    background-color: black;
+}
+
+#cesiumContainer button.cesium-infoBox-camera {
+    display: none;
+}
