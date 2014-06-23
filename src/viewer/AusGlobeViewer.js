@@ -184,6 +184,9 @@ var AusGlobeViewer = function(geoDataManager) {
             that.frameChecker.forceFrameUpdate();
         }
     });
+
+    this.geoDataManager.loadUrl(window.location);
+
 };
 
 
