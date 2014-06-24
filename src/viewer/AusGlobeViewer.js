@@ -832,10 +832,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             if (that.frameChecker.skipFrame(that.scene, date)) {
                 return;
             }
-            //render layers
-            if (that.geoDataManager) {
-                that.geoDataManager.update(date);
-            }
             that.scene.base_render(date);
 
             //capture the scene image right after the render and make
