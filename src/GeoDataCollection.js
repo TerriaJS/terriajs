@@ -63,13 +63,7 @@ GeoDataCollection.prototype.setViewer = function(obj) {
     this.map = obj.map;
 
     if (this.scene) {
-        this.dataSourceDisplay = new Cesium.DataSourceDisplay(this.scene, this.dataSourceCollection);
         this.imageryLayersCollection = this.scene.globe.imageryLayers;
-    }
-    else {
-        if (this.dataSourceDisplay !== undefined) {
-            this.dataSourceDisplay.destroy();
-        }
     }
     this.ViewerChanged.raiseEvent(this, obj);
     
@@ -111,18 +105,6 @@ GeoDataCollection.prototype._getUniqueLayerName = function(name) {
         }
     }
     return name;
-};
-
-/**
-* Update the GeoDataCollection based on the current time
-*
-* @memberof GeoDataCollection
-*
-*/
-GeoDataCollection.prototype.update = function(date) {
-    if (this.dataSourceDisplay !== undefined && !this.dataSourceDisplay.isDestroyed()) {
-        this.dataSourceDisplay.update(date);
-    }
 };
 
 /**
