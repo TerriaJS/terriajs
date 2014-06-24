@@ -53,7 +53,7 @@ body {
 
 .navigation-controls {
     position: absolute;
-    bottom: 100px;
+    bottom: 20px;
     right: 20px;
     
     font-size: 9.5pt;
@@ -255,7 +255,7 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-left-area {
     position: absolute;
     left: 20px;
-    width: 300px;
+    width: 360px;
     top: 144px;
     bottom: 80px;
     pointer-events: none;
@@ -315,8 +315,8 @@ a.ausglobe-title-menuItem:hover {
     visibility: hidden;
     position: absolute;
     top: 20px;
-    left: -350px;
-    width: 300px;
+    left: -400px;
+    width: 360px;
     background-color: rgba(0, 0, 0, 0.65);
     pointer-events: auto;
     max-height: 500px;
@@ -695,4 +695,29 @@ a.ausglobe-title-menuItem:hover {
 
 .cesium-credit-text:nth-child(3) {
     font-weight: bolder;
+}
+
+#cesiumContainer .cesium-infoBox {
+    top: 164px;
+    right: 20px;
+    border-radius: 0px;
+    border: 1px solid gray;
+    background-color: rgba(0, 0, 0, 0.65);
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: white;
+    overflow: auto;
+    max-height: 500px;
+}
+
+#cesiumContainer .cesium-infoBox-title {
+    background-color: black;
+    font-size: 15px;
+    font-weight: 600;
+    color: #66CCFF;
+}
+
+#cesiumContainer button.cesium-infoBox-camera {
+    display: none;
 }
