@@ -61,13 +61,7 @@ GeoDataCollection.prototype.setViewer = function(obj) {
     this.map = obj.map;
 
     if (this.scene) {
-        this.dataSourceDisplay = new Cesium.DataSourceDisplay(this.scene, this.dataSourceCollection);
         this.imageryLayersCollection = this.scene.globe.imageryLayers;
-    }
-    else {
-        if (this.dataSourceDisplay !== undefined) {
-            this.dataSourceDisplay.destroy();
-        }
     }
     this.ViewerChanged.raiseEvent(this, obj);
     
@@ -109,18 +103,6 @@ GeoDataCollection.prototype._getUniqueLayerName = function(name) {
         }
     }
     return name;
-};
-
-/**
-* Update the GeoDataCollection based on the current time
-*
-* @memberof GeoDataCollection
-*
-*/
-GeoDataCollection.prototype.update = function(date) {
-    if (this.dataSourceDisplay !== undefined && !this.dataSourceDisplay.isDestroyed()) {
-        this.dataSourceDisplay.update(date);
-    }
 };
 
 /**
@@ -278,11 +260,14 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     
     //store the current server location for use when creating urls
     this.visServer = uri.protocol() + '://' + uri.host();
+    
+        //TODO: remove need for this
+    var visStore = 'http://localhost:3000';
 
     var visUrl = uri_params.vis_url;
     var visID = uri_params.vis_id;
     if (visID) {
-        visUrl = this.visStore + '/get_rec?vis_id=' + visID;
+        visUrl = visStore + '/get_rec?vis_id=' + visID;
     }
     var visStr = uri_params.vis_str;
     
