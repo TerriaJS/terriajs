@@ -29,6 +29,7 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     var that = this;
 
     //Dialogs
+    //Dialogs
     var div = document.createElement('div');
     div.id = 'dialogInfo';
     div.className = "dialog";
@@ -37,21 +38,8 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     div = document.createElement('div');
     div.id = 'dialogServices';
     div.className = "dialog";
-    div.innerHTML = '<div id="list2" class="list"></div> \
-            <div>URL: <br /><input type="text" id="layer_url"></div>';
-    document.body.appendChild(div);
-
-    div = document.createElement('div');
-    div.id = 'dialogSelect';
-    div.className = "dialog";
     div.innerHTML = '<div id="list1" class="list"></div> \
             <div id="details" class="info"></div>';
-    document.body.appendChild(div);
-
-    div = document.createElement('div');
-    div.id = 'dialogLayers';
-    div.className = "dialog";
-    div.innerHTML = '<div id="list3" class="list"></div>';
     document.body.appendChild(div);
 
     div = document.createElement('div');
@@ -60,7 +48,7 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     div.innerHTML = ' \
             <form id="modalform" name="modalform"> \
                 <img id="img1" src="./images/default.jpg" width="256"/> \
-                URL: <br /><input type="text" name="url" id="url"/> \
+                Shareable URL: <br /><input type="text" name="url" id="url"/> \
             </form>';
     document.body.appendChild(div);
 
@@ -111,10 +99,15 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
     });
 
     geoDataManager.ShareRequest.addEventListener(function(collection, request) {
-        console.log('Share Request Event:', request);
-        that.postViewToServer(request);
+        console.log('Share Request Event:');
+        that.showShareDialog(request);
     });
 
+    //load list of available services for National Map
+    Cesium.loadJson('./nm_services.json').then(function (obj) {
+        that.services = obj.services;
+    });
+    
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
 
@@ -153,43 +146,6 @@ function dropHandler(evt, that) {
     }
 }
 
-function closeDialog(name) {
-    if ($(name).hasClass('ui-dialog-content') && $(name).dialog( "isOpen" ) === true) {
-        $(name).dialog("close");
-    }
-}
-
-function closeDialogs() {
-    closeDialog("#dialogServices");
-    closeDialog("#dialogSelect");
-    closeDialog("#dialogLayers");
-    closeDialog("#dialogShare");
-}
-
-//Simple html dialog
-function showHTMLTextDialog(title_text, display_text, b_modal, close_function) {
-    if (b_modal === undefined) {
-        b_modal = true;
-    }
-    if (close_function === undefined) {
-        close_function = function() {};
-    }
-    $('#dialogInfo').html(display_text);
-    $('#dialogInfo').dialog({
-        close: close_function,
-        title: title_text,
-        modal: b_modal,
-        width: 300,
-        position: {
-            my: "middle center",
-            at: "middle center",
-            offset: "20 0",
-            of: window
-        }
-    });
-}
-
-
 function getOGCLayerExtent(layer) {
     var rect;
     var box;
@@ -216,77 +172,58 @@ function getOGCLayerExtent(layer) {
     return rect;
 }
 
-// Pick layer dialog
-GeoDataWidget.prototype.showSelectDialog = function (collection) {
-    var data_extent;
-    var that = this;
-
-    console.log(collection);
-
-    //TODO: add checkbox to set extent from current view (default on)
-
-    $('#list1').height('250px');
-    $("#dialogSelect").dialog({
-        title: collection.name,
+//Simple html dialog
+function showHTMLTextDialog(title_text, display_text, b_modal, close_function) {
+    if (b_modal === undefined) {
+        b_modal = true;
+    }
+    if (close_function === undefined) {
+        close_function = function() {};
+    }
+    $('#dialogInfo').html(display_text);
+    $('#dialogInfo').dialog({
+        close: close_function,
+        title: title_text,
+        modal: b_modal,
         width: 300,
-        height: 500,
+        position: {
+            my: "middle center",
+            at: "middle center",
+            offset: "20 0",
+            of: window
+        }
+    });
+}
+
+
+// Pick layer dialog
+GeoDataWidget.prototype.showServicesDialog = function (request) {
+    var that = this;
+    
+    var services = that.services;
+
+    $('#list1').height('50px');
+    $("#dialogServices").dialog({
+        title: 'Aditional Services (Experimental)',
+        width: 300,
+        height: 300,
         modal: false,
         position: {
             my: "left top",
             at: "left top",
-            offset: "85 78",
+            offset: "150 200",
             of: window
         },
         buttons: {
-            'services' : {
-                text: 'Other Data', click: function () {
-                    $(this).dialog("close");
-                    that.showServicesDialog(that.geoDataManager.serviceList);
+            "Select": function () {
+                var item = $('#list1 .ui-selected');
+                if (item !== undefined) {
+                    var id = item[0].id;
                 }
+                $(this).dialog('close');
             },
-            'select': {
-                text: 'Add', click: function () {
-                    var item = $('#list1 .ui-selected');
-                    var idx = item[0].id;
-                    var description = sel_list[idx];
-
-                        // Set bbox for call
-                    if (data_extent !== undefined) {
-                        description.extent = data_extent;
-                    }
-                    if (that.regionExt !== undefined) {
-                        description.extent = that.regionExt;
-                    }
-
-                    var layer = new GeoData({
-                        name: description.Name,
-                        type: description.type,
-                        extent: description.extent
-                    });
-
-                    console.log(description);
-                    if (sel_list[idx].url !== undefined) {
-                        layer.url = sel_list[idx].url;
-                    }
-                    else if (description.type === 'CKAN') {
-                        for (var i = 0; i < sel_list[idx].resources.length; i++) {
-                            if (sel_list[idx].resources[i].format.toUpperCase() === 'JSON') {
-                                layer.url = sel_list[idx].resources[i].url;
-                            }
-                        }
-                    }
-                    else {
-                        // description.count = 100;
-                        layer.url = that.geoDataManager.getOGCFeatureURL(description);
-                    }
-                    //pass leaflet map object if exists
-                    layer.map = that.map;
-                    layer.proxy = description.proxy;
-
-                    that.geoDataManager.sendLayerRequest(layer);
-
-                    $(this).dialog("close");
-                }
+            'Close': function () {
+                $(this).dialog('close');
             }
         }
     });
@@ -295,18 +232,10 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
         selected: function (event, ui) {
             var item = $('#list1 .ui-selected');
             var idx = item[0].id;
-            var layer = sel_list[parseInt(idx, 10)];
-            var text = '<b>Selected:</b><br>' + layer.Title;
-            if (layer.Abstract !== undefined) {
-                text += '<br>' + layer.Abstract;
-            }
-                //capture the layer extent for display and later use
-            data_extent = getOGCLayerExtent(layer);
-            if (data_extent) {
-                text += '<br>' + CesiumMath.toDegrees(data_extent.west).toFixed(3) +
-                        ', ' + CesiumMath.toDegrees(data_extent.south).toFixed(3) +
-                        '<br>' + CesiumMath.toDegrees(data_extent.east).toFixed(3) +
-                        ', ' + CesiumMath.toDegrees(data_extent.north).toFixed(3);
+            var service = services[idx];
+            var text = '<h3>' + service.name + '</h3>';
+            if (service.description !== undefined) {
+                text += service.description;
             }
             $('.info').html(text);
         }
@@ -314,192 +243,25 @@ GeoDataWidget.prototype.showSelectDialog = function (collection) {
 
     list.html('');
     $('.info').html('');
-    var sel_list = [];
-
-    var layers = collection.Layer;
-
-    for (var n = 0; n < layers.length; n++) {
-        var datasets, parent;
-        if (layers[n].Layer === undefined) {
-            datasets = layers;
-            parent = collection;
-        }
-        else {
-            list.append('<p class="data_type"><b>' + layers[n].name + '</b></p>');
-            datasets = layers[n].Layer;
-            parent = layers[n];
-        }
-        var name;
-        for (var i = 0; i < datasets.length; i++) {
-            var item = datasets[i];
-            for (var p in parent) {
-                if (!(parent[p] instanceof Array) && item[p] === undefined) {
-                    item[p] = parent[p];
-                }
-            }
-            if (item.Title !== undefined) {
-                name = item.Title;
-            }
-            else {
-                name = item.Name.split(':');
-                name = name[name.length - 1];
-            }
-            var ndx = sel_list.length;
-            list.append('<li id=' + ndx + '>' + name + '</li>');
-            sel_list.push(item);
-        }
-        if (layers[n].Layer === undefined) {
-            break;
-        }
-    }
-};
-
-// Pick Service Dialog
-GeoDataWidget.prototype.showServicesDialog = function (services) {
-    var that = this;
-
-    $('#list2').height('300px');
-    $('#dialogServices').dialog({
-        title: services.name,
-        modal: false,
-        width: 300,
-        height: 500,
-        position: {
-            my: "left top",
-            at: "left top",
-            offset: "85 78",
-            of: window
-        },
-        buttons: {
-            "Cancel": function () {
-                $(this).dialog("close");
-            },
-            "OK": function () {
-                var description;
-                var url = $('#layer_url').val();
-                if (url === '') {
-                    var item = $('#list2 .ui-selected');
-                    var id = item[0].id;
-                    description = sel_list[id];
-                }
-                else {
-                     description = {name: 'User Entered', base_url: url, type: 'WFS', proxy: true};
-                }
-                if (description !== undefined) {
-                    console.log('Getting: ' + description.base_url);
-                    that.geoDataManager.getCapabilities(description, function(desc) { that.showSelectDialog(desc); });
-                    $(this).dialog("close");
-                }
-            }
-        }
-    });
-
-    var list = $('#list2');
-    list.selectable({
-        selected: function (event, ui) {
-            var item = $('#list2 .ui-selected');
-        }
-    });
+    
     list.html('');
-
-    var sel_list = [];
-    for (var n = 0; n < services.Layer.length; n++) {
-        var name = services.Layer[n].name;
-        list.append('<p class="data_type"><b>' + name + '</b></p>');
-        var layers = services.Layer[n].Layer;
-        for (var i = 0; i < layers.length; i++) {
-            var item = layers[i];
-            var ndx = sel_list.length;
-            list.append('<li id=' + ndx + '>' + item.name + '</li>');
-            sel_list.push(item);
-        }
+    for (var i = 0; i < services.length; i++) {
+        var name = services[i].name;
+        list.append('<li id=' + i + '>' + name + '</li>');
     }
-};
-
-// Update layers dialog
-GeoDataWidget.prototype.showLayersDialog = function () {
-    var that = this;
-
-    var layers = this.geoDataManager.layers;
-
-    $('#list3').height('300px');
-    $("#dialogLayers").dialog({
-        title: 'Edit',
-        width: 300,
-        height: 500,
-        modal: false,
-        position: {
-            my: "left top",
-            at: "left top",
-            offset: "85 78",
-            of: window
-        },
-        buttons: {
-            "Goto": function () {
-                var item = $('#list3 .ui-selected');
-                if (item !== undefined) {
-                    var id = item[0].id;
-                    var layer = layers[id];
-                    that.geoDataManager.GeoDataAdded.raiseEvent(that.geoDataManager, layer);
-                }
-            },
-            "Remove": function () {
-                var item = $('#list3 .ui-selected');
-                if (item !== undefined && confirm('Remove this layer?')) {
-                    var id = item[0].id;
-                    var layer = layers[id];
-                    that.geoDataManager.GeoDataRemoved.raiseEvent(that.geoDataManager, layer);
-                    that.geoDataManager.remove(id);
-                    //rebuild the display list
-                    list.html('');
-                    for (var i = 0; i < layers.length; i++) {
-                        var name = layers[i].name;
-            //            list.append('<li id=' + i + '>' + name + '</li>');
-                        list.append('<input type="checkbox" name="' + name + '" id=' + i + ' checked><label for=' + i + ' id=' + i + '>' + name + '</label><br>');
-                    }
-                }
-            },
-            "Edit": function () {
-                var item = $('#list3 .ui-selected');
-                if (item !== undefined) {
-                    var id = item[0].id;
-                    alert('NYI:\nCall the appropriate line/point/time/map edit dialog for : ' + layers[id].name);
-                }
-            }
-        }
-    });
-
-    var list = $('#list3');
-    list.selectable({
-        selected: function (event, ui) {
-            var item = $('#list3 .ui-selected');
-        }
-    });
-    list.html('');
-    for (var i = 0; i < layers.length; i++) {
-        var name = layers[i].name;
-//            list.append('<li id=' + i + '>' + name + '</li>');
-        var show = (layers[i].show) ? 'checked' : 'unchecked';
-        list.append('<input type="checkbox" name="' + name + '" id=' + i + ' '+show+'><label for=' + i + ' id=' + i + '>' + name + '</label><br>');
-    }
-      //dialog for hiding and showing
-    $('#dialogLayers :checkbox').click(function() {
-        var $this = $(this);
-        var id = $this[0].id;
-        var layer = layers[id];
-        if ($this.is(':checked')) {
-            that.geoDataManager.show(layer, true);
-        } else {
-            that.geoDataManager.show(layer, false);
-        }
-    });
+    
+    $('.info').html('<b>BUG:</b> First one should be selected, but does not work properly so click on first one (GeoSpace)');
+/*
+    // pre-select first one - doesn't work properly
+    $(".ui-selected", $('#list1')).not($("li:first","#list1")).removeClass("ui-selected").addClass("ui-unselecting");
+    $($("li:first","#list1")).not(".ui-selected").addClass("ui-selecting");
+    $('#list1').data("selectable")._mouseStop(null);
+*/
 };
 
 
-function embedShare(url) {
-}
 // Dialog to share a visualization
-GeoDataWidget.prototype.postViewToServer = function (request) {
+GeoDataWidget.prototype.showShareDialog = function (request) {
     var that = this;
     
     var url = that.geoDataManager.getShareRequestURL(request);
@@ -511,12 +273,12 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
     $("#dialogShare").dialog({
         title: "Share",
         width: 300,
-        height: 400,
-        modal: false,
+        height: 500,
+        modal: true,
         position: {
             my: "left top",
             at: "left top",
-            offset: "85 78",
+            offset: "100 160",
             of: window
         },
         buttons: {
@@ -527,8 +289,11 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
             'Embed': function () {
                 var str = '&lt;iframe style="width: 720px; height: 405px; border: none;" src="' + url;
                 str += '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen&gt;&lt;/iframe&gt;';
-                showHTMLTextDialog("IFrame to Embed in HTML", str, true);
+                showHTMLTextDialog("Copy this code to embed National Map in an HTML page", str, true);
                 $(this).dialog('close');
+            },
+            'Services': function () {
+                that.showServicesDialog(request);
             },
             'GeoSpace': function () {
                 var formData = new FormData();
@@ -551,19 +316,17 @@ GeoDataWidget.prototype.postViewToServer = function (request) {
                             var resp = JSON.parse(xhr.responseText);
                             var vis_url = that.geoDataManager.visServer + '?vis_id=' + resp.vis_id;
                             var geo_url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
-                            var str = 'Shortened Link:<br><a href="' + vis_url + '" target="_blank">' + vis_url + '</a>';
-                            str +=  '<br><br><a href="' + geo_url + '" target="_blank">Go to GeoSpace</a>';
+                            var str = 'Here is the shortened link you can share with others:<br><a href="' + vis_url + '" target="_blank">' + vis_url + '</a>';
+                            str +=  '<br><br>You can <a href="' + geo_url + '" target="_blank">Go to GeoSpace</a> to find other visualizations, add comments and share them in other ways.';
                             showHTMLTextDialog("Link to Visualization", str, true);
-                            $(this).dialog('close');
+//                            $(this).dialog('close');
                        }
                     }
                 };
                 xhr.open('POST', that.geoDataManager.visStore + '/upload');
                 xhr.send(formData);
-
              }
-        }
-
+         }
     });
 };
 

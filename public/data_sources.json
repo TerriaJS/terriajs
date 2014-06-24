@@ -1,4 +1,4 @@
-{"name":"National Map Services", "Layer": [
+{"name":"National Map Data Sources", "Layer": [
   { "name": "Maps", "Layer": [
     { "name": "Boundaries (ABS)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "proxy": false },
     { "name": "Topography (GA)", "base_url": "http://www.ga.gov.au/gis/services/topography/Australian_Topography/MapServer/WMSServer", "type": "WMS", "proxy": true },
