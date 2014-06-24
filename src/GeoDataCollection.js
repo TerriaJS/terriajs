@@ -25,8 +25,6 @@ var GeoDataCollection = function() {
     
     this.layers = [];
     
-    this.visStore = 'http://geospace.research.nicta.com.au';
-
     var that = this;
     
     this.scene = undefined;
@@ -271,7 +269,6 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     //URI suport for over-riding uriParams - put presets in uri_params
     var uri = new URI(url);
     var uri_params = {
-        vis_server: this.visStore,
         vis_id: undefined,
         vis_str: undefined,
         data_url: undefined
@@ -279,10 +276,14 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     var overrides = uri.search(true);
     $.extend(uri_params, overrides);
     
+    //store the current server location for use when creating urls
     this.visServer = uri.protocol() + '://' + uri.host();
 
-    this.visStore = uri_params.vis_server;
+    var visUrl = uri_params.vis_url;
     var visID = uri_params.vis_id;
+    if (visID) {
+        visUrl = this.visStore + '/get_rec?vis_id=' + visID;
+    }
     var visStr = uri_params.vis_str;
     
     var dataUrl = uri_params.data_url;
@@ -291,11 +292,11 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     var that = this;
     
     //Initialize the view based on vis_id if passed in url
-    if (this.visID) {
+    if (visUrl) {
         //call to server to get json record
-        url = this.visStore + '/get_rec?vis_id=' + visID;
-        Cesium.when(Cesium.loadJson(url), function(obj) {
-            this.visID = visID;
+        Cesium.when(Cesium.loadJson(visUrl), function(obj) {
+                //figure out this for versioning
+//            this.visID = obj.visID;
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
                 var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
@@ -347,9 +348,9 @@ GeoDataCollection.prototype.getShareRequest = function( description ) {
     request.layers = this._stringify();
     request.version = '0.0.02';
     request.camera = JSON.stringify(description.camera); //just extent for now
-     if (this.visID) {
-        request.parent = this.visID;
-    }
+//     if (this.visID) {
+//        request.parent = this.visID;
+//    }
     request.image = description.image;
     return request;
 };

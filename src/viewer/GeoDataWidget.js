@@ -185,7 +185,7 @@ function showHTMLTextDialog(title_text, display_text, b_modal, close_function) {
         close: close_function,
         title: title_text,
         modal: b_modal,
-        width: 300,
+        width: 400,
         position: {
             my: "middle center",
             at: "middle center",
@@ -195,6 +195,31 @@ function showHTMLTextDialog(title_text, display_text, b_modal, close_function) {
     });
 }
 
+function postToService(service, request) {
+    var formData = new FormData();
+    for (var fld in request) {
+        if (request.hasOwnProperty(fld)) {
+            formData.append(fld, request[fld]);
+        }
+    }
+    // submit and display returned html text
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            var str;
+            if (xhr.status !== 200) {
+                str = 'Error ' + xhr.status + ': ' + xhr.responseText;
+            }
+            else {
+                var res = JSON.parse(xhr.responseText);
+                str = res.displayHtml;
+           }
+           showHTMLTextDialog(service.name + ' responded with', str, true);
+        }
+    };
+    xhr.open('POST', service.url);
+    xhr.send(formData);
+}
 
 // Pick layer dialog
 GeoDataWidget.prototype.showServicesDialog = function (request) {
@@ -219,6 +244,7 @@ GeoDataWidget.prototype.showServicesDialog = function (request) {
                 var item = $('#list1 .ui-selected');
                 if (item !== undefined) {
                     var id = item[0].id;
+                    postToService(services[id], request);
                 }
                 $(this).dialog('close');
             },
@@ -231,8 +257,8 @@ GeoDataWidget.prototype.showServicesDialog = function (request) {
     list.selectable({
         selected: function (event, ui) {
             var item = $('#list1 .ui-selected');
-            var idx = item[0].id;
-            var service = services[idx];
+            var id = item[0].id;
+            var service = services[id];
             var text = '<h3>' + service.name + '</h3>';
             if (service.description !== undefined) {
                 text += service.description;
@@ -273,7 +299,7 @@ GeoDataWidget.prototype.showShareDialog = function (request) {
     $("#dialogShare").dialog({
         title: "Share",
         width: 300,
-        height: 500,
+        height: 400,
         modal: true,
         position: {
             my: "left top",
@@ -294,39 +320,8 @@ GeoDataWidget.prototype.showShareDialog = function (request) {
             },
             'Services': function () {
                 that.showServicesDialog(request);
-            },
-            'GeoSpace': function () {
-                var formData = new FormData();
-                for (var fld in request) {
-                    if (request.hasOwnProperty(fld)) {
-                        formData.append(fld, request[fld]);
-                    }
-                }
-                //TODO: include,resize image here based on user setting
-                // submit and use the returned url provide share links
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4) {
-                        console.log('VisStore response: ' + xhr.responseText);
-                        if (xhr.responseText === '') {
-                            alert('Unable to send view to the server');
-                            $("#dialogShare").dialog('close');
-                        }
-                        else {
-                            var resp = JSON.parse(xhr.responseText);
-                            var vis_url = that.geoDataManager.visServer + '?vis_id=' + resp.vis_id;
-                            var geo_url = that.geoDataManager.visStore + '/details?vis_id=' + resp.vis_id;
-                            var str = 'Here is the shortened link you can share with others:<br><a href="' + vis_url + '" target="_blank">' + vis_url + '</a>';
-                            str +=  '<br><br>You can <a href="' + geo_url + '" target="_blank">Go to GeoSpace</a> to find other visualizations, add comments and share them in other ways.';
-                            showHTMLTextDialog("Link to Visualization", str, true);
-//                            $(this).dialog('close');
-                       }
-                    }
-                };
-                xhr.open('POST', that.geoDataManager.visStore + '/upload');
-                xhr.send(formData);
-             }
-         }
+            }
+        }
     });
 };
 
