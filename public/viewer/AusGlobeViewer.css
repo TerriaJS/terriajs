@@ -426,6 +426,7 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-accordion-category-item {
     padding-left: 10px;
     padding-right: 10px;
+    position: relative;
 }
 
 .ausglobe-now-viewing-no-data {
@@ -442,9 +443,10 @@ a.ausglobe-title-menuItem:hover {
     font-weight: 300;
     font-size: 14px;
     color: white;
-    padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 5px;
+    width: 275px;
+    vertical-align: middle;
 }
 
 .ausglobe-accordion-category-item-enabled {
@@ -468,11 +470,11 @@ a.ausglobe-title-menuItem:hover {
     position: absolute;
     right: 0;
     font-size: 9pt;
-    padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 10px;
     color: #66CCFF;
     cursor: pointer;
+    top: 8px;
 }
 
 .ausglobe-viewer-radio-button {
@@ -568,6 +570,7 @@ a.ausglobe-title-menuItem:hover {
     left: 0;
     bottom: 0;
     right: 0;
+    font-family: "Open Sans", sans-serif;
 }
 
 .ausglobe-info-close-button {
