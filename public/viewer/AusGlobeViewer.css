@@ -116,7 +116,7 @@ body {
 }
 
 .list {
-    height:40%;
+    height:20%;
     overflow: auto;
     list-style-type: none; 
     margin: 10px;
@@ -730,4 +730,5 @@ a.ausglobe-title-menuItem:hover {
 #cesiumContainer button.cesium-infoBox-camera {
     display: none;
 }
+
 
