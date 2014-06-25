@@ -45,6 +45,15 @@ var GeoDataCollection = function() {
     Cesium.loadJson('./data_sources.json').then(function (obj) {
         that.serviceList = obj;
     });
+    
+    //load list of available services for National Map
+    this.services = [];
+    Cesium.loadJson('./nm_services.json').then(function (obj) {
+        if (obj !== undefined) {
+            that.addServices(obj.services);
+        }
+    });
+    
 };
 
 
@@ -190,6 +199,34 @@ GeoDataCollection.prototype.show = function(layer, val) {
     }
 };
 
+
+// -------------------------------------------
+// Services for GeoDataCollection
+// -------------------------------------------
+/**
+ * Adds a set of services to the available GeodataCollection services.
+ *
+ * @param {Object} an array of JSON service objects to add to the list.
+ *
+ */
+GeoDataCollection.prototype.addServices = function(services) {
+    if (services === undefined)
+        return;
+
+    for (var i = 0; i < services.length; i++) {
+        console.log('added service for:', services[i].name);
+        this.services.push(services[i]);
+    }
+};
+
+/**
+ * Returns an array of available services
+ *
+ * @returns {Array} an array of available services as JSON objects.
+ */
+GeoDataCollection.prototype.getServices = function() {
+    return this.services;
+};
 
 // -------------------------------------------
 // Handle loading and sharing visualizations
@@ -387,7 +424,6 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format) {
     if (format !== undefined) {
         sourceUpperCase = (srcname + '.' + format).toUpperCase();
     }
-    console.log(sourceUpperCase);
     
     var layer;
     var dom;
@@ -1155,7 +1191,6 @@ var point_palette = {
 };
 
 function getRandomColor(palette, seed) {
-    console.log(seed);
     if (seed !== undefined) {
         if (typeof seed === 'string') {
             var val = 0;
@@ -1188,7 +1223,6 @@ function getCesiumColor(clr) {
 */
 GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     //set default layer styles
-    console.log(layer);
     if (layer.style === undefined) {
         layer.style = {line: {}, point: {}, polygon: {}};
         layer.style.line.color = getRandomColor(line_palette, layer.name);

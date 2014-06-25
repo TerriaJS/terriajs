@@ -392,7 +392,7 @@ var GeoDataBrowserViewModel = function(options) {
         evt.preventDefault();
 
         function loadCollection(json) {
-            if (!defined(json) || !defined(json.name) || !defined(json.Layer)) {
+            if (!defined(json) || !defined(json.name)) {
                 return;
             }
 
@@ -402,9 +402,7 @@ var GeoDataBrowserViewModel = function(options) {
             } else if (json.name === 'National Map Collections') {
                 collections = [json];
             } else if (json.name === 'National Map Services') {
-                alert('NYI: need to add this to services');
-            } else {
-                alert('NYI: need to send this to the data loader');
+                that._dataManager.addServices(json.services);
             }
             
             var existingCollection;

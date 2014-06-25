@@ -103,11 +103,6 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
         that.showShareDialog(request);
     });
 
-    //load list of available services for National Map
-    Cesium.loadJson('./nm_services.json').then(function (obj) {
-        that.services = obj.services;
-    });
-    
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
 
@@ -144,32 +139,6 @@ function dropHandler(evt, that) {
 
         that.geoDataManager.addFile(file);
     }
-}
-
-function getOGCLayerExtent(layer) {
-    var rect;
-    var box;
-    if (layer.WGS84BoundingBox) {
-        var lc = layer.WGS84BoundingBox.LowerCorner.split(" ");
-        var uc = layer.WGS84BoundingBox.UpperCorner.split(" ");
-        rect = Rectangle.fromDegrees(parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]));
-    }
-    else if (layer.LatLonBoundingBox) {
-        box = layer.LatLonBoundingBox || layer.BoundingBox;
-        rect = Rectangle.fromDegrees(parseFloat(box.minx), parseFloat(box.miny),
-            parseFloat(box.maxx), parseFloat(box.maxy));
-    }
-    else if (layer.EX_GeographicBoundingBox) {
-        box = layer.EX_GeographicBoundingBox;
-        rect = Rectangle.fromDegrees(parseFloat(box.westBoundLongitude), parseFloat(box.southBoundLatitude),
-            parseFloat(box.eastBoundLongitude), parseFloat(box.northBoundLatitude));
-    }
-    else if (layer.BoundingBox) {
-        box = layer.BoundingBox;
-        rect = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
-            parseFloat(box.east), parseFloat(box.north));
-    }
-    return rect;
 }
 
 //Simple html dialog
@@ -225,7 +194,7 @@ function postToService(service, request) {
 GeoDataWidget.prototype.showServicesDialog = function (request) {
     var that = this;
     
-    var services = that.services;
+    var services = that.geoDataManager.getServices();
 
     $('#list1').height('50px');
     $("#dialogServices").dialog({
