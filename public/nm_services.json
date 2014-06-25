@@ -1,6 +1,5 @@
 {"name":"National Map Services", "services": [
     { "name": "GeoSpace", "description": "A service provided by NICTA for sharing visualizations made in National Map", "url": "http://geospace.research.nicta.com.au/upload", "request": "POST"},
-   { "name": "Local GeoSpace", "description": "Test version of geospace", "url": "http://localhost:3000/upload", "request": "POST"},
     { "name": "Your Service", "description": "Something you built"}
 ]}
 

@@ -397,12 +397,16 @@ var GeoDataBrowserViewModel = function(options) {
             }
 
             var collections;
-            if (json.name === 'National Map Services') {
+            if (json.name === 'National Map Data Sources') {
                 collections = json.Layer;
-            } else {
+            } else if (json.name === 'National Map Collections') {
                 collections = [json];
+            } else if (json.name === 'National Map Services') {
+                alert('NYI: need to add this to services');
+            } else {
+                alert('NYI: need to send this to the data loader');
             }
-
+            
             var existingCollection;
 
             for (var i = 0; i < collections.length; ++i) {

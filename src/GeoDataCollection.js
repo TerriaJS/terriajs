@@ -251,7 +251,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     //URI suport for over-riding uriParams - put presets in uri_params
     var uri = new URI(url);
     var uri_params = {
-        vis_id: undefined,
+        vis_url: undefined,
         vis_str: undefined,
         data_url: undefined
     };
@@ -261,14 +261,10 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     //store the current server location for use when creating urls
     this.visServer = uri.protocol() + '://' + uri.host();
     
-        //TODO: remove need for this
-    var visStore = 'http://localhost:3000';
+        //TODO: !!! Determine where this should live or if it should
+    this.supportServer = 'http://geospace.research.nicta.com.au';
 
     var visUrl = uri_params.vis_url;
-    var visID = uri_params.vis_id;
-    if (visID) {
-        visUrl = visStore + '/get_rec?vis_id=' + visID;
-    }
     var visStr = uri_params.vis_str;
     
     var dataUrl = uri_params.data_url;
@@ -1357,7 +1353,7 @@ GeoDataCollection.prototype.addFile = function(file) {
                     }
                 }
             };
-            xhr.open('POST', that.geoDataManager.visStore + '/convert');
+            xhr.open('POST', that.supportServer + '/convert');
             xhr.send(formData);
         }
     }
