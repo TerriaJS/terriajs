@@ -392,17 +392,19 @@ var GeoDataBrowserViewModel = function(options) {
         evt.preventDefault();
 
         function loadCollection(json) {
-            if (!defined(json) || !defined(json.name) || !defined(json.Layer)) {
+            if (!defined(json) || !defined(json.name)) {
                 return;
             }
 
             var collections;
-            if (json.name === 'National Map Services') {
+            if (json.name === 'National Map Data Sources') {
                 collections = json.Layer;
-            } else {
+            } else if (json.name === 'National Map Collections') {
                 collections = [json];
+            } else if (json.name === 'National Map Services') {
+                that._dataManager.addServices(json.services);
             }
-
+            
             var existingCollection;
 
             for (var i = 0; i < collections.length; ++i) {

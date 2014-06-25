@@ -25,8 +25,6 @@ var GeoDataCollection = function() {
     
     this.layers = [];
     
-    this.visStore = 'http://geospace.research.nicta.com.au';
-
     var that = this;
     
     this.scene = undefined;
@@ -47,6 +45,15 @@ var GeoDataCollection = function() {
     Cesium.loadJson('./data_sources.json').then(function (obj) {
         that.serviceList = obj;
     });
+    
+    //load list of available services for National Map
+    this.services = [];
+    Cesium.loadJson('./nm_services.json').then(function (obj) {
+        if (obj !== undefined) {
+            that.addServices(obj.services);
+        }
+    });
+    
 };
 
 
@@ -194,6 +201,35 @@ GeoDataCollection.prototype.show = function(layer, val) {
 
 
 // -------------------------------------------
+// Services for GeoDataCollection
+// -------------------------------------------
+/**
+ * Adds a set of services to the available GeodataCollection services.
+ *
+ * @param {Object} an array of JSON service objects to add to the list.
+ *
+ */
+GeoDataCollection.prototype.addServices = function(services) {
+    if (services === undefined) {
+        return;
+    }
+
+    for (var i = 0; i < services.length; i++) {
+        console.log('added service for:', services[i].name);
+        this.services.push(services[i]);
+    }
+};
+
+/**
+ * Returns an array of available services
+ *
+ * @returns {Array} an array of available services as JSON objects.
+ */
+GeoDataCollection.prototype.getServices = function() {
+    return this.services;
+};
+
+// -------------------------------------------
 // Handle loading and sharing visualizations
 // -------------------------------------------
 GeoDataCollection.prototype._stringify = function() {
@@ -253,18 +289,20 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     //URI suport for over-riding uriParams - put presets in uri_params
     var uri = new URI(url);
     var uri_params = {
-        vis_server: this.visStore,
-        vis_id: undefined,
+        vis_url: undefined,
         vis_str: undefined,
         data_url: undefined
     };
     var overrides = uri.search(true);
     $.extend(uri_params, overrides);
     
+    //store the current server location for use when creating urls
     this.visServer = uri.protocol() + '://' + uri.host();
+    
+        //TODO: !!! Determine where this should live or if it should
+    this.supportServer = 'http://geospace.research.nicta.com.au';
 
-    this.visStore = uri_params.vis_server;
-    var visID = uri_params.vis_id;
+    var visUrl = uri_params.vis_url;
     var visStr = uri_params.vis_str;
     
     var dataUrl = uri_params.data_url;
@@ -273,11 +311,11 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     var that = this;
     
     //Initialize the view based on vis_id if passed in url
-    if (this.visID) {
+    if (visUrl) {
         //call to server to get json record
-        url = this.visStore + '/get_rec?vis_id=' + visID;
-        Cesium.when(Cesium.loadJson(url), function(obj) {
-            this.visID = visID;
+        Cesium.when(Cesium.loadJson(visUrl), function(obj) {
+                //figure out this for versioning
+//            this.visID = obj.visID;
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
                 var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
@@ -329,9 +367,9 @@ GeoDataCollection.prototype.getShareRequest = function( description ) {
     request.layers = this._stringify();
     request.version = '0.0.02';
     request.camera = JSON.stringify(description.camera); //just extent for now
-     if (this.visID) {
-        request.parent = this.visID;
-    }
+//     if (this.visID) {
+//        request.parent = this.visID;
+//    }
     request.image = description.image;
     return request;
 };
@@ -387,7 +425,6 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format) {
     if (format !== undefined) {
         sourceUpperCase = (srcname + '.' + format).toUpperCase();
     }
-    console.log(sourceUpperCase);
     
     var layer;
     var dom;
@@ -1155,7 +1192,6 @@ var point_palette = {
 };
 
 function getRandomColor(palette, seed) {
-    console.log(seed);
     if (seed !== undefined) {
         if (typeof seed === 'string') {
             var val = 0;
@@ -1188,7 +1224,6 @@ function getCesiumColor(clr) {
 */
 GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     //set default layer styles
-    console.log(layer);
     if (layer.style === undefined) {
         layer.style = {line: {}, point: {}, polygon: {}};
         layer.style.line.color = getRandomColor(line_palette, layer.name);
@@ -1353,7 +1388,7 @@ GeoDataCollection.prototype.addFile = function(file) {
                     }
                 }
             };
-            xhr.open('POST', that.geoDataManager.visStore + '/convert');
+            xhr.open('POST', that.supportServer + '/convert');
             xhr.send(formData);
         }
     }
