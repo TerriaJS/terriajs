@@ -22,7 +22,7 @@ var TitleWidget = function(options) {
     wrapper.className = 'ausglobe-title-area';
     wrapper.innerHTML = '\
         <div class="ausglobe-title-image"><img src="images/nicta.png" width="60" height="60" /></div>\
-        <div class="ausglobe-title-image"><img src="images/nationalmap.svg" height="40" /></div>\
+        <div class="ausglobe-title-image"><img src="images/nationalmap.png" width="99" height="40" /></div>\
         <div id="ausglobe-title-middle" class="ausglobe-title-middle"></div>\
         <div class="ausglobe-title-credits"></div>\
         <div class="ausglobe-title-menu" data-bind="foreach: menuItems">\
