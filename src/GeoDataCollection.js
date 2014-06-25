@@ -210,8 +210,9 @@ GeoDataCollection.prototype.show = function(layer, val) {
  *
  */
 GeoDataCollection.prototype.addServices = function(services) {
-    if (services === undefined)
+    if (services === undefined) {
         return;
+    }
 
     for (var i = 0; i < services.length; i++) {
         console.log('added service for:', services[i].name);
