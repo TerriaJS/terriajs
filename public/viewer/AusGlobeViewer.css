@@ -609,6 +609,22 @@ a.ausglobe-title-menuItem:hover {
     right: 10px;
 }
 
+.ausglobe-info-properties-level1 {
+    padding-left: 10px;
+}
+
+.ausglobe-info-properties-level2 {
+    padding-left: 20px;
+}
+
+.ausglobe-info-properties-level3 {
+    padding-left: 30px;
+}
+
+.ausglobe-info-properties-level4 {
+    padding-left: 40px;
+}
+
 .ausglobe-add-data-message {
     color: white;
     font-size: 14px;
@@ -735,5 +751,4 @@ a.ausglobe-title-menuItem:hover {
 #cesiumContainer button.cesium-infoBox-camera {
     display: none;
 }
-
 

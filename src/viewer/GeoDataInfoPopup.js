@@ -1,12 +1,14 @@
 "use strict";
 
-/*global require,Cesium*/
+/*global require,Cesium,$*/
+var defined = Cesium.defined;
 var getElement = Cesium.getElement;
 var when = Cesium.when;
 var loadXML = Cesium.loadXML;
 
 var corsProxy = require('../corsProxy');
 var knockout = require('knockout');
+var komapping = require('knockout.mapping');
 
 var metadataConversions = {
     KeywordList : function(node) {
@@ -19,7 +21,7 @@ var metadataConversions = {
                 if (result.length > 0) {
                     result += '; ';
                 }
-                result += keywordNode.textContent.trim();
+                result += escapeHTML(keywordNode.textContent.trim());
             }
         }
 
@@ -41,7 +43,7 @@ var metadataConversions = {
 
         return {
             name : node.nodeName + ' (' + crs + ')',
-            value : 'MinX: ' + minx + ' MinY: ' + miny + ' MaxX: ' + maxx + ' MaxY: ' + maxy
+            value : 'MinX: ' + escapeHTML(minx) + ' MinY: ' + escapeHTML(miny) + '<br />MaxX: ' + escapeHTML(maxx) + ' MaxY: ' + escapeHTML(maxy)
         };
     },
 
@@ -57,7 +59,26 @@ var metadataConversions = {
 
         return {
             name : node.nodeName,
-            value : 'West: ' + west + '° South: ' + south + '° East: ' + east + '° North: ' + north + '°'
+            value : 'West: ' + escapeHTML(west) + '° South: ' + escapeHTML(south) + '°<br />East: ' + escapeHTML(east) + '° North: ' + escapeHTML(north) + '°'
+        };
+    },
+
+    ContactInformation : function(node, xml) {
+        var contactPerson = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactPersonPrimary/wms:ContactPerson'));
+        var contactOrganization = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactPersonPrimary/wms:ContactOrganization'));
+        var contactPosition = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactPosition'));
+        var contactAddress = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactAddress/wms:Address'));
+        var contactCity = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactAddress/wms:City'));
+        var contactState = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactAddress/wms:StateOrProvince'));
+        var contactPostCode = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactAddress/wms:PostCode'));
+        var contactCountry = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactAddress/wms:Country'));
+        var contactVoiceTelephone = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactVoiceTelephone'));
+        var contactFacsimileTelephone = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactFacsimileTelephone'));
+        var contactElectronicMailAddress = escapeHTML(getXmlValue(xml, node, wmsNamespaceResolver, 'wms:ContactElectronicMailAddress'));
+
+        return {
+            name : 'ContactInformation',
+            value : ''
         };
     }
 };
@@ -70,9 +91,33 @@ var GeoDataInfoPopup = function(options) {
     wrapper.setAttribute('data-bind', 'click: closeIfClickOnBackground');
     container.appendChild(wrapper);
 
+    var template = document.createElement('script');
+    template.setAttribute('type', 'text/html');
+    template.setAttribute('id', 'ausglobe-info-item-template');
+    template.innerHTML = '\
+            <tr>\
+                <td data-bind="text: name, click: $root.toggleOpen, css: levelCssClass"></td>\
+                <!-- ko if: isParent -->\
+                    <td></td>\
+                <!-- /ko -->\
+                <!-- ko if: isArray -->\
+                    <td data-bind="foreach: value">\
+                        <span data-bind="if: $index() !== 0">; </span>\
+                        <span data-bind="text: $data"></span>\
+                    </td>\
+                <!-- /ko -->\
+                <!-- ko ifnot: isParent || isArray -->\
+                    <td data-bind="text: value"></td>\
+                <!-- /ko -->\
+            </tr>\
+            <!-- ko if: isParent && value.isOpen() -->\
+                <!-- ko template: { name: \'ausglobe-info-item-template\', foreach: value.data } -->\
+                <!-- /ko -->\
+            <!-- /ko -->';
+    container.appendChild(template);
+
     var info = document.createElement('div');
     info.className = 'ausglobe-info';
-    //info.setAttribute('data-bind', 'click: function(viewModel, e) { e.stopPropagation(); }');
     info.innerHTML = '\
         <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
         <h1 data-bind="text: info.Title"></h1>\
@@ -82,21 +127,11 @@ var GeoDataInfoPopup = function(options) {
         <a data-bind="attr: { href: getCapabilitiesUrl }, text: getCapabilitiesUrl" target="_blank"></a>\
         <hr />\
         <h2>Layer Details</h2>\
-        <table data-bind="foreach: layerProperties">\
-            <tr>\
-                <td data-bind="text: name">\
-                <td data-bind="text: value">\
-            </tr>\
+        <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
         </table>\
-        <hr />\
         <h2>Service Details</h2>\
-        <table data-bind="foreach: serviceProperties">\
-            <tr>\
-                <td data-bind="text: name">\
-                <td data-bind="text: value">\
-            </tr>\
+        <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
         </table>\
-        </div>\
     ';
     wrapper.appendChild(info);
 
@@ -107,8 +142,44 @@ var GeoDataInfoPopup = function(options) {
     viewModel.info = options.viewModel;
     
     viewModel.layer = {};
-    viewModel.layerProperties = knockout.observableArray();
-    viewModel.serviceProperties = knockout.observableArray();
+
+    function addBindingProperties(o, level) {
+        o = knockout.utils.unwrapObservable(o);
+
+        if (typeof o !== 'object' || o instanceof Array) {
+            return;
+        }
+
+        var array = o.data;
+        if (!defined(array)) {
+            array = o.data = knockout.observableArray();
+            o.isOpen = knockout.observable(true);
+        }
+
+        array.removeAll();
+
+        for (var property in o) {
+            if (o.hasOwnProperty(property) && property !== '__ko_mapping__' && property !== 'data' && property !== 'isOpen') {
+                var value = knockout.utils.unwrapObservable(o[property]);
+
+                addBindingProperties(value, level + 1);
+
+                array.push({
+                    name : property,
+                    value : value,
+                    isParent : typeof value === 'object' && !(value instanceof Array),
+                    isArray : value instanceof Array,
+                    levelCssClass : 'ausglobe-info-properties-level' + level
+                });
+            }
+        }
+    }
+
+    viewModel.layerProperties = komapping.fromJS({});
+    viewModel.serviceProperties = komapping.fromJS({});
+
+    addBindingProperties(viewModel.layerProperties, 1);
+    addBindingProperties(viewModel.serviceProperties, 1);
 
     viewModel.close = function() {
         container.removeChild(wrapper);
@@ -118,6 +189,12 @@ var GeoDataInfoPopup = function(options) {
             viewModel.close();
         }
         return true;
+    };
+
+    viewModel.toggleOpen = function(item) {
+        if (defined(item.value)) {
+            item.value.isOpen(!item.value.isOpen());
+        }
     };
 
     viewModel.serviceType = knockout.computed(function() {
@@ -142,49 +219,37 @@ var GeoDataInfoPopup = function(options) {
         getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl);
     }
 
-    viewModel.layerProperties.push({
-        name : 'Loading...',
-        value : ''
-    });
-
-    viewModel.serviceProperties.push({
-        name : 'Loading...',
-        value : ''
-    });
-
     var layerName = viewModel.info.Name();
 
     if (viewModel.info.type() === 'WMS') {
         when(loadXML(getCapabilitiesUrl), function(capabilities) {
-            viewModel.layerProperties.removeAll();
-            viewModel.serviceProperties.removeAll();
+            function findLayer(startLayer, name) {
+                if (startLayer.Name === name || startLayer.Title === name) {
+                    return startLayer;
+                }
 
-            // Find service information in the capabilities document.
-            var serviceNode = capabilities.evaluate('//wms:Service', capabilities, wmsNamespaceResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                var layers = startLayer.Layer;
+                if (!defined(layers)) {
+                    return undefined;
+                }
 
-            // Find the layer in the capabilities document.
-            var layerNode = capabilities.evaluate('//wms:Layer[wms:Name="' + layerName + '"]', capabilities, wmsNamespaceResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            if (!layerNode) {
-                layerNode = capabilities.evaluate('//wms:Layer[wms:Title="' + layerName + '"]', capabilities, wmsNamespaceResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+                var found;
+                for (var i = 0; !found && i < layers.length; ++i) {
+                    var layer = layers[i];
+                    found = findLayer(layer, name);
+                }
+
+                return found;
             }
 
-            if (layerNode) {
-                addOgcMetadata(viewModel.layerProperties, layerNode, capabilities, metadataConversions);
-            } else {
-                viewModel.layerProperties.push({
-                    name : 'Error',
-                    value : 'Layer not found in GetCapabilities document.'
-                });
-            }
+            var json = $.xml2json(capabilities);
+            var layer = findLayer(json.Capability.Layer, layerName);
 
-            if (serviceNode) {
-                addOgcMetadata(viewModel.serviceProperties, serviceNode, capabilities, metadataConversions);
-            } else {
-                viewModel.serviceProperties.push({
-                    name : 'Error',
-                    value : 'Service information not found in GetCapabilities document.'
-                });
-            }
+            komapping.fromJS(json.Service, viewModel.serviceProperties);
+            komapping.fromJS(layer, viewModel.layerProperties);
+
+            addBindingProperties(viewModel.layerProperties, 1);
+            addBindingProperties(viewModel.serviceProperties, 1);
         });
     }
 
@@ -223,10 +288,11 @@ function addOgcMetadata(properties, node, xml, metadataConversions) {
             if (!newItem) {
                 continue;
             }
-        } else if (layerNode.nodeType === Node.ELEMENT_NODE && layerNode.childNodes.length === 1 && layerNode.childNodes[0].nodeType === Node.TEXT_NODE) {
+        } else if (layerNode.nodeType === Node.ELEMENT_NODE && layerNode.childNodes.length === 1 &&
+                   (layerNode.childNodes[0].nodeType === Node.TEXT_NODE || layerNode.childNodes[0].nodeType === Node.CDATA_SECTION_NODE)) {
             newItem = {
                 name : layerNode.nodeName,
-                value : layerNode.textContent.trim()
+                value : escapeHTML(layerNode.textContent.trim())
             };
         }
 
@@ -243,6 +309,18 @@ function addOgcMetadata(properties, node, xml, metadataConversions) {
             properties.push(newItem);
         }
     }
+}
+
+function escapeHTML(s)
+{
+    if (!defined(s)) {
+        return s;
+    }
+
+    var div = document.createElement('div');
+    var text = document.createTextNode(s);
+    div.appendChild(text);
+    return div.innerHTML;
 }
 
 module.exports = GeoDataInfoPopup;
