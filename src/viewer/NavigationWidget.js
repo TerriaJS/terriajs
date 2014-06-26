@@ -125,28 +125,28 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
     var controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
 
-    scene.animations.add({
-        duration : durationMilliseconds,
+    scene.tweens.add({
+        duration : durationMilliseconds / 1000.0,
         easingFunction : Tween.Easing.Sinusoidal.InOut,
-        startValue : {
+        startObject : {
             time: 0.0
         },
-        stopValue : {
+        stopObject : {
             time : 1.0
         },
-        onUpdate : function(value) {
+        update : function(value) {
             if (scene.isDestroyed()) {
                 return;
             }
             scene.camera.tilt = CesiumMath.lerp(startTilt, endTilt, value.time);
         },
-        onComplete : function() {
+        complete : function() {
             if (controller.isDestroyed()) {
                 return;
             }
             controller.enableInputs = true;
         },
-        onCancel: function() {
+        cancel: function() {
             if (controller.isDestroyed()) {
                 return;
             }
@@ -177,16 +177,16 @@ function flyToPosition(scene, position, durationMilliseconds) {
     var controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
 
-    scene.animations.add({
-        duration : durationMilliseconds,
+    scene.tweens.add({
+        duration : durationMilliseconds / 1000.0,
         easingFunction : Tween.Easing.Sinusoidal.InOut,
-        startValue : {
+        startObject : {
             time: 0.0
         },
-        stopValue : {
+        stopObject : {
             time : 1.0
         },
-        onUpdate : function(value) {
+        update : function(value) {
             if (scene.isDestroyed()) {
                 return;
             }
@@ -194,13 +194,13 @@ function flyToPosition(scene, position, durationMilliseconds) {
             scene.camera.position.y = CesiumMath.lerp(startPosition.y, endPosition.y, value.time);
             scene.camera.position.z = CesiumMath.lerp(startPosition.z, endPosition.z, value.time);
         },
-        onComplete : function() {
+        complete : function() {
             if (controller.isDestroyed()) {
                 return;
             }
             controller.enableInputs = true;
         },
-        onCancel: function() {
+        cancel: function() {
             if (controller.isDestroyed()) {
                 return;
             }

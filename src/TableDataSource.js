@@ -179,6 +179,8 @@ TableDataSource.prototype.setCurrentVariable = function (varname) {
     });
 };
 
+var startScratch = new JulianDate();
+var endScratch = new JulianDate();
 
 /**
 * Replaceable visualizer function
@@ -209,8 +211,8 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         rec.position.cartographicDegrees[p] = point.pos[p];
     }
 
-    var start = JulianDate.addMinutes(point.time, -this.leadTimeMin);
-    var finish = JulianDate.addMinutes(point.time, this.trailTimeMin);
+    var start = JulianDate.addMinutes(point.time, -this.leadTimeMin, startScratch);
+    var finish = JulianDate.addMinutes(point.time, this.trailTimeMin, endScratch);
     rec.billboard.show[0].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
     return rec;
 };

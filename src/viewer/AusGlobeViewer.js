@@ -816,9 +816,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
             this.scene.primitives.removeAll();
 
-            // Hack to prevent the viewer from destroying our DataSourceCollection.
-            this.viewer._dataSourceCollection = new DataSourceCollection();
-
             this.viewer.destroy();
             this.viewer = undefined;
         }
@@ -1104,13 +1101,13 @@ function flyToPosition(scene, position, durationMilliseconds) {
     var controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
 
-    scene.animations.add({
-        duration : durationMilliseconds,
+    scene.tweens.add({
+        duration : durationMilliseconds / 1000.0,
         easingFunction : Tween.Easing.Sinusoidal.InOut,
-        startValue : {
+        startObject : {
             time: 0.0
         },
-        stopValue : {
+        stopObject : {
             time : 1.0
         },
         onUpdate : function(value) {
@@ -1192,11 +1189,11 @@ AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMill
         rect.south -= epsilon/2.0;
     }
     if (scene !== undefined && !scene.isDestroyed()) {
-        var flight = CameraFlightPath.createAnimationRectangle(scene, {
+        var flight = CameraFlightPath.createTweenRectangle(scene, {
             destination : rect,
-            duration: flightTimeMilliseconds
+            duration: flightTimeMilliseconds / 1000.0
         });
-        scene.animations.add(flight);
+        scene.tweens.add(flight);
     }
     else if (map !== undefined) {
         var bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
