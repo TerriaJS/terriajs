@@ -93,8 +93,8 @@ Variable.prototype.processTimeVar = function () {
     }
     function time_excel(v) {   // 40544.4533
         var date = JulianDate.fromDate(new Date('January 1, 1970 0:00:00'));
-        date = JulianDate.addDays(date, Math.floor(v) - 25569.0); //account for offset to 1900
-        date = JulianDate.addSeconds(date, (v - Math.floor(v)) * 60 * 60 * 24);
+        date = JulianDate.addDays(date, Math.floor(v) - 25569.0, date); //account for offset to 1900
+        date = JulianDate.addSeconds(date, (v - Math.floor(v)) * 60 * 60 * 24, date);
         return date;
     }
     function time_utc(v) {   //12321231414434
@@ -110,7 +110,7 @@ Variable.prototype.processTimeVar = function () {
         var d = new Date();
         d.setUTCFullYear(year);
         d.setUTCHours(date_str.substring(7, 9), date_str.substring(9, 11), date_str.substring(11, 13));
-        var date = JulianDate.addDays(JulianDate.fromDate(d), dayofyear);
+        var date = JulianDate.addDays(JulianDate.fromDate(d), dayofyear, new JulianDate());
         return date;
     }
     //create new Cessium time variable to attach to the variable

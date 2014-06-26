@@ -19,6 +19,7 @@ var ClockRange = Cesium.ClockRange;
 var Color = Cesium.Color;
 var combine = Cesium.combine;
 var Credit = Cesium.Credit;
+var DataSourceCollection = Cesium.DataSourceCollection;
 var defaultValue = Cesium.defaultValue;
 var defined = Cesium.defined;
 var DynamicObject = Cesium.DynamicObject;
@@ -808,11 +809,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this._enableSelectExtent(false);
             stopTimeline();
 
-            this.mouseOverPosHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
-            this.mouseZoomHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
-            this.mouseZoomHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
+            var inputHandler = this.viewer.screenSpaceEventHandler;
+            inputHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
+            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
+            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
 
             this.scene.primitives.removeAll();
+
             this.viewer.destroy();
             this.viewer = undefined;
         }
@@ -1098,13 +1101,13 @@ function flyToPosition(scene, position, durationMilliseconds) {
     var controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
 
-    scene.animations.add({
-        duration : durationMilliseconds,
+    scene.tweens.add({
+        duration : durationMilliseconds / 1000.0,
         easingFunction : Tween.Easing.Sinusoidal.InOut,
-        startValue : {
+        startObject : {
             time: 0.0
         },
-        stopValue : {
+        stopObject : {
             time : 1.0
         },
         onUpdate : function(value) {
@@ -1186,11 +1189,11 @@ AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMill
         rect.south -= epsilon/2.0;
     }
     if (scene !== undefined && !scene.isDestroyed()) {
-        var flight = CameraFlightPath.createAnimationRectangle(scene, {
+        var flight = CameraFlightPath.createTweenRectangle(scene, {
             destination : rect,
-            duration: flightTimeMilliseconds
+            duration: flightTimeMilliseconds / 1000.0
         });
-        scene.animations.add(flight);
+        scene.tweens.add(flight);
     }
     else if (map !== undefined) {
         var bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],

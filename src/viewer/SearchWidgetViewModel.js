@@ -267,8 +267,8 @@ function geocode(viewModel) {
 
             var options = {
                 destination: position,
-                duration: viewModel._flightDuration,
-                onComplete: function () {
+                duration: viewModel._flightDuration / 1000.0,
+                complete: function () {
                     var screenSpaceCameraController = viewModel._viewer.scene.screenSpaceCameraController;
                     screenSpaceCameraController.ellipsoid = viewModel._ellipsoid;
                 },
@@ -276,8 +276,8 @@ function geocode(viewModel) {
                 convert: false
             };
 
-            var flight = CameraFlightPath.createAnimation(viewModel._viewer.scene, options);
-            viewModel._viewer.scene.animations.add(flight);
+            var flight = CameraFlightPath.createTween(viewModel._viewer.scene, options);
+            viewModel._viewer.scene.tweens.add(flight);
         } else {
             // Leaflet
             viewModel._viewer.map.fitBounds([[south, west], [north, east]]);
