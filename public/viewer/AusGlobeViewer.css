@@ -610,19 +610,35 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-info-properties-level1 {
-    padding-left: 10px;
-}
-
-.ausglobe-info-properties-level2 {
     padding-left: 20px;
 }
 
+.ausglobe-info-properties-level2 {
+    padding-left: 40px;
+}
+
 .ausglobe-info-properties-level3 {
-    padding-left: 30px;
+    padding-left: 60px;
 }
 
 .ausglobe-info-properties-level4 {
-    padding-left: 40px;
+    padding-left: 80px;
+}
+
+.ausglobe-info-properties-parent {
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.ausglobe-info-properties-arrow {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
+.ausglobe-info-properties-name {
+    display: inline-block;
 }
 
 .ausglobe-add-data-message {

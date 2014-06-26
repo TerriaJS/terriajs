@@ -23,7 +23,18 @@ var GeoDataInfoPopup = function(options) {
     template.setAttribute('id', 'ausglobe-info-item-template');
     template.innerHTML = '\
             <tr>\
-                <td data-bind="text: name, click: $root.toggleOpen, css: levelCssClass"></td>\
+                <td data-bind="click: $root.toggleOpen, css: cssClass">\
+                    <!-- ko if: isParent && value.isOpen() -->\
+                    <div class="ausglobe-info-properties-arrow" data-bind="cesiumSvgPath: { path: $root._arrowDownPath, width: 32, height: 32 }"></div>\
+                    <!-- /ko -->\
+                    <!-- ko if: isParent && !value.isOpen() -->\
+                    <div class="ausglobe-info-properties-arrow" data-bind="cesiumSvgPath: { path: $root._arrowRightPath, width: 32, height: 32 }"></div>\
+                    <!-- /ko -->\
+                    <!-- ko if: !isParent -->\
+                    <div class="ausglobe-info-properties-arrow"></div>\
+                    <!-- /ko -->\
+                    <div class="ausglobe-info-properties-name" data-bind="text: name"></div>\
+                </td>\
                 <!-- ko if: isParent -->\
                     <td></td>\
                 <!-- /ko -->\
@@ -63,6 +74,8 @@ var GeoDataInfoPopup = function(options) {
     wrapper.appendChild(info);
 
     var viewModel = this._viewModel = {
+        _arrowDownPath : 'M8.037,11.166L14.5,22.359c0.825,1.43,2.175,1.43,3,0l6.463-11.194c0.826-1.429,0.15-2.598-1.5-2.598H9.537C7.886,8.568,7.211,9.737,8.037,11.166z',
+        _arrowRightPath : 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z'
     };
 
     viewModel.info = options.viewModel;
@@ -88,28 +101,35 @@ var GeoDataInfoPopup = function(options) {
             if (o.hasOwnProperty(property) && property !== '__ko_mapping__' && property !== 'data' && property !== 'isOpen') {
                 var value = knockout.utils.unwrapObservable(o[property]);
 
+                var cssClass = 'ausglobe-info-properties-level' + level;
+                var isParent;
+
                 if (property === 'BoundingBox' && value instanceof Array) {
                     for (var i = 0; i < value.length; ++i) {
                         var subValue = knockout.utils.unwrapObservable(value[i]);
                         addBindingProperties(subValue, level + 1);
 
+                        isParent = typeof subValue === 'object' && !(subValue instanceof Array);
+
                         array.push({
                             name : property + ' (' + knockout.utils.unwrapObservable(subValue.CRS) + ')',
                             value : subValue,
-                            isParent : typeof subValue === 'object' && !(subValue instanceof Array),
+                            isParent : isParent,
                             isArray : subValue instanceof Array,
-                            levelCssClass : 'ausglobe-info-properties-level' + level
+                            cssClass : isParent ? cssClass + ' ausglobe-info-properties-parent' : cssClass
                         });
                     }
                 } else {
                     addBindingProperties(value, level + 1);
+
+                    isParent = typeof value === 'object' && !(value instanceof Array);
 
                     array.push({
                         name : property,
                         value : value,
                         isParent : typeof value === 'object' && !(value instanceof Array),
                         isArray : value instanceof Array,
-                        levelCssClass : 'ausglobe-info-properties-level' + level
+                        cssClass : isParent ? cssClass + ' ausglobe-info-properties-parent' : cssClass
                     });
                 }
             }
