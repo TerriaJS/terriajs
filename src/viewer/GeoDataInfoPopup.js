@@ -5,7 +5,62 @@ var getElement = Cesium.getElement;
 var when = Cesium.when;
 var loadXML = Cesium.loadXML;
 
+var corsProxy = require('../corsProxy');
 var knockout = require('knockout');
+
+var metadataConversions = {
+    KeywordList : function(node) {
+        var result = '';
+
+        var keywordNodes = node.childNodes;
+        for (var i = 0; i < keywordNodes.length; ++i) {
+            var keywordNode = keywordNodes[i];
+            if (keywordNode.nodeType === Node.ELEMENT_NODE && keywordNode.childNodes.length === 1 && keywordNode.childNodes[0].nodeType === Node.TEXT_NODE) {
+                if (result.length > 0) {
+                    result += '; ';
+                }
+                result += keywordNode.textContent.trim();
+            }
+        }
+
+        return {
+            name : node.nodeName,
+            value : result
+        };
+    },
+    BoundingBox : function(node) {
+        var crs = node.getAttribute('CRS');
+        var minx = node.getAttribute('minx');
+        var miny = node.getAttribute('miny');
+        var maxx = node.getAttribute('maxx');
+        var maxy = node.getAttribute('maxy');
+
+        if (!minx || !miny || !maxx || !maxy) {
+            return undefined;
+        }
+
+        return {
+            name : node.nodeName + ' (' + crs + ')',
+            value : 'MinX: ' + minx + ' MinY: ' + miny + ' MaxX: ' + maxx + ' MaxY: ' + maxy
+        };
+    },
+
+    EX_GeographicBoundingBox : function(node, xml) {
+        var west = getXmlValue(xml, node, wmsNamespaceResolver, 'wms:westBoundLongitude');
+        var south = getXmlValue(xml, node, wmsNamespaceResolver, 'wms:southBoundLatitude');
+        var east = getXmlValue(xml, node, wmsNamespaceResolver, 'wms:eastBoundLongitude');
+        var north = getXmlValue(xml, node, wmsNamespaceResolver, 'wms:northBoundLatitude');
+
+        if (!west || !south || !east || !north) {
+            return undefined;
+        }
+
+        return {
+            name : node.nodeName,
+            value : 'West: ' + west + '° South: ' + south + '° East: ' + east + '° North: ' + north + '°'
+        };
+    }
+};
 
 var GeoDataInfoPopup = function(options) {
     var container = getElement(options.container);
@@ -35,14 +90,12 @@ var GeoDataInfoPopup = function(options) {
         </table>\
         <hr />\
         <h2>Service Details</h2>\
-        <h2><span data-bind="text: serviceType"></span> URL</h2>\
-        <div class="ausglobe-info-field" data-bind="text: info.base_url"></div>\
-        <h2>Type</h2>\
-        <div class="ausglobe-info-field" data-bind="text: info.type"></div>\
-        <h2>URL</h2>\
-        <div class="ausglobe-info-field" data-bind="text: info.base_url"></div>\
-        <h2 data-bind="visible: info.Name && info.Name() !== \'REST\'">Layer Name</h2>\
-        <div class="ausglobe-info-field" data-bind="visible: info.Name && info.Name() !== \'REST\', text: info.Name"></div>\
+        <table data-bind="foreach: serviceProperties">\
+            <tr>\
+                <td data-bind="text: name">\
+                <td data-bind="text: value">\
+            </tr>\
+        </table>\
         </div>\
     ';
     wrapper.appendChild(info);
@@ -55,6 +108,7 @@ var GeoDataInfoPopup = function(options) {
     
     viewModel.layer = {};
     viewModel.layerProperties = knockout.observableArray();
+    viewModel.serviceProperties = knockout.observableArray();
 
     viewModel.close = function() {
         container.removeChild(wrapper);
@@ -83,122 +137,67 @@ var GeoDataInfoPopup = function(options) {
         return viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetCapabilities';
     });
 
-    when(loadXML(viewModel.getCapabilitiesUrl()), function(capabilities) {
-        var layerName = viewModel.info.Name();
+    var getCapabilitiesUrl = viewModel.getCapabilitiesUrl();
+    if (viewModel.info.proxy()) {
+        getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl);
+    }
 
-        // Find the layer in the capabilities document.
-        function nsResolver(prefix) {
-            var ns = {
-                'wms' : 'http://www.opengis.net/wms'
-            };
-            return ns[prefix] || null;
-        }
-        var result = capabilities.evaluate('/wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer[wms:Name="' + layerName + '"]', capabilities, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-        var node = result.singleNodeValue;
-        if (!node) {
-            result = capabilities.evaluate('/wms:WMS_Capabilities/wms:Capability/wms:Layer/wms:Layer[wms:Title="' + layerName + '"]', capabilities, nsResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
-            node = result.singleNodeValue;
-            if (!node) {
-                viewModel.layer.name('Layer not found in GetCapabilities document.');
-                return;
-            }
-        }
-
-        var conversions = {
-            KeywordList : function(node) {
-                var result = '';
-
-                var keywordNodes = node.childNodes;
-                for (var i = 0; i < keywordNodes.length; ++i) {
-                    var keywordNode = keywordNodes[i];
-                    if (keywordNode.nodeType === Node.ELEMENT_NODE && keywordNode.childNodes.length === 1 && keywordNode.childNodes[0].nodeType === Node.TEXT_NODE) {
-                        if (result.length > 0) {
-                            result += '; ';
-                        }
-                        result += keywordNode.textContent.trim();
-                    }
-                }
-
-                return {
-                    name : node.nodeName,
-                    value : result
-                };
-            },
-            BoundingBox : function(node) {
-                var crs = node.getAttribute('CRS');
-                var minx = node.getAttribute('minx');
-                var miny = node.getAttribute('miny');
-                var maxx = node.getAttribute('maxx');
-                var maxy = node.getAttribute('maxy');
-
-                if (!minx || !miny || !maxx || !maxy) {
-                    return undefined;
-                }
-
-                return {
-                    name : node.nodeName + ' (' + crs + ')',
-                    value : 'MinX: ' + minx + ' MinY: ' + miny + ' MaxX: ' + maxx + ' MaxY: ' + maxy
-                };
-            },
-
-            EX_GeographicBoundingBox : function(node, xml, resolver) {
-                var west = getXmlValue(xml, node, resolver, 'wms:westBoundLongitude');
-                var south = getXmlValue(xml, node, resolver, 'wms:southBoundLatitude');
-                var east = getXmlValue(xml, node, resolver, 'wms:eastBoundLongitude');
-                var north = getXmlValue(xml, node, resolver, 'wms:northBoundLatitude');
-
-                if (!west || !south || !east || !north) {
-                    return undefined;
-                }
-
-                return {
-                    name : node.nodeName,
-                    value : 'West: ' + west + '° South: ' + south + '° East: ' + east + '° North: ' + north + '°'
-                };
-            }
-        };
-
-        var keys = {};
-
-        var newItem;
-
-        var layerNodes = node.childNodes;
-        for (var i = 0; i < layerNodes.length; ++i) {
-            var layerNode = layerNodes[i];
-
-            newItem = undefined;
-            if (layerNode.nodeName && conversions[layerNode.nodeName]) {
-                newItem = conversions[layerNode.nodeName](layerNode, capabilities, nsResolver);
-                if (!newItem) {
-                    continue;
-                }
-            } else if (layerNode.nodeType === Node.ELEMENT_NODE && layerNode.childNodes.length === 1 && layerNode.childNodes[0].nodeType === Node.TEXT_NODE) {
-                newItem = {
-                    name : layerNode.nodeName,
-                    value : layerNode.textContent.trim()
-                };
-            }
-
-            if (!newItem) {
-                continue;
-            }
-
-            var oldItem = keys[newItem.name];
-            if (oldItem) {
-                oldItem.value(oldItem.value() + '; ' + newItem.value);
-            } else {
-                newItem.value = knockout.observable(newItem.value);
-                keys[newItem.name] = newItem;
-                viewModel.layerProperties.push(newItem);
-            }
-        }
-
-        //viewModel.layer.name(result.singleNodeValue)
-        console.log(result.singleNodeValue);
+    viewModel.layerProperties.push({
+        name : 'Loading...',
+        value : ''
     });
+
+    viewModel.serviceProperties.push({
+        name : 'Loading...',
+        value : ''
+    });
+
+    var layerName = viewModel.info.Name();
+
+    if (viewModel.info.type() === 'WMS') {
+        when(loadXML(getCapabilitiesUrl), function(capabilities) {
+            viewModel.layerProperties.removeAll();
+            viewModel.serviceProperties.removeAll();
+
+            // Find service information in the capabilities document.
+            var serviceNode = capabilities.evaluate('//wms:Service', capabilities, wmsNamespaceResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+            // Find the layer in the capabilities document.
+            var layerNode = capabilities.evaluate('//wms:Layer[wms:Name="' + layerName + '"]', capabilities, wmsNamespaceResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (!layerNode) {
+                layerNode = capabilities.evaluate('//wms:Layer[wms:Title="' + layerName + '"]', capabilities, wmsNamespaceResolver, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            }
+
+            if (layerNode) {
+                addOgcMetadata(viewModel.layerProperties, layerNode, capabilities, metadataConversions);
+            } else {
+                viewModel.layerProperties.push({
+                    name : 'Error',
+                    value : 'Layer not found in GetCapabilities document.'
+                });
+            }
+
+            if (serviceNode) {
+                addOgcMetadata(viewModel.serviceProperties, serviceNode, capabilities, metadataConversions);
+            } else {
+                viewModel.serviceProperties.push({
+                    name : 'Error',
+                    value : 'Service information not found in GetCapabilities document.'
+                });
+            }
+        });
+    }
 
     knockout.applyBindings(this._viewModel, wrapper);
 };
+
+function wmsNamespaceResolver(prefix) {
+    var ns = {
+        'wms' : 'http://www.opengis.net/wms'
+    };
+    return ns[prefix] || null;
+}
+
 
 function getXmlValue(xml, node, resolver, xpath) {
     var result = xml.evaluate(xpath, node, resolver, XPathResult.STRING_TYPE, null);
@@ -206,6 +205,43 @@ function getXmlValue(xml, node, resolver, xpath) {
         return result.stringValue;
     } else {
         return '';
+    }
+}
+
+function addOgcMetadata(properties, node, xml, metadataConversions) {
+    var keys = {};
+
+    var newItem;
+
+    var layerNodes = node.childNodes;
+    for (var i = 0; i < layerNodes.length; ++i) {
+        var layerNode = layerNodes[i];
+
+        newItem = undefined;
+        if (layerNode.nodeName && metadataConversions[layerNode.nodeName]) {
+            newItem = metadataConversions[layerNode.nodeName](layerNode, xml);
+            if (!newItem) {
+                continue;
+            }
+        } else if (layerNode.nodeType === Node.ELEMENT_NODE && layerNode.childNodes.length === 1 && layerNode.childNodes[0].nodeType === Node.TEXT_NODE) {
+            newItem = {
+                name : layerNode.nodeName,
+                value : layerNode.textContent.trim()
+            };
+        }
+
+        if (!newItem) {
+            continue;
+        }
+
+        var oldItem = keys[newItem.name];
+        if (oldItem) {
+            oldItem.value(oldItem.value() + '; ' + newItem.value);
+        } else {
+            newItem.value = knockout.observable(newItem.value);
+            keys[newItem.name] = newItem;
+            properties.push(newItem);
+        }
     }
 }
 
