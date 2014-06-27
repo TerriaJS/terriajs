@@ -279,13 +279,13 @@ GeoDataCollection.prototype._parseLayers = function(str_layers) {
 
 
 /**
- * Loads a GeoDataCollection based on a url, replacing any existing data.
+ * Loads a GeoDataCollection based on the intial url used to launch it
  *
  * @param {Object} url The url to be processed.
  *
  * @returns {Promise} a promise that will resolve when the CZML is processed.
  */
-GeoDataCollection.prototype.loadUrl = function(url) {
+GeoDataCollection.prototype.loadInitialUrl = function(url) {
     //URI suport for over-riding uriParams - put presets in uri_params
     var uri = new URI(url);
     var uri_params = {
@@ -314,8 +314,8 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     if (visUrl) {
         //call to server to get json record
         Cesium.when(Cesium.loadJson(visUrl), function(obj) {
-                //figure out this for versioning
-//            this.visID = obj.visID;
+                //capture an id if it is passed
+            that.visID = obj.id;
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
                 var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
@@ -332,6 +332,7 @@ GeoDataCollection.prototype.loadUrl = function(url) {
     }
     else if (visStr) {
         var obj = JSON.parse(visStr);
+        that.visID = obj.id;
         if (obj.camera !== undefined) {
             var e = JSON.parse(obj.camera);
             var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
@@ -346,9 +347,30 @@ GeoDataCollection.prototype.loadUrl = function(url) {
         }
     }
     else if (dataUrl) {
-        Cesium.loadText(this.dataUrl).then(function (text) { 
+        this.loadUrl(this.dataUrl, that.dataFormat);
+    }
+};
+
+/**
+ * Loads a GeoDataCollection based on the  url, replacing any existing data.
+ *
+ * @param {Object} url The url to be processed.
+ *
+ * @returns {Promise} a promise that will resolve when the CZML is processed.
+ */
+GeoDataCollection.prototype.loadUrl = function(url, format) {
+    var that = this;
+    if (!that.formatSupported(url)) {
+        //TODO: !!! need to set this up to handle wms and wfs urls
+        // Also need to think about allowing WMS url, but that is more work
+//      if (url.toUpperCase().indexOf('REQUEST=GETFEATURE') !== -1) {
+//          that.geoDataManager.loadUrl(url, 'GEOJSON');
+//      }
+    }
+    else {
+        Cesium.loadText(url).then(function (text) { 
             that.zoomTo = true;
-            that.loadText(text, that.dataUrl, that.dataFormat);
+            that.loadText(text, url, format);
         });
     }
 };
@@ -367,9 +389,9 @@ GeoDataCollection.prototype.getShareRequest = function( description ) {
     request.layers = this._stringify();
     request.version = '0.0.02';
     request.camera = JSON.stringify(description.camera); //just extent for now
-//     if (this.visID) {
-//        request.parent = this.visID;
-//    }
+    if (this.visID) {
+        request.id = this.visID;
+    }
     request.image = description.image;
     return request;
 };

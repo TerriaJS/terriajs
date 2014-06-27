@@ -189,7 +189,7 @@ var AusGlobeViewer = function(geoDataManager) {
         }
     });
 
-    this.geoDataManager.loadUrl(window.location);
+    this.geoDataManager.loadInitialUrl(window.location);
 
 };
 
