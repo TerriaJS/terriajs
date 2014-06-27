@@ -65,8 +65,8 @@ var GeoDataInfoPopup = function(options) {
         <div class="ausglobe-info-content">\
             <h2><span data-bind="text: serviceType"></span> URL</h2>\
             <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
-            <h2>GetCapabilities URL</h2>\
-            <a data-bind="attr: { href: getCapabilitiesUrl }, text: getCapabilitiesUrl" target="_blank"></a>\
+            <h2>Metadata URL</h2>\
+            <a data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
             <hr />\
             <h2>Layer Details</h2>\
             <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
@@ -177,19 +177,28 @@ var GeoDataInfoPopup = function(options) {
         }
     });
 
-    viewModel.getCapabilitiesUrl = knockout.computed(function() {
-        return viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetCapabilities';
+    viewModel.getMetadataUrl = knockout.computed(function() {
+        var type = viewModel.info.type();
+        if (type === 'WMS') {
+            return viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetCapabilities';
+        } else if (type === 'WFS') {
+            return viewModel.info.base_url() + '?service=WFS&version=1.1.0&request=GetCapabilities';
+        } else if (type === 'REST') {
+            return 'Esri REST service information not yet supported.';
+        } else {
+            return 'N/A';
+        }
     });
 
-    var getCapabilitiesUrl = viewModel.getCapabilitiesUrl();
+    var getMetadataUrl = viewModel.getMetadataUrl();
     if (viewModel.info.proxy()) {
-        getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl);
+        getMetadataUrl = corsProxy.getURL(getMetadataUrl);
     }
 
-    var layerName = viewModel.info.Name();
+    var layerName = viewModel.info.Name ? viewModel.info.Name() : viewModel.info.name();
 
     if (viewModel.info.type() === 'WMS') {
-        when(loadXML(getCapabilitiesUrl), function(capabilities) {
+        when(loadXML(getMetadataUrl), function(capabilities) {
             function findLayer(startLayer, name) {
                 if (startLayer.Name === name || startLayer.Title === name) {
                     return startLayer;
@@ -239,7 +248,78 @@ var GeoDataInfoPopup = function(options) {
             komapping.fromJS({
                 'An error occurred while invoking the GetCapabilities service.' : ''
             }, viewModel.layerProperties);
+
+            viewModel.isLoading(false);
         });
+    } else if (viewModel.info.type() === 'WFS') {
+        when(loadXML(getMetadataUrl), function(capabilities) {
+            function findLayer(startLayer, name) {
+                if (startLayer.Name === name || startLayer.Title === name) {
+                    return startLayer;
+                }
+
+                var layers = startLayer.FeatureType;
+                if (!defined(layers)) {
+                    return undefined;
+                }
+
+                var found = findLayer(layers, name);
+                for (var i = 0; !found && i < layers.length; ++i) {
+                    var layer = layers[i];
+                    found = findLayer(layer, name);
+                }
+
+                return found;
+            }
+
+            var json = $.xml2json(capabilities);
+            if (json.ServiceIdentification || json.ServiceProvider) {
+                if (json.ServiceIdentification) {
+                    komapping.fromJS(json.ServiceIdentification, viewModel.serviceProperties);
+                }
+                if (json.ServiceProvider) {
+                    komapping.fromJS(json.ServiceProvider, viewModel.serviceProperties);
+                }
+            } else {
+                komapping.fromJS({
+                    'Service information not found in GetCapabilities operation response.' : ''
+                }, viewModel.serviceProperties);
+            }
+
+            var layer = findLayer(json.FeatureTypeList, layerName);
+            if (layer) {
+                komapping.fromJS(layer, viewModel.layerProperties);
+            } else {
+                komapping.fromJS({
+                    'Layer information not found in GetCapabilities operation response.' : ''
+                }, viewModel.layerProperties);
+            }
+
+            addBindingProperties(viewModel.layerProperties, 1);
+            addBindingProperties(viewModel.serviceProperties, 1);
+
+            viewModel.isLoading(false);
+        }, function(e) {
+            komapping.fromJS({
+                'An error occurred while invoking the GetCapabilities service.' : ''
+            }, viewModel.serviceProperties);
+
+            komapping.fromJS({
+                'An error occurred while invoking the GetCapabilities service.' : ''
+            }, viewModel.layerProperties);
+
+            viewModel.isLoading(false);
+        });
+    } else {
+        komapping.fromJS({
+            'N/A' : ''
+        }, viewModel.serviceProperties);
+
+        komapping.fromJS({
+            'N/A' : ''
+        }, viewModel.layerProperties);
+
+        viewModel.isLoading(false);
     }
 
     knockout.applyBindings(this._viewModel, wrapper);
