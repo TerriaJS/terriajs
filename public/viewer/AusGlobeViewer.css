@@ -573,6 +573,11 @@ a.ausglobe-title-menuItem:hover {
     font-family: "Open Sans", sans-serif;
 }
 
+.ausglobe-info-content {
+    overflow: auto;
+    height: 437px;
+}
+
 .ausglobe-info-close-button {
     position: absolute;
     right: 0;
@@ -598,10 +603,50 @@ a.ausglobe-title-menuItem:hover {
     font-weight: bold;
 }
 
+.ausglobe-info h3 {
+    font-size: 9pt;
+}
+
 .ausglobe-info-field {
     position: relative;
     left: 10px;
     right: 10px;
+}
+
+.ausglobe-info-properties-name-cell {
+    white-space: nowrap;
+}
+
+.ausglobe-info-properties-level1 {
+    padding-left: 20px;
+}
+
+.ausglobe-info-properties-level2 {
+    padding-left: 40px;
+}
+
+.ausglobe-info-properties-level3 {
+    padding-left: 60px;
+}
+
+.ausglobe-info-properties-level4 {
+    padding-left: 80px;
+}
+
+.ausglobe-info-properties-parent {
+    cursor: pointer;
+}
+
+.ausglobe-info-properties-arrow {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    top: 3px;
+}
+
+.ausglobe-info-properties-name {
+    display: inline-block;
 }
 
 .ausglobe-add-data-message {
@@ -730,5 +775,4 @@ a.ausglobe-title-menuItem:hover {
 #cesiumContainer button.cesium-infoBox-camera {
     display: none;
 }
-
 
