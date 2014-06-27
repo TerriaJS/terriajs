@@ -571,7 +571,11 @@ a.ausglobe-title-menuItem:hover {
     bottom: 0;
     right: 0;
     font-family: "Open Sans", sans-serif;
+}
+
+.ausglobe-info-content {
     overflow: auto;
+    height: 437px;
 }
 
 .ausglobe-info-close-button {
@@ -609,6 +613,10 @@ a.ausglobe-title-menuItem:hover {
     right: 10px;
 }
 
+.ausglobe-info-properties-name-cell {
+    white-space: nowrap;
+}
+
 .ausglobe-info-properties-level1 {
     padding-left: 20px;
 }
@@ -627,7 +635,6 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-info-properties-parent {
     cursor: pointer;
-    white-space: nowrap;
 }
 
 .ausglobe-info-properties-arrow {
@@ -635,6 +642,7 @@ a.ausglobe-title-menuItem:hover {
     display: inline-block;
     width: 16px;
     height: 16px;
+    top: 3px;
 }
 
 .ausglobe-info-properties-name {

@@ -23,7 +23,7 @@ var GeoDataInfoPopup = function(options) {
     template.setAttribute('id', 'ausglobe-info-item-template');
     template.innerHTML = '\
             <tr>\
-                <td data-bind="click: $root.toggleOpen, css: cssClass">\
+                <td class="ausglobe-info-properties-name-cell" data-bind="click: $root.toggleOpen, css: cssClass">\
                     <!-- ko if: isParent && value.isOpen() -->\
                     <div class="ausglobe-info-properties-arrow" data-bind="cesiumSvgPath: { path: $root._arrowDownPath, width: 32, height: 32 }"></div>\
                     <!-- /ko -->\
@@ -56,20 +56,25 @@ var GeoDataInfoPopup = function(options) {
 
     var info = document.createElement('div');
     info.className = 'ausglobe-info';
+    info.setAttribute('data-bind', 'css : { loadingIndicator : isLoading }');
     info.innerHTML = '\
-        <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
-        <h1 data-bind="text: info.Title"></h1>\
-        <h2><span data-bind="text: serviceType"></span> URL</h2>\
-        <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
-        <h2>GetCapabilities URL</h2>\
-        <a data-bind="attr: { href: getCapabilitiesUrl }, text: getCapabilitiesUrl" target="_blank"></a>\
-        <hr />\
-        <h2>Layer Details</h2>\
-        <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
-        </table>\
-        <h2>Service Details</h2>\
-        <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
-        </table>\
+        <div class="ausglobe-info-header">\
+            <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
+            <h1 data-bind="text: info.Title"></h1>\
+        </div>\
+        <div class="ausglobe-info-content">\
+            <h2><span data-bind="text: serviceType"></span> URL</h2>\
+            <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
+            <h2>GetCapabilities URL</h2>\
+            <a data-bind="attr: { href: getCapabilitiesUrl }, text: getCapabilitiesUrl" target="_blank"></a>\
+            <hr />\
+            <h2>Layer Details</h2>\
+            <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
+            </table>\
+            <h2>Service Details</h2>\
+            <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
+            </table>\
+        </div>\
     ';
     wrapper.appendChild(info);
 
@@ -78,8 +83,9 @@ var GeoDataInfoPopup = function(options) {
         _arrowRightPath : 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z'
     };
 
+    viewModel.isLoading = knockout.observable(true);
     viewModel.info = options.viewModel;
-    
+
     viewModel.layer = {};
 
     function addBindingProperties(o, level) {
@@ -153,7 +159,7 @@ var GeoDataInfoPopup = function(options) {
     };
 
     viewModel.toggleOpen = function(item) {
-        if (defined(item.value)) {
+        if (defined(item.value) && defined(item.value.isOpen)) {
             item.value.isOpen(!item.value.isOpen());
         }
     };
@@ -194,7 +200,7 @@ var GeoDataInfoPopup = function(options) {
                     return undefined;
                 }
 
-                var found;
+                var found = findLayer(layers, name);
                 for (var i = 0; !found && i < layers.length; ++i) {
                     var layer = layers[i];
                     found = findLayer(layer, name);
@@ -204,13 +210,35 @@ var GeoDataInfoPopup = function(options) {
             }
 
             var json = $.xml2json(capabilities);
-            var layer = findLayer(json.Capability.Layer, layerName);
+            if (json.Service) {
+                komapping.fromJS(json.Service, viewModel.serviceProperties);
+            } else {
+                komapping.fromJS({
+                    'Service information not found in GetCapabilities operation response.' : ''
+                }, viewModel.serviceProperties);
+            }
 
-            komapping.fromJS(json.Service, viewModel.serviceProperties);
-            komapping.fromJS(layer, viewModel.layerProperties);
+            var layer = findLayer(json.Capability.Layer, layerName);
+            if (layer) {
+                komapping.fromJS(layer, viewModel.layerProperties);
+            } else {
+                komapping.fromJS({
+                    'Layer information not found in GetCapabilities operation response.' : ''
+                }, viewModel.layerProperties);
+            }
 
             addBindingProperties(viewModel.layerProperties, 1);
             addBindingProperties(viewModel.serviceProperties, 1);
+
+            viewModel.isLoading(false);
+        }, function(e) {
+            komapping.fromJS({
+                'An error occurred while invoking the GetCapabilities service.' : ''
+            }, viewModel.serviceProperties);
+
+            komapping.fromJS({
+                'An error occurred while invoking the GetCapabilities service.' : ''
+            }, viewModel.layerProperties);
         });
     }
 
