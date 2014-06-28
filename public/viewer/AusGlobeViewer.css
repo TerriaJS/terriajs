@@ -573,38 +573,45 @@ a.ausglobe-title-menuItem:hover {
     font-family: "Open Sans", sans-serif;
 }
 
+.ausglobe-info-header {
+
+}
+
 .ausglobe-info-content {
     overflow: auto;
-    height: 437px;
+    height: 435px;
+    padding: 15px;
 }
 
 .ausglobe-info-close-button {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 10px;
+    top: 4px;
     cursor: pointer;
-    padding: 10px;
     font-size: 18pt;
     font-weight: bold;
+    color: #0099CC;
 }
 
 .ausglobe-info h1 {
-    font-size: 12pt;
-    padding: 10px;
+    font-size: 16px;
+    padding: 15px;
     font-weight: bold;
+    margin: 0;
 }
 
 .ausglobe-info h2 {
     font-size: 10pt;
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 2px;
     font-weight: bold;
+    margin: 0;
 }
 
 .ausglobe-info h3 {
     font-size: 9pt;
+}
+
+.ausglobe-info hr {
+    margin-bottom: 20px;
 }
 
 .ausglobe-info-field {
@@ -613,24 +620,28 @@ a.ausglobe-title-menuItem:hover {
     right: 10px;
 }
 
+.ausglobe-info-section {
+    padding-bottom: 20px;
+}
+
 .ausglobe-info-properties-name-cell {
     white-space: nowrap;
 }
 
 .ausglobe-info-properties-level1 {
-    padding-left: 20px;
+    padding-left: 0px;
 }
 
 .ausglobe-info-properties-level2 {
-    padding-left: 40px;
+    padding-left: 20px;
 }
 
 .ausglobe-info-properties-level3 {
-    padding-left: 60px;
+    padding-left: 40px;
 }
 
 .ausglobe-info-properties-level4 {
-    padding-left: 80px;
+    padding-left: 60px;
 }
 
 .ausglobe-info-properties-parent {
@@ -696,6 +707,7 @@ a.ausglobe-title-menuItem:hover {
     font-size: 14px;
     font-weight: 300;
     color: white;
+    padding-left: 20px;
 }
 
 @media print {

@@ -80,7 +80,7 @@ var GeoDataBrowser = function(options) {
                             <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: !isOpen(), cesiumSvgPath: { path: $root._arrowRight, width: 32, height: 32 }"></div>\
                             <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                         </div>\
-                        <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
+                        <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading...</div>\
                         <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
                             <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
                                 <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: isEnabled, cesiumSvgPath: { path: $root._checkboxChecked, width: 32, height: 32 }"></div>\
