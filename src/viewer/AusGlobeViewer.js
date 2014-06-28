@@ -1110,7 +1110,7 @@ function flyToPosition(scene, position, durationMilliseconds) {
         stopObject : {
             time : 1.0
         },
-        onUpdate : function(value) {
+        update : function(value) {
             scene.camera.position.x = CesiumMath.lerp(startPosition.x, endPosition.x, value.time);
             scene.camera.position.y = CesiumMath.lerp(startPosition.y, endPosition.y, value.time);
             scene.camera.position.z = CesiumMath.lerp(startPosition.z, endPosition.z, value.time);
@@ -1122,10 +1122,10 @@ function flyToPosition(scene, position, durationMilliseconds) {
             camera.right = Matrix3.multiplyByVector(enuToFixedRotation, initialEnuRight, camera.right);
             camera.direction = Matrix3.multiplyByVector(enuToFixedRotation, initialEnuDirection, camera.direction);
         },
-        onComplete : function() {
+        complete : function() {
             controller.enableInputs = true;
         },
-        onCancel: function() {
+        cancel: function() {
             controller.enableInputs = true;
         }
     });
