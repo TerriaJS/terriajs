@@ -675,7 +675,7 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-user-service-form {
     position: relative;
     padding: 10px;
-    width: 100%;
+    width: 320px;
     min-height: 90px;
     color: white;
     font-size: 14px;
@@ -688,7 +688,7 @@ a.ausglobe-title-menuItem:hover {
     height: 30px;
     border: 1px solid #555555;
     width: 80px;
-    right: 0;
+    right: 6px;
     font-size: 9pt;
     padding: 2px;
     background-color: #333333;
