@@ -445,6 +445,68 @@ var GeoDataBrowserViewModel = function(options) {
     document.addEventListener("dragexit", noopHandler, false);
     document.addEventListener("dragover", noopHandler, false);
     document.addEventListener("drop", dropHandler, false);
+
+    var draggedNowViewingItem;
+    var dragPlaceholder;
+
+    this._startNowViewingDrag = createCommand(function(viewModel, e) {
+        console.log('start');
+        draggedNowViewingItem = e.target;
+
+        dragPlaceholder = document.createElement('div');
+        dragPlaceholder.className = 'ausglobe-nowViewing-drop-target';
+        dragPlaceholder.style.height = draggedNowViewingItem.clientHeight + 'px';
+
+        e.originalEvent.dataTransfer.setData('text/plain', 'Dragging a Now View item.');
+
+        return true;
+    });
+
+    this._nowViewingDragEnter = createCommand(function(viewModel, e) {
+        if (e.currentTarget === dragPlaceholder || !e.currentTarget.parentElement) {
+            return;
+        }
+
+        console.log('enter');
+
+        e.originalEvent.dataTransfer.dropEffect = 'move';
+
+        draggedNowViewingItem.style.display = 'none';
+
+        // Add the placeholder above the entered element.
+        // If the placeholder is already below the entered element, move it above.
+        // TODO: this logic is imperfect.
+        var placeholderIndex;
+        var targetIndex;
+
+        var siblings = e.currentTarget.parentElement.childNodes;
+        for (var i = 0; i < siblings.length; ++i) {
+            if (siblings[i] === dragPlaceholder) {
+                placeholderIndex = i;
+            }
+            if (siblings[i] === e.currentTarget) {
+                targetIndex = i;
+            }
+        }
+
+        var insertBefore = true;
+        if (placeholderIndex === targetIndex - 1) {
+            insertBefore = false;
+        }
+
+        if (dragPlaceholder.parentElement) {
+            console.log('removing placeholder');
+            dragPlaceholder.parentElement.removeChild(dragPlaceholder);
+        }
+
+        if (insertBefore) {
+            console.log('inserting before ' + e.currentTarget.title);
+            e.currentTarget.parentElement.insertBefore(dragPlaceholder, e.currentTarget);
+        } else {
+            console.log('inserting after ' + e.currentTarget.title);
+            e.currentTarget.parentElement.insertBefore(dragPlaceholder, siblings[targetIndex + 1]);
+        }
+    });
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {
@@ -571,6 +633,18 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     addUploadedFile : {
         get : function() {
             return this._addUploadedFile;
+        }
+    },
+
+    startNowViewingDrag : {
+        get : function() {
+            return this._startNowViewingDrag;
+        }
+    },
+
+    nowViewingDragEnter : {
+        get : function() {
+            return this._nowViewingDragEnter;
         }
     }
 });
