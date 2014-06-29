@@ -73,7 +73,7 @@ var GeoDataInfoPopup = function(options) {
             </div>\
             <hr />\
             <div class="ausglobe-info-section">\
-                <h2>Layer Details</h2>\
+                <h2>Data Details</h2>\
                 <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
                 </table>\
             </div>\
