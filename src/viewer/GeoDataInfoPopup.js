@@ -63,17 +63,26 @@ var GeoDataInfoPopup = function(options) {
             <h1 data-bind="text: info.Title"></h1>\
         </div>\
         <div class="ausglobe-info-content">\
-            <h2><span data-bind="text: serviceType"></span> URL</h2>\
-            <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
-            <h2>Metadata URL</h2>\
-            <a data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
+            <div class="ausglobe-info-section">\
+                <h2><span data-bind="text: serviceType"></span> Base URL</h2>\
+                <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
+            </div>\
+            <div class="ausglobe-info-section">\
+                <h2>Metadata URL</h2>\
+                <a data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
+            </div>\
             <hr />\
-            <h2>Layer Details</h2>\
-            <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
-            </table>\
-            <h2>Service Details</h2>\
-            <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
-            </table>\
+            <div class="ausglobe-info-section">\
+                <h2>Data Details</h2>\
+                <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
+                </table>\
+            </div>\
+            <hr />\
+            <div class="ausglobe-info-section">\
+                <h2>Service Details</h2>\
+                <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
+                </table>\
+            </div>\
         </div>\
     ';
     wrapper.appendChild(info);
