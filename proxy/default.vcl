@@ -79,9 +79,9 @@ backend default {
 #         beresp.http.Set-Cookie ||
 #         beresp.http.Vary == "*") {
 # 		/*
-# 		 * Mark as "Hit-For-Pass" for the next 2 minutes
+# 		 * Mark as "Hit-For-Pass" for the next hour
 # 		 */
-# 		set beresp.ttl = 120 s;
+# 		set beresp.ttl = 1h;
 # 		return (hit_for_pass);
 #     }
 #     return (deliver);
