@@ -372,14 +372,20 @@ var GeoDataBrowserViewModel = function(options) {
         }
     };
 
-    this.nowViewing = komapping.fromJS(this._dataManager.layers, nowViewingMapping);
+    function getLayers() {
+        var layers = that._dataManager.layers.slice();
+        layers.reverse();
+        return layers;
+    }
+
+    this.nowViewing = komapping.fromJS(getLayers(), nowViewingMapping);
 
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(function() {
-        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
     });
 
     this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(function() {
-        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
     });
 
     function noopHandler(evt) {

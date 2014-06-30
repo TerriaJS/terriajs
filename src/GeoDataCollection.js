@@ -8,6 +8,7 @@ var GeoData = require('./GeoData');
 var readText = require('./readText');
 
 var defaultValue = Cesium.defaultValue;
+var defined = Cesium.defined;
 var DeveloperError = Cesium.DeveloperError;
 var FeatureDetection = Cesium.FeatureDetection;
 var KmlDataSource = Cesium.KmlDataSource;
@@ -114,6 +115,16 @@ GeoDataCollection.prototype._getUniqueLayerName = function(name) {
     return name;
 };
 
+function isFeatureLayer(collection, layer) {
+    if (defined(layer.dataSource)) {
+        return true;
+    } else if (!collection.map) {
+        return false;
+    } else if (layer.primitive instanceof L.GeoJSON) {
+        return true;
+    }
+}
+
 /**
 * Add a new geodata item
 *
@@ -126,9 +137,54 @@ GeoDataCollection.prototype.add = function(layer) {
         return layer;
     }
     layer.name = this._getUniqueLayerName(layer.name);
-    this.layers.push(layer);
+
+    // Feature layers go on the bottom (which is the top in display order), then map layers go above that.
+    var firstFeatureLayer = this.layers.length;
+    for (var i = 0; i < this.layers.length; ++i) {
+        if (isFeatureLayer(this, this.layers[i])) {
+            firstFeatureLayer = i;
+            break;
+        }
+    }
+
+    if (isFeatureLayer(this, layer)) {
+        this.layers.push(layer);
+    } else {
+        this.layers.splice(firstFeatureLayer, 0, layer);
+    }
+
     this.GeoDataAdded.raiseEvent(this, layer);
     return layer;
+};
+
+/**
+ * Moves the given layer up so that it is displayed above the layers below it.
+ * This effectively moves the layer later in the layers array.
+ *
+ * @param {Object} layer The layer to move.
+ */
+GeoDataCollection.prototype.moveUp = function(layer) {
+    // Feature layers cannot be reordered.
+    if (isFeatureLayer(layer)) {
+        return;
+    }
+
+    var currentIndex = this.layers.indexOf(layer);
+    var newIndex = currentIndex + 1;
+    if (newIndex >= this.layers.length) {
+        return;
+    }
+
+};
+
+/**
+ * Moves the given layer down so that it is displayed under the layers above it.
+ * This effectively moves the layer earlier in the layers array.
+ *
+ * @param {Object} layer The layer to move.
+ */
+GeoDataCollection.prototype.moveDown = function(layer) {
+
 };
 
 /**
