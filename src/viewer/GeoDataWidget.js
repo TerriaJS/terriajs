@@ -122,7 +122,7 @@ function dropHandler(evt, that) {
 }
 
 //Simple html dialog
-GeoDataWidget.prototype.showHTMLTextDialog = function(title_text, display_text, b_modal, url) {
+GeoDataWidget.prototype.showHTMLTextDialog = function(title_text, display_text, b_modal, layer) {
     var that = this;
     
     if (b_modal === undefined) {
@@ -141,11 +141,12 @@ GeoDataWidget.prototype.showHTMLTextDialog = function(title_text, display_text, 
             of: window
         }
     };
-    if (url !== undefined) {
+    if (layer !== undefined) {
         dlg_props.buttons = {
             "Load": function () {
-                if (url) {
-                    that.geoDataManager.loadUrl(url);
+                if (layer) {
+                    that.geoDataManager.zoomTo = true;
+                    that.geoDataManager.sendLayerRequest(layer);
                 }
                 $(this).dialog('close');
             }
@@ -167,21 +168,20 @@ GeoDataWidget.prototype.postToService = function(service, request) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var str, url;
+            var str, layer;
             if (xhr.status !== 200) {
                 str = 'Error ' + xhr.status + ': ' + xhr.responseText;
             }
             else {
                 var res = JSON.parse(xhr.responseText);
                 str = res.displayHtml;
-                url = res.dataUrl;
-                if (url !== undefined) {
-                    str += '<h3>Data Links:</h3>';
-                    str += '<i> - You can click load or copy and paste this url into Add Data</i><br>';
-                    str += url;
+                if (res.layer !== undefined) {
+                    str += '<h3>---------------</h3>';
+                    str += 'Click the load button below to load the page from the service.';
+                    layer = res.layer;
                 }
             }
-            that.showHTMLTextDialog(service.name + ' responded with', str, true, url);
+            that.showHTMLTextDialog(service.name + ' responded with', str, true, layer);
         }
     };
     xhr.open('POST', service.url);

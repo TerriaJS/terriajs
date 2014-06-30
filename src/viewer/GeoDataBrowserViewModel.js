@@ -363,6 +363,12 @@ var GeoDataBrowserViewModel = function(options) {
         komapping.fromJS(browserContent, that._collectionListMapping, browserContentViewModel);
     });
 
+    Cesium.loadJson('./nm_services.json').then(function (obj) {
+        if (obj !== undefined) {
+            that._dataManager.addServices(obj.services);
+        }
+    });
+
     this.userContent = komapping.fromJS([], this._collectionListMapping);
 
     var nowViewingMapping = {

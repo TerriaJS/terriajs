@@ -1,5 +1,5 @@
 {"name":"National Map Services", "nm_ext_type": "services", "services": [
     { "name": "GeoSpace", "description": "A service provided by NICTA for sharing visualizations made in National Map", "url": "http://geospace.research.nicta.com.au/upload", "request": "POST"},
-    { "name": "Your Service", "description": "Something you built"}
+    { "name": "NM Sample Service", "description": "A service returning bike racks on the Gold Coast", "url": "http://localhost:3000/nm_service_1", "request": "POST"}
 ]}
 
