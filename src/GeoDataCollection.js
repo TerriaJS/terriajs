@@ -41,11 +41,6 @@ var GeoDataCollection = function() {
     // IE versions prior to 10 don't support CORS, so always use the proxy.
     this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
     
-    //load list of available services for GeoDataCollection
-    Cesium.loadJson('./data_sources.json').then(function (obj) {
-        that.serviceList = obj;
-    });
-    
     //load list of available services for National Map
     this.services = [];
     Cesium.loadJson('./nm_services.json').then(function (obj) {
@@ -76,7 +71,6 @@ GeoDataCollection.prototype.setViewer = function(obj) {
     
     //re-request all the layers on the new map
     for (var i = 0; i < this.layers.length; i++) {
-        console.log('Redisplay Layer', this.layers[i].name);
         this.layers[i].skip = true;
         this.sendLayerRequest(this.layers[i]);
     }
@@ -409,10 +403,16 @@ GeoDataCollection.prototype.getShareRequestURL = function( request ) {
 // -------------------------------------------
 // Handle data sources from text
 // -------------------------------------------
-function endsWith(str, suffix) {
-    var strLength = str.length;
-    var suffixLength = suffix.length;
-    return (suffixLength < strLength) && (str.indexOf(suffix, strLength - suffixLength) !== -1);
+function getFormatFromUrl(url) {
+    if (url !== undefined) {
+        var idx = url.lastIndexOf('.');
+        if (idx === -1 || (idx < url.lastIndexOf('/'))) {
+            return;
+        }
+        var format = url.toUpperCase().substring(idx+1);
+        console.log(format);
+        return format;
+    }
 }
 
 /**
@@ -422,10 +422,11 @@ function endsWith(str, suffix) {
 *
 */
 GeoDataCollection.prototype.formatSupported = function(srcname) {
-    var supported = [".CZML", ".GEOJSON", ".GJSON", ".TOPOJSON", ".JSON", ".TOPOJSON", ".KML", ".KMZ", ".GPX", ".CSV"];
-    var sourceUpperCase = srcname.toUpperCase();
+    var supported = ["CZML", "GEOJSON", "GJSON", "TOPOJSON", "JSON", "TOPOJSON", "KML", "KMZ", "GPX", "CSV"];
+    var format = getFormatFromUrl(srcname);
+    
     for (var i = 0; i < supported.length; i++) {
-        if (endsWith(sourceUpperCase, supported[i])) {
+        if (format === supported[i]) {
             return true;
         }
     }
@@ -441,54 +442,53 @@ GeoDataCollection.prototype.formatSupported = function(srcname) {
  * @param {string} srcname The text file name to get the format extension from.
  *
 */
-GeoDataCollection.prototype.loadText = function(text, srcname, format) {
+GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     var DataSource;
-    var sourceUpperCase = srcname.toUpperCase();
-    if (format !== undefined) {
-        sourceUpperCase = (srcname + '.' + format).toUpperCase();
-    }
     
-    var layer;
     var dom;
-
+    
+    if (layer === undefined) {
+        layer = new GeoData({ name: srcname, type: 'DATA' });
+    }
+    if (format === undefined) {
+        format = getFormatFromUrl(srcname);
+    }
+    format = format.toUpperCase();
+    
     //TODO: !!! save dataset text for dnd data
 
         //Natively handled data sources in cesium
-    if (endsWith(sourceUpperCase, ".CZML")) {
+    if (format === "CZML") {
         var czmlDataSource = new Cesium.CzmlDataSource();
         czmlDataSource.load(JSON.parse(text));
         this.dataSourceCollection.add(czmlDataSource);
             //add it as a layer
-        layer = new GeoData({ name: srcname, type: 'DATA' });
         layer.dataSource = czmlDataSource;
         layer.extent = getDataSourceExtent(czmlDataSource);
         this.add(layer);
     }
-    else if (endsWith(sourceUpperCase, ".GEOJSON") ||
-            endsWith(sourceUpperCase, ".GJSON") ||
-            endsWith(sourceUpperCase, ".JSON") ||
-            endsWith(sourceUpperCase, ".TOPOJSON")) {
-        layer = new GeoData({ name: srcname, type: 'DATA' });
+    else if (format === "GEOJSON" ||
+            format === "GJSON" ||
+            format === "JSON" ||
+            format === "TOPOJSON") {
         this.addGeoJsonLayer(JSON.parse(text), srcname, layer);
     } 
         //Convert in browser using toGeoJSON https://github.com/mapbox/togeojson    
-    else if (endsWith(sourceUpperCase, ".KML")) {
+    else if (format === "KML") {
         layer = new GeoData({ name: srcname, type: 'DATA' });
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
         this.addGeoJsonLayer(toGeoJSON.kml(dom), srcname, layer);
     } 
-    else if (endsWith(sourceUpperCase, ".GPX")) {
-        layer = new GeoData({ name: srcname, type: 'DATA' });
+    else if (format === "GPX") {
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
         this.addGeoJsonLayer(toGeoJSON.gpx(dom), srcname, layer);
     } 
         //Handle table data using TableDataSource plugin        
-    else if (endsWith(sourceUpperCase, ".CSV")) {
+    else if (format === "CSV") {
         var tableDataSource = new TableDataSource();
         tableDataSource.loadText(text);
         this.dataSourceCollection.add(tableDataSource);
         
-        layer = new GeoData({name: srcname, type: 'DATA' });
         layer.dataSource = tableDataSource;
         layer.extent = tableDataSource.dataset.getExtent();
         this.add(layer);
@@ -740,9 +740,11 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
 // Load data file based on extension if loaded as DATA layer
 GeoDataCollection.prototype._viewData = function(request, layer) {
     var that = this;
+    var format = getFormatFromUrl(layer.url);
+    
         //load text here to let me control functions called after
     Cesium.when(Cesium.loadText(request), function (text) {
-        that.loadText(text, layer.name);
+        that.loadText(text, layer.name, format, layer);
     });
 };
 
@@ -757,9 +759,6 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     }
     else if (layer.type === 'WMS') {
         this._viewMap(request, layer);
-    }
-    else if (layer.type === 'CSV') {
-        this._viewTable(request, layer);
     }
     else if (layer.type === 'DATA') {
         this._viewData(request, layer);
@@ -909,12 +908,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         description.extent = Cesium.Rectangle.fromDegrees(parseFloat(ext.xmin), parseFloat(ext.ymin), 
             parseFloat(ext.xmax), parseFloat(ext.ymax));
     }
-    else if (description.type === 'CSV') {
-        layers = json_gml.Layer;
-    }
-    else if (description.type === 'GME') {
-        layers = json_gml.Layer;
-    }
 //    else if (description.type === 'CKAN') {
 //        layers = json_gml.result.results;
 //        for (i = 0; i < layers.length; i++) {
@@ -922,7 +915,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 //        }
  //   }
     else {
-        throw new DeveloperError('Getting capabilities for unsupported service: ' + description.type);
+        throw new DeveloperError('Somehow got capabilities from unsupported type: ' + description.type);
     }
     
     //get the version
@@ -937,26 +930,27 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 };
 
 /**
-* Get capabilities from service
+* Get capabilities from service for WMS, WFS and REST
+*  This also include GME and ESRI backends via their version of WMS/WFS
 *
 * @memberof GeoDataCollection
 *
 */
 GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     var request;
-    if (description.type === 'CSV' || description.type === 'GME' ) {
-        request = description.base_url;
-    }
-    else if (description.type === 'REST') {
+    if (description.type === 'REST') {
         request = description.base_url + '?f=pjson';
     }
 //    else if (description.type === 'CKAN') {
 //        request = description.base_url + '/api/3/action/package_search?q=GeoJSON&rows=50';
 //    }
-    else {
+    else if (description.type === 'WMS' || description.type === 'WFS') {
         request = description.base_url + '?service=' + description.type + '&request=GetCapabilities';
     }
-    
+    else {
+        throw new DeveloperError('Cannot get capabilites for service: ' + description.type);
+    }
+   
     console.log('CAPABILITIES REQUEST:',request);
     if (description.proxy || this.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
@@ -1195,18 +1189,18 @@ function getRandomColor(palette) {
 */
 
 var line_palette = {
-    minimumRed : 0.3,
-    minimumGreen : 0.3,
-    minimumBlue : 0.3,
-    maximumRed : 0.8,
-    maximumGreen : 0.8,
-    maximumBlue : 0.8,
+    minimumRed : 0.4,
+    minimumGreen : 0.4,
+    minimumBlue : 0.4,
+    maximumRed : 0.9,
+    maximumGreen : 0.9,
+    maximumBlue : 0.9,
     alpha : 1.0
 };
 var point_palette = {
-    minimumRed : 0.5,
-    minimumGreen : 0.5,
-    minimumBlue : 0.5,
+    minimumRed : 0.6,
+    minimumGreen : 0.6,
+    minimumBlue : 0.6,
     maximumRed : 1.0,
     maximumGreen : 1.0,
     maximumBlue : 1.0,
@@ -1406,7 +1400,7 @@ GeoDataCollection.prototype.addFile = function(file) {
                     }
                     else {
                         that.zoomTo = true;
-                        that.loadText(response, file.name+'.geojson');
+                        that.loadText(response, file.name, "GEOJSON");
                     }
                 }
             };

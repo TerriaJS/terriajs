@@ -407,11 +407,11 @@ var GeoDataBrowserViewModel = function(options) {
             }
 
             var collections;
-            if (json.name === 'National Map Data Sources') {
+            if (json.nm_ext_type === 'sources') {
                 collections = json.Layer;
-            } else if (json.name === 'National Map Collections') {
+            } else if (json.nm_ext_type === 'collections') {
                 collections = [json];
-            } else if (json.name === 'National Map Services') {
+            } else if (json.nm_ext_type === 'services') {
                 that._dataManager.addServices(json.services);
             }
             
