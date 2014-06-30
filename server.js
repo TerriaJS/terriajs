@@ -35,6 +35,7 @@ if (cluster.isMaster) {
     var path = require('path');
     var express = require('express');
     var url = require('url');
+    var cors = require('cors');
 
     var mime = express.static.mime;
     mime.define({
@@ -47,6 +48,7 @@ if (cluster.isMaster) {
     var dir = path.join(__dirname, 'public');
 
     var app = express();
+    app.use(cors());
     //app.use(express.compress());
     app.use(express.static(dir));
 

@@ -43,11 +43,6 @@ var GeoDataCollection = function() {
     
     //load list of available services for National Map
     this.services = [];
-    Cesium.loadJson('./nm_services.json').then(function (obj) {
-        if (obj !== undefined) {
-            that.addServices(obj.services);
-        }
-    });
     
 };
 
@@ -1121,7 +1116,7 @@ function reducePointList(pts, epsilon, limit) {
             }
         }
     }
-    console.log(pts.length, 'points reduced to', pts_out.length);
+//    console.log(pts.length, 'points reduced to', pts_out.length);
     return pts_out;
 }
 
