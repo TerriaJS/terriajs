@@ -1,0 +1,5 @@
+{"name":"National Map Services", "nm_ext_type": "services", "services": [
+    { "name": "Local GeoSpace", "description": "A local instance to GeoSpace for testing", "url": "http://localhost:3000/upload", "request": "POST"},
+    { "name": "NM Service 1", "description": "A service returning bike racks on the Gold Coast", "url": "http://localhost:3000/nm_service_1", "request": "POST"}
+]}
+

@@ -1,4 +1,4 @@
-{"name":"National Map Data Sources", "Layer": [
+{"name":"National Map Data Sources", "nm_ext_type": "sources", "Layer": [
   { "name": "Maps", "Layer": [
     { "name": "Boundaries (ABS)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "proxy": false },
     { "name": "Boundaries (PSMA)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_psma/ows", "type": "WMS", "proxy": false },
@@ -13,10 +13,6 @@
     { "name": "Water (BOM Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WFS", "proxy": true },
     { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WFS", "proxy": false },
     { "name": "Western Australia", "base_url": "http://www2.landgate.wa.gov.au/ows/wfspublic_4326/wfs", "type": "WFS", "proxy": true }
-  ]},
-  { "name": "Other", "Layer": [
-    { "name": "GME Example", "base_url": "./datasets/gme_service.json", "type": "GME", "proxy": false },
-    { "name": "Sample GeoData", "base_url": "./datasets/csv_service.json", "type": "CSV", "proxy": false }
   ]}
 ]}
 

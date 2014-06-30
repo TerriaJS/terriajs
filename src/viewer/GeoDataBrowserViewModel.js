@@ -116,19 +116,29 @@ var GeoDataBrowserViewModel = function(options) {
         });
     });
 
-    this._addWfsService = createCommand(function() {
-        var item = createCategory({
-            data : {
-                name : that.wfsServiceUrl,
-                base_url : that.wfsServiceUrl,
-                type : 'WFS',
-                proxy : true
+    this._addDataOrService = createCommand(function() {
+        if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
+            that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
+        }
+        else {
+                //TODO: set type based on user confirmation - need real UI
+            var ret = window.confirm("Dumb UI to cover for now.  Click OK for a WFS service and cancel for a WMS service.");
+            var type = 'WFS';
+            if (ret === false) {
+                type = 'WMS';
             }
-        });
-        that.userContent.push(item);
+            var item = createCategory({
+                data : {
+                    name : that.wfsServiceUrl,
+                    base_url : that.wfsServiceUrl,
+                    type : type,
+                    proxy : true
+                }
+            });
+            that.userContent.push(item);
 
-        item.isOpen(true);
-
+            item.isOpen(true);
+        }
         that.wfsServiceUrl = '';
     });
 
@@ -397,11 +407,11 @@ var GeoDataBrowserViewModel = function(options) {
             }
 
             var collections;
-            if (json.name === 'National Map Data Sources') {
+            if (json.nm_ext_type === 'sources') {
                 collections = json.Layer;
-            } else if (json.name === 'National Map Collections') {
+            } else if (json.nm_ext_type === 'collections') {
                 collections = [json];
-            } else if (json.name === 'National Map Services') {
+            } else if (json.nm_ext_type === 'services') {
                 that._dataManager.addServices(json.services);
             }
             
@@ -433,7 +443,7 @@ var GeoDataBrowserViewModel = function(options) {
         var files = evt.dataTransfer.files;
         for (var i = 0; i < files.length; ++i) {
             var file = files[i];
-            if (file.name.indexOf('.json') === -1) {
+            if (file.name.toUpperCase().indexOf('.JSON') === -1) {
                 continue;
             }
 
@@ -556,9 +566,9 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
         }
     },
 
-    addWfsService : {
+    addDataOrService : {
         get : function() {
-            return this._addWfsService;
+            return this._addDataOrService;
         }
     },
 
