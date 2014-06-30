@@ -456,10 +456,29 @@ var GeoDataBrowserViewModel = function(options) {
         dragPlaceholder = document.createElement('div');
         dragPlaceholder.className = 'ausglobe-nowViewing-drop-target';
         dragPlaceholder.style.height = draggedNowViewingItem.clientHeight + 'px';
+        dragPlaceholder.addEventListener('drop', function(e) {
+            draggedNowViewingItem.parentElement.removeChild(draggedNowViewingItem);
+            dragPlaceholder.parentElement.insertBefore(draggedNowViewingItem, dragPlaceholder);
+        }, false);
 
         e.originalEvent.dataTransfer.setData('text/plain', 'Dragging a Now View item.');
 
         return true;
+    });
+
+    this._endNowViewingDrag = createCommand(function(viewModel, e) {
+        console.log('end drag');
+
+        if (defined(draggedNowViewingItem)) {
+            draggedNowViewingItem.style.display = 'block';
+        }
+
+        if (defined(dragPlaceholder)) {
+            if (defined(dragPlaceholder.parentElement)) {
+                dragPlaceholder.parentElement.removeChild(dragPlaceholder);
+            }
+            dragPlaceholder = undefined;
+        }
     });
 
     this._nowViewingDragEnter = createCommand(function(viewModel, e) {
@@ -645,6 +664,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     nowViewingDragEnter : {
         get : function() {
             return this._nowViewingDragEnter;
+        }
+    },
+
+    endNowViewingDrag : {
+        get : function() {
+            return this._endNowViewingDrag;
         }
     }
 });
