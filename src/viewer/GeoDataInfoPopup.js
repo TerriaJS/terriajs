@@ -64,6 +64,9 @@ var GeoDataInfoPopup = function(options) {
         </div>\
         <div class="ausglobe-info-content">\
             <div class="ausglobe-info-section">\
+                <div class="asuglobe-info-description" data-bind="html: description"></div>\
+            </div>\
+            <div class="ausglobe-info-section">\
                 <h2><span data-bind="text: serviceType"></span> Base URL</h2>\
                 <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
             </div>\
@@ -94,6 +97,27 @@ var GeoDataInfoPopup = function(options) {
 
     viewModel.isLoading = knockout.observable(true);
     viewModel.info = options.viewModel;
+
+    viewModel.description = knockout.computed(function() {
+        var text;
+        if (viewModel.info.description) {
+            text = viewModel.info.description();
+        } else {
+            text = 'Please contact the provider of this data for more information, including information about usage rights and constraints.';
+        }
+
+        // Escape HTML in the description.
+        var div = document.createElement('div');
+        div.innerText = text;
+
+        // Replace Markdown style links (such as: [Link Text](http://link.url.com) ) with actual links.
+        var escaped = div.innerHTML;
+        var fixedLinks = escaped.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, function(match, name, href) {
+            return '<a href="' + href + '" target="_blank">' + name + '</a>';
+        });
+
+        return fixedLinks;
+    });
 
     viewModel.layer = {};
 
