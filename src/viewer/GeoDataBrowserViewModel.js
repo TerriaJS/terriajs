@@ -450,7 +450,6 @@ var GeoDataBrowserViewModel = function(options) {
     var dragPlaceholder;
 
     this._startNowViewingDrag = createCommand(function(viewModel, e) {
-        console.log('start');
         draggedNowViewingItem = e.target;
 
         dragPlaceholder = document.createElement('div');
@@ -461,14 +460,12 @@ var GeoDataBrowserViewModel = function(options) {
             dragPlaceholder.parentElement.insertBefore(draggedNowViewingItem, dragPlaceholder);
         }, false);
 
-        e.originalEvent.dataTransfer.setData('text/plain', 'Dragging a Now View item.');
+        e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
 
         return true;
     });
 
     this._endNowViewingDrag = createCommand(function(viewModel, e) {
-        console.log('end drag');
-
         if (defined(draggedNowViewingItem)) {
             draggedNowViewingItem.style.display = 'block';
         }
@@ -485,8 +482,6 @@ var GeoDataBrowserViewModel = function(options) {
         if (e.currentTarget === dragPlaceholder || !e.currentTarget.parentElement) {
             return;
         }
-
-        console.log('enter');
 
         e.originalEvent.dataTransfer.dropEffect = 'move';
 
@@ -514,15 +509,12 @@ var GeoDataBrowserViewModel = function(options) {
         }
 
         if (dragPlaceholder.parentElement) {
-            console.log('removing placeholder');
             dragPlaceholder.parentElement.removeChild(dragPlaceholder);
         }
 
         if (insertBefore) {
-            console.log('inserting before ' + e.currentTarget.title);
             e.currentTarget.parentElement.insertBefore(dragPlaceholder, e.currentTarget);
         } else {
-            console.log('inserting after ' + e.currentTarget.title);
             e.currentTarget.parentElement.insertBefore(dragPlaceholder, siblings[targetIndex + 1]);
         }
     });
