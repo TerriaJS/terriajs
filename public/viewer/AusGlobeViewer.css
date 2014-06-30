@@ -681,6 +681,7 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-upload-file-button {
     font-weight: bold;
     cursor: pointer;
+    color: #66CCFF;
 }
 
 .ausglobe-user-service-form {

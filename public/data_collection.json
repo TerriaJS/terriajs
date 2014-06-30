@@ -1,4 +1,4 @@
-{"name":"National Map Collections", "Layer": [
+{"name":"Topics", "nm_ext_type": "collections", "Layer": [
   {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
@@ -36,7 +36,7 @@
 
   ]},
 
-  {"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+  {"name":"Transport","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"roads","Title":"Roads","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
@@ -44,15 +44,14 @@
 
    {"Name":"aircraftfacilitypoints","Title":"Airports","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-   {"Name":"ferryroutelines","Title":"Ferry Routes","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+   {"Name":"ferryroutelines","Title":"Ferry Routes","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
+  ]},
+  
+  {"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
     {"Name":"pipelines","Title":"Pipelines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"powerlines","Title":"Powerlines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"AHGFContractedCatchment","Title":"Broadband Quality","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"AHGFWaterTableAquifer","Title":"NBN Coverage","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
+    {"Name":"powerlines","Title":"Powerlines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
   ]},
   
   {"name":"Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
@@ -119,12 +118,6 @@
     {"Name":"admin_bnds:UCL_2011_AUST","Title":"Urban Centre and Locality","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
     {"Name":"admin_bnds:RA_2011_AUST","Title":"Remoteness Area","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
-    ]},
-
-  {"name":"Places","base_url":"http://www.ga.gov.au/gazetteer-australia-wfsg-gws/wfs","proxy":true,"type":"WFS","queryable":"0","Layer": [
-
-    {"Name":"iso19112:SI_LocationInstance","Title":"GA Gazetteer Example (slow)","count": "1400", "queryable":"1"}
   ]}
-
 ]}
 

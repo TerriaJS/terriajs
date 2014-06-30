@@ -1,6 +1,0 @@
-{"name":"GME Example", "Layer": [
-  {"name":"Health Data","proxy":false,"type":"GME","queryable":"0","Layer": [
-    {"Name": "CentreLink Sites", "Title": "CentreLink Sites", "Abstract": "CentreLink Sites Example", "BoundingBox":{"west":127.3154707,"south":-41.78012603,"east":153.5498186,"north":-10.2198794}, "url": "https://www.googleapis.com/mapsengine/v1/tables/12421761926155747447-06672618218968397709/features?maxResults=500&version=published&key=AIzaSyBZIS_uRrKShArQfvQtURFZasUpXyAaGDk"}
-  ]}
-]}
-

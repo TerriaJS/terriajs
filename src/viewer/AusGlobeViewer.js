@@ -189,7 +189,7 @@ var AusGlobeViewer = function(geoDataManager) {
         }
     });
 
-    this.geoDataManager.loadUrl(window.location);
+    this.geoDataManager.loadInitialUrl(window.location);
 
 };
 
@@ -972,6 +972,7 @@ function setCurrentDataset(layer, that) {
     updateTimeline(that.viewer, start, finish);
     updateLegend(tableData);
     
+    console.log(layer);
     if (layer.zoomTo && layer.extent !== undefined) {
         that.updateCameraFromRect(layer.extent, 1000);
     }

@@ -120,12 +120,12 @@ var GeoDataBrowser = function(options) {
                 <div class="ausglobe-accordion-category">\
                     <div class="ausglobe-add-data-message">\
                         Add data by dragging and dropping it onto the map, or\
-                        <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">Browse and select a file to upload</span>.\
+                        <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">Browse and select a file to load</span>.\
                         <input type="file" style="display: none;" id="uploadFile" data-bind="event: { change: addUploadedFile }"/>\
                     </div>\
-                    <form class="ausglobe-user-service-form" data-bind="submit: addWfsService">\
+                    <form class="ausglobe-user-service-form" data-bind="submit: addDataOrService">\
                         <label>\
-                            <div>Add a Web Feature Service URL (advanced):</div>\
+                            <div>Enter a web link to add a data file or WMS/WFS service (advanced):</div>\
                             <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
                         </label>\
                         <div>\

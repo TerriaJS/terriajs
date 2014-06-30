@@ -52,27 +52,7 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
             </form>';
     document.body.appendChild(div);
 
-    // -----------------------------
-    // Handle mouse click on display object
-    // -----------------------------
-/*    var handler = new ScreenSpaceEventHandler(this.scene.canvas);
-    handler.setInputAction(
-        function (movement) {
-            var pickedObject = that.scene.pick(movement.position);
-            if (pickedObject !== undefined) {
-                pickedObject = pickedObject.primitive;
-            }
-            if (pickedObject) {
-                //show picking dialog
-                var dlg_text = 'Item ' + pickedObject._index;
-                var dlg_title = 'Info';
-                showHTMLTextDialog(dlg_title, dlg_text, false);
-            }
-        },
-        ScreenSpaceEventType.LEFT_CLICK);
-*/
-
-    //Drag and drop support
+    //Data drag and drop support
     document.addEventListener("dragenter", noopHandler, false);
     document.addEventListener("dragexit", noopHandler, false);
     document.addEventListener("dragover", noopHandler, false);
@@ -142,29 +122,42 @@ function dropHandler(evt, that) {
 }
 
 //Simple html dialog
-function showHTMLTextDialog(title_text, display_text, b_modal, close_function) {
+GeoDataWidget.prototype.showHTMLTextDialog = function(title_text, display_text, b_modal, layer) {
+    var that = this;
+    
     if (b_modal === undefined) {
         b_modal = true;
     }
-    if (close_function === undefined) {
-        close_function = function() {};
-    }
     $('#dialogInfo').html(display_text);
-    $('#dialogInfo').dialog({
-        close: close_function,
+    var dlg_props = {
         title: title_text,
         modal: b_modal,
         width: 400,
+        height: 400,
         position: {
             my: "middle center",
             at: "middle center",
             offset: "20 0",
             of: window
         }
-    });
-}
+    };
+    if (layer !== undefined) {
+        dlg_props.buttons = {
+            "Load": function () {
+                if (layer) {
+                    that.geoDataManager.zoomTo = true;
+                    that.geoDataManager.sendLayerRequest(layer);
+                }
+                $(this).dialog('close');
+            }
+        };
+    }
+    $('#dialogInfo').dialog(dlg_props);
+};
 
-function postToService(service, request) {
+GeoDataWidget.prototype.postToService = function(service, request) {
+    var that = this;
+    
     var formData = new FormData();
     for (var fld in request) {
         if (request.hasOwnProperty(fld)) {
@@ -175,20 +168,25 @@ function postToService(service, request) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var str;
+            var str, layer;
             if (xhr.status !== 200) {
                 str = 'Error ' + xhr.status + ': ' + xhr.responseText;
             }
             else {
                 var res = JSON.parse(xhr.responseText);
                 str = res.displayHtml;
-           }
-           showHTMLTextDialog(service.name + ' responded with', str, true);
+                if (res.layer !== undefined) {
+                    str += '<h3>---------------</h3>';
+                    str += 'Click the load button below to load the page from the service.';
+                    layer = res.layer;
+                }
+            }
+            that.showHTMLTextDialog(service.name + ' responded with', str, true, layer);
         }
     };
     xhr.open('POST', service.url);
     xhr.send(formData);
-}
+};
 
 // Pick layer dialog
 GeoDataWidget.prototype.showServicesDialog = function (request) {
@@ -196,11 +194,11 @@ GeoDataWidget.prototype.showServicesDialog = function (request) {
     
     var services = that.geoDataManager.getServices();
 
-    $('#list1').height('50px');
+    $('#list1').height('150px');
     $("#dialogServices").dialog({
         title: 'Aditional Services (Experimental)',
         width: 300,
-        height: 300,
+        height: 400,
         modal: false,
         position: {
             my: "left top",
@@ -213,7 +211,7 @@ GeoDataWidget.prototype.showServicesDialog = function (request) {
                 var item = $('#list1 .ui-selected');
                 if (item !== undefined) {
                     var id = item[0].id;
-                    postToService(services[id], request);
+                    that.postToService(services[id], request);
                 }
                 $(this).dialog('close');
             },
@@ -284,7 +282,7 @@ GeoDataWidget.prototype.showShareDialog = function (request) {
             'Embed': function () {
                 var str = '&lt;iframe style="width: 720px; height: 405px; border: none;" src="' + url;
                 str += '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen&gt;&lt;/iframe&gt;';
-                showHTMLTextDialog("Copy this code to embed National Map in an HTML page", str, true);
+                that.showHTMLTextDialog("Copy this code to embed National Map in an HTML page", str, true);
                 $(this).dialog('close');
             },
             'Services': function () {
