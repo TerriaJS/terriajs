@@ -57,6 +57,7 @@ var GeoDataWidget = require('./GeoDataWidget');
 var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
 var SearchWidget = require('./SearchWidget');
+var SharePanel = require('./SharePanel');
 var TitleWidget = require('./TitleWidget');
 
 //use our own bing maps key
@@ -190,6 +191,15 @@ var AusGlobeViewer = function(geoDataManager) {
     });
 
     this.geoDataManager.loadInitialUrl(window.location);
+
+    this.geoDataManager.ShareRequest.addEventListener(function(collection, request) {
+        console.log('Share Request Event:');
+        var sharePanel = new SharePanel({
+            request : request,
+            container : document.body,
+            geoDataManager : that.geoDataManager
+        });
+    });
 
 };
 
