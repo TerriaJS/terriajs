@@ -1,6 +1,8 @@
 {"name":"Data Providers", "nm_ext_type": "sources", "Layer": [
+  { "name": "Demo Providers", "Layer": [
     { "name": "Topography (GA)", "base_url": "http://www.ga.gov.au/gis/services/topography/Australian_Topography/MapServer/WFSServer", "type": "WFS", "proxy": true },
     { "name": "Topography (GA REST)", "base_url": "http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer", "type": "REST", "proxy": true },
     { "name": "Western Australia", "base_url": "http://www2.landgate.wa.gov.au/ows/wfspublic_4326/wfs", "type": "WFS", "proxy": true }
+  ]}
 ]}
 
