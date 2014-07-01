@@ -8,6 +8,7 @@ var GeoData = require('./GeoData');
 var readText = require('./readText');
 
 var defaultValue = Cesium.defaultValue;
+var defined = Cesium.defined;
 var DeveloperError = Cesium.DeveloperError;
 var FeatureDetection = Cesium.FeatureDetection;
 var KmlDataSource = Cesium.KmlDataSource;
@@ -35,6 +36,7 @@ var GeoDataCollection = function() {
     
     this.GeoDataAdded = new Cesium.Event();
     this.GeoDataRemoved = new Cesium.Event();
+    this.GeoDataReordered = new Cesium.Event();
     this.ViewerChanged = new Cesium.Event();
     this.ShareRequest = new Cesium.Event();
 
@@ -103,6 +105,16 @@ GeoDataCollection.prototype._getUniqueLayerName = function(name) {
     return name;
 };
 
+function isFeatureLayer(collection, layer) {
+    if (defined(layer.dataSource)) {
+        return true;
+    } else if (!collection.map) {
+        return false;
+    } else if (layer.primitive instanceof L.GeoJSON) {
+        return true;
+    }
+}
+
 /**
 * Add a new geodata item
 *
@@ -115,9 +127,134 @@ GeoDataCollection.prototype.add = function(layer) {
         return layer;
     }
     layer.name = this._getUniqueLayerName(layer.name);
-    this.layers.push(layer);
+
+    // Feature layers go on the bottom (which is the top in display order), then map layers go above that.
+    var firstFeatureLayer = this.layers.length;
+    for (var i = 0; i < this.layers.length; ++i) {
+        if (isFeatureLayer(this, this.layers[i])) {
+            firstFeatureLayer = i;
+            break;
+        }
+    }
+
+    if (isFeatureLayer(this, layer)) {
+        this.layers.push(layer);
+    } else {
+        this.layers.splice(firstFeatureLayer, 0, layer);
+    }
+
+    // Force Leaflet to display the layers in the intended order.
+    if (defined(this.map)) {
+        for (var layerIndex = 0; layerIndex < this.layers.length; ++layerIndex) {
+            var currentLayer = this.layers[layerIndex];
+            if (defined(currentLayer.primitive)) {
+                currentLayer.primitive.setZIndex(layerIndex + 100);
+            }
+        }
+    }
+
     this.GeoDataAdded.raiseEvent(this, layer);
     return layer;
+};
+
+GeoDataCollection.prototype.isLayerMovable = function(layer) {
+    return !isFeatureLayer(this, layer);
+};
+
+/**
+ * Moves the given layer up so that it is displayed above the layers below it.
+ * This effectively moves the layer later in the layers array.
+ *
+ * @param {Object} layer The layer to move.
+ */
+GeoDataCollection.prototype.moveUp = function(layer) {
+    // Feature layers cannot be reordered.
+    if (!this.isLayerMovable(layer)) {
+        return;
+    }
+
+    var currentIndex = this.layers.indexOf(layer);
+    var newIndex = currentIndex + 1;
+    if (newIndex >= this.layers.length) {
+        return;
+    }
+
+    var layerAbove = this.layers[newIndex];
+
+    // We can't reorder past a feature layer.
+    if (!this.isLayerMovable(layerAbove)) {
+        return;
+    }
+
+    this.layers[currentIndex] = layerAbove;
+    this.layers[newIndex] = layer;
+
+    if (!defined(this.map)) {
+        var layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
+        var aboveIndex = this.imageryLayersCollection.indexOf(layerAbove.primitive);
+        while (layerIndex !== -1 && aboveIndex !== -1 && aboveIndex > layerIndex) {
+            this.imageryLayersCollection.raise(layer.primitive);
+            layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
+            aboveIndex = this.imageryLayersCollection.indexOf(layerAbove.primitive);
+        }
+    } else {
+        for (var i = 0; i < this.layers.length; ++i) {
+            var currentLayer = this.layers[i];
+            if (defined(currentLayer.primitive)) {
+                currentLayer.primitive.setZIndex(i + 100);
+            }
+        }
+    }
+
+    this.GeoDataReordered.raiseEvent(this);
+};
+
+/**
+ * Moves the given layer down so that it is displayed under the layers above it.
+ * This effectively moves the layer earlier in the layers array.
+ *
+ * @param {Object} layer The layer to move.
+ */
+GeoDataCollection.prototype.moveDown = function(layer) {
+    // Feature layers cannot be reordered.
+    if (!this.isLayerMovable(layer)) {
+        return;
+    }
+
+    var currentIndex = this.layers.indexOf(layer);
+    var newIndex = currentIndex - 1;
+    if (newIndex < 0) {
+        return;
+    }
+
+    var layerBelow = this.layers[newIndex];
+
+    // We can't reorder past a feature layer.
+    if (!this.isLayerMovable(layerBelow)) {
+        return;
+    }
+
+    this.layers[currentIndex] = layerBelow;
+    this.layers[newIndex] = layer;
+
+    if (!defined(this.map)) {
+        var layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
+        var belowIndex = this.imageryLayersCollection.indexOf(layerBelow.primitive);
+        while (layerIndex !== -1 && belowIndex !== -1 && belowIndex < layerIndex) {
+            this.imageryLayersCollection.lower(layer.primitive);
+            layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
+            belowIndex = this.imageryLayersCollection.indexOf(layerBelow.primitive);
+        }
+    } else {
+        for (var i = 0; i < this.layers.length; ++i) {
+            var currentLayer = this.layers[i];
+            if (defined(currentLayer.primitive)) {
+                currentLayer.primitive.setZIndex(i + 100);
+            }
+        }
+    }
+
+    this.GeoDataReordered.raiseEvent(this);
 };
 
 /**
