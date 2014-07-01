@@ -57,6 +57,7 @@ var GeoDataWidget = require('./GeoDataWidget');
 var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
 var SearchWidget = require('./SearchWidget');
+var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
 var TitleWidget = require('./TitleWidget');
 
@@ -123,7 +124,19 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
-                callbcak : function() {
+                callback : function() {
+                    that.captureCanvasCallback = function (dataUrl) {
+                        var request = that.geoDataManager.getShareRequest({
+                            image: dataUrl,
+                            camera: getCameraRect(that.scene, that.map)
+                        });
+                        var servicesPanel = new ServicesPanel({
+                            request : request,
+                            container : document.body,
+                            geoDataManager : that.geoDataManager
+                        });
+                    };
+                    that.captureCanvas();
                 }
             },
             {

@@ -598,6 +598,30 @@ a.ausglobe-title-menuItem:hover {
     font-family: "Open Sans", sans-serif;
 }
 
+.ausglobe-services {
+    display: inline-block;
+    width: 600px;
+    height: 500px;
+    background-color: white;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
+.ausglobe-services-send-button {
+    color: #0099CC;
+    background-color: white;
+    border: 1px solid #0099CC;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 .ausglobe-share-right {
     position: absolute;
     top: 0px;
@@ -629,24 +653,24 @@ a.ausglobe-title-menuItem:hover {
     color: #0099CC;
 }
 
-.ausglobe-info h1, .ausglobe-share h1 {
+.ausglobe-info h1, .ausglobe-share h1, .ausglobe-services h1 {
     font-size: 16px;
     padding: 15px;
     font-weight: bold;
     margin: 0;
 }
 
-.ausglobe-info h2, .ausglobe-share h2 {
+.ausglobe-info h2, .ausglobe-share h2, .ausglobe-services h2 {
     font-size: 10pt;
     font-weight: bold;
     margin: 0;
 }
 
-.ausglobe-info h3, .ausglobe-share h3 {
+.ausglobe-info h3, .ausglobe-share h3, .ausglobe-services h3 {
     font-size: 9pt;
 }
 
-.ausglobe-info hr, .ausglobe-share hr {
+.ausglobe-info hr, .ausglobe-share hr, .ausglobe-services hr {
     margin-bottom: 20px;
 }
 
