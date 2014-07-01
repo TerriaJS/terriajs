@@ -336,7 +336,7 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
         }
     }
     else if (dataUrl) {
-        this.loadUrl(this.dataUrl, that.dataFormat);
+        that.loadUrl(dataUrl, dataFormat);
     }
 };
 
@@ -345,18 +345,11 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
  *
  * @param {Object} url The url to be processed.
  *
- * @returns {Promise} a promise that will resolve when the CZML is processed.
+ * @returns {Promise} a promise that will resolve when the url is processed.
  */
 GeoDataCollection.prototype.loadUrl = function(url, format) {
     var that = this;
-    if (!that.formatSupported(url)) {
-        //TODO: !!! need to set this up to handle wms and wfs urls
-        // Also need to think about allowing WMS url, but that is more work
-//      if (url.toUpperCase().indexOf('REQUEST=GETFEATURE') !== -1) {
-//          that.geoDataManager.loadUrl(url, 'GEOJSON');
-//      }
-    }
-    else {
+    if (that.formatSupported(url)) {
         Cesium.loadText(url).then(function (text) { 
             that.zoomTo = true;
             that.loadText(text, url, format);
@@ -405,7 +398,6 @@ function getFormatFromUrl(url) {
             return;
         }
         var format = url.toUpperCase().substring(idx+1);
-        console.log(format);
         return format;
     }
 }
@@ -836,6 +828,48 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 };
 
 
+//Utility function to derive a collection from a service
+function _getCollectionFromServiceLayers(layers) {
+    var obj = {"name":"Topics", "nm_ext_type": "collections", "Layer": []};
+    for (var i = 0; i < layers.length; i++) {
+        var layer = layers[i];
+        var name = layer.Name;
+        var idx = name.indexOf(':');
+        var topic_name = name.substring(0, idx);
+        var topic = undefined;
+        for (var j = 0; j < obj.Layer.length; j++) {
+            if (obj.Layer[j].name === topic_name) {
+                topic = obj.Layer[j];
+                break;
+            }
+        } 
+        if (topic === undefined) {
+            topic = {
+                name: topic_name, 
+                base_url: description.base_url,
+                proxy: false,
+                type: description.type,
+                querable: 0,
+                Layer: []
+            };
+            obj.Layer.push(topic);
+        }
+        var dataset = {
+            Name: name.substring(idx+1), 
+            Title: name.substring(idx+1), 
+            BoundingBox: {
+                west: layer.EX_GeographicBoundingBox.westBoundLongitude,
+                east: layer.EX_GeographicBoundingBox.eastBoundLongitude,
+                south: layer.EX_GeographicBoundingBox.southBoundLatitude,
+                north: layer.EX_GeographicBoundingBox.northBoundLatitude                
+            },
+            queryable: 1
+        };
+        topic.Layer.push(dataset);
+    }
+    console.log(JSON.stringify(obj));
+}
+
 function _recurseLayerList(layer_src, layers) {
     for (var i = 0; i < layer_src.length; i++) {
         if (layer_src[i].Layer) {
@@ -865,8 +899,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         json_gml = $.xml2json(text);
     }
     
-//    console.log(json_gml);
-    
     //find the array of available layers
     var i;
     var layers = [];
@@ -888,6 +920,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else if (description.type === 'WMS') {
         var layer_src = [json_gml.Capability.Layer];
         _recurseLayerList(layer_src, layers);
+//        _getCollectionFromServiceLayers(layers)
     }
     else if (description.type === 'REST') {
         var layer = json_gml.layers;
@@ -960,7 +993,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
 
 
 // ----------------
-// Add czml and geojson
+// Add geojson
 // ----------------
 
 /**
@@ -1116,7 +1149,6 @@ function reducePointList(pts, epsilon, limit) {
             }
         }
     }
-//    console.log(pts.length, 'points reduced to', pts_out.length);
     return pts_out;
 }
 
@@ -1155,33 +1187,6 @@ function downsampleGeoJSON(obj) {
     console.log('downsampled object from', obj_size, 'bytes to', JSON.stringify(obj).length);
 }
 
-//----------------------------
-// Random color generator
-//----------------------------
-/*
-var line_palette = [
-    [204, 197, 24, 255],
-    [104, 197, 124, 255],
-    [104, 107, 224, 255],
-    [230, 87, 74, 255],
-    [104, 197, 24, 255],
-    [104, 227, 124, 255],
-    [104, 227, 124, 255]];
-var point_palette = [
-    [200, 200, 0, 255], 
-    [200, 0, 0, 255], 
-    [0, 200, 200, 255], 
-    [0, 200, 0, 255], 
-    [0, 0, 200, 255], 
-    [200, 0, 200, 255], 
-    [200, 200, 200, 255]];
-var palette_idx = 0;
-
-function getRandomColor(palette) {
-    var clr = palette[palette_idx++ % palette.length];
-    return new Cesium.Color(clr[0]/255, clr[1]/255, clr[2]/255, clr[3]/255);
-}
-*/
 
 var line_palette = {
     minimumRed : 0.4,
@@ -1201,6 +1206,7 @@ var point_palette = {
     maximumBlue : 1.0,
     alpha : 1.0
 };
+
 
 function getRandomColor(palette, seed) {
     if (seed !== undefined) {
