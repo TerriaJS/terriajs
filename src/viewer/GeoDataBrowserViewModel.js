@@ -401,7 +401,7 @@ var GeoDataBrowserViewModel = function(options) {
         var panel = document.getElementById('ausglobe-data-panel');
         var previousScrollHeight = panel.scrollHeight ;
 
-        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
 
         // Attempt to maintain the previous scroll position.
         var newScrollHeight = panel.scrollHeight;
