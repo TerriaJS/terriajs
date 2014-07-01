@@ -404,6 +404,10 @@ var GeoDataBrowserViewModel = function(options) {
         komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
     });
 
+    this._removeGeoDataReorderedListener = this._dataManager.GeoDataReordered.addEventListener(function() {
+        //komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
+    });
+
     function noopHandler(evt) {
         evt.stopPropagation();
         evt.preventDefault();
@@ -478,8 +482,17 @@ var GeoDataBrowserViewModel = function(options) {
         dragPlaceholder.className = 'ausglobe-nowViewing-drop-target';
         dragPlaceholder.style.height = draggedNowViewingItem.clientHeight + 'px';
         dragPlaceholder.addEventListener('drop', function(e) {
-            draggedNowViewingItem.parentElement.removeChild(draggedNowViewingItem);
-            dragPlaceholder.parentElement.insertBefore(draggedNowViewingItem, dragPlaceholder);
+            var draggedItemIndex = draggedNowViewingItem.getAttribute('nowViewingIndex') | 0;
+            var placeholderIndex = dragPlaceholder.getAttribute('nowViewingIndex') | 0;
+
+            while (draggedItemIndex > placeholderIndex) {
+                that._dataManager.moveUp(viewModel.layer);
+                --draggedItemIndex;
+            }
+            while (draggedItemIndex < placeholderIndex) {
+                that._dataManager.moveDown(viewModel.layer);
+                ++draggedItemIndex;
+            }
         }, false);
 
         e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
@@ -488,6 +501,7 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._endNowViewingDrag = createCommand(function(viewModel, e) {
+        console.log('end drag');
         if (defined(draggedNowViewingItem)) {
             draggedNowViewingItem.style.display = 'block';
         }
@@ -497,6 +511,13 @@ var GeoDataBrowserViewModel = function(options) {
                 dragPlaceholder.parentElement.removeChild(dragPlaceholder);
             }
             dragPlaceholder = undefined;
+        }
+
+        that.nowViewing.removeAll();
+        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
+
+        if (defined(that._viewer.frameChecker)) {
+            that._viewer.frameChecker.forceFrameUpdate();
         }
     });
 
@@ -511,7 +532,7 @@ var GeoDataBrowserViewModel = function(options) {
 
         // Add the placeholder above the entered element.
         // If the placeholder is already below the entered element, move it above.
-        // TODO: this logic is imperfect.
+        // TODO: this logic is imperfect, but good enough for now.
         var placeholderIndex;
         var targetIndex;
 
@@ -536,8 +557,10 @@ var GeoDataBrowserViewModel = function(options) {
 
         if (insertBefore) {
             e.currentTarget.parentElement.insertBefore(dragPlaceholder, e.currentTarget);
+            dragPlaceholder.setAttribute('nowViewingIndex', e.currentTarget.getAttribute('nowViewingIndex'));
         } else {
             e.currentTarget.parentElement.insertBefore(dragPlaceholder, siblings[targetIndex + 1]);
+            dragPlaceholder.setAttribute('nowViewingIndex', siblings[targetIndex + 1].getAttribute('nowViewingIndex'));
         }
     });
 };
