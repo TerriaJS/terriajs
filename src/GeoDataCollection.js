@@ -143,6 +143,16 @@ GeoDataCollection.prototype.add = function(layer) {
         this.layers.splice(firstFeatureLayer, 0, layer);
     }
 
+    // Force Leaflet to display the layers in the intended order.
+    if (defined(this.map)) {
+        for (var layerIndex = 0; layerIndex < this.layers.length; ++layerIndex) {
+            var currentLayer = this.layers[layerIndex];
+            if (defined(currentLayer.primitive)) {
+                currentLayer.primitive.setZIndex(layerIndex + 100);
+            }
+        }
+    }
+
     this.GeoDataAdded.raiseEvent(this, layer);
     return layer;
 };
@@ -176,6 +186,9 @@ GeoDataCollection.prototype.moveUp = function(layer) {
         return;
     }
 
+    this.layers[currentIndex] = layerAbove;
+    this.layers[newIndex] = layer;
+
     if (!defined(this.map)) {
         var layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
         var aboveIndex = this.imageryLayersCollection.indexOf(layerAbove.primitive);
@@ -184,10 +197,15 @@ GeoDataCollection.prototype.moveUp = function(layer) {
             layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
             aboveIndex = this.imageryLayersCollection.indexOf(layerAbove.primitive);
         }
+    } else {
+        for (var i = 0; i < this.layers.length; ++i) {
+            var currentLayer = this.layers[i];
+            if (defined(currentLayer.primitive)) {
+                currentLayer.primitive.setZIndex(i + 100);
+            }
+        }
     }
 
-    this.layers[currentIndex] = layerAbove;
-    this.layers[newIndex] = layer;
     this.GeoDataReordered.raiseEvent(this);
 };
 
@@ -216,6 +234,9 @@ GeoDataCollection.prototype.moveDown = function(layer) {
         return;
     }
 
+    this.layers[currentIndex] = layerBelow;
+    this.layers[newIndex] = layer;
+
     if (!defined(this.map)) {
         var layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
         var belowIndex = this.imageryLayersCollection.indexOf(layerBelow.primitive);
@@ -224,10 +245,15 @@ GeoDataCollection.prototype.moveDown = function(layer) {
             layerIndex = this.imageryLayersCollection.indexOf(layer.primitive);
             belowIndex = this.imageryLayersCollection.indexOf(layerBelow.primitive);
         }
+    } else {
+        for (var i = 0; i < this.layers.length; ++i) {
+            var currentLayer = this.layers[i];
+            if (defined(currentLayer.primitive)) {
+                currentLayer.primitive.setZIndex(i + 100);
+            }
+        }
     }
 
-    this.layers[currentIndex] = layerBelow;
-    this.layers[newIndex] = layer;
     this.GeoDataReordered.raiseEvent(this);
 };
 
