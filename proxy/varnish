@@ -11,10 +11,10 @@ DAEMON_OPTS="-a :80 \
              -f /etc/varnish/default.vcl \
              -S /etc/varnish/secret \
              -p thread_pool_add_delay=2
-             -p thread_pools=4
+             -p thread_pools=8
              -p thread_pool_min=150
              -p thread_pool_max=4000
              -p session_linger=50
              -p sess_workspace=262144
-             -s malloc,2G"
+             -s malloc,4G"
 

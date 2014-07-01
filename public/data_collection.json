@@ -1,123 +1,301 @@
 {"name":"Topics", "nm_ext_type": "collections", "Layer": [
-  {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
+    {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
+        {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
+        {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
+        {"Name":"0","Title":"Magnetic Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Magnetic_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
+        {"Name":"AUS_GeoRegions_5M","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/services/earth_science/GA_Surface_Geology_of_Australia/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"}
+    ]},
+    {"name":"Surface Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+		{"Name":"AHGFWaterbody","Title":"Waterbodies","BoundingBox":{"west":"112.99395000000004","east":"153.6130200000001","south":"-43.6060489990578","north":"-8.933328999710083"},
+		"queryable":1},
+		{"Name":"AHGFWaterPipeline","Title":"Water Pipeline","BoundingBox":{"west":"113.80691","east":"152.89131000000003","south":"-43.00307999905891","north":"-10.903989999649017"},
+		"queryable":1},
+		{"Name":"AHGFHydroArea","Title":"Hydro Area","BoundingBox":{"west":"113.00706000000002","east":"153.60520000000002","south":"-43.58998899905777","north":"-8.93332899971008"},
+		"queryable":1},
+		{"Name":"AHGFEstuary","Title":"Estuary","BoundingBox":{"west":"113.6089684320001","east":"153.62495056300006","south":"-43.59020860705779","north":"-10.835983610651068"},
+		"queryable":1},
+		{"Name":"AHGFTerrainBreakLine","Title":"Terrain Break Line","BoundingBox":{"west":"113.82628000000012","east":"153.42616600000005","south":"-42.317679999060694","north":"-11.680956499625328"},
+		"queryable":1},
+		{"Name":"AHGFStructure","Title":"Structure","BoundingBox":{"west":"113.76872500000002","east":"153.5956600000001","south":"-43.58274499905778","north":"-10.64324999965701"},
+		"queryable":1},
+		{"Name":"AHGFMappedStream","Title":"Mapped Streams","BoundingBox":{"west":"113.37534500000005","east":"153.63207400000002","south":"-43.629381999057735","north":"-9.242297499700408"},
+		"queryable":1},
+		{"Name":"AHGFMappedNode","Title":"Mapped Nodes","BoundingBox":{"west":"113.37534500000005","east":"153.6320740000001","south":"-43.629381999057735","north":"-9.242297499700424"},
+		"queryable":1},
+		{"Name":"AHGFNetworkStreamsMajor","Title":" Major Stream Networks","BoundingBox":{"west":"113.56375000000004","east":"153.58875000000006","south":"-43.55374999905787","north":"-9.408749999695255"},
+		"queryable":1},
+		{"Name":"AHGFNetworkStream","Title":"Stream Network","BoundingBox":{"west":"112.10056181999998","east":"154.86193818000004","south":"-47.81318817937922","north":"-5.051811819379163"},
+		"queryable":1},
+        {"Name":"AHGFNetworkNode","Title":"Network Nodes","BoundingBox":{"west":"113.33375","east":"153.62875000000008","south":"-43.628749999057746","north":"-9.23624999970059"},
+		"queryable":1},
+		{"Name":"AHGFWaterbody","Title":"Waterbody","BoundingBox":{"west":"112.99395000000004","east":"153.6130200000001","south":"-43.6060489990578","north":"-8.933328999710083"},
+		"queryable":1},
+		{"Name":"AHGFHydroPoint","Title":"Hydro Point","BoundingBox":{"west":"112.98219000000005","east":"153.63525000000004","south":"-43.630079999057735","north":"-9.140889999703603"},
+		"queryable":1},
+		{"Name":"AHGFHydroLine","Title":"Hydro Line","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000007","south":"-43.99999999905724","north":"-8.933329999710095"},
+		"queryable":1},
+		{"Name":"AHGFDam","Title":"Dam","BoundingBox":{"west":"112.9318700000001","east":"153.00634000000005","south":"-42.75848999905948","north":"-9.951769999678337"},
+		"queryable":1},
+		{"Name":"AHGFCanalLine","Title":"Canal Line","BoundingBox":{"west":"113.35392000000002","east":"153.59005000000008","south":"-42.851209999059286","north":"-12.524599999599994"},
+		"queryable":1},
+		{"Name":"RiverRegion","Title":"River Region","BoundingBox":{"west":"112.9225","east":"153.63750000000013","south":"-43.64250000005773","north":"-9.229999999700832"},
+		"queryable":1},
+        {"Name":"AWRADrainageDivision","Title":" Drainage Division","BoundingBox":{"west":"111.24438730279999","east":"155.3156126972001","south":"-48.47186269657931","north":"-4.400637302179204"},
+		"queryable":1},
+        {"Name":"NCBLevel1DrainageDivision","Title":"NCB Level1 Drainage Division","BoundingBox":{"west":"112.9225","east":"153.63750000000002","south":"-43.73999999905757","north":"-9.197499999701801"},
+		"queryable":1},
+		{"Name":"NCBLevel2DrainageBasinGroup","Title":"NCB Level2 Drainage Basin Group","BoundingBox":{"west":"112.9225","east":"153.63750000000013","south":"-43.73999999905757","north":"-9.197499999701803"},
+		"queryable":1},
+		{"Name":"AHGFCatchment","Title":"Catchment","BoundingBox":{"west":"112.9225","east":"153.6375000000001","south":"-43.73999999905757","north":"-9.197499999701808"},
+		"queryable":1},
+       {"Name":"AHGFContractedCatchment","Title":"Contracted Catchment","BoundingBox":{"west":"112.9225","east":"153.63750000000002","south":"-43.73999999905757","north":"-9.197499999701808"},
+		"queryable":1}
+	]},
+    {"name":"Ground Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+        {"Name":"AHGFAquiferContour","Title":"Aquifer Contours","BoundingBox":{"west":"130.9294316820001","east":"151.640955901","south":"-41.24101109706462","north":"-12.157000677611002"},
+		"queryable":1},
+		{"Name":"AHGFAquiferContourBottom","Title":"Aquifer Contours Bottom","BoundingBox":{"west":"140.96832934600002","east":"149.96101540700002","south":"-39.08532118507642","north":"-36.98746808509298"},
+		"queryable":1},
+		{"Name":"AHGFAquiferContourTop","Title":"Aquifer Contours Top","BoundingBox":{"west":"130.9294316820001","east":"151.52314135200012","south":"-39.08578653507643","north":"-12.243238349608427"},
+		"queryable":1},
+		{"Name":"AHGFAquiferContourBedrock","Title":"Aquifer Contours Bedrock","BoundingBox":{"west":"133.20299441400005","east":"151.640955901","south":"-41.24101109706462","north":"-12.157000677611002"},
+		"queryable":1},
+		{"Name":"AHGFWaterTableAquifer","Title":"Water Table Aquifer","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000004","south":"-43.65854999905766","north":"-9.219939999701113"},
+		"queryable":1},
+		{"Name":"AHGFSurficialHydrogeologicUnit","Title":"Surficial Hydrogeologic Unit","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000004","south":"-43.65854999905766","north":"-9.219939999701113"},
+		"queryable":1},
+		{"Name":"AHGFAquiferBoundary","Title":"Aquifer Boundary","BoundingBox":{"west":"112.92137000000001","east":"152.49040280900007","south":"-39.135739999076094","north":"-12.243238350608436"},
+		"queryable":1},
+		{"Name":"AHGFAquiferOutcrop","Title":"Aquifer Outcrop","BoundingBox":{"west":"113.8055180570001","east":"152.49040280900002","south":"-38.755833332078694","north":"-13.441636424572783"},
+		"queryable":1},
+		{"Name":"IGWAquiferSalinity","Title":"Aquifer Salinity","BoundingBox":{"west":"112.92137000000001","east":"148.91107675700005","south":"-38.97436811707721","north":"-20.97124299936873"},
+		"queryable":1},
+		{"Name":"IGWAquiferYield","Title":"Aquifer Yield","BoundingBox":{"west":"138.73545507400001","east":"148.9098995590001","south":"-38.97436810607722","north":"-31.999839353151554"},
+		"queryable":1},
+		{"Name":"IGWWaterTableYield","Title":"Water Table Yield","BoundingBox":{"west":"129.00048000000004","east":"153.63857000000007","south":"-39.135739999076094","north":"-10.965879999647115"},
+		"queryable":1},
+		{"Name":"IGWWaterTableSalinity","Title":"Water Table Salinity","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000007","south":"-43.643049999057716","north":"-10.687579999655645"},
+		"queryable":1},
+		{"Name":"IGWWaterTableHydraulicConductivity","Title":"IGWWaterTableHydraulicConductivity","BoundingBox":{"west":"140.96334594200005","east":"152.49056374800008","south":"-37.68073353908695","north":"-24.586309583285477"},
+		"queryable":1},
+		{"Name":"AHGFWaterTableAquifer","Title":"WaterTableAquifer","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000004","south":"-43.65854999905766","north":"-9.219939999701113"},
+		"queryable":1}
+    ]},
+	{"name":"Elevation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"benchmarks","Title":"Benchmarks","BoundingBox":{"west":"113.50982","east":"149.92117","south":"-38.647199999079525","north":"-12.41999999960316"},
+"queryable":1},
+		{"Name":"contours","Title":"Contours","BoundingBox":{"west":"112.92137","east":"153.63857000000004","south":"-43.74297999905761","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"horizontalcontrolpoints","Title":"Horizontal Control Points","BoundingBox":{"west":"113.06265","east":"153.55039","south":"-43.51730999905795","north":"-10.462999999662589"},
+"queryable":1},
+		{"Name":"spotelevations","Title":"Spot Elevations","BoundingBox":{"west":"112.93472","east":"153.63573999999997","south":"-43.657359999057725","north":"-9.004409999707923"},
+"queryable":1}
+	]},
+	{"name":"Terrain","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"caves","Title":"Caves","BoundingBox":{"west":"113.40833999999998","east":"153.12877","south":"-42.73787999905959","north":"-12.581149999598347"},
+"queryable":1},
+		{"Name":"craters","Title":"Craters","BoundingBox":{"west":"127.38872000000002","east":"145.12202","south":"-37.79733999908604","north":"-18.183079999439965"},
+"queryable":1},
+		{"Name":"deformationareas","Title":"Deformationareas","BoundingBox":{"west":"115.73604000000003","east":"152.29494000000003","south":"-36.794289999094765","north":"-12.909959999588562"},
+"queryable":1},
+		{"Name":"discontinuities","Title":"Discontinuities","BoundingBox":{"west":"112.92144999999998","east":"153.46622","south":"-43.65648999905773","north":"-11.006909999645897"},
+"queryable":1},
+		{"Name":"pinnacles","Title":"Pinnacles","BoundingBox":{"west":"114.35003000000002","east":"152.91039","south":"-35.99436999910254","north":"-11.944649999617436"},
+"queryable":1},
+		{"Name":"sandridges","Title":"Sand Ridges","BoundingBox":{"west":"112.93216999999999","east":"153.3485","south":"-38.869929999077954","north":"-10.576659999659086"},
+"queryable":1},
+		{"Name":"sands","Title":"Sands","BoundingBox":{"west":"112.9297","east":"153.50303","south":"-43.55226999905789","north":"-9.845259999681689"},
+"queryable":1}
+	]},
+	{"name":"Vegetation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"clearedlines","Title":"Cleared Lines","BoundingBox":{"west":"114.30741","east":"151.17083","south":"-35.68676999910569","north":"-11.62904999962697"},
+"queryable":1},
+		{"Name":"cultivatedareas","Title":"Cultivated Areas","BoundingBox":{"west":"113.66133","east":"153.54656","south":"-43.44901999905807","north":"-9.04530999970664"},
+"queryable":1},
+		{"Name":"nativevegetationareas","Title":"Native Vegetation Areas","BoundingBox":{"west":"112.93226","east":"153.63769","south":"-43.658549999057726","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"windbreaks","Title":"Windbreaks","BoundingBox":{"west":"114.99020999999999","east":"151.58246","south":"-41.16088999906501","north":"-24.201429999293836"},
+"queryable":1}
+	]},
+	{"name":"Habitation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"buildingareas","Title":"Building Areas","BoundingBox":{"west":"141.62655","east":"152.80475","south":"-41.12735999906517","north":"-21.102919999365557"},
+"queryable":1},
+		{"Name":"buildingpoints","Title":"Building Points","BoundingBox":{"west":"112.94450000000002","east":"153.62926","south":"-43.65456999905773","north":"-9.128069999704051"},
+"queryable":1},
+		{"Name":"builtupareas","Title":"Builtup Areas","BoundingBox":{"west":"113.53047","east":"153.63702","south":"-43.17193999905859","north":"-9.067499999705948"},
+"queryable":1},
+		{"Name":"cemeteryareas","Title":"Cemetery Areas","BoundingBox":{"west":"114.64094000000001","east":"153.0669","south":"-42.85204999905929","north":"-16.905399999474405"},
+"queryable":1},
+		{"Name":"cemeterypoints","Title":"Cemetery Points","BoundingBox":{"west":"118.51832000000002","east":"152.39647","south":"-37.96838999908467","north":"-15.079179999525442"},
+"queryable":1},
+		{"Name":"homesteads","Title":"Homesteads","BoundingBox":{"west":"113.20027","east":"152.92311","south":"-42.76347999905952","north":"-11.169479999640936"},
+"queryable":1},
+		{"Name":"placenames","Title":"Placenames","BoundingBox":{"west":"113.01127","east":"153.61196000000004","south":"-43.63024999905778","north":"-8.936219999710062"},
+"queryable":1},
+		{"Name":"populatedplaces","Title":"Populated Places","BoundingBox":{"west":"113.53641999999999","east":"153.61194","south":"-43.314229999058306","north":"-10.183389999671217"},
+"queryable":1},
+		{"Name":"recreationareas","Title":"Recreation Areas","BoundingBox":{"west":"113.54947","east":"153.61335","south":"-43.165569999058604","north":"-11.395799999634049"},
+"queryable":1}
+	]},
+	{"name":"Transport","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"aircraftfacilitypoints","Title":"Aircraft Facilites","BoundingBox":{"west":"113.15955999999998","east":"153.56134999999998","south":"-43.651859999057734","north":"-9.088949999705271"},
+"queryable":1},
+		{"Name":"barrierpoints","Title":"Barrier Points","BoundingBox":{"west":"114.60042999999999","east":"146.93454000000003","south":"-34.738279999116116","north":"-11.439839999632706"},
+"queryable":1},
+		{"Name":"ferryroutelines","Title":"Ferry Routes","BoundingBox":{"west":"115.2094","east":"153.52870000000001","south":"-43.14290999905865","north":"-10.584439999658853"},
+"queryable":1},
+		{"Name":"foottracks","Title":"Foot Tracks","BoundingBox":{"west":"113.52908","east":"153.41766","south":"-43.61136999905781","north":"-14.099749999553625"},
+"queryable":1},
+		{"Name":"railwaybridgepoints","Title":"Railway Bridges","BoundingBox":{"west":"114.95969","east":"153.13596000000004","south":"-38.58041999908001","north":"-16.387539999488673"},
+"queryable":1},
+		{"Name":"railwaycrossinglines","Title":"Railway Crossings","BoundingBox":{"west":"113.64339","east":"153.34807","south":"-42.75558999905954","north":"-12.482379999601294"},
+"queryable":1},
+		{"Name":"railways","Title":"Railways","BoundingBox":{"west":"113.62627","east":"153.61314","south":"-43.45491999905806","north":"-12.435059999602709"},
+"queryable":1},
+		{"Name":"railwaystoppoints","Title":"Railway Stop","BoundingBox":{"west":"114.61421","east":"153.61116","south":"-42.87814999905925","north":"-12.4720799996016"},
+"queryable":1},
+		{"Name":"railwaytunnellines","Title":"Railway Tunnel Lines","BoundingBox":{"west":"119.11392999999998","east":"153.52849","south":"-42.48963999906026","north":"-16.861979999475594"},
+"queryable":1},
+		{"Name":"roadcrossinglines","Title":"Road Crossing Lines","BoundingBox":{"west":"113.32183","east":"153.58248","south":"-43.583039999057846","north":"-11.161099999641191"},
+"queryable":1},
+		{"Name":"roadcrossingpoints","Title":"Road Crossing Points","BoundingBox":{"west":"114.00941000000002","east":"153.59565999999998","south":"-42.89165999905921","north":"-10.970479999647017"},
+"queryable":1},
+		{"Name":"roads","Title":"Roads","BoundingBox":{"west":"112.93174000000002","east":"153.63281","south":"-43.58748999905784","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"roadtunnellines","Title":"Road tunnellines","BoundingBox":{"west":"115.85188999999998","east":"151.67768999999998","south":"-37.829839999085785","north":"-25.080719999274965"},
+"queryable":1}
+	]},
+	{"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"aerialcableways","Title":"Aerial Cableways","BoundingBox":{"west":"145.63916","east":"153.47854999999998","south":"-37.845019999085665","north":"-16.819299999476762"},
+"queryable":1},
+		{"Name":"conveyors","Title":"Conveyors","BoundingBox":{"west":"115.65124","east":"151.91119","south":"-41.48786999906365","north":"-12.184729999610212"},
+"queryable":1},
+		{"Name":"damwalls","Title":"Damwalls","BoundingBox":{"west":"115.00212","east":"153.30629","south":"-43.18769999905856","north":"-10.571689999659238"},
+"queryable":1},
+		{"Name":"fences","Title":"Fences","BoundingBox":{"west":"112.92895","east":"152.97735999999998","south":"-35.37394999910903","north":"-10.895739999649303"},
+"queryable":1},
+		{"Name":"marineinfrastructurelines","Title":"Marine Infrastructure Lines","BoundingBox":{"west":"113.32462999999998","east":"153.59193","south":"-43.16099999905862","north":"-9.062449999706104"},
+"queryable":1},
+		{"Name":"marineinfrastructurepoints","Title":"Marine Infrastructure Points","BoundingBox":{"west":"112.97203","east":"153.63569999999999","south":"-43.657359999057725","north":"-9.140769999703654"},
+"queryable":1},
+		{"Name":"mineareas","Title":"Mine Areas","BoundingBox":{"west":"113.36167000000002","east":"153.50486000000004","south":"-43.43038999905809","north":"-11.872959999619598"},
+"queryable":1},
+		{"Name":"minepoints","Title":"Mine Points","BoundingBox":{"west":"113.36334","east":"153.60394","south":"-43.46653999905804","north":"-10.575569999659121"},
+"queryable":1},
+		{"Name":"petroleumwells","Title":"Petroleum Wells","BoundingBox":{"west":"113.9964","east":"152.48242000000002","south":"-38.596209999079896","north":"-15.323399999518502"},
+"queryable":1},
+		{"Name":"storagetanks","Title":"Storage Tanks","BoundingBox":{"west":"113.63004999999998","east":"153.16552999999996","south":"-41.127119999065165","north":"-12.426089999602983"},
+"queryable":1},
+		{"Name":"verticalobstructions","Title":"verticalobstructions","BoundingBox":{"west":"113.52788","east":"153.58229000000003","south":"-43.37782999905819","north":"-9.080289999705544"},
+"queryable":1},
+		{"Name":"watertanks","Title":"Water Tanks","BoundingBox":{"west":"112.93187000000002","east":"153.00634","south":"-42.75848999905954","north":"-9.951769999678387"},
+"queryable":1},
+		{"Name":"windpumps","Title":"Wind Pumps","BoundingBox":{"west":"113.50105","east":"151.48511","south":"-35.85509999910395","north":"-11.177569999640692"},
+"queryable":1},
+		{"Name":"yards","Title":"Yards","BoundingBox":{"west":"113.18122","east":"148.48095","south":"-34.994069999113215","north":"-10.624669999657616"},
+"queryable":1}
+	]},
+	{"name":"Utility","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+				{"Name":"pipelines","Title":"Pipelines","BoundingBox":{"west":"113.67812999999998","east":"153.15454","south":"-43.00307999905895","north":"-10.903989999649047"},
+"queryable":1},
+		{"Name":"powerlines","Title":"Powerlines","BoundingBox":{"west":"114.63228","east":"153.49785","south":"-43.16291999905861","north":"-12.458869999601996"},
+"queryable":1}
+	]},
+	{"name":"Framework","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"frameworkboundaries","Title":"Framework Boundaries","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"geodataindexes","Title":"Geodata Indexes","BoundingBox":{"west":"112.88333","east":"153.99999999999997","south":"-43.99999999905729","north":"-8.999999999708061"},
+"queryable":1},
+		{"Name":"islands","Title":"Islands","BoundingBox":{"west":"112.92137","east":"153.5799","south":"-43.74297999905761","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"largeareafeatures","Title":"Large Area Features","BoundingBox":{"west":"116.04361","east":"152.60876000000002","south":"-39.13573999907615","north":"-10.687579999655679"},
+"queryable":1},
+		{"Name":"locations","Title":"Locations","BoundingBox":{"west":"112.92903","east":"153.63850000000002","south":"-43.64227999905775","north":"-8.95829999970937"},
+"queryable":1},
+		{"Name":"mainlands","Title":"Mainlands","BoundingBox":{"west":"113.15627999999998","east":"153.63857000000004","south":"-43.64304999905776","north":"-10.687579999655679"},
+"queryable":1},
+		{"Name":"mapindexes","Title":"mapindexes","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"prohibitedareas","Title":"Prohibited Areas","BoundingBox":{"west":"113.72448","east":"153.45784999999998","south":"-42.67827999905975","north":"-12.584149999598258"},
+"queryable":1},
+		{"Name":"reserves","Title":"Reserves","BoundingBox":{"west":"112.97143","east":"153.60127","south":"-43.74297999905761","north":"-9.088049999705305"},
+"queryable":1},
+		{"Name":"seas","Title":"Seas","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
+"queryable":1}
+	]},
+	{"name":"Cartography","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+		{"Name":"cartographiclines","Title":"Cartographic Lines","BoundingBox":{"west":"113.02031","east":"153.57704999999999","south":"-43.45349999905806","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"cartographicpoints","Title":"Cartographic Points","BoundingBox":{"west":"113.40966000000002","east":"153.61335","south":"-43.4311099990581","north":"-10.693279999655509"},
+"queryable":1},
+		{"Name":"graticules","Title":"Graticules","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
+"queryable":1},
+		{"Name":"grids","Title":"Grids","BoundingBox":{"west":"112.88333","east":"154.1","south":"-44.00000999905729","north":"-7.999999999739592"},
+"queryable":1}
+	]},
+    {"name":"Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
-    {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
+        {"Name":"admin_bnds:STE_2011_AUST","Title":"States & Territories","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
+        {"Name":"admin_bnds:LGA_2011_AUST","Title":"Local Government Areas","BoundingBox":{"west":"112.92111395999997","east":"153.63872711999997","south":"-43.74050957905761","north":"-9.142175969703604"},"queryable":"1"},
 
-    {"Name":"0","Title":"Magnetic Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Magnetic_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
+        {"Name":"admin_bnds:POA_2011_AUST","Title":"Postal Areas","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.59821500205783","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"AUS_GeoRegions_5M","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/services/earth_science/GA_Surface_Geology_of_Australia/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"}
-  ]},
+        {"Name":"admin_bnds:CED_2011_AUST","Title":"Commonwealth Electoral Divisions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-  {"name":"Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":"0","Layer": [
+        {"Name":"admin_bnds:SED_2011_AUST","Title":"State Electoral Divisions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"AHGFWaterbody","Title":"Water Bodies","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:SSC_2011_AUST","Title":"State Suburbs","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"AHGFMappedStream","Title":"Streams & Rivers","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:ADD_2011_AUST","Title":"Australian Drainage Divisions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"AHGFContractedCatchment","Title":"Catchments","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:NRMR_2011_AUST","Title":"Natural Resource Management Regions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"AHGFEstuary","Title":"Estuaries","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:TR_2011_AUST","Title":"Tourism Regions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
+    ]},
+    {"name":"Statistical Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
 
-    {"Name":"AHGFDam","Title":"Dams","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:SA4_2011_AUST","Title":"Statistical Area Level 4 (SA4)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"bores","Title":"Bore Holes","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:SA3_2011_AUST","Title":"Statistical Area Level 3 (SA3)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"waterholes","Title":"Water Holes","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:SA2_2011_AUST","Title":"Statistical Area Level 2 (SA2)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"RiverRegion","Title":"River Regions","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:SA1_2011_AUST","Title":"Statistical Area Level 1 (SA1)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"AWRADrainageDivision","Title":"Drainage Divisions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-    
-    {"Name":"AHGFAquiferContour","Title":"Aquifer Contours","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"},
+        {"Name":"admin_bnds:GCCSA_2011_AUST","Title":"Greater Capital City Statistical Area (GCCSA)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"AHGFWaterTableAquifer","Title":"Water Table Aquifer","BoundingBox":{"west":"112.99986111110002","east":"153.9998447111","south":"-44.0001296888737","north":"-10.0001432888739"},"queryable":"1"}
+        {"Name":"admin_bnds:MB_2011_ACT","Title":"Australian Capital Territory Mesh Blocks","BoundingBox":{"west":"148.76267481599996","east":"149.3992872","south":"-35.92076221410328","north":"-35.12451727461176"},"queryable":"1"},
 
-  ]},
+        {"Name":"admin_bnds:MB_2011_NSW","Title":"New South Wales Mesh Blocks","BoundingBox":{"west":"140.633657689504","east":"159.475035846496","south":"-42.25172903364744","north":"-23.41035087665545"},"queryable":"1"},
 
-  {"name":"Transport","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+        {"Name":"admin_bnds:MB_2011_NT","Title":"Northern Territory Mesh Blocks","BoundingBox":{"west":"129.00043971199997","east":"138.001197856","south":"-25.99948233275597","north":"-10.965914264647154"},"queryable":"1"},
 
-    {"Name":"roads","Title":"Roads","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:MB_2011_OT","Title":"Other Territories Mesh Blocks","BoundingBox":{"west":"96.816941408","east":"150.772826016","south":"-35.20087199161092","north":"-10.412356006664147"},"queryable":"1"},
 
-    {"Name":"railways","Title":"Railways","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:MB_2011_QLD","Title":"Queensland Mesh Blocks","BoundingBox":{"west":"137.99595744000004","east":"153.552171232","south":"-29.177897698696302","north":"-9.142175976703609"},"queryable":"1"},
 
-   {"Name":"aircraftfacilitypoints","Title":"Airports","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:MB_2011_SA","Title":"South Australia Mesh Blocks","BoundingBox":{"west":"129.00133699200003","east":"141.002955616","south":"-38.06260298858392","north":"-25.996146486756036"},"queryable":"1"},
 
-   {"Name":"ferryroutelines","Title":"Ferry Routes","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
-  ]},
-  
-  {"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+        {"Name":"admin_bnds:MB_2011_TAS","Title":"Tasmania Mesh Blocks","BoundingBox":{"west":"143.81892271999996","east":"148.49867360000002","south":"-43.740509602057614","north":"-39.2036616580757"},"queryable":"1"},
 
-    {"Name":"pipelines","Title":"Pipelines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:MB_2011_VIC","Title":"Victoria Mesh Blocks","BoundingBox":{"west":"140.961681984","east":"149.976679008","south":"-39.15918952657599","north":"-33.98042558562515"},"queryable":"1"},
 
-    {"Name":"powerlines","Title":"Powerlines","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"}
-  ]},
-  
-  {"name":"Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
+        {"Name":"admin_bnds:MB_2011_WA","Title":"Western Australia Mesh Blocks","BoundingBox":{"west":"112.921113952","east":"129.001930016","south":"-35.134846435111655","north":"-13.689492034565587"},"queryable":"1"},
 
-    {"Name":"admin_bnds:STE_2011_AUST","Title":"States & Territories","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:IARE_2011_AUST","Title":"Indigenous Areas","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"admin_bnds:LGA_2011_AUST","Title":"Local Government Areas","BoundingBox":{"west":"112.92111395999997","east":"153.63872711999997","south":"-43.74050957905761","north":"-9.142175969703604"},"queryable":"1"},
+        {"Name":"admin_bnds:ILOC_2011_AUST","Title":"Indigenous Locations","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"admin_bnds:POA_2011_AUST","Title":"Postal Areas","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.59821500205783","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:IREG_2011_AUST","Title":"Indigenous Regions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"admin_bnds:CED_2011_AUST","Title":"Commonwealth Electoral Divisions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:SOS_2011_AUST","Title":"Section of State","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"admin_bnds:SED_2011_AUST","Title":"State Electoral Divisions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:SOSR_2011_AUST","Title":"Section of State Range","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"admin_bnds:SSC_2011_AUST","Title":"State Suburbs","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
+        {"Name":"admin_bnds:UCL_2011_AUST","Title":"Urban Centre and Locality","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
 
-    {"Name":"admin_bnds:ADD_2011_AUST","Title":"Australian Drainage Divisions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:NRMR_2011_AUST","Title":"Natural Resource Management Regions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:TR_2011_AUST","Title":"Tourism Regions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
-  ]},
-
-  {"name":"Statistical Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0","Layer": [
-
-    {"Name":"admin_bnds:SA4_2011_AUST","Title":"Statistical Area Level 4 (SA4)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:SA3_2011_AUST","Title":"Statistical Area Level 3 (SA3)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:SA2_2011_AUST","Title":"Statistical Area Level 2 (SA2)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:SA1_2011_AUST","Title":"Statistical Area Level 1 (SA1)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:GCCSA_2011_AUST","Title":"Greater Capital City Statistical Area (GCCSA)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_ACT","Title":"Australian Capital Territory Mesh Blocks","BoundingBox":{"west":"148.76267481599996","east":"149.3992872","south":"-35.92076221410328","north":"-35.12451727461176"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_NSW","Title":"New South Wales Mesh Blocks","BoundingBox":{"west":"140.633657689504","east":"159.475035846496","south":"-42.25172903364744","north":"-23.41035087665545"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_NT","Title":"Northern Territory Mesh Blocks","BoundingBox":{"west":"129.00043971199997","east":"138.001197856","south":"-25.99948233275597","north":"-10.965914264647154"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_OT","Title":"Other Territories Mesh Blocks","BoundingBox":{"west":"96.816941408","east":"150.772826016","south":"-35.20087199161092","north":"-10.412356006664147"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_QLD","Title":"Queensland Mesh Blocks","BoundingBox":{"west":"137.99595744000004","east":"153.552171232","south":"-29.177897698696302","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_SA","Title":"South Australia Mesh Blocks","BoundingBox":{"west":"129.00133699200003","east":"141.002955616","south":"-38.06260298858392","north":"-25.996146486756036"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_TAS","Title":"Tasmania Mesh Blocks","BoundingBox":{"west":"143.81892271999996","east":"148.49867360000002","south":"-43.740509602057614","north":"-39.2036616580757"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_VIC","Title":"Victoria Mesh Blocks","BoundingBox":{"west":"140.961681984","east":"149.976679008","south":"-39.15918952657599","north":"-33.98042558562515"},"queryable":"1"},
-
-    {"Name":"admin_bnds:MB_2011_WA","Title":"Western Australia Mesh Blocks","BoundingBox":{"west":"112.921113952","east":"129.001930016","south":"-35.134846435111655","north":"-13.689492034565587"},"queryable":"1"},
-
-    {"Name":"admin_bnds:IARE_2011_AUST","Title":"Indigenous Areas","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:ILOC_2011_AUST","Title":"Indigenous Locations","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:IREG_2011_AUST","Title":"Indigenous Regions","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:SOS_2011_AUST","Title":"Section of State","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:SOSR_2011_AUST","Title":"Section of State Range","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:UCL_2011_AUST","Title":"Urban Centre and Locality","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"},
-
-    {"Name":"admin_bnds:RA_2011_AUST","Title":"Remoteness Area","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
-  ]}
+        {"Name":"admin_bnds:RA_2011_AUST","Title":"Remoteness Area","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
+    ]}
 ]}
 
