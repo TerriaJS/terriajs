@@ -42,6 +42,7 @@ var GeoDataBrowser = function(options) {
     wrapper.appendChild(mapButton);
 
     var dataPanel = document.createElement('div');
+    dataPanel.id = 'ausglobe-data-panel';
     dataPanel.className = 'ausglobe-panel';
     dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }');
 

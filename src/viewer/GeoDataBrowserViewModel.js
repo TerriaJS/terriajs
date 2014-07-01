@@ -396,17 +396,20 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.nowViewing = komapping.fromJS(getLayers(), nowViewingMapping);
 
-    this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(function() {
-        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
-    });
+    function refreshNowViewing() {
+        // Get the current scroll height and position
+        var panel = document.getElementById('ausglobe-data-panel');
+        var previousScrollHeight = panel.scrollHeight ;
 
-    this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(function() {
-        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
-    });
+        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
 
-    this._removeGeoDataReorderedListener = this._dataManager.GeoDataReordered.addEventListener(function() {
-        //komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
-    });
+        // Attempt to maintain the previous scroll position.
+        var newScrollHeight = panel.scrollHeight;
+        panel.scrollTop += newScrollHeight - previousScrollHeight;
+    }
+
+    this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
+    this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(refreshNowViewing);
 
     function noopHandler(evt) {
         evt.stopPropagation();
