@@ -74,6 +74,13 @@ var GeoDataInfoPopup = function(options) {
                 <h2>Metadata URL</h2>\
                 <a data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
             </div>\
+            <div class="ausglobe-info-section" data-bind="if: info.wfsAvailable">\
+                <h2>Data URL</h2>\
+                Click the link below to download GeoJSON data.  See the\
+                <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>\
+                for more information on customizing URL query parameters.\
+                <div><a data-bind="attr: { href: getDataUrl }, text: getDataUrl" target="_blank"></a></div>\
+            </div>\
             <hr />\
             <div class="ausglobe-info-section">\
                 <h2>Data Details</h2>\
@@ -221,6 +228,10 @@ var GeoDataInfoPopup = function(options) {
         } else {
             return 'N/A';
         }
+    });
+
+    viewModel.getDataUrl = knockout.computed(function() {
+        return viewModel.info.base_url() + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
     });
 
     var getMetadataUrl = viewModel.getMetadataUrl();
