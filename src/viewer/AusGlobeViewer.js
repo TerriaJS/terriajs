@@ -122,7 +122,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
-                uri : 'http://www.nicta.com.au',
+                uri : 'http://nicta.github.io/nationalmap/public/home.html',
                 target : '_blank'
             },
             {
@@ -131,7 +131,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
-                uri : 'http://www.nicta.com.au',
+                uri : 'http://nicta.github.io/nationalmap/public/faq.html',
                 target : '_blank'
             }
         ]
