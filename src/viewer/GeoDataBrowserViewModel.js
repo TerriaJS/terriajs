@@ -501,7 +501,6 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._endNowViewingDrag = createCommand(function(viewModel, e) {
-        console.log('end drag');
         if (defined(draggedNowViewingItem)) {
             draggedNowViewingItem.style.display = 'block';
         }
