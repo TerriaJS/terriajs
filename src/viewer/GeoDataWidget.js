@@ -78,11 +78,6 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
         that.map = obj.map;
     });
 
-    geoDataManager.ShareRequest.addEventListener(function(collection, request) {
-        console.log('Share Request Event:');
-        that.showShareDialog(request);
-    });
-
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
 
