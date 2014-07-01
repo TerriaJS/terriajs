@@ -423,6 +423,11 @@ a.ausglobe-title-menuItem:hover {
     display: inline-block;
 }
 
+.ausglobe-nowViewing-drop-target {
+    position: relative;
+    border: 1px dashed gray;
+}
+
 .ausglobe-accordion-category-item {
     padding-left: 10px;
     padding-right: 10px;
@@ -452,6 +457,12 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-accordion-category-item-enabled {
     background-color: rgba(128, 128, 128, 0.65);
     cursor: pointer;
+}
+
+.ausglobe-nowViewing-dragHandle {
+    cursor: move;
+    position: relative;
+    top: 4px;
 }
 
 .ausglobe-accordion-category-item-checkbox {

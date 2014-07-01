@@ -388,14 +388,24 @@ var GeoDataBrowserViewModel = function(options) {
         }
     };
 
-    this.nowViewing = komapping.fromJS(this._dataManager.layers, nowViewingMapping);
+    function getLayers() {
+        var layers = that._dataManager.layers.slice();
+        layers.reverse();
+        return layers;
+    }
+
+    this.nowViewing = komapping.fromJS(getLayers(), nowViewingMapping);
 
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(function() {
-        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
     });
 
     this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(function() {
-        komapping.fromJS(that._dataManager.layers, nowViewingMapping, that.nowViewing);
+        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
+    });
+
+    this._removeGeoDataReorderedListener = this._dataManager.GeoDataReordered.addEventListener(function() {
+        //komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
     });
 
     function noopHandler(evt) {
@@ -461,6 +471,97 @@ var GeoDataBrowserViewModel = function(options) {
     document.addEventListener("dragexit", noopHandler, false);
     document.addEventListener("dragover", noopHandler, false);
     document.addEventListener("drop", dropHandler, false);
+
+    var draggedNowViewingItem;
+    var dragPlaceholder;
+
+    this._startNowViewingDrag = createCommand(function(viewModel, e) {
+        draggedNowViewingItem = e.target;
+
+        dragPlaceholder = document.createElement('div');
+        dragPlaceholder.className = 'ausglobe-nowViewing-drop-target';
+        dragPlaceholder.style.height = draggedNowViewingItem.clientHeight + 'px';
+        dragPlaceholder.addEventListener('drop', function(e) {
+            var draggedItemIndex = draggedNowViewingItem.getAttribute('nowViewingIndex') | 0;
+            var placeholderIndex = dragPlaceholder.getAttribute('nowViewingIndex') | 0;
+
+            while (draggedItemIndex > placeholderIndex) {
+                that._dataManager.moveUp(viewModel.layer);
+                --draggedItemIndex;
+            }
+            while (draggedItemIndex < placeholderIndex) {
+                that._dataManager.moveDown(viewModel.layer);
+                ++draggedItemIndex;
+            }
+        }, false);
+
+        e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
+
+        return true;
+    });
+
+    this._endNowViewingDrag = createCommand(function(viewModel, e) {
+        if (defined(draggedNowViewingItem)) {
+            draggedNowViewingItem.style.display = 'block';
+        }
+
+        if (defined(dragPlaceholder)) {
+            if (defined(dragPlaceholder.parentElement)) {
+                dragPlaceholder.parentElement.removeChild(dragPlaceholder);
+            }
+            dragPlaceholder = undefined;
+        }
+
+        that.nowViewing.removeAll();
+        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
+
+        if (defined(that._viewer.frameChecker)) {
+            that._viewer.frameChecker.forceFrameUpdate();
+        }
+    });
+
+    this._nowViewingDragEnter = createCommand(function(viewModel, e) {
+        if (e.currentTarget === dragPlaceholder || !e.currentTarget.parentElement) {
+            return;
+        }
+
+        e.originalEvent.dataTransfer.dropEffect = 'move';
+
+        draggedNowViewingItem.style.display = 'none';
+
+        // Add the placeholder above the entered element.
+        // If the placeholder is already below the entered element, move it above.
+        // TODO: this logic is imperfect, but good enough for now.
+        var placeholderIndex;
+        var targetIndex;
+
+        var siblings = e.currentTarget.parentElement.childNodes;
+        for (var i = 0; i < siblings.length; ++i) {
+            if (siblings[i] === dragPlaceholder) {
+                placeholderIndex = i;
+            }
+            if (siblings[i] === e.currentTarget) {
+                targetIndex = i;
+            }
+        }
+
+        var insertBefore = true;
+        if (placeholderIndex === targetIndex - 1) {
+            insertBefore = false;
+        }
+
+        if (dragPlaceholder.parentElement) {
+            dragPlaceholder.parentElement.removeChild(dragPlaceholder);
+        }
+
+        if (insertBefore) {
+            e.currentTarget.parentElement.insertBefore(dragPlaceholder, e.currentTarget);
+            dragPlaceholder.setAttribute('nowViewingIndex', e.currentTarget.getAttribute('nowViewingIndex'));
+        } else {
+            e.currentTarget.parentElement.insertBefore(dragPlaceholder, siblings[targetIndex + 1]);
+            dragPlaceholder.setAttribute('nowViewingIndex', siblings[targetIndex + 1].getAttribute('nowViewingIndex'));
+        }
+    });
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {
@@ -587,6 +688,24 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     addUploadedFile : {
         get : function() {
             return this._addUploadedFile;
+        }
+    },
+
+    startNowViewingDrag : {
+        get : function() {
+            return this._startNowViewingDrag;
+        }
+    },
+
+    nowViewingDragEnter : {
+        get : function() {
+            return this._nowViewingDragEnter;
+        }
+    },
+
+    endNowViewingDrag : {
+        get : function() {
+            return this._endNowViewingDrag;
         }
     }
 });
