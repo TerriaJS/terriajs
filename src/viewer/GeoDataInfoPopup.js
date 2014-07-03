@@ -66,11 +66,11 @@ var GeoDataInfoPopup = function(options) {
             <div class="ausglobe-info-section">\
                 <div class="asuglobe-info-description" data-bind="html: description"></div>\
             </div>\
-            <div class="ausglobe-info-section">\
+            <div class="ausglobe-info-section" data-bind="if: info.base_url">\
                 <h2><span data-bind="text: serviceType"></span> Base URL</h2>\
                 <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
             </div>\
-            <div class="ausglobe-info-section">\
+            <div class="ausglobe-info-section" data-bind="if: getMetadataUrl">\
                 <h2>Metadata URL</h2>\
                 <a data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
             </div>\
@@ -81,14 +81,14 @@ var GeoDataInfoPopup = function(options) {
                 for more information on customizing URL query parameters.\
                 <div><a data-bind="attr: { href: getDataUrl }, text: getDataUrl" target="_blank"></a></div>\
             </div>\
-            <hr />\
-            <div class="ausglobe-info-section">\
+            <hr data-bind="visible: layerProperties.data().length > 0" />\
+            <div class="ausglobe-info-section" data-bind="if: layerProperties.data().length > 0">\
                 <h2>Data Details</h2>\
                 <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
                 </table>\
             </div>\
-            <hr />\
-            <div class="ausglobe-info-section">\
+            <hr data-bind="visible: serviceProperties.data().length > 0" />\
+            <div class="ausglobe-info-section" data-bind="if: serviceProperties.data().length > 0">\
                 <h2>Service Details</h2>\
                 <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
                 </table>\
@@ -231,15 +231,18 @@ var GeoDataInfoPopup = function(options) {
     });
 
     viewModel.getDataUrl = knockout.computed(function() {
+        if (!viewModel.info.base_url || !viewModel.info.base_url()) {
+            return '';
+        }
         return viewModel.info.base_url() + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
     });
 
     var getMetadataUrl = viewModel.getMetadataUrl();
-    if (viewModel.info.proxy()) {
+    if (viewModel.info.proxy && viewModel.info.proxy()) {
         getMetadataUrl = corsProxy.getURL(getMetadataUrl);
     }
 
-    var layerName = viewModel.info.Name ? viewModel.info.Name() : viewModel.info.name();
+    var layerName = viewModel.info.Name ? viewModel.info.Name() : viewModel.info.name ? viewModel.info.name() : viewModel.info.Title();
 
     if (viewModel.info.type() === 'WMS') {
         when(loadXML(getMetadataUrl), function(capabilities) {
