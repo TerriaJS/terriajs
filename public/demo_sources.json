@@ -1,4 +1,4 @@
-{"name":"Data Providers", "nm_ext_type": "sources", "Layer": [
+{"name":"Data Providers", "Layer": [
   { "name": "Demo Providers", "Layer": [
     { "name": "Topography (GA)", "base_url": "http://www.ga.gov.au/gis/services/topography/Australian_Topography/MapServer/WFSServer", "type": "WFS", "proxy": true },
     { "name": "Topography (GA REST)", "base_url": "http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer", "type": "REST", "proxy": true },

@@ -1,4 +1,5 @@
-{"name":"Topics","nm_ext_type":"collections","Layer":[
+{"name":"Data Collection", "Layer": [
+  {"name":"BOM","Layer":[
     {"name":"ahgf_gwc","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
         {"Name":"AHGFAquiferContour","Title":"AHGFAquiferContour","BoundingBox":{"west":"130.9294316820001","east":"151.640955901","south":"-41.24101109706462","north":"-12.157000677611002"},
 		"queryable":1},
@@ -155,4 +156,5 @@
 		{"Name":"AHGFWaterbody","Title":"AHGFWaterbody","BoundingBox":{"west":"112.99395000000004","east":"153.6130200000001","south":"-43.6060489990578","north":"-8.933328999710083"},
 		"queryable":1}
 	]}
+  ]} 
 ]} 

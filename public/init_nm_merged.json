@@ -336,5 +336,17 @@
 
         {"Name":"admin_bnds:RA_2011_AUST","Title":"Remoteness Area","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
     ]}
+  ]},
+  { "name": "Data Providers", "Layer": [
+    { "name": "Topography (Geoscience Australia)", "base_url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },
+    { "name": "Water (Bureau of Meteorology Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },
+    { "name": "Boundaries (Australia Bureau of Statistics)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "proxy": false, "wfsAvailable": true },
+    { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "proxy": false, "wfsAvailable": true }
   ]}
-]}
+  ],
+  "NMServices": [
+    { "name": "GeoSpace", "description": "A service provided by NICTA for sharing visualizations made in National Map", "url": "http://geospace.research.nicta.com.au/upload", "request": "POST"},
+    { "name": "NM Sample Service", "description": "A service returning bike racks on the Gold Coast", "url": "http://geospace.research.nicta.com.au/nm_service_1", "request": "POST"}
+  ]
+
+}
