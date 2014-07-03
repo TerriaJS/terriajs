@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,Cesium,L,$,html2canvas,alert,console*/
+/*global require,Cesium,L,$,XMLDocument,html2canvas,alert,console*/
 var BingMapsApi = Cesium.BingMapsApi;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
@@ -718,6 +718,30 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                         }
                         html += '</table>';
                         return html;
+                    }
+
+                    // Handle MapInfo MXP.  This is ugly.
+                    if (result instanceof XMLDocument) {
+                        var json = $.xml2json(result);
+                        if (json.FeatureCollection &&
+                            json.FeatureCollection.FeatureMembers && 
+                            json.FeatureCollection.FeatureMembers.Feature && 
+                            json.FeatureCollection.FeatureMembers.Feature.Val) {
+
+                            var properties = {};
+                            result = {
+                                features : [
+                                    {
+                                        properties : properties
+                                    }
+                                ]
+                            };
+
+                            var vals = json.FeatureCollection.FeatureMembers.Feature.Val;
+                            for (var i = 0; i < vals.length; ++i) {
+                                properties[vals[i].ref] = vals[i].text;
+                            }
+                        }
                     }
 
                     if (!defined(result) || !defined(result.features) || result.features.length === 0) {
