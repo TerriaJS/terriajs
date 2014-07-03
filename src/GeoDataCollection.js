@@ -1120,9 +1120,9 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     if (description.proxy || this.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
     }
-    
+
     var that = this;
-    Cesium.when(Cesium.loadText(request), function(text) {
+    Cesium.when(Cesium.loadText(request, undefined, description.username, description.password), function(text) {
         that.handleCapabilitiesRequest(text, description);
         callback(description);
     });
