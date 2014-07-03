@@ -1,4 +1,4 @@
-{"name":"Data Collections", "nm_ext_type": "sources", "Layer": [
+{"name":"Data Collections", "Layer": [
   { "name": "Data Providers", "Layer": [
     { "name": "Topography (Geoscience Australia)", "base_url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },
     { "name": "Water (Bureau of Meteorology Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },

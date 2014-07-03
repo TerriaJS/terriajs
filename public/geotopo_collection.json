@@ -1,4 +1,5 @@
-{"name":"Topics","nm_ext_type":"collections","Layer":[
+{"name":"Data Collection", "Layer": [
+  {"name":"GeoTopo 250K","Layer":[
    	{"name":"Landuse","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
 		{"Name":"DLCDv1_Class","Title":"DLCDv1_Class","BoundingBox":{"west":"110.0000005","east":"155.0091895","south":"-45.004797499999995","north":"-9.999999500000008"},
 "queryable":1},
@@ -203,4 +204,5 @@
 		{"Name":"powerlines","Title":"powerlines","BoundingBox":{"west":"114.63228","east":"153.49785","south":"-43.16291999905861","north":"-12.458869999601996"},
 "queryable":1}
 	]}
+  ]}
 ]}

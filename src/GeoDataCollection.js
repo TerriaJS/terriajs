@@ -967,7 +967,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 
 //Utility function to derive a collection from a service
 function _getCollectionFromServiceLayers(layers) {
-    var obj = {"name":"Topics", "nm_ext_type": "collections", "Layer": []};
+    var obj = {"name":"Topics", "Layer": []};
     for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
         var name = layer.Name;
@@ -1004,7 +1004,8 @@ function _getCollectionFromServiceLayers(layers) {
         };
         topic.Layer.push(dataset);
     }
-    console.log(JSON.stringify(obj));
+    var collection = {"name":"Data Collection", "Layer": [ obj ] };
+    console.log(JSON.stringify(collection));
 }
 
 function _recurseLayerList(layer_src, layers) {

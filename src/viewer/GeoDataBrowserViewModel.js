@@ -350,10 +350,12 @@ var GeoDataBrowserViewModel = function(options) {
 
     var dataCollectionsPromise = loadJson('./data_collection.json');
     var otherSourcesPromise = loadJson('./data_sources.json');
+    var servicesObjPromise = loadJson('./nm_services.json');
+//    var initNMPromise = loadJson('./init_nm_merged.json');
 
-    when.all([dataCollectionsPromise, otherSourcesPromise], function(sources) {
+    when.all([dataCollectionsPromise, otherSourcesPromise, servicesObjPromise], function(sources) {
         var browserContent = [];
-        browserContent.push(sources[0]);
+        browserContent.push(sources[0].Layer[0]);
 
         var otherSources = sources[1].Layer;
         for (var i = 0; i < otherSources.length; ++i) {
@@ -361,12 +363,8 @@ var GeoDataBrowserViewModel = function(options) {
         }
 
         komapping.fromJS(browserContent, that._collectionListMapping, browserContentViewModel);
-    });
-
-    Cesium.loadJson('./nm_services.json').then(function (obj) {
-        if (obj !== undefined) {
-            that._dataManager.addServices(obj.services);
-        }
+        
+        that._dataManager.addServices(sources[2].NMServices);
     });
 
     this.userContent = komapping.fromJS([], this._collectionListMapping);
@@ -421,18 +419,13 @@ var GeoDataBrowserViewModel = function(options) {
         evt.preventDefault();
 
         function loadCollection(json) {
-            if (!defined(json) || !defined(json.name)) {
+            if (!defined(json)) {
                 return;
             }
 
-            var collections;
-            if (json.nm_ext_type === 'sources') {
-                collections = json.Layer;
-            } else if (json.nm_ext_type === 'collections') {
-                collections = [json];
-            } else if (json.nm_ext_type === 'services') {
-                that._dataManager.addServices(json.services);
-            }
+            that._dataManager.addServices(json.NMServices);
+            
+            var collections = json.Layer;
             
             var existingCollection;
 
