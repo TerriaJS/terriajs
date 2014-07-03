@@ -26,22 +26,31 @@ var ServicesPanel = function(options) {
             <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
             <h1>Send to a Service (Advanced)</h1>\
         </div>\
-        <div class="ausglobe-info-content">\
-            <div class="ausglobe-share-label">\
-                Choose one service to use:\
-                <div class="ausglobe-service-list" data-bind="foreach: services">\
-                    <div><label><input type="radio" name="ausglobe-service" data-bind="value: $index, checked: $root.selectedService" /><span data-bind="text: name"></span></div>\
+        <div data-bind="if: services.length > 0">\
+            <div class="ausglobe-info-content">\
+                <div class="ausglobe-share-label">\
+                    Choose one service to use:\
+                    <div class="ausglobe-service-list" data-bind="foreach: services">\
+                        <div><label><input type="radio" name="ausglobe-service" data-bind="value: $index, checked: $root.selectedService" /><span data-bind="text: name"></span></div>\
+                    </div>\
+                </div>\
+                <div class="ausglobe-share-label">\
+                    <hr />\
+                </div>\
+                <div class="ausglobe-share-label">\
+                    <h2 data-bind="text: services[selectedService() | 0].name"></h2>\
+                    <div class="ausglobe-share-label" data-bind="text: services[selectedService() | 0].description"></div>\
+                </div>\
+                <div class="ausglobe-share-label" data-bind="visible: services.length > 0">\
+                    <input class="ausglobe-services-send-button" type="button" value="Send" data-bind="click: sendRequest" />\
                 </div>\
             </div>\
-            <div class="ausglobe-share-label">\
-                <hr />\
-            </div>\
-            <div class="ausglobe-share-label">\
-                <h2 data-bind="text: services[selectedService() | 0].name"></h2>\
-                <div class="ausglobe-share-label" data-bind="text: services[selectedService() | 0].description"></div>\
-            </div>\
-            <div class="ausglobe-share-label">\
-                <input class="ausglobe-services-send-button" type="button" value="Send" data-bind="click: sendRequest" />\
+        </div>\
+        <div data-bind="if: services.length === 0">\
+            <div class="ausglobe-info-content">\
+                <div class="ausglobe-share-label">\
+                    Sorry, no services are currently available.  Please check back later.\
+                </div>\
             </div>\
         </div>\
     ';

@@ -350,7 +350,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     var dataCollectionsPromise = loadJson('./data_collection.json');
     var otherSourcesPromise = loadJson('./data_sources.json');
-    var servicesObjPromise = loadJson('./nm_services.json');
+    var servicesObjPromise; // = loadJson('./nm_services.json');
 //    var initNMPromise = loadJson('./init_nm_merged.json');
 
     when.all([dataCollectionsPromise, otherSourcesPromise, servicesObjPromise], function(sources) {
@@ -364,7 +364,9 @@ var GeoDataBrowserViewModel = function(options) {
 
         komapping.fromJS(browserContent, that._collectionListMapping, browserContentViewModel);
         
-        that._dataManager.addServices(sources[2].NMServices);
+        if (sources[2]) {
+            that._dataManager.addServices(sources[2].NMServices);
+        }
     });
 
     this.userContent = komapping.fromJS([], this._collectionListMapping);
