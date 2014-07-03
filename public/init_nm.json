@@ -5,7 +5,8 @@
         {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"0","Title":"Magnetic Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Magnetic_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
-        {"Name":"AUS_GeoRegions_5M","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/services/earth_science/GA_Surface_Geology_of_Australia/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"}
+        {"Name":"AUS_GeoRegions_5M","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/services/earth_science/GA_Surface_Geology_of_Australia/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
+        {"Name":"earthquakeHazard","Title":"Earthquake Hazard","base_url":"http://www.ga.gov.au/gis/services/hazards/EarthquakeHazard/MapServer/WMSServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"}
     ]},
 	{"name":"Surface Water","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0, "wfsAvailable": true, "Layer":[
 		{"Name":"bores","Title":"Bores","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
@@ -129,6 +130,11 @@
 		{"Name":"horizontalcontrolpoints","Title":"Horizontal Control Points","BoundingBox":{"west":"113.06265","east":"153.55039","south":"-43.51730999905795","north":"-10.462999999662589"},
 "queryable":1},
 		{"Name":"spotelevations","Title":"Spot Elevations","BoundingBox":{"west":"112.93472","east":"153.63573999999997","south":"-43.657359999057725","north":"-9.004409999707923"},
+"queryable":1},
+		{"Name":"0","Title":"SRTM 1 sec DEM Image","base_url":"http://www.ga.gov.au/gisimg/services/topography/dem_s_1s/ImageServer/WMSServer","proxy":true,"wfsAvailable": false, "BoundingBox":{"west":"112.93472","east":"153.63573999999997","south":"-43.657359999057725","north":"-9.004409999707923"},
+"queryable":1},
+		{"Name":"Flow_Direction_Grid_to_accompany_9_Second_Digital_Elevation_Model_of_Australia_Version_3","Title":"Flow Grid Direction Image",
+"base_url": "http://www.ga.gov.au/thredds/wms/national_grids/d8-9s.nc","proxy":true,"wfsAvailable": false, "BoundingBox":{"west":"112.93472","east":"153.63573999999997","south":"-43.657359999057725","north":"-9.004409999707923"},
 "queryable":1}
 	]},
 	{"name":"Terrain","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0, "wfsAvailable": true,"Layer":[
@@ -136,9 +142,9 @@
 "queryable":1},
 		{"Name":"craters","Title":"Craters","BoundingBox":{"west":"127.38872000000002","east":"145.12202","south":"-37.79733999908604","north":"-18.183079999439965"},
 "queryable":1},
-		{"Name":"deformationareas","Title":"Deformationareas","BoundingBox":{"west":"115.73604000000003","east":"152.29494000000003","south":"-36.794289999094765","north":"-12.909959999588562"},
+		{"Name":"deformationareas","Title":"Deformations","BoundingBox":{"west":"115.73604000000003","east":"152.29494000000003","south":"-36.794289999094765","north":"-12.909959999588562"},
 "queryable":1},
-		{"Name":"discontinuities","Title":"Discontinuities","BoundingBox":{"west":"112.92144999999998","east":"153.46622","south":"-43.65648999905773","north":"-11.006909999645897"},
+		{"Name":"discontinuities","Title":"Cliffs","BoundingBox":{"west":"112.92144999999998","east":"153.46622","south":"-43.65648999905773","north":"-11.006909999645897"},
 "queryable":1},
 		{"Name":"pinnacles","Title":"Pinnacles","BoundingBox":{"west":"114.35003000000002","east":"152.91039","south":"-35.99436999910254","north":"-11.944649999617436"},
 "queryable":1},
@@ -226,7 +232,9 @@
 "queryable":1},
 		{"Name":"storagetanks","Title":"Storage Tanks","BoundingBox":{"west":"113.63004999999998","east":"153.16552999999996","south":"-41.127119999065165","north":"-12.426089999602983"},
 "queryable":1},
-		{"Name":"verticalobstructions","Title":"verticalobstructions","BoundingBox":{"west":"113.52788","east":"153.58229000000003","south":"-43.37782999905819","north":"-9.080289999705544"},
+		{"Name":"verticalobstructions","Title":"Vertical Obstructions","BoundingBox":{"west":"113.52788","east":"153.58229000000003","south":"-43.37782999905819","north":"-9.080289999705544"},
+"queryable":1},
+		{"Name":"0","Title":"Waste Management Facilities","base_url":"http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WMSServer","proxy":true, "wfsAvailable": true, "wfsUrl": "http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WFSServer","BoundingBox":{"west":"112.93472","east":"153.63573999999997","south":"-43.657359999057725","north":"-9.004409999707923"},
 "queryable":1},
 		{"Name":"watertanks","Title":"Water Tanks","BoundingBox":{"west":"112.93187000000002","east":"153.00634","south":"-42.75848999905954","north":"-9.951769999678387"},
 "queryable":1},
@@ -236,7 +244,7 @@
 "queryable":1}
 	]},
 	{"name":"Utility","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0, "wfsAvailable": true,"Layer":[
-				{"Name":"pipelines","Title":"Pipelines","BoundingBox":{"west":"113.67812999999998","east":"153.15454","south":"-43.00307999905895","north":"-10.903989999649047"},
+		{"Name":"pipelines","Title":"Pipelines","BoundingBox":{"west":"113.67812999999998","east":"153.15454","south":"-43.00307999905895","north":"-10.903989999649047"},
 "queryable":1},
 		{"Name":"powerlines","Title":"Powerlines","BoundingBox":{"west":"114.63228","east":"153.49785","south":"-43.16291999905861","north":"-12.458869999601996"},
 "queryable":1}
@@ -342,7 +350,8 @@
     { "name": "Topography (Geoscience Australia)", "base_url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },
     { "name": "Water (Bureau of Meteorology Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },
     { "name": "Boundaries (Australia Bureau of Statistics)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "proxy": false, "wfsAvailable": true },
-    { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "proxy": false, "wfsAvailable": true }
+    { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "proxy": false, "wfsAvailable": true },
+	{ "name": "Nexus 2012", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer", "type": "WMS","proxy":true, "wfsAvailable": true, "wfsUrl": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WFSServer"}
   ]}
   ],
   "NMServices": [

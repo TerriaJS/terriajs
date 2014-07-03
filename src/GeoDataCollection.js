@@ -1019,6 +1019,9 @@ function _getCollectionFromServiceLayers(layers, description) {
 }
 
 function _recurseLayerList(layer_src, layers) {
+    if (!(layer_src instanceof Array)) {
+        layer_src = [layer_src];
+    }
     for (var i = 0; i < layer_src.length; i++) {
         if (layer_src[i].Layer) {
             if (layer_src[i].queryable === 1) {
