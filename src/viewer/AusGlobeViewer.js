@@ -210,7 +210,7 @@ var AusGlobeViewer = function(geoDataManager) {
             message : '\
 National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, including the \
 latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
-<a href="http://www.mozilla.org/firefox" target="_blank>Mozilla Firefox</a>, and \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, and \
 <a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
 Your web browser does not appear to support WebGL, so you will see a degraded, \
 2D-only experience.'
