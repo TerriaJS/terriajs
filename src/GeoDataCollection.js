@@ -1511,12 +1511,11 @@ GeoDataCollection.prototype.addFile = function(file) {
             var dataSource = new KmlDataSource(corsProxy);
             when(dataSource.loadKmz(file, file.name), function() {
                 kmlLayer.extent = getDataSourceExtent(dataSource);
+                that.dataSourceCollection.add(dataSource);
+                kmlLayer.primitive = dataSource;
+                that.zoomTo = true;
+                that.add(kmlLayer);
             });
-            this.dataSourceCollection.add(dataSource);
-
-            kmlLayer.primitive = dataSource;
-            that.zoomTo = true;  //BUG!!!
-            this.add(kmlLayer);
         } else {
             when(readText(file), function (text) {
                 that.zoomTo = true;
