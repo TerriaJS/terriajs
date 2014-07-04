@@ -486,11 +486,21 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
  */
 GeoDataCollection.prototype.loadUrl = function(url, format) {
     var that = this;
-    if (that.formatSupported(url)) {
-        Cesium.loadText(url).then(function (text) { 
-            that.zoomTo = true;
-            that.loadText(text, url, format);
-        });
+    if (format || that.formatSupported(url)) {
+        if (format === undefined) {
+            format = getFormatFromUrl(url);
+        }
+        if (format === 'KMZ') {
+            Cesium.loadBlob(url).then( function(blob) {
+                blob.name = url;
+                that.addFile(blob);
+            });
+        } else {
+            Cesium.loadText(url).then(function (text) { 
+                that.zoomTo = true;
+                that.loadText(text, url, format);
+            });
+        }
     }
 };
 
@@ -1505,6 +1515,7 @@ GeoDataCollection.prototype.addFile = function(file) {
             this.dataSourceCollection.add(dataSource);
 
             kmlLayer.primitive = dataSource;
+            that.zoomTo = true;  //BUG!!!
             this.add(kmlLayer);
         } else {
             when(readText(file), function (text) {
