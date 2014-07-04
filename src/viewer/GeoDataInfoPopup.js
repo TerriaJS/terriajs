@@ -231,10 +231,16 @@ var GeoDataInfoPopup = function(options) {
     });
 
     viewModel.getDataUrl = knockout.computed(function() {
-        if (!viewModel.info.base_url || !viewModel.info.base_url()) {
+        var baseUrl;
+        if (viewModel.info.wfsUrl && viewModel.info.wfsUrl()) {
+            baseUrl = viewModel.info.wfsUrl();
+        } else if (viewModel.info.base_url && viewModel.info.base_url()) {
+            baseUrl = viewModel.info.base_url();
+        } else {
             return '';
         }
-        return viewModel.info.base_url() + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
+
+        return baseUrl + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
     });
 
     var getMetadataUrl = viewModel.getMetadataUrl();
