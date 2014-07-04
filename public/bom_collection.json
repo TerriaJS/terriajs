@@ -1,6 +1,6 @@
 {"name":"Data Collection", "Layer": [
   {"name":"BOM","Layer":[
-    {"name":"ahgf_gwc","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+    {"name":"ahgf_gwc","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":0,"Layer":[
         {"Name":"AHGFAquiferContour","Title":"AHGFAquiferContour","BoundingBox":{"west":"130.9294316820001","east":"151.640955901","south":"-41.24101109706462","north":"-12.157000677611002"},
 		"queryable":1},
 		{"Name":"AHGFAquiferContourBottom","Title":"AHGFAquiferContourBottom","BoundingBox":{"west":"140.96832934600002","east":"149.96101540700002","south":"-39.08532118507642","north":"-36.98746808509298"},
@@ -30,7 +30,7 @@
 		{"Name":"AHGFWaterTableAquifer","Title":"AHGFWaterTableAquifer","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000004","south":"-43.65854999905766","north":"-9.219939999701113"},
 		"queryable":1}
     ]},
-    {"name":"ahgf_hunter_river","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+    {"name":"ahgf_hunter_river","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":0,"Layer":[
         {"Name":"AHGFNode_Hunter","Title":"AHGFNode_Hunter","BoundingBox":{"west":"149.75375000000008","east":"151.8112500000001","south":"-33.01374999913751","north":"-31.756249999155113"},
 		"queryable":1},
 		{"Name":"AHGFDam_Hunter","Title":"AHGFDam_Hunter","BoundingBox":{"west":"149.7419000000001","east":"151.80222000000003","south":"-32.88313999913927","north":"-31.976359999151896"},
@@ -86,7 +86,7 @@
 		{"Name":"AHGFSea_Hunter","Title":"AHGFSea_Hunter","BoundingBox":{"west":"143.51028000000008","east":"153.30000000000007","south":"-43.99999999905724","north":"-29.999999999182396"},
 		"queryable":1}
 	]},
-    {"name":"ahgf_hrc","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+    {"name":"ahgf_hrc","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":0,"Layer":[
         {"Name":"AHGFContractedCatchment","Title":"AHGFContractedCatchment","BoundingBox":{"west":"112.9225","east":"153.63750000000002","south":"-43.73999999905757","north":"-9.197499999701808"},
 		"queryable":1},
 		{"Name":"AHGFLink","Title":"AHGFLink","BoundingBox":{"west":"113.64375000000005","east":"153.5887500000001","south":"-43.55374999905787","north":"-10.901249999649112"},
@@ -94,13 +94,13 @@
 		{"Name":"AHGFNode","Title":"AHGFNode","BoundingBox":{"west":"113.4887500000001","east":"153.62875000000008","south":"-43.60874999905773","north":"-9.238749999700568"},
 		"queryable":1}
 	]},
-    {"name":"ahgf_hrr","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+    {"name":"ahgf_hrr","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":0,"Layer":[
         {"Name":"AWRADrainageDivision","Title":"AWRADrainageDivision","BoundingBox":{"west":"111.24438730279999","east":"155.3156126972001","south":"-48.47186269657931","north":"-4.400637302179204"},
 		"queryable":1},
 		{"Name":"RiverRegion","Title":"RiverRegion","BoundingBox":{"west":"112.9225","east":"153.63750000000013","south":"-43.64250000005773","north":"-9.229999999700832"},
 		"queryable":1}
 	]},
-    {"name":"ahgf_shcarto","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+    {"name":"ahgf_shcarto","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":0,"Layer":[
         {"Name":"AHGFSea","Title":"AHGFSea","BoundingBox":{"west":"112.88333000000013","east":"154.1000000000001","south":"-43.99999999905724","north":"-8.933329999710095"},
 		"queryable":1},
 		{"Name":"AHGFWaterPipeline","Title":"AHGFWaterPipeline","BoundingBox":{"west":"113.80691","east":"152.89131000000003","south":"-43.00307999905891","north":"-10.903989999649017"},
@@ -140,7 +140,7 @@
 		{"Name":"AHGFWaterbodyWaterStorage","Title":"AHGFWaterbodyWaterStorage","BoundingBox":{"west":"115.12252000000001","east":"153.31294000000014","south":"-43.03956999905885","north":"-12.821729999591128"},
 		"queryable":1}
 	]},
-    {"name":"ahgf_shcatch","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+    {"name":"ahgf_shcatch","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":0,"Layer":[
         {"Name":"NCBLevel1DrainageDivision","Title":"NCBLevel1DrainageDivision","BoundingBox":{"west":"112.9225","east":"153.63750000000002","south":"-43.73999999905757","north":"-9.197499999701801"},
 		"queryable":1},
 		{"Name":"NCBLevel2DrainageBasinGroup","Title":"NCBLevel2DrainageBasinGroup","BoundingBox":{"west":"112.9225","east":"153.63750000000013","south":"-43.73999999905757","north":"-9.197499999701803"},
@@ -148,7 +148,7 @@
 		{"Name":"AHGFCatchment","Title":"AHGFCatchment","BoundingBox":{"west":"112.9225","east":"153.6375000000001","south":"-43.73999999905757","north":"-9.197499999701808"},
 		"queryable":1}
 	]},
-    {"name":"ahgf_shn","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","querable":0,"Layer":[
+    {"name":"ahgf_shn","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"type":"WMS","queryable":0,"Layer":[
         {"Name":"AHGFNetworkNode","Title":"AHGFNetworkNode","BoundingBox":{"west":"113.33375","east":"153.62875000000008","south":"-43.628749999057746","north":"-9.23624999970059"},
 		"queryable":1},
 		{"Name":"AHGFNetworkStream","Title":"AHGFNetworkStream","BoundingBox":{"west":"112.10056181999998","east":"154.86193818000004","south":"-47.81318817937922","north":"-5.051811819379163"},

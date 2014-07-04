@@ -1,12 +1,12 @@
 {"name":"Data Collection", "Layer": [
   {"name":"GeoTopo 250K","Layer":[
-   	{"name":"Landuse","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+   	{"name":"Landuse","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"DLCDv1_Class","Title":"DLCDv1_Class","BoundingBox":{"west":"110.0000005","east":"155.0091895","south":"-45.004797499999995","north":"-9.999999500000008"},
 "queryable":1},
 		{"Name":"int_veg_09","Title":"int_veg_09","BoundingBox":{"west":"109.50435598124278","east":"157.21573672086433","south":"-44.312602859794346","north":"-9.034203995282887"},
 "queryable":1}
 	]},
-	{"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"aerialcableways","Title":"aerialcableways","BoundingBox":{"west":"145.63916","east":"153.47854999999998","south":"-37.845019999085665","north":"-16.819299999476762"},
 "queryable":1},
 		{"Name":"conveyors","Title":"conveyors","BoundingBox":{"west":"115.65124","east":"151.91119","south":"-41.48786999906365","north":"-12.184729999610212"},
@@ -36,7 +36,7 @@
 		{"Name":"yards","Title":"yards","BoundingBox":{"west":"113.18122","east":"148.48095","south":"-34.994069999113215","north":"-10.624669999657616"},
 "queryable":1}
 	]},
-	{"name":"Transport","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Transport","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"aircraftfacilitypoints","Title":"aircraftfacilitypoints","BoundingBox":{"west":"113.15955999999998","east":"153.56134999999998","south":"-43.651859999057734","north":"-9.088949999705271"},
 "queryable":1},
 		{"Name":"barrierpoints","Title":"barrierpoints","BoundingBox":{"west":"114.60042999999999","east":"146.93454000000003","south":"-34.738279999116116","north":"-11.439839999632706"},
@@ -68,7 +68,7 @@
 		{"Name":"roadtunnelpoints","Title":"roadtunnelpoints","BoundingBox":{"west":"-1.0","east":"0.0","south":"-0.9999999999670266","north":"0.0"},
 "queryable":1}
 	]},
-	{"name":"Elevation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Elevation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"benchmarks","Title":"benchmarks","BoundingBox":{"west":"113.50982","east":"149.92117","south":"-38.647199999079525","north":"-12.41999999960316"},
 "queryable":1},
 		{"Name":"contours","Title":"contours","BoundingBox":{"west":"112.92137","east":"153.63857000000004","south":"-43.74297999905761","north":"-8.93332999971015"},
@@ -78,7 +78,7 @@
 		{"Name":"spotelevations","Title":"spotelevations","BoundingBox":{"west":"112.93472","east":"153.63573999999997","south":"-43.657359999057725","north":"-9.004409999707923"},
 "queryable":1}
 	]},
-	{"name":"Hydrography","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Hydrography","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"bores","Title":"bores","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
 "queryable":1},
 		{"Name":"canalareas","Title":"canalareas","BoundingBox":{"west":"115.70707","east":"145.17220000000003","south":"-38.08189999908377","north":"-32.253269999147996"},
@@ -120,7 +120,7 @@
 		{"Name":"waterpoints","Title":"waterpoints","BoundingBox":{"west":"113.76517999999999","east":"153.09347999999997","south":"-38.63448999907962","north":"-10.072709999674638"},
 "queryable":1}
 	]},
-	{"name":"Habitation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Habitation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"buildingareas","Title":"buildingareas","BoundingBox":{"west":"141.62655","east":"152.80475","south":"-41.12735999906517","north":"-21.102919999365557"},
 "queryable":1},
 		{"Name":"buildingpoints","Title":"buildingpoints","BoundingBox":{"west":"112.94450000000002","east":"153.62926","south":"-43.65456999905773","north":"-9.128069999704051"},
@@ -140,7 +140,7 @@
 		{"Name":"recreationareas","Title":"recreationareas","BoundingBox":{"west":"113.54947","east":"153.61335","south":"-43.165569999058604","north":"-11.395799999634049"},
 "queryable":1}
 	]},
-	{"name":"Cartography","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Cartography","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"cartographiclines","Title":"cartographiclines","BoundingBox":{"west":"113.02031","east":"153.57704999999999","south":"-43.45349999905806","north":"-8.93332999971015"},
 "queryable":1},
 		{"Name":"cartographicpoints","Title":"cartographicpoints","BoundingBox":{"west":"113.40966000000002","east":"153.61335","south":"-43.4311099990581","north":"-10.693279999655509"},
@@ -150,7 +150,7 @@
 		{"Name":"grids","Title":"grids","BoundingBox":{"west":"112.88333","east":"154.1","south":"-44.00000999905729","north":"-7.999999999739592"},
 "queryable":1}
 	]},
-	{"name":"Terrain","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Terrain","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"caves","Title":"caves","BoundingBox":{"west":"113.40833999999998","east":"153.12877","south":"-42.73787999905959","north":"-12.581149999598347"},
 "queryable":1},
 		{"Name":"craters","Title":"craters","BoundingBox":{"west":"127.38872000000002","east":"145.12202","south":"-37.79733999908604","north":"-18.183079999439965"},
@@ -166,7 +166,7 @@
 		{"Name":"sands","Title":"sands","BoundingBox":{"west":"112.9297","east":"153.50303","south":"-43.55226999905789","north":"-9.845259999681689"},
 "queryable":1}
 	]},
-	{"name":"Vegetation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Vegetation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"clearedlines","Title":"clearedlines","BoundingBox":{"west":"114.30741","east":"151.17083","south":"-35.68676999910569","north":"-11.62904999962697"},
 "queryable":1},
 		{"Name":"cultivatedareas","Title":"cultivatedareas","BoundingBox":{"west":"113.66133","east":"153.54656","south":"-43.44901999905807","north":"-9.04530999970664"},
@@ -176,7 +176,7 @@
 		{"Name":"windbreaks","Title":"windbreaks","BoundingBox":{"west":"114.99020999999999","east":"151.58246","south":"-41.16088999906501","north":"-24.201429999293836"},
 "queryable":1}
 	]},
-	{"name":"Framework","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Framework","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 		{"Name":"frameworkboundaries","Title":"frameworkboundaries","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
 "queryable":1},
 		{"Name":"geodataindexes","Title":"geodataindexes","BoundingBox":{"west":"112.88333","east":"153.99999999999997","south":"-43.99999999905729","north":"-8.999999999708061"},
@@ -198,7 +198,7 @@
 		{"Name":"seas","Title":"seas","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
 "queryable":1}
 	]},
-	{"name":"Utility","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","querable":0,"Layer":[
+	{"name":"Utility","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0,"Layer":[
 				{"Name":"pipelines","Title":"pipelines","BoundingBox":{"west":"113.67812999999998","east":"153.15454","south":"-43.00307999905895","north":"-10.903989999649047"},
 "queryable":1},
 		{"Name":"powerlines","Title":"powerlines","BoundingBox":{"west":"114.63228","east":"153.49785","south":"-43.16291999905861","north":"-12.458869999601996"},
