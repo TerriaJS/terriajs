@@ -56,6 +56,7 @@ var GeoDataBrowser = require('./GeoDataBrowser');
 var GeoDataWidget = require('./GeoDataWidget');
 var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
+var PopupMessage = require('./PopupMessage');
 var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
@@ -208,6 +209,19 @@ var AusGlobeViewer = function(geoDataManager) {
     });
 
     this.webGlSupported = supportsWebgl();
+    if (!this.webGlSupported) {
+        var noWebGLMessage = new PopupMessage({
+            container : document.body,
+            title : 'WebGL not supported',
+            message : '\
+National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, including the \
+latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, and \
+<a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
+Your web browser does not appear to support WebGL, so you will see a limited, \
+2D-only experience.'
+        });
+    }
 
     this.selectViewer(this.webGlSupported);
 

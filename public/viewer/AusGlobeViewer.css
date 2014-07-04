@@ -612,6 +612,20 @@ a.ausglobe-title-menuItem:hover {
     font-family: "Open Sans", sans-serif;
 }
 
+.ausglobe-message {
+    display: inline-block;
+    width: 400px;
+    height: 300px;
+    background-color: white;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
 .ausglobe-services-send-button {
     color: #0099CC;
     background-color: white;
@@ -653,7 +667,7 @@ a.ausglobe-title-menuItem:hover {
     color: #0099CC;
 }
 
-.ausglobe-info h1, .ausglobe-share h1, .ausglobe-services h1 {
+.ausglobe-info h1, .ausglobe-share h1, .ausglobe-services h1, .ausglobe-message h1 {
     font-size: 16px;
     padding: 15px;
     font-weight: bold;
