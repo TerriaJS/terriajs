@@ -1,5 +1,6 @@
 {"name":"Data Collections", "Layer": [
   {"name":"Data Sets", "Layer": [
+	{"name":"Broadband","base_url":"https://programs.communications.gov.au/WMS","proxy":true,"type":"WMS","queryable":"0","username":"wms","password":"wms", "wfsAvailable": false, "wfsUrl": "https://programs.communications.gov.au/WFS"},
     {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","proxy":true,"type":"WMS","queryable":"0","Layer": [
         {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
