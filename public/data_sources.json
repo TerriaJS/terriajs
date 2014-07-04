@@ -1,9 +1,0 @@
-{"name":"Data Collections", "Layer": [
-  { "name": "Data Providers", "Layer": [
-    { "name": "Topography (Geoscience Australia)", "base_url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },
-    { "name": "Water (Bureau of Meteorology Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WMS", "proxy": true, "wfsAvailable": true },
-    { "name": "Boundaries (Australia Bureau of Statistics)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "proxy": false, "wfsAvailable": true },
-    { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "proxy": false, "wfsAvailable": true }
-  ]}
-]}
-

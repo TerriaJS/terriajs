@@ -966,14 +966,14 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 
 
 //Utility function to derive a collection from a service
-function _getCollectionFromServiceLayers(layers) {
+function _getCollectionFromServiceLayers(layers, description) {
     var obj = {"name":"Data Sets", "Layer": []};
     for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
         var name = layer.Name;
         var idx = name.indexOf(':');
         var topic_name = name.substring(0, idx);
-        var topic = undefined;
+        var topic; // = undefined;
         for (var j = 0; j < obj.Layer.length; j++) {
             if (obj.Layer[j].name === topic_name) {
                 topic = obj.Layer[j];
@@ -1058,7 +1058,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else if (description.type === 'WMS') {
         var layer_src = [json_gml.Capability.Layer];
         _recurseLayerList(layer_src, layers);
-//        _getCollectionFromServiceLayers(layers)
+//        _getCollectionFromServiceLayers(layers, description)
     }
     else if (description.type === 'REST') {
         var layer = json_gml.layers;

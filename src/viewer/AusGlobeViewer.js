@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,Cesium,L,$,XMLDocument,html2canvas,alert,console*/
+/*global require,Cesium,L,URI,$,XMLDocument,html2canvas,alert,console*/
 var BingMapsApi = Cesium.BingMapsApi;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
@@ -201,11 +201,17 @@ var AusGlobeViewer = function(geoDataManager) {
     this.scene = undefined;
     this.viewer = undefined;
     this.map = undefined;
+    
+    var url = window.location;
+    
+    var uri = new URI(url);
+    var params = uri.search(true);
 
     this.geoDataBrowser = new GeoDataBrowser({
         viewer : this,
         container : leftArea,
-        dataManager : geoDataManager
+        dataManager : geoDataManager,
+        initUrl: params.init_url
     });
 
     this.webGlSupported = supportsWebgl();
@@ -232,7 +238,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         }
     });
 
-    this.geoDataManager.loadInitialUrl(window.location);
+    this.geoDataManager.loadInitialUrl(url);
 
     this.geoDataManager.ShareRequest.addEventListener(function(collection, request) {
         console.log('Share Request Event:');
