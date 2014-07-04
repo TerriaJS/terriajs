@@ -986,7 +986,7 @@ function _getCollectionFromServiceLayers(layers) {
                 base_url: description.base_url,
                 proxy: false,
                 type: description.type,
-                querable: 0,
+                queryable: 0,
                 Layer: []
             };
             obj.Layer.push(topic);
