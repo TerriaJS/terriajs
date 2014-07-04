@@ -84,6 +84,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
+                tooltip : 'Refresh',
                 callback : function() {
                     window.history.go(0);
                 }
@@ -94,6 +95,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
+                tooltip : 'Fullscreen',
                 callback : function() {
                     if (Fullscreen.fullscreen) {
                         Fullscreen.exitFullscreen();
@@ -108,6 +110,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
+                tooltip : 'Share',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
                         that.geoDataManager.setShareRequest({
@@ -124,6 +127,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
+                tooltip : 'Services',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
                         var request = that.geoDataManager.getShareRequest({
@@ -145,6 +149,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
+                tooltip : 'About National Map',
                 uri : 'http://nicta.github.io/nationalmap/public/home.html',
                 target : '_blank'
             },
@@ -154,6 +159,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     width : 32,
                     height : 32
                 },
+                tooltip : 'Help',
                 uri : 'http://nicta.github.io/nationalmap/public/faq.html',
                 target : '_blank'
             }
