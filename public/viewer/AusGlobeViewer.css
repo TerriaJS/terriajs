@@ -637,9 +637,7 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-share-right {
-    position: absolute;
-    top: 0px;
-    left: 280px;
+    position: relative;
 }
 
 .ausglobe-share-label {
