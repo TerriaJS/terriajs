@@ -27,16 +27,17 @@ var SharePanel = function(options) {
         </div>\
         <div class="ausglobe-info-content">\
             <div class="ausglobe-share-image">\
-                <img data-bind="attr: { src: request.image }" width="256" />\
+                <img data-bind="attr: { src: request.image }" height="300" />\
             </div>\
             <div class="ausglobe-share-right">\
                 <div class="ausglobe-share-label">\
                     To <strong>copy</strong> to clipboard, click the link below and press CTRL+C or &#8984;+C:\
-                    <input readonly type="text" data-bind="value: url" size="70" onclick="this.select();" />\
+                    <input readonly type="text" data-bind="value: url" size="100" onclick="this.select();" />\
                 </div>\
                 <div class="ausglobe-share-label">\
                     To <strong>embed</strong>, copy this code to embed this map into an HTML page:\
-                    <textarea readonly cols="54" rows="18" data-bind="text: embedCode"></textarea>\
+                    <input readonly type="text" data-bind="value: embedCode" size="100" onclick="this.select();" />\
+                </div>\
             </div>\
         </div>\
     ';
