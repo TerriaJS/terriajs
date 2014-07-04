@@ -967,7 +967,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 
 //Utility function to derive a collection from a service
 function _getCollectionFromServiceLayers(layers) {
-    var obj = {"name":"Topics", "Layer": []};
+    var obj = {"name":"Data Sets", "Layer": []};
     for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
         var name = layer.Name;
