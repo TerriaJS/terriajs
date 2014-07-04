@@ -13,6 +13,7 @@ var TitleWidgetViewModel = function(options) {
         return {
             label : item.label,
             svg : item.svg,
+            tooltip : item.tooltip,
             uri : item.uri,
             target : item.target,
             callback : item.callback
