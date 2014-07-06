@@ -1504,7 +1504,7 @@ GeoDataCollection.prototype.addFile = function(file) {
             });
             this.dataSourceCollection.add(dataSource);
 
-            kmlLayer.primitive = dataSource;
+            kmlLayer.dataSource = dataSource;
             this.add(kmlLayer);
         } else {
             when(readText(file), function (text) {
