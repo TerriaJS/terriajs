@@ -133,6 +133,14 @@ var GeoDataBrowser = function(options) {
                             <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
                         </label>\
                         <div>\
+                            <label class="ausglobe-addData-type">\
+                                Type: \
+                                <select data-bind="value: addType">\
+                                    <option value="File">Single data file</option>\
+                                    <option value="WMS">WMS Server</option>\
+                                    <option value="WFS">WFS Server</option>\
+                                </select>\
+                            </label>\
                             <input class="ausglobe-button" type="submit" value="Add" />\
                         </div>\
                     </form>\

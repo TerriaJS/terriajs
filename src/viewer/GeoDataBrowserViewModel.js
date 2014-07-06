@@ -19,6 +19,7 @@ var when = Cesium.when;
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
+var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
@@ -35,13 +36,14 @@ var GeoDataBrowserViewModel = function(options) {
     this.addDataIsOpen = false;
     this.nowViewingIsOpen = true;
     this.wfsServiceUrl = '';
+    this.addType = 'Single data file';
 
     this.openMapIndex = 0;
     this.imageryIsOpen = true;
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = 'Terrain';
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'addDataIsOpen', 'nowViewingIsOpen', 'wfsServiceUrl',
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -118,24 +120,25 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._addDataOrService = createCommand(function() {
-        if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
-            that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
-            if (that.wfsServiceUrl.toUpperCase().indexOf('.JSON') !== -1) {
-                loadJson(that.wfsServiceUrl).then(loadCollection);
+        if (that.addType === 'File') {
+            if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
+                that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
+                if (that.wfsServiceUrl.toUpperCase().indexOf('.JSON') !== -1) {
+                    loadJson(that.wfsServiceUrl).then(loadCollection);
+                }
+            } else {
+                var message = new PopupMessage({
+                    container : document.body,
+                    title : 'File format not supported',
+                    message : 'The specified file does not appear to be a format that is supported by National Map.'
+                });
             }
-        }
-        else {
-                //TODO: set type based on user confirmation - need real UI
-            var ret = window.confirm("Dumb UI to cover for now.  Click OK for a WFS service and cancel for a WMS service.");
-            var type = 'WFS';
-            if (ret === false) {
-                type = 'WMS';
-            }
+        } else {
             var item = createCategory({
                 data : {
                     name : that.wfsServiceUrl,
                     base_url : that.wfsServiceUrl,
-                    type : type,
+                    type : that.addType,
                     proxy : true
                 }
             });
