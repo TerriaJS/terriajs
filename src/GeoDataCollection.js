@@ -1515,7 +1515,7 @@ GeoDataCollection.prototype.addFile = function(file) {
             when(dataSource.loadKmz(file, file.name), function() {
                 kmlLayer.extent = getDataSourceExtent(dataSource);
                 that.dataSourceCollection.add(dataSource);
-                kmlLayer.primitive = dataSource;
+                kmlLayer.dataSource = dataSource;
                 that.zoomTo = true;
                 that.add(kmlLayer);
             });
