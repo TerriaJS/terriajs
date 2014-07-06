@@ -165,6 +165,7 @@ li {
     border: 1px solid gray;
     vertical-align: middle;
     z-index: 999; /* required for IE9 */
+    padding-left: 10px;
 }
 
 .ausglobe-title-area:before {
