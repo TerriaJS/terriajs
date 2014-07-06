@@ -28,6 +28,7 @@ var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
     this._dataManager = options.dataManager;
     this.map = options.map;
+    this.initUrl = options.initUrl || './init_nm.json';
 
     this.showingPanel = false;
     this.showingMapPanel = false;
@@ -119,6 +120,9 @@ var GeoDataBrowserViewModel = function(options) {
     this._addDataOrService = createCommand(function() {
         if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
             that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
+            if (that.wfsServiceUrl.toUpperCase().indexOf('.JSON') !== -1) {
+                loadJson(that.wfsServiceUrl).then(loadCollection);
+            }
         }
         else {
                 //TODO: set type based on user confirmation - need real UI
@@ -229,7 +233,11 @@ var GeoDataBrowserViewModel = function(options) {
         var uploadFileElement = document.getElementById('uploadFile');
         var files = uploadFileElement.files;
         for (var i = 0; i < files.length; ++i) {
-            that._viewer.geoDataManager.addFile(files[i]);
+            var file = files[i];
+            that._viewer.geoDataManager.addFile(file);
+            if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
+                when(readJson(file), loadCollection);
+            }
         }
     });
 
@@ -348,26 +356,7 @@ var GeoDataBrowserViewModel = function(options) {
     var browserContentViewModel = komapping.fromJS([], this._collectionListMapping);
     this.content = browserContentViewModel;
 
-    var dataCollectionsPromise = loadJson('./data_collection.json');
-    var otherSourcesPromise = loadJson('./data_sources.json');
-    var servicesObjPromise; // = loadJson('./nm_services.json');
-//    var initNMPromise = loadJson('./init_nm_merged.json');
-
-    when.all([dataCollectionsPromise, otherSourcesPromise, servicesObjPromise], function(sources) {
-        var browserContent = [];
-        browserContent.push(sources[0].Layer[0]);
-
-        var otherSources = sources[1].Layer;
-        for (var i = 0; i < otherSources.length; ++i) {
-            browserContent.push(otherSources[i]);
-        }
-
-        komapping.fromJS(browserContent, that._collectionListMapping, browserContentViewModel);
-        
-        if (sources[2]) {
-            that._dataManager.addServices(sources[2].NMServices);
-        }
-    });
+    loadJson(this.initUrl).then(loadCollection);
 
     this.userContent = komapping.fromJS([], this._collectionListMapping);
 
@@ -411,6 +400,40 @@ var GeoDataBrowserViewModel = function(options) {
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
     this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(refreshNowViewing);
 
+    function loadCollection(json) {
+        if (!defined(json)) {
+            return;
+        }
+
+        that._dataManager.addServices(json.NMServices);
+        
+        var collections = json.Layer;
+        
+        var existingCollection;
+
+        for (var i = 0; i < collections.length; ++i) {
+            var collection = collections[i];
+
+            // Find an existing collection with the same name, if any.
+            var name = collection.name;
+            var existingCollections = browserContentViewModel();
+
+            existingCollection = undefined;
+            for (var j = 0; j < existingCollections.length; ++j) {
+                if (existingCollections[j].name() === name) {
+                    existingCollection = existingCollections[j];
+                    break;
+                }
+            }
+
+            if (defined(existingCollection)) {
+                komapping.fromJS(collection, that._collectionListMapping, existingCollection);
+            } else {
+                browserContentViewModel.push(komapping.fromJS(collection, that._collectionListMapping));
+            }
+        }
+    }
+
     function noopHandler(evt) {
         evt.stopPropagation();
         evt.preventDefault();
@@ -420,48 +443,12 @@ var GeoDataBrowserViewModel = function(options) {
         evt.stopPropagation();
         evt.preventDefault();
 
-        function loadCollection(json) {
-            if (!defined(json)) {
-                return;
-            }
-
-            that._dataManager.addServices(json.NMServices);
-            
-            var collections = json.Layer;
-            
-            var existingCollection;
-
-            for (var i = 0; i < collections.length; ++i) {
-                var collection = collections[i];
-
-                // Find an existing collection with the same name, if any.
-                var name = collection.name;
-                var existingCollections = browserContentViewModel();
-
-                existingCollection = undefined;
-                for (var j = 0; j < existingCollections.length; ++j) {
-                    if (existingCollections[j].name() === name) {
-                        existingCollection = existingCollections[j];
-                        break;
-                    }
-                }
-
-                if (defined(existingCollection)) {
-                    komapping.fromJS(collection, that._collectionListMapping, existingCollection);
-                } else {
-                    browserContentViewModel.push(komapping.fromJS(collection, that._collectionListMapping));
-                }
-            }
-        }
-
         var files = evt.dataTransfer.files;
         for (var i = 0; i < files.length; ++i) {
             var file = files[i];
-            if (file.name.toUpperCase().indexOf('.JSON') === -1) {
-                continue;
+            if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
+                when(readJson(file), loadCollection);
             }
-
-            when(readJson(file), loadCollection);
         }
     }
 
