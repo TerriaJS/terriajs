@@ -219,9 +219,28 @@ var GeoDataBrowserViewModel = function(options) {
             credit : '© Analytical Graphics, Inc.'
         }), 0));
         currentBaseLayers.push(imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
-            url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer',
+            url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer',
             proxy : corsProxy
         }), 1));
+    });
+
+    this._activateAustralianHydrography = createCommand(function() {
+        removeBaseLayer();
+
+        var imageryLayers = that._viewer.scene.globe.imageryLayers;
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
+            url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
+            credit : '© Analytical Graphics, Inc.'
+        }), 0));
+        currentBaseLayers.push(imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
+            url : 'http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer',
+            proxy : corsProxy
+        }), 1));
+    });
+
+    this._selectFileToUpload = createCommand(function() {
+        var element = document.getElementById('uploadFile');
+        element.click();
     });
 
     this._selectFileToUpload = createCommand(function() {
@@ -656,6 +675,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     activateAustralianTopography : {
         get : function() {
             return this._activateAustralianTopography;
+        }
+    },
+
+    activateAustralianHydrography : {
+        get : function() {
+            return this._activateAustralianHydrography;
         }
     },
 
