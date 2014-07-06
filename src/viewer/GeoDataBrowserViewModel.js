@@ -219,20 +219,6 @@ var GeoDataBrowserViewModel = function(options) {
             credit : '© Analytical Graphics, Inc.'
         }), 0));
         currentBaseLayers.push(imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
-            url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer',
-            proxy : corsProxy
-        }), 1));
-    });
-
-    this._activateAustralianTopography2014 = createCommand(function() {
-        removeBaseLayer();
-
-        var imageryLayers = that._viewer.scene.globe.imageryLayers;
-        currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
-            url : '//cesiumjs.org/tilesets/imagery/naturalearthii',
-            credit : '© Analytical Graphics, Inc.'
-        }), 0));
-        currentBaseLayers.push(imageryLayers.addImageryProvider(new ArcGisMapServerImageryProvider({
             url : 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer',
             proxy : corsProxy
         }), 1));
@@ -689,12 +675,6 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     activateAustralianTopography : {
         get : function() {
             return this._activateAustralianTopography;
-        }
-    },
-
-    activateAustralianTopography2014 : {
-        get : function() {
-            return this._activateAustralianTopography2014;
         }
     },
 

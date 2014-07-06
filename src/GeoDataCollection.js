@@ -951,7 +951,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 //        return request;
 //    }
     else {
-        throw new Cesium.DeveloperError('Getting feature for unsupported service: '+description.type);
+//        throw new Cesium.DeveloperError('Getting feature for unsupported service: '+description.type);
     }
     
     if (description.extent) {
