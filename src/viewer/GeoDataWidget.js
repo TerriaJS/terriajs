@@ -51,13 +51,13 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
                 Shareable URL: <br /><input type="text" name="url" id="url"/> \
             </form>';
     document.body.appendChild(div);
-
+/*
     //Data drag and drop support
     document.addEventListener("dragenter", noopHandler, false);
     document.addEventListener("dragexit", noopHandler, false);
     document.addEventListener("dragover", noopHandler, false);
     document.addEventListener("drop", function(evt) { dropHandler(evt, that); }, false);
-
+*/
 
     // Event watchers for geoDataManager
     geoDataManager.GeoDataAdded.addEventListener(function(collection, layer) {
@@ -86,7 +86,7 @@ var GeoDataWidget = function(geoDataManager, setCurrentDataset) {
 GeoDataWidget.prototype.setExtent = function(ext) {
     this.regionExt = ext;
 };
-
+/*
 // -----------------------------
 // Handle file drop for CZML/GeoJSON/CSV
 // -----------------------------
@@ -115,7 +115,7 @@ function dropHandler(evt, that) {
         that.geoDataManager.addFile(file);
     }
 }
-
+*/
 //Simple html dialog
 GeoDataWidget.prototype.showHTMLTextDialog = function(title_text, display_text, b_modal, layer) {
     var that = this;

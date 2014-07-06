@@ -486,11 +486,21 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
  */
 GeoDataCollection.prototype.loadUrl = function(url, format) {
     var that = this;
-    if (that.formatSupported(url)) {
-        Cesium.loadText(url).then(function (text) { 
-            that.zoomTo = true;
-            that.loadText(text, url, format);
-        });
+    if (format || that.formatSupported(url)) {
+        if (format === undefined) {
+            format = getFormatFromUrl(url);
+        }
+        if (format === 'KMZ') {
+            Cesium.loadBlob(url).then( function(blob) {
+                blob.name = url;
+                that.addFile(blob);
+            });
+        } else {
+            Cesium.loadText(url).then(function (text) { 
+                that.zoomTo = true;
+                that.loadText(text, url, format);
+            });
+        }
     }
 };
 
@@ -1501,11 +1511,11 @@ GeoDataCollection.prototype.addFile = function(file) {
             var dataSource = new KmlDataSource(corsProxy);
             when(dataSource.loadKmz(file, file.name), function() {
                 kmlLayer.extent = getDataSourceExtent(dataSource);
+                that.dataSourceCollection.add(dataSource);
+                kmlLayer.primitive = dataSource;
+                that.zoomTo = true;
+                that.add(kmlLayer);
             });
-            this.dataSourceCollection.add(dataSource);
-
-            kmlLayer.primitive = dataSource;
-            this.add(kmlLayer);
         } else {
             when(readText(file), function (text) {
                 that.zoomTo = true;

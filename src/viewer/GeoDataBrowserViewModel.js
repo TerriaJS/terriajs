@@ -446,6 +446,7 @@ var GeoDataBrowserViewModel = function(options) {
         var files = evt.dataTransfer.files;
         for (var i = 0; i < files.length; ++i) {
             var file = files[i];
+            that._viewer.geoDataManager.addFile(file);
             if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
                 when(readJson(file), loadCollection);
             }
