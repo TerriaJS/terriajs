@@ -486,11 +486,21 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
  */
 GeoDataCollection.prototype.loadUrl = function(url, format) {
     var that = this;
-    if (that.formatSupported(url)) {
-        Cesium.loadText(url).then(function (text) { 
-            that.zoomTo = true;
-            that.loadText(text, url, format);
-        });
+    if (format || that.formatSupported(url)) {
+        if (format === undefined) {
+            format = getFormatFromUrl(url);
+        }
+        if (format === 'KMZ') {
+            Cesium.loadBlob(url).then( function(blob) {
+                blob.name = url;
+                that.addFile(blob);
+            });
+        } else {
+            Cesium.loadText(url).then(function (text) { 
+                that.zoomTo = true;
+                that.loadText(text, url, format);
+            });
+        }
     }
 };
 
@@ -941,7 +951,7 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 //        return request;
 //    }
     else {
-        throw new Cesium.DeveloperError('Getting feature for unsupported service: '+description.type);
+//        throw new Cesium.DeveloperError('Getting feature for unsupported service: '+description.type);
     }
     
     if (description.extent) {
@@ -966,14 +976,14 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 
 
 //Utility function to derive a collection from a service
-function _getCollectionFromServiceLayers(layers) {
+function _getCollectionFromServiceLayers(layers, description) {
     var obj = {"name":"Data Sets", "Layer": []};
     for (var i = 0; i < layers.length; i++) {
         var layer = layers[i];
         var name = layer.Name;
         var idx = name.indexOf(':');
         var topic_name = name.substring(0, idx);
-        var topic = undefined;
+        var topic; // = undefined;
         for (var j = 0; j < obj.Layer.length; j++) {
             if (obj.Layer[j].name === topic_name) {
                 topic = obj.Layer[j];
@@ -1009,6 +1019,9 @@ function _getCollectionFromServiceLayers(layers) {
 }
 
 function _recurseLayerList(layer_src, layers) {
+    if (!(layer_src instanceof Array)) {
+        layer_src = [layer_src];
+    }
     for (var i = 0; i < layer_src.length; i++) {
         if (layer_src[i].Layer) {
             if (layer_src[i].queryable === 1) {
@@ -1058,7 +1071,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else if (description.type === 'WMS') {
         var layer_src = [json_gml.Capability.Layer];
         _recurseLayerList(layer_src, layers);
-//        _getCollectionFromServiceLayers(layers)
+//        _getCollectionFromServiceLayers(layers, description)
     }
     else if (description.type === 'REST') {
         var layer = json_gml.layers;
@@ -1501,11 +1514,11 @@ GeoDataCollection.prototype.addFile = function(file) {
             var dataSource = new KmlDataSource(corsProxy);
             when(dataSource.loadKmz(file, file.name), function() {
                 kmlLayer.extent = getDataSourceExtent(dataSource);
+                that.dataSourceCollection.add(dataSource);
+                kmlLayer.dataSource = dataSource;
+                that.zoomTo = true;
+                that.add(kmlLayer);
             });
-            this.dataSourceCollection.add(dataSource);
-
-            kmlLayer.dataSource = dataSource;
-            this.add(kmlLayer);
         } else {
             when(readText(file), function (text) {
                 that.zoomTo = true;
