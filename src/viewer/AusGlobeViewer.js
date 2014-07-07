@@ -454,7 +454,7 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
             }
             that.geoDataWidget.setExtent(ext);
             if (ext) {
-                that.updateCameraFromRect(ext, 1000);
+                that.updateCameraFromRect(ext, 3000);
                 // Display polyline based on ext
                 var east = ext.east, west = ext.west, north = ext.north, south = ext.south;
                 var ellipsoid = Ellipsoid.WGS84;
@@ -1055,7 +1055,7 @@ function setCurrentDataset(layer, that) {
     updateLegend(tableData);
     
     if (layer.zoomTo && layer.extent !== undefined) {
-        that.updateCameraFromRect(layer.extent, 1000);
+        that.updateCameraFromRect(layer.extent, 3000);
     }
 }
 
@@ -1121,7 +1121,7 @@ function getCameraHeight(scene) {
 
 //Camera extent approx for 2D viewer
 function getCameraFocus(scene) {
-    //HACK to get current camera focus
+    //Hack to get current camera focus
     var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
     var focus = scene.camera.pickEllipsoid(pos, Ellipsoid.WGS84);
     return focus;
@@ -1213,7 +1213,6 @@ function flyToPosition(scene, position, durationMilliseconds) {
     });
 }
 
-//TODO: need to make this animate
 function zoomCamera(scene, distFactor, pos) {
     var camera = scene.camera;
     //for now
@@ -1263,12 +1262,12 @@ AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMill
     var epsilon = CesiumMath.EPSILON3;
     var rect = rect_in.clone();
     if ((rect.east - rect.west) < epsilon) {
-        rect.east += epsilon/2.0;
-        rect.west -= epsilon/2.0;
+        rect.east += epsilon;
+        rect.west -= epsilon;
     }
     if ((rect.north - rect.south) < epsilon) {
-        rect.north += epsilon/2.0;
-        rect.south -= epsilon/2.0;
+        rect.north += epsilon;
+        rect.south -= epsilon;
     }
     if (scene !== undefined && !scene.isDestroyed()) {
         var flight = CameraFlightPath.createTweenRectangle(scene, {
