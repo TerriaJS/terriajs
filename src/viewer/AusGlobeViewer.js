@@ -454,7 +454,7 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
             }
             that.geoDataWidget.setExtent(ext);
             if (ext) {
-                that.updateCameraFromRect(ext, 1000);
+                that.updateCameraFromRect(ext, 3000);
                 // Display polyline based on ext
                 var east = ext.east, west = ext.west, north = ext.north, south = ext.south;
                 var ellipsoid = Ellipsoid.WGS84;
@@ -1055,7 +1055,7 @@ function setCurrentDataset(layer, that) {
     updateLegend(tableData);
     
     if (layer.zoomTo && layer.extent !== undefined) {
-        that.updateCameraFromRect(layer.extent, 1000);
+        that.updateCameraFromRect(layer.extent, 3000);
     }
 }
 
@@ -1263,12 +1263,12 @@ AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMill
     var epsilon = CesiumMath.EPSILON3;
     var rect = rect_in.clone();
     if ((rect.east - rect.west) < epsilon) {
-        rect.east += epsilon/2.0;
-        rect.west -= epsilon/2.0;
+        rect.east += epsilon;
+        rect.west -= epsilon;
     }
     if ((rect.north - rect.south) < epsilon) {
-        rect.north += epsilon/2.0;
-        rect.south -= epsilon/2.0;
+        rect.north += epsilon;
+        rect.south -= epsilon;
     }
     if (scene !== undefined && !scene.isDestroyed()) {
         var flight = CameraFlightPath.createTweenRectangle(scene, {

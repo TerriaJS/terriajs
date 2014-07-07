@@ -109,7 +109,7 @@ var GeoDataBrowserViewModel = function(options) {
             return;
         }
 
-        that._viewer.updateCameraFromRect(item.layer.extent, 1000);
+        that._viewer.updateCameraFromRect(item.layer.extent, 3000);
     });
 
     this._showInfoForItem = createCommand(function(item) {

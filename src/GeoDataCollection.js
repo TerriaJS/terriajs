@@ -632,10 +632,6 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
         console.log('There is no handler for this file based on its extension : ' + srcname);
         return false;
     }
-    //TODO: fix this hack
-    if (layer !== undefined) {
-        layer.url = srcname;
-    }
     return true;
 };
 
@@ -776,6 +772,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
                 console.log('Exception returned by the WFS Server:', obj.Exception.ExceptionText);
             }
             obj = _EsriGml2GeoJson(obj);
+            console.log(obj);
                 //Hack for gazetteer since the coordinates are flipped
             if (text.indexOf('gazetter') !== -1) {
                 for (var i = 0; i < obj.features.length; i++) {
@@ -925,10 +922,6 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
         description.version = 1.1;
         request += '?service=wfs&request=GetFeature&typeName=' + name + '&version=' + description.version + '&srsName=EPSG:4326';
         
-        //HACK to find out if GA esri service
-        if (request.indexOf('www.ga.gov.au') !== -1) {
-            description.esri = true;
-        }
         if (description.esri === undefined) {
             request += '&outputFormat=JSON';
         }
@@ -1066,6 +1059,9 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         }
         if (title && description.name === description.base_url) {
             description.name = title;
+        }
+        if (json_gml.Esri !== undefined) {
+            description.esri = true;
         }
     }
     else if (description.type === 'WMS') {
