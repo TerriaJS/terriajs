@@ -11,6 +11,7 @@ var createCommand = Cesium.createCommand;
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
+var GeographicTilingScheme = Cesium.GeographicTilingScheme;
 var loadJson = Cesium.loadJson;
 var Rectangle = Cesium.Rectangle;
 var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
@@ -122,6 +123,8 @@ var GeoDataBrowserViewModel = function(options) {
             ga('send', 'event', 'dataSource', 'hidden', item.Title(), duration);
         }
         that._dataManager.show(item.layer, item.show());
+
+        limitDataSourceCount(that, item);
     });
 
     this._zoomToItem = createCommand(function(item) {
@@ -789,6 +792,57 @@ function enableItem(viewModel, item) {
     item.layer = layer;
 
     viewModel._dataManager.sendLayerRequest(layer);
+
+    limitDataSourceCount(viewModel);
+}
+
+function limitDataSourceCount(viewModel, nowViewingItem) {
+    if (viewModel._dataManager.scene) {
+        // Are our shown layers going to cause us to exceed this machine's texture unit limit?
+        // If so, hide the new layer and inform the user.  This will no longer be necessary
+        // once Cesium's quadtreePrimitive branch is in master.
+        var scene = viewModel._dataManager.scene;
+        var layers = scene.imageryLayers;
+        var maxTextures = scene._context.maximumTextureImageUnits;
+
+        var usedTextures = 0;
+        for (var i = 0; i < layers.length; ++i) {
+            var layer = layers.get(i);
+            if (!layer.show) {
+                continue;
+            }
+
+            var imageryProvider = layer.imageryProvider;
+            if (!imageryProvider.ready || imageryProvider.tilingScheme instanceof GeographicTilingScheme) {
+                ++usedTextures;
+            } else {
+                usedTextures += 3;
+            }
+        }
+
+        if (usedTextures > maxTextures) {
+            if (!nowViewingItem) {
+                var nowViewing = viewModel.nowViewing();
+                for (i = 0; i < nowViewing.length; ++i) {
+                    if (nowViewing[i].show()) {
+                        nowViewingItem = nowViewing[i];
+                        break;
+                    }
+                }
+            }
+
+            if (nowViewingItem && nowViewingItem.show()) {
+                ga('send', 'event', 'dataSource', 'tooMany', nowViewingItem.Title());
+                viewModel.toggleItemShown(nowViewingItem);
+            }
+
+            var message = new PopupMessage({
+                container : document.body,
+                title : 'Too many active data sources',
+                message : 'Showing this data source would exceed the maximum number of data sources that can be displayed simultaneously.  Please use the Now Viewing panel to hide a data source before showing this one.'
+            });
+        }
+    }
 }
 
 function disableItem(viewModel, item) {
