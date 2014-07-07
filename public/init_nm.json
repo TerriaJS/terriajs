@@ -6,8 +6,7 @@
         {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"0","Title":"Magnetic Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Magnetic_Image_WM/MapServer/WMSServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
         {"Name":"REST","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/rest/services/earth_science/GA_Surface_Geology_of_Australia_WM/MapServer","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
-        {"Name":"REST","Title":"Earthquake Hazard","base_url":"http://www.ga.gov.au/gis/rest/services/hazards/EarthquakeHazard/MapServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
-        {"Name":"REST","Title":"Australian Topography 2012","base_url":"http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"}
+        {"Name":"REST","Title":"Earthquake Hazard","base_url":"http://www.ga.gov.au/gis/rest/services/hazards/EarthquakeHazard/MapServer","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"}
     ]},
 	{"name":"Surface Water","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0, "wfsAvailable": true, "Layer":[
 		{"Name":"bores","Title":"Bores","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
@@ -53,6 +52,8 @@
         {"Name":"AHGFNetworkNode","Title":"Stream Network Nodes","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"113.33375","east":"153.62875000000008","south":"-43.628749999057746","north":"-9.23624999970059"},
 		"queryable":1},
 		{"Name":"AHGFStructure","Title":"Structure","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"113.76872500000002","east":"153.5956600000001","south":"-43.58274499905778","north":"-10.64324999965701"},
+		"queryable":1},
+		{"Name":"AHGFWaterbody","Title":"Waterbodies","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","proxy":true,"BoundingBox":{"west":"113.80691","east":"152.89131000000003","south":"-43.00307999905891","north":"-10.903989999649017"},
 		"queryable":1},
 		{"Name":"watercourseareas","Title":"Water Course Areas","BoundingBox":{"west":"113.56261000000002","east":"153.58856","south":"-43.58998999905784","north":"-8.93332999971015"},
 "queryable":1},
@@ -254,16 +255,6 @@
 		{"Name":"reserves","Title":"Reserves","BoundingBox":{"west":"112.97143","east":"153.60127","south":"-43.74297999905761","north":"-9.088049999705305"},
 "queryable":1},
 		{"Name":"seas","Title":"Seas","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
-"queryable":1}
-	]},
-	{"name":"Cartography","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","proxy":false,"type":"WMS","queryable":0, "wfsAvailable": true,"Layer":[
-		{"Name":"cartographiclines","Title":"Cartographic Lines","BoundingBox":{"west":"113.02031","east":"153.57704999999999","south":"-43.45349999905806","north":"-8.93332999971015"},
-"queryable":1},
-		{"Name":"cartographicpoints","Title":"Cartographic Points","BoundingBox":{"west":"113.40966000000002","east":"153.61335","south":"-43.4311099990581","north":"-10.693279999655509"},
-"queryable":1},
-		{"Name":"graticules","Title":"Graticules","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
-"queryable":1},
-		{"Name":"grids","Title":"Grids","BoundingBox":{"west":"112.88333","east":"154.1","south":"-44.00000999905729","north":"-7.999999999739592"},
 "queryable":1}
 	]},
     {"name":"Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","proxy":false,"type":"WMS","queryable":"0", "wfsAvailable": true,"Layer": [
