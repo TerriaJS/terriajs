@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,Cesium*/
+/*global require,Cesium,ga*/
 
 var defined = Cesium.defined;
 var defineProperties = Cesium.defineProperties;
@@ -22,6 +22,7 @@ var TitleWidgetViewModel = function(options) {
 
     var that = this;
     this._selectMenuItem = createCommand(function(menuItem) {
+        ga('send', 'event', 'titleMenu', 'click', menuItem.tooltip);
         if (defined(menuItem.callback)) {
             return menuItem.callback();
         }

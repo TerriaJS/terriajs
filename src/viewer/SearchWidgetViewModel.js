@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,Cesium*/
+/*global require,Cesium,ga*/
 var BingMapsApi = Cesium.BingMapsApi;
 var defaultValue = Cesium.defaultValue;
 var defined = Cesium.defined;
@@ -196,6 +196,8 @@ function geocode(viewModel) {
         return;
     }
 
+    ga('send', 'event', 'search', 'start', query);
+
     viewModel._isSearchInProgress = true;
 
     var longitudeDegrees;
@@ -293,6 +295,8 @@ function geocode(viewModel) {
 }
 
 function cancelGeocode(viewModel) {
+    ga('send', 'event', 'search', 'cancel');
+
     viewModel._isSearchInProgress = false;
     if (defined(viewModel._geocodeInProgress)) {
         viewModel._geocodeInProgress.cancel = true;
