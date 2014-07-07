@@ -1,6 +1,6 @@
 "use strict";
 
-/*global Cesium,require,alert*/
+/*global Cesium,require,ga,alert*/
 
 var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
@@ -93,14 +93,34 @@ var GeoDataBrowserViewModel = function(options) {
         item.isEnabled(!item.isEnabled());
 
         if (item.isEnabled()) {
+            ga('send', 'event', 'dataSource', 'added', item.Title());
+            item._enabledDate = Date.now();
             enableItem(that, item);
         } else {
+            var duration;
+            if (item._enabledDate) {
+                duration = ((Date.now() - item._enabledDate) / 1000.0) | 0;
+            }
+            ga('send', 'event', 'dataSource', 'removed', item.Title(), duration);
             disableItem(that, item);
         }
     });
 
     this._toggleItemShown = createCommand(function(item) {
         item.show(!item.show());
+
+        if (item.show()) {
+            ga('send', 'event', 'dataSource', 'shown', item.Title());
+            item._shownDate = Date.now();
+        } else {
+            var duration;
+            if (item._shownDate) {
+                duration = ((Date.now() - item._shownDate) / 1000.0) | 0;
+            } else if (item._enabledDate) {
+                duration = ((Date.now() - item._enabledDate) / 1000.0) | 0;
+            }
+            ga('send', 'event', 'dataSource', 'hidden', item.Title(), duration);
+        }
         that._dataManager.show(item.layer, item.show());
     });
 
@@ -109,10 +129,12 @@ var GeoDataBrowserViewModel = function(options) {
             return;
         }
 
+        ga('send', 'event', 'dataSource', 'zoomTo', item.Title());
         that._viewer.updateCameraFromRect(item.layer.extent, 3000);
     });
 
     this._showInfoForItem = createCommand(function(item) {
+        ga('send', 'event', 'dataSource', 'info', item.Title());
         var popup = new GeoDataInfoPopup({
             container : document.body,
             viewModel : item
@@ -121,6 +143,8 @@ var GeoDataBrowserViewModel = function(options) {
 
     this._addDataOrService = createCommand(function() {
         if (that.addType === 'File') {
+            ga('send', 'event', 'addDataUrl', 'File', that.wfsServiceUrl);
+
             if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
                 that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
                 if (that.wfsServiceUrl.toUpperCase().indexOf('.JSON') !== -1) {
@@ -134,6 +158,8 @@ var GeoDataBrowserViewModel = function(options) {
                 });
             }
         } else {
+            ga('send', 'event', 'addDataUrl', that.addType, that.wfsServiceUrl);
+
             var item = createCategory({
                 data : {
                     name : that.wfsServiceUrl,
@@ -182,18 +208,23 @@ var GeoDataBrowserViewModel = function(options) {
     }
 
     this._activateBingMapsAerialWithLabels = createCommand(function() {
+        ga('send', 'event', 'mapSettings', 'switchImagery', 'Bing Maps Aerial With Labels');
         switchToBingMaps(BingMapsStyle.AERIAL_WITH_LABELS);
     });
 
     this._activateBingMapsAerial = createCommand(function() {
+        ga('send', 'event', 'mapSettings', 'switchImagery', 'Bing Maps Aerial');
         switchToBingMaps(BingMapsStyle.AERIAL);
     });
 
     this._activateBingMapsRoads = createCommand(function() {
+        ga('send', 'event', 'mapSettings', 'switchImagery', 'Bing Maps Roads');
         switchToBingMaps(BingMapsStyle.ROAD);
     });
 
     this._activateNasaBlackMarble = createCommand(function() {
+        ga('send', 'event', 'mapSettings', 'switchImagery', 'NASA Black Marble');
+
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -204,6 +235,8 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._activateNaturalEarthII = createCommand(function() {
+        ga('send', 'event', 'mapSettings', 'switchImagery', 'Natural Earth II');
+
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -214,6 +247,8 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._activateAustralianTopography = createCommand(function() {
+        ga('send', 'event', 'mapSettings', 'switchImagery', 'Australian Topography');
+
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -228,6 +263,8 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._activateAustralianHydrography = createCommand(function() {
+        ga('send', 'event', 'mapSettings', 'switchImagery', 'Australian Hydrography');
+
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -246,16 +283,12 @@ var GeoDataBrowserViewModel = function(options) {
         element.click();
     });
 
-    this._selectFileToUpload = createCommand(function() {
-        var element = document.getElementById('uploadFile');
-        element.click();
-    });
-
     this._addUploadedFile = createCommand(function() {
         var uploadFileElement = document.getElementById('uploadFile');
         var files = uploadFileElement.files;
         for (var i = 0; i < files.length; ++i) {
             var file = files[i];
+            ga('send', 'event', 'uploadFile', 'browse', file.name);
             that._viewer.geoDataManager.addFile(file);
             if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
                 when(readJson(file), loadCollection);
@@ -267,20 +300,27 @@ var GeoDataBrowserViewModel = function(options) {
     knockout.getObservable(this, 'selectedViewer').subscribe(function(value) {
         if (value === '2D') {
             if (that._viewer.isCesium()) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', '2D');
                 that._viewer.selectViewer(false);
             }
         } else {
+            var switched = false;
             if (!that._viewer.isCesium()) {
                 that._viewer.selectViewer(true);
+                switched = true;
             }
 
             var terrainProvider = that._viewer.scene.globe.terrainProvider;
             if (value === 'Ellipsoid' && !(terrainProvider instanceof EllipsoidTerrainProvider)) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', 'Smooth 3D');
                 that._viewer.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
             } else if (value === 'Terrain' && !(terrainProvider instanceof CesiumTerrainProvider)) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
                 that._viewer.scene.globe.terrainProvider = new CesiumTerrainProvider({
                     url : 'http://cesiumjs.org/stk-terrain/tilesets/world/tiles'
                 });
+            } else if (switched) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
             }
         }
     });
@@ -468,6 +508,7 @@ var GeoDataBrowserViewModel = function(options) {
         var files = evt.dataTransfer.files;
         for (var i = 0; i < files.length; ++i) {
             var file = files[i];
+            ga('send', 'event', 'uploadFile', 'dragDrop', file.name);
             that._viewer.geoDataManager.addFile(file);
             if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
                 when(readJson(file), loadCollection);
@@ -484,6 +525,7 @@ var GeoDataBrowserViewModel = function(options) {
     var dragPlaceholder;
 
     this._startNowViewingDrag = createCommand(function(viewModel, e) {
+        ga('send', 'event', 'dataSource', 'reorder', viewModel.Title());
         draggedNowViewingItem = e.target;
 
         dragPlaceholder = document.createElement('div');

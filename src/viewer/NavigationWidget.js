@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,Cesium*/
+/*global require,Cesium,ga*/
 
 var Cartesian2 = Cesium.Cartesian2;
 var Cartesian3 = Cesium.Cartesian3;
@@ -43,6 +43,7 @@ var NavigationWidget = function(viewer, container) {
     var that = this;
     this._viewModel = {
         zoomIn : createCommand(function() {
+            ga('send', 'event', 'navigation', 'click', 'zoomIn');
             if (that._viewer.map) {
                 // Leaflet
                 that._viewer.map.zoomIn(1);
@@ -60,6 +61,7 @@ var NavigationWidget = function(viewer, container) {
             }
         }),
         zoomOut : createCommand(function() {
+            ga('send', 'event', 'navigation', 'click', 'zoomOut');
             if (that._viewer.map) {
                 // Leaflet
                 that._viewer.map.zoomOut(1);
@@ -77,6 +79,7 @@ var NavigationWidget = function(viewer, container) {
             }
         }),
         tilt : createCommand(function() {
+            ga('send', 'event', 'navigation', 'click', 'tilt');
             if (that._viewModel.isTiltNone) {
                 that._viewModel.isTiltNone = false;
                 that._viewModel.isTiltModerate = true;
