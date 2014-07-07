@@ -257,23 +257,12 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
 // PERF: skip frames where reasonable - global vars for now
 // -------------------------------------------
 var FrameChecker = function () {
-    this._lastDate = undefined;
-    this._lastCam = undefined;
-    this._showFrame = true;
+    this._lastDate = new JulianDate(0, 0.0);
+    this._lastCam = new Matrix4();
     this._maxFPS = 40.0;
-    this.setFrameRate();
     this._skipCnt = 0;
     this._skipCntLim = 10.0; //start skip after 10 seconds
     this._skipCntMax = 15.0; //redraw every few seconds regardless
-};
-
-// Set the max frame rate
-FrameChecker.prototype.setFrameRate = function (maxFPS) {
-    if (maxFPS !== undefined) {
-        this._maxFPS = maxFPS;
-    }
-    var that = this;
-    setInterval(function() { that._showFrame = true; }, 1000/that._maxFPS);
 };
 
 // call to force draw - usually after long downloads/processes
@@ -283,12 +272,6 @@ FrameChecker.prototype.forceFrameUpdate = function() {
 
 // see if we can skip the draw on this frame
 FrameChecker.prototype.skipFrame = function(scene, date) {
-    //check if can show based on maxFPS
-    if (this._showFrame === false) {
-        return true;
-    }
-    this._showFrame = false;
-
     //check if anything actually changed
     if (this._lastDate) {
         var bDateSame = this._lastDate.equals(date);
@@ -312,8 +295,8 @@ FrameChecker.prototype.skipFrame = function(scene, date) {
         this._skipCnt = (this._maxFPS * this._skipCntLim);
     }
 
-    this._lastDate = date.clone();
-    this._lastCam = scene.camera.viewMatrix.clone();
+    this._lastDate = date.clone(this._lastDate);
+    this._lastCam = scene.camera.viewMatrix.clone(this._lastCam);
     return false;
 };
 
@@ -547,7 +530,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         terrainProvider : new CesiumTerrainProvider({
             url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
         }),
-        timeControlsInitiallyVisible : false
+        timeControlsInitiallyVisible : false,
+        targetFrameRate : 40
     };
 
     //create CesiumViewer
@@ -918,6 +902,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
                 return;
             }
             that.scene.base_render(date);
+
+            // If terrain/imagery is loading, force another render immediately so that the loading
+            // happens as quickly as possible.
+            var surface = that.scene.globe._surface;
+            if (surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0) {
+                that.frameChecker.forceFrameUpdate();
+            }
 
             //capture the scene image right after the render and make
             //call to the GeoDataManager which saves scene data, which sets an event
