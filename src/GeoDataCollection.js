@@ -425,7 +425,7 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     //store the current server location for use when creating urls
     this.visServer = uri.protocol() + '://' + uri.host();
     
-        //TODO: !!! Determine where this should live or if it should
+        //TODO: Determine where this should live or if it should
     this.supportServer = 'http://geospace.research.nicta.com.au';
 
     var visUrl = uri_params.vis_url;
@@ -589,7 +589,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     }
     format = format.toUpperCase();
     
-    //TODO: !!! save dataset text for dnd data
+    //TODO: Save dataset text for dnd data
 
         //Natively handled data sources in cesium
     if (format === "CZML") {
@@ -1043,11 +1043,16 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         json_gml = $.xml2json(text);
     }
     
+    console.log(json_gml);
+    
     //find the array of available layers
     var i;
     var layers = [];
     if (description.type === 'WFS') {
         layers = json_gml.FeatureTypeList.FeatureType;
+        if (!(layers instanceof Array)) {
+            layers = [layers];
+        }
 
         // If the data source name is just its URL, and we have a better title from GetCapabilities, use it.
         var title;
@@ -1060,7 +1065,8 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         if (title && description.name === description.base_url) {
             description.name = title;
         }
-        if (json_gml.Esri !== undefined) {
+        
+        if (json_gml.Esri !== undefined || layers[0].OutputFormats !== undefined) {
             description.esri = true;
         }
     }
@@ -1317,10 +1323,8 @@ var countPnts = function (pts, cnt) {
     }
 };
 
-
-//TODO: think about this in a web worker
-//TODO: if we preprocess the reproject than we can use this on non-WGS84 data
-function downsampleGeoJSON(obj) {
+//Lazy function to downsample GeoJson
+function _downsampleGeoJSON(obj) {
     var obj_size = JSON.stringify(obj).length;
     var cnt = {tot:0, longest:0};
     filterValue(obj, 'coordinates', function(obj, prop) { countPnts(obj[prop], cnt); });
@@ -1445,7 +1449,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     }
 
     //downsample object if huge
-    downsampleGeoJSON(obj);
+    _downsampleGeoJSON(obj);
     
     if (this.map === undefined) {
             //create the object
@@ -1526,12 +1530,9 @@ GeoDataCollection.prototype.addFile = function(file) {
         if (file.size > 1000000) {
             alert('File is too large to send to conversion service.  Click here for alternative file conversion options.');
         }
-        else if (false) {
-                //TODO: check against list of support extensions
-            alert('File format is not supported by conversion service.  Click here for alternative file conversion options.');
-        }
+          //TODO: check against list of support extensions
         else {
-            if (!confirm('No local format handler.  Click OK to convert via our web service.')) {
+            if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
                 return;
             }
             // generate form data to submit text for conversion

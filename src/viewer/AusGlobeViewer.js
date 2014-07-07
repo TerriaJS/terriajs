@@ -1121,7 +1121,7 @@ function getCameraHeight(scene) {
 
 //Camera extent approx for 2D viewer
 function getCameraFocus(scene) {
-    //HACK to get current camera focus
+    //Hack to get current camera focus
     var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
     var focus = scene.camera.pickEllipsoid(pos, Ellipsoid.WGS84);
     return focus;
@@ -1213,7 +1213,6 @@ function flyToPosition(scene, position, durationMilliseconds) {
     });
 }
 
-//TODO: need to make this animate
 function zoomCamera(scene, distFactor, pos) {
     var camera = scene.camera;
     //for now
