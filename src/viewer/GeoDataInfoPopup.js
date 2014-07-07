@@ -232,7 +232,9 @@ var GeoDataInfoPopup = function(options) {
 
     viewModel.getDataUrl = knockout.computed(function() {
         var baseUrl;
-        if (viewModel.info.wfsUrl && viewModel.info.wfsUrl()) {
+        if (viewModel.info.completeWfsUrl && viewModel.info.completeWfsUrl()) {
+            return viewModel.info.completeWfsUrl();
+        } else if (viewModel.info.wfsUrl && viewModel.info.wfsUrl()) {
             baseUrl = viewModel.info.wfsUrl();
         } else if (viewModel.info.base_url && viewModel.info.base_url()) {
             baseUrl = viewModel.info.base_url();
