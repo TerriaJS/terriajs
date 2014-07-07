@@ -151,7 +151,7 @@ var AusGlobeViewer = function(geoDataManager) {
                     height : 32
                 },
                 tooltip : 'About National Map',
-                uri : 'http://nicta.github.io/nationalmap/public/home.html',
+                uri : 'http://nicta.github.io/nationalmap/public/info.html',
                 target : '_blank'
             },
             {

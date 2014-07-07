@@ -460,6 +460,10 @@ a.ausglobe-title-menuItem:hover {
     cursor: pointer;
 }
 
+.ausglobe-accordion-category-item-enabled:hover .ausglobe-accordion-category-item-label {
+    text-decoration: underline;
+}
+
 .ausglobe-nowViewing-dragHandle {
     cursor: move;
     position: relative;
@@ -780,8 +784,28 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-addData-type {
     position: relative;
     display: inline-block;
-    top: 8px;
-    left: 60px;
+    top: 3px;
+    left: 100px;
+}
+
+.ausglobe-addData-typeSelect {
+    border: #66CCFF;
+    background-color: black;
+    color: #66CCFF;
+    padding: 5px;
+    border: 1px solid #66CCFF;
+}
+
+.ausglobe-addData-type:after {
+    position: absolute;
+    bottom: 9px;
+    right: 8px;
+    padding: 0 0 2px;
+    border-top: 10px solid #66CCFF;
+    border-right: 6px solid rgba(0, 0, 0, 0);
+    border-left: 6px solid rgba(0, 0, 0, 0);
+    content: ' ';
+    pointer-events: none;
 }
 
 .ausglobe-accordion-category-loading {

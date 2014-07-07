@@ -134,8 +134,7 @@ var GeoDataBrowser = function(options) {
                         </label>\
                         <div>\
                             <label class="ausglobe-addData-type">\
-                                Type: \
-                                <select data-bind="value: addType">\
+                                <select class="ausglobe-addData-typeSelect" data-bind="value: addType">\
                                     <option value="File">Single data file</option>\
                                     <option value="WMS">WMS Server</option>\
                                     <option value="WFS">WFS Server</option>\
