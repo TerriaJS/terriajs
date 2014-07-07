@@ -105,7 +105,7 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._zoomToItem = createCommand(function(item) {
-        if (!defined(item.layer) || !defined(item.layer.extent)) {
+        if (!defined(item.layer) || !defined(item.layer.extent) || !item.isEnabled()) {
             return;
         }
 

@@ -460,6 +460,10 @@ a.ausglobe-title-menuItem:hover {
     cursor: pointer;
 }
 
+.ausglobe-accordion-category-item-enabled:hover .ausglobe-accordion-category-item-label {
+    text-decoration: underline;
+}
+
 .ausglobe-nowViewing-dragHandle {
     cursor: move;
     position: relative;
