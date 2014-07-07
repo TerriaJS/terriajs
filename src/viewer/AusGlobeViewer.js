@@ -919,6 +919,14 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             }
             that.scene.base_render(date);
 
+            // If terrain/imagery is loading, force another render immediately so that the loading
+            // happens as quickly as possible.
+            var surface = that.scene.globe._surface;
+            if (surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0) {
+                that.frameChecker._showFrame = true;
+                that.frameChecker.forceFrameUpdate();
+            }
+
             //capture the scene image right after the render and make
             //call to the GeoDataManager which saves scene data, which sets an event
             // which is picked up by the GeoDataWidget to launch the share dialog
