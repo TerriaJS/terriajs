@@ -326,6 +326,8 @@ var GeoDataBrowserViewModel = function(options) {
                 ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
             }
         }
+
+        limitDataSourceCount(that);
     });
 
     function createDataSource(options) {
@@ -804,38 +806,49 @@ function limitDataSourceCount(viewModel, nowViewingItem) {
         var scene = viewModel._dataManager.scene;
         var layers = scene.imageryLayers;
         var maxTextures = scene._context.maximumTextureImageUnits;
+        var keepChecking = true;
+        var removedLayer = false;
 
-        var usedTextures = 0;
-        for (var i = 0; i < layers.length; ++i) {
-            var layer = layers.get(i);
-            if (!layer.show) {
-                continue;
-            }
+        while (keepChecking) {
+            var usedTextures = 0;
+            for (var i = 0; i < layers.length; ++i) {
+                var layer = layers.get(i);
+                if (!layer.show) {
+                    continue;
+                }
 
-            var imageryProvider = layer.imageryProvider;
-            if (!imageryProvider.ready || imageryProvider.tilingScheme instanceof GeographicTilingScheme) {
-                ++usedTextures;
-            } else {
-                usedTextures += 3;
-            }
-        }
-
-        if (usedTextures > maxTextures) {
-            if (!nowViewingItem) {
-                var nowViewing = viewModel.nowViewing();
-                for (i = 0; i < nowViewing.length; ++i) {
-                    if (nowViewing[i].show()) {
-                        nowViewingItem = nowViewing[i];
-                        break;
-                    }
+                var imageryProvider = layer.imageryProvider;
+                if (imageryProvider.ready && imageryProvider.tilingScheme instanceof GeographicTilingScheme) {
+                    ++usedTextures;
+                } else {
+                    usedTextures += 3;
                 }
             }
 
-            if (nowViewingItem && nowViewingItem.show()) {
-                ga('send', 'event', 'dataSource', 'tooMany', nowViewingItem.Title());
-                viewModel.toggleItemShown(nowViewingItem);
-            }
+            if (usedTextures > maxTextures) {
+                if (!nowViewingItem || !nowViewingItem.show()) {
+                    var nowViewing = viewModel.nowViewing();
+                    for (i = 0; i < nowViewing.length; ++i) {
+                        if (nowViewing[i].show()) {
+                            nowViewingItem = nowViewing[i];
+                            break;
+                        }
+                    }
+                }
 
+                if (nowViewingItem && nowViewingItem.show()) {
+                    viewModel.toggleItemShown(nowViewingItem);
+                    removedLayer = true;
+                } else {
+                    keepChecking = false;
+                }
+            } else {
+                keepChecking = false;
+            }
+        }
+
+        if (removedLayer) {
+            ga('send', 'event', 'dataSource', 'tooManyDataSources');
             var message = new PopupMessage({
                 container : document.body,
                 title : 'Too many active data sources',
