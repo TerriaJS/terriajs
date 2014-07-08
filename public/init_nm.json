@@ -340,7 +340,7 @@
     { "name": "Water (Bureau of Meteorology Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WMS", "proxy": true, "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)" },
     { "name": "Boundaries (Australia Bureau of Statistics)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "proxy": false, "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)" },
     { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "proxy": false, "wfsAvailable": true },
-	{ "name": "NEXIS 2012 (Geoscience Australia)", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer", "type": "WMS","proxy":true, "wfsAvailable": true, "wfsUrl": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WFSServer","description":"[Licence](http://www.ga.gov.au/copyright)"}
+	{ "name": "National Exposure Information System 2012", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer", "type": "WMS","proxy":true, "wfsAvailable": true, "wfsUrl": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WFSServer","description":"[Licence](http://www.ga.gov.au/copyright)"}
   ]}
   ],
   "NMServices": [
