@@ -733,12 +733,13 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                     // Handle MapInfo MXP.  This is ugly.
                     if (result instanceof XMLDocument) {
                         var json = $.xml2json(result);
+                        var properties;
                         if (json.FeatureCollection &&
                             json.FeatureCollection.FeatureMembers && 
                             json.FeatureCollection.FeatureMembers.Feature && 
                             json.FeatureCollection.FeatureMembers.Feature.Val) {
 
-                            var properties = {};
+                            properties = {};
                             result = {
                                 features : [
                                     {
@@ -750,6 +751,22 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                             var vals = json.FeatureCollection.FeatureMembers.Feature.Val;
                             for (var i = 0; i < vals.length; ++i) {
                                 properties[vals[i].ref] = vals[i].text;
+                            }
+                        } else if (json.FIELDS) {
+                            properties = {};
+                            result = {
+                                features : [
+                                    {
+                                        properties : properties
+                                    }
+                                ]
+                            };
+
+                            var fields = json.FIELDS;
+                            for (var field in fields) {
+                                if (fields.hasOwnProperty(field)) {
+                                    properties[field] = fields[field];
+                                }
                             }
                         }
                     }
