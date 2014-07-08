@@ -115,7 +115,12 @@ var GeoDataInfoPopup = function(options) {
 
         // Escape HTML in the description.
         var div = document.createElement('div');
-        div.innerText = text;
+        
+        if (defined(div.textContent)) {
+            div.textContent = text;
+        } else {
+            div.innerText = text;
+        }
 
         // Replace Markdown style links (such as: [Link Text](http://link.url.com) ) with actual links.
         var escaped = div.innerHTML;
