@@ -800,7 +800,11 @@ console.log(layerName);
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
         if (layer.proxy || this.shouldUseProxy(url)) {
-            proxy = corsProxy;
+            if (layer.description && layer.description.username && layer.description.password) {
+                proxy = corsProxy.withCredentials(layer.description.username, layer.description.password);
+            } else {
+                proxy = corsProxy;
+            }
         }
 
         if (layerName === 'REST') {
