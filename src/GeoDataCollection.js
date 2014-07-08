@@ -795,7 +795,6 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     var provider;
     var proxy;
 
-console.log(layerName);
     if (this.map === undefined) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
