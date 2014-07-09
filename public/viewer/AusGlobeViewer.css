@@ -264,7 +264,6 @@ a.ausglobe-title-menuItem:hover {
     .ausglobe-title-menuItem {display: none; }
 }
 
-
 .ausglobe-left-area {
     position: absolute;
     left: 20px;
@@ -589,7 +588,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-info {
     display: inline-block;
-    width: 600px;
+    width: 80%;
     height: 500px;
     background-color: white;
     margin: auto;
@@ -603,7 +602,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-share {
     display: inline-block;
-    width: 760px;
+    width: 500px;
     height: 500px;
     background-color: white;
     margin: auto;
@@ -617,7 +616,7 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-services {
     display: inline-block;
-    width: 600px;
+    width: 500px;
     height: 500px;
     background-color: white;
     margin: auto;
