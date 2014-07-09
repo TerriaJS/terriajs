@@ -188,10 +188,11 @@ li {
     vertical-align: bottom;
 }
 
+
 .ausglobe-title-image {
     display: inline-block;
     vertical-align: middle;
-    padding-right: 15px;
+    padding-right: 5px;
 }
 
 .ausglobe-title-menu {
@@ -223,8 +224,8 @@ a.ausglobe-title-menuItem {
     fill: #999EA1;
     width: 32px;
     height: 32px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 a.ausglobe-title-menuItem:hover {
@@ -252,6 +253,17 @@ a.ausglobe-title-menuItem:hover {
     right: 400px;
     overflow: hidden;
 }
+
+@media screen and (max-width: 850px)
+{
+    .ausglobe-title-middle {display: none; }
+}
+
+@media screen and (max-width: 520px)
+{
+    .ausglobe-title-menuItem {display: none; }
+}
+
 
 .ausglobe-left-area {
     position: absolute;
