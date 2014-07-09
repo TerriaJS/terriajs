@@ -1,5 +1,6 @@
 "use strict";
 
+
 var url = require('url');
 
 function getRemoteUrlFromParam(req) {
@@ -26,6 +27,12 @@ function filterHeaders(req, headers) {
             result[name] = headers[name];
         }
     });
+
+    var remote = getRemoteUrlFromParam(req);
+    if (remote.host === 'programs.communications.gov.au'){
+        result['Authorization'] = 'Basic d21zOndtcw==';
+    }
+
     return result;
 }
 
