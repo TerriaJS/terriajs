@@ -212,11 +212,8 @@ There are known issues with this particular version of Firefox that make Nationa
         this.webGlSupported = false;
     }
     
-    browser.msie = true;
-    browser.version = '8.0';
-    browser.name = 'Internet Explorer';
-    
     if (browser.msie === true && browser.version < "9.0") {
+        browser.name = 'Internet Explorer';
         var noWebGLMessage = new PopupMessage({
             container : document.body,
             title : 'Unsupported browser version detected',
