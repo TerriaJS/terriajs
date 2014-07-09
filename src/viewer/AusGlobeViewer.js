@@ -195,6 +195,38 @@ var AusGlobeViewer = function(geoDataManager) {
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
 
+    //catch problems 
+    this.webGlSupported = supportsWebgl();
+    if (!this.webGlSupported) {
+        var noWebGLMessage = new PopupMessage({
+            container : document.body,
+            title : 'WebGL not supported',
+            message : '\
+National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, including the \
+latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, and \
+<a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
+Your web browser does not appear to support WebGL, so you will see a limited, \
+2D-only experience.'
+        });
+    }
+    
+    var browser = $.browser;
+    console.log(browser);
+    if (browser.mozilla === true && browser.version === "30.0") {
+        var noWebGLMessage = new PopupMessage({
+            container : document.body,
+            title : 'FireFox version 30.0 Detected',
+            message : '\
+There are known issues with this particular version of Firefox that make National Map 3D mode unstable. \
+            These issues will be fixed in the next version of Firefox (31.0) due to release the week of July 22nd.  We recommend \
+            you use another browser for this feature and will be starting you in 2D mode by default. \
+            You can switch display modes via the Map button on the left.'
+        });
+        this.webGlSupported = false;
+    }
+
+
     //TODO: perf test to set environment
 
     this.geoDataWidget = new GeoDataWidget(geoDataManager, function (layer) { setCurrentDataset(layer, that); });
@@ -211,26 +243,12 @@ var AusGlobeViewer = function(geoDataManager) {
         viewer : this,
         container : leftArea,
         dataManager : geoDataManager,
-        initUrl: params.init_url
+        initUrl: params.init_url,
+        mode3d: this.webGlSupported
     });
 
-    this.webGlSupported = supportsWebgl();
-    if (!this.webGlSupported) {
-        var noWebGLMessage = new PopupMessage({
-            container : document.body,
-            title : 'WebGL not supported',
-            message : '\
-National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, including the \
-latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
-<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, and \
-<a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
-Your web browser does not appear to support WebGL, so you will see a limited, \
-2D-only experience.'
-        });
-    }
-
     this.selectViewer(this.webGlSupported);
-
+    
     // simple way to capture most ux redraw needs - catch all canvas clicks
     $(document).click(function() {
         if (that.frameChecker !== undefined) {
