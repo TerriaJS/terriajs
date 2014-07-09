@@ -195,9 +195,39 @@ var AusGlobeViewer = function(geoDataManager) {
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
 
+    this.webGlSupported = true;
+    
+    var browser = $.browser;
+    console.log(browser);
+    if (browser.mozilla === true && browser.version === "30.0") {
+        var noWebGLMessage = new PopupMessage({
+            container : document.body,
+            title : 'FireFox version 30.0 detected',
+            message : '\
+There are known issues with this particular version of Firefox that make National Map 3D mode unstable. \
+            These issues will be fixed in the next version of Firefox (31.0) due to release the week of July 22nd.  We recommend \
+            you use another browser for this feature and will be starting you in 2D mode by default. \
+            You can switch display modes via the Map button on the left.'
+        });
+        this.webGlSupported = false;
+    }
+    
+    browser.msie = true;
+    browser.version = '8.0';
+    browser.name = 'Internet Explorer';
+    
+    if (browser.msie === true && browser.version < "9.0") {
+        var noWebGLMessage = new PopupMessage({
+            container : document.body,
+            title : 'Unsupported browser version detected',
+            message : '\
+            The National Map is not designed to work on versions of '+browser.name+' older than '+browser.version+'. We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. Running on your current browser will probably suffer from limited functionality, poor appearance, and stability issues.'
+        });
+        this.webGlSupported = false;
+    }
+
     //catch problems 
-    this.webGlSupported = supportsWebgl();
-    if (!this.webGlSupported) {
+    if (this.webGlSupported && !supportsWebgl()) {
         var noWebGLMessage = new PopupMessage({
             container : document.body,
             title : 'WebGL not supported',
@@ -209,24 +239,9 @@ latest versions of <a href="http://www.google.com/chrome" target="_blank">Google
 Your web browser does not appear to support WebGL, so you will see a limited, \
 2D-only experience.'
         });
-    }
-    
-    var browser = $.browser;
-//    console.log(browser);
-    if (browser.mozilla === true && browser.version === "30.0") {
-        var noWebGLMessage = new PopupMessage({
-            container : document.body,
-            title : 'FireFox version 30.0 Detected',
-            message : '\
-There are known issues with this particular version of Firefox that make National Map 3D mode unstable. \
-            These issues will be fixed in the next version of Firefox (31.0) due to release the week of July 22nd.  We recommend \
-            you use another browser for this feature and will be starting you in 2D mode by default. \
-            You can switch display modes via the Map button on the left.'
-        });
         this.webGlSupported = false;
     }
-
-
+    
     //TODO: perf test to set environment
 
     this.geoDataWidget = new GeoDataWidget(geoDataManager, function (layer) { setCurrentDataset(layer, that); });
