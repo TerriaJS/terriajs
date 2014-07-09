@@ -5,7 +5,7 @@ ckan.module('cesiumpreview', function (jQuery, _) {
       var self = this;
 	  
 //      var vis_server = 'http://localhost';  //local
-      var vis_server='http://nationalmap.research.nicta.com.au/';
+      var vis_server='http://nationalmap.nicta.com.au/';
       
       //figure out data format
       var data_fmt = '';

@@ -473,6 +473,7 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
         }
     }
     else if (dataUrl) {
+        dataUrl = decodeURIComponent(dataUrl);
         that.loadUrl(dataUrl, dataFormat);
     }
 };
@@ -539,13 +540,20 @@ GeoDataCollection.prototype.getShareRequestURL = function( request ) {
 // Handle data sources from text
 // -------------------------------------------
 function getFormatFromUrl(url) {
-    if (url !== undefined) {
-        var idx = url.lastIndexOf('.');
-        if (idx === -1 || (idx < url.lastIndexOf('/'))) {
-            return;
-        }
-        var format = url.toUpperCase().substring(idx+1);
-        return format;
+    if (url === undefined) {
+        return;
+    }
+        //try to parse as url and get format
+    var uri = new URI(url);
+    var params = uri.search(true);
+    if (params.outputFormat || params.f) {
+        var str = params.outputFormat || params.f;
+        return str.toUpperCase();
+    }
+        //try to get from extension
+    var idx = url.lastIndexOf('.');
+    if (idx !== -1 && (idx > url.lastIndexOf('/'))) {
+        return url.toUpperCase().substring(idx+1);
     }
 }
 
@@ -772,7 +780,6 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
                 console.log('Exception returned by the WFS Server:', obj.Exception.ExceptionText);
             }
             obj = _EsriGml2GeoJson(obj);
-            console.log(obj);
                 //Hack for gazetteer since the coordinates are flipped
             if (text.indexOf('gazetter') !== -1) {
                 for (var i = 0; i < obj.features.length; i++) {
@@ -1046,8 +1053,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else {
         json_gml = $.xml2json(text);
     }
-    
-    console.log(json_gml);
     
     //find the array of available layers
     var i;
@@ -1488,7 +1493,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         });
 */
         // GeoJSON
-        console.log(obj);
         layer.primitive = L.geoJson(obj, {
             style: style,
             pointToLayer: function (feature, latlng) {

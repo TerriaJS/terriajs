@@ -212,7 +212,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     }
     
     var browser = $.browser;
-    console.log(browser);
+//    console.log(browser);
     if (browser.mozilla === true && browser.version === "30.0") {
         var noWebGLMessage = new PopupMessage({
             container : document.body,
