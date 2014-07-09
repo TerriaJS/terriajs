@@ -31,6 +31,7 @@ var GeoDataBrowserViewModel = function(options) {
     this._dataManager = options.dataManager;
     this.map = options.map;
     this.initUrl = options.initUrl || './init_nm.json';
+    this.mode3d = options.mode3d;
 
     this.showingPanel = false;
     this.showingMapPanel = false;
@@ -42,7 +43,7 @@ var GeoDataBrowserViewModel = function(options) {
     this.openMapIndex = 0;
     this.imageryIsOpen = true;
     this.viewerSelectionIsOpen = false;
-    this.selectedViewer = 'Terrain';
+    this.selectedViewer = this.mode3d ? 'Terrain' : '2D';
 
     knockout.track(this, ['showingPanel', 'showingMapPanel', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
