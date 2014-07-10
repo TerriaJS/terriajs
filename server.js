@@ -122,6 +122,16 @@ if (cluster.isMaster) {
         });
     }
 
+    //Non CORS hosts we proxy to
+    var proxyAllowedHosts = {
+        'services.arcgisonline.com' : true,
+        'spatialreference.org' : true,
+        'www2.landgate.wa.gov.au' : true,
+        'geofabric.bom.gov.au' : true,
+        'www.ga.gov.au' : true,
+        'programs.communications.gov.au' : true
+    };
+ 
     app.get('/proxy/*', function(req, res, next) {
         // look for request like http://localhost:8080/proxy/http://example.com/file?query=1
         var remoteUrl = getRemoteUrlFromParam(req);
@@ -146,7 +156,13 @@ if (cluster.isMaster) {
             proxy = upstreamProxy;
         }
 
-        // encoding : null means "body" passed to the callback will be raw bytes
+        //If you want to run a CORS proxy to data source, remove this section
+        if (!proxyAllowedHosts[remoteUrl.host.toLowerCase()]) {
+            res.send(400, 'Host it not in list of allowed hosts.');
+            return;
+        }
+ 
+         // encoding : null means "body" passed to the callback will be raw bytes
 
         request.get({
             url : url.format(remoteUrl),
