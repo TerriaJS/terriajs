@@ -727,7 +727,9 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 if (Rectangle.contains(extent, pickedLocation)) {
                     var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
                     var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
-                    promises.push(provider.getFeatureInfo(imagery.x, imagery.y, imagery.level, pixelX, pixelY));
+                    //promises.push(provider.getFeatureInfo(imagery.x, imagery.y, imagery.level, pixelX, pixelY));
+                    var extentDegrees = new Rectangle(CesiumMath.toDegrees(extent.west), CesiumMath.toDegrees(extent.south), CesiumMath.toDegrees(extent.east), CesiumMath.toDegrees(extent.north));
+                    promises.push(getWmsFeatureInfo(provider.url, provider.layers, extentDegrees, 256, 256, pixelX, pixelY));
                 }
             }
 
@@ -1362,5 +1364,32 @@ function updateLegend(datavis) {
     document.getElementById('lgd_min_val').innerHTML = min_text;
     document.getElementById('lgd_max_val').innerHTML = max_text;
 }
+
+function getWmsFeatureInfo(baseUrl, layers, extentDegrees, width, height, i, j) {
+    var url = baseUrl;
+    var indexOfQuestionMark = url.indexOf('?');
+    if (indexOfQuestionMark >= 0 && indexOfQuestionMark < url.length - 1) {
+        if (url[url.length - 1] !== '&') {
+            url += '&';
+        }
+    } else if (indexOfQuestionMark < 0) {
+        url += '?';
+    }
+
+    url += 'service=WMS&request=GetFeatureInfo&version=1.1.1&layers=' + layers + '&query_layers=' + layers + 
+           '&srs=EPSG:4326&width=' + width + '&height=' + height + '&info_format=application/json' +
+           '&x=' + i + '&y=' + j + '&';
+
+    var bbox = extentDegrees.west + ',' + extentDegrees.south + ',' + extentDegrees.east + ',' + extentDegrees.north;
+    url += 'bbox=' + bbox + '&';
+
+    return when(loadJson(url), function(json) {
+        return json;
+    }, function (e) {
+        // If something goes wrong, try requesting XML instead of GeoJSON.  Then try to interpret it.
+        url = url.replace('info_format=application/json', 'info_format=text/xml');
+        return loadXML(url);
+    });
+};
 
 module.exports = AusGlobeViewer;
