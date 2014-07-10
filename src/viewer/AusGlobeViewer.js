@@ -53,7 +53,6 @@ var knockoutES5 = require('../../public/third_party/knockout-es5.js');
 
 var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
-var GeoDataWidget = require('./GeoDataWidget');
 var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
 var PopupMessage = require('./PopupMessage');
@@ -198,7 +197,7 @@ var AusGlobeViewer = function(geoDataManager) {
     this.webGlSupported = true;
     
     var browser = $.browser;
-    console.log(browser);
+//    console.log(browser);
     if (browser.mozilla === true && browser.version === "30.0") {
         var noWebGLMessage = new PopupMessage({
             container : document.body,
@@ -241,7 +240,34 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     
     //TODO: perf test to set environment
 
-    this.geoDataWidget = new GeoDataWidget(geoDataManager, function (layer) { setCurrentDataset(layer, that); });
+    // Event watchers for geoDataManager
+    this.geoDataManager.GeoDataAdded.addEventListener(function(collection, layer) {
+        console.log('Vis Layer Added:', layer.name);
+        layer.zoomTo = collection.zoomTo;
+        setCurrentDataset(layer, that);
+        collection.zoomTo = false;
+    });
+
+    this.geoDataManager.GeoDataRemoved.addEventListener(function(collection, layer) {
+        console.log('Vis Layer Removed:', layer.name);
+        setCurrentDataset(undefined, that);
+    });
+
+    this.geoDataManager.ViewerChanged.addEventListener(function(collection, obj) {
+        console.log('Viewer Changed:', (obj.scene?'Cesium':'Leaflet'));
+        that.scene = obj.scene;
+        that.map = obj.map;
+    });
+
+    this.geoDataManager.ShareRequest.addEventListener(function(collection, request) {
+        console.log('Share Request Event:');
+        var sharePanel = new SharePanel({
+            request : request,
+            container : document.body,
+            geoDataManager : that.geoDataManager
+        });
+    });
+
     this.scene = undefined;
     this.viewer = undefined;
     this.map = undefined;
@@ -270,15 +296,8 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
 
     this.geoDataManager.loadInitialUrl(url);
 
-    this.geoDataManager.ShareRequest.addEventListener(function(collection, request) {
-        console.log('Share Request Event:');
-        var sharePanel = new SharePanel({
-            request : request,
-            container : document.body,
-            geoDataManager : that.geoDataManager
-        });
-    });
-
+        //TODO: should turn this off based on event from loadUrl
+    $('#loadingIndicator').hide();
 };
 
 
@@ -465,7 +484,7 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
             if (that.regionPolylines.get(0)) {
                 that.regionPolylines.remove(that.regionPolylines.get(0));
             }
-            that.geoDataWidget.setExtent(ext);
+//            that.geoDataWidget.setExtent(ext);
             if (ext) {
                 that.updateCameraFromRect(ext, 3000);
                 // Display polyline based on ext
@@ -959,8 +978,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
             //capture the scene image right after the render and make
             //call to the GeoDataManager which saves scene data, which sets an event
-            // which is picked up by the GeoDataWidget to launch the share dialog
-            //TODO: need leaflet version - use extent for camera and placeholder image
+            // which is picked up to launch the share dialog
             if (that.captureCanvasFlag === true) {
                 that.captureCanvasFlag = false;
                 var dataUrl = that.scene.canvas.toDataURL("image/jpeg");

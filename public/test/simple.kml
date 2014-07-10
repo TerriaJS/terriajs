@@ -9,7 +9,7 @@
       <range>500000</range><tilt>0</tilt><heading>0</heading>
    </LookAt>
    <Point>
-     <coordinates>151.0,-35.0,10</coordinates>
+     <coordinates>150.0,-35.0,500</coordinates>
    </Point>
   </Placemark>
  </Document>
