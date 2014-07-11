@@ -26,6 +26,7 @@ var defined = Cesium.defined;
 var DynamicObject = Cesium.DynamicObject;
 var Ellipsoid = Cesium.Ellipsoid;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
+var GeographicProjection = Cesium.GeographicProjection;
 var CesiumEvent = Cesium.Event;
 var Rectangle = Cesium.Rectangle;
 var Fullscreen = Cesium.Fullscreen;
@@ -50,6 +51,7 @@ var Tween = Cesium.Tween;
 var Viewer = Cesium.Viewer;
 var viewerDynamicObjectMixin = Cesium.viewerDynamicObjectMixin;
 var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
+var WebMercatorProjection = Cesium.WebMercatorProjection;
 var when = Cesium.when;
 
 var knockout = require('knockout');
@@ -733,8 +735,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 if (Rectangle.contains(extent, pickedLocation)) {
                     var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
                     var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
-                    var extentDegrees = new Rectangle(CesiumMath.toDegrees(extent.west), CesiumMath.toDegrees(extent.south), CesiumMath.toDegrees(extent.east), CesiumMath.toDegrees(extent.north));
-                    promises.push(getWmsFeatureInfo(provider.url, provider.layers, extentDegrees, 256, 256, pixelX, pixelY));
+                    promises.push(getWmsFeatureInfo(provider.url, provider.layers, extent, 256, 256, pixelX, pixelY, false));
                 }
             }
 
@@ -1401,7 +1402,7 @@ function updateLegend(datavis) {
     document.getElementById('lgd_max_val').innerHTML = max_text;
 }
 
-function getWmsFeatureInfo(baseUrl, layers, extentDegrees, width, height, i, j) {
+function getWmsFeatureInfo(baseUrl, layers, extent, width, height, i, j, useWebMercator) {
     var url = baseUrl;
     var indexOfQuestionMark = url.indexOf('?');
     if (indexOfQuestionMark >= 0 && indexOfQuestionMark < url.length - 1) {
@@ -1412,11 +1413,27 @@ function getWmsFeatureInfo(baseUrl, layers, extentDegrees, width, height, i, j) 
         url += '?';
     }
 
+    var srs;
+    var sw;
+    var ne;
+    if (useWebMercator) {
+        srs = 'EPSG:3857';
+        
+        var projection = new WebMercatorProjection();
+        sw = projection.project(Rectangle.getSouthwest(extent));
+        ne = projection.project(Rectangle.getNortheast(extent));
+    } else {
+        srs = 'EPSG:4326';
+        sw = new Cartesian3(CesiumMath.toDegrees(extent.west), CesiumMath.toDegrees(extent.south), 0.0);
+        ne = new Cartesian3(CesiumMath.toDegrees(extent.east), CesiumMath.toDegrees(extent.north), 0.0);
+    }
+
     url += 'service=WMS&request=GetFeatureInfo&version=1.1.1&layers=' + layers + '&query_layers=' + layers + 
-           '&srs=EPSG:4326&width=' + width + '&height=' + height + '&info_format=application/json' +
+           '&srs=' + srs + '&width=' + width + '&height=' + height + '&info_format=application/json' +
            '&x=' + i + '&y=' + j + '&';
 
-    var bbox = extentDegrees.west + ',' + extentDegrees.south + ',' + extentDegrees.east + ',' + extentDegrees.north;
+
+    var bbox = sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y;
     url += 'bbox=' + bbox + '&';
 
     return when(loadJson(url), function(json) {
@@ -1434,7 +1451,7 @@ function selectFeatureLeaflet(viewer, latlng) {
     var pickedLocation = new Cartographic(CesiumMath.toRadians(latlng.lng), CesiumMath.toRadians(latlng.lat));
     var pickedXY = viewer.map.latLngToContainerPoint(latlng, viewer.map.getZoom());
     var bounds = viewer.map.getBounds();
-    var extentDegrees = new Rectangle(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
+    var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
 
     var promises = [];
     for (var i = layers.length - 1; i >=0 ; --i) {
@@ -1443,7 +1460,7 @@ function selectFeatureLeaflet(viewer, latlng) {
             continue;
         }
 
-        promises.push(getWmsFeatureInfo(layer.description.base_url, layer.description.Name, extentDegrees, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y));
+        promises.push(getWmsFeatureInfo(layer.description.base_url, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
     }
 
     if (promises.length === 0) {
