@@ -873,7 +873,7 @@ a.ausglobe-title-menuItem:hover {
     font-weight: bolder;
 }
 
-#cesiumContainer .cesium-infoBox {
+.cesium-infoBox {
     top: 164px;
     right: 20px;
     border-radius: 0px;
@@ -884,23 +884,27 @@ a.ausglobe-title-menuItem:hover {
     font-weight: 300;
     color: white;
     box-shadow: 0 0 0 0;
+    z-index: 999;
 }
 
-#cesiumContainer .cesium-infoBox-body {
+.cesium-infoBox-body {
     max-height: 462px;
     font-family: "Open Sans", sans-serif;
     font-size: 14px;
     font-weight: 300;
 }
 
-#cesiumContainer .cesium-infoBox-title {
+.cesium-infoBox-title {
     background-color: black;
     font-size: 15px;
     font-weight: 600;
     color: white;
 }
 
-#cesiumContainer button.cesium-infoBox-camera {
+button.cesium-infoBox-camera {
     display: none;
 }
 
+.leaflet-container {
+    cursor: auto;
+}

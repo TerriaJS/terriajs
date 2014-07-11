@@ -15,6 +15,7 @@ var Cartesian3 = Cesium.Cartesian3;
 var Cartographic = Cesium.Cartographic;
 var CesiumMath = Cesium.Math;
 var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
+var Clock = Cesium.Clock;
 var ClockRange = Cesium.ClockRange;
 var Color = Cesium.Color;
 var combine = Cesium.combine;
@@ -25,10 +26,15 @@ var defined = Cesium.defined;
 var DynamicObject = Cesium.DynamicObject;
 var Ellipsoid = Cesium.Ellipsoid;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
+var GeographicProjection = Cesium.GeographicProjection;
+var CesiumEvent = Cesium.Event;
+var Rectangle = Cesium.Rectangle;
 var Fullscreen = Cesium.Fullscreen;
+var InfoBox = Cesium.InfoBox;
 var JulianDate = Cesium.JulianDate;
 var KeyboardEventModifier = Cesium.KeyboardEventModifier;
 var loadJson = Cesium.loadJson;
+var loadXML = Cesium.loadXML;
 var Material = Cesium.Material;
 var Matrix3 = Cesium.Matrix3;
 var Matrix4 = Cesium.Matrix4;
@@ -45,6 +51,7 @@ var Tween = Cesium.Tween;
 var Viewer = Cesium.Viewer;
 var viewerDynamicObjectMixin = Cesium.viewerDynamicObjectMixin;
 var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
+var WebMercatorProjection = Cesium.WebMercatorProjection;
 var when = Cesium.when;
 
 var knockout = require('knockout');
@@ -196,10 +203,11 @@ var AusGlobeViewer = function(geoDataManager) {
 
     this.webGlSupported = true;
     
+    var noWebGLMessage;
     var browser = $.browser;
 //    console.log(browser);
     if (browser.mozilla === true && browser.version === "30.0") {
-        var noWebGLMessage = new PopupMessage({
+        noWebGLMessage = new PopupMessage({
             container : document.body,
             title : 'FireFox version 30.0 detected',
             message : '\
@@ -213,7 +221,7 @@ There are known issues with this particular version of Firefox that make Nationa
     
     if (browser.msie === true && browser.version < "9.0") {
         browser.name = 'Internet Explorer';
-        var noWebGLMessage = new PopupMessage({
+        noWebGLMessage = new PopupMessage({
             container : document.body,
             title : 'Unsupported browser version detected',
             message : '\
@@ -224,7 +232,7 @@ There are known issues with this particular version of Firefox that make Nationa
 
     //catch problems 
     if (this.webGlSupported && !supportsWebgl()) {
-        var noWebGLMessage = new PopupMessage({
+        noWebGLMessage = new PopupMessage({
             container : document.body,
             title : 'WebGL not supported',
             message : '\
@@ -727,7 +735,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 if (Rectangle.contains(extent, pickedLocation)) {
                     var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
                     var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
-                    promises.push(provider.getFeatureInfo(imagery.x, imagery.y, imagery.level, pixelX, pixelY));
+                    promises.push(getWmsFeatureInfo(provider.url, provider.layers, extent, 256, 256, pixelX, pixelY, false));
                 }
             }
 
@@ -735,128 +743,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 return;
             }
 
-            var nextPromiseIndex = 0;
-
-            function waitForNextLayersResponse() {
-                if (nextPromiseIndex >= promises.length) {
-                    that.viewer.selectedObject = new DynamicObject('None');
-                    that.viewer.selectedObject.description = {
-                        getValue : function() {
-                            return 'No features found.';
-                        }
-                    };
-                    return;
-                }
-
-                when(promises[nextPromiseIndex++], function(result) {
-                    function findGoodIdProperty(properties) {
-                        for (var key in properties) {
-                            if (properties.hasOwnProperty(key) && properties[key]) {
-                                if (/name/i.test(key) || /title/i.test(key)) {
-                                    return properties[key];
-                                }
-                            }
-                        }
-
-                        return undefined;
-                    }
-
-                    function describe(properties) {
-                        var html = '<table class="cesium-geoJsonDataSourceTable">';
-                        for ( var key in properties) {
-                            if (properties.hasOwnProperty(key)) {
-                                var value = properties[key];
-                                if (defined(value)) {
-                                    if (typeof value === 'object') {
-                                        html += '<tr><td>' + key + '</td><td>' + describe(value) + '</td></tr>';
-                                    } else {
-                                        html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
-                                    }
-                                }
-                            }
-                        }
-                        html += '</table>';
-                        return html;
-                    }
-
-                    // Handle MapInfo MXP.  This is ugly.
-                    if (result instanceof XMLDocument) {
-                        var json = $.xml2json(result);
-                        var properties;
-                        if (json.FeatureCollection &&
-                            json.FeatureCollection.FeatureMembers && 
-                            json.FeatureCollection.FeatureMembers.Feature && 
-                            json.FeatureCollection.FeatureMembers.Feature.Val) {
-
-                            properties = {};
-                            result = {
-                                features : [
-                                    {
-                                        properties : properties
-                                    }
-                                ]
-                            };
-
-                            var vals = json.FeatureCollection.FeatureMembers.Feature.Val;
-                            for (var i = 0; i < vals.length; ++i) {
-                                properties[vals[i].ref] = vals[i].text;
-                            }
-                        } else if (json.FIELDS) {
-                            properties = {};
-                            result = {
-                                features : [
-                                    {
-                                        properties : properties
-                                    }
-                                ]
-                            };
-
-                            var fields = json.FIELDS;
-                            for (var field in fields) {
-                                if (fields.hasOwnProperty(field)) {
-                                    properties[field] = fields[field];
-                                }
-                            }
-                        }
-                    }
-
-                    if (!defined(result) || !defined(result.features) || result.features.length === 0) {
-                        waitForNextLayersResponse();
-                        return;
-                    }
-
-                    // Show information for the first selected feature.
-                    var feature = result.features[0];
-                    if (defined(feature)) {
-                        that.viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature.properties));
-                        var description = describe(feature.properties);
-                        that.viewer.selectedObject.description = {
-                            getValue : function() {
-                                return description;
-                            }
-                        };
-                    } else {
-                        that.viewer.selectedObject = new DynamicObject('None');
-                        that.viewer.selectedObject.description = {
-                            getValue : function() {
-                                return 'No features found.';
-                            }
-                        };
-                    }
-                }, function() {
-                    waitForNextLayersResponse();
-                });
-            }
-
-            waitForNextLayersResponse();
-
-            // Add placeholder information to the infobox so the user knows something is happening.
-            that.viewer.selectedObject = new DynamicObject('Loading...');
-            that.viewer.selectedObject.description = {
-                getValue : function() {
-                    return 'Loading WMS feature information...';
-                }
-            };
+            selectFeatures(promises, viewer);
         },
         ScreenSpaceEventType.LEFT_CLICK);
 
@@ -880,12 +767,38 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var bnds;
     var rect;
 
+    var that = this;
+
     if (!bCesium) {
 
         //create leaflet viewer
         var map = L.map('cesiumContainer', {
             zoomControl: false
         }).setView([-28.5, 135], 5);
+
+        // Hacky nonsense to let us use Cesium's InfoBox without actually using Cesium.
+        map.clock = new Clock();
+        map.dataSources = [];
+        map.dataSources.dataSourceAdded = new CesiumEvent();
+        map.dataSources.dataSourceRemoved = new CesiumEvent();
+        map.screenSpaceEventHandler = new ScreenSpaceEventHandler(map.getPanes().mapPane);
+        map.destroy = function() {};
+
+        map.infoBox = new InfoBox(document.body);
+        viewerDynamicObjectMixin(map);
+
+        this.map = map;
+
+        var ticker = function() {
+            if (that.map === map) {
+                map.clock.tick();
+                requestAnimationFrame(ticker);
+            } else {
+                console.log('done');
+            }
+        };
+
+        ticker();
 
         map.on("boxzoomend", function(e) {
             console.log(e.boxZoomBounds);
@@ -909,8 +822,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         //redisplay data
         this.map = map;
-        this.geoDataManager.setViewer({scene: undefined, map: map});
-        this.geoDataBrowser.viewModel.map = map;
 
         this.captureCanvas = function() {
             var that = this;
@@ -935,6 +846,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
                 }
             });
         };
+
+        map.on('click', function(e) {
+            selectFeatureLeaflet(that, e.latlng);
+        });
         
         //shut down existing cesium
         if (this.viewer !== undefined) {
@@ -951,6 +866,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.viewer.destroy();
             this.viewer = undefined;
         }
+
+        this.geoDataManager.setViewer({scene: undefined, map: map});
+        this.geoDataBrowser.viewModel.map = map;
+
         //TODO: set visualizer functions for GeoDataCollection
 
     }
@@ -959,7 +878,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.viewer = this._createCesiumViewer('cesiumContainer');
         this.scene = this.viewer.scene;
         this.frameChecker = new FrameChecker();
-        var that = this;
 
         // override the default render loop
         this.scene.base_render = this.scene.render;
@@ -1361,6 +1279,199 @@ function updateLegend(datavis) {
     var max_text = (val = datavis.dataset.getMaxVal()) === undefined ? 'undefined' : val.toString();
     document.getElementById('lgd_min_val').innerHTML = min_text;
     document.getElementById('lgd_max_val').innerHTML = max_text;
+}
+
+function getWmsFeatureInfo(baseUrl, layers, extent, width, height, i, j, useWebMercator) {
+    var url = baseUrl;
+    var indexOfQuestionMark = url.indexOf('?');
+    if (indexOfQuestionMark >= 0 && indexOfQuestionMark < url.length - 1) {
+        if (url[url.length - 1] !== '&') {
+            url += '&';
+        }
+    } else if (indexOfQuestionMark < 0) {
+        url += '?';
+    }
+
+    var srs;
+    var sw;
+    var ne;
+    if (useWebMercator) {
+        srs = 'EPSG:3857';
+        
+        var projection = new WebMercatorProjection();
+        sw = projection.project(Rectangle.getSouthwest(extent));
+        ne = projection.project(Rectangle.getNortheast(extent));
+    } else {
+        srs = 'EPSG:4326';
+        sw = new Cartesian3(CesiumMath.toDegrees(extent.west), CesiumMath.toDegrees(extent.south), 0.0);
+        ne = new Cartesian3(CesiumMath.toDegrees(extent.east), CesiumMath.toDegrees(extent.north), 0.0);
+    }
+
+    url += 'service=WMS&request=GetFeatureInfo&version=1.1.1&layers=' + layers + '&query_layers=' + layers + 
+           '&srs=' + srs + '&width=' + width + '&height=' + height + '&info_format=application/json' +
+           '&x=' + i + '&y=' + j + '&';
+
+
+    var bbox = sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y;
+    url += 'bbox=' + bbox + '&';
+
+    return when(loadJson(url), function(json) {
+        return json;
+    }, function (e) {
+        // If something goes wrong, try requesting XML instead of GeoJSON.  Then try to interpret it.
+        url = url.replace('info_format=application/json', 'info_format=text/xml');
+        return loadXML(url);
+    });
+}
+
+function selectFeatureLeaflet(viewer, latlng) {
+    var layers = viewer.geoDataManager.layers;
+
+    var pickedLocation = new Cartographic(CesiumMath.toRadians(latlng.lng), CesiumMath.toRadians(latlng.lat));
+    var pickedXY = viewer.map.latLngToContainerPoint(latlng, viewer.map.getZoom());
+    var bounds = viewer.map.getBounds();
+    var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
+
+    var promises = [];
+    for (var i = layers.length - 1; i >=0 ; --i) {
+        var layer = layers[i];
+        if (layer.type !== 'WMS') {
+            continue;
+        }
+
+        promises.push(getWmsFeatureInfo(layer.description.base_url, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
+    }
+
+    if (promises.length === 0) {
+        return;
+    }
+
+    selectFeatures(promises, viewer.map);
+}
+
+function selectFeatures(promises, viewer) {
+    var nextPromiseIndex = 0;
+
+    function waitForNextLayersResponse() {
+        if (nextPromiseIndex >= promises.length) {
+            viewer.selectedObject = new DynamicObject('None');
+            viewer.selectedObject.description = {
+                getValue : function() {
+                    return 'No features found.';
+                }
+            };
+            return;
+        }
+
+        when(promises[nextPromiseIndex++], function(result) {
+            function findGoodIdProperty(properties) {
+                for (var key in properties) {
+                    if (properties.hasOwnProperty(key) && properties[key]) {
+                        if (/name/i.test(key) || /title/i.test(key)) {
+                            return properties[key];
+                        }
+                    }
+                }
+
+                return undefined;
+            }
+
+            function describe(properties) {
+                var html = '<table class="cesium-geoJsonDataSourceTable">';
+                for ( var key in properties) {
+                    if (properties.hasOwnProperty(key)) {
+                        var value = properties[key];
+                        if (defined(value)) {
+                            if (typeof value === 'object') {
+                                html += '<tr><td>' + key + '</td><td>' + describe(value) + '</td></tr>';
+                            } else {
+                                html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+                            }
+                        }
+                    }
+                }
+                html += '</table>';
+                return html;
+            }
+
+            // Handle MapInfo MXP.  This is ugly.
+            if (result instanceof XMLDocument) {
+                var json = $.xml2json(result);
+                var properties;
+                if (json.FeatureCollection &&
+                    json.FeatureCollection.FeatureMembers && 
+                    json.FeatureCollection.FeatureMembers.Feature && 
+                    json.FeatureCollection.FeatureMembers.Feature.Val) {
+
+                    properties = {};
+                    result = {
+                        features : [
+                            {
+                                properties : properties
+                            }
+                        ]
+                    };
+
+                    var vals = json.FeatureCollection.FeatureMembers.Feature.Val;
+                    for (var i = 0; i < vals.length; ++i) {
+                        properties[vals[i].ref] = vals[i].text;
+                    }
+                } else if (json.FIELDS) {
+                    properties = {};
+                    result = {
+                        features : [
+                            {
+                                properties : properties
+                            }
+                        ]
+                    };
+
+                    var fields = json.FIELDS;
+                    for (var field in fields) {
+                        if (fields.hasOwnProperty(field)) {
+                            properties[field] = fields[field];
+                        }
+                    }
+                }
+            }
+
+            if (!defined(result) || !defined(result.features) || result.features.length === 0) {
+                waitForNextLayersResponse();
+                return;
+            }
+
+            // Show information for the first selected feature.
+            var feature = result.features[0];
+            if (defined(feature)) {
+                viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature.properties));
+                var description = describe(feature.properties);
+                viewer.selectedObject.description = {
+                    getValue : function() {
+                        return description;
+                    }
+                };
+            } else {
+                viewer.selectedObject = new DynamicObject('None');
+                viewer.selectedObject.description = {
+                    getValue : function() {
+                        return 'No features found.';
+                    }
+                };
+            }
+        }, function() {
+            waitForNextLayersResponse();
+        });
+    }
+
+    waitForNextLayersResponse();
+
+    // Add placeholder information to the infobox so the user knows something is happening.
+    viewer.selectedObject = new DynamicObject('Loading...');
+    viewer.selectedObject.description = {
+        getValue : function() {
+            return 'Loading WMS feature information...';
+        }
+    };
 }
 
 module.exports = AusGlobeViewer;
