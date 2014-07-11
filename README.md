@@ -1,7 +1,7 @@
 National Map
 ============
 
-The National Map is a web based application developed by the National ICT Australia as part of an initiative of Department of Communications and working closely with Geoscience Australia. It is developed on top of existing open source software Cesium and Leaflet with WebGL and Canvas support.
+The National Map is a web based application developed by the [National ICT Australia](http://www.nicta.com.au/) as part of an initiative of the Australian Department of Communications and working closely with Geoscience Australia. It is developed on top of existing open source software Cesium and Leaflet with WebGL and Canvas support.
 
 It is designed to:
 * Provide easy access to authoritative and other spatial data to government, business and public
