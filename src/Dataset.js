@@ -14,8 +14,7 @@ var EMPTY_OBJECT = {};
 var VarType = {LON: 0, LAT: 1, ALT: 2, TIME: 3, SCALAR: 4, ENUM: 5 };
 
 /**
-* @class Dataset is a container for table based datasets
-* @name Dataset
+* Dataset is a container for table based datasets
 *
 * @alias Dataset
 * @internalConstructor
@@ -33,8 +32,7 @@ var Dataset = function() {
 /**
 * Return the geographic extent of the dataset
 *
-* @memberof Dataset
-*
+* @returns {Object} The extent of the data points
 */
 Dataset.prototype.getExtent = function () {
     var minpos = [0, 0, 0];
@@ -49,24 +47,44 @@ Dataset.prototype.getExtent = function () {
     return Cesium.Rectangle.fromDegrees(minpos[0], minpos[1], maxpos[0], maxpos[1]);
 };
 
+/**
+* Return the minimum value
+*
+* @returns {Float} The minimum data value
+*/
 Dataset.prototype.getMinVal = function () {
     if (this._variables && this._varID[VarType.SCALAR]) {
         return this._variables[this._varID[VarType.SCALAR]].min;
     }
 };
 
+/**
+* Return the maximum value
+*
+* @returns {Float} The maximum data value
+*/
 Dataset.prototype.getMaxVal = function () {
     if (this._variables && this._varID[VarType.SCALAR]) {
         return this._variables[this._varID[VarType.SCALAR]].max;
     }
 };
 
+/**
+* Return the minimum time
+*
+* @returns {Object} The minimum time value in Cesium JulianTime
+*/
 Dataset.prototype.getMinTime = function () {
     if (this._variables && this._varID[VarType.TIME]) {
         return this._variables[this._varID[VarType.TIME]].time_var.min;
     }
 };
 
+/**
+* Return the maximum time
+*
+* @returns {Object} The maximum time value in Cesium JulianTime
+*/
 Dataset.prototype.getMaxTime = function () {
     if (this._variables && this._varID[VarType.TIME]) {
         return this._variables[this._varID[VarType.TIME]].time_var.max;
@@ -77,8 +95,7 @@ Dataset.prototype.getMaxTime = function () {
 /**
 * Get a list of available scalar and enum type variables
 *
-* @memberof Dataset
-*
+* @returns {Array} An array of variables
 */
 Dataset.prototype.getVarList = function () {
     var ret = [];
@@ -149,23 +166,21 @@ Dataset.prototype._processVariables = function () {
 /**
 * Load a JSON object into a dataset
 *
-* @memberof Dataset
-* NOTE: result is now the same format as returned by d3.csv.parseRows
-*
+* @param {Object} jsonTable Table data in JSON format.
 */
-Dataset.prototype.loadJson = function (result) {
+Dataset.prototype.loadJson = function (jsonTable) {
 
     var dataObject = { positions: [], data_values: [] };
     this._dataShape = undefined;
 
     //create the variable set
     this._variables = {};
-    var columnNames = result[0];
+    var columnNames = jsonTable[0];
     for (var c = 0; c < columnNames.length; c++) {
         var name = columnNames[c];
         var variable = new Variable();
-        for (var i = 1; i < result.length; ++i) {
-            variable.vals.push(result[i][c]);
+        for (var i = 1; i < jsonTable.length; ++i) {
+            variable.vals.push(jsonTable[i][c]);
         }
         this._variables[name] = variable;
     }
@@ -185,20 +200,22 @@ Dataset.prototype.loadJson = function (result) {
 /**
 * Load text into a dataset
 *
-* @memberof Dataset
+* @param {String} text Text to load as dataset
 *
 */
 Dataset.prototype.loadText = function (text) {
-    var result = $.csv.toArrays(text, {
+    var jsonTable = $.csv.toArrays(text, {
             onParseValue: $.csv.hooks.castToScalar
         });
-    this.loadJson(result);
+    this.loadJson(jsonTable);
 };
 
 /**
-* Load a dataset - returns header and optionally variable data
+* Load a dataset
 *
-* @memberof Dataset
+* @param {Object} description Object with the following properties:
+* @param {String} [description.url] The url of the dataset
+* @param {String} [description.variable] The initial variable to show
 *
 */
 Dataset.prototype.loadUrl = function (description) {
@@ -216,13 +233,19 @@ Dataset.prototype.loadUrl = function (description) {
     this._loadingData = true;
     var that = this;
     
-    Cesium.when(Cesium.loadText(this._url), function (text) { that.loadText(text); });
+    Cesium.loadText(this._url).then( function (text) { 
+        that.loadText(text); 
+    }, 
+    function(err) { 
+        alert('HTTP Error '+ err.statusCode+' - '+err.response);
+    });
 };
 
 /**
 * Set the current variable
 *
-* @memberof Dataset
+* @param {Object} description Object with the following properties:
+* @param {String} [description.variable] The initial variable to show
 *
 */
 Dataset.prototype.setCurrentVariable = function (description) {
@@ -241,7 +264,7 @@ function _float_equals(a, b) { return (Math.abs((a - b) / b) < 0.00001); }
 /**
 * Get the current variable
 *
-* @memberof Dataset
+* @returns {Object} the current variable
 *
 */
 Dataset.prototype.getCurrentVariable = function () {
@@ -252,8 +275,10 @@ Dataset.prototype.getCurrentVariable = function () {
 /**
 * Get a data value
 *
-* @memberof Dataset
+* @param {String} Variable name
+* @param {Integer} Index in variable values
 *
+* @returns {Float} Value for the variable at that index
 */
 Dataset.prototype.getDataValue = function (var_name, idx) {
     var variable = this._variables[var_name];
@@ -272,8 +297,9 @@ Dataset.prototype.getDataValue = function (var_name, idx) {
 /**
 * Get all of the data values
 *
-* @memberof Dataset
+* @param {String} Variable name
 *
+* @returns {Array} Array of values for the variable
 */
 Dataset.prototype.getDataValues = function (var_name) {
     if (this._variables[var_name] === undefined || this._variables[var_name].vals === undefined) {
@@ -286,17 +312,18 @@ Dataset.prototype.getDataValues = function (var_name) {
 /**
 * Return a boolean as to whether this is a nodata item
 *
-* @memberof Dataset
+* @param {Float} ptVal The value to check
 *
+* @returns {Boolean} True if this is NoData
 */
-Dataset.prototype.isNoData = function (pt_val) {
-    return _float_equals(this._nodataVal, pt_val);
+Dataset.prototype.isNoData = function (ptVal) {
+    return _float_equals(this._nodataVal, ptVal);
 };
 
 /**
 * Get a set of data points and positions for the current variable
 *
-* @memberof Dataset
+* @param {Integer} maxPts The maximum number of points to return
 *
 */
 Dataset.prototype.getPointList = function (maxPts) {
@@ -323,8 +350,6 @@ Dataset.prototype.getPointList = function (maxPts) {
 
 /**
 * Destroy the object and release resources
-*
-* @memberof Dataset
 *
 */
 Dataset.prototype.destroy = function () {

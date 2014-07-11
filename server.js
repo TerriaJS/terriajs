@@ -169,7 +169,7 @@ if (cluster.isMaster) {
 
         //If you want to run a CORS proxy to data source, remove this section
         if (!proxyAllowedHost(remoteUrl.host)) {
-            res.send(400, 'Host is not in list of allowed hosts.');
+            res.send(400, 'Host is not in list of allowed hosts: ' + remoteUrl.host);
             return;
         }
  

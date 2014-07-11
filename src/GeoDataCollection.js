@@ -7,6 +7,8 @@ var TableDataSource = require('./TableDataSource');
 var GeoData = require('./GeoData');
 var readText = require('./readText');
 
+var PopupMessage = require('./viewer/PopupMessage');
+
 var defaultValue = Cesium.defaultValue;
 var defined = Cesium.defined;
 var DeveloperError = Cesium.DeveloperError;
@@ -15,8 +17,14 @@ var KmlDataSource = Cesium.KmlDataSource;
 var when = Cesium.when;
 
 /**
-* @class GeoDataCollection is a collection of geodata instances
-* @name GeoDataCollection
+* This class is loosely based on the cesium DataSource/DataSourceCollection
+* model for feature data loading or converting to load each dataset as a
+* GeoJsonDataCollection in Cesium or a GeoJson Layer in Leaflet.  
+* 
+* The WMS data, the url is passed to the Cesium and Leaflet WMS imagery layers.
+*
+* This also supports a TableDataSourceCollection which will be an addition to
+* Cesium.
 *
 * @alias GeoDataCollection
 * @internalConstructor
@@ -45,44 +53,31 @@ var GeoDataCollection = function() {
     
     //load list of available services for National Map
     this.services = [];
-    
 };
 
 
 /**
-* Set the viewer to use with the geodata collection
-* TODO: Change this to use visualizers instead of embedded code
+* Set the viewer to use with the geodata collection.
 *
-* @memberof GeoDataCollection
-*
+* @param {Object} options Object with the following properties:
+* @param {Object} [options.scene] Set to Cesium Viewer scene object if Cesium Viewer.
+* @param {Object} [options.map] Set to Leaflet map object if Leaflet Viewer.
 */
-GeoDataCollection.prototype.setViewer = function(obj) {
+GeoDataCollection.prototype.setViewer = function(options) {
       //If A cesium scene present then this is in cesium globe
-    this.scene = obj.scene;
-    this.map = obj.map;
+    this.scene = options.scene;
+    this.map = options.map;
 
     if (this.scene) {
         this.imageryLayersCollection = this.scene.globe.imageryLayers;
     }
-    this.ViewerChanged.raiseEvent(this, obj);
+    this.ViewerChanged.raiseEvent(this, options);
     
     //re-request all the layers on the new map
     for (var i = 0; i < this.layers.length; i++) {
         this.layers[i].skip = true;
         this.sendLayerRequest(this.layers[i]);
     }
-};
-
-
-/**
-* Package up a share request and send an event
-*
-* @memberof GeoDataCollection
-*
-*/
-GeoDataCollection.prototype.setShareRequest = function(obj) {
-    var request = this.getShareRequest(obj);
-    this.ShareRequest.raiseEvent(this, request);
 };
 
 
@@ -115,11 +110,21 @@ function isFeatureLayer(collection, layer) {
     }
 }
 
+
+function loadErrorResponse(err) {
+    var msg = new PopupMessage({
+        container : document.body,
+        title : 'HTTP Error '+ err.statusCode,
+        message : err.response
+    });
+}
+
 /**
 * Add a new geodata item
 *
-* @memberof GeoDataCollection
+* @param {Object} layer The layer to move.
 *
+* @returns {Object} The new layer added to the collection.
 */
 GeoDataCollection.prototype.add = function(layer) {
     if (layer.skip) {
@@ -258,20 +263,20 @@ GeoDataCollection.prototype.moveDown = function(layer) {
 };
 
 /**
-* Get a geodata item based on an id (index)
+* Get a geodata item based on an id.
 *
-* @memberof GeoDataCollection
+* @param {Integer} id id of the layer to return
 *
+* @returns {Object} A layer from the collection.
 */
 GeoDataCollection.prototype.get = function(id) {
     return this.layers[id];
 };
 
 /**
-* Remove a geodata item based on an id (index)
+* Remove a geodata item based on an id
 *
-* @memberof GeoDataCollection
-*
+* @param {Integer} id id of the layer to return
 */
 GeoDataCollection.prototype.remove = function(id) {
     var layer = this.get(id);
@@ -332,7 +337,7 @@ GeoDataCollection.prototype.show = function(layer, val) {
 /**
  * Adds a set of services to the available GeodataCollection services.
  *
- * @param {Object} an array of JSON service objects to add to the list.
+ * @param {Object} services An array of JSON service objects to add to the list.
  *
  */
 GeoDataCollection.prototype.addServices = function(services) {
@@ -358,6 +363,7 @@ GeoDataCollection.prototype.getServices = function() {
 // -------------------------------------------
 // Handle loading and sharing visualizations
 // -------------------------------------------
+//stringify and remove cyclical links in the layers
 GeoDataCollection.prototype._stringify = function() {
     var str_layers = [];
     for (var i = 0; i < this.layers.length; i++) {
@@ -387,6 +393,7 @@ GeoDataCollection.prototype._parseObject = function(obj) {
     }
 };
 
+// Parse the string back into a layer collection
 GeoDataCollection.prototype._parseLayers = function(str_layers) {
     var layers = JSON.parse(str_layers);
     var obj_layers = [];
@@ -406,10 +413,10 @@ GeoDataCollection.prototype._parseLayers = function(str_layers) {
 
 /**
  * Loads a GeoDataCollection based on the intial url used to launch it
+ *  supports the following query params on the url: data_url, vis_url, vis_str
  *
  * @param {Object} url The url to be processed.
  *
- * @returns {Promise} a promise that will resolve when the CZML is processed.
  */
 GeoDataCollection.prototype.loadInitialUrl = function(url) {
     //URI suport for over-riding uriParams - put presets in uri_params
@@ -439,7 +446,7 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     //Initialize the view based on vis_id if passed in url
     if (visUrl) {
         //call to server to get json record
-        Cesium.when(Cesium.loadJson(visUrl), function(obj) {
+        Cesium.loadJson(visUrl).then( function(obj) {
                 //capture an id if it is passed
             that.visID = obj.id;
             if (obj.camera !== undefined) {
@@ -454,6 +461,8 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
             for (var i = 0; i < layers.length; i++) {
                 that.sendLayerRequest(layers[i]);
             }
+        }, function(err) {
+            loadErrorResponse(err);
         });
     }
     else if (visStr) {
@@ -479,11 +488,10 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
 };
 
 /**
- * Loads a GeoDataCollection based on the  url, replacing any existing data.
+ * Loads a data file based on the  url
  *
  * @param {Object} url The url to be processed.
  *
- * @returns {Promise} a promise that will resolve when the url is processed.
  */
 GeoDataCollection.prototype.loadUrl = function(url, format) {
     var that = this;
@@ -495,11 +503,15 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
             Cesium.loadBlob(url).then( function(blob) {
                 blob.name = url;
                 that.addFile(blob);
+            }, function(err) {
+                loadErrorResponse(err);
             });
         } else {
             Cesium.loadText(url).then(function (text) { 
                 that.zoomTo = true;
                 that.loadText(text, url, format);
+            }, function(err) {
+                loadErrorResponse(err);
             });
         }
     }
@@ -507,9 +519,26 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
 
 
 /**
+* Package up a share request and send an event
+*
+* @param {Object} options Object with the following properties:
+* @param {Object} [options.image] An image dataUrl with the current view.
+* @param {Object} [options.camera] Current camera settings (just extent for now)
+*/
+GeoDataCollection.prototype.setShareRequest = function(options) {
+    var request = this.getShareRequest(options);
+    this.ShareRequest.raiseEvent(this, request);
+};
+
+
+/**
 * Get a share request object based on the description passed
 *
-* @memberof GeoDataCollection
+* @param {Object} description Object with the following properties:
+* @param {Object} [description.image] An image dataUrl with the current view.
+* @param {Object} [description.camera] Current camera settings (just extent for now)
+*
+* @returns {Object} A request object
 *
 */
 GeoDataCollection.prototype.getShareRequest = function( description ) {
@@ -526,6 +555,14 @@ GeoDataCollection.prototype.getShareRequest = function( description ) {
     return request;
 };
 
+
+/**
+* Given a share request object, turn it into a valid url to launch in viewer
+*
+* @param {Object} request Object containing the share request
+*
+* @returns {Url} A url that will launch in the viewer
+*/
 GeoDataCollection.prototype.getShareRequestURL = function( request ) {
     var img = request.image;
     request.image = undefined;
@@ -539,6 +576,7 @@ GeoDataCollection.prototype.getShareRequestURL = function( request ) {
 // -------------------------------------------
 // Handle data sources from text
 // -------------------------------------------
+// Derive a format from a url
 function getFormatFromUrl(url) {
     if (url === undefined) {
         return;
@@ -558,10 +596,11 @@ function getFormatFromUrl(url) {
 }
 
 /**
-* Determine if a data format is natively supported based on the extension
+* Determine if a data format is natively supported based on the format derived from the srcname
 *
-* @memberof GeoDataCollection
+* @param {String} srcname Name of data file
 *
+* @returns {Boolean} true if supported natively, false otherwise
 */
 GeoDataCollection.prototype.formatSupported = function(srcname) {
     var supported = ["CZML", "GEOJSON", "GJSON", "TOPOJSON", "JSON", "TOPOJSON", "KML", "KMZ", "GPX", "CSV"];
@@ -578,11 +617,12 @@ GeoDataCollection.prototype.formatSupported = function(srcname) {
 /**
 * Load text as a geodata item
 *
-* @memberof GeoDataCollection
+ * @param {String} text The text to be processed.
+ * @param {String} srcname The text file name to get the format extension from.
+ * @param {String} [format] Format override for dataset
+ * @param {Object} [layer] Layer object if that already exists.
 *
- * @param {string} text The text to be processed.
- * @param {string} srcname The text file name to get the format extension from.
- *
+* @returns {Boolean} true if processed
 */
 GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     var DataSource;
@@ -613,17 +653,17 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
             format === "GJSON" ||
             format === "JSON" ||
             format === "TOPOJSON") {
-        this.addGeoJsonLayer(JSON.parse(text), srcname, layer);
+        this.addGeoJsonLayer(JSON.parse(text), layer);
     } 
         //Convert in browser using toGeoJSON https://github.com/mapbox/togeojson    
     else if (format === "KML") {
         layer = new GeoData({ name: srcname, type: 'DATA' });
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
-        this.addGeoJsonLayer(toGeoJSON.kml(dom), srcname, layer);
+        this.addGeoJsonLayer(toGeoJSON.kml(dom), layer);
     } 
     else if (format === "GPX") {
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
-        this.addGeoJsonLayer(toGeoJSON.gpx(dom), srcname, layer);
+        this.addGeoJsonLayer(toGeoJSON.gpx(dom), layer);
     } 
         //Handle table data using TableDataSource plugin        
     else if (format === "CSV") {
@@ -682,6 +722,7 @@ function _EsriRestJson2GeoJson(obj) {
     return obj;
 }
 
+//Utility function to change esri gml positions to geojson positions
 function _gml2coord(posList) {
     var pnts = posList.split(/[ ,]+/);
     var coords = [];
@@ -691,6 +732,7 @@ function _gml2coord(posList) {
     return coords;
 }
 
+//Utility function to convert esri gml based feature to geojson
 function _convertFeature(feature, geom_type) {
     var newFeature = {type: "Feature"};
     var pts = (geom_type === 'Point') ? _gml2coord(feature.pos)[0] : _gml2coord(feature.posList);
@@ -699,6 +741,7 @@ function _convertFeature(feature, geom_type) {
 }           
             
             
+//Utility function to convert esri gml to geojson
 function _EsriGml2GeoJson(obj) {
     var newObj = {type: "FeatureCollection", crs: {"type":"EPSG","properties":{"code":"4326"}}, features: []};
 
@@ -759,7 +802,6 @@ function filterValue(obj, prop, func) {
 // -------------------------------------------
 // Connect to OGC Data Sources
 // -------------------------------------------
-
 GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     
@@ -767,7 +809,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
         request = corsProxy.getURL(request);
     }
 
-    Cesium.when(Cesium.loadText(request), function (text) {
+    Cesium.loadText(request).then( function (text) {
         //convert to geojson
         var obj;
         if (text[0] === '{') {
@@ -788,7 +830,9 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
                  }
             }
         }
-        that.addGeoJsonLayer(obj, layer.name+'.geojson', layer);
+        that.addGeoJsonLayer(obj, layer);
+    }, function(err) {
+        loadErrorResponse(err);
     });
 };
 
@@ -860,7 +904,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
 GeoDataCollection.prototype._viewTable = function(request, layer) {
     var that = this;
         //load text here to let me control functions called after
-    Cesium.when(Cesium.loadText(request), function (text) {
+    Cesium.loadText(request).then( function (text) {
         var tableDataSource = new TableDataSource();
         tableDataSource.loadText(text);
         if (that.map === undefined) {
@@ -874,8 +918,10 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
             for (var i = 0; i < pointList.length; i++) {
                 dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
             }
-            that.addGeoJsonLayer(dispPoints, layer.name+'.geojson', layer);
+            that.addGeoJsonLayer(dispPoints, layer);
         }
+    }, function(err) {
+        loadErrorResponse(err);
     });
 };
 
@@ -885,12 +931,19 @@ GeoDataCollection.prototype._viewData = function(request, layer) {
     var format = getFormatFromUrl(layer.url);
     
         //load text here to let me control functions called after
-    Cesium.when(Cesium.loadText(request), function (text) {
+    Cesium.loadText(request).then (function (text) {
         that.loadText(text, layer.name, format, layer);
+    }, function(err) {
+        loadErrorResponse(err);
     });
 };
 
-// Build a layer based on the description
+/**
+* Determine if a data format is natively supported based on the format derived from the srcname
+*
+* @param {Object} layer The layer object to make into a visible layer.
+*
+*/
 GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     var request = layer.url;
 //    console.log('LAYER REQUEST:',request);
@@ -917,8 +970,14 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
 /**
 * Build a query to get feature from service
 *
-* @memberof GeoDataCollection
-*
+* @param {Object} description Object with the following properties:
+* @param {String} description.Name Name of feature.
+* @param {Url} description.base_url The url for the service
+* @param {String} description.type The identifier of the service
+* @param {String} [description.version] The version of the service to use
+* @param {String} [description.esri] If this is an ESRI OGC service
+* @param {Integer} [description.count] Maximum number of features to return
+* @param {Object} [description.extent] Extent filter for feature request
 */
 GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
     console.log('Getting ', description.Name);
@@ -1022,6 +1081,7 @@ function _getCollectionFromServiceLayers(layers, description) {
     console.log(JSON.stringify(collection));
 }
 
+//Utility function to flatten layer hierarchy
 function _recurseLayerList(layer_src, layers) {
     if (!(layer_src instanceof Array)) {
         layer_src = [layer_src];
@@ -1042,8 +1102,17 @@ function _recurseLayerList(layer_src, layers) {
 /**
 * Parse through capabilities to get possible layers
 *
-* @memberof GeoDataCollection
+* @param {String} text The text returned from the Capabilities request.
+* @param {Object} description Object with the following properties:
+* @param {String} description.Name Name of feature.
+* @param {Url} description.base_url The url for the service
+* @param {String} description.type The identifier of the service
+* @param {String} [description.version] The version of the service to use
+* @param {String} [description.esri] If this is an ESRI OGC service
+* @param {Integer} [description.count] Maximum number of features to return
+* @param {Object} [description.extent] Extent filter for feature request
 *
+* @returns {Array} An array of layer descripters from the service
 */
 GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, description) {
     var json_gml;
@@ -1123,8 +1192,13 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 * Get capabilities from service for WMS, WFS and REST
 *  This also include GME and ESRI backends via their version of WMS/WFS
 *
-* @memberof GeoDataCollection
-*
+* @param {Object} description Object with the following properties:
+* @param {Url} description.base_url The url for the service
+* @param {String} description.type The identifier of the service
+* @param {Boolean} description.proxy True if a proxy is necessary
+* @param {String} description.username Username for password authenticated services
+* @param {String} description.password Password for password authenticated services
+* @param {Function} callback Function to carry out at the successful completion of the request
 */
 GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     var request;
@@ -1147,9 +1221,11 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
 
     var that = this;
-    Cesium.when(Cesium.loadText(request, undefined, description.username, description.password), function(text) {
+    Cesium.loadText(request, undefined, description.username, description.password).then ( function(text) {
         that.handleCapabilitiesRequest(text, description);
         callback(description);
+    }, function(err) {
+        loadErrorResponse(err);
     });
 };
 
@@ -1161,9 +1237,9 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
 /**
 * Get the geographic extent of a datasource
 *
-* @memberof GeoDataCollection
-* TODO: use Availability to determine time range and then use to getValues
+* @param {Object} dataSource Cesium.dataSource object
 *
+* @returns {Object} A Cesium.extent object bounding the data points
 */
 function getDataSourceExtent(dataSource) {
     var collection = dataSource.dynamicObjects;
@@ -1230,6 +1306,7 @@ function setCesiumReprojectFunc(code) {
 }
 */
 
+// Function to pass to reproject function
 function pntReproject(coordinates, id) {
     var source = new proj4.Proj(proj4_epsg[id]);
     var dest = new proj4.Proj('EPSG:4326');
@@ -1259,6 +1336,8 @@ function addProj4Text(code) {
     Cesium.loadText(url).then(function (proj4Text) {
         console.log('Adding new string for ', code, ': ', proj4Text, ' before loading datasource');
         proj4_epsg[code] = proj4Text;
+    }, function(err) {
+        loadErrorResponse(err);
     });
 }
 
@@ -1267,6 +1346,7 @@ function supportedProjection(code) {
     return proj4_epsg.hasOwnProperty(code);
 }
 
+// Reproject a point list based on the supplied crs code
 function reprojectPointList(pts, code) {
     if (!(pts[0] instanceof Array)) {
         return pntReproject(pts, code);  //point
@@ -1278,6 +1358,7 @@ function reprojectPointList(pts, code) {
     return pts_out;
 }
 
+// Reproject a GeoJson based on the supplied crs code
 function reprojectGeoJSON(obj, crs_code) {
     filterValue(obj, 'coordinates', function(obj, prop) { obj[prop] = filterArray(obj[prop], function(pts) {
             return reprojectPointList(pts, crs_code);
@@ -1286,9 +1367,7 @@ function reprojectGeoJSON(obj, crs_code) {
     obj.crs.properties.code = '4326';
 }
 
-// -------------------------------------------
 // Reduce the resolution of a point list in degrees
-// -------------------------------------------
 function reducePointList(pts, epsilon, limit) {
     if (!(pts[0] instanceof Array)) {
         return pts;  //point
@@ -1368,6 +1447,7 @@ var point_palette = {
 };
 
 
+//Get a random color for the data based on the passed seed (usually dataset name)
 function getRandomColor(palette, seed) {
     if (seed !== undefined) {
         if (typeof seed === 'string') {
@@ -1382,6 +1462,7 @@ function getRandomColor(palette, seed) {
     return Cesium.Color.fromRandom(palette);
 }
 
+//Convert a color object into Cesium.Color object
 function getCesiumColor(clr) {
     if (clr instanceof Cesium.Color) {
         return clr;
@@ -1393,13 +1474,14 @@ function getCesiumColor(clr) {
 
 
 /**
-* Add a GeoJson object as a geodata datasource
+* Add a GeoJson object as a geodata datasource layer
 *
-* @memberof GeoDataCollection
-* TODO: use Availability to determine time range and then use to getValues
+ * @param {Object} geojson The GeoJson object to add
+ * @param {Object} [layer] The layer to add if it already exists
 *
+ * @returns {Object} layer The layer that wa added
 */
-GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
+GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     //set default layer styles
     if (layer.style === undefined) {
         layer.style = {line: {}, point: {}, polygon: {}};
@@ -1445,7 +1527,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     polygon.material = material;
     
    //Reprojection and downsampling
-    var crs_code = getCrsCode(obj);
+    var crs_code = getCrsCode(geojson);
     if (crs_code !== '' && crs_code !== 'EPSG:4326') {
         if (!supportedProjection(crs_code)) {
 //            addProj4Text(code); // post POC
@@ -1453,16 +1535,16 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
             return;
         }
         else {
-            reprojectGeoJSON(obj, crs_code);
+            reprojectGeoJSON(geojson, crs_code);
         }
     }
 
-    //downsample object if huge
-    _downsampleGeoJSON(obj);
+    //try to downsample object if huge
+    _downsampleGeoJSON(geojson);
     
     if (this.map === undefined) {
             //create the object
-        newDataSource.load(obj);
+        newDataSource.load(geojson);
         this.dataSourceCollection.add(newDataSource);
             //add it as a layer
         layer.dataSource = newDataSource;
@@ -1493,7 +1575,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
         });
 */
         // GeoJSON
-        layer.primitive = L.geoJson(obj, {
+        layer.primitive = L.geoJson(geojson, {
             style: style,
             pointToLayer: function (feature, latlng) {
                 return L.circleMarker(latlng, geojsonMarkerOptions);
@@ -1503,6 +1585,13 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(obj, srcname, layer) {
     return this.add(layer);
 };
 
+/**
+* Determine if a proxy should be used based on the url
+*
+* @param {Url} url Url of the data item
+*
+* @returns {Boolean} true if should proxy
+*/
 GeoDataCollection.prototype.shouldUseProxy = function(url) {
     if (!this._alwaysUseProxy) {
         return false;
@@ -1512,6 +1601,13 @@ GeoDataCollection.prototype.shouldUseProxy = function(url) {
     return true;
 };
 
+
+/**
+* Add a file object to the layers
+*
+* @param {Object} file A javascript file object
+*
+*/
 GeoDataCollection.prototype.addFile = function(file) {
     var that = this;
 
@@ -1538,7 +1634,7 @@ GeoDataCollection.prototype.addFile = function(file) {
         if (file.size > 1000000) {
             alert('File is too large to send to conversion service.  Click here for alternative file conversion options.');
         }
-          //TODO: check against list of support extensions
+          //TODO: check against list of support extensions to avoid unnecessary forwarding
         else {
             if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
                 return;
