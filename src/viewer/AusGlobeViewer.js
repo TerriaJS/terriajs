@@ -781,7 +781,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.dataSources = [];
         map.dataSources.dataSourceAdded = new CesiumEvent();
         map.dataSources.dataSourceRemoved = new CesiumEvent();
-        map.screenSpaceEventHandler = new ScreenSpaceEventHandler(map.getPanes().mapPane);
+        map.screenSpaceEventHandler = {
+            setInputAction : function() {},
+            remoteInputAction : function() {}
+        };
         map.destroy = function() {};
 
         map.infoBox = new InfoBox(document.body);
