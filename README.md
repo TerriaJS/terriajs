@@ -16,11 +16,3 @@ It is still very much proof of concept application, with revisions and releases 
 
 Check the [wiki](https://github.com/NICTA/ausglobe/wiki) for 
 more information about National Map and how to build and run it.
-
-#### From Git Repository ####
-* Log in to github.com
-* Fork the [nationalmap](https://github.com/NICTA/nationalmap.git) repo into your personal github account using the github UI.
-* Clone your forks locally so data is inside subspace at root level e.g.
-
-
-
