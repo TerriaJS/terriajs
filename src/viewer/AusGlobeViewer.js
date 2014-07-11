@@ -736,7 +736,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 if (Rectangle.contains(extent, pickedLocation)) {
                     var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
                     var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
-                    promises.push(getWmsFeatureInfo(provider.url, provider.layers, extent, 256, 256, pixelX, pixelY, false));
+                    promises.push(getWmsFeatureInfo(provider.url, defined(provider.proxy), provider.layers, extent, 256, 256, pixelX, pixelY, false));
                 }
             }
 
@@ -1285,7 +1285,7 @@ function updateLegend(datavis) {
     document.getElementById('lgd_max_val').innerHTML = max_text;
 }
 
-function getWmsFeatureInfo(baseUrl, layers, extent, width, height, i, j, useWebMercator) {
+function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, j, useWebMercator) {
     var url = baseUrl;
     var indexOfQuestionMark = url.indexOf('?');
     if (indexOfQuestionMark >= 0 && indexOfQuestionMark < url.length - 1) {
@@ -1319,6 +1319,10 @@ function getWmsFeatureInfo(baseUrl, layers, extent, width, height, i, j, useWebM
     var bbox = sw.x + ',' + sw.y + ',' + ne.x + ',' + ne.y;
     url += 'bbox=' + bbox + '&';
 
+    if (useProxy) {
+        url = corsProxy.getURL(url);
+    }
+
     return when(loadJson(url), function(json) {
         return json;
     }, function (e) {
@@ -1343,7 +1347,7 @@ function selectFeatureLeaflet(viewer, latlng) {
             continue;
         }
 
-        promises.push(getWmsFeatureInfo(layer.description.base_url, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
+        promises.push(getWmsFeatureInfo(layer.description.base_url, layer.description.proxy, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
     }
 
     if (promises.length === 0) {
