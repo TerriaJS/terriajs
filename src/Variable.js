@@ -80,8 +80,6 @@ function _swapDateFormat(v) {
 /**
 * Convert input time variable to Cesium Time variable
 *
-* @memberof Variable
-*
 */
 Variable.prototype.processTimeVar = function () {
     if (this.type !== VarType.TIME) {
@@ -168,8 +166,6 @@ Variable.prototype.processTimeVar = function () {
 /**
 * Convert input enum variable to values and enum_list
 *
-* @memberof Variable
-*
 */
 Variable.prototype.processEnumVar = function () {
     if (this.type !== VarType.ENUM) {
@@ -196,7 +192,7 @@ Variable.prototype.processEnumVar = function () {
 /**
 * Based on variable name, guess what the VarType should be
 *
-* @memberof Variable
+* @param {String} name Make an initial guess at the variable type based on its name
 *
 */
 Variable.prototype.guessVarType = function (name) {
@@ -231,8 +227,6 @@ Variable.prototype.guessVarType = function (name) {
 
 /**
 * Destroy the object and release resources
-*
-* @memberof Variable
 *
 */
 Variable.prototype.destroy = function () {

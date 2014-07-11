@@ -5,12 +5,19 @@ var defaultValue = Cesium.defaultValue;
 
 
 /**
-* @class GeoData is a container for generic geodata
-* @name GeoData
+* This class is container for Geobased data set
 *
 * @alias GeoData
-* @internalConstructor
 * @constructor
+*
+* @param {Object} [description] Object with the following properties:
+* @param {String} [description.name] Name of geo data.
+* @param {Boolean} [description.show] Display state for data
+* @param {String} [description.type] The identifier of the service
+* @param {Object} [description.primitive] The map viewer display primitive to use
+* @param {Object} [description.extent] Extent filter for feature request
+* @param {Url} [description.base_url] The url for the service
+* @param {Object} [description.style] Display settings for the data
 */
 var GeoData = function(description) {
     this.name = defaultValue(description.name, 'New Item');
