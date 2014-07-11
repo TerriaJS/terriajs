@@ -45,7 +45,8 @@ function proxyAllowedHost(host) {
         'landgate.wa.gov.au',
         'bom.gov.au',
         'ga.gov.au',
-        'communications.gov.au'
+        'communications.gov.au',
+        'tas.gov.au'
     ];
     //check that host is from one of these domains
     for (var i = 0; i < allowedDomain.length; i++) {
