@@ -69,7 +69,7 @@ var SharePanel = require('./SharePanel');
 var TitleWidget = require('./TitleWidget');
 
 //use our own bing maps key
-BingMapsApi.defaultKey = 'Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk';
+BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
@@ -816,7 +816,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }
 
         //Bing Maps Layer by default
-        var layer = new L.BingLayer('Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk');
+        var layer = new L.BingLayer(BingMapsApi.getKey());
 //            var layer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer');
         map.addLayer(layer);
 
