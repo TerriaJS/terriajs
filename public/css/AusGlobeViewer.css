@@ -884,7 +884,7 @@ a.ausglobe-title-menuItem:hover {
     font-weight: 300;
     color: white;
     box-shadow: 0 0 0 0;
-    z-index: 5000;
+    z-index: 999;
 }
 
 .cesium-infoBox-body {
