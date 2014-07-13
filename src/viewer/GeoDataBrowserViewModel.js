@@ -255,6 +255,9 @@ var GeoDataBrowserViewModel = function(options) {
             var message = 'This imagery layer is not yet supported in Leaflet.';
             alert(message);
             return;
+              //This call works, but since the tiles are in graghic instead of spherical mercator only see western hemisphere
+//        this.mapBaseLayer = new L.tileLayer('http://cesiumjs.org/tilesets/imagery/naturalearthii/{z}/{x}/{y}.jpg', 
+//        {tms: true});
         }
         
         removeBaseLayer();
