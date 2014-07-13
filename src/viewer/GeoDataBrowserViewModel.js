@@ -468,15 +468,15 @@ var GeoDataBrowserViewModel = function(options) {
     var nowViewingMapping = {
         create : function(options) {
             var description = options.data.description;
-                console.log(description);
             if (!defined(description)) {
                 var base_url = options.data.url;
                 var idx = base_url.indexOf('?');
                 if (idx !== -1) {
-                    base_url = base_url.substring(0,idx-1);
+                    base_url = base_url.substring(0,idx);
                 }
                 description = {
                     Title : options.data.name,
+                    Name : options.data.name,
                     base_url : base_url,
                     url : options.data.url,
                     type : options.data.type
