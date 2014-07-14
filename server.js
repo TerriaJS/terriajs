@@ -46,7 +46,9 @@ function proxyAllowedHost(host) {
         'bom.gov.au',
         'ga.gov.au',
         'communications.gov.au',
-        'tas.gov.au'
+        'tas.gov.au',
+        'data.gov.au',
+        'nicta.com.au'
     ];
     //check that host is from one of these domains
     for (var i = 0; i < allowedDomain.length; i++) {
