@@ -1,6 +1,6 @@
 {"name":"Data Collections", "Layer": [
   {"name":"Data Sets", "Layer": [
-    {"name":"Broadband","base_url":"https://programs.communications.gov.au/WMS","proxy":true,"type":"WMS","queryable":"0","username":"wms","password":"wms","wfsAvailable":true,"completeWfsUrl":"https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000","Layer":[
+    {"name":"Broadband","base_url":"https://programs.communications.gov.au/WMS","proxy":true,"type":"WMS","queryable":"0","wfsAvailable":true,"completeWfsUrl":"https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000","Layer":[
 		{"Name":"MyBroadband","Title":"Broadband Map","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[More Info](https://www.mybroadband.communications.gov.au)\n(If necessary: Username is guest, no Password)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
 "queryable":1},
 		{"Name":"MyBroadband Availabilty","Title":"Broadband Availability","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[Legend](https://programs.communications.gov.au/NBNBSL/images/mybroadband/availability.png)\n[More Info](https://www.mybroadband.communications.gov.au)\n(If necessary: Username is guest, no Password)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
