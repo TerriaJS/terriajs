@@ -1,6 +1,6 @@
 "use strict";
 
-/*global Cesium,require,ga,alert*/
+/*global Cesium,require,ga,alert,L*/
 
 var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
@@ -129,7 +129,8 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._zoomToItem = createCommand(function(item) {
-        if (!defined(item.layer) || !defined(item.layer.extent) || !item.isEnabled()) {
+        if (!defined(item.layer) || !defined(item.layer.extent) || 
+            (defined(item.isEnabled) && !item.isEnabled())) {
             return;
         }
 
@@ -183,9 +184,8 @@ var GeoDataBrowserViewModel = function(options) {
 
     function removeBaseLayer() {
         if (!defined(that._viewer.viewer)) {
-            var message = 'Base layer selection is not yet implemented for Leaflet.';
-            alert(message);
-            throw message;
+            that._viewer.map.removeLayer(that._viewer.mapBaseLayer);
+            return;
         }
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -204,6 +204,11 @@ var GeoDataBrowserViewModel = function(options) {
     function switchToBingMaps(style) {
         removeBaseLayer();
 
+        if (!defined(that._viewer.viewer)) {
+            that._viewer.mapBaseLayer = new L.BingLayer(Cesium.BingMapsApi.getKey(), { type: style });
+            that._viewer.map.addLayer(that._viewer.mapBaseLayer);
+            return;
+        }
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
         currentBaseLayers.push(imageryLayers.addImageryProvider(new BingMapsImageryProvider({
             url : '//dev.virtualearth.net',
@@ -229,6 +234,11 @@ var GeoDataBrowserViewModel = function(options) {
     this._activateNasaBlackMarble = createCommand(function() {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'NASA Black Marble');
 
+        if (!defined(that._viewer.viewer)) {
+            var message = 'This imagery layer is not yet supported in Leaflet.';
+            alert(message);
+            return;
+        }
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -241,6 +251,15 @@ var GeoDataBrowserViewModel = function(options) {
     this._activateNaturalEarthII = createCommand(function() {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'Natural Earth II');
 
+        if (!defined(that._viewer.viewer)) {
+            var message = 'This imagery layer is not yet supported in Leaflet.';
+            alert(message);
+            return;
+              //This call works, but since the tiles are in graghic instead of spherical mercator only see western hemisphere
+//        this.mapBaseLayer = new L.tileLayer('http://cesiumjs.org/tilesets/imagery/naturalearthii/{z}/{x}/{y}.jpg', 
+//        {tms: true});
+        }
+        
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -254,6 +273,12 @@ var GeoDataBrowserViewModel = function(options) {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'Australian Topography');
 
         removeBaseLayer();
+
+        if (!defined(that._viewer.viewer)) {
+            that._viewer.mapBaseLayer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer');
+            that._viewer.map.addLayer(that._viewer.mapBaseLayer);
+            return;
+        }
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
         currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({
@@ -270,6 +295,12 @@ var GeoDataBrowserViewModel = function(options) {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'Australian Hydrography');
 
         removeBaseLayer();
+
+        if (!defined(that._viewer.viewer)) {
+            that._viewer.mapBaseLayer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer');
+            that._viewer.map.addLayer(that._viewer.mapBaseLayer);
+            return;
+        }
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
         currentBaseLayers.push(imageryLayers.addImageryProvider(new TileMapServiceImageryProvider({

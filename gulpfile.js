@@ -26,8 +26,6 @@ gulp.task('build', function() {
         .pipe(uglify({mangle: false, compress: false}))
         .pipe(concat('ausglobe.min.js'))
         .pipe(gulp.dest('public/build'));
-
-//        .pipe(refresh(server))
 });
 
 gulp.task('release-ausglobe', function() {
@@ -40,8 +38,6 @@ gulp.task('release-ausglobe', function() {
         .pipe(addsrc('src/copyrightHeader.js'))
         .pipe(concat('ausglobe.js'))
         .pipe(gulp.dest('public/build'));
-
-//        .pipe(refresh(server))
 });
 
 gulp.task('lint', function(){
