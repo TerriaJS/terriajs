@@ -22,7 +22,8 @@
     "gulp-jshint": "~1.6.1",
     "gulp-rename": "~1.2.0",
     "gulp-uglify": "~0.3.0",
-    "gulp-watch": "~0.6.5"
+    "gulp-watch": "~0.6.5",
+    "gulp-add-src": "~0.1.1"
   },
   "scripts": {
     "start": "node_modules/.bin/supervisor server"

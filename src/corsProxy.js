@@ -14,6 +14,6 @@ corsProxy.withCredentials = function(username, password) {
             return '//' + username + ':' + password + '@' + window.location.host + corsProxy.getURL(resource);
         }
     };
-}
+};
 
 module.exports = corsProxy;

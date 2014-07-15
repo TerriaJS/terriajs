@@ -1,4 +1,4 @@
-/*global require,Cesium,$*/
+/*global require,Cesium,$,alert*/
 "use strict";
 
 var Variable = require('./Variable');
