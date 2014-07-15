@@ -652,7 +652,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 var terrainPos = [cartographic];
                 
                 //TODO: vary tile level based based on camera height
-                var tileLevel = 5;
+                var tileLevel = 7;
                 try {
                     when(sampleTerrain(terrainProvider, tileLevel, terrainPos), function() {
                         if (scene.isDestroyed()) {
@@ -816,9 +816,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }
 
         //Bing Maps Layer by default
-        var layer = new L.BingLayer(BingMapsApi.getKey());
-//            var layer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_WM/MapServer');
-        map.addLayer(layer);
+        this.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey());
+        map.addLayer(this.mapBaseLayer);
 
         //document.getElementById('controls').style.visibility = 'hidden';
         this._navigationWidget.showTilt = false;
@@ -831,7 +830,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             var that = this;
             if (that.startup) {
                 that.startup = false;
-                alert('There are known problems capturing images with some datasets in 2D view.  Please use 3D mode if possible for this operation.');
+                //there are problems viewing geojson but since we make it pretty to get that these
+                //days we can probably turn this off by default
+//                alert('There are known problems capturing images with some datasets in 2D view.  Please use 3D mode if possible for this operation.');
             }
             that.map.attributionControl.removeFrom(that.map);
 /*            //might need to break out to global function and deal with err
