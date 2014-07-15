@@ -317,6 +317,7 @@ GeoDataCollection.prototype.show = function(layer, val) {
         return;
     }
     layer.show = val;
+    console.log('here');
     if (layer.dataSource) {
         if (val) {
             this.dataSourceCollection.add(layer.dataSource);
@@ -325,8 +326,16 @@ GeoDataCollection.prototype.show = function(layer, val) {
             this.dataSourceCollection.remove(layer.dataSource, false);
         }
     }
-    else {
+    else if (this.map === undefined) {
         layer.primitive.show = val;
+    }
+    else {
+        if (val) {
+            this.map.addLayer(layer.primitive);
+        }
+        else {
+            this.map.removeLayer(layer.primitive);
+        }
     }
 };
 
