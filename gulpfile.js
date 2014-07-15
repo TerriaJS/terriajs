@@ -9,6 +9,7 @@ var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
 var jasmine = require('gulp-jasmine');
+var addsrc = require('gulp-add-src');
 var exec = require('child_process').exec;
 
 //TODO: figure out if there's any value to this
@@ -19,9 +20,11 @@ var exec = require('child_process').exec;
 gulp.task('build', function() {
     return gulp.src(['src/viewer/main.js'])
         .pipe(browserify())
+        .pipe(addsrc('src/copyrightHeader.js'))
         .pipe(concat('ausglobe.js'))
         .pipe(gulp.dest('public/build'))
         .pipe(uglify())
+        .pipe(addsrc('src/copyrightHeader.js'))
         .pipe(concat('ausglobe.min.js'))
         .pipe(gulp.dest('public/build'));
 
@@ -55,6 +58,19 @@ gulp.task('lr-server', function() {
 gulp.task('build-cesium', function(cb) {
     return exec('"Tools/apache-ant-1.8.2/bin/ant" build combine', {
         cwd : 'public/cesium'
+    }, function(err, stdout, stderr) {
+        if (stderr) {
+            console.log('Error while building Cesium: ');
+            console.log(stderr);
+        }
+        cb(err);
+    });
+});
+
+gulp.task('release-cesium', function(cb) {
+    return exec('"Tools/apache-ant-1.8.2/bin/ant" minifyRelease', {
+        cwd : 'public/cesium',
+        maxBuffer: 1024 * 500
     }, function(err, stdout, stderr) {
         if (stderr) {
             console.log('Error while building Cesium: ');
