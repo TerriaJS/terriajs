@@ -10,6 +10,7 @@ var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
 var jasmine = require('gulp-jasmine');
 var addsrc = require('gulp-add-src');
+var rename = require("gulp-rename");
 var exec = require('child_process').exec;
 
 //TODO: figure out if there's any value to this
@@ -20,12 +21,24 @@ var exec = require('child_process').exec;
 gulp.task('build', function() {
     return gulp.src(['src/viewer/main.js'])
         .pipe(browserify())
-        .pipe(addsrc('src/copyrightHeader.js'))
         .pipe(concat('ausglobe.js'))
         .pipe(gulp.dest('public/build'))
-        .pipe(uglify())
-        .pipe(addsrc('src/copyrightHeader.js'))
+        .pipe(uglify({mangle: false, compress: false}))
         .pipe(concat('ausglobe.min.js'))
+        .pipe(gulp.dest('public/build'));
+
+//        .pipe(refresh(server))
+});
+
+gulp.task('release-ausglobe', function() {
+    return gulp.src(['src/viewer/main.js'])
+        .pipe(browserify())
+        .pipe(addsrc('src/copyrightHeader.js'))
+        .pipe(concat('ausglobeUnminified.js'))
+        .pipe(gulp.dest('public/build'))
+        .pipe(uglify({mangle: false, compress: false}))
+        .pipe(addsrc('src/copyrightHeader.js'))
+        .pipe(concat('ausglobe.js'))
         .pipe(gulp.dest('public/build'));
 
 //        .pipe(refresh(server))
@@ -81,6 +94,8 @@ gulp.task('release-cesium', function(cb) {
 });
 
 gulp.task('default', ['build', 'docs']);
+
+gulp.task('release', ['release-ausglobe', 'docs']);
 
 gulp.task('watch', function() {
     gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
