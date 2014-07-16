@@ -235,10 +235,11 @@ var GeoDataBrowserViewModel = function(options) {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'NASA Black Marble');
 
         if (!defined(that._viewer.viewer)) {
-            var message = 'This imagery layer is not yet supported in Leaflet.';
+            var message = 'This imagery layer is not yet supported in 2D mode.';
             alert(message);
             return;
         }
+        
         removeBaseLayer();
 
         var imageryLayers = that._viewer.scene.globe.imageryLayers;
@@ -252,7 +253,7 @@ var GeoDataBrowserViewModel = function(options) {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'Natural Earth II');
 
         if (!defined(that._viewer.viewer)) {
-            var message = 'This imagery layer is not yet supported in Leaflet.';
+            var message = 'This imagery layer is not yet supported in 2D mode.';
             alert(message);
             return;
         }
@@ -291,6 +292,12 @@ var GeoDataBrowserViewModel = function(options) {
     this._activateAustralianHydrography = createCommand(function() {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'Australian Hydrography');
 
+        if (!defined(that._viewer.viewer)) {
+            var message = 'This imagery layer is not yet supported in 2D mode.';
+            alert(message);
+            return;
+        }
+        
         removeBaseLayer();
 
         if (!defined(that._viewer.viewer)) {
