@@ -585,8 +585,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             mapStyle : BingMapsStyle.AERIAL_WITH_LABELS
         }),
         terrainProvider : new CesiumTerrainProvider({
-            //url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
-            url : 'http://ec2-54-79-68-173.ap-southeast-2.compute.amazonaws.com/stk-terrain/tilesets/Australia/tiles'
+            url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
         }),
         timeControlsInitiallyVisible : false,
         targetFrameRate : 40
