@@ -735,7 +735,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 if (Rectangle.contains(extent, pickedLocation)) {
                     var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
                     var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
-                    promises.push(getWmsFeatureInfo(provider.url, defined(provider.proxy), provider.layers, extent, 256, 256, pixelX, pixelY, false));
+                    var useProxy = that.viewer.geoDataManager.shouldUseProxy(provider.url);
+                    promises.push(getWmsFeatureInfo(provider.url, useProxy, provider.layers, extent, 256, 256, pixelX, pixelY, false));
                 }
             }
 
@@ -931,13 +932,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this._navigationWidget.showTilt = true;
         document.getElementById('ausglobe-title-middle').style.visibility = 'visible';
 
-        /*
-         var esri = new ArcGisMapServerImageryProvider({
-         url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
-         proxy: corsProxy
-         });
-         this.scene.globe.imageryLayers.addImageryProvider(esri);
-         */
     }
 };
 
@@ -1346,8 +1340,8 @@ function selectFeatureLeaflet(viewer, latlng) {
         if (layer.type !== 'WMS') {
             continue;
         }
-
-        promises.push(getWmsFeatureInfo(layer.description.base_url, layer.description.proxy, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
+        var useProxy = viewer.geoDataManager.shouldUseProxy(layer.description.base_url);
+        promises.push(getWmsFeatureInfo(layer.description.base_url, useProxy, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
     }
 
     if (promises.length === 0) {

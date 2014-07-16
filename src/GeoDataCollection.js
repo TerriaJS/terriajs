@@ -376,7 +376,7 @@ GeoDataCollection.prototype._stringify = function() {
     var str_layers = [];
     for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
-        var obj = {name: layer.name, type: layer.type, proxy:layer.proxy,
+        var obj = {name: layer.name, type: layer.type,
                    url: layer.url, extent: layer.extent};
         str_layers.push(obj);
     }
@@ -418,6 +418,42 @@ GeoDataCollection.prototype._parseLayers = function(str_layers) {
 };
 
 
+/**
+* Determine if a proxy should be used based on the url
+*
+* @param {Url} url Url of the data item
+*
+* @returns {Boolean} true if should proxy
+*/
+GeoDataCollection.prototype.shouldUseProxy = function(url) {
+
+    var uri = new URI(url);
+    var host = uri.host();
+    var proxyAvail = this.proxyAllowedHost(host);
+
+    //TODO: PROXY this._alwaysUseProxy  set for IE9-   don't know how best to handle it yet
+    if (proxyAvail && url.indexOf('http') !== -1) {
+        return true;
+    }
+    return false;
+};
+
+
+//Non CORS hosts we proxy to
+GeoDataCollection.prototype.proxyAllowedHost = function(host) {
+    host = host.toLowerCase();
+    var allowedDomains = this.allowedDomains;
+    //check that host is from one of these domains
+    for (var i = 0; i < allowedDomains.length; i++) {
+        if (host.indexOf(allowedDomains[i], host.length - allowedDomains[i].length) !== -1) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
 
 /**
  * Loads a GeoDataCollection based on the intial url used to launch it
@@ -451,11 +487,36 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     
     var that = this;
     
+    var dataUrl = encodeURIComponent('http://maps.gcc.tas.gov.au/geoserver/wfs?request=GetFeature&service=wfs&version=1.0.0&typename=GCC_cc:kerbs&SrsName=EPSG:4326&outputformat=json&format_options=filename:GCC_kerbs.json');
+ 
+    //get the server config to know how to handle urls   
+    Cesium.loadJson('config.json').then( function(obj) {
+        that.allowedDomains = obj.allowedDomains;
+
     //Initialize the view based on vis_id if passed in url
-    if (visUrl) {
-        //call to server to get json record
-        Cesium.loadJson(visUrl).then( function(obj) {
-                //capture an id if it is passed
+        if (visUrl) {
+            //call to server to get json record
+            Cesium.loadJson(visUrl).then( function(obj) {
+                    //capture an id if it is passed
+                that.visID = obj.id;
+                if (obj.camera !== undefined) {
+                    var e = JSON.parse(obj.camera);
+                    var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
+                    that.zoomTo = true;
+                    that.GeoDataAdded.raiseEvent(that, camLayer);
+                }
+               
+                  //loop through layers adding each one
+                var layers = that._parseLayers(obj.layers);
+                for (var i = 0; i < layers.length; i++) {
+                    that.sendLayerRequest(layers[i]);
+                }
+            }, function(err) {
+                loadErrorResponse(err);
+            });
+        }
+        else if (visStr) {
+            var obj = JSON.parse(visStr);
             that.visID = obj.id;
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
@@ -469,30 +530,12 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
             for (var i = 0; i < layers.length; i++) {
                 that.sendLayerRequest(layers[i]);
             }
-        }, function(err) {
-            loadErrorResponse(err);
-        });
-    }
-    else if (visStr) {
-        var obj = JSON.parse(visStr);
-        that.visID = obj.id;
-        if (obj.camera !== undefined) {
-            var e = JSON.parse(obj.camera);
-            var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
-            that.zoomTo = true;
-            that.GeoDataAdded.raiseEvent(that, camLayer);
         }
-       
-          //loop through layers adding each one
-        var layers = that._parseLayers(obj.layers);
-        for (var i = 0; i < layers.length; i++) {
-            that.sendLayerRequest(layers[i]);
+        else if (dataUrl) {
+            dataUrl = decodeURIComponent(dataUrl);
+            that.loadUrl(dataUrl, dataFormat);
         }
-    }
-    else if (dataUrl) {
-        dataUrl = decodeURIComponent(dataUrl);
-        that.loadUrl(dataUrl, dataFormat);
-    }
+    });
 };
 
 /**
@@ -506,6 +549,9 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
     if (format || that.formatSupported(url)) {
         if (format === undefined) {
             format = getFormatFromUrl(url);
+        }
+        if (this.shouldUseProxy(url)) {
+            url = corsProxy.getURL(url);
         }
         if (format === 'KMZ') {
             Cesium.loadBlob(url).then( function(blob) {
@@ -813,7 +859,7 @@ function filterValue(obj, prop, func) {
 GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     
-    if (layer.proxy || this.shouldUseProxy(request)) {
+    if (this.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
     }
 
@@ -857,7 +903,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     if (this.map === undefined) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
-        if (layer.proxy || this.shouldUseProxy(url)) {
+        if (this.shouldUseProxy(url)) {
             if (layer.description && layer.description.username && layer.description.password) {
                 proxy = corsProxy.withCredentials(layer.description.username, layer.description.password);
             } else {
@@ -887,7 +933,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
-        if (layer.proxy || this.shouldUseProxy(server)) {
+        if (this.shouldUseProxy(server)) {
            server = corsProxy.getURL(server);
         }
         
@@ -1065,7 +1111,6 @@ function _getCollectionFromServiceLayers(layers, description) {
             topic = {
                 name: topic_name, 
                 base_url: description.base_url,
-                proxy: false,
                 type: description.type,
                 queryable: 0,
                 Layer: []
@@ -1203,7 +1248,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 * @param {Object} description Object with the following properties:
 * @param {Url} description.base_url The url for the service
 * @param {String} description.type The identifier of the service
-* @param {Boolean} description.proxy True if a proxy is necessary
 * @param {String} description.username Username for password authenticated services
 * @param {String} description.password Password for password authenticated services
 * @param {Function} callback Function to carry out at the successful completion of the request
@@ -1224,7 +1268,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
    
     console.log('CAPABILITIES REQUEST:',request);
-    if (description.proxy || this.shouldUseProxy(request)) {
+    if (this.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
     }
 
@@ -1623,23 +1667,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     }
     return this.add(layer);
 };
-
-/**
-* Determine if a proxy should be used based on the url
-*
-* @param {Url} url Url of the data item
-*
-* @returns {Boolean} true if should proxy
-*/
-GeoDataCollection.prototype.shouldUseProxy = function(url) {
-    if (!this._alwaysUseProxy) {
-        return false;
-    } else if (url.indexOf('http') < 0) {
-        return false;
-    }
-    return true;
-};
-
 
 /**
 * Add a file object to the layers

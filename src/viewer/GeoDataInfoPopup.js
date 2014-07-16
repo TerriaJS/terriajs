@@ -250,6 +250,7 @@ var GeoDataInfoPopup = function(options) {
         return baseUrl + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
     });
 
+    //TODO: PROXY need to figure out how to get or if we need it (should be able to do an onClick());
     var getMetadataUrl = viewModel.getMetadataUrl();
     if (viewModel.info.proxy && viewModel.info.proxy()) {
         getMetadataUrl = corsProxy.getURL(getMetadataUrl);
