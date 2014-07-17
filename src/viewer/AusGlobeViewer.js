@@ -54,6 +54,8 @@ var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
 var WebMercatorProjection = Cesium.WebMercatorProjection;
 var when = Cesium.when;
 
+var FeatureDetection = Cesium.FeatureDetection;
+
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
@@ -206,6 +208,7 @@ var AusGlobeViewer = function(geoDataManager) {
     var noWebGLMessage;
     var browser = $.browser;
 
+        //TODO: add firefox test to featuredetection and get rid of deprecated $.browser
     if (browser.mozilla === true && browser.version === "30.0") {
         noWebGLMessage = new PopupMessage({
             container : document.body,
@@ -219,13 +222,12 @@ There are known issues with this particular version of Firefox that make Nationa
         this.webGlSupported = false;
     }
     
-    if (browser.msie === true && browser.version < "9.0") {
-        browser.name = 'Internet Explorer';
+    if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
         noWebGLMessage = new PopupMessage({
             container : document.body,
             title : 'Unsupported browser version detected',
             message : '\
-            The National Map is not designed to work on versions of '+browser.name+' older than '+browser.version+'. We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. Running on your current browser will probably suffer from limited functionality, poor appearance, and stability issues.'
+            The National Map is not designed to work on versions of Internet Explorer older than 9.0. We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. Running on your current browser will probably suffer from limited functionality, poor appearance, and stability issues.'
         });
         this.webGlSupported = false;
     }
@@ -247,7 +249,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     }
     
     // IE versions prior to 10 don't support CORS, so always use the proxy.
-    this._alwaysUseProxy = (browser.msie === true && browser.version < "10.0");
+    this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
     
     //TODO: perf test to set environment
 

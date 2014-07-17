@@ -246,8 +246,8 @@ var GeoDataInfoPopup = function(options) {
         } else {
             return '';
         }
-
-        return baseUrl + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
+        
+        return baseUrl;// + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
     });
 
     var getMetadataUrl = viewModel.getMetadataUrl();
