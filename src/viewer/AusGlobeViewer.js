@@ -735,7 +735,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 if (Rectangle.contains(extent, pickedLocation)) {
                     var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
                     var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
-                    var useProxy = that.viewer.geoDataManager.shouldUseProxy(provider.url);
+                    var useProxy = corsProxy.shouldUseProxy(provider.url);
                     promises.push(getWmsFeatureInfo(provider.url, useProxy, provider.layers, extent, 256, 256, pixelX, pixelY, false));
                 }
             }
@@ -1340,7 +1340,7 @@ function selectFeatureLeaflet(viewer, latlng) {
         if (layer.type !== 'WMS') {
             continue;
         }
-        var useProxy = viewer.geoDataManager.shouldUseProxy(layer.description.base_url);
+        var useProxy = corsProxy.shouldUseProxy(layer.description.base_url);
         promises.push(getWmsFeatureInfo(layer.description.base_url, useProxy, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
     }
 

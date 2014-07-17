@@ -170,7 +170,6 @@ var GeoDataBrowserViewModel = function(options) {
                     name : that.wfsServiceUrl,
                     base_url : that.wfsServiceUrl,
                     type : that.addType,
-                    proxy : that._viewer.geoDataManager.shouldUseProxy(that.wfsServiceUrl)
                 }
             });
             that.userContent.push(item);
@@ -827,8 +826,6 @@ function enableItem(viewModel, item) {
     }
 
     layer.description = description;
-
-//    layer.proxy = description.proxy;
 
     item.layer = layer;
 

@@ -418,42 +418,6 @@ GeoDataCollection.prototype._parseLayers = function(str_layers) {
 };
 
 
-/**
-* Determine if a proxy should be used based on the url
-*
-* @param {Url} url Url of the data item
-*
-* @returns {Boolean} true if should proxy
-*/
-GeoDataCollection.prototype.shouldUseProxy = function(url) {
-
-    var uri = new URI(url);
-    var host = uri.host();
-    var proxyAvail = this.proxyAllowedHost(host);
-
-    //TODO: PROXY this._alwaysUseProxy  set for IE9-   don't know how best to handle it yet
-    if (proxyAvail && url.indexOf('http') !== -1) {
-        return true;
-    }
-    return false;
-};
-
-
-//Non CORS hosts we proxy to
-GeoDataCollection.prototype.proxyAllowedHost = function(host) {
-    host = host.toLowerCase();
-    var allowedDomains = this.allowedDomains;
-    //check that host is from one of these domains
-    for (var i = 0; i < allowedDomains.length; i++) {
-        if (host.indexOf(allowedDomains[i], host.length - allowedDomains[i].length) !== -1) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-
 
 /**
  * Loads a GeoDataCollection based on the intial url used to launch it
@@ -487,13 +451,16 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     
     var that = this;
     
-    var dataUrl = encodeURIComponent('http://maps.gcc.tas.gov.au/geoserver/wfs?request=GetFeature&service=wfs&version=1.0.0&typename=GCC_cc:kerbs&SrsName=EPSG:4326&outputformat=json&format_options=filename:GCC_kerbs.json');
- 
     //get the server config to know how to handle urls   
     Cesium.loadJson('config.json').then( function(obj) {
-        that.allowedDomains = obj.allowedDomains;
+        var proxyDomains = obj.proxyDomains;
+        //workaround for non-CORS browsers (i.e. IE9)
+        if (that._alwaysUseProxy) {
+            proxyDomains.concat(obj.corsDomains);
+        }
+        corsProxy.setProxyList(proxyDomains);
 
-    //Initialize the view based on vis_id if passed in url
+        //Initialize the view based on vis_id if passed in url
         if (visUrl) {
             //call to server to get json record
             Cesium.loadJson(visUrl).then( function(obj) {
@@ -550,7 +517,7 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
         if (format === undefined) {
             format = getFormatFromUrl(url);
         }
-        if (this.shouldUseProxy(url)) {
+        if (corsProxy.shouldUseProxy(url)) {
             url = corsProxy.getURL(url);
         }
         if (format === 'KMZ') {
@@ -859,7 +826,7 @@ function filterValue(obj, prop, func) {
 GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     
-    if (this.shouldUseProxy(request)) {
+    if (corsProxy.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
     }
 
@@ -903,7 +870,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     if (this.map === undefined) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
-        if (this.shouldUseProxy(url)) {
+        if (corsProxy.shouldUseProxy(url)) {
             if (layer.description && layer.description.username && layer.description.password) {
                 proxy = corsProxy.withCredentials(layer.description.username, layer.description.password);
             } else {
@@ -933,7 +900,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
-        if (this.shouldUseProxy(server)) {
+        if (corsProxy.shouldUseProxy(server)) {
            server = corsProxy.getURL(server);
         }
         
@@ -1268,7 +1235,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
    
     console.log('CAPABILITIES REQUEST:',request);
-    if (this.shouldUseProxy(request)) {
+    if (corsProxy.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
     }
 
