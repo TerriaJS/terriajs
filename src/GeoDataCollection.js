@@ -48,9 +48,6 @@ var GeoDataCollection = function() {
     this.ViewerChanged = new Cesium.Event();
     this.ShareRequest = new Cesium.Event();
 
-    // IE versions prior to 10 don't support CORS, so always use the proxy.
-    this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
-    
     //load list of available services for National Map
     this.services = [];
 };
@@ -451,39 +448,11 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     
     var that = this;
     
-    //get the server config to know how to handle urls   
-    Cesium.loadJson('config.json').then( function(obj) {
-        var proxyDomains = obj.proxyDomains;
-        //workaround for non-CORS browsers (i.e. IE9)
-        if (that._alwaysUseProxy) {
-            proxyDomains.concat(obj.corsDomains);
-        }
-        corsProxy.setProxyList(proxyDomains);
-
-        //Initialize the view based on vis_id if passed in url
-        if (visUrl) {
-            //call to server to get json record
-            Cesium.loadJson(visUrl).then( function(obj) {
-                    //capture an id if it is passed
-                that.visID = obj.id;
-                if (obj.camera !== undefined) {
-                    var e = JSON.parse(obj.camera);
-                    var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
-                    that.zoomTo = true;
-                    that.GeoDataAdded.raiseEvent(that, camLayer);
-                }
-               
-                  //loop through layers adding each one
-                var layers = that._parseLayers(obj.layers);
-                for (var i = 0; i < layers.length; i++) {
-                    that.sendLayerRequest(layers[i]);
-                }
-            }, function(err) {
-                loadErrorResponse(err);
-            });
-        }
-        else if (visStr) {
-            var obj = JSON.parse(visStr);
+    //Initialize the view based on vis_id if passed in url
+    if (visUrl) {
+        //call to server to get json record
+        Cesium.loadJson(visUrl).then( function(obj) {
+                //capture an id if it is passed
             that.visID = obj.id;
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
@@ -497,12 +466,30 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
             for (var i = 0; i < layers.length; i++) {
                 that.sendLayerRequest(layers[i]);
             }
+        }, function(err) {
+            loadErrorResponse(err);
+        });
+    }
+    else if (visStr) {
+        var obj = JSON.parse(visStr);
+        that.visID = obj.id;
+        if (obj.camera !== undefined) {
+            var e = JSON.parse(obj.camera);
+            var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
+            that.zoomTo = true;
+            that.GeoDataAdded.raiseEvent(that, camLayer);
         }
-        else if (dataUrl) {
-            dataUrl = decodeURIComponent(dataUrl);
-            that.loadUrl(dataUrl, dataFormat);
+       
+          //loop through layers adding each one
+        var layers = that._parseLayers(obj.layers);
+        for (var i = 0; i < layers.length; i++) {
+            that.sendLayerRequest(layers[i]);
         }
-    });
+    }
+    else if (dataUrl) {
+        dataUrl = decodeURIComponent(dataUrl);
+        that.loadUrl(dataUrl, dataFormat);
+    }
 };
 
 /**

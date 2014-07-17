@@ -37,15 +37,15 @@ function filterHeaders(req, headers) {
     return result;
 }
 
-var allowedDomains = configSettings.allowedDomains;
+var proxyDomains = configSettings.proxyDomains;
 
     
 //Non CORS hosts and domains we proxy to
 function proxyAllowedHost(host) {
     host = host.toLowerCase();
     //check that host is from one of these domains
-    for (var i = 0; i < allowedDomains.length; i++) {
-        if (host.indexOf(allowedDomains[i], host.length - allowedDomains[i].length) !== -1) {
+    for (var i = 0; i < proxyDomains.length; i++) {
+        if (host.indexOf(proxyDomains[i], host.length - proxyDomains[i].length) !== -1) {
             return true;
         }
     }

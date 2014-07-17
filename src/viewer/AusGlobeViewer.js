@@ -205,7 +205,7 @@ var AusGlobeViewer = function(geoDataManager) {
     
     var noWebGLMessage;
     var browser = $.browser;
-//    console.log(browser);
+
     if (browser.mozilla === true && browser.version === "30.0") {
         noWebGLMessage = new PopupMessage({
             container : document.body,
@@ -245,6 +245,9 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         });
         this.webGlSupported = false;
     }
+    
+    // IE versions prior to 10 don't support CORS, so always use the proxy.
+    this._alwaysUseProxy = (browser.msie === true && browser.version < "10.0");
     
     //TODO: perf test to set environment
 
@@ -289,7 +292,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         viewer : this,
         container : leftArea,
         dataManager : geoDataManager,
-        initUrl: params.init_url,
+        initUrl: params.init_url,  //may need to add proxy
         mode3d: this.webGlSupported
     });
 
@@ -302,7 +305,17 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         }
     });
 
-    this.geoDataManager.loadInitialUrl(url);
+    //get the server config to know how to handle urls and load initial one
+    Cesium.loadJson('config.json').then( function(obj) {
+        var proxyDomains = obj.proxyDomains;
+        //workaround for non-CORS browsers (i.e. IE9)
+        if (that._alwaysUseProxy) {
+            proxyDomains.concat(obj.corsDomains);
+        }
+        corsProxy.setProxyList(proxyDomains);
+        
+        that.geoDataManager.loadInitialUrl(url);
+    });
 
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
