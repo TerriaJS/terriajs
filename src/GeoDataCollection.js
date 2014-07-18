@@ -48,9 +48,6 @@ var GeoDataCollection = function() {
     this.ViewerChanged = new Cesium.Event();
     this.ShareRequest = new Cesium.Event();
 
-    // IE versions prior to 10 don't support CORS, so always use the proxy.
-    this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
-    
     //load list of available services for National Map
     this.services = [];
 };
@@ -376,7 +373,7 @@ GeoDataCollection.prototype._stringify = function() {
     var str_layers = [];
     for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
-        var obj = {name: layer.name, type: layer.type, proxy:layer.proxy,
+        var obj = {name: layer.name, type: layer.type,
                    url: layer.url, extent: layer.extent};
         str_layers.push(obj);
     }
@@ -506,6 +503,9 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
     if (format || that.formatSupported(url)) {
         if (format === undefined) {
             format = getFormatFromUrl(url);
+        }
+        if (corsProxy.shouldUseProxy(url)) {
+            url = corsProxy.getURL(url);
         }
         if (format === 'KMZ') {
             Cesium.loadBlob(url).then( function(blob) {
@@ -813,7 +813,7 @@ function filterValue(obj, prop, func) {
 GeoDataCollection.prototype._viewFeature = function(request, layer) {
     var that = this;
     
-    if (layer.proxy || this.shouldUseProxy(request)) {
+    if (corsProxy.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
     }
 
@@ -857,7 +857,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     if (this.map === undefined) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
-        if (layer.proxy || this.shouldUseProxy(url)) {
+        if (corsProxy.shouldUseProxy(url)) {
             if (layer.description && layer.description.username && layer.description.password) {
                 proxy = corsProxy.withCredentials(layer.description.username, layer.description.password);
             } else {
@@ -887,7 +887,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
-        if (layer.proxy || this.shouldUseProxy(server)) {
+        if (corsProxy.shouldUseProxy(server)) {
            server = corsProxy.getURL(server);
         }
         
@@ -1065,7 +1065,6 @@ function _getCollectionFromServiceLayers(layers, description) {
             topic = {
                 name: topic_name, 
                 base_url: description.base_url,
-                proxy: false,
                 type: description.type,
                 queryable: 0,
                 Layer: []
@@ -1203,7 +1202,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 * @param {Object} description Object with the following properties:
 * @param {Url} description.base_url The url for the service
 * @param {String} description.type The identifier of the service
-* @param {Boolean} description.proxy True if a proxy is necessary
 * @param {String} description.username Username for password authenticated services
 * @param {String} description.password Password for password authenticated services
 * @param {Function} callback Function to carry out at the successful completion of the request
@@ -1224,7 +1222,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
    
     console.log('CAPABILITIES REQUEST:',request);
-    if (description.proxy || this.shouldUseProxy(request)) {
+    if (corsProxy.shouldUseProxy(request)) {
         request = corsProxy.getURL(request);
     }
 
@@ -1623,23 +1621,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     }
     return this.add(layer);
 };
-
-/**
-* Determine if a proxy should be used based on the url
-*
-* @param {Url} url Url of the data item
-*
-* @returns {Boolean} true if should proxy
-*/
-GeoDataCollection.prototype.shouldUseProxy = function(url) {
-    if (!this._alwaysUseProxy) {
-        return false;
-    } else if (url.indexOf('http') < 0) {
-        return false;
-    }
-    return true;
-};
-
 
 /**
 * Add a file object to the layers

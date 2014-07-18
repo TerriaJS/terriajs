@@ -170,7 +170,6 @@ var GeoDataBrowserViewModel = function(options) {
                     name : that.wfsServiceUrl,
                     base_url : that.wfsServiceUrl,
                     type : that.addType,
-                    proxy : true
                 }
             });
             that.userContent.push(item);
@@ -470,9 +469,16 @@ var GeoDataBrowserViewModel = function(options) {
         create : function(options) {
             var description = options.data.description;
             if (!defined(description)) {
+                var base_url = options.data.url;
+                var idx = base_url.indexOf('?');
+                if (idx !== -1) {
+                    base_url = base_url.substring(0,idx);
+                }
                 description = {
                     Title : options.data.name,
-                    base_url : options.data.url,
+                    Name : options.data.name,
+                    base_url : base_url,
+                    url : options.data.url,
                     type : options.data.type
                 };
             }
@@ -827,8 +833,6 @@ function enableItem(viewModel, item) {
     }
 
     layer.description = description;
-
-    layer.proxy = description.proxy;
 
     item.layer = layer;
 

@@ -54,6 +54,8 @@ var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
 var WebMercatorProjection = Cesium.WebMercatorProjection;
 var when = Cesium.when;
 
+var FeatureDetection = Cesium.FeatureDetection;
+
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
 var knockoutES5 = require('../../public/third_party/knockout-es5.js');
@@ -205,7 +207,8 @@ var AusGlobeViewer = function(geoDataManager) {
     
     var noWebGLMessage;
     var browser = $.browser;
-//    console.log(browser);
+
+        //TODO: add firefox test to featuredetection and get rid of deprecated $.browser
     if (browser.mozilla === true && browser.version === "30.0") {
         noWebGLMessage = new PopupMessage({
             container : document.body,
@@ -219,13 +222,12 @@ There are known issues with this particular version of Firefox that make Nationa
         this.webGlSupported = false;
     }
     
-    if (browser.msie === true && browser.version < "9.0") {
-        browser.name = 'Internet Explorer';
+    if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
         noWebGLMessage = new PopupMessage({
             container : document.body,
             title : 'Unsupported browser version detected',
             message : '\
-            The National Map is not designed to work on versions of '+browser.name+' older than '+browser.version+'. We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. Running on your current browser will probably suffer from limited functionality, poor appearance, and stability issues.'
+            The National Map is not designed to work on versions of Internet Explorer older than 9.0. We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. Running on your current browser will probably suffer from limited functionality, poor appearance, and stability issues.'
         });
         this.webGlSupported = false;
     }
@@ -245,6 +247,9 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         });
         this.webGlSupported = false;
     }
+    
+    // IE versions prior to 10 don't support CORS, so always use the proxy.
+    this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
     
     //TODO: perf test to set environment
 
@@ -289,7 +294,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         viewer : this,
         container : leftArea,
         dataManager : geoDataManager,
-        initUrl: params.init_url,
+        initUrl: params.init_url,  //may need to add proxy
         mode3d: this.webGlSupported
     });
 
@@ -302,7 +307,17 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         }
     });
 
-    this.geoDataManager.loadInitialUrl(url);
+    //get the server config to know how to handle urls and load initial one
+    Cesium.loadJson('config.json').then( function(obj) {
+        var proxyDomains = obj.proxyDomains;
+        //workaround for non-CORS browsers (i.e. IE9)
+        if (that._alwaysUseProxy) {
+            proxyDomains.concat(obj.corsDomains);
+        }
+        corsProxy.setProxyList(proxyDomains);
+        
+        that.geoDataManager.loadInitialUrl(url);
+    });
 
         //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
@@ -735,7 +750,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
                 if (Rectangle.contains(extent, pickedLocation)) {
                     var pixelX = 255.0 * (pickedLocation.longitude - extent.west) / (extent.east - extent.west) | 0;
                     var pixelY = 255.0 * (extent.north - pickedLocation.latitude) / (extent.north - extent.south) | 0;
-                    promises.push(getWmsFeatureInfo(provider.url, defined(provider.proxy), provider.layers, extent, 256, 256, pixelX, pixelY, false));
+                    var useProxy = corsProxy.shouldUseProxy(provider.url);
+                    promises.push(getWmsFeatureInfo(provider.url, useProxy, provider.layers, extent, 256, 256, pixelX, pixelY, false));
                 }
             }
 
@@ -931,13 +947,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this._navigationWidget.showTilt = true;
         document.getElementById('ausglobe-title-middle').style.visibility = 'visible';
 
-        /*
-         var esri = new ArcGisMapServerImageryProvider({
-         url: 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer',
-         proxy: corsProxy
-         });
-         this.scene.globe.imageryLayers.addImageryProvider(esri);
-         */
     }
 };
 
@@ -1346,8 +1355,8 @@ function selectFeatureLeaflet(viewer, latlng) {
         if (layer.type !== 'WMS') {
             continue;
         }
-
-        promises.push(getWmsFeatureInfo(layer.description.base_url, layer.description.proxy, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
+        var useProxy = corsProxy.shouldUseProxy(layer.description.base_url);
+        promises.push(getWmsFeatureInfo(layer.description.base_url, useProxy, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
     }
 
     if (promises.length === 0) {

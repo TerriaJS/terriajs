@@ -246,15 +246,15 @@ var GeoDataInfoPopup = function(options) {
         } else {
             return '';
         }
-
+        
         return baseUrl + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
     });
 
     var getMetadataUrl = viewModel.getMetadataUrl();
-    if (viewModel.info.proxy && viewModel.info.proxy()) {
+    if (corsProxy.shouldUseProxy(getMetadataUrl)) {
         getMetadataUrl = corsProxy.getURL(getMetadataUrl);
     }
-
+    
     var layerName = viewModel.info.Name ? viewModel.info.Name() : viewModel.info.name ? viewModel.info.name() : viewModel.info.Title();
 
     if (viewModel.info.type() === 'WMS') {

@@ -2,6 +2,7 @@
 
 
 var url = require('url');
+var configSettings = require('./public/config.json');
 
 function getRemoteUrlFromParam(req) {
     var remoteUrl = req.params[0];
@@ -36,23 +37,15 @@ function filterHeaders(req, headers) {
     return result;
 }
 
+var proxyDomains = configSettings.proxyDomains;
+
+    
 //Non CORS hosts and domains we proxy to
 function proxyAllowedHost(host) {
     host = host.toLowerCase();
-    var allowedDomain = [
-        'services.arcgisonline.com',
-        'spatialreference.org',
-        'landgate.wa.gov.au',
-        'bom.gov.au',
-        'ga.gov.au',
-        'communications.gov.au',
-        'tas.gov.au',
-        'data.gov.au',
-        'nicta.com.au'
-    ];
     //check that host is from one of these domains
-    for (var i = 0; i < allowedDomain.length; i++) {
-        if (host.indexOf(allowedDomain[i], host.length - allowedDomain[i].length) !== -1) {
+    for (var i = 0; i < proxyDomains.length; i++) {
+        if (host.indexOf(proxyDomains[i], host.length - proxyDomains[i].length) !== -1) {
             return true;
         }
     }
