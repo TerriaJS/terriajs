@@ -105,7 +105,7 @@ gulp.task('release-cesium', function(cb) {
 
 gulp.task('default', ['build', 'lint']);
 
-gulp.task('release', ['release-ausglobe', 'docs']);
+gulp.task('release', ['build', 'lint', 'docs']);
 
 gulp.task('watch', function() {
     gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
