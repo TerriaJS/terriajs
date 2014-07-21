@@ -1,4 +1,5 @@
-/*!
+/**
+ * @license
  * Copyright(c) 2012-2014 National ICT Australia Limited (NICTA).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,3 +15,5 @@
  * limitations under the License.
  *
  */
+module.exports = undefined;
+

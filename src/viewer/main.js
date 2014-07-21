@@ -1,7 +1,7 @@
 "use strict";
 
 /*global require,Cesium*/
-
+var copyright = require('../CopyrightModule');
 var SvgPathBindingHandler = Cesium.SvgPathBindingHandler;
 var knockout = require('knockout');
 
@@ -14,7 +14,6 @@ if (typeof window.console === 'undefined') {
 
 SvgPathBindingHandler.register(knockout);
 
-/*global require*/
 var GeoDataCollection = require('../GeoDataCollection');
 var AusGlobeViewer = require('./AusGlobeViewer');
 
