@@ -2,8 +2,9 @@
 
 /*global require*/
 
+var fs = require('fs');
 var gulp = require('gulp');
-var browserify = require('gulp-browserify');
+var browserify = require('browserify');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
@@ -12,13 +13,18 @@ var jasmine = require('gulp-jasmine');
 var exec = require('child_process').exec;
 var sourcemaps = require('gulp-sourcemaps');
 var exorcist = require('exorcist');
+var buffer = require('vinyl-buffer');
 var transform = require('vinyl-transform');
+var source = require('vinyl-source-stream');
+
+fs.mkdirSync('public/build');
 
 function build(minify) {
     // Combine main.js and its dependencies into a single file.
     // The poorly-named "debug: true" causes Browserify to generate a source map.
-    var result = gulp.src(['src/viewer/main.js'])
-        .pipe(browserify({ debug: true }));
+    var result = browserify('./src/viewer/main.js').bundle({ debug: true })
+        .pipe(source('ausglobe.js'))
+        .pipe(buffer());
 
     if (minify) {
         // Minify the combined source.
