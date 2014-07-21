@@ -169,7 +169,7 @@ var GeoDataBrowserViewModel = function(options) {
                 data : {
                     name : that.wfsServiceUrl,
                     base_url : that.wfsServiceUrl,
-                    type : that.addType,
+                    type : that.addType
                 }
             });
             that.userContent.push(item);
