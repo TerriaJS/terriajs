@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require*/
+/*global require,URI*/
 
 var corsProxy = {
     getURL : function(resource) {
@@ -32,7 +32,7 @@ corsProxy.shouldUseProxy = function(url) {
 
 
 //Non CORS hosts we proxy to
-var proxyAllowedHost = function(host) {
+function proxyAllowedHost(host) {
     host = host.toLowerCase();
     var proxyDomains = corsProxy.proxyDomains;
     //check that host is from one of these domains
@@ -47,7 +47,7 @@ var proxyAllowedHost = function(host) {
 
 corsProxy.setProxyList = function(proxyDomains) {
     corsProxy.proxyDomains = proxyDomains;
-}
+};
 
 
 module.exports = corsProxy;
