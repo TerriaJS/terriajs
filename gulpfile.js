@@ -17,7 +17,9 @@ var buffer = require('vinyl-buffer');
 var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 
-fs.mkdirSync('public/build');
+if (!fs.existsSync('public/build')) {
+    fs.mkdirSync('public/build');
+}
 
 function build(minify) {
     // Combine main.js and its dependencies into a single file.
