@@ -9,9 +9,37 @@ var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
 var jasmine = require('gulp-jasmine');
-var addsrc = require('gulp-add-src');
-var rename = require("gulp-rename");
 var exec = require('child_process').exec;
+var sourcemaps = require('gulp-sourcemaps');
+var exorcist = require('exorcist');
+var transform = require('vinyl-transform');
+
+function build(minify) {
+    // Combine main.js and its dependencies into a single file.
+    // The poorly-named "debug: true" causes Browserify to generate a source map.
+    var result = gulp.src(['src/viewer/main.js'])
+        .pipe(browserify({ debug: true }));
+
+    if (minify) {
+        // Minify the combined source.
+        // sourcemaps.init/write maintains a working source map after minification.
+        // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
+        result = result
+            .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(uglify({preserveComments: 'some', mangle: false, compress: false}))
+            .pipe(sourcemaps.write());
+    }
+
+    result = result
+        // Extract the embedded source map to a separate file.
+        .pipe(transform(function () { return exorcist('public/build/ausglobe.js.map'); }))
+
+        // Write the finished product.
+        .pipe(concat('ausglobe.js'))
+        .pipe(gulp.dest('public/build'));
+
+    return result;
+}
 
 //TODO: figure out if there's any value to this
 //var refresh = require('gulp-livereload');  
@@ -19,35 +47,21 @@ var exec = require('child_process').exec;
 //var server = lr();
 
 gulp.task('build', function() {
-    return gulp.src(['src/viewer/main.js'])
-        .pipe(browserify())
-        .pipe(concat('ausglobe.js'))
-        .pipe(gulp.dest('public/build'))
-        .pipe(uglify({mangle: false, compress: false}))
-        .pipe(concat('ausglobe.min.js'))
-        .pipe(gulp.dest('public/build'));
+    return build(true);
 });
 
-gulp.task('release-ausglobe', function() {
-    return gulp.src(['src/viewer/main.js'])
-        .pipe(browserify())
-        .pipe(addsrc('src/copyrightHeader.js'))
-        .pipe(concat('ausglobeUnminified.js'))
-        .pipe(gulp.dest('public/build'))
-        .pipe(uglify({mangle: false, compress: false}))
-        .pipe(addsrc('src/copyrightHeader.js'))
-        .pipe(concat('ausglobe.js'))
-        .pipe(gulp.dest('public/build'));
+gulp.task('build-debug', function() {
+    return build(false);
 });
 
 gulp.task('lint', function(){
-    gulp.src('src/**/*.js')
+    return gulp.src('src/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
 gulp.task('docs', function(){
-    gulp.src('src/*.js')
+    return gulp.src('src/*.js')
         .pipe(jsdoc('./public/doc'));
 });
 
@@ -89,7 +103,7 @@ gulp.task('release-cesium', function(cb) {
     });
 });
 
-gulp.task('default', ['build', 'docs']);
+gulp.task('default', ['build', 'lint']);
 
 gulp.task('release', ['release-ausglobe', 'docs']);
 
