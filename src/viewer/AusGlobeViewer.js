@@ -537,51 +537,6 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
     }
 };
 
-// Settings dialog
-AusGlobeViewer.prototype._showSettingsDialog = function() {
-
-    $("#dialogSettings").dialog({
-        title: 'Settings',
-        width: 250,
-        height: 250,
-        modal: false
-    });
-
-    var list = $('#list4');
-    list.selectable({
-        selected: function (event, ui) {
-            var item = $('#list4 .ui-selected');
-        }
-    });
-    list.html('');
-
-    var that = this;
-
-    var settings = [
-        {
-            text: '3D',
-            getState: function() { return that._cesiumViewerActive(); },
-            setState: function(val) { that.selectViewer(val); }
-        },
-        {
-            text: 'Water Mask',
-            getState: function() { return true; },
-            setState: function(val) { alert('NYI'); }
-        }
-
-    ];
-    for (var i = 0; i < settings.length; i++) {
-        var state = settings[i].getState() ? 'checked' : 'unchecked';
-        list.append('<input type="checkbox" name="' + settings[i].text + '" id=' + i + ' '+ state +'><label for=' + i + ' id=' + i + '>' + settings[i].text + '</label><br>');
-    }
-    //set state when clicked
-    $('#dialogSettings :checkbox').click(function() {
-        var $this = $(this);
-        var id = $this[0].id;
-        settings[id].setState($this.is(':checked'));
-    });
-};
-
 AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer !== undefined); };
 
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
