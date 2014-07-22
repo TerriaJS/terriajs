@@ -5,7 +5,8 @@
         "bom.gov.au",
         "ga.gov.au",
         "communications.gov.au",
-        "tas.gov.au"
+        "tas.gov.au",
+        "ntlis.nt.gov.au"
     ],
  "corsDomains" : [
         "research.nicta.com.au",
