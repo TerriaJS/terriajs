@@ -353,9 +353,6 @@ FrameChecker.prototype.skipFrame = function(scene, date) {
         }
         else {
             this._skipCnt = 0;
-            if (!bCamSame) {
-                checkCameraHeight(scene);
-            }
         }
     }
 
@@ -1078,24 +1075,6 @@ function getCameraRect(scene, map) {
         var bnds = map.getBounds();
         return Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
     }
-}
-
-//A very simple camera height checker.
-//TODO: need to create a new camera controller to do this properly
-function checkCameraHeight(scene) {
-    //check camera below 6000 m start checking against surface
-    if (getCameraHeight(scene) >= 6000) {
-        return;
-    }
-    var terrainPos = [getCameraPos(scene)];
-    when(sampleTerrain(scene.globe.terrainProvider, 5, terrainPos), function() {
-        terrainPos[0].height += 100;
-        if (getCameraHeight(scene) < terrainPos[0].height) {
-            var curCamPos = getCameraPos(scene);
-            curCamPos.height = terrainPos[0].height;
-            scene.camera.position = Ellipsoid.WGS84.cartographicToCartesian(curCamPos);
-        }
-    });
 }
 
 function flyToPosition(scene, position, durationMilliseconds) {
