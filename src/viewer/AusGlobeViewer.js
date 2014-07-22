@@ -23,7 +23,7 @@ var Credit = Cesium.Credit;
 var DataSourceCollection = Cesium.DataSourceCollection;
 var defaultValue = Cesium.defaultValue;
 var defined = Cesium.defined;
-var DynamicObject = Cesium.DynamicObject;
+var Entity = Cesium.Entity;
 var Ellipsoid = Cesium.Ellipsoid;
 var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
 var GeographicProjection = Cesium.GeographicProjection;
@@ -49,7 +49,7 @@ var ScreenSpaceEventType = Cesium.ScreenSpaceEventType;
 var Transforms = Cesium.Transforms;
 var Tween = Cesium.Tween;
 var Viewer = Cesium.Viewer;
-var viewerDynamicObjectMixin = Cesium.viewerDynamicObjectMixin;
+var viewerEntityMixin = Cesium.viewerEntityMixin;
 var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
 var WebMercatorProjection = Cesium.WebMercatorProjection;
 var when = Cesium.when;
@@ -563,7 +563,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     //create CesiumViewer
     var viewer = new Viewer(container, options);
-    viewer.extend(viewerDynamicObjectMixin);
+    viewer.extend(viewerEntityMixin);
 
     var lastHeight = 0;
     viewer.scene.preRender.addEventListener(function(scene, time) {
@@ -649,7 +649,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             }
 
             // If something is already selected, don't try to pick WMS features.
-            if (defined(that.viewer.selectedObject)) {
+            if (defined(that.viewer.selectedEntity)) {
                 return;
             }
 
@@ -662,17 +662,10 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             var surface = that.viewer.scene.globe._surface;
             var pickedTile;
 
-            for (var textureIndex = 0; !defined(pickedTile) && textureIndex < surface._tilesToRenderByTextureCount.length; ++textureIndex) {
-                var tiles = surface._tilesToRenderByTextureCount[textureIndex];
-                if (!defined(tiles)) {
-                    continue;
-                }
-
-                for (var tileIndex = 0; !defined(pickedTile) && tileIndex < tiles.length; ++tileIndex) {
-                    var tile = tiles[tileIndex];
-                    if (Rectangle.contains(tile.rectangle, pickedLocation)) {
-                        pickedTile = tile;
-                    }
+            for (var textureIndex = 0; !defined(pickedTile) && textureIndex < surface._tilesToRender.length; ++textureIndex) {
+                var tile = surface._tilesToRender[textureIndex];
+                if (Rectangle.contains(tile.rectangle, pickedLocation)) {
+                    pickedTile = tile;
                 }
             }
 
@@ -682,7 +675,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
             // GetFeatureInfo for all attached imagery tiles containing the pickedLocation.
             var tileExtent = pickedTile.rectangle;
-            var imageryTiles = pickedTile.imagery;
+            var imageryTiles = pickedTile.data.imagery;
             var extent = extentScratch;
 
             var promises = [];
@@ -759,7 +752,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.destroy = function() {};
 
         map.infoBox = new InfoBox(document.body);
-        viewerDynamicObjectMixin(map);
+        viewerEntityMixin(map);
 
         this.map = map;
 
@@ -969,7 +962,7 @@ function updateTimeline(viewer, start, finish) {
         clock.startTime = start;
         clock.currentTime = start;
         clock.stopTime = finish;
-        clock.multiplier = JulianDate.getSecondsDifference(finish, start) / 60.0;
+        clock.multiplier = JulianDate.secondsDifference(finish, start) / 60.0;
         clock.clockRange = ClockRange.LOOP_STOP;
         clock.shouldAnimate = true;
         viewer.timeline.zoomTo(clock.startTime, clock.stopTime);
@@ -1115,12 +1108,21 @@ function flyToPosition(scene, position, durationMilliseconds) {
     durationMilliseconds = defaultValue(durationMilliseconds, 200);
 
     var initialEnuToFixed = Transforms.eastNorthUpToFixedFrame(startPosition, Ellipsoid.WGS84);
-    var initialEnuToFixedRotation = Matrix4.getRotation(initialEnuToFixed);
-    var initialFixedToEnuRotation = Matrix3.transpose(initialEnuToFixedRotation);
 
-    var initialEnuUp = Matrix3.multiplyByVector(initialFixedToEnuRotation, camera.up);
-    var initialEnuRight = Matrix3.multiplyByVector(initialFixedToEnuRotation, camera.right);
-    var initialEnuDirection = Matrix3.multiplyByVector(initialFixedToEnuRotation, camera.direction);
+    var initialEnuToFixedRotation = new Matrix4();
+    Matrix4.getRotation(initialEnuToFixed, initialEnuToFixedRotation);
+    
+    var initialFixedToEnuRotation = new Matrix3();
+    Matrix3.transpose(initialEnuToFixedRotation, initialFixedToEnuRotation);
+
+    var initialEnuUp = new Matrix3();
+    Matrix3.multiplyByVector(initialFixedToEnuRotation, camera.up, initialEnuUp);
+
+    var initialEnuRight = new Matrix3();
+    Matrix3.multiplyByVector(initialFixedToEnuRotation, camera.right, initialEnuRight);
+
+    var initialEnuDirection = new Matrix3();
+    Matrix3.multiplyByVector(initialFixedToEnuRotation, camera.direction, initialEnuDirection);
 
     var controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
@@ -1140,7 +1142,9 @@ function flyToPosition(scene, position, durationMilliseconds) {
             scene.camera.position.z = CesiumMath.lerp(startPosition.z, endPosition.z, value.time);
 
             var enuToFixed = Transforms.eastNorthUpToFixedFrame(camera.position, Ellipsoid.WGS84);
-            var enuToFixedRotation = Matrix4.getRotation(enuToFixed);
+
+            var enuToFixedRotation = new Matrix3();
+            Matrix4.getRotation(enuToFixed, enuToFixedRotation);
 
             camera.up = Matrix3.multiplyByVector(enuToFixedRotation, initialEnuUp, camera.up);
             camera.right = Matrix3.multiplyByVector(enuToFixedRotation, initialEnuRight, camera.right);
@@ -1267,8 +1271,8 @@ function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, 
         srs = 'EPSG:3857';
         
         var projection = new WebMercatorProjection();
-        sw = projection.project(Rectangle.getSouthwest(extent));
-        ne = projection.project(Rectangle.getNortheast(extent));
+        sw = projection.project(Rectangle.southwest(extent));
+        ne = projection.project(Rectangle.northeast(extent));
     } else {
         srs = 'EPSG:4326';
         sw = new Cartesian3(CesiumMath.toDegrees(extent.west), CesiumMath.toDegrees(extent.south), 0.0);
@@ -1326,8 +1330,8 @@ function selectFeatures(promises, viewer) {
 
     function waitForNextLayersResponse() {
         if (nextPromiseIndex >= promises.length) {
-            viewer.selectedObject = new DynamicObject('None');
-            viewer.selectedObject.description = {
+            viewer.selectedEntity = new Entity('None');
+            viewer.selectedEntity.description = {
                 getValue : function() {
                     return 'No features found.';
                 }
@@ -1415,16 +1419,16 @@ function selectFeatures(promises, viewer) {
             // Show information for the first selected feature.
             var feature = result.features[0];
             if (defined(feature)) {
-                viewer.selectedObject = new DynamicObject(findGoodIdProperty(feature.properties));
+                viewer.selectedEntity = new Entity(findGoodIdProperty(feature.properties));
                 var description = describe(feature.properties);
-                viewer.selectedObject.description = {
+                viewer.selectedEntity.description = {
                     getValue : function() {
                         return description;
                     }
                 };
             } else {
-                viewer.selectedObject = new DynamicObject('None');
-                viewer.selectedObject.description = {
+                viewer.selectedEntity = new Entity('None');
+                viewer.selectedEntity.description = {
                     getValue : function() {
                         return 'No features found.';
                     }
@@ -1438,8 +1442,8 @@ function selectFeatures(promises, viewer) {
     waitForNextLayersResponse();
 
     // Add placeholder information to the infobox so the user knows something is happening.
-    viewer.selectedObject = new DynamicObject('Loading...');
-    viewer.selectedObject.description = {
+    viewer.selectedEntity = new Entity('Loading...');
+    viewer.selectedEntity.description = {
         getValue : function() {
             return 'Loading WMS feature information...';
         }
