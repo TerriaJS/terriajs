@@ -4,6 +4,7 @@
 
 var fs = require('fs');
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var browserify = require('browserify');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
@@ -16,43 +17,13 @@ var exorcist = require('exorcist');
 var buffer = require('vinyl-buffer');
 var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
+var watchify = require('watchify');
 
+// Create the build directory, because browserify flips out if the directory that might
+// contain an existing source map doesn't exist.
 if (!fs.existsSync('public/build')) {
     fs.mkdirSync('public/build');
 }
-
-function build(minify) {
-    // Combine main.js and its dependencies into a single file.
-    // The poorly-named "debug: true" causes Browserify to generate a source map.
-    var result = browserify('./src/viewer/main.js').bundle({ debug: true })
-        .pipe(source('ausglobe.js'))
-        .pipe(buffer());
-
-    if (minify) {
-        // Minify the combined source.
-        // sourcemaps.init/write maintains a working source map after minification.
-        // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
-        result = result
-            .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(uglify({preserveComments: 'some', mangle: false, compress: false}))
-            .pipe(sourcemaps.write());
-    }
-
-    result = result
-        // Extract the embedded source map to a separate file.
-        .pipe(transform(function () { return exorcist('public/build/ausglobe.js.map'); }))
-
-        // Write the finished product.
-        .pipe(concat('ausglobe.js'))
-        .pipe(gulp.dest('public/build'));
-
-    return result;
-}
-
-//TODO: figure out if there's any value to this
-//var refresh = require('gulp-livereload');  
-//var lr = require('tiny-lr');  
-//var server = lr();
 
 gulp.task('build', function() {
     return build(true);
@@ -60,6 +31,14 @@ gulp.task('build', function() {
 
 gulp.task('build-debug', function() {
     return build(false);
+});
+
+gulp.task('watch', function() {
+    return watch(true);
+});
+
+gulp.task('watch-debug', function() {
+    return watch(false);
 });
 
 gulp.task('lint', function(){
@@ -77,14 +56,6 @@ gulp.task('test', function () {
     return gulp.src('public/specs/*.js')
         .pipe(jasmine());
 });
-
-/*
-gulp.task('lr-server', function() {  
-    server.listen(35729, function(err) {
-        if(err) return console.log(err);
-    });
-})
-*/
 
 gulp.task('build-cesium', function(cb) {
     return exec('"Tools/apache-ant-1.8.2/bin/ant" build combine', {
@@ -115,7 +86,65 @@ gulp.task('default', ['build', 'lint']);
 
 gulp.task('release', ['build', 'lint', 'docs']);
 
-gulp.task('watch', function() {
-    gulp.watch(['public/cesium/Source/**', 'public/cesium/Specs/**'], ['build-cesium']);
-    gulp.watch('src/**/*.js', ['default']);
-});
+function bundle(bundler, minify, catchErrors) {
+    // Combine main.js and its dependencies into a single file.
+    // The poorly-named "debug: true" causes Browserify to generate a source map.
+    var result = bundler.bundle({
+            debug: true
+        });
+
+    if (catchErrors) {
+        // Display errors to the user, and don't let them propagate.
+        result = result.on('error', function(e) {
+            gutil.log('Browserify Error', e);
+        });
+    }
+
+    result = result
+        .pipe(source('ausglobe.js'))
+        .pipe(buffer());
+
+    if (minify) {
+        // Minify the combined source.
+        // sourcemaps.init/write maintains a working source map after minification.
+        // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
+        result = result
+            .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(uglify({preserveComments: 'some', mangle: false, compress: false}))
+            .pipe(sourcemaps.write());
+    }
+
+    result = result
+        // Extract the embedded source map to a separate file.
+        .pipe(transform(function () { return exorcist('public/build/ausglobe.js.map'); }))
+
+        // Write the finished product.
+        .pipe(gulp.dest('public/build'));
+
+    return result;
+}
+
+function build(minify) {
+    bundle(browserify('./src/viewer/main.js'), minify, false);
+}
+
+function watch(minify) {
+    var bundler = watchify('./src/viewer/main.js');
+
+    var timeSeconds = 'unknown';
+
+    bundler.on('bytes', function(bytes) {
+        console.log('Wrote ' + bytes + ' bytes in ' + timeSeconds + ' seconds.');
+    })
+    bundler.on('time', function(time) {
+        timeSeconds = time / 1000.0;
+    });
+
+    function rebundle() {
+        return bundle(bundler, minify, true);
+    }
+
+    bundler.on('update', rebundle);
+
+    return rebundle();
+}
