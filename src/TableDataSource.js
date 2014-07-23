@@ -74,7 +74,7 @@ defineProperties(TableDataSource.prototype, {
          * defined in the CZML, the combined availability of all objects is returned.  If
          * only static data exists, this value is undefined.
          * @memberof TableDataSource.prototype
-         * @type {DynamicClock}
+         * @type {DataSourceClock}
          */
        clock : {
             get : function() {
@@ -82,13 +82,13 @@ defineProperties(TableDataSource.prototype, {
             }
         },
          /**
-         * Gets the collection of {@link DynamicObject} instances.
+         * Gets the collection of {@link Entity} instances.
          * @memberof TableDataSource.prototype
-         * @type {DynamicObjectCollection}
+         * @type {EntityCollection}
          */
-       dynamicObjects : {
+       entities : {
             get : function() {
-                return this.czmlDataSource.dynamicObjects;
+                return this.czmlDataSource.entities;
             }
         },
          /**
@@ -197,6 +197,8 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
             "scale" : 1.0,
             "color" : { "rgba" : [255, 0, 0, 255] },
             "show" : [{
+                    "boolean" : false
+                }, {
                 "interval" : "2011-02-04T16:00:00Z/2011-04-04T18:00:00Z",
                 "boolean" : true
             }]
@@ -213,7 +215,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
 
     var start = JulianDate.addMinutes(point.time, -this.leadTimeMin, startScratch);
     var finish = JulianDate.addMinutes(point.time, this.trailTimeMin, endScratch);
-    rec.billboard.show[0].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
+    rec.billboard.show[1].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
     return rec;
 };
 
@@ -233,7 +235,10 @@ TableDataSource.prototype.getDataPointList = function () {
     //update the datapoint collection
     var pointList = this.dataset.getPointList();
     
-    var dispRecords = [];
+    var dispRecords = [{
+        id : 'document',
+        version : '1.0'
+    }];
     
     for (var i = 0; i < pointList.length; i++) {
         //set position, scale, color, and display time
@@ -288,7 +293,7 @@ TableDataSource.prototype._mapValue2Color = function (pt_val) {
 TableDataSource.prototype.setLeadTimeByPercent = function (pct) {
     if (this.dataset) {
         var data = this.dataset;
-        this.leadTimeMin = JulianDate.getSecondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
+        this.leadTimeMin = JulianDate.secondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
     }
 };
 
@@ -301,7 +306,7 @@ TableDataSource.prototype.setLeadTimeByPercent = function (pct) {
 TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
     if (this.dataset) {
         var data = this.dataset;
-        this.trailTimeMin = JulianDate.getSecondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
+        this.trailTimeMin = JulianDate.secondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
     }
 };
 

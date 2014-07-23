@@ -9,7 +9,6 @@ var createCommand = Cesium.createCommand;
 var Ellipsoid = Cesium.Ellipsoid;
 var getElement = Cesium.getElement;
 var SceneMode = Cesium.SceneMode;
-var Matrix4 = Cesium.Matrix4;
 var CameraFlightPath = Cesium.CameraFlightPath;
 var Ray = Cesium.Ray;
 var IntersectionTests = Cesium.IntersectionTests;

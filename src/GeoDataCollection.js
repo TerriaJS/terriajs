@@ -1248,8 +1248,8 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
 * @returns {Object} A Cesium.extent object bounding the data points
 */
 function getDataSourceExtent(dataSource) {
-    var collection = dataSource.dynamicObjects;
-    var objects = collection.getObjects();
+    var collection = dataSource.entities;
+    var objects = collection.entities;
     var e0;
     
     var julianDate = new Cesium.JulianDate();
@@ -1257,8 +1257,8 @@ function getDataSourceExtent(dataSource) {
     var cArray;
 
     for (var i = 0; i < objects.length; i++) {
-        if (objects[i].vertexPositions) {
-            cArray = objects[i].vertexPositions.getValue(julianDate);
+        if (objects[i].positions) {
+            cArray = objects[i].positions.getValue(julianDate);
         }
         else if (objects[i].position) {
             cArray = [objects[i].position.getValue(julianDate)];
@@ -1533,7 +1533,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     
     //update default point/line/polygon
     var defaultPoint = newDataSource.defaultPoint;
-    var point = new Cesium.DynamicPoint();
+    var point = new Cesium.PointGraphics();
     point.color = new Cesium.ConstantProperty(getCesiumColor(layer.style.point.color));
     point.pixelSize = new Cesium.ConstantProperty(layer.style.point.size);
     point.outlineColor = new Cesium.ConstantProperty(Cesium.Color.BLACK);
@@ -1541,7 +1541,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     defaultPoint.point = point;
     
     var defaultLine = newDataSource.defaultLine;
-    var polyline = new Cesium.DynamicPolyline();
+    var polyline = new Cesium.PolylineGraphics();
     var material = new Cesium.ColorMaterialProperty();
     material.color = new Cesium.ConstantProperty(getCesiumColor(layer.style.line.color));
     polyline.material = material;
@@ -1552,7 +1552,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     
     defaultPolygon.polyline = polyline;
     
-    var polygon = new Cesium.DynamicPolygon();
+    var polygon = new Cesium.PolygonGraphics();
     polygon.fill = new Cesium.ConstantProperty(layer.style.polygon.fill);
     defaultPolygon.polygon = polygon;
     
