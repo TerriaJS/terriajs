@@ -5,8 +5,8 @@
 var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
 var getElement = require('../../public/cesium/Source/Widgets/getElement');
 
-var knockout = require('knockout');
-var knockoutES5 = require('../../public/third_party/knockout-es5.js');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var knockoutES5 = require('../../public/cesium/Source/ThirdParty/knockout-es5');
 
 var GeoDataBrowserViewModel = require('./GeoDataBrowserViewModel');
 

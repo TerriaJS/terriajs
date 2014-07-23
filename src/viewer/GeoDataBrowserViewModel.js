@@ -23,9 +23,9 @@ var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
-var knockout = require('knockout');
-var komapping = require('knockout.mapping');
-var knockoutES5 = require('../../public/third_party/knockout-es5.js');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var komapping = require('../../public/third_party/knockout.mapping');
+var knockoutES5 = require('../../public/cesium/Source/ThirdParty/knockout-es5');
 
 var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;

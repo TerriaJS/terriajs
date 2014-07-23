@@ -14,7 +14,7 @@ window.CESIUM_BASE_URL = 'cesium/Build/Cesium/';
 var copyright = require('../CopyrightModule');
 
 var SvgPathBindingHandler = require('../../public/cesium/Source/Widgets/SvgPathBindingHandler');
-var knockout = require('knockout');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
 
 var GeoDataCollection = require('../GeoDataCollection');
 var AusGlobeViewer = require('./AusGlobeViewer');

@@ -6,11 +6,8 @@
     "connect": "^3.0.0",
     "express": "^4.4.3",
     "cors": "~2.3.1",
-    "knockout": "^3.1.0",
-    "knockout.mapping": "^2.4.2",
     "request": "*",
     "supervisor": "^0.4.1",
-    "weakmap": "0.0.6",
     "yargs": "1.2.6"
   },
   "devDependencies": {
@@ -33,5 +30,8 @@
   },
   "scripts": {
     "start": "node_modules/.bin/supervisor server"
+  },
+  "browser": {
+    "knockout": "./public/cesium/Source/ThirdParty/knockout.js"
   }
 }

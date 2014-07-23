@@ -8,7 +8,7 @@ var DeveloperError = require('../../public/cesium/Source/Core/DeveloperError');
 var getElement = require('../../public/cesium/Source/Widgets/getElement');
 var SvgPathBindingHandler = require('../../public/cesium/Source/Widgets/SvgPathBindingHandler');
 
-var knockout = require('knockout');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
 var SearchWidgetViewModel = require('./SearchWidgetViewModel');
 
 SvgPathBindingHandler.register(knockout);

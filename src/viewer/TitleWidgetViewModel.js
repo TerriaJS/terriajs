@@ -6,7 +6,7 @@ var defined = require('../../public/cesium/Source/Core/defined');
 var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
 var createCommand = require('../../public/cesium/Source/Widgets/createCommand');
 
-var knockout = require('knockout');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
 
 var TitleWidgetViewModel = function(options) {
     this.title = 'National Map (BETA)';

@@ -4,7 +4,7 @@
 var defaultValue = require('../../public/cesium/Source/Core/defaultValue');
 var getElement = require('../../public/cesium/Source/Widgets/getElement');
 
-var knockout = require('knockout');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
 
 var PopupMessage = function(options) {
     var container = getElement(options.container);

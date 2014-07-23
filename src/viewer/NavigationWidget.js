@@ -17,7 +17,7 @@ var Tween = require('../../public/cesium/Source/ThirdParty/Tween');
 var defaultValue = require('../../public/cesium/Source/Core/defaultValue');
 var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
 
-var knockout = require('knockout');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
 
 var cartesian3Scratch = new Cartesian3();
 

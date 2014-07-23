@@ -7,8 +7,8 @@ var when = require('../../public/cesium/Source/ThirdParty/when');
 var loadXML = require('../../public/cesium/Source/Core/loadXML');
 
 var corsProxy = require('../corsProxy');
-var knockout = require('knockout');
-var komapping = require('knockout.mapping');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var komapping = require('../../public/third_party/knockout.mapping');
 
 var ServicesPanel = function(options) {
     var container = getElement(options.container);

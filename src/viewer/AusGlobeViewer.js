@@ -54,9 +54,9 @@ var WebMapServiceImageryProvider = require('../../public/cesium/Source/Scene/Web
 var WebMercatorProjection = require('../../public/cesium/Source/Core/WebMercatorProjection');
 var when = require('../../public/cesium/Source/ThirdParty/when');
 
-var knockout = require('knockout');
-var komapping = require('knockout.mapping');
-var knockoutES5 = require('../../public/third_party/knockout-es5.js');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var komapping = require('../../public/third_party/knockout.mapping');
+var knockoutES5 = require('../../public/cesium/Source/ThirdParty/knockout-es5');
 
 var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');

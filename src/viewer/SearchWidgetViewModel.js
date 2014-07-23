@@ -16,7 +16,7 @@ var SceneMode = require('../../public/cesium/Source/Scene/SceneMode');
 var when = require('../../public/cesium/Source/ThirdParty/when');
 var createCommand = require('../../public/cesium/Source/Widgets/createCommand');
 
-var knockout = require('knockout');
+var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
 
 /**
  * The view model for the {@link Geocoder} widget.
