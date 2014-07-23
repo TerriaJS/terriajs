@@ -23,11 +23,13 @@
     "gulp-jshint": "~1.6.1",
     "gulp-sourcemaps": "^1.1.0",
     "gulp-uglify": "~0.3.0",
+    "gulp-util": "^3.0.0",
     "gulp-watch": "~0.6.5",
     "intern": "^2.0.1",
     "vinyl-buffer": "0.0.0",
     "vinyl-source-stream": "^0.1.1",
-    "vinyl-transform": "0.0.1"
+    "vinyl-transform": "0.0.1",
+    "watchify": "git://github.com/cconger/watchify#35407c030db9c6c9099e7fc2a5c21ac5eb7db5f8"
   },
   "scripts": {
     "start": "node_modules/.bin/supervisor server"
