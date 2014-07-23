@@ -1,12 +1,12 @@
 "use strict";
 
-/*global require,Cesium*/
-var defined = Cesium.defined;
-var defineProperties = Cesium.defineProperties;
-var destroyObject = Cesium.destroyObject;
-var DeveloperError = Cesium.DeveloperError;
-var getElement = Cesium.getElement;
-var SvgPathBindingHandler = Cesium.SvgPathBindingHandler;
+/*global require*/
+var defined = require('../../public/cesium/Source/Core/defined');
+var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
+var destroyObject = require('../../public/cesium/Source/Core/destroyObject');
+var DeveloperError = require('../../public/cesium/Source/Core/DeveloperError');
+var getElement = require('../../public/cesium/Source/Widgets/getElement');
+var SvgPathBindingHandler = require('../../public/cesium/Source/Widgets/SvgPathBindingHandler');
 
 var knockout = require('knockout');
 var SearchWidgetViewModel = require('./SearchWidgetViewModel');

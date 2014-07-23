@@ -1,21 +1,22 @@
 "use strict";
 
-/*global Cesium,require,ga,alert,L*/
+/*global require,ga,alert,L*/
 
-var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
-var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
-var BingMapsStyle = Cesium.BingMapsStyle;
-var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
-var combine = Cesium.combine;
-var createCommand = Cesium.createCommand;
-var defined = Cesium.defined;
-var defineProperties = Cesium.defineProperties;
-var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
-var GeographicTilingScheme = Cesium.GeographicTilingScheme;
-var loadJson = Cesium.loadJson;
-var Rectangle = Cesium.Rectangle;
-var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
-var when = Cesium.when;
+var ArcGisMapServerImageryProvider = require('../../public/cesium/Source/Scene/ArcGisMapServerImageryProvider');
+var BingMapsApi = require('../../public/cesium/Source/Core/BingMapsApi');
+var BingMapsImageryProvider = require('../../public/cesium/Source/Scene/BingMapsImageryProvider');
+var BingMapsStyle = require('../../public/cesium/Source/Scene/BingMapsStyle');
+var CesiumTerrainProvider = require('../../public/cesium/Source/Core/CesiumTerrainProvider');
+var combine = require('../../public/cesium/Source/Core/combine');
+var createCommand = require('../../public/cesium/Source/Widgets/createCommand');
+var defined = require('../../public/cesium/Source/Core/defined');
+var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
+var EllipsoidTerrainProvider = require('../../public/cesium/Source/Core/EllipsoidTerrainProvider');
+var GeographicTilingScheme = require('../../public/cesium/Source/Core/GeographicTilingScheme');
+var loadJson = require('../../public/cesium/Source/Core/loadJson');
+var Rectangle = require('../../public/cesium/Source/Core/Rectangle');
+var TileMapServiceImageryProvider = require('../../public/cesium/Source/Scene/TileMapServiceImageryProvider');
+var when = require('../../public/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
@@ -202,7 +203,7 @@ var GeoDataBrowserViewModel = function(options) {
         removeBaseLayer();
 
         if (!defined(that._viewer.viewer)) {
-            that._viewer.mapBaseLayer = new L.BingLayer(Cesium.BingMapsApi.getKey(), { type: style });
+            that._viewer.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey(), { type: style });
             that._viewer.map.addLayer(that._viewer.mapBaseLayer);
             return;
         }

@@ -1,4 +1,4 @@
-/*global require,Cesium,L,URI,$,toGeoJSON,proj4,proj4_epsg,alert,confirm*/
+/*global require,L,URI,$,toGeoJSON,proj4,proj4_epsg,alert,confirm*/
 
 "use strict";
 
@@ -9,12 +9,31 @@ var readText = require('./readText');
 
 var PopupMessage = require('./viewer/PopupMessage');
 
-var defaultValue = Cesium.defaultValue;
-var defined = Cesium.defined;
-var DeveloperError = Cesium.DeveloperError;
-var FeatureDetection = Cesium.FeatureDetection;
-var KmlDataSource = Cesium.KmlDataSource;
-var when = Cesium.when;
+var ArcGisMapServerImageryProvider = require('../public/cesium/Source/Scene/ArcGisMapServerImageryProvider');
+var CesiumMath = require('../public/cesium/Source/Core/Math');
+var Color = require('../public/cesium/Source/Core/Color');
+var ColorMaterialProperty = require('../public/cesium/Source/DataSources/ColorMaterialProperty');
+var ConstantProperty = require('../public/cesium/Source/DataSources/ConstantProperty');
+var CzmlDataSource = require('../public/cesium/Source/DataSources/CzmlDataSource');
+var DataSourceCollection = require('../public/cesium/Source/DataSources/DataSourceCollection');
+var defaultValue = require('../public/cesium/Source/Core/defaultValue');
+var defined = require('../public/cesium/Source/Core/defined');
+var DeveloperError = require('../public/cesium/Source/Core/DeveloperError');
+var Ellipsoid = require('../public/cesium/Source/Core/Ellipsoid');
+var CesiumEvent = require('../public/cesium/Source/Core/Event');
+var FeatureDetection = require('../public/cesium/Source/Core/FeatureDetection');
+var GeoJsonDataSource = require('../public/cesium/Source/DataSources/GeoJsonDataSource');
+var JulianDate = require('../public/cesium/Source/Core/JulianDate');
+var KmlDataSource = require('../public/cesium/Source/DataSources/KmlDataSource');
+var loadBlob = require('../public/cesium/Source/Core/loadBlob');
+var loadJson = require('../public/cesium/Source/Core/loadJson');
+var loadText = require('../public/cesium/Source/Core/loadText');
+var PointGraphics = require('../public/cesium/Source/DataSources/PointGraphics');
+var PolygonGraphics = require('../public/cesium/Source/DataSources/PolygonGraphics');
+var PolylineGraphics = require('../public/cesium/Source/DataSources/PolylineGraphics');
+var Rectangle = require('../public/cesium/Source/Core/Rectangle');
+var WebMapServiceImageryProvider = require('../public/cesium/Source/Scene/WebMapServiceImageryProvider');
+var when = require('../public/cesium/Source/ThirdParty/when');
 
 /**
 * This class is loosely based on the cesium DataSource/DataSourceCollection
@@ -40,13 +59,13 @@ var GeoDataCollection = function() {
     this.map = undefined;
     
     //Init the dataSourceCollection
-    this.dataSourceCollection = new Cesium.DataSourceCollection();
+    this.dataSourceCollection = new DataSourceCollection();
     
-    this.GeoDataAdded = new Cesium.Event();
-    this.GeoDataRemoved = new Cesium.Event();
-    this.GeoDataReordered = new Cesium.Event();
-    this.ViewerChanged = new Cesium.Event();
-    this.ShareRequest = new Cesium.Event();
+    this.GeoDataAdded = new CesiumEvent();
+    this.GeoDataRemoved = new CesiumEvent();
+    this.GeoDataReordered = new CesiumEvent();
+    this.ViewerChanged = new CesiumEvent();
+    this.ShareRequest = new CesiumEvent();
 
     //load list of available services for National Map
     this.services = [];
@@ -384,10 +403,10 @@ GeoDataCollection.prototype._stringify = function() {
 GeoDataCollection.prototype._parseObject = function(obj) {
     for (var p in obj) {
         if (p === 'west') {
-            return new Cesium.Rectangle(obj.west, obj.south, obj.east, obj.north);
+            return new Rectangle(obj.west, obj.south, obj.east, obj.north);
         }
         else if (p === 'red') {
-            return new Cesium.Color(obj.red, obj.green, obj.blue, obj.alpha);
+            return new Color(obj.red, obj.green, obj.blue, obj.alpha);
         }
         else if (typeof obj[p] === 'object') {
             obj[p] = this._parseObject(obj[p]);
@@ -451,12 +470,12 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     //Initialize the view based on vis_id if passed in url
     if (visUrl) {
         //call to server to get json record
-        Cesium.loadJson(visUrl).then( function(obj) {
+        loadJson(visUrl).then( function(obj) {
                 //capture an id if it is passed
             that.visID = obj.id;
             if (obj.camera !== undefined) {
                 var e = JSON.parse(obj.camera);
-                var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
+                var camLayer = { name: 'Camera', extent: new Rectangle(e.west, e.south, e.east, e.north)};
                 that.zoomTo = true;
                 that.GeoDataAdded.raiseEvent(that, camLayer);
             }
@@ -475,7 +494,7 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
         that.visID = obj.id;
         if (obj.camera !== undefined) {
             var e = JSON.parse(obj.camera);
-            var camLayer = { name: 'Camera', extent: new Cesium.Rectangle(e.west, e.south, e.east, e.north)};
+            var camLayer = { name: 'Camera', extent: new Rectangle(e.west, e.south, e.east, e.north)};
             that.zoomTo = true;
             that.GeoDataAdded.raiseEvent(that, camLayer);
         }
@@ -508,14 +527,14 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
             url = corsProxy.getURL(url);
         }
         if (format === 'KMZ') {
-            Cesium.loadBlob(url).then( function(blob) {
+            loadBlob(url).then( function(blob) {
                 blob.name = url;
                 that.addFile(blob);
             }, function(err) {
                 loadErrorResponse(err);
             });
         } else {
-            Cesium.loadText(url).then(function (text) { 
+            loadText(url).then(function (text) { 
                 that.zoomTo = true;
                 that.loadText(text, url, format);
             }, function(err) {
@@ -649,7 +668,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
 
         //Natively handled data sources in cesium
     if (format === "CZML") {
-        var czmlDataSource = new Cesium.CzmlDataSource();
+        var czmlDataSource = new CzmlDataSource();
         czmlDataSource.load(JSON.parse(text));
         this.dataSourceCollection.add(czmlDataSource);
             //add it as a layer
@@ -817,7 +836,7 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
         request = corsProxy.getURL(request);
     }
 
-    Cesium.loadText(request).then( function (text) {
+    loadText(request).then( function (text) {
         //convert to geojson
         var obj;
         if (text[0] === '{') {
@@ -866,13 +885,13 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         }
 
         if (layerName === 'REST') {
-            provider = new Cesium.ArcGisMapServerImageryProvider({
+            provider = new ArcGisMapServerImageryProvider({
                 url: url,
                 proxy: proxy
             });
         }
         else {
-            provider = new Cesium.WebMapServiceImageryProvider({
+            provider = new WebMapServiceImageryProvider({
                 url: url,
                 layers : encodeURIComponent(layerName),
                 parameters: {
@@ -912,7 +931,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
 GeoDataCollection.prototype._viewTable = function(request, layer) {
     var that = this;
         //load text here to let me control functions called after
-    Cesium.loadText(request).then( function (text) {
+    loadText(request).then( function (text) {
         var tableDataSource = new TableDataSource();
         tableDataSource.loadText(text);
         if (that.map === undefined) {
@@ -939,7 +958,7 @@ GeoDataCollection.prototype._viewData = function(request, layer) {
     var format = getFormatFromUrl(layer.url);
     
         //load text here to let me control functions called after
-    Cesium.loadText(request).then (function (text) {
+    loadText(request).then (function (text) {
         that.loadText(text, layer.name, format, layer);
     }, function(err) {
         loadErrorResponse(err);
@@ -1022,13 +1041,13 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
 //        return request;
 //    }
     else {
-//        throw new Cesium.DeveloperError('Getting feature for unsupported service: '+description.type);
+//        throw new DeveloperError('Getting feature for unsupported service: '+description.type);
     }
     
     if (description.extent) {
         var ext = description.extent;
-        var pos = [ Cesium.Math.toDegrees(ext.west), Cesium.Math.toDegrees(ext.south), 
-                    Cesium.Math.toDegrees(ext.east), Cesium.Math.toDegrees(ext.north)];
+        var pos = [ CesiumMath.toDegrees(ext.west), CesiumMath.toDegrees(ext.south), 
+                    CesiumMath.toDegrees(ext.east), CesiumMath.toDegrees(ext.north)];
         //crazy ogc bbox rules - first is old lon/lat ordering, second is newer lat/lon ordering
         var version = parseFloat(description.version);
         if (description.type === 'WFS' && version < 1.1) {
@@ -1171,7 +1190,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
             layers.push(layer[i]);
         }
         var ext = json_gml.fullExtent;
-        description.extent = Cesium.Rectangle.fromDegrees(parseFloat(ext.xmin), parseFloat(ext.ymin), 
+        description.extent = Rectangle.fromDegrees(parseFloat(ext.xmin), parseFloat(ext.ymin), 
             parseFloat(ext.xmax), parseFloat(ext.ymax));
     }
 //    else if (description.type === 'CKAN') {
@@ -1227,7 +1246,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
 
     var that = this;
-    Cesium.loadText(request, undefined, description.username, description.password).then ( function(text) {
+    loadText(request, undefined, description.username, description.password).then ( function(text) {
         that.handleCapabilitiesRequest(text, description);
         callback(description);
     }, function(err) {
@@ -1243,16 +1262,16 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
 /**
 * Get the geographic extent of a datasource
 *
-* @param {Object} dataSource Cesium.dataSource object
+* @param {Object} dataSource Cesium.DataSource object
 *
-* @returns {Object} A Cesium.extent object bounding the data points
+* @returns {Object} A Cesium.Rectangle object bounding the data points
 */
 function getDataSourceExtent(dataSource) {
     var collection = dataSource.entities;
     var objects = collection.entities;
     var e0;
     
-    var julianDate = new Cesium.JulianDate();
+    var julianDate = new JulianDate();
 
     var cArray;
 
@@ -1266,8 +1285,8 @@ function getDataSourceExtent(dataSource) {
         else {
             continue;
         }
-        var cartArray = Cesium.Ellipsoid.WGS84.cartesianArrayToCartographicArray(cArray);
-        var e1 = Cesium.Rectangle.fromCartographicArray(cartArray);
+        var cartArray = Ellipsoid.WGS84.cartesianArrayToCartographicArray(cArray);
+        var e1 = Rectangle.fromCartographicArray(cartArray);
         if (e0 === undefined) {
             e0 = e1;
         }
@@ -1276,7 +1295,7 @@ function getDataSourceExtent(dataSource) {
             var south = Math.min(e0.south, e1.south);
             var east = Math.max(e0.east, e1.east);
             var north = Math.max(e0.north, e1.north);
-            e0 = new Cesium.Rectangle(west, south, east, north);
+            e0 = new Rectangle(west, south, east, north);
         }
     }
     return e0;
@@ -1295,8 +1314,8 @@ function myCrsFunction(coordinates, id) {
     var dest = new proj4.Proj('EPSG:4326');
     var p = new proj4.Point(coordinates[0], coordinates[1]);
     proj4(source, dest, p);      //do the transformation.  x and y are modified in place
-    var cartographic = Cesium.Cartographic.fromDegrees(p.x, p.y);
-    return Cesium.Ellipsoid.WGS84.cartographicToCartesian(cartographic);
+    var cartographic = Cartographic.fromDegrees(p.x, p.y);
+    return Ellipsoid.WGS84.cartographicToCartesian(cartographic);
 }
 
 // Create a reproject func for GeoJsonDataSource to use
@@ -1308,7 +1327,7 @@ function createCesiumReprojectFunc(proj) {
 
 // if we want cesium GeoJsonDataSource to do it
 function setCesiumReprojectFunc(code) {   
-    Cesium.GeoJsonDataSource.crsNames[code] = createCesiumReprojectFunc(code);
+    GeoJsonDataSource.crsNames[code] = createCesiumReprojectFunc(code);
 }
 */
 
@@ -1339,7 +1358,7 @@ function getCrsCode(gjson_obj) {
 function addProj4Text(code) {
         //try to get from a service
     var url = 'http://spatialreference.org/ref/epsg/'+code.substring(5)+'/proj4/';
-    Cesium.loadText(url).then(function (proj4Text) {
+    loadText(url).then(function (proj4Text) {
         console.log('Adding new string for ', code, ': ', proj4Text, ' before loading datasource');
         proj4_epsg[code] = proj4Text;
     }, function(err) {
@@ -1441,7 +1460,7 @@ var getExtent = function (pts, ext) {
 function _getGeoJsonExtent(geojson) {
     var ext = {west:180, east:-180, south:90, north: -90};
     filterValue(geojson, 'coordinates', function(obj, prop) { getExtent(obj[prop], ext); });
-    return Cesium.Rectangle.fromDegrees(ext.west, ext.south, ext.east, ext.north);
+    return Rectangle.fromDegrees(ext.west, ext.south, ext.east, ext.north);
 }
            
             
@@ -1491,17 +1510,17 @@ function getRandomColor(palette, seed) {
             }
             seed = val;
         }
-        Cesium.Math.setRandomNumberSeed(seed);
+        CesiumMath.setRandomNumberSeed(seed);
     }
-    return Cesium.Color.fromRandom(palette);
+    return Color.fromRandom(palette);
 }
 
-//Convert a color object into Cesium.Color object
+//Convert a color object into Color object
 function getCesiumColor(clr) {
-    if (clr instanceof Cesium.Color) {
+    if (clr instanceof Color) {
         return clr;
     }
-    return new Cesium.Color(clr.red, clr.green, clr.blue, clr.alpha);
+    return new Color(clr.red, clr.green, clr.blue, clr.alpha);
 }
 
 
@@ -1529,35 +1548,35 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.style.polygon.fillcolor.alpha = 0.75;
     }
     
-    var newDataSource = new Cesium.GeoJsonDataSource();
+    var newDataSource = new GeoJsonDataSource();
     
     //update default point/line/polygon
     var defaultPoint = newDataSource.defaultPoint;
-    var point = new Cesium.PointGraphics();
-    point.color = new Cesium.ConstantProperty(getCesiumColor(layer.style.point.color));
-    point.pixelSize = new Cesium.ConstantProperty(layer.style.point.size);
-    point.outlineColor = new Cesium.ConstantProperty(Cesium.Color.BLACK);
-    point.outlineWidth = new Cesium.ConstantProperty(1);
+    var point = new PointGraphics();
+    point.color = new ConstantProperty(getCesiumColor(layer.style.point.color));
+    point.pixelSize = new ConstantProperty(layer.style.point.size);
+    point.outlineColor = new ConstantProperty(Color.BLACK);
+    point.outlineWidth = new ConstantProperty(1);
     defaultPoint.point = point;
     
     var defaultLine = newDataSource.defaultLine;
-    var polyline = new Cesium.PolylineGraphics();
-    var material = new Cesium.ColorMaterialProperty();
-    material.color = new Cesium.ConstantProperty(getCesiumColor(layer.style.line.color));
+    var polyline = new PolylineGraphics();
+    var material = new ColorMaterialProperty();
+    material.color = new ConstantProperty(getCesiumColor(layer.style.line.color));
     polyline.material = material;
-    polyline.width = new Cesium.ConstantProperty(layer.style.line.width);
+    polyline.width = new ConstantProperty(layer.style.line.width);
     defaultLine.polyline = polyline;
 
     var defaultPolygon = newDataSource.defaultPolygon;
     
     defaultPolygon.polyline = polyline;
     
-    var polygon = new Cesium.PolygonGraphics();
-    polygon.fill = new Cesium.ConstantProperty(layer.style.polygon.fill);
+    var polygon = new PolygonGraphics();
+    polygon.fill = new ConstantProperty(layer.style.polygon.fill);
     defaultPolygon.polygon = polygon;
     
-    material = new Cesium.ColorMaterialProperty();
-    material.color = new Cesium.ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
+    material = new ColorMaterialProperty();
+    material.color = new ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
     polygon.material = material;
     
    //Reprojection and downsampling

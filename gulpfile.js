@@ -125,16 +125,16 @@ function bundle(bundler, minify, catchErrors) {
 }
 
 function build(minify) {
-    bundle(browserify('./src/viewer/main.js'), minify, false);
+    bundle(browserify('./src/viewer/main.js').transform('deamdify'), minify, false);
 }
 
 function watch(minify) {
-    var bundler = watchify('./src/viewer/main.js');
+    var bundler = watchify('./src/viewer/main.js').transform('deamdify');
 
     var timeSeconds = 'unknown';
 
     bundler.on('bytes', function(bytes) {
-        console.log('Wrote ' + bytes + ' bytes in ' + timeSeconds + ' seconds.');
+        console.log('Wrote ' + bytes + ' bytes (before minification) in ' + timeSeconds + ' seconds.');
     })
     bundler.on('time', function(time) {
         timeSeconds = time / 1000.0;

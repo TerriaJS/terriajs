@@ -1,9 +1,6 @@
 "use strict";
 
-/*global require,Cesium*/
-var copyright = require('../CopyrightModule');
-var SvgPathBindingHandler = Cesium.SvgPathBindingHandler;
-var knockout = require('knockout');
+/*global require*/
 
 // IE9 doesn't have a console object until the debugging tools are opened.
 if (typeof window.console === 'undefined') {
@@ -12,10 +9,17 @@ if (typeof window.console === 'undefined') {
     };
 }
 
-SvgPathBindingHandler.register(knockout);
+window.CESIUM_BASE_URL = 'cesium/Build/Cesium/';
+
+var copyright = require('../CopyrightModule');
+
+var SvgPathBindingHandler = require('../../public/cesium/Source/Widgets/SvgPathBindingHandler');
+var knockout = require('knockout');
 
 var GeoDataCollection = require('../GeoDataCollection');
 var AusGlobeViewer = require('./AusGlobeViewer');
+
+SvgPathBindingHandler.register(knockout);
 
 var geoDataManager = new GeoDataCollection();
 

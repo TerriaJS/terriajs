@@ -1,8 +1,8 @@
 "use strict";
 
-/*global require,Cesium,$*/
-var defaultValue = Cesium.defaultValue;
-var getElement = Cesium.getElement;
+/*global require,$*/
+var defaultValue = require('../../public/cesium/Source/Core/defaultValue');
+var getElement = require('../../public/cesium/Source/Widgets/getElement');
 
 var knockout = require('knockout');
 

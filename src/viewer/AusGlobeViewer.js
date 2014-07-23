@@ -5,56 +5,54 @@
 
 "use strict";
 
-/*global require,Cesium,L,URI,$,XMLDocument,html2canvas,alert,console*/
-var BingMapsApi = Cesium.BingMapsApi;
-var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
-var BingMapsStyle = Cesium.BingMapsStyle;
-var CameraFlightPath = Cesium.CameraFlightPath;
-var Cartesian2 = Cesium.Cartesian2;
-var Cartesian3 = Cesium.Cartesian3;
-var Cartographic = Cesium.Cartographic;
-var CesiumMath = Cesium.Math;
-var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
-var Clock = Cesium.Clock;
-var ClockRange = Cesium.ClockRange;
-var Color = Cesium.Color;
-var combine = Cesium.combine;
-var Credit = Cesium.Credit;
-var DataSourceCollection = Cesium.DataSourceCollection;
-var defaultValue = Cesium.defaultValue;
-var defined = Cesium.defined;
-var Entity = Cesium.Entity;
-var Ellipsoid = Cesium.Ellipsoid;
-var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
-var GeographicProjection = Cesium.GeographicProjection;
-var CesiumEvent = Cesium.Event;
-var Rectangle = Cesium.Rectangle;
-var Fullscreen = Cesium.Fullscreen;
-var InfoBox = Cesium.InfoBox;
-var JulianDate = Cesium.JulianDate;
-var KeyboardEventModifier = Cesium.KeyboardEventModifier;
-var loadJson = Cesium.loadJson;
-var loadXML = Cesium.loadXML;
-var Material = Cesium.Material;
-var Matrix3 = Cesium.Matrix3;
-var Matrix4 = Cesium.Matrix4;
-var PolylineCollection = Cesium.PolylineCollection;
-var Rectangle = Cesium.Rectangle;
-var Rectangle = Cesium.Rectangle;
-var RectanglePrimitive = Cesium.RectanglePrimitive;
-var sampleTerrain = Cesium.sampleTerrain;
-var SceneMode = Cesium.SceneMode;
-var ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler;
-var ScreenSpaceEventType = Cesium.ScreenSpaceEventType;
-var Transforms = Cesium.Transforms;
-var Tween = Cesium.Tween;
-var Viewer = Cesium.Viewer;
-var viewerEntityMixin = Cesium.viewerEntityMixin;
-var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
-var WebMercatorProjection = Cesium.WebMercatorProjection;
-var when = Cesium.when;
-
-var FeatureDetection = Cesium.FeatureDetection;
+/*global require,L,URI,$,XMLDocument,html2canvas,alert,console*/
+var BingMapsApi = require('../../public/cesium/Source/Core/BingMapsApi');
+var BingMapsImageryProvider = require('../../public/cesium/Source/Scene/BingMapsImageryProvider');
+var BingMapsStyle = require('../../public/cesium/Source/Scene/BingMapsStyle');
+var CameraFlightPath = require('../../public/cesium/Source/Scene/CameraFlightPath');
+var Cartesian2 = require('../../public/cesium/Source/Core/Cartesian2');
+var Cartesian3 = require('../../public/cesium/Source/Core/Cartesian3');
+var Cartographic = require('../../public/cesium/Source/Core/Cartographic');
+var CesiumMath = require('../../public/cesium/Source/Core/Math');
+var CesiumTerrainProvider = require('../../public/cesium/Source/Core/CesiumTerrainProvider');
+var Clock = require('../../public/cesium/Source/Core/Clock');
+var ClockRange = require('../../public/cesium/Source/Core/ClockRange');
+var Color = require('../../public/cesium/Source/Core/Color');
+var combine = require('../../public/cesium/Source/Core/combine');
+var Credit = require('../../public/cesium/Source/Core/Credit');
+var DataSourceCollection = require('../../public/cesium/Source/DataSources/DataSourceCollection');
+var defaultValue = require('../../public/cesium/Source/Core/defaultValue');
+var defined = require('../../public/cesium/Source/Core/defined');
+var Entity = require('../../public/cesium/Source/DataSources/Entity');
+var Ellipsoid = require('../../public/cesium/Source/Core/Ellipsoid');
+var EllipsoidTerrainProvider = require('../../public/cesium/Source/Core/EllipsoidTerrainProvider');
+var FeatureDetection = require('../../public/cesium/Source/Core/FeatureDetection');
+var GeographicProjection = require('../../public/cesium/Source/Core/GeographicProjection');
+var CesiumEvent = require('../../public/cesium/Source/Core/Event');
+var Rectangle = require('../../public/cesium/Source/Core/Rectangle');
+var Fullscreen = require('../../public/cesium/Source/Core/Fullscreen');
+var InfoBox = require('../../public/cesium/Source/Widgets/InfoBox/InfoBox');
+var JulianDate = require('../../public/cesium/Source/Core/JulianDate');
+var KeyboardEventModifier = require('../../public/cesium/Source/Core/KeyboardEventModifier');
+var loadJson = require('../../public/cesium/Source/Core/loadJson');
+var loadXML = require('../../public/cesium/Source/Core/loadXML');
+var Material = require('../../public/cesium/Source/Scene/Material');
+var Matrix3 = require('../../public/cesium/Source/Core/Matrix3');
+var Matrix4 = require('../../public/cesium/Source/Core/Matrix4');
+var PolylineCollection = require('../../public/cesium/Source/Scene/PolylineCollection');
+var Rectangle = require('../../public/cesium/Source/Core/Rectangle');
+var RectanglePrimitive = require('../../public/cesium/Source/Scene/RectanglePrimitive');
+var sampleTerrain = require('../../public/cesium/Source/Core/sampleTerrain');
+var SceneMode = require('../../public/cesium/Source/Scene/SceneMode');
+var ScreenSpaceEventHandler = require('../../public/cesium/Source/Core/ScreenSpaceEventHandler');
+var ScreenSpaceEventType = require('../../public/cesium/Source/Core/ScreenSpaceEventType');
+var Transforms = require('../../public/cesium/Source/Core/Transforms');
+var Tween = require('../../public/cesium/Source/ThirdParty/Tween');
+var Viewer = require('../../public/cesium/Source/Widgets/Viewer/Viewer');
+var viewerEntityMixin = require('../../public/cesium/Source/Widgets/Viewer/viewerEntityMixin');
+var WebMapServiceImageryProvider = require('../../public/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMercatorProjection = require('../../public/cesium/Source/Core/WebMercatorProjection');
+var when = require('../../public/cesium/Source/ThirdParty/when');
 
 var knockout = require('knockout');
 var komapping = require('knockout.mapping');
@@ -308,7 +306,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     });
 
     //get the server config to know how to handle urls and load initial one
-    Cesium.loadJson('config.json').then( function(obj) {
+    loadJson('config.json').then( function(obj) {
         var proxyDomains = obj.proxyDomains;
         //workaround for non-CORS browsers (i.e. IE9)
         if (that._alwaysUseProxy) {

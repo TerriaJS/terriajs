@@ -1,9 +1,9 @@
 "use strict";
 
-/*global require,Cesium*/
-var defineProperties = Cesium.defineProperties;
-var getElement = Cesium.getElement;
-var knockout = Cesium.knockout;
+/*global require*/
+var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
+var getElement = require('../../public/cesium/Source/Widgets/getElement');
+var knockout = require('knockout');
 
 var TitleWidgetViewModel = require('./TitleWidgetViewModel');
 

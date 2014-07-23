@@ -1,10 +1,10 @@
 "use strict";
 
-/*global require,Cesium,$*/
-var defined = Cesium.defined;
-var getElement = Cesium.getElement;
-var when = Cesium.when;
-var loadXML = Cesium.loadXML;
+/*global require,$*/
+var defined = require('../../public/cesium/Source/Core/defined');
+var getElement = require('../../public/cesium/Source/Widgets/getElement');
+var when = require('../../public/cesium/Source/ThirdParty/when');
+var loadXML = require('../../public/cesium/Source/Core/loadXML');
 
 var corsProxy = require('../corsProxy');
 var knockout = require('knockout');
