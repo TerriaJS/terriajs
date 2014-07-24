@@ -505,6 +505,9 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
             format = getFormatFromUrl(url);
         }
         if (corsProxy.shouldUseProxy(url)) {
+            if (url.indexOf('http:') === -1) {
+                url = 'http:' + url;
+            }
             url = corsProxy.getURL(url);
         }
         if (format === 'KMZ') {
@@ -1576,15 +1579,16 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     //try to downsample object if huge
     _downsampleGeoJSON(geojson);
     
+    if (!layer.extent) {
+        layer.extent = _getGeoJsonExtent(geojson);
+    }
+    
     if (this.map === undefined) {
             //create the object
         newDataSource.load(geojson);
         this.dataSourceCollection.add(newDataSource);
             //add it as a layer
         layer.dataSource = newDataSource;
-        if (!layer.extent) {
-            layer.extent = getDataSourceExtent(newDataSource);
-        }
     }
     else {
         var style = {
@@ -1615,9 +1619,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
                 return L.circleMarker(latlng, geojsonMarkerOptions);
             }
         }).addTo(this.map);
-        if (!layer.extent) {
-            layer.extent = _getGeoJsonExtent(geojson);
-        }
     }
     return this.add(layer);
 };
