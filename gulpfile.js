@@ -3,6 +3,7 @@
 /*global require*/
 
 var fs = require('fs');
+var glob = require('glob');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var browserify = require('browserify');
@@ -25,21 +26,35 @@ if (!fs.existsSync('public/build')) {
     fs.mkdirSync('public/build');
 }
 
-gulp.task('build', function() {
-    return build(true);
+gulp.task('build-app', ['build-cesium'], function() {
+    return build('ausglobe.js', './src/viewer/main.js', false);
 });
 
-gulp.task('build-debug', function() {
-    return build(false);
+gulp.task('build-specs', ['build-cesium'], function() {
+    return build('ausglobe-specs.js', glob.sync('./public/specs/*.js'), false);
 });
 
-gulp.task('watch', function() {
-    return watch(true);
+gulp.task('build', ['build-app', 'build-specs']);
+
+gulp.task('release-app', ['build-cesium'], function() {
+    return build('ausglobe.js', './src/viewer/main.js', true);
 });
 
-gulp.task('watch-debug', function() {
-    return watch(false);
+gulp.task('release-specs', ['build-cesium'], function() {
+    return build('ausglobe-specs.js', glob.sync('./public/specs/*.js'), true);
 });
+
+gulp.task('release', ['release-app', 'release-specs']);
+
+gulp.task('watch-app', ['build-cesium'], function() {
+    return watch('ausglobe.js', './src/viewer/main.js', false);
+});
+
+gulp.task('watch-specs', ['build-cesium'], function() {
+    return watch('ausglobe-specs.js', glob.sync('./public/specs/*.js'), false);
+});
+
+gulp.task('watch', ['watch-app', 'watch-specs']);
 
 gulp.task('lint', function(){
     return gulp.src('src/**/*.js')
@@ -52,13 +67,8 @@ gulp.task('docs', function(){
         .pipe(jsdoc('./public/doc'));
 });
 
-gulp.task('test', function () {
-    return gulp.src('public/specs/*.js')
-        .pipe(jasmine());
-});
-
 gulp.task('build-cesium', function(cb) {
-    return exec('"Tools/apache-ant-1.8.2/bin/ant" build combine', {
+    return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
         cwd : 'public/cesium'
     }, function(err, stdout, stderr) {
         if (stderr) {
@@ -69,24 +79,9 @@ gulp.task('build-cesium', function(cb) {
     });
 });
 
-gulp.task('release-cesium', function(cb) {
-    return exec('"Tools/apache-ant-1.8.2/bin/ant" minifyRelease', {
-        cwd : 'public/cesium',
-        maxBuffer: 1024 * 500
-    }, function(err, stdout, stderr) {
-        if (stderr) {
-            console.log('Error while building Cesium: ');
-            console.log(stderr);
-        }
-        cb(err);
-    });
-});
+gulp.task('default', ['lint', 'build']);
 
-gulp.task('default', ['build', 'lint']);
-
-gulp.task('release', ['build', 'lint', 'docs']);
-
-function bundle(bundler, minify, catchErrors) {
+function bundle(name, bundler, minify, catchErrors) {
     // Combine main.js and its dependencies into a single file.
     // The poorly-named "debug: true" causes Browserify to generate a source map.
     var result = bundler.bundle({
@@ -101,7 +96,7 @@ function bundle(bundler, minify, catchErrors) {
     }
 
     result = result
-        .pipe(source('ausglobe.js'))
+        .pipe(source(name))
         .pipe(buffer());
 
     if (minify) {
@@ -110,13 +105,13 @@ function bundle(bundler, minify, catchErrors) {
         // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
         result = result
             .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(uglify({preserveComments: 'some', mangle: false, compress: false}))
+            .pipe(uglify({preserveComments: 'some', mangle: true, compress: true}))
             .pipe(sourcemaps.write());
     }
 
     result = result
         // Extract the embedded source map to a separate file.
-        .pipe(transform(function () { return exorcist('public/build/ausglobe.js.map'); }))
+        .pipe(transform(function () { return exorcist('public/build/' + name + '.map'); }))
 
         // Write the finished product.
         .pipe(gulp.dest('public/build'));
@@ -124,24 +119,23 @@ function bundle(bundler, minify, catchErrors) {
     return result;
 }
 
-function build(minify) {
-    bundle(browserify('./src/viewer/main.js').transform('deamdify'), minify, false);
+function build(name, files, minify) {
+    return bundle(name, browserify(files).transform('deamdify'), minify, false);
 }
 
-function watch(minify) {
-    var bundler = watchify('./src/viewer/main.js').transform('deamdify');
-
-    var timeSeconds = 'unknown';
-
-    bundler.on('bytes', function(bytes) {
-        console.log('Wrote ' + bytes + ' bytes (before minification) in ' + timeSeconds + ' seconds.');
-    })
-    bundler.on('time', function(time) {
-        timeSeconds = time / 1000.0;
-    });
+function watch(name, files, minify) {
+    var bundler = watchify(files).transform('deamdify');
 
     function rebundle() {
-        return bundle(bundler, minify, true);
+        var start = new Date();
+
+        var result = bundle(name, bundler, minify, true);
+
+        result.on('end', function() {
+            console.log('Rebuilt ' + name + ' in ' + (new Date() - start) + ' milliseconds.');
+        });
+
+        return result;
     }
 
     bundler.on('update', rebundle);
