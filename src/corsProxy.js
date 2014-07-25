@@ -23,8 +23,9 @@ corsProxy.shouldUseProxy = function(url) {
     var uri = new URI(url);
     var host = uri.host();
     var proxyAvail = proxyAllowedHost(host);
+    console.log(host);
 
-    if (proxyAvail && url.indexOf('http') !== -1) {
+    if (proxyAvail) {
         return true;
     }
     return false;

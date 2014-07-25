@@ -151,9 +151,10 @@ var GeoDataBrowserViewModel = function(options) {
 
             if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
                 that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
-                if (that.wfsServiceUrl.toUpperCase().indexOf('.JSON') !== -1) {
-                    loadJson(that.wfsServiceUrl).then(loadCollection);
-                }
+                    //drop loading init from add Data input field
+//                if (that.wfsServiceUrl.toUpperCase().indexOf('.JSON') !== -1) {
+//                    loadJson(that.wfsServiceUrl).then(loadCollection);
+//                }
             } else {
                 var message = new PopupMessage({
                     container : document.body,
@@ -467,9 +468,11 @@ var GeoDataBrowserViewModel = function(options) {
             var description = options.data.description;
             if (!defined(description)) {
                 var base_url = options.data.url;
+                if (defined(base_url)) {
                 var idx = base_url.indexOf('?');
-                if (idx !== -1) {
-                    base_url = base_url.substring(0,idx);
+                    if (idx !== -1) {
+                        base_url = base_url.substring(0,idx);
+                    }
                 }
                 description = {
                     Title : options.data.name,
