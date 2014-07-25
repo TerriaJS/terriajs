@@ -24,7 +24,7 @@ var watchify = require('watchify');
 var appJSName = 'ausglobe.js';
 var specJSName = 'ausglobe-specs.js';
 var appEntryFile = './src/viewer/main.js';
-var specGlob = './specs/*.js';
+var specGlob = './spec/*.js';
 
 
 // Create the build directory, because browserify flips out if the directory that might
