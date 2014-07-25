@@ -20,6 +20,13 @@ var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 
+
+var appJSName = 'ausglobe.js';
+var specJSName = 'ausglobe-specs.js';
+var appEntryFile = './src/viewer/main.js';
+var specGlob = './specs/*.js';
+
+
 // Create the build directory, because browserify flips out if the directory that might
 // contain an existing source map doesn't exist.
 if (!fs.existsSync('public/build')) {
@@ -27,31 +34,31 @@ if (!fs.existsSync('public/build')) {
 }
 
 gulp.task('build-app', ['build-cesium'], function() {
-    return build('ausglobe.js', './src/viewer/main.js', false);
+    return build(appJSName, appEntryFile, false);
 });
 
 gulp.task('build-specs', ['build-cesium'], function() {
-    return build('ausglobe-specs.js', glob.sync('./public/specs/*.js'), false);
+    return build(specJSName, glob.sync(specGlob), false);
 });
 
 gulp.task('build', ['build-app', 'build-specs']);
 
 gulp.task('release-app', ['build-cesium'], function() {
-    return build('ausglobe.js', './src/viewer/main.js', true);
+    return build(appJSName, appEntryFile, true);
 });
 
 gulp.task('release-specs', ['build-cesium'], function() {
-    return build('ausglobe-specs.js', glob.sync('./public/specs/*.js'), true);
+    return build(specJSName, glob.sync(specGlob), true);
 });
 
 gulp.task('release', ['release-app', 'release-specs']);
 
 gulp.task('watch-app', ['build-cesium'], function() {
-    return watch('ausglobe.js', './src/viewer/main.js', false);
+    return watch(appJSName, appEntryFile, false);
 });
 
 gulp.task('watch-specs', ['build-cesium'], function() {
-    return watch('ausglobe-specs.js', glob.sync('./public/specs/*.js'), false);
+    return watch(specJSName, glob.sync(specGlob), false);
 });
 
 gulp.task('watch', ['watch-app', 'watch-specs']);

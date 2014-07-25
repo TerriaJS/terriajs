@@ -1,4 +1,4 @@
-var GeoData = require('../../src/GeoData');
+var GeoData = require('../src/GeoData');
 
 describe('GeoData', function() {
     it('can be constructed', function() {
