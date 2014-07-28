@@ -3,7 +3,7 @@
 /*global require*/
 
 var fs = require('fs');
-var glob = require('glob');
+var glob = require('glob-all');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var browserify = require('browserify');
@@ -23,7 +23,14 @@ var watchify = require('watchify');
 
 var appJSName = 'ausglobe.js';
 var specJSName = 'ausglobe-specs.js';
-var appEntryFile = './src/viewer/main.js';
+var appGlob = [
+    './src/viewer/main.js',
+    './public/cesium/Source/Workers/*.js',
+    '!./public/cesium/Source/Workers/*.profile.js',
+    '!./public/cesium/Souce/Workers/cesiumWorkerBootstrapper.js',
+    '!./public/cesium/Souce/Workers/transferTypedArrayTest.js',
+    '!./public/cesium/Souce/Workers/createTaskProcessorWorker.js'
+];
 var specGlob = './spec/*.js';
 
 
@@ -34,7 +41,7 @@ if (!fs.existsSync('public/build')) {
 }
 
 gulp.task('build-app', ['build-cesium'], function() {
-    return build(appJSName, appEntryFile, false);
+    return build(appJSName, glob.sync(appGlob), false);
 });
 
 gulp.task('build-specs', ['build-cesium'], function() {
@@ -44,7 +51,7 @@ gulp.task('build-specs', ['build-cesium'], function() {
 gulp.task('build', ['build-app', 'build-specs']);
 
 gulp.task('release-app', ['build-cesium'], function() {
-    return build(appJSName, appEntryFile, true);
+    return build(appJSName, glob.sync(appGlob), true);
 });
 
 gulp.task('release-specs', ['build-cesium'], function() {
@@ -54,7 +61,7 @@ gulp.task('release-specs', ['build-cesium'], function() {
 gulp.task('release', ['release-app', 'release-specs']);
 
 gulp.task('watch-app', ['build-cesium'], function() {
-    return watch(appJSName, appEntryFile, false);
+    return watch(appJSName, glob.sync(appGlob), false);
 });
 
 gulp.task('watch-specs', ['build-cesium'], function() {
@@ -89,10 +96,13 @@ gulp.task('build-cesium', function(cb) {
 gulp.task('default', ['lint', 'build']);
 
 function bundle(name, bundler, minify, catchErrors) {
+    //bundler.require('./public/cesium/Source/Workers/createVerticesFromQuantizedTerrainMesh', { expose: 'createVerticesFromQuantizedTerrainMesh'});
+    bundler.require('./src/workerLoader', { expose: 'workerLoader' });
+
     // Combine main.js and its dependencies into a single file.
     // The poorly-named "debug: true" causes Browserify to generate a source map.
     var result = bundler.bundle({
-            debug: true
+            debug: true,
         });
 
     if (catchErrors) {
