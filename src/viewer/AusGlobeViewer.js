@@ -215,9 +215,9 @@ var AusGlobeViewer = function(geoDataManager) {
             title : 'FireFox version 30.0 detected',
             message : '\
 There are known issues with this particular version of Firefox that make National Map 3D mode unstable. \
-            These issues will be fixed in the next version of Firefox (31.0) due to release the week of July 22nd.  We recommend \
-            you use another browser for this feature and will be starting you in 2D mode by default. \
-            You can switch display modes via the Map button on the left.'
+These issues were fixed in Firefox 31, so we highly recommend that you update your version \
+of Firefox.  Until you upgrade, National Map will start in 2D mode. \
+You can switch display modes via the Map button on the left.'
         });
         this.webGlSupported = false;
     }
