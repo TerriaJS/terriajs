@@ -1,16 +1,11 @@
 { "proxyDomains" : [
-        "services.arcgisonline.com",
         "spatialreference.org",
-        "landgate.wa.gov.au",
-        "bom.gov.au",
-        "ga.gov.au",
-        "communications.gov.au",
-        "tas.gov.au",
-        "ntlis.nt.gov.au"
+        "gov.au"
     ],
  "corsDomains" : [
         "research.nicta.com.au",
-        "data.gov.au"
+        "data.gov.au",
+        "corsproxy.com"
     ]
 }
 
