@@ -310,11 +310,9 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     //get the server config to know how to handle urls and load initial one
     Cesium.loadJson('config.json').then( function(obj) {
         var proxyDomains = obj.proxyDomains;
+        var corsDomains = obj.corsDomains;
         //workaround for non-CORS browsers (i.e. IE9)
-        if (that._alwaysUseProxy) {
-            proxyDomains.concat(obj.corsDomains);
-        }
-        corsProxy.setProxyList(proxyDomains);
+        corsProxy.setProxyList(obj.proxyDomains, obj.corsDomains, that._alwaysUseProxy);
         
         that.geoDataManager.loadInitialUrl(url);
     });
