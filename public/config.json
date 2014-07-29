@@ -1,5 +1,4 @@
 { "proxyDomains" : [
-        "spatialreference.org",
         "gov.au"
     ],
  "corsDomains" : [
