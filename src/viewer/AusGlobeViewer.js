@@ -633,6 +633,11 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             }
 
             var errorBar = globe.terrainProvider.getLevelMaximumGeometricError(pickedTriangle.tile.level);
+            var approximateHeight = intersection.height;
+            var minHeight = pickedTriangle.tile.data.minimumHeight;
+            var maxHeight = pickedTriangle.tile.data.maximumHeight;
+            var maxDiff = Math.max(approximateHeight - minHeight, maxHeight - approximateHeight);
+            errorBar = Math.min(errorBar, maxDiff);
 
             document.getElementById('ausglobe-title-middle').innerHTML = cartographicToDegreeString(intersection, errorBar);
 
