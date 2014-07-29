@@ -160,13 +160,14 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
 function getCameraFocus(scene) {
     var ray = new Ray(scene.camera.positionWC, scene.camera.directionWC);
     var intersections = IntersectionTests.rayEllipsoid(ray, Ellipsoid.WGS84);
-    if (defined(intersections)) {
-        return Ray.getPoint(ray, intersections.start);
-    } else {
+    if (!defined(intersections)) {
         // Camera direction is not pointing at the globe, so use the ellipsoid horizon point as
         // the focal point.
-        return IntersectionTests.grazingAltitudeLocation(ray, Ellipsoid.WGS84);
+        var cart = IntersectionTests.grazingAltitudeLocation(ray, Ellipsoid.WGS84);
+        ray = new Ray(cart, Cartesian3.subtract(Cartesian3.ZERO, cart ,cartesian3Scratch));
+        intersections = IntersectionTests.rayEllipsoid(ray, Ellipsoid.WGS84);
     }
+    return Ray.getPoint(ray, intersections.start);
 }
 
 function flyToPosition(scene, position, durationMilliseconds) {
