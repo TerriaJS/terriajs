@@ -31,6 +31,7 @@ var CesiumEvent = Cesium.Event;
 var Rectangle = Cesium.Rectangle;
 var Fullscreen = Cesium.Fullscreen;
 var InfoBox = Cesium.InfoBox;
+var Intersections2D = Cesium.Intersections2D;
 var JulianDate = Cesium.JulianDate;
 var KeyboardEventModifier = Cesium.KeyboardEventModifier;
 var loadJson = Cesium.loadJson;
@@ -604,33 +605,34 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     // Show mouse position and height if terrain on
     inputHandler.setInputAction( function (movement) {
-        var terrainProvider = scene.globe.terrainProvider;
-        var cartesian = camera.pickEllipsoid(movement.endPosition, ellipsoid);
-        if (cartesian) {
-            if (terrainProvider instanceof EllipsoidTerrainProvider) {
-                //flat earth
-                document.getElementById('ausglobe-title-middle').innerHTML = cartesianToDegreeString(scene, cartesian);
+        var pickRay = camera.getPickRay(movement.endPosition);
+
+        var globe = scene.globe;
+        var pickedTriangle = globe.pickTriangle(pickRay, scene);
+        if (defined(pickedTriangle)) {
+            var ellipsoid = globe.ellipsoid;
+            
+            var v0 = ellipsoid.cartesianToCartographic(pickedTriangle.v0);
+            var v1 = ellipsoid.cartesianToCartographic(pickedTriangle.v1);
+            var v2 = ellipsoid.cartesianToCartographic(pickedTriangle.v2);
+            var intersection = ellipsoid.cartesianToCartographic(pickedTriangle.intersection);
+
+            var barycentric = Intersections2D.computeBarycentricCoordinates(
+                intersection.longitude, intersection.latitude,
+                v0.longitude, v0.latitude,
+                v1.longitude, v1.latitude,
+                v2.longitude, v2.latitude);
+
+            if (barycentric.x >= -1e-15 && barycentric.y >= -1e-15 && barycentric.z >= -1e-15) {
+                var height = barycentric.x * v0.height +
+                             barycentric.y * v1.height +
+                             barycentric.z * v2.height;
+                intersection.height = height;
             }
-            else {
-                var cartographic = ellipsoid.cartesianToCartographic(cartesian);
-                var terrainPos = [cartographic];
-                
-                //TODO: vary tile level based based on camera height
-                var tileLevel = 7;
-                try {
-                    when(sampleTerrain(terrainProvider, tileLevel, terrainPos), function() {
-                        if (scene.isDestroyed()) {
-                            return;
-                        }
-                        var text = cartesianToDegreeString(scene, cartesian);
-                        text += ' | Elev: ' + terrainPos[0].height.toFixed(1) + ' m';
-                        document.getElementById('ausglobe-title-middle').innerHTML = text;
-                    });
-                } catch (e) {}
-            }
-        }
-        else {
-            document.getElementById('ausglobe-title-middle').innerHTML = "";
+
+            document.getElementById('ausglobe-title-middle').innerHTML = cartographicToDegreeString(scene, intersection);
+        } else {
+            document.getElementById('ausglobe-title-middle').innerHTML = '';
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
@@ -997,21 +999,9 @@ function cartographicToDegreeString(scene, cartographic) {
     var strWE = cartographic.longitude < 0 ? 'W' : 'E';
     var text = 'Lat: ' + Math.abs(CesiumMath.toDegrees(cartographic.latitude)).toFixed(3) + '&deg; ' + strNS +
         ' | Lon: ' + Math.abs(CesiumMath.toDegrees(cartographic.longitude)).toFixed(3) + '&deg; ' + strWE;
-    return text;
-}
-
-function cartesianToDegreeString(scene, cartesian) {
-    var globe = scene.globe;
-    var ellipsoid = globe.ellipsoid;
-    var cartographic = ellipsoid.cartesianToCartographic(cartesian);
-    return cartographicToDegreeString(scene, cartographic);
-}
-
-function rectangleToDegreeString(scene, rect) {
-    var nw = new Cartographic(rect.west, rect.north);
-    var se = new Cartographic(rect.east, rect.south);
-    var text = 'NW: ' + cartographicToDegreeString(scene, nw);
-    text += ', SE: ' + cartographicToDegreeString(scene, se);
+    if (defined(cartographic.height)) {
+        text += ' | Elev: ' + cartographic.height.toFixed(1) + ' m';
+    }
     return text;
 }
 
