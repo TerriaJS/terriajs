@@ -593,7 +593,7 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-info {
     display: inline-block;
     width: 80%;
-    height: 500px;
+    height: 520px;
     background-color: white;
     margin: auto;
     position: absolute;
@@ -602,6 +602,10 @@ a.ausglobe-title-menuItem:hover {
     bottom: 0;
     right: 0;
     font-family: "Open Sans", sans-serif;
+}
+
+.ausglobe-info-translucencySlider {
+    vertical-align: middle;
 }
 
 .ausglobe-share {

@@ -1360,7 +1360,7 @@ function getCrsCode(gjson_obj) {
 //  requires asynchronous layer loading so on hold for now
 function addProj4Text(code) {
         //try to get from a service
-    var url = 'http://spatialreference.org/ref/epsg/'+code.substring(5)+'/proj4/';
+    var url = 'http://geospace.research.nicta.com.au/proj4def/' + code;
     loadText(url).then(function (proj4Text) {
         console.log('Adding new string for ', code, ': ', proj4Text, ' before loading datasource');
         proj4_epsg[code] = proj4Text;

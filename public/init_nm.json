@@ -14,6 +14,12 @@
 		{"Name":"MyBroadband ADSL Quality no outline","Title":"Broadband ADSL Quality no Borders","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[Legend](https://programs.communications.gov.au/NBNBSL/images/mybroadband/adsl_quality.png)\n[More Info](https://www.mybroadband.communications.gov.au)\n(If necessary: Username is guest, no Password)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
 "queryable":1}
     ]},
+    {"name":"Social and Economic","type":"WMS","queryable":"0","wfsAvailable":true,"Layer":[
+		{"Name":"7","Title":"Population Estimates", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer","wfsAvailable":false,"description":"[Licence](http://www.ga.gov.au/copyright)\n[Legend](http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer?service=WMS&request=GetLegendGraphic&version=1.3.0&format=image/png&layer=7)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
+"queryable":1},
+		{"Name":"95d9e550_8b36_4273_8df7_2b76c140e73a","Title":"Taxation Statistics 2011-2012", "base_url":"http://data.gov.au/geoserver/taxation-statistics-2011-12/wms", "completeWfsUrl": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=95d9e550_8b36_4273_8df7_2b76c140e73a&srsName=EPSG%3A4326&maxFeatures=1000&outputFormat=json","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[Legend](http://data.gov.au/geoserver/taxation-statistics-2011-12/wms?service=WMS&request=GetLegendGraphic&version=1.3.0&format=image/png&layer=95d9e550_8b36_4273_8df7_2b76c140e73a)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
+"queryable":1}
+    ]},
     {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","type":"WMS","queryable":"0","description":"[Licence](http://www.ga.gov.au/copyright)","Layer": [
         {"Name":"0","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Gravity_Image_WM/MapServer/WMSServer","description":"[Licence](http://www.ga.gov.au/copyright)\n[Legend](http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer/legend)","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"0","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/services/earth_observation/Landcover_WM/MapServer/WMSServer","description":"[Licence](http://www.ga.gov.au/copyright)\n[Legend](http://www.ga.gov.au/gis/rest/services/earth_observation/Landcover_WM/MapServer/legend)","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
@@ -58,8 +64,6 @@
 		"queryable":1},
 		{"Name":"AHGFMappedNode","Title":"Stream Nodes","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"113.37534500000005","east":"153.6320740000001","south":"-43.629381999057735","north":"-9.242297499700424"},
 		"queryable":1},
-		{"Name":"AHGFNetworkStreamsMajor","Title":" Major Stream Networks","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"113.56375000000004","east":"153.58875000000006","south":"-43.55374999905787","north":"-9.408749999695255"},
-		"queryable":1},
 		{"Name":"AHGFNetworkStream","Title":"Stream Network","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"112.10056181999998","east":"154.86193818000004","south":"-47.81318817937922","north":"-5.051811819379163"},
 		"queryable":1},
         {"Name":"AHGFNetworkNode","Title":"Stream Network Nodes","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"113.33375","east":"153.62875000000008","south":"-43.628749999057746","north":"-9.23624999970059"},
@@ -95,12 +99,6 @@
 	]},
     {"name":"Ground Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","Layer":[
         {"Name":"AHGFAquiferContour","Title":"Aquifer Contours","BoundingBox":{"west":"130.9294316820001","east":"151.640955901","south":"-41.24101109706462","north":"-12.157000677611002"},
-		"queryable":1},
-		{"Name":"AHGFAquiferContourBottom","Title":"Aquifer Contours Bottom","BoundingBox":{"west":"140.96832934600002","east":"149.96101540700002","south":"-39.08532118507642","north":"-36.98746808509298"},
-		"queryable":1},
-		{"Name":"AHGFAquiferContourTop","Title":"Aquifer Contours Top","BoundingBox":{"west":"130.9294316820001","east":"151.52314135200012","south":"-39.08578653507643","north":"-12.243238349608427"},
-		"queryable":1},
-		{"Name":"AHGFAquiferContourBedrock","Title":"Aquifer Contours Bedrock","BoundingBox":{"west":"133.20299441400005","east":"151.640955901","south":"-41.24101109706462","north":"-12.157000677611002"},
 		"queryable":1},
 		{"Name":"AHGFWaterTableAquifer","Title":"Water Table Aquifer","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[Legend](http://geofabric.bom.gov.au/simplefeatures/ows?service=WMS&request=GetLegendGraphic&version=1.3.0&format=image/png&layer=AHGFWaterTableAquifer)","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000004","south":"-43.65854999905766","north":"-9.219939999701113"},
 		"queryable":1},

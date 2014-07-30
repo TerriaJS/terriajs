@@ -32,6 +32,7 @@ var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var Fullscreen = require('../../third_party/cesium/Source/Core/Fullscreen');
 var InfoBox = require('../../third_party/cesium/Source/Widgets/InfoBox/InfoBox');
+var Intersections2D = require('../../third_party/cesium/Source/Core/Intersections2D');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var KeyboardEventModifier = require('../../third_party/cesium/Source/Core/KeyboardEventModifier');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
@@ -213,9 +214,9 @@ var AusGlobeViewer = function(geoDataManager) {
             title : 'FireFox version 30.0 detected',
             message : '\
 There are known issues with this particular version of Firefox that make National Map 3D mode unstable. \
-            These issues will be fixed in the next version of Firefox (31.0) due to release the week of July 22nd.  We recommend \
-            you use another browser for this feature and will be starting you in 2D mode by default. \
-            You can switch display modes via the Map button on the left.'
+These issues were fixed in Firefox 31, so we highly recommend that you update your version \
+of Firefox.  Until you upgrade, National Map will start in 2D mode. \
+You can switch display modes via the Map button on the left.'
         });
         this.webGlSupported = false;
     }
@@ -308,11 +309,9 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     //get the server config to know how to handle urls and load initial one
     loadJson('config.json').then( function(obj) {
         var proxyDomains = obj.proxyDomains;
+        var corsDomains = obj.corsDomains;
         //workaround for non-CORS browsers (i.e. IE9)
-        if (that._alwaysUseProxy) {
-            proxyDomains.concat(obj.corsDomains);
-        }
-        corsProxy.setProxyList(proxyDomains);
+        corsProxy.setProxyList(obj.proxyDomains, obj.corsDomains, that._alwaysUseProxy);
         
         that.geoDataManager.loadInitialUrl(url);
     });
@@ -604,33 +603,45 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     // Show mouse position and height if terrain on
     inputHandler.setInputAction( function (movement) {
-        var terrainProvider = scene.globe.terrainProvider;
-        var cartesian = camera.pickEllipsoid(movement.endPosition, ellipsoid);
-        if (cartesian) {
-            if (terrainProvider instanceof EllipsoidTerrainProvider) {
-                //flat earth
-                document.getElementById('ausglobe-title-middle').innerHTML = cartesianToDegreeString(scene, cartesian);
+
+        var pickRay = camera.getPickRay(movement.endPosition);
+
+        var globe = scene.globe;
+        var pickedTriangle = globe.pickTriangle(pickRay, scene);
+        if (defined(pickedTriangle)) {
+            // Get a fast, accurate-ish height every time the mouse moves.
+            var ellipsoid = globe.ellipsoid;
+            
+            var v0 = ellipsoid.cartesianToCartographic(pickedTriangle.v0);
+            var v1 = ellipsoid.cartesianToCartographic(pickedTriangle.v1);
+            var v2 = ellipsoid.cartesianToCartographic(pickedTriangle.v2);
+            var intersection = ellipsoid.cartesianToCartographic(pickedTriangle.intersection);
+
+            var barycentric = Intersections2D.computeBarycentricCoordinates(
+                intersection.longitude, intersection.latitude,
+                v0.longitude, v0.latitude,
+                v1.longitude, v1.latitude,
+                v2.longitude, v2.latitude);
+
+            if (barycentric.x >= -1e-15 && barycentric.y >= -1e-15 && barycentric.z >= -1e-15) {
+                var height = barycentric.x * v0.height +
+                             barycentric.y * v1.height +
+                             barycentric.z * v2.height;
+                intersection.height = height;
             }
-            else {
-                var cartographic = ellipsoid.cartesianToCartographic(cartesian);
-                var terrainPos = [cartographic];
-                
-                //TODO: vary tile level based based on camera height
-                var tileLevel = 7;
-                try {
-                    when(sampleTerrain(terrainProvider, tileLevel, terrainPos), function() {
-                        if (scene.isDestroyed()) {
-                            return;
-                        }
-                        var text = cartesianToDegreeString(scene, cartesian);
-                        text += ' | Elev: ' + terrainPos[0].height.toFixed(1) + ' m';
-                        document.getElementById('ausglobe-title-middle').innerHTML = text;
-                    });
-                } catch (e) {}
-            }
-        }
-        else {
-            document.getElementById('ausglobe-title-middle').innerHTML = "";
+
+            var errorBar = globe.terrainProvider.getLevelMaximumGeometricError(pickedTriangle.tile.level);
+            var approximateHeight = intersection.height;
+            var minHeight = pickedTriangle.tile.data.minimumHeight;
+            var maxHeight = pickedTriangle.tile.data.maximumHeight;
+            var maxDiff = Math.max(approximateHeight - minHeight, maxHeight - approximateHeight);
+            errorBar = Math.min(errorBar, maxDiff);
+
+            document.getElementById('ausglobe-title-middle').innerHTML = cartographicToDegreeString(intersection, errorBar);
+
+            debounceSampleAccurateHeight(globe, intersection);
+        } else {
+            document.getElementById('ausglobe-title-middle').innerHTML = '';
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
@@ -717,6 +728,70 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     return viewer;
 };
+
+var lastHeightSamplePosition = new Cartographic();
+var accurateHeightTimer;
+var tileRequestInFlight;
+var accurateSamplingDebounceTime = 250;
+
+function debounceSampleAccurateHeight(globe, position) {
+    // After a delay with no mouse movement, get a more accurate height.
+    Cartographic.clone(position, lastHeightSamplePosition);
+
+    var terrainProvider = globe.terrainProvider;
+    if (terrainProvider instanceof CesiumTerrainProvider) {
+        clearTimeout(accurateHeightTimer);
+        accurateHeightTimer = setTimeout(function() {
+            sampleAccurateHeight(terrainProvider, position);
+        }, accurateSamplingDebounceTime);
+    }
+}
+
+function sampleAccurateHeight(terrainProvider, position) {
+    accurateHeightTimer = undefined;
+    if (tileRequestInFlight) {
+        // A tile request is already in flight, so reschedule for later.
+        accurateHeightTimer = setTimeout(sampleAccurateHeight, accurateSamplingDebounceTime);
+        return;
+    }
+
+    // Find the most detailed available tile at the last mouse position.
+    var tilingScheme = terrainProvider.tilingScheme;
+    var tiles = terrainProvider._availableTiles;
+    var foundTileID;
+    var foundLevel;
+
+    for (var level = tiles.length - 1; !foundTileID && level >= 0; --level) {
+        var levelTiles = tiles[level];
+        var tileID = tilingScheme.positionToTileXY(position, level);
+        var yTiles = tilingScheme.getNumberOfYTilesAtLevel(level);
+        var tmsY = yTiles - tileID.y - 1;
+
+        // Is this tile ID available from the terrain provider?
+        for (var i = 0, len = levelTiles.length; !foundTileID && i < len; ++i) {
+            var range = levelTiles[i];
+            if (tileID.x >= range.startX && tileID.x <= range.endX && tmsY >= range.startY && tmsY <= range.endY) {
+                foundLevel = level;
+                foundTileID = tileID;
+            }
+        }
+    }
+
+    if (foundTileID) {
+        // This tile has our most accurate available height, so go get it.
+        tileRequestInFlight = when(terrainProvider.requestTileGeometry(foundTileID.x, foundTileID.y, foundLevel, false), function(terrainData) {
+            tileRequestInFlight = undefined;
+            if (Cartographic.equals(position, lastHeightSamplePosition)) {
+                position.height = terrainData.interpolateHeight(tilingScheme.tileXYToRectangle(foundTileID.x, foundTileID.y, foundLevel), position.longitude, position.latitude);
+                document.getElementById('ausglobe-title-middle').innerHTML = cartographicToDegreeString(position);
+            } else {
+                // Mouse moved since we started this request, so the result isn't useful.  Try again next time.
+            }
+        }, function() {
+            tileRequestInFlight = undefined;
+        });
+    }
+}
 
 AusGlobeViewer.prototype.isCesium = function() {
     return defined(this.viewer);
@@ -992,26 +1067,19 @@ function setCurrentDataset(layer, that) {
 // -------------------------------------------
 // Text Formatting
 // -------------------------------------------
-function cartographicToDegreeString(scene, cartographic) {
+function cartographicToDegreeString(cartographic, errorBar) {
     var strNS = cartographic.latitude < 0 ? 'S' : 'N';
     var strWE = cartographic.longitude < 0 ? 'W' : 'E';
     var text = 'Lat: ' + Math.abs(CesiumMath.toDegrees(cartographic.latitude)).toFixed(3) + '&deg; ' + strNS +
         ' | Lon: ' + Math.abs(CesiumMath.toDegrees(cartographic.longitude)).toFixed(3) + '&deg; ' + strWE;
-    return text;
-}
+    if (defined(cartographic.height)) {
+        text += ' | Elev: ' + cartographic.height.toFixed(1);
+        if (defined(errorBar)) {
+            text += "±" + errorBar.toFixed(1);
+        }
 
-function cartesianToDegreeString(scene, cartesian) {
-    var globe = scene.globe;
-    var ellipsoid = globe.ellipsoid;
-    var cartographic = ellipsoid.cartesianToCartographic(cartesian);
-    return cartographicToDegreeString(scene, cartographic);
-}
-
-function rectangleToDegreeString(scene, rect) {
-    var nw = new Cartographic(rect.west, rect.north);
-    var se = new Cartographic(rect.east, rect.south);
-    var text = 'NW: ' + cartographicToDegreeString(scene, nw);
-    text += ', SE: ' + cartographicToDegreeString(scene, se);
+        text += ' m';
+    }
     return text;
 }
 
