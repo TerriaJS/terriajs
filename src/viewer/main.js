@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
         };
     }
 
-    window.CESIUM_BASE_URL = 'cesium/Build/Cesium/';
+    window.CESIUM_BASE_URL = 'build/Cesium/';
 
     var copyright = require('../CopyrightModule');
 
@@ -21,8 +21,6 @@ if (typeof window !== 'undefined') {
 
     var GeoDataCollection = require('../GeoDataCollection');
     var AusGlobeViewer = require('./AusGlobeViewer');
-
-    TaskProcessor._bootstrapperScript = '../../../build/cesiumWorkerBootstrapper.js';
 
     SvgPathBindingHandler.register(knockout);
 

@@ -40,31 +40,31 @@ if (!fs.existsSync('public/build')) {
     fs.mkdirSync('public/build');
 }
 
-gulp.task('build-app', ['build-cesium'], function() {
+gulp.task('build-app', ['prepare-cesium'], function() {
     return build(appJSName, appEntryJSName, false);
 });
 
-gulp.task('build-specs', ['build-cesium'], function() {
+gulp.task('build-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(specGlob), false);
 });
 
 gulp.task('build', ['build-app', 'build-specs']);
 
-gulp.task('release-app', ['build-cesium'], function() {
+gulp.task('release-app', ['prepare-cesium'], function() {
     return build(appJSName, appEntryJSName, true);
 });
 
-gulp.task('release-specs', ['build-cesium'], function() {
+gulp.task('release-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(specGlob), true);
 });
 
 gulp.task('release', ['release-app', 'release-specs']);
 
-gulp.task('watch-app', ['build-cesium'], function() {
+gulp.task('watch-app', ['prepare-cesium'], function() {
     return watch(appJSName, appEntryJSName, false);
 });
 
-gulp.task('watch-specs', ['build-cesium'], function() {
+gulp.task('watch-specs', ['prepare-cesium'], function() {
     return watch(specJSName, glob.sync(specGlob), false);
 });
 
@@ -81,6 +81,8 @@ gulp.task('docs', function(){
         .pipe(jsdoc('./public/doc'));
 });
 
+gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets']);
+
 gulp.task('build-cesium', function(cb) {
     return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
         cwd : 'public/cesium'
@@ -91,6 +93,16 @@ gulp.task('build-cesium', function(cb) {
         }
         cb(err);
     });
+});
+
+gulp.task('copy-cesium-assets', function() {
+    return gulp.src([
+            'public/cesium/Source/Workers/transferTypedArrayTest.js',
+            'public/cesium/Source/Assets/**',
+            'public/cesium/Source/Widgets/**/*.css',
+            'public/cesium/Source/Widgets/Images/**'
+        ], { base: 'public/cesium/Source' })
+        .pipe(gulp.dest('public/build/Cesium/'));
 });
 
 gulp.task('default', ['lint', 'build']);
