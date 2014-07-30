@@ -15,9 +15,9 @@ if (typeof window !== 'undefined') {
 
     var copyright = require('../CopyrightModule');
 
-    var SvgPathBindingHandler = require('../../public/cesium/Source/Widgets/SvgPathBindingHandler');
-    var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
-    var TaskProcessor = require('../../public/cesium/Source/Core/TaskProcessor');
+    var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
+    var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+    var TaskProcessor = require('../../third_party/cesium/Source/Core/TaskProcessor');
 
     var GeoDataCollection = require('../GeoDataCollection');
     var AusGlobeViewer = require('./AusGlobeViewer');

@@ -9,31 +9,31 @@ var readText = require('./readText');
 
 var PopupMessage = require('./viewer/PopupMessage');
 
-var ArcGisMapServerImageryProvider = require('../public/cesium/Source/Scene/ArcGisMapServerImageryProvider');
-var CesiumMath = require('../public/cesium/Source/Core/Math');
-var Color = require('../public/cesium/Source/Core/Color');
-var ColorMaterialProperty = require('../public/cesium/Source/DataSources/ColorMaterialProperty');
-var ConstantProperty = require('../public/cesium/Source/DataSources/ConstantProperty');
-var CzmlDataSource = require('../public/cesium/Source/DataSources/CzmlDataSource');
-var DataSourceCollection = require('../public/cesium/Source/DataSources/DataSourceCollection');
-var defaultValue = require('../public/cesium/Source/Core/defaultValue');
-var defined = require('../public/cesium/Source/Core/defined');
-var DeveloperError = require('../public/cesium/Source/Core/DeveloperError');
-var Ellipsoid = require('../public/cesium/Source/Core/Ellipsoid');
-var CesiumEvent = require('../public/cesium/Source/Core/Event');
-var FeatureDetection = require('../public/cesium/Source/Core/FeatureDetection');
-var GeoJsonDataSource = require('../public/cesium/Source/DataSources/GeoJsonDataSource');
-var JulianDate = require('../public/cesium/Source/Core/JulianDate');
-var KmlDataSource = require('../public/cesium/Source/DataSources/KmlDataSource');
-var loadBlob = require('../public/cesium/Source/Core/loadBlob');
-var loadJson = require('../public/cesium/Source/Core/loadJson');
-var loadText = require('../public/cesium/Source/Core/loadText');
-var PointGraphics = require('../public/cesium/Source/DataSources/PointGraphics');
-var PolygonGraphics = require('../public/cesium/Source/DataSources/PolygonGraphics');
-var PolylineGraphics = require('../public/cesium/Source/DataSources/PolylineGraphics');
-var Rectangle = require('../public/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../public/cesium/Source/Scene/WebMapServiceImageryProvider');
-var when = require('../public/cesium/Source/ThirdParty/when');
+var ArcGisMapServerImageryProvider = require('../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
+var CesiumMath = require('../third_party/cesium/Source/Core/Math');
+var Color = require('../third_party/cesium/Source/Core/Color');
+var ColorMaterialProperty = require('../third_party/cesium/Source/DataSources/ColorMaterialProperty');
+var ConstantProperty = require('../third_party/cesium/Source/DataSources/ConstantProperty');
+var CzmlDataSource = require('../third_party/cesium/Source/DataSources/CzmlDataSource');
+var DataSourceCollection = require('../third_party/cesium/Source/DataSources/DataSourceCollection');
+var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../third_party/cesium/Source/Core/defined');
+var DeveloperError = require('../third_party/cesium/Source/Core/DeveloperError');
+var Ellipsoid = require('../third_party/cesium/Source/Core/Ellipsoid');
+var CesiumEvent = require('../third_party/cesium/Source/Core/Event');
+var FeatureDetection = require('../third_party/cesium/Source/Core/FeatureDetection');
+var GeoJsonDataSource = require('../third_party/cesium/Source/DataSources/GeoJsonDataSource');
+var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
+var KmlDataSource = require('../third_party/cesium/Source/DataSources/KmlDataSource');
+var loadBlob = require('../third_party/cesium/Source/Core/loadBlob');
+var loadJson = require('../third_party/cesium/Source/Core/loadJson');
+var loadText = require('../third_party/cesium/Source/Core/loadText');
+var PointGraphics = require('../third_party/cesium/Source/DataSources/PointGraphics');
+var PolygonGraphics = require('../third_party/cesium/Source/DataSources/PolygonGraphics');
+var PolylineGraphics = require('../third_party/cesium/Source/DataSources/PolylineGraphics');
+var Rectangle = require('../third_party/cesium/Source/Core/Rectangle');
+var WebMapServiceImageryProvider = require('../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var when = require('../third_party/cesium/Source/ThirdParty/when');
 
 /**
 * This class is loosely based on the cesium DataSource/DataSourceCollection

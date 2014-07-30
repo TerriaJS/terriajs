@@ -2,11 +2,11 @@
 
 /*global require,ga*/
 
-var defined = require('../../public/cesium/Source/Core/defined');
-var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
-var createCommand = require('../../public/cesium/Source/Widgets/createCommand');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
 
-var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var TitleWidgetViewModel = function(options) {
     this.title = 'National Map (BETA)';

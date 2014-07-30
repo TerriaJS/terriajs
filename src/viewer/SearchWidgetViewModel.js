@@ -1,22 +1,22 @@
 "use strict";
 
 /*global require,ga*/
-var BingMapsApi = require('../../public/cesium/Source/Core/BingMapsApi');
-var defaultValue = require('../../public/cesium/Source/Core/defaultValue');
-var defined = require('../../public/cesium/Source/Core/defined');
-var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../public/cesium/Source/Core/DeveloperError');
-var Ellipsoid = require('../../public/cesium/Source/Core/Ellipsoid');
-var jsonp = require('../../public/cesium/Source/Core/jsonp');
-var CesiumMath = require('../../public/cesium/Source/Core/Math');
-var Matrix4 = require('../../public/cesium/Source/Core/Matrix4');
-var Rectangle = require('../../public/cesium/Source/Core/Rectangle');
-var CameraFlightPath = require('../../public/cesium/Source/Scene/CameraFlightPath');
-var SceneMode = require('../../public/cesium/Source/Scene/SceneMode');
-var when = require('../../public/cesium/Source/ThirdParty/when');
-var createCommand = require('../../public/cesium/Source/Widgets/createCommand');
+var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var jsonp = require('../../third_party/cesium/Source/Core/jsonp');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
+var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
 
-var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 /**
  * The view model for the {@link Geocoder} widget.

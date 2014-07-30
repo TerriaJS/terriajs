@@ -2,22 +2,22 @@
 
 /*global require,ga*/
 
-var Cartesian2 = require('../../public/cesium/Source/Core/Cartesian2');
-var Cartesian3 = require('../../public/cesium/Source/Core/Cartesian3');
-var CesiumMath = require('../../public/cesium/Source/Core/Math');
-var createCommand = require('../../public/cesium/Source/Widgets/createCommand');
-var Ellipsoid = require('../../public/cesium/Source/Core/Ellipsoid');
-var getElement = require('../../public/cesium/Source/Widgets/getElement');
-var SceneMode = require('../../public/cesium/Source/Scene/SceneMode');
-var CameraFlightPath = require('../../public/cesium/Source/Scene/CameraFlightPath');
-var Ray = require('../../public/cesium/Source/Core/Ray');
-var IntersectionTests = require('../../public/cesium/Source/Core/IntersectionTests');
-var defined = require('../../public/cesium/Source/Core/defined');
-var Tween = require('../../public/cesium/Source/ThirdParty/Tween');
-var defaultValue = require('../../public/cesium/Source/Core/defaultValue');
-var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
+var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
+var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
+var Ray = require('../../third_party/cesium/Source/Core/Ray');
+var IntersectionTests = require('../../third_party/cesium/Source/Core/IntersectionTests');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 
-var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var cartesian3Scratch = new Cartesian3();
 

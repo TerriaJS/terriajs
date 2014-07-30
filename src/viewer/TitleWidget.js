@@ -1,9 +1,9 @@
 "use strict";
 
 /*global require*/
-var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
-var getElement = require('../../public/cesium/Source/Widgets/getElement');
-var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var TitleWidgetViewModel = require('./TitleWidgetViewModel');
 

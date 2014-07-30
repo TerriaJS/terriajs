@@ -2,30 +2,30 @@
 
 /*global require,ga,alert,L*/
 
-var ArcGisMapServerImageryProvider = require('../../public/cesium/Source/Scene/ArcGisMapServerImageryProvider');
-var BingMapsApi = require('../../public/cesium/Source/Core/BingMapsApi');
-var BingMapsImageryProvider = require('../../public/cesium/Source/Scene/BingMapsImageryProvider');
-var BingMapsStyle = require('../../public/cesium/Source/Scene/BingMapsStyle');
-var CesiumTerrainProvider = require('../../public/cesium/Source/Core/CesiumTerrainProvider');
-var combine = require('../../public/cesium/Source/Core/combine');
-var createCommand = require('../../public/cesium/Source/Widgets/createCommand');
-var defined = require('../../public/cesium/Source/Core/defined');
-var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
-var EllipsoidTerrainProvider = require('../../public/cesium/Source/Core/EllipsoidTerrainProvider');
-var GeographicTilingScheme = require('../../public/cesium/Source/Core/GeographicTilingScheme');
-var loadJson = require('../../public/cesium/Source/Core/loadJson');
-var Rectangle = require('../../public/cesium/Source/Core/Rectangle');
-var TileMapServiceImageryProvider = require('../../public/cesium/Source/Scene/TileMapServiceImageryProvider');
-var when = require('../../public/cesium/Source/ThirdParty/when');
+var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
+var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
+var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
+var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
+var CesiumTerrainProvider = require('../../third_party/cesium/Source/Core/CesiumTerrainProvider');
+var combine = require('../../third_party/cesium/Source/Core/combine');
+var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
+var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
+var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
-var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
-var knockoutES5 = require('../../public/cesium/Source/ThirdParty/knockout-es5');
+var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
 
 var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;

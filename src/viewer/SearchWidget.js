@@ -1,14 +1,14 @@
 "use strict";
 
 /*global require*/
-var defined = require('../../public/cesium/Source/Core/defined');
-var defineProperties = require('../../public/cesium/Source/Core/defineProperties');
-var destroyObject = require('../../public/cesium/Source/Core/destroyObject');
-var DeveloperError = require('../../public/cesium/Source/Core/DeveloperError');
-var getElement = require('../../public/cesium/Source/Widgets/getElement');
-var SvgPathBindingHandler = require('../../public/cesium/Source/Widgets/SvgPathBindingHandler');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
+var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
 
-var knockout = require('../../public/cesium/Source/ThirdParty/knockout');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var SearchWidgetViewModel = require('./SearchWidgetViewModel');
 
 SvgPathBindingHandler.register(knockout);

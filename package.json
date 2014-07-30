@@ -33,6 +33,6 @@
     "start": "node_modules/.bin/supervisor server"
   },
   "browser": {
-    "knockout": "./public/cesium/Source/ThirdParty/knockout.js"
+    "knockout": "./third_party/cesium/Source/ThirdParty/knockout.js"
   }
 }
