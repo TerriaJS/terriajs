@@ -831,7 +831,12 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         var ticker = function() {
             if (that.map === map) {
                 map.clock.tick();
-                requestAnimationFrame(ticker);
+
+                if (typeof requestAnimationFrame !== 'undefined') {
+                    requestAnimationFrame(ticker);
+                } else {
+                    setTimeout(ticker, 15);
+                }
             } else {
                 console.log('done');
             }
