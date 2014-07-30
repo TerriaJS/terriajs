@@ -113,7 +113,7 @@ function loadErrorResponse(err) {
         container : document.body,
         title : 'HTTP Error ' + (defined(err.statusCode) ? err.statusCode : ''),
         message : '\
-<p>An error occurred while accessing the web link.  Please verify that the link is correct.</p> \
+An error occurred while accessing the web link.  Please verify that the link is correct. \
 <p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
 server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
 please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \

@@ -155,10 +155,10 @@ var GeoDataBrowserViewModel = function(options) {
                     container : document.body,
                     title : 'File format not supported',
                     message : '\
-The specified file does not appear to be a format that is supported by National Map.  National Map\
-supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json),\
-Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value\
-files (.csv).  The file extension of the file in the user-specified URL must match one of\
+The specified file does not appear to be a format that is supported by National Map.  National Map \
+supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
+Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \
+files (.csv).  The file extension of the file in the user-specified URL must match one of \
 these extensions in order for National Map to know how to load it.'
                 });
             }
