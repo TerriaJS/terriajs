@@ -111,8 +111,15 @@ function isFeatureLayer(collection, layer) {
 function loadErrorResponse(err) {
     var msg = new PopupMessage({
         container : document.body,
-        title : 'HTTP Error '+ err.statusCode,
-        message : err.response
+        title : 'HTTP Error ' + (defined(err.statusCode) ? err.statusCode : ''),
+        message : '\
+<p>An error occurred while accessing the web link.  Please verify that the link is correct.</p> \
+<p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
+server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
+please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \
+Map team by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> \
+and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by \
+National Map itself.</p>'
     });
 }
 
