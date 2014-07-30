@@ -887,6 +887,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             });
         }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
+        layer.primitive.alpha = 0.5;
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
@@ -904,6 +905,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                 transparent: true
             });
         }
+        provider.setOpacity(0.5);
         layer.primitive = provider;
         this.map.addLayer(provider);
     }
