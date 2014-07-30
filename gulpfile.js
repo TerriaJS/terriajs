@@ -174,8 +174,6 @@ function requireWebWorkers(bundler) {
         var dotJSIndex = exposeName.lastIndexOf('.js');
         exposeName = exposeName.substring(0, dotJSIndex);
 
-        console.log(exposeName);
-
         bundler.require(workerFilename, { expose : exposeName });
     }
 }
