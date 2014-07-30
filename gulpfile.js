@@ -81,7 +81,7 @@ gulp.task('docs', function(){
         .pipe(jsdoc('./public/doc'));
 });
 
-gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets']);
+gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper']);
 
 gulp.task('build-cesium', function(cb) {
     return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
@@ -103,6 +103,11 @@ gulp.task('copy-cesium-assets', function() {
             'public/cesium/Source/Widgets/Images/**'
         ], { base: 'public/cesium/Source' })
         .pipe(gulp.dest('public/build/Cesium/'));
+});
+
+gulp.task('copy-cesiumWorkerBootstrapper', function() {
+    return gulp.src('src/cesiumWorkerBootstrapper.js')
+        .pipe(gulp.dest('public/build/Cesium/Workers'));
 });
 
 gulp.task('default', ['lint', 'build']);
