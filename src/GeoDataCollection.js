@@ -1576,6 +1576,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     
     var polygon = new PolygonGraphics();
     polygon.fill = new ConstantProperty(layer.style.polygon.fill);
+    polygon.outline = new ConstantProperty(true);
     defaultPolygon.polygon = polygon;
     
     material = new ColorMaterialProperty();
