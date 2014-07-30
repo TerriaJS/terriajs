@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,Cesium,L,URI,$,XMLDocument,html2canvas,alert,console*/
+/*global require,Cesium,L,URI,$,Document,html2canvas,alert,console*/
 var BingMapsApi = Cesium.BingMapsApi;
 var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
 var BingMapsStyle = Cesium.BingMapsStyle;
@@ -1423,7 +1423,7 @@ function selectFeatures(promises, viewer) {
             }
 
             // Handle MapInfo MXP.  This is ugly.
-            if (result instanceof XMLDocument) {
+            if (result instanceof Document) {
                 var json = $.xml2json(result);
                 var properties;
                 if (json.FeatureCollection &&
