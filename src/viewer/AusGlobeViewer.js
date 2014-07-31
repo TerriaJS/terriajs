@@ -488,7 +488,7 @@ DrawExtentHelper.prototype.start = function () {
 
 DrawExtentHelper.prototype.destroy = function () {
     this._mouseHandler.destroy();
-    this._scene = undefined
+    this._scene = undefined;
 };
 
 
