@@ -1192,7 +1192,7 @@ function flyToPosition(scene, position, durationMilliseconds) {
     });
 }
 
-function zoomCamera(scene, distFactor, pos) {
+function zoomCamera(scene, distFactor, pos) { 
     var camera = scene.camera;
     //for now
     if (scene.mode === SceneMode.SCENE3D) {
