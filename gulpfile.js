@@ -3,6 +3,7 @@
 /*global require*/
 
 var fs = require('fs');
+var glob = require('glob-all');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var browserify = require('browserify');
@@ -19,27 +20,55 @@ var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 
+
+var appJSName = 'ausglobe.js';
+var specJSName = 'ausglobe-specs.js';
+var appEntryJSName = './src/viewer/main.js';
+var workerGlob = [
+    './third_party/cesium/Source/Workers/*.js',
+    '!./third_party/cesium/Source/Workers/*.profile.js',
+    '!./third_party/cesium/Source/Workers/cesiumWorkerBootstrapper.js',
+    '!./third_party/cesium/Source/Workers/transferTypedArrayTest.js',
+    '!./third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
+];
+var specGlob = './spec/*.js';
+
+
 // Create the build directory, because browserify flips out if the directory that might
 // contain an existing source map doesn't exist.
 if (!fs.existsSync('public/build')) {
     fs.mkdirSync('public/build');
 }
 
-gulp.task('build', function() {
-    return build(true);
+gulp.task('build-app', ['prepare-cesium'], function() {
+    return build(appJSName, appEntryJSName, false);
 });
 
-gulp.task('build-debug', function() {
-    return build(false);
+gulp.task('build-specs', ['prepare-cesium'], function() {
+    return build(specJSName, glob.sync(specGlob), false);
 });
 
-gulp.task('watch', function() {
-    return watch(true);
+gulp.task('build', ['build-app', 'build-specs']);
+
+gulp.task('release-app', ['prepare-cesium'], function() {
+    return build(appJSName, appEntryJSName, true);
 });
 
-gulp.task('watch-debug', function() {
-    return watch(false);
+gulp.task('release-specs', ['prepare-cesium'], function() {
+    return build(specJSName, glob.sync(specGlob), true);
 });
+
+gulp.task('release', ['release-app', 'release-specs']);
+
+gulp.task('watch-app', ['prepare-cesium'], function() {
+    return watch(appJSName, appEntryJSName, false);
+});
+
+gulp.task('watch-specs', ['prepare-cesium'], function() {
+    return watch(specJSName, glob.sync(specGlob), false);
+});
+
+gulp.task('watch', ['watch-app', 'watch-specs']);
 
 gulp.task('lint', function(){
     return gulp.src('src/**/*.js')
@@ -52,14 +81,11 @@ gulp.task('docs', function(){
         .pipe(jsdoc('./public/doc'));
 });
 
-gulp.task('test', function () {
-    return gulp.src('public/specs/*.js')
-        .pipe(jasmine());
-});
+gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper']);
 
 gulp.task('build-cesium', function(cb) {
-    return exec('"Tools/apache-ant-1.8.2/bin/ant" build combine', {
-        cwd : 'public/cesium'
+    return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
+        cwd : 'third_party/cesium'
     }, function(err, stdout, stderr) {
         if (stderr) {
             console.log('Error while building Cesium: ');
@@ -69,24 +95,26 @@ gulp.task('build-cesium', function(cb) {
     });
 });
 
-gulp.task('release-cesium', function(cb) {
-    return exec('"Tools/apache-ant-1.8.2/bin/ant" minifyRelease', {
-        cwd : 'public/cesium',
-        maxBuffer: 1024 * 500
-    }, function(err, stdout, stderr) {
-        if (stderr) {
-            console.log('Error while building Cesium: ');
-            console.log(stderr);
-        }
-        cb(err);
-    });
+gulp.task('copy-cesium-assets', function() {
+    return gulp.src([
+            'third_party/cesium/Source/Workers/transferTypedArrayTest.js',
+            'third_party/cesium/Source/Assets/**',
+            'third_party/cesium/Source/Widgets/**/*.css',
+            'third_party/cesium/Source/Widgets/Images/**'
+        ], { base: 'third_party/cesium/Source' })
+        .pipe(gulp.dest('public/build/Cesium/'));
 });
 
-gulp.task('default', ['build', 'lint']);
+gulp.task('copy-cesiumWorkerBootstrapper', function() {
+    return gulp.src('src/cesiumWorkerBootstrapper.js')
+        .pipe(gulp.dest('public/build/Cesium/Workers'));
+});
 
-gulp.task('release', ['build', 'lint', 'docs']);
+gulp.task('default', ['lint', 'build']);
 
-function bundle(bundler, minify, catchErrors) {
+function bundle(name, bundler, minify, catchErrors) {
+    requireWebWorkers(bundler);
+
     // Combine main.js and its dependencies into a single file.
     // The poorly-named "debug: true" causes Browserify to generate a source map.
     var result = bundler.bundle({
@@ -101,7 +129,7 @@ function bundle(bundler, minify, catchErrors) {
     }
 
     result = result
-        .pipe(source('ausglobe.js'))
+        .pipe(source(name))
         .pipe(buffer());
 
     if (minify) {
@@ -110,13 +138,13 @@ function bundle(bundler, minify, catchErrors) {
         // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
         result = result
             .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(uglify({preserveComments: 'some', mangle: false, compress: false}))
+            .pipe(uglify({preserveComments: 'some', mangle: true, compress: true}))
             .pipe(sourcemaps.write());
     }
 
     result = result
         // Extract the embedded source map to a separate file.
-        .pipe(transform(function () { return exorcist('public/build/ausglobe.js.map'); }))
+        .pipe(transform(function () { return exorcist('public/build/' + name + '.map'); }))
 
         // Write the finished product.
         .pipe(gulp.dest('public/build'));
@@ -124,27 +152,45 @@ function bundle(bundler, minify, catchErrors) {
     return result;
 }
 
-function build(minify) {
-    bundle(browserify('./src/viewer/main.js'), minify, false);
+function build(name, files, minify) {
+    return bundle(name, browserify(files).transform('deamdify'), minify, false);
 }
 
-function watch(minify) {
-    var bundler = watchify('./src/viewer/main.js');
-
-    var timeSeconds = 'unknown';
-
-    bundler.on('bytes', function(bytes) {
-        console.log('Wrote ' + bytes + ' bytes in ' + timeSeconds + ' seconds.');
-    })
-    bundler.on('time', function(time) {
-        timeSeconds = time / 1000.0;
-    });
+function watch(name, files, minify) {
+    var bundler = watchify(files).transform('deamdify');
 
     function rebundle() {
-        return bundle(bundler, minify, true);
+        var start = new Date();
+
+        var result = bundle(name, bundler, minify, true);
+
+        result.on('end', function() {
+            console.log('Rebuilt ' + name + ' in ' + (new Date() - start) + ' milliseconds.');
+        });
+
+        return result;
     }
 
     bundler.on('update', rebundle);
 
     return rebundle();
+}
+
+function requireWebWorkers(bundler) {
+    // Explicitly require the Cesium Web Workers, and expose them with the name the cesiumWorkerBootstrapper will use for them.
+    var workers = glob.sync(workerGlob);
+    for (var i = 0; i < workers.length; ++i) {
+        var workerFilename = workers[i];
+
+        var lastSlashIndex = workerFilename.lastIndexOf('/');
+        if (lastSlashIndex < 0) {
+            continue;
+        }
+
+        var exposeName = 'Workers/' + workerFilename.substring(lastSlashIndex + 1);
+        var dotJSIndex = exposeName.lastIndexOf('.js');
+        exposeName = exposeName.substring(0, dotJSIndex);
+
+        bundler.require(workerFilename, { expose : exposeName });
+    }
 }

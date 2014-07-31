@@ -1,23 +1,23 @@
 "use strict";
 
-/*global require,Cesium,ga*/
+/*global require,ga*/
 
-var Cartesian2 = Cesium.Cartesian2;
-var Cartesian3 = Cesium.Cartesian3;
-var CesiumMath = Cesium.Math;
-var createCommand = Cesium.createCommand;
-var Ellipsoid = Cesium.Ellipsoid;
-var getElement = Cesium.getElement;
-var SceneMode = Cesium.SceneMode;
-var CameraFlightPath = Cesium.CameraFlightPath;
-var Ray = Cesium.Ray;
-var IntersectionTests = Cesium.IntersectionTests;
-var defined = Cesium.defined;
-var Tween = Cesium.Tween;
-var defaultValue = Cesium.defaultValue;
-var defineProperties = Cesium.defineProperties;
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
+var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
+var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
+var Ray = require('../../third_party/cesium/Source/Core/Ray');
+var IntersectionTests = require('../../third_party/cesium/Source/Core/IntersectionTests');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 
-var knockout = require('knockout');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var cartesian3Scratch = new Cartesian3();
 

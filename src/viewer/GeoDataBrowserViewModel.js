@@ -1,30 +1,31 @@
 "use strict";
 
-/*global Cesium,require,ga,alert,L*/
+/*global require,ga,alert,L*/
 
-var ArcGisMapServerImageryProvider = Cesium.ArcGisMapServerImageryProvider;
-var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
-var BingMapsStyle = Cesium.BingMapsStyle;
-var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
-var combine = Cesium.combine;
-var createCommand = Cesium.createCommand;
-var defined = Cesium.defined;
-var defineProperties = Cesium.defineProperties;
-var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
-var GeographicTilingScheme = Cesium.GeographicTilingScheme;
-var loadJson = Cesium.loadJson;
-var Rectangle = Cesium.Rectangle;
-var TileMapServiceImageryProvider = Cesium.TileMapServiceImageryProvider;
-var when = Cesium.when;
+var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
+var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
+var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
+var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
+var CesiumTerrainProvider = require('../../third_party/cesium/Source/Core/CesiumTerrainProvider');
+var combine = require('../../third_party/cesium/Source/Core/combine');
+var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
+var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
+var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
-var knockout = require('knockout');
-var komapping = require('knockout.mapping');
-var knockoutES5 = require('../../public/third_party/knockout-es5.js');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var komapping = require('../../public/third_party/knockout.mapping');
+var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
 
 var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
@@ -204,7 +205,7 @@ these extensions in order for National Map to know how to load it.'
         removeBaseLayer();
 
         if (!defined(that._viewer.viewer)) {
-            that._viewer.mapBaseLayer = new L.BingLayer(Cesium.BingMapsApi.getKey(), { type: style });
+            that._viewer.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey(), { type: style });
             that._viewer.map.addLayer(that._viewer.mapBaseLayer);
             return;
         }

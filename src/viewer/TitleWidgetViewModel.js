@@ -1,11 +1,12 @@
 "use strict";
 
-/*global require,Cesium,ga*/
+/*global require,ga*/
 
-var defined = Cesium.defined;
-var defineProperties = Cesium.defineProperties;
-var createCommand = Cesium.createCommand;
-var knockout = Cesium.knockout;
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
+
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var TitleWidgetViewModel = function(options) {
     this.title = 'National Map (BETA)';

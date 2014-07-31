@@ -1,12 +1,12 @@
 "use strict";
 
-/*global Cesium,require*/
+/*global require*/
 
-var defineProperties = Cesium.defineProperties;
-var getElement = Cesium.getElement;
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
 
-var knockout = require('knockout');
-var knockoutES5 = require('../../public/third_party/knockout-es5.js');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
 
 var GeoDataBrowserViewModel = require('./GeoDataBrowserViewModel');
 

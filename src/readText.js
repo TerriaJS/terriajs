@@ -1,8 +1,8 @@
 "use strict";
 
-/*global require,Cesium*/
-var DeveloperError = Cesium.DeveloperError;
-var when = Cesium.when;
+/*global require*/
+var DeveloperError = require('../third_party/cesium/Source/Core/DeveloperError');
+var when = require('../third_party/cesium/Source/ThirdParty/when');
 
 function readText(file) {
     if (typeof file === 'undefined') {
