@@ -1,7 +1,7 @@
-/*global require,Cesium*/
+/*global require*/
 "use strict";
 
-var defaultValue = Cesium.defaultValue;
+var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
 
 
 /**

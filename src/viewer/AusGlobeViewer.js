@@ -5,61 +5,59 @@
 
 "use strict";
 
-/*global require,Cesium,L,URI,$,XMLDocument,html2canvas,alert,console*/
-var BingMapsApi = Cesium.BingMapsApi;
-var BingMapsImageryProvider = Cesium.BingMapsImageryProvider;
-var BingMapsStyle = Cesium.BingMapsStyle;
-var CameraFlightPath = Cesium.CameraFlightPath;
-var Cartesian2 = Cesium.Cartesian2;
-var Cartesian3 = Cesium.Cartesian3;
-var Cartographic = Cesium.Cartographic;
-var CesiumMath = Cesium.Math;
-var CesiumTerrainProvider = Cesium.CesiumTerrainProvider;
-var Clock = Cesium.Clock;
-var ClockRange = Cesium.ClockRange;
-var Color = Cesium.Color;
-var combine = Cesium.combine;
-var Credit = Cesium.Credit;
-var DataSourceCollection = Cesium.DataSourceCollection;
-var defaultValue = Cesium.defaultValue;
-var defined = Cesium.defined;
-var Entity = Cesium.Entity;
-var Ellipsoid = Cesium.Ellipsoid;
-var EllipsoidTerrainProvider = Cesium.EllipsoidTerrainProvider;
-var GeographicProjection = Cesium.GeographicProjection;
-var CesiumEvent = Cesium.Event;
-var Rectangle = Cesium.Rectangle;
-var Fullscreen = Cesium.Fullscreen;
-var InfoBox = Cesium.InfoBox;
-var Intersections2D = Cesium.Intersections2D;
-var JulianDate = Cesium.JulianDate;
-var KeyboardEventModifier = Cesium.KeyboardEventModifier;
-var loadJson = Cesium.loadJson;
-var loadXML = Cesium.loadXML;
-var Material = Cesium.Material;
-var Matrix3 = Cesium.Matrix3;
-var Matrix4 = Cesium.Matrix4;
-var PolylineCollection = Cesium.PolylineCollection;
-var Rectangle = Cesium.Rectangle;
-var Rectangle = Cesium.Rectangle;
-var RectanglePrimitive = Cesium.RectanglePrimitive;
-var sampleTerrain = Cesium.sampleTerrain;
-var SceneMode = Cesium.SceneMode;
-var ScreenSpaceEventHandler = Cesium.ScreenSpaceEventHandler;
-var ScreenSpaceEventType = Cesium.ScreenSpaceEventType;
-var Transforms = Cesium.Transforms;
-var Tween = Cesium.Tween;
-var Viewer = Cesium.Viewer;
-var viewerEntityMixin = Cesium.viewerEntityMixin;
-var WebMapServiceImageryProvider = Cesium.WebMapServiceImageryProvider;
-var WebMercatorProjection = Cesium.WebMercatorProjection;
-var when = Cesium.when;
+/*global require,L,URI,$,XMLDocument,html2canvas,alert,console*/
+var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
+var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
+var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
+var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
+var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var CesiumTerrainProvider = require('../../third_party/cesium/Source/Core/CesiumTerrainProvider');
+var Clock = require('../../third_party/cesium/Source/Core/Clock');
+var ClockRange = require('../../third_party/cesium/Source/Core/ClockRange');
+var Color = require('../../third_party/cesium/Source/Core/Color');
+var combine = require('../../third_party/cesium/Source/Core/combine');
+var Credit = require('../../third_party/cesium/Source/Core/Credit');
+var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
+var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
+var GeographicProjection = require('../../third_party/cesium/Source/Core/GeographicProjection');
+var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var Fullscreen = require('../../third_party/cesium/Source/Core/Fullscreen');
+var InfoBox = require('../../third_party/cesium/Source/Widgets/InfoBox/InfoBox');
+var Intersections2D = require('../../third_party/cesium/Source/Core/Intersections2D');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
+var KeyboardEventModifier = require('../../third_party/cesium/Source/Core/KeyboardEventModifier');
+var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
+var Material = require('../../third_party/cesium/Source/Scene/Material');
+var Matrix3 = require('../../third_party/cesium/Source/Core/Matrix3');
+var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
+var PolylineCollection = require('../../third_party/cesium/Source/Scene/PolylineCollection');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var RectanglePrimitive = require('../../third_party/cesium/Source/Scene/RectanglePrimitive');
+var sampleTerrain = require('../../third_party/cesium/Source/Core/sampleTerrain');
+var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
+var ScreenSpaceEventHandler = require('../../third_party/cesium/Source/Core/ScreenSpaceEventHandler');
+var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
+var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
+var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
+var Viewer = require('../../third_party/cesium/Source/Widgets/Viewer/Viewer');
+var viewerEntityMixin = require('../../third_party/cesium/Source/Widgets/Viewer/viewerEntityMixin');
+var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var FeatureDetection = Cesium.FeatureDetection;
-
-var knockout = require('knockout');
-var komapping = require('knockout.mapping');
-var knockoutES5 = require('../../public/third_party/knockout-es5.js');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var komapping = require('../../public/third_party/knockout.mapping');
+var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
 
 var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
@@ -309,7 +307,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     });
 
     //get the server config to know how to handle urls and load initial one
-    Cesium.loadJson('config.json').then( function(obj) {
+    loadJson('config.json').then( function(obj) {
         var proxyDomains = obj.proxyDomains;
         var corsDomains = obj.corsDomains;
         //workaround for non-CORS browsers (i.e. IE9)

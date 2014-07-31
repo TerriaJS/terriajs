@@ -1,10 +1,10 @@
 "use strict";
 
-/*global require,Cesium,$*/
-var defaultValue = Cesium.defaultValue;
-var getElement = Cesium.getElement;
+/*global require,$*/
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
 
-var knockout = require('knockout');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var PopupMessage = function(options) {
     var container = getElement(options.container);

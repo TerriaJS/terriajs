@@ -1,12 +1,12 @@
-/*global require,Cesium*/
+/*global require*/
 "use strict";
 
 /*!
  * Copyright(c) 2012-2013 National ICT Australia Limited (NICTA).  All rights reserved.
  */
 
-var destroyObject = Cesium.destroyObject;
-var JulianDate = Cesium.JulianDate;
+var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
+var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
 
 var VarType = {LON: 0, LAT: 1, ALT: 2, TIME: 3, SCALAR: 4, ENUM: 5 };
 

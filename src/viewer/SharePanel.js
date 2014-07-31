@@ -1,14 +1,14 @@
 "use strict";
 
-/*global require,Cesium,$*/
-var defined = Cesium.defined;
-var getElement = Cesium.getElement;
-var when = Cesium.when;
-var loadXML = Cesium.loadXML;
+/*global require,$*/
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 
 var corsProxy = require('../corsProxy');
-var knockout = require('knockout');
-var komapping = require('knockout.mapping');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var komapping = require('../../public/third_party/knockout.mapping');
 
 var SharePanel = function(options) {
     var container = getElement(options.container);

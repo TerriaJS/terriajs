@@ -1,14 +1,17 @@
-/*global require,Cesium,$,alert*/
+/*global require,$,alert*/
 "use strict";
 
 var Variable = require('./Variable');
+
+var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
+var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
+var loadText = require('../third_party/cesium/Source/Core/loadText');
+var Rectangle = require('../third_party/cesium/Source/Core/Rectangle');
 
 /*!
  * Copyright(c) 2012-2013 National ICT Australia Limited (NICTA).  All rights reserved.
  */
  
-var defaultValue = Cesium.defaultValue;
-
 var EMPTY_OBJECT = {};
 
 var VarType = {LON: 0, LAT: 1, ALT: 2, TIME: 3, SCALAR: 4, ENUM: 5 };
@@ -44,7 +47,7 @@ Dataset.prototype.getExtent = function () {
             maxpos[p] = this._variables[this._varID[type[p]]].max;
         }
     }
-    return Cesium.Rectangle.fromDegrees(minpos[0], minpos[1], maxpos[0], maxpos[1]);
+    return Rectangle.fromDegrees(minpos[0], minpos[1], maxpos[0], maxpos[1]);
 };
 
 /**
@@ -233,7 +236,7 @@ Dataset.prototype.loadUrl = function (description) {
     this._loadingData = true;
     var that = this;
     
-    Cesium.loadText(this._url).then( function (text) { 
+    loadText(this._url).then( function (text) { 
         that.loadText(text); 
     }, 
     function(err) { 
@@ -353,7 +356,7 @@ Dataset.prototype.getPointList = function (maxPts) {
 *
 */
 Dataset.prototype.destroy = function () {
-    return Cesium.destroyObject(this);
+    return destroyObject(this);
 };
 
 module.exports = Dataset;

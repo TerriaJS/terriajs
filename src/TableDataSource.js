@@ -1,4 +1,4 @@
-/*global require,Cesium,$*/
+/*global require,$*/
 "use strict";
 
 var Dataset = require('./Dataset');
@@ -11,12 +11,12 @@ And writes a czml file for it to display
 
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
-var defaultValue = Cesium.defaultValue;
-var CzmlDataSource = Cesium.CzmlDataSource;
-var Color = Cesium.Color;
-var defineProperties = Cesium.defineProperties;
-var destroyObject = Cesium.destroyObject;
-var JulianDate = Cesium.JulianDate;
+var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
+var CzmlDataSource = require('../third_party/cesium/Source/DataSources/CzmlDataSource');
+var Color = require('../third_party/cesium/Source/Core/Color');
+var defineProperties = require('../third_party/cesium/Source/Core/defineProperties');
+var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
+var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
 
 var EMPTY_OBJECT = {};
 
