@@ -664,7 +664,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             var extent = extentScratch;
 
             var promises = [];
-            for (var i = 0; i < imageryTiles.length; ++i) {
+            for (var i = imageryTiles.length-1; i >= 0; --i) {
                 var terrainImagery = imageryTiles[i];
                 var imagery = terrainImagery.readyImagery;
                 if (!defined(imagery)) {
