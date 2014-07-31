@@ -1194,34 +1194,16 @@ function flyToPosition(scene, position, durationMilliseconds) {
 
 function zoomCamera(scene, distFactor, pos) { 
     var camera = scene.camera;
-    //for now
-    if (scene.mode === SceneMode.SCENE3D) {
-        var cartesian;
-        if (pos === undefined) {
-            cartesian = getCameraFocus(scene);
-            if (cartesian) {
-                var direction = Cartesian3.subtract(cartesian, camera.position, cartesian3Scratch);
-                var movementVector = Cartesian3.multiplyByScalar(direction, distFactor, cartesian3Scratch);
-                var endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
-
-                flyToPosition(scene, endPosition);
-            }
-        }
-        else {
-            cartesian = camera.pickEllipsoid(pos, Ellipsoid.WGS84);
-            if (cartesian) {
-                // Zoom to the picked latitude/longitude, at a distFactor multiple
-                // of the height.
-                var targetCartographic = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
-                var cameraCartographic = Ellipsoid.WGS84.cartesianToCartographic(camera.position);
-                targetCartographic.height = cameraCartographic.height - (cameraCartographic.height - targetCartographic.height) * distFactor;
-                cartesian = Ellipsoid.WGS84.cartographicToCartesian(targetCartographic);
-                flyToPosition(scene, cartesian);
-            }
-        }
-    }
-    else {
-        camera.moveForward(camera.getMagnitude() * distFactor);
+    var pickRay = camera.getPickRay(pos);
+    var targetCartesian = scene.globe.pick(pickRay, scene);
+    if (targetCartesian) {
+        // Zoom to the picked latitude/longitude, at a distFactor multiple
+        // of the height.
+        var targetCartographic = Ellipsoid.WGS84.cartesianToCartographic(targetCartesian);
+        var cameraCartographic = Ellipsoid.WGS84.cartesianToCartographic(camera.position);
+        targetCartographic.height = cameraCartographic.height - (cameraCartographic.height - targetCartographic.height) * distFactor;
+        targetCartesian = Ellipsoid.WGS84.cartographicToCartesian(targetCartographic);
+        flyToPosition(scene, targetCartesian);
     }
 }
 
