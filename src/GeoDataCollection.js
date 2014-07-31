@@ -913,7 +913,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             });
         }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
-        layer.primitive.alpha = 0.5;
+        layer.primitive.alpha = 0.6;
     }
     else {
         var server = request.substring(0, request.indexOf('?'));
@@ -931,7 +931,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                 transparent: true
             });
         }
-        provider.setOpacity(0.5);
+        provider.setOpacity(0.6);
         layer.primitive = provider;
         this.map.addLayer(provider);
     }
@@ -985,6 +985,9 @@ GeoDataCollection.prototype._viewData = function(request, layer) {
 */
 GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     var request = layer.url;
+    if (!defined(layer.show)) {
+        layer.show = true;
+    }
 //    console.log('LAYER REQUEST:',request);
     
     // Deal with the different data Services
