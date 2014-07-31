@@ -371,14 +371,10 @@ FrameChecker.prototype.skipFrame = function(scene, date) {
 //  modified to always be available on shift-click
 // -------------------------------------------
 var DrawExtentHelper = function (scene, handler) {
-    this._canvas = scene.canvas;
     this._scene = scene;
     this._ellipsoid = scene.globe.ellipsoid;
     this._finishHandler = handler;
-    this._mouseHandler = new ScreenSpaceEventHandler(this._canvas);
-    this._extentPrimitive = new RectanglePrimitive();
-    this._extentPrimitive.asynchronous = false;
-    this._scene.primitives.add(this._extentPrimitive);
+    this._mouseHandler = new ScreenSpaceEventHandler(scene.canvas);
     this.active = false;
 };
 
@@ -441,7 +437,7 @@ DrawExtentHelper.prototype.handleRegionStop = function (movement) {
         }
         ext = this.getExtent(this._click1, this._click2);
     }
-    this._extentPrimitive.show = false;
+    this._scene.primitives.remove(this._extentPrimitive);
     this.active = false;
     this._finishHandler(ext);
 };
@@ -461,7 +457,13 @@ DrawExtentHelper.prototype.handleRegionStart = function (movement) {
     if (cartesian) {
         this.disableInput();
         this.active = true;
-        this._extentPrimitive.show = true;
+        this._extentPrimitive = new RectanglePrimitive({
+            material : Material.fromType('Color', {
+                color : new Color(1.0, 1.0, 1.0, 0.5)
+            })
+        });
+        this._extentPrimitive.asynchronous = false;
+        this._scene.primitives.add(this._extentPrimitive);
         var that = this;
         this._click1 = this._ellipsoid.cartesianToCartographic(cartesian);
         this._mouseHandler.setInputAction(function (movement) {
@@ -485,7 +487,8 @@ DrawExtentHelper.prototype.start = function () {
 };
 
 DrawExtentHelper.prototype.destroy = function () {
-    this._scene.primitives.remove(this._extentPrimitive);
+    this._mouseHandler.destroy();
+    this._scene = undefined;
 };
 
 
@@ -494,39 +497,15 @@ DrawExtentHelper.prototype.destroy = function () {
 // -------------------------------------------
 AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
     if (bActive) {
-        this.regionPolylines = new PolylineCollection();
-        this.scene.primitives.add(this.regionPolylines);
         var that = this;
         this.regionSelect = new DrawExtentHelper(this.scene, function (ext) {
-            if (that.regionPolylines.get(0)) {
-                that.regionPolylines.remove(that.regionPolylines.get(0));
-            }
-//            that.geoDataWidget.setExtent(ext);
             if (ext) {
-                that.updateCameraFromRect(ext, 3000);
-                // Display polyline based on ext
-                var east = ext.east, west = ext.west, north = ext.north, south = ext.south;
-                var ellipsoid = Ellipsoid.WGS84;
-                that.regionPolylines.add({
-                    positions : ellipsoid.cartographicArrayToCartesianArray(
-                        [
-                            new Cartographic(west, south),
-                            new Cartographic(west, north),
-                            new Cartographic(east, north),
-                            new Cartographic(east, south),
-                            new Cartographic(west, south)
-                        ]),
-                    width: 3.0,
-                    material : Material.fromType('Color', {
-                        color : new Color(0.8, 0.8, 0.0, 0.5)
-                    })
-                });
+                that.updateCameraFromRect(ext, 2000);
             }
         });
         this.regionSelect.start();
     }
     else {
-        this.scene.primitives.remove(this.regionPolylines);
         this.regionSelect.destroy();
     }
 };
@@ -748,6 +727,10 @@ function debounceSampleAccurateHeight(globe, position) {
 }
 
 function sampleAccurateHeight(terrainProvider, position) {
+        //can happen if reload while over ui element
+    if (!defined(terrainProvider) || !defined(position)) {
+        return;
+    }
     accurateHeightTimer = undefined;
     if (tileRequestInFlight) {
         // A tile request is already in flight, so reschedule for later.
@@ -1209,7 +1192,7 @@ function flyToPosition(scene, position, durationMilliseconds) {
     });
 }
 
-function zoomCamera(scene, distFactor, pos) {
+function zoomCamera(scene, distFactor, pos) { 
     var camera = scene.camera;
     //for now
     if (scene.mode === SceneMode.SCENE3D) {
