@@ -1423,8 +1423,23 @@ function selectFeatures(promises, viewer) {
             }
 
             // Handle MapInfo MXP.  This is ugly.
-            if (result instanceof Document) {
+            if (result instanceof Document || defined(result.xml)) {
                 var json = $.xml2json(result);
+
+                // xml2json returns namespaced property names in IE9.
+                if (json['mxp:FeatureCollection']) {
+                    json.FeatureCollection = json['mxp:FeatureCollection'];
+                    if (json.FeatureCollection['mxp:FeatureMembers']) {
+                        json.FeatureCollection.FeatureMembers = json.FeatureCollection['mxp:FeatureMembers'];
+                        if (json.FeatureCollection.FeatureMembers['mxp:Feature']) {
+                            json.FeatureCollection.FeatureMembers.Feature = json.FeatureCollection.FeatureMembers['mxp:Feature'];
+                            if (json.FeatureCollection.FeatureMembers.Feature['mxp:Val']) {
+                                json.FeatureCollection.FeatureMembers.Feature.Val = json.FeatureCollection.FeatureMembers.Feature['mxp:Val'];
+                            }
+                        }
+                    }
+                }
+
                 var properties;
                 if (json.FeatureCollection &&
                     json.FeatureCollection.FeatureMembers && 
