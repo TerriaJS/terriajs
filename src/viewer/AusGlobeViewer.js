@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,L,URI,$,XMLDocument,html2canvas,alert,console*/
+/*global require,L,URI,$,Document,html2canvas,alert,console*/
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
 var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
 var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
@@ -829,7 +829,12 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         var ticker = function() {
             if (that.map === map) {
                 map.clock.tick();
-                requestAnimationFrame(ticker);
+
+                if (typeof requestAnimationFrame !== 'undefined') {
+                    requestAnimationFrame(ticker);
+                } else {
+                    setTimeout(ticker, 15);
+                }
             } else {
                 console.log('done');
             }
@@ -1416,8 +1421,23 @@ function selectFeatures(promises, viewer) {
             }
 
             // Handle MapInfo MXP.  This is ugly.
-            if (result instanceof XMLDocument) {
+            if (result instanceof Document || defined(result.xml)) {
                 var json = $.xml2json(result);
+
+                // xml2json returns namespaced property names in IE9.
+                if (json['mxp:FeatureCollection']) {
+                    json.FeatureCollection = json['mxp:FeatureCollection'];
+                    if (json.FeatureCollection['mxp:FeatureMembers']) {
+                        json.FeatureCollection.FeatureMembers = json.FeatureCollection['mxp:FeatureMembers'];
+                        if (json.FeatureCollection.FeatureMembers['mxp:Feature']) {
+                            json.FeatureCollection.FeatureMembers.Feature = json.FeatureCollection.FeatureMembers['mxp:Feature'];
+                            if (json.FeatureCollection.FeatureMembers.Feature['mxp:Val']) {
+                                json.FeatureCollection.FeatureMembers.Feature.Val = json.FeatureCollection.FeatureMembers.Feature['mxp:Val'];
+                            }
+                        }
+                    }
+                }
+
                 var properties;
                 if (json.FeatureCollection &&
                     json.FeatureCollection.FeatureMembers && 
