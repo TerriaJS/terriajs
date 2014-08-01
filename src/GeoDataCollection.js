@@ -635,7 +635,7 @@ function recolorImage(img, colorFunc) {
             }
         }
         else {
-            image.data[i+3] = 0;
+//!!! let's real image through            image.data[i+3] = 0;
         }
     }
     context.putImageData(image, 0, 0);
@@ -685,13 +685,13 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
     var lookup = {};
     for (var i = 0; i < codes.length; i++) {
-//        lookup[codes[i]] = vals[i];
-        lookup[i] = vals[i]; //hack until server side fixed
+        lookup[codes[i]] = vals[i];
     }
     var colors = [];
     for (var i = dataset.getMinVal(); i <= dataset.getMaxVal(); i++) {
         colors[i] = tableDataSource._mapValue2Color(i);
     }
+    console.log(colors, lookup)
     wmsLayer.colorFunc = function(idx) {
         return colors[lookup[idx]];
     };
@@ -1013,6 +1013,26 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                 },
                 proxy: proxy
             });
+            if (defined(layer.colorFunc)) {
+                provider.base_requestImage = provider.requestImage;
+                provider.requestImage = function(x, y, level) {
+                    var imagePromise = provider.base_requestImage(x, y, level);
+                    if (!defined(imagePromise)) {
+                        return imagePromise;
+                    }
+                    
+                    var deferred = when.defer();
+
+                    when(imagePromise, function(image) {
+                        if (defined(image)) {
+                            image = recolorImage(image, layer.colorFunc);
+                        }
+                        deferred.resolve(image);                        
+                    });
+
+                    return deferred.promise;
+                }
+            }
         }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
         layer.primitive.alpha = 0.6;
