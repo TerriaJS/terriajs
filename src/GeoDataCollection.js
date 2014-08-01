@@ -610,6 +610,96 @@ GeoDataCollection.prototype.getShareRequestURL = function( request ) {
 };
 
 
+//////////////////////////////////////////////////////////////////////////
+
+//Recolor an image using 2d canvas
+function recolorImage(img, colorFunc) {
+    
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Copy the image contents to the canvas
+    var context = canvas.getContext("2d");
+    context.drawImage(img, 0, 0);
+    var image = context.getImageData(0, 0, canvas.width, canvas.height);
+    var length = image.data.length;  //pixel count * 4
+    
+    //TODO: need to find a way to get back int16 data from image
+    for (var i = 0; i < length; i += 4) {
+        var idx = image.data[i];
+        if (idx > 0) {
+            var clr = colorFunc(idx);
+            for (var j = 0; j < 3; j++) {
+                image.data[i+j] = clr[j];
+            }
+        }
+        else {
+            image.data[i+3] = 0;
+        }
+    }
+    context.putImageData(image, 0, 0);
+    
+    return context.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+var regionWmsMap = {'POA_CODE': {
+    "Name":"admin_bnds_abs:poa",
+    "Title":"Postal Areas",
+    "base_url":"http://geospace.research.nicta.com.au:8080/admin_bnds/ows",
+    "type":"WMS",
+    "BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.59821500205783","north":"-9.142175976703609"}
+    }
+};
+
+GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
+    console.log(layer);
+    var dataset = tableDataSource.dataset;
+    var vars = dataset.getVarList();
+    
+    var idx = vars.indexOf('POA_CODE');
+    if (idx === -1) {
+        return;
+    }
+        //change current var
+    if (dataset.getCurrentVariable() === vars[idx]) {
+        dataset.setCurrentVariable({ variable: vars[idx+1]}); 
+    }    
+        //index to wmsLayerProxy
+    var description = regionWmsMap['POA_CODE'];
+    var box = description.BoundingBox;
+    description.extent = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
+        parseFloat(box.east), parseFloat(box.north));
+    var wmsLayer = new GeoData({
+        name: layer.name,
+        type: description.type,
+        extent: description.extent,
+        url: this.getOGCFeatureURL(description)
+    });
+
+    var request = wmsLayer.url;
+    
+    //   create colorFunc
+    //  create json lookup object from table = {'800': val1, ...}
+    var codes = dataset.getDataValues(vars[idx]);
+    var vals = dataset.getDataValues(dataset.getCurrentVariable());
+    var lookup = {};
+    for (var i = 0; i < codes.length; i++) {
+//        lookup[codes[i]] = vals[i];
+        lookup[i] = vals[i]; //hack until server side fixed
+    }
+    var colors = [];
+    for (var i = dataset.getMinVal(); i <= dataset.getMaxVal(); i++) {
+        colors[i] = tableDataSource._mapValue2Color(i);
+    }
+    wmsLayer.colorFunc = function(idx) {
+        return colors[lookup[idx]];
+    };
+    
+    this._viewMap(request, wmsLayer);
+}
+/////////////////////////////////////////////////////////////////////////////////
+
 // -------------------------------------------
 // Handle data sources from text
 // -------------------------------------------
@@ -706,11 +796,23 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     else if (format === "CSV") {
         var tableDataSource = new TableDataSource();
         tableDataSource.loadText(text);
-        this.dataSourceCollection.add(tableDataSource);
-        
-        layer.dataSource = tableDataSource;
-        layer.extent = tableDataSource.dataset.getExtent();
-        this.add(layer);
+        if (!tableDataSource.dataset.hasLocationData()) {
+            this.addRegionMap(layer, tableDataSource);
+        }
+        else if (this.map === undefined) {
+            this.dataSourceCollection.add(tableDataSource);
+            layer.dataSource = tableDataSource;
+            layer.extent = tableDataSource.dataset.getExtent();
+            this.add(layer);
+        }
+        else {
+            var pointList = tableDataSource.dataset.getPointList();
+            var dispPoints = [];
+            for (var i = 0; i < pointList.length; i++) {
+                dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
+            }
+            this.addGeoJsonLayer(dispPoints, layer);
+        }
     }
         //Return false so widget can try to send to conversion service
     else {
@@ -885,7 +987,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
 
     if (this.map === undefined) {
         var wmsServer = request.substring(0, request.indexOf('?'));
-        var url = 'http://' + uri.hostname() + uri.path();
+        var url = wmsServer; //'http://' + uri.hostname() + uri.path();
         if (corsProxy.shouldUseProxy(url)) {
             if (layer.description && layer.description.username && layer.description.password) {
                 proxy = corsProxy.withCredentials(layer.description.username, layer.description.password);
