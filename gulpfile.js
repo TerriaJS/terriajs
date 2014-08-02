@@ -31,7 +31,7 @@ var workerGlob = [
     '!./third_party/cesium/Source/Workers/transferTypedArrayTest.js',
     '!./third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
 ];
-var specGlob = './spec/*.js';
+var specGlob = './spec/**/*.js';
 
 
 // Create the build directory, because browserify flips out if the directory that might

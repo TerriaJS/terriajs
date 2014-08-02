@@ -1,3 +1,7 @@
+'use strict';
+
+/*global require,describe,it,expect*/
+
 var GeoData = require('../src/GeoData');
 
 describe('GeoData', function() {
