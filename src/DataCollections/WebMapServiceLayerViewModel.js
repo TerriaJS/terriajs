@@ -8,6 +8,7 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
+var corsProxy = require('../corsProxy');
 var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 
 /**
@@ -57,13 +58,17 @@ WebMapServiceLayerViewModel.prototype.enable = function(dataSourceCollection) {
         },
         {
             name : this.name,
-            webMapService : {
-                url : url,
-                layers : this.layers,
-                parameters : {
-                    format : 'image/png',
-                    transparent : true,
-                    styles : ''
+            imageryLayer : {
+                alpha : 0.5,
+                zIndex : 10,
+                webMapService : {
+                    url : url,
+                    layers : this.layers,
+                    parameters : {
+                        format : 'image/png',
+                        transparent : true,
+                        styles : ''
+                    }
                 }
             }
         }
