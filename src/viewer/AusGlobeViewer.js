@@ -430,8 +430,8 @@ DrawExtentHelper.prototype.handleRegionStop = function (movement) {
     this.enableInput();
     var ext;
     if (movement) {
-        var cartesian = this._scene.camera.pickEllipsoid(movement.position,
-            this._ellipsoid);
+        var pickRay = this._scene.camera.getPickRay(movement.position);
+        var cartesian = this._scene.globe.pick(pickRay, this._scene);
         if (cartesian) {
             this._click2 = this._ellipsoid.cartesianToCartographic(cartesian);
         }
@@ -443,8 +443,8 @@ DrawExtentHelper.prototype.handleRegionStop = function (movement) {
 };
 
 DrawExtentHelper.prototype.handleRegionInter = function (movement) {
-    var cartesian = this._scene.camera.pickEllipsoid(movement.endPosition,
-        this._ellipsoid);
+    var pickRay = this._scene.camera.getPickRay(movement.endPosition);
+    var cartesian = this._scene.globe.pick(pickRay, this._scene);
     if (cartesian) {
         var cartographic = this._ellipsoid.cartesianToCartographic(cartesian);
         this.setPolyPts(this._click1, cartographic);
@@ -452,8 +452,8 @@ DrawExtentHelper.prototype.handleRegionInter = function (movement) {
 };
 
 DrawExtentHelper.prototype.handleRegionStart = function (movement) {
-    var cartesian = this._scene.camera.pickEllipsoid(movement.position,
-        this._ellipsoid);
+    var pickRay = this._scene.camera.getPickRay(movement.position);
+    var cartesian = this._scene.globe.pick(pickRay, this._scene);
     if (cartesian) {
         this.disableInput();
         this.active = true;
@@ -639,8 +639,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             }
 
             // Find the picked location on the globe.
-            // TODO: this should take terrain into account.
-            var pickedPosition = scene.camera.pickEllipsoid(movement.position, Ellipsoid.WGS84);
+            var pickRay = scene.camera.getPickRay(movement.position);
+            var pickedPosition = scene.globe.pick(pickRay, scene);
             var pickedLocation = Ellipsoid.WGS84.cartesianToCartographic(pickedPosition);
 
             // Find the terrain tile containing the picked location.
@@ -1102,7 +1102,8 @@ function getCameraHeight(scene) {
 function getCameraFocus(scene) {
     //Hack to get current camera focus
     var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
-    var focus = scene.camera.pickEllipsoid(pos, Ellipsoid.WGS84);
+    var pickRay = scene.camera.getPickRay(pos);
+    var focus = scene.globe.pick(pickRay, scene);
     return focus;
 }
 //Approximate camera extent approx for 2D viewer
