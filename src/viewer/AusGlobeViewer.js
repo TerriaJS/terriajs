@@ -696,15 +696,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         },
         ScreenSpaceEventType.LEFT_CLICK);
 
-
-    //Opening scene
-    //TODO: based on perf test to see if we can do some animation at startup
-    var e = new Cartesian3(-5696178.715241763, 5664619.403367736, -4108462.746194852);
-    var v = new Cartesian3(0.6306011721197975, -0.6271116358860636, 0.45724518352430904);
-    var u = new Cartesian3(-0.3415299812150222, 0.3048158142378301, 0.8890695080602443);
-    var target = new Cartesian3();
-    camera.lookAt(e, Cartesian3.add(e,v,target), u);
-
     return viewer;
 };
 
@@ -934,15 +925,17 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             that.captureCanvasFlag = true;
         };
 
-        if (this.map !== undefined) {
+        if (defined(this.map)) {
             rect = getCameraRect(undefined, this.map);
-
             //remove existing map viewer
             this.map.remove();
             this.map = undefined;
-
-            this.updateCameraFromRect(rect, 0);
         }
+        else {
+            rect = new Rectangle( 2.0, -0.8, 2.6, -0.1);
+         }
+
+        this.updateCameraFromRect(rect, 0);
 
         this.geoDataManager.setViewer({scene: this.scene, map: undefined});
         this.geoDataBrowser.viewModel.map = undefined;
@@ -1194,34 +1187,16 @@ function flyToPosition(scene, position, durationMilliseconds) {
 
 function zoomCamera(scene, distFactor, pos) { 
     var camera = scene.camera;
-    //for now
-    if (scene.mode === SceneMode.SCENE3D) {
-        var cartesian;
-        if (pos === undefined) {
-            cartesian = getCameraFocus(scene);
-            if (cartesian) {
-                var direction = Cartesian3.subtract(cartesian, camera.position, cartesian3Scratch);
-                var movementVector = Cartesian3.multiplyByScalar(direction, distFactor, cartesian3Scratch);
-                var endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
-
-                flyToPosition(scene, endPosition);
-            }
-        }
-        else {
-            cartesian = camera.pickEllipsoid(pos, Ellipsoid.WGS84);
-            if (cartesian) {
-                // Zoom to the picked latitude/longitude, at a distFactor multiple
-                // of the height.
-                var targetCartographic = Ellipsoid.WGS84.cartesianToCartographic(cartesian);
-                var cameraCartographic = Ellipsoid.WGS84.cartesianToCartographic(camera.position);
-                targetCartographic.height = cameraCartographic.height - (cameraCartographic.height - targetCartographic.height) * distFactor;
-                cartesian = Ellipsoid.WGS84.cartographicToCartesian(targetCartographic);
-                flyToPosition(scene, cartesian);
-            }
-        }
-    }
-    else {
-        camera.moveForward(camera.getMagnitude() * distFactor);
+    var pickRay = camera.getPickRay(pos);
+    var targetCartesian = scene.globe.pick(pickRay, scene);
+    if (targetCartesian) {
+        // Zoom to the picked latitude/longitude, at a distFactor multiple
+        // of the height.
+        var targetCartographic = Ellipsoid.WGS84.cartesianToCartographic(targetCartesian);
+        var cameraCartographic = Ellipsoid.WGS84.cartesianToCartographic(camera.position);
+        targetCartographic.height = cameraCartographic.height - (cameraCartographic.height - targetCartographic.height) * distFactor;
+        targetCartesian = Ellipsoid.WGS84.cartographicToCartesian(targetCartographic);
+        flyToPosition(scene, targetCartesian);
     }
 }
 
