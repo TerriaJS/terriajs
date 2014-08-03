@@ -1565,36 +1565,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     
     var newDataSource = new GeoJsonDataSource();
     
-    //update default point/line/polygon
-    var defaultPoint = newDataSource.defaultPoint;
-    var point = new PointGraphics();
-    point.color = new ConstantProperty(getCesiumColor(layer.style.point.color));
-    point.pixelSize = new ConstantProperty(layer.style.point.size);
-    point.outlineColor = new ConstantProperty(Color.BLACK);
-    point.outlineWidth = new ConstantProperty(1);
-    defaultPoint.point = point;
-    
-    var defaultLine = newDataSource.defaultLine;
-    var polyline = new PolylineGraphics();
-    var material = new ColorMaterialProperty();
-    material.color = new ConstantProperty(getCesiumColor(layer.style.line.color));
-    polyline.material = material;
-    polyline.width = new ConstantProperty(layer.style.line.width);
-    defaultLine.polyline = polyline;
-
-    var defaultPolygon = newDataSource.defaultPolygon;
-    
-    defaultPolygon.polyline = polyline;
-    
-    var polygon = new PolygonGraphics();
-    polygon.fill = new ConstantProperty(layer.style.polygon.fill);
-    polygon.outline = new ConstantProperty(true);
-    defaultPolygon.polygon = polygon;
-    
-    material = new ColorMaterialProperty();
-    material.color = new ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
-    polygon.material = material;
-    
    //Reprojection and downsampling
     var crs_code = getCrsCode(geojson);
     if (crs_code !== '' && crs_code !== 'EPSG:4326') {
@@ -1617,7 +1587,41 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     
     if (this.map === undefined) {
             //create the object
-        newDataSource.load(geojson);
+        newDataSource.load(geojson).then(function() {
+            var entities = newDataSource.entities.entities;
+
+            for (var i = 0; i < entities.length; ++i) {
+                var entity = entities[i];
+                var material;
+
+                //update default point/line/polygon
+                var point = entity.point;
+                if (defined(point)) {
+                    point.color = new ConstantProperty(getCesiumColor(layer.style.point.color));
+                    point.pixelSize = new ConstantProperty(layer.style.point.size);
+                    point.outlineColor = new ConstantProperty(Color.BLACK);
+                    point.outlineWidth = new ConstantProperty(1);
+                }
+
+                var polyline = entity.polyline;
+                if (defined(polyline)) {
+                    material = new ColorMaterialProperty();
+                    material.color = new ConstantProperty(getCesiumColor(layer.style.line.color));
+                    polyline.material = material;
+                    polyline.width = new ConstantProperty(layer.style.line.width);
+                }
+
+                var polygon = entity.polygon;
+                if (defined(polygon)) {
+                    polygon.fill = new ConstantProperty(layer.style.polygon.fill);
+                    polygon.outline = new ConstantProperty(true);
+
+                    material = new ColorMaterialProperty();
+                    material.color = new ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
+                    polygon.material = material;
+                }
+            }
+        });
         this.dataSourceCollection.add(newDataSource);
             //add it as a layer
         layer.dataSource = newDataSource;
