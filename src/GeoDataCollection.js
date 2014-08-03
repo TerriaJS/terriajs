@@ -1577,8 +1577,26 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.style.polygon.fillcolor = layer.style.line.color;
         layer.style.polygon.fillcolor.alpha = 0.75;
     }
-    
-    var newDataSource = new GeoJsonDataSource();
+
+    // If this GeoJSON is an object literal with a single property, treat that
+    // property as the name of the data source, and the property's value as the
+    // actual GeoJSON.
+    var numProperties = 0;
+    var propertyName;
+    for (propertyName in geojson) {
+        if (geojson.hasOwnProperty(propertyName)) {
+            ++numProperties;
+            if (numProperties > 1) {
+                break; // no need to count past 2 properties.
+            }
+        }
+    }
+
+    var name;
+    if (numProperties === 1) {
+        name = propertyName;
+        geojson = geojson[propertyName];
+    }
     
    //Reprojection and downsampling
     var crs_code = getCrsCode(geojson);
@@ -1601,7 +1619,9 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     }
     
     if (this.map === undefined) {
-            //create the object
+        //create the object
+        var newDataSource = new GeoJsonDataSource(name);
+
         newDataSource.load(geojson).then(function() {
             var entities = newDataSource.entities.entities;
 
