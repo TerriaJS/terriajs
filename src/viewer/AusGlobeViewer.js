@@ -1362,7 +1362,7 @@ function selectFeatures(promises, viewer) {
             }
 
             function describe(properties) {
-                var html = '<table class="cesium-geoJsonDataSourceTable">';
+                var html = '<table class="cesium-infoBox-defaultTable">';
                 for ( var key in properties) {
                     if (properties.hasOwnProperty(key)) {
                         var value = properties[key];

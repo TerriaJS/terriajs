@@ -1358,14 +1358,22 @@ function pntReproject(coordinates, id) {
 
 // Get the crs code from the geojson
 function getCrsCode(gjson_obj) {
-    if (gjson_obj.crs === undefined || gjson_obj.crs.type !== 'EPSG') {
-        return "";
+    var code;
+
+    if (!defined(gjson_obj.crs)) {
+        return '';
+    } else if (gjson_obj.crs.type === 'EPSG') {
+        code = gjson_obj.crs.properties.code;
+    } else if (gjson_obj.crs.type === 'name' &&
+               defined(gjson_obj.crs.properties) &&
+               defined(gjson_obj.crs.properties.name) &&
+               gjson_obj.crs.properties.name.indexOf('EPSG:') === 0) {
+        code = gjson_obj.crs.properties.name.substring(5);
+    } else {
+        return '';
     }
-    var code = gjson_obj.crs.properties.code;
-    if (code === '4283') {
-        code = '4326';
-    }
-    return gjson_obj.crs.type + ':' + code;
+
+    return 'EPSG:' + code;
 }
 
 //  TODO: get new proj4 strings from REST service
@@ -1400,11 +1408,18 @@ function reprojectPointList(pts, code) {
 
 // Reproject a GeoJson based on the supplied crs code
 function reprojectGeoJSON(obj, crs_code) {
-    filterValue(obj, 'coordinates', function(obj, prop) { obj[prop] = filterArray(obj[prop], function(pts) {
-            return reprojectPointList(pts, crs_code);
+    if (crs_code !== 'EPSG:4283') {
+        filterValue(obj, 'coordinates', function(obj, prop) { obj[prop] = filterArray(obj[prop], function(pts) {
+                return reprojectPointList(pts, crs_code);
+            });
         });
-    });
-    obj.crs.properties.code = '4326';
+    }
+    obj.crs = {
+        type: 'EPSG',
+        properties: {
+            code: '4326'
+        }
+    };
 }
 
 // Reduce the resolution of a point list in degrees
