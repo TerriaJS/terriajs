@@ -430,8 +430,8 @@ DrawExtentHelper.prototype.handleRegionStop = function (movement) {
     this.enableInput();
     var ext;
     if (movement) {
-        var cartesian = this._scene.camera.pickEllipsoid(movement.position,
-            this._ellipsoid);
+        var pickRay = this._scene.camera.getPickRay(movement.position);
+        var cartesian = this._scene.globe.pick(pickRay, this._scene);
         if (cartesian) {
             this._click2 = this._ellipsoid.cartesianToCartographic(cartesian);
         }
@@ -443,8 +443,8 @@ DrawExtentHelper.prototype.handleRegionStop = function (movement) {
 };
 
 DrawExtentHelper.prototype.handleRegionInter = function (movement) {
-    var cartesian = this._scene.camera.pickEllipsoid(movement.endPosition,
-        this._ellipsoid);
+    var pickRay = this._scene.camera.getPickRay(movement.endPosition);
+    var cartesian = this._scene.globe.pick(pickRay, this._scene);
     if (cartesian) {
         var cartographic = this._ellipsoid.cartesianToCartographic(cartesian);
         this.setPolyPts(this._click1, cartographic);
@@ -452,8 +452,8 @@ DrawExtentHelper.prototype.handleRegionInter = function (movement) {
 };
 
 DrawExtentHelper.prototype.handleRegionStart = function (movement) {
-    var cartesian = this._scene.camera.pickEllipsoid(movement.position,
-        this._ellipsoid);
+    var pickRay = this._scene.camera.getPickRay(movement.position);
+    var cartesian = this._scene.globe.pick(pickRay, this._scene);
     if (cartesian) {
         this.disableInput();
         this.active = true;
@@ -639,8 +639,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             }
 
             // Find the picked location on the globe.
-            // TODO: this should take terrain into account.
-            var pickedPosition = scene.camera.pickEllipsoid(movement.position, Ellipsoid.WGS84);
+            var pickRay = scene.camera.getPickRay(movement.position);
+            var pickedPosition = scene.globe.pick(pickRay, scene);
             var pickedLocation = Ellipsoid.WGS84.cartesianToCartographic(pickedPosition);
 
             // Find the terrain tile containing the picked location.
@@ -695,15 +695,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             selectFeatures(promises, viewer);
         },
         ScreenSpaceEventType.LEFT_CLICK);
-
-
-    //Opening scene
-    //TODO: based on perf test to see if we can do some animation at startup
-    var e = new Cartesian3(-5696178.715241763, 5664619.403367736, -4108462.746194852);
-    var v = new Cartesian3(0.6306011721197975, -0.6271116358860636, 0.45724518352430904);
-    var u = new Cartesian3(-0.3415299812150222, 0.3048158142378301, 0.8890695080602443);
-    var target = new Cartesian3();
-    camera.lookAt(e, Cartesian3.add(e,v,target), u);
 
     return viewer;
 };
@@ -934,15 +925,17 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             that.captureCanvasFlag = true;
         };
 
-        if (this.map !== undefined) {
+        if (defined(this.map)) {
             rect = getCameraRect(undefined, this.map);
-
             //remove existing map viewer
             this.map.remove();
             this.map = undefined;
-
-            this.updateCameraFromRect(rect, 0);
         }
+        else {
+            rect = new Rectangle( 2.0, -0.8, 2.6, -0.1);
+         }
+
+        this.updateCameraFromRect(rect, 0);
 
         this.geoDataManager.setViewer({scene: this.scene, map: undefined});
         this.geoDataBrowser.viewModel.map = undefined;
@@ -1109,7 +1102,8 @@ function getCameraHeight(scene) {
 function getCameraFocus(scene) {
     //Hack to get current camera focus
     var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
-    var focus = scene.camera.pickEllipsoid(pos, Ellipsoid.WGS84);
+    var pickRay = scene.camera.getPickRay(pos);
+    var focus = scene.globe.pick(pickRay, scene);
     return focus;
 }
 //Approximate camera extent approx for 2D viewer
@@ -1368,7 +1362,7 @@ function selectFeatures(promises, viewer) {
             }
 
             function describe(properties) {
-                var html = '<table class="cesium-geoJsonDataSourceTable">';
+                var html = '<table class="cesium-infoBox-defaultTable">';
                 for ( var key in properties) {
                     if (properties.hasOwnProperty(key)) {
                         var value = properties[key];
