@@ -655,7 +655,6 @@ var regionWmsMap = {'POA_CODE': {
 };
 
 GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
-    console.log(layer);
     var dataset = tableDataSource.dataset;
     var vars = dataset.getVarList();
     
