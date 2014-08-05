@@ -627,15 +627,17 @@ function recolorImage(img, colorFunc) {
     
     //TODO: need to find a way to get back int16 data from image
     for (var i = 0; i < length; i += 4) {
-        var idx = image.data[i];
+        var idx = image.data[i] * 0x10000 + image.data[i+1] * 0x100 + image.data[i+2];
         if (idx > 0) {
             var clr = colorFunc(idx);
-            for (var j = 0; j < 3; j++) {
-                image.data[i+j] = clr[j];
+            if (defined(clr)) {
+                for (var j = 0; j < 3; j++) {
+                    image.data[i+j] = clr[j];
+                }
             }
         }
         else {
-//!!! let's real image through            image.data[i+3] = 0;
+            image.data[i+3] = 0;
         }
     }
     context.putImageData(image, 0, 0);
@@ -688,10 +690,12 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
         lookup[codes[i]] = vals[i];
     }
     var colors = [];
-    for (var i = dataset.getMinVal(); i <= dataset.getMaxVal(); i++) {
-        colors[i] = tableDataSource._mapValue2Color(i);
+    var range = dataset.getMaxVal()-dataset.getMinVal();
+    for (var i = 0; i <= range; i++) {
+        var idx = i + dataset.getMinVal();
+        var val = dataset.getMaxVal() - i;    //flip the colors so blue is highest - just use idx for normal
+        colors[idx] = tableDataSource._mapValue2Color(val);
     }
-    console.log(colors, lookup)
     wmsLayer.colorFunc = function(idx) {
         return colors[lookup[idx]];
     };
