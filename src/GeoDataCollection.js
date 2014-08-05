@@ -905,9 +905,10 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                 url: url,
                 layers : encodeURIComponent(layerName),
                 parameters: {
-                    'format':'image/png',
-                    'transparent':'true',
-                    'styles': ''
+                    format: 'image/png',
+                    transparent: true,
+                    styles: '',
+                    exceptions: 'application/vnd.ogc.se_xml'
                 },
                 proxy: proxy
             });
@@ -928,7 +929,8 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             provider = new L.tileLayer.wms(server, {
                 layers: layerName,
                 format: 'image/png',
-                transparent: true
+                transparent: true,
+                exceptions: 'application/vnd.ogc.se_xml'
             });
         }
         provider.setOpacity(0.6);
