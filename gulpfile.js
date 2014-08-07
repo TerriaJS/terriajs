@@ -98,6 +98,7 @@ gulp.task('build-cesium', function(cb) {
 gulp.task('copy-cesium-assets', function() {
     return gulp.src([
             'third_party/cesium/Source/Workers/transferTypedArrayTest.js',
+            'third_party/cesium/Source/ThirdParty/Workers/**',
             'third_party/cesium/Source/Assets/**',
             'third_party/cesium/Source/Widgets/**/*.css',
             'third_party/cesium/Source/Widgets/Images/**'
