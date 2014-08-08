@@ -9,15 +9,6 @@ var corsProxy = {
     proxyDomains : []
 };
 
-corsProxy.withCredentials = function(username, password) {
-    return {
-        getURL : function(resource) {
-            return '//' + username + ':' + password + '@' + window.location.host + corsProxy.getURL(resource);
-        }
-    };
-};
-
-
 corsProxy.shouldUseProxy = function(url) {
 
     var uri = new URI(url);

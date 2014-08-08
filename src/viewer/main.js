@@ -43,7 +43,6 @@ if (start) {
 
     var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-    var TaskProcessor = require('../../third_party/cesium/Source/Core/TaskProcessor');
 
     var GeoDataCollection = require('../GeoDataCollection');
     var AusGlobeViewer = require('./AusGlobeViewer');

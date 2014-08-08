@@ -887,11 +887,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = 'http://' + uri.hostname() + uri.path();
         if (corsProxy.shouldUseProxy(url)) {
-            if (layer.description && layer.description.username && layer.description.password) {
-                proxy = corsProxy.withCredentials(layer.description.username, layer.description.password);
-            } else {
-                proxy = corsProxy;
-            }
+            proxy = corsProxy;
         }
 
         if (layerName === 'REST') {
@@ -1238,8 +1234,6 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 * @param {Object} description Object with the following properties:
 * @param {Url} description.base_url The url for the service
 * @param {String} description.type The identifier of the service
-* @param {String} description.username Username for password authenticated services
-* @param {String} description.password Password for password authenticated services
 * @param {Function} callback Function to carry out at the successful completion of the request
 */
 GeoDataCollection.prototype.getCapabilities = function(description, callback) {
@@ -1263,7 +1257,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     }
 
     var that = this;
-    loadText(request, undefined, description.username, description.password).then ( function(text) {
+    loadText(request, undefined).then ( function(text) {
         that.handleCapabilitiesRequest(text, description);
         callback(description);
     }, function(err) {
