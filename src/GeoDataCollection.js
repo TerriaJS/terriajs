@@ -33,6 +33,7 @@ var PolygonGraphics = require('../third_party/cesium/Source/DataSources/PolygonG
 var PolylineGraphics = require('../third_party/cesium/Source/DataSources/PolylineGraphics');
 var Rectangle = require('../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMercatorTilingScheme = require('../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var when = require('../third_party/cesium/Source/ThirdParty/when');
 
 /**
@@ -897,7 +898,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             });
         }
         else {
-            provider = new WebMapServiceImageryProvider({
+            var wmsOptions = {
                 url: url,
                 layers : encodeURIComponent(layerName),
                 parameters: {
@@ -907,7 +908,37 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     exceptions: 'application/vnd.ogc.se_xml'
                 },
                 proxy: proxy
-            });
+            };
+
+            var crs;
+            if (defined(layer.description.CRS)) {
+                crs = layer.description.CRS;
+            } else {
+                crs = layer.description.SRS;
+            }
+
+            if (defined(crs)) {
+                if (crsIsMatch(crs, 'EPSG:4326')) {
+                    // Standard Geographic
+                } else if (crsIsMatch(crs, 'CRS:84')) {
+                    // Another name for EPSG:4326
+                    wmsOptions.parameters.srs = 'CRS:84';
+                } else if (crsIsMatch(crs, 'EPSG:4283')) {
+                    // Australian system that is equivalent to EPSG:4326.
+                    wmsOptions.parameters.srs = 'EPSG:4283';
+                } else if (crsIsMatch(crs, 'EPSG:3857')) {
+                    // Standard Web Mercator
+                    wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                } else if (crsIsMatch(crs, 'EPSG:900913')) {
+                    // Older code for Web Mercator
+                    wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                    wmsOptions.parameters.srs = 'EPSG:900913';
+                } else {
+                    // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+                }
+            }
+
+            provider = new WebMapServiceImageryProvider(wmsOptions);
         }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
         layer.primitive.alpha = 0.6;
@@ -936,6 +967,18 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
 
     this.add(layer);
 };
+
+function crsIsMatch(crs, matchValue) {
+    if (crs === matchValue) {
+        return true;
+    }
+
+    if (crs instanceof Array && crs.indexOf(matchValue) >= 0) {
+        return true;
+    }
+
+     return false;
+}
 
 // Show csv table data
 GeoDataCollection.prototype._viewTable = function(request, layer) {
