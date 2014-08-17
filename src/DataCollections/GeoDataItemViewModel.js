@@ -22,21 +22,15 @@ var GeoDataItemViewModel = function() {
      */
     this.description = '';
 
-    this._isEnabled = false;
+    this.isEnabled = false;
 
-    knockout.track(this, ['name', 'description', '_isEnabled']);
+    knockout.track(this, ['name', 'description', 'isEnabled']);
 };
 
 defineProperties(GeoDataItemViewModel.prototype, {
     isGroup : {
         get : function() {
             return false;
-        }
-    },
-
-    isEnabled : {
-        get : function() {
-            return this._isEnabled;
         }
     }
 });

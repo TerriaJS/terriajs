@@ -36,54 +36,46 @@ var WebMapServiceLayerViewModel = function() {
     this._dataSource = undefined;
 
     knockout.track(this, ['url', 'layers']);
+
+    var that = this;
+    ko.getObservable(this, 'isEnabled').subscribe(this._isEnabledChanged, this);
 };
 
 WebMapServiceLayerViewModel.prototype = new GeoDataItemViewModel();
 WebMapServiceLayerViewModel.prototype.constructor = WebMapServiceLayerViewModel;
 
-WebMapServiceLayerViewModel.prototype.enable = function(dataSourceCollection) {
-    if (defined(this._dataSource)) {
-        throw new DeveloperError('WebMapServiceLayerViewModel is already enabled.');
-    }
+WebMapServiceLayerViewModel.prototype._isEnabledChanged = function(newValue) {
+    if (newValue === true && !defined(this._dataSource)) {
+        // Enabling
+        var url = corsProxy.shouldUseProxy(this.url) ? corsProxy.getURL(this.url) : this.url;
 
-    var url = corsProxy.shouldUseProxy(this.url) ? corsProxy.getURL(this.url) : this.url;
+        this._dataSource = new CzmlDataSource(this.name);
+        dataSourceCollection.add(this._dataSource);
 
-    this._dataSource = new CzmlDataSource();
-    dataSourceCollection.add(this._dataSource);
-
-    this._dataSource.process([
-        {
-            id : 'document',
-            version : '1.0'
-        },
-        {
-            name : this.name,
-            imageryLayer : {
-                alpha : 0.5,
-                zIndex : 10,
-                webMapService : {
-                    url : url,
-                    layers : this.layers,
-                    parameters : {
-                        format : 'image/png',
-                        transparent : true,
-                        styles : ''
+        this._dataSource.process([
+            {
+                id : 'document',
+                version : '1.0'
+            },
+            {
+                name : this.name,
+                imageryLayer : {
+                    alpha : 0.6,
+                    webMapService : {
+                        url : url,
+                        layers : this.layers,
+                        parameters : {
+                            format : 'image/png',
+                            transparent : true,
+                            styles : ''
+                        }
                     }
                 }
             }
-        }
-    ]);
-
-    this._isEnabled = true;
-};
-
-WebMapServiceLayerViewModel.prototype.disable = function(dataSourceCollection) {
-    if (!defined(this._dataSource)) {
-        throw new DeveloperError('WebMapServiceLayerViewModel is not enabled.');
+        ]);
+    } else if (newValue === false && defined(this._dataSource)) {
+        // Disabling
+        dataSourceCollection.remove(this._dataSource, true);
+        this._dataSource = undefined;
     }
-
-    dataSourceCollection.remove(this._dataSource, true);
-    this._dataSource = undefined;
-
-    this._isEnabled = false;
 };

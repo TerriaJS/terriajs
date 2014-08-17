@@ -1,0 +1,50 @@
+{
+    "catalog": [
+        {
+            "name": "Data Sets",
+            "type": "group",
+            "items": [
+                {
+                    "name": "Broadband",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Broadband Map",
+                            "type": "czml",
+                            "czml": {
+                                "imageryLayer": {
+                                    "alpha": 0.6,
+                                    "webMapService": {
+                                        "url": "https://programs.communications.gov.au/WMS",
+                                        "layers": "MyBroadband",
+                                        "parameters": {
+                                            "transparent": true,
+                                            "format": "image/png"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "name": "Broadband Availability",
+                            "type": "czml",
+                            "czml": {
+                                "imageryLayer": {
+                                    "alpha": 0.6,
+                                    "webMapService": {
+                                        "url": "https://programs.communications.gov.au/WMS",
+                                        "layers": "MyBroadband Availabilty",
+                                        "parameters": {
+                                            "transparent": true,
+                                            "format": "image/png"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
