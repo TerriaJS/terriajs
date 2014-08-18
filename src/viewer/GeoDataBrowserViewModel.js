@@ -547,19 +547,28 @@ these extensions in order for National Map to know how to load it.'
             }
 
             if (collection.type === 'CKAN') {
-                // Get the list of groups on the CKAN server.
-                var url = collection.base_url + '/api/3/action/group_list?all_fields=true';
+                // Get the list of groups containing WMS data sources.
+                var url = collection.base_url + '/api/3/action/package_search?rows=100000&fq=res_format:wms';
+
                 when(loadJson(url), function(result) {
-                    var groups = result.result;
-                    for (var i = 0; i < groups.length; ++i) {
-                        var group = groups[i];
-                        existingCollection.Layer.push(createCategory({
-                            data : {
-                                name: group.display_name,
-                                base_url: collection.base_url + '/api/3/action/package_search?fq=groups:' + group.name + '+res_format:wms',
-                                type: 'CKAN'
+                    var existingGroups = {};
+
+                    var items = result.result.results;
+                    for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
+                        var groups = items[itemIndex].groups;
+                        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+                            var group = groups[groupIndex];
+                            if (!existingGroups[group.name]) {
+                                existingCollection.Layer.push(createCategory({
+                                    data : {
+                                        name: group.display_name,
+                                        base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
+                                        type: 'CKAN'
+                                    }
+                                }));
+                                existingGroups[group.name] = true;
                             }
-                        }));
+                        }
                     }
                 });
             }
