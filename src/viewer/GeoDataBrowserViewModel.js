@@ -542,7 +542,26 @@ these extensions in order for National Map to know how to load it.'
             if (defined(existingCollection)) {
                 komapping.fromJS(collection, that._collectionListMapping, existingCollection);
             } else {
-                browserContentViewModel.push(komapping.fromJS(collection, that._collectionListMapping));
+                existingCollection = komapping.fromJS(collection, that._collectionListMapping);
+                browserContentViewModel.push(existingCollection);
+            }
+
+            if (collection.type === 'CKAN') {
+                // Get the list of groups on the CKAN server.
+                var url = collection.base_url + '/api/3/action/group_list?all_fields=true';
+                when(loadJson(url), function(result) {
+                    var groups = result.result;
+                    for (var i = 0; i < groups.length; ++i) {
+                        var group = groups[i];
+                        existingCollection.Layer.push(createCategory({
+                            data : {
+                                name: group.display_name,
+                                base_url: collection.base_url + '/api/3/action/package_search?fq=groups:' + group.name + '+res_format:wms',
+                                type: 'CKAN'
+                            }
+                        }));
+                    }
+                });
             }
         }
     }

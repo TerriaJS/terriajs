@@ -339,7 +339,13 @@
     { "name": "Boundaries (Australia Bureau of Statistics)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)" },
     { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "wfsAvailable": true },
 	{ "name": "National Exposure Information System 2012", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer", "type": "WMS", "wfsAvailable": true, "wfsUrl": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WFSServer","description":"[Licence](http://www.ga.gov.au/copyright)"}
-  ]}
+  ]},
+  {
+    "name": "Victorian Government",
+    "type": "CKAN",
+    "base_url": "http://www.data.vic.gov.au/data",
+    "Layer": []
+  }
   ],
   "NMServices": [
   ]
