@@ -1276,11 +1276,32 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
                     url = resource.wms_url;
                 }
 
+                var textDescription = result.notes.replace(/\n/g, '<br/>');
+                if (defined(result.license_url)) {
+                    textDescription += '<br/>[Licence](' + result.license_url + ')';
+                }
+
+                var bbox;
+                var bboxString = result.geo_coverage;
+                if (defined(bboxString)) {
+                    var parts = bboxString.split(',');
+                    if (parts.length === 4) {
+                        bbox = {
+                            west : parts[0],
+                            south : parts[1],
+                            east : parts[2],
+                            north : parts[3]
+                        };
+                    }
+                }
+
                 layers.push({
                     Name: layerName,
                     Title: resource.name,
                     base_url: url,
-                    type: 'WMS'
+                    type: 'WMS',
+                    description: textDescription,
+                    BoundingBox : bbox
                 });
             }
         }
