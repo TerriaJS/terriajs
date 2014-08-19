@@ -32,6 +32,14 @@ var Dataset = function() {
     this._loadingData = false;
 };
 
+Dataset.prototype.hasLocationData = function () {
+    return (this._varID[VarType.LON] && this._varID[VarType.LAT]);
+};
+
+Dataset.prototype.hasTimeData = function () {
+    return (this._varID[VarType.TIME]);
+};
+
 /**
 * Return the geographic extent of the dataset
 *
