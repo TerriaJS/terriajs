@@ -1043,7 +1043,7 @@ function getCameraRect(scene, map) {
         var lon = CesiumMath.toDegrees(focus_cart.longitude);
 
         var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position, cartesian3Scratch));
-        var offset = dist * 5e-6;
+        var offset = dist * 2.5e-6;
 
         return Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
     }
