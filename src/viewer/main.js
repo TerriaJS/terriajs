@@ -11,7 +11,7 @@ if (typeof window === 'undefined') {
     start = false;
 } else {
     var browser = $.browser;
-    if (browser.msie === true && browser.version < "9.0") {
+    if (browser.msie === true && parseInt(browser.version, 10) < 9) {
         var oldBrowserMessage = new PopupMessage({
             container : document.body,
             title : 'Internet Explorer 8 or earlier detected',
