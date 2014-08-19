@@ -219,7 +219,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         rec.billboard.show[1].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
     }
     else {
-        rec.billboard.show[0].boolean = true;
+        rec.billboard.show[0]['boolean'] = true;
         rec.billboard.show[1].interval = undefined;
     }
     return rec;
