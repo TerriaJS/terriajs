@@ -66,6 +66,9 @@ var GeoDataInfoPopup = function(options) {
             <div class="ausglobe-info-section">\
                 <div class="asuglobe-info-description" data-bind="html: description"></div>\
             </div>\
+            <div class="ausglobe-info-section" data-bind="if: getLegendUrl">\
+                <a data-bind="attr: { href: getLegendUrl }" target="_blank">Legend</a>\
+            </div>\
             <div class="ausglobe-info-section" data-bind="if: supportsTranslucency">\
                 <div class="asuglobe-info-description">\
                     <span>Translucency:</span>\
@@ -155,6 +158,9 @@ var GeoDataInfoPopup = function(options) {
         var fixedLinks = escaped.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, function(match, name, href) {
             return '<a href="' + href + '" target="_blank">' + name + '</a>';
         });
+
+        // Replace '<br/>' with actual an <br/> tag.
+        fixedLinks = fixedLinks.replace(/&lt;br\/&gt;/g, '<br/>');
 
         return fixedLinks;
     });
@@ -247,6 +253,23 @@ var GeoDataInfoPopup = function(options) {
             return 'Esri REST';
         } else {
             return '';
+        }
+    });
+
+    //this should really happen after getWfsFeatureInfo to ensure that the style exists
+    viewModel.getLegendUrl = knockout.computed(function() {
+        var type = viewModel.info.type();
+        if (type === 'WMS') {
+            var legendUrl;
+            if (defined(viewModel.info.legendUrl)) {
+                legendUrl = viewModel.info.legendUrl();
+            }
+            else {
+                legendUrl = viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + viewModel.info.Name();
+            }
+            return legendUrl;
+        } else {
+            return 'N/A';
         }
     });
 

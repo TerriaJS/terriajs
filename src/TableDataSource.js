@@ -213,9 +213,15 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         rec.position.cartographicDegrees[p] = point.pos[p];
     }
 
-    var start = JulianDate.addMinutes(point.time, -this.leadTimeMin, startScratch);
-    var finish = JulianDate.addMinutes(point.time, this.trailTimeMin, endScratch);
-    rec.billboard.show[1].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
+    if (this.dataset.hasTimeData()) {
+        var start = JulianDate.addMinutes(point.time, -this.leadTimeMin, startScratch);
+        var finish = JulianDate.addMinutes(point.time, this.trailTimeMin, endScratch);
+        rec.billboard.show[1].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
+    }
+    else {
+        rec.billboard.show[0].boolean = true;
+        rec.billboard.show[1].interval = undefined;
+    }
     return rec;
 };
 
@@ -291,7 +297,7 @@ TableDataSource.prototype._mapValue2Color = function (pt_val) {
 *
 */
 TableDataSource.prototype.setLeadTimeByPercent = function (pct) {
-    if (this.dataset) {
+    if (this.dataset && this.dataset.hasTimeData()) {
         var data = this.dataset;
         this.leadTimeMin = JulianDate.secondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
     }
@@ -304,7 +310,7 @@ TableDataSource.prototype.setLeadTimeByPercent = function (pct) {
 *
 */
 TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
-    if (this.dataset) {
+    if (this.dataset && this.dataset.hasTimeData()) {
         var data = this.dataset;
         this.trailTimeMin = JulianDate.secondsDifference(data.getMaxTime(), data.getMinTime()) * pct / (60.0 * 100.0);
     }
