@@ -61,11 +61,18 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         }
 
         // Find an existing group with the same name, if any.
-        for (var existingGroupIndex = 0; existingGroupIndex < this.groups.length; ++existingGroupIndex) {
+        var existingGroup;
+        for (var existingGroupIndex = 0; !defined(existingGroup) && existingGroupIndex < this.groups.length; ++existingGroupIndex) {
             if (this.groups[existingGroupIndex].name === group.name) {
-
+                existingGroup = this.groups[existingGroupIndex];
             }
         }
+
+        if (!defined(existingGroup)) {
+            existingGroup = new GeoDataGroupViewModel();
+        }
+
+        existingGroup.updateFromJson(group);
     }
 };
 

@@ -67,4 +67,15 @@ GeoDataGroupViewModel.prototype.toggleOpen = function() {
     this.isOpen = !this.isOpen;
 };
 
+/**
+ * Updates the group from a JSON object-literal description of the group.
+ * Existing items with the same name as a collection in the JSON description are
+ * updated.  If the description contains a collection with a name that does not yet exist,
+ * it is created.
+ *
+ * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
+ */
+GeoDataGroupViewModel.prototype.updateFromJson = function(json, replaceExisting) {
+};
+
 module.exports = GeoDataGroupViewModel;

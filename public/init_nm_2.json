@@ -6,6 +6,7 @@
             "items": [
                 {
                     "name": "Broadband",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[More Info](https://www.mybroadband.communications.gov.au)\n(If necessary: Username is guest, no Password)",
                     "type": "group",
                     "items": [
                         {
@@ -27,6 +28,7 @@
                         },
                         {
                             "name": "Broadband Availability",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[More Info](https://www.mybroadband.communications.gov.au)\n(If necessary: Username is guest, no Password)",
                             "type": "czml",
                             "czml": {
                                 "imageryLayer": {
