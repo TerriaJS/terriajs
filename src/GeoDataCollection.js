@@ -915,12 +915,13 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             };
 
             var crs;
-            if (defined(layer.description.CRS)) {
-                crs = layer.description.CRS;
-            } else {
-                crs = layer.description.SRS;
+            if (defined(layer.description)) {
+                if (defined(layer.description.CRS)) {
+                    crs = layer.description.CRS;
+                } else {
+                    crs = layer.description.SRS;
+                }
             }
-
             if (defined(crs)) {
                 if (crsIsMatch(crs, 'EPSG:4326')) {
                     // Standard Geographic
