@@ -1253,12 +1253,59 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
         description.extent = Rectangle.fromDegrees(parseFloat(ext.xmin), parseFloat(ext.ymin), 
             parseFloat(ext.xmax), parseFloat(ext.ymax));
     }
-//    else if (description.type === 'CKAN') {
-//        layers = json_gml.result.results;
-//        for (i = 0; i < layers.length; i++) {
-//            layers[i].Name = layers[i].name;
-//        }
- //   }
+    else if (description.type === 'CKAN') {
+        layers = [];
+        var results = json_gml.result.results;
+        for (var resultIndex = 0; resultIndex < results.length; ++resultIndex) {
+            var result = results[resultIndex];
+            var resources = result.resources;
+            for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
+                var resource = resources[resourceIndex];
+
+                // Extract the layer name from the WMS URL.
+                var uri = new URI(resource.wms_url);
+                var params = uri.search(true);
+                var layerName = params.LAYERS;
+
+                // Remove the query portion of the WMS URL.
+                var queryIndex = resource.wms_url.indexOf('?');
+                var url;
+                if (queryIndex >= 0) {
+                    url = resource.wms_url.substring(0, queryIndex);
+                } else {
+                    url = resource.wms_url;
+                }
+
+                var textDescription = result.notes.replace(/\n/g, '<br/>');
+                if (defined(result.license_url)) {
+                    textDescription += '<br/>[Licence](' + result.license_url + ')';
+                }
+
+                var bbox;
+                var bboxString = result.geo_coverage;
+                if (defined(bboxString)) {
+                    var parts = bboxString.split(',');
+                    if (parts.length === 4) {
+                        bbox = {
+                            west : parts[0],
+                            south : parts[1],
+                            east : parts[2],
+                            north : parts[3]
+                        };
+                    }
+                }
+
+                layers.push({
+                    Name: layerName,
+                    Title: resource.name,
+                    base_url: url,
+                    type: 'WMS',
+                    description: textDescription,
+                    BoundingBox : bbox
+                });
+            }
+        }
+    }
     else {
         throw new DeveloperError('Somehow got capabilities from unsupported type: ' + description.type);
     }
@@ -1290,9 +1337,9 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     if (description.type === 'REST') {
         request = description.base_url + '?f=pjson';
     }
-//    else if (description.type === 'CKAN') {
-//        request = description.base_url + '/api/3/action/package_search?q=GeoJSON&rows=50';
-//    }
+    else if (description.type === 'CKAN') {
+        request = description.base_url;
+    }
     else if (description.type === 'WMS' || description.type === 'WFS') {
         request = description.base_url + '?service=' + description.type + '&request=GetCapabilities';
     }

@@ -159,6 +159,9 @@ var GeoDataInfoPopup = function(options) {
             return '<a href="' + href + '" target="_blank">' + name + '</a>';
         });
 
+        // Replace '<br/>' with actual an <br/> tag.
+        fixedLinks = fixedLinks.replace(/&lt;br\/&gt;/g, '<br/>');
+
         return fixedLinks;
     });
 
