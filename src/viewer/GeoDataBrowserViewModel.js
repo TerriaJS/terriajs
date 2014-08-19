@@ -134,7 +134,7 @@ var GeoDataBrowserViewModel = function(options) {
         }
 
         ga('send', 'event', 'dataSource', 'zoomTo', item.Title());
-        that._viewer.updateCameraFromRect(item.layer.extent, 3000);
+        that._viewer.setCurrentDataset(item.layer);
     });
 
     this._showInfoForItem = createCommand(function(item) {

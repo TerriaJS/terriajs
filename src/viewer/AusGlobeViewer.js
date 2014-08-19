@@ -256,13 +256,13 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     this.geoDataManager.GeoDataAdded.addEventListener(function(collection, layer) {
         console.log('Vis Layer Added:', layer.name);
         layer.zoomTo = collection.zoomTo;
-        setCurrentDataset(layer, that);
+        that.setCurrentDataset(layer);
         collection.zoomTo = false;
     });
 
     this.geoDataManager.GeoDataRemoved.addEventListener(function(collection, layer) {
         console.log('Vis Layer Removed:', layer.name);
-        setCurrentDataset(undefined, that);
+        that.setCurrentDataset(undefined);
     });
 
     this.geoDataManager.ViewerChanged.addEventListener(function(collection, obj) {
@@ -949,27 +949,28 @@ function updateTimeline(viewer, start, finish) {
 }
 
 //update menu and camera
-function setCurrentDataset(layer, that) {
+AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     //remove case
     if (layer === undefined) {
-        updateTimeline(that.viewer);
+        updateTimeline(this.viewer);
         updateLegend();
         return;
     }
+    
     //table info
     var tableData, start, finish;
     if (layer.dataSource !== undefined && layer.dataSource.dataset !== undefined) {
         tableData = layer.dataSource;
-        if (that._cesiumViewerActive()) {
+        if (this._cesiumViewerActive()) {
             start = tableData.dataset.getMinTime();
             finish = tableData.dataset.getMaxTime();
         }
     }
-    updateTimeline(that.viewer, start, finish);
+    updateTimeline(this.viewer, start, finish);
     updateLegend(tableData);
     
     if (layer.zoomTo && layer.extent !== undefined) {
-        that.updateCameraFromRect(layer.extent, 3000);
+        this.updateCameraFromRect(layer.extent, 3000);
     }
 }
 
