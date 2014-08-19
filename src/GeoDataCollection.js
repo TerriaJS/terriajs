@@ -668,7 +668,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
         dataset.setCurrentVariable({ variable: vars[idx+1]}); 
     }    
         //index to wmsLayerProxy
-    var description = regionWmsMap['POA_CODE'];
+    var description = regionWmsMap.POA_CODE;
     var box = description.BoundingBox;
     description.extent = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
         parseFloat(box.east), parseFloat(box.north));
@@ -686,22 +686,24 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     var codes = dataset.getDataValues(vars[idx]);
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
     var lookup = {};
-    for (var i = 0; i < codes.length; i++) {
+    var i;
+    for (i = 0; i < codes.length; i++) {
         lookup[codes[i]] = vals[i];
     }
     var colors = [];
     var range = dataset.getMaxVal()-dataset.getMinVal();
-    for (var i = 0; i <= range; i++) {
-        var idx = i + dataset.getMinVal();
+    for (i = 0; i <= range; i++) {
+        var colorIndex = i + dataset.getMinVal();
         var val = dataset.getMaxVal() - i;    //flip the colors so blue is highest - just use idx for normal
-        colors[idx] = tableDataSource._mapValue2Color(val);
+        colors[colorIndex] = tableDataSource._mapValue2Color(val);
     }
     wmsLayer.colorFunc = function(idx) {
         return colors[lookup[idx]];
     };
     
     this._viewMap(request, wmsLayer);
-}
+};
+
 /////////////////////////////////////////////////////////////////////////////////
 
 // -------------------------------------------
@@ -1059,17 +1061,13 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                         return imagePromise;
                     }
                     
-                    var deferred = when.defer();
-
-                    when(imagePromise, function(image) {
+                    return when(imagePromise, function(image) {
                         if (defined(image)) {
                             image = recolorImage(image, layer.colorFunc);
                         }
-                        deferred.resolve(image);                        
+                        return image;
                     });
-
-                    return deferred.promise;
-                }
+                };
             }
         }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
