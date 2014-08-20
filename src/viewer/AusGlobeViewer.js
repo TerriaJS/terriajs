@@ -205,21 +205,6 @@ var AusGlobeViewer = function(geoDataManager) {
     this.webGlSupported = true;
     
     var noWebGLMessage;
-    var browser = $.browser;
-
-        //TODO: add firefox test to featuredetection and get rid of deprecated $.browser
-    if (browser.mozilla === true && browser.version === "30.0") {
-        noWebGLMessage = new PopupMessage({
-            container : document.body,
-            title : 'FireFox version 30.0 detected',
-            message : '\
-There are known issues with this particular version of Firefox that make National Map 3D mode unstable. \
-These issues were fixed in Firefox 31, so we highly recommend that you update your version \
-of Firefox.  Until you upgrade, National Map will start in 2D mode. \
-You can switch display modes via the Map button on the left.'
-        });
-        this.webGlSupported = false;
-    }
     
     if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
         noWebGLMessage = new PopupMessage({
