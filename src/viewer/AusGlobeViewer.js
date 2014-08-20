@@ -972,7 +972,7 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     if (layer.zoomTo && layer.extent !== undefined) {
         this.updateCameraFromRect(layer.extent, 3000);
     }
-}
+};
 
 // -------------------------------------------
 // Text Formatting
