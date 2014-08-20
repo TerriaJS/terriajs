@@ -2,8 +2,12 @@
 
 /*global require*/
 
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
+
+var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 
 /**
  * The view model for the geospatial data catalog.
@@ -57,7 +61,7 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         }
 
         if (!defined(group.name)) {
-            throw new RuntimeError('A group must have a name.')
+            throw new RuntimeError('A group must have a name.');
         }
 
         // Find an existing group with the same name, if any.

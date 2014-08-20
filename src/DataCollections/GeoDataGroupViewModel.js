@@ -2,11 +2,14 @@
 
 /*global require*/
 
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
+var createGeoDataItemFromType = require('./createGeoDataItemFromType');
 var GeoDataItemViewModel = require('./GeoDataItemViewModel');
+var inherit = require('../inherit');
 
 /**
  * A group of data in the {@link GeoDataCatalogViewModel}.  A group can contain
@@ -15,7 +18,9 @@ var GeoDataItemViewModel = require('./GeoDataItemViewModel');
  *
  * @extends GeoDataItemViewModel
  */
-var GeoDataGroupViewModel = function() {
+var GeoDataGroupViewModel = function(dataSourceCollection) {
+    GeoDataItemViewModel.apply(this, 'group', dataSourceCollection);
+
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
      * its children.  This property is observable.
@@ -32,15 +37,11 @@ var GeoDataGroupViewModel = function() {
     knockout.track(this, ['isOpen', 'items']);
 };
 
-GeoDataGroupViewModel.prototype = new GeoDataItemViewModel();
-GeoDataGroupViewModel.prototype.constructor = GeoDataGroupViewModel;
+GeoDataGroupViewModel.type = 'group';
+
+GeoDataGroupViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
 defineProperties(GeoDataGroupViewModel.prototype, {
-    isGroup : {
-        get : function() {
-            return true;
-        }
-    }
 });
 
 /**
@@ -69,13 +70,34 @@ GeoDataGroupViewModel.prototype.toggleOpen = function() {
 
 /**
  * Updates the group from a JSON object-literal description of the group.
- * Existing items with the same name as a collection in the JSON description are
- * updated.  If the description contains a collection with a name that does not yet exist,
+ * Existing items with the same name as an item in the JSON description are
+ * updated.  If the description contains an item with a name that does not yet exist,
  * it is created.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  */
-GeoDataGroupViewModel.prototype.updateFromJson = function(json, replaceExisting) {
+GeoDataGroupViewModel.prototype.updateFromJson = function(json) {
+    this.name = defaultValue(json.name, 'Unnamed Group');
+    this.description = defaultValue(json.description, '');
+
+    var items = json.items;
+    for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
+        var item = items[itemIndex];
+
+        // Find an existing item with the same name
+        var existingItem;
+        for (var existingItemIndex = 0; !defined(existingItem) && existingItemIndex < this.items.length; ++existingItemIndex) {
+            if (this.items[existingItemIndex].name === item.name) {
+                existingItem = this.items[existingItemIndex];
+            }
+        }
+
+        if (!defined(existingItem) || existingItem.type !== item.type) {
+            existingItem = createGeoDataItemFromType(item.type);
+        }
+
+        existingItem.updateFromJson(item);
+    }
 };
 
 module.exports = GeoDataGroupViewModel;
