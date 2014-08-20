@@ -40,6 +40,17 @@ CzmlDataItemViewModel.type = 'czml';
 
 CzmlDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
+/**
+ * Updates the CZML data item from a JSON object-literal description of it.
+ *
+ * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
+ */
+ CzmlDataItemViewModel.prototype.updateFromJson = function(json) {
+    this.name = defaultValue(json.name, 'Unnamed Item');
+    this.description = defaultValue(json.description, '');
+    this.czml = defaultValue(json.czml, {});
+};
+
 CzmlDataItemViewModel.prototype._isEnabledChanged = function(newValue) {
     if (newValue === true && !defined(this._dataSource)) {
         // Enabling
@@ -53,13 +64,4 @@ CzmlDataItemViewModel.prototype._isEnabledChanged = function(newValue) {
     }
 };
 
-/**
- * Updates the CZML data item from a JSON object-literal description of it.
- *
- * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
- */
- CzmlDataItemViewModel.prototype.updateFromJson = function(json) {
-    this.name = defaultValue(json.name, 'Unnamed Item');
-    this.description = defaultValue(json.description, '');
-    this.czml = defaultValue(json.czml, {});
-};
+module.exports = CzmlDataItemViewModel;
