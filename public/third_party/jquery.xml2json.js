@@ -1,5 +1,5 @@
 /*
- ### jQuery XML to JSON Plugin v1.2 - 2013-02-18 ###
+ ### jQuery XML to JSON Plugin v1.3 - 2013-02-18 ###
  * http://www.fyneworks.com/ - diego@fyneworks.com
 	* Licensed under http://en.wikipedia.org/wiki/MIT_License
  ###
@@ -99,7 +99,8 @@
     };//node.attributes
     if(obj){
      obj = $.extend( (txt!='' ? new String(txt) : {}),/* {text:txt},*/ obj || {}/*, att || {}*/);
-     txt = (obj.text) ? (typeof(obj.text)=='object' ? obj.text : [obj.text || '']).concat([txt]) : txt;
+     //txt = (obj.text) ? (typeof(obj.text)=='object' ? obj.text : [obj.text || '']).concat([txt]) : txt;
+     txt = (obj.text) ? ([obj.text || '']).concat([txt]) : txt;
      if(txt) obj.text = txt;
      txt = '';
     };
@@ -168,6 +169,9 @@
   text2xml: function(str) {
    // NOTE: I'd like to use jQuery for this, but jQuery makes all tags uppercase
    //return $(xml)[0];
+   
+   /* prior to jquery 1.9 */
+   /*
    var out;
    try{
     var xml = ((!$.support.opacity && !$.support.style))?new ActiveXObject("Microsoft.XMLDOM"):new DOMParser();
@@ -178,6 +182,10 @@
     else out = xml.parseFromString(str, "text/xml");
    }catch(e){ throw new Error("Error parsing XML string") };
    return out;
+   */
+
+   /* jquery 1.9+ */
+   return $.parseXML(str);
   }
 		
  }); // extend $
