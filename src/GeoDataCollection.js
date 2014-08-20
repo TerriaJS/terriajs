@@ -1387,19 +1387,30 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
             var resources = result.resources;
             for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
                 var resource = resources[resourceIndex];
+                if (resource.format !== 'wms') {
+                    continue;
+                }
+
+                var wmsUrl = resource.wms_url;
+                if (!defined(wmsUrl)) {
+                    wmsUrl = resource.url;
+                    if (!defined(wmsUrl)) {
+                        continue;
+                    }
+                }
 
                 // Extract the layer name from the WMS URL.
-                var uri = new URI(resource.wms_url);
+                var uri = new URI(wmsUrl);
                 var params = uri.search(true);
                 var layerName = params.LAYERS;
 
                 // Remove the query portion of the WMS URL.
-                var queryIndex = resource.wms_url.indexOf('?');
+                var queryIndex = wmsUrl.indexOf('?');
                 var url;
                 if (queryIndex >= 0) {
-                    url = resource.wms_url.substring(0, queryIndex);
+                    url = wmsUrl.substring(0, queryIndex);
                 } else {
-                    url = resource.wms_url;
+                    url = wmsUrl;
                 }
 
                 var textDescription = result.notes.replace(/\n/g, '<br/>');
@@ -1423,7 +1434,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 
                 layers.push({
                     Name: layerName,
-                    Title: resource.name,
+                    Title: result.title,
                     base_url: url,
                     type: 'WMS',
                     description: textDescription,

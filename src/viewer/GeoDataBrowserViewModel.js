@@ -134,7 +134,9 @@ var GeoDataBrowserViewModel = function(options) {
         }
 
         ga('send', 'event', 'dataSource', 'zoomTo', item.Title());
+        item.layer.zoomTo = true;
         that._viewer.setCurrentDataset(item.layer);
+        item.layer.zoomTo = false;
     });
 
     this._showInfoForItem = createCommand(function(item) {
