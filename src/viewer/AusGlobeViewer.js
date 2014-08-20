@@ -285,34 +285,37 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
     this.map = undefined;
     
     var url = window.location;
-    
     var uri = new URI(url);
     var params = uri.search(true);
-
-    this.geoDataBrowser = new GeoDataBrowser({
-        viewer : this,
-        container : leftArea,
-        dataManager : geoDataManager,
-        initUrl: params.init_url,  //may need to add proxy
-        mode3d: this.webGlSupported
-    });
-
-    this.selectViewer(this.webGlSupported);
     
-    // simple way to capture most ux redraw needs - catch all canvas clicks
-    $(document).click(function() {
-        if (that.frameChecker !== undefined) {
-            that.frameChecker.forceFrameUpdate();
-        }
-    });
+    var configUrl = params.config || 'config.json';
 
     //get the server config to know how to handle urls and load initial one
-    loadJson('config.json').then( function(obj) {
-        var proxyDomains = obj.proxyDomains;
-        var corsDomains = obj.corsDomains;
+    loadJson(configUrl).then( function(config) {
+        var proxyDomains = config.proxyDomains;
+        var corsDomains = config.corsDomains;
         //workaround for non-CORS browsers (i.e. IE9)
-        corsProxy.setProxyList(obj.proxyDomains, obj.corsDomains, that._alwaysUseProxy);
+        corsProxy.setProxyList(config.proxyDomains, config.corsDomains, that._alwaysUseProxy);
         
+        that.initialCamera = config.initialCamera;
+        
+        that.geoDataBrowser = new GeoDataBrowser({
+            viewer : that,
+            container : leftArea,
+            dataManager : geoDataManager,
+            initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
+            mode3d: that.webGlSupported
+        });
+        
+        that.selectViewer(that.webGlSupported);
+        
+        // simple way to capture most ux redraw needs - catch all canvas clicks
+        $(document).click(function() {
+            if (that.frameChecker !== undefined) {
+                that.frameChecker.forceFrameUpdate();
+            }
+        });
+
         that.geoDataManager.loadInitialUrl(url);
     });
 
@@ -860,7 +863,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.map = undefined;
         }
         else {
-            rect = new Rectangle( 2.0, -0.8, 2.6, -0.1);
+            var cam = this.initialCamera;
+            rect = new Rectangle.fromDegrees( cam.west, cam.south, cam.east, cam.north);
          }
 
         this.updateCameraFromRect(rect, 0);

@@ -31,7 +31,7 @@ var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
     this._dataManager = options.dataManager;
     this.map = options.map;
-    this.initUrl = options.initUrl || './init_nm.json';
+    this.initUrl = options.initUrl;
     this.mode3d = options.mode3d;
 
     this.showingPanel = false;
