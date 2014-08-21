@@ -646,20 +646,39 @@ function recolorImage(img, colorFunc) {
     return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
+//TODO: map this to publice server
+//TODO: add other aliases
+//TODO: look at getting extent automatically
+//TODO: figure out LGA mapping (all valid ones end in 0)
+//TODO: on click add, csv info to getFeatureInfo
+//TODO: ui for other vars?
+//TODO: be able to set style to border or no border
 var regionWmsMap = {'POA_CODE': {
-    "Name":"admin_bnds_abs:poa",
+    "Name":"region:POA_2011_AUST",
     "Title":"Postal Areas",
-    "base_url":"http://geospace.research.nicta.com.au:8080/admin_bnds/ows",
+    "base_url":"http://localhost:8080/admin_bnds/ows",
     "type":"WMS",
-    "BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.59821500205783","north":"-9.142175976703609"}
+    "BoundingBox":{"west":"97","east":"159","south":"-44","north":"-9"}
     }
 };
+
+function getRegionVar(vars, aliases) {
+    for (var i = 0; i < vars.length; i++) {
+        var varName = vars[i].toLowerCase();
+        for (var j = 0; j < aliases.length; j++) {
+            if (varName === aliases[j]) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
 
 GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     var dataset = tableDataSource.dataset;
     var vars = dataset.getVarList();
-    
-    var idx = vars.indexOf('POA_CODE');
+    var idx = getRegionVar(vars, ['poa_code', 'postcode']);
+    console.log(idx);
     if (idx === -1) {
         return;
     }
@@ -804,7 +823,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
         tableDataSource.loadText(text);
         if (!tableDataSource.dataset.hasLocationData()) {
             console.log('No locaton date found in csv file');
-//            this.addRegionMap(layer, tableDataSource);
+            this.addRegionMap(layer, tableDataSource);
         }
         else if (this.map === undefined) {
             this.dataSourceCollection.add(tableDataSource);
