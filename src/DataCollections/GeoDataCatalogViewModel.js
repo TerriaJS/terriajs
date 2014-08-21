@@ -11,15 +11,27 @@ var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 
 /**
  * The view model for the geospatial data catalog.
+ *
+ * @constructor
+ *
+ * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this catalog's items are added when they are enabled.
  */
-var GeoDataCatalogViewModel = function() {
+var GeoDataCatalogViewModel = function(dataSourceCollection) {
+    this._dataSourceCollection = dataSourceCollection;
+
     /**
      * The geospatial data collections in this catalog.  This property is observable.
      * @type {Array}
      */
     this.groups = [];
 
-    knockout.track(this, ['groups']);
+    /**
+     * Gets or sets a flag indicating whether the catalog is currently loading.
+     * @type {Boolean}
+     */
+    this.isLoading = false;
+
+    knockout.track(this, ['groups', 'isLoading']);
 };
 
 /**
@@ -53,6 +65,8 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         throw new DeveloperError('JSON catalog description must be an array of groups.');
     }
 
+    var existingGroup;
+
     for (var groupIndex = 0; groupIndex < json.length; ++groupIndex) {
         var group = json[groupIndex];
 
@@ -65,7 +79,7 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         }
 
         // Find an existing group with the same name, if any.
-        var existingGroup;
+        existingGroup = undefined;
         for (var existingGroupIndex = 0; !defined(existingGroup) && existingGroupIndex < this.groups.length; ++existingGroupIndex) {
             if (this.groups[existingGroupIndex].name === group.name) {
                 existingGroup = this.groups[existingGroupIndex];
@@ -73,7 +87,8 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         }
 
         if (!defined(existingGroup)) {
-            existingGroup = new GeoDataGroupViewModel();
+            existingGroup = new GeoDataGroupViewModel(this._dataSourceCollection);
+            this.groups.push(existingGroup);
         }
 
         existingGroup.updateFromJson(group);

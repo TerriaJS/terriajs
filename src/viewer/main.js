@@ -40,11 +40,32 @@ if (start) {
 
     var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+    var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
+    var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 
-    var GeoDataCollection = require('../GeoDataCollection');
     var AusGlobeViewer = require('./AusGlobeViewer');
+    var corsProxy = require('../corsProxy');
+    var GeoDataCollection = require('../GeoDataCollection');
+    var registerGeoDataViewModels = require('../DataCollections/registerGeoDataViewModels');
 
     SvgPathBindingHandler.register(knockout);
+    registerGeoDataViewModels();
+
+    // Intercept XHR requests and proxy them if necessary.
+    loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType) {
+        if (corsProxy.shouldUseProxy(url)) {
+            url = corsProxy.getURL(url);
+        }
+        return loadWithXhr.defaultLoad(url, responseType, method, data, headers, deferred, overrideMimeType);
+    };
+
+    // Intercept image requests and proxy them if necessary.
+    loadImage.createImage = function(url, crossOrigin, deferred) {
+        if (crossOrigin && corsProxy.shouldUseProxy(url)) {
+            url = corsProxy.getURL(url);
+        }
+        return loadImage.defaultCreateImage(url, crossOrigin, deferred);
+    };
 
     var geoDataManager = new GeoDataCollection();
 

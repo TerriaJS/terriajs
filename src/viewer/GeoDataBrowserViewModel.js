@@ -46,6 +46,8 @@ var GeoDataBrowserViewModel = function(options) {
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = this.mode3d ? 'Terrain' : '2D';
 
+    this.catalog = options.catalog;
+
     knockout.track(this, ['showingPanel', 'showingMapPanel', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 

@@ -70,4 +70,12 @@ defineProperties(GeoDataItemViewModel.prototype, {
     }
 });
 
+/**
+ * Toggles the {@link GeoDataItemViewModel#isEnabled} property of this item.  If it is enabled, calling this method
+ * will disable it.  If it is disabled, calling this method will enable it.
+ */
+GeoDataItemViewModel.prototype.toggleEnabled = function() {
+    this.isEnabled = !this.isEnabled;
+};
+
 module.exports = GeoDataItemViewModel;

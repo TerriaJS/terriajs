@@ -478,7 +478,7 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     //Initialize the view based on vis_id if passed in url
     if (visUrl) {
         //call to server to get json record
-        loadJson(visUrl).then( function(obj) {
+        return loadJson(visUrl).then( function(obj) {
                 //capture an id if it is passed
             that.visID = obj.id;
             if (obj.camera !== undefined) {
@@ -515,7 +515,7 @@ GeoDataCollection.prototype.loadInitialUrl = function(url) {
     }
     else if (dataUrl) {
         dataUrl = decodeURIComponent(dataUrl);
-        that.loadUrl(dataUrl, dataFormat);
+        return that.loadUrl(dataUrl, dataFormat);
     }
 };
 
@@ -538,14 +538,14 @@ GeoDataCollection.prototype.loadUrl = function(url, format) {
             url = corsProxy.getURL(url);
         }
         if (format === 'KMZ') {
-            loadBlob(url).then( function(blob) {
+            return loadBlob(url).then( function(blob) {
                 blob.name = url;
                 that.addFile(blob);
             }, function(err) {
                 loadErrorResponse(err);
             });
         } else {
-            loadText(url).then(function (text) { 
+            return loadText(url).then(function (text) { 
                 that.zoomTo = true;
                 that.loadText(text, url, format);
             }, function(err) {

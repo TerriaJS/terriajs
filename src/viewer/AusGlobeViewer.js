@@ -61,6 +61,7 @@ var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-e
 
 var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
+var GeoDataCatalogViewModel = require('../DataCollections/GeoDataCatalogViewModel');
 var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
 var PopupMessage = require('./PopupMessage');
@@ -74,7 +75,6 @@ BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
 var AusGlobeViewer = function(geoDataManager) {
-
     this.geoDataManager = geoDataManager;
 
     var that = this;
@@ -277,21 +277,27 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
 
     //get the server config to know how to handle urls and load initial one
     loadJson(configUrl).then( function(config) {
-        var proxyDomains = config.proxyDomains;
-        var corsDomains = config.corsDomains;
-        //workaround for non-CORS browsers (i.e. IE9)
         corsProxy.setProxyList(config.proxyDomains, config.corsDomains, that._alwaysUseProxy);
         
         that.initialCamera = config.initialCamera;
-        
+
+        var catalog = new GeoDataCatalogViewModel(geoDataManager.dataSourceCollection);
+        catalog.isLoading = true;
+
+        when(loadJson(params.data_menu || /*config.initialDataMenu ||*/ 'init_nm_2.json'), function(json) {
+            catalog.updateFromJson(json.catalog);
+            catalog.isLoading = false;
+        });
+
         that.geoDataBrowser = new GeoDataBrowser({
             viewer : that,
             container : leftArea,
             dataManager : geoDataManager,
             initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
-            mode3d: that.webGlSupported
+            mode3d: that.webGlSupported,
+            catalog : catalog
         });
-        
+
         that.selectViewer(that.webGlSupported);
         
         // simple way to capture most ux redraw needs - catch all canvas clicks
@@ -301,11 +307,10 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
             }
         });
 
-        that.geoDataManager.loadInitialUrl(url);
+        when(that.geoDataManager.loadInitialUrl(url), function() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+        });
     });
-
-        //TODO: should turn this off based on event from loadUrl
-    $('#loadingIndicator').hide();
 };
 
 

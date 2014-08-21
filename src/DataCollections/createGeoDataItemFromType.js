@@ -2,10 +2,10 @@
 
 /*global require*/
 
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 
-var CzmlDataItemViewModel = require('./CzmlDataItemViewModel');
-var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
+var mapping = {};
 
 /**
  * Creates a type derived from {@link GeoDataItemViewModel} based on a given type string.
@@ -14,14 +14,16 @@ var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
  * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which the new item is added when it is enabled.
  */
 var createGeoDataItemFromType = function(type, dataSourceCollection) {
-    switch (type) {
-        case GeoDataGroupViewModel.type:
-            return new GeoDataGroupViewModel(dataSourceCollection);
-        case CzmlDataItemViewModel.type:
-            return new CzmlDataItemViewModel(dataSourceCollection);
-        default:
-            throw new RuntimeError('Unsupported GeoDataItemViewModel type: ' + type);
+    var Constructor = mapping[type];
+    if (!defined(Constructor)) {
+        throw new RuntimeError('Unsupported GeoDataItemViewModel type: ' + type);
     }
+
+    return new Constructor(dataSourceCollection);
+};
+
+createGeoDataItemFromType.register = function(type, constructor) {
+    mapping[type] = constructor;
 };
 
 module.exports = createGeoDataItemFromType;

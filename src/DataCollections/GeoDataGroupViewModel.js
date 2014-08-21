@@ -16,10 +16,13 @@ var inherit = require('../inherit');
  * {@link GeoDataItemViewModel|GeoDataItemViewModels} or other
  * {@link GeoDataGroupViewModel|GeoDataGroupViewModels}.
  *
+ * @constructor
  * @extends GeoDataItemViewModel
+ *
+ * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this item is added when it is enabled.
  */
 var GeoDataGroupViewModel = function(dataSourceCollection) {
-    GeoDataItemViewModel.apply(this, 'group', dataSourceCollection);
+    GeoDataItemViewModel.call(this, 'group', dataSourceCollection);
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -29,12 +32,19 @@ var GeoDataGroupViewModel = function(dataSourceCollection) {
     this.isOpen = false;
 
     /**
+     * Gets or sets a value indicating whether the group is currently loading.  This property
+     * is observable.
+     * @type {Boolean}
+     */
+    this.isLoading = false;
+
+    /**
      * Gets the collection of items in this group.  This property is observable.
      * @type {GeoDataItemViewModel[]}
      */
     this.items = [];
 
-    knockout.track(this, ['isOpen', 'items']);
+    knockout.track(this, ['isOpen', 'isLoading', 'items']);
 };
 
 GeoDataGroupViewModel.type = 'group';
@@ -50,6 +60,7 @@ defineProperties(GeoDataGroupViewModel.prototype, {
  * @param {GeoDataItemViewModel} item The item to add.
  */
 GeoDataGroupViewModel.prototype.add = function(item) {
+    this.items.push(item);
 };
 
 /**
@@ -58,6 +69,7 @@ GeoDataGroupViewModel.prototype.add = function(item) {
  * @param {GeoDataItemViewModel} item The item to remove.
  */
 GeoDataGroupViewModel.prototype.remove = function(item) {
+    this.items.remove(item);
 };
 
 /**
@@ -80,12 +92,14 @@ GeoDataGroupViewModel.prototype.updateFromJson = function(json) {
     this.name = defaultValue(json.name, 'Unnamed Group');
     this.description = defaultValue(json.description, '');
 
+    var existingItem;
+
     var items = json.items;
     for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
         var item = items[itemIndex];
 
         // Find an existing item with the same name
-        var existingItem;
+        existingItem = undefined;
         for (var existingItemIndex = 0; !defined(existingItem) && existingItemIndex < this.items.length; ++existingItemIndex) {
             if (this.items[existingItemIndex].name === item.name) {
                 existingItem = this.items[existingItemIndex];
@@ -93,7 +107,8 @@ GeoDataGroupViewModel.prototype.updateFromJson = function(json) {
         }
 
         if (!defined(existingItem) || existingItem.type !== item.type) {
-            existingItem = createGeoDataItemFromType(item.type);
+            existingItem = createGeoDataItemFromType(item.type, this.dataSourceCollection);
+            this.add(existingItem);
         }
 
         existingItem.updateFromJson(item);

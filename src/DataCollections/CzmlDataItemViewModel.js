@@ -20,7 +20,7 @@ var inherit = require('../inherit');
  * @extends CzmlDataItemViewModel
  */
 var CzmlDataItemViewModel = function(dataSourceCollection) {
-    GeoDataItemViewModel.apply(this, 'czml', dataSourceCollection);
+    GeoDataItemViewModel.call(this, 'czml', dataSourceCollection);
 
     this._dataSource = undefined;
 
@@ -56,6 +56,14 @@ CzmlDataItemViewModel.prototype._isEnabledChanged = function(newValue) {
         // Enabling
         this._dataSource = new CzmlDataSource(this.name);
         this.dataSourceCollection.add(this._dataSource);
+
+        if (!(this.czml instanceof Array) && this.czml.id !== 'document') {
+            this._dataSource.process({
+                id: 'document',
+                version: '1.0'
+            });
+        }
+
         this._dataSource.process(this.czml);
     } else if (newValue === false && defined(this._dataSource)) {
         // Disabling

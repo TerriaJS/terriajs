@@ -18,7 +18,8 @@ var GeoDataBrowser = function(options) {
         dataManager : options.dataManager,
         map : options.map,
         initUrl: options.initUrl,
-        mode3d: options.mode3d
+        mode3d: options.mode3d,
+        catalog: options.catalog
     });
 
     this._viewModel._dataButton = 'M15.701026,10.8708 h 29.569528 c 0.694648,0 1.09333,-0.729467 1.09333,-1.4241149 V 2.8614609 c 0,-0.693777 -0.398682,-1.5660037 -1.09333,-1.5660037 H 15.701026 c -0.692036,0 -1.545112,0.8722267 -1.545112,1.5660037 V 9.4466851 C 14.155044,10.141333 15.00899,10.8708 15.701026,10.8708 z M8.056421,1.2954572 H 1.1212616 c -0.6920361,0 -0.89398878,0.8722267 -0.89398878,1.5660037 v 6.5852242 c 0,0.6946479 0.20195268,1.4241149 0.89398878,1.4241149 H 8.056421 c 0.6946476,0 0.8757086,-0.729467 0.8757086,-1.4241149 V 2.8614609 c 0,-0.693777 -0.181061,-1.5660037 -0.8757086,-1.5660037 z M46.363014,23.420592 v -5.978496 c 0,-0.693777 -0.398683,-1.348382 -1.09333,-1.348382 H 15.701026 c -0.692036,0 -1.545112,0.654605 -1.545112,1.348382 v 6.585224 c 0,0.694648 0.853076,1.641736 1.545112,1.641736 h 21.870953 c 4.076484,-2.466086 8.791035,-2.25891 8.791035,-2.248464 z M8.056421,16.093714 H 1.1212616 c -0.6920361,0 -0.89398878,0.654605 -0.89398878,1.348382 v 6.585224 c 0,0.694648 0.20195268,1.641736 0.89398878,1.641736 H 8.056421 c 0.6946476,0 0.8757086,-0.947088 0.8757086,-1.641736 v -6.585224 c 0,-0.693777 -0.181061,-1.348382 -0.8757086,-1.348382 z M15.701026,30.89197 c -0.692036,0 -1.545112,0.436984 -1.545112,1.130761 v 6.585224 c 0,0.694648 0.853076,0.988872 1.545112,0.988872 h 8.97906 c 0.915751,-3.481943 2.655852,-6.0934 4.997458,-8.704857 H 15.701026 z M8.056421,30.89197 H 1.1212616 c -0.6920361,0 -0.89398878,0.436984 -0.89398878,1.130761 v 6.585224 c 0,0.694648 0.20195268,0.988872 0.89398878,0.988872 H 8.056421 c 0.6946476,0 0.8757086,-0.294224 0.8757086,-0.988872 v -6.585224 c 0,-0.693777 -0.181061,-1.130761 -0.8757086,-1.130761 z M46.580635,28.280513 c -9.495258,0 -17.192092,7.697705 -17.192092,17.192092 0,9.494388 7.696834,17.192093 17.192092,17.192093 9.495258,0 17.192092,-7.697705 17.192092,-17.192093 0,-9.494387 -7.696834,-17.192092 -17.192092,-17.192092 z m 7.61675,19.150685 h -5.222914 v 6.0934 h -5.222914 v -6.0934 H 38.528643 V 43.07877 h 5.222914 v -6.0934 h 5.222914 v 6.0934 h 5.222914 v 4.352428 z';
@@ -74,24 +75,24 @@ var GeoDataBrowser = function(options) {
                 </div>\
             </div>\
         </div>\
-        <div data-bind="foreach: content">\
+        <div data-bind="foreach: catalog.groups">\
             <div class="ausglobe-accordion-item">\
-                <div class="ausglobe-accordion-item-header" data-bind="click: $root.openItem">\
+                <div class="ausglobe-accordion-item-header" data-bind="click: toggleOpen">\
                     <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
                 </div>\
-                <div class="ausglobe-accordion-item-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
+                <div class="ausglobe-accordion-item-content" data-bind="foreach: items, css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
                     <div class="ausglobe-accordion-category">\
-                        <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
-                            <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: isOpen(), cesiumSvgPath: { path: $root._arrowDown, width: 32, height: 32 }"></div>\
-                            <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: !isOpen(), cesiumSvgPath: { path: $root._arrowRight, width: 32, height: 32 }"></div>\
+                        <div class="ausglobe-accordion-category-header" data-bind="click: toggleOpen">\
+                            <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: isOpen, cesiumSvgPath: { path: $root._arrowDown, width: 32, height: 32 }"></div>\
+                            <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: !isOpen, cesiumSvgPath: { path: $root._arrowRight, width: 32, height: 32 }"></div>\
                             <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                         </div>\
                         <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading...</div>\
-                        <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
-                            <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: isEnabled, cesiumSvgPath: { path: $root._checkboxChecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled(), cesiumSvgPath: { path: $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
+                        <div class="ausglobe-accordion-category-content" data-bind="foreach: items, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
+                            <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled }">\
+                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, visible: isEnabled, cesiumSvgPath: { path: $root._checkboxChecked, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, visible: !isEnabled, cesiumSvgPath: { path: $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: $root.zoomToItem"></div>\
                                 <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                             </div>\
                         </div>\
