@@ -6,6 +6,7 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 /**
  * An item in a {@link GeoDataGroupViewModel}.
@@ -39,13 +40,20 @@ var GeoDataItemViewModel = function(type, dataSourceCollection) {
     this.description = '';
 
     /**
+     * Gets or sets the geographic rectangle containing this data item.  This property
+     * is observable.
+     * @type {Rectangle}
+     */
+    this.rectangle = Rectangle.fromDegrees(-180, -90, 180, 90);
+
+    /**
      * Gets or sets a value indicating whether this data item is enabled.  An enabled data item
      * appears up in the "Now Viewing" pane, but is not necessarily shown on the map.
      * @type {Boolean}
      */
     this.isEnabled = false;
 
-    knockout.track(this, ['name', 'description', 'isEnabled']);
+    knockout.track(this, ['name', 'description', 'rectangle', 'isEnabled']);
 };
 
 defineProperties(GeoDataItemViewModel.prototype, {
@@ -76,6 +84,13 @@ defineProperties(GeoDataItemViewModel.prototype, {
  */
 GeoDataItemViewModel.prototype.toggleEnabled = function() {
     this.isEnabled = !this.isEnabled;
+};
+
+/**
+ * Moves the camera so that the 
+ * @return {[type]} [description]
+ */
+GeoDataItemViewModel.prototype.zoomTo = function() {
 };
 
 module.exports = GeoDataItemViewModel;

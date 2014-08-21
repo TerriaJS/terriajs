@@ -2,6 +2,7 @@
 
 /*global require*/
 
+var clone = require('../../third_party/cesium/Source/Core/clone');
 var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -17,7 +18,7 @@ var inherit = require('../inherit');
  * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this item is added when it is enabled.
  *
  * @constructor
- * @extends CzmlDataItemViewModel
+ * @extends GeoDataItemViewModel
  */
 var CzmlDataItemViewModel = function(dataSourceCollection) {
     GeoDataItemViewModel.call(this, 'czml', dataSourceCollection);
@@ -32,11 +33,8 @@ var CzmlDataItemViewModel = function(dataSourceCollection) {
 
     knockout.track(this, ['czml']);
 
-    var that = this;
     knockout.getObservable(this, 'isEnabled').subscribe(this._isEnabledChanged, this);
 };
-
-CzmlDataItemViewModel.type = 'czml';
 
 CzmlDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
@@ -48,7 +46,12 @@ CzmlDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
  CzmlDataItemViewModel.prototype.updateFromJson = function(json) {
     this.name = defaultValue(json.name, 'Unnamed Item');
     this.description = defaultValue(json.description, '');
-    this.czml = defaultValue(json.czml, {});
+
+    if (defined(json.czml)) {
+        this.czml = clone(json.czml);
+    } else {
+        this.czml = {};
+    }
 };
 
 CzmlDataItemViewModel.prototype._isEnabledChanged = function(newValue) {
