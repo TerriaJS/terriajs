@@ -654,9 +654,9 @@ function recolorImage(img, colorFunc) {
 //TODO: ui for other vars?
 //TODO: be able to set style to border or no border
 var regionWmsMap = {'POA_CODE': {
-    "Name":"region:POA_2011_AUST",
+    "Name":"admin_bnds_region:POA_2011_AUST",
     "Title":"Postal Areas",
-    "base_url":"http://localhost:8080/admin_bnds/ows",
+    "base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
     "type":"WMS",
     "BoundingBox":{"west":"97","east":"159","south":"-44","north":"-9"}
     }
@@ -678,10 +678,11 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     var dataset = tableDataSource.dataset;
     var vars = dataset.getVarList();
     var idx = getRegionVar(vars, ['poa_code', 'postcode']);
-    console.log(idx);
     if (idx === -1) {
         return;
     }
+    console.log('Region mapping var is:', vars[idx]);
+    
         //change current var
     if (dataset.getCurrentVariable() === vars[idx]) {
         dataset.setCurrentVariable({ variable: vars[idx+1]}); 
@@ -713,7 +714,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     var range = dataset.getMaxVal()-dataset.getMinVal();
     for (i = 0; i <= range; i++) {
         var colorIndex = i + dataset.getMinVal();
-        var val = dataset.getMaxVal() - i;    //flip the colors so blue is highest - just use idx for normal
+        var val = colorIndex; //dataset.getMaxVal() - i;    //flip the colors
         colors[colorIndex] = tableDataSource._mapValue2Color(val);
     }
     wmsLayer.colorFunc = function(idx) {

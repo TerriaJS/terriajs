@@ -195,6 +195,7 @@
             <Stroke>
               <CssParameter name="stroke">#444444</CssParameter>
               <CssParameter name="stroke-width">0.5</CssParameter>
+              <!-- <CssParameter name="stroke-opacity">0.8</CssParameter> -->
             </Stroke>
           </PolygonSymbolizer>
         </Rule>
