@@ -1,18 +1,22 @@
 'use strict';
 
-/*global require*/
+/*global require,L,URI*/
 
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
+var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 
 var corsProxy = require('../corsProxy');
 var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var inherit = require('../inherit');
+var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
 /**
  * A {@link GeoDataItemViewModel} representing a layer from a Web Map Service (WMS) server.
@@ -25,7 +29,7 @@ var inherit = require('../inherit');
 var WebMapServiceDataItemViewModel = function(dataSourceCollection) {
     GeoDataItemViewModel.call(this, 'wms', dataSourceCollection);
 
-    this._dataSource = undefined;
+    this._imageryLayer = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -44,10 +48,7 @@ var WebMapServiceDataItemViewModel = function(dataSourceCollection) {
      * Gets or sets the additional parameters to pass to the WMS server when requesting images.
      * @type {Object}
      */
-    this.parameters = {
-        transparent: true,
-        format: 'image/png'
-    };
+    this.parameters = WebMapServiceDataItemViewModel.defaultParameters;
 
     /**
      * Gets or sets the alpha (opacity) of the data item, where 0.0 is fully transparent and 1.0 is
@@ -56,9 +57,25 @@ var WebMapServiceDataItemViewModel = function(dataSourceCollection) {
      */
     this.alpha = 0.6;
 
-    knockout.track(this, ['url', 'layers', 'parameters', 'alpha']);
+    /**
+     * Gets or sets a value indicating whether we should request information about individual features on click
+     * as GeoJSON.  If getFeatureInfoAsXml is true as well, feature information will be requested first as GeoJSON,
+     * and then as XML if the GeoJSON request fails.  If both are false, this data item will not support feature picking at all.
+     * @type {Boolean}
+     * @default true
+     */
+    this.getFeatureInfoAsGeoJson = true;
 
-    knockout.getObservable(this, 'isEnabled').subscribe(this._isEnabledChanged, this);
+    /**
+     * Gets or sets a value indicating whether we should request information about individual features on click
+     * as XML.  If getFeatureInfoAsGeoJson is true as well, feature information will be requested first as GeoJSON,
+     * and then as XML if the GeoJSON request fails.  If both are false, this data item will not support feature picking at all.
+     * @type {Boolean}
+     * @default true
+     */
+    this.getFeatureInfoAsXml = true;
+
+    knockout.track(this, ['url', 'layers', 'parameters', 'alpha']);
 };
 
 WebMapServiceDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
@@ -73,6 +90,8 @@ WebMapServiceDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototyp
     this.description = defaultValue(json.description, '');
     this.url = defaultValue(json.url, '');
     this.layers = defaultValue(json.layers, '');
+    this.getFeatureInfoAsGeoJson = defaultValue(json.getFeatureInfoAsGeoJson, true);
+    this.getFeatureInfoAsXml = defaultValue(json.getFeatureInfoAsXml, true);
 
     if (defined(json.rectangle)) {
         this.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
@@ -83,45 +102,110 @@ WebMapServiceDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototyp
     if (defined(json.parameters)) {
         this.parameters = clone(json.parameters);
     } else {
-        this.parameters = {};
+        this.parameters = clone(WebMapServiceDataItemViewModel.defaultParameters);
     }
 };
 
-WebMapServiceDataItemViewModel.prototype._isEnabledChanged = function(newValue) {
-    if (newValue === true && !defined(this._dataSource)) {
-        // Enabling
-        this._dataSource = new CzmlDataSource(this.name);
-        this.dataSourceCollection.add(this._dataSource);
-
-        this._dataSource.process([
-            {
-                id: 'document',
-                version: '1.0'
-            },
-            {
-                imageryLayer: {
-                    alpha: this.alpha,
-                    rectangle : {
-                        wsenDegrees : [
-                            CesiumMath.toDegrees(this.rectangle.west),
-                            CesiumMath.toDegrees(this.rectangle.south),
-                            CesiumMath.toDegrees(this.rectangle.east),
-                            CesiumMath.toDegrees(this.rectangle.north)
-                        ]
-                    },
-                    webMapService: {
-                        url : this.url,
-                        layers : this.layers,
-                        parameters : this.parameters
-                    }
-                }
-            }
-        ]);
-    } else if (newValue === false && defined(this._dataSource)) {
-        // Disabling
-        this.dataSourceCollection.remove(this._dataSource, true);
-        this._dataSource = undefined;
+WebMapServiceDataItemViewModel.prototype.enableInCesium = function(scene) {
+    if (defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is already enabled.');
     }
+
+    var imageryProvider = new WebMapServiceImageryProvider({
+        url : cleanUrl(this.url),
+        layers : this.layers,
+        getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
+        getFeatureInfoAsXml : this.getFeatureInfoAsXml,
+        parameters : this.parameters
+    });
+
+    this._imageryLayer = new ImageryLayer(imageryProvider, {
+        alpha : this.alpha,
+        rectangle : this.rectangle
+    });
+
+    scene.imageryLayers.add(this._imageryLayer);
 };
+
+WebMapServiceDataItemViewModel.prototype.disableInCesium = function(scene) {
+    if (!defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is not enabled.');
+    }
+
+    scene.imageryLayers.remove(this._imageryLayer);
+    this._imageryLayer = undefined;
+};
+
+WebMapServiceDataItemViewModel.prototype.showInCesium = function(scene) {
+    if (!defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is not enabled.');
+    }
+
+    this._imageryLayer.alpha = this.alpha;
+};
+
+WebMapServiceDataItemViewModel.prototype.hideInCesium = function(scene) {
+    if (!defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is not enabled.');
+    }
+
+    this._imageryLayer.alpha = 0.0;
+};
+
+WebMapServiceDataItemViewModel.prototype.enableInLeaflet = function(map) {
+    if (defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is already enabled.');
+    }
+
+    var options = {
+        layers : this.layers,
+        opacity : this.alpha,
+        bounds : rectangleToLatLngBounds(this.rectangle)
+    };
+
+    options = combine(this.parameters, options);
+
+    this._imageryLayer = new L.tileLayer.wms(cleanUrl(this.url), options);
+    map.addLayer(this._imageryLayer);
+};
+
+WebMapServiceDataItemViewModel.prototype.disableInLeaflet = function(map) {
+    if (!defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is not enabled.');
+    }
+
+    map.removeLayer(this._imageryLayer);
+    this._imageryLayer = undefined;
+};
+
+WebMapServiceDataItemViewModel.prototype.showInLeaflet = function(map) {
+    if (!defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is not enabled.');
+    }
+
+    this._imageryLayer.setOpacity(this.alpha);
+};
+
+WebMapServiceDataItemViewModel.prototype.hideInLeaflet = function(map) {
+    if (!defined(this._imageryLayer)) {
+        throw new DeveloperError('Data item is not enabled.');
+    }
+
+    this._imageryLayer.setOpacity(0.0);
+};
+
+WebMapServiceDataItemViewModel.defaultParameters = {
+    transparent: true,
+    format: 'image/png',
+    exceptions: 'application/vnd.ogc.se_xml',
+    style: ''
+};
+
+function cleanUrl(url) {
+    // Strip off the search portion of the URL
+    var uri = new URI(url);
+    uri.search('');
+    return uri.toString();
+}
 
 module.exports = WebMapServiceDataItemViewModel;

@@ -15,28 +15,16 @@
                             "url": "https://programs.communications.gov.au/WMS",
                             "layers": "MyBroadband",
                             "rectangle": [112.93529999999998, -38.208809999082796, 152.06206, -11.05104999964455],
-                            "parameters": {
-                                "transparent": true,
-                                "format": "image/png"
-                            }
+                            "getFeatureInfoAsGeoJson": false
                         },
                         {
                             "name": "Broadband Availability",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)\n[More Info](https://www.mybroadband.communications.gov.au)\n(If necessary: Username is guest, no Password)",
-                            "type": "czml",
-                            "czml": {
-                                "imageryLayer": {
-                                    "alpha": 0.6,
-                                    "webMapService": {
-                                        "url": "https://programs.communications.gov.au/WMS",
-                                        "layers": "MyBroadband Availabilty",
-                                        "parameters": {
-                                            "transparent": true,
-                                            "format": "image/png"
-                                        }
-                                    }
-                                }
-                            }
+                            "type": "wms",
+                            "url": "https://programs.communications.gov.au/WMS",
+                            "layers": "MyBroadband Availabilty",
+                            "rectangle": [112.93529999999998, -38.208809999082796, 152.06206, -11.05104999964455],
+                            "getFeatureInfoAsGeoJson": false
                         }
                     ]
                 }

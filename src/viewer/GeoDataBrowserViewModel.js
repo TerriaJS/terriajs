@@ -21,6 +21,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
+var NowViewingViewModel = require('../DataCollections/NowViewingViewModel');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -31,6 +32,7 @@ var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
     this._dataManager = options.dataManager;
     this.map = options.map;
+
     this.initUrl = options.initUrl;
     this.mode3d = options.mode3d;
 
@@ -47,6 +49,8 @@ var GeoDataBrowserViewModel = function(options) {
     this.selectedViewer = this.mode3d ? 'Terrain' : '2D';
 
     this.catalog = options.catalog;
+
+    this.nowViewing = new NowViewingViewModel();
 
     knockout.track(this, ['showingPanel', 'showingMapPanel', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
@@ -95,38 +99,11 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._toggleItemEnabled = createCommand(function(item) {
-        item.isEnabled(!item.isEnabled());
-
-        if (item.isEnabled()) {
-            ga('send', 'event', 'dataSource', 'added', item.Title());
-            item._enabledDate = Date.now();
-            enableItem(that, item);
-        } else {
-            var duration;
-            if (item._enabledDate) {
-                duration = ((Date.now() - item._enabledDate) / 1000.0) | 0;
-            }
-            ga('send', 'event', 'dataSource', 'removed', item.Title(), duration);
-            disableItem(that, item);
-        }
+        item.toggleEnabled(sceneOrMap(that._viewer), that.nowViewing);
     });
 
     this._toggleItemShown = createCommand(function(item) {
-        item.show(!item.show());
-
-        if (item.show()) {
-            ga('send', 'event', 'dataSource', 'shown', item.Title());
-            item._shownDate = Date.now();
-        } else {
-            var duration;
-            if (item._shownDate) {
-                duration = ((Date.now() - item._shownDate) / 1000.0) | 0;
-            } else if (item._enabledDate) {
-                duration = ((Date.now() - item._enabledDate) / 1000.0) | 0;
-            }
-            ga('send', 'event', 'dataSource', 'hidden', item.Title(), duration);
-        }
-        that._dataManager.show(item.layer, item.show());
+        item.toggleShown(sceneOrMap(that._viewer), that.nowViewing);
     });
 
     this._zoomToItem = createCommand(function(item) {
@@ -500,7 +477,7 @@ these extensions in order for National Map to know how to load it.'
         return layers;
     }
 
-    this.nowViewing = komapping.fromJS(getLayers(), nowViewingMapping);
+    //this.nowViewing = komapping.fromJS(getLayers(), nowViewingMapping);
 
     function refreshNowViewing() {
         // Get the current scroll height and position
@@ -906,6 +883,14 @@ function getOGCLayerExtent(layer) {
             parseFloat(box.east), parseFloat(box.north));
     }
     return rect;
+}
+
+function sceneOrMap(viewer) {
+    if (defined(viewer.scene)) {
+        return viewer.scene;
+    } else {
+        return viewer.map;
+    }
 }
 
 module.exports = GeoDataBrowserViewModel;
