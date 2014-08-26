@@ -98,14 +98,6 @@ var GeoDataBrowserViewModel = function(options) {
         item.isOpen(!item.isOpen());
     });
 
-    this._toggleItemEnabled = createCommand(function(item) {
-        item.toggleEnabled(sceneOrMap(that._viewer), that.nowViewing);
-    });
-
-    this._toggleItemShown = createCommand(function(item) {
-        item.toggleShown(sceneOrMap(that._viewer), that.nowViewing);
-    });
-
     this._zoomToItem = createCommand(function(item) {
         if (!defined(item.layer) || !defined(item.layer.extent) || 
             (defined(item.isEnabled) && !item.isEnabled())) {
@@ -676,9 +668,41 @@ these extensions in order for National Map to know how to load it.'
             dragPlaceholder.setAttribute('nowViewingIndex', siblings[targetIndex + 1].getAttribute('nowViewingIndex'));
         }
     });
+
+    this._toggleItemEnabled = function(item) { item.toggleEnabled(that.sceneOrMap, that.nowViewing); }
+    this._toggleItemShown = function(item) { item.toggleShown(that.sceneOrMap); }
+    this._zoomToItem = function(item) { item.zoomTo(that.sceneOrMap); }
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {
+    sceneOrMap : {
+        get : function() {
+            if (defined(this._viewer.scene)) {
+                return this._viewer.scene;
+            } else {
+                return this._viewer.map;
+            }
+        }
+    },
+
+    toggleItemEnabled : {
+        get : function() {
+            return this._toggleItemEnabled;
+        }
+    },
+
+    toggleItemShown : {
+        get : function() {
+            return this._toggleItemShown;
+        }
+    },
+
+    zoomToItem : {
+        get : function() {
+            return this._zoomToItem;
+        }
+    },
+
     toggleShowingPanel : {
         get : function() {
             return this._toggleShowingPanel;
@@ -724,24 +748,6 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     toggleCategoryOpen : {
         get : function() {
             return this._toggleCategoryOpen;
-        }
-    },
-
-    toggleItemEnabled : {
-        get : function() {
-            return this._toggleItemEnabled;
-        }
-    },
-
-    toggleItemShown : {
-        get : function() {
-            return this._toggleItemShown;
-        }
-    },
-
-    zoomToItem : {
-        get : function() {
-            return this._zoomToItem;
         }
     },
 
@@ -883,14 +889,6 @@ function getOGCLayerExtent(layer) {
             parseFloat(box.east), parseFloat(box.north));
     }
     return rect;
-}
-
-function sceneOrMap(viewer) {
-    if (defined(viewer.scene)) {
-        return viewer.scene;
-    } else {
-        return viewer.map;
-    }
 }
 
 module.exports = GeoDataBrowserViewModel;

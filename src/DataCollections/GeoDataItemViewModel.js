@@ -2,6 +2,8 @@
 
 /*global require,ga*/
 
+var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
@@ -10,6 +12,7 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var Scene = require('../../third_party/cesium/Source/Scene/Scene');
 
 var NowViewingViewModel = require('./NowViewingViewModel');
+var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
 /**
  * An item in a {@link GeoDataGroupViewModel}.
@@ -184,11 +187,37 @@ GeoDataItemViewModel.prototype.toggleShown = function(sceneOrMap) {
     return this._isShown;
 };
 
+var scratchRectangle = new Rectangle();
+
 /**
  * Moves the camera so that the 
  * @return {[type]} [description]
  */
-GeoDataItemViewModel.prototype.zoomTo = function(sceneOrMap) {
+GeoDataItemViewModel.prototype.zoomTo = function(sceneOrMap, flightTimeSeconds) {
+    var epsilon = CesiumMath.EPSILON3;
+
+    var rect = Rectangle.clone(this.rectangle, scratchRectangle);
+
+    if (rect.east - rect.west < epsilon) {
+        rect.east += epsilon;
+        rect.west -= epsilon;
+    }
+
+    if (rect.north - rect.south < epsilon) {
+        rect.north += epsilon;
+        rect.south -= epsilon;
+    }
+
+
+    if (sceneOrMap instanceof Scene) {
+        var flight = CameraFlightPath.createTweenRectangle(sceneOrMap, {
+            destination : rect,
+            duration: flightTimeSeconds
+        });
+        sceneOrMap.tweens.add(flight);
+    } else {
+        sceneOrMap.fitBounds(rectangleToLatLngBounds(rect));
+    }
 };
 
 module.exports = GeoDataItemViewModel;
