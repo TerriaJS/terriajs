@@ -154,6 +154,13 @@ GeoDataItemViewModel.prototype.toggleEnabled = function(sceneOrMap, nowViewing) 
     return this._isEnabled;
 };
 
+/**
+ * Toggles the {@link GeoDataItemViewModel#isShown} property of this item.  If it is shown, calling this method
+ * will hide it.  If it is hidden, calling this method will show it.
+ *
+ * @param {Scene|L.map} sceneOrMap The Cesium Scene or Leaflet Map in which to toggle the data item.
+ * @returns {Boolean} true if the item is now shown, false if it is now hidden.
+ */
 GeoDataItemViewModel.prototype.toggleShown = function(sceneOrMap) {
     if (sceneOrMap instanceof Scene) {
         if (!this._isShown) {
@@ -190,10 +197,17 @@ GeoDataItemViewModel.prototype.toggleShown = function(sceneOrMap) {
 var scratchRectangle = new Rectangle();
 
 /**
- * Moves the camera so that the 
- * @return {[type]} [description]
+ * Moves the camera so that the item's bounding rectangle is visible.
+ * @param {Scene|L.map} sceneOrMap The Cesium Scene or Leaflet map to zoom.
+ * @param {Number} flightTimeSeconds The number of seconds over which to fly the camera.  This parameter is ignored in Leaflet.
  */
 GeoDataItemViewModel.prototype.zoomTo = function(sceneOrMap, flightTimeSeconds) {
+    if (!this.isEnabled || !this.isShown || !defined(this.rectangle)) {
+        return;
+    }
+
+    ga('send', 'event', 'dataSource', 'zoomTo', this.name);
+
     var epsilon = CesiumMath.EPSILON3;
 
     var rect = Rectangle.clone(this.rectangle, scratchRectangle);
