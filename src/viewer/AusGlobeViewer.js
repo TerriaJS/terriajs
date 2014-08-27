@@ -78,6 +78,9 @@ var AusGlobeViewer = function(geoDataManager) {
 
     this.geoDataManager = geoDataManager;
 
+    this._distanceLegendBarWidth = undefined;
+    this._distanceLegendLabel = undefined;
+
     var that = this;
     
     that.startup = true;
@@ -923,9 +926,15 @@ AusGlobeViewer.prototype.updateDistanceLegend = function() {
             label = distance.toString() + ' m';
         }
 
-        document.getElementById('ausglobe-title-scale').style.visibility = 'visible';
-        document.getElementById('ausglobe-title-scale-label').textContent = label;
-        document.getElementById('ausglobe-title-scale-bar').style.width = (distance / pixelDistance).toString() + 'px';
+        var barWidth = (distance / pixelDistance) | 0;
+        if (barWidth !== this._distanceLegendBarWidth || label !== this._distanceLegendLabel) {
+            document.getElementById('ausglobe-title-scale').style.visibility = 'visible';
+            document.getElementById('ausglobe-title-scale-label').textContent = label;
+            document.getElementById('ausglobe-title-scale-bar').style.width = barWidth.toString() + 'px';
+
+            this._distanceLegendBarWidth = barWidth;
+            this._distanceLegendLabel = label;
+        }
     } else {
         document.getElementById('ausglobe-title-scale').style.visibility = 'hidden';
     }
