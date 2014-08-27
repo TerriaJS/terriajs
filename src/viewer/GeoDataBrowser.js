@@ -43,6 +43,13 @@ var GeoDataBrowser = function(options) {
     mapButton.setAttribute('data-bind', 'click: toggleShowingMapPanel, css { "ausglobe-panel-button-panel-visible": showingMapPanel }');
     wrapper.appendChild(mapButton);
 
+    var legendButton = document.createElement('div');
+    legendButton.className = 'ausglobe-panel-button';
+    legendButton.title = 'Legend';
+    legendButton.innerHTML = '<a target="_blank" data-bind="attr: { href: topLayerLegendUrl }"><div class="ausglobe-panel-button-label">Legend</div></a>';
+    legendButton.setAttribute('data-bind', 'visible: showingLegendButton');
+    wrapper.appendChild(legendButton);
+
     var dataPanel = document.createElement('div');
     dataPanel.id = 'ausglobe-data-panel';
     dataPanel.className = 'ausglobe-panel';
