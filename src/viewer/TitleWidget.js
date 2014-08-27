@@ -24,7 +24,13 @@ var TitleWidget = function(options) {
         <div class="ausglobe-title-image"><img src="images/Australia.png" width="60" height="46" /></div>\
         <div class="ausglobe-title-image"><img src="images/nicta.png" width="60" height="60" /></div>\
         <div class="ausglobe-title-image"><img src="images/nationalmap.png" width="99" height="40" /></div>\
-        <div id="ausglobe-title-middle" class="ausglobe-title-middle"></div>\
+        <div class="ausglobe-title-middle">\
+            <div id="ausglobe-title-scale" class="ausglobe-title-scale">\
+                <div id="ausglobe-title-scale-label" class="ausglobe-title-scale-label">1000 m</div>\
+                <div id="ausglobe-title-scale-bar" class="ausglobe-title-scale-bar"></div>\
+            </div>\
+            <div id="ausglobe-title-position"></div>\
+        </div>\
         <div class="ausglobe-title-credits"></div>\
         <div class="ausglobe-title-menu" data-bind="foreach: menuItems">\
             <span data-bind="if: typeof svg !== \'undefined\'"><a class="ausglobe-title-menuItem" data-bind="cesiumSvgPath: { path: svg.path, width: svg.width, height: svg.height }, attr: { href: uri, target: target, title: tooltip }, click: $parent.selectMenuItem"></a></span>\

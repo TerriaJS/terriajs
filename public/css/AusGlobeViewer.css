@@ -190,8 +190,29 @@ li {
     bottom: 10px;
     color: #aaaaaa;
     vertical-align: bottom;
+    min-width: 200px;
 }
 
+.ausglobe-title-scale {
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+}
+
+.ausglobe-title-scale-label {
+    display: inline-block;
+    height: 15px;
+    padding-right: 10px;
+}
+
+.ausglobe-title-scale-bar {
+    display: inline-block;
+    height: 10px;
+    width: 100px;
+    border-left: 2px solid #9A9A9B;
+    border-right: 2px solid #9A9A9B;
+    border-bottom: 2px solid #9A9A9B;
+}
 
 .ausglobe-title-image {
     display: inline-block;
