@@ -38,10 +38,12 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.showingPanel = false;
     this.showingMapPanel = false;
+    this.showingLegendButton = false;
     this.addDataIsOpen = false;
     this.nowViewingIsOpen = true;
     this.wfsServiceUrl = '';
     this.addType = 'Single data file';
+    this.topLayerLegendUrl = '';
 
     this.openMapIndex = 0;
     this.imageryIsOpen = true;
@@ -52,7 +54,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.nowViewing = new NowViewingViewModel();
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'wfsServiceUrl',
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendButton', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -474,13 +476,30 @@ these extensions in order for National Map to know how to load it.'
     function refreshNowViewing() {
         // Get the current scroll height and position
         var panel = document.getElementById('ausglobe-data-panel');
-        var previousScrollHeight = panel.scrollHeight ;
+        var previousScrollHeight = panel.scrollHeight;
 
         komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
 
         // Attempt to maintain the previous scroll position.
         var newScrollHeight = panel.scrollHeight;
         panel.scrollTop += newScrollHeight - previousScrollHeight;
+
+        that.showingLegendButton = false;
+
+        var nowViewing = that.nowViewing();
+        if (nowViewing.length > 0) {
+            var topLayer = nowViewing[0];
+
+            if (defined(topLayer.legendUrl) && defined(topLayer.legendUrl())) {
+                if (topLayer.legendUrl().length > 0) {
+                    that.topLayerLegendUrl = topLayer.legendUrl();
+                    that.showingLegendButton = true;
+                }
+            } else if (topLayer.type() === 'WMS') {
+                that.topLayerLegendUrl = topLayer.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + topLayer.Name();
+                that.showingLegendButton = true;
+            }
+        }
     }
 
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
@@ -618,8 +637,7 @@ these extensions in order for National Map to know how to load it.'
             dragPlaceholder = undefined;
         }
 
-        that.nowViewing.removeAll();
-        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
+        refreshNowViewing();
 
         if (defined(that._viewer.frameChecker)) {
             that._viewer.frameChecker.forceFrameUpdate();
