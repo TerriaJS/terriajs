@@ -12,6 +12,7 @@ And writes a czml file for it to display
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
 var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../third_party/cesium/Source/Core/defined');
 var CzmlDataSource = require('../third_party/cesium/Source/DataSources/CzmlDataSource');
 var Color = require('../third_party/cesium/Source/Core/Color');
 var defineProperties = require('../third_party/cesium/Source/Core/defineProperties');
@@ -268,7 +269,7 @@ TableDataSource.prototype._getNormalizedPoint = function (pt_val) {
 TableDataSource.prototype._mapValue2Scale = function (pt_val) {
     var scale = this.scale;
     var normPoint = this._getNormalizedPoint(pt_val);
-    if (normPoint !== undefined) {
+    if (defined(normPoint) && normPoint === normPoint) {
         scale *= (this.scale_by_val ? 1.0 * normPoint + 0.5 : 1.0);
     }
     return scale;
