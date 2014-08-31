@@ -96,13 +96,17 @@ function cleanUrl(url) {
     return uri.toString();
 }
 
-function addLayersRecursively(viewModel, layers, items) {
+function addLayersRecursively(viewModel, layers, items, parent) {
     if (!(layers instanceof Array)) {
         layers = [layers];
     }
 
     for (var i = 0; i < layers.length; ++i) {
         var layer = layers[i];
+
+        // Record this layer's parent, so we can walk up the ancestry later.
+        layer.parent = parent;
+
         if (defined(layer.Layer)) {
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
             // in the 'layers' parameter of a GetMap request.
@@ -125,19 +129,32 @@ function createWmsDataItem(viewModel, layer) {
     result.url = viewModel.url;
     result.layers = layer.Name;
 
-    var supportsGetFeatureInfo = layer.queryable;
+    var supportsGetFeatureInfo = defaultValue(getInheritableProperty(layer, 'queryable'), false);
     result.getFeatureInfoAsGeoJson = supportsGetFeatureInfo;
     result.getFeatureInfoAsXml = supportsGetFeatureInfo;
 
-    if (defined(layer.EX_GeographicBoundingBox)) { // required in WMS 1.3.0
-        var egbb = layer.EX_GeographicBoundingBox;
+    var egbb = getInheritableProperty(layer, 'EX_GeographicBoundingBox'); // required in WMS 1.3.0
+    if (defined(egbb)) {
         result.rectangle = Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
-    } else if (defined(layer.LatLonBoundingBox)) { // required in WMS 1.0.0+
-        var llbb = layer.LatLonBoundingBox;
-        result.rectangle = Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
+    } else {
+        var llbb = getInheritableProperty(layer, 'LatLonBoundingBox'); // required in WMS 1.0.0 through 1.1.1
+        if (defined(llbb)) {
+            result.rectangle = Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
+        }
     }
 
     return result;
+}
+
+function getInheritableProperty(layer, name) {
+    while (defined(layer)) {
+        if (defined(layer[name])) {
+            return layer[name];
+        }
+        layer = layer.parent;
+    }
+
+    return undefined;
 }
 
 module.exports = WebMapServiceGroupViewModel;
