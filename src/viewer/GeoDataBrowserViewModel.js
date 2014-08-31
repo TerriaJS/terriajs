@@ -687,9 +687,9 @@ these extensions in order for National Map to know how to load it.'
         }
     });
 
-    this._toggleItemEnabled = function(item) { item.toggleEnabled(that.sceneOrMap, that.nowViewing); }
-    this._toggleItemShown = function(item) { item.toggleShown(that.sceneOrMap); }
-    this._zoomToItem = function(item) { item.zoomTo(that.sceneOrMap); }
+    this._toggleItemEnabled = function(item) { item.toggleEnabled(that.sceneOrMap, that.nowViewing); };
+    this._toggleItemShown = function(item) { item.toggleShown(that.sceneOrMap); };
+    this._zoomToItem = function(item) { item.zoomTo(that.sceneOrMap); };
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {

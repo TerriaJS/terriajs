@@ -11,15 +11,14 @@ var mapping = {};
  * Creates a type derived from {@link GeoDataItemViewModel} based on a given type string.
  * 
  * @param  {String} type The derived type name.
- * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which the new item is added when it is enabled.
  */
-var createGeoDataItemFromType = function(type, dataSourceCollection) {
+var createGeoDataItemFromType = function(type) {
     var Constructor = mapping[type];
     if (!defined(Constructor)) {
         throw new RuntimeError('Unsupported GeoDataItemViewModel type: ' + type);
     }
 
-    return new Constructor(dataSourceCollection);
+    return new Constructor();
 };
 
 createGeoDataItemFromType.register = function(type, constructor) {

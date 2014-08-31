@@ -12,13 +12,10 @@ var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 /**
  * The view model for the geospatial data catalog.
  *
+ * @alias GeoDataCatalogViewModel
  * @constructor
- *
- * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this catalog's items are added when they are enabled.
  */
-var GeoDataCatalogViewModel = function(dataSourceCollection) {
-    this._dataSourceCollection = dataSourceCollection;
-
+var GeoDataCatalogViewModel = function() {
     /**
      * The geospatial data collections in this catalog.  This property is observable.
      * @type {Array}
@@ -87,7 +84,7 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         }
 
         if (!defined(existingGroup)) {
-            existingGroup = new GeoDataGroupViewModel(this._dataSourceCollection);
+            existingGroup = new GeoDataGroupViewModel();
             this.groups.push(existingGroup);
         }
 

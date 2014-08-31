@@ -1,7 +1,7 @@
 {
     "catalog": [
         {
-            "name": "Data Sets",
+            "name": "National Data Sets",
             "type": "group",
             "items": [
                 {
@@ -27,6 +27,18 @@
                             "getFeatureInfoAsGeoJson": false
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "name": "Data Providers",
+            "type": "group",
+            "items": [
+                {
+                    "name": "Topography (Geoscience Australia)",
+                    "description": "[Licence](http://www.ga.gov.au/copyright)",
+                    "type": "wms-getCapabilities",
+                    "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows"
                 }
             ]
         }

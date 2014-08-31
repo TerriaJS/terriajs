@@ -21,13 +21,12 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 /**
  * A {@link GeoDataItemViewModel} representing a layer from a Web Map Service (WMS) server.
  *
- * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this item is added when it is enabled.
- *
+ * @alias WebMapServiceDataItemViewModel
  * @constructor
  * @extends GeoDataItemViewModel
  */
-var WebMapServiceDataItemViewModel = function(dataSourceCollection) {
-    GeoDataItemViewModel.call(this, 'wms', dataSourceCollection);
+var WebMapServiceDataItemViewModel = function() {
+    GeoDataItemViewModel.call(this, 'wms');
 
     this._imageryLayer = undefined;
 

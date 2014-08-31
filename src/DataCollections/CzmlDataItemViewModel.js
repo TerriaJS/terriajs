@@ -15,13 +15,11 @@ var inherit = require('../inherit');
 /**
  * A {@link GeoDataItemViewModel} that is represented as CZML.
  *
- * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this item is added when it is enabled.
- *
  * @constructor
  * @extends GeoDataItemViewModel
  */
-var CzmlDataItemViewModel = function(dataSourceCollection) {
-    GeoDataItemViewModel.call(this, 'czml', dataSourceCollection);
+var CzmlDataItemViewModel = function() {
+    GeoDataItemViewModel.call(this, 'czml');
 
     this._dataSource = undefined;
 

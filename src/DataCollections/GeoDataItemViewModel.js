@@ -20,7 +20,6 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @constructor
  *
  * @param {String} type The type of data item represented by the new instance.
- * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this item is added when it is enabled.
  */
 var GeoDataItemViewModel = function(type) {
     if (!defined(type)) {

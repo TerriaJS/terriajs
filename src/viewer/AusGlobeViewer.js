@@ -289,7 +289,15 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         catalog.isLoading = true;
 
         when(loadJson(params.data_menu || /*config.initialDataMenu ||*/ 'init_nm_2.json'), function(json) {
-            catalog.updateFromJson(json.catalog);
+            try {
+                catalog.updateFromJson(json.catalog);
+            } catch (e) {
+                new PopupMessage({
+                    container: document.body,
+                    title: 'An error occurred while loading the catalog',
+                    message: e.toString()
+                });
+            }
             catalog.isLoading = false;
         });
 

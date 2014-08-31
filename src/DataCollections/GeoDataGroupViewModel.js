@@ -16,13 +16,12 @@ var inherit = require('../inherit');
  * {@link GeoDataItemViewModel|GeoDataItemViewModels} or other
  * {@link GeoDataGroupViewModel|GeoDataGroupViewModels}.
  *
+ * @alias GeoDataGroupViewModel
  * @constructor
  * @extends GeoDataItemViewModel
- *
- * @param {DataSourceCollection} dataSourceCollection The collection of data sources to which this item is added when it is enabled.
  */
-var GeoDataGroupViewModel = function(dataSourceCollection) {
-    GeoDataItemViewModel.call(this, 'group', dataSourceCollection);
+var GeoDataGroupViewModel = function(type) {
+    GeoDataItemViewModel.call(this, defaultValue(type, 'group'));
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -46,8 +45,6 @@ var GeoDataGroupViewModel = function(dataSourceCollection) {
 
     knockout.track(this, ['isOpen', 'isLoading', 'items']);
 };
-
-GeoDataGroupViewModel.type = 'group';
 
 GeoDataGroupViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
@@ -107,7 +104,7 @@ GeoDataGroupViewModel.prototype.updateFromJson = function(json) {
         }
 
         if (!defined(existingItem) || existingItem.type !== item.type) {
-            existingItem = createGeoDataItemFromType(item.type, this.dataSourceCollection);
+            existingItem = createGeoDataItemFromType(item.type);
             this.add(existingItem);
         }
 
