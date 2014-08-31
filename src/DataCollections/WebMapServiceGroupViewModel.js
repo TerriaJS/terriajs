@@ -18,6 +18,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var corsProxy = require('../corsProxy');
 var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 var inherit = require('../inherit');
+var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var WebMapServiceDataItemViewModel = require('./WebMapServiceDataItemViewModel');
 
@@ -71,9 +72,20 @@ WebMapServiceGroupViewModel.prototype = inherit(GeoDataGroupViewModel.prototype)
 
 function getCapabilities(viewModel) {
     var url = cleanUrl(viewModel.url) + '?service=WMS&request=GetCapabilities';
+
     return when(loadXML(url), function(xml) {
         var json = $.xml2json(xml);
         addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items);
+    }, function(e) {
+        new PopupMessage({
+            container: document.body,
+            title: 'Group is not available',
+            message: 'An error occurred while invoking GetCapabilities on the WMS server.  This may indicate that group you opened is temporarily unavailable ' +
+                     'or that there is a problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by ' +
+                     'sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
+        });
+        viewModel.isOpen = false;
+        viewModel._needsLoad = true;
     });
 }
 
