@@ -23,9 +23,10 @@ var Credit = require('../../third_party/cesium/Source/Core/Credit');
 var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
-var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var EllipsoidGeodesic = require('../../third_party/cesium/Source/Core/EllipsoidGeodesic');
 var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
+var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
 var GeographicProjection = require('../../third_party/cesium/Source/Core/GeographicProjection');
 var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
@@ -76,6 +77,9 @@ BingMapsApi.defaultKey = undefined;
 var AusGlobeViewer = function(geoDataManager) {
 
     this.geoDataManager = geoDataManager;
+
+    this._distanceLegendBarWidth = undefined;
+    this._distanceLegendLabel = undefined;
 
     var that = this;
     
@@ -604,11 +608,11 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             var maxDiff = Math.max(approximateHeight - minHeight, maxHeight - approximateHeight);
             errorBar = Math.min(errorBar, maxDiff);
 
-            document.getElementById('ausglobe-title-middle').innerHTML = cartographicToDegreeString(intersection, errorBar);
+            document.getElementById('ausglobe-title-position').innerHTML = cartographicToDegreeString(intersection, errorBar);
 
             debounceSampleAccurateHeight(globe, intersection);
         } else {
-            document.getElementById('ausglobe-title-middle').innerHTML = '';
+            document.getElementById('ausglobe-title-position').innerHTML = '';
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
@@ -673,7 +677,7 @@ function sampleAccurateHeight(terrainProvider, position) {
             tileRequestInFlight = undefined;
             if (Cartographic.equals(position, lastHeightSamplePosition)) {
                 position.height = terrainData.interpolateHeight(tilingScheme.tileXYToRectangle(foundTileID.x, foundTileID.y, foundLevel), position.longitude, position.latitude);
-                document.getElementById('ausglobe-title-middle').innerHTML = cartographicToDegreeString(position);
+                document.getElementById('ausglobe-title-position').innerHTML = cartographicToDegreeString(position);
             } else {
                 // Mouse moved since we started this request, so the result isn't useful.  Try again next time.
             }
@@ -749,7 +753,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         //document.getElementById('controls').style.visibility = 'hidden';
         this._navigationWidget.showTilt = false;
-        document.getElementById('ausglobe-title-middle').style.visibility = 'hidden';
+        document.getElementById('ausglobe-title-position').style.visibility = 'hidden';
 
         //redisplay data
         this.map = map;
@@ -820,6 +824,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             }
             that.scene.base_render(date);
 
+            that.updateDistanceLegend();
+
             // If terrain/imagery is loading, force another render immediately so that the loading
             // happens as quickly as possible.
             var surface = that.scene.globe._surface;
@@ -849,7 +855,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }
         else {
             var cam = this.initialCamera;
-            rect = new Rectangle.fromDegrees( cam.west, cam.south, cam.east, cam.north);
+            rect = new Rectangle.fromDegrees(cam.west, cam.south, cam.east, cam.north);
          }
 
         this.updateCameraFromRect(rect, 0);
@@ -861,8 +867,76 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         stopTimeline(this.viewer);
 
         this._navigationWidget.showTilt = true;
-        document.getElementById('ausglobe-title-middle').style.visibility = 'visible';
+        document.getElementById('ausglobe-title-position').style.visibility = 'visible';
 
+    }
+};
+
+var offsetScratch = new Cartesian3();
+var geodesic = new EllipsoidGeodesic();
+
+var distances = [
+    1, 2, 3, 5,
+    10, 20, 30, 50,
+    100, 200, 300, 500,
+    1000, 2000, 3000, 5000,
+    10000, 20000, 30000, 50000,
+    100000, 200000, 300000, 500000,
+    1000000, 2000000, 3000000, 5000000,
+    10000000, 20000000, 30000000, 50000000];
+
+AusGlobeViewer.prototype.updateDistanceLegend = function() {
+    // Find the distance between two pixels at the bottom center of the screen.
+    var scene = this.scene;
+    var width = scene.canvas.clientWidth;
+    var height = scene.canvas.clientHeight;
+
+    var left = scene.camera.getPickRay(new Cartesian2((width / 2) | 0, height - 1));
+    var right = scene.camera.getPickRay(new Cartesian2(1 + (width / 2) | 0, height - 1));
+
+    var globe = scene.globe;
+    var leftPosition = globe.pick(left, scene);
+    var rightPosition = globe.pick(right, scene);
+
+    if (!defined(leftPosition) || !defined(rightPosition)) {
+        document.getElementById('ausglobe-title-scale').style.visibility = 'hidden';
+        return;
+    }
+
+    var leftCartographic = globe.ellipsoid.cartesianToCartographic(leftPosition);
+    var rightCartographic = globe.ellipsoid.cartesianToCartographic(rightPosition);
+
+    geodesic.setEndPoints(leftCartographic, rightCartographic);
+    var pixelDistance = geodesic.surfaceDistance;
+
+    // Find the first distance that makes the scale bar less than 150 pixels.
+    var maxBarWidth = 150;
+    var distance;
+    for (var i = distances.length - 1; !defined(distance) && i >= 0; --i) {
+        if (distances[i] / pixelDistance < maxBarWidth) {
+            distance = distances[i];
+        }
+    }
+
+    if (defined(distance)) {
+        var label;
+        if (distance >= 1000) {
+            label = (distance / 1000).toString() + ' km';
+        } else {
+            label = distance.toString() + ' m';
+        }
+
+        var barWidth = (distance / pixelDistance) | 0;
+        if (barWidth !== this._distanceLegendBarWidth || label !== this._distanceLegendLabel) {
+            document.getElementById('ausglobe-title-scale').style.visibility = 'visible';
+            document.getElementById('ausglobe-title-scale-label').textContent = label;
+            document.getElementById('ausglobe-title-scale-bar').style.width = barWidth.toString() + 'px';
+
+            this._distanceLegendBarWidth = barWidth;
+            this._distanceLegendLabel = label;
+        }
+    } else {
+        document.getElementById('ausglobe-title-scale').style.visibility = 'hidden';
     }
 };
 
@@ -877,7 +951,14 @@ function supportsWebgl() {
         return false;
     }
     var canvas = document.createElement( 'canvas' );
-    var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+
+    var webglOptions = {
+        alpha : false,
+        stencil : false,
+        failIfMajorPerformanceCaveat : true
+    };
+
+    var gl = canvas.getContext("webgl", webglOptions) || canvas.getContext("experimental-webgl", webglOptions);
     if (!gl) {
         // Browser could not initialize WebGL. User probably needs to
         // update their drivers or get a new browser. Present a link to

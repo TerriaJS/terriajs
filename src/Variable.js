@@ -185,7 +185,7 @@ Variable.prototype.processEnumVar = function () {
         this.vals[i] = parseFloat(n);
     }
     this.enum_list = enum_list;
-    this.calculateVarMinMax();
+    this._calculateVarMinMax();
 };
 
 
