@@ -633,7 +633,7 @@ function recolorImage(img, colorFunc) {
         if (idx > 0) {
             var clr = colorFunc(idx);
             if (defined(clr)) {
-                for (var j = 0; j < 3; j++) {
+                for (var j = 0; j < 4; j++) {
                     image.data[i+j] = clr[j];
                 }
             }
@@ -650,13 +650,10 @@ function recolorImage(img, colorFunc) {
     return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-//TODO: map this to publice server
-//TODO: add other aliases
 //TODO: look at getting extent automatically
-//TODO: figure out LGA mapping (all valid ones end in 0)
 //TODO: on click add, csv info to getFeatureInfo
 //TODO: ui for other vars?
-//TODO: be able to set style to border or no border
+//TODO: create legend image in TableDataSource
 var regionWmsMap = {'POA_CODE': {
     "Name":"admin_bnds_region:POA_2011_AUST",
     "Title":"Postal Areas",
@@ -689,6 +686,7 @@ function getRegionVar(vars, aliases) {
 }
 
 GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
+    //see if we can do region mapping
     var dataset = tableDataSource.dataset;
     var vars = dataset.getVarList();
     var region_type;
@@ -705,10 +703,6 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     }
     console.log('Region type:', region_type, ', Region var:', vars[idx]);
     
-        //change current var
-    if (dataset.getCurrentVariable() === vars[idx]) {
-        dataset.setCurrentVariable({ variable: vars[idx+1]}); 
-    }    
         //create wms layer
     var description = regionWmsMap[region_type];
     var box = description.BoundingBox;
@@ -723,7 +717,23 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
 
     var request = wmsLayer.url;
     
-    //   create colorFunc
+        //change current var if necessary
+    if (dataset.getCurrentVariable() === vars[idx]) {
+        dataset.setCurrentVariable({ variable: vars[idx+1]}); 
+    } 
+        //set the normalized color gradient
+    var defaultGradient = [
+        {offset: 0.0, color: 'rgba(0,0,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
+    ];
+    tableDataSource.setColorGradient(defaultGradient);
+
     //  create json lookup object from table = {'800': val1, ...}
     var codes = dataset.getDataValues(vars[idx]);
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
@@ -732,6 +742,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     for (i = 0; i < codes.length; i++) {
         lookup[codes[i]] = vals[i];
     }
+    // set color for each code
     var colors = [];
     var range = dataset.getMaxVal()-dataset.getMinVal();
     for (i = 0; i <= range; i++) {
@@ -739,6 +750,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
         var val = colorIndex; //dataset.getMaxVal() - i;    //flip the colors
         colors[colorIndex] = tableDataSource._mapValue2Color(val);
     }
+    //   create colorFunc used by the region mapper
     var factor = regionWmsMap[region_type].factor || 1.0;
     wmsLayer.colorFunc = function(idx) {
         return colors[lookup[idx*factor]];

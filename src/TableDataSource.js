@@ -55,7 +55,6 @@ var TableDataSource = function () {
         {offset: 0.75, color: '#ff0'},
         {offset: 1.0, color: '#f00'}
     ];
-    this.colorGradient = defaultGradient;
     this.setColorGradient(defaultGradient);
 };
 
@@ -339,7 +338,7 @@ TableDataSource.prototype.createGradient = function (ctx) {
 * @memberof TableDataSource
 *
 */
-TableDataSource.prototype.setColorGradient = function () {
+TableDataSource.prototype.setColorGradient = function (colorGradient) {
     //create 2d canvas
     if (!document.getElementById("grad_div")) {
         $('body').append('<div id="grad_div"></div>');
@@ -347,6 +346,9 @@ TableDataSource.prototype.setColorGradient = function () {
     }
     var grad_canvas = $('#gradCanvas')[0];
     var ctx = grad_canvas.getContext('2d');
+    if (colorGradient !== undefined) {
+        this.colorGradient = colorGradient;
+    }
     this.createGradient(ctx);
     this.dataImage = ctx.getImageData(0, 0, 1, 256);
 };
