@@ -626,15 +626,19 @@ function recolorImage(img, colorFunc) {
     var image = context.getImageData(0, 0, canvas.width, canvas.height);
     var length = image.data.length;  //pixel count * 4
     
-    //TODO: need to find a way to get back int16 data from image
     for (var i = 0; i < length; i += 4) {
-        var idx = image.data[i] * 0x10000 + image.data[i+1] * 0x100 + image.data[i+2];
+        if (image.data[i] > 0)
+            continue;
+        var idx = image.data[i+1] * 0x100 + image.data[i+2];
         if (idx > 0) {
             var clr = colorFunc(idx);
             if (defined(clr)) {
                 for (var j = 0; j < 3; j++) {
                     image.data[i+j] = clr[j];
                 }
+            }
+            else {
+                image.data[i+3] = 0;
             }
         }
         else {
@@ -658,15 +662,25 @@ var regionWmsMap = {'POA_CODE': {
     "Title":"Postal Areas",
     "base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
     "type":"WMS",
-    "BoundingBox":{"west":"97","east":"159","south":"-44","north":"-9"}
+    "BoundingBox":{"west":"97","east":"159","south":"-44","north":"-9"},
+    "aliases": ['poa', 'postcode']
+    },
+    'LGA_CODE': {
+    "Name":"admin_bnds_region:LGA_2011_AUST",
+    "Title":"Local Government Areas",
+    "base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
+    "type":"WMS",
+    "BoundingBox":{"west":"97","east":"159","south":"-44","north":"-9"},
+    "aliases": ['lga'],
+    "factor": 10  //this can be removed when we get ids larger than 10k in style
     }
-};
+    };
 
 function getRegionVar(vars, aliases) {
     for (var i = 0; i < vars.length; i++) {
         var varName = vars[i].toLowerCase();
         for (var j = 0; j < aliases.length; j++) {
-            if (varName === aliases[j]) {
+            if (varName.substring(0,aliases[j].length) === aliases[j]) {
                 return i;
             }
         }
@@ -677,18 +691,26 @@ function getRegionVar(vars, aliases) {
 GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     var dataset = tableDataSource.dataset;
     var vars = dataset.getVarList();
-    var idx = getRegionVar(vars, ['poa_code', 'postcode']);
+    var region_type;
+    var idx = -1;
+    for (region_type in regionWmsMap) {
+        idx = getRegionVar(vars, regionWmsMap[region_type].aliases);
+        if (idx !== -1) {
+            break;
+        }
+    }
+    
     if (idx === -1) {
         return;
     }
-    console.log('Region mapping var is:', vars[idx]);
+    console.log('Region type:', region_type, ', Region var:', vars[idx]);
     
         //change current var
     if (dataset.getCurrentVariable() === vars[idx]) {
         dataset.setCurrentVariable({ variable: vars[idx+1]}); 
     }    
-        //index to wmsLayerProxy
-    var description = regionWmsMap.POA_CODE;
+        //create wms layer
+    var description = regionWmsMap[region_type];
     var box = description.BoundingBox;
     description.extent = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
         parseFloat(box.east), parseFloat(box.north));
@@ -717,8 +739,9 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
         var val = colorIndex; //dataset.getMaxVal() - i;    //flip the colors
         colors[colorIndex] = tableDataSource._mapValue2Color(val);
     }
+    var factor = regionWmsMap[region_type].factor || 1.0;
     wmsLayer.colorFunc = function(idx) {
-        return colors[lookup[idx]];
+        return colors[lookup[idx*factor]];
     };
     
     this._viewMap(request, wmsLayer);
