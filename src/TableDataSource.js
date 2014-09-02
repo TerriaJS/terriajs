@@ -46,14 +46,14 @@ var TableDataSource = function () {
     this.scale_by_val = true;
 
     var defaultGradient = [
-        {offset: 0.0, color: '#00f'},
-        {offset: 0.25, color: '#0ff'},
-        {offset: 0.25, color: '#0ff'},
-        {offset: 0.5, color: '#0f0'},
-        {offset: 0.5, color: '#0f0'},
-        {offset: 0.75, color: '#ff0'},
-        {offset: 0.75, color: '#ff0'},
-        {offset: 1.0, color: '#f00'}
+        {offset: 0.0, color: 'rgba(0,0,200,1.00)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
     this.setColorGradient(defaultGradient);
 };
@@ -321,6 +321,7 @@ TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
 TableDataSource.prototype.createGradient = function (ctx) {
     var w = ctx.canvas.width;
     var h = ctx.canvas.height;
+    ctx.clearRect(0,0,w,h);
 
     // Create Linear Gradient
     var lingrad = ctx.createLinearGradient(0,0,0,h);
