@@ -725,7 +725,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     } 
         //set the normalized color gradient
     var defaultGradient = [
-        {offset: 0.0, color: 'rgba(0,0,200,0.0)'},
+        {offset: 0.0, color: 'rgba(0,0,200,1.0)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
         {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
@@ -745,7 +745,6 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
         lookup[codes[i]] = vals[i];
     }
     // set color for each code
-    console.log('here');
     var colors = [];
     var range = dataset.getMaxVal()-dataset.getMinVal();
     for (i = 0; i <= range; i++) {
