@@ -104,12 +104,12 @@ function addLayersRecursively(viewModel, layers, items, parent) {
     for (var i = 0; i < layers.length; ++i) {
         var layer = layers[i];
 
-        // Record this layer's parent, so we can walk up the ancestry later.
+        // Record this layer's parent, so we can walk up the layer hierarchy looking for inherited properties.
         layer.parent = parent;
 
         if (defined(layer.Layer)) {
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
-            // in the 'layers' parameter of a GetMap request.
+            // in the 'layers' parameter of a GetMap request.  This is true in 1.0.0 and 1.3.0 as well.
             if (defined(layer.Name) && layer.Name.length > 0) {
                 items.push(createWmsDataItem(viewModel, layer));
             }

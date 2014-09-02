@@ -513,6 +513,7 @@ these extensions in order for National Map to know how to load it.'
         that._dataManager.addServices(json.NMServices);
         
         var collections = json.Layer;
+        go(collections);
         
         var existingCollection;
 
@@ -542,6 +543,47 @@ these extensions in order for National Map to know how to load it.'
                 loadCkanCollection(collection, existingCollection);
             }
         }
+
+        go(existingCollections);
+    }
+
+    function go(collections) {
+        var result = {
+            "catalog": []
+        };
+        var catalog = result.catalog;
+
+        for (var i = 0; i < collections.length; ++i) {
+            var sourceCollection = collections[i];
+
+            var destCollection = {
+                name: sourceCollection.name(),
+                type: 'group',
+                items: []
+            };
+            catalog.push(destCollection);
+
+            var sourceGroups = sourceCollection.Layer;
+            for (var j = 0; j < sourceGroups.length; ++j) {
+                var sourceGroup = sourceGroups[j];
+
+                var destGroup = {
+                    name: sourceGroup.Title
+                    type: convertType(sourceGroup.type())
+                };
+                destCollection.items.push(destGroup);
+            }
+        }
+
+        console.log(JSON.stringify(result, null, 4));
+    }
+
+    function convertType(type) {
+        switch (type) {
+            case 'WMS':
+                return 'wms';
+        }
+        return 'unknown'
     }
 
     function loadCkanCollection(collection, existingCollection) {

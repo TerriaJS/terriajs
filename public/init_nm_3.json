@@ -1,0 +1,19 @@
+{
+    "catalog": [
+        {
+            "items": [],
+            "name": "National Data Sets",
+            "type": "group"
+        },
+        {
+            "items": [],
+            "name": "Victorian Government",
+            "type": "group"
+        },
+        {
+            "items": [],
+            "name": "Data Providers",
+            "type": "group"
+        }
+    ]
+}

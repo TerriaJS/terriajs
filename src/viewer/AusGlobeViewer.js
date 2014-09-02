@@ -288,7 +288,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         var catalog = new GeoDataCatalogViewModel(geoDataManager.dataSourceCollection);
         catalog.isLoading = true;
 
-        when(loadJson(params.data_menu || /*config.initialDataMenu ||*/ 'init_nm_2.json'), function(json) {
+        when(loadJson(params.data_menu || /*config.initialDataMenu ||*/ 'init_nm_3.json'), function(json) {
             try {
                 catalog.updateFromJson(json.catalog);
             } catch (e) {
