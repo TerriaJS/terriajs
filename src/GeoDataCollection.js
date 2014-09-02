@@ -327,6 +327,11 @@ GeoDataCollection.prototype.remove = function(id) {
     this.GeoDataRemoved.raiseEvent(this, layer);
 };
 
+GeoDataCollection.prototype.removeAll = function() {
+    for (var i = this.layers.length - 1; i >= 0; --i) {
+        this.remove(i);
+    }
+};
 
 /**
 * Set whether to show a geodata item based on id
