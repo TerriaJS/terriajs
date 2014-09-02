@@ -383,6 +383,23 @@ a.ausglobe-title-menuItem:hover {
     transition: left 0.25s;
 }
 
+.ausglobe-now-viewing {
+    overflow: auto;
+    max-height: 150px;
+}
+
+.ausglobe-now-viewing-clear-all {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    color: #66CCFF;
+}
+
+.ausglobe-data-panel-bottom {
+    overflow: auto;
+    max-height: 350px;
+}
+
 .ausglobe-accordion-item {
 }
 
