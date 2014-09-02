@@ -59,6 +59,7 @@ var GeoDataBrowser = function(options) {
         <div class="ausglobe-now-viewing ausglobe-accordion-item">\
             <div class="ausglobe-accordion-item-header" data-bind="click: openNowViewing">\
                 <div class="ausglobe-accordion-item-header-label">Now Viewing</div>\
+                <div class="ausglobe-now-viewing-clear-all" data-bind="click: clearAll, clickBubble: false">Clear all</div>\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': nowViewingIsOpen }">\
                 <div class="ausglobe-accordion-category">\

@@ -342,6 +342,25 @@ these extensions in order for National Map to know how to load it.'
         }
     });
 
+    function disableAll(items) {
+        for (var i = 0; i < items.length; ++i) {
+            var item = items[i];
+            if (defined(item.isEnabled)) {
+                item.isEnabled(false);
+            }
+
+            if (defined(item.Layer)) {
+                disableAll(item.Layer());
+            }
+        }
+    }
+
+    this._clearAll = createCommand(function() {
+        disableAll(that.content());
+        that._viewer.geoDataManager.removeAll();
+        return false;
+    });
+
     // Subscribe to a change in the selected viewer (2D/3D) in order to actually switch the viewer.
     knockout.getObservable(this, 'selectedViewer').subscribe(function(value) {
         if (value === '2D') {
@@ -865,6 +884,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     endNowViewingDrag : {
         get : function() {
             return this._endNowViewingDrag;
+        }
+    },
+
+    clearAll : {
+        get : function() {
+            return this._clearAll;
         }
     }
 });

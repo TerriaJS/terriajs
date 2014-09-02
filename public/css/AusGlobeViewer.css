@@ -388,6 +388,13 @@ a.ausglobe-title-menuItem:hover {
     max-height: 150px;
 }
 
+.ausglobe-now-viewing-clear-all {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    color: #66CCFF;
+}
+
 .ausglobe-data-panel-bottom {
     overflow: auto;
     max-height: 350px;
