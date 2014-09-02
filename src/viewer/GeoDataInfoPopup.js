@@ -338,7 +338,10 @@ var GeoDataInfoPopup = function(options) {
                 }, viewModel.serviceProperties);
             }
 
-            var layer = findLayer(json.Capability.Layer, layerName);
+            var layer;
+            if (defined(json.Capability)) {
+                layer = findLayer(json.Capability.Layer, layerName);
+            }
             if (layer) {
                 komapping.fromJS(layer, viewModel.layerProperties);
             } else {
