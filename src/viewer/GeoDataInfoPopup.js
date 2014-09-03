@@ -264,6 +264,9 @@ var GeoDataInfoPopup = function(options) {
             if (defined(viewModel.info.legendUrl)) {
                 legendUrl = viewModel.info.legendUrl();
             }
+            else if (viewModel.info.layer && viewModel.info.layer.dataSource) {
+                legendUrl = viewModel.info.layer.dataSource.getLegendGraphic();
+            }
             else {
                 legendUrl = viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + viewModel.info.Name();
             }

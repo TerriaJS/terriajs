@@ -632,8 +632,9 @@ function recolorImage(img, colorFunc) {
     var length = image.data.length;  //pixel count * 4
     
     for (var i = 0; i < length; i += 4) {
-        if (image.data[i] > 0)
+        if (image.data[i] > 0) {
             continue;
+        }
         var idx = image.data[i+1] * 0x100 + image.data[i+2];
         if (idx > 0) {
             var clr = colorFunc(idx);
@@ -1092,7 +1093,6 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     crs = layer.description.SRS;
                 }
             }
-            console.log(crs);
             if (defined(crs)) {
                 if (crsIsMatch(crs, 'EPSG:4326')) {
                     // Standard Geographic

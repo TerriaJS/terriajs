@@ -317,21 +317,45 @@ TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
 };
 
 
-//TODO: canvas is an easy way to do this, but html5 specific
-TableDataSource.prototype.createGradient = function (ctx) {
-    var w = ctx.canvas.width;
-    var h = ctx.canvas.height;
-    ctx.clearRect(0,0,w,h);
+TableDataSource.prototype.getLegendGraphic = function () {
+    var canvas = document.createElement("canvas");
+    if (!defined(canvas)) {
+        return;
+    }
+    var w = canvas.width = 80;
+    var h = canvas.height = 128;
+    var ctx = canvas.getContext('2d');
 
-    // Create Linear Gradient
-    var lingrad = ctx.createLinearGradient(0,0,0,h);
+        // Create Linear Gradient
     var grad = this.colorGradient;
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
     for (var i = 0; i < grad.length; i++) {
         lingrad.addColorStop(grad[i].offset, grad[i].color);
     }
-    ctx.fillStyle = lingrad;
+        //white background
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0,0,w,h);
+        //put 0 at bottom
+    var gradW = 32;
+    ctx.translate(gradW, h);
+    ctx.rotate(180 * Math.PI / 180);
+    ctx.fillStyle = lingrad;
+    ctx.fillRect(0,0,gradW,h);
+    
+        //text
+    var val;
+    var min_text = (val = this.dataset.getMinVal()) === undefined ? 'und.' : val.toString();
+    var max_text = (val = this.dataset.getMaxVal()) === undefined ? 'und.' : val.toString();
+    
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.font = "15px Arial";
+    ctx.fillStyle = "#000000";
+    ctx.fillText(max_text, gradW + 5, 15);
+    ctx.fillText(min_text, gradW + 5, h);
+    
+    return canvas.toDataURL("image/png");
 };
+
 
 /**
 * Set the gradient used to color the data points
@@ -340,17 +364,27 @@ TableDataSource.prototype.createGradient = function (ctx) {
 *
 */
 TableDataSource.prototype.setColorGradient = function (colorGradient) {
-    //create 2d canvas
-    if (!document.getElementById("grad_div")) {
-        $('body').append('<div id="grad_div"></div>');
-        $('<canvas/>', { 'id': 'gradCanvas', 'Width': 64, 'Height': 256, 'Style': "display: none" }).appendTo('#grad_div');
-    }
-    var grad_canvas = $('#gradCanvas')[0];
-    var ctx = grad_canvas.getContext('2d');
     if (colorGradient !== undefined) {
         this.colorGradient = colorGradient;
     }
-    this.createGradient(ctx);
+    
+    var canvas = document.createElement("canvas");
+    if (!defined(canvas)) {
+        return;
+    }
+    var w = canvas.width = 64;
+    var h = canvas.height = 256;
+    var ctx = canvas.getContext('2d');
+    
+    // Create Linear Gradient
+    var grad = this.colorGradient;
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    for (var i = 0; i < grad.length; i++) {
+        lingrad.addColorStop(grad[i].offset, grad[i].color);
+    }
+    ctx.fillStyle = lingrad;
+    ctx.fillRect(0,0,w,h);
+
     this.dataImage = ctx.getImageData(0, 0, 1, 256);
 };
 
