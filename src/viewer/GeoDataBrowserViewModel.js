@@ -280,7 +280,7 @@ these extensions in order for National Map to know how to load it.'
         removeBaseLayer();
 
         if (!defined(that._viewer.viewer)) {
-            that._viewer.mapBaseLayer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer');
+            that._viewer.mapBaseLayer = new L.esri.tiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer');
             that._viewer.map.addLayer(that._viewer.mapBaseLayer);
             return;
         }
@@ -308,7 +308,7 @@ these extensions in order for National Map to know how to load it.'
         removeBaseLayer();
 
         if (!defined(that._viewer.viewer)) {
-            that._viewer.mapBaseLayer = new L.esri.TiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer');
+            that._viewer.mapBaseLayer = new L.esri.tiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer');
             that._viewer.map.addLayer(that._viewer.mapBaseLayer);
             return;
         }
