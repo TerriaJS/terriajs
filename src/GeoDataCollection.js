@@ -656,16 +656,13 @@ function recolorImage(img, colorFunc) {
     return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-//TODO: look at getting extent automatically
 //TODO: on click add, csv info to getFeatureInfo
 //TODO: ui for other vars?
-//TODO: create legend image in TableDataSource
 var regionWmsMap = {'POA_CODE': {
     "Name":"admin_bnds_region:POA_2011_AUST",
     "Title":"Postal Areas",
     "base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
     "type":"WMS",
-    "BoundingBox":{"west":"97","east":"159","south":"-44","north":"-9"},
     "aliases": ['poa', 'postcode']
     },
     'LGA_CODE': {
@@ -673,11 +670,10 @@ var regionWmsMap = {'POA_CODE': {
     "Title":"Local Government Areas",
     "base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
     "type":"WMS",
-    "BoundingBox":{"west":"97","east":"159","south":"-44","north":"-9"},
     "aliases": ['lga'],
     "factor": 10  //this can be removed when we get ids larger than 10k in style
     }
-    };
+};
 
 function getRegionVar(vars, aliases) {
     for (var i = 0; i < vars.length; i++) {
@@ -691,14 +687,40 @@ function getRegionVar(vars, aliases) {
     return -1;
 }
 
-GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
-    //see if we can do region mapping
+GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
+    if (!defined(layer) || !defined(layer.dataSource) || !defined(layer.dataSource.dataset)) {
+        return;
+    }
+    var tableDataSource = layer.dataSource;
     var dataset = tableDataSource.dataset;
+    //  create json lookup object from table = {'800': val1, ...}
+    var codes = dataset.getDataValues(layer.regionVar);
+    var vals = dataset.getDataValues(dataset.getCurrentVariable());
+    var lookup = {};
+    for (var i = 0; i < codes.length; i++) {
+        lookup[codes[i]] = vals[i];
+    }
+    // set color for each code
+    var colors = [];
+    for (var idx = dataset.getMinVal(); idx <= dataset.getMaxVal(); idx++) {
+        colors[idx] = tableDataSource._mapValue2Color(idx);
+    }
+    //   create colorFunc used by the region mapper
+    var factor = regionWmsMap[layer.regionType].factor || 1.0;
+    layer.colorFunc = function(id) {
+        return colors[lookup[id*factor]];
+    };
+    
+}
+
+GeoDataCollection.prototype.addRegionMap = function(layer) {
+    //see if we can do region mapping
+    var dataset = layer.dataSource.dataset;
     var vars = dataset.getVarList();
-    var region_type;
+    var regionType;
     var idx = -1;
-    for (region_type in regionWmsMap) {
-        idx = getRegionVar(vars, regionWmsMap[region_type].aliases);
+    for (regionType in regionWmsMap) {
+        idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
         if (idx !== -1) {
             break;
         }
@@ -707,23 +729,17 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
     if (idx === -1) {
         return;
     }
-    console.log('Region type:', region_type, ', Region var:', vars[idx]);
+    layer.regionType = regionType;
+    layer.regionVar = vars[idx];
     
-        //create wms layer
-    var description = regionWmsMap[region_type];
-    var box = description.BoundingBox;
-    description.extent = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
-        parseFloat(box.east), parseFloat(box.north));
-    var wmsLayer = new GeoData({
-        name: layer.name,
-        type: description.type,
-        extent: description.extent,
-        url: this.getOGCFeatureURL(description)
-    });
-
-    wmsLayer.dataSource = tableDataSource;
+    console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
     
-    var request = wmsLayer.url;
+    //TODO: once we have the region type figured scrub random text from id (eg ABS)
+    
+        //update wms layer
+    var description = regionWmsMap[regionType];
+    layer.type = description.type;
+    layer.url = this.getOGCFeatureURL(description);
     
         //change current var if necessary
     if (dataset.getCurrentVariable() === vars[idx]) {
@@ -740,31 +756,11 @@ GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
         {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
         {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
-    tableDataSource.setColorGradient(defaultGradient);
+    layer.dataSource.setColorGradient(defaultGradient);
+        //create the remapping filter
+    this.createRegionLookupFunc(layer);
 
-    //  create json lookup object from table = {'800': val1, ...}
-    var codes = dataset.getDataValues(vars[idx]);
-    var vals = dataset.getDataValues(dataset.getCurrentVariable());
-    var lookup = {};
-    var i;
-    for (i = 0; i < codes.length; i++) {
-        lookup[codes[i]] = vals[i];
-    }
-    // set color for each code
-    var colors = [];
-    var range = dataset.getMaxVal()-dataset.getMinVal();
-    for (i = 0; i <= range; i++) {
-        var colorIndex = i + dataset.getMinVal();
-        var val = colorIndex; //dataset.getMaxVal() - i;    //flip the colors
-        colors[colorIndex] = tableDataSource._mapValue2Color(val);
-    }
-    //   create colorFunc used by the region mapper
-    var factor = regionWmsMap[region_type].factor || 1.0;
-    wmsLayer.colorFunc = function(idx) {
-        return colors[lookup[idx*factor]];
-    };
-    
-    this._viewMap(request, wmsLayer);
+    this._viewMap(layer.url, layer);
 };
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -867,7 +863,8 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
         tableDataSource.loadText(text);
         if (!tableDataSource.dataset.hasLocationData()) {
             console.log('No locaton date found in csv file');
-            this.addRegionMap(layer, tableDataSource);
+            layer.dataSource = tableDataSource;
+            this.addRegionMap(layer);
         }
         else if (this.map === undefined) {
             this.dataSourceCollection.add(tableDataSource);
