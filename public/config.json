@@ -1,5 +1,6 @@
 { "proxyDomains" : [
-        "gov.au"
+        "gov.au",
+        "arcgis.com"
     ],
  "corsDomains" : [
         "research.nicta.com.au",

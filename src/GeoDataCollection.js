@@ -1092,6 +1092,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     crs = layer.description.SRS;
                 }
             }
+            console.log(crs);
             if (defined(crs)) {
                 if (crsIsMatch(crs, 'EPSG:4326')) {
                     // Standard Geographic
@@ -1142,7 +1143,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         }
         
         if (layerName === 'REST') {
-            provider = new L.esri.TiledMapLayer(server);
+            provider = new L.esri.tiledMapLayer(server);
         }
         else {
             provider = new L.tileLayer.wms(server, {
