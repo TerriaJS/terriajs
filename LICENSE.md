@@ -23,8 +23,6 @@ National Map includes the following third-party code.
 
 http://cesiumjs.org/
 
-> Laurens Holst (http://www.grauw.nl/)
->
 > Copyright 2011-2014 Cesium Contributors
 >
 > Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
