@@ -193,9 +193,9 @@
              </CssParameter>
            </Fill>
             <Stroke>
-              <CssParameter name="stroke">#444444</CssParameter>
-              <CssParameter name="stroke-width">0.5</CssParameter>
-              <!-- <CssParameter name="stroke-opacity">0.8</CssParameter> -->
+              <CssParameter name="stroke">#222222</CssParameter>
+              <CssParameter name="stroke-width">0.25</CssParameter>
+              <CssParameter name="stroke-opacity">0.25</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
         </Rule>
