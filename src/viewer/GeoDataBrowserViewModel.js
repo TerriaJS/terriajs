@@ -558,6 +558,10 @@ these extensions in order for National Map to know how to load it.'
         // Get the list of groups containing WMS data sources.
         var url = collection.base_url + '/api/3/action/package_search?rows=100000&fq=res_format:wms';
 
+        if (corsProxy.shouldUseProxy(url)) {
+            url = corsProxy.getURL(url);
+        }
+
         when(loadJson(url), function(result) {
             var existingGroups = {};
 
