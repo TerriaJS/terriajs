@@ -688,10 +688,10 @@ function getRegionVar(vars, aliases) {
 }
 
 GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
-    if (!defined(layer) || !defined(layer.dataSource) || !defined(layer.dataSource.dataset)) {
+    if (!defined(layer) || !defined(layer.baseDataSource) || !defined(layer.baseDataSource.dataset)) {
         return;
     }
-    var tableDataSource = layer.dataSource;
+    var tableDataSource = layer.baseDataSource;
     var dataset = tableDataSource.dataset;
     //  create json lookup object from table = {'800': val1, ...}
     var codes = dataset.getDataValues(layer.regionVar);
@@ -715,7 +715,7 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
 
 GeoDataCollection.prototype.addRegionMap = function(layer) {
     //see if we can do region mapping
-    var dataset = layer.dataSource.dataset;
+    var dataset = layer.baseDataSource.dataset;
     var vars = dataset.getVarList();
     var regionType;
     var idx = -1;
@@ -738,6 +738,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     
         //update wms layer
     var description = regionWmsMap[regionType];
+    layer.type = 'WMS';
     layer.url = this.getOGCFeatureURL(description);
     
         //change current var if necessary
@@ -755,7 +756,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
         {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
         {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
-    layer.dataSource.setColorGradient(defaultGradient);
+    layer.baseDataSource.setColorGradient(defaultGradient);
         //create the remapping filter
     this.createRegionLookupFunc(layer);
 
@@ -862,7 +863,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
         tableDataSource.loadText(text);
         if (!tableDataSource.dataset.hasLocationData()) {
             console.log('No locaton date found in csv file');
-            layer.dataSource = tableDataSource;
+            layer.baseDataSource = tableDataSource;
             this.addRegionMap(layer);
         }
         else if (this.map === undefined) {
