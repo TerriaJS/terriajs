@@ -903,7 +903,10 @@ function _EsriRestJson2GeoJson(obj) {
     var geom;
 
     obj.type = "FeatureCollection";
-    obj.crs = {"type":"EPSG","properties":{"code":"4326"}};
+    var code = obj.spatialReference.latestWkid || obj.spatialReference.wkid;
+    if (defined(code)) {
+        obj.crs = {"type":"EPSG","properties":{"code": code}};
+    }
     for (var i = 0; i < obj.features.length; i++) {
         var feature = obj.features[i];
         feature.type = "Feature";
@@ -1019,6 +1022,9 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
         var obj;
         if (text[0] === '{') {
             obj = JSON.parse(text);
+            if (obj.exceededTransferLimit) {
+                console.log('WARNING: Data retrieval limit enforced by service!');
+            }
             obj = _EsriRestJson2GeoJson(obj);  //ESRI Rest
         }
         else {
@@ -1252,7 +1258,7 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
 * @param {Object} [description.extent] Extent filter for feature request
 */
 GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
-    console.log('Getting ', description.Name);
+    console.log('Getting ', description.Name || description.name);
     
     var request = description.base_url;
     var name  = encodeURIComponent(description.Name);
@@ -1886,7 +1892,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         geojson = geojson[propertyName];
     }
     
-   //Reprojection and downsampling
+   //Reprojection
     var crs_code = getCrsCode(geojson);
     if (crs_code !== '' && crs_code !== 'EPSG:4326') {
         if (!supportedProjection(crs_code)) {
