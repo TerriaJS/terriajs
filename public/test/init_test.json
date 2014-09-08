@@ -1,0 +1,32 @@
+{"name":"Data Collections", "Layer": [
+  {"name":"Test Data", "Layer": [
+    {"name":"Files","type":"DATA","queryable":"0","description":"[Licence](http://www.ga.gov.au/copyright)","Layer": [
+        {"Name":"Cemeteries","Title":"Cemeteries (geojson)","base_url":"./test/cemeteries.geojson","queryable":"1"},
+        {"Name":"BikeRacks","Title":"Bike Racks (geojson:reproj)","base_url":"./test/bike_racks.geojson","queryable":"1"},
+        {"Name":"EarthQuakes","Title":"Pacific Earthquakes (csv)","base_url":"./test/earthquakes.csv","queryable":"1"},
+        {"Name":"Incidents","Title":"Auto Incidents (csv)","base_url":"./test/incidents.csv","queryable":"1"},
+        {"Name":"CZML","Title":"Simple Test (czml)","base_url":"./test/simple.czml","queryable":"1"},
+        {"Name":"VicPolice","Title":"Vic Police (kml)","base_url":"./test/vic_police.kml","queryable":"1"},
+        {"Name":"VicPolice","Title":"Vic Police (kmz)","base_url":"./test/vic_police.kmz","queryable":"1"},
+        {"Name":"SEIFA","Title":"SEIFA 2011 (POA)","base_url":"./test/SEIFA_POA_2011.csv","queryable":"1"}
+    ]}
+  ]},
+  {"name":"Tile Sets", "Layer": [
+    {"name":"TEST","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","type":"WMS","queryable":"0","description":"[Licence](http://www.ga.gov.au/copyright)","Layer": [
+        {"Name":"REST","Title":"Base Map","base_url":"http://tiles.arcgis.com/tiles/yeXpdyjk3azbqItW/arcgis/rest/services/Launceston_Basemap/MapServer", "legendUrl": "http://tiles.arcgis.com/tiles/yeXpdyjk3azbqItW/arcgis/rest/services/Launceston_Basemap/MapServer/legend","BoundingBox":{"west":"140","east":"150","south":"-44","north":"-40"},"queryable":"1"},
+        {"Name":"REST","Title":"Topography","base_url":"http://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/ImageServer", "legendUrl": "http://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/ImageServer/legend","BoundingBox":{"west":"140","east":"150","south":"-44","north":"-40"},"queryable":"1"}
+    ]}
+  ]},
+  { "name": "Test Providers", "Layer": [
+    { "name": "Topography (GA)", "base_url": "http://www.ga.gov.au/gis/services/topography/Australian_Topography/MapServer/WFSServer", "type": "WFS", "proxy": true },
+    { "name": "Topography (GA REST)", "base_url": "http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography/MapServer", "type": "REST", "proxy": true },
+    { "name": "Tasmania Topography and Relief (REST)", "base_url": "http://services.thelist.tas.gov.au/arcgis/rest/services/Public/TopographyAndRelief/MapServer", "type": "REST", "proxy": true },
+    { "name": "Boundaries (PSMA)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_psma/ows", "type": "WMS", "proxy": false, "wfsAvailable": true },
+    { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WFS", "proxy": false, "wfsAvailable": true },
+    { "name": "Western Australia", "base_url": "http://www2.landgate.wa.gov.au/ows/wfspublic_4326/wfs", "type": "WFS", "proxy": true },
+    {"name":"Google Maps Engine","base_url":"","proxy":false,"type":"GME","queryable":"0","Layer": [
+        {"Name": "CentreLink Sites", "Title": "CentreLink Sites via GME", "Abstract": "CentreLink Sites - Google Maps Engine Example","type":"GME", "BoundingBox":{"west":127.3154707,"south":-41.78012603,"east":153.5498186,"north":-10.2198794}, "url": "https://www.googleapis.com/mapsengine/v1/tables/12421761926155747447-06672618218968397709/features?maxResults=500&version=published&key=AIzaSyBZIS_uRrKShArQfvQtURFZasUpXyAaGDk"}
+    ]}
+  ]}
+]}
+
