@@ -215,6 +215,8 @@ Dataset.prototype.loadJson = function (jsonTable) {
 *
 */
 Dataset.prototype.loadText = function (text) {
+        //normalize line breaks
+    text = text.replace(/\r\n|\r|\n/g, "\r\n");
     var jsonTable = $.csv.toArrays(text, {
             onParseValue: $.csv.hooks.castToScalar
         });
