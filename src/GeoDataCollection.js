@@ -738,7 +738,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     
         //update wms layer
     var description = regionWmsMap[regionType];
-    layer.type = 'WMS';
+//    layer.type = 'WMS';
     layer.url = this.getOGCFeatureURL(description);
     
         //change current var if necessary

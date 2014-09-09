@@ -8,7 +8,8 @@
         {"Name":"CZML","Title":"Simple Test (czml)","base_url":"./test/simple.czml","queryable":"1"},
         {"Name":"VicPolice","Title":"Vic Police (kml)","base_url":"./test/vic_police.kml","queryable":"1"},
         {"Name":"VicPolice","Title":"Vic Police (kmz)","base_url":"./test/vic_police.kmz","queryable":"1"},
-        {"Name":"SEIFA","Title":"SEIFA 2011 (POA)","type":"WMS","base_url":"./test/SEIFA_POA_2011.csv","queryable":"1"}
+        {"Name":"SEIFA","Title":"SEIFA 2011 (POA)","type":"DATA","base_url":"./test/SEIFA_POA_2011.csv","queryable":"1"},
+        {"Name":"NEXIS_NSW","Title":"NEXIS NSW 2012 (LGA)","type":"DATA","base_url":"./test/NSW_LGA_NEXIS_201212.csv","queryable":"1"}
     ]}
   ]},
   {"name":"Tile Sets", "Layer": [
