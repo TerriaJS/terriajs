@@ -322,8 +322,8 @@ TableDataSource.prototype.getLegendGraphic = function () {
     if (!defined(canvas)) {
         return;
     }
-    var w = canvas.width = 80;
-    var h = canvas.height = 128;
+    var w = canvas.width = 150;
+    var h = canvas.height = 150;
     var ctx = canvas.getContext('2d');
 
         // Create Linear Gradient
@@ -337,20 +337,23 @@ TableDataSource.prototype.getLegendGraphic = function () {
     ctx.fillRect(0,0,w,h);
         //put 0 at bottom
     var gradW = 32;
+    var gradH = 128;
     ctx.translate(gradW, h);
     ctx.rotate(180 * Math.PI / 180);
     ctx.fillStyle = lingrad;
-    ctx.fillRect(0,0,gradW,h);
+    ctx.fillRect(0,0,gradW,gradH);
     
         //text
     var val;
     var min_text = (val = this.dataset.getMinVal()) === undefined ? 'und.' : val.toString();
     var max_text = (val = this.dataset.getMaxVal()) === undefined ? 'und.' : val.toString();
+    var var_text = this.dataset.getCurrentVariable();
     
     ctx.setTransform(1,0,0,1,0,0);
-    ctx.font = "15px Arial";
+    ctx.font = "15px Arial Narrow";
     ctx.fillStyle = "#000000";
-    ctx.fillText(max_text, gradW + 5, 15);
+    ctx.fillText(var_text, 5, 15);
+    ctx.fillText(max_text, gradW + 5, 15+h-gradH);
     ctx.fillText(min_text, gradW + 5, h);
     
     return canvas.toDataURL("image/png");

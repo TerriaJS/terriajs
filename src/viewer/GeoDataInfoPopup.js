@@ -269,8 +269,8 @@ var GeoDataInfoPopup = function(options) {
             }
             return legendUrl;
         } else if (type === 'DATA') {
-            if (viewModel.info.layer && viewModel.info.layer.dataSource) {
-                return viewModel.info.layer.dataSource.getLegendGraphic();
+            if (viewModel.info.layer && viewModel.info.layer.baseDataSource) {
+                return viewModel.info.layer.baseDataSource.getLegendGraphic();
             }
         }
         return 'N/A';

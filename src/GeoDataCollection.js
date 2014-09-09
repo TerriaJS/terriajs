@@ -312,7 +312,7 @@ GeoDataCollection.prototype.remove = function(id) {
         if (this.dataSourceCollection.contains(layer.dataSource)) {
             this.dataSourceCollection.remove(layer.dataSource);
         }
-        else {
+        else if (defined(layer.dataSource.destroy)) {
             layer.dataSource.destroy();
         }
     }
@@ -405,8 +405,17 @@ GeoDataCollection.prototype._stringify = function() {
     var str_layers = [];
     for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
+        if (layer.show === false) {
+            console.log('Skipping hidden layer in share request:', layer.name);
+            continue;
+        }
+        var url = defined(layer.shareUrl) ? layer.shareUrl : layer.url;
+        if (!defined(url) || url === '') {
+            console.log('Skipping d+d layer in share request:', layer.name);
+            continue;
+        }
         var obj = {name: layer.name, type: layer.type,
-                   url: layer.url, extent: layer.extent};
+                   url: url, extent: layer.extent};
         str_layers.push(obj);
     }
     return JSON.stringify(str_layers);
@@ -736,9 +745,11 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     
     //TODO: once we have the region type figured scrub random text from id (eg ABS)
     
+        //capture url to use for sharing
+    layer.shareUrl = layer.url || '';
+    
         //update wms layer
     var description = regionWmsMap[regionType];
-//    layer.type = 'WMS';
     layer.url = this.getOGCFeatureURL(description);
     
         //change current var if necessary
@@ -849,7 +860,6 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     } 
         //Convert in browser using toGeoJSON https://github.com/mapbox/togeojson    
     else if (format === "KML") {
-        layer = new GeoData({ name: srcname, type: 'DATA' });
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
         this.addGeoJsonLayer(toGeoJSON.kml(dom), layer);
     } 
@@ -1202,16 +1212,32 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
 };
 
 // Load data file based on extension if loaded as DATA layer
-GeoDataCollection.prototype._viewData = function(request, layer) {
+GeoDataCollection.prototype._viewData = function(url, layer) {
     var that = this;
-    var format = getFormatFromUrl(layer.url);
+    var format = getFormatFromUrl(url);
     
-        //load text here to let me control functions called after
-    loadText(request).then (function (text) {
-        that.loadText(text, layer.name, format, layer);
-    }, function(err) {
-        loadErrorResponse(err);
-    });
+    if (corsProxy.shouldUseProxy(url)) {
+        if (url.indexOf('http:') === -1) {
+            url = 'http:' + url;
+        }
+        url = corsProxy.getURL(url);
+    }
+        //added this here to handle loading kmz's from init.json file
+    if (format === 'KMZ') {
+        loadBlob(url).then( function(blob) {
+            blob.name = url;
+            that.addFile(blob, layer);
+        }, function(err) {
+            loadErrorResponse(err);
+        });
+    } else {
+            //load text here to let me control functions called after
+        loadText(url).then (function (text) {
+            that.loadText(text, layer.name, format, layer);
+        }, function(err) {
+            loadErrorResponse(err);
+        });
+    }
 };
 
 /**
@@ -1995,25 +2021,26 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
 * @param {Object} file A javascript file object
 *
 */
-GeoDataCollection.prototype.addFile = function(file) {
+GeoDataCollection.prototype.addFile = function(file, layer) {
     var that = this;
 
     if (this.formatSupported(file.name)) {
         if (file.name.match(/.kmz$/i)) {
-            var kmlLayer = new GeoData({ name: file.name, type: 'DATA' });
-
+            if (!defined(layer)) {
+                layer = new GeoData({ name: file.name, type: 'DATA' });
+            }
             var dataSource = new KmlDataSource(corsProxy);
             when(dataSource.loadKmz(file, file.name), function() {
-                kmlLayer.extent = getDataSourceExtent(dataSource);
+                layer.extent = getDataSourceExtent(dataSource);
                 that.dataSourceCollection.add(dataSource);
-                kmlLayer.dataSource = dataSource;
+                layer.dataSource = dataSource;
                 that.zoomTo = true;
-                that.add(kmlLayer);
+                that.add(layer);
             });
         } else {
             when(readText(file), function (text) {
                 that.zoomTo = true;
-                that.loadText(text, file.name);
+                that.loadText(text, file.name, undefined, layer);
             });
         }
     }
