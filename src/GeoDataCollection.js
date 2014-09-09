@@ -727,9 +727,10 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     }
 }
 
-//setRegionVariable(regionVar, regionType)
-/*
-    if no changes return
+GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regionType) {
+    if (layer.regionVar === regionVar && layer.regionType === regionType) {
+        return;
+    }
     layer.regionVar = regionVar;
     if (layer.regionType !== regionType) {
         layer.regionType = regionType;
@@ -737,28 +738,33 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
         layer.url = this.getOGCFeatureURL(description);
     }
     this.createRegionLookupFunc(layer);
-    if new region type remove imagery layer
-    else just clear imagery layer
+    this.remove(layer);
+    
+    console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
+    
     this._viewMap(layer.url, layer);
-*/   
+}
 
-//setRegionMapVar(var)
-/*
-    if no changes return
-    dataset.setCurrentVariable({ variable: var}); 
+GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
+    if (dataset.getCurrentVariable() === newVar) {
+        return;
+    }
+    dataset.setCurrentVariable({ variable: newVar}); 
     this.createRegionLookupFunc(layer);
-    clear old imagery layer
+    this.remove(layer);
+    
+    console.log('Var set to:', newVar);
+    
     this._viewMap(layer.url, layer);
-*/   
+}
 
-//setRegionColorMap(colorMapObj)
-/*
-    if no changes return
-    layer.baseDataSource.setColorGradient(defaultGradient);
+GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
+    layer.baseDataSource.setColorGradient(dataColorMap);
     this.createRegionLookupFunc(layer);
-    clear old imagery layer
+    this.remove(layer);
+    
     this._viewMap(layer.url, layer);
-*/ 
+}
 
 GeoDataCollection.prototype.addRegionMap = function(layer) {
     //see if we can do region mapping
@@ -776,26 +782,9 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     if (idx === -1) {
         return;
     }
-    layer.regionType = regionType;
-    layer.regionVar = vars[idx];
-    
-    console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
-    
-    //TODO: once we have the region type figured scrub random text from id (eg ABS)
-    
-        //capture url to use for sharing
-    layer.shareUrl = layer.url || '';
-    
-        //update wms layer
-    var description = regionWmsMap[regionType];
-    layer.url = this.getOGCFeatureURL(description);
-    
-        //change current var if necessary
-    if (dataset.getCurrentVariable() === vars[idx]) {
-        dataset.setCurrentVariable({ variable: vars[idx+1]}); 
-    } 
+
         //set the normalized color gradient
-    var defaultGradient = [
+    var dataColorMap = [
         {offset: 0.0, color: 'rgba(0,0,200,1.0)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
@@ -805,11 +794,24 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
         {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
         {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
-    layer.baseDataSource.setColorGradient(defaultGradient);
-        //create the remapping filter
-    this.createRegionLookupFunc(layer);
+    
+    
+        //change current var if necessary
+    if (dataset.getCurrentVariable() === vars[idx]) {
+        dataset.setCurrentVariable({ variable: vars[idx+1]}); 
+    } 
+    layer.baseDataSource.setColorGradient(dataColorMap);
+    
+        //capture url to use for sharing
+    layer.shareUrl = layer.url || '';
+    
+    this.setRegionVariable(layer, vars[idx], regionType);
 
-    this._viewMap(layer.url, layer);
+//    if (dataset.getCurrentVariable() === vars[idx]) {
+//        this.setRegionMapVar(layer, vars[idx+1]);
+//    } 
+    
+ //   this.setRegionColorMap(layer, dataColorMap);
 };
 
 /////////////////////////////////////////////////////////////////////////////////
