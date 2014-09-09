@@ -1292,6 +1292,8 @@ function selectFeatureLeaflet(viewer, latlng) {
     selectFeatures(promises, viewer.map);
 }
 
+//TODO:!!! need to get csv info and return it to the the feature prop viewer
+//         need layer and can go from there.
 function selectFeatures(promises, viewer) {
     var nextPromiseIndex = 0;
 

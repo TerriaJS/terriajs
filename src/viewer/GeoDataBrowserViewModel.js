@@ -493,9 +493,15 @@ these extensions in order for National Map to know how to load it.'
             if (!defined(description)) {
                 var base_url = options.data.url;
                 if (defined(base_url)) {
-                var idx = base_url.indexOf('?');
-                    if (idx !== -1) {
-                        base_url = base_url.substring(0,idx);
+                        //good enough for now.  can be addressed in infobox redo
+                    if (defined(options.data.type) && options.data.type === 'DATA') {
+                        base_url = '';
+                    }
+                    else {
+                        var idx = base_url.indexOf('?');
+                        if (idx !== -1) {
+                            base_url = base_url.substring(0,idx);
+                        }
                     }
                 }
                 description = {

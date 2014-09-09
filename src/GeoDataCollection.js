@@ -684,6 +684,7 @@ var regionWmsMap = {'POA_CODE': {
     }
 };
 
+
 function getRegionVar(vars, aliases) {
     for (var i = 0; i < vars.length; i++) {
         var varName = vars[i].toLowerCase();
@@ -702,7 +703,7 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     }
     var tableDataSource = layer.baseDataSource;
     var dataset = tableDataSource.dataset;
-    //  create json lookup object from table = {'800': val1, ...}
+
     var codes = dataset.getDataValues(layer.regionVar);
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
     var lookup = {};
@@ -720,7 +721,44 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
         return colors[lookup[id*factor]];
     };
     
+    layer.rowProperties = function(code) {
+        //  get row for layer.regionVar===lookup[code]
+        //  return as object
+    }
 }
+
+//setRegionVariable(regionVar, regionType)
+/*
+    if no changes return
+    layer.regionVar = regionVar;
+    if (layer.regionType !== regionType) {
+        layer.regionType = regionType;
+        var description = regionWmsMap[regionType];
+        layer.url = this.getOGCFeatureURL(description);
+    }
+    this.createRegionLookupFunc(layer);
+    if new region type remove imagery layer
+    else just clear imagery layer
+    this._viewMap(layer.url, layer);
+*/   
+
+//setRegionMapVar(var)
+/*
+    if no changes return
+    dataset.setCurrentVariable({ variable: var}); 
+    this.createRegionLookupFunc(layer);
+    clear old imagery layer
+    this._viewMap(layer.url, layer);
+*/   
+
+//setRegionColorMap(colorMapObj)
+/*
+    if no changes return
+    layer.baseDataSource.setColorGradient(defaultGradient);
+    this.createRegionLookupFunc(layer);
+    clear old imagery layer
+    this._viewMap(layer.url, layer);
+*/ 
 
 GeoDataCollection.prototype.addRegionMap = function(layer) {
     //see if we can do region mapping
