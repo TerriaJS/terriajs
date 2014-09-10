@@ -703,6 +703,7 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     }
     var tableDataSource = layer.baseDataSource;
     var dataset = tableDataSource.dataset;
+    var vars = dataset.getVarList();
 
     var codes = dataset.getDataValues(layer.regionVar);
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
@@ -720,10 +721,13 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     layer.colorFunc = function(id) {
         return colors[lookup[id*factor]];
     };
-    
+    layer.valFunc = function(id) {
+        var rowIndex = codes.indexOf(code);
+        return vals[rowIndex];
+    }
     layer.rowProperties = function(code) {
-        //  get row for layer.regionVar===lookup[code]
-        //  return as object
+        var rowIndex = codes.indexOf(code);
+        return dataset.getDataRow(rowIndex);
     }
 }
 
@@ -738,7 +742,10 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
         layer.url = this.getOGCFeatureURL(description);
     }
     this.createRegionLookupFunc(layer);
-    this.remove(layer);
+    var currentIndex = this.layers.indexOf(layer);
+    if (currentIndex !== -1) {
+        this.remove(currentIndex);
+    }
     
     console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
     
@@ -746,24 +753,26 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
 }
 
 GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
+    var tableDataSource = layer.baseDataSource;
+    var dataset = tableDataSource.dataset;
     if (dataset.getCurrentVariable() === newVar) {
         return;
     }
     dataset.setCurrentVariable({ variable: newVar}); 
     this.createRegionLookupFunc(layer);
-    this.remove(layer);
     
     console.log('Var set to:', newVar);
     
-    this._viewMap(layer.url, layer);
+    this.show(layer, false);
+    this.show(layer, true);
 }
 
 GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
     layer.baseDataSource.setColorGradient(dataColorMap);
     this.createRegionLookupFunc(layer);
-    this.remove(layer);
     
-    this._viewMap(layer.url, layer);
+    this.show(layer, false);
+    this.show(layer, true);
 }
 
 GeoDataCollection.prototype.addRegionMap = function(layer) {
@@ -783,35 +792,24 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
         return;
     }
 
-        //set the normalized color gradient
+        //set the normalized color gradient - heat map
     var dataColorMap = [
-        {offset: 0.0, color: 'rgba(0,0,200,1.0)'},
-        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
-        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
-        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
-        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
-        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
-        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
-        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
+        {offset: 0.0, color: 'rgba(200,0,0,1.00)'},
+        {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
+        {offset: 1.0, color: 'rgba(0,0,200,1.0)'}
     ];
-    
     
         //change current var if necessary
     if (dataset.getCurrentVariable() === vars[idx]) {
         dataset.setCurrentVariable({ variable: vars[idx+1]}); 
-    } 
+    }
     layer.baseDataSource.setColorGradient(dataColorMap);
     
         //capture url to use for sharing
     layer.shareUrl = layer.url || '';
     
     this.setRegionVariable(layer, vars[idx], regionType);
-
-//    if (dataset.getCurrentVariable() === vars[idx]) {
-//        this.setRegionMapVar(layer, vars[idx+1]);
-//    } 
-    
- //   this.setRegionColorMap(layer, dataColorMap);
 };
 
 /////////////////////////////////////////////////////////////////////////////////

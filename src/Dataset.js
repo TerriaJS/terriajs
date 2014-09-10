@@ -308,6 +308,25 @@ Dataset.prototype.getDataValue = function (var_name, idx) {
 };
 
 /**
+* Get a data row
+*
+* @param {Integer} Index of row
+*
+* @returns {Object} Object containing all row members
+*/
+Dataset.prototype.getDataRow = function (idx) {
+    var rowObj = {};
+    if (idx !== undefined) {
+        for (var id in this._variables) {
+            if (this._variables.hasOwnProperty(id)) {
+                rowObj[id] = this.getDataValue(id, idx);
+            }
+        }
+    }
+    return rowObj;
+};
+
+/**
 * Get all of the data values
 *
 * @param {String} Variable name
