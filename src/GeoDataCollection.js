@@ -628,18 +628,8 @@ GeoDataCollection.prototype.getShareRequestURL = function( request ) {
 //////////////////////////////////////////////////////////////////////////
 
 //Recolor an image using 2d canvas
-function recolorImage(img, colorFunc) {
-    
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    // Copy the image contents to the canvas
-    var context = canvas.getContext("2d");
-    context.drawImage(img, 0, 0);
-    var image = context.getImageData(0, 0, canvas.width, canvas.height);
+function recolorImage(image, colorFunc) {
     var length = image.data.length;  //pixel count * 4
-    
     for (var i = 0; i < length; i += 4) {
         if (image.data[i] > 0) {
             continue;
@@ -660,14 +650,27 @@ function recolorImage(img, colorFunc) {
             image.data[i+3] = 0;
         }
     }
-    context.putImageData(image, 0, 0);
+    return image;
+}
+
+function recolorImageWithCanvas(img, colorFunc) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Copy the image contents to the canvas
+    var context = canvas.getContext("2d");
+    context.drawImage(img, 0, 0);
+    var image = context.getImageData(0, 0, canvas.width, canvas.height);
     
+    image = recolorImage(image, colorFunc);
+    
+    context.putImageData(image, 0, 0);
     return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-//TODO: on click add, csv info to getFeatureInfo
-//TODO: ui for other vars?
 
+//TODO: on click add, csv info to getFeatureInfo
 var regionServer = 'http://geoserver.research.nicta.com.au/admin_bnds_abs/ows';
 var regionWmsMap = {
     'STE': {
@@ -745,6 +748,7 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     layer.colorFunc = function(id) {
         return colors[lookup[id*factor]];
     };
+    // can be used to get point data
     layer.valFunc = function(id) {
         var rowIndex = codes.indexOf(code);
         return vals[rowIndex];
@@ -1201,7 +1205,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     
                     return when(imagePromise, function(image) {
                         if (defined(image)) {
-                            image = recolorImage(image, layer.colorFunc);
+                            image = recolorImageWithCanvas(image, layer.colorFunc);
                         }
                         return image;
                     });
@@ -1227,6 +1231,16 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                 transparent: true,
                 exceptions: 'application/vnd.ogc.se_xml'
             });
+            
+            if (defined(layer.colorFunc)) {
+                provider.setFilter(function () {
+                    new L.CanvasFilter(this, {
+                        channelFilter: function (image) {
+                            return recolorImage(image, layer.colorFunc);
+                        }
+                   }).render();
+                });
+            }
         }
         provider.setOpacity(0.6);
         layer.primitive = provider;
