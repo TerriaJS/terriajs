@@ -1339,9 +1339,6 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     else if (layer.type === 'DATA') {
         this._viewData(request, layer);
     }
-//    if (layer.type === 'CKAN') {
-//        this._viewFeature(request, layer);
-//    }
     else {
         throw new DeveloperError('Creating layer for unsupported service: '+layer.type);
     }
@@ -1384,16 +1381,6 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
         request += '/' + description.name;
         request += '/query?geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&returnGeometry=true&f=pjson';
     }
-//    else if (description.type === 'CKAN') {
-//        for (var i = 0; i < description.resources.length; i++) {
-//            var format = description.resources[i].format.toUpperCase();
-//            if (format === 'GEOJSON' || format === 'JSON' || format === 'KML') {
-//                request = description.resources[i].url;
-//                break;
-//            }
-//        }
-//        return request;
-//    }
     else {
 //        throw new DeveloperError('Getting feature for unsupported service: '+description.type);
     }
