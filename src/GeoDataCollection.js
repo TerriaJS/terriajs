@@ -667,20 +667,44 @@ function recolorImage(img, colorFunc) {
 
 //TODO: on click add, csv info to getFeatureInfo
 //TODO: ui for other vars?
-var regionWmsMap = {'POA_CODE': {
-    "Name":"admin_bnds_region:POA_2011_AUST",
-    "Title":"Postal Areas",
-    "base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-    "type":"WMS",
-    "aliases": ['poa', 'postcode']
+
+var regionServer = 'http://geoserver.research.nicta.com.au/admin_bnds_abs/ows';
+var regionWmsMap = {
+    'STE': {
+        "Name":"admin_bnds_region:STE_2011_AUST",
+        "Title":"States",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['state', 'ste']
     },
-    'LGA_CODE': {
-    "Name":"admin_bnds_region:LGA_2011_AUST",
-    "Title":"Local Government Areas",
-    "base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-    "type":"WMS",
-    "aliases": ['lga'],
-    "factor": 10  //this can be removed when we get ids larger than 10k in style
+    'CED': {
+        "Name":"admin_bnds_region:CED_2011_AUST",
+        "Title":"Commonwealth Election Districts",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['ced']
+    },
+    'POA': {
+        "Name":"admin_bnds_region:POA_2011_AUST",
+        "Title":"Postal Areas",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['poa', 'postcode']
+    },
+    'LGA': {
+        "Name":"admin_bnds_region:LGA_2011_AUST",
+        "Title":"Local Government Areas",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['lga'],
+        "factor": 10  //this can be removed when we get ids larger than 10k in style
+    },
+    'SA4': {
+        "Name":"admin_bnds_region:SA4_2011_AUST",
+        "Title":"SA4",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['sa4']
     }
 };
 
