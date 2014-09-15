@@ -87,31 +87,6 @@ body {
     box-shadow: 0 0 8px #fff;
 }
 
-#legend {
-    display: block;
-    position:fixed;
-    bottom: 140px;
-    left: 20px;
-    height: 136px;
-    background-color: rgba(0,0,0,0.8);
-    color: #eee;
-    font-size: 11pt;
-    z-index: 999; /* required for IE9 */
-}
-
-#position {
-    position: absolute;
-    bottom: 50px;
-    right: 10px;
-    width: auto;
-    font-size: 8.5pt;
-    color: #fff;
-    background-color: rgba(0,0,0,0.8);
-    border: 1px solid gray;
-    padding: 3px;
-    z-index: 999; /* required for IE9 */
-}
-
 .dialog {
     display: none;
     font-size: 9.5pt;

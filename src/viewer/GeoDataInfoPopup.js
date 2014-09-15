@@ -268,9 +268,12 @@ var GeoDataInfoPopup = function(options) {
                 legendUrl = viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + viewModel.info.Name();
             }
             return legendUrl;
-        } else {
-            return 'N/A';
+        } else if (type === 'DATA') {
+            if (viewModel.info.layer && viewModel.info.layer.baseDataSource) {
+                return viewModel.info.layer.baseDataSource.getLegendGraphic();
+            }
         }
+        return 'N/A';
     });
 
     viewModel.getMetadataUrl = knockout.computed(function() {

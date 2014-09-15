@@ -312,7 +312,7 @@ GeoDataCollection.prototype.remove = function(id) {
         if (this.dataSourceCollection.contains(layer.dataSource)) {
             this.dataSourceCollection.remove(layer.dataSource);
         }
-        else {
+        else if (defined(layer.dataSource.destroy)) {
             layer.dataSource.destroy();
         }
     }
@@ -405,8 +405,17 @@ GeoDataCollection.prototype._stringify = function() {
     var str_layers = [];
     for (var i = 0; i < this.layers.length; i++) {
         var layer = this.layers[i];
+        if (layer.show === false) {
+            console.log('Skipping hidden layer in share request:', layer.name);
+            continue;
+        }
+        var url = defined(layer.shareUrl) ? layer.shareUrl : layer.url;
+        if (!defined(url) || url === '') {
+            console.log('Skipping d+d layer in share request:', layer.name);
+            continue;
+        }
         var obj = {name: layer.name, type: layer.type,
-                   url: layer.url, extent: layer.extent};
+                   url: url, extent: layer.extent};
         str_layers.push(obj);
     }
     return JSON.stringify(str_layers);
@@ -619,8 +628,32 @@ GeoDataCollection.prototype.getShareRequestURL = function( request ) {
 //////////////////////////////////////////////////////////////////////////
 
 //Recolor an image using 2d canvas
-function recolorImage(img, colorFunc) {
-    
+function recolorImage(image, colorFunc) {
+    var length = image.data.length;  //pixel count * 4
+    for (var i = 0; i < length; i += 4) {
+        if (image.data[i] > 0) {
+            continue;
+        }
+        var idx = image.data[i+1] * 0x100 + image.data[i+2];
+        if (idx > 0) {
+            var clr = colorFunc(idx);
+            if (defined(clr)) {
+                for (var j = 0; j < 4; j++) {
+                    image.data[i+j] = clr[j];
+                }
+            }
+            else {
+                image.data[i+3] = 0;
+            }
+        }
+        else {
+            image.data[i+3] = 0;
+        }
+    }
+    return image;
+}
+
+function recolorImageWithCanvas(img, colorFunc) {
     var canvas = document.createElement("canvas");
     canvas.width = img.width;
     canvas.height = img.height;
@@ -629,84 +662,184 @@ function recolorImage(img, colorFunc) {
     var context = canvas.getContext("2d");
     context.drawImage(img, 0, 0);
     var image = context.getImageData(0, 0, canvas.width, canvas.height);
-    var length = image.data.length;  //pixel count * 4
     
-    //TODO: need to find a way to get back int16 data from image
-    for (var i = 0; i < length; i += 4) {
-        var idx = image.data[i] * 0x10000 + image.data[i+1] * 0x100 + image.data[i+2];
-        if (idx > 0) {
-            var clr = colorFunc(idx);
-            if (defined(clr)) {
-                for (var j = 0; j < 3; j++) {
-                    image.data[i+j] = clr[j];
-                }
-            }
-        }
-        else {
-            image.data[i+3] = 0;
-        }
-    }
+    image = recolorImage(image, colorFunc);
+    
     context.putImageData(image, 0, 0);
-    
     return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-var regionWmsMap = {'POA_CODE': {
-    "Name":"admin_bnds_abs:poa",
-    "Title":"Postal Areas",
-    "base_url":"http://geospace.research.nicta.com.au:8080/admin_bnds/ows",
-    "type":"WMS",
-    "BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.59821500205783","north":"-9.142175976703609"}
+
+//TODO: on click add, csv info to getFeatureInfo
+var regionServer = 'http://geoserver.research.nicta.com.au/admin_bnds_abs/ows';
+var regionWmsMap = {
+    'STE': {
+        "Name":"admin_bnds_region:STE_2011_AUST",
+        "Title":"States",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['state', 'ste']
+    },
+    'CED': {
+        "Name":"admin_bnds_region:CED_2011_AUST",
+        "Title":"Commonwealth Election Districts",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['ced']
+    },
+    'POA': {
+        "Name":"admin_bnds_region:POA_2011_AUST",
+        "Title":"Postal Areas",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['poa', 'postcode']
+    },
+    'LGA': {
+        "Name":"admin_bnds_region:LGA_2011_AUST",
+        "Title":"Local Government Areas",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['lga'],
+        "factor": 10  //this can be removed when we get ids larger than 10k in style
+    },
+    'SA4': {
+        "Name":"admin_bnds_region:SA4_2011_AUST",
+        "Title":"SA4",
+        "base_url":regionServer,
+        "type": "WMS",
+        "aliases": ['sa4']
     }
 };
 
-GeoDataCollection.prototype.addRegionMap = function(layer, tableDataSource) {
+
+function getRegionVar(vars, aliases) {
+    for (var i = 0; i < vars.length; i++) {
+        var varName = vars[i].toLowerCase();
+        for (var j = 0; j < aliases.length; j++) {
+            if (varName.substring(0,aliases[j].length) === aliases[j]) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
+    if (!defined(layer) || !defined(layer.baseDataSource) || !defined(layer.baseDataSource.dataset)) {
+        return;
+    }
+    var tableDataSource = layer.baseDataSource;
     var dataset = tableDataSource.dataset;
     var vars = dataset.getVarList();
+
+    var codes = dataset.getDataValues(layer.regionVar);
+    var vals = dataset.getDataValues(dataset.getCurrentVariable());
+    var lookup = {};
+    for (var i = 0; i < codes.length; i++) {
+        lookup[codes[i]] = vals[i];
+    }
+    // set color for each code
+    var colors = [];
+    for (var idx = dataset.getMinVal(); idx <= dataset.getMaxVal(); idx++) {
+        colors[idx] = tableDataSource._mapValue2Color(idx);
+    }
+    //   create colorFunc used by the region mapper
+    var factor = regionWmsMap[layer.regionType].factor || 1.0;
+    layer.colorFunc = function(id) {
+        return colors[lookup[id*factor]];
+    };
+    // can be used to get point data
+    layer.valFunc = function(id) {
+        var rowIndex = codes.indexOf(id);
+        return vals[rowIndex];
+    };
+    layer.rowProperties = function(code) {
+        var rowIndex = codes.indexOf(code);
+        return dataset.getDataRow(rowIndex);
+    };
+};
+
+GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regionType) {
+    if (layer.regionVar === regionVar && layer.regionType === regionType) {
+        return;
+    }
+    layer.regionVar = regionVar;
+    if (layer.regionType !== regionType) {
+        layer.regionType = regionType;
+        var description = regionWmsMap[regionType];
+        layer.url = this.getOGCFeatureURL(description);
+    }
+    this.createRegionLookupFunc(layer);
+    var currentIndex = this.layers.indexOf(layer);
+    if (currentIndex !== -1) {
+        this.remove(currentIndex);
+    }
     
-    var idx = vars.indexOf('POA_CODE');
+    console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
+    
+    this._viewMap(layer.url, layer);
+};
+
+GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
+    var tableDataSource = layer.baseDataSource;
+    var dataset = tableDataSource.dataset;
+    if (dataset.getCurrentVariable() === newVar) {
+        return;
+    }
+    dataset.setCurrentVariable({ variable: newVar}); 
+    this.createRegionLookupFunc(layer);
+    
+    console.log('Var set to:', newVar);
+    
+    this.show(layer, false);
+    this.show(layer, true);
+};
+
+GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
+    layer.baseDataSource.setColorGradient(dataColorMap);
+    this.createRegionLookupFunc(layer);
+    
+    this.show(layer, false);
+    this.show(layer, true);
+};
+
+GeoDataCollection.prototype.addRegionMap = function(layer) {
+    //see if we can do region mapping
+    var dataset = layer.baseDataSource.dataset;
+    var vars = dataset.getVarList();
+    var regionType;
+    var idx = -1;
+    for (regionType in regionWmsMap) {
+        if (regionWmsMap.hasOwnProperty(regionType)) {
+            idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
+            if (idx !== -1) {
+                break;
+            }
+        }
+    }
+    
     if (idx === -1) {
         return;
     }
-        //change current var
+
+        //set the normalized color gradient - heat map
+    var dataColorMap = [
+        {offset: 0.0, color: 'rgba(200,0,0,1.00)'},
+        {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
+        {offset: 1.0, color: 'rgba(0,0,200,1.0)'}
+    ];
+    
+        //change current var if necessary
     if (dataset.getCurrentVariable() === vars[idx]) {
         dataset.setCurrentVariable({ variable: vars[idx+1]}); 
-    }    
-        //index to wmsLayerProxy
-    var description = regionWmsMap.POA_CODE;
-    var box = description.BoundingBox;
-    description.extent = Rectangle.fromDegrees(parseFloat(box.west), parseFloat(box.south),
-        parseFloat(box.east), parseFloat(box.north));
-    var wmsLayer = new GeoData({
-        name: layer.name,
-        type: description.type,
-        extent: description.extent,
-        url: this.getOGCFeatureURL(description)
-    });
-
-    var request = wmsLayer.url;
-    
-    //   create colorFunc
-    //  create json lookup object from table = {'800': val1, ...}
-    var codes = dataset.getDataValues(vars[idx]);
-    var vals = dataset.getDataValues(dataset.getCurrentVariable());
-    var lookup = {};
-    var i;
-    for (i = 0; i < codes.length; i++) {
-        lookup[codes[i]] = vals[i];
     }
-    var colors = [];
-    var range = dataset.getMaxVal()-dataset.getMinVal();
-    for (i = 0; i <= range; i++) {
-        var colorIndex = i + dataset.getMinVal();
-        var val = dataset.getMaxVal() - i;    //flip the colors so blue is highest - just use idx for normal
-        colors[colorIndex] = tableDataSource._mapValue2Color(val);
-    }
-    wmsLayer.colorFunc = function(idx) {
-        return colors[lookup[idx]];
-    };
+    layer.baseDataSource.setColorGradient(dataColorMap);
     
-    this._viewMap(request, wmsLayer);
+        //capture url to use for sharing
+    layer.shareUrl = layer.url || '';
+    
+    this.setRegionVariable(layer, vars[idx], regionType);
 };
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -795,7 +928,6 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     } 
         //Convert in browser using toGeoJSON https://github.com/mapbox/togeojson    
     else if (format === "KML") {
-        layer = new GeoData({ name: srcname, type: 'DATA' });
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
         this.addGeoJsonLayer(toGeoJSON.kml(dom), layer);
     } 
@@ -809,7 +941,8 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
         tableDataSource.loadText(text);
         if (!tableDataSource.dataset.hasLocationData()) {
             console.log('No locaton date found in csv file');
-//            this.addRegionMap(layer, tableDataSource);
+            layer.baseDataSource = tableDataSource;
+            this.addRegionMap(layer);
         }
         else if (this.map === undefined) {
             this.dataSourceCollection.add(tableDataSource);
@@ -1041,7 +1174,6 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     crs = layer.description.SRS;
                 }
             }
-            console.log(crs);
             if (defined(crs)) {
                 if (crsIsMatch(crs, 'EPSG:4326')) {
                     // Standard Geographic
@@ -1075,7 +1207,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     
                     return when(imagePromise, function(image) {
                         if (defined(image)) {
-                            image = recolorImage(image, layer.colorFunc);
+                            image = recolorImageWithCanvas(image, layer.colorFunc);
                         }
                         return image;
                     });
@@ -1101,6 +1233,16 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                 transparent: true,
                 exceptions: 'application/vnd.ogc.se_xml'
             });
+            
+            if (defined(layer.colorFunc)) {
+                provider.setFilter(function () {
+                    new L.CanvasFilter(this, {
+                        channelFilter: function (image) {
+                            return recolorImage(image, layer.colorFunc);
+                        }
+                   }).render();
+                });
+            }
         }
         provider.setOpacity(0.6);
         layer.primitive = provider;
@@ -1148,16 +1290,32 @@ GeoDataCollection.prototype._viewTable = function(request, layer) {
 };
 
 // Load data file based on extension if loaded as DATA layer
-GeoDataCollection.prototype._viewData = function(request, layer) {
+GeoDataCollection.prototype._viewData = function(url, layer) {
     var that = this;
-    var format = getFormatFromUrl(layer.url);
+    var format = getFormatFromUrl(url);
     
-        //load text here to let me control functions called after
-    loadText(request).then (function (text) {
-        that.loadText(text, layer.name, format, layer);
-    }, function(err) {
-        loadErrorResponse(err);
-    });
+    if (corsProxy.shouldUseProxy(url)) {
+        if (url.indexOf('http:') === -1) {
+            url = 'http:' + url;
+        }
+        url = corsProxy.getURL(url);
+    }
+        //added this here to handle loading kmz's from init.json file
+    if (format === 'KMZ') {
+        loadBlob(url).then( function(blob) {
+            blob.name = url;
+            that.addFile(blob, layer);
+        }, function(err) {
+            loadErrorResponse(err);
+        });
+    } else {
+            //load text here to let me control functions called after
+        loadText(url).then (function (text) {
+            that.loadText(text, layer.name, format, layer);
+        }, function(err) {
+            loadErrorResponse(err);
+        });
+    }
 };
 
 /**
@@ -1183,9 +1341,6 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     else if (layer.type === 'DATA') {
         this._viewData(request, layer);
     }
-//    if (layer.type === 'CKAN') {
-//        this._viewFeature(request, layer);
-//    }
     else {
         throw new DeveloperError('Creating layer for unsupported service: '+layer.type);
     }
@@ -1228,16 +1383,6 @@ GeoDataCollection.prototype.getOGCFeatureURL = function(description) {
         request += '/' + description.name;
         request += '/query?geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&returnGeometry=true&f=pjson';
     }
-//    else if (description.type === 'CKAN') {
-//        for (var i = 0; i < description.resources.length; i++) {
-//            var format = description.resources[i].format.toUpperCase();
-//            if (format === 'GEOJSON' || format === 'JSON' || format === 'KML') {
-//                request = description.resources[i].url;
-//                break;
-//            }
-//        }
-//        return request;
-//    }
     else {
 //        throw new DeveloperError('Getting feature for unsupported service: '+description.type);
     }
@@ -1941,25 +2086,26 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
 * @param {Object} file A javascript file object
 *
 */
-GeoDataCollection.prototype.addFile = function(file) {
+GeoDataCollection.prototype.addFile = function(file, layer) {
     var that = this;
 
     if (this.formatSupported(file.name)) {
         if (file.name.match(/.kmz$/i)) {
-            var kmlLayer = new GeoData({ name: file.name, type: 'DATA' });
-
+            if (!defined(layer)) {
+                layer = new GeoData({ name: file.name, type: 'DATA' });
+            }
             var dataSource = new KmlDataSource(corsProxy);
             when(dataSource.loadKmz(file, file.name), function() {
-                kmlLayer.extent = getDataSourceExtent(dataSource);
+                layer.extent = getDataSourceExtent(dataSource);
                 that.dataSourceCollection.add(dataSource);
-                kmlLayer.dataSource = dataSource;
+                layer.dataSource = dataSource;
                 that.zoomTo = true;
-                that.add(kmlLayer);
+                that.add(layer);
             });
         } else {
             when(readText(file), function (text) {
                 that.zoomTo = true;
-                that.loadText(text, file.name);
+                that.loadText(text, file.name, undefined, layer);
             });
         }
     }
