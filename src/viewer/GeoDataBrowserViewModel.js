@@ -101,6 +101,10 @@ var GeoDataBrowserViewModel = function(options) {
         that.viewerSelectionIsOpen = true;
     });
 
+    this._openLegend = createCommand(function(item) {
+        item.legendIsOpen(!item.legendIsOpen());
+    });
+
     this._toggleCategoryOpen = createCommand(function(item) {
         item.isOpen(!item.isOpen());
     });
@@ -498,6 +502,8 @@ these extensions in order for National Map to know how to load it.'
 
     this.userContent = komapping.fromJS([], this._collectionListMapping);
 
+    var firstNowViewingItem = true;
+
     var nowViewingMapping = {
         create : function(options) {
             var description = options.data.description;
@@ -525,7 +531,11 @@ these extensions in order for National Map to know how to load it.'
             }
             var viewModel = komapping.fromJS(description);
             viewModel.show = knockout.observable(options.data.show);
+            viewModel.legendIsOpen = knockout.observable(firstNowViewingItem);
             viewModel.layer = options.data;
+
+            firstNowViewingItem = false;
+
             return viewModel;
         }
     };
@@ -543,6 +553,7 @@ these extensions in order for National Map to know how to load it.'
         var panel = document.getElementById('ausglobe-data-panel');
         var previousScrollHeight = panel.scrollHeight;
 
+        firstNowViewingItem = true;
         komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
 
         // Attempt to maintain the previous scroll position.
@@ -577,6 +588,21 @@ these extensions in order for National Map to know how to load it.'
         }
 
         return '';
+    };
+
+    var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
+
+    this.legendIsImage = function(item) {
+        var url = this.getLegendUrl(item);
+        if (url.length === 0) {
+            return false;
+        }
+
+        return url.match(imageUrlRegex);
+    };
+
+    this.legendIsLink = function(item) {
+        return !this.legendIsImage(item) && this.getLegendUrl(item).length > 0;
     };
 
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
@@ -811,6 +837,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     openViewerSelection : {
         get : function() {
             return this._openViewerSelection;
+        }
+    },
+
+    openLegend : {
+        get : function() {
+            return this._openLegend;
         }
     },
 
