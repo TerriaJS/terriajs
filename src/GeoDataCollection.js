@@ -750,14 +750,14 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     };
     // can be used to get point data
     layer.valFunc = function(id) {
-        var rowIndex = codes.indexOf(code);
+        var rowIndex = codes.indexOf(id);
         return vals[rowIndex];
-    }
+    };
     layer.rowProperties = function(code) {
         var rowIndex = codes.indexOf(code);
         return dataset.getDataRow(rowIndex);
-    }
-}
+    };
+};
 
 GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regionType) {
     if (layer.regionVar === regionVar && layer.regionType === regionType) {
@@ -778,7 +778,7 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
     console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
     
     this._viewMap(layer.url, layer);
-}
+};
 
 GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
     var tableDataSource = layer.baseDataSource;
@@ -793,7 +793,7 @@ GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
     
     this.show(layer, false);
     this.show(layer, true);
-}
+};
 
 GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
     layer.baseDataSource.setColorGradient(dataColorMap);
@@ -801,7 +801,7 @@ GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
     
     this.show(layer, false);
     this.show(layer, true);
-}
+};
 
 GeoDataCollection.prototype.addRegionMap = function(layer) {
     //see if we can do region mapping
@@ -810,9 +810,11 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     var regionType;
     var idx = -1;
     for (regionType in regionWmsMap) {
-        idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
-        if (idx !== -1) {
-            break;
+        if (regionWmsMap.hasOwnProperty(regionType)) {
+            idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
+            if (idx !== -1) {
+                break;
+            }
         }
     }
     
