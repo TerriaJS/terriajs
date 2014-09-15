@@ -160,13 +160,13 @@ GeoDataCollection.prototype.add = function(layer) {
     // Feature layers go on the bottom (which is the top in display order), then map layers go above that.
     var firstFeatureLayer = this.layers.length;
     for (var i = 0; i < this.layers.length; ++i) {
-        if (isFeatureLayer(this, this.layers[i])) {
+        if (!this.isLayerMovable(this.layers[i])) {
             firstFeatureLayer = i;
             break;
         }
     }
 
-    if (isFeatureLayer(this, layer)) {
+    if (!this.isLayerMovable(this, layer)) {
         this.layers.push(layer);
     } else {
         this.layers.splice(firstFeatureLayer, 0, layer);
@@ -355,7 +355,9 @@ GeoDataCollection.prototype.show = function(layer, val) {
         }
     }
     else if (this.map === undefined) {
-        layer.primitive.show = val;
+        if (layer.primitive !== undefined) {
+            layer.primitive.show = val;
+        }
     }
     else {
         if (val) {
