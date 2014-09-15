@@ -36,6 +36,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.showingPanel = false;
     this.showingMapPanel = false;
+    this.showingLegendPanel = false;
     this.showingLegendButton = false;
     this.addDataIsOpen = false;
     this.nowViewingIsOpen = true;
@@ -48,7 +49,7 @@ var GeoDataBrowserViewModel = function(options) {
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = this.mode3d ? 'Terrain' : '2D';
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendButton', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -58,6 +59,7 @@ var GeoDataBrowserViewModel = function(options) {
         that.showingPanel = !that.showingPanel;
         if (that.showingPanel) {
             that.showingMapPanel = false;
+            that.showingLegendPanel = false;
         }
     });
 
@@ -65,6 +67,15 @@ var GeoDataBrowserViewModel = function(options) {
         that.showingMapPanel = !that.showingMapPanel;
         if (that.showingMapPanel) {
             that.showingPanel = false;
+            that.showingLegendPanel = false;
+        }
+    });
+
+    this._toggleShowingLegendPanel = createCommand(function() {
+        that.showingLegendPanel = !that.showingLegendPanel;
+        if (that.showingLegendPanel) {
+            that.showingPanel = false;
+            that.showingMapPanel = false;
         }
     });
 
@@ -556,6 +567,18 @@ these extensions in order for National Map to know how to load it.'
         }
     }
 
+    this.getLegendUrl = function(item) {
+        if (defined(item.legendUrl) && defined(item.legendUrl())) {
+            if (item.legendUrl().length > 0) {
+                return item.legendUrl();
+            }
+        } else if (item.type() === 'WMS') {
+            return item.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
+        }
+
+        return '';
+    };
+
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
     this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(refreshNowViewing);
 
@@ -752,6 +775,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     toggleShowingMapPanel : {
         get : function() {
             return this._toggleShowingMapPanel;
+        }
+    },
+
+    toggleShowingLegendPanel : {
+        get : function() {
+            return this._toggleShowingLegendPanel;
         }
     },
 

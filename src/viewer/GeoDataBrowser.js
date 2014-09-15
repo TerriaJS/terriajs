@@ -46,9 +46,16 @@ var GeoDataBrowser = function(options) {
     var legendButton = document.createElement('div');
     legendButton.className = 'ausglobe-panel-button';
     legendButton.title = 'Legend';
+    legendButton.innerHTML = '<div class="ausglobe-panel-button-label">Legend</div>';
+    legendButton.setAttribute('data-bind', 'visible: nowViewing().length > 0, click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
+    wrapper.appendChild(legendButton);
+
+    /*var legendButton = document.createElement('div');
+    legendButton.className = 'ausglobe-panel-button';
+    legendButton.title = 'Legend';
     legendButton.innerHTML = '<a target="_blank" data-bind="attr: { href: topLayerLegendUrl }"><div class="ausglobe-panel-button-label">Legend</div></a>';
     legendButton.setAttribute('data-bind', 'visible: showingLegendButton');
-    wrapper.appendChild(legendButton);
+    wrapper.appendChild(legendButton);*/
 
     var dataPanel = document.createElement('div');
     dataPanel.id = 'ausglobe-data-panel';
@@ -189,6 +196,24 @@ var GeoDataBrowser = function(options) {
         </div>';
 
     wrapper.appendChild(mapPanel);
+
+    var legendPanel = document.createElement('div');
+    legendPanel.className = 'ausglobe-panel';
+    legendPanel.setAttribute('data-bind', 'if: nowViewing().length > 0, css: { "ausglobe-panel-visible" : showingLegendPanel }');
+
+    legendPanel.innerHTML = '\
+        <div data-bind="foreach: nowViewing">\
+            <div class="ausglobe-accordion-item">\
+                <div class="ausglobe-accordion-item-header">\
+                    <div class="ausglobe-accordion-item-header-label" data-bind="text: Title"></div>\
+                </div>\
+                <div class="ausglobe-accordion-item-content ausglobe-accordion-item-content-visible">\
+                    <img data-bind="attr: { src: $root.getLegendUrl($data) }" />\
+                </div>\
+            </div>\
+        </div>';
+
+    wrapper.appendChild(legendPanel);
 
     knockout.applyBindings(this._viewModel, wrapper);
 };
