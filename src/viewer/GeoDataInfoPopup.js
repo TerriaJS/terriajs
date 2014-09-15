@@ -176,11 +176,11 @@ var GeoDataInfoPopup = function(options) {
     });
 
     viewModel.dataCustodianInformation = knockout.computed(function() {
-        if (defined(viewModel.info.dataCustodian) && defined(viewModel.info.dataCustodian())) {
-            return formatText(viewModel.info.dataCustodian());
-        } else {
-            return 'Unknown';
+        if (!defined(viewModel.info.dataCustodian) || !defined(viewModel.info.dataCustodian())) {
+            viewModel.info.dataCustodian = knockout.observable('Unknown');
         }
+
+        return formatText(viewModel.info.dataCustodian());
     });
 
     viewModel.layer = {};
@@ -374,42 +374,31 @@ var GeoDataInfoPopup = function(options) {
             addBindingProperties(viewModel.layerProperties, 1);
             addBindingProperties(viewModel.serviceProperties, 1);
 
-            if (!defined(viewModel.info.dataCustodian) && defined(json.Service.ContactInformation)) {
+            if (viewModel.info.dataCustodian() === 'Unknown' && defined(json.Service.ContactInformation)) {
                 // Fill in the data custodian from the WMS metadata.
+                var contactInfo = json.Service.ContactInformation;
+
                 var text = '';
 
-                var primary = json.Service.ContactInformation.ContactPersonPrimary;
+                var primary = contactInfo.ContactPersonPrimary;
                 if (defined(primary)) {
-                    if (defined(primary.ContactPerson)) {
+                    if (defined(primary.ContactPerson) && primary.ContactPerson.length > 0) {
                         text += primary.ContactPerson + '<br/>';
                     }
-                    if (defined(primary.ContactOrganization)) {
+                    if (defined(primary.ContactOrganization) && primary.ContactOrganization.length > 0) {
                         text += primary.ContactOrganization + '<br/>';
                     }
                 }
 
-                var address = json.Service.ContactInformation.ContactAddress;
-                if (defined(address)) {
-                    if (defined(address.Address)) {
-                        text += address.Address + '<br/>';
-                    }
-                    if (defined(address.City) || defined(address.StateOrProvince) || defined(address.PostCode) || defined(address.Country)) {
-                        if (defined(address.City)) {
-                            text += address.City + ' ';
-                        }
-                        if (defined(address.StateOrProvince)) {
-                            text += address.StateOrProvince + ' ';
-                        }
-                        if (defined(address.PostCode)) {
-                            text += address.PostCode + ' ';
-                        }
-                        if (defined(address.Country)) {
-                            text += address.Country;
-                        }
-                    }
+                if (defined(contactInfo.ContactElectronicMailAddress) && contactInfo.ContactElectronicMailAddress.length > 0) {
+                    text += '[' + contactInfo.ContactElectronicMailAddress + '](mailto:' + contactInfo.ContactElectronicMailAddress + ')<br/>'; 
                 }
 
-                viewModel.info.dataCustodian = knockout.observable(text);
+                if (defined(contactInfo.ContactVoiceTelephone) && contactInfo.ContactVoiceTelephone.length > 0) {
+                    text += contactInfo.ContactVoiceTelephone + '<br/>';
+                }
+
+                viewModel.info.dataCustodian(text);
             }
 
             viewModel.isLoading(false);
