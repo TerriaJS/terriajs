@@ -40,6 +40,10 @@ Dataset.prototype.hasTimeData = function () {
     return (this._varID[VarType.TIME]);
 };
 
+Dataset.prototype.getVarID = function (type) {
+    return (this._varID[type]);
+};
+
 /**
 * Return the geographic extent of the dataset
 *

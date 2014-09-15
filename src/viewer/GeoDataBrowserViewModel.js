@@ -917,6 +917,7 @@ function enableItem(viewModel, item) {
     }
 
     layer.description = description;
+    layer.style = description.style;
 
     item.layer = layer;
 
