@@ -103,6 +103,16 @@ var GeoDataBrowserViewModel = function(options) {
 
     this._openLegend = createCommand(function(item) {
         item.legendIsOpen(!item.legendIsOpen());
+
+        if (item.legendIsOpen()) {
+            // Close the other legends.
+            var nowViewing = that.nowViewing();
+            for (var i = 0; i < nowViewing.length; ++i) {
+                if (nowViewing[i] !== item) {
+                    nowViewing[i].legendIsOpen(false);
+                }
+            }
+        }
     });
 
     this._toggleCategoryOpen = createCommand(function(item) {
