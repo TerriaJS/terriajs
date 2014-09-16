@@ -47,7 +47,7 @@ var GeoDataBrowser = function(options) {
     legendButton.className = 'ausglobe-panel-button';
     legendButton.title = 'Legend';
     legendButton.innerHTML = '<div class="ausglobe-panel-button-label">Legend</div>';
-    legendButton.setAttribute('data-bind', 'visible: nowViewing().length > 0, click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
+    legendButton.setAttribute('data-bind', 'visible: legendsExist(), click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
     wrapper.appendChild(legendButton);
 
     var dataPanel = document.createElement('div');
@@ -196,11 +196,15 @@ var GeoDataBrowser = function(options) {
 
     legendPanel.innerHTML = '\
         <div data-bind="foreach: nowViewing">\
+            <!-- ko if: show -->\
             <div class="ausglobe-accordion-item">\
                 <div class="ausglobe-accordion-item-header" data-bind="click: $root.openLegend">\
                     <div class="ausglobe-accordion-item-header-label" data-bind="text: Title"></div>\
                 </div>\
                 <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': legendIsOpen }">\
+                    <div class="ausglobe-legend-opacity" data-bind="if: $root.supportsOpacity($data)">\
+                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: $root.opacity($data), valueUpdate: \'input\'" /></label>\
+                    </div>\
                     <!-- ko if: $root.legendIsImage($data) -->\
                     <img data-bind="attr: { src: $root.getLegendUrl($data) }" />\
                     <!-- /ko -->\
@@ -212,6 +216,7 @@ var GeoDataBrowser = function(options) {
                     <!-- /ko -->\
                 </div>\
             </div>\
+            <!-- /ko -->\
         </div>';
 
     wrapper.appendChild(legendPanel);

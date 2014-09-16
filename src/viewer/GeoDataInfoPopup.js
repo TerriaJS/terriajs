@@ -66,15 +66,6 @@ var GeoDataInfoPopup = function(options) {
             <div class="ausglobe-info-section">\
                 <div class="ausglobe-info-description" data-bind="html: description"></div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: getLegendUrl">\
-                <a class="ausglobe-info-description" data-bind="attr: { href: getLegendUrl }" target="_blank">Legend</a>\
-            </div>\
-            <div class="ausglobe-info-section" data-bind="if: supportsTranslucency">\
-                <h2>Translucency</h2>\
-                <div class="ausglobe-info-description">\
-                    <input class="ausglobe-info-translucencySlider" type="range" min="0" max="100" data-bind="value: translucency, valueUpdate: \'input\'" />\
-                </div>\
-            </div>\
             <div class="ausglobe-info-section">\
                 <h2>Data Custodian</h2>\
                 <div class="ausglobe-info-description" data-bind="html: dataCustodianInformation"></div>\
@@ -119,30 +110,8 @@ var GeoDataInfoPopup = function(options) {
         _arrowRightPath : 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z'
     };
 
-    var primitive = options.viewModel.layer ? options.viewModel.layer.primitive : undefined;
-
     viewModel.isLoading = knockout.observable(true);
     viewModel.info = options.viewModel;
-    viewModel.supportsTranslucency = primitive && (defined(primitive.alpha) || defined(primitive.setOpacity));
-    viewModel.translucency = knockout.observable(0);
-
-    if (viewModel.supportsTranslucency) {
-        if (defined(primitive.alpha)) {
-            viewModel.translucency((1.0 - primitive.alpha) * 100.0);
-        } else if (defined(primitive.options) && defined(primitive.options.opacity)) {
-            viewModel.translucency((1.0 - primitive.options.opacity) * 100.0);
-        }
-    }
-
-    viewModel.translucency.subscribe(function() {
-        if (viewModel.supportsTranslucency) {
-            if (defined(primitive.alpha)) {
-                primitive.alpha = (100.0 - viewModel.translucency()) / 100.0;
-            } else if (defined(primitive.setOpacity)) {
-                primitive.setOpacity((100.0 - viewModel.translucency()) / 100.0);
-            }
-        }
-    });
 
     function formatText(text) {
         // Escape HTML in the description.
@@ -274,26 +243,6 @@ var GeoDataInfoPopup = function(options) {
         }
     });
 
-    //this should really happen after getWfsFeatureInfo to ensure that the style exists
-    viewModel.getLegendUrl = knockout.computed(function() {
-        var type = viewModel.info.type();
-        if (type === 'WMS') {
-            var legendUrl;
-            if (defined(viewModel.info.legendUrl)) {
-                legendUrl = viewModel.info.legendUrl();
-            }
-            else {
-                legendUrl = viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + viewModel.info.Name();
-            }
-            return legendUrl;
-        } else if (type === 'DATA') {
-            if (viewModel.info.layer && viewModel.info.layer.baseDataSource) {
-                return viewModel.info.layer.baseDataSource.getLegendGraphic();
-            }
-        }
-        return 'N/A';
-    });
-
     viewModel.getMetadataUrl = knockout.computed(function() {
         var type = viewModel.info.type();
         if (type === 'WMS') {
@@ -382,9 +331,6 @@ var GeoDataInfoPopup = function(options) {
 
                 var primary = contactInfo.ContactPersonPrimary;
                 if (defined(primary)) {
-                    if (defined(primary.ContactPerson) && primary.ContactPerson.length > 0) {
-                        text += primary.ContactPerson + '<br/>';
-                    }
                     if (defined(primary.ContactOrganization) && primary.ContactOrganization.length > 0) {
                         text += primary.ContactOrganization + '<br/>';
                     }
@@ -392,10 +338,6 @@ var GeoDataInfoPopup = function(options) {
 
                 if (defined(contactInfo.ContactElectronicMailAddress) && contactInfo.ContactElectronicMailAddress.length > 0) {
                     text += '[' + contactInfo.ContactElectronicMailAddress + '](mailto:' + contactInfo.ContactElectronicMailAddress + ')<br/>'; 
-                }
-
-                if (defined(contactInfo.ContactVoiceTelephone) && contactInfo.ContactVoiceTelephone.length > 0) {
-                    text += contactInfo.ContactVoiceTelephone + '<br/>';
                 }
 
                 viewModel.info.dataCustodian(text);

@@ -333,6 +333,10 @@ a.ausglobe-title-menuItem:hover {
     text-align: center;
 }
 
+.ausglobe-panel-button-panel-visible .ausglobe-panel-button-label {
+    color: #fff;
+}
+
 .ausglobe-panel-button:hover .ausglobe-panel-button-label {
     color: #fff;
 }
@@ -551,6 +555,16 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-imagery-label {
     text-align: center;
+}
+
+.ausglobe-legend-opacity {
+    color: #fff;
+    font-size: 10pt;
+    padding: 5px;
+}
+
+.ausglobe-legend-opacitySlider {
+    vertical-align: middle;
 }
 
 .ausglobe-search-form {
