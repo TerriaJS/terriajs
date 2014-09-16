@@ -359,9 +359,6 @@ var GeoDataInfoPopup = function(options) {
 
                 var primary = contactInfo.ContactPersonPrimary;
                 if (defined(primary)) {
-                    if (defined(primary.ContactPerson) && primary.ContactPerson.length > 0) {
-                        text += primary.ContactPerson + '<br/>';
-                    }
                     if (defined(primary.ContactOrganization) && primary.ContactOrganization.length > 0) {
                         text += primary.ContactOrganization + '<br/>';
                     }
@@ -369,10 +366,6 @@ var GeoDataInfoPopup = function(options) {
 
                 if (defined(contactInfo.ContactElectronicMailAddress) && contactInfo.ContactElectronicMailAddress.length > 0) {
                     text += '[' + contactInfo.ContactElectronicMailAddress + '](mailto:' + contactInfo.ContactElectronicMailAddress + ')<br/>'; 
-                }
-
-                if (defined(contactInfo.ContactVoiceTelephone) && contactInfo.ContactVoiceTelephone.length > 0) {
-                    text += contactInfo.ContactVoiceTelephone + '<br/>';
                 }
 
                 viewModel.info.dataCustodian(text);
