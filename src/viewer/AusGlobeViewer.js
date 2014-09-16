@@ -220,6 +220,19 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         });
         this.webGlSupported = false;
     }
+
+    if (document.body.clientWidth < 520) {
+        var smallScreenMessage = new PopupMessage({
+            container : document.body,
+            title : 'Small screen or window',
+            message : '\
+Hello!<br/>\
+<br/>\
+Currently the National Map isn\'t optimised for small screens.<br/>\
+<br/>\
+For a better experience we\'d suggest you visit the application from a larger screen like your tablet, laptop or desktop.'
+        });
+    }
     
     // IE versions prior to 10 don't support CORS, so always use the proxy.
     this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
