@@ -29,6 +29,10 @@ var PopupMessage = function(options) {
     ';
     wrapper.appendChild(popup);
 
+    if (popup.clientWidth > container.clientWidth) {
+        popup.style.width = container.clientWidth + 'px';
+    }
+
     var viewModel = {};
 
     viewModel.close = function() {
