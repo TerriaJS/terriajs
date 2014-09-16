@@ -373,6 +373,7 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-now-viewing {
     overflow: auto;
     max-height: 150px;
+    border-bottom: 1px solid gray;
 }
 
 .ausglobe-now-viewing-clear-all {
