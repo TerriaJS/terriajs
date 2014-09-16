@@ -76,6 +76,19 @@ var GeoDataBrowserViewModel = function(options) {
         if (that.showingLegendPanel) {
             that.showingPanel = false;
             that.showingMapPanel = false;
+
+            // Make sure a legend is visible.
+            var nowViewing = that.nowViewing();
+            var oneIsOpen = false;
+            for (var i = 0; !oneIsOpen && i < nowViewing.length; ++i) {
+                if (nowViewing[i].legendIsOpen()) {
+                    oneIsOpen = true;
+                }
+            }
+
+            if (!oneIsOpen && nowViewing.length > 0) {
+                nowViewing[i].legendIsOpen(true);
+            }
         }
     });
 
@@ -613,6 +626,18 @@ these extensions in order for National Map to know how to load it.'
 
     this.legendIsLink = function(item) {
         return !this.legendIsImage(item) && this.getLegendUrl(item).length > 0;
+    };
+
+    this.legendsExist = function() {
+        var nowViewing = that.nowViewing();
+
+        for (var i = 0; i < nowViewing.length; ++i) {
+            if (nowViewing[i].show) {
+                return true;
+            }
+        }
+
+        return false;
     };
 
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
