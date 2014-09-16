@@ -230,7 +230,8 @@ Hello!<br/>\
 <br/>\
 Currently the National Map isn\'t optimised for small screens.<br/>\
 <br/>\
-For a better experience we\'d suggest you visit the application from a larger screen like your tablet, laptop or desktop.'
+For a better experience we\'d suggest you visit the application from a larger screen like your tablet, laptop or desktop.  \
+If you\'re on a desktop or laptop, consider increasing the size of your window.'
         });
     }
     
