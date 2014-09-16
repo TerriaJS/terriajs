@@ -333,6 +333,12 @@
         {"Name":"admin_bnds:RA_2011_AUST","Title":"Remoteness Area","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
     ]}
   ]},
+  {
+    "name": "Victorian Government",
+    "type": "CKAN",
+    "base_url": "http://www.data.vic.gov.au/data",
+    "Layer": []
+  },
   { "name": "Data Providers", "Layer": [
     { "name": "Topography (Geoscience Australia)", "base_url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)" },
     { "name": "Water (Bureau of Meteorology Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)" },
