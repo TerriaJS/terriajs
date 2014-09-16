@@ -66,9 +66,6 @@ var GeoDataInfoPopup = function(options) {
             <div class="ausglobe-info-section">\
                 <div class="ausglobe-info-description" data-bind="html: description"></div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: getLegendUrl">\
-                <a class="ausglobe-info-description" data-bind="attr: { href: getLegendUrl }" target="_blank">Legend</a>\
-            </div>\
             <div class="ausglobe-info-section" data-bind="if: supportsTranslucency">\
                 <h2>Translucency</h2>\
                 <div class="ausglobe-info-description">\
@@ -272,26 +269,6 @@ var GeoDataInfoPopup = function(options) {
         } else {
             return '';
         }
-    });
-
-    //this should really happen after getWfsFeatureInfo to ensure that the style exists
-    viewModel.getLegendUrl = knockout.computed(function() {
-        var type = viewModel.info.type();
-        if (type === 'WMS') {
-            var legendUrl;
-            if (defined(viewModel.info.legendUrl)) {
-                legendUrl = viewModel.info.legendUrl();
-            }
-            else {
-                legendUrl = viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + viewModel.info.Name();
-            }
-            return legendUrl;
-        } else if (type === 'DATA') {
-            if (viewModel.info.layer && viewModel.info.layer.baseDataSource) {
-                return viewModel.info.layer.baseDataSource.getLegendGraphic();
-            }
-        }
-        return 'N/A';
     });
 
     viewModel.getMetadataUrl = knockout.computed(function() {
