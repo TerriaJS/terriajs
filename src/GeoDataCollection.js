@@ -952,6 +952,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
         }
         else {
             if (!defined(layer.style) || !defined(layer.style.table)) {
+                var dataset = tableDataSource.dataset;
                 var style = {line: {}, point: {}, polygon: {}, table: {}};
                 style.table.lon = dataset.getVarID(0);
                 style.table.lat = dataset.getVarID(1);
@@ -1976,9 +1977,9 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         style.line.width = 2;
         style.point.color = getRandomColor(point_palette, layer.name);
         style.point.size = 10;
-        style.polygon.color = layer.style.line.color;
+        style.polygon.color = style.line.color;
         style.polygon.fill = false;  //off by default for perf reasons
-        style.polygon.fillcolor = layer.style.line.color;
+        style.polygon.fillcolor = style.line.color;
         style.polygon.fillcolor.alpha = 0.75;
         layer.style = style;
     }
