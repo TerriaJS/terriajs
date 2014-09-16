@@ -36,6 +36,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.showingPanel = false;
     this.showingMapPanel = false;
+    this.showingLegendPanel = false;
     this.showingLegendButton = false;
     this.addDataIsOpen = false;
     this.nowViewingIsOpen = true;
@@ -48,7 +49,7 @@ var GeoDataBrowserViewModel = function(options) {
     this.viewerSelectionIsOpen = false;
     this.selectedViewer = this.mode3d ? 'Terrain' : '2D';
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendButton', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -58,6 +59,7 @@ var GeoDataBrowserViewModel = function(options) {
         that.showingPanel = !that.showingPanel;
         if (that.showingPanel) {
             that.showingMapPanel = false;
+            that.showingLegendPanel = false;
         }
     });
 
@@ -65,6 +67,15 @@ var GeoDataBrowserViewModel = function(options) {
         that.showingMapPanel = !that.showingMapPanel;
         if (that.showingMapPanel) {
             that.showingPanel = false;
+            that.showingLegendPanel = false;
+        }
+    });
+
+    this._toggleShowingLegendPanel = createCommand(function() {
+        that.showingLegendPanel = !that.showingLegendPanel;
+        if (that.showingLegendPanel) {
+            that.showingPanel = false;
+            that.showingMapPanel = false;
         }
     });
 
@@ -88,6 +99,10 @@ var GeoDataBrowserViewModel = function(options) {
     this._openViewerSelection = createCommand(function() {
         that.imageryIsOpen = false;
         that.viewerSelectionIsOpen = true;
+    });
+
+    this._openLegend = createCommand(function(item) {
+        item.legendIsOpen(!item.legendIsOpen());
     });
 
     this._toggleCategoryOpen = createCommand(function(item) {
@@ -487,6 +502,8 @@ these extensions in order for National Map to know how to load it.'
 
     this.userContent = komapping.fromJS([], this._collectionListMapping);
 
+    var firstNowViewingItem = true;
+
     var nowViewingMapping = {
         create : function(options) {
             var description = options.data.description;
@@ -514,7 +531,11 @@ these extensions in order for National Map to know how to load it.'
             }
             var viewModel = komapping.fromJS(description);
             viewModel.show = knockout.observable(options.data.show);
+            viewModel.legendIsOpen = knockout.observable(firstNowViewingItem);
             viewModel.layer = options.data;
+
+            firstNowViewingItem = false;
+
             return viewModel;
         }
     };
@@ -532,6 +553,7 @@ these extensions in order for National Map to know how to load it.'
         var panel = document.getElementById('ausglobe-data-panel');
         var previousScrollHeight = panel.scrollHeight;
 
+        firstNowViewingItem = true;
         komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
 
         // Attempt to maintain the previous scroll position.
@@ -555,6 +577,33 @@ these extensions in order for National Map to know how to load it.'
             }
         }
     }
+
+    this.getLegendUrl = function(item) {
+        if (defined(item.legendUrl) && defined(item.legendUrl())) {
+            if (item.legendUrl().length > 0) {
+                return item.legendUrl();
+            }
+        } else if (item.type() === 'WMS') {
+            return item.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
+        }
+
+        return '';
+    };
+
+    var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
+
+    this.legendIsImage = function(item) {
+        var url = this.getLegendUrl(item);
+        if (url.length === 0) {
+            return false;
+        }
+
+        return url.match(imageUrlRegex);
+    };
+
+    this.legendIsLink = function(item) {
+        return !this.legendIsImage(item) && this.getLegendUrl(item).length > 0;
+    };
 
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
     this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(refreshNowViewing);
@@ -755,6 +804,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
         }
     },
 
+    toggleShowingLegendPanel : {
+        get : function() {
+            return this._toggleShowingLegendPanel;
+        }
+    },
+
     openItem : {
         get : function() {
             return this._openItem;
@@ -782,6 +837,12 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     openViewerSelection : {
         get : function() {
             return this._openViewerSelection;
+        }
+    },
+
+    openLegend : {
+        get : function() {
+            return this._openLegend;
         }
     },
 
