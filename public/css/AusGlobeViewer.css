@@ -557,6 +557,16 @@ a.ausglobe-title-menuItem:hover {
     text-align: center;
 }
 
+.ausglobe-legend-opacity {
+    color: #fff;
+    font-size: 10pt;
+    padding: 5px;
+}
+
+.ausglobe-legend-opacitySlider {
+    vertical-align: middle;
+}
+
 .ausglobe-search-form {
     position: absolute;
     display: inline-block;

@@ -202,6 +202,9 @@ var GeoDataBrowser = function(options) {
                     <div class="ausglobe-accordion-item-header-label" data-bind="text: Title"></div>\
                 </div>\
                 <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': legendIsOpen }">\
+                    <div class="ausglobe-legend-opacity" data-bind="if: $root.supportsOpacity($data)">\
+                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: $root.opacity($data), valueUpdate: \'input\'" /></label>\
+                    </div>\
                     <!-- ko if: $root.legendIsImage($data) -->\
                     <img data-bind="attr: { src: $root.getLegendUrl($data) }" />\
                     <!-- /ko -->\

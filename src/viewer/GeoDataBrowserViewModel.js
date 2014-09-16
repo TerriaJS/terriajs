@@ -640,6 +640,35 @@ these extensions in order for National Map to know how to load it.'
         return false;
     };
 
+    this.supportsOpacity = function(item) {
+        var primitive = item.layer ? item.layer.primitive : undefined;
+        return primitive && (defined(primitive.alpha) || defined(primitive.setOpacity));
+    };
+
+    this.opacity = function(item) {
+        if (!defined(item._opacity)) {
+            item._opacity = knockout.observable(100);
+
+            var primitive = item.layer ? item.layer.primitive : undefined;
+
+            if (defined(primitive.alpha)) {
+                item._opacity(primitive.alpha * 100.0);
+            } else if (defined(primitive.options) && defined(primitive.options.opacity)) {
+                item._opacity(primitive.options.opacity * 100.0);
+            }
+
+            item._opacity.subscribe(function() {
+                if (defined(primitive.alpha)) {
+                    primitive.alpha = item._opacity() / 100.0;
+                } else if (defined(primitive.setOpacity)) {
+                    primitive.setOpacity(item._opacity() / 100.0);
+                }
+            });
+        }
+
+        return item._opacity;
+    };
+
     this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
     this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(refreshNowViewing);
 
