@@ -15,19 +15,19 @@
 "queryable":1}
     ]},
     {"name":"Social and Economic","type":"WMS","queryable":"0","wfsAvailable":true,"Layer":[
-		{"Name":"7","Title":"Population Estimates", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer","wfsAvailable":false,"description":"[Licence](http://www.ga.gov.au/copyright)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
+		{"Name":"7","Title":"Population Estimates", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer","wfsAvailable":false,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
 "queryable":1},
-		{"Name":"95d9e550_8b36_4273_8df7_2b76c140e73a","Title":"Taxation Statistics 2011-2012", "base_url":"http://data.gov.au/geoserver/taxation-statistics-2011-12/wms", "completeWfsUrl": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=95d9e550_8b36_4273_8df7_2b76c140e73a&srsName=EPSG%3A4326&maxFeatures=1000&outputFormat=json","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
+		{"Name":"95d9e550_8b36_4273_8df7_2b76c140e73a","Title":"Taxation Statistics 2011-2012", "base_url":"http://data.gov.au/geoserver/taxation-statistics-2011-12/wms", "completeWfsUrl": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=95d9e550_8b36_4273_8df7_2b76c140e73a&srsName=EPSG%3A4326&maxFeatures=1000&outputFormat=json","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)", "dataCustodian":"[data.gov.au](http://www.data.gov.au/)","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
 "queryable":1}
     ]},
-    {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","type":"WMS","queryable":"0","description":"[Licence](http://www.ga.gov.au/copyright)","Layer": [
+    {"name":"Land","base_url":"http://www.ga.gov.au/gis/services/topography/Australian_Topography_WM/MapServer/WMSServer","type":"WMS","queryable":"0","description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer": [
         {"Name":"REST","Title":"Gravity Image","base_url":"http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer","description":"[Licence](http://www.ga.gov.au/copyright)", "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer/legend","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"REST","Title":"Land Cover","base_url":"http://www.ga.gov.au/gis/rest/services/earth_observation/Landcover_WM/MapServer","description":"[Licence](http://www.ga.gov.au/copyright)", "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Landcover_WM/MapServer/legend","BoundingBox":{"west":"110","east":"155.00919","south":"-45.0047975","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"REST","Title":"Magnetic Image","base_url":"http://www.ga.gov.au/gis/rest/services/earth_observation/Magnetic_Image_WM/MapServer","description":"[Licence](http://www.ga.gov.au/copyright)", "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Magnetic_Image_WM/MapServer/legend","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"},
         {"Name":"REST","Title":"Surface Geology","base_url":"http://www.ga.gov.au/gis/rest/services/earth_science/GA_Surface_Geology_of_Australia_WM/MapServer","description":"[Licence](http://www.ga.gov.au/copyright)", "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_science/GA_Surface_Geology_of_Australia_WM/MapServer/legend","BoundingBox":{"west":"105.930454436693","east":"162.097118856693","south":"-43.74050960205765","north":"-7.92768801894694"},"queryable":"1"},
         {"Name":"earthquakeHazard,hazardContours","Title":"Earthquake Hazard","base_url":"http://www.ga.gov.au/gis/services/hazards/EarthquakeHazard/MapServer/WMSServer","description":"[Licence](http://www.ga.gov.au/copyright)", "legendUrl": "http://www.ga.gov.au/gis/rest/services/hazards/EarthquakeHazard/MapServer/legend","BoundingBox":{"west":"106","east":"172","south":"-52","north":"-8"},"queryable":"1"}
     ]},
-	{"name":"Surface Water","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)", "Layer":[
+	{"name":"Surface Water","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)", "Layer":[
 		{"Name":"bores","Title":"Bores","BoundingBox":{"west":"112.93529999999998","east":"152.06206","south":"-38.208809999082796","north":"-11.05104999964455"},
 "queryable":1},
 		{"Name":"canalareas","Title":"Canal Areas","BoundingBox":{"west":"115.70707","east":"145.17220000000003","south":"-38.08189999908377","north":"-32.253269999147996"},
@@ -97,7 +97,7 @@
 		{"Name":"NCBLevel2DrainageBasinGroup","Title":"NCB Level2 Drainage Basin Group","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"112.9225","east":"153.63750000000013","south":"-43.73999999905757","north":"-9.197499999701803"},
 		"queryable":1}
 	]},
-    {"name":"Ground Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","Layer":[
+    {"name":"Ground Water","base_url":"http://geofabric.bom.gov.au/simplefeatures/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
         {"Name":"AHGFAquiferContour","Title":"Aquifer Contours","legendUrl": "", "BoundingBox":{"west":"130.9294316820001","east":"151.640955901","south":"-41.24101109706462","north":"-12.157000677611002"},
 		"queryable":1},
 		{"Name":"AHGFWaterTableAquifer","Title":"Water Table Aquifer","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000004","south":"-43.65854999905766","north":"-9.219939999701113"},
@@ -121,7 +121,7 @@
 		{"Name":"AHGFWaterTableAquifer","Title":"WaterTableAquifer","description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)","BoundingBox":{"west":"112.92137000000001","east":"153.63857000000004","south":"-43.65854999905766","north":"-9.219939999701113"},
 		"queryable":1}
     ]},
-	{"name":"Elevation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Elevation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"benchmarks","Title":"Benchmarks","BoundingBox":{"west":"113.50982","east":"149.92117","south":"-38.647199999079525","north":"-12.41999999960316"},
 "queryable":1},
 		{"Name":"contours","Title":"Contours","BoundingBox":{"west":"112.92137","east":"153.63857000000004","south":"-43.74297999905761","north":"-8.93332999971015"},
@@ -136,7 +136,7 @@
 "base_url": "http://www.ga.gov.au/thredds/wms/national_grids/d8-9s.nc","wfsAvailable": false,"description":"[Licence](http://www.ga.gov.au/copyright)", "BoundingBox":{"west":"112.93472","east":"153.63573999999997","south":"-43.657359999057725","north":"-9.004409999707923"},
 "queryable":1}
 	]},
-	{"name":"Terrain","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Terrain","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"caves","Title":"Caves","BoundingBox":{"west":"113.40833999999998","east":"153.12877","south":"-42.73787999905959","north":"-12.581149999598347"},
 "queryable":1},
 		{"Name":"craters","Title":"Craters","BoundingBox":{"west":"127.38872000000002","east":"145.12202","south":"-37.79733999908604","north":"-18.183079999439965"},
@@ -152,7 +152,7 @@
 		{"Name":"sands","Title":"Sands","BoundingBox":{"west":"112.9297","east":"153.50303","south":"-43.55226999905789","north":"-9.845259999681689"},
 "queryable":1}
 	]},
-	{"name":"Vegetation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Vegetation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"clearedlines","Title":"Cleared Lines","BoundingBox":{"west":"114.30741","east":"151.17083","south":"-35.68676999910569","north":"-11.62904999962697"},
 "queryable":1},
 		{"Name":"cultivatedareas","Title":"Cultivated Areas","BoundingBox":{"west":"113.66133","east":"153.54656","south":"-43.44901999905807","north":"-9.04530999970664"},
@@ -162,7 +162,7 @@
 		{"Name":"windbreaks","Title":"Windbreaks","BoundingBox":{"west":"114.99020999999999","east":"151.58246","south":"-41.16088999906501","north":"-24.201429999293836"},
 "queryable":1}
 	]},
-	{"name":"Habitation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Habitation","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"buildingareas","Title":"Building Areas","BoundingBox":{"west":"141.62655","east":"152.80475","south":"-41.12735999906517","north":"-21.102919999365557"},
 "queryable":1},
 		{"Name":"buildingpoints","Title":"Building Points","BoundingBox":{"west":"112.94450000000002","east":"153.62926","south":"-43.65456999905773","north":"-9.128069999704051"},
@@ -182,7 +182,7 @@
 		{"Name":"recreationareas","Title":"Recreation Areas","BoundingBox":{"west":"113.54947","east":"153.61335","south":"-43.165569999058604","north":"-11.395799999634049"},
 "queryable":1}
 	]},
-	{"name":"Transport","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Transport","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"aircraftfacilitypoints","Title":"Aircraft Facilites","BoundingBox":{"west":"113.15955999999998","east":"153.56134999999998","south":"-43.651859999057734","north":"-9.088949999705271"},
 "queryable":1},
 		{"Name":"barrierpoints","Title":"Barrier Points","BoundingBox":{"west":"114.60042999999999","east":"146.93454000000003","south":"-34.738279999116116","north":"-11.439839999632706"},
@@ -210,7 +210,7 @@
 		{"Name":"roadtunnellines","Title":"Road Tunnel Lines","BoundingBox":{"west":"115.85188999999998","east":"151.67768999999998","south":"-37.829839999085785","north":"-25.080719999274965"},
 "queryable":1}
 	]},
-	{"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Infrastructure","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"aerialcableways","Title":"Aerial Cableways","BoundingBox":{"west":"145.63916","east":"153.47854999999998","south":"-37.845019999085665","north":"-16.819299999476762"},
 "queryable":1},
 		{"Name":"conveyors","Title":"Conveyors","BoundingBox":{"west":"115.65124","east":"151.91119","south":"-41.48786999906365","north":"-12.184729999610212"},
@@ -242,11 +242,11 @@
 		{"Name":"yards","Title":"Yards","BoundingBox":{"west":"113.18122","east":"148.48095","south":"-34.994069999113215","north":"-10.624669999657616"},
 "queryable":1}
 	]},
-	{"name":"Utility","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Utility","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"pipelines","Title":"Pipelines","BoundingBox":{"west":"113.67812999999998","east":"153.15454","south":"-43.00307999905895","north":"-10.903989999649047"},
 "queryable":1}
 	]},
-	{"name":"Framework","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","Layer":[
+	{"name":"Framework","base_url":"http://geoserver.research.nicta.com.au/geotopo_250k/ows","type":"WMS","queryable":0, "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)","Layer":[
 		{"Name":"frameworkboundaries","Title":"Framework Boundaries","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
 "queryable":1},
 		{"Name":"geodataindexes","Title":"Geodata Indexes","BoundingBox":{"west":"112.88333","east":"153.99999999999997","south":"-43.99999999905729","north":"-8.999999999708061"},
@@ -268,7 +268,7 @@
 		{"Name":"seas","Title":"Seas","BoundingBox":{"west":"112.88333","east":"154.1","south":"-43.99999999905729","north":"-8.93332999971015"},
 "queryable":1}
 	]},
-    {"name":"Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","type":"WMS","queryable":"0", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)","Layer": [
+    {"name":"Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","type":"WMS","queryable":"0", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)", "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)","Layer": [
 
         {"Name":"admin_bnds:STE_2011_AUST","Title":"States & Territories","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
@@ -288,7 +288,7 @@
 
         {"Name":"admin_bnds:TR_2011_AUST","Title":"Tourism Regions","BoundingBox":{"west":"112.921113952","east":"159.109219008","south":"-43.740509602057614","north":"-9.142175976703609"},"queryable":"1"}
     ]},
-    {"name":"Statistical Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","type":"WMS","queryable":"0", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)","Layer": [
+    {"name":"Statistical Boundaries","base_url":"http://geoserver.research.nicta.com.au/admin_bnds_abs/ows","type":"WMS","queryable":"0", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)", "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)", "Layer": [
 
         {"Name":"admin_bnds:SA4_2011_AUST","Title":"Statistical Area Level 4 (SA4)","BoundingBox":{"west":"96.816941408","east":"159.109219008","south":"-43.74050960205765","north":"-9.142175976703609"},"queryable":"1"},
 
@@ -334,11 +334,11 @@
     ]}
   ]},
   { "name": "Data Providers", "Layer": [
-    { "name": "Topography (Geoscience Australia)", "base_url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)" },
+    { "name": "Topography (Geoscience Australia)", "base_url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)" },
     { "name": "Water (Bureau of Meteorology Geofabric)", "base_url": "http://geofabric.bom.gov.au/simplefeatures/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/3.0/au/)" },
-    { "name": "Boundaries (Australia Bureau of Statistics)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)" },
-    { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "wfsAvailable": true },
-	{ "name": "National Exposure Information System 2012", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer", "type": "WMS", "wfsAvailable": true, "wfsUrl": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WFSServer","description":"[Licence](http://www.ga.gov.au/copyright)"}
+    { "name": "Boundaries (Australia Bureau of Statistics)", "base_url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows", "type": "WMS", "wfsAvailable": true,"description":"[Licence](http://creativecommons.org/licenses/by/2.5/au/)", "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)" },
+    { "name": "data.gov.au", "base_url": "http://data.gov.au/geoserver/ows", "type": "WMS", "wfsAvailable": true, "dataCustodian":"[data.gov.au](http://www.data.gov.au/)" },
+	{ "name": "National Exposure Information System 2012", "base_url":"http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer", "type": "WMS", "wfsAvailable": true, "wfsUrl": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WFSServer","description":"[Licence](http://www.ga.gov.au/copyright)","dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)"}
   ]}
   ],
   "NMServices": [
