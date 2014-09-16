@@ -221,7 +221,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
         this.webGlSupported = false;
     }
 
-    if (document.body.clientWidth < 520) {
+    if (document.body.clientWidth < 520 || document.body.clientHeight < 400) {
         var smallScreenMessage = new PopupMessage({
             container : document.body,
             title : 'Small screen or window',
