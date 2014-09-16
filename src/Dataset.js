@@ -1,6 +1,7 @@
 /*global require,$,alert*/
 "use strict";
 
+var VarType = require('./VarType');
 var Variable = require('./Variable');
 
 var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');

@@ -4,6 +4,7 @@
 
 var corsProxy = require('./corsProxy');
 var TableDataSource = require('./TableDataSource');
+var VarType = require('./VarType');
 var GeoData = require('./GeoData');
 var readText = require('./readText');
 
@@ -826,7 +827,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
         style.table.alt = undefined;
         style.table.region = vars[idx];
         style.table.regionType = regionType;
-        style.table.time = dataset.getVarID(3); //VarType.TIME
+        style.table.time = dataset.getVarID(VarType.TIME);
         style.table.data = dataVar;
         style.table.colorMap = [
             {offset: 0.0, color: 'rgba(200,0,0,1.00)'},
@@ -954,11 +955,11 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
             if (!defined(layer.style) || !defined(layer.style.table)) {
                 var dataset = tableDataSource.dataset;
                 var style = {line: {}, point: {}, polygon: {}, table: {}};
-                style.table.lon = dataset.getVarID(0);
-                style.table.lat = dataset.getVarID(1);
-                style.table.alt = dataset.getVarID(2);
-                style.table.time = dataset.getVarID(3); //VarType.TIME
-                style.table.data = dataset.getVarID(4);
+                style.table.lon = dataset.getVarID(VarType.LON);
+                style.table.lat = dataset.getVarID(VarType.LAT);
+                style.table.alt = dataset.getVarID(VarType.ALT);
+                style.table.time = dataset.getVarID(VarType.TIME);
+                style.table.data = dataset.getVarID(VarType.SCALAR);
                 style.table.colorMap = undefined;
                 layer.style = style;
             }
