@@ -333,6 +333,10 @@ a.ausglobe-title-menuItem:hover {
     text-align: center;
 }
 
+.ausglobe-panel-button-panel-visible .ausglobe-panel-button-label {
+    color: #fff;
+}
+
 .ausglobe-panel-button:hover .ausglobe-panel-button-label {
     color: #fff;
 }
