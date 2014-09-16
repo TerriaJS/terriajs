@@ -805,9 +805,11 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
         var regionType;
         var idx = -1;
         for (regionType in regionWmsMap) {
-            idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
-            if (idx !== -1) {
-                break;
+            if (regionWmsMap.hasOwnProperty(regionType)) {
+                idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
+                if (idx !== -1) {
+                    break;
+                }
             }
         }
         
@@ -2069,7 +2071,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.dataSource = newDataSource;
     }
     else {
-        var style = {
+        var geoJsonStyle = {
             "color": layer.style.line.color.toCssColorString(),
             "weight": layer.style.line.width,
             "opacity": 0.9
@@ -2092,7 +2094,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
 */
         // GeoJSON
         layer.primitive = L.geoJson(geojson, {
-            style: style,
+            style: geoJsonStyle,
             pointToLayer: function (feature, latlng) {
                 return L.circleMarker(latlng, geojsonMarkerOptions);
             }
