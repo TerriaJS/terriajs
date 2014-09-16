@@ -160,13 +160,13 @@ GeoDataCollection.prototype.add = function(layer) {
     // Feature layers go on the bottom (which is the top in display order), then map layers go above that.
     var firstFeatureLayer = this.layers.length;
     for (var i = 0; i < this.layers.length; ++i) {
-        if (isFeatureLayer(this, this.layers[i])) {
+        if (!this.isLayerMovable(this.layers[i])) {
             firstFeatureLayer = i;
             break;
         }
     }
 
-    if (isFeatureLayer(this, layer)) {
+    if (!this.isLayerMovable(this, layer)) {
         this.layers.push(layer);
     } else {
         this.layers.splice(firstFeatureLayer, 0, layer);
@@ -355,7 +355,9 @@ GeoDataCollection.prototype.show = function(layer, val) {
         }
     }
     else if (this.map === undefined) {
-        layer.primitive.show = val;
+        if (layer.primitive !== undefined) {
+            layer.primitive.show = val;
+        }
     }
     else {
         if (val) {
@@ -738,14 +740,14 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     };
     // can be used to get point data
     layer.valFunc = function(id) {
-        var rowIndex = codes.indexOf(code);
+        var rowIndex = codes.indexOf(id);
         return vals[rowIndex];
-    }
+    };
     layer.rowProperties = function(code) {
         var rowIndex = codes.indexOf(code);
         return dataset.getDataRow(rowIndex);
-    }
-}
+    };
+};
 
 GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regionType) {
     if (layer.regionVar === regionVar && layer.regionType === regionType) {
@@ -767,7 +769,7 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
     console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
     
     this._viewMap(layer.url, layer);
-}
+};
 
 GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
     var tableDataSource = layer.baseDataSource;
@@ -782,7 +784,7 @@ GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
     
     this.show(layer, false);
     this.show(layer, true);
-}
+};
 
 GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
     layer.baseDataSource.setColorGradient(dataColorMap);
@@ -790,13 +792,13 @@ GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
     
     this.show(layer, false);
     this.show(layer, true);
-}
+};
 
 GeoDataCollection.prototype.addRegionMap = function(layer) {
     //see if we can do region mapping
     var dataset = layer.baseDataSource.dataset;
     var vars = dataset.getVarList();
-    
+
     //if layer includes style/var info then use that
     if (!defined(layer.style) || !defined(layer.style.table)) {
         var regionType;
