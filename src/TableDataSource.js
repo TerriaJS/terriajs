@@ -12,6 +12,7 @@ And writes a czml file for it to display
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
 var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../third_party/cesium/Source/Core/defined');
 var CzmlDataSource = require('../third_party/cesium/Source/DataSources/CzmlDataSource');
 var Color = require('../third_party/cesium/Source/Core/Color');
 var defineProperties = require('../third_party/cesium/Source/Core/defineProperties');
@@ -45,16 +46,15 @@ var TableDataSource = function () {
     this.scale_by_val = true;
 
     var defaultGradient = [
-        {offset: 0.0, color: '#00f'},
-        {offset: 0.25, color: '#0ff'},
-        {offset: 0.25, color: '#0ff'},
-        {offset: 0.5, color: '#0f0'},
-        {offset: 0.5, color: '#0f0'},
-        {offset: 0.75, color: '#ff0'},
-        {offset: 0.75, color: '#ff0'},
-        {offset: 1.0, color: '#f00'}
+        {offset: 0.0, color: 'rgba(0,0,200,1.00)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
-    this.colorGradient = defaultGradient;
     this.setColorGradient(defaultGradient);
 };
 
@@ -268,7 +268,7 @@ TableDataSource.prototype._getNormalizedPoint = function (pt_val) {
 TableDataSource.prototype._mapValue2Scale = function (pt_val) {
     var scale = this.scale;
     var normPoint = this._getNormalizedPoint(pt_val);
-    if (normPoint !== undefined) {
+    if (defined(normPoint) && normPoint === normPoint) {
         scale *= (this.scale_by_val ? 1.0 * normPoint + 0.5 : 1.0);
     }
     return scale;
@@ -317,20 +317,48 @@ TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
 };
 
 
-//TODO: canvas is an easy way to do this, but html5 specific
-TableDataSource.prototype.createGradient = function (ctx) {
-    var w = ctx.canvas.width;
-    var h = ctx.canvas.height;
+TableDataSource.prototype.getLegendGraphic = function () {
+    var canvas = document.createElement("canvas");
+    if (!defined(canvas)) {
+        return;
+    }
+    var w = canvas.width = 150;
+    var h = canvas.height = 150;
+    var ctx = canvas.getContext('2d');
 
-    // Create Linear Gradient
-    var lingrad = ctx.createLinearGradient(0,0,0,h);
+        // Create Linear Gradient
     var grad = this.colorGradient;
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
     for (var i = 0; i < grad.length; i++) {
         lingrad.addColorStop(grad[i].offset, grad[i].color);
     }
-    ctx.fillStyle = lingrad;
+        //white background
+    ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0,0,w,h);
+        //put 0 at bottom
+    var gradW = 32;
+    var gradH = 128;
+    ctx.translate(gradW, h);
+    ctx.rotate(180 * Math.PI / 180);
+    ctx.fillStyle = lingrad;
+    ctx.fillRect(0,0,gradW,gradH);
+    
+        //text
+    var val;
+    var min_text = (val = this.dataset.getMinVal()) === undefined ? 'und.' : val.toString();
+    var max_text = (val = this.dataset.getMaxVal()) === undefined ? 'und.' : val.toString();
+    var var_text = this.dataset.getCurrentVariable();
+    
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.font = "15px Arial Narrow";
+    ctx.fillStyle = "#000000";
+    ctx.fillText(var_text, 5, 15);
+    ctx.fillText(max_text, gradW + 5, 15+h-gradH);
+    ctx.fillText(min_text, gradW + 5, h);
+    
+    return canvas.toDataURL("image/png");
 };
+
 
 /**
 * Set the gradient used to color the data points
@@ -338,15 +366,28 @@ TableDataSource.prototype.createGradient = function (ctx) {
 * @memberof TableDataSource
 *
 */
-TableDataSource.prototype.setColorGradient = function () {
-    //create 2d canvas
-    if (!document.getElementById("grad_div")) {
-        $('body').append('<div id="grad_div"></div>');
-        $('<canvas/>', { 'id': 'gradCanvas', 'Width': 64, 'Height': 256, 'Style': "display: none" }).appendTo('#grad_div');
+TableDataSource.prototype.setColorGradient = function (colorGradient) {
+    if (colorGradient !== undefined) {
+        this.colorGradient = colorGradient;
     }
-    var grad_canvas = $('#gradCanvas')[0];
-    var ctx = grad_canvas.getContext('2d');
-    this.createGradient(ctx);
+    
+    var canvas = document.createElement("canvas");
+    if (!defined(canvas)) {
+        return;
+    }
+    var w = canvas.width = 64;
+    var h = canvas.height = 256;
+    var ctx = canvas.getContext('2d');
+    
+    // Create Linear Gradient
+    var grad = this.colorGradient;
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    for (var i = 0; i < grad.length; i++) {
+        lingrad.addColorStop(grad[i].offset, grad[i].color);
+    }
+    ctx.fillStyle = lingrad;
+    ctx.fillRect(0,0,w,h);
+
     this.dataImage = ctx.getImageData(0, 0, 1, 256);
 };
 
