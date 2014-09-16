@@ -1,6 +1,7 @@
 /*global require,$,alert*/
 "use strict";
 
+var VarType = require('./VarType');
 var Variable = require('./Variable');
 
 var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
@@ -38,6 +39,10 @@ Dataset.prototype.hasLocationData = function () {
 
 Dataset.prototype.hasTimeData = function () {
     return (this._varID[VarType.TIME]);
+};
+
+Dataset.prototype.getVarID = function (type) {
+    return (this._varID[type]);
 };
 
 /**

@@ -4,6 +4,7 @@
 
 var corsProxy = require('./corsProxy');
 var TableDataSource = require('./TableDataSource');
+var VarType = require('./VarType');
 var GeoData = require('./GeoData');
 var readText = require('./readText');
 
@@ -416,7 +417,7 @@ GeoDataCollection.prototype._stringify = function() {
             console.log('Skipping d+d layer in share request:', layer.name);
             continue;
         }
-        var obj = {name: layer.name, type: layer.type,
+        var obj = {name: layer.name, type: layer.type, style: layer.style,
                    url: url, extent: layer.extent};
         str_layers.push(obj);
     }
@@ -435,10 +436,8 @@ GeoDataCollection.prototype._parseObject = function(obj) {
         else if (typeof obj[p] === 'object') {
             obj[p] = this._parseObject(obj[p]);
         }
-        else {
-            return obj;
-        }
     }
+    return obj;
 };
 
 // Parse the string back into a layer collection
@@ -677,38 +676,28 @@ var regionServer = 'http://geoserver.research.nicta.com.au/admin_bnds_abs/ows';
 var regionWmsMap = {
     'STE': {
         "Name":"admin_bnds_region:STE_2011_AUST",
-        "Title":"States",
         "base_url":regionServer,
-        "type": "WMS",
         "aliases": ['state', 'ste']
     },
     'CED': {
         "Name":"admin_bnds_region:CED_2011_AUST",
-        "Title":"Commonwealth Election Districts",
         "base_url":regionServer,
-        "type": "WMS",
         "aliases": ['ced']
     },
     'POA': {
         "Name":"admin_bnds_region:POA_2011_AUST",
-        "Title":"Postal Areas",
         "base_url":regionServer,
-        "type": "WMS",
         "aliases": ['poa', 'postcode']
     },
     'LGA': {
         "Name":"admin_bnds_region:LGA_2011_AUST",
-        "Title":"Local Government Areas",
         "base_url":regionServer,
-        "type": "WMS",
         "aliases": ['lga'],
         "factor": 10  //this can be removed when we get ids larger than 10k in style
     },
     'SA4': {
         "Name":"admin_bnds_region:SA4_2011_AUST",
-        "Title":"SA4",
-        "base_url":regionServer,
-        "type": "WMS",
+        "base_url" : regionServer,
         "aliases": ['sa4']
     }
 };
@@ -769,6 +758,7 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
     if (layer.regionType !== regionType) {
         layer.regionType = regionType;
         var description = regionWmsMap[regionType];
+        description.type = 'WMS';
         layer.url = this.getOGCFeatureURL(description);
     }
     this.createRegionLookupFunc(layer);
@@ -809,39 +799,56 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     //see if we can do region mapping
     var dataset = layer.baseDataSource.dataset;
     var vars = dataset.getVarList();
-    var regionType;
-    var idx = -1;
-    for (regionType in regionWmsMap) {
-        if (regionWmsMap.hasOwnProperty(regionType)) {
-            idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
-            if (idx !== -1) {
-                break;
+
+    //if layer includes style/var info then use that
+    if (!defined(layer.style) || !defined(layer.style.table)) {
+        var regionType;
+        var idx = -1;
+        for (regionType in regionWmsMap) {
+            if (regionWmsMap.hasOwnProperty(regionType)) {
+                idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
+                if (idx !== -1) {
+                    break;
+                }
             }
         }
-    }
-    
-    if (idx === -1) {
-        return;
+        
+        if (idx === -1) {
+            return;
+        }
+
+            //change current var if necessary
+        var dataVar = dataset.getCurrentVariable();
+        if (dataVar === vars[idx]) {
+            dataVar = vars[idx+1];
+        }
+        
+        var style = {line: {}, point: {}, polygon: {}, table: {}};
+        style.table.lat = undefined;
+        style.table.lon = undefined;
+        style.table.alt = undefined;
+        style.table.region = vars[idx];
+        style.table.regionType = regionType;
+        style.table.time = dataset.getVarID(VarType.TIME);
+        style.table.data = dataVar;
+        style.table.colorMap = [
+            {offset: 0.0, color: 'rgba(200,0,0,1.00)'},
+            {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
+            {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
+            {offset: 1.0, color: 'rgba(0,0,200,1.0)'}
+        ];
+        layer.style = style;
     }
 
-        //set the normalized color gradient - heat map
-    var dataColorMap = [
-        {offset: 0.0, color: 'rgba(200,0,0,1.00)'},
-        {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
-        {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
-        {offset: 1.0, color: 'rgba(0,0,200,1.0)'}
-    ];
-    
-        //change current var if necessary
-    if (dataset.getCurrentVariable() === vars[idx]) {
-        dataset.setCurrentVariable({ variable: vars[idx+1]}); 
+    if (defined(layer.style.table.colorMap)) {
+        layer.baseDataSource.setColorGradient(layer.style.table.colorMap);
     }
-    layer.baseDataSource.setColorGradient(dataColorMap);
+    dataset.setCurrentVariable({ variable: layer.style.table.data});
     
         //capture url to use for sharing
     layer.shareUrl = layer.url || '';
     
-    this.setRegionVariable(layer, vars[idx], regionType);
+    this.setRegionVariable(layer, layer.style.table.region, layer.style.table.regionType);
 };
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -946,19 +953,32 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
             layer.baseDataSource = tableDataSource;
             this.addRegionMap(layer);
         }
-        else if (this.map === undefined) {
-            this.dataSourceCollection.add(tableDataSource);
-            layer.dataSource = tableDataSource;
-            layer.extent = tableDataSource.dataset.getExtent();
-            this.add(layer);
-        }
         else {
-            var pointList = tableDataSource.dataset.getPointList();
-            var dispPoints = [];
-            for (var i = 0; i < pointList.length; i++) {
-                dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
+            if (!defined(layer.style) || !defined(layer.style.table)) {
+                var dataset = tableDataSource.dataset;
+                var style = {line: {}, point: {}, polygon: {}, table: {}};
+                style.table.lon = dataset.getVarID(VarType.LON);
+                style.table.lat = dataset.getVarID(VarType.LAT);
+                style.table.alt = dataset.getVarID(VarType.ALT);
+                style.table.time = dataset.getVarID(VarType.TIME);
+                style.table.data = dataset.getVarID(VarType.SCALAR);
+                style.table.colorMap = undefined;
+                layer.style = style;
             }
-            this.addGeoJsonLayer(dispPoints, layer);
+            if (this.map === undefined) {
+                this.dataSourceCollection.add(tableDataSource);
+                layer.dataSource = tableDataSource;
+                layer.extent = tableDataSource.dataset.getExtent();
+                this.add(layer);
+            }
+            else {
+                var pointList = tableDataSource.dataset.getPointList();
+                var dispPoints = [];
+                for (var i = 0; i < pointList.length; i++) {
+                    dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
+                }
+                this.addGeoJsonLayer(dispPoints, layer);
+            }
         }
     }
         //Return false so widget can try to send to conversion service
@@ -1955,15 +1975,16 @@ function getCesiumColor(clr) {
 GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     //set default layer styles
     if (layer.style === undefined) {
-        layer.style = {line: {}, point: {}, polygon: {}};
-        layer.style.line.color = getRandomColor(line_palette, layer.name);
-        layer.style.line.width = 2;
-        layer.style.point.color = getRandomColor(point_palette, layer.name);
-        layer.style.point.size = 10;
-        layer.style.polygon.color = layer.style.line.color;
-        layer.style.polygon.fill = false;  //off by default for perf reasons
-        layer.style.polygon.fillcolor = layer.style.line.color;
-        layer.style.polygon.fillcolor.alpha = 0.75;
+        var style = {line: {}, point: {}, polygon: {}, table: {}};
+        style.line.color = getRandomColor(line_palette, layer.name);
+        style.line.width = 2;
+        style.point.color = getRandomColor(point_palette, layer.name);
+        style.point.size = 10;
+        style.polygon.color = style.line.color;
+        style.polygon.fill = false;  //off by default for perf reasons
+        style.polygon.fillcolor = style.line.color;
+        style.polygon.fillcolor.alpha = 0.75;
+        layer.style = style;
     }
 
     // If this GeoJSON is an object literal with a single property, treat that
@@ -2050,7 +2071,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.dataSource = newDataSource;
     }
     else {
-        var style = {
+        var geoJsonStyle = {
             "color": layer.style.line.color.toCssColorString(),
             "weight": layer.style.line.width,
             "opacity": 0.9
@@ -2073,7 +2094,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
 */
         // GeoJSON
         layer.primitive = L.geoJson(geojson, {
-            style: style,
+            style: geoJsonStyle,
             pointToLayer: function (feature, latlng) {
                 return L.circleMarker(latlng, geojsonMarkerOptions);
             }

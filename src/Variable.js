@@ -7,8 +7,7 @@
 
 var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
 var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
-
-var VarType = {LON: 0, LAT: 1, ALT: 2, TIME: 3, SCALAR: 4, ENUM: 5 };
+var VarType = require('./VarType');
 
 /**
 * @class Variable contains a single variable from a table dataset
