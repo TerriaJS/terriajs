@@ -872,6 +872,7 @@ a.ausglobe-title-menuItem:hover {
     color: #66CCFF;
     padding: 5px;
     border: 1px solid #66CCFF;
+    height: 30px;
 }
 
 .ausglobe-addData-type:after {
