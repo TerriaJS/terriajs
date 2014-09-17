@@ -188,7 +188,15 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._addDataOrService = createCommand(function() {
-        if (that.addType === 'File') {
+        if (that.addType === 'NotSpecified') {
+            var message = new PopupMessage({
+                container : document.body,
+                title : 'Please select a file or service type',
+                message : '\
+Please select a file or service type from the drop-down list before clicking the Add button.'
+            });
+            return;
+        } else if (that.addType === 'File') {
             ga('send', 'event', 'addDataUrl', 'File', that.wfsServiceUrl);
 
             if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
