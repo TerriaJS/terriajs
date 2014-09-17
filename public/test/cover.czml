@@ -9,7 +9,7 @@
             "material": {
                 "solidColor": {
                     "color": {
-                        "rgba": [ 200, 200, 200, 200 ]
+                        "rgba": [ 2100, 100, 100, 200 ]
                     }
                 }
             },
