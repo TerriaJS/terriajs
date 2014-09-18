@@ -33,7 +33,7 @@ var GeoDataBrowserViewModel = function(options) {
     this._dataManager = options.dataManager;
     this.map = options.map;
 
-    this.initUrl = options.initUrl;
+    //this.initUrl = options.initUrl;
     this.mode3d = options.mode3d;
 
     this.showingPanel = false;
@@ -492,7 +492,7 @@ these extensions in order for National Map to know how to load it.'
     var browserContentViewModel = komapping.fromJS([], this._collectionListMapping);
     this.content = browserContentViewModel;
 
-    loadJson(this.initUrl).then(loadCollection);
+    //loadJson(this.initUrl).then(loadCollection);
 
     this.userContent = komapping.fromJS([], this._collectionListMapping);
 

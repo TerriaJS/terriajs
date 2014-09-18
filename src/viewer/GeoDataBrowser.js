@@ -17,7 +17,7 @@ var GeoDataBrowser = function(options) {
         viewer : options.viewer,
         dataManager : options.dataManager,
         map : options.map,
-        initUrl: options.initUrl,
+        //initUrl: options.initUrl,
         mode3d: options.mode3d,
         catalog: options.catalog
     });
