@@ -47,8 +47,8 @@ var GeoDataBrowser = function(options) {
     var legendButton = document.createElement('div');
     legendButton.className = 'ausglobe-panel-button';
     legendButton.title = 'Legend';
-    legendButton.innerHTML = '<a target="_blank" data-bind="attr: { href: topLayerLegendUrl }"><div class="ausglobe-panel-button-label">Legend</div></a>';
-    legendButton.setAttribute('data-bind', 'visible: showingLegendButton');
+    legendButton.innerHTML = '<div class="ausglobe-panel-button-label">Legend</div>';
+    legendButton.setAttribute('data-bind', 'visible: legendsExist(), click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
     wrapper.appendChild(legendButton);
 
     var dataPanel = document.createElement('div');
@@ -57,9 +57,10 @@ var GeoDataBrowser = function(options) {
     dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }');
 
     dataPanel.innerHTML = '\
-        <div class="ausglobe-accordion-item">\
+        <div class="ausglobe-now-viewing ausglobe-accordion-item">\
             <div class="ausglobe-accordion-item-header" data-bind="click: openNowViewing">\
                 <div class="ausglobe-accordion-item-header-label">Now Viewing</div>\
+                <div class="ausglobe-now-viewing-clear-all" data-bind="click: clearAll, clickBubble: false">Clear all</div>\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': nowViewingIsOpen }">\
                 <div class="ausglobe-accordion-category">\
@@ -184,6 +185,37 @@ var GeoDataBrowser = function(options) {
         </div>';
 
     wrapper.appendChild(mapPanel);
+
+    var legendPanel = document.createElement('div');
+    legendPanel.className = 'ausglobe-panel';
+    legendPanel.setAttribute('data-bind', 'if: nowViewing.hasItems, css: { "ausglobe-panel-visible" : showingLegendPanel }');
+
+    legendPanel.innerHTML = '\
+        <div data-bind="foreach: nowViewing.items">\
+            <!-- ko if: show -->\
+            <div class="ausglobe-accordion-item">\
+                <div class="ausglobe-accordion-item-header" data-bind="click: $root.openLegend">\
+                    <div class="ausglobe-accordion-item-header-label" data-bind="text: Title"></div>\
+                </div>\
+                <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': legendIsVisible }">\
+                    <div class="ausglobe-legend-opacity" data-bind="if: $root.supportsOpacity($data)">\
+                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: $root.opacity($data), valueUpdate: \'input\'" /></label>\
+                    </div>\
+                    <!-- ko if: $root.legendIsImage($data) -->\
+                    <img data-bind="attr: { src: $root.getLegendUrl($data) }" />\
+                    <!-- /ko -->\
+                    <!-- ko if: $root.legendIsLink($data) -->\
+                    <a class="ausglobe-accordion-category-item-label" data-bind="attr: { href: $root.getLegendUrl($data) }" target="_blank">Open legend in a separate tab</a>\
+                    <!-- /ko -->\
+                    <!-- ko if: !$root.legendIsLink($data) && !$root.legendIsImage($data) -->\
+                    <div class="ausglobe-accordion-category-item-label">No legend available for this data source.</div>\
+                    <!-- /ko -->\
+                </div>\
+            </div>\
+            <!-- /ko -->\
+        </div>';
+
+    wrapper.appendChild(legendPanel);
 
     knockout.applyBindings(this._viewModel, wrapper);
 };

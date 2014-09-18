@@ -13,6 +13,14 @@ body {
     font-family: "Open Sans", sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 .fullWindow {
     position: absolute;
     top: 0;
@@ -85,31 +93,6 @@ body {
     background: #48b;
     border-color: #aef;
     box-shadow: 0 0 8px #fff;
-}
-
-#legend {
-    display: block;
-    position:fixed;
-    bottom: 140px;
-    left: 20px;
-    height: 136px;
-    background-color: rgba(0,0,0,0.8);
-    color: #eee;
-    font-size: 11pt;
-    z-index: 999; /* required for IE9 */
-}
-
-#position {
-    position: absolute;
-    bottom: 50px;
-    right: 10px;
-    width: auto;
-    font-size: 8.5pt;
-    color: #fff;
-    background-color: rgba(0,0,0,0.8);
-    border: 1px solid gray;
-    padding: 3px;
-    z-index: 999; /* required for IE9 */
 }
 
 .dialog {
@@ -350,6 +333,10 @@ a.ausglobe-title-menuItem:hover {
     text-align: center;
 }
 
+.ausglobe-panel-button-panel-visible .ausglobe-panel-button-label {
+    color: #fff;
+}
+
 .ausglobe-panel-button:hover .ausglobe-panel-button-label {
     color: #fff;
 }
@@ -381,6 +368,24 @@ a.ausglobe-title-menuItem:hover {
     -ms-transition: left 0.25s;
     -o-transition: left 0.25s;
     transition: left 0.25s;
+}
+
+.ausglobe-now-viewing {
+    overflow: auto;
+    max-height: 150px;
+    border-bottom: 1px solid gray;
+}
+
+.ausglobe-now-viewing-clear-all {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    color: #66CCFF;
+}
+
+.ausglobe-data-panel-bottom {
+    overflow: auto;
+    max-height: 350px;
 }
 
 .ausglobe-accordion-item {
@@ -553,6 +558,16 @@ a.ausglobe-title-menuItem:hover {
     text-align: center;
 }
 
+.ausglobe-legend-opacity {
+    color: #fff;
+    font-size: 10pt;
+    padding: 5px;
+}
+
+.ausglobe-legend-opacitySlider {
+    vertical-align: middle;
+}
+
 .ausglobe-search-form {
     position: absolute;
     display: inline-block;
@@ -635,6 +650,17 @@ a.ausglobe-title-menuItem:hover {
     vertical-align: middle;
 }
 
+.ausglobe-info-baseUrl {
+    padding: 10px;
+    background-color: #F2F2F2;
+    border: 1px solid #CCCCCC;
+}
+
+.ausglobe-info-table {
+    background-color: #E3E3E3;
+    padding: 5px;
+}
+
 .ausglobe-share {
     display: inline-block;
     width: 500px;
@@ -696,7 +722,7 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-info-header {
-
+    border-bottom: 1px solid #9A9A9B;
 }
 
 .ausglobe-info-content {
@@ -717,16 +743,17 @@ a.ausglobe-title-menuItem:hover {
 }
 
 .ausglobe-info h1, .ausglobe-share h1, .ausglobe-services h1, .ausglobe-message h1 {
-    font-size: 16px;
+    font-size: 12pt;
     padding: 15px;
     font-weight: bold;
     margin: 0;
 }
 
 .ausglobe-info h2, .ausglobe-share h2, .ausglobe-services h2 {
-    font-size: 10pt;
-    font-weight: bold;
+    font-size: 12pt;
+    font-weight: normal;
     margin: 0;
+    padding-bottom: 10px;
 }
 
 .ausglobe-info h3, .ausglobe-share h3, .ausglobe-services h3 {
@@ -735,6 +762,11 @@ a.ausglobe-title-menuItem:hover {
 
 .ausglobe-info hr, .ausglobe-share hr, .ausglobe-services hr {
     margin-bottom: 20px;
+}
+
+.ausglobe-info-description {
+    font-size: 10pt;
+    font-weight: normal;
 }
 
 .ausglobe-info-field {
@@ -878,22 +910,6 @@ a.ausglobe-title-menuItem:hover {
     text-shadow: 0px 0px 1px #000000;
     padding: 5px;
     font-family: "Open Sans", sans-serif;
-}
-
-#cesiumContainer .cesium-widget-credits a {
-    text-decoration: none;
-}
-
-#cesiumContainer .cesium-widget-credits a:link {
-    color: white;
-}
-
-#cesiumContainer .cesium-widget-credits a:visited {
-    color: white;
-}
-
-#cesiumContainer .cesium-widget-credits a:hover {
-    text-decoration: underline;
 }
 
 #cesiumContainer .cesium-credit-imageContainer {

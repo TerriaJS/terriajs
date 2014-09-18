@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<StyledLayerDescriptor version="1.0.0" 
+ xsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd" 
+ xmlns="http://www.opengis.net/sld" 
+ xmlns:ogc="http://www.opengis.net/ogc" 
+ xmlns:xlink="http://www.w3.org/1999/xlink" 
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- a Named Layer is the basic building block of an SLD document -->
+  <NamedLayer>
+    <Name>region_poa</Name>
+    <UserStyle>
+    <!-- Styles can have names, titles and abstracts -->
+      <Title>Region Mapping for PostCodes</Title>
+      <Abstract>A style that returns region ids from LGA_CODE</Abstract>
+      <FeatureTypeStyle>
+        <Rule>
+          <Name>rule1</Name>
+          <Title>Region ID</Title>
+          <Abstract>Region ID for LGA_CODE</Abstract>
+          <PolygonSymbolizer>
+           <Fill>
+             <CssParameter name="fill">
+               <ogc:Function name="Interpolate">
+                 <!-- Property to transform -->
+                <ogc:Div>
+                   <ogc:PropertyName>LGA_CODE11</ogc:PropertyName>
+                   <ogc:Literal>10.0</ogc:Literal>
+                </ogc:Div>
+                 
+                <ogc:Literal>0</ogc:Literal>
+                <ogc:Literal>#0</ogc:Literal>
+                <ogc:Literal>255</ogc:Literal>
+                <ogc:Literal>#ff</ogc:Literal>
+                <ogc:Literal>256</ogc:Literal>
+                <ogc:Literal>#100</ogc:Literal>
+                <ogc:Literal>511</ogc:Literal>
+                <ogc:Literal>#1ff</ogc:Literal>
+                <ogc:Literal>512</ogc:Literal>
+                <ogc:Literal>#200</ogc:Literal>
+                <ogc:Literal>767</ogc:Literal>
+                <ogc:Literal>#2ff</ogc:Literal>
+                <ogc:Literal>768</ogc:Literal>
+                <ogc:Literal>#300</ogc:Literal>
+                <ogc:Literal>1023</ogc:Literal>
+                <ogc:Literal>#3ff</ogc:Literal>
+                <ogc:Literal>1024</ogc:Literal>
+                <ogc:Literal>#400</ogc:Literal>
+                <ogc:Literal>1279</ogc:Literal>
+                <ogc:Literal>#4ff</ogc:Literal>
+                <ogc:Literal>1280</ogc:Literal>
+                <ogc:Literal>#500</ogc:Literal>
+                <ogc:Literal>1535</ogc:Literal>
+                <ogc:Literal>#5ff</ogc:Literal>
+                <ogc:Literal>1536</ogc:Literal>
+                <ogc:Literal>#600</ogc:Literal>
+                <ogc:Literal>1791</ogc:Literal>
+                <ogc:Literal>#6ff</ogc:Literal>
+                <ogc:Literal>1792</ogc:Literal>
+                <ogc:Literal>#700</ogc:Literal>
+                <ogc:Literal>2047</ogc:Literal>
+                <ogc:Literal>#7ff</ogc:Literal>
+                <ogc:Literal>2048</ogc:Literal>
+                <ogc:Literal>#800</ogc:Literal>
+                <ogc:Literal>2303</ogc:Literal>
+                <ogc:Literal>#8ff</ogc:Literal>
+                <ogc:Literal>2304</ogc:Literal>
+                <ogc:Literal>#900</ogc:Literal>
+                <ogc:Literal>2559</ogc:Literal>
+                <ogc:Literal>#9ff</ogc:Literal>
+                <ogc:Literal>2560</ogc:Literal>
+                <ogc:Literal>#a00</ogc:Literal>
+                <ogc:Literal>2815</ogc:Literal>
+                <ogc:Literal>#aff</ogc:Literal>
+                <ogc:Literal>2816</ogc:Literal>
+                <ogc:Literal>#b00</ogc:Literal>
+                <ogc:Literal>3071</ogc:Literal>
+                <ogc:Literal>#bff</ogc:Literal>
+                <ogc:Literal>3072</ogc:Literal>
+                <ogc:Literal>#c00</ogc:Literal>
+                <ogc:Literal>3327</ogc:Literal>
+                <ogc:Literal>#cff</ogc:Literal>
+                <ogc:Literal>3328</ogc:Literal>
+                <ogc:Literal>#d00</ogc:Literal>
+                <ogc:Literal>3583</ogc:Literal>
+                <ogc:Literal>#dff</ogc:Literal>
+                <ogc:Literal>3584</ogc:Literal>
+                <ogc:Literal>#e00</ogc:Literal>
+                <ogc:Literal>3839</ogc:Literal>
+                <ogc:Literal>#eff</ogc:Literal>
+                <ogc:Literal>3840</ogc:Literal>
+                <ogc:Literal>#f00</ogc:Literal>
+                <ogc:Literal>4095</ogc:Literal>
+                <ogc:Literal>#fff</ogc:Literal>
+                <ogc:Literal>4096</ogc:Literal>
+                <ogc:Literal>#1000</ogc:Literal>
+                <ogc:Literal>4351</ogc:Literal>
+                <ogc:Literal>#10ff</ogc:Literal>
+                <ogc:Literal>4352</ogc:Literal>
+                <ogc:Literal>#1100</ogc:Literal>
+                <ogc:Literal>4607</ogc:Literal>
+                <ogc:Literal>#11ff</ogc:Literal>
+                <ogc:Literal>4608</ogc:Literal>
+                <ogc:Literal>#1200</ogc:Literal>
+                <ogc:Literal>4863</ogc:Literal>
+                <ogc:Literal>#12ff</ogc:Literal>
+                <ogc:Literal>4864</ogc:Literal>
+                <ogc:Literal>#1300</ogc:Literal>
+                <ogc:Literal>5119</ogc:Literal>
+                <ogc:Literal>#13ff</ogc:Literal>
+                <ogc:Literal>5120</ogc:Literal>
+                <ogc:Literal>#1400</ogc:Literal>
+                <ogc:Literal>5375</ogc:Literal>
+                <ogc:Literal>#14ff</ogc:Literal>
+                <ogc:Literal>5376</ogc:Literal>
+                <ogc:Literal>#1500</ogc:Literal>
+                <ogc:Literal>5631</ogc:Literal>
+                <ogc:Literal>#15ff</ogc:Literal>
+                <ogc:Literal>5632</ogc:Literal>
+                <ogc:Literal>#1600</ogc:Literal>
+                <ogc:Literal>5887</ogc:Literal>
+                <ogc:Literal>#16ff</ogc:Literal>
+                <ogc:Literal>5888</ogc:Literal>
+                <ogc:Literal>#1700</ogc:Literal>
+                <ogc:Literal>6143</ogc:Literal>
+                <ogc:Literal>#17ff</ogc:Literal>
+                <ogc:Literal>6144</ogc:Literal>
+                <ogc:Literal>#1800</ogc:Literal>
+                <ogc:Literal>6399</ogc:Literal>
+                <ogc:Literal>#18ff</ogc:Literal>
+                <ogc:Literal>6400</ogc:Literal>
+                <ogc:Literal>#1900</ogc:Literal>
+                <ogc:Literal>6655</ogc:Literal>
+                <ogc:Literal>#19ff</ogc:Literal>
+                <ogc:Literal>6656</ogc:Literal>
+                <ogc:Literal>#1a00</ogc:Literal>
+                <ogc:Literal>6911</ogc:Literal>
+                <ogc:Literal>#1aff</ogc:Literal>
+                <ogc:Literal>6912</ogc:Literal>
+                <ogc:Literal>#1b00</ogc:Literal>
+                <ogc:Literal>7167</ogc:Literal>
+                <ogc:Literal>#1bff</ogc:Literal>
+                <ogc:Literal>7168</ogc:Literal>
+                <ogc:Literal>#1c00</ogc:Literal>
+                <ogc:Literal>7423</ogc:Literal>
+                <ogc:Literal>#1cff</ogc:Literal>
+                <ogc:Literal>7424</ogc:Literal>
+                <ogc:Literal>#1d00</ogc:Literal>
+                <ogc:Literal>7679</ogc:Literal>
+                <ogc:Literal>#1dff</ogc:Literal>
+                <ogc:Literal>7680</ogc:Literal>
+                <ogc:Literal>#1e00</ogc:Literal>
+                <ogc:Literal>7935</ogc:Literal>
+                <ogc:Literal>#1eff</ogc:Literal>
+                <ogc:Literal>7936</ogc:Literal>
+                <ogc:Literal>#1f00</ogc:Literal>
+                <ogc:Literal>8191</ogc:Literal>
+                <ogc:Literal>#1fff</ogc:Literal>
+                <ogc:Literal>8192</ogc:Literal>
+                <ogc:Literal>#2000</ogc:Literal>
+                <ogc:Literal>8447</ogc:Literal>
+                <ogc:Literal>#20ff</ogc:Literal>
+                <ogc:Literal>8448</ogc:Literal>
+                <ogc:Literal>#2100</ogc:Literal>
+                <ogc:Literal>8703</ogc:Literal>
+                <ogc:Literal>#21ff</ogc:Literal>
+                <ogc:Literal>8704</ogc:Literal>
+                <ogc:Literal>#2200</ogc:Literal>
+                <ogc:Literal>8959</ogc:Literal>
+                <ogc:Literal>#22ff</ogc:Literal>
+                <ogc:Literal>8960</ogc:Literal>
+                <ogc:Literal>#2300</ogc:Literal>
+                <ogc:Literal>9215</ogc:Literal>
+                <ogc:Literal>#23ff</ogc:Literal>
+                <ogc:Literal>9216</ogc:Literal>
+                <ogc:Literal>#2400</ogc:Literal>
+                <ogc:Literal>9471</ogc:Literal>
+                <ogc:Literal>#24ff</ogc:Literal>
+                <ogc:Literal>9472</ogc:Literal>
+                <ogc:Literal>#2500</ogc:Literal>
+                <ogc:Literal>9727</ogc:Literal>
+                <ogc:Literal>#25ff</ogc:Literal>
+                <ogc:Literal>9728</ogc:Literal>
+                <ogc:Literal>#2600</ogc:Literal>
+                <ogc:Literal>9983</ogc:Literal>
+                <ogc:Literal>#26ff</ogc:Literal>
+                <ogc:Literal>9984</ogc:Literal>
+                <ogc:Literal>#2700</ogc:Literal>
+                <ogc:Literal>10239</ogc:Literal>
+                <ogc:Literal>#27ff</ogc:Literal>
+                             
+                 <!-- Interpolation method -->
+                 <ogc:Literal>color</ogc:Literal>
+
+                 <!-- Interpolation mode - defaults to linear -->
+               </ogc:Function>
+             </CssParameter>
+           </Fill>
+            <Stroke>
+              <CssParameter name="stroke">#222222</CssParameter>
+              <CssParameter name="stroke-width">0.25</CssParameter>
+              <CssParameter name="stroke-opacity">0.25</CssParameter>
+            </Stroke>
+          </PolygonSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
+
