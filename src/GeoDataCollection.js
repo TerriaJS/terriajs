@@ -843,7 +843,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     if (defined(layer.style.table.colorMap)) {
         layer.baseDataSource.setColorGradient(layer.style.table.colorMap);
     }
-    dataset.setCurrentVariable({ variable: layer.style.table.data});
+    layer.baseDataSource.setCurrentVariable(layer.style.table.data);
     
         //capture url to use for sharing
     layer.shareUrl = layer.url || '';
@@ -962,8 +962,18 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
                 style.table.alt = dataset.getVarID(VarType.ALT);
                 style.table.time = dataset.getVarID(VarType.TIME);
                 style.table.data = dataset.getVarID(VarType.SCALAR);
+                style.table.imageUrl = undefined;
                 style.table.colorMap = undefined;
                 layer.style = style;
+            }
+            if (defined(layer.style.table.colorMap)) {
+                tableDataSource.setColorGradient(layer.style.table.colorMap);
+            }
+            if (defined(layer.style.table.imageUrl)) {
+                tableDataSource.setImageUrl(layer.style.table.imageUrl);
+            }
+            if (defined(layer.style.table.data)) {
+                tableDataSource.setCurrentVariable(layer.style.table.data);
             }
             if (this.map === undefined) {
                 this.dataSourceCollection.add(tableDataSource);
