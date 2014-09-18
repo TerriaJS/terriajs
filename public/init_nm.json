@@ -22,6 +22,7 @@
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/WMS",
                             "layers": "MyBroadband",
+                            "getFeatureInfoAsGeoJson": false,
                             "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
                             "dataUrlType": "wfs-complete"
                         },
@@ -39,6 +40,7 @@
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/WMS",
                             "layers": "MyBroadband Availabilty",
+                            "getFeatureInfoAsGeoJson": false,
                             "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
                             "dataUrlType": "wfs-complete"
                         },
@@ -56,6 +58,7 @@
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/WMS",
                             "layers": "MyBroadband Availabilty no outline",
+                            "getFeatureInfoAsGeoJson": false,
                             "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
                             "dataUrlType": "wfs-complete"
                         },
@@ -73,6 +76,7 @@
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/WMS",
                             "layers": "MyBroadband Quality",
+                            "getFeatureInfoAsGeoJson": false,
                             "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
                             "dataUrlType": "wfs-complete"
                         },
@@ -90,6 +94,7 @@
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/WMS",
                             "layers": "MyBroadband ADSL Quality",
+                            "getFeatureInfoAsGeoJson": false,
                             "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
                             "dataUrlType": "wfs-complete"
                         },
@@ -107,6 +112,7 @@
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/WMS",
                             "layers": "MyBroadband ADSL Quality no outline",
+                            "getFeatureInfoAsGeoJson": false,
                             "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
                             "dataUrlType": "wfs-complete"
                         }
