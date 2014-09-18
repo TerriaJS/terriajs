@@ -1,6 +1,10 @@
 
 [
   {
+    "id" : "document",
+    "version" : "1.0"
+  },
+  {
     "id":"Vehicle",
     "billboard":{
       "eyeOffset":{

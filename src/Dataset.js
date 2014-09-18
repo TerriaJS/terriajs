@@ -1,6 +1,7 @@
 /*global require,$,alert*/
 "use strict";
 
+var VarType = require('./VarType');
 var Variable = require('./Variable');
 
 var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
@@ -38,6 +39,10 @@ Dataset.prototype.hasLocationData = function () {
 
 Dataset.prototype.hasTimeData = function () {
     return (this._varID[VarType.TIME]);
+};
+
+Dataset.prototype.getVarID = function (type) {
+    return (this._varID[type]);
 };
 
 /**
@@ -215,6 +220,8 @@ Dataset.prototype.loadJson = function (jsonTable) {
 *
 */
 Dataset.prototype.loadText = function (text) {
+        //normalize line breaks
+    text = text.replace(/\r\n|\r|\n/g, "\r\n");
     var jsonTable = $.csv.toArrays(text, {
             onParseValue: $.csv.hooks.castToScalar
         });
@@ -303,6 +310,25 @@ Dataset.prototype.getDataValue = function (var_name, idx) {
         return variable.time_var.vals[idx];
     }
      return variable.vals[idx];
+};
+
+/**
+* Get a data row
+*
+* @param {Integer} Index of row
+*
+* @returns {Object} Object containing all row members
+*/
+Dataset.prototype.getDataRow = function (idx) {
+    var rowObj = {};
+    if (idx !== undefined) {
+        for (var id in this._variables) {
+            if (this._variables.hasOwnProperty(id)) {
+                rowObj[id] = this.getDataValue(id, idx);
+            }
+        }
+    }
+    return rowObj;
 };
 
 /**

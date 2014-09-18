@@ -64,43 +64,42 @@ var GeoDataInfoPopup = function(options) {
         </div>\
         <div class="ausglobe-info-content">\
             <div class="ausglobe-info-section">\
-                <div class="asuglobe-info-description" data-bind="html: description"></div>\
+                <div class="ausglobe-info-description" data-bind="html: description"></div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: getLegendUrl">\
-                <a data-bind="attr: { href: getLegendUrl }" target="_blank">Legend</a>\
-            </div>\
-            <div class="ausglobe-info-section" data-bind="if: supportsTranslucency">\
-                <div class="asuglobe-info-description">\
-                    <span>Translucency:</span>\
-                    <input class="ausglobe-info-translucencySlider" type="range" min="0" max="100" data-bind="value: translucency, valueUpdate: \'input\'" />\
-                </div>\
+            <div class="ausglobe-info-section">\
+                <h2>Data Custodian</h2>\
+                <div class="ausglobe-info-description" data-bind="html: dataCustodianInformation"></div>\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: info.base_url">\
                 <h2><span data-bind="text: serviceType"></span> Base URL</h2>\
-                <input readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
+                <input class="ausglobe-info-baseUrl" readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: getMetadataUrl">\
                 <h2>Metadata URL</h2>\
-                <a data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
+                <a class="ausglobe-info-description" data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: info.wfsAvailable">\
                 <h2>Data URL</h2>\
-                Click the link below to download GeoJSON data.  See the\
-                <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>\
-                for more information on customizing URL query parameters.\
-                <div><a data-bind="attr: { href: getDataUrl }, text: getDataUrl" target="_blank"></a></div>\
+                <div class="ausglobe-info-description">\
+                    Use the link below to download GeoJSON data.  See the\
+                    <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>\
+                    for more information on customising URL query parameters.\
+                    <div><a data-bind="attr: { href: getDataUrl }, text: getDataUrl" target="_blank"></a></div>\
+                </div>\
             </div>\
-            <hr data-bind="visible: layerProperties.data().length > 0" />\
             <div class="ausglobe-info-section" data-bind="if: layerProperties.data().length > 0">\
                 <h2>Data Details</h2>\
-                <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
-                </table>\
+                <div class="ausglobe-info-table">\
+                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
+                    </table>\
+                </div>\
             </div>\
-            <hr data-bind="visible: serviceProperties.data().length > 0" />\
             <div class="ausglobe-info-section" data-bind="if: serviceProperties.data().length > 0">\
                 <h2>Service Details</h2>\
-                <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
-                </table>\
+                <div class="ausglobe-info-table">\
+                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
+                    </table>\
+                </div>\
             </div>\
         </div>\
     ';
@@ -111,39 +110,10 @@ var GeoDataInfoPopup = function(options) {
         _arrowRightPath : 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z'
     };
 
-    var primitive = options.viewModel.layer ? options.viewModel.layer.primitive : undefined;
-
     viewModel.isLoading = knockout.observable(true);
     viewModel.info = options.viewModel;
-    viewModel.supportsTranslucency = primitive && (defined(primitive.alpha) || defined(primitive.setOpacity));
-    viewModel.translucency = knockout.observable(0);
 
-    if (viewModel.supportsTranslucency) {
-        if (defined(primitive.alpha)) {
-            viewModel.translucency((1.0 - primitive.alpha) * 100.0);
-        } else if (defined(primitive.options) && defined(primitive.options.opacity)) {
-            viewModel.translucency((1.0 - primitive.options.opacity) * 100.0);
-        }
-    }
-
-    viewModel.translucency.subscribe(function() {
-        if (viewModel.supportsTranslucency) {
-            if (defined(primitive.alpha)) {
-                primitive.alpha = (100.0 - viewModel.translucency()) / 100.0;
-            } else if (defined(primitive.setOpacity)) {
-                primitive.setOpacity((100.0 - viewModel.translucency()) / 100.0);
-            }
-        }
-    });
-
-    viewModel.description = knockout.computed(function() {
-        var text;
-        if (viewModel.info.description) {
-            text = viewModel.info.description();
-        } else {
-            text = 'Please contact the provider of this data for more information, including information about usage rights and constraints.';
-        }
-
+    function formatText(text) {
         // Escape HTML in the description.
         var div = document.createElement('div');
         
@@ -160,9 +130,26 @@ var GeoDataInfoPopup = function(options) {
         });
 
         // Replace '<br/>' with actual an <br/> tag.
-        fixedLinks = fixedLinks.replace(/&lt;br\/&gt;/g, '<br/>');
+        return fixedLinks.replace(/&lt;br\/&gt;/g, '<br/>');
+    }
 
-        return fixedLinks;
+    viewModel.description = knockout.computed(function() {
+        var text;
+        if (viewModel.info.description) {
+            text = viewModel.info.description();
+        } else {
+            text = 'Please contact the provider of this data for more information, including information about usage rights and constraints.';
+        }
+
+        return formatText(text);
+    });
+
+    viewModel.dataCustodianInformation = knockout.computed(function() {
+        if (!defined(viewModel.info.dataCustodian) || !defined(viewModel.info.dataCustodian())) {
+            viewModel.info.dataCustodian = knockout.observable('Unknown');
+        }
+
+        return formatText(viewModel.info.dataCustodian());
     });
 
     viewModel.layer = {};
@@ -256,23 +243,6 @@ var GeoDataInfoPopup = function(options) {
         }
     });
 
-    //this should really happen after getWfsFeatureInfo to ensure that the style exists
-    viewModel.getLegendUrl = knockout.computed(function() {
-        var type = viewModel.info.type();
-        if (type === 'WMS') {
-            var legendUrl;
-            if (defined(viewModel.info.legendUrl)) {
-                legendUrl = viewModel.info.legendUrl();
-            }
-            else {
-                legendUrl = viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + viewModel.info.Name();
-            }
-            return legendUrl;
-        } else {
-            return 'N/A';
-        }
-    });
-
     viewModel.getMetadataUrl = knockout.computed(function() {
         var type = viewModel.info.type();
         if (type === 'WMS') {
@@ -338,7 +308,10 @@ var GeoDataInfoPopup = function(options) {
                 }, viewModel.serviceProperties);
             }
 
-            var layer = findLayer(json.Capability.Layer, layerName);
+            var layer;
+            if (defined(json.Capability)) {
+                layer = findLayer(json.Capability.Layer, layerName);
+            }
             if (layer) {
                 komapping.fromJS(layer, viewModel.layerProperties);
             } else {
@@ -349,6 +322,26 @@ var GeoDataInfoPopup = function(options) {
 
             addBindingProperties(viewModel.layerProperties, 1);
             addBindingProperties(viewModel.serviceProperties, 1);
+
+            if (viewModel.info.dataCustodian() === 'Unknown' && defined(json.Service.ContactInformation)) {
+                // Fill in the data custodian from the WMS metadata.
+                var contactInfo = json.Service.ContactInformation;
+
+                var text = '';
+
+                var primary = contactInfo.ContactPersonPrimary;
+                if (defined(primary)) {
+                    if (defined(primary.ContactOrganization) && primary.ContactOrganization.length > 0) {
+                        text += primary.ContactOrganization + '<br/>';
+                    }
+                }
+
+                if (defined(contactInfo.ContactElectronicMailAddress) && contactInfo.ContactElectronicMailAddress.length > 0) {
+                    text += '[' + contactInfo.ContactElectronicMailAddress + '](mailto:' + contactInfo.ContactElectronicMailAddress + ')<br/>'; 
+                }
+
+                viewModel.info.dataCustodian(text);
+            }
 
             viewModel.isLoading(false);
         }, function(e) {

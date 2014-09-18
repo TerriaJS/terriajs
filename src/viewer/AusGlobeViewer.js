@@ -187,21 +187,6 @@ var AusGlobeViewer = function(geoDataManager) {
         viewer : this
     });
 
-    var legend = document.createElement('div');
-    legend.id = 'legend';
-//    div.className = 'legend';
-    legend.style.visibility = "hidden";
-    legend.innerHTML += '\
-            <table> \
-                <td><canvas id="legendCanvas" width="32" height="128"></canvas></td> \
-                <td> <table> \
-                    <tr height="64"><td id="lgd_max_val" valign="top"></td></tr> \
-                    <tr height="64"><td id="lgd_min_val" valign="bottom"></td></tr> \
-                    </table> \
-                </td> \
-            </table>';
-    document.body.appendChild(legend);
-
     var leftArea = document.createElement('div');
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
@@ -234,6 +219,20 @@ Your web browser does not appear to support WebGL, so you will see a limited, \
 2D-only experience.'
         });
         this.webGlSupported = false;
+    }
+
+    if (document.body.clientWidth < 520 || document.body.clientHeight < 400) {
+        var smallScreenMessage = new PopupMessage({
+            container : document.body,
+            title : 'Small screen or window',
+            message : '\
+Hello!<br/>\
+<br/>\
+Currently the National Map isn\'t optimised for small screens.<br/>\
+<br/>\
+For a better experience we\'d suggest you visit the application from a larger screen like your tablet, laptop or desktop.  \
+If you\'re on a desktop or laptop, consider increasing the size of your window.'
+        });
     }
     
     // IE versions prior to 10 don't support CORS, so always use the proxy.
@@ -1036,7 +1035,6 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     //remove case
     if (layer === undefined) {
         updateTimeline(this.viewer);
-        updateLegend();
         return;
     }
     
@@ -1050,7 +1048,6 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
         }
     }
     updateTimeline(this.viewer, start, finish);
-    updateLegend(tableData);
     
     if (layer.zoomTo && layer.extent !== undefined) {
         this.updateCameraFromRect(layer.extent, 3000);
@@ -1250,30 +1247,6 @@ AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMill
     }
 };
 
-// -------------------------------------------
-// Update the data legend
-// -------------------------------------------
-function updateLegend(datavis) {
-    if (datavis === undefined) {
-        document.getElementById('legend').style.visibility = 'hidden';
-        return;
-    }
-
-    document.getElementById('legend').style.visibility = 'visible';
-    var legend_canvas = $('#legendCanvas')[0];
-    var ctx = legend_canvas.getContext('2d');
-    ctx.translate(ctx.canvas.width, ctx.canvas.height);
-    ctx.rotate(180 * Math.PI / 180);
-    datavis.createGradient(ctx);
-    ctx.restore();
-
-    var val;
-    var min_text = (val = datavis.dataset.getMinVal()) === undefined ? 'undefined' : val.toString();
-    var max_text = (val = datavis.dataset.getMaxVal()) === undefined ? 'undefined' : val.toString();
-    document.getElementById('lgd_min_val').innerHTML = min_text;
-    document.getElementById('lgd_max_val').innerHTML = max_text;
-}
-
 function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, j, useWebMercator) {
     var url = baseUrl;
     var indexOfQuestionMark = url.indexOf('?');
@@ -1346,6 +1319,8 @@ function selectFeatureLeaflet(viewer, latlng) {
     selectFeatures(promises, viewer.map);
 }
 
+//TODO:!!! need to get csv info and return it to the the feature prop viewer
+//         need layer and can go from there.
 function selectFeatures(promises, viewer) {
     var nextPromiseIndex = 0;
 

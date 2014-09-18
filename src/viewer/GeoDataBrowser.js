@@ -47,8 +47,8 @@ var GeoDataBrowser = function(options) {
     var legendButton = document.createElement('div');
     legendButton.className = 'ausglobe-panel-button';
     legendButton.title = 'Legend';
-    legendButton.innerHTML = '<a target="_blank" data-bind="attr: { href: topLayerLegendUrl }"><div class="ausglobe-panel-button-label">Legend</div></a>';
-    legendButton.setAttribute('data-bind', 'visible: showingLegendButton');
+    legendButton.innerHTML = '<div class="ausglobe-panel-button-label">Legend</div>';
+    legendButton.setAttribute('data-bind', 'visible: legendsExist(), click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
     wrapper.appendChild(legendButton);
 
     var dataPanel = document.createElement('div');
@@ -57,9 +57,10 @@ var GeoDataBrowser = function(options) {
     dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }');
 
     dataPanel.innerHTML = '\
-        <div class="ausglobe-accordion-item">\
+        <div class="ausglobe-now-viewing ausglobe-accordion-item">\
             <div class="ausglobe-accordion-item-header" data-bind="click: openNowViewing">\
                 <div class="ausglobe-accordion-item-header-label">Now Viewing</div>\
+                <div class="ausglobe-now-viewing-clear-all" data-bind="click: clearAll, clickBubble: false">Clear all</div>\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': nowViewingIsOpen }">\
                 <div class="ausglobe-accordion-category">\
@@ -101,52 +102,52 @@ var GeoDataBrowser = function(options) {
                     </div>\
                 </div>\
             </div>\
-        </div>\
-        <div class="ausglobe-accordion-item">\
-            <div class="ausglobe-accordion-item-header" data-bind="click: openAddData">\
-                <div class="ausglobe-accordion-item-header-label">Add Data</div>\
-            </div>\
-            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': addDataIsOpen }">\
-                <div data-bind="foreach: userContent">\
-                    <div class="ausglobe-accordion-category">\
-                        <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
-                            <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: isOpen(), cesiumSvgPath: { path: $root._arrowDown, width: 32, height: 32 }"></div>\
-                            <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: !isOpen(), cesiumSvgPath: { path: $root._arrowRight, width: 32, height: 32 }"></div>\
-                            <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
-                        </div>\
-                        <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
-                        <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
-                            <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: isEnabled, cesiumSvgPath: { path: $root._checkboxChecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled(), cesiumSvgPath: { path: $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
-                                <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+            <div class="ausglobe-accordion-item">\
+                <div class="ausglobe-accordion-item-header" data-bind="click: openAddData">\
+                    <div class="ausglobe-accordion-item-header-label">Add Data</div>\
+                </div>\
+                <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': addDataIsOpen }">\
+                    <div data-bind="foreach: userContent">\
+                        <div class="ausglobe-accordion-category">\
+                            <div class="ausglobe-accordion-category-header" data-bind="click: $root.toggleCategoryOpen">\
+                                <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: isOpen(), cesiumSvgPath: { path: $root._arrowDown, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-header-arrow" data-bind="visible: !isOpen(), cesiumSvgPath: { path: $root._arrowRight, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
+                            </div>\
+                            <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
+                            <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
+                                <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
+                                    <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: isEnabled, cesiumSvgPath: { path: $root._checkboxChecked, width: 32, height: 32 }"></div>\
+                                    <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled(), cesiumSvgPath: { path: $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
+                                    <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
+                                    <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+                                </div>\
                             </div>\
                         </div>\
                     </div>\
-                </div>\
-                <div class="ausglobe-accordion-category">\
-                    <div class="ausglobe-add-data-message">\
-                        Add data by dragging and dropping it onto the map, or\
-                        <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">browse and select a file to load</span>.\
-                        <input type="file" style="display: none;" id="uploadFile" data-bind="event: { change: addUploadedFile }"/>\
-                    </div>\
-                    <form class="ausglobe-user-service-form" data-bind="submit: addDataOrService">\
-                        <label>\
-                            <div>Enter a web link to add a data file or WMS/WFS service (advanced):</div>\
-                            <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
-                        </label>\
-                        <div>\
-                            <label class="ausglobe-addData-type">\
-                                <select class="ausglobe-addData-typeSelect" data-bind="value: addType">\
-                                    <option value="File">Single data file</option>\
-                                    <option value="WMS">WMS Server</option>\
-                                    <option value="WFS">WFS Server</option>\
-                                </select>\
-                            </label>\
-                            <input class="ausglobe-button" type="submit" value="Add" />\
+                    <div class="ausglobe-accordion-category">\
+                        <div class="ausglobe-add-data-message">\
+                            Add data by dragging and dropping it onto the map, or\
+                            <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">browse and select a file to load</span>.\
+                            <input type="file" style="display: none;" id="uploadFile" data-bind="event: { change: addUploadedFile }"/>\
                         </div>\
-                    </form>\
+                        <form class="ausglobe-user-service-form" data-bind="submit: addDataOrService">\
+                            <label>\
+                                <div>Enter a web link to add a data file or WMS/WFS service (advanced):</div>\
+                                <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
+                            </label>\
+                            <div>\
+                                <label class="ausglobe-addData-type">\
+                                    <select class="ausglobe-addData-typeSelect" data-bind="value: addType">\
+                                        <option value="File">Single data file</option>\
+                                        <option value="WMS">WMS Server</option>\
+                                        <option value="WFS">WFS Server</option>\
+                                    </select>\
+                                </label>\
+                                <input class="ausglobe-button" type="submit" value="Add" />\
+                            </div>\
+                        </form>\
+                    </div>\
                 </div>\
             </div>\
         </div>';
@@ -184,6 +185,37 @@ var GeoDataBrowser = function(options) {
         </div>';
 
     wrapper.appendChild(mapPanel);
+
+    var legendPanel = document.createElement('div');
+    legendPanel.className = 'ausglobe-panel';
+    legendPanel.setAttribute('data-bind', 'if: nowViewing().length > 0, css: { "ausglobe-panel-visible" : showingLegendPanel }');
+
+    legendPanel.innerHTML = '\
+        <div data-bind="foreach: nowViewing">\
+            <!-- ko if: show -->\
+            <div class="ausglobe-accordion-item">\
+                <div class="ausglobe-accordion-item-header" data-bind="click: $root.openLegend">\
+                    <div class="ausglobe-accordion-item-header-label" data-bind="text: Title"></div>\
+                </div>\
+                <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': legendIsOpen }">\
+                    <div class="ausglobe-legend-opacity" data-bind="if: $root.supportsOpacity($data)">\
+                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: $root.opacity($data), valueUpdate: \'input\'" /></label>\
+                    </div>\
+                    <!-- ko if: $root.legendIsImage($data) -->\
+                    <img data-bind="attr: { src: $root.getLegendUrl($data) }" />\
+                    <!-- /ko -->\
+                    <!-- ko if: $root.legendIsLink($data) -->\
+                    <a class="ausglobe-accordion-category-item-label" data-bind="attr: { href: $root.getLegendUrl($data) }" target="_blank">Open legend in a separate tab</a>\
+                    <!-- /ko -->\
+                    <!-- ko if: !$root.legendIsLink($data) && !$root.legendIsImage($data) -->\
+                    <div class="ausglobe-accordion-category-item-label">No legend available for this data source.</div>\
+                    <!-- /ko -->\
+                </div>\
+            </div>\
+            <!-- /ko -->\
+        </div>';
+
+    wrapper.appendChild(legendPanel);
 
     knockout.applyBindings(this._viewModel, wrapper);
 };
