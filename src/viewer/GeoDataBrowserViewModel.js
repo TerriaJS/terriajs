@@ -651,7 +651,6 @@ these extensions in order for National Map to know how to load it.'
         that._dataManager.addServices(json.NMServices);
         
         var collections = json.Layer;
-        go(collections);
         
         var existingCollection;
         var existingCollections = browserContentViewModel();
@@ -681,120 +680,6 @@ these extensions in order for National Map to know how to load it.'
                 loadCkanCollection(collection, existingCollection);
             }
         }
-    }
-
-    function go(collections) {
-        var result = {
-            "catalog": []
-        };
-        var catalog = result.catalog;
-
-        for (var i = 0; i < collections.length; ++i) {
-            var sourceCollection = collections[i];
-
-            var destCollection = {
-                name: sourceCollection.name,
-                type: 'group',
-                items: []
-            };
-            catalog.push(destCollection);
-
-            var sourceGroups = sourceCollection.Layer;
-            for (var j = 0; j < sourceGroups.length; ++j) {
-                var sourceGroup = sourceGroups[j];
-                destCollection.items.push(goItem(sourceGroup, []));
-            }
-        }
-
-        console.log(JSON.stringify(result, null, 4));
-    }
-
-    function goItem(sourceItem, ancestors) {
-        var result;
-        var dataUrl;
-
-        if (sourceItem.Layer && sourceItem.Layer.length > 0) {
-            result = {
-                name: sourceItem.name,
-                type: "group",
-                items: []
-            };
-
-            ancestors.push(sourceItem);
-
-            var subItems = sourceItem.Layer;
-            for (var i = 0; i < subItems.length; ++i) {
-                result.items.push(goItem(subItems[i], ancestors));
-            }
-
-            ancestors.pop();
-        } else if (getInheritedValue(sourceItem, 'type', ancestors) === 'WMS') {
-            // This might be a single WMS layer or an entire server.
-            if (defined(sourceItem.Name)) {
-                // Single WMS layer.
-                result = {
-                    name: sourceItem.Title,
-                    description: getInheritedValue(sourceItem, 'description', ancestors),
-                    legendUrl: getInheritedValue(sourceItem, 'legendUrl', ancestors),
-                    dataCustodian: getInheritedValue(sourceItem, 'dataCustodian', ancestors),
-                    rectangle: [sourceItem.BoundingBox.west, sourceItem.BoundingBox.south, sourceItem.BoundingBox.east, sourceItem.BoundingBox.north],
-                    type: 'wms',
-                    url: getInheritedValue(sourceItem, 'base_url', ancestors),
-                    layers: sourceItem.Name
-                };
-            } else {
-                // An entire server (GetCapabilities)
-                result = {
-                    name: sourceItem.name,
-                    description: getInheritedValue(sourceItem, 'description', ancestors),
-                    legendUrl: getInheritedValue(sourceItem, 'legendUrl', ancestors),
-                    dataCustodian: getInheritedValue(sourceItem, 'dataCustodian', ancestors),
-                    url: sourceItem.base_url,
-                    type: 'wms-getCapabilities'
-                };
-            }
-
-            dataUrl = getInheritedValue(sourceItem, 'wfsUrl', ancestors);
-            if (defined(dataUrl)) {
-                result.dataUrl = dataUrl;
-                result.dataUrlType = 'wfs';
-            }
-
-            dataUrl = getInheritedValue(sourceItem, 'completeWfsUrl', ancestors);
-            if (defined(dataUrl)) {
-                result.dataUrl = dataUrl;
-                result.dataUrlType = 'wfs-complete';
-            }
-
-            if (!defined(result.dataUrl) && getInheritedValue(sourceItem, 'wfsAvailable', ancestors)) {
-                result.dataUrl = getInheritedValue(sourceItem, 'base_url', ancestors);
-                result.dataUrlType = 'wfs';
-            }
-        }
-
-        return result;
-    }
-
-    function convertType(type) {
-        switch (type) {
-            case 'WMS':
-                return 'wms';
-        }
-        return 'unknown';
-    }
-
-    function getInheritedValue(o, name, ancestors) {
-        if (defined(o[name])) {
-            return o[name];
-        }
-
-        for (var i = ancestors.length - 1; i >= 0; --i) {
-            if (defined(ancestors[i][name])) {
-                return ancestors[i][name];
-            }
-        }
-
-        return undefined;
     }
 
     function loadCkanCollection(collection, existingCollection) {
