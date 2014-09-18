@@ -180,7 +180,7 @@ var startScratch = new JulianDate();
 var endScratch = new JulianDate();
 
 
-function describe(properties) {
+TableDataSource.prototype.describe = function(properties) {
     var html = '<table class="cesium-infoBox-defaultTable">';
     for ( var key in properties) {
         if (properties.hasOwnProperty(key)) {
@@ -196,7 +196,7 @@ function describe(properties) {
     }
     html += '</table>';
     return html;
-}
+};
 
 
 /**
@@ -270,7 +270,7 @@ TableDataSource.prototype.getDataPointList = function () {
     for (var i = 0; i < pointList.length; i++) {
         //set position, scale, color, and display time
         var rec = this.czmlRecFromPoint(pointList[i]);
-        rec.description = describe(data.getDataRow(pointList[i].row));
+        rec.description = this.describe(data.getDataRow(pointList[i].row));
         dispRecords.push(rec);
     }
     return dispRecords;
