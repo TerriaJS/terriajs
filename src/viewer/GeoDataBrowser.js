@@ -192,12 +192,12 @@ var GeoDataBrowser = function(options) {
 
     legendPanel.innerHTML = '\
         <div data-bind="foreach: nowViewing.items">\
-            <!-- ko if: show -->\
+            <!-- ko if: isShown -->\
             <div class="ausglobe-accordion-item">\
                 <div class="ausglobe-accordion-item-header" data-bind="click: $root.openLegend">\
-                    <div class="ausglobe-accordion-item-header-label" data-bind="text: Title"></div>\
+                    <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
                 </div>\
-                <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': legendIsVisible }">\
+                <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': isLegendVisible }">\
                     <div class="ausglobe-legend-opacity" data-bind="if: $root.supportsOpacity($data)">\
                         <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: $root.opacity($data), valueUpdate: \'input\'" /></label>\
                     </div>\

@@ -573,12 +573,12 @@ these extensions in order for National Map to know how to load it.'
     }
 
     this.getLegendUrl = function(item) {
-        if (defined(item.legendUrl) && defined(item.legendUrl())) {
-            if (item.legendUrl().length > 0) {
-                return item.legendUrl();
+        if (defined(item.legendUrl)) {
+            if (item.legendUrl.length > 0) {
+                return item.legendUrl;
             }
-        } else if (item.type() === 'WMS') {
-            return item.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
+        } else if (item.type === 'WMS') {
+            return item.url + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.layers;
         }
 
         return '';
@@ -654,13 +654,13 @@ these extensions in order for National Map to know how to load it.'
         go(collections);
         
         var existingCollection;
+        var existingCollections = browserContentViewModel();
 
         for (var i = 0; i < collections.length; ++i) {
             var collection = collections[i];
 
             // Find an existing collection with the same name, if any.
             var name = collection.name;
-            var existingCollections = browserContentViewModel();
 
             existingCollection = undefined;
             for (var j = 0; j < existingCollections.length; ++j) {
@@ -681,8 +681,6 @@ these extensions in order for National Map to know how to load it.'
                 loadCkanCollection(collection, existingCollection);
             }
         }
-
-        go(existingCollections);
     }
 
     function go(collections) {
@@ -695,7 +693,7 @@ these extensions in order for National Map to know how to load it.'
             var sourceCollection = collections[i];
 
             var destCollection = {
-                name: sourceCollection.name(),
+                name: sourceCollection.name,
                 type: 'group',
                 items: []
             };
@@ -704,16 +702,77 @@ these extensions in order for National Map to know how to load it.'
             var sourceGroups = sourceCollection.Layer;
             for (var j = 0; j < sourceGroups.length; ++j) {
                 var sourceGroup = sourceGroups[j];
-
-                var destGroup = {
-                    name: sourceGroup.Title
-                    type: convertType(sourceGroup.type())
-                };
-                destCollection.items.push(destGroup);
+                destCollection.items.push(goItem(sourceGroup, []));
             }
         }
 
         console.log(JSON.stringify(result, null, 4));
+    }
+
+    function goItem(sourceItem, ancestors) {
+        var result;
+        var dataUrl;
+
+        if (sourceItem.Layer && sourceItem.Layer.length > 0) {
+            result = {
+                name: sourceItem.name,
+                type: "group",
+                items: []
+            };
+
+            ancestors.push(sourceItem);
+
+            var subItems = sourceItem.Layer;
+            for (var i = 0; i < subItems.length; ++i) {
+                result.items.push(goItem(subItems[i], ancestors));
+            }
+
+            ancestors.pop();
+        } else if (getInheritedValue(sourceItem, 'type', ancestors) === 'WMS') {
+            // This might be a single WMS layer or an entire server.
+            if (defined(sourceItem.Name)) {
+                // Single WMS layer.
+                result = {
+                    name: sourceItem.Title,
+                    description: getInheritedValue(sourceItem, 'description', ancestors),
+                    legendUrl: getInheritedValue(sourceItem, 'legendUrl', ancestors),
+                    dataCustodian: getInheritedValue(sourceItem, 'dataCustodian', ancestors),
+                    rectangle: [sourceItem.BoundingBox.west, sourceItem.BoundingBox.south, sourceItem.BoundingBox.east, sourceItem.BoundingBox.north],
+                    type: 'wms',
+                    url: getInheritedValue(sourceItem, 'base_url', ancestors),
+                    layers: sourceItem.Name
+                };
+            } else {
+                // An entire server (GetCapabilities)
+                result = {
+                    name: sourceItem.name,
+                    description: getInheritedValue(sourceItem, 'description', ancestors),
+                    legendUrl: getInheritedValue(sourceItem, 'legendUrl', ancestors),
+                    dataCustodian: getInheritedValue(sourceItem, 'dataCustodian', ancestors),
+                    url: sourceItem.base_url,
+                    type: 'wms-getCapabilities'
+                };
+            }
+
+            dataUrl = getInheritedValue(sourceItem, 'wfsUrl', ancestors);
+            if (defined(dataUrl)) {
+                result.dataUrl = dataUrl;
+                result.dataUrlType = 'wfs';
+            }
+
+            dataUrl = getInheritedValue(sourceItem, 'completeWfsUrl', ancestors);
+            if (defined(dataUrl)) {
+                result.dataUrl = dataUrl;
+                result.dataUrlType = 'wfs-complete';
+            }
+
+            if (!defined(result.dataUrl) && getInheritedValue(sourceItem, 'wfsAvailable', ancestors)) {
+                result.dataUrl = getInheritedValue(sourceItem, 'base_url', ancestors);
+                result.dataUrlType = 'wfs';
+            }
+        }
+
+        return result;
     }
 
     function convertType(type) {
@@ -721,7 +780,21 @@ these extensions in order for National Map to know how to load it.'
             case 'WMS':
                 return 'wms';
         }
-        return 'unknown'
+        return 'unknown';
+    }
+
+    function getInheritedValue(o, name, ancestors) {
+        if (defined(o[name])) {
+            return o[name];
+        }
+
+        for (var i = ancestors.length - 1; i >= 0; --i) {
+            if (defined(ancestors[i][name])) {
+                return ancestors[i][name];
+            }
+        }
+
+        return undefined;
     }
 
     function loadCkanCollection(collection, existingCollection) {
