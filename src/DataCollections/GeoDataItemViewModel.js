@@ -33,13 +33,6 @@ var GeoDataItemViewModel = function(type) {
     this._shownDate = undefined;
 
     /**
-     * Gets or sets a value indicating whether the legend for this data item is currently visible.
-     * This property is observable.
-     * @type {Boolean}
-     */
-    this.isLegendVisible = false;
-
-    /**
      * Gets or sets the name of the item.  This property is observable.
      * @type {String}
      */
@@ -59,10 +52,11 @@ var GeoDataItemViewModel = function(type) {
     this.rectangle = Rectangle.fromDegrees(-180, -90, 180, 90);
 
     /**
-     * Gets or sets a value indicating whether this data item is enabled.  An enabled data item
-     * appears up in the "Now Viewing" pane, but is not necessarily shown on the map.
+     * Gets or sets a value indicating whether the legend for this data item is currently visible.
+     * This property is observable.
      * @type {Boolean}
      */
+    this.isLegendVisible = false;
 
     knockout.track(this, ['name', 'description', 'rectangle', 'isLegendVisible', '_isEnabled', '_isShown']);
 };
