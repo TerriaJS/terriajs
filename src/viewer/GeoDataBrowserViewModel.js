@@ -600,7 +600,7 @@ these extensions in order for National Map to know how to load it.'
     };
 
     this.legendsExist = function() {
-        var nowViewing = that.nowViewing();
+        var nowViewing = that.nowViewing.items;
 
         for (var i = 0; i < nowViewing.length; ++i) {
             if (nowViewing[i].show) {
