@@ -842,17 +842,19 @@ a.ausglobe-title-menuItem:hover {
     position: absolute;
     display: inline-block;
     height: 30px;
-    border: 1px solid #555555;
+    border: 1px solid #2EA1C3;
     width: 80px;
     right: 6px;
     font-size: 9pt;
     padding: 2px;
-    background-color: #333333;
-    color: white;
+    background-color: black;
+    color: #2EA1C3;
     line-height: 30px;
     cursor: pointer;
     margin-top: 5px;
     text-align: center;
+    font-weight: bold;
+    font-size: 11pt;
 }
 
 .ausglobe-wfs-url-input {
@@ -862,8 +864,8 @@ a.ausglobe-title-menuItem:hover {
 .ausglobe-addData-type {
     position: relative;
     display: inline-block;
-    top: 3px;
-    left: 100px;
+    top: 5px;
+    left: 45px;
 }
 
 .ausglobe-addData-typeSelect {
@@ -872,6 +874,7 @@ a.ausglobe-title-menuItem:hover {
     color: #66CCFF;
     padding: 5px;
     border: 1px solid #66CCFF;
+    height: 30px;
 }
 
 .ausglobe-addData-type:after {

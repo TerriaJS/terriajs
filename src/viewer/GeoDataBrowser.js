@@ -132,7 +132,7 @@ var GeoDataBrowser = function(options) {
                     <div class="ausglobe-accordion-category">\
                         <div class="ausglobe-add-data-message">\
                             Add data by dragging and dropping it onto the map, or\
-                            <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">browse and select a file to load</span>.\
+                            <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">browse to select</span> a file to upload.\
                             <input type="file" style="display: none;" id="uploadFile" data-bind="event: { change: addUploadedFile }"/>\
                         </div>\
                         <form class="ausglobe-user-service-form" data-bind="submit: addDataOrService">\
@@ -143,6 +143,7 @@ var GeoDataBrowser = function(options) {
                             <div>\
                                 <label class="ausglobe-addData-type">\
                                     <select class="ausglobe-addData-typeSelect" data-bind="value: addType">\
+                                        <option value="NotSpecified">Select file or service type</option>\
                                         <option value="File">Single data file</option>\
                                         <option value="WMS">WMS Server</option>\
                                         <option value="WFS">WFS Server</option>\
