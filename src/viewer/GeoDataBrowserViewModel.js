@@ -608,7 +608,11 @@ these extensions in order for National Map to know how to load it.'
             }
         } else if (item.type() === 'WMS') {
             return item.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
-        }
+        } else if (defined(item.layer.baseDataSource)) {
+            return item.layer.baseDataSource.getLegendGraphic();
+        } else if (defined(item.layer.dataSource) && defined(item.layer.dataSource.getLegendGraphic)) {
+            return item.layer.dataSource.getLegendGraphic();
+        } 
 
         return '';
     };

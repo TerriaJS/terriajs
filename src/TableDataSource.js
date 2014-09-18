@@ -187,7 +187,7 @@ TableDataSource.prototype.describe = function(properties) {
             var value = properties[key];
             if (defined(value)) {
                 if (typeof value === 'object') {
-                    html += '<tr><td>' + key + '</td><td>' + describe(value) + '</td></tr>';
+                    html += '<tr><td>' + key + '</td><td>' + this.describe(value) + '</td></tr>';
                 } else {
                     html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
                 }
@@ -344,13 +344,15 @@ TableDataSource.prototype.getLegendGraphic = function () {
     if (!defined(canvas)) {
         return;
     }
-    var w = canvas.width = 150;
-    var h = canvas.height = 150;
+    var w = canvas.width = 210;
+    var h = canvas.height = 160;
+    var gradW = 40;
+    var gradH = 128;
     var ctx = canvas.getContext('2d');
 
         // Create Linear Gradient
     var grad = this.colorGradient;
-    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    var lingrad = ctx.createLinearGradient(0,0,0,gradH);
     for (var i = 0; i < grad.length; i++) {
         lingrad.addColorStop(grad[i].offset, grad[i].color);
     }
@@ -358,9 +360,7 @@ TableDataSource.prototype.getLegendGraphic = function () {
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0,0,w,h);
         //put 0 at bottom
-    var gradW = 32;
-    var gradH = 128;
-    ctx.translate(gradW, h);
+    ctx.translate(gradW + 15, h-5);
     ctx.rotate(180 * Math.PI / 180);
     ctx.fillStyle = lingrad;
     ctx.fillRect(0,0,gradW,gradH);
@@ -372,11 +372,11 @@ TableDataSource.prototype.getLegendGraphic = function () {
     var var_text = this.dataset.getCurrentVariable();
     
     ctx.setTransform(1,0,0,1,0,0);
-    ctx.font = "15px Arial Narrow";
+    ctx.font = "16px Arial Narrow";
     ctx.fillStyle = "#000000";
     ctx.fillText(var_text, 5, 15);
-    ctx.fillText(max_text, gradW + 5, 15+h-gradH);
-    ctx.fillText(min_text, gradW + 5, h);
+    ctx.fillText(max_text, gradW + 25, 15+h-gradH-5);
+    ctx.fillText(min_text, gradW + 25, h-5);
     
     return canvas.toDataURL("image/png");
 };
