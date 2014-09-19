@@ -304,7 +304,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
             viewer : that,
             container : leftArea,
             dataManager : geoDataManager,
-            initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
+            //initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
             mode3d: that.webGlSupported,
             catalog : catalog
         });

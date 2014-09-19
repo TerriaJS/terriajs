@@ -20,7 +20,7 @@ var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
-var WebMapServiceDataItemViewModel = require('./WebMapServiceDataItemViewModel');
+var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewModel');
 
 /**
  * A {@link GeoDataGroupViewModel} representing a collection of layers from a Web Map Service (WMS) server.
@@ -77,7 +77,8 @@ function getCapabilities(viewModel) {
         var json = $.xml2json(xml);
         addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items);
     }, function(e) {
-        new PopupMessage({
+        // TODO: view models should not create UI elements directly like this.
+        var message =new PopupMessage({
             container: document.body,
             title: 'Group is not available',
             message: 'An error occurred while invoking GetCapabilities on the WMS server.  This may indicate that group you opened is temporarily unavailable ' +
@@ -111,18 +112,18 @@ function addLayersRecursively(viewModel, layers, items, parent) {
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
             // in the 'layers' parameter of a GetMap request.  This is true in 1.0.0 and 1.3.0 as well.
             if (defined(layer.Name) && layer.Name.length > 0) {
-                items.push(createWmsDataItem(viewModel, layer));
+                items.push(createWmsDataSource(viewModel, layer));
             }
             addLayersRecursively(viewModel, layer.Layer, items);
         }
         else {
-            items.push(createWmsDataItem(viewModel, layer));
+            items.push(createWmsDataSource(viewModel, layer));
         }
     }
 }
 
-function createWmsDataItem(viewModel, layer) {
-    var result = new WebMapServiceDataItemViewModel();
+function createWmsDataSource(viewModel, layer) {
+    var result = new WebMapServiceDataSourceViewModel();
 
     result.name = layer.Title;
     result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;

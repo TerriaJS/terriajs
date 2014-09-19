@@ -9,7 +9,7 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var corsProxy = require('../corsProxy');
-var GeoDataItemViewModel = require('./GeoDataItemViewModel');
+var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var inherit = require('../inherit');
 
 /**
@@ -18,8 +18,8 @@ var inherit = require('../inherit');
  * @constructor
  * @extends GeoDataItemViewModel
  */
-var CzmlDataItemViewModel = function() {
-    GeoDataItemViewModel.call(this, 'czml');
+var CzmlDataSourceViewModel = function() {
+    GeoDataSourceViewModel.call(this, 'czml');
 
     this._dataSource = undefined;
 
@@ -34,14 +34,14 @@ var CzmlDataItemViewModel = function() {
     knockout.getObservable(this, 'isEnabled').subscribe(this._isEnabledChanged, this);
 };
 
-CzmlDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+CzmlDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
 
 /**
  * Updates the CZML data item from a JSON object-literal description of it.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  */
- CzmlDataItemViewModel.prototype.updateFromJson = function(json) {
+ CzmlDataSourceViewModel.prototype.updateFromJson = function(json) {
     this.name = defaultValue(json.name, 'Unnamed Item');
     this.description = defaultValue(json.description, '');
 
@@ -52,7 +52,7 @@ CzmlDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
     }
 };
 
-CzmlDataItemViewModel.prototype._isEnabledChanged = function(newValue) {
+CzmlDataSourceViewModel.prototype._isEnabledChanged = function(newValue) {
     if (newValue === true && !defined(this._dataSource)) {
         // Enabling
         this._dataSource = new CzmlDataSource(this.name);
@@ -73,4 +73,4 @@ CzmlDataItemViewModel.prototype._isEnabledChanged = function(newValue) {
     }
 };
 
-module.exports = CzmlDataItemViewModel;
+module.exports = CzmlDataSourceViewModel;

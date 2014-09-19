@@ -14,19 +14,19 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 
 var corsProxy = require('../corsProxy');
-var GeoDataItemViewModel = require('./GeoDataItemViewModel');
+var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
 /**
  * A {@link GeoDataItemViewModel} representing a layer from a Web Map Service (WMS) server.
  *
- * @alias WebMapServiceDataItemViewModel
+ * @alias WebMapServiceDataSourceViewModel
  * @constructor
  * @extends GeoDataItemViewModel
  */
-var WebMapServiceDataItemViewModel = function() {
-    GeoDataItemViewModel.call(this, 'wms');
+var WebMapServiceDataSourceViewModel = function() {
+    GeoDataSourceViewModel.call(this, 'wms');
 
     this._imageryLayer = undefined;
 
@@ -47,7 +47,7 @@ var WebMapServiceDataItemViewModel = function() {
      * Gets or sets the additional parameters to pass to the WMS server when requesting images.
      * @type {Object}
      */
-    this.parameters = WebMapServiceDataItemViewModel.defaultParameters;
+    this.parameters = WebMapServiceDataSourceViewModel.defaultParameters;
 
     /**
      * Gets or sets the alpha (opacity) of the data item, where 0.0 is fully transparent and 1.0 is
@@ -77,14 +77,14 @@ var WebMapServiceDataItemViewModel = function() {
     knockout.track(this, ['url', 'layers', 'parameters', 'alpha']);
 };
 
-WebMapServiceDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+WebMapServiceDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
 
 /**
  * Updates the WMS data item from a JSON object-literal description of it.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  */
- WebMapServiceDataItemViewModel.prototype.updateFromJson = function(json) {
+ WebMapServiceDataSourceViewModel.prototype.updateFromJson = function(json) {
     this.name = defaultValue(json.name, 'Unnamed Item');
     this.description = defaultValue(json.description, '');
     this.url = defaultValue(json.url, '');
@@ -101,11 +101,11 @@ WebMapServiceDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototyp
     if (defined(json.parameters)) {
         this.parameters = clone(json.parameters);
     } else {
-        this.parameters = clone(WebMapServiceDataItemViewModel.defaultParameters);
+        this.parameters = clone(WebMapServiceDataSourceViewModel.defaultParameters);
     }
 };
 
-WebMapServiceDataItemViewModel.prototype.enableInCesium = function(scene) {
+WebMapServiceDataSourceViewModel.prototype.enableInCesium = function(scene) {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is already enabled.');
     }
@@ -126,7 +126,7 @@ WebMapServiceDataItemViewModel.prototype.enableInCesium = function(scene) {
     scene.imageryLayers.add(this._imageryLayer);
 };
 
-WebMapServiceDataItemViewModel.prototype.disableInCesium = function(scene) {
+WebMapServiceDataSourceViewModel.prototype.disableInCesium = function(scene) {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -135,7 +135,7 @@ WebMapServiceDataItemViewModel.prototype.disableInCesium = function(scene) {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceDataItemViewModel.prototype.showInCesium = function(scene) {
+WebMapServiceDataSourceViewModel.prototype.showInCesium = function(scene) {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -143,7 +143,7 @@ WebMapServiceDataItemViewModel.prototype.showInCesium = function(scene) {
     this._imageryLayer.alpha = this.alpha;
 };
 
-WebMapServiceDataItemViewModel.prototype.hideInCesium = function(scene) {
+WebMapServiceDataSourceViewModel.prototype.hideInCesium = function(scene) {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -151,7 +151,7 @@ WebMapServiceDataItemViewModel.prototype.hideInCesium = function(scene) {
     this._imageryLayer.alpha = 0.0;
 };
 
-WebMapServiceDataItemViewModel.prototype.enableInLeaflet = function(map) {
+WebMapServiceDataSourceViewModel.prototype.enableInLeaflet = function(map) {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is already enabled.');
     }
@@ -168,7 +168,7 @@ WebMapServiceDataItemViewModel.prototype.enableInLeaflet = function(map) {
     map.addLayer(this._imageryLayer);
 };
 
-WebMapServiceDataItemViewModel.prototype.disableInLeaflet = function(map) {
+WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function(map) {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -177,7 +177,7 @@ WebMapServiceDataItemViewModel.prototype.disableInLeaflet = function(map) {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceDataItemViewModel.prototype.showInLeaflet = function(map) {
+WebMapServiceDataSourceViewModel.prototype.showInLeaflet = function(map) {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -185,7 +185,7 @@ WebMapServiceDataItemViewModel.prototype.showInLeaflet = function(map) {
     this._imageryLayer.setOpacity(this.alpha);
 };
 
-WebMapServiceDataItemViewModel.prototype.hideInLeaflet = function(map) {
+WebMapServiceDataSourceViewModel.prototype.hideInLeaflet = function(map) {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -193,7 +193,7 @@ WebMapServiceDataItemViewModel.prototype.hideInLeaflet = function(map) {
     this._imageryLayer.setOpacity(0.0);
 };
 
-WebMapServiceDataItemViewModel.defaultParameters = {
+WebMapServiceDataSourceViewModel.defaultParameters = {
     transparent: true,
     format: 'image/png',
     exceptions: 'application/vnd.ogc.se_xml',
@@ -207,4 +207,4 @@ function cleanUrl(url) {
     return uri.toString();
 }
 
-module.exports = WebMapServiceDataItemViewModel;
+module.exports = WebMapServiceDataSourceViewModel;
