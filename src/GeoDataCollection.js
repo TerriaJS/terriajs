@@ -843,7 +843,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     if (defined(layer.style.table.colorMap)) {
         layer.baseDataSource.setColorGradient(layer.style.table.colorMap);
     }
-    dataset.setCurrentVariable({ variable: layer.style.table.data});
+    layer.baseDataSource.setCurrentVariable(layer.style.table.data);
     
         //capture url to use for sharing
     layer.shareUrl = layer.url || '';
@@ -962,8 +962,18 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
                 style.table.alt = dataset.getVarID(VarType.ALT);
                 style.table.time = dataset.getVarID(VarType.TIME);
                 style.table.data = dataset.getVarID(VarType.SCALAR);
+                style.table.imageUrl = undefined;
                 style.table.colorMap = undefined;
                 layer.style = style;
+            }
+            if (defined(layer.style.table.colorMap)) {
+                tableDataSource.setColorGradient(layer.style.table.colorMap);
+            }
+            if (defined(layer.style.table.imageUrl)) {
+                tableDataSource.setImageUrl(layer.style.table.imageUrl);
+            }
+            if (defined(layer.style.table.data)) {
+                tableDataSource.setCurrentVariable(layer.style.table.data);
             }
             if (this.map === undefined) {
                 this.dataSourceCollection.add(tableDataSource);
@@ -1148,7 +1158,6 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     });
 };
 
-
 // Show wms map
 GeoDataCollection.prototype._viewMap = function(request, layer) {
     var uri = new URI(request);
@@ -1220,6 +1229,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             provider = new WebMapServiceImageryProvider(wmsOptions);
             
             if (defined(layer.colorFunc)) {
+                    //remap image layer color func
                 provider.base_requestImage = provider.requestImage;
                 provider.requestImage = function(x, y, level) {
                     var imagePromise = provider.base_requestImage(x, y, level);
@@ -1234,6 +1244,23 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                         return image;
                     });
                 };
+                    //remap image layer featurePicking Func
+                provider.base_pickFeatures = provider.pickFeatures;
+                provider.pickFeatures = function(x, y, level, longitude, latitude) {
+                    var featurePromise = provider.base_pickFeatures(x, y, level, longitude, latitude);
+                    if (!defined(featurePromise)) {
+                        return featurePromise;
+                    }
+                    
+                    return when(featurePromise, function(results) {
+                        if (defined(results)) {
+                            var id = results[0].data.properties['POA_CODE'];
+                            var properties = layer.rowProperties(parseInt(id));
+                            results[0].description = layer.baseDataSource.describe(properties);
+                        }
+                        return results;
+                    });
+                }
             }
         }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
