@@ -19,13 +19,16 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
 /**
  * A data source in a {@link GeoDataGroupViewModel}.
+ *
  * @alias GeoDataSourceViewModel
  * @constructor
+ * @extends GeoDataItemViewModel
  *
  * @param {String} type The type of data source represented by the new instance.
+ * @param {GeoDataCatalogContext} context The context for the item.
  */
-var GeoDataSourceViewModel = function(type) {
-    GeoDataItemViewModel.call(this, defaultValue(type, 'source'));
+var GeoDataSourceViewModel = function(type, context) {
+    GeoDataItemViewModel.call(this, defaultValue(type, 'source'), context);
 
     this._isEnabled = false; // observable
     this._isShown = false; // observable
@@ -54,13 +57,14 @@ var GeoDataSourceViewModel = function(type) {
 
     /**
      * Gets or sets the type of the {@link GeoDataSourceViewModel#dataUrl}.  Valid values are
-     * 'wfs', 'wfs-complete'
-     * @type {[type]}
+     * 'direct', 'wfs', and 'wfs-complete'.  This property is observable.
+     * @type {String}
      */
     this.dataUrlType = undefined;
 
     /**
-     * Gets or sets the URL from which this data item's raw data can be retrieved.
+     * Gets or sets the URL from which this data item's raw data can be retrieved.  This property
+     * is observable.
      * @type {String}
      */
     this.dataUrl = undefined;

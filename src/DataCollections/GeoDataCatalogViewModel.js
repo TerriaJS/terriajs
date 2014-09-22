@@ -12,10 +12,14 @@ var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 /**
  * The view model for the geospatial data catalog.
  *
+ * @param {GeoDataCatalogContext} context The context for the catalog.
+ *
  * @alias GeoDataCatalogViewModel
  * @constructor
  */
-var GeoDataCatalogViewModel = function() {
+var GeoDataCatalogViewModel = function(context) {
+    this._context = context;
+
     /**
      * The geospatial data collections in this catalog.  This property is observable.
      * @type {Array}
@@ -84,7 +88,7 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         }
 
         if (!defined(existingGroup)) {
-            existingGroup = new GeoDataGroupViewModel();
+            existingGroup = new GeoDataGroupViewModel(this._context);
             this.groups.push(existingGroup);
         }
 

@@ -15,20 +15,22 @@ var NowViewingViewModel = require('./NowViewingViewModel');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
 /**
- * An member of a {@link GeoDataGroupViewModel}.  A member may be {@link GeoDataItemViewModel} or a
+ * A member of a {@link GeoDataGroupViewModel}.  An item may be a {@link GeoDataSourceViewModel} or a
  * {@link GeoDataGroupViewModel}.
  *
  * @alias GeoDataItemViewModel
  * @constructor
  *
  * @param {String} type The type of data item represented by the new instance.
+ * @param {GeoDataCatalogContext} context The context for the item.
  */
-var GeoDataItemViewModel = function(type) {
+var GeoDataItemViewModel = function(type, context) {
     if (!defined(type)) {
         throw new DeveloperError('type is required.');
     }
 
     this._type = type;
+    this._context = context;
 
     /**
      * Gets or sets the name of the member.  This property is observable.
@@ -53,6 +55,16 @@ defineProperties(GeoDataItemViewModel.prototype, {
     type : {
         get : function() {
             return this._type;
+        }
+    },
+
+    /**
+     * Gets the context for this data item.
+     * @type {GeoDataCatalogContext}
+     */
+    context : {
+        get : function() {
+            return this._context;
         }
     }
 });

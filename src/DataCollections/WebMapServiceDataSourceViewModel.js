@@ -23,10 +23,12 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  *
  * @alias WebMapServiceDataSourceViewModel
  * @constructor
- * @extends GeoDataItemViewModel
+ * @extends GeoDataSourceViewModel
+ * 
+ * @param {GeoDataCatalogContext} context The context for the group.
  */
-var WebMapServiceDataSourceViewModel = function() {
-    GeoDataSourceViewModel.call(this, 'wms');
+var WebMapServiceDataSourceViewModel = function(context) {
+    GeoDataSourceViewModel.call(this, 'wms', context);
 
     this._imageryLayer = undefined;
 
@@ -87,6 +89,10 @@ WebMapServiceDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prot
  WebMapServiceDataSourceViewModel.prototype.updateFromJson = function(json) {
     this.name = defaultValue(json.name, 'Unnamed Item');
     this.description = defaultValue(json.description, '');
+    this.legendUrl = json.legendUrl;
+    this.dataUrl = json.dataUrl;
+    this.dataUrlType = defaultValue(json.dataUrlType, 'none');
+
     this.url = defaultValue(json.url, '');
     this.layers = defaultValue(json.layers, '');
     this.getFeatureInfoAsGeoJson = defaultValue(json.getFeatureInfoAsGeoJson, true);

@@ -19,9 +19,11 @@ var inherit = require('../inherit');
  * @alias GeoDataGroupViewModel
  * @constructor
  * @extends GeoDataItemViewModel
+ * 
+ * @param {GeoDataCatalogContext} context The context for the group.
  */
-var GeoDataGroupViewModel = function(type) {
-    GeoDataItemViewModel.call(this, defaultValue(type, 'group'));
+var GeoDataGroupViewModel = function(type, context) {
+    GeoDataItemViewModel.call(this, defaultValue(type, 'group'), context);
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -104,7 +106,7 @@ GeoDataGroupViewModel.prototype.updateFromJson = function(json) {
         }
 
         if (!defined(existingItem) || existingItem.type !== item.type) {
-            existingItem = createGeoDataItemFromType(item.type);
+            existingItem = createGeoDataItemFromType(item.type, this.context);
             this.add(existingItem);
         }
 

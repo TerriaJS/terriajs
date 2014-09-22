@@ -28,9 +28,11 @@ var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewMod
  * @alias WebMapServiceGroupViewModel
  * @constructor
  * @extends GeoDataGroupViewModel
+ * 
+ * @param {GeoDataCatalogContext} context The context for the group.
  */
-var WebMapServiceGroupViewModel = function() {
-    GeoDataGroupViewModel.call(this, 'wms-getCapabilities');
+var WebMapServiceGroupViewModel = function(context) {
+    GeoDataGroupViewModel.call(this, 'wms-getCapabilities', context);
 
     this._needsLoad = true;
     this._imageryLayer = undefined;

@@ -77,7 +77,7 @@ gulp.task('lint', function(){
 });
 
 gulp.task('docs', function(){
-    return gulp.src('src/*.js')
+    return gulp.src('src/**/*.js')
         .pipe(jsdoc('./public/doc'));
 });
 
