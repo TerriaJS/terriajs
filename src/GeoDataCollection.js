@@ -677,27 +677,32 @@ var regionWmsMap = {
     'STE': {
         "Name":"admin_bnds_region:STE_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "STE_CODE11",
         "aliases": ['state', 'ste']
     },
     'CED': {
         "Name":"admin_bnds_region:CED_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "CED_CODE",
         "aliases": ['ced']
     },
     'POA': {
         "Name":"admin_bnds_region:POA_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "POA_CODE",
         "aliases": ['poa', 'postcode']
     },
     'LGA': {
         "Name":"admin_bnds_region:LGA_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "LGA_CODE11",
         "aliases": ['lga'],
         "factor": 10  //this can be removed when we get ids larger than 10k in style
     },
     'SA4': {
         "Name":"admin_bnds_region:SA4_2011_AUST",
         "base_url" : regionServer,
+        "regionProp": "SA4_CODE11",
         "aliases": ['sa4']
     }
 };
@@ -760,6 +765,7 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
         var description = regionWmsMap[regionType];
         description.type = 'WMS';
         layer.url = this.getOGCFeatureURL(description);
+        layer.regionProp = description.regionProp;
     }
     this.createRegionLookupFunc(layer);
     var currentIndex = this.layers.indexOf(layer);
@@ -1254,13 +1260,13 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     
                     return when(featurePromise, function(results) {
                         if (defined(results)) {
-                            var id = results[0].data.properties['POA_CODE'];
-                            var properties = layer.rowProperties(parseInt(id));
+                            var id = results[0].data.properties[layer.regionProp];
+                            var properties = layer.rowProperties(parseInt(id),10);
                             results[0].description = layer.baseDataSource.describe(properties);
                         }
                         return results;
                     });
-                }
+                };
             }
         }
         layer.primitive = this.imageryLayersCollection.addImageryProvider(provider);
