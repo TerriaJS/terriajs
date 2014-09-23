@@ -77,6 +77,10 @@ var WebMapServiceDataSourceViewModel = function(context) {
     this.getFeatureInfoAsXml = true;
 
     knockout.track(this, ['url', 'layers', 'parameters', 'alpha']);
+
+    knockout.getObservable(this, 'alpha').subscribe(function(newValue) {
+        updateAlpha(this);
+    }, this);
 };
 
 WebMapServiceDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
@@ -217,6 +221,18 @@ function cleanUrl(url) {
     var uri = new URI(url);
     uri.search('');
     return uri.toString();
+}
+
+function updateAlpha(viewModel) {
+    if (defined(this._imageryLayer) && viewModel.isEnabled && viewModel.isShown) {
+        if (defined(this._imageryLayer.alpha)) {
+            this._imageryLayer.alpha = viewModel.alpha;
+        }
+
+        if (defined(this._imageryLayer.setOpacity)) {
+            this._imageryLayer.setOpacity(viewModel.alpha);
+        }
+    }
 }
 
 module.exports = WebMapServiceDataSourceViewModel;

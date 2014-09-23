@@ -136,7 +136,6 @@ var scratchRectangle = new Rectangle();
 
 /**
  * Moves the camera so that the item's bounding rectangle is visible.
- * @param {Number} [flightTimeSeconds=3] The number of seconds over which to fly the camera.  This parameter is ignored in Leaflet.
  */
  GeoDataSourceViewModel.prototype.zoomTo = function() {
     if (!this.isEnabled || !this.isShown || !defined(this.rectangle)) {

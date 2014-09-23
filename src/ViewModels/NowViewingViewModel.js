@@ -44,12 +44,24 @@ NowViewingViewModel.prototype.add = function(item) {
 };
 
 /**
- * Removes an item from the "Now Viewing" pane.
+ * Removes an item from the "Now Viewing" pane and from the map.
  *
  * @param {GeoDataItemViewModel} item The item to remove.
  */
 NowViewingViewModel.prototype.remove = function(item) {
+    item.isEnabled = false;
     this.items.remove(item);
+};
+
+/**
+ * Removes all data sources from the "Now Viewing" pane and from the map.
+ */
+NowViewingViewModel.prototype.removeAll = function() {
+    for (var i = 0; i < this.items.length; ++i) {
+        this.items[i].isEnabled = false;
+    }
+
+    this.items.removeAll();
 };
 
 /**

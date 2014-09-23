@@ -57,14 +57,14 @@ var GeoDataBrowser = function(options) {
     dataPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingPanel }');
 
     dataPanel.innerHTML = '\
-        <div class="ausglobe-now-viewing ausglobe-accordion-item">\
-            <div class="ausglobe-accordion-item-header" data-bind="click: openNowViewing">\
+        <div class="ausglobe-now-viewing ausglobe-accordion-item" data-bind="with: nowViewing">\
+            <div class="ausglobe-accordion-item-header" data-bind="click: $root.openNowViewing">\
                 <div class="ausglobe-accordion-item-header-label">Now Viewing</div>\
-                <div class="ausglobe-now-viewing-clear-all" data-bind="click: clearAll, clickBubble: false">Clear all</div>\
+                <div class="ausglobe-now-viewing-clear-all" data-bind="click: removeAll, clickBubble: false">Clear all</div>\
             </div>\
-            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': nowViewingIsOpen }">\
+            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': $root.nowViewingIsOpen }">\
                 <div class="ausglobe-accordion-category">\
-                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: nowViewing.hasItems, foreach: nowViewing.items">\
+                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: hasItems, foreach: items">\
                         <div class="ausglobe-accordion-category-item" draggable="true" data-bind="attr : { title : name, nowViewingIndex : $index }, css: { \'ausglobe-accordion-category-item-enabled\': isShown }, event : { dragstart: $root.startNowViewingDrag, dragenter: $root.nowViewingDragEnter, dragend: $root.endNowViewingDrag }">\
                             <img class="ausglobe-nowViewing-dragHandle" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." />\
                             <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
@@ -72,7 +72,7 @@ var GeoDataBrowser = function(options) {
                             <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                         </div>\
                     </div>\
-                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: !nowViewing.hasItems">\
+                    <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: !hasItems">\
                         <div class="ausglobe-now-viewing-no-data">\
                             Add data from the collections below.\
                         </div>\
