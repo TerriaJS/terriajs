@@ -77,7 +77,22 @@ function getCapabilities(viewModel) {
 
     return when(loadXML(url), function(xml) {
         var json = $.xml2json(xml);
-        addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items);
+
+        var supportsJsonGetFeatureInfo = false;
+
+        if (defined(json.Capability.Request) &&
+            defined(json.Capability.Request.GetFeatureInfo) &&
+            defined(json.Capability.Request.GetFeatureInfo.Format)) {
+
+            var format = json.Capability.Request.GetFeatureInfo.Format;
+            if (format === 'application/json') {
+                supportsJsonGetFeatureInfo = true;
+            } else if (defined(format.indexOf) && format.indexOf('application/json') >= 0) {
+                supportsJsonGetFeatureInfo = true;
+            }
+        }
+
+        addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo);
     }, function(e) {
         // TODO: view models should not create UI elements directly like this.
         var message =new PopupMessage({
@@ -99,7 +114,7 @@ function cleanUrl(url) {
     return uri.toString();
 }
 
-function addLayersRecursively(viewModel, layers, items, parent) {
+function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetFeatureInfo) {
     if (!(layers instanceof Array)) {
         layers = [layers];
     }
@@ -114,17 +129,17 @@ function addLayersRecursively(viewModel, layers, items, parent) {
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
             // in the 'layers' parameter of a GetMap request.  This is true in 1.0.0 and 1.3.0 as well.
             if (defined(layer.Name) && layer.Name.length > 0) {
-                items.push(createWmsDataSource(viewModel, layer));
+                items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo));
             }
-            addLayersRecursively(viewModel, layer.Layer, items);
+            addLayersRecursively(viewModel, layer.Layer, items, layer, supportsJsonGetFeatureInfo);
         }
         else {
-            items.push(createWmsDataSource(viewModel, layer));
+            items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo));
         }
     }
 }
 
-function createWmsDataSource(viewModel, layer) {
+function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo) {
     var result = new WebMapServiceDataSourceViewModel(viewModel.context);
 
     result.name = layer.Title;
@@ -132,9 +147,10 @@ function createWmsDataSource(viewModel, layer) {
     result.url = viewModel.url;
     result.layers = layer.Name;
 
-    var supportsGetFeatureInfo = defaultValue(getInheritableProperty(layer, 'queryable'), false);
-    result.getFeatureInfoAsGeoJson = supportsGetFeatureInfo;
-    result.getFeatureInfoAsXml = supportsGetFeatureInfo;
+    var queryable = defaultValue(getInheritableProperty(layer, 'queryable'), false);
+
+    result.getFeatureInfoAsGeoJson = queryable && supportsJsonGetFeatureInfo;
+    result.getFeatureInfoAsXml = queryable;
 
     var egbb = getInheritableProperty(layer, 'EX_GeographicBoundingBox'); // required in WMS 1.3.0
     if (defined(egbb)) {
