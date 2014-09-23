@@ -125,7 +125,7 @@ function addLayersRecursively(viewModel, layers, items, parent) {
 }
 
 function createWmsDataSource(viewModel, layer) {
-    var result = new WebMapServiceDataSourceViewModel();
+    var result = new WebMapServiceDataSourceViewModel(viewModel.context);
 
     result.name = layer.Title;
     result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;
