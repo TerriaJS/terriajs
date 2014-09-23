@@ -298,7 +298,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
             try {
                 catalog.updateFromJson(json.catalog);
             } catch (e) {
-                new PopupMessage({
+                var message = new PopupMessage({
                     container: document.body,
                     title: 'An error occurred while loading the catalog',
                     message: e.toString()

@@ -189,6 +189,8 @@ WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
         throw new DeveloperError('Data item is not enabled.');
     }
 
+    var map = this.context.leafletMap;
+
     map.removeLayer(this._imageryLayer);
     this._imageryLayer = undefined;
 };
@@ -224,13 +226,13 @@ function cleanUrl(url) {
 }
 
 function updateAlpha(viewModel) {
-    if (defined(this._imageryLayer) && viewModel.isEnabled && viewModel.isShown) {
-        if (defined(this._imageryLayer.alpha)) {
-            this._imageryLayer.alpha = viewModel.alpha;
+    if (defined(viewModel._imageryLayer) && viewModel.isEnabled && viewModel.isShown) {
+        if (defined(viewModel._imageryLayer.alpha)) {
+            viewModel._imageryLayer.alpha = viewModel.alpha;
         }
 
-        if (defined(this._imageryLayer.setOpacity)) {
-            this._imageryLayer.setOpacity(viewModel.alpha);
+        if (defined(viewModel._imageryLayer.setOpacity)) {
+            viewModel._imageryLayer.setOpacity(viewModel.alpha);
         }
     }
 }
