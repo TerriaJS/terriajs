@@ -2,8 +2,8 @@
 
 /*global require,describe,it,expect*/
 
-var GeoDataItemViewModel = require('../../src/DataCollections/GeoDataItemViewModel');
-var GeoDataGroupViewModel = require('../../src/DataCollections/GeoDataGroupViewModel');
+var GeoDataItemViewModel = require('../../src/ViewModels/GeoDataItemViewModel');
+var GeoDataGroupViewModel = require('../../src/ViewModels/GeoDataGroupViewModel');
 
 describe('GeoDataCatalogViewModel', function() {
     it('foo', function() {

@@ -134,7 +134,8 @@
                             ],
                             "type": "wms",
                             "url": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer",
-                            "layers": "7"
+                            "layers": "7",
+                            "getFeatureInfoAsGeoJson": false
                         },
                         {
                             "name": "Taxation Statistics 2011-2012",

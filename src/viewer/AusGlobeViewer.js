@@ -62,11 +62,11 @@ var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-e
 
 var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
-var GeoDataCatalogContext = require('../DataCollections/GeoDataCatalogContext');
-var GeoDataCatalogViewModel = require('../DataCollections/GeoDataCatalogViewModel');
+var GeoDataCatalogContext = require('../ViewModels/GeoDataCatalogContext');
+var GeoDataCatalogViewModel = require('../ViewModels/GeoDataCatalogViewModel');
 var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
-var NowViewingViewModel = require('../DataCollections/NowViewingViewModel');
+var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');
 var PopupMessage = require('./PopupMessage');
 var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');

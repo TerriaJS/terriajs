@@ -46,7 +46,7 @@ if (start) {
     var AusGlobeViewer = require('./AusGlobeViewer');
     var corsProxy = require('../corsProxy');
     var GeoDataCollection = require('../GeoDataCollection');
-    var registerGeoDataViewModels = require('../DataCollections/registerGeoDataViewModels');
+    var registerGeoDataViewModels = require('../ViewModels/registerGeoDataViewModels');
 
     SvgPathBindingHandler.register(knockout);
     registerGeoDataViewModels();
