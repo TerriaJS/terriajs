@@ -67,8 +67,8 @@ var GeoDataBrowser = function(options) {
                     <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: nowViewing.hasItems, foreach: nowViewing.items">\
                         <div class="ausglobe-accordion-category-item" draggable="true" data-bind="attr : { title : name, nowViewingIndex : $index }, css: { \'ausglobe-accordion-category-item-enabled\': isShown }, event : { dragstart: $root.startNowViewingDrag, dragenter: $root.nowViewingDragEnter, dragend: $root.endNowViewingDrag }">\
                             <img class="ausglobe-nowViewing-dragHandle" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." />\
-                            <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemShown, cesiumSvgPath: { path: isShown ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                            <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: $root.zoomToItem"></div>\
+                            <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
+                            <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomTo"></div>\
                             <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                         </div>\
                     </div>\
@@ -94,8 +94,8 @@ var GeoDataBrowser = function(options) {
                         <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading...</div>\
                         <div class="ausglobe-accordion-category-content" data-bind="foreach: items, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
                             <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled }">\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, cesiumSvgPath: { path: isEnabled ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: $root.zoomToItem"></div>\
+                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomTo"></div>\
                                 <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                             </div>\
                         </div>\
@@ -118,9 +118,9 @@ var GeoDataBrowser = function(options) {
                         <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading</div>\
                         <div class="ausglobe-accordion-category-content" data-bind="foreach: Layer, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
                             <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled() }">\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: isEnabled, cesiumSvgPath: { path: $root._checkboxChecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: $root.toggleItemEnabled, visible: !isEnabled(), cesiumSvgPath: { path: $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: $root.zoomToItem"></div>\
+                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, visible: isEnabled, cesiumSvgPath: { path: $root._checkboxChecked, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, visible: !isEnabled(), cesiumSvgPath: { path: $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-item-label" data-bind="text: Title, click: zoomTo"></div>\
                                 <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                             </div>\
                         </div>\

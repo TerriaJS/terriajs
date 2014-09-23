@@ -28,6 +28,9 @@ var GeoDataItemViewModel = function(type, context) {
     if (!defined(type)) {
         throw new DeveloperError('type is required.');
     }
+    if (!defined(context)) {
+        throw new DeveloperError('context is required');
+    }
 
     this._type = type;
     this._context = context;

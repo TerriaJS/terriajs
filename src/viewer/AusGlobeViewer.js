@@ -62,9 +62,11 @@ var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-e
 
 var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
+var GeoDataCatalogContext = require('../DataCollections/GeoDataCatalogContext');
 var GeoDataCatalogViewModel = require('../DataCollections/GeoDataCatalogViewModel');
 var readJson = require('../readJson');
 var NavigationWidget = require('./NavigationWidget');
+var NowViewingViewModel = require('../DataCollections/NowViewingViewModel');
 var PopupMessage = require('./PopupMessage');
 var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
@@ -257,6 +259,8 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         console.log('Viewer Changed:', (obj.scene?'Cesium':'Leaflet'));
         that.scene = obj.scene;
         that.map = obj.map;
+        that.context.cesiumScene = obj.scene;
+        that.context.leafletMap = obj.map;
     });
 
     this.geoDataManager.ShareRequest.addEventListener(function(collection, request) {
@@ -271,7 +275,10 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.scene = undefined;
     this.viewer = undefined;
     this.map = undefined;
-    
+
+    this.context = new GeoDataCatalogContext();
+    this.context.nowViewing = new NowViewingViewModel();
+
     var url = window.location;
     var uri = new URI(url);
     var params = uri.search(true);
@@ -284,7 +291,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         
         that.initialCamera = config.initialCamera;
 
-        var catalog = new GeoDataCatalogViewModel(geoDataManager.dataSourceCollection);
+        var catalog = new GeoDataCatalogViewModel(that.context);
         catalog.isLoading = true;
 
         when(loadJson(params.data_menu || config.initialDataMenu || 'init_nm.json'), function(json) {
@@ -769,6 +776,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         //redisplay data
         this.map = map;
+        this.context.leafletMap = map;
 
         this.captureCanvas = function() {
             var that = this;
@@ -825,7 +833,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     else {
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
-        this.scene = this.viewer.scene;
+        this.scene = this.context.cesiumScene = this.viewer.scene;
         this.frameChecker = new FrameChecker();
 
         // override the default render loop

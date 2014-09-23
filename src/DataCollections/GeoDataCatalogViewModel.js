@@ -3,6 +3,7 @@
 /*global require*/
 
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
@@ -18,6 +19,10 @@ var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
  * @constructor
  */
 var GeoDataCatalogViewModel = function(context) {
+    if (!defined(context)) {
+        throw new DeveloperError('context is required');
+    }
+
     this._context = context;
 
     /**
@@ -34,6 +39,18 @@ var GeoDataCatalogViewModel = function(context) {
 
     knockout.track(this, ['groups', 'isLoading']);
 };
+
+defineProperties(GeoDataCatalogViewModel.prototype, {
+    /**
+     * Gets the context for this catalog.
+     * @type {GeoDataCatalogContext}
+     */
+    context : {
+        get : function() {
+            return this._context;
+        }
+    }
+});
 
 /**
  * Adds a group to the catalog.

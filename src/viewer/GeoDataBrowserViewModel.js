@@ -21,7 +21,6 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
-var NowViewingViewModel = require('../DataCollections/NowViewingViewModel');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -53,7 +52,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.catalog = options.catalog;
 
-    this.nowViewing = new NowViewingViewModel();
+    this.nowViewing = this.catalog.context.nowViewing;
 
     knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
@@ -824,10 +823,6 @@ these extensions in order for National Map to know how to load it.'
             dragPlaceholder.setAttribute('nowViewingIndex', siblings[targetIndex + 1].getAttribute('nowViewingIndex'));
         }
     });
-
-    this._toggleItemEnabled = function(item) { item.toggleEnabled(that.sceneOrMap, that.nowViewing); };
-    this._toggleItemShown = function(item) { item.toggleShown(that.sceneOrMap); };
-    this._zoomToItem = function(item) { item.zoomTo(that.sceneOrMap); };
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {

@@ -30,10 +30,22 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var GeoDataSourceViewModel = function(type, context) {
     GeoDataItemViewModel.call(this, defaultValue(type, 'source'), context);
 
-    this._isEnabled = false; // observable
-    this._isShown = false; // observable
     this._enabledDate = undefined;
     this._shownDate = undefined;
+
+    /**
+     * Gets a value indicating whether this data item is enabled.  An enabled data item appears in the
+     * "Now Viewing" pane, but is not necessarily shown on the map.  This property is observable.
+     * @type {Boolean}
+     */
+    this.isEnabled = false;
+
+    /**
+     * Gets a value indicating whether this data item is currently shown on the map.  In order to be shown,
+     * the item must also be enabled.  This property is observable.
+     * @type {Boolean}
+     */
+    this.isShown = false;
 
     /**
      * Gets or sets the geographic rectangle containing this data item.  This property
@@ -69,7 +81,15 @@ var GeoDataSourceViewModel = function(type, context) {
      */
     this.dataUrl = undefined;
 
-    knockout.track(this, ['name', 'description', 'rectangle', 'legend', 'isLegendVisible', 'dataUrltype', 'dataUrl', '_isEnabled', '_isShown']);
+    knockout.track(this, ['isEnabled', 'isShown', 'rectangle', 'legendUrl', 'isLegendVisible', 'dataUrltype', 'dataUrl']);
+
+    knockout.getObservable(this, 'isEnabled').subscribe(function(newValue) {
+        isEnabledChanged(this);
+    }, this);
+
+    knockout.getObservable(this, 'isShown').subscribe(function(newValue) {
+        isShownChanged(this);
+    }, this);
 };
 
 GeoDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
@@ -83,39 +103,6 @@ defineProperties(GeoDataSourceViewModel.prototype, {
         get : function() {
             return this._type;
         }
-    },
-
-    /**
-     * Gets a value indicating whether this data item is enabled.  An enabled data item appears in the
-     * "Now Viewing" pane, but is not necessarily shown on the map.  This property is observable.
-     * @type {Boolean}
-     */
-    isEnabled : {
-        get : function() {
-            return this._isEnabled;
-        }
-    },
-
-    /**
-     * Gets a value indicating whether this data item can be enabled/disabled by calling {@link GeoDataSourceViewModel#toggleEnabled}.
-     * @type {Boolean}
-     */
-    canToggleEnabled : {
-        get : function() {
-            return defined(this.enableInCesium) && defined(this.enableInLeaflet) &&
-                   defined(this.disableInCesium) && defined(this.disableInLeaflet);
-        }
-    },
-
-    /**
-     * Gets a value indicating whether this data item is currently shown on the map.  In order to be shown,
-     * the item must also be enabled.
-     * @type {Boolean}
-     */
-    isShown : {
-        get : function() {
-            return this._isShown;
-        }
     }
 });
 
@@ -123,98 +110,31 @@ defineProperties(GeoDataSourceViewModel.prototype, {
  * Toggles the {@link GeoDataSourceViewModel#isEnabled} property of this item.  If it is enabled, calling this method
  * will disable it.  If it is disabled, calling this method will enable it.
  *
- * @param {Scene|L.map} sceneOrMap The Cesium Scene or Leaflet Map in which to toggle the data item.
- * @param {NowViewingViewModel} nowViewing The Now Viewing view model to which the item will be added if it is enabled, or removed if it is disabled.
  * @returns {Boolean} true if the item is now enabled, false if it is now disabled.
  */
- GeoDataSourceViewModel.prototype.toggleEnabled = function(sceneOrMap, nowViewing) {
-    if (!this.canToggleEnabled) {
-        throw new DeveloperError('This data item\'s enabled state cannot be toggled.');
-    }
-
-    if (sceneOrMap instanceof Scene) {
-        if (!this._isEnabled) {
-            this.enableInCesium(sceneOrMap);
-        } else {
-            this.disableInCesium(sceneOrMap);
-        }
-    } else {
-        if (!this._isEnabled) {
-            this.enableInLeaflet(sceneOrMap);
-        } else {
-            this.disableInLeaflet(sceneOrMap);
-        }
-    }
-
-    this._isEnabled = !this._isEnabled;
-    this._isShown = this._isEnabled;
-
-    if (this._isEnabled) {
-        nowViewing.add(this);
-
-        ga('send', 'event', 'dataSource', 'added', this.name);
-        this._enabledDate = Date.now();
-    } else {
-        nowViewing.remove(this);
-
-        var duration;
-        if (this._enabledDate) {
-            duration = ((Date.now() - this._enabledDate) / 1000.0) | 0;
-        }
-        ga('send', 'event', 'dataSource', 'removed', this.name, duration);
-    }
-
-    return this._isEnabled;
+ GeoDataSourceViewModel.prototype.toggleEnabled = function() {
+    this.isEnabled = !this.isEnabled;
+    return this.isEnabled;
 };
 
 /**
  * Toggles the {@link GeoDataSourceViewModel#isShown} property of this item.  If it is shown, calling this method
  * will hide it.  If it is hidden, calling this method will show it.
  *
- * @param {Scene|L.map} sceneOrMap The Cesium Scene or Leaflet Map in which to toggle the data item.
  * @returns {Boolean} true if the item is now shown, false if it is now hidden.
  */
- GeoDataSourceViewModel.prototype.toggleShown = function(sceneOrMap) {
-    if (sceneOrMap instanceof Scene) {
-        if (!this._isShown) {
-            this.showInCesium(sceneOrMap);
-        } else {
-            this.hideInCesium(sceneOrMap);
-        }
-    } else {
-        if (!this._isShown) {
-            this.showInLeaflet(sceneOrMap);
-        } else {
-            this.hideInLeaflet(sceneOrMap);
-        }
-    }
-
-    this._isShown = !this._isShown;
-
-    if (this._isShown) {
-        ga('send', 'event', 'dataSource', 'shown', this.name);
-        this._shownDate = Date.now();
-    } else {
-        var duration;
-        if (defined(this._shownDate)) {
-            duration = ((Date.now() - this._shownDate) / 1000.0) | 0;
-        } else if (this._enabledDate) {
-            duration = ((Date.now() - this._enabledDate) / 1000.0) | 0;
-        }
-        ga('send', 'event', 'dataSource', 'hidden', this.name, duration);
-    }
-
-    return this._isShown;
+ GeoDataSourceViewModel.prototype.toggleShown = function() {
+    this.isShown = !this.isShown;
+    return this.isShown;
 };
 
 var scratchRectangle = new Rectangle();
 
 /**
  * Moves the camera so that the item's bounding rectangle is visible.
- * @param {Scene|L.map} sceneOrMap The Cesium Scene or Leaflet map to zoom.
- * @param {Number} flightTimeSeconds The number of seconds over which to fly the camera.  This parameter is ignored in Leaflet.
+ * @param {Number} [flightTimeSeconds=3] The number of seconds over which to fly the camera.  This parameter is ignored in Leaflet.
  */
- GeoDataSourceViewModel.prototype.zoomTo = function(sceneOrMap, flightTimeSeconds) {
+ GeoDataSourceViewModel.prototype.zoomTo = function() {
     if (!this.isEnabled || !this.isShown || !defined(this.rectangle)) {
         return;
     }
@@ -235,16 +155,91 @@ var scratchRectangle = new Rectangle();
         rect.south -= epsilon;
     }
 
+    var context = this.context;
 
-    if (sceneOrMap instanceof Scene) {
-        var flight = CameraFlightPath.createTweenRectangle(sceneOrMap, {
-            destination : rect,
-            duration: flightTimeSeconds
+    if (defined(context.cesiumScene)) {
+        var flight = CameraFlightPath.createTweenRectangle(context.cesiumScene, {
+            destination : rect
         });
-        sceneOrMap.tweens.add(flight);
-    } else {
-        sceneOrMap.fitBounds(rectangleToLatLngBounds(rect));
+        context.cesiumScene.tweens.add(flight);
+    }
+
+    if (defined(context.leafletMap)) {
+        context.leafletMap.fitBounds(rectangleToLatLngBounds(rect));
     }
 };
+
+function isEnabledChanged(viewModel) {
+    var context = viewModel.context;
+
+    if (defined(context.cesiumScene)) {
+        if (viewModel.isEnabled) {
+            viewModel.enableInCesium();
+        } else {
+            viewModel.disableInCesium();
+        }
+    }
+
+    if (defined(context.leafletMap)) {
+        if (viewModel.isEnabled) {
+            viewModel.enableInLeaflet();
+        } else {
+            viewModel.disableInLeaflet();
+        }
+    }
+
+    // Newly-enabled data sources should initially be shown.
+    if (viewModel.isEnabled && !viewModel.isShown) {
+        viewModel.isShown = true;
+    }
+
+    if (viewModel.isEnabled) {
+        context.nowViewing.add(viewModel);
+
+        ga('send', 'event', 'dataSource', 'added', viewModel.name);
+        viewModel._enabledDate = Date.now();
+    } else {
+        context.nowViewing.remove(viewModel);
+
+        var duration;
+        if (viewModel._enabledDate) {
+            duration = ((Date.now() - viewModel._enabledDate) / 1000.0) | 0;
+        }
+        ga('send', 'event', 'dataSource', 'removed', viewModel.name, duration);
+    }
+}
+
+function isShownChanged(viewModel) {
+    var context = viewModel.context;
+
+    if (defined(context.cesiumScene)) {
+        if (viewModel.isShown) {
+            viewModel.showInCesium();
+        } else {
+            viewModel.hideInCesium();
+        }
+    }
+
+    if (defined(context.leafletMap)) {
+        if (viewModel.isShown) {
+            viewModel.showInLeaflet();
+        } else {
+            viewModel.hideInLeaflet();
+        }
+    }
+
+    if (viewModel.isShown) {
+        ga('send', 'event', 'dataSource', 'shown', viewModel.name);
+        viewModel._shownDate = Date.now();
+    } else {
+        var duration;
+        if (defined(viewModel._shownDate)) {
+            duration = ((Date.now() - viewModel._shownDate) / 1000.0) | 0;
+        } else if (viewModel._enabledDate) {
+            duration = ((Date.now() - viewModel._enabledDate) / 1000.0) | 0;
+        }
+        ga('send', 'event', 'dataSource', 'hidden', viewModel.name, duration);
+    }
+}
 
 module.exports = GeoDataSourceViewModel;
