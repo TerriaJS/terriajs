@@ -68,8 +68,12 @@ var GeoDataSourceViewModel = function(type, context) {
     this.isLegendVisible = false;
 
     /**
-     * Gets or sets the type of the {@link GeoDataSourceViewModel#dataUrl}.  Valid values are
-     * 'direct', 'wfs', and 'wfs-complete'.  This property is observable.
+     * Gets or sets the type of the {@link GeoDataSourceViewModel#dataUrl}.  This property is observable.
+     * Valid values are:
+     *  * `direct` - A direct link to the data.
+     *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link GeoDataSourceViewModel#dataUrl} is not
+     *            specified, the base URL will be this data source's URL.
+     *  * `wfs-complete` - A complete, ready-to-use link to download features from a WFS server.
      * @type {String}
      */
     this.dataUrlType = undefined;

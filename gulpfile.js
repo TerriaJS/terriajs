@@ -78,7 +78,9 @@ gulp.task('lint', function(){
 
 gulp.task('docs', function(){
     return gulp.src('src/**/*.js')
-        .pipe(jsdoc('./public/doc'));
+        .pipe(jsdoc('./public/doc', undefined, {
+            plugins : ['plugins/markdown']
+        }));
 });
 
 gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper']);
