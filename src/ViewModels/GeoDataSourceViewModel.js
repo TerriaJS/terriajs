@@ -142,6 +142,11 @@ var scratchRectangle = new Rectangle();
         return;
     }
 
+    if (this.rectangle.east - this.rectangle.west > 3.14) {
+        console.log('Extent is wider than half the world.  Ignoring zoomto');
+        return;
+    }
+
     ga('send', 'event', 'dataSource', 'zoomTo', this.name);
 
     var epsilon = CesiumMath.EPSILON3;

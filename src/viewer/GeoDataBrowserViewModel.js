@@ -35,7 +35,7 @@ var GeoDataBrowserViewModel = function(options) {
     //this.initUrl = options.initUrl;
     this.mode3d = options.mode3d;
 
-    this.showingPanel = false;
+    this.showingDataPanel = false;
     this.showingMapPanel = false;
     this.showingLegendPanel = false;
     this.showingLegendButton = false;
@@ -53,32 +53,16 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.nowViewing = this.catalog.context.nowViewing;
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
+    knockout.track(this, ['showingDataPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
 
     // Create commands
-    this._toggleShowingPanel = createCommand(function() {
-        that.showingPanel = !that.showingPanel;
-        if (that.showingPanel) {
-            that.showingMapPanel = false;
-            that.showingLegendPanel = false;
-        }
-    });
-
-    this._toggleShowingMapPanel = createCommand(function() {
-        that.showingMapPanel = !that.showingMapPanel;
-        if (that.showingMapPanel) {
-            that.showingPanel = false;
-            that.showingLegendPanel = false;
-        }
-    });
-
     this._toggleShowingLegendPanel = createCommand(function() {
         that.showingLegendPanel = !that.showingLegendPanel;
         if (that.showingLegendPanel) {
-            that.showingPanel = false;
+            that.showingDataPanel = false;
             that.showingMapPanel = false;
 
             // Make sure a legend is visible.
@@ -94,10 +78,6 @@ var GeoDataBrowserViewModel = function(options) {
                 nowViewing[i].legendIsOpen(true);
             }
         }
-    });
-
-    this._openItem = createCommand(function(item) {
-        item.isOpen(!item.isOpen());
     });
 
     this._openAddData = createCommand(function() {
@@ -126,27 +106,6 @@ var GeoDataBrowserViewModel = function(options) {
                 }
             }
         }
-    });
-
-    this._toggleCategoryOpen = createCommand(function(item) {
-        item.isOpen(!item.isOpen());
-    });
-
-    this._zoomToItem = createCommand(function(item) {
-        if (!defined(item.layer) || !defined(item.layer.extent) || 
-            (defined(item.isEnabled) && !item.isEnabled())) {
-            return;
-        }
-
-        if ((item.layer.extent.east - item.layer.extent.west) > 3.14) {
-            console.log('Extent is wider than half the world.  Ignoring zoomto');
-            return;
-        }
-
-        ga('send', 'event', 'dataSource', 'zoomTo', item.Title());
-        item.layer.zoomTo = true;
-        that._viewer.setCurrentDataset(item.layer);
-        item.layer.zoomTo = false;
     });
 
     this._showInfoForItem = createCommand(function(item) {
@@ -410,179 +369,6 @@ these extensions in order for National Map to know how to load it.'
         }
     });
 
-    function createDataSource(options) {
-        var parent = komapping.toJS(options.parent);
-        var data = combine(options.data, parent);
-
-        var viewModel = komapping.fromJS(data, that._categoryMapping);
-        viewModel.isEnabled = knockout.observable(false);
-        return viewModel;
-    }
-
-    this._categoryMapping = {
-        Layer : {
-            create : createDataSource
-        }
-    };
-
-    function createCategory(options) {
-        var viewModel = komapping.fromJS(options.data, that._categoryMapping);
-
-        viewModel.isOpen = knockout.observable(false);
-        viewModel.isLoading = knockout.observable(false);
-
-        if (!defined(viewModel.Layer)) {
-            var layer;
-            var layerRequested = false;
-            var version = knockout.observable(0);
-
-            viewModel.Layer = knockout.computed(function() {
-                version();
-
-                if (layerRequested) {
-                    return layer;
-                }
-
-                if (!defined(layer)) {
-                    layer = [];
-                }
-
-                // Don't request capabilities until the layer is opened.
-                if (viewModel.isOpen()) {
-                    viewModel.isLoading(true);
-                    that._viewer.geoDataManager.getCapabilities(options.data, function(description) {
-                        var remapped = createCategory({
-                            data: description
-                        });
-
-                        viewModel.name(remapped.name());
-
-                        var layers = remapped.Layer();
-                        for (var i = 0; i < layers.length; ++i) {
-                            // TODO: handle hierarchy better
-                            if (defined(layers[i].Layer)) {
-                                var subLayers = layers[i].Layer();
-                                for (var j = 0; j < subLayers.length; ++j) {
-                                    layer.push(subLayers[j]);
-                                }
-                            } else {
-                                layer.push(layers[i]);
-                            }
-                        }
-
-                        version(version() + 1);
-                        viewModel.isLoading(false);
-                    });
-
-                    layerRequested = true;
-                }
-
-                return layer;
-            });
-        }
-
-        return viewModel;
-    }
-
-    this._collectionMapping = {
-        Layer : {
-            create : createCategory
-        }
-    };
-
-    function createCollection(options) {
-        var viewModel = komapping.fromJS(options.data, that._collectionMapping);
-        viewModel.isOpen = knockout.observable(false);
-        return viewModel;
-    }
-
-    this._collectionListMapping = {
-        create : createCollection
-    };
-
-    var browserContentViewModel = komapping.fromJS([], this._collectionListMapping);
-    this.content = browserContentViewModel;
-
-    //loadJson(this.initUrl).then(loadCollection);
-
-    this.userContent = komapping.fromJS([], this._collectionListMapping);
-
-    var firstNowViewingItem = true;
-
-    var nowViewingMapping = {
-        create : function(options) {
-            var description = options.data.description;
-            if (!defined(description)) {
-                var base_url = options.data.url;
-                if (defined(base_url)) {
-                        //good enough for now.  can be addressed in infobox redo
-                    if (defined(options.data.type) && options.data.type === 'DATA') {
-                        base_url = '';
-                    }
-                    else {
-                        var idx = base_url.indexOf('?');
-                        if (idx !== -1) {
-                            base_url = base_url.substring(0,idx);
-                        }
-                    }
-                }
-                description = {
-                    Title : options.data.name,
-                    Name : options.data.name,
-                    base_url : base_url,
-                    url : options.data.url,
-                    type : options.data.type
-                };
-            }
-            var viewModel = komapping.fromJS(description);
-            viewModel.show = knockout.observable(options.data.show);
-            viewModel.legendIsOpen = knockout.observable(firstNowViewingItem);
-            viewModel.layer = options.data;
-
-            firstNowViewingItem = false;
-
-            return viewModel;
-        }
-    };
-
-    function getLayers() {
-        var layers = that._dataManager.layers.slice();
-        layers.reverse();
-        return layers;
-    }
-
-    //this.nowViewing = komapping.fromJS(getLayers(), nowViewingMapping);
-
-    function refreshNowViewing() {
-        // Get the current scroll height and position
-        var panel = document.getElementById('ausglobe-data-panel');
-        var previousScrollHeight = panel.scrollHeight;
-
-        firstNowViewingItem = true;
-        komapping.fromJS(getLayers(), nowViewingMapping, that.nowViewing);
-
-        // Attempt to maintain the previous scroll position.
-        var newScrollHeight = panel.scrollHeight;
-        panel.scrollTop += newScrollHeight - previousScrollHeight;
-
-        that.showingLegendButton = false;
-
-        var nowViewing = that.nowViewing();
-        if (nowViewing.length > 0) {
-            var topLayer = nowViewing[0];
-
-            if (defined(topLayer.legendUrl) && defined(topLayer.legendUrl())) {
-                if (topLayer.legendUrl().length > 0) {
-                    that.topLayerLegendUrl = topLayer.legendUrl();
-                    that.showingLegendButton = true;
-                }
-            } else if (topLayer.type() === 'WMS') {
-                that.topLayerLegendUrl = topLayer.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + topLayer.Name();
-                that.showingLegendButton = true;
-            }
-        }
-    }
-
     this.getLegendUrl = function(item) {
         if (defined(item.legendUrl)) {
             if (item.legendUrl.length > 0) {
@@ -654,48 +440,6 @@ these extensions in order for National Map to know how to load it.'
 
         return item._opacity;
     };
-
-    this._removeGeoDataAddedListener = this._dataManager.GeoDataAdded.addEventListener(refreshNowViewing);
-    this._removeGeoDataRemovedListener = this._dataManager.GeoDataRemoved.addEventListener(refreshNowViewing);
-
-    function loadCollection(json) {
-        if (!defined(json)) {
-            return;
-        }
-
-        that._dataManager.addServices(json.NMServices);
-        
-        var collections = json.Layer;
-        
-        var existingCollection;
-        var existingCollections = browserContentViewModel();
-
-        for (var i = 0; i < collections.length; ++i) {
-            var collection = collections[i];
-
-            // Find an existing collection with the same name, if any.
-            var name = collection.name;
-
-            existingCollection = undefined;
-            for (var j = 0; j < existingCollections.length; ++j) {
-                if (existingCollections[j].name() === name) {
-                    existingCollection = existingCollections[j];
-                    break;
-                }
-            }
-
-            if (defined(existingCollection)) {
-                komapping.fromJS(collection, that._collectionListMapping, existingCollection);
-            } else {
-                existingCollection = komapping.fromJS(collection, that._collectionListMapping);
-                browserContentViewModel.push(existingCollection);
-            }
-
-            if (collection.type === 'CKAN') {
-                loadCkanCollection(collection, existingCollection);
-            }
-        }
-    }
 
     function loadCkanCollection(collection, existingCollection) {
         // Get the list of groups containing WMS data sources.
@@ -852,48 +596,6 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
         }
     },
 
-    toggleItemEnabled : {
-        get : function() {
-            return this._toggleItemEnabled;
-        }
-    },
-
-    toggleItemShown : {
-        get : function() {
-            return this._toggleItemShown;
-        }
-    },
-
-    zoomToItem : {
-        get : function() {
-            return this._zoomToItem;
-        }
-    },
-
-    toggleShowingPanel : {
-        get : function() {
-            return this._toggleShowingPanel;
-        }
-    },
-
-    toggleShowingMapPanel : {
-        get : function() {
-            return this._toggleShowingMapPanel;
-        }
-    },
-
-    toggleShowingLegendPanel : {
-        get : function() {
-            return this._toggleShowingLegendPanel;
-        }
-    },
-
-    openItem : {
-        get : function() {
-            return this._openItem;
-        }
-    },
-
     openAddData : {
         get : function() {
             return this._openAddData;
@@ -915,12 +617,6 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     openLegend : {
         get : function() {
             return this._openLegend;
-        }
-    },
-
-    toggleCategoryOpen : {
-        get : function() {
-            return this._toggleCategoryOpen;
         }
     },
 
@@ -1006,14 +702,32 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
         get : function() {
             return this._endNowViewingDrag;
         }
-    },
-
-    clearAll : {
-        get : function() {
-            return this._clearAll;
-        }
     }
 });
+
+GeoDataBrowserViewModel.prototype.toggleShowingDataPanel = function() {
+    this.showingDataPanel = !this.showingDataPanel;
+    if (this.showingDataPanel) {
+        this.showingMapPanel = false;
+        this.showingLegendPanel = false;
+    }
+};
+
+GeoDataBrowserViewModel.prototype.toggleShowingMapPanel = function() {
+    this.showingMapPanel = !this.showingMapPanel;
+    if (this.showingMapPanel) {
+        this.showingDataPanel = false;
+        this.showingLegendPanel = false;
+    }
+};
+
+GeoDataBrowserViewModel.prototype.toggleShowingLegendPanel = function() {
+    this.showingLegendPanel = !this.showingLegendPanel;
+    if (this.showingLegendPanel) {
+        this.showingDataPanel = false;
+        this.showingMapPanel = false;
+    }
+};
 
 function enableItem(viewModel, item) {
     var description = komapping.toJS(item);
