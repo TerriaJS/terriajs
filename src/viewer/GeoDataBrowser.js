@@ -65,8 +65,8 @@ var GeoDataBrowser = function(options) {
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
                 <div class="ausglobe-accordion-category">\
                     <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: hasItems, foreach: items">\
-                        <div class="ausglobe-accordion-category-item" draggable="true" data-bind="attr : { title : name, nowViewingIndex : $index }, css: { \'ausglobe-accordion-category-item-enabled\': isShown }, event : { dragstart: $root.startNowViewingDrag, dragenter: $root.nowViewingDragEnter, dragend: $root.endNowViewingDrag }">\
-                            <img class="ausglobe-nowViewing-dragHandle" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." />\
+                        <div class="ausglobe-accordion-category-item" draggable="true" data-bind="attr : { title : name, nowViewingIndex : $index }, css: { \'ausglobe-accordion-category-item-enabled\': isShown }, event : { dragstart: $root.nowViewingDragStart.bind($root), dragenter: $root.nowViewingDragEnter.bind($root), dragend: $root.nowViewingDragEnd.bind($root) }">\
+                            <img class="ausglobe-nowViewing-dragHandle" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." title="Drag to reorder data sources." />\
                             <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
                             <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomTo"></div>\
                             <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\

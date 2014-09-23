@@ -56,6 +56,8 @@ NowViewingViewModel.prototype.add = function(item) {
  */
 NowViewingViewModel.prototype.remove = function(item) {
     item.isEnabled = false;
+
+    // This is likely to be a no-op, because setting isEnabled=false already removed it.
     this.items.remove(item);
 };
 
@@ -63,7 +65,9 @@ NowViewingViewModel.prototype.remove = function(item) {
  * Removes all data sources from the "Now Viewing" pane and from the map.
  */
 NowViewingViewModel.prototype.removeAll = function() {
-    for (var i = 0; i < this.items.length; ++i) {
+    // Work backwards through the list of items because setting isEnabled=false
+    // will usually remove the item from the list.
+    for (var i = this.items.length - 1; i >= 0; --i) {
         this.items[i].isEnabled = false;
     }
 
@@ -77,17 +81,29 @@ NowViewingViewModel.prototype.removeAll = function() {
  * @param {GeoDataItemViewModel} item The item to raise.
  */
 NowViewingViewModel.prototype.raise = function(item) {
-    // TODO
+    var index = this.items.indexOf(item);
+    if (index <= 0) {
+        return;
+    }
+
+    this.items.splice(index, 1);
+    this.items.splice(index - 1, 0, item);
 };
 
 /**
- * Raises an item, making it displayed on top of the item that is currently above it.  If it
- * is nonsensical to move this item up (e.g. it is already at the top), this method does nothing.
+ * Lowers an item, making it displayed below the item that is currently below it.  If it
+ * is nonsensical to move this item down (e.g. it is already at the bottom), this method does nothing.
  *
- * @param {GeoDataItemViewModel} item The item to raise.
+ * @param {GeoDataItemViewModel} item The item to lower.
  */
 NowViewingViewModel.prototype.lower = function(item) {
-    // TODO
+    var index = this.items.indexOf(item);
+    if (index < 0 || index === this.items.length - 1) {
+        return;
+    }
+
+    this.items.splice(index, 1);
+    this.items.splice(index + 1, 0, item);
 };
 
 /**
