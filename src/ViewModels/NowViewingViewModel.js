@@ -18,7 +18,13 @@ var NowViewingViewModel = function() {
      */
     this.items = [];
 
-    knockout.track(this, ['items']);
+    /**
+     * Gets or sets a value indicating whether the Now Viewing list is currently open and visible.
+     * @type {Boolean}
+     */
+    this.isOpen = true;
+
+    knockout.track(this, ['items', 'isOpen']);
 };
 
 defineProperties(NowViewingViewModel.prototype, {
@@ -82,6 +88,13 @@ NowViewingViewModel.prototype.raise = function(item) {
  */
 NowViewingViewModel.prototype.lower = function(item) {
     // TODO
+};
+
+/**
+ * Toggles the {@link NowViewingViewModel#isOpen} flag.  If it's open, it is closed.  If it's closed, it is opened.
+ */
+NowViewingViewModel.prototype.toggleOpen = function() {
+    this.isOpen = !this.isOpen;
 };
 
 module.exports = NowViewingViewModel;

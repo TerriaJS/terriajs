@@ -58,11 +58,11 @@ var GeoDataBrowser = function(options) {
 
     dataPanel.innerHTML = '\
         <div class="ausglobe-now-viewing ausglobe-accordion-item" data-bind="with: nowViewing">\
-            <div class="ausglobe-accordion-item-header" data-bind="click: $root.openNowViewing">\
+            <div class="ausglobe-accordion-item-header" data-bind="click: toggleOpen">\
                 <div class="ausglobe-accordion-item-header-label">Now Viewing</div>\
                 <div class="ausglobe-now-viewing-clear-all" data-bind="click: removeAll, clickBubble: false">Clear all</div>\
             </div>\
-            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': $root.nowViewingIsOpen }">\
+            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
                 <div class="ausglobe-accordion-category">\
                     <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible" data-bind="visible: hasItems, foreach: items">\
                         <div class="ausglobe-accordion-category-item" draggable="true" data-bind="attr : { title : name, nowViewingIndex : $index }, css: { \'ausglobe-accordion-category-item-enabled\': isShown }, event : { dragstart: $root.startNowViewingDrag, dragenter: $root.nowViewingDragEnter, dragend: $root.endNowViewingDrag }">\

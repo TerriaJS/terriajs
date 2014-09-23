@@ -40,7 +40,6 @@ var GeoDataBrowserViewModel = function(options) {
     this.showingLegendPanel = false;
     this.showingLegendButton = false;
     this.addDataIsOpen = false;
-    this.nowViewingIsOpen = true;
     this.wfsServiceUrl = '';
     this.addType = 'Single data file';
     this.topLayerLegendUrl = '';
@@ -54,7 +53,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.nowViewing = this.catalog.context.nowViewing;
 
-    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'nowViewingIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
+    knockout.track(this, ['showingPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -103,10 +102,6 @@ var GeoDataBrowserViewModel = function(options) {
 
     this._openAddData = createCommand(function() {
         that.addDataIsOpen = !that.addDataIsOpen;
-    });
-
-    this._openNowViewing = createCommand(function() {
-        that.nowViewingIsOpen = !that.nowViewingIsOpen;
     });
 
     this._openImagery = createCommand(function() {
@@ -881,12 +876,6 @@ defineProperties(GeoDataBrowserViewModel.prototype, {
     openAddData : {
         get : function() {
             return this._openAddData;
-        }
-    },
-
-    openNowViewing : {
-        get : function() {
-            return this._openNowViewing;
         }
     },
 
