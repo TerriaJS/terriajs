@@ -138,6 +138,11 @@ var GeoDataBrowserViewModel = function(options) {
             return;
         }
 
+        if ((item.layer.extent.east - item.layer.extent.west) > 3.14) {
+            console.log('Extent is wider than half the world.  Ignoring zoomto');
+            return;
+        }
+
         ga('send', 'event', 'dataSource', 'zoomTo', item.Title());
         item.layer.zoomTo = true;
         that._viewer.setCurrentDataset(item.layer);
@@ -153,16 +158,24 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._addDataOrService = createCommand(function() {
-        if (that.addType === 'File') {
+        if (that.addType === 'NotSpecified') {
+            var message = new PopupMessage({
+                container : document.body,
+                title : 'Please select a file or service type',
+                message : '\
+Please select a file or service type from the drop-down list before clicking the Add button.'
+            });
+            return;
+        } else if (that.addType === 'File') {
             ga('send', 'event', 'addDataUrl', 'File', that.wfsServiceUrl);
 
             if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
                 that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
             } else {
-                var message = new PopupMessage({
+                var message2 = new PopupMessage({
                     container : document.body,
                     title : 'File format not supported',
-                    message : '\
+                    message2 : '\
 The specified file does not appear to be a format that is supported by National Map.  National Map \
 supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
 Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \
@@ -172,7 +185,11 @@ these extensions in order for National Map to know how to load it.'
             }
         } else {
             ga('send', 'event', 'addDataUrl', that.addType, that.wfsServiceUrl);
-
+            
+            var idx = that.wfsServiceUrl.indexOf('?');
+            if (idx !== -1) {
+                that.wfsServiceUrl = that.wfsServiceUrl.substring(0,idx);
+            }
             var item = createCategory({
                 data : {
                     name : that.wfsServiceUrl,
@@ -573,7 +590,11 @@ these extensions in order for National Map to know how to load it.'
             }
         } else if (item.type === 'WMS') {
             return item.url + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.layers;
-        }
+        } else if (defined(item.layer.baseDataSource)) {
+            return item.layer.baseDataSource.getLegendGraphic();
+        } else if (defined(item.layer.dataSource) && defined(item.layer.dataSource.getLegendGraphic)) {
+            return item.layer.dataSource.getLegendGraphic();
+        } 
 
         return '';
     };

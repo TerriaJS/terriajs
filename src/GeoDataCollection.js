@@ -677,27 +677,32 @@ var regionWmsMap = {
     'STE': {
         "Name":"admin_bnds_region:STE_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "STE_CODE11",
         "aliases": ['state', 'ste']
     },
     'CED': {
         "Name":"admin_bnds_region:CED_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "CED_CODE",
         "aliases": ['ced']
     },
     'POA': {
         "Name":"admin_bnds_region:POA_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "POA_CODE",
         "aliases": ['poa', 'postcode']
     },
     'LGA': {
         "Name":"admin_bnds_region:LGA_2011_AUST",
         "base_url":regionServer,
+        "regionProp": "LGA_CODE11",
         "aliases": ['lga'],
         "factor": 10  //this can be removed when we get ids larger than 10k in style
     },
     'SA4': {
         "Name":"admin_bnds_region:SA4_2011_AUST",
         "base_url" : regionServer,
+        "regionProp": "SA4_CODE11",
         "aliases": ['sa4']
     }
 };
@@ -760,6 +765,7 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
         var description = regionWmsMap[regionType];
         description.type = 'WMS';
         layer.url = this.getOGCFeatureURL(description);
+        layer.regionProp = description.regionProp;
     }
     this.createRegionLookupFunc(layer);
     var currentIndex = this.layers.indexOf(layer);
@@ -843,7 +849,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     if (defined(layer.style.table.colorMap)) {
         layer.baseDataSource.setColorGradient(layer.style.table.colorMap);
     }
-    dataset.setCurrentVariable({ variable: layer.style.table.data});
+    layer.baseDataSource.setCurrentVariable(layer.style.table.data);
     
         //capture url to use for sharing
     layer.shareUrl = layer.url || '';
@@ -962,8 +968,18 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
                 style.table.alt = dataset.getVarID(VarType.ALT);
                 style.table.time = dataset.getVarID(VarType.TIME);
                 style.table.data = dataset.getVarID(VarType.SCALAR);
+                style.table.imageUrl = undefined;
                 style.table.colorMap = undefined;
                 layer.style = style;
+            }
+            if (defined(layer.style.table.colorMap)) {
+                tableDataSource.setColorGradient(layer.style.table.colorMap);
+            }
+            if (defined(layer.style.table.imageUrl)) {
+                tableDataSource.setImageUrl(layer.style.table.imageUrl);
+            }
+            if (defined(layer.style.table.data)) {
+                tableDataSource.setCurrentVariable(layer.style.table.data);
             }
             if (this.map === undefined) {
                 this.dataSourceCollection.add(tableDataSource);
@@ -1148,7 +1164,6 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     });
 };
 
-
 // Show wms map
 GeoDataCollection.prototype._viewMap = function(request, layer) {
     var uri = new URI(request);
@@ -1216,6 +1231,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             provider = new WebMapServiceImageryProvider(wmsOptions);
             
             if (defined(layer.colorFunc)) {
+                    //remap image layer color func
                 provider.base_requestImage = provider.requestImage;
                 provider.requestImage = function(x, y, level) {
                     var imagePromise = provider.base_requestImage(x, y, level);
@@ -1228,6 +1244,23 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                             image = recolorImageWithCanvas(image, layer.colorFunc);
                         }
                         return image;
+                    });
+                };
+                    //remap image layer featurePicking Func
+                provider.base_pickFeatures = provider.pickFeatures;
+                provider.pickFeatures = function(x, y, level, longitude, latitude) {
+                    var featurePromise = provider.base_pickFeatures(x, y, level, longitude, latitude);
+                    if (!defined(featurePromise)) {
+                        return featurePromise;
+                    }
+                    
+                    return when(featurePromise, function(results) {
+                        if (defined(results)) {
+                            var id = results[0].data.properties[layer.regionProp];
+                            var properties = layer.rowProperties(parseInt(id,10));
+                            results[0].description = layer.baseDataSource.describe(properties);
+                        }
+                        return results;
                     });
                 };
             }
