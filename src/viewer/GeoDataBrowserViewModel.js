@@ -220,7 +220,11 @@ these extensions in order for National Map to know how to load it.'
             }
         } else {
             ga('send', 'event', 'addDataUrl', that.addType, that.wfsServiceUrl);
-
+            
+            var idx = that.wfsServiceUrl.indexOf('?');
+            if (idx !== -1) {
+                that.wfsServiceUrl = that.wfsServiceUrl.substring(0,idx);
+            }
             var item = createCategory({
                 data : {
                     name : that.wfsServiceUrl,
