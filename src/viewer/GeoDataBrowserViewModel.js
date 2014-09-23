@@ -173,6 +173,11 @@ var GeoDataBrowserViewModel = function(options) {
             return;
         }
 
+        if ((item.layer.extent.east - item.layer.extent.west) > 3.14) {
+            console.log('Extent is wider than half the world.  Ignoring zoomto');
+            return;
+        }
+
         ga('send', 'event', 'dataSource', 'zoomTo', item.Title());
         item.layer.zoomTo = true;
         that._viewer.setCurrentDataset(item.layer);
@@ -202,10 +207,10 @@ Please select a file or service type from the drop-down list before clicking the
             if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
                 that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
             } else {
-                var message = new PopupMessage({
+                var message2 = new PopupMessage({
                     container : document.body,
                     title : 'File format not supported',
-                    message : '\
+                    message2 : '\
 The specified file does not appear to be a format that is supported by National Map.  National Map \
 supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
 Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \

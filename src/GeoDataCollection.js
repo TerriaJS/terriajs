@@ -1261,7 +1261,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                     return when(featurePromise, function(results) {
                         if (defined(results)) {
                             var id = results[0].data.properties[layer.regionProp];
-                            var properties = layer.rowProperties(parseInt(id),10);
+                            var properties = layer.rowProperties(parseInt(id,10));
                             results[0].description = layer.baseDataSource.describe(properties);
                         }
                         return results;
