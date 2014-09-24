@@ -669,59 +669,65 @@ function recolorImageWithCanvas(img, colorFunc) {
 }
 
 
-//var regionServer = 'http://geoserver.research.nicta.com.au/admin_bnds_abs/ows';
-var regionServer = 'http://localhost:8080/admin_bnds/ows';
+var regionServer = 'http://geoserver.research.nicta.com.au/region_map/ows';
 var regionWmsMap = {
     'STE': {
-        "Name":"admin_bnds_region:STE_2011_AUST",
-        "base_url":regionServer,
+        "Name":"region_map:FID_STE_2011_AUST",
         "regionProp": "STE_CODE11",
         "aliases": ['state', 'ste']
     },
     'CED': {
-        "Name":"admin_bnds_region:CED_2011_AUST",
-        "base_url":regionServer,
+        "Name":"region_map:FID_CED_2011_AUST",
         "regionProp": "CED_CODE",
         "aliases": ['ced']
     },
+    'SED': {
+        "Name":"region_map:FID_SED_2011_AUST",
+        "regionProp": "SED_CODE",
+        "aliases": ['sed']
+    },
     'POA': {
-        "Name":"region:POA_2011_AUST_FID",
-        "base_url":regionServer,
+        "Name":"region_map:FID_POA_2011_AUST",
         "regionProp": "POA_CODE",
         "aliases": ['poa', 'postcode']
     },
+    'LGA': {
+        "Name":"region_map:FID_LGA_2011_AUST",
+        "regionProp": "LGA_CODE11",
+        "aliases": ['lga'],
+    },
+    'SCC': {
+        "Name":"region_map:FID_SCC_2011_AUST",
+        "regionProp": "SCC_CODE",
+        "aliases": ['scc', 'suburb'],
+    },
+    'SA4': {
+        "Name":"region_map:FID_SA4_2011_AUST",
+        "regionProp": "SA4_CODE11",
+        "aliases": ['sa4']
+    },
+    'SA3': {
+        "Name":"region_map:FID_SA3_2011_AUST",
+        "regionProp": "SA3_CODE11",
+        "aliases": ['sa3']
+    },
     'SA2': {
-        "Name":"region:SA2_2011_AUST_FID",
-        "base_url":regionServer,
+        "Name":"region_map:FID_SA2_2011_AUST",
         "regionProp": "SA2_MAIN11",
         "aliases": ['sa2']
     },
     'SA1': {
-        "Name":"region:SA1_2011_AUST_FID",
-        "base_url":regionServer,
-        "regionProp": "SA1_7DIG11",
+        "Name":"region_map:FID_SA1_2011_AUST",
+         "regionProp": "SA1_7DIG11",
         "aliases": ['sa1']
-    },
-    'LGA': {
-        "Name":"admin_bnds_region:LGA_2011_AUST",
-        "base_url":regionServer,
-        "regionProp": "LGA_CODE11",
-        "aliases": ['lga'],
-        "factor": 10  //this can be removed when we get ids larger than 10k in style
-    },
-    'SA4': {
-        "Name":"admin_bnds_region:SA4_2011_AUST",
-        "base_url" : regionServer,
-        "regionProp": "SA4_CODE11",
-        "aliases": ['sa4']
     }
 };
 
 //TODO: for now this turns ids into numbers since they are that way in table data
 //      need to add enum capability and then can work with any unique field
-//btw: since javascript uses doubles this is not a big problem for the numerical ids
+//btw: since javascript uses doubles this is not a problem for the numerical ids
 function loadRegionIDs(description) {
-    var url = description.base_url + '?service=wfs&version=2.0&request=getPropertyValue';
+    var url = regionServer + '?service=wfs&version=2.0&request=getPropertyValue';
     url += '&typeNames=' + description.Name;
     url += '&valueReference=' + description.regionProp;
     loadText(url).then(function (text) { 
@@ -735,13 +741,17 @@ function loadRegionIDs(description) {
         loadErrorResponse(err);
     });
 }
-//for (prop in regionWmsMap) {}
-loadRegionIDs(regionWmsMap.POA);
-loadRegionIDs(regionWmsMap.SA2);
-loadRegionIDs(regionWmsMap.SA1);
 
+//preload all the regionMapIndex Lists
+function preloadRegionIDs() {
+    for (var prop in regionWmsMap) {
+        loadRegionIDs(regionWmsMap[prop]);   
+    }
+}
 
-function getRegionVar(vars, aliases) {
+preloadRegionIDs();
+
+function determineRegionVar(vars, aliases) {
     for (var i = 0; i < vars.length; i++) {
         var varName = vars[i].toLowerCase();
         for (var j = 0; j < aliases.length; j++) {
@@ -800,6 +810,8 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
         layer.regionType = regionType;
         var description = regionWmsMap[regionType];
         description.type = 'WMS';
+        description.base_url = regionServer;
+
         layer.url = this.getOGCFeatureURL(description);
         layer.regionProp = description.regionProp;
 
@@ -815,7 +827,7 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
     this._viewMap(layer.url, layer);
 };
 
-GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
+GeoDataCollection.prototype.setRegionDataVariable = function(layer, newVar) {
     var tableDataSource = layer.baseDataSource;
     var dataset = tableDataSource.dataset;
     if (dataset.getCurrentVariable() === newVar) {
@@ -849,7 +861,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
         var idx = -1;
         for (regionType in regionWmsMap) {
             if (regionWmsMap.hasOwnProperty(regionType)) {
-                idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
+                idx = determineRegionVar(vars, regionWmsMap[regionType].aliases);
                 if (idx !== -1) {
                     break;
                 }
