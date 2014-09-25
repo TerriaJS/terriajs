@@ -107,6 +107,16 @@ defineProperties(GeoDataSourceViewModel.prototype, {
         get : function() {
             return this._type;
         }
+    },
+
+    /**
+     * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
+     * @type {Boolean}
+     */
+    supportsReordering : {
+        get : function() {
+            return false;
+        }
     }
 });
 

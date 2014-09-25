@@ -7,6 +7,7 @@ var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -84,6 +85,14 @@ var WebMapServiceDataSourceViewModel = function(context) {
 };
 
 WebMapServiceDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
+
+defineProperties(WebMapServiceDataSourceViewModel.prototype, {
+    supportsReordering : {
+        get : function() {
+            return true;
+        }
+    }
+});
 
 /**
  * Updates the WMS data item from a JSON object-literal description of it.
