@@ -48,6 +48,17 @@ defineProperties(NowViewingViewModel.prototype, {
         get : function() {
             return this.items.length > 0;
         }
+    },
+
+    hasShownItems : {
+        get : function() {
+            for (var i = 0; i < this.items.length; ++i) {
+                if (this.items[i].isShown) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 });
 

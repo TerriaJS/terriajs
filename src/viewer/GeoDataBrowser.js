@@ -48,7 +48,7 @@ var GeoDataBrowser = function(options) {
     legendButton.className = 'ausglobe-panel-button';
     legendButton.title = 'Legend';
     legendButton.innerHTML = '<div class="ausglobe-panel-button-label">Legend</div>';
-    legendButton.setAttribute('data-bind', 'visible: legendsExist(), click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
+    legendButton.setAttribute('data-bind', 'visible: nowViewing.hasShownItems, click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
     wrapper.appendChild(legendButton);
 
     var dataPanel = document.createElement('div');
@@ -184,7 +184,7 @@ var GeoDataBrowser = function(options) {
                 </div>\
                 <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': isLegendVisible }">\
                     <div class="ausglobe-legend-opacity" data-bind="if: supportsOpacity">\
-                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: opacity, valueUpdate: \'input\'" /></label>\
+                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: \'input\'" /></label>\
                     </div>\
                     <!-- ko if: legendIsImage -->\
                     <img data-bind="attr: { src: legendUrl }" />\

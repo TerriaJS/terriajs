@@ -620,6 +620,22 @@ GeoDataBrowserViewModel.prototype.toggleShowingLegendPanel = function() {
     if (this.showingLegendPanel) {
         this.showingDataPanel = false;
         this.showingMapPanel = false;
+
+        // Make sure at least one legend is visible.
+        var items = this.nowViewing.items;
+
+        var oneIsVisible = false;
+        var firstShown;
+        for (var i = 0; !oneIsVisible && i < items.length; ++i) {
+            oneIsVisible = items[i].isLegendVisible;
+            if (!defined(firstShown) && items[i].isShown) {
+                firstShown = items[i];
+            }
+        }
+
+        if (!oneIsVisible) {
+            firstShown.isLegendVisible = true;
+        }
     }
 };
 
