@@ -20,14 +20,17 @@ var ClockRange = require('../../third_party/cesium/Source/Core/ClockRange');
 var Color = require('../../third_party/cesium/Source/Core/Color');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var Credit = require('../../third_party/cesium/Source/Core/Credit');
+var DataSourceDisplay = require('../../third_party/cesium/Source/DataSources/DataSourceDisplay');
 var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var EllipsoidGeodesic = require('../../third_party/cesium/Source/Core/EllipsoidGeodesic');
 var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
 var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
+var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
 var GeographicProjection = require('../../third_party/cesium/Source/Core/GeographicProjection');
 var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
@@ -690,6 +693,35 @@ AusGlobeViewer.prototype.isCesium = function() {
     return defined(this.viewer);
 };
 
+
+var tempVisualizer = function (scene, entities) {
+    console.log(scene, entities);
+};
+
+tempVisualizer.prototype.update = function(time) {
+//    console.log(time);
+}
+
+tempVisualizer.prototype.destroy = function() {
+    return destroyObject(this);
+}
+
+var visualizersCallback = function(scene, dataSource) {
+    var entities = dataSource.entities;
+    return [new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities),
+        new tempVisualizer(scene, entities)];
+};
+
+
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var bnds;
     var rect;
@@ -718,6 +750,19 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         viewerEntityMixin(map);
 
         this.map = map;
+
+        this.dataSourceDisplay = new DataSourceDisplay({
+            scene : map,
+            dataSourceCollection : this.geoDataManager.dataSourceCollection,
+            visualizersCallback: visualizersCallback
+        });
+
+        var that = this;
+        var eventHelper = new EventHelper();
+
+        eventHelper.add(map.clock.onTick, function(clock) {
+            that.dataSourceDisplay.update(clock.currentTime);
+        });
 
         var ticker = function() {
             if (that.map === map) {

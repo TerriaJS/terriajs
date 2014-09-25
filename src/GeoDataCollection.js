@@ -59,7 +59,7 @@ var GeoDataCollection = function() {
     
     this.scene = undefined;
     this.map = undefined;
-    
+
     //Init the dataSourceCollection
     this.dataSourceCollection = new DataSourceCollection();
     
@@ -2178,6 +2178,8 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.primitive = L.geoJson(geojson, {
             style: geoJsonStyle,
             pointToLayer: function (feature, latlng) {
+                var clr = getRandomColor(point_palette);
+                geojsonMarkerOptions.fillColor = clr.toCssColorString();
                 return L.circleMarker(latlng, geojsonMarkerOptions);
             }
         }).addTo(this.map);
