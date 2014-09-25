@@ -105,6 +105,10 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     } else {
         this.parameters = clone(WebMapServiceDataSourceViewModel.defaultParameters);
     }
+
+    if (!defined(this.legendUrl)) {
+        this.legendUrl = cleanAndProxyUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
+    }
 };
 
 WebMapServiceDataSourceViewModel.prototype.enableInCesium = function() {

@@ -179,20 +179,20 @@ var GeoDataBrowser = function(options) {
         <div data-bind="foreach: nowViewing.items">\
             <!-- ko if: isShown -->\
             <div class="ausglobe-accordion-item">\
-                <div class="ausglobe-accordion-item-header" data-bind="click: $root.openLegend">\
+                <div class="ausglobe-accordion-item-header" data-bind="click: toggleLegendVisible">\
                     <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
                 </div>\
                 <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': isLegendVisible }">\
-                    <div class="ausglobe-legend-opacity" data-bind="if: $root.supportsOpacity($data)">\
-                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: $root.opacity($data), valueUpdate: \'input\'" /></label>\
+                    <div class="ausglobe-legend-opacity" data-bind="if: supportsOpacity">\
+                        <label>Opacity: <input class="ausglobe-legend-opacitySlider" type="range" min="0" max="100" data-bind="value: opacity, valueUpdate: \'input\'" /></label>\
                     </div>\
-                    <!-- ko if: $root.legendIsImage($data) -->\
-                    <img data-bind="attr: { src: $root.getLegendUrl($data) }" />\
+                    <!-- ko if: legendIsImage -->\
+                    <img data-bind="attr: { src: legendUrl }" />\
                     <!-- /ko -->\
-                    <!-- ko if: $root.legendIsLink($data) -->\
-                    <a class="ausglobe-accordion-category-item-label" data-bind="attr: { href: $root.getLegendUrl($data) }" target="_blank">Open legend in a separate tab</a>\
+                    <!-- ko if: hasLegend && !legendIsImage -->\
+                    <a class="ausglobe-accordion-category-item-label" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>\
                     <!-- /ko -->\
-                    <!-- ko if: !$root.legendIsLink($data) && !$root.legendIsImage($data) -->\
+                    <!-- ko if: !hasLegend -->\
                     <div class="ausglobe-accordion-category-item-label">No legend available for this data source.</div>\
                     <!-- /ko -->\
                 </div>\

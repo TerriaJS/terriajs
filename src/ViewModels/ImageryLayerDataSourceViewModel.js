@@ -30,16 +30,16 @@ var ImageryLayerDataSourceViewModel = function(context, type) {
     this._imageryLayer = undefined;
 
     /**
-     * Gets or sets the alpha (opacity) of the data item, where 0.0 is fully transparent and 1.0 is
+     * Gets or sets the opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is
      * fully opaque.
      * @type {Number}
      */
-    this.alpha = 0.6;
+    this.opacity = 0.6;
 
-    knockout.track(this, ['alpha']);
+    knockout.track(this, ['opacity']);
 
-    knockout.getObservable(this, 'alpha').subscribe(function(newValue) {
-        updateAlpha(this);
+    knockout.getObservable(this, 'opacity').subscribe(function(newValue) {
+        updateOpacity(this);
     }, this);
 };
 
@@ -66,6 +66,16 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
         get : function() {
             return true;
         }
+    },
+
+    /**
+     * Gets a value indicating whether the opacity of this data source can be changed.
+     * @type {Boolean}
+     */
+    supportsOpacity : {
+        get : function() {
+            return true;
+        }
     }
 });
 
@@ -74,7 +84,7 @@ ImageryLayerDataSourceViewModel.prototype.showInCesium = function() {
         throw new DeveloperError('Data item is not enabled.');
     }
 
-    this._imageryLayer.alpha = this.alpha;
+    this._imageryLayer.alpha = this.opacity;
 };
 
 ImageryLayerDataSourceViewModel.prototype.hideInCesium = function() {
@@ -90,7 +100,7 @@ ImageryLayerDataSourceViewModel.prototype.showInLeaflet = function() {
         throw new DeveloperError('Data item is not enabled.');
     }
 
-    this._imageryLayer.setOpacity(this.alpha);
+    this._imageryLayer.setOpacity(this.opacity);
 };
 
 ImageryLayerDataSourceViewModel.prototype.hideInLeaflet = function() {
@@ -101,14 +111,14 @@ ImageryLayerDataSourceViewModel.prototype.hideInLeaflet = function() {
     this._imageryLayer.setOpacity(0.0);
 };
 
-function updateAlpha(viewModel) {
+function updateOpacity(viewModel) {
     if (defined(viewModel._imageryLayer) && viewModel.isEnabled && viewModel.isShown) {
         if (defined(viewModel._imageryLayer.alpha)) {
-            viewModel._imageryLayer.alpha = viewModel.alpha;
+            viewModel._imageryLayer.alpha = viewModel.opacity;
         }
 
         if (defined(viewModel._imageryLayer.setOpacity)) {
-            viewModel._imageryLayer.setOpacity(viewModel.alpha);
+            viewModel._imageryLayer.setOpacity(viewModel.opacity);
         }
     }
 }

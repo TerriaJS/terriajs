@@ -732,6 +732,11 @@ function loadRegionIDs(description) {
     url += '&valueReference=' + description.regionProp;
     loadText(url).then(function (text) { 
         var obj = $.xml2json(text);
+
+        if (!defined(obj.member)) {
+            return;
+        }
+
         var idMap = [];
         for (var i = 0; i < obj.member.length; i++) {
             idMap.push(parseInt(obj.member[i][description.regionProp],10));

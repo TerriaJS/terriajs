@@ -98,6 +98,8 @@ var GeoDataSourceViewModel = function(context, type) {
 
 GeoDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
+var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
+
 defineProperties(GeoDataSourceViewModel.prototype, {
     /**
      * Gets the type of data item represented by this instance.
@@ -117,6 +119,32 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     supportsReordering : {
         get : function() {
             return false;
+        }
+    },
+
+    /**
+     * Gets a value indicating whether the opacity of this data source can be changed.
+     * @type {Boolean}
+     */
+    supportsOpacity : {
+        get : function() {
+            return false;
+        }
+    },
+
+    hasLegend : {
+        get : function() {
+            return defined(this.legendUrl);
+        }
+    },
+
+    legendIsImage : {
+        get : function() {
+            if (!defined(this.legendUrl) || this.legendUrl.length === 0) {
+                return false;
+            }
+
+            return this.legendUrl.match(imageUrlRegex);
         }
     }
 });
@@ -141,6 +169,16 @@ defineProperties(GeoDataSourceViewModel.prototype, {
  GeoDataSourceViewModel.prototype.toggleShown = function() {
     this.isShown = !this.isShown;
     return this.isShown;
+};
+
+/**
+ * Toggles the {@link GeoDataSourceViewModel#isLegendVisible} property of this item.  If it is visible, calling this
+ * method will hide it.  If it is hidden, calling this method will make it visible.
+ * @return {Boolean} true if the legend is now visible, false if it is now hidden.
+ */
+GeoDataSourceViewModel.prototype.toggleLegendVisible = function() {
+    this.isLegendVisible = !this.isLegendVisible;
+    return this.isLegendVisible;
 };
 
 var scratchRectangle = new Rectangle();
