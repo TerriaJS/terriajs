@@ -191,16 +191,4 @@ function cleanAndProxyUrl(context, url) {
     return cleanedUrl;
 }
 
-function updateAlpha(viewModel) {
-    if (defined(viewModel._imageryLayer) && viewModel.isEnabled && viewModel.isShown) {
-        if (defined(viewModel._imageryLayer.alpha)) {
-            viewModel._imageryLayer.alpha = viewModel.alpha;
-        }
-
-        if (defined(viewModel._imageryLayer.setOpacity)) {
-            viewModel._imageryLayer.setOpacity(viewModel.alpha);
-        }
-    }
-}
-
 module.exports = WebMapServiceDataSourceViewModel;

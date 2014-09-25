@@ -80,57 +80,59 @@ var GeoDataBrowser = function(options) {
                 </div>\
             </div>\
         </div>\
-        <div data-bind="foreach: catalog.groups">\
-            <div class="ausglobe-accordion-item">\
-                <div class="ausglobe-accordion-item-header" data-bind="click: toggleOpen">\
-                    <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
-                </div>\
-                <div class="ausglobe-accordion-item-content" data-bind="foreach: items, css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
-                    <div class="ausglobe-accordion-category">\
-                        <div class="ausglobe-accordion-category-header" data-bind="click: toggleOpen">\
-                            <div class="ausglobe-accordion-category-header-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root._arrowDown : $root._arrowRight, width: 32, height: 32 }"></div>\
-                            <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
-                        </div>\
-                        <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading...</div>\
-                        <div class="ausglobe-accordion-category-content" data-bind="foreach: items, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
-                            <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled }">\
-                                <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                                <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomTo"></div>\
-                                <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+        <div class="ausglobe-data-panel-bottom">\
+            <div data-bind="foreach: catalog.groups">\
+                <div class="ausglobe-accordion-item">\
+                    <div class="ausglobe-accordion-item-header" data-bind="click: toggleOpen">\
+                        <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
+                    </div>\
+                    <div class="ausglobe-accordion-item-content" data-bind="foreach: items, css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
+                        <div class="ausglobe-accordion-category">\
+                            <div class="ausglobe-accordion-category-header" data-bind="click: toggleOpen">\
+                                <div class="ausglobe-accordion-category-header-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root._arrowDown : $root._arrowRight, width: 32, height: 32 }"></div>\
+                                <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
+                            </div>\
+                            <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading...</div>\
+                            <div class="ausglobe-accordion-category-content" data-bind="foreach: items, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
+                                <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled }">\
+                                    <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
+                                    <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomTo"></div>\
+                                    <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
+                                </div>\
                             </div>\
                         </div>\
                     </div>\
                 </div>\
             </div>\
-        </div>\
-        <div class="ausglobe-accordion-item">\
-            <div class="ausglobe-accordion-item-header" data-bind="click: openAddData">\
-                <div class="ausglobe-accordion-item-header-label">Add Data</div>\
-            </div>\
-            <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': addDataIsOpen }">\
-                <div class="ausglobe-accordion-category">\
-                    <div class="ausglobe-add-data-message">\
-                        Add data by dragging and dropping it onto the map, or\
-                        <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">browse to select</span> a file to upload.\
-                        <input type="file" style="display: none;" id="uploadFile" data-bind="event: { change: addUploadedFile }"/>\
-                    </div>\
-                    <form class="ausglobe-user-service-form" data-bind="submit: addDataOrService">\
-                        <label>\
-                            <div>Enter a web link to add a data file or WMS/WFS service (advanced):</div>\
-                            <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
-                        </label>\
-                        <div>\
-                            <label class="ausglobe-addData-type">\
-                                <select class="ausglobe-addData-typeSelect" data-bind="value: addType">\
-                                    <option value="NotSpecified">Select file or service type</option>\
-                                    <option value="File">Single data file</option>\
-                                    <option value="WMS">WMS Server</option>\
-                                    <option value="WFS">WFS Server</option>\
-                                </select>\
-                            </label>\
-                            <input class="ausglobe-button" type="submit" value="Add" />\
+            <div class="ausglobe-accordion-item">\
+                <div class="ausglobe-accordion-item-header" data-bind="click: openAddData">\
+                    <div class="ausglobe-accordion-item-header-label">Add Data</div>\
+                </div>\
+                <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': addDataIsOpen }">\
+                    <div class="ausglobe-accordion-category">\
+                        <div class="ausglobe-add-data-message">\
+                            Add data by dragging and dropping it onto the map, or\
+                            <span class="ausglobe-upload-file-button" data-bind="click: selectFileToUpload">browse to select</span> a file to upload.\
+                            <input type="file" style="display: none;" id="uploadFile" data-bind="event: { change: addUploadedFile }"/>\
                         </div>\
-                    </form>\
+                        <form class="ausglobe-user-service-form" data-bind="submit: addDataOrService">\
+                            <label>\
+                                <div>Enter a web link to add a data file or WMS/WFS service (advanced):</div>\
+                                <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
+                            </label>\
+                            <div>\
+                                <label class="ausglobe-addData-type">\
+                                    <select class="ausglobe-addData-typeSelect" data-bind="value: addType">\
+                                        <option value="NotSpecified">Select file or service type</option>\
+                                        <option value="File">Single data file</option>\
+                                        <option value="WMS">WMS Server</option>\
+                                        <option value="WFS">WFS Server</option>\
+                                    </select>\
+                                </label>\
+                                <input class="ausglobe-button" type="submit" value="Add" />\
+                            </div>\
+                        </form>\
+                    </div>\
                 </div>\
             </div>\
         </div>';
