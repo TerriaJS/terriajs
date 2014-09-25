@@ -2056,8 +2056,8 @@ function getCesiumColor(clr) {
 */
 GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     //set default layer styles
-    if (layer.style === undefined) {
-        var style = {line: {}, point: {}, polygon: {}, table: {}};
+    if (layer.style === undefined || layer.style.line) {
+        var style = layer.style || {line: {}, point: {}, polygon: {}, table: {}};
         style.line.color = getRandomColor(line_palette, layer.name);
         style.line.width = 2;
         style.point.color = getRandomColor(point_palette, layer.name);
