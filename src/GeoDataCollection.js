@@ -1412,7 +1412,7 @@ GeoDataCollection.prototype._viewData = function(url, layer) {
         }, function(err) {
             loadErrorResponse(err);
         });
-    } else {
+    } else if (url) {
             //load text here to let me control functions called after
         loadText(url).then (function (text) {
             that.loadText(text, layer.name, format, layer);

@@ -730,16 +730,38 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     if (!bCesium) {
 
-        //create leaflet viewer
+         var bnds;
+        if (this.viewer !== undefined) {
+            rect = getCameraRect(this.scene);
+            bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
+                [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+        }
+       //TODO: LOOK FOR SIDE EFFECTS TO DOING THIS EARLY
+         //shut down existing cesium
+        if (this.viewer !== undefined) {
+            this._enableSelectExtent(false);
+            stopTimeline();
+
+            var inputHandler = this.viewer.screenSpaceEventHandler;
+            inputHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
+            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
+            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
+
+            this.scene.primitives.removeAll();
+
+            this.viewer.destroy();
+            this.viewer = undefined;
+        }
+
+       //create leaflet viewer
         var map = L.map('cesiumContainer', {
             zoomControl: false
         }).setView([-28.5, 135], 5);
 
         // Hacky nonsense to let us use Cesium's InfoBox without actually using Cesium.
         map.clock = new Clock();
-        map.dataSources = [];
-        map.dataSources.dataSourceAdded = new CesiumEvent();
-        map.dataSources.dataSourceRemoved = new CesiumEvent();
+        map.dataSources = this.geoDataManager.dataSourceCollection;
+
         map.screenSpaceEventHandler = {
             setInputAction : function() {},
             remoteInputAction : function() {}
@@ -757,7 +779,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             visualizersCallback: visualizersCallback
         });
 
-        var that = this;
         var eventHelper = new EventHelper();
 
         eventHelper.add(map.clock.onTick, function(clock) {
@@ -784,12 +805,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             console.log(e.boxZoomBounds);
         });
 
-        if (this.viewer !== undefined) {
-            rect = getCameraRect(this.scene);
-            bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
-                [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
-            map.fitBounds(bnds);
-        }
+        map.fitBounds(bnds);
 
         //Bing Maps Layer by default
         this.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey());
@@ -832,22 +848,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             selectFeatureLeaflet(that, e.latlng);
         });
         
-        //shut down existing cesium
-        if (this.viewer !== undefined) {
-            this._enableSelectExtent(false);
-            stopTimeline();
-
-            var inputHandler = this.viewer.screenSpaceEventHandler;
-            inputHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
-            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
-            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
-
-            this.scene.primitives.removeAll();
-
-            this.viewer.destroy();
-            this.viewer = undefined;
-        }
-
         this.geoDataManager.setViewer({scene: undefined, map: map});
         this.geoDataBrowser.viewModel.map = map;
 
@@ -855,6 +855,20 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     }
     else {
+        var rect;
+        if (defined(this.map)) {
+            rect = getCameraRect(undefined, this.map);
+                //remove existing map viewer
+            this.map.dataSources = undefined;
+            this.dataSourceDisplay.destroy();
+            this.map.remove();
+            this.map = undefined;
+        }
+        else {
+            var cam = this.initialCamera;
+            rect = new Rectangle.fromDegrees(cam.west, cam.south, cam.east, cam.north);
+         }
+
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
         this.scene = this.viewer.scene;
@@ -890,17 +904,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.captureCanvas = function() {
             that.captureCanvasFlag = true;
         };
-
-        if (defined(this.map)) {
-            rect = getCameraRect(undefined, this.map);
-            //remove existing map viewer
-            this.map.remove();
-            this.map = undefined;
-        }
-        else {
-            var cam = this.initialCamera;
-            rect = new Rectangle.fromDegrees(cam.west, cam.south, cam.east, cam.north);
-         }
 
         this.updateCameraFromRect(rect, 0);
 
