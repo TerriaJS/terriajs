@@ -23,7 +23,7 @@ var inherit = require('../inherit');
  * @param {GeoDataCatalogContext} context The context for the group.
  */
 var GeoDataGroupViewModel = function(context, type) {
-    GeoDataItemViewModel.call(this, defaultValue(type, 'group'), context);
+    GeoDataItemViewModel.call(this, context, defaultValue(type, 'group'));
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing

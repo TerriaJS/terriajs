@@ -51,7 +51,7 @@ if (start) {
     SvgPathBindingHandler.register(knockout);
     registerGeoDataViewModels();
 
-    // Intercept XHR requests and proxy them if necessary.
+    /*// Intercept XHR requests and proxy them if necessary.
     loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType) {
         if (corsProxy.shouldUseProxy(url)) {
             url = corsProxy.getURL(url);
@@ -65,7 +65,7 @@ if (start) {
             url = corsProxy.getURL(url);
         }
         return loadImage.defaultCreateImage(url, crossOrigin, deferred);
-    };
+    };*/
 
     var geoDataManager = new GeoDataCollection();
 

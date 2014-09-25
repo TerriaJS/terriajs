@@ -16,22 +16,21 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 
 var corsProxy = require('../corsProxy');
 var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
+var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
 /**
- * A {@link GeoDataItemViewModel} representing a layer from a Web Map Service (WMS) server.
+ * A {@link ImageryLayerDataSourceViewModel} representing a layer from a Web Map Service (WMS) server.
  *
  * @alias WebMapServiceDataSourceViewModel
  * @constructor
- * @extends GeoDataSourceViewModel
+ * @extends ImageryLayerDataSourceViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
 var WebMapServiceDataSourceViewModel = function(context) {
-    GeoDataSourceViewModel.call(this, 'wms', context);
-
-    this._imageryLayer = undefined;
+    ImageryLayerDataSourceViewModel.call(this, context, 'wms');
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -53,13 +52,6 @@ var WebMapServiceDataSourceViewModel = function(context) {
     this.parameters = WebMapServiceDataSourceViewModel.defaultParameters;
 
     /**
-     * Gets or sets the alpha (opacity) of the data item, where 0.0 is fully transparent and 1.0 is
-     * fully opaque.
-     * @type {Number}
-     */
-    this.alpha = 0.6;
-
-    /**
      * Gets or sets a value indicating whether we should request information about individual features on click
      * as GeoJSON.  If getFeatureInfoAsXml is true as well, feature information will be requested first as GeoJSON,
      * and then as XML if the GeoJSON request fails.  If both are false, this data item will not support feature picking at all.
@@ -77,21 +69,12 @@ var WebMapServiceDataSourceViewModel = function(context) {
      */
     this.getFeatureInfoAsXml = true;
 
-    knockout.track(this, ['url', 'layers', 'parameters', 'alpha']);
-
-    knockout.getObservable(this, 'alpha').subscribe(function(newValue) {
-        updateAlpha(this);
-    }, this);
+    knockout.track(this, ['url', 'layers', 'parameters']);
 };
 
-WebMapServiceDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
+WebMapServiceDataSourceViewModel.prototype = inherit(ImageryLayerDataSourceViewModel.prototype);
 
 defineProperties(WebMapServiceDataSourceViewModel.prototype, {
-    supportsReordering : {
-        get : function() {
-            return true;
-        }
-    }
 });
 
 /**
@@ -132,7 +115,7 @@ WebMapServiceDataSourceViewModel.prototype.enableInCesium = function() {
     var scene = this.context.cesiumScene;
 
     var imageryProvider = new WebMapServiceImageryProvider({
-        url : cleanUrl(this.url),
+        url : cleanAndProxyUrl(this.context, this.url),
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
@@ -158,22 +141,6 @@ WebMapServiceDataSourceViewModel.prototype.disableInCesium = function() {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceDataSourceViewModel.prototype.showInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
-    }
-
-    this._imageryLayer.alpha = this.alpha;
-};
-
-WebMapServiceDataSourceViewModel.prototype.hideInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
-    }
-
-    this._imageryLayer.alpha = 0.0;
-};
-
 WebMapServiceDataSourceViewModel.prototype.enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is already enabled.');
@@ -189,7 +156,7 @@ WebMapServiceDataSourceViewModel.prototype.enableInLeaflet = function() {
 
     options = combine(this.parameters, options);
 
-    this._imageryLayer = new L.tileLayer.wms(cleanUrl(this.url), options);
+    this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.context, this.url), options);
     map.addLayer(this._imageryLayer);
 };
 
@@ -204,22 +171,6 @@ WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceDataSourceViewModel.prototype.showInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
-    }
-
-    this._imageryLayer.setOpacity(this.alpha);
-};
-
-WebMapServiceDataSourceViewModel.prototype.hideInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
-    }
-
-    this._imageryLayer.setOpacity(0.0);
-};
-
 WebMapServiceDataSourceViewModel.defaultParameters = {
     transparent: true,
     format: 'image/png',
@@ -227,11 +178,17 @@ WebMapServiceDataSourceViewModel.defaultParameters = {
     style: ''
 };
 
-function cleanUrl(url) {
+function cleanAndProxyUrl(context, url) {
     // Strip off the search portion of the URL
     var uri = new URI(url);
     uri.search('');
-    return uri.toString();
+
+    var cleanedUrl = uri.toString();
+    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(cleanedUrl)) {
+        cleanedUrl = context.corsProxy.getURL(cleanedUrl);
+    }
+
+    return cleanedUrl;
 }
 
 function updateAlpha(viewModel) {

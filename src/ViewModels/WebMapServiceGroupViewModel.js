@@ -73,7 +73,7 @@ WebMapServiceGroupViewModel.prototype = inherit(GeoDataGroupViewModel.prototype)
 };
 
 function getCapabilities(viewModel) {
-    var url = cleanUrl(viewModel.url) + '?service=WMS&request=GetCapabilities';
+    var url = cleanAndProxyUrl(viewModel.context, viewModel.url) + '?service=WMS&request=GetCapabilities';
 
     return when(loadXML(url), function(xml) {
         var json = $.xml2json(xml);
@@ -107,11 +107,17 @@ function getCapabilities(viewModel) {
     });
 }
 
-function cleanUrl(url) {
+function cleanAndProxyUrl(context, url) {
     // Strip off the search portion of the URL
     var uri = new URI(url);
     uri.search('');
-    return uri.toString();
+
+    var cleanedUrl = uri.toString();
+    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(cleanedUrl)) {
+        cleanedUrl = context.corsProxy.getURL(cleanedUrl);
+    }
+
+    return cleanedUrl;
 }
 
 function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetFeatureInfo) {

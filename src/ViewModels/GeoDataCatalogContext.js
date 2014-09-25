@@ -23,6 +23,12 @@ var GeoDataCatalogContext = function() {
      * @type {NowViewingViewModel}
      */
     this.nowViewing = undefined;
+
+    /**
+     * Gets or sets the {@link corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
+     * @type {corsProxy}
+     */
+    this.corsProxy = undefined;
 };
 
 module.exports = GeoDataCatalogContext;

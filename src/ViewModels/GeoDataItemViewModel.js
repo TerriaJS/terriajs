@@ -21,10 +21,10 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @alias GeoDataItemViewModel
  * @constructor
  *
- * @param {String} type The type of data item represented by the new instance.
  * @param {GeoDataCatalogContext} context The context for the item.
+ * @param {String} type The type of data item represented by the new instance.
  */
-var GeoDataItemViewModel = function(type, context) {
+var GeoDataItemViewModel = function(context, type) {
     if (!defined(type)) {
         throw new DeveloperError('type is required.');
     }

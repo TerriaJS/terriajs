@@ -278,6 +278,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.context = new GeoDataCatalogContext();
     this.context.nowViewing = new NowViewingViewModel();
+    this.context.corsProxy = corsProxy;
 
     var url = window.location;
     var uri = new URI(url);

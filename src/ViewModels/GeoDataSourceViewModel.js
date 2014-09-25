@@ -27,8 +27,8 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @param {String} type The type of data source represented by the new instance.
  * @param {GeoDataCatalogContext} context The context for the item.
  */
-var GeoDataSourceViewModel = function(type, context) {
-    GeoDataItemViewModel.call(this, defaultValue(type, 'source'), context);
+var GeoDataSourceViewModel = function(context, type) {
+    GeoDataItemViewModel.call(this, context, type);
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
@@ -111,6 +111,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
+     * Data sources that cannot be reordered are typically displayed above reorderable data sources.
      * @type {Boolean}
      */
     supportsReordering : {
