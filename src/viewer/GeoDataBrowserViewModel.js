@@ -112,7 +112,7 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._showInfoForItem = createCommand(function(item) {
-        ga('send', 'event', 'dataSource', 'info', item.Title());
+        ga('send', 'event', 'dataSource', 'info', item.name);
         var popup = new GeoDataInfoPopup({
             container : document.body,
             viewModel : item

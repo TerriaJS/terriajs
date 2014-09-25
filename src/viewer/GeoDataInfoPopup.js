@@ -60,7 +60,7 @@ var GeoDataInfoPopup = function(options) {
     info.innerHTML = '\
         <div class="ausglobe-info-header">\
             <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
-            <h1 data-bind="text: info.Title"></h1>\
+            <h1 data-bind="text: info.name"></h1>\
         </div>\
         <div class="ausglobe-info-content">\
             <div class="ausglobe-info-section">\
@@ -78,13 +78,20 @@ var GeoDataInfoPopup = function(options) {
                 <h2>Metadata URL</h2>\
                 <a class="ausglobe-info-description" data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.wfsAvailable">\
+            <div class="ausglobe-info-section" data-bind="if: info.dataUrlType === \'wfs\' || info.dataUrlType === \'wfs-complete\'">\
                 <h2>Data URL</h2>\
                 <div class="ausglobe-info-description">\
                     Use the link below to download GeoJSON data.  See the\
                     <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>\
                     for more information on customising URL query parameters.\
-                    <div><a data-bind="attr: { href: getDataUrl }, text: getDataUrl" target="_blank"></a></div>\
+                    <div><a data-bind="attr: { href: info.dataUrl }, text: info.dataUrl" target="_blank"></a></div>\
+                </div>\
+            </div>\
+            <div class="ausglobe-info-section" data-bind="if: info.dataUrlType === \'direct\'">\
+                <h2>Data URL</h2>\
+                <div class="ausglobe-info-description">\
+                    Use the link below to download data directly.\
+                    <div><a data-bind="attr: { href: info.dataUrl }, text: info.dataUrl" target="_blank"></a></div>\
                 </div>\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: layerProperties.data().length > 0">\
@@ -136,7 +143,7 @@ var GeoDataInfoPopup = function(options) {
     viewModel.description = knockout.computed(function() {
         var text;
         if (viewModel.info.description) {
-            text = viewModel.info.description();
+            text = viewModel.info.description;
         } else {
             text = 'Please contact the provider of this data for more information, including information about usage rights and constraints.';
         }
@@ -145,11 +152,7 @@ var GeoDataInfoPopup = function(options) {
     });
 
     viewModel.dataCustodianInformation = knockout.computed(function() {
-        if (!defined(viewModel.info.dataCustodian) || !defined(viewModel.info.dataCustodian())) {
-            viewModel.info.dataCustodian = knockout.observable('Unknown');
-        }
-
-        return formatText(viewModel.info.dataCustodian());
+        return formatText(viewModel.info.dataCustodian);
     });
 
     viewModel.layer = {};
@@ -231,12 +234,12 @@ var GeoDataInfoPopup = function(options) {
     };
 
     viewModel.serviceType = knockout.computed(function() {
-        var type = viewModel.info.type();
-        if (type === 'WFS') {
+        var type = viewModel.info.type;
+        if (type === 'wfs') {
             return 'Web Feature Service (WFS)';
-        } else if (type === 'WMS') {
+        } else if (type === 'wms') {
             return 'Web Map Service (WMS)';
-        } else if (type === 'REST') {
+        } else if (type === 'esri-rest') {
             return 'Esri REST';
         } else {
             return '';
@@ -244,12 +247,12 @@ var GeoDataInfoPopup = function(options) {
     });
 
     viewModel.getMetadataUrl = knockout.computed(function() {
-        var type = viewModel.info.type();
-        if (type === 'WMS') {
-            return viewModel.info.base_url() + '?service=WMS&version=1.3.0&request=GetCapabilities';
-        } else if (type === 'WFS') {
-            return viewModel.info.base_url() + '?service=WFS&version=1.1.0&request=GetCapabilities';
-        } else if (type === 'REST') {
+        var type = viewModel.info.type;
+        if (type === 'wms') {
+            return viewModel.info.url + '?service=WMS&version=1.3.0&request=GetCapabilities';
+        } else if (type === 'wfs') {
+            return viewModel.info.url + '?service=WFS&version=1.1.0&request=GetCapabilities';
+        } else if (type === 'esri-rest') {
             return 'Esri REST service information not yet supported.';
         } else {
             return 'N/A';
@@ -276,9 +279,9 @@ var GeoDataInfoPopup = function(options) {
         getMetadataUrl = corsProxy.getURL(getMetadataUrl);
     }
     
-    var layerName = viewModel.info.Name ? viewModel.info.Name() : viewModel.info.name ? viewModel.info.name() : viewModel.info.Title();
+    var layerName = viewModel.info.layers;
 
-    if (viewModel.info.type() === 'WMS') {
+    if (viewModel.info.type === 'wms') {
         when(loadXML(getMetadataUrl), function(capabilities) {
             function findLayer(startLayer, name) {
                 if (startLayer.Name === name || startLayer.Title === name) {
@@ -323,7 +326,7 @@ var GeoDataInfoPopup = function(options) {
             addBindingProperties(viewModel.layerProperties, 1);
             addBindingProperties(viewModel.serviceProperties, 1);
 
-            if (viewModel.info.dataCustodian() === 'Unknown' && defined(json.Service.ContactInformation)) {
+            if (viewModel.info.dataCustodian === 'Unknown' && defined(json.Service.ContactInformation)) {
                 // Fill in the data custodian from the WMS metadata.
                 var contactInfo = json.Service.ContactInformation;
 
@@ -355,7 +358,7 @@ var GeoDataInfoPopup = function(options) {
 
             viewModel.isLoading(false);
         });
-    } else if (viewModel.info.type() === 'WFS') {
+    } else if (viewModel.info.type === 'wfs') {
         when(loadXML(getMetadataUrl), function(capabilities) {
             function findLayer(startLayer, name) {
                 if (startLayer.Name === name || startLayer.Title === name) {

@@ -85,7 +85,14 @@ var GeoDataSourceViewModel = function(context, type) {
      */
     this.dataUrl = undefined;
 
-    knockout.track(this, ['isEnabled', 'isShown', 'rectangle', 'legendUrl', 'isLegendVisible', 'dataUrltype', 'dataUrl']);
+    /**
+     * Gets or sets a description of the custodian of this data source.  The description is an HTML string that 
+     * must be sanitized before display to the user.
+     * @type {String}
+     */
+    this.dataCustodian = undefined;
+
+    knockout.track(this, ['isEnabled', 'isShown', 'rectangle', 'legendUrl', 'isLegendVisible', 'dataUrltype', 'dataUrl', 'dataCustodian']);
 
     knockout.getObservable(this, 'isEnabled').subscribe(function(newValue) {
         isEnabledChanged(this);

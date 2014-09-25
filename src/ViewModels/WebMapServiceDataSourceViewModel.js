@@ -88,6 +88,7 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     this.legendUrl = json.legendUrl;
     this.dataUrl = json.dataUrl;
     this.dataUrlType = defaultValue(json.dataUrlType, 'none');
+    this.dataCustodian = defaultValue(json.dataCustodian, 'Unknown');
 
     this.url = defaultValue(json.url, '');
     this.layers = defaultValue(json.layers, '');
