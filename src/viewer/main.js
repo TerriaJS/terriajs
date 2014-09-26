@@ -46,9 +46,11 @@ if (start) {
     var AusGlobeViewer = require('./AusGlobeViewer');
     var corsProxy = require('../corsProxy');
     var GeoDataCollection = require('../GeoDataCollection');
+    var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
     var registerGeoDataViewModels = require('../ViewModels/registerGeoDataViewModels');
 
     SvgPathBindingHandler.register(knockout);
+    KnockoutSanitizedHtmlBinding.register(knockout);
     registerGeoDataViewModels();
 
     /*// Intercept XHR requests and proxy them if necessary.

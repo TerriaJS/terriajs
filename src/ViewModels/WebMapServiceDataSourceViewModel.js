@@ -30,7 +30,7 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @param {GeoDataCatalogContext} context The context for the group.
  */
 var WebMapServiceDataSourceViewModel = function(context) {
-    ImageryLayerDataSourceViewModel.call(this, context, 'wms');
+    ImageryLayerDataSourceViewModel.call(this, context);
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -75,6 +75,25 @@ var WebMapServiceDataSourceViewModel = function(context) {
 WebMapServiceDataSourceViewModel.prototype = inherit(ImageryLayerDataSourceViewModel.prototype);
 
 defineProperties(WebMapServiceDataSourceViewModel.prototype, {
+    /**
+     * Gets the type of data member represented by this instance.
+     * @type {String}
+     */
+    type : {
+        get : function() {
+            return 'wms';
+        }
+    },
+
+    /**
+     * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
+     * @type {String}
+     */
+    typeName : {
+        get : function() {
+            return 'Web Map Service (WMS)';
+        }
+    }
 });
 
 /**

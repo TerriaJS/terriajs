@@ -64,15 +64,20 @@ var GeoDataInfoPopup = function(options) {
         </div>\
         <div class="ausglobe-info-content">\
             <div class="ausglobe-info-section">\
-                <div class="ausglobe-info-description" data-bind="html: description"></div>\
+                <!-- ko if: info.description -->\
+                <div class="ausglobe-info-description" data-bind="sanitizedHtml: info.description"></div>\
+                <!-- /ko -->\
+                <!-- ko if: !info.description -->\
+                <div class="ausglobe-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>\
+                <!-- /ko -->\
             </div>\
             <div class="ausglobe-info-section">\
                 <h2>Data Custodian</h2>\
-                <div class="ausglobe-info-description" data-bind="html: dataCustodianInformation"></div>\
+                <div class="ausglobe-info-description" data-bind="sanitizedHtml: info.dataCustodian"></div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.base_url">\
-                <h2><span data-bind="text: serviceType"></span> Base URL</h2>\
-                <input class="ausglobe-info-baseUrl" readonly type="text" data-bind="value: info.base_url" size="80" onclick="this.select();" />\
+            <div class="ausglobe-info-section" data-bind="if: info.url">\
+                <h2><span data-bind="text: info.typeName"></span> Base URL</h2>\
+                <input class="ausglobe-info-baseUrl" readonly type="text" data-bind="value: info.url" size="80" onclick="this.select();" />\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: getMetadataUrl">\
                 <h2>Metadata URL</h2>\
@@ -119,43 +124,6 @@ var GeoDataInfoPopup = function(options) {
 
     viewModel.isLoading = knockout.observable(true);
     viewModel.info = options.viewModel;
-
-    function formatText(text) {
-        // Escape HTML in the description.
-        var div = document.createElement('div');
-        
-        if (defined(div.textContent)) {
-            div.textContent = text;
-        } else {
-            div.innerText = text;
-        }
-
-        // Replace Markdown style links (such as: [Link Text](http://link.url.com) ) with actual links.
-        var escaped = div.innerHTML;
-        var fixedLinks = escaped.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, function(match, name, href) {
-            return '<a href="' + href + '" target="_blank">' + name + '</a>';
-        });
-
-        // Replace '<br/>' with actual an <br/> tag.
-        return fixedLinks.replace(/&lt;br\/&gt;/g, '<br/>');
-    }
-
-    viewModel.description = knockout.computed(function() {
-        var text;
-        if (viewModel.info.description) {
-            text = viewModel.info.description;
-        } else {
-            text = 'Please contact the provider of this data for more information, including information about usage rights and constraints.';
-        }
-
-        return formatText(text);
-    });
-
-    viewModel.dataCustodianInformation = knockout.computed(function() {
-        return formatText(viewModel.info.dataCustodian);
-    });
-
-    viewModel.layer = {};
 
     function addBindingProperties(o, level) {
         o = knockout.utils.unwrapObservable(o);
@@ -232,19 +200,6 @@ var GeoDataInfoPopup = function(options) {
             item.value.isOpen(!item.value.isOpen());
         }
     };
-
-    viewModel.serviceType = knockout.computed(function() {
-        var type = viewModel.info.type;
-        if (type === 'wfs') {
-            return 'Web Feature Service (WFS)';
-        } else if (type === 'wms') {
-            return 'Web Map Service (WMS)';
-        } else if (type === 'esri-rest') {
-            return 'Esri REST';
-        } else {
-            return '';
-        }
-    });
 
     viewModel.getMetadataUrl = knockout.computed(function() {
         var type = viewModel.info.type;

@@ -7,6 +7,7 @@ var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -60,6 +61,28 @@ var WebMapServiceGroupViewModel = function(context) {
 };
 
 WebMapServiceGroupViewModel.prototype = inherit(GeoDataGroupViewModel.prototype);
+
+defineProperties(WebMapServiceGroupViewModel.prototype, {
+    /**
+     * Gets the type of data member represented by this instance.
+     * @type {String}
+     */
+    type : {
+        get : function() {
+            return 'wms-getCapabilities';
+        }
+    },
+
+    /**
+     * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
+     * @type {String}
+     */
+    typeName : {
+        get : function() {
+            return 'Web Map Service (WMS) Group';
+        }
+    }
+});
 
 /**
  * Updates the WMS group from a JSON object-literal description of it.

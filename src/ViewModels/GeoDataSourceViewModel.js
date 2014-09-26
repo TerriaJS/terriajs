@@ -24,51 +24,30 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @constructor
  * @extends GeoDataItemViewModel
  *
- * @param {String} type The type of data source represented by the new instance.
  * @param {GeoDataCatalogContext} context The context for the item.
  */
-var GeoDataSourceViewModel = function(context, type) {
-    GeoDataItemViewModel.call(this, context, type);
+var GeoDataSourceViewModel = function(context) {
+    GeoDataItemViewModel.call(this, context);
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
 
     /**
-     * Gets a value indicating whether this data item is enabled.  An enabled data item appears in the
-     * "Now Viewing" pane, but is not necessarily shown on the map.  This property is observable.
-     * @type {Boolean}
-     */
-    this.isEnabled = false;
-
-    /**
-     * Gets a value indicating whether this data item is currently shown on the map.  In order to be shown,
-     * the item must also be enabled.  This property is observable.
-     * @type {Boolean}
-     */
-    this.isShown = false;
-
-    /**
-     * Gets or sets the geographic rectangle containing this data item.  This property
-     * is observable.
+     * Gets or sets the geographic rectangle containing this data source.  This property is observable.
      * @type {Rectangle}
      */
-    this.rectangle = Rectangle.fromDegrees(-180, -90, 180, 90);
+    this.rectangle = Rectangle.MAX_VALUE;
 
     /**
-     * Gets or sets the URL of the legend for this data item.  This property is obsevable.
+     * Gets or sets the URL of the legend for this data source, or undefined if this data source does not have a legend.
+     * This property is observable.
      * @type {String}
      */
-    this.legendUrl = '';
+    this.legendUrl = undefined;
 
     /**
-     * Gets or sets a value indicating whether the legend for this data item is currently visible.
-     * This property is observable.
-     * @type {Boolean}
-     */
-    this.isLegendVisible = false;
-
-    /**
-     * Gets or sets the type of the {@link GeoDataSourceViewModel#dataUrl}.  This property is observable.
+     * Gets or sets the type of the {@link GeoDataSourceViewModel#dataUrl}, or undefined if raw data for this data
+     * source is not available.  This property is observable.
      * Valid values are:
      *  * `direct` - A direct link to the data.
      *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link GeoDataSourceViewModel#dataUrl} is not
@@ -79,20 +58,51 @@ var GeoDataSourceViewModel = function(context, type) {
     this.dataUrlType = undefined;
 
     /**
-     * Gets or sets the URL from which this data item's raw data can be retrieved.  This property
-     * is observable.
+     * Gets or sets the URL from which this data item's raw data can be retrieved, or undefined if raw data for
+     * this data source is not available.  This property is observable.
      * @type {String}
      */
     this.dataUrl = undefined;
 
     /**
-     * Gets or sets a description of the custodian of this data source.  The description is an HTML string that 
-     * must be sanitized before display to the user.
+     * Gets or sets a description of the custodian of this data source.
+     * This property is an HTML string that must be sanitized before display to the user.
+     * This property is observable.
      * @type {String}
      */
-    this.dataCustodian = undefined;
+    this.dataCustodian = 'Unknown';
 
-    knockout.track(this, ['isEnabled', 'isShown', 'rectangle', 'legendUrl', 'isLegendVisible', 'dataUrltype', 'dataUrl', 'dataCustodian']);
+    /**
+     * Gets or sets the URL from which this data source's metadata description can be retrieved, or undefined if
+     * metadata is not available for this data source.  The format of the metadata depends on the type of data source.
+     * For example, Web Map Service (WMS) data sources provide their metadata via their GetCapabilities document.
+     * This property is observable.
+     * @type {String}
+     */
+    this.metadataUrl = undefined;
+
+    /**
+     * Gets or sets a value indicating whether this data item is enabled.  An enabled data item appears in the
+     * "Now Viewing" pane, but is not necessarily shown on the map.  This property is observable.
+     * @type {Boolean}
+     */
+    this.isEnabled = false;
+
+    /**
+     * Gets or sets a value indicating whether this data item is currently shown on the map.  In order to be shown,
+     * the item must also be enabled.  This property is observable.
+     * @type {Boolean}
+     */
+    this.isShown = false;
+
+    /**
+     * Gets or sets a value indicating whether the legend for this data source is currently visible.
+     * This property is observable.
+     * @type {Boolean}
+     */
+    this.isLegendVisible = false;
+
+    knockout.track(this, ['isEnabled', 'isShown', 'isLegendVisible']);
 
     knockout.getObservable(this, 'isEnabled').subscribe(function(newValue) {
         isEnabledChanged(this);
@@ -108,16 +118,6 @@ GeoDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
 
 defineProperties(GeoDataSourceViewModel.prototype, {
-    /**
-     * Gets the type of data item represented by this instance.
-     * @type {String}
-     */
-    type : {
-        get : function() {
-            return this._type;
-        }
-    },
-
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
      * Data sources that cannot be reordered are typically displayed above reorderable data sources.

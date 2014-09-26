@@ -18,10 +18,9 @@ var inherit = require('../inherit');
  * @extends GeoDataSourceViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
- * @param {String} type The type of imagery layer data source represented by the new instance.
  */
-var ImageryLayerDataSourceViewModel = function(context, type) {
-    GeoDataSourceViewModel.call(this, context, type);
+var ImageryLayerDataSourceViewModel = function(context) {
+    GeoDataSourceViewModel.call(this, context);
 
     /**
      * [_imageryLayer description]

@@ -22,17 +22,12 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @constructor
  *
  * @param {GeoDataCatalogContext} context The context for the item.
- * @param {String} type The type of data item represented by the new instance.
  */
-var GeoDataItemViewModel = function(context, type) {
-    if (!defined(type)) {
-        throw new DeveloperError('type is required.');
-    }
+var GeoDataItemViewModel = function(context) {
     if (!defined(context)) {
         throw new DeveloperError('context is required');
     }
 
-    this._type = type;
     this._context = context;
 
     /**
@@ -57,7 +52,17 @@ defineProperties(GeoDataItemViewModel.prototype, {
      */
     type : {
         get : function() {
-            return this._type;
+            throw new DeveloperError('Types derived from GeoDataItemViewModel must implement a "type" property.');
+        }
+    },
+
+    /**
+     * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
+     * @type {String}
+     */
+    typeName : {
+        get : function() {
+            throw new DeveloperError('Types derived from GeoDataItemViewModel must implement a "typeName" property.');
         }
     },
 

@@ -22,8 +22,8 @@ var inherit = require('../inherit');
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
-var GeoDataGroupViewModel = function(context, type) {
-    GeoDataItemViewModel.call(this, context, defaultValue(type, 'group'));
+var GeoDataGroupViewModel = function(context) {
+    GeoDataItemViewModel.call(this, context);
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -51,6 +51,25 @@ var GeoDataGroupViewModel = function(context, type) {
 GeoDataGroupViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
 defineProperties(GeoDataGroupViewModel.prototype, {
+    /**
+     * Gets the type of data member represented by this instance.
+     * @type {String}
+     */
+    type : {
+        get : function() {
+            return 'group';
+        }
+    },
+
+    /**
+     * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
+     * @type {String}
+     */
+    typeName : {
+        get : function() {
+            return 'Group';
+        }
+    }
 });
 
 /**
