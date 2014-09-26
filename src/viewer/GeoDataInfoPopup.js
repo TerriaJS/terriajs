@@ -79,9 +79,9 @@ var GeoDataInfoPopup = function(options) {
                 <h2><span data-bind="text: info.typeName"></span> Base URL</h2>\
                 <input class="ausglobe-info-baseUrl" readonly type="text" data-bind="value: info.url" size="80" onclick="this.select();" />\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: getMetadataUrl">\
+            <div class="ausglobe-info-section" data-bind="if: info.metadataUrl">\
                 <h2>Metadata URL</h2>\
-                <a class="ausglobe-info-description" data-bind="attr: { href: getMetadataUrl }, text: getMetadataUrl" target="_blank"></a>\
+                <a class="ausglobe-info-description" data-bind="attr: { href: info.metadataUrl }, text: info.metadataUrl" target="_blank"></a>\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: info.dataUrlType === \'wfs\' || info.dataUrlType === \'wfs-complete\'">\
                 <h2>Data URL</h2>\
@@ -201,43 +201,10 @@ var GeoDataInfoPopup = function(options) {
         }
     };
 
-    viewModel.getMetadataUrl = knockout.computed(function() {
-        var type = viewModel.info.type;
-        if (type === 'wms') {
-            return viewModel.info.url + '?service=WMS&version=1.3.0&request=GetCapabilities';
-        } else if (type === 'wfs') {
-            return viewModel.info.url + '?service=WFS&version=1.1.0&request=GetCapabilities';
-        } else if (type === 'esri-rest') {
-            return 'Esri REST service information not yet supported.';
-        } else {
-            return 'N/A';
-        }
-    });
-
-    viewModel.getDataUrl = knockout.computed(function() {
-        var baseUrl;
-        if (viewModel.info.completeWfsUrl && viewModel.info.completeWfsUrl()) {
-            return viewModel.info.completeWfsUrl();
-        } else if (viewModel.info.wfsUrl && viewModel.info.wfsUrl()) {
-            baseUrl = viewModel.info.wfsUrl();
-        } else if (viewModel.info.base_url && viewModel.info.base_url()) {
-            baseUrl = viewModel.info.base_url();
-        } else {
-            return '';
-        }
-        
-        return baseUrl + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + viewModel.info.Name() + '&srsName=EPSG%3A4326&maxFeatures=1000';
-    });
-
-    var getMetadataUrl = viewModel.getMetadataUrl();
-    if (corsProxy.shouldUseProxy(getMetadataUrl)) {
-        getMetadataUrl = corsProxy.getURL(getMetadataUrl);
-    }
-    
     var layerName = viewModel.info.layers;
 
     if (viewModel.info.type === 'wms') {
-        when(loadXML(getMetadataUrl), function(capabilities) {
+        when(loadXML(viewModel.info.metadataUrl), function(capabilities) {
             function findLayer(startLayer, name) {
                 if (startLayer.Name === name || startLayer.Title === name) {
                     return startLayer;

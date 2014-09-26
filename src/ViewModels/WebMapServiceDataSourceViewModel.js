@@ -15,6 +15,8 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 
 var corsProxy = require('../corsProxy');
+var DataSourceMetadataGroupViewModel = require('./DataSourceMetadataGroupViewModel');
+var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
 var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
@@ -108,6 +110,7 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     this.dataUrl = json.dataUrl;
     this.dataUrlType = defaultValue(json.dataUrlType, 'none');
     this.dataCustodian = defaultValue(json.dataCustodian, 'Unknown');
+    this.metadataUrl = json.metadataUrl;
 
     this.url = defaultValue(json.url, '');
     this.layers = defaultValue(json.layers, '');
@@ -127,7 +130,11 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     }
 
     if (!defined(this.legendUrl)) {
-        this.legendUrl = cleanAndProxyUrl(this.context, this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
+        this.legendUrl = cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
+    }
+
+    if (!defined(this.metadataUrl)) {
+        this.metadataUrl = cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetCapabilities';
     }
 };
 
@@ -139,7 +146,7 @@ WebMapServiceDataSourceViewModel.prototype.enableInCesium = function() {
     var scene = this.context.cesiumScene;
 
     var imageryProvider = new WebMapServiceImageryProvider({
-        url : cleanAndProxyUrl(this.context, this.url),
+        url : proxyUrl(this.context, this.url),
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
@@ -195,6 +202,23 @@ WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
     this._imageryLayer = undefined;
 };
 
+/**
+ * Requests metadata for this data source.  The returned metadata may initially be empty until
+ * {@link DataSourceMetadataViewModel#promise} resolves.
+ * @return {DataSourceMetadataViewModel} The metadata.
+ */
+WebMapServiceDataSourceViewModel.prototype.requestMetadata = function() {
+    var result = new DataSourceMetadataViewModel();
+
+    result.promise = loadXML(proxyUrl(this.context, this.metadataUrl)).then(function(capabilities) {
+
+    }).otherwise(function() {
+
+    });
+
+    return result;
+};
+
 WebMapServiceDataSourceViewModel.defaultParameters = {
     transparent: true,
     format: 'image/png',
@@ -203,16 +227,22 @@ WebMapServiceDataSourceViewModel.defaultParameters = {
 };
 
 function cleanAndProxyUrl(context, url) {
+    return proxyUrl(context, cleanUrl(url));
+}
+
+function cleanUrl(url) {
     // Strip off the search portion of the URL
     var uri = new URI(url);
     uri.search('');
+    return uri.toString();
+}
 
-    var cleanedUrl = uri.toString();
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(cleanedUrl)) {
-        cleanedUrl = context.corsProxy.getURL(cleanedUrl);
+function proxyUrl(context, url) {
+    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
+        return context.corsProxy.getURL(url);
     }
 
-    return cleanedUrl;
+    return url;
 }
 
 module.exports = WebMapServiceDataSourceViewModel;
