@@ -381,7 +381,10 @@ GeoDataCollection.prototype.show = function(layer, val) {
 */
 GeoDataCollection.prototype.checkServerHealth = function(layer, succeed, fail) {
     if (layer.type === 'DATA') {
-        return succeed(layer);
+        if (defined(succeed)) {
+            succeed(layer);
+        }
+        return;
     }
     // pinging the service url to see if it's alive
     var paramIdx = layer.url.indexOf('?');
@@ -391,12 +394,16 @@ GeoDataCollection.prototype.checkServerHealth = function(layer, succeed, fail) {
     }
     var that = this;
     loadText(url).then(function (text) {
-        succeed(layer);
+        if (defined(succeed)) {
+            succeed(layer);
+        }
     }, function(err) {
-        fail(layer);
+        if (defined(fail)) {
+            fail(layer);
+        }
         loadErrorResponse(err);
     });
-}
+};
 
 
 // -------------------------------------------
@@ -663,7 +670,7 @@ function recolorImage(image, colorFunc) {
         if (image.data[i+3] < 255) {
             continue;
         }
-        if (image.data[i] == 0) {
+        if (image.data[i] === 0) {
             var idx = image.data[i+1] * 0x100 + image.data[i+2];
             var clr = colorFunc(idx);
             if (defined(clr)) {
@@ -722,12 +729,12 @@ var regionWmsMap = {
     'LGA': {
         "Name":"region_map:FID_LGA_2011_AUST",
         "regionProp": "LGA_CODE11",
-        "aliases": ['lga'],
+        "aliases": ['lga']
     },
     'SCC': {
         "Name":"region_map:FID_SCC_2011_AUST",
         "regionProp": "SCC_CODE",
-        "aliases": ['scc', 'suburb'],
+        "aliases": ['scc', 'suburb']
     },
     'SA4': {
         "Name":"region_map:FID_SA4_2011_AUST",
@@ -773,7 +780,9 @@ function loadRegionIDs(description) {
 //preload all the regionMapIndex Lists
 function preloadRegionIDs() {
     for (var prop in regionWmsMap) {
-        loadRegionIDs(regionWmsMap[prop]);   
+        if (regionWmsMap.hasOwnProperty(prop)) {
+            loadRegionIDs(regionWmsMap[prop]);
+        } 
     }
 }
 
