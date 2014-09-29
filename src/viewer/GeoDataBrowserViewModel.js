@@ -115,7 +115,7 @@ var GeoDataBrowserViewModel = function(options) {
         ga('send', 'event', 'dataSource', 'info', item.name);
         var popup = new GeoDataInfoPopup({
             container : document.body,
-            viewModel : item
+            dataSource : item
         });
     });
 

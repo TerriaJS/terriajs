@@ -98,7 +98,7 @@ var WebMapServiceDataSourceViewModel = function(context) {
                 return this._legendUrl;
             }
 
-            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers
+            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
         },
         set : function(value) {
             this._legendUrl = value;

@@ -60,56 +60,56 @@ var GeoDataInfoPopup = function(options) {
     info.innerHTML = '\
         <div class="ausglobe-info-header">\
             <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
-            <h1 data-bind="text: info.name"></h1>\
+            <h1 data-bind="text: dataSource.name"></h1>\
         </div>\
         <div class="ausglobe-info-content">\
             <div class="ausglobe-info-section">\
-                <!-- ko if: info.description -->\
-                <div class="ausglobe-info-description" data-bind="sanitizedHtml: info.description"></div>\
+                <!-- ko if: dataSource.description -->\
+                <div class="ausglobe-info-description" data-bind="sanitizedHtml: dataSource.description"></div>\
                 <!-- /ko -->\
-                <!-- ko if: !info.description -->\
+                <!-- ko if: !dataSource.description -->\
                 <div class="ausglobe-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>\
                 <!-- /ko -->\
             </div>\
             <div class="ausglobe-info-section">\
                 <h2>Data Custodian</h2>\
-                <div class="ausglobe-info-description" data-bind="sanitizedHtml: info.dataCustodian"></div>\
+                <div class="ausglobe-info-description" data-bind="sanitizedHtml: dataSource.dataCustodian"></div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.url">\
-                <h2><span data-bind="text: info.typeName"></span> Base URL</h2>\
-                <input class="ausglobe-info-baseUrl" readonly type="text" data-bind="value: info.url" size="80" onclick="this.select();" />\
+            <div class="ausglobe-info-section" data-bind="if: dataSource.url">\
+                <h2><span data-bind="text: dataSource.typeName"></span> Base URL</h2>\
+                <input class="ausglobe-info-baseUrl" readonly type="text" data-bind="value: dataSource.url" size="80" onclick="this.select();" />\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.metadataUrl">\
+            <div class="ausglobe-info-section" data-bind="if: dataSource.metadataUrl">\
                 <h2>Metadata URL</h2>\
-                <a class="ausglobe-info-description" data-bind="attr: { href: info.metadataUrl }, text: info.metadataUrl" target="_blank"></a>\
+                <a class="ausglobe-info-description" data-bind="attr: { href: dataSource.metadataUrl }, text: dataSource.metadataUrl" target="_blank"></a>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.dataUrlType === \'wfs\' || info.dataUrlType === \'wfs-complete\'">\
+            <div class="ausglobe-info-section" data-bind="if: dataSource.dataUrlType === \'wfs\' || dataSource.dataUrlType === \'wfs-complete\'">\
                 <h2>Data URL</h2>\
                 <div class="ausglobe-info-description">\
                     Use the link below to download GeoJSON data.  See the\
                     <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>\
                     for more information on customising URL query parameters.\
-                    <div><a data-bind="attr: { href: info.dataUrl }, text: info.dataUrl" target="_blank"></a></div>\
+                    <div><a data-bind="attr: { href: dataSource.dataUrl }, text: dataSource.dataUrl" target="_blank"></a></div>\
                 </div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.dataUrlType === \'direct\'">\
+            <div class="ausglobe-info-section" data-bind="if: dataSource.dataUrlType === \'direct\'">\
                 <h2>Data URL</h2>\
                 <div class="ausglobe-info-description">\
                     Use the link below to download data directly.\
-                    <div><a data-bind="attr: { href: info.dataUrl }, text: info.dataUrl" target="_blank"></a></div>\
+                    <div><a data-bind="attr: { href: dataSource.dataUrl }, text: dataSource.dataUrl" target="_blank"></a></div>\
                 </div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.metadata.dataSourceMetadata.hasChildren">\
+            <div class="ausglobe-info-section" data-bind="if: dataSource.metadata.dataSourceMetadata.hasChildren">\
                 <h2>Data Details</h2>\
                 <div class="ausglobe-info-table">\
-                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: info.metadata.dataSourceMetadata.items }">\
+                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: dataSource.metadata.dataSourceMetadata.items }">\
                     </table>\
                 </div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: info.metadata.serviceMetadata.hasChildren">\
+            <div class="ausglobe-info-section" data-bind="if: dataSource.metadata.serviceMetadata.hasChildren">\
                 <h2>Service Details</h2>\
                 <div class="ausglobe-info-table">\
-                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: info.metadata.serviceMetadata.items }">\
+                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: dataSource.metadata.serviceMetadata.items }">\
                     </table>\
                 </div>\
             </div>\
@@ -123,7 +123,7 @@ var GeoDataInfoPopup = function(options) {
     };
 
     viewModel.isLoading = knockout.observable(true);
-    viewModel.info = options.viewModel;
+    viewModel.dataSource = options.dataSource;
 
     viewModel.close = function() {
         container.removeChild(wrapper);
@@ -135,7 +135,7 @@ var GeoDataInfoPopup = function(options) {
         return true;
     };
 
-    when(viewModel.info.metadata.promise, function() {
+    when(viewModel.dataSource.metadata.promise, function() {
         viewModel.isLoading(false);
     });
 
