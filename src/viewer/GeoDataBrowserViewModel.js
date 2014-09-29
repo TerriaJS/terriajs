@@ -1058,7 +1058,16 @@ function enableItem(viewModel, item) {
 
     item.layer = layer;
 
-    viewModel._dataManager.sendLayerRequest(layer);
+    var succeed = function(layer) {
+        viewModel._dataManager.sendLayerRequest(layer);
+    }
+    var fail = function(layer) {
+        viewModel._dataManager.remove(viewModel._dataManager.layers.indexOf(layer));
+        item.isEnabled(false);
+    }
+    
+    //doing this after as a check - could also be done before
+    viewModel._dataManager.checkServerHealth(layer, succeed, fail );
 }
 
 function disableItem(viewModel, item) {

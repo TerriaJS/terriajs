@@ -134,7 +134,7 @@ function loadErrorResponse(err) {
         container : document.body,
         title : 'HTTP Error ' + (defined(err.statusCode) ? err.statusCode : ''),
         message : '\
-An error occurred while accessing the web link.  Please verify that the link is correct. \
+An error occurred while accessing the web service link and the data cannot be shown.  If you entered the link manually, please verify that the link is correct. \
 <p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
 server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
 please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \
@@ -369,6 +369,34 @@ GeoDataCollection.prototype.show = function(layer, val) {
         }
     }
 };
+
+
+/**
+* Check the server health for a layer
+*
+ * @param {Object} layer The layer to be checked.
+ * @param {Function} succeed Function to carry out if server OK
+ * @param {Function} fail Function to carry out if server returns an err
+*
+*/
+GeoDataCollection.prototype.checkServerHealth = function(layer, succeed, fail) {
+    if (layer.type === 'DATA') {
+        return succeed(layer);
+    }
+    // pinging the service url to see if it's alive
+    var paramIdx = layer.url.indexOf('?');
+    var url = (paramIdx !== -1) ? layer.url.substring(0, paramIdx) : layer.url;
+    if (corsProxy.shouldUseProxy(url)) {
+        url = corsProxy.getURL(url);
+    }
+    var that = this;
+    loadText(url).then(function (text) {
+        succeed(layer);
+    }, function(err) {
+        fail(layer);
+        loadErrorResponse(err);
+    });
+}
 
 
 // -------------------------------------------
