@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,L,URI*/
+/*global require,L,URI,$*/
 
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
@@ -11,11 +11,12 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 
 var corsProxy = require('../corsProxy');
-var DataSourceMetadataGroupViewModel = require('./DataSourceMetadataGroupViewModel');
+var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
 var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
 var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
@@ -210,10 +211,28 @@ WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
 WebMapServiceDataSourceViewModel.prototype.requestMetadata = function() {
     var result = new DataSourceMetadataViewModel();
 
+    var that = this;
     result.promise = loadXML(proxyUrl(this.context, this.metadataUrl)).then(function(capabilities) {
+        var json = $.xml2json(capabilities);
 
+        if (json.Service) {
+            populateMetadataGroup(result.dataSourceMetadata, capabilities.Service);
+        } else {
+            result.dataSourceErrorMessage = 'Service information not found in GetCapabilities operation response.';
+        }
+
+        var layer;
+        if (defined(json.Capability)) {
+            layer = findLayer(json.Capability.Layer, that.layers);
+        }
+        if (layer) {
+            populateMetadataGroup(result.serviceMetadata, layer);
+        } else {
+            result.serviceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
+        }
     }).otherwise(function() {
-
+        result.dataSourceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
+        result.serviceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
     });
 
     return result;
@@ -243,6 +262,56 @@ function proxyUrl(context, url) {
     }
 
     return url;
+}
+
+function findLayer(startLayer, name) {
+    if (startLayer.Name === name || startLayer.Title === name) {
+        return startLayer;
+    }
+
+    var layers = startLayer.Layer;
+    if (!defined(layers)) {
+        return undefined;
+    }
+
+    var found = findLayer(layers, name);
+    for (var i = 0; !found && i < layers.length; ++i) {
+        var layer = layers[i];
+        found = findLayer(layer, name);
+    }
+
+    return found;
+}
+
+function populateMetadataGroup(metadataGroup, sourceMetadata) {
+    for (var name in sourceMetadata) {
+        if (sourceMetadata.hasOwnProperty(name)) {
+            var value = sourceMetadata[name];
+
+            var dest;
+            if (name === 'BoundingBox' && value instanceof Array) {
+                for (var i = 0; i < value.length; ++i) {
+                    var subValue = value[i];
+
+                    dest = new DataSourceMetadataItemViewModel();
+                    dest.name = name + ' (' + subValue.CRS + ')';
+                    dest.value = subValue;
+
+                    populateMetadataGroup(dest, subValue);
+
+                    metadataGroup.items.push(dest);
+                }
+            } else {
+                dest = new DataSourceMetadataItemViewModel();
+                dest.name = name;
+                dest.value = value;
+
+                populateMetadataGroup(dest, value);
+
+                metadataGroup.items.push(dest);
+            }
+        }
+    }
 }
 
 module.exports = WebMapServiceDataSourceViewModel;
