@@ -42,7 +42,13 @@ var DataSourceMetadataViewModel = function() {
      */
     this.serviceErrorMessage = undefined;
 
-    knockout.track(this, ['dataSourceMetadata', 'serviceMetadata', 'dataSourceErrorMessage', 'serviceErrorMessage']);
+    /**
+     * Gets or sets a value indicating whether the metadata is currently loading.
+     * @type {Boolean}
+     */
+    this.isLoading = true;
+
+    knockout.track(this, ['dataSourceMetadata', 'serviceMetadata', 'dataSourceErrorMessage', 'serviceErrorMessage', 'isLoading']);
 };
 
 module.exports = DataSourceMetadataViewModel;

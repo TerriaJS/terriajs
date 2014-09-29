@@ -264,13 +264,15 @@ function proxyUrl(context, url) {
 function requestMetadata(viewModel) {
     var result = new DataSourceMetadataViewModel();
 
+    result.isLoading = true;
+
     result.promise = loadXML(proxyUrl(viewModel.context, viewModel.metadataUrl)).then(function(capabilities) {
         var json = $.xml2json(capabilities);
 
         if (json.Service) {
             populateMetadataGroup(result.serviceMetadata, json.Service);
         } else {
-            result.dataSourceErrorMessage = 'Service information not found in GetCapabilities operation response.';
+            result.serviceErrorMessage = 'Service information not found in GetCapabilities operation response.';
         }
 
         var layer;
@@ -280,11 +282,14 @@ function requestMetadata(viewModel) {
         if (layer) {
             populateMetadataGroup(result.dataSourceMetadata, layer);
         } else {
-            result.serviceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
+            result.dataSourceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
         }
+
+        result.isLoading = false;
     }).otherwise(function() {
         result.dataSourceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
         result.serviceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
+        result.isLoading = false;
     });
 
     return result;

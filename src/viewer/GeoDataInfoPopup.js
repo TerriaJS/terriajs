@@ -56,7 +56,7 @@ var GeoDataInfoPopup = function(options) {
 
     var info = document.createElement('div');
     info.className = 'ausglobe-info';
-    info.setAttribute('data-bind', 'css : { loadingIndicator : isLoading }');
+    info.setAttribute('data-bind', 'css : { loadingIndicator : dataSource.metadata.isLoading }');
     info.innerHTML = '\
         <div class="ausglobe-info-header">\
             <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
@@ -99,18 +99,42 @@ var GeoDataInfoPopup = function(options) {
                     <div><a data-bind="attr: { href: dataSource.dataUrl }, text: dataSource.dataUrl" target="_blank"></a></div>\
                 </div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: dataSource.metadata.dataSourceMetadata.hasChildren">\
+            <div class="ausglobe-info-section">\
                 <h2>Data Details</h2>\
                 <div class="ausglobe-info-table">\
+                    <!-- ko if: dataSource.metadata.dataSourceMetadata.hasChildren -->\
                     <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: dataSource.metadata.dataSourceMetadata.items }">\
                     </table>\
+                    <!-- /ko -->\
+                    <!-- ko if: dataSource.metadata.dataSourceErrorMessage -->\
+                    <table>\
+                        <tr>\
+                            <td class="ausglobe-info-properties-name-cell ausglobe-info-properties-level1">\
+                                <div class="ausglobe-info-properties-arrow"></div>\
+                                <div class="ausglobe-info-properties-name" data-bind="text: dataSource.metadata.dataSourceErrorMessage"></div>\
+                            </td>\
+                        </tr>\
+                    </table>\
+                    <!-- /ko -->\
                 </div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: dataSource.metadata.serviceMetadata.hasChildren">\
+            <div class="ausglobe-info-section">\
                 <h2>Service Details</h2>\
                 <div class="ausglobe-info-table">\
+                    <!-- ko if: dataSource.metadata.serviceMetadata.hasChildren -->\
                     <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: dataSource.metadata.serviceMetadata.items }">\
                     </table>\
+                    <!-- /ko -->\
+                    <!-- ko if: dataSource.metadata.serviceErrorMessage -->\
+                    <table>\
+                        <tr>\
+                            <td class="ausglobe-info-properties-name-cell ausglobe-info-properties-level1">\
+                                <div class="ausglobe-info-properties-arrow"></div>\
+                                <div class="ausglobe-info-properties-name" data-bind="text: dataSource.metadata.serviceErrorMessage"></div>\
+                            </td>\
+                        </tr>\
+                    </table>\
+                    <!-- /ko -->\
                 </div>\
             </div>\
         </div>\
@@ -122,7 +146,6 @@ var GeoDataInfoPopup = function(options) {
         _arrowRightPath : 'M11.166,23.963L22.359,17.5c1.43-0.824,1.43-2.175,0-3L11.166,8.037c-1.429-0.826-2.598-0.15-2.598,1.5v12.926C8.568,24.113,9.737,24.789,11.166,23.963z'
     };
 
-    viewModel.isLoading = knockout.observable(true);
     viewModel.dataSource = options.dataSource;
 
     viewModel.close = function() {
@@ -134,10 +157,6 @@ var GeoDataInfoPopup = function(options) {
         }
         return true;
     };
-
-    when(viewModel.dataSource.metadata.promise, function() {
-        viewModel.isLoading(false);
-    });
 
     knockout.applyBindings(this._viewModel, wrapper);
 };
