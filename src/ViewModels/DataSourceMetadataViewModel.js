@@ -3,6 +3,7 @@
 /*global require*/
 
 var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 /**
  * Represents the metadata associated with a data source.
@@ -40,6 +41,8 @@ var DataSourceMetadataViewModel = function() {
      * @type {String}
      */
     this.serviceErrorMessage = undefined;
+
+    knockout.track(this, ['dataSourceMetadata', 'serviceMetadata', 'dataSourceErrorMessage', 'serviceErrorMessage']);
 };
 
 module.exports = DataSourceMetadataViewModel;

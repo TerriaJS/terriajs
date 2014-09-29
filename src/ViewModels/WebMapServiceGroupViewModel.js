@@ -44,7 +44,15 @@ var WebMapServiceGroupViewModel = function(context) {
      */
     this.url = '';
 
-    knockout.track(this, ['url']);
+    /**
+     * Gets or sets a description of the custodian of the data sources in this group.
+     * This property is an HTML string that must be sanitized before display to the user.
+     * This property is observable.
+     * @type {String}
+     */
+    this.dataCustodian = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian']);
 
     var that = this;
     knockout.getObservable(this, 'isOpen').subscribe(function(newValue) {
@@ -93,6 +101,9 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
     this.name = defaultValue(json.name, 'Unnamed WMS Server');
     this.description = defaultValue(json.description, '');
     this.url = defaultValue(json.url, '');
+    this.dataCustodian = json.dataCustodian;
+    this.dataUrlType = defaultValue(json.dataUrlType, 'none');
+    this.dataUrl = json.dataUrl;
 };
 
 function getCapabilities(viewModel) {
@@ -115,7 +126,27 @@ function getCapabilities(viewModel) {
             }
         }
 
-        addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo);
+        var dataCustodian = viewModel.dataCustodian;
+        if (!defined(dataCustodian) && defined(json.Service.ContactInformation)) {
+            var contactInfo = json.Service.ContactInformation;
+
+            var text = '';
+
+            var primary = contactInfo.ContactPersonPrimary;
+            if (defined(primary)) {
+                if (defined(primary.ContactOrganization) && primary.ContactOrganization.length > 0) {
+                    text += primary.ContactOrganization + '<br/>';
+                }
+            }
+
+            if (defined(contactInfo.ContactElectronicMailAddress) && contactInfo.ContactElectronicMailAddress.length > 0) {
+                text += '[' + contactInfo.ContactElectronicMailAddress + '](mailto:' + contactInfo.ContactElectronicMailAddress + ')<br/>'; 
+            }
+
+            dataCustodian = text;
+        }
+
+        addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
     }, function(e) {
         // TODO: view models should not create UI elements directly like this.
         var message =new PopupMessage({
@@ -143,7 +174,7 @@ function cleanAndProxyUrl(context, url) {
     return cleanedUrl;
 }
 
-function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetFeatureInfo) {
+function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetFeatureInfo, dataCustodian) {
     if (!(layers instanceof Array)) {
         layers = [layers];
     }
@@ -158,21 +189,22 @@ function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetF
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
             // in the 'layers' parameter of a GetMap request.  This is true in 1.0.0 and 1.3.0 as well.
             if (defined(layer.Name) && layer.Name.length > 0) {
-                items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo));
+                items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian));
             }
-            addLayersRecursively(viewModel, layer.Layer, items, layer, supportsJsonGetFeatureInfo);
+            addLayersRecursively(viewModel, layer.Layer, items, layer, supportsJsonGetFeatureInfo, dataCustodian);
         }
         else {
-            items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo));
+            items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian));
         }
     }
 }
 
-function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo) {
+function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian) {
     var result = new WebMapServiceDataSourceViewModel(viewModel.context);
 
     result.name = layer.Title;
     result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;
+    result.dataCustodian = dataCustodian;
     result.url = viewModel.url;
     result.layers = layer.Name;
 

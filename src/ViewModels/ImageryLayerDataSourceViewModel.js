@@ -22,10 +22,6 @@ var inherit = require('../inherit');
 var ImageryLayerDataSourceViewModel = function(context) {
     GeoDataSourceViewModel.call(this, context);
 
-    /**
-     * [_imageryLayer description]
-     * @type {[type]}
-     */
     this._imageryLayer = undefined;
 
     /**

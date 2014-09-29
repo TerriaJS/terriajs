@@ -23,33 +23,33 @@ var GeoDataInfoPopup = function(options) {
     template.setAttribute('id', 'ausglobe-info-item-template');
     template.innerHTML = '\
             <tr>\
-                <td class="ausglobe-info-properties-name-cell" data-bind="click: $root.toggleOpen, css: cssClass">\
-                    <!-- ko if: isParent && value.isOpen() -->\
+                <td class="ausglobe-info-properties-name-cell" data-bind="click: toggleOpen, css: \'ausglobe-info-properties-level\' + $parents.length + (hasChildren ? \' ausglobe-info-properties-parent\' : \'\')">\
+                    <!-- ko if: hasChildren && isOpen -->\
                     <div class="ausglobe-info-properties-arrow" data-bind="cesiumSvgPath: { path: $root._arrowDownPath, width: 32, height: 32 }"></div>\
                     <!-- /ko -->\
-                    <!-- ko if: isParent && !value.isOpen() -->\
+                    <!-- ko if: hasChildren && !isOpen -->\
                     <div class="ausglobe-info-properties-arrow" data-bind="cesiumSvgPath: { path: $root._arrowRightPath, width: 32, height: 32 }"></div>\
                     <!-- /ko -->\
-                    <!-- ko if: !isParent -->\
+                    <!-- ko if: !hasChildren -->\
                     <div class="ausglobe-info-properties-arrow"></div>\
                     <!-- /ko -->\
                     <div class="ausglobe-info-properties-name" data-bind="text: name"></div>\
                 </td>\
-                <!-- ko if: isParent -->\
+                <!-- ko if: hasChildren -->\
                     <td></td>\
                 <!-- /ko -->\
-                <!-- ko if: isArray -->\
+                <!-- ko if: valueIsArray -->\
                     <td data-bind="foreach: value">\
                         <span data-bind="if: $index() !== 0">; </span>\
                         <span data-bind="text: $data"></span>\
                     </td>\
                 <!-- /ko -->\
-                <!-- ko ifnot: isParent || isArray -->\
+                <!-- ko ifnot: hasChildren || valueIsArray -->\
                     <td data-bind="text: value"></td>\
                 <!-- /ko -->\
             </tr>\
-            <!-- ko if: isParent && value.isOpen() -->\
-                <!-- ko template: { name: \'ausglobe-info-item-template\', foreach: value.data } -->\
+            <!-- ko if: hasChildren && isOpen -->\
+                <!-- ko template: { name: \'ausglobe-info-item-template\', foreach: items } -->\
                 <!-- /ko -->\
             <!-- /ko -->';
     container.appendChild(template);
@@ -99,17 +99,17 @@ var GeoDataInfoPopup = function(options) {
                     <div><a data-bind="attr: { href: info.dataUrl }, text: info.dataUrl" target="_blank"></a></div>\
                 </div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: layerProperties.data().length > 0">\
+            <div class="ausglobe-info-section" data-bind="if: info.metadata.dataSourceMetadata.hasChildren">\
                 <h2>Data Details</h2>\
                 <div class="ausglobe-info-table">\
-                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: layerProperties.data }">\
+                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: info.metadata.dataSourceMetadata.items }">\
                     </table>\
                 </div>\
             </div>\
-            <div class="ausglobe-info-section" data-bind="if: serviceProperties.data().length > 0">\
+            <div class="ausglobe-info-section" data-bind="if: info.metadata.serviceMetadata.hasChildren">\
                 <h2>Service Details</h2>\
                 <div class="ausglobe-info-table">\
-                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: serviceProperties.data }">\
+                    <table data-bind="template: { name: \'ausglobe-info-item-template\', foreach: info.metadata.serviceMetadata.items }">\
                     </table>\
                 </div>\
             </div>\
@@ -125,66 +125,6 @@ var GeoDataInfoPopup = function(options) {
     viewModel.isLoading = knockout.observable(true);
     viewModel.info = options.viewModel;
 
-    function addBindingProperties(o, level) {
-        o = knockout.utils.unwrapObservable(o);
-
-        if (typeof o !== 'object' || o instanceof Array) {
-            return;
-        }
-
-        var array = o.data;
-        if (!defined(array)) {
-            array = o.data = knockout.observableArray();
-            o.isOpen = knockout.observable(true);
-        }
-
-        array.removeAll();
-
-        for (var property in o) {
-            if (o.hasOwnProperty(property) && property !== '__ko_mapping__' && property !== 'data' && property !== 'isOpen') {
-                var value = knockout.utils.unwrapObservable(o[property]);
-
-                var cssClass = 'ausglobe-info-properties-level' + level;
-                var isParent;
-
-                if (property === 'BoundingBox' && value instanceof Array) {
-                    for (var i = 0; i < value.length; ++i) {
-                        var subValue = knockout.utils.unwrapObservable(value[i]);
-                        addBindingProperties(subValue, level + 1);
-
-                        isParent = typeof subValue === 'object' && !(subValue instanceof Array);
-
-                        array.push({
-                            name : property + ' (' + knockout.utils.unwrapObservable(subValue.CRS) + ')',
-                            value : subValue,
-                            isParent : isParent,
-                            isArray : subValue instanceof Array,
-                            cssClass : isParent ? cssClass + ' ausglobe-info-properties-parent' : cssClass
-                        });
-                    }
-                } else {
-                    addBindingProperties(value, level + 1);
-
-                    isParent = typeof value === 'object' && !(value instanceof Array);
-
-                    array.push({
-                        name : property,
-                        value : value,
-                        isParent : typeof value === 'object' && !(value instanceof Array),
-                        isArray : value instanceof Array,
-                        cssClass : isParent ? cssClass + ' ausglobe-info-properties-parent' : cssClass
-                    });
-                }
-            }
-        }
-    }
-
-    viewModel.layerProperties = komapping.fromJS({});
-    viewModel.serviceProperties = komapping.fromJS({});
-
-    addBindingProperties(viewModel.layerProperties, 1);
-    addBindingProperties(viewModel.serviceProperties, 1);
-
     viewModel.close = function() {
         container.removeChild(wrapper);
     };
@@ -195,161 +135,9 @@ var GeoDataInfoPopup = function(options) {
         return true;
     };
 
-    viewModel.toggleOpen = function(item) {
-        if (defined(item.value) && defined(item.value.isOpen)) {
-            item.value.isOpen(!item.value.isOpen());
-        }
-    };
-
-    var layerName = viewModel.info.layers;
-
-    if (viewModel.info.type === 'wms') {
-        when(loadXML(viewModel.info.metadataUrl), function(capabilities) {
-            function findLayer(startLayer, name) {
-                if (startLayer.Name === name || startLayer.Title === name) {
-                    return startLayer;
-                }
-
-                var layers = startLayer.Layer;
-                if (!defined(layers)) {
-                    return undefined;
-                }
-
-                var found = findLayer(layers, name);
-                for (var i = 0; !found && i < layers.length; ++i) {
-                    var layer = layers[i];
-                    found = findLayer(layer, name);
-                }
-
-                return found;
-            }
-
-            var json = $.xml2json(capabilities);
-            if (json.Service) {
-                komapping.fromJS(json.Service, viewModel.serviceProperties);
-            } else {
-                komapping.fromJS({
-                    'Service information not found in GetCapabilities operation response.' : ''
-                }, viewModel.serviceProperties);
-            }
-
-            var layer;
-            if (defined(json.Capability)) {
-                layer = findLayer(json.Capability.Layer, layerName);
-            }
-            if (layer) {
-                komapping.fromJS(layer, viewModel.layerProperties);
-            } else {
-                komapping.fromJS({
-                    'Layer information not found in GetCapabilities operation response.' : ''
-                }, viewModel.layerProperties);
-            }
-
-            addBindingProperties(viewModel.layerProperties, 1);
-            addBindingProperties(viewModel.serviceProperties, 1);
-
-            if (viewModel.info.dataCustodian === 'Unknown' && defined(json.Service.ContactInformation)) {
-                // Fill in the data custodian from the WMS metadata.
-                var contactInfo = json.Service.ContactInformation;
-
-                var text = '';
-
-                var primary = contactInfo.ContactPersonPrimary;
-                if (defined(primary)) {
-                    if (defined(primary.ContactOrganization) && primary.ContactOrganization.length > 0) {
-                        text += primary.ContactOrganization + '<br/>';
-                    }
-                }
-
-                if (defined(contactInfo.ContactElectronicMailAddress) && contactInfo.ContactElectronicMailAddress.length > 0) {
-                    text += '[' + contactInfo.ContactElectronicMailAddress + '](mailto:' + contactInfo.ContactElectronicMailAddress + ')<br/>'; 
-                }
-
-                viewModel.info.dataCustodian(text);
-            }
-
-            viewModel.isLoading(false);
-        }, function(e) {
-            komapping.fromJS({
-                'An error occurred while invoking the GetCapabilities service.' : ''
-            }, viewModel.serviceProperties);
-
-            komapping.fromJS({
-                'An error occurred while invoking the GetCapabilities service.' : ''
-            }, viewModel.layerProperties);
-
-            viewModel.isLoading(false);
-        });
-    } else if (viewModel.info.type === 'wfs') {
-        when(loadXML(getMetadataUrl), function(capabilities) {
-            function findLayer(startLayer, name) {
-                if (startLayer.Name === name || startLayer.Title === name) {
-                    return startLayer;
-                }
-
-                var layers = startLayer.FeatureType;
-                if (!defined(layers)) {
-                    return undefined;
-                }
-
-                var found = findLayer(layers, name);
-                for (var i = 0; !found && i < layers.length; ++i) {
-                    var layer = layers[i];
-                    found = findLayer(layer, name);
-                }
-
-                return found;
-            }
-
-            var json = $.xml2json(capabilities);
-            if (json.ServiceIdentification || json.ServiceProvider) {
-                if (json.ServiceIdentification) {
-                    komapping.fromJS(json.ServiceIdentification, viewModel.serviceProperties);
-                }
-                if (json.ServiceProvider) {
-                    komapping.fromJS(json.ServiceProvider, viewModel.serviceProperties);
-                }
-            } else {
-                komapping.fromJS({
-                    'Service information not found in GetCapabilities operation response.' : ''
-                }, viewModel.serviceProperties);
-            }
-
-            var layer = findLayer(json.FeatureTypeList, layerName);
-            if (layer) {
-                komapping.fromJS(layer, viewModel.layerProperties);
-            } else {
-                komapping.fromJS({
-                    'Layer information not found in GetCapabilities operation response.' : ''
-                }, viewModel.layerProperties);
-            }
-
-            addBindingProperties(viewModel.layerProperties, 1);
-            addBindingProperties(viewModel.serviceProperties, 1);
-
-            viewModel.isLoading(false);
-        }, function(e) {
-            komapping.fromJS({
-                'An error occurred while invoking the GetCapabilities service.' : ''
-            }, viewModel.serviceProperties);
-
-            komapping.fromJS({
-                'An error occurred while invoking the GetCapabilities service.' : ''
-            }, viewModel.layerProperties);
-
-            viewModel.isLoading(false);
-        });
-    } else {
-        komapping.fromJS({
-            'N/A' : ''
-        }, viewModel.serviceProperties);
-
-        komapping.fromJS({
-            'N/A' : ''
-        }, viewModel.layerProperties);
-
+    when(viewModel.info.metadata.promise, function() {
         viewModel.isLoading(false);
-    }
+    });
 
     knockout.applyBindings(this._viewModel, wrapper);
 };

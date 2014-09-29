@@ -31,10 +31,10 @@ var DataSourceMetadataItemViewModel = function(name, value) {
      */
     this.isOpen = true;
 
-    knockout.track(this, ['name', 'value', 'items']);
+    knockout.track(this, ['name', 'value', 'items', 'isOpen']);
 };
 
-defineProperties(DataSourceMetadataItemViewModel, {
+defineProperties(DataSourceMetadataItemViewModel.prototype, {
     /**
      * Gets a value indicating whether this item has child items.
      * @type {Boolean}
@@ -43,7 +43,21 @@ defineProperties(DataSourceMetadataItemViewModel, {
         get : function() {
             return this.items.length > 0;
         }
+    },
+
+    valueIsArray : {
+        get : function() {
+            return this.value instanceof Array;
+        }
     }
 });
+
+/**
+ * Toggles the {@link DataSourceMetadataItemViewModel#isOpen} property.  If this item's list of children is open,
+ * calling this method will close it.  If the list is closed, calling this method will open it.
+ */
+DataSourceMetadataItemViewModel.prototype.toggleOpen = function() {
+    this.isOpen = !this.isOpen;
+};
 
 module.exports = DataSourceMetadataItemViewModel;

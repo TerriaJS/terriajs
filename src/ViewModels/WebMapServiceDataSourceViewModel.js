@@ -35,6 +35,10 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var WebMapServiceDataSourceViewModel = function(context) {
     ImageryLayerDataSourceViewModel.call(this, context);
 
+    this._metadata = undefined;
+    this._legendUrl = undefined;
+    this._metadataUrl = undefined;
+
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
      * @type {String}
@@ -72,7 +76,34 @@ var WebMapServiceDataSourceViewModel = function(context) {
      */
     this.getFeatureInfoAsXml = true;
 
-    knockout.track(this, ['url', 'layers', 'parameters']);
+    knockout.track(this, ['_legendUrl', '_metadataUrl', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml']);
+
+    // metadataUrl and legendUrl are derived from url if not explicitly specified.
+    knockout.defineProperty(this, 'metadataUrl', {
+        get : function() {
+            if (defined(this._metadataUrl)) {
+                return this._metadataUrl;
+            }
+
+            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetCapabilities';
+        },
+        set : function(value) {
+            this._metadataUrl = value;
+        }
+    });
+
+    knockout.defineProperty(this, 'legendUrl', {
+        get : function() {
+            if (defined(this._legendUrl)) {
+                return this._legendUrl;
+            }
+
+            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers
+        },
+        set : function(value) {
+            this._legendUrl = value;
+        }
+    });
 };
 
 WebMapServiceDataSourceViewModel.prototype = inherit(ImageryLayerDataSourceViewModel.prototype);
@@ -95,6 +126,15 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     typeName : {
         get : function() {
             return 'Web Map Service (WMS)';
+        }
+    },
+
+    metadata : {
+        get : function() {
+            if (!defined(this._metadata)) {
+                this._metadata = requestMetadata(this);
+            }
+            return this._metadata;
         }
     }
 });
@@ -128,14 +168,6 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
         this.parameters = clone(json.parameters);
     } else {
         this.parameters = clone(WebMapServiceDataSourceViewModel.defaultParameters);
-    }
-
-    if (!defined(this.legendUrl)) {
-        this.legendUrl = cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
-    }
-
-    if (!defined(this.metadataUrl)) {
-        this.metadataUrl = cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetCapabilities';
     }
 };
 
@@ -203,41 +235,6 @@ WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
     this._imageryLayer = undefined;
 };
 
-/**
- * Requests metadata for this data source.  The returned metadata may initially be empty until
- * {@link DataSourceMetadataViewModel#promise} resolves.
- * @return {DataSourceMetadataViewModel} The metadata.
- */
-WebMapServiceDataSourceViewModel.prototype.requestMetadata = function() {
-    var result = new DataSourceMetadataViewModel();
-
-    var that = this;
-    result.promise = loadXML(proxyUrl(this.context, this.metadataUrl)).then(function(capabilities) {
-        var json = $.xml2json(capabilities);
-
-        if (json.Service) {
-            populateMetadataGroup(result.dataSourceMetadata, capabilities.Service);
-        } else {
-            result.dataSourceErrorMessage = 'Service information not found in GetCapabilities operation response.';
-        }
-
-        var layer;
-        if (defined(json.Capability)) {
-            layer = findLayer(json.Capability.Layer, that.layers);
-        }
-        if (layer) {
-            populateMetadataGroup(result.serviceMetadata, layer);
-        } else {
-            result.serviceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
-        }
-    }).otherwise(function() {
-        result.dataSourceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
-        result.serviceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
-    });
-
-    return result;
-};
-
 WebMapServiceDataSourceViewModel.defaultParameters = {
     transparent: true,
     format: 'image/png',
@@ -264,6 +261,35 @@ function proxyUrl(context, url) {
     return url;
 }
 
+function requestMetadata(viewModel) {
+    var result = new DataSourceMetadataViewModel();
+
+    result.promise = loadXML(proxyUrl(viewModel.context, viewModel.metadataUrl)).then(function(capabilities) {
+        var json = $.xml2json(capabilities);
+
+        if (json.Service) {
+            populateMetadataGroup(result.serviceMetadata, json.Service);
+        } else {
+            result.dataSourceErrorMessage = 'Service information not found in GetCapabilities operation response.';
+        }
+
+        var layer;
+        if (defined(json.Capability)) {
+            layer = findLayer(json.Capability.Layer, viewModel.layers);
+        }
+        if (layer) {
+            populateMetadataGroup(result.dataSourceMetadata, layer);
+        } else {
+            result.serviceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
+        }
+    }).otherwise(function() {
+        result.dataSourceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
+        result.serviceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
+    });
+
+    return result;
+}
+
 function findLayer(startLayer, name) {
     if (startLayer.Name === name || startLayer.Title === name) {
         return startLayer;
@@ -284,6 +310,10 @@ function findLayer(startLayer, name) {
 }
 
 function populateMetadataGroup(metadataGroup, sourceMetadata) {
+    if (typeof sourceMetadata === 'string' || sourceMetadata instanceof Array) {
+        return;
+    }
+
     for (var name in sourceMetadata) {
         if (sourceMetadata.hasOwnProperty(name)) {
             var value = sourceMetadata[name];
