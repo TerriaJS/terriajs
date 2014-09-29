@@ -141,7 +141,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
     hasLegend : {
         get : function() {
-            return defined(this.legendUrl);
+            return defined(this.legendUrl) && this.legendUrl.length > 0;
         }
     },
 
