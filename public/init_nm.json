@@ -291,7 +291,7 @@
                         {
                             "name": "Estuary",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.6089684320001",
                                 "-43.59020860705779",
@@ -499,7 +499,7 @@
                         {
                             "name": "Streams",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.37534500000005",
                                 "-43.629381999057735",
@@ -515,7 +515,7 @@
                         {
                             "name": "Stream Nodes",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.37534500000005",
                                 "-43.629381999057735",
@@ -531,7 +531,7 @@
                         {
                             "name": "Stream Network",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.10056181999998",
                                 "-47.81318817937922",
@@ -547,7 +547,7 @@
                         {
                             "name": "Stream Network Nodes",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.33375",
                                 "-43.628749999057746",
@@ -563,7 +563,7 @@
                         {
                             "name": "Structure",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.76872500000002",
                                 "-43.58274499905778",
@@ -579,7 +579,7 @@
                         {
                             "name": "Waterbodies",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.80691",
                                 "-43.00307999905891",
@@ -675,7 +675,7 @@
                         {
                             "name": "Water Pipeline",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.80691",
                                 "-43.00307999905891",
@@ -691,7 +691,7 @@
                         {
                             "name": "Water Storage",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.9318700000001",
                                 "-42.75848999905948",
@@ -707,7 +707,7 @@
                         {
                             "name": "River Region",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.9225",
                                 "-43.64250000005773",
@@ -723,7 +723,7 @@
                         {
                             "name": "Catchment",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.9225",
                                 "-43.73999999905757",
@@ -739,7 +739,7 @@
                         {
                             "name": " Drainage Division",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "111.24438730279999",
                                 "-48.47186269657931",
@@ -755,7 +755,7 @@
                         {
                             "name": "NCB Level1 Drainage Division",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.9225",
                                 "-43.73999999905757",
@@ -771,7 +771,7 @@
                         {
                             "name": "NCB Level2 Drainage Basin Group",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.9225",
                                 "-43.73999999905757",
@@ -794,7 +794,7 @@
                             "name": "Aquifer Contours",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                             "legendUrl": "",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "130.9294316820001",
                                 "-41.24101109706462",
@@ -810,7 +810,7 @@
                         {
                             "name": "Water Table Aquifer",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.92137000000001",
                                 "-43.65854999905766",
@@ -826,7 +826,7 @@
                         {
                             "name": "Surficial Hydrogeologic Unit",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.92137000000001",
                                 "-43.65854999905766",
@@ -842,7 +842,7 @@
                         {
                             "name": "Aquifer Boundary",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.92137000000001",
                                 "-39.135739999076094",
@@ -858,7 +858,7 @@
                         {
                             "name": "Aquifer Outcrop",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "113.8055180570001",
                                 "-38.755833332078694",
@@ -874,7 +874,7 @@
                         {
                             "name": "Aquifer Salinity",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.92137000000001",
                                 "-38.97436811707721",
@@ -890,7 +890,7 @@
                         {
                             "name": "Aquifer Yield",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "138.73545507400001",
                                 "-38.97436810607722",
@@ -906,7 +906,7 @@
                         {
                             "name": "Water Table Yield",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "129.00048000000004",
                                 "-39.135739999076094",
@@ -922,7 +922,7 @@
                         {
                             "name": "Water Table Salinity",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.92137000000001",
                                 "-43.643049999057716",
@@ -938,7 +938,7 @@
                         {
                             "name": "IGWWaterTableHydraulicConductivity",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "140.96334594200005",
                                 "-37.68073353908695",
@@ -954,7 +954,7 @@
                         {
                             "name": "WaterTableAquifer",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "112.92137000000001",
                                 "-43.65854999905766",
@@ -2563,6 +2563,7 @@
                 {
                     "name": "Water (Bureau of Meteorology Geofabric)",
                     "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                    "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                     "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
                     "type": "wms-getCapabilities",
                     "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
