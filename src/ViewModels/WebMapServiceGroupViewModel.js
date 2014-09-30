@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,L,URI,$*/
+/*global require,URI,$*/
 
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
@@ -238,4 +238,3 @@ function getInheritableProperty(layer, name) {
 }
 
 module.exports = WebMapServiceGroupViewModel;
-

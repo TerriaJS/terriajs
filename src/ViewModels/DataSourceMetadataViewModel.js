@@ -7,6 +7,9 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 /**
  * Represents the metadata associated with a data source.
+ *
+ * @alias DataSourceMetadataViewModel
+ * @function
  */
 var DataSourceMetadataViewModel = function() {
     /**

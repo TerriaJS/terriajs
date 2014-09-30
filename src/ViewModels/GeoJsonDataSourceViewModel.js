@@ -11,6 +11,7 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
@@ -32,109 +33,76 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
-var WebMapServiceDataSourceViewModel = function(context) {
-    ImageryLayerDataSourceViewModel.call(this, context);
+var GeoJsonDataSourceViewModel = function(context) {
+    GeoDataSourceViewModel.call(this, context);
 
-    this._metadata = undefined;
-    this._legendUrl = undefined;
-    this._metadataUrl = undefined;
+    this._needsLoad = true;
+    this._loadedGeoJson = undefined;
 
     /**
-     * Gets or sets the URL of the WMS server.  This property is observable.
+     * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
+     * {@link GeoJsonDataSourceViewModel#data} is defined.  This property is observable.
      * @type {String}
      */
-    this.url = '';
+    this.url = undefined;
 
     /**
-     * Gets or sets the WMS layers to include.  To specify multiple layers, separate them
-     * with a commas.  This property is observable.
-     * @type {String}
-     */
-    this.layers = '';
-
-    /**
-     * Gets or sets the additional parameters to pass to the WMS server when requesting images.
+     * Gets or sets the GeoJSON data, represented as an object literal (not a string).
+     * This property is observable.
      * @type {Object}
      */
-    this.parameters = WebMapServiceDataSourceViewModel.defaultParameters;
+    this.data = undefined;
 
-    /**
-     * Gets or sets a value indicating whether we should request information about individual features on click
-     * as GeoJSON.  If getFeatureInfoAsXml is true as well, feature information will be requested first as GeoJSON,
-     * and then as XML if the GeoJSON request fails.  If both are false, this data item will not support feature picking at all.
-     * @type {Boolean}
-     * @default true
-     */
-    this.getFeatureInfoAsGeoJson = true;
+    knockout.track(this, ['_needsLoad', '_loadedGeoJson', 'url', 'data']);
 
-    /**
-     * Gets or sets a value indicating whether we should request information about individual features on click
-     * as XML.  If getFeatureInfoAsGeoJson is true as well, feature information will be requested first as GeoJSON,
-     * and then as XML if the GeoJSON request fails.  If both are false, this data item will not support feature picking at all.
-     * @type {Boolean}
-     * @default true
-     */
-    this.getFeatureInfoAsXml = true;
-
-    knockout.track(this, ['_legendUrl', '_metadataUrl', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml']);
-
-    // metadataUrl and legendUrl are derived from url if not explicitly specified.
-    knockout.defineProperty(this, 'metadataUrl', {
+    knockout.defineProperty(this, 'loadedGeoJson', {
         get : function() {
-            if (defined(this._metadataUrl)) {
-                return this._metadataUrl;
+            if (this._needsLoad) {
+                this._needsLoad = false;
+
+                if (defined(this.data)) {
+                    this._loadedGeoJson = this.data;
+                } else if (defined(this.url) && this.url.length > 0) {
+                    loadJson(this.url).then(function(json) {
+                        this._loadedGeoJson = json;
+                    }).otherwise(function(e) {
+                        // TODO: need to standard way of handling errors like this.
+                    });
+                }
             }
 
-            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetCapabilities';
-        },
-        set : function(value) {
-            this._metadataUrl = value;
-        }
-    });
-
-    knockout.defineProperty(this, 'legendUrl', {
-        get : function() {
-            if (defined(this._legendUrl)) {
-                return this._legendUrl;
-            }
-
-            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
-        },
-        set : function(value) {
-            this._legendUrl = value;
+            return this._loadedGeoJson;
         }
     });
 };
 
-WebMapServiceDataSourceViewModel.prototype = inherit(ImageryLayerDataSourceViewModel.prototype);
+GeoJsonDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
 
-defineProperties(WebMapServiceDataSourceViewModel.prototype, {
+defineProperties(GeoJsonDataSourceViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
      * @type {String}
      */
     type : {
         get : function() {
-            return 'wms';
+            return 'geojson';
         }
     },
 
     /**
-     * Gets a human-readable name for this type of data source, 'Web Map Service (WMS)'.
+     * Gets a human-readable name for this type of data source, 'GeoJSON'.
      * @type {String}
      */
     typeName : {
         get : function() {
-            return 'Web Map Service (WMS)';
+            return 'GeoJSON';
         }
     },
 
     metadata : {
         get : function() {
-            if (!defined(this._metadata)) {
-                this._metadata = requestMetadata(this);
-            }
-            return this._metadata;
+            // TODO: maybe return the FeatureCollection's properties?
+            return undefined;
         }
     }
 });
@@ -144,34 +112,25 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  */
- WebMapServiceDataSourceViewModel.prototype.updateFromJson = function(json) {
+ GeoJsonDataSourceViewModel.prototype.updateFromJson = function(json) {
     this.name = defaultValue(json.name, 'Unnamed Item');
     this.description = defaultValue(json.description, '');
     this.legendUrl = json.legendUrl;
     this.dataUrl = json.dataUrl;
-    this.dataUrlType = defaultValue(json.dataUrlType, 'none');
+    this.dataUrlType = defaultValue(json.dataUrlType, 'direct');
     this.dataCustodian = defaultValue(json.dataCustodian, 'Unknown');
     this.metadataUrl = json.metadataUrl;
 
     this.url = defaultValue(json.url, '');
-    this.layers = defaultValue(json.layers, '');
-    this.getFeatureInfoAsGeoJson = defaultValue(json.getFeatureInfoAsGeoJson, true);
-    this.getFeatureInfoAsXml = defaultValue(json.getFeatureInfoAsXml, true);
 
     if (defined(json.rectangle)) {
         this.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
     } else {
         this.rectangle = Rectangle.MAX_VALUE;
     }
-
-    if (defined(json.parameters)) {
-        this.parameters = clone(json.parameters);
-    } else {
-        this.parameters = clone(WebMapServiceDataSourceViewModel.defaultParameters);
-    }
 };
 
-WebMapServiceDataSourceViewModel.prototype.enableInCesium = function() {
+GeoJsonDataSourceViewModel.prototype.enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is already enabled.');
     }
@@ -194,7 +153,7 @@ WebMapServiceDataSourceViewModel.prototype.enableInCesium = function() {
     scene.imageryLayers.add(this._imageryLayer);
 };
 
-WebMapServiceDataSourceViewModel.prototype.disableInCesium = function() {
+GeoJsonDataSourceViewModel.prototype.disableInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -205,7 +164,7 @@ WebMapServiceDataSourceViewModel.prototype.disableInCesium = function() {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceDataSourceViewModel.prototype.enableInLeaflet = function() {
+GeoJsonDataSourceViewModel.prototype.enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is already enabled.');
     }
@@ -220,11 +179,11 @@ WebMapServiceDataSourceViewModel.prototype.enableInLeaflet = function() {
 
     options = combine(this.parameters, options);
 
-    this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.context, this.url), options);
+    this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.context, this.url), options);
     map.addLayer(this._imageryLayer);
 };
 
-WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
+GeoJsonDataSourceViewModel.prototype.disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('Data item is not enabled.');
     }
@@ -234,24 +193,6 @@ WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
     map.removeLayer(this._imageryLayer);
     this._imageryLayer = undefined;
 };
-
-WebMapServiceDataSourceViewModel.defaultParameters = {
-    transparent: true,
-    format: 'image/png',
-    exceptions: 'application/vnd.ogc.se_xml',
-    style: ''
-};
-
-function cleanAndProxyUrl(context, url) {
-    return proxyUrl(context, cleanUrl(url));
-}
-
-function cleanUrl(url) {
-    // Strip off the search portion of the URL
-    var uri = new URI(url);
-    uri.search('');
-    return uri.toString();
-}
 
 function proxyUrl(context, url) {
     if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
@@ -349,4 +290,4 @@ function populateMetadataGroup(metadataGroup, sourceMetadata) {
     }
 }
 
-module.exports = WebMapServiceDataSourceViewModel;
+module.exports = GeoJsonDataSourceViewModel;

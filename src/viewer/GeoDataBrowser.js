@@ -118,15 +118,15 @@ var GeoDataBrowser = function(options) {
                         <form class="ausglobe-user-service-form" data-bind="submit: addDataOrService">\
                             <label>\
                                 <div>Enter a web link to add a data file or WMS/WFS service (advanced):</div>\
-                                <input class="ausglobe-wfs-url-input" type="text" data-bind="value: wfsServiceUrl" />\
+                                <input class="ausglobe-wfs-url-input" type="text" data-bind="value: addDataUrl" />\
                             </label>\
                             <div>\
                                 <label class="ausglobe-addData-type">\
                                     <select class="ausglobe-addData-typeSelect" data-bind="value: addType">\
                                         <option value="NotSpecified">Select file or service type</option>\
                                         <option value="File">Single data file</option>\
-                                        <option value="WMS">WMS Server</option>\
-                                        <option value="WFS">WFS Server</option>\
+                                        <option value="wms-getCapabilities">WMS Server</option>\
+                                        <option value="wfs-getCapabilities">WFS Server</option>\
                                     </select>\
                                 </label>\
                                 <input class="ausglobe-button" type="submit" value="Add" />\

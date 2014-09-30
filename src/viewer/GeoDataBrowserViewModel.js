@@ -19,6 +19,8 @@ var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Sce
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
+var createGeoDataItemFromType = require('../ViewModels/createGeoDataItemFromType');
+var createGeoDataItemFromUrl = require('../ViewModels/createGeoDataItemFromUrl');
 var GeoData = require('../GeoData');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
@@ -43,7 +45,7 @@ var GeoDataBrowserViewModel = function(options) {
     this.showingLegendPanel = false;
     this.showingLegendButton = false;
     this.addDataIsOpen = false;
-    this.wfsServiceUrl = '';
+    this.addDataUrl = '';
     this.addType = 'Single data file';
     this.topLayerLegendUrl = '';
 
@@ -56,7 +58,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.nowViewing = this.catalog.context.nowViewing;
 
-    knockout.track(this, ['showingDataPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'addType', 'topLayerLegendUrl', 'wfsServiceUrl',
+    knockout.track(this, ['showingDataPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'addType', 'topLayerLegendUrl', 'addDataUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
 
     var that = this;
@@ -120,6 +122,8 @@ var GeoDataBrowserViewModel = function(options) {
     });
 
     this._addDataOrService = createCommand(function() {
+        var newViewModel;
+
         if (that.addType === 'NotSpecified') {
             var message = new PopupMessage({
                 container : document.body,
@@ -129,11 +133,10 @@ Please select a file or service type from the drop-down list before clicking the
             });
             return;
         } else if (that.addType === 'File') {
-            ga('send', 'event', 'addDataUrl', 'File', that.wfsServiceUrl);
+            ga('send', 'event', 'addDataUrl', 'File', that.addDataUrl);
 
-            if (that._viewer.geoDataManager.formatSupported(that.wfsServiceUrl)) {
-                that._viewer.geoDataManager.loadUrl(that.wfsServiceUrl);
-            } else {
+            newViewModel = createGeoDataItemFromUrl(that.addDataUrl, that.catalog.context);
+            if (!defined(newViewModel)) {
                 var message2 = new PopupMessage({
                     container : document.body,
                     title : 'File format not supported',
@@ -145,25 +148,23 @@ files (.csv).  The file extension of the file in the user-specified URL must mat
 these extensions in order for National Map to know how to load it.'
                 });
             }
-        } else {
-            ga('send', 'event', 'addDataUrl', that.addType, that.wfsServiceUrl);
-            
-            var idx = that.wfsServiceUrl.indexOf('?');
-            if (idx !== -1) {
-                that.wfsServiceUrl = that.wfsServiceUrl.substring(0,idx);
-            }
-            var item = createCategory({
-                data : {
-                    name : that.wfsServiceUrl,
-                    base_url : that.wfsServiceUrl,
-                    type : that.addType
-                }
-            });
-            that.userContent.push(item);
 
-            item.isOpen(true);
+            newViewModel.name = that.addDataurl;
+
+            that.catalog.userAddedDataGroup.item.push(newViewModel);
+            that.catalog.userAddedDataGroup.isOpen = true;
+        } else {
+            ga('send', 'event', 'addDataUrl', that.addType, that.addDataUrl);
+
+            newViewModel = createGeoDataItemFromType(that.addType, that.catalog.context);
+            newViewModel.name = that.addDataUrl;
+            newViewModel.url = that.addDataUrl;
+            that.catalog.userAddedDataGroup.items.push(newViewModel);
+
+            newViewModel.isOpen = true;
+            that.catalog.userAddedDataGroup.isOpen = true;
         }
-        that.wfsServiceUrl = '';
+        that.addDataUrl = '';
     });
 
     var currentBaseLayers;
