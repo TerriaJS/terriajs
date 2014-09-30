@@ -1075,11 +1075,15 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
             }
             else {
                 var pointList = tableDataSource.dataset.getPointList();
-                var dispPoints = [];
+                var geojson = {type: "FeatureCollection", crs: {"type":"EPSG","properties":{"code":"4326"}}, features: []};
                 for (var i = 0; i < pointList.length; i++) {
-                    dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
+                    geojson.features[i] = {
+                        "type" : "Feature", 
+                        "properties" : tableDataSource.dataset.getDataRow(pointList[i].row),
+                        "geom" : { "type": "Point", "coordinates": pointList[i].pos }
+                    };
                 }
-                this.addGeoJsonLayer(dispPoints, layer);
+                this.addGeoJsonLayer(geojson, layer);
             }
         }
     }

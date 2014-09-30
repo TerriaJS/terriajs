@@ -695,7 +695,7 @@ AusGlobeViewer.prototype.isCesium = function() {
 
 
 var tempVisualizer = function (scene, entities) {
-    console.log(scene, entities);
+//    console.log(scene, entities);
 };
 
 tempVisualizer.prototype.update = function(time) {
@@ -706,19 +706,23 @@ tempVisualizer.prototype.destroy = function() {
     return destroyObject(this);
 }
 
+var pointVisualizer = function (map, entities) {
+    this._map = map;
+    this._entities = entities;
+    console.log(scene, entities);
+};
+
+pointVisualizer.prototype.update = function(time) {
+//    console.log(time);
+}
+
+pointVisualizer.prototype.destroy = function() {
+    return destroyObject(this);
+}
+
 var visualizersCallback = function(scene, dataSource) {
     var entities = dataSource.entities;
-    return [new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities),
-        new tempVisualizer(scene, entities)];
+    return [new pointVisualizer(scene, entities)];
 };
 
 

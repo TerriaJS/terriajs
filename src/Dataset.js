@@ -380,6 +380,9 @@ Dataset.prototype.getPointList = function (maxPts) {
         rec.time =  time ? time[i] : undefined;
         rec.pos = [lon ? lon[i] : 0.0, lat ? lat[i] : 0.0, alt ? alt[i] : 0.0];
         rec.row = i;
+        if (this.isNoData(rec.pos[0]) || this.isNoData(rec.pos[1])) {
+            continue;
+        }
         ret.push(rec);
     }
     return ret;
