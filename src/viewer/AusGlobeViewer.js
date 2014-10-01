@@ -73,6 +73,8 @@ var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
 var TitleWidget = require('./TitleWidget');
 
+var LeafletVisualizer = require('../LeafletVisualizer');
+
 //use our own bing maps key
 BingMapsApi.defaultKey = undefined;
 
@@ -693,37 +695,7 @@ AusGlobeViewer.prototype.isCesium = function() {
     return defined(this.viewer);
 };
 
-
-var tempVisualizer = function (scene, entities) {
-//    console.log(scene, entities);
-};
-
-tempVisualizer.prototype.update = function(time) {
-//    console.log(time);
-}
-
-tempVisualizer.prototype.destroy = function() {
-    return destroyObject(this);
-}
-
-var pointVisualizer = function (map, entities) {
-    this._map = map;
-    this._entities = entities;
-    console.log(scene, entities);
-};
-
-pointVisualizer.prototype.update = function(time) {
-//    console.log(time);
-}
-
-pointVisualizer.prototype.destroy = function() {
-    return destroyObject(this);
-}
-
-var visualizersCallback = function(scene, dataSource) {
-    var entities = dataSource.entities;
-    return [new pointVisualizer(scene, entities)];
-};
+var leafletVisualizer = new LeafletVisualizer();
 
 
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
@@ -734,7 +706,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     if (!bCesium) {
 
-         var bnds;
+        var bnds;
         if (this.viewer !== undefined) {
             rect = getCameraRect(this.scene);
             bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
@@ -780,7 +752,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.dataSourceDisplay = new DataSourceDisplay({
             scene : map,
             dataSourceCollection : this.geoDataManager.dataSourceCollection,
-            visualizersCallback: visualizersCallback
+            visualizersCallback: leafletVisualizer.visualizersCallback
         });
 
         var eventHelper = new EventHelper();
