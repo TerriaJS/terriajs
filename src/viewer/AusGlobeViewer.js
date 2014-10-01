@@ -768,7 +768,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }
 
         //Bing Maps Layer by default
-        this.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey());
+        this.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey(), { type: 'AerialWithLabels' });
         map.addLayer(this.mapBaseLayer);
 
         //document.getElementById('controls').style.visibility = 'hidden';
