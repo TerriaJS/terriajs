@@ -758,35 +758,27 @@ var regionWmsMap = {
     }
 };
 
-//TODO: for now this turns ids into numbers since they are that way in table data
-//      need to add enum capability and then can work with any unique field
-//btw: since javascript uses doubles this is not a problem for the numerical ids
-function loadRegionIDs(description) {
+//TODO: if we add enum capability and then can work with any unique field
+//TODO: need way to support a progress display on slow loads
+function loadRegionIDs(description, succeed, fail) {
     var url = regionServer + '?service=wfs&version=2.0&request=getPropertyValue';
     url += '&typeNames=' + description.Name;
     url += '&valueReference=' + description.regionProp;
     loadText(url).then(function (text) { 
         var obj = $.xml2json(text);
         var idMap = [];
+            //for now this turns ids into numbers since they are that way in table data
+            //btw: since javascript uses doubles this is not a problem for the numerical ids
         for (var i = 0; i < obj.member.length; i++) {
             idMap.push(parseInt(obj.member[i][description.regionProp],10));
         }
         description.idMap = idMap;
+        succeed();
     }, function(err) {
         loadErrorResponse(err);
+        fail();
     });
 }
-
-//preload all the regionMapIndex Lists
-function preloadRegionIDs() {
-    for (var prop in regionWmsMap) {
-        if (regionWmsMap.hasOwnProperty(prop)) {
-            loadRegionIDs(regionWmsMap[prop]);
-        } 
-    }
-}
-
-preloadRegionIDs();
 
 function determineRegionVar(vars, aliases) {
     for (var i = 0; i < vars.length; i++) {
@@ -843,25 +835,37 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
     }
 
     layer.regionVar = regionVar;
+    var description = regionWmsMap[regionType];
     if (layer.regionType !== regionType) {
         layer.regionType = regionType;
-        var description = regionWmsMap[regionType];
         description.type = 'WMS';
         description.base_url = regionServer;
 
         layer.url = this.getOGCFeatureURL(description);
         layer.regionProp = description.regionProp;
-
     }
-    this.createRegionLookupFunc(layer);
-    var currentIndex = this.layers.indexOf(layer);
-    if (currentIndex !== -1) {
-        this.remove(currentIndex);
-    }
-    
     console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
-    
-    this._viewMap(layer.url, layer);
+        
+    var that = this;
+    var succeed = function() {
+         that.createRegionLookupFunc(layer);
+        //remove layer and recreate from scratch
+        var currentIndex = that.layers.indexOf(layer);
+        if (currentIndex !== -1) {
+            that.remove(currentIndex);
+        }
+       that._viewMap(layer.url, layer);
+    };
+    var fail = function () {
+        console.log('failed to load region ids from server');
+    };
+
+    if (!defined(description.idMap)) {
+        loadRegionIDs(description, succeed, fail);
+    }
+    else {
+        succeed();
+    }
 };
 
 GeoDataCollection.prototype.setRegionDataVariable = function(layer, newVar) {
@@ -874,7 +878,7 @@ GeoDataCollection.prototype.setRegionDataVariable = function(layer, newVar) {
     this.createRegionLookupFunc(layer);
     
     console.log('Var set to:', newVar);
-    
+        //redisplay layer to update
     this.show(layer, false);
     this.show(layer, true);
 };
@@ -882,7 +886,7 @@ GeoDataCollection.prototype.setRegionDataVariable = function(layer, newVar) {
 GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
     layer.baseDataSource.setColorGradient(dataColorMap);
     this.createRegionLookupFunc(layer);
-    
+        //redisplay layer to update
     this.show(layer, false);
     this.show(layer, true);
 };
