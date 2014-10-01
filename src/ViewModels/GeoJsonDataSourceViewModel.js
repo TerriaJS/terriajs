@@ -29,11 +29,12 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  *
  * @alias WebMapServiceDataSourceViewModel
  * @constructor
- * @extends ImageryLayerDataSourceViewModel
+ * @extends GeoDataSourceViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {String} [url] The URL from which to retrieve the GeoJSON data.
  */
-var GeoJsonDataSourceViewModel = function(context) {
+var GeoJsonDataSourceViewModel = function(context, url) {
     GeoDataSourceViewModel.call(this, context);
 
     this._needsLoad = true;
@@ -44,7 +45,7 @@ var GeoJsonDataSourceViewModel = function(context) {
      * {@link GeoJsonDataSourceViewModel#data} is defined.  This property is observable.
      * @type {String}
      */
-    this.url = undefined;
+    this.url = url;
 
     /**
      * Gets or sets the GeoJSON data, represented as an object literal (not a string).
@@ -55,6 +56,12 @@ var GeoJsonDataSourceViewModel = function(context) {
 
     knockout.track(this, ['_needsLoad', '_loadedGeoJson', 'url', 'data']);
 
+    /**
+     * Gets the loaded GeoJSON as an object literal (not a string).  This property is undefined if the
+     * data is not yet loaded.
+     * @name loadedGeoJson
+     * @type {Object}
+     */
     knockout.defineProperty(this, 'loadedGeoJson', {
         get : function() {
             if (this._needsLoad) {
