@@ -150,16 +150,24 @@ these extensions in order for National Map to know how to load it.'
                 });
             }
 
-            newViewModel.name = that.addDataUrl;
+            var lastSlashIndex = that.addDataUrl.lastIndexOf('/');
+
+            var name = that.addDataUrl;
+            if (lastSlashIndex >= 0) {
+                name = name.substring(lastSlashIndex + 1);
+            }
+
+            newViewModel.name = name;
 
             // TODO: Remove this, it only exists to make the UI happy.
             var group = new GeoDataGroupViewModel(that.catalog.context);
-            group.name = that.addDataUrl;
+            group.name = name;
             group.isOpen = true;
             group.items.push(newViewModel);
 
             that.catalog.userAddedDataGroup.items.push(group);
             that.catalog.userAddedDataGroup.isOpen = true;
+            newViewModel.isEnabled = true;
         } else {
             ga('send', 'event', 'addDataUrl', that.addType, that.addDataUrl);
 
