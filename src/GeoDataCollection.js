@@ -1084,7 +1084,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
                     geojson.features[i] = {
                         "type" : "Feature", 
                         "properties" : tableDataSource.dataset.getDataRow(pointList[i].row),
-                        "geom" : { "type": "Point", "coordinates": pointList[i].pos }
+                        "geometry" : { "type": "Point", "coordinates": pointList[i].pos }
                     };
                 }
                 this.addGeoJsonLayer(geojson, layer);
@@ -2223,8 +2223,8 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.primitive = L.geoJson(geojson, {
             style: geoJsonStyle,
             pointToLayer: function (feature, latlng) {
-                var clr = getRandomColor(point_palette);
-                geojsonMarkerOptions.fillColor = clr.toCssColorString();
+//                var clr = getRandomColor(point_palette);
+//                geojsonMarkerOptions.fillColor = clr.toCssColorString();
                 return L.circleMarker(latlng, geojsonMarkerOptions);
             }
         }).addTo(this.map);
