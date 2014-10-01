@@ -260,6 +260,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         that.scene = obj.scene;
         that.map = obj.map;
         that.context.cesiumScene = obj.scene;
+        that.context.cesiumViewer = obj.viewer;
         that.context.leafletMap = obj.map;
     });
 
@@ -835,6 +836,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
         this.scene = this.context.cesiumScene = this.viewer.scene;
+        this.context.cesiumViewer = this.viewer;
         this.frameChecker = new FrameChecker();
 
         // override the default render loop
@@ -881,7 +883,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.updateCameraFromRect(rect, 0);
 
-        this.geoDataManager.setViewer({scene: this.scene, map: undefined});
+        this.geoDataManager.setViewer({scene: this.scene, viewer: this.viewer, map: undefined});
         this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);

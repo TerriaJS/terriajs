@@ -4,17 +4,19 @@
 
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
+var Color = require('../../third_party/cesium/Source/Core/Color');
+var ColorMaterialProperty = require('../../third_party/cesium/Source/DataSources/ColorMaterialProperty');
 var combine = require('../../third_party/cesium/Source/Core/combine');
+var ConstantProperty = require('../../third_party/cesium/Source/DataSources/ConstantProperty');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
+var GeoJsonDataSource = require('../../third_party/cesium/Source/DataSources/GeoJsonDataSource');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 
 var corsProxy = require('../corsProxy');
 var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
@@ -24,10 +26,30 @@ var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
+var lineAndFillPalette = {
+    minimumRed : 0.4,
+    minimumGreen : 0.4,
+    minimumBlue : 0.4,
+    maximumRed : 0.9,
+    maximumGreen : 0.9,
+    maximumBlue : 0.9,
+    alpha : 1.0
+};
+
+var pointPalette = {
+    minimumRed : 0.6,
+    minimumGreen : 0.6,
+    minimumBlue : 0.6,
+    maximumRed : 1.0,
+    maximumGreen : 1.0,
+    maximumBlue : 1.0,
+    alpha : 1.0
+};
+
 /**
- * A {@link ImageryLayerDataSourceViewModel} representing a layer from a Web Map Service (WMS) server.
+ * A {@link GeoDataSourceViewModel} representing GeoJSON feature data.
  *
- * @alias WebMapServiceDataSourceViewModel
+ * @alias GeoJsonDataSourceViewModel
  * @constructor
  * @extends GeoDataSourceViewModel
  * 
@@ -36,6 +58,8 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  */
 var GeoJsonDataSourceViewModel = function(context, url) {
     GeoDataSourceViewModel.call(this, context);
+
+    this._cesiumDataSource = undefined;
 
     this._needsLoad = true;
     this._loadedGeoJson = undefined;
@@ -58,7 +82,9 @@ var GeoJsonDataSourceViewModel = function(context, url) {
 
     /**
      * Gets the loaded GeoJSON as an object literal (not a string).  This property is undefined if the
-     * data is not yet loaded.
+     * data is not yet loaded.  This property is observable.
+     * @memberOf GeoJsonDataSourceViewModel
+     * @instance
      * @name loadedGeoJson
      * @type {Object}
      */
@@ -67,11 +93,15 @@ var GeoJsonDataSourceViewModel = function(context, url) {
             if (this._needsLoad) {
                 this._needsLoad = false;
 
+                var that = this;
+
                 if (defined(this.data)) {
-                    this._loadedGeoJson = this.data;
+                    updateViewModelFromData(this, this.data);
+                    loadGeoJsonInCesium(that);
                 } else if (defined(this.url) && this.url.length > 0) {
                     loadJson(this.url).then(function(json) {
-                        this._loadedGeoJson = json;
+                        updateViewModelFromData(that, json);
+                        loadGeoJsonInCesium(that);
                     }).otherwise(function(e) {
                         // TODO: need to standard way of handling errors like this.
                     });
@@ -82,6 +112,34 @@ var GeoJsonDataSourceViewModel = function(context, url) {
         }
     });
 };
+
+function updateViewModelFromData(viewModel, geoJson) {
+    // If this GeoJSON data is an object literal with a single property, treat that
+    // property as the name of the data source, and the property's value as the
+    // actual GeoJSON.
+    var numProperties = 0;
+    var propertyName;
+    for (propertyName in geoJson) {
+        if (geoJson.hasOwnProperty(propertyName)) {
+            ++numProperties;
+            if (numProperties > 1) {
+                break; // no need to count past 2 properties.
+            }
+        }
+    }
+
+    var name;
+    if (numProperties === 1) {
+        name = propertyName;
+        geoJson = geoJson[propertyName];
+
+        if (!defined(viewModel.name) || viewModel.name.length === 0 || viewModel.name === viewModel.url) {
+            viewModel.name = name;
+        }
+    }
+
+    viewModel._loadedGeoJson = geoJson;
+}
 
 GeoJsonDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
 
@@ -115,7 +173,7 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
 });
 
 /**
- * Updates the WMS data item from a JSON object-literal description of it.
+ * Updates the GeoJSON data item from a JSON object-literal description of it.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  */
@@ -138,37 +196,50 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
 };
 
 GeoJsonDataSourceViewModel.prototype.enableInCesium = function() {
-    if (defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is already enabled.');
+    if (defined(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is already enabled.');
     }
 
-    var scene = this.context.cesiumScene;
+    var viewer = this.context.cesiumViewer;
 
-    var imageryProvider = new WebMapServiceImageryProvider({
-        url : proxyUrl(this.context, this.url),
-        layers : this.layers,
-        getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
-        getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : this.parameters
-    });
+    this._cesiumDataSource = new GeoJsonDataSource(this.name);
 
-    this._imageryLayer = new ImageryLayer(imageryProvider, {
-        alpha : this.alpha,
-        rectangle : this.rectangle
-    });
-
-    scene.imageryLayers.add(this._imageryLayer);
+    loadGeoJsonInCesium(this);
 };
 
 GeoJsonDataSourceViewModel.prototype.disableInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+    if (!defined(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is not enabled.');
     }
 
-    var scene = this.context.cesiumScene;
+    this.isShown = false;
+    this._cesiumDataSource = undefined;
+};
 
-    scene.imageryLayers.remove(this._imageryLayer);
-    this._imageryLayer = undefined;
+GeoJsonDataSourceViewModel.prototype.showInCesium = function() {
+    if (!defined(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is not enabled.');
+    }
+
+    var dataSources = this.context.cesiumViewer.dataSources;
+    if (dataSources.contains(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is already shown.');
+    }
+
+    dataSources.add(this._cesiumDataSource);
+};
+
+GeoJsonDataSourceViewModel.prototype.hideInCesium = function() {
+    if (!defined(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is not enabled.');
+    }
+
+    var dataSources = this.context.cesiumViewer.dataSources;
+    if (!dataSources.contains(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is not shown.');
+    }
+
+    dataSources.remove(this._cesiumDataSource, false);
 };
 
 GeoJsonDataSourceViewModel.prototype.enableInLeaflet = function() {
@@ -209,92 +280,71 @@ function proxyUrl(context, url) {
     return url;
 }
 
-function requestMetadata(viewModel) {
-    var result = new DataSourceMetadataViewModel();
-
-    result.isLoading = true;
-
-    result.promise = loadXML(proxyUrl(viewModel.context, viewModel.metadataUrl)).then(function(capabilities) {
-        var json = $.xml2json(capabilities);
-
-        if (json.Service) {
-            populateMetadataGroup(result.serviceMetadata, json.Service);
-        } else {
-            result.serviceErrorMessage = 'Service information not found in GetCapabilities operation response.';
-        }
-
-        var layer;
-        if (defined(json.Capability)) {
-            layer = findLayer(json.Capability.Layer, viewModel.layers);
-        }
-        if (layer) {
-            populateMetadataGroup(result.dataSourceMetadata, layer);
-        } else {
-            result.dataSourceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
-        }
-
-        result.isLoading = false;
-    }).otherwise(function() {
-        result.dataSourceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
-        result.serviceErrorMessage = 'An error occurred while invoking the GetCapabilities service.';
-        result.isLoading = false;
-    });
-
-    return result;
-}
-
-function findLayer(startLayer, name) {
-    if (startLayer.Name === name || startLayer.Title === name) {
-        return startLayer;
-    }
-
-    var layers = startLayer.Layer;
-    if (!defined(layers)) {
-        return undefined;
-    }
-
-    var found = findLayer(layers, name);
-    for (var i = 0; !found && i < layers.length; ++i) {
-        var layer = layers[i];
-        found = findLayer(layer, name);
-    }
-
-    return found;
-}
-
-function populateMetadataGroup(metadataGroup, sourceMetadata) {
-    if (typeof sourceMetadata === 'string' || sourceMetadata instanceof Array) {
+function loadGeoJsonInCesium(viewModel) {
+    if (!(viewModel._cesiumDataSource instanceof GeoJsonDataSource) || !defined(viewModel.loadedGeoJson)) {
         return;
     }
 
-    for (var name in sourceMetadata) {
-        if (sourceMetadata.hasOwnProperty(name)) {
-            var value = sourceMetadata[name];
+    var fillPolygons = false;
+    var pointColor = getRandomColor(pointPalette, viewModel.name);
+    var lineColor = getRandomColor(lineAndFillPalette, viewModel.name);
+    var fillColor = Color.clone(lineColor);
+    fillColor.alpha = 0.75;
 
-            var dest;
-            if (name === 'BoundingBox' && value instanceof Array) {
-                for (var i = 0; i < value.length; ++i) {
-                    var subValue = value[i];
+    var pointSize = 10;
+    var lineWidth = 2;
 
-                    dest = new DataSourceMetadataItemViewModel();
-                    dest.name = name + ' (' + subValue.CRS + ')';
-                    dest.value = subValue;
+    var dataSource = viewModel._cesiumDataSource;
+    dataSource.load(viewModel.loadedGeoJson).then(function() {
+        var entities = dataSource.entities.entities;
 
-                    populateMetadataGroup(dest, subValue);
+        for (var i = 0; i < entities.length; ++i) {
+            var entity = entities[i];
+            var material;
 
-                    metadataGroup.items.push(dest);
-                }
-            } else {
-                dest = new DataSourceMetadataItemViewModel();
-                dest.name = name;
-                dest.value = value;
+            // Update default point/line/polygon
+            var point = entity.point;
+            if (defined(point)) {
+                point.color = new ConstantProperty(pointColor);
+                point.pixelSize = new ConstantProperty(pointSize);
+                point.outlineColor = new ConstantProperty(Color.BLACK);
+                point.outlineWidth = new ConstantProperty(1);
+            }
 
-                populateMetadataGroup(dest, value);
+            var polyline = entity.polyline;
+            if (defined(polyline)) {
+                material = new ColorMaterialProperty();
+                material.color = new ConstantProperty(lineColor);
+                polyline.material = material;
+                polyline.width = new ConstantProperty(lineWidth);
+            }
 
-                metadataGroup.items.push(dest);
+            var polygon = entity.polygon;
+            if (defined(polygon)) {
+                polygon.fill = new ConstantProperty(fillPolygons);
+                polygon.outline = new ConstantProperty(true);
+
+                material = new ColorMaterialProperty();
+                material.color = new ConstantProperty(fillColor);
+                polygon.material = material;
             }
         }
+    });
+}
+
+// Get a random color for the data based on the passed seed (usually dataset name)
+function getRandomColor(palette, seed) {
+    if (defined(seed)) {
+        if (typeof seed === 'string') {
+            var val = 0;
+            for (var i = 0; i < seed.length; i++) {
+                val += seed.charCodeAt(i);
+            }
+            seed = val;
+        }
+        CesiumMath.setRandomNumberSeed(seed);
     }
+    return Color.fromRandom(palette);
 }
 
 module.exports = GeoJsonDataSourceViewModel;

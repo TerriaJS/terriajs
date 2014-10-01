@@ -13,6 +13,7 @@ var registerGeoDataViewModels = function() {
     createGeoDataItemFromType.register('group', GeoDataGroupViewModel);
     createGeoDataItemFromType.register('wms', WebMapServiceDataSourceViewModel);
     createGeoDataItemFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
+    createGeoDataItemFromType.register('geoJson', GeoJsonDataSourceViewModel);
 
     createGeoDataItemFromUrl.register(matchesExtension('geojson'), GeoJsonDataSourceViewModel);
 };

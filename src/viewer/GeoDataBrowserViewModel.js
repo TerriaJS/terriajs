@@ -22,6 +22,7 @@ var corsProxy = require('../corsProxy');
 var createGeoDataItemFromType = require('../ViewModels/createGeoDataItemFromType');
 var createGeoDataItemFromUrl = require('../ViewModels/createGeoDataItemFromUrl');
 var GeoData = require('../GeoData');
+var GeoDataGroupViewModel = require('../ViewModels/GeoDataGroupViewModel');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
@@ -149,9 +150,15 @@ these extensions in order for National Map to know how to load it.'
                 });
             }
 
-            newViewModel.name = that.addDataurl;
+            newViewModel.name = that.addDataUrl;
 
-            that.catalog.userAddedDataGroup.item.push(newViewModel);
+            // TODO: Remove this, it only exists to make the UI happy.
+            var group = new GeoDataGroupViewModel(that.catalog.context);
+            group.name = that.addDataUrl;
+            group.isOpen = true;
+            group.items.push(newViewModel);
+
+            that.catalog.userAddedDataGroup.items.push(group);
             that.catalog.userAddedDataGroup.isOpen = true;
         } else {
             ga('send', 'event', 'addDataUrl', that.addType, that.addDataUrl);
