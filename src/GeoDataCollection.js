@@ -93,8 +93,10 @@ GeoDataCollection.prototype.setViewer = function(options) {
     
     //re-request all the layers on the new map
     for (var i = 0; i < this.layers.length; i++) {
-        this.layers[i].skip = true;
-        this.sendLayerRequest(this.layers[i]);
+        if (this.layers[i].type === 'WMS') {
+            this.layers[i].skip = true;
+            this.sendLayerRequest(this.layers[i]);
+        }
     }
 };
 

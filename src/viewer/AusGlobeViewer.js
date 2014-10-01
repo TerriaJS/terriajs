@@ -695,9 +695,6 @@ AusGlobeViewer.prototype.isCesium = function() {
     return defined(this.viewer);
 };
 
-var leafletVisualizer = new LeafletVisualizer();
-
-
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var bnds;
     var rect;
@@ -723,8 +720,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
 
-            this.scene.primitives.removeAll();
-
             this.viewer.destroy();
             this.viewer = undefined;
         }
@@ -734,7 +729,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             zoomControl: false
         }).setView([-28.5, 135], 5);
 
-        // Hacky nonsense to let us use Cesium's InfoBox without actually using Cesium.
+        this.map = map;
+
+       // Hacky nonsense to let us use Cesium's InfoBox without actually using Cesium.
         map.clock = new Clock();
         map.dataSources = this.geoDataManager.dataSourceCollection;
 
@@ -747,12 +744,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.infoBox = new InfoBox(document.body);
         viewerEntityMixin(map);
 
-        this.map = map;
-
+        if (!defined(this.leafletVisualizer)) {
+            this.leafletVisualizer = new LeafletVisualizer();
+        }
         this.dataSourceDisplay = new DataSourceDisplay({
             scene : map,
             dataSourceCollection : this.geoDataManager.dataSourceCollection,
-            visualizersCallback: leafletVisualizer.visualizersCallback
+            visualizersCallback: this.leafletVisualizer.visualizersCallback
         });
 
         var eventHelper = new EventHelper();
@@ -834,9 +832,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         var rect;
         if (defined(this.map)) {
             rect = getCameraRect(undefined, this.map);
-                //remove existing map viewer
-            this.map.dataSources = undefined;
+
             this.dataSourceDisplay.destroy();
+            this.map.dataSources = undefined;
             this.map.remove();
             this.map = undefined;
         }

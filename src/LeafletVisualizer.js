@@ -28,7 +28,7 @@ var scaleByDistance = new NearFarScalar();
  * @alias LeafletPointVisualizer
  * @constructor
  *
- * @param {Scene} scene The scene the primitives will be rendered in.
+ * @param {Scene} map The map the primitives will be rendered in.
  * @param {EntityCollection} entityCollection The entityCollection to visualize.
  */
 var LeafletPointVisualizer = function(scene, entityCollection) {
@@ -204,62 +204,11 @@ function cleanEntity(entity, collection, unusedIndexes) {
     }
 }
 
-function createCallback(centerAlpha, cssColor, cssOutlineColor, cssOutlineWidth, newPixelSize){
-    return function(id) {
-        var canvas = document.createElement('canvas');
-
-        var length = newPixelSize + (2 * cssOutlineWidth);
-        canvas.height = canvas.width = length;
-
-        var context2D = canvas.getContext('2d');
-        context2D.clearRect(0, 0, length, length);
-
-        if (cssOutlineWidth !== 0) {
-            context2D.beginPath();
-            context2D.arc(length / 2, length / 2, length / 2, 0, 2 * Math.PI, true);
-            context2D.closePath();
-            context2D.fillStyle = cssOutlineColor;
-            context2D.fill();
-            // Punch a hole in the center if needed.
-            if (centerAlpha < 1.0) {
-                context2D.save();
-                context2D.globalCompositeOperation = 'destination-out';
-                context2D.beginPath();
-                context2D.arc(length / 2, length / 2, newPixelSize / 2, 0, 2 * Math.PI, true);
-                context2D.closePath();
-                context2D.fillStyle = 'black';
-                context2D.fill();
-                context2D.restore();
-            }
-        }
-
-        context2D.beginPath();
-        context2D.arc(length / 2, length / 2, newPixelSize / 2, 0, 2 * Math.PI, true);
-        context2D.closePath();
-        context2D.fillStyle = cssColor;
-        context2D.fill();
-
-        return canvas;
-    };
-}
-
-
-var tempVisualizer = function (scene, entities) {
-//    console.log(scene, entities);
-};
-
-tempVisualizer.prototype.update = function(time) {
-//    console.log(time);
-};
-
-tempVisualizer.prototype.destroy = function() {
-    return destroyObject(this);
-};
 
 var pointVisualizer = function (map, entities) {
     this._map = map;
     this._entities = entities;
-    console.log(scene, entities);
+    console.log(map, entities);
 };
 
 pointVisualizer.prototype.update = function(time) {
@@ -275,9 +224,9 @@ pointVisualizer.prototype.destroy = function() {
 var LeafletVisualizer = function() {
 };
 
-var visualizersCallback = function(scene, dataSource) {
+LeafletVisualizer.prototype.visualizersCallback = function(map, dataSource) {
     var entities = dataSource.entities;
-    return [new pointVisualizer(scene, entities)];
+    return [new pointVisualizer(map, entities)];
 };
 
 module.exports = LeafletVisualizer;
