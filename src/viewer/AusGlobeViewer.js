@@ -713,6 +713,8 @@ AusGlobeViewer.prototype.isCesium = function() {
 };
 
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
+    this.context.beforeViewerChanged.raiseEvent();
+
     var bnds;
     var rect;
 
@@ -893,6 +895,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         document.getElementById('ausglobe-title-position').style.visibility = 'visible';
 
     }
+
+    this.context.afterViewerChanged.raiseEvent();
 };
 
 var offsetScratch = new Cartesian3();

@@ -32,6 +32,8 @@ var GeoDataSourceViewModel = function(context) {
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
+    this._beforeViewerChangedSubscription = undefined;
+    this._afterViewerChangedSubscription = undefined;
 
     /**
      * Gets or sets the geographic rectangle containing this data source.  This property is observable.
@@ -343,39 +345,49 @@ GeoDataSourceViewModel.prototype._hideInLeaflet = function() {
 function isEnabledChanged(viewModel) {
     var context = viewModel.context;
 
-    // If we're disabling this data source and it is currently shown, hide it first.
-    if (!viewModel.isEnabled && viewModel.isShown) {
-        viewModel.isShown = false;
-    }
-
-    if (defined(context.cesiumScene)) {
-        if (viewModel.isEnabled) {
-            viewModel._enableInCesium();
-        } else {
-            viewModel._disableInCesium();
-        }
-    }
-
-    if (defined(context.leafletMap)) {
-        if (viewModel.isEnabled) {
-            viewModel._enableInLeaflet();
-        } else {
-            viewModel._disableInLeaflet();
-        }
-    }
-
-    // Newly-enabled data sources should initially be shown.
-    if (viewModel.isEnabled && !viewModel.isShown) {
-        viewModel.isShown = true;
-    }
-
     if (viewModel.isEnabled) {
+        enable(viewModel);
+        viewModel.isShown = true;
+
         context.nowViewing.add(viewModel);
+
+        // Disable the data source immediately before a viewer change and re-enable it afterward.
+        viewModel._beforeViewerChangedSubscription = viewModel.context.beforeViewerChanged.addEventListener(function() {
+            if (viewModel.isShown) {
+                hide(viewModel);
+            }
+            if (viewModel.isEnabled) {
+                disable(viewModel);
+            }
+        });
+
+        viewModel._afterViewerChangedSubscription = viewModel.context.afterViewerChanged.addEventListener(function() {
+            if (viewModel.isEnabled) {
+                enable(viewModel);
+            }
+            if (viewModel.isShown) {
+                show(viewModel);
+            }
+        });
 
         ga('send', 'event', 'dataSource', 'added', viewModel.name);
         viewModel._enabledDate = Date.now();
     } else {
+        viewModel.isShown = false;
+        disable(viewModel);
+
         context.nowViewing.remove(viewModel);
+
+        // Unsubscribe from viewer change events.
+        if (defined(viewModel._beforeViewerChangedSubscription)) {
+            viewModel._beforeViewerChangedSubscription();
+            viewModel._beforeViewerChangedSubscription = undefined;
+        }
+
+        if (defined(viewModel._afterViewerChangedSubscription)) {
+            viewModel._afterViewerChangedSubscription();
+            viewModel._afterViewerChangedSubscription = undefined;
+        }
 
         var duration;
         if (viewModel._enabledDate) {
@@ -388,20 +400,10 @@ function isEnabledChanged(viewModel) {
 function isShownChanged(viewModel) {
     var context = viewModel.context;
 
-    if (defined(context.cesiumScene)) {
-        if (viewModel.isShown) {
-            viewModel._showInCesium();
-        } else {
-            viewModel._hideInCesium();
-        }
-    }
-
-    if (defined(context.leafletMap)) {
-        if (viewModel.isShown) {
-            viewModel._showInLeaflet();
-        } else {
-            viewModel._hideInLeaflet();
-        }
+    if (viewModel.isShown) {
+        show(viewModel)
+    } else {
+        hide(viewModel);
     }
 
     if (viewModel.isShown) {
@@ -415,6 +417,42 @@ function isShownChanged(viewModel) {
             duration = ((Date.now() - viewModel._enabledDate) / 1000.0) | 0;
         }
         ga('send', 'event', 'dataSource', 'hidden', viewModel.name, duration);
+    }
+}
+
+function enable(viewModel) {
+    var context = viewModel.context;
+    if (defined(context.cesiumScene)) {
+        viewModel._enableInCesium();
+    } else {
+        viewModel._enableInLeaflet();
+    }
+}
+
+function disable(viewModel) {
+    var context = viewModel.context;
+    if (defined(context.cesiumScene)) {
+        viewModel._disableInCesium();
+    } else {
+        viewModel._disableInLeaflet();
+    }
+}
+
+function show(viewModel) {
+    var context = viewModel.context;
+    if (defined(context.cesiumScene)) {
+        viewModel._showInCesium();
+    } else {
+        viewModel._showInLeaflet();
+    }
+}
+
+function hide(viewModel) {
+    var context = viewModel.context;
+    if (defined(context.cesiumScene)) {
+        viewModel._hideInCesium();
+    } else {
+        viewModel._hideInLeaflet();
     }
 }
 

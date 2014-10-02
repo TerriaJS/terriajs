@@ -89,8 +89,6 @@ NowViewingViewModel.prototype.add = function(item) {
  */
 NowViewingViewModel.prototype.remove = function(item) {
     item.isEnabled = false;
-
-    // This is likely to be a no-op, because setting isEnabled=false already removed it.
     this.items.remove(item);
 };
 

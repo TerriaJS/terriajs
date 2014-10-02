@@ -1,5 +1,7 @@
 "use strict";
 
+var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
+
 var GeoDataCatalogContext = function() {
     /**
      * Gets or sets the Cesium Scene.  If the application is in 2D mode, this property will be undefined and
@@ -37,6 +39,18 @@ var GeoDataCatalogContext = function() {
      * @type {corsProxy}
      */
     this.corsProxy = undefined;
+
+    /**
+     * Gets or sets the event that is raised just before switching between between Cesium and Leaflet.
+     * @type {Event}
+     */
+    this.beforeViewerChanged = new CesiumEvent();
+
+    /**
+     * Gets or sets the event that is raised just after switching between between Cesium and Leaflet.
+     * @type {Event}
+     */
+    this.afterViewerChanged = new CesiumEvent();
 };
 
 module.exports = GeoDataCatalogContext;
