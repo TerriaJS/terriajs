@@ -2156,7 +2156,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.extent = _getGeoJsonExtent(geojson);
     }
     
-    if (this.map === undefined) {
+ //   if (this.map === undefined) {
         //create the object
         var newDataSource = new GeoJsonDataSource(name);
 
@@ -2198,7 +2198,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         this.dataSourceCollection.add(newDataSource);
             //add it as a layer
         layer.dataSource = newDataSource;
-    }
+/*    }
     else {
         var geoJsonStyle = {
             "color": layer.style.line.color.toCssColorString(),
@@ -2215,12 +2215,12 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
             opacity: 0.9
         };
 
-/*        
+        
          // icons will show up for leaflet print, but unable to set color
         var geojsonIcon = L.icon({
             iconUrl: 'images/pow32.png'
         });
-*/
+
         // GeoJSON
         layer.primitive = L.geoJson(geojson, {
             style: geoJsonStyle,
@@ -2231,7 +2231,7 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
             }
         }).addTo(this.map);
     }
-    return this.add(layer);
+*/    return this.add(layer);
 };
 
 /**
