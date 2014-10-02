@@ -97,11 +97,13 @@ var GeoJsonDataSourceViewModel = function(context, url) {
 
                 if (defined(this.data)) {
                     updateViewModelFromData(this, this.data);
-                    loadGeoJsonInCesium(that);
+                    loadGeoJsonInCesium(this);
+                    loadGeoJsonInLeaflet(this);
                 } else if (defined(this.url) && this.url.length > 0) {
                     loadJson(this.url).then(function(json) {
                         updateViewModelFromData(that, json);
                         loadGeoJsonInCesium(that);
+                        loadGeoJsonInLeaflet(that);
                     }).otherwise(function(e) {
                         // TODO: need to standard way of handling errors like this.
                     });
@@ -177,10 +179,7 @@ GeoJsonDataSourceViewModel.prototype.enableInCesium = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    var viewer = this.context.cesiumViewer;
-
     this._cesiumDataSource = new GeoJsonDataSource(this.name);
-
     loadGeoJsonInCesium(this);
 };
 
@@ -220,33 +219,66 @@ GeoJsonDataSourceViewModel.prototype.hideInCesium = function() {
 };
 
 GeoJsonDataSourceViewModel.prototype.enableInLeaflet = function() {
-    if (defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is already enabled.');
+    if (defined(this._leafletLayer)) {
+        throw new DeveloperError('This data source is already enabled.');
     }
 
-    var map = this.context.leafletMap;
+    var pointColor = getRandomColor(pointPalette, this.name);
+    var lineColor = getRandomColor(lineAndFillPalette, this.name);
+    var fillColor = Color.clone(lineColor);
+    fillColor.alpha = 0.75;
 
-    var options = {
-        layers : this.layers,
-        opacity : this.alpha,
-        bounds : rectangleToLatLngBounds(this.rectangle)
+    var pointSize = 10;
+    var lineWidth = 2;
+
+    var geoJsonStyle = {
+        "color": lineColor.toCssColorString(),
+        "weight": lineWidth,
+        "opacity": 0.9
     };
 
-    options = combine(this.parameters, options);
+    var geojsonMarkerOptions = {
+        radius: pointSize / 2.0,
+        fillColor: pointColor.toCssColorString(),
+        fillOpacity: 0.9,
+        color: "#000",
+        weight: 1,
+        opacity: 0.9
+    };
 
-    this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.context, this.url), options);
-    map.addLayer(this._imageryLayer);
+    this._leafletLayer = L.geoJson(undefined, {
+        style: geoJsonStyle,
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        }
+    });
+
+    loadGeoJsonInLeaflet(this);
 };
 
 GeoJsonDataSourceViewModel.prototype.disableInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+    if (!defined(this._leafletLayer)) {
+        throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.context.leafletMap;
+    this.isShown = false;
+    this._leafletLayer = undefined;
+};
 
-    map.removeLayer(this._imageryLayer);
-    this._imageryLayer = undefined;
+GeoJsonDataSourceViewModel.prototype.showInLeaflet = function() {
+    if (!defined(this._leafletLayer)) {
+        throw new DeveloperError('This data source is not enabled.');
+    }
+
+    this.context.leafletMap.addLayer(this._leafletLayer);
+};
+
+GeoJsonDataSourceViewModel.prototype.hideInLeaflet = function() {
+    if (!defined(this._leafletLayer)) {
+        throw new DeveloperError('This data source is not enabled.');
+    }
+
+    this.context.leafletMap.removeLayer(this._leafletLayer);
 };
 
 function updateViewModelFromData(viewModel, geoJson) {
@@ -358,6 +390,14 @@ function loadGeoJsonInCesium(viewModel) {
             }
         }
     });
+}
+
+function loadGeoJsonInLeaflet(viewModel) {
+    if (!defined(viewModel._leafletLayer) || !defined(viewModel.loadedGeoJson)) {
+        return;
+    }
+
+    viewModel._leafletLayer.addData(viewModel.loadedGeoJson);
 }
 
 // Get a random color for the data based on the passed seed (usually dataset name)
