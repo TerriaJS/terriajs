@@ -43,24 +43,18 @@ var LeafletPointVisualizer = function(map, entityCollection) {
     entityCollection.collectionChanged.addEventListener(LeafletPointVisualizer.prototype._onCollectionChanged, this);
 
     this._map = map;
-    this._unusedIndexes = [];
-    this._entityCollection = entityCollection;
     this._featureGroup = featureGroup;
+    this._entityCollection = entityCollection;
     this._entitiesToVisualize = new AssociativeArray();
 
     this._onCollectionChanged(entityCollection, entityCollection.entities, [], []);
 };
 
 
-//TODO: !!! removed unused indexes
-//TODO: !!! rename pointVisualizerIndex to markerLayer
-
-
 LeafletPointVisualizer.prototype._onCollectionChanged = function(entityCollection, added, removed, changed) {
     var i;
     var entity;
     var featureGroup = this._featureGroup;
-    var unusedIndexes = this._unusedIndexes;
     var entities = this._entitiesToVisualize;
 
     for (i = added.length - 1; i > -1; i--) {
@@ -75,22 +69,22 @@ LeafletPointVisualizer.prototype._onCollectionChanged = function(entityCollectio
         if (defined(entity._point) && defined(entity._position)) {
             entities.set(entity.id, entity);
         } else {
-            cleanEntity(entity, featureGroup, unusedIndexes);
+            cleanEntity(entity, featureGroup);
             entities.remove(entity.id);
         }
     }
 
     for (i = removed.length - 1; i > -1; i--) {
         entity = removed[i];
-        cleanEntity(entity, featureGroup, unusedIndexes);
+        cleanEntity(entity, featureGroup);
         entities.remove(entity.id);
     }
 };
 
-function cleanEntity(entity, collection, unusedIndexes) {
-    var pointVisualizerIndex = entity._pointVisualizerIndex;
-    if (defined(pointVisualizerIndex)) {
-        collection.removeLayer(pointVisualizerIndex);
+function cleanEntity(entity, collection) {
+    var geomLayer = entity._geomLayer;
+    if (defined(geomLayer)) {
+        collection.removeLayer(geomLayer);
     }
 }
 
@@ -115,19 +109,19 @@ LeafletPointVisualizer.prototype.update = function(time) {
 
     var entities = this._entitiesToVisualize.values;
     var featureGroup = this._featureGroup;
-    var unusedIndexes = this._unusedIndexes;
-    for (var i = 0, len = entities.length; i < len; i++) {
+     for (var i = 0, len = entities.length; i < len; i++) {
         var entity = entities[i];
-        var pointGraphics = entity._point;
+//        var pointGraphics = entity._point;
+        var pointGraphics = entity._billboard;
         var marker;
-        var pointVisualizerIndex = entity._pointVisualizerIndex;
+        var geomLayer = entity._geomLayer;
         var show = entity.isAvailable(time) && Property.getValueOrDefault(pointGraphics._show, time, true);
         if (show) {
             position = Property.getValueOrUndefined(entity._position, time, position);
             show = defined(position);
         }
         if (!show) {
-            cleanEntity(entity, featureGroup, unusedIndexes);
+            cleanEntity(entity, featureGroup);
             continue;
         }
 
@@ -144,13 +138,13 @@ LeafletPointVisualizer.prototype.update = function(time) {
         var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
 
         var needRedraw = false;
-        if (!defined(pointVisualizerIndex)) {
+        if (!defined(geomLayer)) {
             marker = L.circleMarker(latlng, geojsonMarkerOptions);
             featureGroup.addLayer(marker);
-            entity._pointVisualizerIndex = marker;
+            entity._geomLayer = marker;
             needRedraw = true;
         } else {
-            marker = featureGroup.getLayer(pointVisualizerIndex);
+            marker = featureGroup.getLayer(geomLayer);
         }
 
         var newColor = Property.getValueOrDefault(pointGraphics._color, time, defaultColor, color);
@@ -159,10 +153,10 @@ LeafletPointVisualizer.prototype.update = function(time) {
         var newPixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
 /*
         needRedraw = needRedraw || //
-        newOutlineWidth !== pointVisualizerIndex._visualizerOutlineWidth || //
-        newPixelSize !== pointVisualizerIndex._visualizerPixelSize || //
-        !Color.equals(newColor, pointVisualizerIndex._visualizerColor) || //
-        !Color.equals(newOutlineColor, pointVisualizerIndex._visualizerOutlineColor);
+        newOutlineWidth !== geomLayer._visualizerOutlineWidth || //
+        newPixelSize !== geomLayer._visualizerPixelSize || //
+        !Color.equals(newColor, geomLayer._visualizerColor) || //
+        !Color.equals(newOutlineColor, geomLayer._visualizerOutlineColor);
 */
         if (needRedraw) {
             geojsonMarkerOptions.fillColor = newColor.toCssColorString();
@@ -190,7 +184,7 @@ LeafletPointVisualizer.prototype.isDestroyed = function() {
 LeafletPointVisualizer.prototype.destroy = function() {
     var entities = this._entitiesToVisualize.values;
     for (var i = entities.length - 1; i > -1; i--) {
-        entities[i]._pointVisualizerIndex = undefined;
+        entities[i]._geomLayer = undefined;
     }
     this._entityCollection.collectionChanged.removeEventListener(LeafletPointVisualizer.prototype._onCollectionChanged, this);
     this._map.removeLayer(this._featureGroup);

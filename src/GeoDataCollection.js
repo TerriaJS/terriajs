@@ -2156,82 +2156,47 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.extent = _getGeoJsonExtent(geojson);
     }
     
- //   if (this.map === undefined) {
-        //create the object
-        var newDataSource = new GeoJsonDataSource(name);
+    var newDataSource = new GeoJsonDataSource(name);
 
-        newDataSource.load(geojson).then(function() {
-            var entities = newDataSource.entities.entities;
+    newDataSource.load(geojson).then(function() {
+        var entities = newDataSource.entities.entities;
 
-            for (var i = 0; i < entities.length; ++i) {
-                var entity = entities[i];
-                var material;
+        for (var i = 0; i < entities.length; ++i) {
+            var entity = entities[i];
+            var material;
 
-                //update default point/line/polygon
-                var point = entity.point;
-                if (defined(point)) {
-                    point.color = new ConstantProperty(getCesiumColor(layer.style.point.color));
-                    point.pixelSize = new ConstantProperty(layer.style.point.size);
-                    point.outlineColor = new ConstantProperty(Color.BLACK);
-                    point.outlineWidth = new ConstantProperty(1);
-                }
-
-                var polyline = entity.polyline;
-                if (defined(polyline)) {
-                    material = new ColorMaterialProperty();
-                    material.color = new ConstantProperty(getCesiumColor(layer.style.line.color));
-                    polyline.material = material;
-                    polyline.width = new ConstantProperty(layer.style.line.width);
-                }
-
-                var polygon = entity.polygon;
-                if (defined(polygon)) {
-                    polygon.fill = new ConstantProperty(layer.style.polygon.fill);
-                    polygon.outline = new ConstantProperty(true);
-
-                    material = new ColorMaterialProperty();
-                    material.color = new ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
-                    polygon.material = material;
-                }
+            //update default point/line/polygon
+            var point = entity.point;
+            if (defined(point)) {
+                point.color = new ConstantProperty(getCesiumColor(layer.style.point.color));
+                point.pixelSize = new ConstantProperty(layer.style.point.size);
+                point.outlineColor = new ConstantProperty(Color.BLACK);
+                point.outlineWidth = new ConstantProperty(1);
             }
-        });
-        this.dataSourceCollection.add(newDataSource);
-            //add it as a layer
-        layer.dataSource = newDataSource;
-/*    }
-    else {
-        var geoJsonStyle = {
-            "color": layer.style.line.color.toCssColorString(),
-            "weight": layer.style.line.width,
-            "opacity": 0.9
-        };
 
-        var geojsonMarkerOptions = {
-            radius: layer.style.point.size / 2.0,
-            fillColor: layer.style.point.color.toCssColorString(),
-            fillOpacity: 0.9,
-            color: "#000",
-            weight: 1,
-            opacity: 0.9
-        };
-
-        
-         // icons will show up for leaflet print, but unable to set color
-        var geojsonIcon = L.icon({
-            iconUrl: 'images/pow32.png'
-        });
-
-        // GeoJSON
-        layer.primitive = L.geoJson(geojson, {
-            style: geoJsonStyle,
-            pointToLayer: function (feature, latlng) {
-//                var clr = getRandomColor(point_palette);
-//                geojsonMarkerOptions.fillColor = clr.toCssColorString();
-                return L.circleMarker(latlng, geojsonMarkerOptions);
+            var polyline = entity.polyline;
+            if (defined(polyline)) {
+                material = new ColorMaterialProperty();
+                material.color = new ConstantProperty(getCesiumColor(layer.style.line.color));
+                polyline.material = material;
+                polyline.width = new ConstantProperty(layer.style.line.width);
             }
-        }).addTo(this.map);
-    }
-*/    return this.add(layer);
+
+            var polygon = entity.polygon;
+            if (defined(polygon)) {
+                polygon.fill = new ConstantProperty(layer.style.polygon.fill);
+                polygon.outline = new ConstantProperty(true);
+
+                material = new ColorMaterialProperty();
+                material.color = new ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
+                polygon.material = material;
+            }
+        }
+    });
+    this.dataSourceCollection.add(newDataSource);
+        //add it as a layer
+    layer.dataSource = newDataSource;
+    return this.add(layer);
 };
 
 /**
