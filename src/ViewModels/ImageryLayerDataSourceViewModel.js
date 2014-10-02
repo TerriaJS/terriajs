@@ -16,6 +16,7 @@ var inherit = require('../inherit');
  * @alias ImageryLayerDataSourceViewModel
  * @constructor
  * @extends GeoDataSourceViewModel
+ * @abstract
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
@@ -26,7 +27,7 @@ var ImageryLayerDataSourceViewModel = function(context) {
 
     /**
      * Gets or sets the opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is
-     * fully opaque.
+     * fully opaque.  This property is observable.
      * @type {Number}
      */
     this.opacity = 0.6;
@@ -74,33 +75,33 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     }
 });
 
-ImageryLayerDataSourceViewModel.prototype.showInCesium = function() {
+ImageryLayerDataSourceViewModel.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+        throw new DeveloperError('This data source is not enabled.');
     }
 
     this._imageryLayer.alpha = this.opacity;
 };
 
-ImageryLayerDataSourceViewModel.prototype.hideInCesium = function() {
+ImageryLayerDataSourceViewModel.prototype._hideInCesium = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+        throw new DeveloperError('This data source is not enabled.');
     }
 
     this._imageryLayer.alpha = 0.0;
 };
 
-ImageryLayerDataSourceViewModel.prototype.showInLeaflet = function() {
+ImageryLayerDataSourceViewModel.prototype._showInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+        throw new DeveloperError('This data source is not enabled.');
     }
 
     this._imageryLayer.setOpacity(this.opacity);
 };
 
-ImageryLayerDataSourceViewModel.prototype.hideInLeaflet = function() {
+ImageryLayerDataSourceViewModel.prototype._hideInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+        throw new DeveloperError('This data source is not enabled.');
     }
 
     this._imageryLayer.setOpacity(0.0);

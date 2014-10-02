@@ -23,6 +23,7 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @alias GeoDataSourceViewModel
  * @constructor
  * @extends GeoDataItemViewModel
+ * @abstract
  *
  * @param {GeoDataCatalogContext} context The context for the item.
  */
@@ -191,7 +192,9 @@ GeoDataSourceViewModel.prototype.toggleLegendVisible = function() {
 var scratchRectangle = new Rectangle();
 
 /**
- * Moves the camera so that the item's bounding rectangle is visible.
+ * Moves the camera so that the item's bounding rectangle is visible.  If {@link GeoDataSourceViewModel#rectangle} is
+ * undefined or covers more than about half the world in the longitude direction, or if the data source is not enabled
+ * or not shown, this method does nothing.
  */
  GeoDataSourceViewModel.prototype.zoomTo = function() {
     if (!this.isEnabled || !this.isShown || !defined(this.rectangle)) {
@@ -233,22 +236,131 @@ var scratchRectangle = new Rectangle();
     }
 };
 
+/**
+ * When implemented in a derived class, enables this data source on the Cesium globe.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to true.  This method will throw an exception
+ * if the data source is already enabled.  Calling this method should NOT also show the data source
+ * on the globe (see {@link GeoDataSourceViewModel#showInCesium}), so in some cases it may not do anything at all.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is already enabled.
+ */
+GeoDataSourceViewModel.prototype._enableInCesium = function() {
+    throw new DeveloperError('_enableInCesium must be implemented in the derived class.');
+};
+
+/**
+ * When implemented in a derived class, disables this data source on the Cesium globe.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to false.  This method will throw an exception
+ * if the data source is not enabled.  When implementing this method in a derived class, you can assume that
+ * {@link GeoDataSourceViewModel#hideInCesium} will be called on a shown data source before this method is called.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is not enabled.
+ */
+GeoDataSourceViewModel.prototype._disableInCesium = function() {
+    throw new DeveloperError('_disableInCesium must be implemented in the derived class.');
+};
+
+/**
+ * When implemented in a derived class, shows this data source on the Cesium globe.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to true.  This method will throw an exception
+ * if the data source is already shown or if it is not enabled.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is not enabled.
+ * @throws {DeveloperError} If the data source is already shown.
+ */
+GeoDataSourceViewModel.prototype._showInCesium = function() {
+    throw new DeveloperError('_showInCesium must be implemented in the derived class.');
+};
+
+/**
+ * When implemented in a derived class, hides this data source on the Cesium globe.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to false.  This method will throw an exception
+ * if the data source is not shown or if it is not enabled.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is not enabled.
+ * @throws {DeveloperError} If the data source is not shown.
+ */
+GeoDataSourceViewModel.prototype._hideInCesium = function() {
+    throw new DeveloperError('_hideInCesium must be implemented in the derived class.');
+};
+
+/**
+ * When implemented in a derived class, enables this data source on the Leaflet map.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to true.  This method will throw an exception
+ * if the data source is already enabled.  Calling this method should NOT also show the data source
+ * on the map (see {@link GeoDataSourceViewModel#showInLeaflet}), so in some cases it may not do anything at all.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is already enabled.
+ */
+GeoDataSourceViewModel.prototype._enableInLeaflet = function() {
+    throw new DeveloperError('enableInLeaflet must be implemented in the derived class.');
+};
+
+/**
+ * When implemented in a derived class, disables this data source on the Leaflet map.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to false.  This method will throw an exception
+ * if the data source is not enabled.  When implementing this method in a derived class, you can assume that
+ * {@link GeoDataSourceViewModel#hideInLeaflet} will be called on a shown data source before this method is called.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is not enabled.
+ */
+GeoDataSourceViewModel.prototype._disableInLeaflet = function() {
+    throw new DeveloperError('disableInLeaflet must be implemented in the derived class.');
+};
+
+/**
+ * When implemented in a derived class, shows this data source on the Leaflet map.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to true.  This method will throw an exception
+ * if the data source is already shown or if it is not enabled.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is not enabled.
+ * @throws {DeveloperError} If the data source is already shown.
+ */
+GeoDataSourceViewModel.prototype._showInLeaflet = function() {
+    throw new DeveloperError('_showInLeaflet must be implemented in the derived class.');
+};
+
+/**
+ * When implemented in a derived class, hides this data source on the Leaflet map.  You should not call this
+ * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to false.  This method will throw an exception
+ * if the data source is not shown or if it is not enabled.
+ * @abstract
+ * @protected
+ * @throws {DeveloperError} If the data source is not enabled.
+ * @throws {DeveloperError} If the data source is not shown.
+ */
+GeoDataSourceViewModel.prototype._hideInLeaflet = function() {
+    throw new DeveloperError('_hideInLeaflet must be implemented in the derived class.');
+};
+
 function isEnabledChanged(viewModel) {
     var context = viewModel.context;
 
+    // If we're disabling this data source and it is currently shown, hide it first.
+    if (!viewModel.isEnabled && viewModel.isShown) {
+        viewModel.isShown = false;
+    }
+
     if (defined(context.cesiumScene)) {
         if (viewModel.isEnabled) {
-            viewModel.enableInCesium();
+            viewModel._enableInCesium();
         } else {
-            viewModel.disableInCesium();
+            viewModel._disableInCesium();
         }
     }
 
     if (defined(context.leafletMap)) {
         if (viewModel.isEnabled) {
-            viewModel.enableInLeaflet();
+            viewModel._enableInLeaflet();
         } else {
-            viewModel.disableInLeaflet();
+            viewModel._disableInLeaflet();
         }
     }
 
@@ -278,17 +390,17 @@ function isShownChanged(viewModel) {
 
     if (defined(context.cesiumScene)) {
         if (viewModel.isShown) {
-            viewModel.showInCesium();
+            viewModel._showInCesium();
         } else {
-            viewModel.hideInCesium();
+            viewModel._hideInCesium();
         }
     }
 
     if (defined(context.leafletMap)) {
         if (viewModel.isShown) {
-            viewModel.showInLeaflet();
+            viewModel._showInLeaflet();
         } else {
-            viewModel.hideInLeaflet();
+            viewModel._hideInLeaflet();
         }
     }
 

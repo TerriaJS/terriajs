@@ -174,7 +174,7 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
     }
 };
 
-GeoJsonDataSourceViewModel.prototype.enableInCesium = function() {
+GeoJsonDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -183,16 +183,15 @@ GeoJsonDataSourceViewModel.prototype.enableInCesium = function() {
     loadGeoJsonInCesium(this);
 };
 
-GeoJsonDataSourceViewModel.prototype.disableInCesium = function() {
+GeoJsonDataSourceViewModel.prototype._disableInCesium = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this.isShown = false;
     this._cesiumDataSource = undefined;
 };
 
-GeoJsonDataSourceViewModel.prototype.showInCesium = function() {
+GeoJsonDataSourceViewModel.prototype._showInCesium = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -205,7 +204,7 @@ GeoJsonDataSourceViewModel.prototype.showInCesium = function() {
     dataSources.add(this._cesiumDataSource);
 };
 
-GeoJsonDataSourceViewModel.prototype.hideInCesium = function() {
+GeoJsonDataSourceViewModel.prototype._hideInCesium = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -218,7 +217,7 @@ GeoJsonDataSourceViewModel.prototype.hideInCesium = function() {
     dataSources.remove(this._cesiumDataSource, false);
 };
 
-GeoJsonDataSourceViewModel.prototype.enableInLeaflet = function() {
+GeoJsonDataSourceViewModel.prototype._enableInLeaflet = function() {
     if (defined(this._leafletLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -256,16 +255,15 @@ GeoJsonDataSourceViewModel.prototype.enableInLeaflet = function() {
     loadGeoJsonInLeaflet(this);
 };
 
-GeoJsonDataSourceViewModel.prototype.disableInLeaflet = function() {
+GeoJsonDataSourceViewModel.prototype._disableInLeaflet = function() {
     if (!defined(this._leafletLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this.isShown = false;
     this._leafletLayer = undefined;
 };
 
-GeoJsonDataSourceViewModel.prototype.showInLeaflet = function() {
+GeoJsonDataSourceViewModel.prototype._showInLeaflet = function() {
     if (!defined(this._leafletLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -273,7 +271,7 @@ GeoJsonDataSourceViewModel.prototype.showInLeaflet = function() {
     this.context.leafletMap.addLayer(this._leafletLayer);
 };
 
-GeoJsonDataSourceViewModel.prototype.hideInLeaflet = function() {
+GeoJsonDataSourceViewModel.prototype._hideInLeaflet = function() {
     if (!defined(this._leafletLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }

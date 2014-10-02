@@ -171,9 +171,9 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     }
 };
 
-WebMapServiceDataSourceViewModel.prototype.enableInCesium = function() {
+WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is already enabled.');
+        throw new DeveloperError('This data source is already enabled.');
     }
 
     var scene = this.context.cesiumScene;
@@ -194,9 +194,9 @@ WebMapServiceDataSourceViewModel.prototype.enableInCesium = function() {
     scene.imageryLayers.add(this._imageryLayer);
 };
 
-WebMapServiceDataSourceViewModel.prototype.disableInCesium = function() {
+WebMapServiceDataSourceViewModel.prototype._disableInCesium = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+        throw new DeveloperError('This data source is not enabled.');
     }
 
     var scene = this.context.cesiumScene;
@@ -205,9 +205,9 @@ WebMapServiceDataSourceViewModel.prototype.disableInCesium = function() {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceDataSourceViewModel.prototype.enableInLeaflet = function() {
+WebMapServiceDataSourceViewModel.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is already enabled.');
+        throw new DeveloperError('This data source is already enabled.');
     }
 
     var map = this.context.leafletMap;
@@ -224,9 +224,9 @@ WebMapServiceDataSourceViewModel.prototype.enableInLeaflet = function() {
     map.addLayer(this._imageryLayer);
 };
 
-WebMapServiceDataSourceViewModel.prototype.disableInLeaflet = function() {
+WebMapServiceDataSourceViewModel.prototype._disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('Data item is not enabled.');
+        throw new DeveloperError('This data source is not enabled.');
     }
 
     var map = this.context.leafletMap;

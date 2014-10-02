@@ -20,6 +20,7 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  *
  * @alias GeoDataItemViewModel
  * @constructor
+ * @abstract
  *
  * @param {GeoDataCatalogContext} context The context for the item.
  */
