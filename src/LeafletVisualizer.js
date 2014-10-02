@@ -20,10 +20,6 @@ var defaultOutlineColor = Color.BLACK;
 var defaultOutlineWidth = 1.0;
 var defaultPixelSize = 5.0;
 
-var color = new Color();
-var position = new Cartesian3();
-var outlineColor = new Color();
-var scaleByDistance = new NearFarScalar();
 
 /**
  * A {@link Visualizer} which maps {@link Entity#point} to a {@link Billboard}.
@@ -99,15 +95,9 @@ function cleanEntity(entity, collection, unusedIndexes) {
 }
 
 
-var defaultMarkerOptions = {
-    radius: 5.0,
-    fillColor: defaultColor.toCssColorString(),
-    fillOpacity: 0.9,
-    color: defaultOutlineColor.toCssColorString(),
-    weight: defaultOutlineWidth,
-    opacity: 0.9
-};
-
+var color = new Color();
+var position = new Cartesian3();
+var outlineColor = new Color();
 
 /**
  * Updates the primitives created by this visualizer to match their
@@ -129,6 +119,7 @@ LeafletPointVisualizer.prototype.update = function(time) {
     for (var i = 0, len = entities.length; i < len; i++) {
         var entity = entities[i];
         var pointGraphics = entity._point;
+        var marker;
         var pointVisualizerIndex = entity._pointVisualizerIndex;
         var show = entity.isAvailable(time) && Property.getValueOrDefault(pointGraphics._show, time, true);
         if (show) {
@@ -140,79 +131,46 @@ LeafletPointVisualizer.prototype.update = function(time) {
             continue;
         }
 
-        var needRedraw = false;
-        needRedraw = true;
-/*        if (!defined(pointVisualizerIndex)) {
-            var length = unusedIndexes.length;
-            if (length > 0) {
-                pointVisualizerIndex = unusedIndexes.pop();
-                billboard = billboardCollection.get(pointVisualizerIndex);
-            } else {
-                pointVisualizerIndex = billboardCollection.length;
-                billboard = billboardCollection.add();
-            }
-            entity._pointVisualizerIndex = pointVisualizerIndex;
-            billboard.id = entity;
+         var geojsonMarkerOptions = {
+            radius: defaultPixelSize,
+            fillColor: defaultColor.toCssColorString(),
+            fillOpacity: 0.9,
+            color: defaultOutlineColor.toCssColorString(),
+            weight: defaultOutlineWidth,
+            opacity: 0.9
+        };
 
-            billboard._visualizerColor = Color.clone(Color.WHITE, billboard._visualizerColor);
-            billboard._visualizerOutlineColor = Color.clone(Color.BLACK, billboard._visualizerOutlineColor);
-            billboard._visualizerOutlineWidth = 0;
-            billboard._visualizerPixelSize = 1;
+        var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
+        var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
+
+        var needRedraw = false;
+        if (!defined(pointVisualizerIndex)) {
+            marker = L.circleMarker(latlng, geojsonMarkerOptions);
+            featureGroup.addLayer(marker);
+            entity._pointVisualizerIndex = marker;
             needRedraw = true;
         } else {
-            billboard = billboardCollection.get(pointVisualizerIndex);
+            marker = featureGroup.getLayer(pointVisualizerIndex);
         }
 
-        billboard.show = true;
-        billboard.position = position;
-        billboard.scaleByDistance = Property.getValueOrUndefined(pointGraphics._scaleByDistance, time, scaleByDistance);
-*/
         var newColor = Property.getValueOrDefault(pointGraphics._color, time, defaultColor, color);
         var newOutlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor, outlineColor);
         var newOutlineWidth = Property.getValueOrDefault(pointGraphics._outlineWidth, time, defaultOutlineWidth);
         var newPixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
 /*
         needRedraw = needRedraw || //
-        newOutlineWidth !== billboard._visualizerOutlineWidth || //
-        newPixelSize !== billboard._visualizerPixelSize || //
-        !Color.equals(newColor, billboard._visualizerColor) || //
-        !Color.equals(newOutlineColor, billboard._visualizerOutlineColor);
-
+        newOutlineWidth !== pointVisualizerIndex._visualizerOutlineWidth || //
+        newPixelSize !== pointVisualizerIndex._visualizerPixelSize || //
+        !Color.equals(newColor, pointVisualizerIndex._visualizerColor) || //
+        !Color.equals(newOutlineColor, pointVisualizerIndex._visualizerOutlineColor);
+*/
         if (needRedraw) {
-            billboard._visualizerColor = Color.clone(newColor, billboard._visualizerColor);
-            billboard._visualizerOutlineColor = Color.clone(newOutlineColor, billboard._visualizerOutlineColor);
-            billboard._visualizerPixelSize = newPixelSize;
-            billboard._visualizerOutlineWidth = newOutlineWidth;
-
-            var centerAlpha = newColor.alpha;
-            var cssColor = newColor.toCssColorString();
-            var cssOutlineColor = newOutlineColor.toCssColorString();
-            var cssOutlineWidth = newOutlineWidth;
-            var textureId = JSON.stringify([cssColor, newPixelSize, cssOutlineColor, cssOutlineWidth]);
-
-            billboard.setImage(textureId, createCallback(centerAlpha, cssColor, cssOutlineColor, cssOutlineWidth, newPixelSize));
+            geojsonMarkerOptions.fillColor = newColor.toCssColorString();
+            geojsonMarkerOptions.color = newOutlineColor.toCssColorString();
+            geojsonMarkerOptions.radius = newPixelSize;
+            geojsonMarkerOptions.weight = newOutlineWidth;
+            marker.setStyle(geojsonMarkerOptions);
         }
- */ 
- //       point.color;
- //       point.pixelSize;
- //       point.outlineColor;
-//        point.outlineWidth;
-
-         var geojsonMarkerOptions = {
-            radius: 10.0 / 2.0,
-            fillColor: newColor.toCssColorString(),
-            fillOpacity: 0.9,
-            color: newOutlineColor.toCssColorString(),
-            weight: newOutlineWidth,
-            opacity: 0.9
-        };
-        var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
-        var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
-        var marker = L.circleMarker(latlng, geojsonMarkerOptions);
-        entity._pointVisualizerIndex = marker;
-        featureGroup.addLayer(marker);
-        console.log('added marker');
-  
     }
     return true;
 };
