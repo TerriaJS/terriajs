@@ -187,7 +187,7 @@ WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
-        alpha : this.alpha,
+        alpha : 0.0,
         rectangle : this.rectangle
     });
 
@@ -214,7 +214,7 @@ WebMapServiceDataSourceViewModel.prototype._enableInLeaflet = function() {
 
     var options = {
         layers : this.layers,
-        opacity : this.alpha,
+        opacity : 0.0,
         bounds : rectangleToLatLngBounds(this.rectangle)
     };
 

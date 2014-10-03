@@ -351,25 +351,6 @@ function isEnabledChanged(viewModel) {
 
         context.nowViewing.add(viewModel);
 
-        // Disable the data source immediately before a viewer change and re-enable it afterward.
-        viewModel._beforeViewerChangedSubscription = viewModel.context.beforeViewerChanged.addEventListener(function() {
-            if (viewModel.isShown) {
-                hide(viewModel);
-            }
-            if (viewModel.isEnabled) {
-                disable(viewModel);
-            }
-        });
-
-        viewModel._afterViewerChangedSubscription = viewModel.context.afterViewerChanged.addEventListener(function() {
-            if (viewModel.isEnabled) {
-                enable(viewModel);
-            }
-            if (viewModel.isShown) {
-                show(viewModel);
-            }
-        });
-
         ga('send', 'event', 'dataSource', 'added', viewModel.name);
         viewModel._enabledDate = Date.now();
     } else {
@@ -377,17 +358,6 @@ function isEnabledChanged(viewModel) {
         disable(viewModel);
 
         context.nowViewing.remove(viewModel);
-
-        // Unsubscribe from viewer change events.
-        if (defined(viewModel._beforeViewerChangedSubscription)) {
-            viewModel._beforeViewerChangedSubscription();
-            viewModel._beforeViewerChangedSubscription = undefined;
-        }
-
-        if (defined(viewModel._afterViewerChangedSubscription)) {
-            viewModel._afterViewerChangedSubscription();
-            viewModel._afterViewerChangedSubscription = undefined;
-        }
 
         var duration;
         if (viewModel._enabledDate) {

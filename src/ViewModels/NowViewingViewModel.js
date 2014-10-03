@@ -4,6 +4,7 @@
 
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 /**
@@ -11,6 +12,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
  */
 var NowViewingViewModel = function(context) {
     this._context = context;
+    this._events = new EventHelper();
 
     /**
      * Gets the list of items that we are "now viewing".  It is recommended that you use
@@ -27,6 +29,14 @@ var NowViewingViewModel = function(context) {
     this.isOpen = true;
 
     knockout.track(this, ['items', 'isOpen']);
+
+    this._events.add(this.context.beforeViewerChanged, function() {
+        beforeViewerChanged(this);
+    }, this);
+
+    this._events.add(this.context.afterViewerChanged, function() {
+        afterViewerChanged(this);
+    }, this);
 };
 
 defineProperties(NowViewingViewModel.prototype, {
@@ -61,6 +71,13 @@ defineProperties(NowViewingViewModel.prototype, {
         }
     }
 });
+
+/**
+ * Destroys this instance, including unsubscribing it from any events.
+ */
+NowViewingViewModel.prototype.destroy = function() {
+    this._events.removeAll();
+};
 
 /**
  * Adds an item to the "Now Viewing" pane.
@@ -229,6 +246,70 @@ function swapLeafletZIndices(viewModel, item, otherItem) {
 
     item.imageryLayer.setZIndex(otherIndex);
     otherItem.imageryLayer.setZIndex(itemIndex);
+}
+
+function beforeViewerChanged(viewModel) {
+    // Hide and disable all data sources, without actually changing
+    // their isEnabled and isShown flags.
+
+    var context = viewModel.context;
+    var dataSources = viewModel.items;
+
+    for (var i = 0; i < dataSources.length; ++i) {
+        var dataSource = dataSources[i];
+
+        if (dataSource.isShown) {
+            if (defined(context.cesiumScene)) {
+                dataSource._hideInCesium();
+            }
+
+            if (defined(context.leafletMap)) {
+                dataSource._hideInLeaflet();
+            }
+        }
+
+        if (dataSource.isEnabled) {
+            if (defined(context.cesiumScene)) {
+                dataSource._disableInCesium();
+            }
+
+            if (defined(context.leafletMap)) {
+                dataSource._disableInLeaflet();
+            }
+        }
+    }
+}
+
+function afterViewerChanged(viewModel) {
+    // Re-enable and re-show all data sources that were previously enabled or shown.
+    // Work from the bottom data source up so that the correct order is created.
+
+    var context = viewModel.context;
+    var dataSources = viewModel.items;
+
+    for (var i = dataSources.length - 1; i >= 0; --i) {
+        var dataSource = dataSources[i];
+
+        if (dataSource.isEnabled) {
+            if (defined(context.cesiumScene)) {
+                dataSource._enableInCesium();
+            }
+
+            if (defined(context.leafletMap)) {
+                dataSource._enableInLeaflet();
+            }
+        }
+
+        if (dataSource.isShown) {
+            if (defined(context.cesiumScene)) {
+                dataSource._showInCesium();
+            }
+
+            if (defined(context.leafletMap)) {
+                dataSource._showInLeaflet();
+            }
+        }
+    }
 }
 
 module.exports = NowViewingViewModel;
