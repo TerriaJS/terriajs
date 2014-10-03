@@ -217,6 +217,24 @@ function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataC
     result.url = viewModel.url;
     result.layers = layer.Name;
 
+    result.description = '';
+
+    var viewModelHasDescription = defined(viewModel.description) && viewModel.description.length > 0;
+    var layerHasAbstract = defined(layer.Abstract) && layer.Abstract.length > 0;
+
+    if (viewModelHasDescription) {
+        result.description += viewModel.description;
+    }
+
+    if (viewModelHasDescription && layerHasAbstract) {
+        result.description += '<br/>';
+    }
+
+    if (layerHasAbstract) {
+        result.description += layer.Abstract;
+    }
+
+
     var queryable = defaultValue(getInheritableProperty(layer, 'queryable'), false);
 
     result.getFeatureInfoAsGeoJson = queryable && supportsJsonGetFeatureInfo;

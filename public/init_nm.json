@@ -252,9 +252,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "bores",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "bores"
                         },
                         {
                             "name": "Canal Areas",
@@ -268,9 +266,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "canalareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "canalareas"
                         },
                         {
                             "name": "Canal Lines",
@@ -284,9 +280,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "canallines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "canallines"
                         },
                         {
                             "name": "Estuary",
@@ -300,9 +294,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFEstuary",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFEstuary"
                         },
                         {
                             "name": "Flats",
@@ -316,9 +308,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "flats",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "flats"
                         },
                         {
                             "name": "Foreshore Flats",
@@ -332,9 +322,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "foreshoreflats",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "foreshoreflats"
                         },
                         {
                             "name": "Lakes",
@@ -348,9 +336,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "lakes",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "lakes"
                         },
                         {
                             "name": "Locks",
@@ -364,9 +350,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "locks",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "locks"
                         },
                         {
                             "name": "Reef Areas",
@@ -380,9 +364,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marinehazardareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "marinehazardareas"
                         },
                         {
                             "name": "Reef Points",
@@ -396,9 +378,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marinehazardpoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "marinehazardpoints"
                         },
                         {
                             "name": "Pondage Areas",
@@ -412,9 +392,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pondageareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "pondageareas"
                         },
                         {
                             "name": "Rapid Areas",
@@ -428,9 +406,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "rapidareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "rapidareas"
                         },
                         {
                             "name": "Rapid Lines",
@@ -444,9 +420,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "rapidlines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "rapidlines"
                         },
                         {
                             "name": "Reservoirs",
@@ -460,9 +434,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "reservoirs",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "reservoirs"
                         },
                         {
                             "name": "Spillways",
@@ -476,9 +448,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "spillways",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "spillways"
                         },
                         {
                             "name": "Springs",
@@ -492,9 +462,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "springs",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "springs"
                         },
                         {
                             "name": "Streams",
@@ -508,9 +476,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFMappedStream",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFMappedStream"
                         },
                         {
                             "name": "Stream Nodes",
@@ -524,9 +490,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFMappedNode",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFMappedNode"
                         },
                         {
                             "name": "Stream Network",
@@ -540,9 +504,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFNetworkStream",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFNetworkStream"
                         },
                         {
                             "name": "Stream Network Nodes",
@@ -556,9 +518,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFNetworkNode",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFNetworkNode"
                         },
                         {
                             "name": "Structure",
@@ -572,9 +532,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFStructure",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFStructure"
                         },
                         {
                             "name": "Waterbodies",
@@ -588,9 +546,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterbody",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFWaterbody"
                         },
                         {
                             "name": "Water Course Areas",
@@ -604,9 +560,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watercourseareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "watercourseareas"
                         },
                         {
                             "name": "Water Course Lines",
@@ -620,9 +574,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watercourselines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "watercourselines"
                         },
                         {
                             "name": "Waterfall Points",
@@ -636,9 +588,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterfallpoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "waterfallpoints"
                         },
                         {
                             "name": "Waterholes",
@@ -652,9 +602,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterholes",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "waterholes"
                         },
                         {
                             "name": "Water Points",
@@ -668,9 +616,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterpoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "waterpoints"
                         },
                         {
                             "name": "Water Pipeline",
@@ -684,9 +630,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterPipeline",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFWaterPipeline"
                         },
                         {
                             "name": "Water Storage",
@@ -700,9 +644,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFDam",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFDam"
                         },
                         {
                             "name": "River Region",
@@ -716,9 +658,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "RiverRegion",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "RiverRegion"
                         },
                         {
                             "name": "Catchment",
@@ -732,9 +672,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFContractedCatchment",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFContractedCatchment"
                         },
                         {
                             "name": " Drainage Division",
@@ -748,9 +686,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AWRADrainageDivision",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AWRADrainageDivision"
                         },
                         {
                             "name": "NCB Level1 Drainage Division",
@@ -764,9 +700,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "NCBLevel1DrainageDivision",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "NCBLevel1DrainageDivision"
                         },
                         {
                             "name": "NCB Level2 Drainage Basin Group",
@@ -780,9 +714,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "NCBLevel2DrainageBasinGroup",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "NCBLevel2DrainageBasinGroup"
                         }
                     ]
                 },
@@ -803,9 +735,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferContour",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFAquiferContour"
                         },
                         {
                             "name": "Water Table Aquifer",
@@ -819,9 +749,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterTableAquifer",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFWaterTableAquifer"
                         },
                         {
                             "name": "Surficial Hydrogeologic Unit",
@@ -835,9 +763,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFSurficialHydrogeologicUnit",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFSurficialHydrogeologicUnit"
                         },
                         {
                             "name": "Aquifer Boundary",
@@ -851,9 +777,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferBoundary",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFAquiferBoundary"
                         },
                         {
                             "name": "Aquifer Outcrop",
@@ -867,9 +791,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferOutcrop",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFAquiferOutcrop"
                         },
                         {
                             "name": "Aquifer Salinity",
@@ -883,9 +805,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWAquiferSalinity",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "IGWAquiferSalinity"
                         },
                         {
                             "name": "Aquifer Yield",
@@ -899,9 +819,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWAquiferYield",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "IGWAquiferYield"
                         },
                         {
                             "name": "Water Table Yield",
@@ -915,9 +833,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableYield",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "IGWWaterTableYield"
                         },
                         {
                             "name": "Water Table Salinity",
@@ -931,9 +847,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableSalinity",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "IGWWaterTableSalinity"
                         },
                         {
                             "name": "IGWWaterTableHydraulicConductivity",
@@ -947,9 +861,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableHydraulicConductivity",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "IGWWaterTableHydraulicConductivity"
                         },
                         {
                             "name": "WaterTableAquifer",
@@ -963,9 +875,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterTableAquifer",
-                            "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "AHGFWaterTableAquifer"
                         }
                     ]
                 },
@@ -985,9 +895,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "benchmarks",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "benchmarks"
                         },
                         {
                             "name": "Contours",
@@ -1001,9 +909,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "contours",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "contours"
                         },
                         {
                             "name": "Horizontal Control Points",
@@ -1017,9 +923,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "horizontalcontrolpoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "horizontalcontrolpoints"
                         },
                         {
                             "name": "Spot Elevations",
@@ -1033,9 +937,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "spotelevations",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "spotelevations"
                         },
                         {
                             "name": "SRTM 1 sec DEM Image",
@@ -1083,9 +985,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "caves",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "caves"
                         },
                         {
                             "name": "Craters",
@@ -1099,9 +999,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "craters",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "craters"
                         },
                         {
                             "name": "Deformations",
@@ -1115,9 +1013,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "deformationareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "deformationareas"
                         },
                         {
                             "name": "Cliffs",
@@ -1131,9 +1027,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "discontinuities",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "discontinuities"
                         },
                         {
                             "name": "Pinnacles",
@@ -1147,9 +1041,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pinnacles",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "pinnacles"
                         },
                         {
                             "name": "Sand Ridges",
@@ -1163,9 +1055,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "sandridges",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "sandridges"
                         },
                         {
                             "name": "Sands",
@@ -1179,9 +1069,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "sands",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "sands"
                         }
                     ]
                 },
@@ -1201,9 +1089,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "clearedlines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "clearedlines"
                         },
                         {
                             "name": "Cultivated Areas",
@@ -1217,9 +1103,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cultivatedareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "cultivatedareas"
                         },
                         {
                             "name": "Native Vegetation Areas",
@@ -1233,9 +1117,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "nativevegetationareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "nativevegetationareas"
                         },
                         {
                             "name": "Windbreaks",
@@ -1249,9 +1131,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "windbreaks",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "windbreaks"
                         }
                     ]
                 },
@@ -1271,9 +1151,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "buildingareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "buildingareas"
                         },
                         {
                             "name": "Building Points",
@@ -1287,9 +1165,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "buildingpoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "buildingpoints"
                         },
                         {
                             "name": "Builtup Areas",
@@ -1303,9 +1179,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "builtupareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "builtupareas"
                         },
                         {
                             "name": "Cemetery Areas",
@@ -1319,9 +1193,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cemeteryareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "cemeteryareas"
                         },
                         {
                             "name": "Cemetery Points",
@@ -1335,9 +1207,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cemeterypoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "cemeterypoints"
                         },
                         {
                             "name": "Homesteads",
@@ -1351,9 +1221,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "homesteads",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "homesteads"
                         },
                         {
                             "name": "Placenames",
@@ -1367,9 +1235,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "placenames",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "placenames"
                         },
                         {
                             "name": "Populated Places",
@@ -1383,9 +1249,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "populatedplaces",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "populatedplaces"
                         },
                         {
                             "name": "Recreation Areas",
@@ -1399,9 +1263,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "recreationareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "recreationareas"
                         }
                     ]
                 },
@@ -1421,9 +1283,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "aircraftfacilitypoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "aircraftfacilitypoints"
                         },
                         {
                             "name": "Barrier Points",
@@ -1437,9 +1297,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "barrierpoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "barrierpoints"
                         },
                         {
                             "name": "Ferry Routes",
@@ -1453,9 +1311,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "ferryroutelines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "ferryroutelines"
                         },
                         {
                             "name": "Foot Tracks",
@@ -1469,9 +1325,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "foottracks",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "foottracks"
                         },
                         {
                             "name": "Railway Bridges",
@@ -1485,9 +1339,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaybridgepoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "railwaybridgepoints"
                         },
                         {
                             "name": "Railway Crossings",
@@ -1501,9 +1353,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaycrossinglines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "railwaycrossinglines"
                         },
                         {
                             "name": "Railways",
@@ -1517,9 +1367,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railways",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "railways"
                         },
                         {
                             "name": "Railway Stop",
@@ -1533,9 +1381,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaystoppoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "railwaystoppoints"
                         },
                         {
                             "name": "Railway Tunnel Lines",
@@ -1549,9 +1395,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaytunnellines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "railwaytunnellines"
                         },
                         {
                             "name": "Road Crossing Lines",
@@ -1565,9 +1409,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadcrossinglines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "roadcrossinglines"
                         },
                         {
                             "name": "Road Crossing Points",
@@ -1581,9 +1423,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadcrossingpoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "roadcrossingpoints"
                         },
                         {
                             "name": "Roads",
@@ -1597,9 +1437,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roads",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "roads"
                         },
                         {
                             "name": "Road Tunnel Lines",
@@ -1613,9 +1451,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadtunnellines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "roadtunnellines"
                         }
                     ]
                 },
@@ -1635,9 +1471,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "aerialcableways",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "aerialcableways"
                         },
                         {
                             "name": "Conveyors",
@@ -1651,9 +1485,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "conveyors",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "conveyors"
                         },
                         {
                             "name": "Damwalls",
@@ -1667,9 +1499,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "damwalls",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "damwalls"
                         },
                         {
                             "name": "Fences",
@@ -1683,9 +1513,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "fences",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "fences"
                         },
                         {
                             "name": "Marine Infrastructure Lines",
@@ -1699,9 +1527,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marineinfrastructurelines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "marineinfrastructurelines"
                         },
                         {
                             "name": "Marine Infrastructure Points",
@@ -1715,9 +1541,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marineinfrastructurepoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "marineinfrastructurepoints"
                         },
                         {
                             "name": "Mine Areas",
@@ -1731,9 +1555,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mineareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "mineareas"
                         },
                         {
                             "name": "Mine Points",
@@ -1747,9 +1569,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "minepoints",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "minepoints"
                         },
                         {
                             "name": "Petroleum Wells",
@@ -1763,9 +1583,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "petroleumwells",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "petroleumwells"
                         },
                         {
                             "name": "Storage Tanks",
@@ -1779,9 +1597,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "storagetanks",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "storagetanks"
                         },
                         {
                             "name": "Vertical Obstructions",
@@ -1795,9 +1611,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "verticalobstructions",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "verticalobstructions"
                         },
                         {
                             "name": "Waste Management Facilities",
@@ -1811,9 +1625,7 @@
                             ],
                             "type": "wms",
                             "url": "http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WMSServer",
-                            "layers": "0",
-                            "dataUrl": "http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WFSServer",
-                            "dataUrlType": "wfs"
+                            "layers": "0"
                         },
                         {
                             "name": "Water Tanks",
@@ -1827,9 +1639,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watertanks",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "watertanks"
                         },
                         {
                             "name": "Wind Pumps",
@@ -1843,9 +1653,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "windpumps",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "windpumps"
                         },
                         {
                             "name": "Yards",
@@ -1859,9 +1667,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "yards",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "yards"
                         }
                     ]
                 },
@@ -1881,9 +1687,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pipelines",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "pipelines"
                         }
                     ]
                 },
@@ -1903,9 +1707,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "frameworkboundaries",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "frameworkboundaries"
                         },
                         {
                             "name": "Geodata Indexes",
@@ -1919,9 +1721,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "geodataindexes",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "geodataindexes"
                         },
                         {
                             "name": "Islands",
@@ -1935,9 +1735,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "islands",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "islands"
                         },
                         {
                             "name": "Large Area Features",
@@ -1951,9 +1749,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "largeareafeatures",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "largeareafeatures"
                         },
                         {
                             "name": "Locations",
@@ -1967,9 +1763,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "locations",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "locations"
                         },
                         {
                             "name": "Mainlands",
@@ -1983,9 +1777,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mainlands",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "mainlands"
                         },
                         {
                             "name": "mapindexes",
@@ -1999,9 +1791,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mapindexes",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "mapindexes"
                         },
                         {
                             "name": "Prohibited Areas",
@@ -2015,9 +1805,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "prohibitedareas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "prohibitedareas"
                         },
                         {
                             "name": "Reserves",
@@ -2031,9 +1819,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "reserves",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "reserves"
                         },
                         {
                             "name": "Seas",
@@ -2047,9 +1833,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "layers": "seas",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "seas"
                         }
                     ]
                 },
@@ -2069,9 +1853,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:STE_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:STE_2011_AUST"
                         },
                         {
                             "name": "Local Government Areas",
@@ -2085,9 +1867,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:LGA_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:LGA_2011_AUST"
                         },
                         {
                             "name": "Postal Areas",
@@ -2101,9 +1881,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:POA_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:POA_2011_AUST"
                         },
                         {
                             "name": "Commonwealth Electoral Divisions",
@@ -2117,9 +1895,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:CED_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:CED_2011_AUST"
                         },
                         {
                             "name": "State Electoral Divisions",
@@ -2133,9 +1909,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SED_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SED_2011_AUST"
                         },
                         {
                             "name": "State Suburbs",
@@ -2149,9 +1923,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SSC_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SSC_2011_AUST"
                         },
                         {
                             "name": "Australian Drainage Divisions",
@@ -2165,9 +1937,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:ADD_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:ADD_2011_AUST"
                         },
                         {
                             "name": "Natural Resource Management Regions",
@@ -2181,9 +1951,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:NRMR_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:NRMR_2011_AUST"
                         },
                         {
                             "name": "Tourism Regions",
@@ -2197,9 +1965,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:TR_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:TR_2011_AUST"
                         }
                     ]
                 },
@@ -2219,9 +1985,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SA4_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SA4_2011_AUST"
                         },
                         {
                             "name": "Statistical Area Level 3 (SA3)",
@@ -2235,9 +1999,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SA3_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SA3_2011_AUST"
                         },
                         {
                             "name": "Statistical Area Level 2 (SA2)",
@@ -2251,9 +2013,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SA2_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SA2_2011_AUST"
                         },
                         {
                             "name": "Statistical Area Level 1 (SA1)",
@@ -2267,9 +2027,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SA1_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SA1_2011_AUST"
                         },
                         {
                             "name": "Greater Capital City Statistical Area (GCCSA)",
@@ -2283,9 +2041,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:GCCSA_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:GCCSA_2011_AUST"
                         },
                         {
                             "name": "Australian Capital Territory Mesh Blocks",
@@ -2299,9 +2055,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_ACT",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_ACT"
                         },
                         {
                             "name": "New South Wales Mesh Blocks",
@@ -2315,9 +2069,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_NSW",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_NSW"
                         },
                         {
                             "name": "Northern Territory Mesh Blocks",
@@ -2331,9 +2083,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_NT",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_NT"
                         },
                         {
                             "name": "Other Territories Mesh Blocks",
@@ -2347,9 +2097,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_OT",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_OT"
                         },
                         {
                             "name": "Queensland Mesh Blocks",
@@ -2363,9 +2111,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_QLD",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_QLD"
                         },
                         {
                             "name": "South Australia Mesh Blocks",
@@ -2379,9 +2125,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_SA",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_SA"
                         },
                         {
                             "name": "Tasmania Mesh Blocks",
@@ -2395,9 +2139,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_TAS",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_TAS"
                         },
                         {
                             "name": "Victoria Mesh Blocks",
@@ -2411,9 +2153,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_VIC",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_VIC"
                         },
                         {
                             "name": "Western Australia Mesh Blocks",
@@ -2427,9 +2167,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:MB_2011_WA",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:MB_2011_WA"
                         },
                         {
                             "name": "Indigenous Areas",
@@ -2443,9 +2181,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:IARE_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:IARE_2011_AUST"
                         },
                         {
                             "name": "Indigenous Locations",
@@ -2459,9 +2195,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:ILOC_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:ILOC_2011_AUST"
                         },
                         {
                             "name": "Indigenous Regions",
@@ -2475,9 +2209,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:IREG_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:IREG_2011_AUST"
                         },
                         {
                             "name": "Section of State",
@@ -2491,9 +2223,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SOS_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SOS_2011_AUST"
                         },
                         {
                             "name": "Section of State Range",
@@ -2507,9 +2237,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SOSR_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:SOSR_2011_AUST"
                         },
                         {
                             "name": "Urban Centre and Locality",
@@ -2523,9 +2251,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:UCL_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:UCL_2011_AUST"
                         },
                         {
                             "name": "Remoteness Area",
@@ -2539,9 +2265,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:RA_2011_AUST",
-                            "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                            "dataUrlType": "wfs"
+                            "layers": "admin_bnds:RA_2011_AUST"
                         }
                     ]
                 }
@@ -2556,9 +2280,7 @@
                     "description": "[Licence](http://www.ga.gov.au/copyright)",
                     "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                     "url": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                    "type": "wms-getCapabilities",
-                    "dataUrl": "http://geoserver.research.nicta.com.au/geotopo_250k/ows",
-                    "dataUrlType": "wfs"
+                    "type": "wms-getCapabilities"
                 },
                 {
                     "name": "Water (Bureau of Meteorology Geofabric)",
@@ -2574,26 +2296,20 @@
                     "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
                     "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
                     "url": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                    "type": "wms-getCapabilities",
-                    "dataUrl": "http://geoserver.research.nicta.com.au/admin_bnds_abs/ows",
-                    "dataUrlType": "wfs"
+                    "type": "wms-getCapabilities"
                 },
                 {
                     "name": "data.gov.au",
                     "dataCustodian": "[data.gov.au](http://www.data.gov.au/)",
                     "url": "http://data.gov.au/geoserver/ows",
-                    "type": "wms-getCapabilities",
-                    "dataUrl": "http://data.gov.au/geoserver/ows",
-                    "dataUrlType": "wfs"
+                    "type": "wms-getCapabilities"
                 },
                 {
                     "name": "National Exposure Information System 2012",
                     "description": "[Licence](http://www.ga.gov.au/copyright)",
                     "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                     "url": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer",
-                    "type": "wms-getCapabilities",
-                    "dataUrl": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WFSServer",
-                    "dataUrlType": "wfs"
+                    "type": "wms-getCapabilities"
                 }
             ]
         }

@@ -19,11 +19,11 @@ var PopupMessage = function(options) {
     var popup = document.createElement('div');
     popup.className = 'ausglobe-message';
     popup.innerHTML = '\
-        <div class="ausglobe-info-header">\
-            <div class="ausglobe-info-close-button" data-bind="click: close">&times;</div>\
+        <div class="ausglobe-message-header">\
+            <div class="ausglobe-message-close-button" data-bind="click: close">&times;</div>\
             <h1 data-bind="text: title"></h1>\
         </div>\
-        <div class="ausglobe-info-content">\
+        <div class="ausglobe-message-content">\
             <div class="ausglobe-share-label" data-bind="html: message"></div>\
         </div>\
     ';

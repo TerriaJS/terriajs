@@ -36,8 +36,10 @@ var WebMapServiceDataSourceViewModel = function(context) {
     ImageryLayerDataSourceViewModel.call(this, context);
 
     this._metadata = undefined;
-    this._legendUrl = undefined;
+    this._dataUrl = undefined;
+    this._dataUrlType = undefined;
     this._metadataUrl = undefined;
+    this._legendUrl = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -76,9 +78,40 @@ var WebMapServiceDataSourceViewModel = function(context) {
      */
     this.getFeatureInfoAsXml = true;
 
-    knockout.track(this, ['_legendUrl', '_metadataUrl', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml']);
+    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml']);
 
-    // metadataUrl and legendUrl are derived from url if not explicitly specified.
+    // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
+    knockout.defineProperty(this, 'dataUrl', {
+        get : function() {
+            var url = this._dataUrl;
+            if (!defined(url)) {
+                url = cleanUrl(this.url);
+            }
+
+            if (this.dataUrlType === 'wfs') {
+                url = url + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + this.layers + '&srsName=EPSG%3A4326&maxFeatures=1000';
+            }
+
+            return url;
+        },
+        set : function(value) {
+            this._dataUrl = value;
+        }
+    });
+
+    knockout.defineProperty(this, 'dataUrlType', {
+        get : function() {
+            if (defined(this._dataUrlType)) {
+                return this._dataUrlType;
+            } else {
+                return 'wfs';
+            }
+        },
+        set : function(value) {
+            this._dataUrlType = value;
+        }
+    });
+
     knockout.defineProperty(this, 'metadataUrl', {
         get : function() {
             if (defined(this._metadataUrl)) {
@@ -149,8 +182,8 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     this.description = defaultValue(json.description, '');
     this.legendUrl = json.legendUrl;
     this.dataUrl = json.dataUrl;
-    this.dataUrlType = defaultValue(json.dataUrlType, 'none');
-    this.dataCustodian = defaultValue(json.dataCustodian, 'Unknown');
+    this.dataUrlType = json.dataUrlType;
+    this.dataCustodian = json.dataCustodian;
     this.metadataUrl = json.metadataUrl;
 
     this.url = defaultValue(json.url, '');
