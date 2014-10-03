@@ -81,17 +81,13 @@ LeafletPointVisualizer.prototype._onCollectionChanged = function(entityCollectio
     }
 };
 
-function cleanEntity(entity, collection) {
+function cleanEntity(entity, group) {
     var geomLayer = entity._geomLayer;
     if (defined(geomLayer)) {
-        collection.removeLayer(geomLayer);
+        group.removeLayer(geomLayer);
     }
 }
 
-
-var color = new Color();
-var position = new Cartesian3();
-var outlineColor = new Color();
 
 /**
  * Updates the primitives created by this visualizer to match their
@@ -111,13 +107,12 @@ LeafletPointVisualizer.prototype.update = function(time) {
     var featureGroup = this._featureGroup;
      for (var i = 0, len = entities.length; i < len; i++) {
         var entity = entities[i];
-//        var pointGraphics = entity._point;
-        var pointGraphics = entity._billboard;
-        var marker;
+        var pointGraphics = entity._point;
+        var position;
         var geomLayer = entity._geomLayer;
         var show = entity.isAvailable(time) && Property.getValueOrDefault(pointGraphics._show, time, true);
         if (show) {
-            position = Property.getValueOrUndefined(entity._position, time, position);
+            position = Property.getValueOrUndefined(entity._position, time, tmpPosition);
             show = defined(position);
         }
         if (!show) {
@@ -125,45 +120,37 @@ LeafletPointVisualizer.prototype.update = function(time) {
             continue;
         }
 
-         var geojsonMarkerOptions = {
-            radius: defaultPixelSize,
-            fillColor: defaultColor.toCssColorString(),
+        var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
+        var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
+        var color = Property.getValueOrDefault(pointGraphics._color, time, defaultColor);
+        var outlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor);
+        var outlineWidth = Property.getValueOrDefault(pointGraphics._outlineWidth, time, defaultOutlineWidth);
+        var pixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
+
+        var markerOptions = {
+            radius: pixelSize / 2.0,
+            fillColor: color.toCssColorString(),
             fillOpacity: 0.9,
-            color: defaultOutlineColor.toCssColorString(),
-            weight: defaultOutlineWidth,
+            color: outlineColor.toCssColorString(),
+            weight: outlineWidth,
             opacity: 0.9
         };
 
-        var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
-        var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
-
-        var needRedraw = false;
         if (!defined(geomLayer)) {
-            marker = L.circleMarker(latlng, geojsonMarkerOptions);
-            featureGroup.addLayer(marker);
-            entity._geomLayer = marker;
-            needRedraw = true;
+            var point = L.circleMarker(latlng, markerOptions);
+            featureGroup.addLayer(point);
+            entity._geomLayer = point;
         } else {
-            marker = featureGroup.getLayer(geomLayer);
-        }
-
-        var newColor = Property.getValueOrDefault(pointGraphics._color, time, defaultColor, color);
-        var newOutlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor, outlineColor);
-        var newOutlineWidth = Property.getValueOrDefault(pointGraphics._outlineWidth, time, defaultOutlineWidth);
-        var newPixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
-/*
-        needRedraw = needRedraw || //
-        newOutlineWidth !== geomLayer._visualizerOutlineWidth || //
-        newPixelSize !== geomLayer._visualizerPixelSize || //
-        !Color.equals(newColor, geomLayer._visualizerColor) || //
-        !Color.equals(newOutlineColor, geomLayer._visualizerOutlineColor);
-*/
-        if (needRedraw) {
-            geojsonMarkerOptions.fillColor = newColor.toCssColorString();
-            geojsonMarkerOptions.color = newOutlineColor.toCssColorString();
-            geojsonMarkerOptions.radius = newPixelSize;
-            geojsonMarkerOptions.weight = newOutlineWidth;
-            marker.setStyle(geojsonMarkerOptions);
+            var point = geomLayer;
+            if (!point._latlng.equals(latlng)) {
+                point.setLatLng(latlng);
+            }
+            for (var prop in markerOptions) {
+                if (markerOptions[prop] !== point.options[prop]) {
+                    point.setStyle(markerOptions);
+                    break;
+                }
+            }
         }
     }
     return true;

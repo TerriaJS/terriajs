@@ -57,7 +57,6 @@ var GeoDataCollection = function() {
     
     var that = this;
     
-    this.scene = undefined;
     this.map = undefined;
 
     //Init the dataSourceCollection
@@ -82,12 +81,11 @@ var GeoDataCollection = function() {
 * @param {Object} [options.map] Set to Leaflet map object if Leaflet Viewer.
 */
 GeoDataCollection.prototype.setViewer = function(options) {
-      //If A cesium scene present then this is in cesium globe
-    this.scene = options.scene;
+      //If a leaflet map is present save the object for use below (for now)
     this.map = options.map;
 
-    if (this.scene) {
-        this.imageryLayersCollection = this.scene.globe.imageryLayers;
+    if (defined(options.scene)) {
+        this.imageryLayersCollection = options.scene.globe.imageryLayers;
     }
     this.ViewerChanged.raiseEvent(this, options);
     
@@ -307,11 +305,11 @@ GeoDataCollection.prototype.get = function(id) {
 */
 GeoDataCollection.prototype.remove = function(id) {
     var layer = this.get(id);
-    if (layer === undefined) {
+    if (!defined(layer)) {
         console.log('ERROR: layer not found:', id);
         return;
     }
-    if (layer.dataSource) {
+    if (defined(layer.dataSource)) {
         if (this.dataSourceCollection.contains(layer.dataSource)) {
             this.dataSourceCollection.remove(layer.dataSource);
         }
@@ -319,11 +317,11 @@ GeoDataCollection.prototype.remove = function(id) {
             layer.dataSource.destroy();
         }
     }
-    else if (this.map === undefined) {
-        this.imageryLayersCollection.remove(layer.primitive);
+    else if (defined(this.map)) {
+        this.map.removeLayer(layer.primitive);
     }
     else {
-        this.map.removeLayer(layer.primitive);
+        this.imageryLayersCollection.remove(layer.primitive);
     }
     
     this.layers.splice(id, 1);
@@ -357,17 +355,17 @@ GeoDataCollection.prototype.show = function(layer, val) {
             this.dataSourceCollection.remove(layer.dataSource, false);
         }
     }
-    else if (this.map === undefined) {
-        if (layer.primitive !== undefined) {
-            layer.primitive.show = val;
-        }
-    }
-    else {
+    else if (defined(this.map)) {
         if (val) {
             this.map.addLayer(layer.primitive);
         }
         else {
             this.map.removeLayer(layer.primitive);
+        }
+    }
+    else {
+        if (defined(layer.primitive)) {
+            layer.primitive.show = val;
         }
     }
 };
@@ -1073,24 +1071,10 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
             if (defined(layer.style.table.data)) {
                 tableDataSource.setCurrentVariable(layer.style.table.data);
             }
-            if (this.map === undefined) {
-                this.dataSourceCollection.add(tableDataSource);
-                layer.dataSource = tableDataSource;
-                layer.extent = tableDataSource.dataset.getExtent();
-                this.add(layer);
-            }
-            else {
-                var pointList = tableDataSource.dataset.getPointList();
-                var geojson = {type: "FeatureCollection", crs: {"type":"EPSG","properties":{"code":"4326"}}, features: []};
-                for (var i = 0; i < pointList.length; i++) {
-                    geojson.features[i] = {
-                        "type" : "Feature", 
-                        "properties" : tableDataSource.dataset.getDataRow(pointList[i].row),
-                        "geometry" : { "type": "Point", "coordinates": pointList[i].pos }
-                    };
-                }
-                this.addGeoJsonLayer(geojson, layer);
-            }
+            this.dataSourceCollection.add(tableDataSource);
+            layer.dataSource = tableDataSource;
+            layer.extent = tableDataSource.dataset.getExtent();
+            this.add(layer);
         }
     }
         //Return false so widget can try to send to conversion service
@@ -1269,7 +1253,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     var provider;
     var proxy;
 
-    if (this.map === undefined) {
+    if (!defined(this.map)) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = wmsServer; //'http://' + uri.hostname() + uri.path();
         if (corsProxy.shouldUseProxy(url)) {
@@ -1414,31 +1398,6 @@ function crsIsMatch(crs, matchValue) {
 
      return false;
 }
-
-// Show csv table data
-GeoDataCollection.prototype._viewTable = function(request, layer) {
-    var that = this;
-        //load text here to let me control functions called after
-    loadText(request).then( function (text) {
-        var tableDataSource = new TableDataSource();
-        tableDataSource.loadText(text);
-        if (that.map === undefined) {
-            that.dataSourceCollection.add(tableDataSource);
-            layer.dataSource = tableDataSource;
-            that.add(layer);
-        }
-        else {
-            var pointList = tableDataSource.dataset.getPointList();
-            var dispPoints = [];
-            for (var i = 0; i < pointList.length; i++) {
-                dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
-            }
-            that.addGeoJsonLayer(dispPoints, layer);
-        }
-    }, function(err) {
-        loadErrorResponse(err);
-    });
-};
 
 // Load data file based on extension if loaded as DATA layer
 GeoDataCollection.prototype._viewData = function(url, layer) {
@@ -2194,7 +2153,6 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         }
     });
     this.dataSourceCollection.add(newDataSource);
-        //add it as a layer
     layer.dataSource = newDataSource;
     return this.add(layer);
 };
