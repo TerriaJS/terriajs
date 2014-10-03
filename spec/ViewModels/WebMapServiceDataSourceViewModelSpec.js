@@ -6,6 +6,8 @@ var GeoDataCatalogContext = require('../../src/ViewModels/GeoDataCatalogContext'
 var ImageryLayerDataSourceViewModel = require('../../src/ViewModels/ImageryLayerDataSourceViewModel');
 var WebMapServiceDataSourceViewModel = require('../../src/ViewModels/WebMapServiceDataSourceViewModel');
 
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+
 var context;
 var wmsViewModel;
 
@@ -68,5 +70,61 @@ describe('WebMapServiceDataSourceViewModel', function() {
         wmsViewModel.url = 'http://foo.com/somethingElse';
         expect(wmsViewModel.dataUrl).toBe('http://foo.com/data');
         expect(wmsViewModel.dataUrlType).toBe('wfs-complete');
+    });
+
+    it('can update from json', function() {
+        wmsViewModel.updateFromJson({
+            name: 'Name',
+            description: 'Description',
+            rectangle: [-10, 10, -20, 20],
+            legendUrl: 'http://legend.com',
+            dataUrlType: 'wfs',
+            dataUrl: 'http://my.wfs.com/wfs',
+            dataCustodian: 'Data Custodian',
+            metadataUrl: 'http://my.metadata.com',
+            url: 'http://my.wms.com',
+            layers: 'mylayer',
+            parameters: {
+                custom: true,
+                awesome: 'maybe'
+            },
+            getFeatureInfoAsGeoJson: false,
+            getFeatureInfoAsXml: false
+        });
+
+        expect(wmsViewModel.name).toBe('Name');
+        expect(wmsViewModel.description).toBe('Description');
+        expect(wmsViewModel.rectangle).toEqual(Rectangle.fromDegrees(-10, 10, -20, 20));
+        expect(wmsViewModel.legendUrl).toBe('http://legend.com');
+        expect(wmsViewModel.dataUrlType).toBe('wfs');
+        expect(wmsViewModel.dataUrl.indexOf('http://my.wfs.com/wfs')).toBe(0);
+        expect(wmsViewModel.dataCustodian).toBe('Data Custodian');
+        expect(wmsViewModel.metadataUrl).toBe('http://my.metadata.com');
+        expect(wmsViewModel.url).toBe('http://my.wms.com');
+        expect(wmsViewModel.layers).toBe('mylayer');
+        expect(wmsViewModel.parameters).toEqual({
+            custom: true,
+            awesome: 'maybe'
+        });
+        expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(false);
+        expect(wmsViewModel.getFeatureInfoAsXml).toBe(false);
+    });
+
+    it('uses reasonable defaults for updateFromJson', function() {
+        wmsViewModel.updateFromJson({});
+
+        expect(wmsViewModel.name).toBe('Unnamed Item');
+        expect(wmsViewModel.description).toBe('');
+        expect(wmsViewModel.rectangle).toEqual(Rectangle.MAX_VALUE);
+        expect(wmsViewModel.legendUrl.indexOf('?')).toBe(0);
+        expect(wmsViewModel.dataUrlType).toBe('wfs');
+        expect(wmsViewModel.dataUrl.indexOf('?')).toBe(0);
+        expect(wmsViewModel.dataCustodian).toBeUndefined();
+        expect(wmsViewModel.metadataUrl.indexOf('?')).toBe(0);
+        expect(wmsViewModel.url).toBe('');
+        expect(wmsViewModel.layers).toBe('');
+        expect(wmsViewModel.parameters.transparent).toBe(true);
+        expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(true);
+        expect(wmsViewModel.getFeatureInfoAsXml).toBe(true);
     });
 });
