@@ -85,7 +85,7 @@ NowViewingViewModel.prototype.destroy = function() {
  * @param {GeoDataItemViewModel} item The item to add.
  */
 NowViewingViewModel.prototype.add = function(item) {
-    // Keep reorderable data sources (ie: imagery layhers) below non-orderable ones (ie: GeoJSON).
+    // Keep reorderable data sources (ie: imagery layers) below non-orderable ones (ie: GeoJSON).
     if (item.supportsReordering) {
         var index = 0;
 

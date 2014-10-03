@@ -1310,7 +1310,7 @@ function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, 
 }
 
 function selectFeatureLeaflet(viewer, latlng) {
-    var layers = viewer.geoDataManager.layers;
+    var dataSources = viewer.context.nowViewing.items;
 
     var pickedLocation = new Cartographic(CesiumMath.toRadians(latlng.lng), CesiumMath.toRadians(latlng.lat));
     var pickedXY = viewer.map.latLngToContainerPoint(latlng, viewer.map.getZoom());
@@ -1318,13 +1318,13 @@ function selectFeatureLeaflet(viewer, latlng) {
     var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
 
     var promises = [];
-    for (var i = layers.length - 1; i >=0 ; --i) {
-        var layer = layers[i];
-        if (layer.type !== 'WMS') {
+    for (var i = dataSources.length - 1; i >=0 ; --i) {
+        var dataSource = dataSources[i];
+        if (dataSource.type !== 'wms') {
             continue;
         }
-        var useProxy = corsProxy.shouldUseProxy(layer.description.base_url);
-        promises.push(getWmsFeatureInfo(layer.description.base_url, useProxy, layer.description.Name, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
+        var useProxy = corsProxy.shouldUseProxy(dataSource.url);
+        promises.push(getWmsFeatureInfo(dataSource.url, useProxy, dataSource.layers, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
     }
 
     if (promises.length === 0) {
