@@ -39,6 +39,8 @@ var LeafletGeomVisualizer = function(map, entityCollection) {
     }
     //>>includeEnd('debug');
 
+    console.log('leaflet-point-visualizer');
+
     var featureGroup = L.featureGroup().addTo(map);
     entityCollection.collectionChanged.addEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
 
@@ -59,7 +61,8 @@ LeafletGeomVisualizer.prototype._onCollectionChanged = function(entityCollection
 
     for (i = added.length - 1; i > -1; i--) {
         entity = added[i];
-        if ((defined(entity._point) || defined(entity._polyline) || defined(entity._polygon))
+        if ((defined(entity._point) || defined(entity._polyline) || defined(entity._path)
+            || defined(entity._polygon || defined(entity._billboard)|| defined(entity._label)))
                  && defined(entity._position)) {
             entities.set(entity.id, entity);
         }
@@ -67,7 +70,8 @@ LeafletGeomVisualizer.prototype._onCollectionChanged = function(entityCollection
 
     for (i = changed.length - 1; i > -1; i--) {
         entity = changed[i];
-        if ((defined(entity._point) || defined(entity._polyline) || defined(entity._polygon))
+        if ((defined(entity._point) || defined(entity._polyline) || defined(entity._path)
+            || defined(entity._polygon || defined(entity._billboard) || defined(entity._label)))
                 && defined(entity._position)) {
             entities.set(entity.id, entity);
         } else {
@@ -140,8 +144,170 @@ LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
     }
 }
 
+//Recolor an image using a color function
+function recolorImage(image, colorFunc) {
+    var length = image.data.length;  //pixel count * 4
+    for (var i = 0; i < length; i += 4) {
+        if (image.data[i+3] < 255) {
+            continue;
+        }
+        if (image.data[i] === 0) {
+            var idx = image.data[i+1] * 0x100 + image.data[i+2];
+            var clr = colorFunc(idx);
+            if (defined(clr)) {
+                for (var j = 0; j < 4; j++) {
+                    image.data[i+j] = clr[j];
+                }
+            }
+            else {
+                image.data[i+3] = 0;
+            }
+        }
+    }
+    return image;
+}
+
+//Recolor an image using 2d canvas
+function recolorBillboard(img, color) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Copy the image contents to the canvas
+    var context = canvas.getContext("2d");
+    context.drawImage(img, 0, 0);
+    var image = context.getImageData(0, 0, canvas.width, canvas.height);
+    var normClr = [color[0]/255, color[1]/255, color[2]/255, color[3]/255];
+
+    var length = image.data.length;  //pixel count * 4
+    for (var i = 0; i < length; i += 4) {
+        for (var j = 0; j < 4; j++) {
+            image.data[j+i] *= normClr[j];
+        }
+    }
+    
+    context.putImageData(image, 0, 0);
+    return context.getImageData(0, 0, canvas.width, canvas.height);
+}
+
+
+LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
+    var markerGraphics = entity._billboard;
+    var featureGroup = this._featureGroup;
+    var geomLayer = entity._geomLayer;
+    var position;
+    var show = entity.isAvailable(time) && Property.getValueOrDefault(markerGraphics._show, time, true);
+    if (show) {
+        position = Property.getValueOrUndefined(entity._position, time);
+        show = defined(position);
+    }
+    if (!show) {
+        cleanEntity(entity, featureGroup);
+        return;
+    }
+
+    var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
+    var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
+    var image = Property.getValueOrDefault(markerGraphics._image, time, undefined);
+    var height = Property.getValueOrDefault(markerGraphics._height, time, undefined);
+    var width = Property.getValueOrDefault(markerGraphics._width, time, undefined);
+    var verticalOffset = Property.getValueOrDefault(markerGraphics._verticalOffset, time, undefined);
+    var horizontalOffset = Property.getValueOrDefault(markerGraphics._horizontalOffset, time, undefined);
+//    var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
+
+    var iconObj = L.icon({
+        iconUrl: image
+   });
+    if (defined(height) || defined(width)) {
+        iconObj.iconSize = [width, height];
+    }
+    if (defined(verticalOffset) || defined(horizontalOffset)) {
+        iconObj.iconAnchor = [horizontalOffset, verticalOffset];
+    }
+
+    var markerOptions = {
+        icon: iconObj
+//        color: outlineColor.toCssColorString(),
+//        opacity: 0.9
+    };
+
+    if (!defined(geomLayer)) {
+        var marker = L.marker(latlng, markerOptions);
+        featureGroup.addLayer(marker);
+        entity._geomLayer = marker;
+    }
+     else {
+        var marker = geomLayer;
+        if (!marker._latlng.equals(latlng)) {
+            marker.setLatLng(latlng);
+        }
+        //TODO: figure out how to keep icon properties
+        marker.setIcon(iconObj);
+/*        for (var prop in pointOptions) {
+            if (pointOptions[prop] !== point.options[prop]) {
+                point.setStyle(markerOptions);
+                break;
+            }
+        }
+*/    }
+}
+
+LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
+    var markerGraphics = entity._billboard;
+    var featureGroup = this._featureGroup;
+    var geomLayer = entity._geomLayer;
+    var position;
+    var show = entity.isAvailable(time) && Property.getValueOrDefault(markerGraphics._show, time, true);
+    if (show) {
+        position = Property.getValueOrUndefined(entity._position, time);
+        show = defined(position);
+    }
+    if (!show) {
+        cleanEntity(entity, featureGroup);
+        return;
+    }
+
+    var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
+    var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
+    var text = Property.getValueOrDefault(markerGraphics._text, time, undefined);
+
+    var iconObj = L.icon({
+        iconUrl: image
+   });
+    if (defined(height) || defined(width)) {
+        iconObj.iconSize = [width, height];
+    }
+    if (defined(verticalOffset) || defined(horizontalOffset)) {
+        iconObj.iconAnchor = [horizontalOffset, verticalOffset];
+    }
+
+    var markerOptions = {
+        title: text
+    };
+
+    if (!defined(geomLayer)) {
+        var marker = L.marker(latlng, markerOptions);
+        featureGroup.addLayer(marker);
+        entity._geomLayer = marker;
+    }
+     else {
+        var marker = geomLayer;
+        if (!marker._latlng.equals(latlng)) {
+            marker.setLatLng(latlng);
+        }
+        //TODO: figure out how to keep icon properties
+        marker.setIcon(iconObj);
+/*        for (var prop in pointOptions) {
+            if (pointOptions[prop] !== point.options[prop]) {
+                point.setStyle(markerOptions);
+                break;
+            }
+        }
+*/    }
+}
+
 LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
-    var polylineGraphics = entity._polyline;
+    var polylineGraphics = entity._polyline || entity._path;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomLayer;
     var positions;
@@ -268,6 +434,9 @@ LeafletGeomVisualizer.prototype.update = function(time) {
         }
         else if (defined(entity._polygon)) {
             this.updatePolygon(entity, time);
+        }
+        else if (defined(entity._billboard)) {
+            this.updateBillboard(entity, time);
         }
     }
     return true;
