@@ -81,7 +81,7 @@ var GeoDataBrowser = function(options) {
             </div>\
         </div>\
         <div class="ausglobe-data-panel-bottom">\
-            <div data-bind="foreach: catalog.groups">\
+            <div data-bind="foreach: catalog.group.items">\
                 <div class="ausglobe-accordion-item">\
                     <div class="ausglobe-accordion-item-header" data-bind="click: toggleOpen">\
                         <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\

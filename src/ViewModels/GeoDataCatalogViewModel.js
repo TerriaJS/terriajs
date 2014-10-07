@@ -25,11 +25,7 @@ var GeoDataCatalogViewModel = function(context) {
 
     this._context = context;
 
-    /**
-     * The geospatial data collections in this catalog.  This property is observable.
-     * @type {Array}
-     */
-    this.groups = [];
+    this._group = new GeoDataGroupViewModel(context);
 
     /**
      * Gets or sets a flag indicating whether the catalog is currently loading.
@@ -68,26 +64,18 @@ defineProperties(GeoDataCatalogViewModel.prototype, {
         get : function() {
             return this._context;
         }
+    },
+
+    /**
+     * Gets the catalog's top-level group.
+     * @type {GeoDataGroupViewModel}
+     */
+    group : {
+        get : function() {
+            return this._group;
+        }
     }
 });
-
-/**
- * Adds a group to the catalog.
- * 
- * @param {GeoDataGroupViewModel} group The group to add.
- */
-GeoDataCatalogViewModel.prototype.addGroup = function(group) {
-    this.groups.push(group);
-};
-
-/**
- * Removes a group from the catalog.
- * 
- * @param  {GeoDataGroupViewModel} group The group to remove.
- */
-GeoDataCatalogViewModel.prototype.removeGroup = function(group) {
-    this.groups.remove(group);
-};
 
 /**
  * Updates the catalog from a JSON object-literal description of the available collections.
@@ -102,8 +90,6 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         throw new DeveloperError('JSON catalog description must be an array of groups.');
     }
 
-    var existingGroup;
-
     for (var groupIndex = 0; groupIndex < json.length; ++groupIndex) {
         var group = json[groupIndex];
 
@@ -116,16 +102,10 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         }
 
         // Find an existing group with the same name, if any.
-        existingGroup = undefined;
-        for (var existingGroupIndex = 0; !defined(existingGroup) && existingGroupIndex < this.groups.length; ++existingGroupIndex) {
-            if (this.groups[existingGroupIndex].name === group.name) {
-                existingGroup = this.groups[existingGroupIndex];
-            }
-        }
-
+        var existingGroup = this.group.findFirstItemByName(group.name);
         if (!defined(existingGroup)) {
             existingGroup = new GeoDataGroupViewModel(this._context);
-            this.groups.push(existingGroup);
+            this.group.add(existingGroup);
         }
 
         existingGroup.updateFromJson(group);

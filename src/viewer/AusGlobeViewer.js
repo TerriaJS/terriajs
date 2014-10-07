@@ -275,8 +275,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.map = undefined;
 
     this.context = context;
-    this.context.nowViewing = new NowViewingViewModel(this.context);
-    this.context.corsProxy = corsProxy;
 
     this.catalog = catalog;
 

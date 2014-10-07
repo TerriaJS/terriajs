@@ -50,6 +50,7 @@ if (start) {
     var GeoDataCollection = require('../GeoDataCollection');
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
     var PopupMessage = require('./PopupMessage');
+    var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');
     var registerGeoDataViewModels = require('../ViewModels/registerGeoDataViewModels');
 
     SvgPathBindingHandler.register(knockout);
@@ -57,8 +58,11 @@ if (start) {
     registerGeoDataViewModels();
 
     var context = new GeoDataCatalogContext();
-    var catalog = new GeoDataCatalogViewModel(context);
 
+    context.nowViewing = new NowViewingViewModel(context);
+    context.corsProxy = corsProxy;
+
+    var catalog = new GeoDataCatalogViewModel(context);
     catalog.isLoading = true;
 
     var url = window.location;

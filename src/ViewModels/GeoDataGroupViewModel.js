@@ -133,4 +133,20 @@ GeoDataGroupViewModel.prototype.updateFromJson = function(json) {
     }
 };
 
+/**
+ * Finds the first item in this group that has the given name.  The search is case-sensitive.
+ * 
+ * @param {String} name The name of the item to find.
+ * @return {GeoDataItemViewModel} The first item with the given name, or undefined if no item with that name exists.
+ */
+GeoDataGroupViewModel.prototype.findFirstItemByName = function(name) {
+    for (var i = 0; i < this.items.length; ++i) {
+        if (this.items[i].name === name) {
+            return this.items[i];
+        }
+    }
+
+    return undefined;
+};
+
 module.exports = GeoDataGroupViewModel;
