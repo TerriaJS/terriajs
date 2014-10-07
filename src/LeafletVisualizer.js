@@ -11,6 +11,7 @@ var DeveloperError = require('../third_party/cesium/Source/Core/DeveloperError')
 var Property = require('../third_party/cesium/Source/DataSources/Property');
 var Ellipsoid = require('../third_party/cesium/Source/Core/Ellipsoid');
 var CesiumMath = require('../third_party/cesium/Source/Core/Math');
+var loadImage = require('../third_party/cesium/Source/Core/loadImage');
  
 
 var defaultColor = Color.WHITE;
@@ -144,29 +145,6 @@ LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
     }
 }
 
-//Recolor an image using a color function
-function recolorImage(image, colorFunc) {
-    var length = image.data.length;  //pixel count * 4
-    for (var i = 0; i < length; i += 4) {
-        if (image.data[i+3] < 255) {
-            continue;
-        }
-        if (image.data[i] === 0) {
-            var idx = image.data[i+1] * 0x100 + image.data[i+2];
-            var clr = colorFunc(idx);
-            if (defined(clr)) {
-                for (var j = 0; j < 4; j++) {
-                    image.data[i+j] = clr[j];
-                }
-            }
-            else {
-                image.data[i+3] = 0;
-            }
-        }
-    }
-    return image;
-}
-
 //Recolor an image using 2d canvas
 function recolorBillboard(img, color) {
     var canvas = document.createElement("canvas");
@@ -177,7 +155,7 @@ function recolorBillboard(img, color) {
     var context = canvas.getContext("2d");
     context.drawImage(img, 0, 0);
     var image = context.getImageData(0, 0, canvas.width, canvas.height);
-    var normClr = [color[0]/255, color[1]/255, color[2]/255, color[3]/255];
+    var normClr = [color.red, color.green, color.blue, color.alpha];
 
     var length = image.data.length;  //pixel count * 4
     for (var i = 0; i < length; i += 4) {
@@ -187,7 +165,8 @@ function recolorBillboard(img, color) {
     }
     
     context.putImageData(image, 0, 0);
-    return context.getImageData(0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL();
+//    return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
 
@@ -213,43 +192,41 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     var width = Property.getValueOrDefault(markerGraphics._width, time, undefined);
     var verticalOffset = Property.getValueOrDefault(markerGraphics._verticalOffset, time, undefined);
     var horizontalOffset = Property.getValueOrDefault(markerGraphics._horizontalOffset, time, undefined);
-//    var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
+    var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
 
-    var iconObj = L.icon({
-        iconUrl: image
-   });
-    if (defined(height) || defined(width)) {
-        iconObj.iconSize = [width, height];
-    }
-    if (defined(verticalOffset) || defined(horizontalOffset)) {
-        iconObj.iconAnchor = [horizontalOffset, verticalOffset];
-    }
-
-    var markerOptions = {
-        icon: iconObj
-//        color: outlineColor.toCssColorString(),
-//        opacity: 0.9
-    };
-
-    if (!defined(geomLayer)) {
-        var marker = L.marker(latlng, markerOptions);
-        featureGroup.addLayer(marker);
-        entity._geomLayer = marker;
-    }
-     else {
-        var marker = geomLayer;
-        if (!marker._latlng.equals(latlng)) {
-            marker.setLatLng(latlng);
+    loadImage(image).then (function(image) {
+        if (!color.equals(defaultColor)) {
+            image = recolorBillboard(image, color);
         }
-        //TODO: figure out how to keep icon properties
-        marker.setIcon(iconObj);
-/*        for (var prop in pointOptions) {
-            if (pointOptions[prop] !== point.options[prop]) {
-                point.setStyle(markerOptions);
-                break;
+
+        var iconObj = L.icon({
+            iconUrl: image
+        });
+        if (defined(height) || defined(width)) {
+            iconObj.iconSize = [width, height];
+        }
+        if (defined(verticalOffset) || defined(horizontalOffset)) {
+            iconObj.iconAnchor = [horizontalOffset, verticalOffset];
+        }
+
+        var markerOptions = {
+            icon: iconObj
+        };
+
+        if (!defined(geomLayer)) {
+            var marker = L.marker(latlng, markerOptions);
+            featureGroup.addLayer(marker);
+            entity._geomLayer = marker;
+        }
+         else {
+            var marker = geomLayer;
+            if (!marker._latlng.equals(latlng)) {
+                marker.setLatLng(latlng);
             }
+            //TODO: figure out how to look at or keep icon properties
+            marker.setIcon(iconObj);
         }
-*/    }
+    });
 }
 
 LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
