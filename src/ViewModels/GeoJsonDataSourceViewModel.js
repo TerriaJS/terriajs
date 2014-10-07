@@ -105,7 +105,7 @@ var GeoJsonDataSourceViewModel = function(context, url) {
                         loadGeoJsonInCesium(that);
                         loadGeoJsonInLeaflet(that);
                     }).otherwise(function(e) {
-                        // TODO: need to standard way of handling errors like this.
+                        // TODO: need a standard way of handling errors like this.
                     });
                 }
             }
@@ -146,7 +146,11 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
     metadata : {
         get : function() {
             // TODO: maybe return the FeatureCollection's properties?
-            return undefined;
+            var result = new DataSourceMetadataViewModel();
+            result.isLoading = false;
+            result.dataSourceErrorMessage = 'This data source does not have any details available.';
+            result.serviceErrorMessage = 'This service does not have any details available.';
+            return result;
         }
     }
 });

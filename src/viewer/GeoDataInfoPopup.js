@@ -76,7 +76,7 @@ var GeoDataInfoPopup = function(options) {
                 <div class="ausglobe-info-description" data-bind="sanitizedHtml: dataSource.dataCustodian"></div>\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: dataSource.url">\
-                <h2><span data-bind="text: dataSource.typeName"></span> Base URL</h2>\
+                <h2><span data-bind="text: dataSource.typeName"></span> URL</h2>\
                 <input class="ausglobe-info-baseUrl" readonly type="text" data-bind="value: dataSource.url" size="80" onclick="this.select();" />\
             </div>\
             <div class="ausglobe-info-section" data-bind="if: dataSource.metadataUrl">\
