@@ -841,6 +841,14 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.context.cesiumViewer = this.viewer;
         this.frameChecker = new FrameChecker();
 
+        // Make sure we re-render when data sources or imagery layers are added or removed.
+        this.scene.imageryLayers.layerAdded.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
+        this.scene.imageryLayers.layerRemoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
+        this.scene.imageryLayers.layerMoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
+
+        this.viewer.dataSources.dataSourceAdded.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
+        this.viewer.dataSources.dataSourceRemoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
+
         // override the default render loop
         this.scene.base_render = this.scene.render;
         this.scene.render = function(date) {

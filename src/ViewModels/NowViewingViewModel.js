@@ -12,7 +12,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
  */
 var NowViewingViewModel = function(context) {
     this._context = context;
-    this._events = new EventHelper();
+    this._eventSubscriptions = new EventHelper();
 
     /**
      * Gets the list of items that we are "now viewing".  It is recommended that you use
@@ -30,11 +30,11 @@ var NowViewingViewModel = function(context) {
 
     knockout.track(this, ['items', 'isOpen']);
 
-    this._events.add(this.context.beforeViewerChanged, function() {
+    this._eventSubscriptions.add(this.context.beforeViewerChanged, function() {
         beforeViewerChanged(this);
     }, this);
 
-    this._events.add(this.context.afterViewerChanged, function() {
+    this._eventSubscriptions.add(this.context.afterViewerChanged, function() {
         afterViewerChanged(this);
     }, this);
 };
@@ -76,7 +76,7 @@ defineProperties(NowViewingViewModel.prototype, {
  * Destroys this instance, including unsubscribing it from any events.
  */
 NowViewingViewModel.prototype.destroy = function() {
-    this._events.removeAll();
+    this._eventSubscriptions.removeAll();
 };
 
 /**
