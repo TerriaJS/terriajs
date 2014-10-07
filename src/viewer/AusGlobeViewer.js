@@ -77,7 +77,7 @@ var TitleWidget = require('./TitleWidget');
 BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
-var AusGlobeViewer = function(geoDataManager) {
+var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
     this.geoDataManager = geoDataManager;
 
     this._distanceLegendBarWidth = undefined;
@@ -237,9 +237,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         });
     }
     
-    // IE versions prior to 10 don't support CORS, so always use the proxy.
-    this._alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
-    
     //TODO: perf test to set environment
 
     // Event watchers for geoDataManager
@@ -277,59 +274,33 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.viewer = undefined;
     this.map = undefined;
 
-    this.context = new GeoDataCatalogContext();
+    this.context = context;
     this.context.nowViewing = new NowViewingViewModel(this.context);
     this.context.corsProxy = corsProxy;
 
-    var url = window.location;
-    var uri = new URI(url);
-    var params = uri.search(true);
-    
-    var configUrl = params.config || 'config.json';
+    this.catalog = catalog;
 
-    //get the server config to know how to handle urls and load initial one
-    loadJson(configUrl).then( function(config) {
-        corsProxy.setProxyList(config.proxyDomains, config.corsDomains, that._alwaysUseProxy);
-        
-        that.initialCamera = config.initialCamera;
+    this.initialCamera = config.initialCamera;
 
-        var catalog = new GeoDataCatalogViewModel(that.context);
-        catalog.isLoading = true;
+    this.geoDataBrowser = new GeoDataBrowser({
+        viewer : that,
+        container : leftArea,
+        dataManager : geoDataManager,
+        mode3d: that.webGlSupported,
+        catalog : catalog
+    });
 
-        when(loadJson(params.data_menu || config.initialDataMenu || 'init_nm.json'), function(json) {
-            try {
-                catalog.updateFromJson(json.catalog);
-            } catch (e) {
-                var message = new PopupMessage({
-                    container: document.body,
-                    title: 'An error occurred while loading the catalog',
-                    message: e.toString()
-                });
-            }
-            catalog.isLoading = false;
-        });
+    this.selectViewer(this.webGlSupported);
 
-        that.geoDataBrowser = new GeoDataBrowser({
-            viewer : that,
-            container : leftArea,
-            dataManager : geoDataManager,
-            //initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
-            mode3d: that.webGlSupported,
-            catalog : catalog
-        });
+    // simple way to capture most ux redraw needs - catch all canvas clicks
+    $(document).click(function() {
+        if (that.frameChecker !== undefined) {
+            that.frameChecker.forceFrameUpdate();
+        }
+    });
 
-        that.selectViewer(that.webGlSupported);
-        
-        // simple way to capture most ux redraw needs - catch all canvas clicks
-        $(document).click(function() {
-            if (that.frameChecker !== undefined) {
-                that.frameChecker.forceFrameUpdate();
-            }
-        });
-
-        when(that.geoDataManager.loadInitialUrl(url), function() {
-            document.getElementById('loadingIndicator').style.display = 'none';
-        });
+    when(that.geoDataManager.loadInitialUrl(window.location), function() {
+        document.getElementById('loadingIndicator').style.display = 'none';
     });
 };
 

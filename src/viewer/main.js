@@ -40,36 +40,55 @@ if (start) {
 
     var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-    var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
-    var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
+    var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+    var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
     var AusGlobeViewer = require('./AusGlobeViewer');
     var corsProxy = require('../corsProxy');
+    var GeoDataCatalogContext = require('../ViewModels/GeoDataCatalogContext');
+    var GeoDataCatalogViewModel = require('../ViewModels/GeoDataCatalogViewModel');
     var GeoDataCollection = require('../GeoDataCollection');
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
+    var PopupMessage = require('./PopupMessage');
     var registerGeoDataViewModels = require('../ViewModels/registerGeoDataViewModels');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
     registerGeoDataViewModels();
 
-    /*// Intercept XHR requests and proxy them if necessary.
-    loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType) {
-        if (corsProxy.shouldUseProxy(url)) {
-            url = corsProxy.getURL(url);
-        }
-        return loadWithXhr.defaultLoad(url, responseType, method, data, headers, deferred, overrideMimeType);
-    };
+    var context = new GeoDataCatalogContext();
+    var catalog = new GeoDataCatalogViewModel(context);
 
-    // Intercept image requests and proxy them if necessary.
-    loadImage.createImage = function(url, crossOrigin, deferred) {
-        if (crossOrigin && corsProxy.shouldUseProxy(url)) {
-            url = corsProxy.getURL(url);
-        }
-        return loadImage.defaultCreateImage(url, crossOrigin, deferred);
-    };*/
+    catalog.isLoading = true;
 
-    var geoDataManager = new GeoDataCollection();
+    var url = window.location;
+    var uri = new URI(url);
+    var params = uri.search(true);
 
-    var viewer = new AusGlobeViewer(geoDataManager);
+    var configUrl = params.config || 'config.json';
+
+    //get the server config to know how to handle urls and load initial one
+    loadJson(configUrl).then( function(config) {
+        // IE versions prior to 10 don't support CORS, so always use the proxy.
+        var alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
+
+        corsProxy.setProxyList(config.proxyDomains, config.corsDomains, alwaysUseProxy);
+
+        when(loadJson(params.data_menu || config.initialDataMenu || 'init_nm.json'), function(json) {
+            try {
+                catalog.updateFromJson(json.catalog);
+            } catch (e) {
+                var message = new PopupMessage({
+                    container: document.body,
+                    title: 'An error occurred while loading the catalog',
+                    message: e.toString()
+                });
+            }
+            catalog.isLoading = false;
+
+            var geoDataManager = new GeoDataCollection();
+
+            var viewer = new AusGlobeViewer(geoDataManager, config, context, catalog);
+        });
+    });
 }
