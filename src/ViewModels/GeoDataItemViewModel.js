@@ -133,9 +133,9 @@ GeoDataItemViewModel.prototype.serializeToJson = function() {
     for (var propertyName in this) {
         if (this.hasOwnProperty(propertyName)) {
             if (this.serializers && this.serializers[propertyName]) {
-                this.serializers[propertyName](this, json, propertyName);
+                this.serializers[propertyName](this, result, propertyName);
             } else {
-                json[propertyName] = this[propertyName];
+                result[propertyName] = this[propertyName];
             }
         }
     }

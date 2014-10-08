@@ -72,7 +72,7 @@ var GeoDataSourceViewModel = function(context) {
      * This property is observable.
      * @type {String}
      */
-    this.dataCustodian = 'Unknown';
+    this.dataCustodian = undefined;
 
     /**
      * Gets or sets the URL from which this data source's metadata description can be retrieved, or undefined if
@@ -426,15 +426,13 @@ function isShownChanged(viewModel) {
     var context = viewModel.context;
 
     if (viewModel.isShown) {
-        show(viewModel)
-    } else {
-        hide(viewModel);
-    }
+        show(viewModel);
 
-    if (viewModel.isShown) {
         ga('send', 'event', 'dataSource', 'shown', viewModel.name);
         viewModel._shownDate = Date.now();
     } else {
+        hide(viewModel);
+
         var duration;
         if (defined(viewModel._shownDate)) {
             duration = ((Date.now() - viewModel._shownDate) / 1000.0) | 0;
@@ -447,36 +445,48 @@ function isShownChanged(viewModel) {
 
 function enable(viewModel) {
     var context = viewModel.context;
+
     if (defined(context.cesiumScene)) {
         viewModel._enableInCesium();
-    } else {
+    }
+
+    if (defined(context.leafletMap)) {
         viewModel._enableInLeaflet();
     }
 }
 
 function disable(viewModel) {
     var context = viewModel.context;
+
     if (defined(context.cesiumScene)) {
         viewModel._disableInCesium();
-    } else {
+    }
+
+    if (defined(context.leafletMap)) {
         viewModel._disableInLeaflet();
     }
 }
 
 function show(viewModel) {
     var context = viewModel.context;
+
     if (defined(context.cesiumScene)) {
         viewModel._showInCesium();
-    } else {
+    }
+
+    if (defined(context.leafletMap)) {
         viewModel._showInLeaflet();
     }
 }
 
 function hide(viewModel) {
     var context = viewModel.context;
+
     if (defined(context.cesiumScene)) {
         viewModel._hideInCesium();
-    } else {
+    }
+
+    if (defined(context.leafletMap)) {
         viewModel._hideInLeaflet();
     }
 }

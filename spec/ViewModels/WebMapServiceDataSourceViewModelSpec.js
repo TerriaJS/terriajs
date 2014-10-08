@@ -127,4 +127,30 @@ describe('WebMapServiceDataSourceViewModel', function() {
         expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(true);
         expect(wmsViewModel.getFeatureInfoAsXml).toBe(true);
     });
+
+    it('can be round-tripped with serializeToJson and updateFromJson', function() {
+        wmsViewModel.name = 'Name';
+        wmsViewModel.description = 'Description';
+        wmsViewModel.rectangle = [-10, 10, -20, 20];
+        wmsViewModel.legendUrl = 'http://legend.com';
+        wmsViewModel.dataUrlType = 'wfs';
+        wmsViewModel.dataUrl = 'http://my.wfs.com/wfs';
+        wmsViewModel.dataCustodian = 'Data Custodian';
+        wmsViewModel.metadataUrl = 'http://my.metadata.com';
+        wmsViewModel.url = 'http://my.wms.com';
+        wmsViewModel.layers = 'mylayer';
+        wmsViewModel.parameters = {
+            custom: true,
+            awesome: 'maybe'
+        };
+        wmsViewModel.getFeatureInfoAsGeoJson = false;
+        wmsViewModel.getFeatureInfoAsXml = false;
+
+        var json = wmsViewModel.serializeToJson();
+
+        var reconstructed = new WebMapServiceDataSourceViewModel(context);
+        reconstructed.updateFromJson(json);
+
+        expect(reconstructed).toEqual(wmsViewModel);
+    });
 });
