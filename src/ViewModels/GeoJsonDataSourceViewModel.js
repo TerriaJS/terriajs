@@ -155,29 +155,6 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
     }
 });
 
-/**
- * Updates the GeoJSON data item from a JSON object-literal description of it.
- *
- * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
- */
- GeoJsonDataSourceViewModel.prototype.updateFromJson = function(json) {
-    this.name = defaultValue(json.name, 'Unnamed Item');
-    this.description = defaultValue(json.description, '');
-    this.legendUrl = json.legendUrl;
-    this.dataUrl = json.dataUrl;
-    this.dataUrlType = defaultValue(json.dataUrlType, 'direct');
-    this.dataCustodian = defaultValue(json.dataCustodian, 'Unknown');
-    this.metadataUrl = json.metadataUrl;
-
-    this.url = defaultValue(json.url, '');
-
-    if (defined(json.rectangle)) {
-        this.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
-    } else {
-        this.rectangle = Rectangle.MAX_VALUE;
-    }
-};
-
 GeoJsonDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is already enabled.');

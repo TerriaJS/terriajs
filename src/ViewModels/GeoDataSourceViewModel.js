@@ -4,6 +4,7 @@
 
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var clone = require('../../third_party/cesium/Source/Core/clone');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
@@ -140,12 +141,21 @@ defineProperties(GeoDataSourceViewModel.prototype, {
         }
     },
 
+    /**
+     * Gets a value indicating whether this data source has a legend.
+     * @type {Boolean}
+     */
     hasLegend : {
         get : function() {
             return defined(this.legendUrl) && this.legendUrl.length > 0;
         }
     },
 
+    /**
+     * Gets a value indicating whether this data source's legend is an image in a
+     * browser-supported format such as JPEG, PNG, or GIF.
+     * @type {Boolean}
+     */
     legendIsImage : {
         get : function() {
             if (!defined(this.legendUrl) || this.legendUrl.length === 0) {
@@ -154,8 +164,55 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
             return this.legendUrl.match(imageUrlRegex);
         }
+    },
+
+    /**
+     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * When a property name in the returned object literal matches the name of a property on this instance, the value
+     * will be called as a function and passed a reference to this instance, a reference to the source JSON object
+     * literal, and the name of the property.
+     * @type {Object}
+     */
+    updaters : {
+        get : function() {
+            return GeoDataSourceViewModel.defaultUpdaters;
+        }
+    },
+
+    /**
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * When a property name on the view-model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * JSON object literal, and the name of the property.
+     * @type {Object}
+     */
+    serializers : {
+        get : function() {
+            return GeoDataSourceViewModel.defaultSerializers;
+        }
     }
 });
+
+GeoDataSourceViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
+GeoDataSourceViewModel.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
+    if (defined(json.rectangle)) {
+        viewModel.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
+    } else {
+        viewModel.rectangle = Rectangle.MAX_VALUE;
+    }
+};
+
+GeoDataSourceViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
+GeoDataSourceViewModel.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
+    if (defined(viewModel.rectangle)) {
+        json.rectangle = [
+            CesiumMath.toDegrees(viewModel.rectangle.west),
+            CesiumMath.toDegrees(viewModel.rectangle.south),
+            CesiumMath.toDegrees(viewModel.rectangle.east),
+            CesiumMath.toDegrees(viewModel.rectangle.north)
+        ];
+    }
+};
 
 /**
  * Toggles the {@link GeoDataSourceViewModel#isEnabled} property of this item.  If it is enabled, calling this method

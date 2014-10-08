@@ -172,38 +172,6 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     }
 });
 
-/**
- * Updates the WMS data item from a JSON object-literal description of it.
- *
- * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
- */
- WebMapServiceDataSourceViewModel.prototype.updateFromJson = function(json) {
-    this.name = defaultValue(json.name, 'Unnamed Item');
-    this.description = defaultValue(json.description, '');
-    this.legendUrl = json.legendUrl;
-    this.dataUrl = json.dataUrl;
-    this.dataUrlType = json.dataUrlType;
-    this.dataCustodian = json.dataCustodian;
-    this.metadataUrl = json.metadataUrl;
-
-    this.url = defaultValue(json.url, '');
-    this.layers = defaultValue(json.layers, '');
-    this.getFeatureInfoAsGeoJson = defaultValue(json.getFeatureInfoAsGeoJson, true);
-    this.getFeatureInfoAsXml = defaultValue(json.getFeatureInfoAsXml, true);
-
-    if (defined(json.rectangle)) {
-        this.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
-    } else {
-        this.rectangle = Rectangle.MAX_VALUE;
-    }
-
-    if (defined(json.parameters)) {
-        this.parameters = clone(json.parameters);
-    } else {
-        this.parameters = clone(WebMapServiceDataSourceViewModel.defaultParameters);
-    }
-};
-
 WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');

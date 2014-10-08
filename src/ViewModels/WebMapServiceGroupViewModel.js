@@ -92,20 +92,6 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
     }
 });
 
-/**
- * Updates the WMS group from a JSON object-literal description of it.
- *
- * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
- */
- WebMapServiceGroupViewModel.prototype.updateFromJson = function(json) {
-    this.name = defaultValue(json.name, 'Unnamed WMS Server');
-    this.description = defaultValue(json.description, '');
-    this.url = defaultValue(json.url, '');
-    this.dataCustodian = json.dataCustodian;
-    this.dataUrlType = defaultValue(json.dataUrlType, 'none');
-    this.dataUrl = json.dataUrl;
-};
-
 function getCapabilities(viewModel) {
     var url = cleanAndProxyUrl(viewModel.context, viewModel.url) + '?service=WMS&request=GetCapabilities';
 

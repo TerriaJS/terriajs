@@ -2,6 +2,7 @@
 
 /*global require*/
 
+var clone = require('../../third_party/cesium/Source/Core/clone');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
@@ -69,8 +70,66 @@ defineProperties(GeoDataGroupViewModel.prototype, {
         get : function() {
             return 'Group';
         }
+    },
+
+    /**
+     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * When a property name in the returned object literal matches the name of a property on this instance, the value
+     * will be called as a function and passed a reference to this instance, a reference to the source JSON object
+     * literal, and the name of the property.
+     * @type {Object}
+     */
+    updaters : {
+        get : function() {
+            return GeoDataGroupViewModel.defaultUpdaters;
+        }
+    },
+
+    /**
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * When a property name on the view-model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * JSON object literal, and the name of the property.
+     * @type {Object}
+     */
+    serializers : {
+        get : function() {
+            return GeoDataGroupViewModel.defaultSerializers;
+        }
     }
 });
+
+GeoDataGroupViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
+GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName) {
+    if (!defined(json.items)) {
+        return;
+    }
+
+    // TODO: allow JSON to update the order of items as well.
+
+    var items = json.items;
+    for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
+        var item = items[itemIndex];
+
+        // Find an existing item with the same name
+        var existingItem = viewModel.findFirstItemByName(item.name);
+        if (!defined(existingItem) || existingItem.type !== item.type) {
+            existingItem = createGeoDataItemFromType(item.type, viewModel.context);
+            viewModel.add(existingItem);
+        }
+
+        existingItem.updateFromJson(item);
+    }
+};
+
+GeoDataGroupViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
+GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName) {
+    var items = json.items = [];
+
+    for (var i = 0; i < viewModel.items.length; ++i) {
+        items.push(viewModel[items].serializeToJson());
+    }
+};
 
 /**
  * Adds an item or group to this group.
@@ -96,41 +155,6 @@ GeoDataGroupViewModel.prototype.remove = function(item) {
  */
 GeoDataGroupViewModel.prototype.toggleOpen = function() {
     this.isOpen = !this.isOpen;
-};
-
-/**
- * Updates the group from a JSON object-literal description of the group.
- * Existing items with the same name as an item in the JSON description are
- * updated.  If the description contains an item with a name that does not yet exist,
- * it is created.
- *
- * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
- */
-GeoDataGroupViewModel.prototype.updateFromJson = function(json) {
-    this.name = defaultValue(json.name, 'Unnamed Group');
-    this.description = defaultValue(json.description, '');
-
-    var existingItem;
-
-    var items = json.items;
-    for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
-        var item = items[itemIndex];
-
-        // Find an existing item with the same name
-        existingItem = undefined;
-        for (var existingItemIndex = 0; !defined(existingItem) && existingItemIndex < this.items.length; ++existingItemIndex) {
-            if (this.items[existingItemIndex].name === item.name) {
-                existingItem = this.items[existingItemIndex];
-            }
-        }
-
-        if (!defined(existingItem) || existingItem.type !== item.type) {
-            existingItem = createGeoDataItemFromType(item.type, this.context);
-            this.add(existingItem);
-        }
-
-        existingItem.updateFromJson(item);
-    }
 };
 
 /**
