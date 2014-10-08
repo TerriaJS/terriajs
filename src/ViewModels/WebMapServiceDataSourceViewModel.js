@@ -85,11 +85,11 @@ var WebMapServiceDataSourceViewModel = function(context) {
         get : function() {
             var url = this._dataUrl;
             if (!defined(url)) {
-                url = cleanUrl(this.url);
+                url = this.url;
             }
 
             if (this.dataUrlType === 'wfs') {
-                url = url + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + this.layers + '&srsName=EPSG%3A4326&maxFeatures=1000';
+                url = cleanUrl(url) + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + this.layers + '&srsName=EPSG%3A4326&maxFeatures=1000';
             }
 
             return url;
@@ -169,8 +169,52 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
             }
             return this._metadata;
         }
+    },
+
+    /**
+     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * When a property name in the returned object literal matches the name of a property on this instance, the value
+     * will be called as a function and passed a reference to this instance, a reference to the source JSON object
+     * literal, and the name of the property.
+     * @type {Object}
+     */
+    updaters : {
+        get : function() {
+            return WebMapServiceDataSourceViewModel.defaultUpdaters;
+        }
+    },
+
+    /**
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * When a property name on the view-model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * JSON object literal, and the name of the property.
+     * @type {Object}
+     */
+    serializers : {
+        get : function() {
+            return WebMapServiceDataSourceViewModel.defaultSerializers;
+        }
     }
 });
+
+WebMapServiceDataSourceViewModel.defaultUpdaters = clone(ImageryLayerDataSourceViewModel.defaultUpdaters);
+
+WebMapServiceDataSourceViewModel.defaultSerializers = clone(ImageryLayerDataSourceViewModel.defaultSerializers);
+
+// Serialize the underlying properties instead of the public views of them.
+WebMapServiceDataSourceViewModel.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {
+    json.dataUrl = viewModel._dataUrl;
+};
+WebMapServiceDataSourceViewModel.defaultSerializers.dataUrlType = function(viewModel, json, propertyName) {
+    json.dataUrlType = viewModel._dataUrlType;
+};
+WebMapServiceDataSourceViewModel.defaultSerializers.metadataUrl = function(viewModel, json, propertyName) {
+    json.metadataUrl = viewModel._metadataUrl;
+};
+WebMapServiceDataSourceViewModel.defaultSerializers.legendUrl = function(viewModel, json, propertyName) {
+    json.legendUrl = viewModel._legendUrl;
+};
 
 WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {

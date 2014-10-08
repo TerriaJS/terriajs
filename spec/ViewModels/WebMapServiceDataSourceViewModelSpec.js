@@ -131,7 +131,7 @@ describe('WebMapServiceDataSourceViewModel', function() {
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         wmsViewModel.name = 'Name';
         wmsViewModel.description = 'Description';
-        wmsViewModel.rectangle = [-10, 10, -20, 20];
+        wmsViewModel.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
         wmsViewModel.legendUrl = 'http://legend.com';
         wmsViewModel.dataUrlType = 'wfs';
         wmsViewModel.dataUrl = 'http://my.wfs.com/wfs';

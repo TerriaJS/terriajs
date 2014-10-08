@@ -2,6 +2,7 @@
 
 /*global require*/
 
+var clone = require('../../third_party/cesium/Source/Core/clone');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
@@ -72,8 +73,38 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
         get : function() {
             return true;
         }
+    },
+
+    /**
+     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * When a property name in the returned object literal matches the name of a property on this instance, the value
+     * will be called as a function and passed a reference to this instance, a reference to the source JSON object
+     * literal, and the name of the property.
+     * @type {Object}
+     */
+    updaters : {
+        get : function() {
+            return ImageryLayerDataSourceViewModel.defaultUpdaters;
+        }
+    },
+
+    /**
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * When a property name on the view-model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * JSON object literal, and the name of the property.
+     * @type {Object}
+     */
+    serializers : {
+        get : function() {
+            return ImageryLayerDataSourceViewModel.defaultSerializers;
+        }
     }
 });
+
+ImageryLayerDataSourceViewModel.defaultUpdaters = clone(GeoDataSourceViewModel.defaultUpdaters);
+
+ImageryLayerDataSourceViewModel.defaultSerializers = clone(GeoDataSourceViewModel.defaultSerializers);
 
 ImageryLayerDataSourceViewModel.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {
