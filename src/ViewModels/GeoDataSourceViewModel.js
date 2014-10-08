@@ -32,8 +32,6 @@ var GeoDataSourceViewModel = function(context) {
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
-    this._beforeViewerChangedSubscription = undefined;
-    this._afterViewerChangedSubscription = undefined;
 
     /**
      * Gets or sets the geographic rectangle containing this data source.  This property is observable.
