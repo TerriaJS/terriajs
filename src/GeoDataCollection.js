@@ -1283,7 +1283,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
         else {
             var wmsOptions = {
                 url: url,
-                layers : encodeURIComponent(layerName),
+                layers : layerName,
                 parameters: {
                     format: 'image/png',
                     transparent: true,
