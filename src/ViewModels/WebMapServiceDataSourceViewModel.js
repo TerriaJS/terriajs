@@ -56,9 +56,10 @@ var WebMapServiceDataSourceViewModel = function(context) {
 
     /**
      * Gets or sets the additional parameters to pass to the WMS server when requesting images.
+     * If this property is undefiend, {@link WebMapServiceDataSourceViewModel.defaultParameters} is used.
      * @type {Object}
      */
-    this.parameters = WebMapServiceDataSourceViewModel.defaultParameters;
+    this.parameters = undefined;
 
     /**
      * Gets or sets a value indicating whether we should request information about individual features on click
@@ -228,7 +229,7 @@ WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : this.parameters
+        parameters : defaultValue(this.parameters, WebMapServiceDataSourceViewModel.defaultParameters)
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
@@ -263,7 +264,7 @@ WebMapServiceDataSourceViewModel.prototype._enableInLeaflet = function() {
         bounds : rectangleToLatLngBounds(this.rectangle)
     };
 
-    options = combine(this.parameters, options);
+    options = combine(defaultValue(this.parameters, WebMapServiceDataSourceViewModel.defaultParameters), options);
 
     this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.context, this.url), options);
     map.addLayer(this._imageryLayer);

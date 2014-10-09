@@ -123,11 +123,14 @@ GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
 };
 
 GeoDataGroupViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
-GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName) {
+GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, enabledItemsOnly) {
     var items = json.items = [];
 
     for (var i = 0; i < viewModel.items.length; ++i) {
-        items.push(viewModel[items].serializeToJson());
+        var item = viewModel.items[i].serializeToJson(enabledItemsOnly);
+        if (defined(item)) {
+            items.push(item);
+        }
     }
 };
 

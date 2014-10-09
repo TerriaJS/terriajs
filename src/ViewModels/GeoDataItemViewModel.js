@@ -127,17 +127,33 @@ GeoDataItemViewModel.prototype.updateFromJson = function(json) {
     }
 };
 
-GeoDataItemViewModel.prototype.serializeToJson = function() {
+/**
+ * Serializes the data item to JSON.
+ *
+ * @param {Boolean} enabledItemsOnly true if only enabled data items (and their groups) should be serialized,
+ *                                   or false if all data items should be serialized.
+ * @return {Object} The serialized JSON object-literal.
+ */
+GeoDataItemViewModel.prototype.serializeToJson = function(enabledItemsOnly) {
+    if (enabledItemsOnly && this.isEnabled === false) {
+        return undefined;
+    }
+
     var result = {};
 
     for (var propertyName in this) {
         if (this.hasOwnProperty(propertyName) && propertyName.length > 0 && propertyName[0] !== '_') {
             if (this.serializers && this.serializers[propertyName]) {
-                this.serializers[propertyName](this, result, propertyName);
+                this.serializers[propertyName](this, result, propertyName, enabledItemsOnly);
             } else {
                 result[propertyName] = this[propertyName];
             }
         }
+    }
+
+    // When serializing enabled items only, only serialize a group if the group has items in it.
+    if (enabledItemsOnly && !defined(this.isEnabled) && (!defined(result.items) || result.items.length === 0)) {
+        return undefined;
     }
 
     return result;

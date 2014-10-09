@@ -26,6 +26,7 @@ var GeoDataCatalogViewModel = function(context) {
     this._context = context;
 
     this._group = new GeoDataGroupViewModel(context);
+    this._group.name = 'Root Group';
 
     /**
      * Gets or sets a flag indicating whether the catalog is currently loading.
@@ -110,6 +111,19 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
 
         existingGroup.updateFromJson(group);
     }
+};
+
+/**
+ * Serializes the catalog to JSON.
+ *
+ * @param {Boolean} enabledItemsOnly true if only enabled data items (and their groups) should be serialized,
+ *                                   or false if all data items should be serialized.
+ * @return {Object} The serialized JSON object-literal.
+ */
+GeoDataCatalogViewModel.prototype.serializeToJson = function(enabledItemsOnly) {
+    var json = {};
+    GeoDataGroupViewModel.defaultSerializers.items(this.group, json, 'items', true);
+    return json.items;
 };
 
 module.exports = GeoDataCatalogViewModel;

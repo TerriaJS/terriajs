@@ -127,9 +127,17 @@ var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
                 tooltip : 'Share',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
-                        that.geoDataManager.setShareRequest({
+                        var jsonCatalog = that.catalog.serializeToJson(true);
+                        var request = {
+                            version: '0.0.03',
+                            camera: getCameraRect(that.scene, that.map),
                             image: dataUrl,
-                            camera: getCameraRect(that.scene, that.map)
+                            catalog: jsonCatalog
+                        };
+
+                        var sharePanel = new SharePanel({
+                            request : request,
+                            container : document.body
                         });
                     };
                     that.captureCanvas();
