@@ -1629,6 +1629,8 @@ function _recurseLayerList(layer_src, layers) {
 * @returns {Array} An array of layer descripters from the service
 */
 GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, description) {
+    var promise;
+
     var json_gml;
     if (text[0] === '{') {
         json_gml = JSON.parse(text);
@@ -1682,6 +1684,8 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
             parseFloat(ext.xmax), parseFloat(ext.ymax));
     }
     else if (description.type === 'CKAN') {
+        var wmsServers = {};
+
         layers = [];
         var results = json_gml.result.results;
         for (var resultIndex = 0; resultIndex < results.length; ++resultIndex) {
@@ -1734,16 +1738,66 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
                     }
                 }
 
-                layers.push({
+                var layer = {
                     Name: layerName,
                     Title: result.title,
                     base_url: url,
                     type: 'WMS',
                     description: textDescription,
                     BoundingBox : bbox
-                });
+                };
+                layers.push(layer);
+
+                if (!defined(wmsServers[url])) {
+                    wmsServers[url] = [];
+                }
+
+                wmsServers[url].push(layer);
             }
         }
+
+        var promises = [];
+
+        for (var wmsServer in wmsServers) {
+            if (wmsServers.hasOwnProperty(wmsServer)) {
+                var getCapabilitiesUrl = wmsServer + '?service=WMS&request=GetCapabilities';
+                if (corsProxy.shouldUseProxy(getCapabilitiesUrl)) {
+                    getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl);
+                }
+
+                promises.push(loadText(getCapabilitiesUrl).then(function(getCapabilitiesXml) {
+                    var getCapabilitiesJson = $.xml2json(getCapabilitiesXml);
+
+                    var wmsLayersSource = [getCapabilitiesJson.Capability.Layer];
+                    var wmsLayers = [];
+                    _recurseLayerList(wmsLayersSource, wmsLayers);
+
+                    var layersInGroup = wmsServers[wmsServer];
+                    for (var i = 0; i < layersInGroup.length; ++i) {
+                        var layerInGroup = layersInGroup[i];
+
+                        // Find a matching layer in the GetCapabilities response.
+                        // Remove the layer if there is no match in GetCapabilities or if the layer has a MaxScaleDenominator.
+                        var remove = true;
+                        for (var j = 0; j < wmsLayers.length; ++j) {
+                            if (wmsLayers[j].Name === layerInGroup.Name) {
+                                remove = defined(wmsLayers[j].MaxScaleDenominator);
+                                break;
+                            }
+                        }
+
+                        if (remove) {
+                            var index = layers.indexOf(layerInGroup);
+                            if (index >= 0) {
+                                layers.splice(index, 1);
+                            }
+                        }
+                    }
+                }));
+            }
+        }
+
+        promise = when.all(promises);
     }
     else {
         throw new DeveloperError('Somehow got capabilities from unsupported type: ' + description.type);
@@ -1758,6 +1812,8 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     }
     
     description.Layer = layers;
+
+    return promise;
 };
 
 /**
@@ -1793,8 +1849,12 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
 
     var that = this;
     loadText(request, undefined, description.username, description.password).then ( function(text) {
-        that.handleCapabilitiesRequest(text, description);
-        callback(description);
+        var promise = that.handleCapabilitiesRequest(text, description);
+        if (promise) {
+            when(promise, callback);
+        } else {
+            callback(description);
+        }
     }, function(err) {
         loadErrorResponse(err);
     });
