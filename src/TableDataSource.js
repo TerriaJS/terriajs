@@ -43,9 +43,10 @@ var TableDataSource = function () {
     this.leadTimeMin = 0;
     this.trailTimeMin = 60;
     this.scale = 1.0;
-    this.scale_by_val = true;
+    this.scaleValue = false;
+    this.imageUrl = "./images/circle32.png";
 
-    var defaultGradient = [
+    var rainbowGradient = [
         {offset: 0.0, color: 'rgba(0,0,200,1.00)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
@@ -55,7 +56,7 @@ var TableDataSource = function () {
         {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
         {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
-    this.setColorGradient(defaultGradient);
+    this.setColorGradient(rainbowGradient);
 };
 
 defineProperties(TableDataSource.prototype, {
@@ -158,11 +159,10 @@ TableDataSource.prototype.loadUrl = function (url) {
  * @returns {Promise} a promise that will resolve when the CZML is processed.
  */
 TableDataSource.prototype.loadText = function (text) {
-    var that = this;
     this.dataset.loadText(text);
-    that.setLeadTimeByPercent(0.0);
-    that.setTrailTimeByPercent(1.0);
-    that.czmlDataSource.load(that.getDataPointList(), 'TableDataSource');
+    this.setLeadTimeByPercent(0.0);
+    this.setTrailTimeByPercent(1.0);
+    this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
 };
 
 /**
@@ -172,15 +172,32 @@ TableDataSource.prototype.loadText = function (text) {
 *
 */
 TableDataSource.prototype.setCurrentVariable = function (varname) {
-    var that = this;
-    this.dataset.setCurrentVariable({ variable: varname, callback: function (data) { 
-        that.czmlDataSource.load(that.getDataPointList(), 'TableDataSource');
-        }
-    });
+    this.dataset.setCurrentVariable({ variable: varname});
+    this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
 };
 
 var startScratch = new JulianDate();
 var endScratch = new JulianDate();
+
+
+TableDataSource.prototype.describe = function(properties) {
+    var html = '<table class="cesium-infoBox-defaultTable">';
+    for ( var key in properties) {
+        if (properties.hasOwnProperty(key)) {
+            var value = properties[key];
+            if (defined(value)) {
+                if (typeof value === 'object') {
+                    html += '<tr><td>' + key + '</td><td>' + this.describe(value) + '</td></tr>';
+                } else {
+                    html += '<tr><td>' + key + '</td><td>' + value + '</td></tr>';
+                }
+            }
+        }
+    }
+    html += '</table>';
+    return html;
+};
+
 
 /**
 * Replaceable visualizer function
@@ -189,12 +206,15 @@ var endScratch = new JulianDate();
 *
 */
 TableDataSource.prototype.czmlRecFromPoint = function (point) {
+
     var rec = {
+        "name": "Site Data",
+        "description": "empty",
         "billboard" : {
             "horizontalOrigin" : "CENTER",
             "verticalOrigin" : "BOTTOM",
-            "image" : "./images/pow32.png",
-            "scale" : 1.0,
+            "image" : this.imageUrl,
+            "scale" : this.scale,
             "color" : { "rgba" : [255, 0, 0, 255] },
             "show" : [{
                     "boolean" : false
@@ -207,6 +227,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
             "cartographicDegrees" : [0, 0, 0]
         }
     };
+    
     rec.billboard.color.rgba = this._mapValue2Color(point.val);
     rec.billboard.scale = this._mapValue2Scale(point.val);
     for (var p = 0; p < 3; p++) {
@@ -239,7 +260,7 @@ TableDataSource.prototype.getDataPointList = function () {
         return;
     }
     //update the datapoint collection
-    var pointList = this.dataset.getPointList();
+    var pointList = data.getPointList();
     
     var dispRecords = [{
         id : 'document',
@@ -249,6 +270,7 @@ TableDataSource.prototype.getDataPointList = function () {
     for (var i = 0; i < pointList.length; i++) {
         //set position, scale, color, and display time
         var rec = this.czmlRecFromPoint(pointList[i]);
+        rec.description = this.describe(data.getDataRow(pointList[i].row));
         dispRecords.push(rec);
     }
     return dispRecords;
@@ -269,7 +291,7 @@ TableDataSource.prototype._mapValue2Scale = function (pt_val) {
     var scale = this.scale;
     var normPoint = this._getNormalizedPoint(pt_val);
     if (defined(normPoint) && normPoint === normPoint) {
-        scale *= (this.scale_by_val ? 1.0 * normPoint + 0.5 : 1.0);
+        scale *= (this.scaleValue ? 1.0 * normPoint + 0.5 : 1.0);
     }
     return scale;
 };
@@ -322,13 +344,15 @@ TableDataSource.prototype.getLegendGraphic = function () {
     if (!defined(canvas)) {
         return;
     }
-    var w = canvas.width = 150;
-    var h = canvas.height = 150;
+    var w = canvas.width = 210;
+    var h = canvas.height = 160;
+    var gradW = 40;
+    var gradH = 128;
     var ctx = canvas.getContext('2d');
 
         // Create Linear Gradient
     var grad = this.colorGradient;
-    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    var lingrad = ctx.createLinearGradient(0,0,0,gradH);
     for (var i = 0; i < grad.length; i++) {
         lingrad.addColorStop(grad[i].offset, grad[i].color);
     }
@@ -336,9 +360,7 @@ TableDataSource.prototype.getLegendGraphic = function () {
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0,0,w,h);
         //put 0 at bottom
-    var gradW = 32;
-    var gradH = 128;
-    ctx.translate(gradW, h);
+    ctx.translate(gradW + 15, h-5);
     ctx.rotate(180 * Math.PI / 180);
     ctx.fillStyle = lingrad;
     ctx.fillRect(0,0,gradW,gradH);
@@ -350,11 +372,11 @@ TableDataSource.prototype.getLegendGraphic = function () {
     var var_text = this.dataset.getCurrentVariable();
     
     ctx.setTransform(1,0,0,1,0,0);
-    ctx.font = "15px Arial Narrow";
+    ctx.font = "16px Arial Narrow";
     ctx.fillStyle = "#000000";
     ctx.fillText(var_text, 5, 15);
-    ctx.fillText(max_text, gradW + 5, 15+h-gradH);
-    ctx.fillText(min_text, gradW + 5, h);
+    ctx.fillText(max_text, gradW + 25, 15+h-gradH-5);
+    ctx.fillText(min_text, gradW + 25, h-5);
     
     return canvas.toDataURL("image/png");
 };
@@ -389,6 +411,16 @@ TableDataSource.prototype.setColorGradient = function (colorGradient) {
     ctx.fillRect(0,0,w,h);
 
     this.dataImage = ctx.getImageData(0, 0, 1, 256);
+};
+
+/**
+* Set the image used to represent the data points
+*
+* @memberof TableDataSource
+*
+*/
+TableDataSource.prototype.setImageUrl = function (imageUrl) {
+    this.imageUrl = imageUrl;
 };
 
 /**

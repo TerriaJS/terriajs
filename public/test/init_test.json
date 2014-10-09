@@ -4,10 +4,11 @@
         {"Name":"Cemeteries","Title":"Cemeteries (geojson)","base_url":"./test/cemeteries.geojson","queryable":"1"},
         {"Name":"BikeRacks","Title":"Bike Racks (geojson:reproj)","base_url":"./test/bike_racks.geojson","queryable":"1"},
         {"Name":"EarthQuakes","Title":"Pacific Earthquakes (csv)","base_url":"./test/earthquakes.csv","queryable":"1"},
-        {"Name":"Incidents","Title":"Auto Incidents (csv)","base_url":"./test/incidents.csv","queryable":"1"},
+        {"Name":"Incidents","Title":"Auto Incidents (csv)","base_url":"./test/incidents.csv","queryable":"1", "style" : {"line": {}, "point": {}, "polygon": {}, "table": { "data": "incident_severity", "imageUrl": "./images/pow32.png","colorMap": [ {"offset": 0.0, "color": "rgba(0,0,255,1.00)"}, {"offset": 1.0, "color": "rgba(255,0,0,1.0)"}]}}},
         {"Name":"CZML","Title":"Simple Test (czml)","base_url":"./test/simple.czml","queryable":"1"},
         {"Name":"VicPolice","Title":"Vic Police (kml)","base_url":"./test/vic_police.kml","queryable":"1"},
         {"Name":"VicPolice","Title":"Vic Police (kmz)","base_url":"./test/vic_police.kmz","queryable":"1"},
+        {"Name":"GPX","Title":"Route in England (gpx)","base_url":"./test/sample.gpx","queryable":"1"},
         {"Name":"SEIFA","Title":"SEIFA 2011 (POA)","type":"DATA","base_url":"./test/SEIFA_POA_2011.csv","queryable":"1", "style" : {"line": {}, "point": {}, "polygon": {}, "table": { "region": "POA_CODE", "regionType": "POA", "data": "Socio-economic_Disadvantage", "colorMap": [ {"offset": 0.0, "color": "rgba(0,0,0,1.00)"}, {"offset": 1.0, "color": "rgba(0,200,0,1.0)"}]}}
         },
         {"Name":"NEXIS_NSW","Title":"NEXIS NSW 2012 (LGA)","type":"DATA","base_url":"./test/NSW_LGA_NEXIS_201212.csv","queryable":"1"},

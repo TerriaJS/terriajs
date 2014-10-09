@@ -134,7 +134,7 @@ function loadErrorResponse(err) {
         container : document.body,
         title : 'HTTP Error ' + (defined(err.statusCode) ? err.statusCode : ''),
         message : '\
-An error occurred while accessing the web link.  Please verify that the link is correct. \
+An error occurred while accessing the web service link and the data cannot be shown.  If you entered the link manually, please verify that the link is correct. \
 <p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
 server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
 please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \
@@ -368,6 +368,41 @@ GeoDataCollection.prototype.show = function(layer, val) {
             this.map.removeLayer(layer.primitive);
         }
     }
+};
+
+
+/**
+* Check the server health for a layer
+*
+ * @param {Object} layer The layer to be checked.
+ * @param {Function} succeed Function to carry out if server OK
+ * @param {Function} fail Function to carry out if server returns an err
+*
+*/
+GeoDataCollection.prototype.checkServerHealth = function(layer, succeed, fail) {
+    if (layer.type === 'DATA') {
+        if (defined(succeed)) {
+            succeed(layer);
+        }
+        return;
+    }
+    // pinging the service url to see if it's alive
+    var paramIdx = layer.url.indexOf('?');
+    var url = (paramIdx !== -1) ? layer.url.substring(0, paramIdx) : layer.url;
+    if (corsProxy.shouldUseProxy(url)) {
+        url = corsProxy.getURL(url);
+    }
+    var that = this;
+    loadText(url).then(function (text) {
+        if (defined(succeed)) {
+            succeed(layer);
+        }
+    }, function(err) {
+        if (defined(fail)) {
+            fail(layer);
+        }
+        loadErrorResponse(err);
+    });
 };
 
 
@@ -628,15 +663,15 @@ GeoDataCollection.prototype.getShareRequestURL = function( request ) {
 
 //////////////////////////////////////////////////////////////////////////
 
-//Recolor an image using 2d canvas
+//Recolor an image using a color function
 function recolorImage(image, colorFunc) {
     var length = image.data.length;  //pixel count * 4
     for (var i = 0; i < length; i += 4) {
-        if (image.data[i] > 0) {
+        if (image.data[i+3] < 255) {
             continue;
         }
-        var idx = image.data[i+1] * 0x100 + image.data[i+2];
-        if (idx > 0) {
+        if (image.data[i] === 0) {
+            var idx = image.data[i+1] * 0x100 + image.data[i+2];
             var clr = colorFunc(idx);
             if (defined(clr)) {
                 for (var j = 0; j < 4; j++) {
@@ -647,13 +682,11 @@ function recolorImage(image, colorFunc) {
                 image.data[i+3] = 0;
             }
         }
-        else {
-            image.data[i+3] = 0;
-        }
     }
     return image;
 }
 
+//Recolor an image using 2d canvas
 function recolorImageWithCanvas(img, colorFunc) {
     var canvas = document.createElement("canvas");
     canvas.width = img.width;
@@ -671,39 +704,83 @@ function recolorImageWithCanvas(img, colorFunc) {
 }
 
 
-//TODO: on click add, csv info to getFeatureInfo
-var regionServer = 'http://geoserver.research.nicta.com.au/admin_bnds_abs/ows';
+var regionServer = 'http://geoserver.research.nicta.com.au/region_map/ows';
 var regionWmsMap = {
     'STE': {
-        "Name":"admin_bnds_region:STE_2011_AUST",
-        "base_url":regionServer,
+        "Name":"region_map:FID_STE_2011_AUST",
+        "regionProp": "STE_CODE11",
         "aliases": ['state', 'ste']
     },
     'CED': {
-        "Name":"admin_bnds_region:CED_2011_AUST",
-        "base_url":regionServer,
+        "Name":"region_map:FID_CED_2011_AUST",
+        "regionProp": "CED_CODE",
         "aliases": ['ced']
     },
+    'SED': {
+        "Name":"region_map:FID_SED_2011_AUST",
+        "regionProp": "SED_CODE",
+        "aliases": ['sed']
+    },
     'POA': {
-        "Name":"admin_bnds_region:POA_2011_AUST",
-        "base_url":regionServer,
+        "Name":"region_map:FID_POA_2011_AUST",
+        "regionProp": "POA_CODE",
         "aliases": ['poa', 'postcode']
     },
     'LGA': {
-        "Name":"admin_bnds_region:LGA_2011_AUST",
-        "base_url":regionServer,
-        "aliases": ['lga'],
-        "factor": 10  //this can be removed when we get ids larger than 10k in style
+        "Name":"region_map:FID_LGA_2011_AUST",
+        "regionProp": "LGA_CODE11",
+        "aliases": ['lga']
+    },
+    'SCC': {
+        "Name":"region_map:FID_SCC_2011_AUST",
+        "regionProp": "SCC_CODE",
+        "aliases": ['scc', 'suburb']
     },
     'SA4': {
-        "Name":"admin_bnds_region:SA4_2011_AUST",
-        "base_url" : regionServer,
+        "Name":"region_map:FID_SA4_2011_AUST",
+        "regionProp": "SA4_CODE11",
         "aliases": ['sa4']
+    },
+    'SA3': {
+        "Name":"region_map:FID_SA3_2011_AUST",
+        "regionProp": "SA3_CODE11",
+        "aliases": ['sa3']
+    },
+    'SA2': {
+        "Name":"region_map:FID_SA2_2011_AUST",
+        "regionProp": "SA2_MAIN11",
+        "aliases": ['sa2']
+    },
+    'SA1': {
+        "Name":"region_map:FID_SA1_2011_AUST",
+         "regionProp": "SA1_7DIG11",
+        "aliases": ['sa1']
     }
 };
 
+//TODO: if we add enum capability and then can work with any unique field
+//TODO: need way to support a progress display on slow loads
+function loadRegionIDs(description, succeed, fail) {
+    var url = regionServer + '?service=wfs&version=2.0&request=getPropertyValue';
+    url += '&typeNames=' + description.Name;
+    url += '&valueReference=' + description.regionProp;
+    loadText(url).then(function (text) { 
+        var obj = $.xml2json(text);
+        var idMap = [];
+            //for now this turns ids into numbers since they are that way in table data
+            //btw: since javascript uses doubles this is not a problem for the numerical ids
+        for (var i = 0; i < obj.member.length; i++) {
+            idMap.push(parseInt(obj.member[i][description.regionProp],10));
+        }
+        description.idMap = idMap;
+        succeed();
+    }, function(err) {
+        loadErrorResponse(err);
+        fail();
+    });
+}
 
-function getRegionVar(vars, aliases) {
+function determineRegionVar(vars, aliases) {
     for (var i = 0; i < vars.length; i++) {
         var varName = vars[i].toLowerCase();
         for (var j = 0; j < aliases.length; j++) {
@@ -722,12 +799,15 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
     var tableDataSource = layer.baseDataSource;
     var dataset = tableDataSource.dataset;
     var vars = dataset.getVarList();
-
+    var description = regionWmsMap[layer.regionType];
+ 
     var codes = dataset.getDataValues(layer.regionVar);
+    var ids = description.idMap;
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
-    var lookup = {};
+    var lookup = new Array(ids.length);
     for (var i = 0; i < codes.length; i++) {
-        lookup[codes[i]] = vals[i];
+        var id = ids.indexOf(codes[i]);
+        lookup[id] = vals[i];
     }
     // set color for each code
     var colors = [];
@@ -735,13 +815,12 @@ GeoDataCollection.prototype.createRegionLookupFunc = function(layer) {
         colors[idx] = tableDataSource._mapValue2Color(idx);
     }
     //   create colorFunc used by the region mapper
-    var factor = regionWmsMap[layer.regionType].factor || 1.0;
     layer.colorFunc = function(id) {
-        return colors[lookup[id*factor]];
+        return colors[lookup[id]];
     };
     // can be used to get point data
-    layer.valFunc = function(id) {
-        var rowIndex = codes.indexOf(id);
+    layer.valFunc = function(code) {
+        var rowIndex = codes.indexOf(code);
         return vals[rowIndex];
     };
     layer.rowProperties = function(code) {
@@ -754,25 +833,42 @@ GeoDataCollection.prototype.setRegionVariable = function(layer, regionVar, regio
     if (layer.regionVar === regionVar && layer.regionType === regionType) {
         return;
     }
+
     layer.regionVar = regionVar;
+    var description = regionWmsMap[regionType];
     if (layer.regionType !== regionType) {
         layer.regionType = regionType;
-        var description = regionWmsMap[regionType];
         description.type = 'WMS';
+        description.base_url = regionServer;
+
         layer.url = this.getOGCFeatureURL(description);
+        layer.regionProp = description.regionProp;
     }
-    this.createRegionLookupFunc(layer);
-    var currentIndex = this.layers.indexOf(layer);
-    if (currentIndex !== -1) {
-        this.remove(currentIndex);
-    }
-    
     console.log('Region type:', layer.regionType, ', Region var:', layer.regionVar);
-    
-    this._viewMap(layer.url, layer);
+        
+    var that = this;
+    var succeed = function() {
+         that.createRegionLookupFunc(layer);
+        //remove layer and recreate from scratch
+        var currentIndex = that.layers.indexOf(layer);
+        if (currentIndex !== -1) {
+            that.remove(currentIndex);
+        }
+       that._viewMap(layer.url, layer);
+    };
+    var fail = function () {
+        console.log('failed to load region ids from server');
+    };
+
+    if (!defined(description.idMap)) {
+        loadRegionIDs(description, succeed, fail);
+    }
+    else {
+        succeed();
+    }
 };
 
-GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
+GeoDataCollection.prototype.setRegionDataVariable = function(layer, newVar) {
     var tableDataSource = layer.baseDataSource;
     var dataset = tableDataSource.dataset;
     if (dataset.getCurrentVariable() === newVar) {
@@ -782,7 +878,7 @@ GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
     this.createRegionLookupFunc(layer);
     
     console.log('Var set to:', newVar);
-    
+        //redisplay layer to update
     this.show(layer, false);
     this.show(layer, true);
 };
@@ -790,7 +886,7 @@ GeoDataCollection.prototype.setRegionMapVar = function(layer, newVar) {
 GeoDataCollection.prototype.setRegionColorMap = function(layer, dataColorMap) {
     layer.baseDataSource.setColorGradient(dataColorMap);
     this.createRegionLookupFunc(layer);
-    
+        //redisplay layer to update
     this.show(layer, false);
     this.show(layer, true);
 };
@@ -806,7 +902,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
         var idx = -1;
         for (regionType in regionWmsMap) {
             if (regionWmsMap.hasOwnProperty(regionType)) {
-                idx = getRegionVar(vars, regionWmsMap[regionType].aliases);
+                idx = determineRegionVar(vars, regionWmsMap[regionType].aliases);
                 if (idx !== -1) {
                     break;
                 }
@@ -843,7 +939,7 @@ GeoDataCollection.prototype.addRegionMap = function(layer) {
     if (defined(layer.style.table.colorMap)) {
         layer.baseDataSource.setColorGradient(layer.style.table.colorMap);
     }
-    dataset.setCurrentVariable({ variable: layer.style.table.data});
+    layer.baseDataSource.setCurrentVariable(layer.style.table.data);
     
         //capture url to use for sharing
     layer.shareUrl = layer.url || '';
@@ -949,7 +1045,7 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
         var tableDataSource = new TableDataSource();
         tableDataSource.loadText(text);
         if (!tableDataSource.dataset.hasLocationData()) {
-            console.log('No locaton date found in csv file');
+            console.log('No locaton date found in csv file - trying to match based on region');
             layer.baseDataSource = tableDataSource;
             this.addRegionMap(layer);
         }
@@ -962,8 +1058,18 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
                 style.table.alt = dataset.getVarID(VarType.ALT);
                 style.table.time = dataset.getVarID(VarType.TIME);
                 style.table.data = dataset.getVarID(VarType.SCALAR);
+                style.table.imageUrl = undefined;
                 style.table.colorMap = undefined;
                 layer.style = style;
+            }
+            if (defined(layer.style.table.colorMap)) {
+                tableDataSource.setColorGradient(layer.style.table.colorMap);
+            }
+            if (defined(layer.style.table.imageUrl)) {
+                tableDataSource.setImageUrl(layer.style.table.imageUrl);
+            }
+            if (defined(layer.style.table.data)) {
+                tableDataSource.setCurrentVariable(layer.style.table.data);
             }
             if (this.map === undefined) {
                 this.dataSourceCollection.add(tableDataSource);
@@ -1148,7 +1254,6 @@ GeoDataCollection.prototype._viewFeature = function(request, layer) {
     });
 };
 
-
 // Show wms map
 GeoDataCollection.prototype._viewMap = function(request, layer) {
     var uri = new URI(request);
@@ -1220,6 +1325,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
             provider = new WebMapServiceImageryProvider(wmsOptions);
             
             if (defined(layer.colorFunc)) {
+                    //remap image layer color func
                 provider.base_requestImage = provider.requestImage;
                 provider.requestImage = function(x, y, level) {
                     var imagePromise = provider.base_requestImage(x, y, level);
@@ -1232,6 +1338,23 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
                             image = recolorImageWithCanvas(image, layer.colorFunc);
                         }
                         return image;
+                    });
+                };
+                    //remap image layer featurePicking Func
+                provider.base_pickFeatures = provider.pickFeatures;
+                provider.pickFeatures = function(x, y, level, longitude, latitude) {
+                    var featurePromise = provider.base_pickFeatures(x, y, level, longitude, latitude);
+                    if (!defined(featurePromise)) {
+                        return featurePromise;
+                    }
+                    
+                    return when(featurePromise, function(results) {
+                        if (defined(results)) {
+                            var id = results[0].data.properties[layer.regionProp];
+                            var properties = layer.rowProperties(parseInt(id,10));
+                            results[0].description = layer.baseDataSource.describe(properties);
+                        }
+                        return results;
                     });
                 };
             }
