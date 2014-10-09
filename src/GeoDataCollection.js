@@ -1738,7 +1738,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
                     }
                 }
 
-                var layer = {
+                var newLayer = {
                     Name: layerName,
                     Title: result.title,
                     base_url: url,
@@ -1746,13 +1746,13 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
                     description: textDescription,
                     BoundingBox : bbox
                 };
-                layers.push(layer);
+                layers.push(newLayer);
 
                 if (!defined(wmsServers[url])) {
                     wmsServers[url] = [];
                 }
 
-                wmsServers[url].push(layer);
+                wmsServers[url].push(newLayer);
             }
         }
 
@@ -1765,35 +1765,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
                     getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl);
                 }
 
-                promises.push(loadText(getCapabilitiesUrl).then(function(getCapabilitiesXml) {
-                    var getCapabilitiesJson = $.xml2json(getCapabilitiesXml);
-
-                    var wmsLayersSource = [getCapabilitiesJson.Capability.Layer];
-                    var wmsLayers = [];
-                    _recurseLayerList(wmsLayersSource, wmsLayers);
-
-                    var layersInGroup = wmsServers[wmsServer];
-                    for (var i = 0; i < layersInGroup.length; ++i) {
-                        var layerInGroup = layersInGroup[i];
-
-                        // Find a matching layer in the GetCapabilities response.
-                        // Remove the layer if there is no match in GetCapabilities or if the layer has a MaxScaleDenominator.
-                        var remove = true;
-                        for (var j = 0; j < wmsLayers.length; ++j) {
-                            if (wmsLayers[j].Name === layerInGroup.Name) {
-                                remove = defined(wmsLayers[j].MaxScaleDenominator);
-                                break;
-                            }
-                        }
-
-                        if (remove) {
-                            var index = layers.indexOf(layerInGroup);
-                            if (index >= 0) {
-                                layers.splice(index, 1);
-                            }
-                        }
-                    }
-                }));
+                promises.push(filterMaxScaleDenominatorLayers(getCapabilitiesUrl, wmsServers[wmsServer], layers));
             }
         }
 
@@ -1815,6 +1787,60 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
 
     return promise;
 };
+
+function filterMaxScaleDenominatorLayers(getCapabilitiesUrl, layersInGroup, layersToFilter) {
+    return loadText(getCapabilitiesUrl).then(function(getCapabilitiesXml) {
+        var getCapabilitiesJson = $.xml2json(getCapabilitiesXml);
+
+        var wmsLayersSource = [getCapabilitiesJson.Capability.Layer];
+        var wmsLayers = [];
+        _recurseLayerList(wmsLayersSource, wmsLayers);
+
+        for (var i = 0; i < layersInGroup.length; ++i) {
+            var layerInGroup = layersInGroup[i];
+
+            // Find a matching layer in the GetCapabilities response.
+            // Remove the layer if there is no match in GetCapabilities or if the layer has a MaxScaleDenominator.
+            var remove = true;
+            var found = false;
+            for (var j = 0; j < wmsLayers.length; ++j) {
+                if (wmsLayers[j].Name === layerInGroup.Name) {
+                    found = true;
+                    remove = defined(wmsLayers[j].MaxScaleDenominator) && wmsLayers[j].MaxScaleDenominator < 1e10;
+                    if (remove) {
+                        console.log('Filtering out ' + layerInGroup.Title + ' (' + layerInGroup.Name + ') because its MaxScaleDenominator is ' + wmsLayers[j].MaxScaleDenominator);
+                    }
+                    break;
+                }
+            }
+
+            if (remove) {
+                if (!found) {
+                    console.log('Filtering out ' + layerInGroup.Title + ' (' + layerInGroup.Name + ') because it does not exist in the WMS server\'s GetCapabilities.');
+                }
+                var index = layersToFilter.indexOf(layerInGroup);
+                if (index >= 0) {
+                    layersToFilter.splice(index, 1);
+                }
+            }
+        }
+    }).otherwise(function() {
+        filterAllLayers(getCapabilitiesUrl, layersInGroup, layersToFilter);
+    });
+}
+
+function filterAllLayers(getCapabilitiesUrl, layersIngroup, layersToFilter) {
+    for (var i = 0; i < layersInGroup.length; ++i) {
+        var layerInGroup = layersInGroup[i];
+
+        console.log('Filtering out ' + layerInGroup.Title + ' (' + layerInGroup.Name + ') because we received an error or unexpected response from GetCapabilities ('+ getCapabilitiesUrl + ').');
+
+        var index = layersToFilter.indexOf(layerInGroup);
+        if (index >= 0) {
+            layersToFilter.splice(index, 1);
+        }
+    }
+}
 
 /**
 * Get capabilities from service for WMS, WFS and REST
@@ -1851,7 +1877,9 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
     loadText(request, undefined, description.username, description.password).then ( function(text) {
         var promise = that.handleCapabilitiesRequest(text, description);
         if (promise) {
-            when(promise, callback);
+            when(promise, function() {
+                callback(description);
+            });
         } else {
             callback(description);
         }
