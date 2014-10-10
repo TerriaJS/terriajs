@@ -1596,19 +1596,29 @@ function _getCollectionFromServiceLayers(layers, description) {
 }
 
 //Utility function to flatten layer hierarchy
-function _recurseLayerList(layer_src, layers) {
+function _recurseLayerList(layer_src, layers, filterLayersWithMaxScaleDenominator) {
+    filterLayersWithMaxScaleDenominator = defaultValue(filterLayersWithMaxScaleDenominator, true);
+
     if (!(layer_src instanceof Array)) {
         layer_src = [layer_src];
     }
     for (var i = 0; i < layer_src.length; i++) {
         if (layer_src[i].Layer) {
             if (layer_src[i].queryable === 1) {
-                layers.push(layer_src[i]);
+                if (filterLayersWithMaxScaleDenominator && defined(layer_src[i].MaxScaleDenominator) && layer_src[i].MaxScaleDenominator < 1e10) {
+                    console.log('Filtering out ' + layer_src[i].Title + ' (' + layer_src[i].Name + ') because its MaxScaleDenominator is ' + layer_src[i].MaxScaleDenominator);
+                } else {
+                    layers.push(layer_src[i]);
+                }
             }
             _recurseLayerList(layer_src[i].Layer, layers);
         }
         else {
-            layers.push(layer_src[i]);
+            if (filterLayersWithMaxScaleDenominator && defined(layer_src[i].MaxScaleDenominator) && layer_src[i].MaxScaleDenominator < 1e10) {
+                console.log('Filtering out ' + layer_src[i].Title + ' (' + layer_src[i].Name + ') because its MaxScaleDenominator is ' + layer_src[i].MaxScaleDenominator);
+            } else {
+                layers.push(layer_src[i]);
+            }
         }
     }
 }
@@ -1794,7 +1804,7 @@ function filterMaxScaleDenominatorLayers(getCapabilitiesUrl, layersInGroup, laye
 
         var wmsLayersSource = [getCapabilitiesJson.Capability.Layer];
         var wmsLayers = [];
-        _recurseLayerList(wmsLayersSource, wmsLayers);
+        _recurseLayerList(wmsLayersSource, wmsLayers, false);
 
         for (var i = 0; i < layersInGroup.length; ++i) {
             var layerInGroup = layersInGroup[i];
