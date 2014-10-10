@@ -133,7 +133,7 @@ LeafletGeomVisualizer.prototype.update = function(time) {
 LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
     var pointGraphics = entity._point;
     var featureGroup = this._featureGroup;
-    var geomLayer = entity._geomLayer;
+    var geomLayer = entity._geomPoint;
     var position;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(pointGraphics._show, time, true);
     if (show) {
@@ -147,24 +147,24 @@ LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
 
     var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
     var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
+    var pixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
     var color = Property.getValueOrDefault(pointGraphics._color, time, defaultColor);
     var outlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor);
     var outlineWidth = Property.getValueOrDefault(pointGraphics._outlineWidth, time, defaultOutlineWidth);
-    var pixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
 
     var pointOptions = {
         radius: pixelSize / 2.0,
         fillColor: color.toCssColorString(),
-        fillOpacity: 0.9,
+        fillOpacity: color.alpha,
         color: outlineColor.toCssColorString(),
         weight: outlineWidth,
-        opacity: 0.9
+        opacity: outlineColor.alpha
     };
 
     if (!defined(geomLayer)) {
         var point = L.circleMarker(latlng, pointOptions);
         featureGroup.addLayer(point);
-        entity._geomLayer = point;
+        entity._geomPoint = point;
     } else {
         var point = geomLayer;
         if (!point._latlng.equals(latlng)) {
@@ -331,7 +331,7 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
 }
 
 LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
-    var polylineGraphics = entity._polyline || entity._path;
+    var polylineGraphics = entity._polyline;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomLayer;
     var positions;
@@ -356,7 +356,7 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
     var polylineOptions = {
         color: color.toCssColorString(),
         weight: width,
-        opacity: 0.9
+        opacity: color.alpha
     };
 
     if (!defined(geomLayer)) {
@@ -402,14 +402,18 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
         latlngs.push(L.latLng( CesiumMath.toDegrees(carts[i].latitude), CesiumMath.toDegrees(carts[i].longitude)));
     }
     var color = Property.getValueOrDefault(polygonGraphics._material.color, time, defaultColor);
-    var fill = Property.getValueOrDefault(polygonGraphics._width, time, true);
+    var fill = Property.getValueOrDefault(polygonGraphics._fill, time, true);
     var outline = Property.getValueOrDefault(polygonGraphics._outline, time, true);
+    var outlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor);
 
     var polygonOptions = {
-        fillColor: color.toCssColorString(),
         fill: fill,
+        fillColor: color.toCssColorString(),
+        fillOpacity: color.alpha,
         weight: outline ? 1.0 : 0.0,
-    };
+        color: outlineColor.toCssColorString(),
+        opacity: outlineColor.alpha
+     };
 
     if (!defined(geomLayer)) {
         var polygon = L.polygon(latlngs, polygonOptions);
@@ -451,6 +455,7 @@ LeafletGeomVisualizer.prototype.destroy = function() {
         entities[i]._geomLayer = undefined;
         entities[i]._geomBillboard = undefined;
         entities[i]._geomLabel = undefined;
+        entities[i]._geomPoint = undefined;
     }
     this._entityCollection.collectionChanged.removeEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
     this._map.removeLayer(this._featureGroup);
