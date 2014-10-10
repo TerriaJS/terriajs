@@ -1839,7 +1839,7 @@ function filterMaxScaleDenominatorLayers(getCapabilitiesUrl, layersInGroup, laye
     });
 }
 
-function filterAllLayers(getCapabilitiesUrl, layersIngroup, layersToFilter) {
+function filterAllLayers(getCapabilitiesUrl, layersInGroup, layersToFilter) {
     for (var i = 0; i < layersInGroup.length; ++i) {
         var layerInGroup = layersInGroup[i];
 
