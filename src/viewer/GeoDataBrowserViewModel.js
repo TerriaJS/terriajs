@@ -878,6 +878,48 @@ these extensions in order for National Map to know how to load it.'
             dragPlaceholder.setAttribute('nowViewingIndex', siblings[targetIndex + 1].getAttribute('nowViewingIndex'));
         }
     });
+
+    handleHash(this);
+
+    window.addEventListener("hashchange", function() {
+        handleHash(that);
+    }, false);
+
+    function handleHash(viewModel) {
+        var uri = new URI(window.location);
+        var hash = uri.fragment();
+
+        if (hash.length === 0 || !hashIsSafe(hash)) {
+            return;
+        }
+
+        // Try loading hash.json.
+        loadJson(hash + '.json').then(function(json) {
+            if (json.initialCamera) {
+                var rectangle = Rectangle.fromDegrees(
+                    json.initialCamera.west,
+                    json.initialCamera.south,
+                    json.initialCamera.east,
+                    json.initialCamera.north);
+                viewModel._viewer.updateCameraFromRect(rectangle, 3000);
+            }
+
+            if (json.initialDataMenu) {
+                when(loadJson(json.initialDataMenu), loadCollection);
+            }
+        });
+    }
+
+    function hashIsSafe(hash) {
+        var safe = true;
+        for (var i = 0; i < hash.length; ++i) {
+            safe = safe && (hash[i] >= 'a' && hash[i] <= 'z' ||
+                            hash[i] >= 'A' && hash[i] <= 'Z' ||
+                            hash[i] >= '0' && hash[i] <= '9');
+        }
+        return safe;
+    }
+
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {

@@ -9,6 +9,6 @@
         "corsproxy.com"
     ],
   "initialDataMenu" : "init_nm.json",
-  "initialCamera" : { "west": 140, "south": -39, "east": 150, "north": -34}
+  "initialCamera" : { "west": 105, "south": -45, "east": 155, "north": -5}
 }
 
