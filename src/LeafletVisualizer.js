@@ -62,18 +62,16 @@ LeafletGeomVisualizer.prototype._onCollectionChanged = function(entityCollection
 
     for (i = added.length - 1; i > -1; i--) {
         entity = added[i];
-        if ((defined(entity._point) || defined(entity._polyline) || defined(entity._path)
-            || defined(entity._polygon || defined(entity._billboard)|| defined(entity._label)))
-                 && defined(entity._position)) {
+        if (((defined(entity._point) || defined(entity._billboard) || defined(entity._label)) && entity._position)
+            || defined(entity._polyline) || defined(entity._polygon) ) {
             entities.set(entity.id, entity);
         }
     }
 
     for (i = changed.length - 1; i > -1; i--) {
         entity = changed[i];
-        if ((defined(entity._point) || defined(entity._polyline) || defined(entity._path)
-            || defined(entity._polygon || defined(entity._billboard) || defined(entity._label)))
-                && defined(entity._position)) {
+        if (((defined(entity._point) || defined(entity._billboard) || defined(entity._label)) && entity._position)
+            || defined(entity._polyline) || defined(entity._polygon) ) {
             entities.set(entity.id, entity);
         } else {
             cleanEntity(entity, featureGroup);
@@ -116,17 +114,17 @@ LeafletGeomVisualizer.prototype.update = function(time) {
         if (defined(entity._point)) {
             this.updatePoint(entity, time);
         }
-        if (defined(entity._polyline) || defined(entity._path)) {
-            this.updatePolyline(entity, time);
-        }
-        if (defined(entity._polygon)) {
-            this.updatePolygon(entity, time);
-        }
         if (defined(entity._billboard)) {
             this.updateBillboard(entity, time);
         }
         if (defined(entity._label)) {
             this.updateLabel(entity, time);
+        }
+        if (defined(entity._polyline)) {
+            this.updatePolyline(entity, time);
+        }
+        if (defined(entity._polygon)) {
+            this.updatePolygon(entity, time);
         }
     }
     return true;
@@ -339,7 +337,7 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
     var positions;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polylineGraphics._show, time, true);
     if (show) {
-        positions = Property.getValueOrUndefined(entity._positions, time);
+        positions = Property.getValueOrUndefined(polylineGraphics._positions, time);
         show = defined(positions);
     }
     if (!show) {
@@ -350,7 +348,7 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
     var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
     var latlngs = [];
     for (var i = 0; i < carts.length; i++) {
-        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[i].latitude), CesiumMath.toDegrees(cart[i].longitude)));
+        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[i].latitude), CesiumMath.toDegrees(carts[i].longitude)));
     }
     var color = Property.getValueOrDefault(polylineGraphics._material.color, time, defaultColor);
     var width = Property.getValueOrDefault(polylineGraphics._width, time, defaultWidth);
@@ -390,7 +388,7 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
     var positions;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polygonGraphics._show, time, true);
     if (show) {
-        positions = Property.getValueOrUndefined(entity._positions, time);
+        positions = Property.getValueOrUndefined(polygonGraphics._positions, time);
         show = defined(positions);
     }
     if (!show) {
@@ -401,7 +399,7 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
     var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
     var latlngs = [];
     for (var i = 0; i < carts.length; i++) {
-        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[i].latitude), CesiumMath.toDegrees(cart[i].longitude)));
+        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[i].latitude), CesiumMath.toDegrees(carts[i].longitude)));
     }
     var color = Property.getValueOrDefault(polygonGraphics._material.color, time, defaultColor);
     var fill = Property.getValueOrDefault(polygonGraphics._width, time, true);
