@@ -6,8 +6,7 @@
         "research.nicta.com.au",
         "data.gov.au",
         "ga.gov.au",
-        "corsproxy.com",
-        "data.vic.gov.au"
+        "corsproxy.com"
     ],
   "initialDataMenu" : "init_nm.json",
   "initialCamera" : { "west": 105, "south": -45, "east": 155, "north": -5}
