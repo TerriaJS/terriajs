@@ -96,6 +96,42 @@ function cleanEntity(entity, group) {
 }
 
 
+/**
+ * Updates the primitives created by this visualizer to match their
+ * Entity counterpart at the given time.
+ *
+ * @param {JulianDate} time The time to update to.
+ * @returns {Boolean} This function always returns true.
+ */
+LeafletGeomVisualizer.prototype.update = function(time) {
+    //>>includeStart('debug', pragmas.debug);
+    if (!defined(time)) {
+        throw new DeveloperError('time is required.');
+    }
+    //>>includeEnd('debug');
+
+    var entities = this._entitiesToVisualize.values;
+    for (var i = 0, len = entities.length; i < len; i++) {
+        var entity = entities[i];
+        if (defined(entity._point)) {
+            this.updatePoint(entity, time);
+        }
+        if (defined(entity._polyline) || defined(entity._path)) {
+            this.updatePolyline(entity, time);
+        }
+        if (defined(entity._polygon)) {
+            this.updatePolygon(entity, time);
+        }
+        if (defined(entity._billboard)) {
+            this.updateBillboard(entity, time);
+        }
+        if (defined(entity._label)) {
+            this.updateLabel(entity, time);
+        }
+    }
+    return true;
+};
+
 LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
     var pointGraphics = entity._point;
     var featureGroup = this._featureGroup;
@@ -175,7 +211,7 @@ var tmpImage = "data:image/gif;base64,R0lGODlhAQABAPAAAAAAAP///yH5BAAAAAAALAAAAA
 LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     var markerGraphics = entity._billboard;
     var featureGroup = this._featureGroup;
-    var geomLayer = entity._geomLayer;
+    var geomLayer = entity._geomBillboard;
     var position;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(markerGraphics._show, time, true);
     if (show) {
@@ -187,8 +223,6 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
         return;
     }
 
-    return;
-
     var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
     var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
     var imageUrl = Property.getValueOrDefault(markerGraphics._image, time, undefined);
@@ -197,6 +231,10 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     var verticalOffset = Property.getValueOrDefault(markerGraphics._verticalOffset, time, undefined);
     var horizontalOffset = Property.getValueOrDefault(markerGraphics._horizontalOffset, time, undefined);
     var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
+    //TODO: scale/vertical-horizontal origin - get size after loading image
+    //if (defined(verticalOffset) || defined(horizontalOffset)) {
+    //    iconOptions.iconAnchor = [horizontalOffset, verticalOffset];
+    //}
 
     var iconOptions = {
         color: color.toCssColorString(),
@@ -206,15 +244,12 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     if (defined(height) || defined(width)) {
         iconOptions.iconSize = [width, height];
     }
-    if (defined(verticalOffset) || defined(horizontalOffset)) {
-        iconOptions.iconAnchor = [horizontalOffset, verticalOffset];
-    }
 
     var redrawIcon = false;
     if (!defined(geomLayer)) {
         var marker = L.marker(latlng, {icon: L.icon({iconUrl: tmpImage})});
         featureGroup.addLayer(marker);
-        entity._geomLayer = marker;
+        entity._geomBillboard = marker;
         redrawIcon = true;
     } else {
         var marker = geomLayer;
@@ -230,13 +265,18 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     }
 
     if (redrawIcon) {
-        loadImage(imageUrl).then (function(image) {
+        var drawBillboard = function(image) {
             iconOptions.iconUrl = image;
             if (!color.equals(defaultColor)) {
                 iconOptions.iconUrl = recolorBillboard(image, color);
             }
             marker.setIcon(L.icon(iconOptions));
-        });
+        };
+        if (imageUrl.indexOf('data:image') === 0) {
+            drawBillboard(imageUrl);
+        } else {
+            loadImage(imageUrl).then(drawBillboard(image));
+        }
     }
 }
 
@@ -244,7 +284,7 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
 LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
     var labelGraphics = entity._label;
     var featureGroup = this._featureGroup;
-    var geomLayer = entity._geomLayer;
+    var geomLayer = entity._geomLabel;
     var position;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(labelGraphics._show, time, true);
     if (show) {
@@ -261,38 +301,34 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
     var text = Property.getValueOrDefault(labelGraphics._text, time, undefined);
     var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, undefined);
     var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, undefined);
-    var color = Property.getValueOrDefault(labelGraphics._color, time, defaultColor);
+    var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, undefined);
+    var color = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
 
-    var redrawLabel = false;
+    var divIconOptions = {
+        html: '<p style="color:'+color.toCssColorString()+';margin-left:0px;font-size:12px;">'+text+'</p>',
+        iconSize: [0, 0]
+    };
+    //TODO: fix placement, leaflet centers by default it appears
+    if (defined(pixelOffset)) {
+        divIconOptions.iconAnchor = [-pixelOffset.x, -pixelOffset.y];
+    }
+
     if (!defined(geomLayer)) {
-        var divIconObj = L.divIcon({
-            html: '<p style="color:white;margin-left:30px;">'+text+'</p>'
-        });
-
-        var markerOptions = {
-            icon: divIconObj,
-        };
-
+        var markerOptions = { icon: L.divIcon(divIconOptions) };
         var marker = L.marker(latlng, markerOptions);
         featureGroup.addLayer(marker);
-        entity._geomLayer = marker;
-        redrawLabel = true;
-    }
-/*     else {
+        entity._geomLabel = marker;
+    } else {
         var marker = geomLayer;
         if (!marker._latlng.equals(latlng)) {
             marker.setLatLng(latlng);
         }
-        for (var prop in markerOptions) {
-            if (markerOptions[prop] !== marker.options[prop]) {
-                redrawLabel = true;
+        for (var prop in divIconOptions) {
+            if (divIconOptions[prop] !== marker.options.icon.options[prop]) {
+                marker.setIcon(L.divIcon(divIconOptions));
                 break;
             }
         }
-    }
-*/
-    if (redrawLabel) {
-
     }
 }
 
@@ -400,42 +436,6 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
 }
 
 /**
- * Updates the primitives created by this visualizer to match their
- * Entity counterpart at the given time.
- *
- * @param {JulianDate} time The time to update to.
- * @returns {Boolean} This function always returns true.
- */
-LeafletGeomVisualizer.prototype.update = function(time) {
-    //>>includeStart('debug', pragmas.debug);
-    if (!defined(time)) {
-        throw new DeveloperError('time is required.');
-    }
-    //>>includeEnd('debug');
-
-    var entities = this._entitiesToVisualize.values;
-    for (var i = 0, len = entities.length; i < len; i++) {
-        var entity = entities[i];
-        if (defined(entity._point)) {
-            this.updatePoint(entity, time);
-        }
-        if (defined(entity._polyline) || defined(entity._path)) {
-            this.updatePolyline(entity, time);
-        }
-        if (defined(entity._polygon)) {
-            this.updatePolygon(entity, time);
-        }
-        if (defined(entity._billboard)) {
-            this.updateBillboard(entity, time);
-        }
-        if (defined(entity._label)) {
-            this.updateLabel(entity, time);
-        }
-    }
-    return true;
-};
-
-/**
  * Returns true if this object was destroyed; otherwise, false.
  *
  * @returns {Boolean} True if this object was destroyed; otherwise, false.
@@ -451,6 +451,8 @@ LeafletGeomVisualizer.prototype.destroy = function() {
     var entities = this._entitiesToVisualize.values;
     for (var i = entities.length - 1; i > -1; i--) {
         entities[i]._geomLayer = undefined;
+        entities[i]._geomBillboard = undefined;
+        entities[i]._geomLabel = undefined;
     }
     this._entityCollection.collectionChanged.removeEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
     this._map.removeLayer(this._featureGroup);
