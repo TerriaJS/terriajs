@@ -3,6 +3,7 @@
 
 /*global require,L,URI,$,Document,alert,console*/
 var AssociativeArray = require('../third_party/cesium/Source/Core/AssociativeArray');
+var Cartesian2 = require('../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../third_party/cesium/Source/Core/Cartesian3');
 var Color = require('../third_party/cesium/Source/Core/Color');
 var defined = require('../third_party/cesium/Source/Core/defined');
@@ -206,6 +207,7 @@ function recolorBillboard(img, color) {
 
 var tmpImage = "data:image/gif;base64,R0lGODlhAQABAPAAAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
 
+//TODO: currently skipping all the distance related properties
 LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     var markerGraphics = entity._billboard;
     var featureGroup = this._featureGroup;
@@ -226,9 +228,11 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     var imageUrl = Property.getValueOrDefault(markerGraphics._image, time, undefined);
     var height = Property.getValueOrDefault(markerGraphics._height, time, undefined);
     var width = Property.getValueOrDefault(markerGraphics._width, time, undefined);
-    var verticalOffset = Property.getValueOrDefault(markerGraphics._verticalOffset, time, undefined);
-    var horizontalOffset = Property.getValueOrDefault(markerGraphics._horizontalOffset, time, undefined);
     var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
+    var scale = Property.getValueOrDefault(markerGraphics._scale, time, 1.0);
+    var verticalOrigin = Property.getValueOrDefault(markerGraphics._verticalOrigin, time, undefined);
+    var horizontalOrigin = Property.getValueOrDefault(markerGraphics._horizontalOrigin, time, undefined);
+    var pixelOffset = Property.getValueOrDefault(markerGraphics._pixelOffset, time, new Cartesian2(0,0));
     //TODO: scale/vertical-horizontal origin - get size after loading image
     //if (defined(verticalOffset) || defined(horizontalOffset)) {
     //    iconOptions.iconAnchor = [horizontalOffset, verticalOffset];
@@ -236,7 +240,10 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
 
     var iconOptions = {
         color: color.toCssColorString(),
-        origUrl: imageUrl
+        origUrl: imageUrl,
+        scale: scale,
+        horizontalOrigin: horizontalOrigin,  //value: left, center, right
+        verticalOrigin: verticalOrigin      //value: bottom, center, top
     };
 
     if (defined(height) || defined(width)) {
@@ -263,17 +270,30 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     }
 
     if (redrawIcon) {
-        var drawBillboard = function(image) {
-            iconOptions.iconUrl = image;
+        var drawBillboard = function(image, dataurl) {
+            iconOptions.iconUrl = dataurl || image;
+            if (!defined(iconOptions.iconSize)) {
+                iconOptions.iconSize = [image.width * scale, image.height * scale];
+            }
+            //TODO: verify this against datasets
+            var w = iconOptions.iconSize[0], h = iconOptions.iconSize[1];
+            var xOff = (w/2)*(1+horizontalOrigin) + pixelOffset.x;
+            var yOff = (h/2)*(1+verticalOrigin) + pixelOffset.y;
+            iconOptions.iconAnchor = [xOff, yOff];
+
             if (!color.equals(defaultColor)) {
                 iconOptions.iconUrl = recolorBillboard(image, color);
             }
             marker.setIcon(L.icon(iconOptions));
         };
         if (imageUrl.indexOf('data:image') === 0) {
-            drawBillboard(imageUrl);
+            var img = new Image();
+            img.onload = function() {
+                drawBillboard(img, imageUrl);
+            };
+            img.src = imageUrl;
         } else {
-            loadImage(imageUrl).then(drawBillboard(image));
+            loadImage(imageUrl).then(function(img) { drawBillboard(img); });
         }
     }
 }
@@ -297,16 +317,29 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
     var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
     var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
     var text = Property.getValueOrDefault(labelGraphics._text, time, undefined);
+    var font = Property.getValueOrDefault(labelGraphics._font, time, undefined);
+    var scale = Property.getValueOrDefault(labelGraphics._scale, time, 1.0);
+    var color = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
     var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, undefined);
     var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, undefined);
     var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, undefined);
-    var color = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
 
+    var color = 'color:'+color.toCssColorString() + ';';
+    var font = defined(font) ? 'font-family:'+font + ';' : '';
+    var size = 'font-size:'+ Math.round(scale*12) + 'px;';
+    var align = defined(horizontalOrigin) ? 'text-align:center;' : '';
+    var valign = defined(verticalOrigin) ? 'vertical-align:bottom;' : '';
+    var hOff = defined(pixelOffset) ? 'margin-left:'+pixelOffset[0]+'px;' : '';
+    var vOff = defined(pixelOffset) ? 'margin-top:'+pixelOffset[1]+'px;' : '';
+
+    var style = color + font + size + align + valign + hOff + vOff;
+
+    //TODO: verify against datasets
     var divIconOptions = {
-        html: '<p style="color:'+color.toCssColorString()+';margin-left:0px;font-size:12px;">'+text+'</p>',
+        html: '<p style="'+style+'">'+text+'</p>',
         iconSize: [0, 0]
     };
-    //TODO: fix placement, leaflet centers by default it appears
+
     if (defined(pixelOffset)) {
         divIconOptions.iconAnchor = [-pixelOffset.x, -pixelOffset.y];
     }
