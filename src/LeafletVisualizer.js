@@ -204,7 +204,7 @@ function recolorBillboard(img, color) {
 //    return context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-
+//Single pixel black dot
 var tmpImage = "data:image/gif;base64,R0lGODlhAQABAPAAAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
 
 //TODO: currently skipping all the distance related properties
@@ -233,10 +233,6 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     var verticalOrigin = Property.getValueOrDefault(markerGraphics._verticalOrigin, time, undefined);
     var horizontalOrigin = Property.getValueOrDefault(markerGraphics._horizontalOrigin, time, undefined);
     var pixelOffset = Property.getValueOrDefault(markerGraphics._pixelOffset, time, new Cartesian2(0,0));
-    //TODO: scale/vertical-horizontal origin - get size after loading image
-    //if (defined(verticalOffset) || defined(horizontalOffset)) {
-    //    iconOptions.iconAnchor = [horizontalOffset, verticalOffset];
-    //}
 
     var iconOptions = {
         color: color.toCssColorString(),
@@ -298,7 +294,7 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     }
 }
 
-//TODO: use divIcon instead of marker to control text visuals
+
 LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
     var labelGraphics = entity._label;
     var featureGroup = this._featureGroup;
