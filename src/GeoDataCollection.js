@@ -400,7 +400,9 @@ GeoDataCollection.prototype.checkServerHealth = function(layer, succeed, fail) {
     }, function(err) {
             //ESRI exception case - accept 400 status as well as 200
         if (err.statusCode === 400) {
-            succeed(layer);
+            if (defined(succeed)) {
+                succeed(layer);
+            }
             return;
         }
         if (defined(fail)) {
