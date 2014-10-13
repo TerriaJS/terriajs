@@ -35,6 +35,7 @@ function filterHeaders(req, headers) {
     }
 
     result['Cache-Control'] = 'public; max-age=315360000';
+    result['Access-Control-Allow-Origin'] ='*';
 
     return result;
 }
