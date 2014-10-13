@@ -696,14 +696,12 @@ AusGlobeViewer.prototype.isCesium = function() {
 };
 
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
-    var bnds;
-    var rect;
+    var bnds, rect;
 
     var that = this;
 
     if (!bCesium) {
 
-        var bnds;
         if (this.viewer !== undefined) {
             rect = getCameraRect(this.scene);
             bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
@@ -829,7 +827,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     }
     else {
-        var rect;
         if (defined(this.map)) {
             rect = getCameraRect(undefined, this.map);
 

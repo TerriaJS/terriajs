@@ -72,7 +72,7 @@ gulp.task('watch', ['watch-app', 'watch-specs']);
 
 gulp.task('lint', function(){
     return gulp.src('src/**/*.js')
-        .pipe(jshint())
+        .pipe(jshint({laxbreak:true}))
         .pipe(jshint.reporter('default'));
 });
 

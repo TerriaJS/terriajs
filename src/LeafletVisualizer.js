@@ -21,6 +21,7 @@ var defaultOutlineWidth = 1.0;
 var defaultPixelSize = 5.0;
 
 var defaultWidth = 5.0;
+var popupHeight = 520;
 
 
 /**
@@ -63,16 +64,16 @@ LeafletGeomVisualizer.prototype._onCollectionChanged = function(entityCollection
 
     for (i = added.length - 1; i > -1; i--) {
         entity = added[i];
-        if (((defined(entity._point) || defined(entity._billboard) || defined(entity._label)) && entity._position)
-            || defined(entity._polyline) || defined(entity._polygon) ) {
+        if (((defined(entity._point) || defined(entity._billboard) || defined(entity._label)) && defined(entity._position))
+            || defined(entity._polyline) || defined(entity._polygon)) {
             entities.set(entity.id, entity);
         }
     }
 
     for (i = changed.length - 1; i > -1; i--) {
         entity = changed[i];
-        if (((defined(entity._point) || defined(entity._billboard) || defined(entity._label)) && entity._position)
-            || defined(entity._polyline) || defined(entity._polygon) ) {
+        if (((defined(entity._point) || defined(entity._billboard) || defined(entity._label)) && defined(entity._position))
+            || defined(entity._polyline) || defined(entity._polygon)) {
             entities.set(entity.id, entity);
         } else {
             cleanEntity(entity, featureGroup);
@@ -87,10 +88,19 @@ LeafletGeomVisualizer.prototype._onCollectionChanged = function(entityCollection
     }
 };
 
+
 function cleanEntity(entity, group) {
-    var geomLayer = entity._geomLayer;
-    if (defined(geomLayer)) {
-        group.removeLayer(geomLayer);
+    if (defined(entity._geomLayer)) {
+        group.removeLayer(entity._geomLayer);
+    }
+    if (defined(entity._geomPoint)) {
+        group.removeLayer(entity._geomPoint);
+    }
+    if (defined(entity._geomBillboard)) {
+        group.removeLayer(entity._geomBillboard);
+    }
+    if (defined(entity._geomLabel)) {
+        group.removeLayer(entity._geomLabel);
     }
 }
 
@@ -135,10 +145,11 @@ LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
     var pointGraphics = entity._point;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomPoint;
-    var position;
+    var position, point, description;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(pointGraphics._show, time, true);
     if (show) {
         position = Property.getValueOrUndefined(entity._position, time);
+        description = Property.getValueOrUndefined(entity._description, time);
         show = defined(position);
     }
     if (!show) {
@@ -163,22 +174,23 @@ LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
     };
 
     if (!defined(geomLayer)) {
-        var point = L.circleMarker(latlng, pointOptions);
+        point = L.circleMarker(latlng, pointOptions);
+        point.bindPopup(description, {maxHeight: popupHeight});
         featureGroup.addLayer(point);
         entity._geomPoint = point;
     } else {
-        var point = geomLayer;
+        point = geomLayer;
         if (!point._latlng.equals(latlng)) {
             point.setLatLng(latlng);
         }
         for (var prop in pointOptions) {
             if (pointOptions[prop] !== point.options[prop]) {
-                point.setStyle(markerOptions);
+                point.setStyle(pointOptions);
                 break;
             }
         }
     }
-}
+};
 
 //Recolor an image using 2d canvas
 function recolorBillboard(img, color) {
@@ -207,15 +219,16 @@ function recolorBillboard(img, color) {
 //Single pixel black dot
 var tmpImage = "data:image/gif;base64,R0lGODlhAQABAPAAAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
 
-//TODO: currently skipping all the distance related properties
+//TODO: currently skipping all the camera distance related properties
 LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
     var markerGraphics = entity._billboard;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomBillboard;
-    var position;
+    var position, marker, description;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(markerGraphics._show, time, true);
     if (show) {
         position = Property.getValueOrUndefined(entity._position, time);
+        description = Property.getValueOrUndefined(entity._description, time);
         show = defined(position);
     }
     if (!show) {
@@ -248,12 +261,14 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
 
     var redrawIcon = false;
     if (!defined(geomLayer)) {
-        var marker = L.marker(latlng, {icon: L.icon({iconUrl: tmpImage})});
+        var markerOptions = {icon: L.icon({iconUrl: tmpImage})};
+        marker = L.marker(latlng, markerOptions);
+        marker.bindPopup(description, {maxHeight: popupHeight});
         featureGroup.addLayer(marker);
         entity._geomBillboard = marker;
         redrawIcon = true;
     } else {
-        var marker = geomLayer;
+        marker = geomLayer;
         if (!marker._latlng.equals(latlng)) {
             marker.setLatLng(latlng);
         }
@@ -292,14 +307,14 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
             loadImage(imageUrl).then(function(img) { drawBillboard(img); });
         }
     }
-}
+};
 
 
 LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
     var labelGraphics = entity._label;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomLabel;
-    var position;
+    var position, marker;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(labelGraphics._show, time, true);
     if (show) {
         position = Property.getValueOrUndefined(entity._position, time);
@@ -315,20 +330,20 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
     var text = Property.getValueOrDefault(labelGraphics._text, time, undefined);
     var font = Property.getValueOrDefault(labelGraphics._font, time, undefined);
     var scale = Property.getValueOrDefault(labelGraphics._scale, time, 1.0);
-    var color = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
+    var fillColor = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
     var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, undefined);
     var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, undefined);
     var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, undefined);
 
-    var color = 'color:'+color.toCssColorString() + ';';
-    var font = defined(font) ? 'font-family:'+font + ';' : '';
-    var size = 'font-size:'+ Math.round(scale*12) + 'px;';
+    var color = 'color:'+ fillColor.toCssColorString() + ';';
+    var fontFamily = defined(font) ? 'font-family:' + font + ';' : '';
+    var fontSize = 'font-size:' + Math.round(scale*12) + 'px;';
     var align = defined(horizontalOrigin) ? 'text-align:center;' : '';
     var valign = defined(verticalOrigin) ? 'vertical-align:bottom;' : '';
-    var hOff = defined(pixelOffset) ? 'margin-left:'+pixelOffset[0]+'px;' : '';
-    var vOff = defined(pixelOffset) ? 'margin-top:'+pixelOffset[1]+'px;' : '';
+    var hOff = defined(pixelOffset) ? 'margin-left:' + pixelOffset[0] + 'px;' : '';
+    var vOff = defined(pixelOffset) ? 'margin-top:' + pixelOffset[1] + 'px;' : '';
 
-    var style = color + font + size + align + valign + hOff + vOff;
+    var style = color + fontFamily + fontSize + align + valign + hOff + vOff;
 
     //TODO: verify against datasets
     var divIconOptions = {
@@ -342,11 +357,11 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
 
     if (!defined(geomLayer)) {
         var markerOptions = { icon: L.divIcon(divIconOptions) };
-        var marker = L.marker(latlng, markerOptions);
+        marker = L.marker(latlng, markerOptions);
         featureGroup.addLayer(marker);
         entity._geomLabel = marker;
     } else {
-        var marker = geomLayer;
+        marker = geomLayer;
         if (!marker._latlng.equals(latlng)) {
             marker.setLatLng(latlng);
         }
@@ -357,16 +372,17 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
             }
         }
     }
-}
+};
 
 LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
     var polylineGraphics = entity._polyline;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomLayer;
-    var positions;
+    var positions, polyline, description;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polylineGraphics._show, time, true);
     if (show) {
         positions = Property.getValueOrUndefined(polylineGraphics._positions, time);
+        description = Property.getValueOrUndefined(entity._description, time);
         show = defined(positions);
     }
     if (!show) {
@@ -376,8 +392,8 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
 
     var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
     var latlngs = [];
-    for (var i = 0; i < carts.length; i++) {
-        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[i].latitude), CesiumMath.toDegrees(carts[i].longitude)));
+    for (var p = 0; p < carts.length; p++) {
+        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[p].latitude), CesiumMath.toDegrees(carts[p].longitude)));
     }
     var color = Property.getValueOrDefault(polylineGraphics._material.color, time, defaultColor);
     var width = Property.getValueOrDefault(polylineGraphics._width, time, defaultWidth);
@@ -389,14 +405,15 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
     };
 
     if (!defined(geomLayer)) {
-        var polyline = L.polyline(latlngs, polylineOptions);
+        polyline = L.polyline(latlngs, polylineOptions);
+        polyline.bindPopup(description, {maxHeight: popupHeight});
         featureGroup.addLayer(polyline);
         entity._geomLayer = polyline;
     } else {
-        var polyline = geomLayer;
+        polyline = geomLayer;
         var curLatLngs = polyline.getLatLngs;
         for (var i = 0; i < curLatLngs.length; i++) {
-            if (!curLatLngs[i].equals(latlng[i])) {
+            if (!curLatLngs[i].equals(latlngs[i])) {
                 polyline.setLatLngs(latlngs);
                 break;
             }
@@ -408,16 +425,17 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
             }
         }
     }
-}
+};
 
 LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
     var polygonGraphics = entity._polygon;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomLayer;
-    var positions;
+    var positions, polygon, description;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polygonGraphics._show, time, true);
     if (show) {
         positions = Property.getValueOrUndefined(polygonGraphics._positions, time);
+        description = Property.getValueOrUndefined(entity._description, time);
         show = defined(positions);
     }
     if (!show) {
@@ -427,13 +445,13 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
 
     var carts = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
     var latlngs = [];
-    for (var i = 0; i < carts.length; i++) {
-        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[i].latitude), CesiumMath.toDegrees(carts[i].longitude)));
+    for (var p = 0; p < carts.length; p++) {
+        latlngs.push(L.latLng( CesiumMath.toDegrees(carts[p].latitude), CesiumMath.toDegrees(carts[p].longitude)));
     }
     var color = Property.getValueOrDefault(polygonGraphics._material.color, time, defaultColor);
     var fill = Property.getValueOrDefault(polygonGraphics._fill, time, true);
     var outline = Property.getValueOrDefault(polygonGraphics._outline, time, true);
-    var outlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor);
+    var outlineColor = Property.getValueOrDefault(polygonGraphics._outlineColor, time, defaultOutlineColor);
 
     var polygonOptions = {
         fill: fill,
@@ -445,14 +463,15 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
      };
 
     if (!defined(geomLayer)) {
-        var polygon = L.polygon(latlngs, polygonOptions);
+        polygon = L.polygon(latlngs, polygonOptions);
+        polygon.bindPopup(description, {maxHeight: popupHeight});
         featureGroup.addLayer(polygon);
         entity._geomLayer = polygon;
     } else {
-        var polygon = geomLayer;
+        polygon = geomLayer;
         var curLatLngs = polygon.getLatLngs;
         for (var i = 0; i < curLatLngs.length; i++) {
-            if (!curLatLngs[i].equals(latlng[i])) {
+            if (!curLatLngs[i].equals(latlngs[i])) {
                 polygon.setLatLngs(latlngs);
                 break;
             }
@@ -464,7 +483,7 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
             }
         }
     }
-}
+};
 
 /**
  * Returns true if this object was destroyed; otherwise, false.
