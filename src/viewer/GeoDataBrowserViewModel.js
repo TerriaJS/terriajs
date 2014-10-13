@@ -1046,6 +1046,27 @@ these extensions in order for National Map to know how to load it.'
         }
     }
 
+    // From StackOverflow: http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    function shuffle(array) {
+        var currentIndex = array.length,
+            temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
     function requestTiles(requests, maxLevel) {
         var urls = [];
 
@@ -1085,6 +1106,10 @@ these extensions in order for National Map to know how to load it.'
         throttleRequestByServer.maximumRequestsPerServer = oldMax;
 
         console.log('Requesting ' + urls.length + ' URLs!');
+
+        // Do requests in random order for better performance; successive requests are
+        // less likely to be to the same server.
+        shuffle(urls);
 
         var maxRequests = 6;
         var nextRequestIndex = 0;
