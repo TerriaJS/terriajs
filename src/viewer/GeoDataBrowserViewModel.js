@@ -17,6 +17,7 @@ var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
@@ -923,6 +924,8 @@ these extensions in order for National Map to know how to load it.'
         return safe;
     }
 
+    this.maxLevel = knockout.observable(5);
+
     var numWaitingFor;
 
     this.showPopulateCache = function() {
@@ -935,17 +938,17 @@ these extensions in order for National Map to know how to load it.'
         return false;
     }
 
-    this.populateCache = function(cacheOpenCategoriesOnly) {
+    this.populateCache = function(mode) {
         function waitForAllToFinishLoading() {
             numWaitingFor = 0;
-            if (cacheOpenCategoriesOnly || (that.content().length > 0 && areAllDoneLoading(that.content()))) {
+            if (mode !== "all" || (that.content().length > 0 && areAllDoneLoading(that.content()))) {
                 var requests = [];
 
-                getAllRequests(requests, that.content());
+                getAllRequests(mode, requests, that.content());
 
                 console.log('Requesting tiles from ' + requests.length + ' data sources.');
 
-                requestTiles(requests);
+                requestTiles(requests, that.maxLevel());
             } else {
                 setTimeout(waitForAllToFinishLoading, 5000);
             }
@@ -975,14 +978,16 @@ these extensions in order for National Map to know how to load it.'
         return allDone;
     }
 
-    function getAllRequests(requests, layers) {
+    function getAllRequests(mode, requests, layers) {
         for (var i = 0; i < layers.length; ++i) {
             var item = layers[i];
             if (item.Layer) {
-                if (item.isOpen && item.isOpen()) {
-                    getAllRequests(requests, item.Layer());
+                if (mode !== 'opened' || (item.isOpen && item.isOpen())) {
+                    getAllRequests(mode, requests, item.Layer());
+                } else if (mode === 'enabled' && item.isEnabled && item.isEnabled()) {
+                    getAllRequests(mode, requests, item.Layer());
                 }
-            } else if (item.type() === 'WMS') {
+            } else if (item.type() === 'WMS' && (mode !== 'enabled' || item.isEnabled())) {
                 var url = item.base_url();
                 var proxy;
                 if (corsProxy.shouldUseProxy(url)) {
@@ -1041,7 +1046,7 @@ these extensions in order for National Map to know how to load it.'
         }
     }
 
-    function requestTiles(requests) {
+    function requestTiles(requests, maxLevel) {
         var urls = [];
 
         loadImage.createImage = function(url, crossOrigin, deferred) {
@@ -1049,13 +1054,14 @@ these extensions in order for National Map to know how to load it.'
             deferred.resolve();
         };
 
+        var oldMax = throttleRequestByServer.maximumRequestsPerServer;
+        throttleRequestByServer.maximumRequestsPerServer = Number.MAX_VALUE;
+
         for (var i = 0; i < requests.length; ++i) {
             var request = requests[i];
             var bareItem = komapping.toJS(request.item);
             var extent = getOGCLayerExtent(bareItem);
             var tilingScheme = request.provider.tilingScheme;
-
-            var maxLevel = 5;
 
             for (var level = 0; level <= maxLevel; ++level) {
                 var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
@@ -1076,6 +1082,7 @@ these extensions in order for National Map to know how to load it.'
         }
 
         loadImage.createImage = loadImage.defaultCreateImage;
+        throttleRequestByServer.maximumRequestsPerServer = oldMax;
 
         console.log('Requesting ' + urls.length + ' URLs!');
 
@@ -1098,6 +1105,9 @@ these extensions in order for National Map to know how to load it.'
                     url : urls[nextRequestIndex++]
                 }).then(doneUrl).otherwise(doneUrl);
             } else if (inFlight === 0) {
+                if ((nextRequestIndex % 10) !== 0) {
+                    console.log('Finished ' + nextRequestIndex + ' URLs.');
+                }
                 console.log('Done!');
             }
         }
