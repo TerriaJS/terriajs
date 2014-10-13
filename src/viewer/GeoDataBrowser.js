@@ -54,28 +54,28 @@ var GeoDataBrowser = function(options) {
     populateEnabledButton.className = 'ausglobe-panel-button';
     populateEnabledButton.title = 'Populate cache for data sources that are enabled';
     populateEnabledButton.innerHTML = '<div class="ausglobe-panel-button-label">Enabled</div>';
-    populateEnabledButton.setAttribute('data-bind', 'visible: showPopulateCache, click: function() { populateCache("enabled"); }');
+    populateEnabledButton.setAttribute('data-bind', 'visible: showPopulateCache(), click: function() { populateCache("enabled"); }');
     wrapper.appendChild(populateEnabledButton);
 
     var populateOpenButton = document.createElement('div');
     populateOpenButton.className = 'ausglobe-panel-button';
     populateOpenButton.title = 'Populate cache for data sources that are in open data panel categories';
     populateOpenButton.innerHTML = '<div class="ausglobe-panel-button-label">Open</div>';
-    populateOpenButton.setAttribute('data-bind', 'visible: showPopulateCache, click: function() { populateCache("opened"); }');
+    populateOpenButton.setAttribute('data-bind', 'visible: showPopulateCache(), click: function() { populateCache("opened"); }');
     wrapper.appendChild(populateOpenButton);
 
     var populateAllButton = document.createElement('div');
     populateAllButton.className = 'ausglobe-panel-button';
     populateAllButton.title = 'Populate cache for all data sources';
     populateAllButton.innerHTML = '<div class="ausglobe-panel-button-label">All</div>';
-    populateAllButton.setAttribute('data-bind', 'visible: showPopulateCache, click: function() { populateCache("all"); }');
+    populateAllButton.setAttribute('data-bind', 'visible: showPopulateCache(), click: function() { populateCache("all"); }');
     wrapper.appendChild(populateAllButton);
 
     var maxLevel = document.createElement('div');
     maxLevel.className = 'ausglobe-panel-button';
     maxLevel.title = 'Maximum tile level';
     maxLevel.innerHTML = '<input class="ausglobe-wfs-url-input" type="text" data-bind="value: maxLevel" />';
-    maxLevel.setAttribute('data-bind', 'visible: showPopulateCache');
+    maxLevel.setAttribute('data-bind', 'visible: showPopulateCache()');
     wrapper.appendChild(maxLevel);
 
     var dataPanel = document.createElement('div');
