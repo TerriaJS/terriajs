@@ -52,14 +52,14 @@ var GeoDataBrowser = function(options) {
 
     var populateOpenButton = document.createElement('div');
     populateOpenButton.className = 'ausglobe-panel-button';
-    populateOpenButton.title = 'Pop Open';
-    populateOpenButton.innerHTML = '<div class="ausglobe-panel-button-label">Pop Open</div>';
+    populateOpenButton.title = 'Populate cache for data sources that are in open data panel categories';
+    populateOpenButton.innerHTML = '<div class="ausglobe-panel-button-label">Populate</div>';
     populateOpenButton.setAttribute('data-bind', 'visible: showPopulateCache, click: function() { populateCache(true); }');
     wrapper.appendChild(populateOpenButton);
 
     var populateAllButton = document.createElement('div');
     populateAllButton.className = 'ausglobe-panel-button';
-    populateAllButton.title = 'Pop All';
+    populateAllButton.title = 'Populate cache for all data sources';
     populateAllButton.innerHTML = '<div class="ausglobe-panel-button-label">Pop All</div>';
     populateAllButton.setAttribute('data-bind', 'visible: showPopulateCache, click: function() { populateCache(false); }');
     wrapper.appendChild(populateAllButton);
