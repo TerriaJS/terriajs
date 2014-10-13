@@ -59,6 +59,13 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var Animation = require('../../third_party/cesium/Source/Widgets/Animation/Animation');
+var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animation/AnimationViewModel');
+var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timeline');
+var subscribeAndEvaluate = require('../../third_party/cesium/Source/Widgets/subscribeAndEvaluate');
+var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
+
+
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
 var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
@@ -700,16 +707,14 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     if (!bCesium) {
 
-        if (this.viewer !== undefined) {
+            //shut down existing cesium
+        if (defined(this.viewer)) {
             rect = getCameraRect(this.scene);
             bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
                 [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
-        }
-       //TODO: LOOK FOR SIDE EFFECTS TO DOING THIS EARLY
-         //shut down existing cesium
-        if (this.viewer !== undefined) {
+
             this._enableSelectExtent(false);
-            stopTimeline();
+            this.updateTimeline();
 
             var inputHandler = this.viewer.screenSpaceEventHandler;
             inputHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
@@ -726,8 +731,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }).setView([-28.5, 135], 5);
 
         this.map = map;
-
-       // Hacky nonsense to let us use Cesium's InfoBox without actually using Cesium.
         map.clock = new Clock();
         map.dataSources = this.geoDataManager.dataSourceCollection;
 
@@ -771,6 +774,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         ticker();
 
+        this.createTimeline(map.clock);
+            //TODO: restart existing timeline settings
+        this.updateTimeline();
+
         map.on("boxzoomend", function(e) {
             console.log(e.boxZoomBounds);
         });
@@ -785,25 +792,12 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this._navigationWidget.showTilt = false;
         document.getElementById('ausglobe-title-position').style.visibility = 'hidden';
 
-        //redisplay data
-        this.map = map;
-
         this.captureCanvas = function() {
             var that = this;
             if (that.startup) {
                 that.startup = false;
-                //there are problems viewing geojson but since we make it pretty to get that these
-                //days we can probably turn this off by default
-//                alert('There are known problems capturing images with some datasets in 2D view.  Please use 3D mode if possible for this operation.');
             }
             that.map.attributionControl.removeFrom(that.map);
-/*            //might need to break out to global function and deal with err
-            leafletImage(that.map, function(err, canvas) {
-                var dataUrl = canvas.toDataURL();
-                    that.captureCanvasCallback(dataUrl);
-                    that.map.attributionControl.addTo(that.map);
-            });            
-*/            
             html2canvas( document.getElementById('cesiumContainer'), {
 	            useCORS: true,
                 onrendered: function(canvas) {
@@ -820,14 +814,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         
         this.geoDataManager.setViewer({scene: undefined, map: map});
         this.geoDataBrowser.viewModel.map = map;
-
-        //TODO: set visualizer functions for GeoDataCollection
-
     }
     else {
         if (defined(this.map)) {
             rect = getCameraRect(undefined, this.map);
 
+            this.updateTimeline();
+            this.removeTimeline();
             this.dataSourceDisplay.destroy();
             this.map.dataSources = undefined;
             this.map.remove();
@@ -880,7 +873,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);
-        stopTimeline(this.viewer);
+        this.updateTimeline();
 
         this._navigationWidget.showTilt = true;
         document.getElementById('ausglobe-title-position').style.visibility = 'visible';
@@ -988,6 +981,51 @@ function supportsWebgl() {
 //------------------------------------
 // Timeline display on selection
 //------------------------------------
+
+//TODO: figure out timeline scrub
+function onTimelineScrubfunction(e) {
+    var clock = e.clock;
+    clock.currentTime = e.timeJulian;
+    clock.shouldAnimate = false;
+}
+
+AusGlobeViewer.prototype.createTimeline = function(clock) {
+    var viewerContainer = document.getElementById('cesiumContainer');
+
+    var clockViewModel = new ClockViewModel(clock);
+
+    var animationContainer = document.createElement('div');
+    animationContainer.className = 'cesium-viewer-animationContainer';
+    animationContainer.style.bottom = '15px';
+    viewerContainer.appendChild(animationContainer);
+    this.map.animation = new Animation(animationContainer, new AnimationViewModel(clockViewModel));
+
+    var timelineContainer = document.createElement('div');
+    timelineContainer.className = 'cesium-viewer-timelineContainer';
+    timelineContainer.style.right = '0px';
+    timelineContainer.style.bottom = '15px';
+    viewerContainer.appendChild(timelineContainer);
+    var timeline = new Timeline(timelineContainer, clock);
+    timeline.addEventListener('settime', onTimelineScrubfunction, false);
+    timeline.zoomTo(clock.startTime, clock.stopTime);
+    this.map.timeline = timeline;
+}
+
+AusGlobeViewer.prototype.removeTimeline = function() {
+    var viewerContainer = document.getElementById('cesiumContainer');
+
+    if (defined(this.map.animation)) {
+        viewerContainer.removeChild(this.map.animation.container);
+        this.map.animation = this.map.animation.destroy();
+    }
+
+    if (defined(this.map.timeline)) {
+        this.map.timeline.removeEventListener('settime', onTimelineScrubfunction, false);
+        viewerContainer.removeChild(this.map.timeline.container);
+        this.map.timeline = this.map.timeline.destroy();
+    }
+}
+
 function showTimeline(viewer) {
     $('.cesium-viewer-animationContainer').css('visibility', 'visible');
     $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
@@ -1006,39 +1044,34 @@ function hideTimeline(viewer) {
     }
 }
 
-function stopTimeline(viewer) {
-    if (defined(viewer)) {
-        hideTimeline(viewer);
-        viewer.clock.clockRange = ClockRange.UNBOUNDED;
-        viewer.clock.shouldAnimate = false;
-    }
-}
-
 //update the timeline
-function updateTimeline(viewer, start, finish) {
+AusGlobeViewer.prototype.updateTimeline = function(start, finish) {
+    var viewer = this.viewer;
+    var clock = defined(viewer) ? this.viewer.clock : this.map.clock;
+    var timeline = defined(viewer) ? this.viewer.timeline : this.map.timeline;
+
     if (start === undefined || finish === undefined) {
-        stopTimeline(viewer);
-        return;
+        hideTimeline(viewer);
+        clock.clockRange = ClockRange.UNBOUNDED;
+        clock.shouldAnimate = false;
     }
-    showTimeline(viewer);
-    //update clock
-    if (viewer !== undefined) {
-        var clock = viewer.clock;
+    else {
+        showTimeline(viewer);
         clock.startTime = start;
         clock.currentTime = start;
         clock.stopTime = finish;
         clock.multiplier = JulianDate.secondsDifference(finish, start) / 60.0;
         clock.clockRange = ClockRange.LOOP_STOP;
         clock.shouldAnimate = true;
-        viewer.timeline.zoomTo(clock.startTime, clock.stopTime);
+        timeline.zoomTo(clock.startTime, clock.stopTime);
     }
-}
+ }
 
 //update menu and camera
 AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     //remove case
     if (layer === undefined) {
-        updateTimeline(this.viewer);
+        this.updateTimeline();
         return;
     }
     
@@ -1046,12 +1079,10 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     var tableData, start, finish;
     if (layer.dataSource !== undefined && layer.dataSource.dataset !== undefined) {
         tableData = layer.dataSource;
-        if (this._cesiumViewerActive()) {
-            start = tableData.dataset.getMinTime();
-            finish = tableData.dataset.getMaxTime();
-        }
+        start = tableData.dataset.getMinTime();
+        finish = tableData.dataset.getMaxTime();
     }
-    updateTimeline(this.viewer, start, finish);
+    this.updateTimeline(start, finish);
     
     if (layer.zoomTo && layer.extent !== undefined) {
         this.updateCameraFromRect(layer.extent, 3000);
