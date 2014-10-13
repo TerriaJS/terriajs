@@ -34,7 +34,8 @@ function filterHeaders(req, headers) {
         result['Authorization'] = 'Basic d21zOndtcw==';
     }
 
-    result['Cache-Control'] = 'public; max-age=315360000';
+    result['Cache-Control'] = 'max-age=315360000';
+    result['Expires'] = 'Thu, 31 Dec 2037 23:55:55 GMT';
     result['Access-Control-Allow-Origin'] ='*';
 
     return result;
