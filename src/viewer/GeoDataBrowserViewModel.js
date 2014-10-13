@@ -13,10 +13,14 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
+var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
@@ -736,6 +740,10 @@ these extensions in order for National Map to know how to load it.'
         // Get the list of groups containing WMS data sources.
         var url = collection.base_url + '/api/3/action/package_search?rows=100000&fq=res_format:wms';
 
+        if (corsProxy.shouldUseProxy(url)) {
+            url = corsProxy.getURL(url);
+        }
+
         when(loadJson(url), function(result) {
             var existingGroups = {};
 
@@ -874,6 +882,278 @@ these extensions in order for National Map to know how to load it.'
             dragPlaceholder.setAttribute('nowViewingIndex', siblings[targetIndex + 1].getAttribute('nowViewingIndex'));
         }
     });
+
+    handleHash(this);
+
+    window.addEventListener("hashchange", function() {
+        handleHash(that);
+    }, false);
+
+    function handleHash(viewModel) {
+        var uri = new URI(window.location);
+        var hash = uri.fragment();
+
+        if (hash.length === 0 || !hashIsSafe(hash)) {
+            return;
+        }
+
+        // Try loading hash.json.
+        loadJson(hash + '.json').then(function(json) {
+            if (json.initialCamera) {
+                var rectangle = Rectangle.fromDegrees(
+                    json.initialCamera.west,
+                    json.initialCamera.south,
+                    json.initialCamera.east,
+                    json.initialCamera.north);
+                viewModel._viewer.updateCameraFromRect(rectangle, 3000);
+            }
+
+            if (json.initialDataMenu) {
+                when(loadJson(json.initialDataMenu), loadCollection);
+            }
+        });
+    }
+
+    function hashIsSafe(hash) {
+        var safe = true;
+        for (var i = 0; i < hash.length; ++i) {
+            safe = safe && (hash[i] >= 'a' && hash[i] <= 'z' ||
+                            hash[i] >= 'A' && hash[i] <= 'Z' ||
+                            hash[i] >= '0' && hash[i] <= '9');
+        }
+        return safe;
+    }
+
+    this.maxLevel = knockout.observable(5);
+
+    var numWaitingFor;
+
+    this.showPopulateCache = function() {
+        var uri = new URI(window.location);
+        var hash = uri.fragment();
+
+        if (hash === 'populate-cache') {
+            return true;
+        }
+        return false;
+    }
+
+    this.populateCache = function(mode) {
+        function waitForAllToFinishLoading() {
+            numWaitingFor = 0;
+            if (mode !== "all" || (that.content().length > 0 && areAllDoneLoading(that.content()))) {
+                var requests = [];
+
+                getAllRequests(mode, requests, that.content());
+
+                console.log('Requesting tiles from ' + requests.length + ' data sources.');
+
+                requestTiles(requests, that.maxLevel());
+            } else {
+                setTimeout(waitForAllToFinishLoading, 5000);
+            }
+        }
+
+        waitForAllToFinishLoading();
+    };
+
+    function areAllDoneLoading(layers) {
+        var allDone = true;
+
+        for (var i = 0; i < layers.length; ++i) {
+            var item = layers[i];
+            if (item.Layer) {
+                if (item.isOpen && !item.isOpen()) {
+                    ++numWaitingFor;
+                    allDone = false;
+                    item.isOpen(true);
+                } else if (item.isLoading && item.isLoading()) {
+                    ++numWaitingFor;
+                    allDone = false;
+                }
+                allDone = areAllDoneLoading(item.Layer()) && allDone;
+            }
+        }
+
+        return allDone;
+    }
+
+    function getAllRequests(mode, requests, layers) {
+        for (var i = 0; i < layers.length; ++i) {
+            var item = layers[i];
+            if (item.Layer) {
+                if (mode !== 'opened' || (item.isOpen && item.isOpen())) {
+                    getAllRequests(mode, requests, item.Layer());
+                } else if (mode === 'enabled' && item.isEnabled && item.isEnabled()) {
+                    getAllRequests(mode, requests, item.Layer());
+                }
+            } else if (item.type() === 'WMS' && (mode !== 'enabled' || item.isEnabled())) {
+                var url = item.base_url();
+                var proxy;
+                if (corsProxy.shouldUseProxy(url)) {
+                    proxy = corsProxy;
+                } else {
+                    proxy = undefined;
+                }
+
+                var wmsOptions = {
+                    url: url,
+                    layers : item.Name(),
+                    parameters: {
+                        format: 'image/png',
+                        transparent: true,
+                        styles: '',
+                        exceptions: 'application/vnd.ogc.se_xml'
+                    },
+                    proxy: proxy
+                };
+
+                var crs;
+                if (defined(item.CRS)) {
+                    crs = item.CRS();
+                } else if (defined(item.SRS)) {
+                    crs = item.SRS();
+                } else {
+                    crs = undefined;
+                }
+                if (defined(crs)) {
+                    if (crsIsMatch(crs, 'EPSG:4326')) {
+                        // Standard Geographic
+                    } else if (crsIsMatch(crs, 'CRS:84')) {
+                        // Another name for EPSG:4326
+                        wmsOptions.parameters.srs = 'CRS:84';
+                    } else if (crsIsMatch(crs, 'EPSG:4283')) {
+                        // Australian system that is equivalent to EPSG:4326.
+                        wmsOptions.parameters.srs = 'EPSG:4283';
+                    } else if (crsIsMatch(crs, 'EPSG:3857')) {
+                        // Standard Web Mercator
+                        wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                    } else if (crsIsMatch(crs, 'EPSG:900913')) {
+                        // Older code for Web Mercator
+                        wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                        wmsOptions.parameters.srs = 'EPSG:900913';
+                    } else {
+                        // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+                    }
+                }
+
+                var provider = new WebMapServiceImageryProvider(wmsOptions);
+                requests.push({
+                    item : item,
+                    provider : provider
+                });
+            }
+        }
+    }
+
+    // From StackOverflow: http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    function shuffle(array) {
+        var currentIndex = array.length,
+            temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
+    function requestTiles(requests, maxLevel) {
+        var urls = [];
+
+        loadImage.createImage = function(url, crossOrigin, deferred) {
+            urls.push(url);
+            deferred.resolve();
+        };
+
+        var oldMax = throttleRequestByServer.maximumRequestsPerServer;
+        throttleRequestByServer.maximumRequestsPerServer = Number.MAX_VALUE;
+
+        for (var i = 0; i < requests.length; ++i) {
+            var request = requests[i];
+            var bareItem = komapping.toJS(request.item);
+            var extent = getOGCLayerExtent(bareItem);
+            var tilingScheme = request.provider.tilingScheme;
+
+            for (var level = 0; level <= maxLevel; ++level) {
+                var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
+                var se = tilingScheme.positionToTileXY(Rectangle.southeast(extent), level);
+                if (!defined(nw) || !defined(se)) {
+                    // Extent is probably junk.
+                    continue;
+                }
+
+                for (var y = nw.y; y <= se.y; ++y) {
+                    for (var x = nw.x; x <= se.x; ++x) {
+                        if (!defined(request.provider.requestImage(x, y, level))) {
+                            console.log('too many requests in flight');
+                        }
+                    }
+                }
+            }
+        }
+
+        loadImage.createImage = loadImage.defaultCreateImage;
+        throttleRequestByServer.maximumRequestsPerServer = oldMax;
+
+        console.log('Requesting ' + urls.length + ' URLs!');
+
+        // Do requests in random order for better performance; successive requests are
+        // less likely to be to the same server.
+        shuffle(urls);
+
+        var maxRequests = 6;
+        var nextRequestIndex = 0;
+        var inFlight = 0;
+
+        function doneUrl() {
+            --inFlight;
+            doNext();
+        }
+
+        function doNext() {
+            if (nextRequestIndex < urls.length) {
+                if ((nextRequestIndex % 10) === 0) {
+                    console.log('Finished ' + nextRequestIndex + ' URLs.');
+                }
+                ++inFlight;
+                loadWithXhr({
+                    url : urls[nextRequestIndex++]
+                }).then(doneUrl).otherwise(doneUrl);
+            } else if (inFlight === 0) {
+                if ((nextRequestIndex % 10) !== 0) {
+                    console.log('Finished ' + nextRequestIndex + ' URLs.');
+                }
+                console.log('Done!');
+            }
+        }
+
+        for (var i = 0; i < maxRequests; ++i) {
+            doNext();
+        }
+    }
+
+
+    function crsIsMatch(crs, matchValue) {
+        if (crs === matchValue) {
+            return true;
+        }
+
+        if (crs instanceof Array && crs.indexOf(matchValue) >= 0) {
+            return true;
+        }
+
+         return false;
+    }
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {

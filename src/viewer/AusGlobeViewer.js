@@ -312,11 +312,9 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         that.geoDataManager.loadInitialUrl(url);
     });
 
-        //TODO: should turn this off based on event from loadUrl
+    //TODO: should turn this off based on event from loadUrl
     $('#loadingIndicator').hide();
 };
-
-
 
 // -------------------------------------------
 // PERF: skip frames where reasonable - global vars for now
