@@ -29,11 +29,6 @@ function filterHeaders(req, headers) {
         }
     });
 
-    var remote = getRemoteUrlFromParam(req);
-    if (remote.host === 'programs.communications.gov.au'){
-        result['Authorization'] = 'Basic d21zOndtcw==';
-    }
-
     result['Cache-Control'] = 'max-age=315360000';
     result['Expires'] = 'Thu, 31 Dec 2037 23:55:55 GMT';
     result['Access-Control-Allow-Origin'] ='*';
