@@ -892,11 +892,6 @@ these extensions in order for National Map to know how to load it.'
         var uri = new URI(window.location);
         var hash = uri.fragment();
 
-        if (hash === 'populate-cache') {
-            populateCache();
-            return;
-        }
-
         if (hash.length === 0 || !hashIsSafe(hash)) {
             return;
         }
@@ -928,13 +923,22 @@ these extensions in order for National Map to know how to load it.'
         return safe;
     }
 
-    function populateCache() {
-        // Wait 5 seconds, open all categories, then wait another while.
-        // This way maybe we'll actually see all the data sources.
-        setTimeout(function() {
-            openAll(that.content());
+    var numWaitingFor;
 
-            setTimeout(function() {
+    this.showPopulateCache = function() {
+        var uri = new URI(window.location);
+        var hash = uri.fragment();
+
+        if (hash === 'populate-cache') {
+            return true;
+        }
+        return false;
+    }
+
+    this.populateCache = function(cacheOpenCategoriesOnly) {
+        function waitForAllToFinishLoading() {
+            numWaitingFor = 0;
+            if (cacheOpenCategoriesOnly || (that.content().length > 0 && areAllDoneLoading(that.content()))) {
                 var requests = [];
 
                 getAllRequests(requests, that.content());
@@ -942,32 +946,49 @@ these extensions in order for National Map to know how to load it.'
                 console.log('Requesting tiles from ' + requests.length + ' data sources.');
 
                 requestTiles(requests);
-            }, 120000);
-        }, 5000);
-    }
+            } else {
+                setTimeout(waitForAllToFinishLoading, 5000);
+            }
+        }
 
-    function openAll(layers) {
+        waitForAllToFinishLoading();
+    };
+
+    function areAllDoneLoading(layers) {
+        var allDone = true;
+
         for (var i = 0; i < layers.length; ++i) {
             var item = layers[i];
             if (item.Layer) {
-                if (item.isOpen) {
+                if (item.isOpen && !item.isOpen()) {
+                    ++numWaitingFor;
+                    allDone = false;
                     item.isOpen(true);
+                } else if (item.isLoading && item.isLoading()) {
+                    ++numWaitingFor;
+                    allDone = false;
                 }
-                openAll(item.Layer());
+                allDone = areAllDoneLoading(item.Layer()) && allDone;
             }
         }
+
+        return allDone;
     }
 
     function getAllRequests(requests, layers) {
         for (var i = 0; i < layers.length; ++i) {
             var item = layers[i];
             if (item.Layer) {
-                getAllRequests(requests, item.Layer());
+                if (item.isOpen && item.isOpen()) {
+                    getAllRequests(requests, item.Layer());
+                }
             } else if (item.type() === 'WMS') {
                 var url = item.base_url();
                 var proxy;
                 if (corsProxy.shouldUseProxy(url)) {
                     proxy = corsProxy;
+                } else {
+                    proxy = undefined;
                 }
 
                 var wmsOptions = {
@@ -979,7 +1000,7 @@ these extensions in order for National Map to know how to load it.'
                         styles: '',
                         exceptions: 'application/vnd.ogc.se_xml'
                     },
-                    proxy: corsProxy
+                    proxy: proxy
                 };
 
                 var crs;
@@ -987,6 +1008,8 @@ these extensions in order for National Map to know how to load it.'
                     crs = item.CRS();
                 } else if (defined(item.SRS)) {
                     crs = item.SRS();
+                } else {
+                    crs = undefined;
                 }
                 if (defined(crs)) {
                     if (crsIsMatch(crs, 'EPSG:4326')) {

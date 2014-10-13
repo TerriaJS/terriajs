@@ -50,6 +50,20 @@ var GeoDataBrowser = function(options) {
     legendButton.setAttribute('data-bind', 'visible: legendsExist(), click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
     wrapper.appendChild(legendButton);
 
+    var populateOpenButton = document.createElement('div');
+    populateOpenButton.className = 'ausglobe-panel-button';
+    populateOpenButton.title = 'Pop Open';
+    populateOpenButton.innerHTML = '<div class="ausglobe-panel-button-label">Pop Open</div>';
+    populateOpenButton.setAttribute('data-bind', 'visible: showPopulateCache, click: function() { populateCache(true); }');
+    wrapper.appendChild(populateOpenButton);
+
+    var populateAllButton = document.createElement('div');
+    populateAllButton.className = 'ausglobe-panel-button';
+    populateAllButton.title = 'Pop All';
+    populateAllButton.innerHTML = '<div class="ausglobe-panel-button-label">Pop All</div>';
+    populateAllButton.setAttribute('data-bind', 'visible: showPopulateCache, click: function() { populateCache(false); }');
+    wrapper.appendChild(populateAllButton);
+
     var dataPanel = document.createElement('div');
     dataPanel.id = 'ausglobe-data-panel';
     dataPanel.className = 'ausglobe-panel';
