@@ -43,7 +43,17 @@ var SharePanel = function(options) {
     ';
     wrapper.appendChild(info);
 
-    var url = options.geoDataManager.getShareRequestURL(options.request);
+    var uri = new URI(window.location);
+    var visServer = uri.protocol() + '://' + uri.host();
+
+    var request = options.request;
+    
+    var img = request.image;
+    request.image = undefined;
+    var requestStr = JSON.stringify(request);
+    var url = visServer + '?start=' + encodeURIComponent(requestStr);
+    request.image = img;
+
     var viewModel = this._viewModel = {
         request : options.request,
         url : url,

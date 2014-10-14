@@ -38,6 +38,7 @@ if (start) {
 
     var copyright = require('../CopyrightModule');
 
+    var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
     var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
     var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
@@ -88,6 +89,18 @@ if (start) {
                     message: e.toString()
                 });
             }
+
+            if (params.start) {
+                var startData = JSON.parse(params.start);
+                catalog.updateFromJson(startData.catalog);
+                config.initialCamera = {
+                    west : CesiumMath.toDegrees(startData.camera.west),
+                    south : CesiumMath.toDegrees(startData.camera.south),
+                    east : CesiumMath.toDegrees(startData.camera.east),
+                    north : CesiumMath.toDegrees(startData.camera.north)
+                };
+            }
+
             catalog.isLoading = false;
 
             var geoDataManager = new GeoDataCollection();
