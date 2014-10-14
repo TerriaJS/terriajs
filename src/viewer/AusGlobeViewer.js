@@ -310,8 +310,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     });
 };
 
-
-
 // -------------------------------------------
 // PERF: skip frames where reasonable - global vars for now
 // -------------------------------------------

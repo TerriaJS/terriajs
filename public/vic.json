@@ -1,14 +1,9 @@
-{ "proxyDomains" : [
-        "gov.au"
-    ],
- "corsDomains" : [
-        "research.nicta.com.au",
-        "data.gov.au",
-        "ga.gov.au",
-        "corsproxy.com",
-        "data.vic.gov.au"
-    ],
-  "initialDataMenu" : "init_nm.json",
-  "initialCamera" : { "west": 140, "south": -39, "east": 150, "north": -34}
+{
+    "initialDataMenu": "init_vic.json",
+    "initialCamera": {
+        "west": 140,
+        "south": -39,
+        "east": 150,
+        "north": -34
+    }
 }
-

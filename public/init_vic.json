@@ -1,0 +1,9 @@
+{
+    "name": "Data Collections",
+    "Layer": [{
+        "name": "Victorian Government",
+        "type": "CKAN",
+        "base_url": "http://www.data.vic.gov.au/data",
+        "Layer": []
+    }]
+}
