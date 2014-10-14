@@ -1779,7 +1779,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
             if (wmsServers.hasOwnProperty(wmsServer)) {
                 var getCapabilitiesUrl = wmsServer + '?service=WMS&request=GetCapabilities';
                 if (corsProxy.shouldUseProxy(getCapabilitiesUrl)) {
-                    getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl);
+                    getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl,'1d');
                 }
 
                 promises.push(filterMaxScaleDenominatorLayers(getCapabilitiesUrl, wmsServers[wmsServer], layers));
@@ -1887,7 +1887,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
    
     console.log('CAPABILITIES REQUEST:',request);
     if (corsProxy.shouldUseProxy(request)) {
-        request = corsProxy.getURL(request);
+        request = corsProxy.getURL(request, '1d');
     }
 
     var that = this;
