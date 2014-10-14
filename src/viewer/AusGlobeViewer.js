@@ -702,6 +702,7 @@ AusGlobeViewer.prototype.isCesium = function() {
 
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var bnds, rect;
+    var timeline = {}; 
 
     var that = this;
 
@@ -709,12 +710,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
             //shut down existing cesium
         if (defined(this.viewer)) {
+            //get camera and timeline settings
             rect = getCameraRect(this.scene);
             bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
                 [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+            timeline = this.getTimelineSettings();
 
             this._enableSelectExtent(false);
-            this.updateTimeline();
 
             var inputHandler = this.viewer.screenSpaceEventHandler;
             inputHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
@@ -774,9 +776,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         ticker();
 
-        this.createTimeline(map.clock);
-            //TODO: restart existing timeline settings
-        this.updateTimeline();
+        this.createLeafletTimeline(map.clock);
+        this.updateTimeline(timeline.start, timeline.stop, timeline.cur);
 
         map.on("boxzoomend", function(e) {
             console.log(e.boxZoomBounds);
@@ -817,10 +818,11 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     }
     else {
         if (defined(this.map)) {
+            //get camera and timeline settings
             rect = getCameraRect(undefined, this.map);
+            timeline = this.getTimelineSettings();
 
-            this.updateTimeline();
-            this.removeTimeline();
+            this.removeLeafletTimeline();
             this.dataSourceDisplay.destroy();
             this.map.dataSources = undefined;
             this.map.remove();
@@ -873,7 +875,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);
-        this.updateTimeline();
+        this.updateTimeline(timeline.start, timeline.stop, timeline.cur);
 
         this._navigationWidget.showTilt = true;
         document.getElementById('ausglobe-title-position').style.visibility = 'visible';
@@ -982,7 +984,7 @@ function supportsWebgl() {
 // Timeline display on selection
 //------------------------------------
 
-AusGlobeViewer.prototype.createTimeline = function(clock) {
+AusGlobeViewer.prototype.createLeafletTimeline = function(clock) {
 
     var viewerContainer = document.getElementById('cesiumContainer');
 
@@ -1018,7 +1020,7 @@ AusGlobeViewer.prototype.createTimeline = function(clock) {
     timeline.addEventListener('settime', timeline.scrubFunction, false);
 }
 
-AusGlobeViewer.prototype.removeTimeline = function() {
+AusGlobeViewer.prototype.removeLeafletTimeline = function() {
     var viewerContainer = document.getElementById('cesiumContainer');
 
     if (defined(this.map.animation)) {
@@ -1052,7 +1054,7 @@ function hideTimeline(viewer) {
 }
 
 //update the timeline
-AusGlobeViewer.prototype.updateTimeline = function(start, finish) {
+AusGlobeViewer.prototype.updateTimeline = function(start, finish, cur, run) {
     var viewer = this.viewer;
     var clock = defined(viewer) ? this.viewer.clock : this.map.clock;
     var timeline = defined(viewer) ? this.viewer.timeline : this.map.timeline;
@@ -1065,14 +1067,24 @@ AusGlobeViewer.prototype.updateTimeline = function(start, finish) {
     else {
         showTimeline(viewer);
         clock.startTime = start;
-        clock.currentTime = start;
+        clock.currentTime = (defined(cur)) ? cur : start;
         clock.stopTime = finish;
         clock.multiplier = JulianDate.secondsDifference(finish, start) / 60.0;
         clock.clockRange = ClockRange.LOOP_STOP;
-        clock.shouldAnimate = true;
+        clock.shouldAnimate = defined(run) ? run : false;
         timeline.zoomTo(clock.startTime, clock.stopTime);
     }
  }
+
+ AusGlobeViewer.prototype.getTimelineSettings = function() {
+    if ($('.cesium-viewer-timelineContainer').is(":visible") === false ) {
+        return {};
+    }
+    var viewer = this.viewer;
+    var clock = defined(viewer) ? this.viewer.clock : this.map.clock;
+    return {start: clock.startTime, stop: clock.stopTime, cur: clock.currentTime};
+ }
+
 
 //update timeline and camera
 AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
@@ -1089,7 +1101,7 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
         start = tableData.dataset.getMinTime();
         finish = tableData.dataset.getMaxTime();
     }
-    this.updateTimeline(start, finish);
+    this.updateTimeline(start, finish, start, true);
     
     if (layer.zoomTo && layer.extent !== undefined) {
         this.updateCameraFromRect(layer.extent, 3000);
