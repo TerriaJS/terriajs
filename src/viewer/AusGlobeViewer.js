@@ -1077,7 +1077,7 @@ AusGlobeViewer.prototype.updateTimeline = function(start, finish, cur, run) {
  }
 
  AusGlobeViewer.prototype.getTimelineSettings = function() {
-    if ($('.cesium-viewer-timelineContainer').is(":visible") === false ) {
+    if ($('.cesium-viewer-timelineContainer').css('visibility') === 'hidden' ) {
         return {};
     }
     var viewer = this.viewer;
