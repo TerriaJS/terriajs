@@ -3,3 +3,5 @@ node_modules/
 .idea/
 public/build
 public/doc
+error.log
+output.log
