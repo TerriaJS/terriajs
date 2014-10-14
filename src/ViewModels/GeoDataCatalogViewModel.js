@@ -34,14 +34,15 @@ var GeoDataCatalogViewModel = function(context) {
      */
     this.isLoading = false;
 
-    knockout.track(this, ['groups', 'isLoading']);
+    knockout.track(this, ['isLoading']);
 
     knockout.defineProperty(this, 'userAddedDataGroup', {
         get : function() {
             var group;
 
-            for (var i = 0; i < this.groups.length; ++i) {
-                group = this.groups[i];
+            var groups = this.group.items;
+            for (var i = 0; i < groups.length; ++i) {
+                group = groups[i];
                 if (group.name === 'User-Added Data') {
                     return group;
                 }
@@ -50,7 +51,7 @@ var GeoDataCatalogViewModel = function(context) {
             group = new GeoDataGroupViewModel(this.context);
             group.name = 'User-Added Data';
             group.description = 'The group for data that was added by the user via the Add Data panel.';
-            this.groups.push(group);
+            this.group.add(group);
             return group;
         }
     });

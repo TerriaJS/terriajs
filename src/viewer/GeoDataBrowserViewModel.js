@@ -501,7 +501,7 @@ these extensions in order for National Map to know how to load it.'
             return true;
         }
         return false;
-    }
+    };
 
     this.populateCache = function(mode) {
         function waitForAllToFinishLoading() {
