@@ -23,9 +23,14 @@ var defaultPixelSize = 5.0;
 var defaultWidth = 5.0;
 var popupHeight = 520;
 
+//NOT IMPLEMENTED
+// Path primitive - no need identified
+// Ellipse primitive - no need identified
+// Ellipsoid primitive - 3d prim - no plans for this
+// Model primitive - 3d prim - no plans for this
 
 /**
- * A {@link Visualizer} which maps {@link Entity#point} to a {@link Billboard}.
+ * A {@link Visualizer} which maps {@link Entity#point} to Leaflet primitives.
  * @alias LeafletGeomVisualizer
  * @constructor
  *
@@ -33,16 +38,12 @@ var popupHeight = 520;
  * @param {EntityCollection} entityCollection The entityCollection to visualize.
  */
 var LeafletGeomVisualizer = function(map, entityCollection) {
-    //>>includeStart('debug', pragmas.debug);
     if (!defined(map)) {
         throw new DeveloperError('map is required.');
     }
     if (!defined(entityCollection)) {
         throw new DeveloperError('entityCollection is required.');
     }
-    //>>includeEnd('debug');
-
-    console.log('leaflet-point-visualizer');
 
     var featureGroup = L.featureGroup().addTo(map);
     entityCollection.collectionChanged.addEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
@@ -90,17 +91,25 @@ LeafletGeomVisualizer.prototype._onCollectionChanged = function(entityCollection
 
 
 function cleanEntity(entity, group) {
-    if (defined(entity._geomLayer)) {
-        group.removeLayer(entity._geomLayer);
-    }
     if (defined(entity._geomPoint)) {
         group.removeLayer(entity._geomPoint);
+        entity._geomPoint = undefined;
     }
-    if (defined(entity._geomBillboard)) {
+    else if (defined(entity._geomBillboard)) {
         group.removeLayer(entity._geomBillboard);
+        entity._geomBillboard = undefined;
     }
-    if (defined(entity._geomLabel)) {
+    else if (defined(entity._geomLabel)) {
         group.removeLayer(entity._geomLabel);
+        entity._geomLabel = undefined;
+    }
+    else if (defined(entity._geomPolyline)) {
+        group.removeLayer(entity._geomPolyline);
+        entity._geomPolyline = undefined;
+    }
+    else if (defined(entity._geomPolygon)) {
+        group.removeLayer(entity._geomPolygon);
+        entity._geomPolygon = undefined;
     }
 }
 
@@ -123,25 +132,25 @@ LeafletGeomVisualizer.prototype.update = function(time) {
     for (var i = 0, len = entities.length; i < len; i++) {
         var entity = entities[i];
         if (defined(entity._point)) {
-            this.updatePoint(entity, time);
+            this._updatePoint(entity, time);
         }
         if (defined(entity._billboard)) {
-            this.updateBillboard(entity, time);
+            this._updateBillboard(entity, time);
         }
         if (defined(entity._label)) {
-            this.updateLabel(entity, time);
+            this._updateLabel(entity, time);
         }
         if (defined(entity._polyline)) {
-            this.updatePolyline(entity, time);
+            this._updatePolyline(entity, time);
         }
         if (defined(entity._polygon)) {
-            this.updatePolygon(entity, time);
+            this._updatePolygon(entity, time);
         }
     }
     return true;
 };
 
-LeafletGeomVisualizer.prototype.updatePoint = function(entity, time) {
+LeafletGeomVisualizer.prototype._updatePoint = function(entity, time) {
     var pointGraphics = entity._point;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomPoint;
@@ -219,8 +228,8 @@ function recolorBillboard(img, color) {
 //Single pixel black dot
 var tmpImage = "data:image/gif;base64,R0lGODlhAQABAPAAAAAAAP///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==";
 
-//TODO: currently skipping all the camera distance related properties
-LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
+//NYI: currently skipping all the camera distance related properties
+LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
     var markerGraphics = entity._billboard;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomBillboard;
@@ -286,7 +295,6 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
             if (!defined(iconOptions.iconSize)) {
                 iconOptions.iconSize = [image.width * scale, image.height * scale];
             }
-            //TODO: verify this against datasets
             var w = iconOptions.iconSize[0], h = iconOptions.iconSize[1];
             var xOff = (w/2)*(1+horizontalOrigin) + pixelOffset.x;
             var yOff = (h/2)*(1+verticalOrigin) + pixelOffset.y;
@@ -310,7 +318,7 @@ LeafletGeomVisualizer.prototype.updateBillboard = function(entity, time) {
 };
 
 
-LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
+LeafletGeomVisualizer.prototype._updateLabel = function(entity, time) {
     var labelGraphics = entity._label;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomLabel;
@@ -345,7 +353,6 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
 
     var style = color + fontFamily + fontSize + align + valign + hOff + vOff;
 
-    //TODO: verify against datasets
     var divIconOptions = {
         html: '<p style="'+style+'">'+text+'</p>',
         iconSize: [0, 0]
@@ -374,10 +381,10 @@ LeafletGeomVisualizer.prototype.updateLabel = function(entity, time) {
     }
 };
 
-LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
+LeafletGeomVisualizer.prototype._updatePolyline = function(entity, time) {
     var polylineGraphics = entity._polyline;
     var featureGroup = this._featureGroup;
-    var geomLayer = entity._geomLayer;
+    var geomLayer = entity._geomPolyline;
     var positions, polyline, description;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polylineGraphics._show, time, true);
     if (show) {
@@ -408,7 +415,7 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
         polyline = L.polyline(latlngs, polylineOptions);
         polyline.bindPopup(description, {maxHeight: popupHeight});
         featureGroup.addLayer(polyline);
-        entity._geomLayer = polyline;
+        entity._geomPolyline = polyline;
     } else {
         polyline = geomLayer;
         var curLatLngs = polyline.getLatLngs;
@@ -427,10 +434,10 @@ LeafletGeomVisualizer.prototype.updatePolyline = function(entity, time) {
     }
 };
 
-LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
+LeafletGeomVisualizer.prototype._updatePolygon = function(entity, time) {
     var polygonGraphics = entity._polygon;
     var featureGroup = this._featureGroup;
-    var geomLayer = entity._geomLayer;
+    var geomLayer = entity._geomPolygon;
     var positions, polygon, description;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polygonGraphics._show, time, true);
     if (show) {
@@ -466,7 +473,7 @@ LeafletGeomVisualizer.prototype.updatePolygon = function(entity, time) {
         polygon = L.polygon(latlngs, polygonOptions);
         polygon.bindPopup(description, {maxHeight: popupHeight});
         featureGroup.addLayer(polygon);
-        entity._geomLayer = polygon;
+        entity._geomPolygon = polygon;
     } else {
         polygon = geomLayer;
         var curLatLngs = polygon.getLatLngs;

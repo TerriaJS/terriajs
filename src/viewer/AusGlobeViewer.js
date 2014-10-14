@@ -811,7 +811,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.on('click', function(e) {
             selectFeatureLeaflet(that, e.latlng);
         });
-        
+
         this.geoDataManager.setViewer({scene: undefined, map: map});
         this.geoDataBrowser.viewModel.map = map;
     }
@@ -982,14 +982,8 @@ function supportsWebgl() {
 // Timeline display on selection
 //------------------------------------
 
-//TODO: figure out timeline scrub
-function onTimelineScrubfunction(e) {
-    var clock = e.clock;
-    clock.currentTime = e.timeJulian;
-    clock.shouldAnimate = false;
-}
-
 AusGlobeViewer.prototype.createTimeline = function(clock) {
+
     var viewerContainer = document.getElementById('cesiumContainer');
 
     var clockViewModel = new ClockViewModel(clock);
@@ -1006,9 +1000,22 @@ AusGlobeViewer.prototype.createTimeline = function(clock) {
     timelineContainer.style.bottom = '15px';
     viewerContainer.appendChild(timelineContainer);
     var timeline = new Timeline(timelineContainer, clock);
-    timeline.addEventListener('settime', onTimelineScrubfunction, false);
     timeline.zoomTo(clock.startTime, clock.stopTime);
     this.map.timeline = timeline;
+
+    var that = this;
+    timeline.scrubFunction = function(e) {
+        if (that.map.dragging.enabled()) {
+            that.map.dragging.disable();
+            that.map.on('mouseup', function(e) {
+                that.map.dragging.enable();
+            });
+        }
+        var clock = e.clock;
+        clock.currentTime = e.timeJulian;
+        clock.shouldAnimate = false;
+    }
+    timeline.addEventListener('settime', timeline.scrubFunction, false);
 }
 
 AusGlobeViewer.prototype.removeTimeline = function() {
@@ -1020,7 +1027,7 @@ AusGlobeViewer.prototype.removeTimeline = function() {
     }
 
     if (defined(this.map.timeline)) {
-        this.map.timeline.removeEventListener('settime', onTimelineScrubfunction, false);
+        this.map.timeline.removeEventListener('settime', this.map.timeline.scrubFunction, false);
         viewerContainer.removeChild(this.map.timeline.container);
         this.map.timeline = this.map.timeline.destroy();
     }
@@ -1067,7 +1074,7 @@ AusGlobeViewer.prototype.updateTimeline = function(start, finish) {
     }
  }
 
-//update menu and camera
+//update timeline and camera
 AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     //remove case
     if (layer === undefined) {
