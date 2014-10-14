@@ -104,7 +104,8 @@ var GeoDataSourceViewModel = function(context) {
      */
     this.isLegendVisible = false;
 
-    knockout.track(this, ['isEnabled', 'isShown', 'isLegendVisible']);
+    knockout.track(this, ['rectangle', 'legendUrl', 'dataUrlType', 'dataUrl', 'dataCustodian',
+                          'metadataUrl', 'isEnabled', 'isShown', 'isLegendVisible']);
 
     knockout.getObservable(this, 'isEnabled').subscribe(function(newValue) {
         isEnabledChanged(this);
