@@ -625,10 +625,18 @@ these extensions in order for National Map to know how to load it.'
     this.getLegendUrl = function(item) {
         if (defined(item.legendUrl) && defined(item.legendUrl())) {
             if (item.legendUrl().length > 0) {
-                return item.legendUrl();
+                if (corsProxy.shouldUseProxy(item.legendUrl())) {
+                    return corsProxy.getURL(item.legendUrl());
+                } else {
+                    return item.legendUrl();
+                }
             }
         } else if (item.type() === 'WMS') {
-            return item.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
+            var baseUrl = item.base_url();
+            if (corsProxy.shouldUseProxy(baseUrl)) {
+                baseUrl = corsProxy.getURL(baseUrl);
+            }
+            return baseUrl + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
         } else if (defined(item.layer.baseDataSource)) {
             return item.layer.baseDataSource.getLegendGraphic();
         } else if (defined(item.layer.dataSource) && defined(item.layer.dataSource.getLegendGraphic)) {
