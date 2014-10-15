@@ -1121,30 +1121,68 @@ these extensions in order for National Map to know how to load it.'
         // less likely to be to the same server.
         shuffle(urls);
 
-        var maxRequests = 6;
+        var maxRequests = 2;
         var nextRequestIndex = 0;
         var inFlight = 0;
+        var urlsRequested = 0;
 
         function doneUrl() {
             --inFlight;
             doNext();
         }
 
-        function doNext() {
-            if (nextRequestIndex < urls.length) {
+        function getNextUrl() {
+            var url;
+            var baseUrl;
+
+            do {
+                if (nextRequestIndex >= urls.length) {
+                    return undefined;
+                }
+
                 if ((nextRequestIndex % 10) === 0) {
                     console.log('Finished ' + nextRequestIndex + ' URLs.');
                 }
-                ++inFlight;
-                loadWithXhr({
-                    url : urls[nextRequestIndex++]
-                }).then(doneUrl).otherwise(doneUrl);
-            } else if (inFlight === 0) {
-                if ((nextRequestIndex % 10) !== 0) {
-                    console.log('Finished ' + nextRequestIndex + ' URLs.');
+
+                url = urls[nextRequestIndex];
+                ++nextRequestIndex;
+
+                var queryIndex = url.indexOf('?');
+                baseUrl = url;
+                if (queryIndex >= 0) {
+                    baseUrl = url.substring(0, queryIndex);
                 }
-                console.log('Done!');
+
+            } while (blacklist[baseUrl]);
+
+            return {
+                url: url,
+                baseUrl : baseUrl
+            };
+        }
+
+        var blacklist = {};
+
+        function doNext() {
+            var next = getNextUrl();
+            if (!defined(next)) {
+                if (inFlight === 0) {
+                    console.log('Finished ' + nextRequestIndex + ' URLs.  DONE!');
+                    console.log('Actually name of URLs requested: ' + urlsRequested);
+                }
+                return;
             }
+
+            ++urlsRequested;
+            ++inFlight;
+
+            loadWithXhr({
+                url : next.url
+            }).then(doneUrl).otherwise(function() {
+                console.log('Blacklisting ' + next.baseUrl + ' because it returned an error.');
+                blacklist[next.baseUrl] = true;
+                doneUrl();
+            });
         }
 
         for (i = 0; i < maxRequests; ++i) {
