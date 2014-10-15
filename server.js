@@ -6,6 +6,9 @@ var configSettings = require('./public/config.json');
 
 function getRemoteUrlFromParam(req) {
     var remoteUrl = req.params[0];
+    if (remoteUrl.indexOf('_') === 0) {
+        remoteUrl = remoteUrl.substring(remoteUrl.indexOf('/')+1);
+    }
     if (remoteUrl) {
         // add http:// to the URL if no protocol is present
         if (!/^https?:\/\//.test(remoteUrl)) {
@@ -27,16 +30,12 @@ function filterHeaders(req, headers) {
         if (!dontProxyHeaderRegex.test(name)) {
             result[name] = headers[name];
         }
-    });
-
-    var remote = getRemoteUrlFromParam(req);
-    if (remote.host === 'programs.communications.gov.au'){
-        result['Authorization'] = 'Basic d21zOndtcw==';
-    }
+    }); 
 
     result['Cache-Control'] = 'max-age=315360000';
     result['Expires'] = 'Thu, 31 Dec 2037 23:55:55 GMT';
     result['Access-Control-Allow-Origin'] ='*';
+    delete result['pragma'];
 
     return result;
 }

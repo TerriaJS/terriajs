@@ -24,7 +24,11 @@ sub vcl_recv {
 
 sub vcl_fetch
 {
-    set beresp.ttl = 10000m;
+  if (req.url ~ "^/proxy/_"){
+    set beresp.ttl = 1d;
+  } else {
+    set beresp.ttl = 14d;
+  }
 }
 
 # 

@@ -201,7 +201,11 @@ var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
 
-    this.webGlSupported = true;
+    var url = window.location;
+    var uri = new URI(url);
+    var params = uri.search(true);
+
+    this.webGlSupported = (params.map === '2d') ? false : true;
     
     var noWebGLMessage;
     

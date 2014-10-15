@@ -1780,7 +1780,7 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
             if (wmsServers.hasOwnProperty(wmsServer)) {
                 var getCapabilitiesUrl = wmsServer + '?service=WMS&request=GetCapabilities';
                 if (corsProxy.shouldUseProxy(getCapabilitiesUrl)) {
-                    getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl);
+                    getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl,'1d');
                 }
 
                 promises.push(filterMaxScaleDenominatorLayers(getCapabilitiesUrl, wmsServers[wmsServer], layers));
@@ -1806,45 +1806,54 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     return promise;
 };
 
+var getCapabilitiesCache = {};
+
 function filterMaxScaleDenominatorLayers(getCapabilitiesUrl, layersInGroup, layersToFilter) {
-    return loadText(getCapabilitiesUrl).then(function(getCapabilitiesXml) {
-        var getCapabilitiesJson = $.xml2json(getCapabilitiesXml);
+    if (defined(getCapabilitiesCache[getCapabilitiesUrl])) {
+        filterBasedOnGetCapabilities(getCapabilitiesCache[getCapabilitiesUrl], layersInGroup, layersToFilter);
+    } else {
+        return loadText(getCapabilitiesUrl).then(function(getCapabilitiesXml) {
+            getCapabilitiesCache[getCapabilitiesUrl] = $.xml2json(getCapabilitiesXml);
+            filterBasedOnGetCapabilities(getCapabilitiesCache[getCapabilitiesUrl], layersInGroup, layersToFilter);
+        }).otherwise(function() {
+            filterAllLayers(getCapabilitiesUrl, layersInGroup, layersToFilter);
+        });
+    }
+}
 
-        var wmsLayersSource = [getCapabilitiesJson.Capability.Layer];
-        var wmsLayers = [];
-        _recurseLayerList(wmsLayersSource, wmsLayers, false);
+function filterBasedOnGetCapabilities(getCapabilitiesJson, layersInGroup, layersToFilter) {
+    var wmsLayersSource = [getCapabilitiesJson.Capability.Layer];
+    var wmsLayers = [];
+    _recurseLayerList(wmsLayersSource, wmsLayers, false);
 
-        for (var i = 0; i < layersInGroup.length; ++i) {
-            var layerInGroup = layersInGroup[i];
+    for (var i = 0; i < layersInGroup.length; ++i) {
+        var layerInGroup = layersInGroup[i];
 
-            // Find a matching layer in the GetCapabilities response.
-            // Remove the layer if there is no match in GetCapabilities or if the layer has a MaxScaleDenominator.
-            var remove = true;
-            var found = false;
-            for (var j = 0; j < wmsLayers.length; ++j) {
-                if (wmsLayers[j].Name === layerInGroup.Name) {
-                    found = true;
-                    remove = defined(wmsLayers[j].MaxScaleDenominator) && wmsLayers[j].MaxScaleDenominator < 1e10;
-                    if (remove) {
-                        console.log('Filtering out ' + layerInGroup.Title + ' (' + layerInGroup.Name + ') because its MaxScaleDenominator is ' + wmsLayers[j].MaxScaleDenominator);
-                    }
-                    break;
+        // Find a matching layer in the GetCapabilities response.
+        // Remove the layer if there is no match in GetCapabilities or if the layer has a MaxScaleDenominator.
+        var remove = true;
+        var found = false;
+        for (var j = 0; j < wmsLayers.length; ++j) {
+            if (wmsLayers[j].Name === layerInGroup.Name) {
+                found = true;
+                remove = defined(wmsLayers[j].MaxScaleDenominator) && wmsLayers[j].MaxScaleDenominator < 1e10;
+                if (remove) {
+                    console.log('Filtering out ' + layerInGroup.Title + ' (' + layerInGroup.Name + ') because its MaxScaleDenominator is ' + wmsLayers[j].MaxScaleDenominator);
                 }
-            }
-
-            if (remove) {
-                if (!found) {
-                    console.log('Filtering out ' + layerInGroup.Title + ' (' + layerInGroup.Name + ') because it does not exist in the WMS server\'s GetCapabilities.');
-                }
-                var index = layersToFilter.indexOf(layerInGroup);
-                if (index >= 0) {
-                    layersToFilter.splice(index, 1);
-                }
+                break;
             }
         }
-    }).otherwise(function() {
-        filterAllLayers(getCapabilitiesUrl, layersInGroup, layersToFilter);
-    });
+
+        if (remove) {
+            if (!found) {
+                console.log('Filtering out ' + layerInGroup.Title + ' (' + layerInGroup.Name + ') because it does not exist in the WMS server\'s GetCapabilities.');
+            }
+            var index = layersToFilter.indexOf(layerInGroup);
+            if (index >= 0) {
+                layersToFilter.splice(index, 1);
+            }
+        }
+    }
 }
 
 function filterAllLayers(getCapabilitiesUrl, layersInGroup, layersToFilter) {
@@ -1886,7 +1895,7 @@ GeoDataCollection.prototype.getCapabilities = function(description, callback) {
    
     console.log('CAPABILITIES REQUEST:',request);
     if (corsProxy.shouldUseProxy(request)) {
-        request = corsProxy.getURL(request);
+        request = corsProxy.getURL(request, '1d');
     }
 
     var that = this;

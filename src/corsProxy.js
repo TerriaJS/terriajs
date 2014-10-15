@@ -5,8 +5,9 @@
 var defined = require('../third_party/cesium/Source/Core/defined');
 
 var corsProxy = {
-    getURL : function(resource) {
-        return '/proxy/' + resource;
+    getURL : function(resource, proxyFlag) {
+        var flag = (proxyFlag === undefined) ? '' : '_' + proxyFlag + '/';
+        return '/proxy/' + flag + resource;
     },
     proxyDomains : []
 };
