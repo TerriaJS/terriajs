@@ -1131,6 +1131,7 @@ these extensions in order for National Map to know how to load it.'
         // less likely to be to the same server.
         //shuffle(urls);
 
+        var blacklistFailedServers = false;
         var maxRequests = 2;
         var nextRequestIndex = 0;
         var inFlight = 0;
@@ -1191,8 +1192,12 @@ these extensions in order for National Map to know how to load it.'
             loadWithXhr({
                 url : next.url
             }).then(doneUrl).otherwise(function() {
-                console.log('Blacklisting ' + next.baseUrl + ' because it returned an error while working on layer ' + next.name);
-                blacklist[next.baseUrl] = true;
+                if (blacklistFailedServers) {
+                    console.log('Blacklisting ' + next.baseUrl + ' because it returned an error while working on layer ' + next.name);
+                    blacklist[next.baseUrl] = true;
+                } else {
+                    console.log(next.baseUrl + ' returned an error while working on layer ' + next.name);
+                }
                 doneUrl();
             });
         }
