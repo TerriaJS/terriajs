@@ -48,7 +48,7 @@ var GeoDataBrowser = function(options) {
     legendButton.className = 'ausglobe-panel-button';
     legendButton.title = 'Legend';
     legendButton.innerHTML = '<div class="ausglobe-panel-button-label">Legend</div>';
-    legendButton.setAttribute('data-bind', 'visible: nowViewing.hasShownItems, click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
+    legendButton.setAttribute('data-bind', 'click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
     wrapper.appendChild(legendButton);
 
     var populateEnabledButton = document.createElement('div');
@@ -120,7 +120,8 @@ var GeoDataBrowser = function(options) {
                                 <div class="ausglobe-accordion-category-header-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root._arrowDown : $root._arrowRight, width: 32, height: 32 }"></div>\
                                 <div class="ausglobe-accordion-category-header-label" data-bind="text: name"></div>\
                             </div>\
-                            <div class="ausglobe-accordion-category-loading" data-bind="visible: isLoading">Loading...</div>\
+                            <div class="ausglobe-accordion-category-loading" data-bind="visible: isOpen && isLoading">Loading...</div>\
+                            <div class="ausglobe-accordion-category-loading" data-bind="visible: isOpen && !isLoading && items.length === 0">This group does not contain any data sources.</div>\
                             <div class="ausglobe-accordion-category-content" data-bind="foreach: items, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
                                 <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled }">\
                                     <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
@@ -201,7 +202,7 @@ var GeoDataBrowser = function(options) {
 
     var legendPanel = document.createElement('div');
     legendPanel.className = 'ausglobe-panel';
-    legendPanel.setAttribute('data-bind', 'if: nowViewing.hasItems, css: { "ausglobe-panel-visible" : showingLegendPanel }');
+    legendPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingLegendPanel }');
 
     legendPanel.innerHTML = '\
         <div data-bind="foreach: nowViewing.items">\
@@ -226,6 +227,13 @@ var GeoDataBrowser = function(options) {
                 </div>\
             </div>\
             <!-- /ko -->\
+        </div>\
+        <div data-bind="visible: !nowViewing.hasShownItems">\
+            <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible">\
+                <div class="ausglobe-now-viewing-no-data">\
+                    There are no legends to show because no data sources are currently shown.\
+                </div>\
+            </div>\
         </div>';
 
     wrapper.appendChild(legendPanel);

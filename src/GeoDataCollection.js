@@ -507,7 +507,10 @@ GeoDataCollection.prototype._parseLayers = function(str_layers) {
  * @param {Object} url The url to be processed.
  *
  */
-GeoDataCollection.prototype.loadInitialUrl = function(url) {
+GeoDataCollection.prototype.loadInitialUrl = function(url, ckanWhitelist, ckanBlacklist) {
+    this.ckanWhitelist = ckanWhitelist;
+    this.ckanBlacklist = ckanBlacklist;
+
     //URI suport for over-riding uriParams - put presets in uri_params
     var uri = new URI(url);
     var uri_params = {
@@ -1704,6 +1707,13 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
     else if (description.type === 'CKAN') {
         var wmsServers = {};
 
+        var whitelist = this.ckanWhitelist;
+        if (!whitelist || whitelist.indexOf(description.name) >= 0) {
+            whitelist = undefined;
+        }
+
+        var blacklist = this.ckanBlacklist;
+
         layers = [];
         var results = json_gml.result.results;
         for (var resultIndex = 0; resultIndex < results.length; ++resultIndex) {
@@ -1756,21 +1766,27 @@ GeoDataCollection.prototype.handleCapabilitiesRequest = function(text, descripti
                     }
                 }
 
-                var newLayer = {
-                    Name: layerName,
-                    Title: result.title,
-                    base_url: url,
-                    type: 'WMS',
-                    description: textDescription,
-                    BoundingBox : bbox
-                };
-                layers.push(newLayer);
-
-                if (!defined(wmsServers[url])) {
-                    wmsServers[url] = [];
+                if (blacklist && blacklist.indexOf(result.title) >= 0) {
+                    continue;
                 }
 
-                wmsServers[url].push(newLayer);
+                if (!whitelist || whitelist.indexOf(result.title) >= 0) {
+                    var newLayer = {
+                        Name: layerName,
+                        Title: result.title,
+                        base_url: url,
+                        type: 'WMS',
+                        description: textDescription,
+                        BoundingBox : bbox
+                    };
+                    layers.push(newLayer);
+
+                    if (!defined(wmsServers[url])) {
+                        wmsServers[url] = [];
+                    }
+
+                    wmsServers[url].push(newLayer);
+                }
             }
         }
 

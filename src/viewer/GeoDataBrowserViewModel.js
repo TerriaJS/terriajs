@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,ga,alert,L*/
+/*global require,ga,alert,L,URI*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
@@ -21,6 +21,7 @@ var throttleRequestByServer = require('../../third_party/cesium/Source/Core/thro
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var corsProxy = require('../corsProxy');
 var createGeoDataItemFromType = require('../ViewModels/createGeoDataItemFromType');
@@ -401,6 +402,8 @@ these extensions in order for National Map to know how to load it.'
         }
 
         when(loadJson(url), function(result) {
+            var blacklist = that._viewer.geoDataManager.ckanBlacklist;
+
             var existingGroups = {};
 
             var items = result.result.results;
@@ -409,14 +412,16 @@ these extensions in order for National Map to know how to load it.'
                 for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                     var group = groups[groupIndex];
                     if (!existingGroups[group.name]) {
-                        existingCollection.Layer.push(createCategory({
-                            data : {
-                                name: group.display_name,
-                                base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
-                                type: 'CKAN'
-                            }
-                        }));
-                        existingGroups[group.name] = true;
+                        if (!blacklist || blacklist.indexOf(group.display_name) < 0) {
+                            existingCollection.Layer.push(createCategory({
+                                data : {
+                                    name: group.display_name,
+                                    base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
+                                    type: 'CKAN'
+                                }
+                            }));
+                            existingGroups[group.name] = true;
+                        }
                     }
                 }
             }
@@ -634,20 +639,27 @@ these extensions in order for National Map to know how to load it.'
 
     function requestTiles(requests, maxLevel) {
         var urls = [];
+        var names = [];
+
+        var name;
 
         loadImage.createImage = function(url, crossOrigin, deferred) {
             urls.push(url);
+            names.push(name);
             deferred.resolve();
         };
 
         var oldMax = throttleRequestByServer.maximumRequestsPerServer;
         throttleRequestByServer.maximumRequestsPerServer = Number.MAX_VALUE;
 
-        for (var i = 0; i < requests.length; ++i) {
+        var i;
+        for (i = 0; i < requests.length; ++i) {
             var request = requests[i];
             var bareItem = komapping.toJS(request.item);
             var extent = getOGCLayerExtent(bareItem);
             var tilingScheme = request.provider.tilingScheme;
+
+            name = bareItem.Title;
 
             for (var level = 0; level <= maxLevel; ++level) {
                 var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
@@ -674,35 +686,80 @@ these extensions in order for National Map to know how to load it.'
 
         // Do requests in random order for better performance; successive requests are
         // less likely to be to the same server.
-        shuffle(urls);
+        //shuffle(urls);
 
-        var maxRequests = 6;
+        var blacklistFailedServers = false;
+        var maxRequests = 2;
         var nextRequestIndex = 0;
         var inFlight = 0;
+        var urlsRequested = 0;
 
         function doneUrl() {
             --inFlight;
             doNext();
         }
 
-        function doNext() {
-            if (nextRequestIndex < urls.length) {
+        function getNextUrl() {
+            var url;
+            var baseUrl;
+
+            do {
+                if (nextRequestIndex >= urls.length) {
+                    return undefined;
+                }
+
                 if ((nextRequestIndex % 10) === 0) {
                     console.log('Finished ' + nextRequestIndex + ' URLs.');
                 }
-                ++inFlight;
-                loadWithXhr({
-                    url : urls[nextRequestIndex++]
-                }).then(doneUrl).otherwise(doneUrl);
-            } else if (inFlight === 0) {
-                if ((nextRequestIndex % 10) !== 0) {
-                    console.log('Finished ' + nextRequestIndex + ' URLs.');
+
+                url = urls[nextRequestIndex];
+                name = names[nextRequestIndex];
+                ++nextRequestIndex;
+
+                var queryIndex = url.indexOf('?');
+                baseUrl = url;
+                if (queryIndex >= 0) {
+                    baseUrl = url.substring(0, queryIndex);
                 }
-                console.log('Done!');
-            }
+
+            } while (blacklist[baseUrl]);
+
+            return {
+                url: url,
+                baseUrl: baseUrl,
+                name: name
+            };
         }
 
-        for (var i = 0; i < maxRequests; ++i) {
+        var blacklist = {};
+
+        function doNext() {
+            var next = getNextUrl();
+            if (!defined(next)) {
+                if (inFlight === 0) {
+                    console.log('Finished ' + nextRequestIndex + ' URLs.  DONE!');
+                    console.log('Actual number of URLs requested: ' + urlsRequested);
+                }
+                return;
+            }
+
+            ++urlsRequested;
+            ++inFlight;
+
+            loadWithXhr({
+                url : next.url
+            }).then(doneUrl).otherwise(function() {
+                if (blacklistFailedServers) {
+                    console.log('Blacklisting ' + next.baseUrl + ' because it returned an error while working on layer ' + next.name);
+                    blacklist[next.baseUrl] = true;
+                } else {
+                    console.log(next.baseUrl + ' returned an error while working on layer ' + next.name);
+                }
+                doneUrl();
+            });
+        }
+
+        for (i = 0; i < maxRequests; ++i) {
             doNext();
         }
     }
@@ -851,13 +908,13 @@ GeoDataBrowserViewModel.prototype.toggleShowingLegendPanel = function() {
         var oneIsVisible = false;
         var firstShown;
         for (var i = 0; !oneIsVisible && i < items.length; ++i) {
-            oneIsVisible = items[i].isLegendVisible;
+            oneIsVisible = items[i].isShown && items[i].isLegendVisible;
             if (!defined(firstShown) && items[i].isShown) {
                 firstShown = items[i];
             }
         }
 
-        if (!oneIsVisible) {
+        if (!oneIsVisible && defined(firstShown)) {
             firstShown.isLegendVisible = true;
         }
     }
