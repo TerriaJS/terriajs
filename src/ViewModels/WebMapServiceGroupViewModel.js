@@ -21,6 +21,7 @@ var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var runLater = require('../runLater');
 var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewModel');
 
 /**
@@ -62,8 +63,11 @@ var WebMapServiceGroupViewModel = function(context) {
 
         that._needsLoad = false;
         that.isLoading = true;
-        getCapabilities(that).always(function() {
-            that.isLoading = false;
+
+        runLater(function() {
+            getCapabilities(that).always(function() {
+                that.isLoading = false;
+            });
         });
     });
 };
