@@ -204,7 +204,10 @@ var AusGlobeViewer = function(geoDataManager) {
             container : document.body,
             title : 'Unsupported browser version detected',
             message : '\
-            The National Map is not designed to work on versions of Internet Explorer older than 9.0. We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. Running on your current browser will probably suffer from limited functionality, poor appearance, and stability issues.'
+The National Map is not designed to work on versions of Internet Explorer older than 9.0. \
+We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. \
+Running on your current browser will probably suffer from limited functionality, poor appearance, \
+and stability issues.'
         });
         this.webGlSupported = false;
     }
@@ -215,12 +218,12 @@ var AusGlobeViewer = function(geoDataManager) {
             container : document.body,
             title : 'WebGL not supported',
             message : '\
-National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, including the \
-latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
+National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, 
+including the latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
 <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, and \
+<a href="https://www.apple.com/au/osx/how-to-upgrade/" target="_blank">Apple Safari</a>, and \
 <a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
-Your web browser does not appear to support WebGL, so you will see a limited, \
-2D-only experience.'
+Your web browser does not appear to support WebGL, so you will see a limited, 2D-only experience.'
         });
         this.webGlSupported = false;
     }
