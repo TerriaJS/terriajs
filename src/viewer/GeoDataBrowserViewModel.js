@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,ga,alert,L*/
+/*global require,ga,alert,L,URI*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
@@ -21,6 +21,7 @@ var throttleRequestByServer = require('../../third_party/cesium/Source/Core/thro
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
@@ -665,7 +666,7 @@ these extensions in order for National Map to know how to load it.'
         var nowViewing = that.nowViewing();
 
         for (var i = 0; i < nowViewing.length; ++i) {
-            if (nowViewing[i].show) {
+            if (nowViewing[i].show && nowViewing[i].show()) {
                 return true;
             }
         }
@@ -944,7 +945,7 @@ these extensions in order for National Map to know how to load it.'
             return true;
         }
         return false;
-    }
+    };
 
     this.populateCache = function(mode) {
         function waitForAllToFinishLoading() {
@@ -1086,7 +1087,8 @@ these extensions in order for National Map to know how to load it.'
         var oldMax = throttleRequestByServer.maximumRequestsPerServer;
         throttleRequestByServer.maximumRequestsPerServer = Number.MAX_VALUE;
 
-        for (var i = 0; i < requests.length; ++i) {
+        var i;
+        for (i = 0; i < requests.length; ++i) {
             var request = requests[i];
             var bareItem = komapping.toJS(request.item);
             var extent = getOGCLayerExtent(bareItem);
@@ -1145,7 +1147,7 @@ these extensions in order for National Map to know how to load it.'
             }
         }
 
-        for (var i = 0; i < maxRequests; ++i) {
+        for (i = 0; i < maxRequests; ++i) {
             doNext();
         }
     }
