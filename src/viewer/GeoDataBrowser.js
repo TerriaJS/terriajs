@@ -47,7 +47,7 @@ var GeoDataBrowser = function(options) {
     legendButton.className = 'ausglobe-panel-button';
     legendButton.title = 'Legend';
     legendButton.innerHTML = '<div class="ausglobe-panel-button-label">Legend</div>';
-    legendButton.setAttribute('data-bind', 'visible: legendsExist(), click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
+    legendButton.setAttribute('data-bind', 'click: toggleShowingLegendPanel, css { "ausglobe-panel-button-panel-visible": showingLegendPanel }');
     wrapper.appendChild(legendButton);
 
     var populateEnabledButton = document.createElement('div');
@@ -221,7 +221,7 @@ var GeoDataBrowser = function(options) {
 
     var legendPanel = document.createElement('div');
     legendPanel.className = 'ausglobe-panel';
-    legendPanel.setAttribute('data-bind', 'if: nowViewing().length > 0, css: { "ausglobe-panel-visible" : showingLegendPanel }');
+    legendPanel.setAttribute('data-bind', 'css: { "ausglobe-panel-visible" : showingLegendPanel }');
 
     legendPanel.innerHTML = '\
         <div data-bind="foreach: nowViewing">\
@@ -246,6 +246,13 @@ var GeoDataBrowser = function(options) {
                 </div>\
             </div>\
             <!-- /ko -->\
+        </div>\
+        <div data-bind="visible: !legendsExist()">\
+            <div class="ausglobe-accordion-category-content ausglobe-accordion-category-content-visible">\
+                <div class="ausglobe-now-viewing-no-data">\
+                    There are no legends to show because no data sources are currently shown.\
+                </div>\
+            </div>\
         </div>';
 
     wrapper.appendChild(legendPanel);
