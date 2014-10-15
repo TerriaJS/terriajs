@@ -1,1 +1,35 @@
-Herb-rich Woodlands - Alluvial terraces and/or creeklines (EVC_1750)
+Biology & Ecology
+Vicmap Vegetation - Tree Density - Scattered
+Vicmap Vegetation - Tree Density - Medium
+Vicmap Vegetation - Tree Density - Dense
+Watercourse Network 1:25,000 - Vicmap Hydro
+Vicmap Property Annotation Text
+Vicmap Property datasets
+Vicmap Property layers
+Atmosphere & Climate
+Tailings Licences - Expired
+Seismic Survey Points
+VMPROP map-polygons, Parcel and Property
+Vicmap Elevation - Contours
+Elevation
+Vicmap Elevation - Ground Type Sand
+Vicmap Elevation - Ground Type Rock Outcrop
+Vicmap Elevation - Ground Points
+Vicmap Elevation 10 - 20 m
+Exploration Graticules with 1km intervals
+Exploration Graticules with 10km intervals
+Exploration Graticules with 100km intervals
+Vicmap Property Map Polygons
+Vicmap Property Address Map Polygons
+Agriculture & Farming
+Location & GPS
+Borehole geology
+Surface Geochemistry Samples (being Superceded by GEOCHEMISTRY)
+Statewide Landuse (1:100,000)
+Geologically Significant Features
+Geological polygons (1:100,000)
+Alluvial mineralisation and mined alluvial workings line (1:100,00)
+Vicmap Property - Road Casement Polygon
+Boreholes that are available to the public
+Vicmap Transport - Road Network
+
