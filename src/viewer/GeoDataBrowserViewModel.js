@@ -1119,7 +1119,7 @@ these extensions in order for National Map to know how to load it.'
 
         // Do requests in random order for better performance; successive requests are
         // less likely to be to the same server.
-        shuffle(urls);
+        //shuffle(urls);
 
         var maxRequests = 2;
         var nextRequestIndex = 0;
