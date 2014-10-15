@@ -1078,9 +1078,13 @@ these extensions in order for National Map to know how to load it.'
 
     function requestTiles(requests, maxLevel) {
         var urls = [];
+        var names = [];
+
+        var name;
 
         loadImage.createImage = function(url, crossOrigin, deferred) {
             urls.push(url);
+            names.push(name);
             deferred.resolve();
         };
 
@@ -1093,6 +1097,8 @@ these extensions in order for National Map to know how to load it.'
             var bareItem = komapping.toJS(request.item);
             var extent = getOGCLayerExtent(bareItem);
             var tilingScheme = request.provider.tilingScheme;
+
+            name = bareItem.Title;
 
             for (var level = 0; level <= maxLevel; ++level) {
                 var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
@@ -1145,6 +1151,7 @@ these extensions in order for National Map to know how to load it.'
                 }
 
                 url = urls[nextRequestIndex];
+                name = names[nextRequestIndex];
                 ++nextRequestIndex;
 
                 var queryIndex = url.indexOf('?');
@@ -1157,7 +1164,8 @@ these extensions in order for National Map to know how to load it.'
 
             return {
                 url: url,
-                baseUrl : baseUrl
+                baseUrl: baseUrl,
+                name: name
             };
         }
 
@@ -1168,7 +1176,7 @@ these extensions in order for National Map to know how to load it.'
             if (!defined(next)) {
                 if (inFlight === 0) {
                     console.log('Finished ' + nextRequestIndex + ' URLs.  DONE!');
-                    console.log('Actually name of URLs requested: ' + urlsRequested);
+                    console.log('Actual number of URLs requested: ' + urlsRequested);
                 }
                 return;
             }
@@ -1179,7 +1187,7 @@ these extensions in order for National Map to know how to load it.'
             loadWithXhr({
                 url : next.url
             }).then(doneUrl).otherwise(function() {
-                console.log('Blacklisting ' + next.baseUrl + ' because it returned an error.');
+                console.log('Blacklisting ' + next.baseUrl + ' because it returned an error while working on layer ' + next.name);
                 blacklist[next.baseUrl] = true;
                 doneUrl();
             });
