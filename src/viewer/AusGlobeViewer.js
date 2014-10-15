@@ -191,7 +191,11 @@ var AusGlobeViewer = function(geoDataManager) {
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
 
-    this.webGlSupported = true;
+    var url = window.location;
+    var uri = new URI(url);
+    var params = uri.search(true);
+
+    this.webGlSupported = (params.map === '2d') ? false : true;
     
     var noWebGLMessage;
     
@@ -271,10 +275,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.scene = undefined;
     this.viewer = undefined;
     this.map = undefined;
-    
-    var url = window.location;
-    var uri = new URI(url);
-    var params = uri.search(true);
     
     var configUrl = params.config || 'config.json';
 
