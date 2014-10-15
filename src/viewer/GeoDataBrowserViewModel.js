@@ -754,6 +754,8 @@ these extensions in order for National Map to know how to load it.'
         }
 
         when(loadJson(url), function(result) {
+            var blacklist = that._viewer.geoDataManager.ckanBlacklist;
+
             var existingGroups = {};
 
             var items = result.result.results;
@@ -762,14 +764,16 @@ these extensions in order for National Map to know how to load it.'
                 for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                     var group = groups[groupIndex];
                     if (!existingGroups[group.name]) {
-                        existingCollection.Layer.push(createCategory({
-                            data : {
-                                name: group.display_name,
-                                base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
-                                type: 'CKAN'
-                            }
-                        }));
-                        existingGroups[group.name] = true;
+                        if (!blacklist || blacklist.indexOf(group.display_name) < 0) {
+                            existingCollection.Layer.push(createCategory({
+                                data : {
+                                    name: group.display_name,
+                                    base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
+                                    type: 'CKAN'
+                                }
+                            }));
+                            existingGroups[group.name] = true;
+                        }
                     }
                 }
             }

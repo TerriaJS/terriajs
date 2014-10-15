@@ -37,6 +37,7 @@ var Intersections2D = require('../../third_party/cesium/Source/Core/Intersection
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var KeyboardEventModifier = require('../../third_party/cesium/Source/Core/KeyboardEventModifier');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Material = require('../../third_party/cesium/Source/Scene/Material');
 var Matrix3 = require('../../third_party/cesium/Source/Core/Matrix3');
@@ -290,24 +291,39 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         
         that.initialCamera = config.initialCamera;
         
-        that.geoDataBrowser = new GeoDataBrowser({
-            viewer : that,
-            container : leftArea,
-            dataManager : geoDataManager,
-            initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
-            mode3d: that.webGlSupported
-        });
-        
-        that.selectViewer(that.webGlSupported);
-        
-        // simple way to capture most ux redraw needs - catch all canvas clicks
-        $(document).click(function() {
-            if (that.frameChecker !== undefined) {
-                that.frameChecker.forceFrameUpdate();
-            }
-        });
+        when.all([loadText('test/ckan_whitelist.txt'), loadText('test/ckan_blacklist.txt')], function(lists) {
+            var whitelist = lists[0];
+            var blacklist = lists[1];
 
-        that.geoDataManager.loadInitialUrl(url);
+            that.ckanWhitelist = whitelist.match(/[^\r\n]+/g);
+            if (!that.ckanWhitelist || that.ckanWhitelist.length == 0) {
+                that.ckanWhitelist = undefined;
+            }
+
+            that.ckanBlacklist = blacklist.match(/[^\r\n]+/g);
+            if (!that.ckanBlacklist || that.ckanBlacklist.length === 0) {
+                that.ckanBlacklist = undefined;
+            }
+
+            that.geoDataBrowser = new GeoDataBrowser({
+                viewer : that,
+                container : leftArea,
+                dataManager : geoDataManager,
+                initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
+                mode3d: that.webGlSupported
+            });
+            
+            that.selectViewer(that.webGlSupported);
+            
+            // simple way to capture most ux redraw needs - catch all canvas clicks
+            $(document).click(function() {
+                if (that.frameChecker !== undefined) {
+                    that.frameChecker.forceFrameUpdate();
+                }
+            });
+
+            that.geoDataManager.loadInitialUrl(url, that.ckanWhitelist, that.ckanBlacklist);
+        });
     });
 
     //TODO: should turn this off based on event from loadUrl
