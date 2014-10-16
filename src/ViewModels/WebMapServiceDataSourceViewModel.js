@@ -82,6 +82,7 @@ var WebMapServiceDataSourceViewModel = function(context) {
     knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
+    delete this.__knockoutObservables.dataUrl;
     knockout.defineProperty(this, 'dataUrl', {
         get : function() {
             var url = this._dataUrl;
@@ -100,6 +101,7 @@ var WebMapServiceDataSourceViewModel = function(context) {
         }
     });
 
+    delete this.__knockoutObservables.dataUrlType;
     knockout.defineProperty(this, 'dataUrlType', {
         get : function() {
             if (defined(this._dataUrlType)) {
@@ -113,6 +115,7 @@ var WebMapServiceDataSourceViewModel = function(context) {
         }
     });
 
+    delete this.__knockoutObservables.metadataUrl;
     knockout.defineProperty(this, 'metadataUrl', {
         get : function() {
             if (defined(this._metadataUrl)) {
@@ -126,6 +129,7 @@ var WebMapServiceDataSourceViewModel = function(context) {
         }
     });
 
+    delete this.__knockoutObservables.legendUrl;
     knockout.defineProperty(this, 'legendUrl', {
         get : function() {
             if (defined(this._legendUrl)) {
