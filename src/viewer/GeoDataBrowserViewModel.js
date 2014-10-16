@@ -604,6 +604,7 @@ these extensions in order for National Map to know how to load it.'
                         transparent: true,
                         exceptions: 'application/vnd.ogc.se_xml'
                     });
+                    that._viewer.map.addLayer(provider);
                 }
                 else {
                     var wmsOptions = {
@@ -713,7 +714,11 @@ these extensions in order for National Map to know how to load it.'
 
                 for (var y = nw.y; y <= se.y; ++y) {
                     for (var x = nw.x; x <= se.x; ++x) {
-                        console.log('tile', x, y, level);
+                        var coords = new L.Point(x, y);
+                        coords.z = level;
+
+                        var str = request.provider.getTileUrl(coords);
+                        console.log(str);
 //                        if (!defined(request.provider.requestImage(x, y, level))) {
 //                            console.log('too many requests in flight');
 //                        }
