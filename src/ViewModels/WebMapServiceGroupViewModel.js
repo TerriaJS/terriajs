@@ -54,22 +54,6 @@ var WebMapServiceGroupViewModel = function(context) {
     this.dataCustodian = undefined;
 
     knockout.track(this, ['url', 'dataCustodian']);
-
-    var that = this;
-    knockout.getObservable(this, 'isOpen').subscribe(function(newValue) {
-        if (that._needsLoad === false || newValue === false) {
-            return;
-        }
-
-        that._needsLoad = false;
-        that.isLoading = true;
-
-        runLater(function() {
-            getCapabilities(that).always(function() {
-                that.isLoading = false;
-            });
-        });
-    });
 };
 
 WebMapServiceGroupViewModel.prototype = inherit(GeoDataGroupViewModel.prototype);
@@ -95,6 +79,27 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
         }
     }
 });
+
+/**
+ * Loads the items in this group by invoking the GetCapabilities service on the WMS server.
+ * Each layer in the response becomes an item in the group.  The {@link GeoDataGroupViewModel#isLoading} flag will
+ * be set while the load is in progress.
+ */
+WebMapServiceGroupViewModel.prototype.load = function() {
+    if (this._needsLoad === false) {
+        return;
+    }
+
+    this._needsLoad = false;
+    this.isLoading = true;
+
+    var that = this;
+    runLater(function() {
+        getCapabilities(that).always(function() {
+            that.isLoading = false;
+        });
+    });
+};
 
 function getCapabilities(viewModel) {
     var url = cleanAndProxyUrl(viewModel.context, viewModel.url) + '?service=WMS&request=GetCapabilities';

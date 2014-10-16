@@ -47,6 +47,14 @@ var GeoDataGroupViewModel = function(context) {
     this.items = [];
 
     knockout.track(this, ['isOpen', 'isLoading', 'items']);
+
+    var that = this;
+    knockout.getObservable(this, 'isOpen').subscribe(function(newValue) {
+        // Load this group's items (if we haven't already) when it is opened.
+        if (newValue) {
+            that.load();
+        }
+    });
 };
 
 GeoDataGroupViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
@@ -100,29 +108,52 @@ defineProperties(GeoDataGroupViewModel.prototype, {
 });
 
 GeoDataGroupViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
+
 GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName) {
     if (!defined(json.items)) {
         return;
     }
 
-    // TODO: allow JSON to update the order of items as well.
+    // Load the group's items first, if we haven't already.
+    viewModel.load();
 
-    var items = json.items;
-    for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
-        var item = items[itemIndex];
+    // If the group is still loading, delay this operation until the loading is complete.
+    // Otherwise, these changes could get clobbered by the load.
+    if (viewModel.isLoading) {
+        var subscription = knockout.getObservable(viewModel, 'isLoading').subscribe(function(newValue) {
+            if (newValue === false) {
+                // Done loading
+                subscription.dispose();
+                doUpdate();
+            }
+        });
+    } else {
+        doUpdate();
+    }
 
-        // Find an existing item with the same name
-        var existingItem = viewModel.findFirstItemByName(item.name);
-        if (!defined(existingItem) || existingItem.type !== item.type) {
-            existingItem = createGeoDataItemFromType(item.type, viewModel.context);
-            viewModel.add(existingItem);
+    function doUpdate() {
+        // TODO: allow JSON to update the order of items as well.
+
+        var items = json.items;
+        for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
+            var item = items[itemIndex];
+
+            // Find an existing item with the same name
+            var existingItem = viewModel.findFirstItemByName(item.name);
+            if (!defined(existingItem) || existingItem.type !== item.type) {
+                existingItem = createGeoDataItemFromType(item.type, viewModel.context);
+                viewModel.add(existingItem);
+            }
+
+            existingItem.updateFromJson(item);
         }
-
-        existingItem.updateFromJson(item);
     }
 };
 
+GeoDataGroupViewModel.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
+
 GeoDataGroupViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
+
 GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, enabledItemsOnly) {
     var items = json.items = [];
 
@@ -132,6 +163,17 @@ GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, prope
             items.push(item);
         }
     }
+};
+
+GeoDataGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, enabledItemsOnly) {};
+
+/**
+ * When implemented in a derived class, loads the contents of this group, if the contents are not already loaded.  It is safe to
+ * call this method multiple times.  The {@link GeoDataGroupViewModel#isLoading} flag will be set while the load is in progress.
+ * This base-class implementation of this method does nothing because {@link GeoDataGroupViewModel} does not do an lazy loading
+ * of its content.
+ */
+GeoDataGroupViewModel.prototype.load = function() {
 };
 
 /**
