@@ -40,6 +40,7 @@ var Intersections2D = require('../../third_party/cesium/Source/Core/Intersection
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var KeyboardEventModifier = require('../../third_party/cesium/Source/Core/KeyboardEventModifier');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Material = require('../../third_party/cesium/Source/Scene/Material');
 var Matrix3 = require('../../third_party/cesium/Source/Core/Matrix3');
@@ -203,7 +204,11 @@ var AusGlobeViewer = function(geoDataManager) {
     leftArea.className = 'ausglobe-left-area';
     document.body.appendChild(leftArea);
 
-    this.webGlSupported = true;
+    var url = window.location;
+    var uri = new URI(url);
+    var params = uri.search(true);
+
+    this.webGlSupported = (params.map === '2d') ? false : true;
     
     var noWebGLMessage;
     
@@ -212,7 +217,10 @@ var AusGlobeViewer = function(geoDataManager) {
             container : document.body,
             title : 'Unsupported browser version detected',
             message : '\
-            The National Map is not designed to work on versions of Internet Explorer older than 9.0. We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. Running on your current browser will probably suffer from limited functionality, poor appearance, and stability issues.'
+The National Map is not designed to work on versions of Internet Explorer older than 9.0. \
+We suggest you upgrade to the latest version of Google Chrome, Microsoft IE11 or Mozilla Firefox. \
+Running on your current browser will probably suffer from limited functionality, poor appearance, \
+and stability issues.'
         });
         this.webGlSupported = false;
     }
@@ -223,12 +231,12 @@ var AusGlobeViewer = function(geoDataManager) {
             container : document.body,
             title : 'WebGL not supported',
             message : '\
-National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, including the \
-latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
-<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, and \
+National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, \
+including the latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, \
+<a href="https://www.apple.com/au/osx/how-to-upgrade/" target="_blank">Apple Safari</a>, and \
 <a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
-Your web browser does not appear to support WebGL, so you will see a limited, \
-2D-only experience.'
+Your web browser does not appear to support WebGL, so you will see a limited, 2D-only experience.'
         });
         this.webGlSupported = false;
     }
@@ -284,10 +292,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.viewer = undefined;
     this.map = undefined;
     
-    var url = window.location;
-    var uri = new URI(url);
-    var params = uri.search(true);
-    
     var configUrl = params.config || 'config.json';
 
     //get the server config to know how to handle urls and load initial one
@@ -299,24 +303,39 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         
         that.initialCamera = config.initialCamera;
         
-        that.geoDataBrowser = new GeoDataBrowser({
-            viewer : that,
-            container : leftArea,
-            dataManager : geoDataManager,
-            initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
-            mode3d: that.webGlSupported
-        });
-        
-        that.selectViewer(that.webGlSupported);
-        
-        // simple way to capture most ux redraw needs - catch all canvas clicks
-        $(document).click(function() {
-            if (that.frameChecker !== undefined) {
-                that.frameChecker.forceFrameUpdate();
-            }
-        });
+        when.all([loadText('test/ckan_whitelist.txt'), loadText('test/ckan_blacklist.txt')], function(lists) {
+            var whitelist = lists[0];
+            var blacklist = lists[1];
 
-        that.geoDataManager.loadInitialUrl(url);
+            that.ckanWhitelist = whitelist.match(/[^\r\n]+/g);
+            if (!that.ckanWhitelist || that.ckanWhitelist.length == 0) {
+                that.ckanWhitelist = undefined;
+            }
+
+            that.ckanBlacklist = blacklist.match(/[^\r\n]+/g);
+            if (!that.ckanBlacklist || that.ckanBlacklist.length === 0) {
+                that.ckanBlacklist = undefined;
+            }
+
+            that.geoDataBrowser = new GeoDataBrowser({
+                viewer : that,
+                container : leftArea,
+                dataManager : geoDataManager,
+                initUrl: params.data_menu || config.initialDataMenu || 'init_nm.json',
+                mode3d: that.webGlSupported
+            });
+            
+            that.selectViewer(that.webGlSupported);
+            
+            // simple way to capture most ux redraw needs - catch all canvas clicks
+            $(document).click(function() {
+                if (that.frameChecker !== undefined) {
+                    that.frameChecker.forceFrameUpdate();
+                }
+            });
+
+            that.geoDataManager.loadInitialUrl(url, that.ckanWhitelist, that.ckanBlacklist);
+        });
     });
 
     //TODO: should turn this off based on event from loadUrl

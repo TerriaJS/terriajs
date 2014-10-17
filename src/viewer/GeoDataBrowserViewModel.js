@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,ga,alert,L*/
+/*global require,ga,alert,L,URI*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
@@ -21,6 +21,7 @@ var throttleRequestByServer = require('../../third_party/cesium/Source/Core/thro
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var corsProxy = require('../corsProxy');
 var GeoData = require('../GeoData');
@@ -625,10 +626,18 @@ these extensions in order for National Map to know how to load it.'
     this.getLegendUrl = function(item) {
         if (defined(item.legendUrl) && defined(item.legendUrl())) {
             if (item.legendUrl().length > 0) {
-                return item.legendUrl();
+                if (corsProxy.shouldUseProxy(item.legendUrl())) {
+                    return corsProxy.getURL(item.legendUrl());
+                } else {
+                    return item.legendUrl();
+                }
             }
         } else if (item.type() === 'WMS') {
-            return item.base_url() + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
+            var baseUrl = item.base_url();
+            if (corsProxy.shouldUseProxy(baseUrl)) {
+                baseUrl = corsProxy.getURL(baseUrl);
+            }
+            return baseUrl + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + item.Name();
         } else if (defined(item.layer.baseDataSource)) {
             return item.layer.baseDataSource.getLegendGraphic();
         } else if (defined(item.layer.dataSource) && defined(item.layer.dataSource.getLegendGraphic)) {
@@ -657,7 +666,7 @@ these extensions in order for National Map to know how to load it.'
         var nowViewing = that.nowViewing();
 
         for (var i = 0; i < nowViewing.length; ++i) {
-            if (nowViewing[i].show) {
+            if (nowViewing[i].show && nowViewing[i].show()) {
                 return true;
             }
         }
@@ -745,6 +754,8 @@ these extensions in order for National Map to know how to load it.'
         }
 
         when(loadJson(url), function(result) {
+            var blacklist = that._viewer.geoDataManager.ckanBlacklist;
+
             var existingGroups = {};
 
             var items = result.result.results;
@@ -753,14 +764,16 @@ these extensions in order for National Map to know how to load it.'
                 for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                     var group = groups[groupIndex];
                     if (!existingGroups[group.name]) {
-                        existingCollection.Layer.push(createCategory({
-                            data : {
-                                name: group.display_name,
-                                base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
-                                type: 'CKAN'
-                            }
-                        }));
-                        existingGroups[group.name] = true;
+                        if (!blacklist || blacklist.indexOf(group.display_name) < 0) {
+                            existingCollection.Layer.push(createCategory({
+                                data : {
+                                    name: group.display_name,
+                                    base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
+                                    type: 'CKAN'
+                                }
+                            }));
+                            existingGroups[group.name] = true;
+                        }
                     }
                 }
             }
@@ -936,7 +949,7 @@ these extensions in order for National Map to know how to load it.'
             return true;
         }
         return false;
-    }
+    };
 
     this.populateCache = function(mode) {
         function waitForAllToFinishLoading() {
@@ -996,48 +1009,62 @@ these extensions in order for National Map to know how to load it.'
                     proxy = undefined;
                 }
 
-                var wmsOptions = {
-                    url: url,
-                    layers : item.Name(),
-                    parameters: {
+                var provider;
+                if (!defined(that._viewer.viewer)) {
+                    if (defined(proxy)) {
+                        url = corsProxy.getURL(url);
+                    }
+                    provider = new L.tileLayer.wms(url, {
+                        layers: item.Name(),
                         format: 'image/png',
                         transparent: true,
-                        styles: '',
                         exceptions: 'application/vnd.ogc.se_xml'
-                    },
-                    proxy: proxy
-                };
-
-                var crs;
-                if (defined(item.CRS)) {
-                    crs = item.CRS();
-                } else if (defined(item.SRS)) {
-                    crs = item.SRS();
-                } else {
-                    crs = undefined;
+                    });
                 }
-                if (defined(crs)) {
-                    if (crsIsMatch(crs, 'EPSG:4326')) {
-                        // Standard Geographic
-                    } else if (crsIsMatch(crs, 'CRS:84')) {
-                        // Another name for EPSG:4326
-                        wmsOptions.parameters.srs = 'CRS:84';
-                    } else if (crsIsMatch(crs, 'EPSG:4283')) {
-                        // Australian system that is equivalent to EPSG:4326.
-                        wmsOptions.parameters.srs = 'EPSG:4283';
-                    } else if (crsIsMatch(crs, 'EPSG:3857')) {
-                        // Standard Web Mercator
-                        wmsOptions.tilingScheme = new WebMercatorTilingScheme();
-                    } else if (crsIsMatch(crs, 'EPSG:900913')) {
-                        // Older code for Web Mercator
-                        wmsOptions.tilingScheme = new WebMercatorTilingScheme();
-                        wmsOptions.parameters.srs = 'EPSG:900913';
+                else {
+                    var wmsOptions = {
+                        url: url,
+                        layers : item.Name(),
+                        parameters: {
+                            format: 'image/png',
+                            transparent: true,
+                            styles: '',
+                            exceptions: 'application/vnd.ogc.se_xml'
+                        },
+                        proxy: proxy
+                    };
+
+                    var crs;
+                    if (defined(item.CRS)) {
+                        crs = item.CRS();
+                    } else if (defined(item.SRS)) {
+                        crs = item.SRS();
                     } else {
-                        // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+                        crs = undefined;
                     }
-                }
+                    if (defined(crs)) {
+                        if (crsIsMatch(crs, 'EPSG:4326')) {
+                            // Standard Geographic
+                        } else if (crsIsMatch(crs, 'CRS:84')) {
+                            // Another name for EPSG:4326
+                            wmsOptions.parameters.srs = 'CRS:84';
+                        } else if (crsIsMatch(crs, 'EPSG:4283')) {
+                            // Australian system that is equivalent to EPSG:4326.
+                            wmsOptions.parameters.srs = 'EPSG:4283';
+                        } else if (crsIsMatch(crs, 'EPSG:3857')) {
+                            // Standard Web Mercator
+                            wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                        } else if (crsIsMatch(crs, 'EPSG:900913')) {
+                            // Older code for Web Mercator
+                            wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                            wmsOptions.parameters.srs = 'EPSG:900913';
+                        } else {
+                            // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+                        }
+                    }
 
-                var provider = new WebMapServiceImageryProvider(wmsOptions);
+                    provider = new WebMapServiceImageryProvider(wmsOptions);
+                }
                 requests.push({
                     item : item,
                     provider : provider
@@ -1069,20 +1096,37 @@ these extensions in order for National Map to know how to load it.'
 
     function requestTiles(requests, maxLevel) {
         var urls = [];
+        var names = [];
+
+        var name;
 
         loadImage.createImage = function(url, crossOrigin, deferred) {
             urls.push(url);
-            deferred.resolve();
+            names.push(name);
+            if (defined(deferred)) {
+                deferred.resolve();
+            }
         };
 
         var oldMax = throttleRequestByServer.maximumRequestsPerServer;
         throttleRequestByServer.maximumRequestsPerServer = Number.MAX_VALUE;
 
-        for (var i = 0; i < requests.length; ++i) {
+        var i;
+        for (i = 0; i < requests.length; ++i) {
             var request = requests[i];
             var bareItem = komapping.toJS(request.item);
             var extent = getOGCLayerExtent(bareItem);
-            var tilingScheme = request.provider.tilingScheme;
+            var tilingScheme;
+            if (!defined(that._viewer.viewer)) {
+                tilingScheme = new WebMercatorTilingScheme();
+                that._viewer.map.addLayer(request.provider);
+            }
+            else {
+                tilingScheme = request.provider.tilingScheme;
+            }
+
+
+            name = bareItem.Title;
 
             for (var level = 0; level <= maxLevel; ++level) {
                 var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
@@ -1094,11 +1138,22 @@ these extensions in order for National Map to know how to load it.'
 
                 for (var y = nw.y; y <= se.y; ++y) {
                     for (var x = nw.x; x <= se.x; ++x) {
-                        if (!defined(request.provider.requestImage(x, y, level))) {
-                            console.log('too many requests in flight');
+                        if (!defined(that._viewer.viewer)) {
+                            var coords = new L.Point(x, y);
+                            coords.z = level;
+                            var url = request.provider.getTileUrl(coords);
+                            loadImage.createImage(url);
+                        }
+                        else {
+                            if (!defined(request.provider.requestImage(x, y, level))) {
+                                console.log('too many requests in flight');
+                            }
                         }
                     }
                 }
+            }
+            if (!defined(that._viewer.viewer)) {
+                that._viewer.map.removeLayer(request.provider);
             }
         }
 
@@ -1109,35 +1164,80 @@ these extensions in order for National Map to know how to load it.'
 
         // Do requests in random order for better performance; successive requests are
         // less likely to be to the same server.
-        shuffle(urls);
+        //shuffle(urls);
 
-        var maxRequests = 6;
+        var blacklistFailedServers = false;
+        var maxRequests = 2;
         var nextRequestIndex = 0;
         var inFlight = 0;
+        var urlsRequested = 0;
 
         function doneUrl() {
             --inFlight;
             doNext();
         }
 
-        function doNext() {
-            if (nextRequestIndex < urls.length) {
+        function getNextUrl() {
+            var url;
+            var baseUrl;
+
+            do {
+                if (nextRequestIndex >= urls.length) {
+                    return undefined;
+                }
+
                 if ((nextRequestIndex % 10) === 0) {
                     console.log('Finished ' + nextRequestIndex + ' URLs.');
                 }
-                ++inFlight;
-                loadWithXhr({
-                    url : urls[nextRequestIndex++]
-                }).then(doneUrl).otherwise(doneUrl);
-            } else if (inFlight === 0) {
-                if ((nextRequestIndex % 10) !== 0) {
-                    console.log('Finished ' + nextRequestIndex + ' URLs.');
+
+                url = urls[nextRequestIndex];
+                name = names[nextRequestIndex];
+                ++nextRequestIndex;
+
+                var queryIndex = url.indexOf('?');
+                baseUrl = url;
+                if (queryIndex >= 0) {
+                    baseUrl = url.substring(0, queryIndex);
                 }
-                console.log('Done!');
-            }
+
+            } while (blacklist[baseUrl]);
+
+            return {
+                url: url,
+                baseUrl: baseUrl,
+                name: name
+            };
         }
 
-        for (var i = 0; i < maxRequests; ++i) {
+        var blacklist = {};
+
+        function doNext() {
+            var next = getNextUrl();
+            if (!defined(next)) {
+                if (inFlight === 0) {
+                    console.log('Finished ' + nextRequestIndex + ' URLs.  DONE!');
+                    console.log('Actual number of URLs requested: ' + urlsRequested);
+                }
+                return;
+            }
+
+            ++urlsRequested;
+            ++inFlight;
+
+            loadWithXhr({
+                url : next.url
+            }).then(doneUrl).otherwise(function() {
+                if (blacklistFailedServers) {
+                    console.log('Blacklisting ' + next.baseUrl + ' because it returned an error while working on layer ' + next.name);
+                    blacklist[next.baseUrl] = true;
+                } else {
+                    console.log(next.baseUrl + ' returned an error while working on layer ' + next.name);
+                }
+                doneUrl();
+            });
+        }
+
+        for (i = 0; i < maxRequests; ++i) {
             doNext();
         }
     }
