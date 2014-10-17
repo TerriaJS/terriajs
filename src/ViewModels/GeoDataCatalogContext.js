@@ -2,6 +2,11 @@
 
 var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
 
+/**
+ * Represents contextual information related to the catalog, groups, and data sources.
+ * @alias GeoDataCatalogContext
+ * @constructor
+ */
 var GeoDataCatalogContext = function() {
     /**
      * Gets or sets the Cesium Scene.  If the application is in 2D mode, this property will be undefined and
@@ -51,6 +56,17 @@ var GeoDataCatalogContext = function() {
      * @type {Event}
      */
     this.afterViewerChanged = new CesiumEvent();
+
+    /**
+     * An event that is raised when a user-facing error occurs with the catalog, groups, or data sources.
+     * The following parameters are passed to the event handler:
+     *
+     * * The object raising the error.
+     * * A short title describing the error.
+     * * A detailed message describing the error.  This may include HTML tags.
+     * @type {CesiumEvent}
+     */
+    this.error = new CesiumEvent();
 };
 
 module.exports = GeoDataCatalogContext;

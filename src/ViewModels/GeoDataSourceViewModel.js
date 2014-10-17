@@ -110,6 +110,10 @@ var GeoDataSourceViewModel = function(context) {
                           'metadataUrl', 'isEnabled', 'isShown', 'isLegendVisible']);
 
     knockout.getObservable(this, 'isEnabled').subscribe(function(newValue) {
+        // Load this data source's data (if we haven't already) when it is enabled.
+        if (newValue) {
+            this.load();
+        }
         isEnabledChanged(this);
     }, this);
 
@@ -259,6 +263,14 @@ GeoDataSourceViewModel.defaultSerializers.rectangle = function(viewModel, json, 
 };
 
 freezeObject(GeoDataSourceViewModel.defaultSerializers);
+
+/**
+ * When implemented in a derived class, loads this data source it is not already loaded.  It is safe to
+ * call this method multiple times.  The {@link GeoDataSourceViewModel#isLoading} flag will be set while the load is in progress.
+ * This method may do nothing if the data source does not do an lazy loading of its data.
+ */
+GeoDataSourceViewModel.prototype.load = function() {
+};
 
 /**
  * Toggles the {@link GeoDataSourceViewModel#isEnabled} property of this item.  If it is enabled, calling this method

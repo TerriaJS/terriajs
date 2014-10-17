@@ -50,9 +50,20 @@ var GeoDataGroupViewModel = function(context) {
     knockout.track(this, ['isOpen', 'isLoading', 'items']);
 
     var that = this;
+
     knockout.getObservable(this, 'isOpen').subscribe(function(newValue) {
         // Load this group's items (if we haven't already) when it is opened.
         if (newValue) {
+            that.load();
+        }
+    });
+
+    knockout.getObservable(this, 'isLoading').subscribe(function(newValue) {
+        // Call load() again immediately after finishing loading.  Normally this will do nothing,
+        // but if the URL has changed since we started, it will kick off loading the new URL.
+        // If this spins you into a stack overflow, verify that your load method only loads
+        // when it actually needs to do so!
+        if (!newValue) {
             that.load();
         }
     });

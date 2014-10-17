@@ -36,7 +36,7 @@ var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewMod
 var WebMapServiceGroupViewModel = function(context) {
     GeoDataGroupViewModel.call(this, context, 'wms-getCapabilities');
 
-    this._needsLoad = true;
+    this._loadedUrl = undefined;
     this._imageryLayer = undefined;
 
     /**
@@ -88,17 +88,21 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
  * be set while the load is in progress.
  */
 WebMapServiceGroupViewModel.prototype.load = function() {
-    if (this._needsLoad === false) {
+    if (this.url === this._loadedUrl || this.isLoading) {
         return;
     }
 
-    this._needsLoad = false;
     this.isLoading = true;
 
     var that = this;
     runLater(function() {
+        that._loadedUrl = that.url;
         getCapabilities(that).always(function() {
             that.isLoading = false;
+
+            // Call load() again immediately.  Normally this will do nothing, but if the URL
+            // has changed since we started, it will kick off loading the new URL.
+            that.load();
         });
     });
 };

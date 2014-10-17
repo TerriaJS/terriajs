@@ -25,6 +25,7 @@ var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var runLater = require('../runLater');
 
 var lineAndFillPalette = {
     minimumRed : 0.4,
@@ -61,8 +62,10 @@ var GeoJsonDataSourceViewModel = function(context, url) {
 
     this._cesiumDataSource = undefined;
 
-    this._needsLoad = true;
-    this._loadedGeoJson = undefined;
+    this._loadedUrl = undefined;
+    this._loadedData = undefined;
+    
+    this._readyData = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
@@ -78,47 +81,8 @@ var GeoJsonDataSourceViewModel = function(context, url) {
      */
     this.data = undefined;
 
-    knockout.track(this, ['_needsLoad', '_loadedGeoJson', 'url', 'data']);
-
-    /**
-     * Gets the loaded GeoJSON as an object literal (not a string).  This property is undefined if the
-     * data is not yet loaded.  This property is observable.
-     * @memberOf GeoJsonDataSourceViewModel
-     * @instance
-     * @name loadedGeoJson
-     * @type {Object}
-     */
-    knockout.defineProperty(this, 'loadedGeoJson', {
-        get : function() {
-            if (this._needsLoad) {
-                this._needsLoad = false;
-
-                var that = this;
-
-                if (defined(this.data)) {
-                    updateViewModelFromData(this, this.data);
-                    loadGeoJsonInCesium(this);
-                    loadGeoJsonInLeaflet(this);
-                } else if (defined(this.url) && this.url.length > 0) {
-                    loadJson(this.url).then(function(json) {
-                        updateViewModelFromData(that, json);
-                        loadGeoJsonInCesium(that);
-                        loadGeoJsonInLeaflet(that);
-                    }).otherwise(function(e) {
-                        // TODO: need a standard way of handling errors like this.
-                    });
-                }
-            }
-
-            return this._loadedGeoJson;
-        }
-    });
-
-    evaluateObservable(this.loadedGeoJson);
+    knockout.track(this, ['url', 'data']);
 };
-
-function evaluateObservable() {
-}
 
 GeoJsonDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
 
@@ -161,6 +125,52 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
         }
     }
 });
+
+/**
+ * Processes the GeoJSON data supplied via the {@link GeoJsonDataSourceViewModel#data} property.  If
+ * {@link GeoJsonDataSourceViewModel#data} is undefined, this method downloads GeoJSON data from 
+ * {@link GeoJsonDataSourceViewModel#url} and processes that.  It is safe to call this method multiple times.
+ * It is called automatically when the data source is enabled.
+ */
+GeoJsonDataSourceViewModel.prototype.load = function() {
+    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
+        return;
+    }
+
+    this.isLoading = true;
+
+    var that = this;
+    runLater(function() {
+        that._loadedUrl = that.url;
+        that._loadedData = that.data;
+
+        if (that.data) {
+            updateViewModelFromData(that, that.data);
+            that.isLoading = false;
+        } else {
+            loadJson(that.url).then(function(json) {
+                updateViewModelFromData(that, json);
+                that.isLoading = false;
+            }).otherwise(function(e) {
+                that.context.error.raiseEvent(that,
+                    'Could not load JSON',
+                    '\
+An error occurred while retrieving JSON data from the provided link.  \
+<p>If you entered the link manually, please verify that the link is correct.</p>\
+<p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
+server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
+please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \
+Map team by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> \
+and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by \
+National Map itself.</p>\
+<p>If you did not enter this link manually, this error may indicate that the data source you\'re trying to add is temporarily unavailable or there is a \
+problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by \
+sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>');
+                that._needsLoad = true;
+            });
+        }
+    });
+};
 
 GeoJsonDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._cesiumDataSource)) {
@@ -301,7 +311,10 @@ function updateViewModelFromData(viewModel, geoJson) {
         viewModel.rectangle = getGeoJsonExtent(geoJson);
     }
 
-    viewModel._loadedGeoJson = geoJson;
+    viewModel._readyData = geoJson;
+
+    loadGeoJsonInCesium(viewModel);
+    loadGeoJsonInLeaflet(viewModel);
 }
 
 function nameIsDerivedFromUrl(name, url) {
@@ -327,7 +340,7 @@ function proxyUrl(context, url) {
 }
 
 function loadGeoJsonInCesium(viewModel) {
-    if (!(viewModel._cesiumDataSource instanceof GeoJsonDataSource) || !defined(viewModel.loadedGeoJson)) {
+    if (!(viewModel._cesiumDataSource instanceof GeoJsonDataSource) || !defined(viewModel._readyData)) {
         return;
     }
 
@@ -341,7 +354,7 @@ function loadGeoJsonInCesium(viewModel) {
     var lineWidth = 2;
 
     var dataSource = viewModel._cesiumDataSource;
-    dataSource.load(viewModel.loadedGeoJson).then(function() {
+    dataSource.load(viewModel._readyData).then(function() {
         var entities = dataSource.entities.entities;
 
         for (var i = 0; i < entities.length; ++i) {
@@ -379,11 +392,11 @@ function loadGeoJsonInCesium(viewModel) {
 }
 
 function loadGeoJsonInLeaflet(viewModel) {
-    if (!defined(viewModel._leafletLayer) || !defined(viewModel.loadedGeoJson)) {
+    if (!defined(viewModel._leafletLayer) || !defined(viewModel._readyData)) {
         return;
     }
 
-    viewModel._leafletLayer.addData(viewModel.loadedGeoJson);
+    viewModel._leafletLayer.addData(viewModel._readyData);
 }
 
 // Get a random color for the data based on the passed seed (usually dataset name)
