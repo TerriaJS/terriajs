@@ -503,7 +503,7 @@ function filterArray(pts, func) {
 function pntReproject(coordinates, id) {
     var source = new proj4.Proj(proj4_epsg[id]);
     var dest = new proj4.Proj('EPSG:4326');
-    var p = new proj4.Point(coordinates[0], coordinates[1]);
+    var p = proj4.toPoint(coordinates);
     proj4(source, dest, p);      //do the transformation.  x and y are modified in place
     return [p.x, p.y];
 }

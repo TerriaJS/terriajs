@@ -18,6 +18,7 @@ var registerGeoDataViewModels = function() {
     createGeoDataItemFromType.register('esri-mapServer', ArcGisMapServerDataSourceViewModel);
 
     createGeoDataItemFromUrl.register(matchesExtension('geojson'), GeoJsonDataSourceViewModel);
+    createGeoDataItemFromUrl.register(matchesExtension('json'), GeoJsonDataSourceViewModel);
 };
 
 function matchesExtension(extension) {

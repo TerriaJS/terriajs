@@ -146,13 +146,14 @@ Please select a file or service type from the drop-down list before clicking the
                 var message2 = new PopupMessage({
                     container : document.body,
                     title : 'File format not supported',
-                    message2 : '\
+                    message : '\
 The specified file does not appear to be a format that is supported by National Map.  National Map \
 supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
 Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \
 files (.csv).  The file extension of the file in the user-specified URL must match one of \
 these extensions in order for National Map to know how to load it.'
                 });
+                return;
             }
 
             var lastSlashIndex = that.addDataUrl.lastIndexOf('/');
