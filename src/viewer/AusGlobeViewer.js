@@ -308,7 +308,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
             var blacklist = lists[1];
 
             that.ckanWhitelist = whitelist.match(/[^\r\n]+/g);
-            if (!that.ckanWhitelist || that.ckanWhitelist.length == 0) {
+            if (!that.ckanWhitelist || that.ckanWhitelist.length === 0) {
                 that.ckanWhitelist = undefined;
             }
 
@@ -722,6 +722,7 @@ AusGlobeViewer.prototype.isCesium = function() {
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var bnds, rect;
     var timeline = {}; 
+    var cam = this.initialCamera;
 
     var that = this;
 
@@ -745,6 +746,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.viewer.destroy();
             this.viewer = undefined;
         }
+        else {
+            bnds = [[cam.south, cam.west], [cam.north, cam.east]];
+         }
 
        //create leaflet viewer
         var map = L.map('cesiumContainer', {
@@ -848,7 +852,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.map = undefined;
         }
         else {
-            var cam = this.initialCamera;
             rect = new Rectangle.fromDegrees(cam.west, cam.south, cam.east, cam.north);
          }
 
@@ -1035,9 +1038,9 @@ AusGlobeViewer.prototype.createLeafletTimeline = function(clock) {
         var clock = e.clock;
         clock.currentTime = e.timeJulian;
         clock.shouldAnimate = false;
-    }
+    };
     timeline.addEventListener('settime', timeline.scrubFunction, false);
-}
+};
 
 AusGlobeViewer.prototype.removeLeafletTimeline = function() {
     var viewerContainer = document.getElementById('cesiumContainer');
@@ -1052,7 +1055,7 @@ AusGlobeViewer.prototype.removeLeafletTimeline = function() {
         viewerContainer.removeChild(this.map.timeline.container);
         this.map.timeline = this.map.timeline.destroy();
     }
-}
+};
 
 function showTimeline(viewer) {
     $('.cesium-viewer-animationContainer').css('visibility', 'visible');
@@ -1093,7 +1096,7 @@ AusGlobeViewer.prototype.updateTimeline = function(start, finish, cur, run) {
         clock.shouldAnimate = defined(run) ? run : false;
         timeline.zoomTo(clock.startTime, clock.stopTime);
     }
- }
+ };
 
  AusGlobeViewer.prototype.getTimelineSettings = function() {
     if ($('.cesium-viewer-timelineContainer').css('visibility') === 'hidden' ) {
@@ -1102,7 +1105,7 @@ AusGlobeViewer.prototype.updateTimeline = function(start, finish, cur, run) {
     var viewer = this.viewer;
     var clock = defined(viewer) ? this.viewer.clock : this.map.clock;
     return {start: clock.startTime, stop: clock.stopTime, cur: clock.currentTime};
- }
+ };
 
 
 //update timeline and camera

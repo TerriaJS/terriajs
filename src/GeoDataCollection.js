@@ -1043,8 +1043,14 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     } 
         //Convert in browser using toGeoJSON https://github.com/mapbox/togeojson    
     else if (format === "KML") {
+        var kmlDataSource = new KmlDataSource(corsProxy);
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
-        this.addGeoJsonLayer(toGeoJSON.kml(dom), layer);
+        kmlDataSource.load(dom);
+        this.dataSourceCollection.add(kmlDataSource);
+            //add it as a layer
+        layer.dataSource = kmlDataSource;
+        layer.extent = getDataSourceExtent(kmlDataSource);
+        this.add(layer);
     } 
     else if (format === "GPX") {
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
