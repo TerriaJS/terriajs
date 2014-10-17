@@ -1009,48 +1009,62 @@ these extensions in order for National Map to know how to load it.'
                     proxy = undefined;
                 }
 
-                var wmsOptions = {
-                    url: url,
-                    layers : item.Name(),
-                    parameters: {
+                var provider;
+                if (!defined(that._viewer.viewer)) {
+                    if (defined(proxy)) {
+                        url = corsProxy.getURL(url);
+                    }
+                    provider = new L.tileLayer.wms(url, {
+                        layers: item.Name(),
                         format: 'image/png',
                         transparent: true,
-                        styles: '',
                         exceptions: 'application/vnd.ogc.se_xml'
-                    },
-                    proxy: proxy
-                };
-
-                var crs;
-                if (defined(item.CRS)) {
-                    crs = item.CRS();
-                } else if (defined(item.SRS)) {
-                    crs = item.SRS();
-                } else {
-                    crs = undefined;
+                    });
                 }
-                if (defined(crs)) {
-                    if (crsIsMatch(crs, 'EPSG:4326')) {
-                        // Standard Geographic
-                    } else if (crsIsMatch(crs, 'CRS:84')) {
-                        // Another name for EPSG:4326
-                        wmsOptions.parameters.srs = 'CRS:84';
-                    } else if (crsIsMatch(crs, 'EPSG:4283')) {
-                        // Australian system that is equivalent to EPSG:4326.
-                        wmsOptions.parameters.srs = 'EPSG:4283';
-                    } else if (crsIsMatch(crs, 'EPSG:3857')) {
-                        // Standard Web Mercator
-                        wmsOptions.tilingScheme = new WebMercatorTilingScheme();
-                    } else if (crsIsMatch(crs, 'EPSG:900913')) {
-                        // Older code for Web Mercator
-                        wmsOptions.tilingScheme = new WebMercatorTilingScheme();
-                        wmsOptions.parameters.srs = 'EPSG:900913';
+                else {
+                    var wmsOptions = {
+                        url: url,
+                        layers : item.Name(),
+                        parameters: {
+                            format: 'image/png',
+                            transparent: true,
+                            styles: '',
+                            exceptions: 'application/vnd.ogc.se_xml'
+                        },
+                        proxy: proxy
+                    };
+
+                    var crs;
+                    if (defined(item.CRS)) {
+                        crs = item.CRS();
+                    } else if (defined(item.SRS)) {
+                        crs = item.SRS();
                     } else {
-                        // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+                        crs = undefined;
                     }
-                }
+                    if (defined(crs)) {
+                        if (crsIsMatch(crs, 'EPSG:4326')) {
+                            // Standard Geographic
+                        } else if (crsIsMatch(crs, 'CRS:84')) {
+                            // Another name for EPSG:4326
+                            wmsOptions.parameters.srs = 'CRS:84';
+                        } else if (crsIsMatch(crs, 'EPSG:4283')) {
+                            // Australian system that is equivalent to EPSG:4326.
+                            wmsOptions.parameters.srs = 'EPSG:4283';
+                        } else if (crsIsMatch(crs, 'EPSG:3857')) {
+                            // Standard Web Mercator
+                            wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                        } else if (crsIsMatch(crs, 'EPSG:900913')) {
+                            // Older code for Web Mercator
+                            wmsOptions.tilingScheme = new WebMercatorTilingScheme();
+                            wmsOptions.parameters.srs = 'EPSG:900913';
+                        } else {
+                            // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+                        }
+                    }
 
-                var provider = new WebMapServiceImageryProvider(wmsOptions);
+                    provider = new WebMapServiceImageryProvider(wmsOptions);
+                }
                 requests.push({
                     item : item,
                     provider : provider
@@ -1089,7 +1103,9 @@ these extensions in order for National Map to know how to load it.'
         loadImage.createImage = function(url, crossOrigin, deferred) {
             urls.push(url);
             names.push(name);
-            deferred.resolve();
+            if (defined(deferred)) {
+                deferred.resolve();
+            }
         };
 
         var oldMax = throttleRequestByServer.maximumRequestsPerServer;
@@ -1100,7 +1116,15 @@ these extensions in order for National Map to know how to load it.'
             var request = requests[i];
             var bareItem = komapping.toJS(request.item);
             var extent = getOGCLayerExtent(bareItem);
-            var tilingScheme = request.provider.tilingScheme;
+            var tilingScheme;
+            if (!defined(that._viewer.viewer)) {
+                tilingScheme = new WebMercatorTilingScheme();
+                that._viewer.map.addLayer(request.provider);
+            }
+            else {
+                tilingScheme = request.provider.tilingScheme;
+            }
+
 
             name = bareItem.Title;
 
@@ -1114,11 +1138,22 @@ these extensions in order for National Map to know how to load it.'
 
                 for (var y = nw.y; y <= se.y; ++y) {
                     for (var x = nw.x; x <= se.x; ++x) {
-                        if (!defined(request.provider.requestImage(x, y, level))) {
-                            console.log('too many requests in flight');
+                        if (!defined(that._viewer.viewer)) {
+                            var coords = new L.Point(x, y);
+                            coords.z = level;
+                            var url = request.provider.getTileUrl(coords);
+                            loadImage.createImage(url);
+                        }
+                        else {
+                            if (!defined(request.provider.requestImage(x, y, level))) {
+                                console.log('too many requests in flight');
+                            }
                         }
                     }
                 }
+            }
+            if (!defined(that._viewer.viewer)) {
+                that._viewer.map.removeLayer(request.provider);
             }
         }
 
