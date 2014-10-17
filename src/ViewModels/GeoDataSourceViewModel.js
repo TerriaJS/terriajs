@@ -9,10 +9,12 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var Scene = require('../../third_party/cesium/Source/Scene/Scene');
 
+var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
 var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var inherit = require('../inherit');
 var NowViewingViewModel = require('./NowViewingViewModel');
@@ -124,6 +126,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
      * Data sources that cannot be reordered are typically displayed above reorderable data sources.
+     * @memberOf GeoDataSourceViewModel.prototype
      * @type {Boolean}
      */
     supportsReordering : {
@@ -134,6 +137,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the opacity of this data source can be changed.
+     * @memberOf GeoDataSourceViewModel.prototype
      * @type {Boolean}
      */
     supportsOpacity : {
@@ -144,6 +148,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
     /**
      * Gets a value indicating whether this data source has a legend.
+     * @memberOf GeoDataSourceViewModel.prototype
      * @type {Boolean}
      */
     hasLegend : {
@@ -155,6 +160,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source's legend is an image in a
      * browser-supported format such as JPEG, PNG, or GIF.
+     * @memberOf GeoDataSourceViewModel.prototype
      * @type {Boolean}
      */
     legendIsImage : {
@@ -168,10 +174,22 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     },
 
     /**
+     * Gets the metadata associated with this data source and the server that provided it, if applicable.
+     * @memberOf GeoDataSourceViewModel.prototype
+     * @type {DataSourceMetadataViewModel}
+     */
+    metadata : {
+        get : function() {
+            return GeoDataSourceViewModel.defaultMetadata;
+        }
+    },
+
+    /**
      * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
+     * @memberOf GeoDataSourceViewModel.prototype
      * @type {Object}
      */
     updaters : {
@@ -185,6 +203,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
+     * @memberOf GeoDataSourceViewModel.prototype
      * @type {Object}
      */
     serializers : {
@@ -194,6 +213,23 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     }
 });
 
+/**
+ * Gets or sets the default metadata to use for data sources that don't provide anything better from their
+ * {@link GeoDataSourceViewModel#metadata} property.  The default simply indicates that no metadata is available.
+ * @type {DataSourceMetadataViewModel}
+ */
+GeoDataSourceViewModel.defaultMetadata = new DataSourceMetadataViewModel();
+GeoDataSourceViewModel.defaultMetadata.isLoading = false;
+GeoDataSourceViewModel.defaultMetadata.dataSourceErrorMessage = 'This data source does not have any details available.';
+GeoDataSourceViewModel.defaultMetadata.serviceErrorMessage = 'This service does not have any details available.';
+
+freezeObject(GeoDataSourceViewModel.defaultMetadata);
+
+/**
+ * Gets or sets the set of default updater functions to use in {@link GeoDataItemViewModel#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#updaters} property.
+ * @type {Object}
+ */
 GeoDataSourceViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
 GeoDataSourceViewModel.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
     if (defined(json.rectangle)) {
@@ -203,6 +239,13 @@ GeoDataSourceViewModel.defaultUpdaters.rectangle = function(viewModel, json, pro
     }
 };
 
+freezeObject(GeoDataSourceViewModel.defaultUpdaters);
+
+/**
+ * Gets or sets the set of default serializer functions to use in {@link GeoDataItemViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#serializers} property.
+ * @type {Object}
+ */
 GeoDataSourceViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
 GeoDataSourceViewModel.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
     if (defined(viewModel.rectangle)) {
@@ -214,6 +257,8 @@ GeoDataSourceViewModel.defaultSerializers.rectangle = function(viewModel, json, 
         ];
     }
 };
+
+freezeObject(GeoDataSourceViewModel.defaultSerializers);
 
 /**
  * Toggles the {@link GeoDataSourceViewModel#isEnabled} property of this item.  If it is enabled, calling this method

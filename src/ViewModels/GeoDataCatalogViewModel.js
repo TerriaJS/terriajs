@@ -60,6 +60,7 @@ var GeoDataCatalogViewModel = function(context) {
 defineProperties(GeoDataCatalogViewModel.prototype, {
     /**
      * Gets the context for this catalog.
+     * @memberOf GeoDataCatalogViewModel.prototype
      * @type {GeoDataCatalogContext}
      */
     context : {
@@ -70,6 +71,7 @@ defineProperties(GeoDataCatalogViewModel.prototype, {
 
     /**
      * Gets the catalog's top-level group.
+     * @memberOf GeoDataCatalogViewModel.prototype
      * @type {GeoDataGroupViewModel}
      */
     group : {

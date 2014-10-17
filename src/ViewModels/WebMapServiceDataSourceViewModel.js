@@ -9,6 +9,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
@@ -149,6 +150,7 @@ WebMapServiceDataSourceViewModel.prototype = inherit(ImageryLayerDataSourceViewM
 defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
+     * @memberOf WebMapServiceDataSourceViewModel.prototype
      * @type {String}
      */
     type : {
@@ -159,6 +161,7 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'Web Map Service (WMS)'.
+     * @memberOf WebMapServiceDataSourceViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -167,6 +170,11 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
         }
     },
 
+    /**
+     * Gets the metadata associated with this data source and the server that provided it, if applicable.
+     * @memberOf WebMapServiceDataSourceViewModel.prototype
+     * @type {DataSourceMetadataViewModel}
+     */
     metadata : {
         get : function() {
             if (!defined(this._metadata)) {
@@ -181,6 +189,7 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
+     * @memberOf WebMapServiceDataSourceViewModel.prototype
      * @type {Object}
      */
     updaters : {
@@ -194,6 +203,7 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
+     * @memberOf WebMapServiceDataSourceViewModel.prototype
      * @type {Object}
      */
     serializers : {
@@ -204,6 +214,7 @@ defineProperties(WebMapServiceDataSourceViewModel.prototype, {
 });
 
 WebMapServiceDataSourceViewModel.defaultUpdaters = clone(ImageryLayerDataSourceViewModel.defaultUpdaters);
+freezeObject(WebMapServiceDataSourceViewModel.defaultUpdaters);
 
 WebMapServiceDataSourceViewModel.defaultSerializers = clone(ImageryLayerDataSourceViewModel.defaultSerializers);
 
@@ -221,6 +232,8 @@ WebMapServiceDataSourceViewModel.defaultSerializers.legendUrl = function(viewMod
     json.legendUrl = viewModel._legendUrl;
 };
 
+freezeObject(WebMapServiceDataSourceViewModel.defaultSerializers);
+
 WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
@@ -237,8 +250,12 @@ WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
-        alpha : 0.0,
-        rectangle : this.rectangle
+        alpha : 0.0
+        // Ideally we'd specify "rectangle : this.rectangle" here.
+        // But lots of WMS data sources get the extent wrong, and even the ones that get it right
+        // specify the extent of the geometry itself, not the representation of the geometry.  So that means,
+        // for example, that if we clip the layer at the given extent, then a point centered on the edge of the
+        // extent will only be half visible.
     });
 
     scene.imageryLayers.add(this._imageryLayer);
@@ -264,8 +281,9 @@ WebMapServiceDataSourceViewModel.prototype._enableInLeaflet = function() {
 
     var options = {
         layers : this.layers,
-        opacity : 0.0,
-        bounds : rectangleToLatLngBounds(this.rectangle)
+        opacity : 0.0
+        // Ideally we'd specify "bounds : rectangleToLatLngBounds(this.rectangle)" here.
+        // See comment in _enableInCesium for an explanation of why we don't.
     };
 
     options = combine(defaultValue(this.parameters, WebMapServiceDataSourceViewModel.defaultParameters), options);

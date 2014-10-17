@@ -6,6 +6,7 @@ var clone = require('../../third_party/cesium/Source/Core/clone');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
@@ -46,6 +47,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     /**
      * Gets the Cesium or Leaflet imagery layer object associated with this data source.
      * This property is undefined if the data source is not enabled.
+     * @memberOf ImageryLayerDataSourceViewModel.prototype
      * @type {Object}
      */
     imageryLayer : {
@@ -57,6 +59,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
      * Data sources that cannot be reordered are typically displayed above reorderable data sources.
+     * @memberOf ImageryLayerDataSourceViewModel.prototype
      * @type {Boolean}
      */
     supportsReordering : {
@@ -67,6 +70,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the opacity of this data source can be changed.
+     * @memberOf ImageryLayerDataSourceViewModel.prototype
      * @type {Boolean}
      */
     supportsOpacity : {
@@ -80,6 +84,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
+     * @memberOf ImageryLayerDataSourceViewModel.prototype
      * @type {Object}
      */
     updaters : {
@@ -93,6 +98,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
+     * @memberOf ImageryLayerDataSourceViewModel.prototype
      * @type {Object}
      */
     serializers : {
@@ -103,8 +109,10 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
 });
 
 ImageryLayerDataSourceViewModel.defaultUpdaters = clone(GeoDataSourceViewModel.defaultUpdaters);
+freezeObject(ImageryLayerDataSourceViewModel.defaultUpdaters);
 
 ImageryLayerDataSourceViewModel.defaultSerializers = clone(GeoDataSourceViewModel.defaultSerializers);
+freezeObject(ImageryLayerDataSourceViewModel.defaultSerializers);
 
 ImageryLayerDataSourceViewModel.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {

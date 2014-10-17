@@ -4,9 +4,11 @@
 
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var Scene = require('../../third_party/cesium/Source/Scene/Scene');
@@ -32,7 +34,7 @@ var GeoDataItemViewModel = function(context) {
     this._context = context;
 
     /**
-     * Gets or sets the name of the member.  This property is observable.
+     * Gets or sets the name of the item.  This property is observable.
      * @type {String}
      */
     this.name = 'Unnamed Item';
@@ -48,7 +50,8 @@ var GeoDataItemViewModel = function(context) {
 
 defineProperties(GeoDataItemViewModel.prototype, {
     /**
-     * Gets the type of data member represented by this instance.
+     * Gets the type of data item represented by this instance.
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {String}
      */
     type : {
@@ -59,6 +62,7 @@ defineProperties(GeoDataItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -69,6 +73,7 @@ defineProperties(GeoDataItemViewModel.prototype, {
 
     /**
      * Gets the context for this data item.
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {GeoDataCatalogContext}
      */
     context : {
@@ -82,6 +87,7 @@ defineProperties(GeoDataItemViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Object}
      */
     updaters : {
@@ -95,6 +101,7 @@ defineProperties(GeoDataItemViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Object}
      */
     serializers : {
@@ -104,11 +111,25 @@ defineProperties(GeoDataItemViewModel.prototype, {
     }
 });
 
+/**
+ * Gets or sets the set of default updater functions to use in {@link GeoDataItemViewModel#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#updaters} property.
+ * @type {Object}
+ */
 GeoDataItemViewModel.defaultUpdaters = {
 };
 
+freezeObject(GeoDataItemViewModel.defaultUpdaters);
+
+/**
+ * Gets or sets the set of default serializer functions to use in {@link GeoDataItemViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#serializers} property.
+ * @type {Object}
+ */
 GeoDataItemViewModel.defaultSerializers = {
 };
+
+freezeObject(GeoDataItemViewModel.defaultSerializers);
 
 /**
  * Updates the data item from a JSON object-literal description of it.
@@ -130,11 +151,13 @@ GeoDataItemViewModel.prototype.updateFromJson = function(json) {
 /**
  * Serializes the data item to JSON.
  *
- * @param {Boolean} enabledItemsOnly true if only enabled data items (and their groups) should be serialized,
+ * @param {Boolean} [enabledItemsOnly=true] true if only enabled data items (and their groups) should be serialized,
  *                                   or false if all data items should be serialized.
  * @return {Object} The serialized JSON object-literal.
  */
 GeoDataItemViewModel.prototype.serializeToJson = function(enabledItemsOnly) {
+    enabledItemsOnly = defaultValue(enabledItemsOnly, true);
+
     if (enabledItemsOnly && this.isEnabled === false) {
         return undefined;
     }

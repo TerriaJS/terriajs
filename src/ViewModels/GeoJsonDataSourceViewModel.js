@@ -125,6 +125,7 @@ GeoJsonDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype)
 defineProperties(GeoJsonDataSourceViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
+     * @memberOf GeoJsonDataSourceViewModel.prototype
      * @type {String}
      */
     type : {
@@ -135,6 +136,7 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'GeoJSON'.
+     * @memberOf GeoJsonDataSourceViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -143,6 +145,11 @@ defineProperties(GeoJsonDataSourceViewModel.prototype, {
         }
     },
 
+    /**
+     * Gets the metadata associated with this data source and the server that provided it, if applicable.
+     * @memberOf GeoJsonDataSourceViewModel.prototype
+     * @type {DataSourceMetadataViewModel}
+     */
     metadata : {
         get : function() {
             // TODO: maybe return the FeatureCollection's properties?

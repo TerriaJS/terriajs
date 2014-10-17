@@ -42,6 +42,7 @@ var NowViewingViewModel = function(context) {
 defineProperties(NowViewingViewModel.prototype, {
     /**
      * Gets the context for this Now Viewing list.
+     * @memberOf NowViewingViewModel.prototype
      * @type {GeoDataCatalogContext}
      */
     context : {
@@ -52,6 +53,7 @@ defineProperties(NowViewingViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the "Now Viewing" pane has one or more items.
+     * @memberOf NowViewingViewModel.prototype
      * @type {Boolean}
      */
     hasItems : {
@@ -60,6 +62,12 @@ defineProperties(NowViewingViewModel.prototype, {
         }
     },
 
+    /**
+     * Gets a value indicating whether the "Now Viewing" pane has at list own data
+     * source that is currently shown.
+     * @memberOf NowViewingViewModel.prototype
+     * @type {Boolean}
+     */
     hasShownItems : {
         get : function() {
             for (var i = 0; i < this.items.length; ++i) {

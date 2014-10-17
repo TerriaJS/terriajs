@@ -6,6 +6,7 @@ var clone = require('../../third_party/cesium/Source/Core/clone');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var createGeoDataItemFromType = require('./createGeoDataItemFromType');
@@ -62,6 +63,7 @@ GeoDataGroupViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 defineProperties(GeoDataGroupViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
+     * @memberOf GeoDataGroupViewModel.prototype
      * @type {String}
      */
     type : {
@@ -72,6 +74,7 @@ defineProperties(GeoDataGroupViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
+     * @memberOf GeoDataGroupViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -85,6 +88,7 @@ defineProperties(GeoDataGroupViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
+     * @memberOf GeoDataGroupViewModel.prototype
      * @type {Object}
      */
     updaters : {
@@ -98,6 +102,7 @@ defineProperties(GeoDataGroupViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
+     * @memberOf GeoDataGroupViewModel.prototype
      * @type {Object}
      */
     serializers : {
@@ -107,6 +112,11 @@ defineProperties(GeoDataGroupViewModel.prototype, {
     }
 });
 
+/**
+ * Gets or sets the set of default updater functions to use in {@link GeoDataItemViewModel#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#updaters} property.
+ * @type {Object}
+ */
 GeoDataGroupViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
 
 GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName) {
@@ -152,6 +162,13 @@ GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
 
 GeoDataGroupViewModel.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
 
+freezeObject(GeoDataGroupViewModel.defaultUpdaters);
+
+/**
+ * Gets or sets the set of default serializer functions to use in {@link GeoDataItemViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#serializers} property.
+ * @type {Object}
+ */
 GeoDataGroupViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
 
 GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, enabledItemsOnly) {
@@ -166,6 +183,8 @@ GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, prope
 };
 
 GeoDataGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, enabledItemsOnly) {};
+
+freezeObject(GeoDataGroupViewModel.defaultSerializers);
 
 /**
  * When implemented in a derived class, loads the contents of this group, if the contents are not already loaded.  It is safe to

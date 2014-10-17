@@ -61,6 +61,7 @@ WebMapServiceGroupViewModel.prototype = inherit(GeoDataGroupViewModel.prototype)
 defineProperties(WebMapServiceGroupViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
+     * @memberOf WebMapServiceGroupViewModel.prototype
      * @type {String}
      */
     type : {
@@ -71,6 +72,7 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
+     * @memberOf WebMapServiceGroupViewModel.prototype
      * @type {String}
      */
     typeName : {

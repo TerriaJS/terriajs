@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,$*/
+/*global require,$,URI*/
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
