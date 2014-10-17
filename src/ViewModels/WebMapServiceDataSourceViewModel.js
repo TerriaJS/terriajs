@@ -149,7 +149,7 @@ WebMapServiceDataSourceViewModel.prototype = inherit(ImageryLayerDataSourceViewM
 
 defineProperties(WebMapServiceDataSourceViewModel.prototype, {
     /**
-     * Gets the type of data member represented by this instance.
+     * Gets the type of data item represented by this instance.
      * @memberOf WebMapServiceDataSourceViewModel.prototype
      * @type {String}
      */
@@ -242,7 +242,7 @@ WebMapServiceDataSourceViewModel.prototype._enableInCesium = function() {
     var scene = this.context.cesiumScene;
 
     var imageryProvider = new WebMapServiceImageryProvider({
-        url : proxyUrl(this.context, this.url),
+        url : cleanAndProxyUrl(this.context, this.url),
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
