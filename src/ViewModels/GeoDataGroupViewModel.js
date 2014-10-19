@@ -59,11 +59,11 @@ var GeoDataGroupViewModel = function(context) {
     });
 
     knockout.getObservable(this, 'isLoading').subscribe(function(newValue) {
-        // Call load() again immediately after finishing loading.  Normally this will do nothing,
+        // Call load() again immediately after finishing loading, if the group is still open.  Normally this will do nothing,
         // but if the URL has changed since we started, it will kick off loading the new URL.
-        // If this spins you into a stack overflow, verify that your load method only loads
-        // when it actually needs to do so!
-        if (!newValue) {
+        // If this spins you into a stack overflow, verify that your derived-class load method only
+        // loads when it actually needs to do so!
+        if (newValue === false && that.isOpen) {
             that.load();
         }
     });

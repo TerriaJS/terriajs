@@ -99,10 +99,6 @@ WebMapServiceGroupViewModel.prototype.load = function() {
         that._loadedUrl = that.url;
         getCapabilities(that).always(function() {
             that.isLoading = false;
-
-            // Call load() again immediately.  Normally this will do nothing, but if the URL
-            // has changed since we started, it will kick off loading the new URL.
-            that.load();
         });
     });
 };
@@ -167,7 +163,7 @@ problem with your internet connection.  Try opening the group again, and if the 
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
         });
         viewModel.isOpen = false;
-        viewModel._needsLoad = true;
+        viewModel._loadedUrl = undefined;
     });
 }
 
