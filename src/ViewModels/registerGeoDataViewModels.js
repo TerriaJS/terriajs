@@ -3,6 +3,7 @@
 /*global require*/
 
 var ArcGisMapServerDataSourceViewModel = require('./ArcGisMapServerDataSourceViewModel');
+var CkanGroupViewModel = require('./CkanGroupViewModel');
 var createGeoDataItemFromType = require('./createGeoDataItemFromType');
 var createGeoDataItemFromUrl = require('./createGeoDataItemFromUrl');
 var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
@@ -11,11 +12,12 @@ var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewMod
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
 
 var registerGeoDataViewModels = function() {
+    createGeoDataItemFromType.register('ckan', CkanGroupViewModel);
+    createGeoDataItemFromType.register('esri-mapServer', ArcGisMapServerDataSourceViewModel);
+    createGeoDataItemFromType.register('geojson', GeoJsonDataSourceViewModel);
     createGeoDataItemFromType.register('group', GeoDataGroupViewModel);
     createGeoDataItemFromType.register('wms', WebMapServiceDataSourceViewModel);
     createGeoDataItemFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
-    createGeoDataItemFromType.register('geojson', GeoJsonDataSourceViewModel);
-    createGeoDataItemFromType.register('esri-mapServer', ArcGisMapServerDataSourceViewModel);
 
     createGeoDataItemFromUrl.register(matchesExtension('geojson'), GeoJsonDataSourceViewModel);
     createGeoDataItemFromUrl.register(matchesExtension('json'), GeoJsonDataSourceViewModel);

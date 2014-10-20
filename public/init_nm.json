@@ -2268,6 +2268,12 @@
             ]
         },
         {
+            "name": "Victorian Government",
+            "type": "ckan",
+            "url": "http://www.data.vic.gov.au/data",
+            "filterQuery": "res_format:wms"
+        },
+        {
             "name": "Data Providers",
             "type": "group",
             "items": [

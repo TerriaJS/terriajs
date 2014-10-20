@@ -37,7 +37,6 @@ var WebMapServiceGroupViewModel = function(context) {
     GeoDataGroupViewModel.call(this, context, 'wms-getCapabilities');
 
     this._loadedUrl = undefined;
-    this._imageryLayer = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.

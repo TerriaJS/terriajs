@@ -8,6 +8,7 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 
+var createGeoDataItemFromType = require('./createGeoDataItemFromType');
 var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 
 /**
@@ -97,18 +98,17 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
     for (var groupIndex = 0; groupIndex < json.length; ++groupIndex) {
         var group = json[groupIndex];
 
-        if (group.type !== 'group') {
-            throw new RuntimeError('Catalog items must be groups.');
-        }
-
         if (!defined(group.name)) {
             throw new RuntimeError('A group must have a name.');
+        }
+        if (!defined(group.type)) {
+            throw new RuntimeError('A group must have a type.');
         }
 
         // Find an existing group with the same name, if any.
         var existingGroup = this.group.findFirstItemByName(group.name);
         if (!defined(existingGroup)) {
-            existingGroup = new GeoDataGroupViewModel(this._context);
+            existingGroup = createGeoDataItemFromType(group.type, this.context);
             this.group.add(existingGroup);
         }
 
