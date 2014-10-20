@@ -65,6 +65,7 @@ var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animat
 var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timeline');
 var subscribeAndEvaluate = require('../../third_party/cesium/Source/Widgets/subscribeAndEvaluate');
 var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
+var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
 
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -1117,11 +1118,14 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     }
     
     //table info
-    var tableData, start, finish;
-    if (layer.dataSource !== undefined && layer.dataSource.dataset !== undefined) {
-        tableData = layer.dataSource;
-        start = tableData.dataset.getMinTime();
-        finish = tableData.dataset.getMaxTime();
+    var tableData, start, finish, current;
+    if (layer.dataSource !== undefined) {
+        var collection = layer.dataSource.entities;
+        var availability = collection.computeAvailability();
+        if (availability.isStartIncluded && availability.isStopIncluded) {
+            start = availability.start;
+            finish = availability.stop;
+        }
     }
     this.updateTimeline(start, finish, start, true);
     

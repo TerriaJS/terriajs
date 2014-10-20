@@ -338,7 +338,7 @@ LeafletGeomVisualizer.prototype._updateLabel = function(entity, time) {
     var fillColor = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
     var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, undefined);
     var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, undefined);
-    var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, undefined);
+    var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, new Cartesian2(0,0));
 
     var iconOptions = {
         text: text,

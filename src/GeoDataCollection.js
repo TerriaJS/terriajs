@@ -1918,16 +1918,16 @@ function getDataSourceExtent(dataSource) {
     
     var julianDate = new JulianDate();
 
-    var cArray;
 
     for (var i = 0; i < objects.length; i++) {
+        var cArray;
         if (objects[i].positions) {
             cArray = objects[i].positions.getValue(julianDate);
         }
         else if (objects[i].position) {
             cArray = [objects[i].position.getValue(julianDate)];
         }
-        else {
+        if (!defined(cArray) || !defined(cArray[0])) {
             continue;
         }
         var cartArray = Ellipsoid.WGS84.cartesianArrayToCartographicArray(cArray);
