@@ -13,6 +13,7 @@ var Property = require('../third_party/cesium/Source/DataSources/Property');
 var Ellipsoid = require('../third_party/cesium/Source/Core/Ellipsoid');
 var CesiumMath = require('../third_party/cesium/Source/Core/Math');
 var loadImage = require('../third_party/cesium/Source/Core/loadImage');
+var writeTextToCanvas = require('../third_party/cesium/Source/Core/writeTextToCanvas');
  
 
 var defaultColor = Color.WHITE;
@@ -296,8 +297,8 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
                 iconOptions.iconSize = [image.width * scale, image.height * scale];
             }
             var w = iconOptions.iconSize[0], h = iconOptions.iconSize[1];
-            var xOff = (w/2)*(1+horizontalOrigin) + pixelOffset.x;
-            var yOff = (h/2)*(1+verticalOrigin) + pixelOffset.y;
+            var xOff = (w/2)*(1-horizontalOrigin) - pixelOffset.x;
+            var yOff = (h/2)*(1+verticalOrigin) - pixelOffset.y;
             iconOptions.iconAnchor = [xOff, yOff];
 
             if (!color.equals(defaultColor)) {
@@ -339,41 +340,56 @@ LeafletGeomVisualizer.prototype._updateLabel = function(entity, time) {
     var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, undefined);
     var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, undefined);
 
-    var color = 'color:'+ fillColor.toCssColorString() + ';';
-    var fontFamily = defined(font) ? 'font-family:' + font + ';' : '';
-    var fontSize = 'font-size:' + Math.round(scale*12) + 'px;';
-    var align = defined(horizontalOrigin) ? 'text-align:center;' : '';
-    var valign = defined(verticalOrigin) ? 'vertical-align:bottom;' : '';
-    var hOff = defined(pixelOffset) ? 'margin-left:' + pixelOffset[0] + 'px;' : '';
-    var vOff = defined(pixelOffset) ? 'margin-top:' + pixelOffset[1] + 'px;' : '';
-
-    var style = color + fontFamily + fontSize + align + valign + hOff + vOff;
-
-    var divIconOptions = {
-        html: '<p style="'+style+'">'+text+'</p>',
-        iconSize: [0, 0]
+    var iconOptions = {
+        text: text,
+        font: font,
+        color: fillColor.toCssColorString(),
+        scale: scale,
+        horizontalOrigin: horizontalOrigin,  //value: left, center, right
+        verticalOrigin: verticalOrigin      //value: bottom, center, top
     };
 
-    if (defined(pixelOffset)) {
-        divIconOptions.iconAnchor = [-pixelOffset.x, -pixelOffset.y];
-    }
-
+    var redrawLabel = false;
     if (!defined(geomLayer)) {
-        var markerOptions = { icon: L.divIcon(divIconOptions) };
+        var markerOptions = {icon: L.icon({iconUrl: tmpImage})};
         marker = L.marker(latlng, markerOptions);
         featureGroup.addLayer(marker);
         entity._geomLabel = marker;
+        redrawLabel = true;
     } else {
         marker = geomLayer;
         if (!marker._latlng.equals(latlng)) {
             marker.setLatLng(latlng);
         }
-        for (var prop in divIconOptions) {
-            if (divIconOptions[prop] !== marker.options.icon.options[prop]) {
-                marker.setIcon(L.divIcon(divIconOptions));
+        for (var prop in iconOptions) {
+            if (iconOptions[prop] !== marker.options.icon.options[prop]) {
+                redrawLabel = true;
                 break;
             }
         }
+    }
+
+    if (redrawLabel) {
+        var drawBillboard = function(image, dataurl) {
+            iconOptions.iconUrl = dataurl || image;
+            if (!defined(iconOptions.iconSize)) {
+                iconOptions.iconSize = [image.width * scale, image.height * scale];
+            }
+            var w = iconOptions.iconSize[0], h = iconOptions.iconSize[1];
+            var xOff = (w/2)*(1-horizontalOrigin) - pixelOffset.x;
+            var yOff = (h/2)*(1+verticalOrigin) - pixelOffset.y;
+            iconOptions.iconAnchor = [xOff, yOff];
+            marker.setIcon(L.icon(iconOptions));
+        };
+
+        var canvas = writeTextToCanvas(text, {fillColor: fillColor, font: font});
+        var imageUrl = canvas.toDataURL();
+
+        var img = new Image();
+        img.onload = function() {
+            drawBillboard(img, imageUrl);
+        };
+        img.src = imageUrl;
     }
 };
 

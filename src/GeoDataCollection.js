@@ -1455,8 +1455,6 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     if (!defined(layer.show)) {
         layer.show = true;
     }
-//    console.log('LAYER REQUEST:',request);
-    
     // Deal with the different data Services
     if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'GME') {
         this._viewFeature(request, layer);
