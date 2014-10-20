@@ -114,6 +114,8 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
 
         existingGroup.updateFromJson(group);
     }
+
+    this.context.nowViewing.sortByNowViewingIndices();
 };
 
 /**
@@ -124,6 +126,8 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
  * @return {Object} The serialized JSON object-literal.
  */
 GeoDataCatalogViewModel.prototype.serializeToJson = function(enabledItemsOnly) {
+    this.context.nowViewing.recordNowViewingIndices();
+
     var json = {};
     GeoDataGroupViewModel.defaultSerializers.items(this.group, json, 'items', true);
     return json.items;

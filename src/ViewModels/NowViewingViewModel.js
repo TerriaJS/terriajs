@@ -135,10 +135,21 @@ NowViewingViewModel.prototype.removeAll = function() {
  * is nonsensical to move this item up (e.g. it is already at the top), this method does nothing.
  *
  * @param {GeoDataItemViewModel} item The item to raise.
+ * @param {Number} [index] The index of the item of the list, if it is already known.
  */
-NowViewingViewModel.prototype.raise = function(item) {
-    var index = this.items.indexOf(item);
-    if (index <= 0) {
+NowViewingViewModel.prototype.raise = function(item, index) {
+    if (defined(index)) {
+        if (this.items[index] !== item) {
+            throw new DeveloperError('The provided index is not correct.');
+        }
+    } else {
+        index = this.items.indexOf(item);
+        if (index < 0) {
+            return;
+        }
+    }
+
+    if (index === 0) {
         return;
     }
 
@@ -168,8 +179,18 @@ NowViewingViewModel.prototype.raise = function(item) {
  * @param {GeoDataItemViewModel} item The item to lower.
  */
 NowViewingViewModel.prototype.lower = function(item) {
-    var index = this.items.indexOf(item);
-    if (index < 0 || index === this.items.length - 1) {
+    if (defined(index)) {
+        if (this.items[index] !== item) {
+            throw new DeveloperError('The provided index is not correct.');
+        }
+    } else {
+        index = this.items.indexOf(item);
+        if (index < 0) {
+            return;
+        }
+    }
+
+    if (inedx === this.items.length - 1) {
         return;
     }
 
@@ -199,6 +220,41 @@ NowViewingViewModel.prototype.lower = function(item) {
  */
 NowViewingViewModel.prototype.toggleOpen = function() {
     this.isOpen = !this.isOpen;
+};
+
+/**
+ * Records the the index of each data source in the Now Viewing list in a {@link GeoDataSourceViewModel#nowViewingIndex} property
+ * on the data source.  This is used to save the state of the Now Viewing list and is not intended for general
+ * use.
+ * @private
+ */
+NowViewingViewModel.prototype.recordNowViewingIndices = function() {
+    for (var i = 0; i < this.items.length; ++i) {
+        this.items[i].nowViewingIndex = i;
+    }
+};
+
+/**
+ * Sorts the data sources in the Now Viewing list by their {@link GeoDataSourceViewModel#nowViewingIndex} properties.  This is used
+ * to restore the state of the Now Viewing list and is not intended for general use.
+ * @private
+ */
+NowViewingViewModel.prototype.sortByNowViewingIndices = function() {
+    var sortedItems = this.items.slice();
+    sortedItems.sort(function(a, b) {
+        return a.nowViewingIndex - b.nowViewingIndex;
+    });
+
+    for (var i = 0; i < sortedItems.length; ++i) {
+        var item = sortedItems[i];
+
+        var existingIndex = this.items.indexOf(item);
+
+        while (existingIndex > i) {
+            this.raise(item, existingIndex);
+            --existingIndex;
+        }
+    }
 };
 
 // Raise and lower functions for the two maps.  Currently we can only raise and lower imagery layers.

@@ -37,6 +37,14 @@ var GeoDataSourceViewModel = function(context) {
     this._shownDate = undefined;
 
     /**
+     * The index of the item in the Now Viewing list.  Setting this property does not automatically change the order.
+     * This property is used intenally to save/restore the Now Viewing order and is not intended for general use.
+     * @private
+     * @type {Number}
+     */
+    this.nowViewingIndex = undefined;
+
+    /**
      * Gets or sets the geographic rectangle containing this data source.  This property is observable.
      * @type {Rectangle}
      */
