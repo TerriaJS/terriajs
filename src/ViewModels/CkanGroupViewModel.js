@@ -169,6 +169,12 @@ function packageSearch(viewModel) {
                 newItem.layers = layerName;
                 newItem.rectangle = rectangle;
 
+                if (defined(viewModel.dataCustodian)) {
+                    newItem.dataCustodian = viewModel.dataCustodian;
+                } else if (item.organization && item.organization.title) {
+                    newItem.dataCustodian = item.organization.title;
+                }
+
                 var groups = item.groups;
                 for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                     var group = groups[groupIndex];
