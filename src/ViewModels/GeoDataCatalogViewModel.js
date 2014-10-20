@@ -121,15 +121,16 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
 /**
  * Serializes the catalog to JSON.
  *
- * @param {Boolean} enabledItemsOnly true if only enabled data items (and their groups) should be serialized,
- *                                   or false if all data items should be serialized.
+ * @param {Object} [options] Object with the following properties:
+ * @param {Boolean} [options.enabledItemsOnly=true] true if only enabled data items (and their groups) should be serialized,
+ *                  or false if all data items should be serialized.
  * @return {Object} The serialized JSON object-literal.
  */
-GeoDataCatalogViewModel.prototype.serializeToJson = function(enabledItemsOnly) {
+GeoDataCatalogViewModel.prototype.serializeToJson = function(options) {
     this.context.nowViewing.recordNowViewingIndices();
 
     var json = {};
-    GeoDataGroupViewModel.defaultSerializers.items(this.group, json, 'items', true);
+    GeoDataGroupViewModel.defaultSerializers.items(this.group, json, 'items', options);
     return json.items;
 };
 

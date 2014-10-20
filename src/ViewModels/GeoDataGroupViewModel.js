@@ -182,18 +182,18 @@ freezeObject(GeoDataGroupViewModel.defaultUpdaters);
  */
 GeoDataGroupViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
 
-GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, enabledItemsOnly) {
+GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     var items = json.items = [];
 
     for (var i = 0; i < viewModel.items.length; ++i) {
-        var item = viewModel.items[i].serializeToJson(enabledItemsOnly);
+        var item = viewModel.items[i].serializeToJson(options);
         if (defined(item)) {
             items.push(item);
         }
     }
 };
 
-GeoDataGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, enabledItemsOnly) {};
+GeoDataGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
 freezeObject(GeoDataGroupViewModel.defaultSerializers);
 

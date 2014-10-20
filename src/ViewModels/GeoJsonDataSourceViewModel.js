@@ -17,6 +17,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
 var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
@@ -145,8 +146,13 @@ GeoJsonDataSourceViewModel.prototype.load = function() {
         that._loadedData = that.data;
 
         if (that.data) {
-            updateViewModelFromData(that, that.data);
-            that.isLoading = false;
+            when(that.data, function(json) {
+                that.data = json;
+                updateViewModelFromData(that, json);
+                that.isLoading = false;
+            }).otherwise(function() {
+                that.isLoading = false;
+            });
         } else {
             loadJson(that.url).then(function(json) {
                 updateViewModelFromData(that, json);
@@ -166,7 +172,9 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the data source you\'re trying to add is temporarily unavailable or there is a \
 problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>');
-                that._needsLoad = true;
+                that.isEnabled = false;
+                that._loadedUrl = undefined;
+                that._loadedData = undefined;
             });
         }
     });

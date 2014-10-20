@@ -339,10 +339,40 @@ these extensions in order for National Map to know how to load it.'
         for (var i = 0; i < files.length; ++i) {
             var file = files[i];
             ga('send', 'event', 'uploadFile', 'browse', file.name);
-            that._viewer.geoDataManager.addFile(file);
-            if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
-                when(readJson(file), loadCollection);
+
+            var newViewModel = createGeoDataItemFromUrl(file.name, that.catalog.context);
+            if (!defined(newViewModel)) {
+                var message2 = new PopupMessage({
+                    container : document.body,
+                    title : 'File format not supported',
+                    message : '\
+The specified file does not appear to be a format that is supported by National Map.  National Map \
+supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
+Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \
+files (.csv).  The file extension of the file in the user-specified URL must match one of \
+these extensions in order for National Map to know how to load it.'
+                });
+                return;
             }
+
+            var name = file.name;
+            var lastSlashIndex = name.lastIndexOf('/');
+            if (lastSlashIndex >= 0) {
+                name = name.substring(lastSlashIndex + 1);
+            }
+
+            newViewModel.name = name;
+            newViewModel.data = readJson(file);
+
+            // TODO: Remove this, it only exists to make the UI happy.
+            var group = new GeoDataGroupViewModel(that.catalog.context);
+            group.name = name;
+            group.isOpen = true;
+            group.items.push(newViewModel);
+
+            that.catalog.userAddedDataGroup.items.push(group);
+            that.catalog.userAddedDataGroup.isOpen = true;
+            newViewModel.isEnabled = true;
         }
     });
 

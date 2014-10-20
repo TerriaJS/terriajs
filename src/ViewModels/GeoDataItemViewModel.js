@@ -151,14 +151,33 @@ GeoDataItemViewModel.prototype.updateFromJson = function(json) {
 /**
  * Serializes the data item to JSON.
  *
- * @param {Boolean} [enabledItemsOnly=true] true if only enabled data items (and their groups) should be serialized,
- *                                   or false if all data items should be serialized.
+ * @param {Object} [options] Object with the following properties:
+ * @param {Boolean} [options.enabledItemsOnly=true] true if only enabled data items (and their groups) should be serialized,
+ *                  or false if all data items should be serialized.
+ * @param {GeoDataItemViewModel[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
+ *        all of the data items that were not serialized because they were not enabled.  The array will be empty if
+ *        options.enabledItemsOnly is false.
+ * @param {Boolean} [options.skipItemsWithLocalData=true] true if items with a serializable 'data' property should be skipped entirely.
+ *                  This is useful to avoid creating a JSON data structure with potentially very large embedded data.
+ * @param {GeoDataItemViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
+ *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
+ *        if options.skipItemsWithLocalData is false.
  * @return {Object} The serialized JSON object-literal.
  */
-GeoDataItemViewModel.prototype.serializeToJson = function(enabledItemsOnly) {
-    enabledItemsOnly = defaultValue(enabledItemsOnly, true);
+GeoDataItemViewModel.prototype.serializeToJson = function(options) {
+    options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
-    if (enabledItemsOnly && this.isEnabled === false) {
+    if (defaultValue(options.enabledItemsOnly, true) && this.isEnabled === false) {
+        if (defined(options.itemsSkippedBecauseTheyAreNotEnabled)) {
+            options.itemsSkippedBecauseTheyAreNotEnabled.push(this);
+        }
+        return undefined;
+    }
+
+    if (defaultValue(options.skipItemsWithLocalData, true) && defined(this.data)) {
+        if (defined(options.itemsSkippedBecauseTheyHaveLocalData)) {
+            options.itemsSkippedBecauseTheyHaveLocalData.push(this);
+        }
         return undefined;
     }
 
@@ -169,15 +188,15 @@ GeoDataItemViewModel.prototype.serializeToJson = function(enabledItemsOnly) {
     for (var propertyName in this) {
         if (this.hasOwnProperty(propertyName) && propertyName.length > 0 && propertyName[0] !== '_') {
             if (this.serializers && this.serializers[propertyName]) {
-                this.serializers[propertyName](this, result, propertyName, enabledItemsOnly);
+                this.serializers[propertyName](this, result, propertyName, options);
             } else {
                 result[propertyName] = this[propertyName];
             }
         }
     }
 
-    // When serializing enabled items only, only serialize a group if the group has items in it.
-    if (enabledItemsOnly && !defined(this.isEnabled) && (!defined(result.items) || result.items.length === 0)) {
+    // Only serialize a group if the group has items in it.
+    if (!defined(this.isEnabled) && (!defined(result.items) || result.items.length === 0)) {
         return undefined;
     }
 

@@ -128,7 +128,11 @@ var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
                 tooltip : 'Share',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
-                        var jsonCatalog = that.catalog.serializeToJson(true);
+                        var serializeOptions = {
+                            enabledItemsOnly: true,
+                            itemsSkippedBecauseTheyHaveLocalData: []
+                        };
+                        var jsonCatalog = that.catalog.serializeToJson(serializeOptions);
                         var request = {
                             version: '0.0.03',
                             camera: getCameraRect(that.scene, that.map),
@@ -137,8 +141,9 @@ var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
                         };
 
                         var sharePanel = new SharePanel({
-                            request : request,
-                            container : document.body
+                            request: request,
+                            container: document.body,
+                            itemsSkippedBecauseTheyHaveLocalData: serializeOptions.itemsSkippedBecauseTheyHaveLocalData
                         });
                     };
                     that.captureCanvas();
