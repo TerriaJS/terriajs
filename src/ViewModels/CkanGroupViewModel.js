@@ -38,6 +38,7 @@ var CkanGroupViewModel = function(context) {
 
     this._loadedUrl = undefined;
     this._loadedFilterQuery = undefined;
+    this._loadedBlacklist = undefined;
 
     /**
      * Gets or sets the URL of the CKAN server.  This property is observable.
@@ -62,7 +63,15 @@ var CkanGroupViewModel = function(context) {
      */
     this.filterQuery = undefined;
 
-    knockout.track(this, ['url', 'dataCustodian', 'filterQuery']);
+    /**
+     * Gets or sets a hash of names of blacklisted groups and data sources.  A group or data source that appears in this hash
+     * will not be shown to the user.  In this hash, the keys should be the names of the groups and data sources to blacklist,
+     * and the values should be "true".  This property is observable.
+     * @type {Object}
+     */
+    this.blacklist = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
 };
 
 CkanGroupViewModel.prototype = inherit(GeoDataGroupViewModel.prototype);
@@ -107,6 +116,7 @@ CkanGroupViewModel.prototype.load = function() {
     runLater(function() {
         that._loadedUrl = that.url;
         that._loadedFilterQuery = that.filterQuery;
+        that._loadedBlacklist = that.blacklist;
         packageSearch(that).always(function() {
             that.isLoading = false;
         });
@@ -123,6 +133,10 @@ function packageSearch(viewModel) {
         var items = json.result.results;
         for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
             var item = items[itemIndex];
+
+            if (viewModel.blacklist && viewModel.blacklist[item.title]) {
+                continue;
+            }
 
             var textDescription = item.notes.replace(/\n/g, '<br/>');
             if (defined(item.license_url)) {
@@ -179,6 +193,10 @@ function packageSearch(viewModel) {
                 for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                     var group = groups[groupIndex];
 
+                    if (viewModel.blacklist && viewModel.blacklist[group.display_name]) {
+                        continue;
+                    }
+
                     var existingGroup = viewModel.findFirstItemByName(group.display_name);
                     if (!defined(existingGroup)) {
                         existingGroup = new GeoDataGroupViewModel(viewModel.context);
@@ -211,6 +229,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
         viewModel.isOpen = false;
         viewModel._loadedUrl = undefined;
         viewModel._loadedFilterQuery = undefined;
+        viewModel._loadedBlacklist = undefined;
     });
 }
 
