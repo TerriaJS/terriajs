@@ -39,6 +39,8 @@ var CkanGroupViewModel = function(context) {
     this._loadedUrl = undefined;
     this._loadedFilterQuery = undefined;
     this._loadedBlacklist = undefined;
+    this._loadedFilterByWmsGetCapabilities = undefined;
+    this._loadedMinimumMaxScaleDenominator = undefined;
 
     /**
      * Gets or sets the URL of the CKAN server.  This property is observable.
@@ -70,6 +72,21 @@ var CkanGroupViewModel = function(context) {
      * @type {Object}
      */
     this.blacklist = undefined;
+
+    /**
+     * Gets or sets a value indicating whether the CKAN datasets should be filtered by querying GetCapabilities from each
+     * referenced WMS server and excluding datasets not found therein.  This property is observable.
+     * @type {Boolean}
+     */
+    this.filterByWmsGetCapabilities = false;
+
+    /**
+     * Gets or sets the minimum MaxScaleDenominator that is allowed for a WMS dataset to be included in this CKAN group.
+     * If this property is undefined or if {@link CkanGroupViewModel#filterByWmsGetCapabilities} is false, no
+     * filtering based on MaxScaleDenominator is performed.  This property is observable.
+     * @type {Number}
+     */
+    this.minimumMaxScaleDenominator = undefined;
 
     knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
 };
@@ -106,7 +123,12 @@ defineProperties(CkanGroupViewModel.prototype, {
  * be set while the load is in progress.
  */
 CkanGroupViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.filterQuery ===  this._loadedFilterQuery) || this.isLoading) {
+    if (this.isLoading ||
+        (this.url === this._loadedUrl &&
+         this.filterQuery === this._loadedFilterQuery &&
+         this.blacklist === this._loadedBlacklist &&
+         this.filterByWmsGetCapabilities === this._loadedFilterByWmsGetCapabilities)) {
+
         return;
     }
 
@@ -117,6 +139,7 @@ CkanGroupViewModel.prototype.load = function() {
         that._loadedUrl = that.url;
         that._loadedFilterQuery = that.filterQuery;
         that._loadedBlacklist = that.blacklist;
+        this._loadedFilterByWmsGetCapabilities = this.filterByWmsGetCapabilities;
         packageSearch(that).always(function() {
             that.isLoading = false;
         });
@@ -130,6 +153,8 @@ function packageSearch(viewModel) {
     var url = cleanAndProxyUrl(viewModel.context, viewModel.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(viewModel.filterQuery);
 
     return when(loadJson(url), function(json) {
+        var wmsServers = {};
+
         var items = json.result.results;
         for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
             var item = items[itemIndex];
@@ -175,11 +200,12 @@ function packageSearch(viewModel) {
 
                 // Remove the query portion of the WMS URL.
                 uri.search('');
+                var url = uri.toString();
 
                 var newItem = new WebMapServiceDataSourceViewModel(viewModel.context);
                 newItem.name = item.title;
                 newItem.description = textDescription;
-                newItem.url = uri.toString();
+                newItem.url = url;
                 newItem.layers = layerName;
                 newItem.rectangle = rectangle;
 
@@ -189,6 +215,7 @@ function packageSearch(viewModel) {
                     newItem.dataCustodian = item.organization.title;
                 }
 
+                var inOneOrMoreGroups = false;
                 var groups = item.groups;
                 for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                     var group = groups[groupIndex];
@@ -205,6 +232,15 @@ function packageSearch(viewModel) {
                     }
 
                     existingGroup.add(newItem);
+                    inOneOrMoreGroups = true;
+                }
+
+                if (inOneOrMoreGroups) {
+                    if (!defined(wmsServers[url])) {
+                        wmsServers[url] = [];
+                    }
+
+                    wmsServers[url].push(newLayer);
                 }
             }
         }
@@ -230,6 +266,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
         viewModel._loadedUrl = undefined;
         viewModel._loadedFilterQuery = undefined;
         viewModel._loadedBlacklist = undefined;
+        viewModel._loadedFilterByWmsGetCapabilities = undefined;
     });
 }
 
