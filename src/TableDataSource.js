@@ -238,6 +238,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         var start = JulianDate.addMinutes(point.time, -this.leadTimeMin, startScratch);
         var finish = JulianDate.addMinutes(point.time, this.trailTimeMin, endScratch);
         rec.billboard.show[1].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
+        rec.availability = rec.billboard.show[1].interval;
     }
     else {
         rec.billboard.show[0]['boolean'] = true;
