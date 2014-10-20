@@ -748,7 +748,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }
         else {
             bnds = [[cam.south, cam.west], [cam.north, cam.east]];
-         }
+        }
 
        //create leaflet viewer
         var map = L.map('cesiumContainer', {
