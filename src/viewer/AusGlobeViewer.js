@@ -1392,22 +1392,20 @@ function selectFeatureLeaflet(viewer, latlng) {
         return;
     }
 
-    selectFeatures(promises, viewer.map);
+    selectFeatures(promises, viewer.map, latlng);
 }
 
-//TODO:!!! need to get csv info and return it to the the feature prop viewer
-//         need layer and can go from there.
-function selectFeatures(promises, viewer) {
+function formatPopup(title, text) {
+    return '<h3><center>'+title+'</center></h3>'+text;
+}
+
+function selectFeatures(promises, viewer, latlng) {
     var nextPromiseIndex = 0;
+    var popup;
 
     function waitForNextLayersResponse() {
         if (nextPromiseIndex >= promises.length) {
-            viewer.selectedEntity = new Entity('None');
-            viewer.selectedEntity.description = {
-                getValue : function() {
-                    return 'No features found.';
-                }
-            };
+            popup.setContent(formatPopup('None', 'No features found.'));
             return;
         }
 
@@ -1506,20 +1504,9 @@ function selectFeatures(promises, viewer) {
             // Show information for the first selected feature.
             var feature = result.features[0];
             if (defined(feature)) {
-                viewer.selectedEntity = new Entity(findGoodIdProperty(feature.properties));
-                var description = describe(feature.properties);
-                viewer.selectedEntity.description = {
-                    getValue : function() {
-                        return description;
-                    }
-                };
+                popup.setContent( formatPopup( findGoodIdProperty(feature.properties), describe(feature.properties) ));
             } else {
-                viewer.selectedEntity = new Entity('None');
-                viewer.selectedEntity.description = {
-                    getValue : function() {
-                        return 'No features found.';
-                    }
-                };
+                popup.setContent(formatPopup( 'None', 'No features found.'));
             }
         }, function() {
             waitForNextLayersResponse();
@@ -1529,12 +1516,11 @@ function selectFeatures(promises, viewer) {
     waitForNextLayersResponse();
 
     // Add placeholder information to the infobox so the user knows something is happening.
-    viewer.selectedEntity = new Entity('Loading...');
-    viewer.selectedEntity.description = {
-        getValue : function() {
-            return 'Loading WMS feature information...';
-        }
-    };
+    var title = '<h3><center>None</center></h3>';
+    popup = L.popup({maxHeight: 520})
+        .setLatLng(latlng)
+        .setContent(formatPopup('None', 'Loading WMS feature information...'))
+        .openOn(viewer);
 }
 
 module.exports = AusGlobeViewer;

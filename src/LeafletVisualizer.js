@@ -305,15 +305,11 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
             }
             marker.setIcon(L.icon(iconOptions));
         };
-        if (imageUrl.indexOf('data:image') === 0) {
-            var img = new Image();
-            img.onload = function() {
-                drawBillboard(img, imageUrl);
-            };
-            img.src = imageUrl;
-        } else {
-            loadImage(imageUrl).then(function(img) { drawBillboard(img); });
-        }
+        var img = new Image();
+        img.onload = function() {
+            drawBillboard(img, imageUrl);
+        };
+        img.src = imageUrl;
     }
 };
 
