@@ -537,9 +537,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             url : '//dev.virtualearth.net',
             mapStyle : BingMapsStyle.AERIAL_WITH_LABELS
         }),
-        terrainProvider : new CesiumTerrainProvider({
-            url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
-        }),
         timeControlsInitiallyVisible : false,
         targetFrameRate : 40
     };
@@ -551,6 +548,25 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
      //create CesiumViewer
     var viewer = new Viewer(container, options);
     viewer.extend(viewerEntityMixin);
+
+
+    //check that the terrain server is up before adding it.  easier than catching it after
+    var url = 'http://cesiumjs.org/stk-terrain/tilesets/world/tiles/0/1/0.terrain';
+    loadText(url).then(function (text) {
+        viewer.scene.terrainProvider = new CesiumTerrainProvider({
+            url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+        })
+    }, function(err) {
+       var msg = new PopupMessage({
+            container : document.body,
+            title : 'Terrain Server Not Responding',
+            message : '\
+The terrain server is not responding at the moment.  You can still use all the features of National \
+Map but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
+again later and the terrain server should be responding again.  If the issue persists, please contact \
+us via email at nationalmap@lists.nicta.com.au.'
+        });
+    });
 
     var lastHeight = 0;
     viewer.scene.preRender.addEventListener(function(scene, time) {
