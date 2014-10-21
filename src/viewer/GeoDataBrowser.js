@@ -114,6 +114,7 @@ var GeoDataBrowser = function(options) {
                     <div class="ausglobe-accordion-item-header" data-bind="click: toggleOpen">\
                         <div class="ausglobe-accordion-item-header-label" data-bind="text: name"></div>\
                     </div>\
+                    <div class="ausglobe-accordion-item-content ausglobe-accordion-item-content-visible ausglobe-accordion-category-item-label" data-bind="visible: isOpen && isLoading">Loading...</div>\
                     <div class="ausglobe-accordion-item-content" data-bind="foreach: items, css: { \'ausglobe-accordion-item-content-visible\': isOpen }">\
                         <div class="ausglobe-accordion-category">\
                             <div class="ausglobe-accordion-category-header" data-bind="click: toggleOpen">\

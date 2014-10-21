@@ -22,6 +22,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var corsProxy = require('../corsProxy');
 var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
 var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
+var GeoDataCatalogError = require('./GeoDataCatalogError');
 var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
@@ -158,9 +159,10 @@ GeoJsonDataSourceViewModel.prototype.load = function() {
                 updateViewModelFromData(that, json);
                 that.isLoading = false;
             }).otherwise(function(e) {
-                that.context.error.raiseEvent(that,
-                    'Could not load JSON',
-                    '\
+                that.context.error.raiseEvent(new GeoDataCatalogError({
+                    sender: that,
+                    title: 'Could not load JSON',
+                    message: '\
 An error occurred while retrieving JSON data from the provided link.  \
 <p>If you entered the link manually, please verify that the link is correct.</p>\
 <p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
@@ -171,7 +173,8 @@ and ask us to add this server to the list of non-CORS-supporting servers that ma
 National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the data source you\'re trying to add is temporarily unavailable or there is a \
 problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by \
-sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>');
+sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
+                }));
                 that.isEnabled = false;
                 that._loadedUrl = undefined;
                 that._loadedData = undefined;

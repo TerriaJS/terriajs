@@ -59,11 +59,7 @@ var GeoDataCatalogContext = function() {
 
     /**
      * An event that is raised when a user-facing error occurs with the catalog, groups, or data sources.
-     * The following parameters are passed to the event handler:
-     *
-     * * The object raising the error.
-     * * A short title describing the error.
-     * * A detailed message describing the error.  This may include HTML tags.
+     * Subscribers are passed the {@link GeoDataCatalogError} that occurred as the only function parameter.
      * @type {CesiumEvent}
      */
     this.error = new CesiumEvent();

@@ -12,6 +12,7 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
@@ -139,7 +140,7 @@ CkanGroupViewModel.prototype.load = function() {
         that._loadedUrl = that.url;
         that._loadedFilterQuery = that.filterQuery;
         that._loadedBlacklist = that.blacklist;
-        this._loadedFilterByWmsGetCapabilities = this.filterByWmsGetCapabilities;
+        that._loadedFilterByWmsGetCapabilities = that.filterByWmsGetCapabilities;
         packageSearch(that).always(function() {
             that.isLoading = false;
         });
@@ -153,101 +154,16 @@ function packageSearch(viewModel) {
     var url = cleanAndProxyUrl(viewModel.context, viewModel.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(viewModel.filterQuery);
 
     return when(loadJson(url), function(json) {
-        var wmsServers = {};
-
-        var items = json.result.results;
-        for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
-            var item = items[itemIndex];
-
-            if (viewModel.blacklist && viewModel.blacklist[item.title]) {
-                continue;
-            }
-
-            var textDescription = item.notes.replace(/\n/g, '<br/>');
-            if (defined(item.license_url)) {
-                textDescription += '<br/>[Licence](' + item.license_url + ')';
-            }
-
-            var rectangle;
-            var bboxString = item.geo_coverage;
-            if (defined(bboxString)) {
-                var parts = bboxString.split(',');
-                if (parts.length === 4) {
-                    rectangle = Rectangle.fromDegrees(parts[0], parts[1], parts[2], parts[3])
-                }
-            }
-
-            // Currently, we only support WMS layers.
-            var resources = item.resources;
-            for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
-                var resource = resources[resourceIndex];
-                if (!resource.format.match(wmsFormatRegex)) {
-                    continue;
-                }
-
-                var wmsUrl = resource.wms_url;
-                if (!defined(wmsUrl)) {
-                    wmsUrl = resource.url;
-                    if (!defined(wmsUrl)) {
-                        continue;
-                    }
-                }
-
-                // Extract the layer name from the WMS URL.
-                var uri = new URI(wmsUrl);
-                var params = uri.search(true);
-                var layerName = params.LAYERS;
-
-                // Remove the query portion of the WMS URL.
-                uri.search('');
-                var url = uri.toString();
-
-                var newItem = new WebMapServiceDataSourceViewModel(viewModel.context);
-                newItem.name = item.title;
-                newItem.description = textDescription;
-                newItem.url = url;
-                newItem.layers = layerName;
-                newItem.rectangle = rectangle;
-
-                if (defined(viewModel.dataCustodian)) {
-                    newItem.dataCustodian = viewModel.dataCustodian;
-                } else if (item.organization && item.organization.title) {
-                    newItem.dataCustodian = item.organization.title;
-                }
-
-                var inOneOrMoreGroups = false;
-                var groups = item.groups;
-                for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-                    var group = groups[groupIndex];
-
-                    if (viewModel.blacklist && viewModel.blacklist[group.display_name]) {
-                        continue;
-                    }
-
-                    var existingGroup = viewModel.findFirstItemByName(group.display_name);
-                    if (!defined(existingGroup)) {
-                        existingGroup = new GeoDataGroupViewModel(viewModel.context);
-                        existingGroup.name = group.display_name;
-                        viewModel.add(existingGroup);
-                    }
-
-                    existingGroup.add(newItem);
-                    inOneOrMoreGroups = true;
-                }
-
-                if (inOneOrMoreGroups) {
-                    if (!defined(wmsServers[url])) {
-                        wmsServers[url] = [];
-                    }
-
-                    wmsServers[url].push(newLayer);
-                }
-            }
+        if (viewModel.filterByWmsGetCapabilities) {
+            return when(filterResultsByGetCapabilities(viewModel, json), function() {
+                populateGroupFromResults(viewModel, json);
+            });
+        } else {
+            populateGroupFromResults(viewModel, json);
         }
-    }, function(e) {
-        // TODO: view models should not create UI elements directly like this.
-        var message =new PopupMessage({
-            container: document.body,
+    }).otherwise(function() {
+        viewModel.context.error.raiseEvent(new GeoDataCatalogError({
+            sender: viewModel,
             title: 'Group is not available',
             message: '\
 An error occurred while invoking package_search on the CKAN server.  \
@@ -261,13 +177,190 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
 problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-        });
+        }));
+
         viewModel.isOpen = false;
         viewModel._loadedUrl = undefined;
         viewModel._loadedFilterQuery = undefined;
         viewModel._loadedBlacklist = undefined;
         viewModel._loadedFilterByWmsGetCapabilities = undefined;
     });
+}
+
+function filterResultsByGetCapabilities(viewModel, json) {
+    var wmsServers = {};
+
+    var items = json.result.results;
+    for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
+        var item = items[itemIndex];
+
+        var resources = item.resources;
+        for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
+            var resource = resources[resourceIndex];
+            if (!resource.format.match(wmsFormatRegex)) {
+                continue;
+            }
+
+            var wmsUrl = resource.wms_url;
+            if (!defined(wmsUrl)) {
+                wmsUrl = resource.url;
+                if (!defined(wmsUrl)) {
+                    continue;
+                }
+            }
+
+            // Extract the layer name from the WMS URL.
+            var uri = new URI(wmsUrl);
+            var params = uri.search(true);
+            var layerName = params.LAYERS;
+
+            // Remove the query portion of the WMS URL.
+            uri.search('');
+            var url = uri.toString();
+
+            if (!defined(wmsServers[url])) {
+                wmsServers[url] = {};
+            }
+
+            wmsServers[url][layerName] = resource;
+        }
+    }
+
+    var promises = [];
+
+    for (var wmsServer in wmsServers) {
+        if (wmsServers.hasOwnProperty(wmsServer)) {
+            var getCapabilitiesUrl = wmsServer + '?service=WMS&request=GetCapabilities';
+            if (corsProxy.shouldUseProxy(getCapabilitiesUrl)) {
+                getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl,'1d');
+            }
+
+            promises.push(filterBasedOnGetCapabilities(viewModel, getCapabilitiesUrl, wmsServers[wmsServer]));
+        }
+    }
+
+    return when.all(promises);
+}
+
+function filterBasedOnGetCapabilities(viewModel, getCapabilitiesUrl, resources) {
+    // Initially assume all resources will be filtered.
+    for (var name in resources) {
+        if (resources.hasOwnProperty(name)) {
+            resources[name].__filtered = true;
+        }
+    }
+
+    return loadText(getCapabilitiesUrl).then(function(getCapabilitiesXml) {
+        var getCapabilitiesJson = $.xml2json(getCapabilitiesXml);
+        filterBasedOnGetCapabilitiesResponse(viewModel, getCapabilitiesJson.Capability.Layer, resources);
+    }).otherwise(function() {
+        // Do nothing - all resources will be filtered.
+    });
+}
+
+function filterBasedOnGetCapabilitiesResponse(viewModel, wmsLayersSource, resources) {
+    if (defined(wmsLayersSource) && !(wmsLayersSource instanceof Array)) {
+        wmsLayersSource = [wmsLayersSource];
+    }
+
+    for (var i = 0; i < wmsLayersSource.length; ++i) {
+        var layerSource = wmsLayersSource[i];
+
+        if (layerSource.Name) {
+            var resource = resources[layerSource.Name];
+            if (resource) {
+                if (!defined(layerSource.MaxScaleDenominator) || layerSource.MaxScaleDenominator >= viewModel.minimumMaxScaleDenominator) {
+                    resource.__filtered = false;
+                }
+            }
+        }
+
+        if (layerSource.Layer) {
+            filterBasedOnGetCapabilitiesResponse(viewModel, layerSource.Layer, resources);
+        }
+    }
+}
+
+function populateGroupFromResults(viewModel, json) {
+    var items = json.result.results;
+    for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
+        var item = items[itemIndex];
+
+        if (viewModel.blacklist && viewModel.blacklist[item.title]) {
+            continue;
+        }
+
+        var textDescription = item.notes.replace(/\n/g, '<br/>');
+        if (defined(item.license_url)) {
+            textDescription += '<br/>[Licence](' + item.license_url + ')';
+        }
+
+        var rectangle;
+        var bboxString = item.geo_coverage;
+        if (defined(bboxString)) {
+            var parts = bboxString.split(',');
+            if (parts.length === 4) {
+                rectangle = Rectangle.fromDegrees(parts[0], parts[1], parts[2], parts[3])
+            }
+        }
+
+        // Currently, we only support WMS layers.
+        var resources = item.resources;
+        for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
+            var resource = resources[resourceIndex];
+            if (resource.__filtered || !resource.format.match(wmsFormatRegex)) {
+                continue;
+            }
+
+            var wmsUrl = resource.wms_url;
+            if (!defined(wmsUrl)) {
+                wmsUrl = resource.url;
+                if (!defined(wmsUrl)) {
+                    continue;
+                }
+            }
+
+            // Extract the layer name from the WMS URL.
+            var uri = new URI(wmsUrl);
+            var params = uri.search(true);
+            var layerName = params.LAYERS;
+
+            // Remove the query portion of the WMS URL.
+            uri.search('');
+            var url = uri.toString();
+
+            var newItem = new WebMapServiceDataSourceViewModel(viewModel.context);
+            newItem.name = item.title;
+            newItem.description = textDescription;
+            newItem.url = url;
+            newItem.layers = layerName;
+            newItem.rectangle = rectangle;
+
+            if (defined(viewModel.dataCustodian)) {
+                newItem.dataCustodian = viewModel.dataCustodian;
+            } else if (item.organization && item.organization.title) {
+                newItem.dataCustodian = item.organization.title;
+            }
+
+            var groups = item.groups;
+            for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+                var group = groups[groupIndex];
+
+                if (viewModel.blacklist && viewModel.blacklist[group.display_name]) {
+                    continue;
+                }
+
+                var existingGroup = viewModel.findFirstItemByName(group.display_name);
+                if (!defined(existingGroup)) {
+                    existingGroup = new GeoDataGroupViewModel(viewModel.context);
+                    existingGroup.name = group.display_name;
+                    viewModel.add(existingGroup);
+                }
+
+                existingGroup.add(newItem);
+            }
+        }
+    }
 }
 
 function cleanAndProxyUrl(context, url) {
