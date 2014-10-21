@@ -584,6 +584,17 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     //TODO: set based on platform
 //        globe.tileCacheSize *= 2;
+/*
+    var monitor = new FrameRateMonitor.fromScene(scene);
+    monitor.minimumFrameRateAfterWarmup = 100;
+    monitor.minimumFrameRateDuringWarmup = 100;
+    monitor.warmupPeriod = 1;
+    monitor.samplingWindow = 1;
+    monitor.quietPeriod = 1;
+    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
+        console.log('too slow');
+    });
+*/
 
     var that = this;
     

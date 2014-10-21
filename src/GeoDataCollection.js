@@ -1916,31 +1916,42 @@ function getDataSourceExtent(dataSource) {
     var objects = collection.entities;
     var e0;
     
-    var julianDate = new JulianDate();
+    var dates = [];
+    var availability = collection.computeAvailability();
+    if (availability.isStartIncluded) {
+        dates.push(availability.start);
+    }
+    if (availability.isStopIncluded) {
+        dates.push(availability.stop);
+    }
+    if (dates.length === 0) {
+        dates.push(new JulianDate());
+    }
 
-
-    for (var i = 0; i < objects.length; i++) {
-        var cArray;
-        if (objects[i].positions) {
-            cArray = objects[i].positions.getValue(julianDate);
-        }
-        else if (objects[i].position) {
-            cArray = [objects[i].position.getValue(julianDate)];
-        }
-        if (!defined(cArray) || !defined(cArray[0])) {
-            continue;
-        }
-        var cartArray = Ellipsoid.WGS84.cartesianArrayToCartographicArray(cArray);
-        var e1 = Rectangle.fromCartographicArray(cartArray);
-        if (e0 === undefined) {
-            e0 = e1;
-        }
-        else {
-            var west = Math.min(e0.west, e1.west);
-            var south = Math.min(e0.south, e1.south);
-            var east = Math.max(e0.east, e1.east);
-            var north = Math.max(e0.north, e1.north);
-            e0 = new Rectangle(west, south, east, north);
+    for (var t = 0; t < dates.length; t++) {
+        for (var i = 0; i < objects.length; i++) {
+            var cArray;
+            if (objects[i].positions) {
+                cArray = objects[i].positions.getValue(dates[t]);
+            }
+            else if (objects[i].position) {
+                cArray = [objects[i].position.getValue(dates[t])];
+            }
+            if (!defined(cArray) || !defined(cArray[0])) {
+                continue;
+            }
+            var cartArray = Ellipsoid.WGS84.cartesianArrayToCartographicArray(cArray);
+            var e1 = Rectangle.fromCartographicArray(cartArray);
+            if (e0 === undefined) {
+                e0 = e1;
+            }
+            else {
+                var west = Math.min(e0.west, e1.west);
+                var south = Math.min(e0.south, e1.south);
+                var east = Math.max(e0.east, e1.east);
+                var north = Math.max(e0.north, e1.north);
+                e0 = new Rectangle(west, south, east, north);
+            }
         }
     }
     return e0;
