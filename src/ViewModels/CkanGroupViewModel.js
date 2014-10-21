@@ -233,7 +233,7 @@ function filterResultsByGetCapabilities(viewModel, json) {
         if (wmsServers.hasOwnProperty(wmsServer)) {
             var getCapabilitiesUrl = wmsServer + '?service=WMS&request=GetCapabilities';
             if (corsProxy.shouldUseProxy(getCapabilitiesUrl)) {
-                getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl,'1d');
+                getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl, '1d');
             }
 
             promises.push(filterBasedOnGetCapabilities(viewModel, getCapabilitiesUrl, wmsServers[wmsServer]));
@@ -362,6 +362,24 @@ function populateGroupFromResults(viewModel, json) {
             }
         }
     }
+
+    function compareNames(a, b) {
+        var aName = a.name.toLowerCase();
+        var bName = b.name.toLowerCase();
+        if (aName < bName) {
+            return -1;
+        } else if (aName > bName) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    viewModel.items.sort(compareNames);
+
+    for (var i = 0; i < viewModel.items.length; ++i) {
+        viewModel.items[i].items.sort(compareNames);
+    }
 }
 
 function cleanAndProxyUrl(context, url) {
@@ -371,7 +389,7 @@ function cleanAndProxyUrl(context, url) {
 
     var cleanedUrl = uri.toString();
     if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(cleanedUrl)) {
-        cleanedUrl = context.corsProxy.getURL(cleanedUrl);
+        cleanedUrl = context.corsProxy.getURL(cleanedUrl, '1d');
     }
 
     return cleanedUrl;
