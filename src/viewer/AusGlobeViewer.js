@@ -20,14 +20,17 @@ var ClockRange = require('../../third_party/cesium/Source/Core/ClockRange');
 var Color = require('../../third_party/cesium/Source/Core/Color');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var Credit = require('../../third_party/cesium/Source/Core/Credit');
+var DataSourceDisplay = require('../../third_party/cesium/Source/DataSources/DataSourceDisplay');
 var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var EllipsoidGeodesic = require('../../third_party/cesium/Source/Core/EllipsoidGeodesic');
 var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
 var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
+var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
 var GeographicProjection = require('../../third_party/cesium/Source/Core/GeographicProjection');
 var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
@@ -57,6 +60,14 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var Animation = require('../../third_party/cesium/Source/Widgets/Animation/Animation');
+var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animation/AnimationViewModel');
+var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timeline');
+var subscribeAndEvaluate = require('../../third_party/cesium/Source/Widgets/subscribeAndEvaluate');
+var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
+var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
+
+
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
 var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
@@ -73,6 +84,8 @@ var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
 var TitleWidget = require('./TitleWidget');
+
+var LeafletVisualizer = require('../LeafletVisualizer');
 
 //use our own bing maps key
 BingMapsApi.defaultKey = undefined;
@@ -294,6 +307,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.scene = undefined;
     this.viewer = undefined;
     this.map = undefined;
+
 
     this.context = context;
 
@@ -564,6 +578,17 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     //TODO: set based on platform
 //        globe.tileCacheSize *= 2;
+/*
+    var monitor = new FrameRateMonitor.fromScene(scene);
+    monitor.minimumFrameRateAfterWarmup = 100;
+    monitor.minimumFrameRateDuringWarmup = 100;
+    monitor.warmupPeriod = 1;
+    monitor.samplingWindow = 1;
+    monitor.quietPeriod = 1;
+    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
+        console.log('too slow');
+    });
+*/
 
     var that = this;
     
@@ -703,23 +728,45 @@ AusGlobeViewer.prototype.isCesium = function() {
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     this.context.beforeViewerChanged.raiseEvent();
 
-    var bnds;
-    var rect;
+    var bnds, rect;
+    var timeline = {}; 
+    var cam = this.initialCamera;
 
     var that = this;
 
     if (!bCesium) {
 
-        //create leaflet viewer
+            //shut down existing cesium
+        if (defined(this.viewer)) {
+            //get camera and timeline settings
+            rect = getCameraRect(this.scene);
+            bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
+                [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+            timeline = this.getTimelineSettings();
+
+            this._enableSelectExtent(false);
+
+            var inputHandler = this.viewer.screenSpaceEventHandler;
+            inputHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
+            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
+            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
+
+            this.viewer.destroy();
+            this.viewer = undefined;
+        }
+        else {
+            bnds = [[cam.south, cam.west], [cam.north, cam.east]];
+        }
+
+       //create leaflet viewer
         var map = L.map('cesiumContainer', {
             zoomControl: false
         }).setView([-28.5, 135], 5);
 
-        // Hacky nonsense to let us use Cesium's InfoBox without actually using Cesium.
+        this.map = map;
         map.clock = new Clock();
-        map.dataSources = [];
-        map.dataSources.dataSourceAdded = new CesiumEvent();
-        map.dataSources.dataSourceRemoved = new CesiumEvent();
+        map.dataSources = this.geoDataManager.dataSourceCollection;
+
         map.screenSpaceEventHandler = {
             setInputAction : function() {},
             remoteInputAction : function() {}
@@ -729,7 +776,20 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.infoBox = new InfoBox(document.body);
         viewerEntityMixin(map);
 
-        this.map = map;
+        if (!defined(this.leafletVisualizer)) {
+            this.leafletVisualizer = new LeafletVisualizer();
+        }
+        this.dataSourceDisplay = new DataSourceDisplay({
+            scene : map,
+            dataSourceCollection : this.geoDataManager.dataSourceCollection,
+            visualizersCallback: this.leafletVisualizer.visualizersCallback
+        });
+
+        var eventHelper = new EventHelper();
+
+        eventHelper.add(map.clock.onTick, function(clock) {
+            that.dataSourceDisplay.update(clock.currentTime);
+        });
 
         var ticker = function() {
             if (that.map === map) {
@@ -747,16 +807,14 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         ticker();
 
+        this.createLeafletTimeline(map.clock);
+        this.updateTimeline(timeline.start, timeline.stop, timeline.cur);
+
         map.on("boxzoomend", function(e) {
             console.log(e.boxZoomBounds);
         });
 
-        if (this.viewer !== undefined) {
-            rect = getCameraRect(this.scene);
-            bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
-                [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
-            map.fitBounds(bnds);
-        }
+        map.fitBounds(bnds);
 
         //Bing Maps Layer by default
         this.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey(), { type: 'AerialWithLabels' });
@@ -774,18 +832,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             var that = this;
             if (that.startup) {
                 that.startup = false;
-                //there are problems viewing geojson but since we make it pretty to get that these
-                //days we can probably turn this off by default
-//                alert('There are known problems capturing images with some datasets in 2D view.  Please use 3D mode if possible for this operation.');
             }
             that.map.attributionControl.removeFrom(that.map);
-/*            //might need to break out to global function and deal with err
-            leafletImage(that.map, function(err, canvas) {
-                var dataUrl = canvas.toDataURL();
-                    that.captureCanvasCallback(dataUrl);
-                    that.map.attributionControl.addTo(that.map);
-            });            
-*/            
             html2canvas( document.getElementById('cesiumContainer'), {
 	            useCORS: true,
                 onrendered: function(canvas) {
@@ -799,30 +847,26 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.on('click', function(e) {
             selectFeatureLeaflet(that, e.latlng);
         });
-        
-        //shut down existing cesium
-        if (this.viewer !== undefined) {
-            this._enableSelectExtent(false);
-            stopTimeline();
-
-            var inputHandler = this.viewer.screenSpaceEventHandler;
-            inputHandler.removeInputAction( ScreenSpaceEventType.MOUSE_MOVE );
-            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
-            inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
-
-            this.scene.primitives.removeAll();
-
-            this.viewer.destroy();
-            this.viewer = undefined;
-        }
 
         this.geoDataManager.setViewer({scene: undefined, map: map});
         this.geoDataBrowser.viewModel.map = map;
-
-        //TODO: set visualizer functions for GeoDataCollection
-
     }
     else {
+        if (defined(this.map)) {
+            //get camera and timeline settings
+            rect = getCameraRect(undefined, this.map);
+            timeline = this.getTimelineSettings();
+
+            this.removeLeafletTimeline();
+            this.dataSourceDisplay.destroy();
+            this.map.dataSources = undefined;
+            this.map.remove();
+            this.map = undefined;
+        }
+        else {
+            rect = new Rectangle.fromDegrees(cam.west, cam.south, cam.east, cam.north);
+         }
+
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
         this.scene = this.context.cesiumScene = this.viewer.scene;
@@ -868,24 +912,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             that.captureCanvasFlag = true;
         };
 
-        if (defined(this.map)) {
-            rect = getCameraRect(undefined, this.map);
-            //remove existing map viewer
-            this.map.remove();
-            this.map = undefined;
-        }
-        else {
-            var cam = this.initialCamera;
-            rect = new Rectangle.fromDegrees(cam.west, cam.south, cam.east, cam.north);
-         }
-
         this.updateCameraFromRect(rect, 0);
 
         this.geoDataManager.setViewer({scene: this.scene, viewer: this.viewer, map: undefined});
         this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);
-        stopTimeline(this.viewer);
+        this.updateTimeline(timeline.start, timeline.stop, timeline.cur);
 
         this._navigationWidget.showTilt = true;
         document.getElementById('ausglobe-title-position').style.visibility = 'visible';
@@ -995,6 +1028,58 @@ function supportsWebgl() {
 //------------------------------------
 // Timeline display on selection
 //------------------------------------
+
+AusGlobeViewer.prototype.createLeafletTimeline = function(clock) {
+
+    var viewerContainer = document.getElementById('cesiumContainer');
+
+    var clockViewModel = new ClockViewModel(clock);
+
+    var animationContainer = document.createElement('div');
+    animationContainer.className = 'cesium-viewer-animationContainer';
+    animationContainer.style.bottom = '15px';
+    viewerContainer.appendChild(animationContainer);
+    this.map.animation = new Animation(animationContainer, new AnimationViewModel(clockViewModel));
+
+    var timelineContainer = document.createElement('div');
+    timelineContainer.className = 'cesium-viewer-timelineContainer';
+    timelineContainer.style.right = '0px';
+    timelineContainer.style.bottom = '15px';
+    viewerContainer.appendChild(timelineContainer);
+    var timeline = new Timeline(timelineContainer, clock);
+    timeline.zoomTo(clock.startTime, clock.stopTime);
+    this.map.timeline = timeline;
+
+    var that = this;
+    timeline.scrubFunction = function(e) {
+        if (that.map.dragging.enabled()) {
+            that.map.dragging.disable();
+            that.map.on('mouseup', function(e) {
+                that.map.dragging.enable();
+            });
+        }
+        var clock = e.clock;
+        clock.currentTime = e.timeJulian;
+        clock.shouldAnimate = false;
+    };
+    timeline.addEventListener('settime', timeline.scrubFunction, false);
+};
+
+AusGlobeViewer.prototype.removeLeafletTimeline = function() {
+    var viewerContainer = document.getElementById('cesiumContainer');
+
+    if (defined(this.map.animation)) {
+        viewerContainer.removeChild(this.map.animation.container);
+        this.map.animation = this.map.animation.destroy();
+    }
+
+    if (defined(this.map.timeline)) {
+        this.map.timeline.removeEventListener('settime', this.map.timeline.scrubFunction, false);
+        viewerContainer.removeChild(this.map.timeline.container);
+        this.map.timeline = this.map.timeline.destroy();
+    }
+};
+
 function showTimeline(viewer) {
     $('.cesium-viewer-animationContainer').css('visibility', 'visible');
     $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
@@ -1013,52 +1098,58 @@ function hideTimeline(viewer) {
     }
 }
 
-function stopTimeline(viewer) {
-    if (defined(viewer)) {
-        hideTimeline(viewer);
-        viewer.clock.clockRange = ClockRange.UNBOUNDED;
-        viewer.clock.shouldAnimate = false;
-    }
-}
-
 //update the timeline
-function updateTimeline(viewer, start, finish) {
+AusGlobeViewer.prototype.updateTimeline = function(start, finish, cur, run) {
+    var viewer = this.viewer;
+    var clock = defined(viewer) ? this.viewer.clock : this.map.clock;
+    var timeline = defined(viewer) ? this.viewer.timeline : this.map.timeline;
+
     if (start === undefined || finish === undefined) {
-        stopTimeline(viewer);
-        return;
+        hideTimeline(viewer);
+        clock.clockRange = ClockRange.UNBOUNDED;
+        clock.shouldAnimate = false;
     }
-    showTimeline(viewer);
-    //update clock
-    if (viewer !== undefined) {
-        var clock = viewer.clock;
+    else {
+        showTimeline(viewer);
         clock.startTime = start;
-        clock.currentTime = start;
+        clock.currentTime = (defined(cur)) ? cur : start;
         clock.stopTime = finish;
         clock.multiplier = JulianDate.secondsDifference(finish, start) / 60.0;
         clock.clockRange = ClockRange.LOOP_STOP;
-        clock.shouldAnimate = true;
-        viewer.timeline.zoomTo(clock.startTime, clock.stopTime);
+        clock.shouldAnimate = defined(run) ? run : false;
+        timeline.zoomTo(clock.startTime, clock.stopTime);
     }
-}
+ };
 
-//update menu and camera
+ AusGlobeViewer.prototype.getTimelineSettings = function() {
+    if ($('.cesium-viewer-timelineContainer').css('visibility') === 'hidden' ) {
+        return {};
+    }
+    var viewer = this.viewer;
+    var clock = defined(viewer) ? this.viewer.clock : this.map.clock;
+    return {start: clock.startTime, stop: clock.stopTime, cur: clock.currentTime};
+ };
+
+
+//update timeline and camera
 AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     //remove case
     if (layer === undefined) {
-        updateTimeline(this.viewer);
+        this.updateTimeline();
         return;
     }
     
     //table info
-    var tableData, start, finish;
-    if (layer.dataSource !== undefined && layer.dataSource.dataset !== undefined) {
-        tableData = layer.dataSource;
-        if (this._cesiumViewerActive()) {
-            start = tableData.dataset.getMinTime();
-            finish = tableData.dataset.getMaxTime();
+    var tableData, start, finish, current;
+    if (layer.dataSource !== undefined) {
+        var collection = layer.dataSource.entities;
+        var availability = collection.computeAvailability();
+        if (availability.isStartIncluded && availability.isStopIncluded) {
+            start = availability.start;
+            finish = availability.stop;
         }
     }
-    updateTimeline(this.viewer, start, finish);
+    this.updateTimeline(start, finish, start, true);
     
     if (layer.zoomTo && layer.extent !== undefined) {
         this.updateCameraFromRect(layer.extent, 3000);
@@ -1327,22 +1418,20 @@ function selectFeatureLeaflet(viewer, latlng) {
         return;
     }
 
-    selectFeatures(promises, viewer.map);
+    selectFeatures(promises, viewer.map, latlng);
 }
 
-//TODO:!!! need to get csv info and return it to the the feature prop viewer
-//         need layer and can go from there.
-function selectFeatures(promises, viewer) {
+function formatPopup(title, text) {
+    return '<h3><center>'+title+'</center></h3>'+text;
+}
+
+function selectFeatures(promises, viewer, latlng) {
     var nextPromiseIndex = 0;
+    var popup;
 
     function waitForNextLayersResponse() {
         if (nextPromiseIndex >= promises.length) {
-            viewer.selectedEntity = new Entity('None');
-            viewer.selectedEntity.description = {
-                getValue : function() {
-                    return 'No features found.';
-                }
-            };
+            popup.setContent(formatPopup('None', 'No features found.'));
             return;
         }
 
@@ -1441,20 +1530,9 @@ function selectFeatures(promises, viewer) {
             // Show information for the first selected feature.
             var feature = result.features[0];
             if (defined(feature)) {
-                viewer.selectedEntity = new Entity(findGoodIdProperty(feature.properties));
-                var description = describe(feature.properties);
-                viewer.selectedEntity.description = {
-                    getValue : function() {
-                        return description;
-                    }
-                };
+                popup.setContent( formatPopup( findGoodIdProperty(feature.properties), describe(feature.properties) ));
             } else {
-                viewer.selectedEntity = new Entity('None');
-                viewer.selectedEntity.description = {
-                    getValue : function() {
-                        return 'No features found.';
-                    }
-                };
+                popup.setContent(formatPopup( 'None', 'No features found.'));
             }
         }, function() {
             waitForNextLayersResponse();
@@ -1464,12 +1542,11 @@ function selectFeatures(promises, viewer) {
     waitForNextLayersResponse();
 
     // Add placeholder information to the infobox so the user knows something is happening.
-    viewer.selectedEntity = new Entity('Loading...');
-    viewer.selectedEntity.description = {
-        getValue : function() {
-            return 'Loading WMS feature information...';
-        }
-    };
+    var title = '<h3><center>None</center></h3>';
+    popup = L.popup({maxHeight: 520})
+        .setLatLng(latlng)
+        .setContent(formatPopup('None', 'Loading WMS feature information...'))
+        .openOn(viewer);
 }
 
 module.exports = AusGlobeViewer;

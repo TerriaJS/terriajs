@@ -57,9 +57,8 @@ var GeoDataCollection = function() {
     
     var that = this;
     
-    this.scene = undefined;
     this.map = undefined;
-    
+
     //Init the dataSourceCollection
     this.dataSourceCollection = new DataSourceCollection();
     
@@ -82,19 +81,20 @@ var GeoDataCollection = function() {
 * @param {Object} [options.map] Set to Leaflet map object if Leaflet Viewer.
 */
 GeoDataCollection.prototype.setViewer = function(options) {
-      //If A cesium scene present then this is in cesium globe
-    this.scene = options.scene;
+      //If a leaflet map is present save the object for use below (for now)
     this.map = options.map;
 
-    if (this.scene) {
-        this.imageryLayersCollection = this.scene.globe.imageryLayers;
+    if (defined(options.scene)) {
+        this.imageryLayersCollection = options.scene.globe.imageryLayers;
     }
     this.ViewerChanged.raiseEvent(this, options);
     
     //re-request all the layers on the new map
     for (var i = 0; i < this.layers.length; i++) {
-        this.layers[i].skip = true;
-        this.sendLayerRequest(this.layers[i]);
+        if (this.layers[i].type === 'WMS') {
+            this.layers[i].skip = true;
+            this.sendLayerRequest(this.layers[i]);
+        }
     }
 };
 
@@ -305,11 +305,11 @@ GeoDataCollection.prototype.get = function(id) {
 */
 GeoDataCollection.prototype.remove = function(id) {
     var layer = this.get(id);
-    if (layer === undefined) {
+    if (!defined(layer)) {
         console.log('ERROR: layer not found:', id);
         return;
     }
-    if (layer.dataSource) {
+    if (defined(layer.dataSource)) {
         if (this.dataSourceCollection.contains(layer.dataSource)) {
             this.dataSourceCollection.remove(layer.dataSource);
         }
@@ -317,11 +317,11 @@ GeoDataCollection.prototype.remove = function(id) {
             layer.dataSource.destroy();
         }
     }
-    else if (this.map === undefined) {
-        this.imageryLayersCollection.remove(layer.primitive);
+    else if (defined(this.map)) {
+        this.map.removeLayer(layer.primitive);
     }
     else {
-        this.map.removeLayer(layer.primitive);
+        this.imageryLayersCollection.remove(layer.primitive);
     }
     
     this.layers.splice(id, 1);
@@ -355,17 +355,17 @@ GeoDataCollection.prototype.show = function(layer, val) {
             this.dataSourceCollection.remove(layer.dataSource, false);
         }
     }
-    else if (this.map === undefined) {
-        if (layer.primitive !== undefined) {
-            layer.primitive.show = val;
-        }
-    }
-    else {
+    else if (defined(this.map)) {
         if (val) {
             this.map.addLayer(layer.primitive);
         }
         else {
             this.map.removeLayer(layer.primitive);
+        }
+    }
+    else {
+        if (defined(layer.primitive)) {
+            layer.primitive.show = val;
         }
     }
 };
@@ -1048,8 +1048,14 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
     } 
         //Convert in browser using toGeoJSON https://github.com/mapbox/togeojson    
     else if (format === "KML") {
+        var kmlDataSource = new KmlDataSource(corsProxy);
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
-        this.addGeoJsonLayer(toGeoJSON.kml(dom), layer);
+        kmlDataSource.load(dom);
+        this.dataSourceCollection.add(kmlDataSource);
+            //add it as a layer
+        layer.dataSource = kmlDataSource;
+        layer.extent = getDataSourceExtent(kmlDataSource);
+        this.add(layer);
     } 
     else if (format === "GPX") {
         dom = (new DOMParser()).parseFromString(text, 'text/xml');    
@@ -1086,20 +1092,10 @@ GeoDataCollection.prototype.loadText = function(text, srcname, format, layer) {
             if (defined(layer.style.table.data)) {
                 tableDataSource.setCurrentVariable(layer.style.table.data);
             }
-            if (this.map === undefined) {
-                this.dataSourceCollection.add(tableDataSource);
-                layer.dataSource = tableDataSource;
-                layer.extent = tableDataSource.dataset.getExtent();
-                this.add(layer);
-            }
-            else {
-                var pointList = tableDataSource.dataset.getPointList();
-                var dispPoints = [];
-                for (var i = 0; i < pointList.length; i++) {
-                    dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
-                }
-                this.addGeoJsonLayer(dispPoints, layer);
-            }
+            this.dataSourceCollection.add(tableDataSource);
+            layer.dataSource = tableDataSource;
+            layer.extent = tableDataSource.dataset.getExtent();
+            this.add(layer);
         }
     }
         //Return false so widget can try to send to conversion service
@@ -1278,7 +1274,7 @@ GeoDataCollection.prototype._viewMap = function(request, layer) {
     var provider;
     var proxy;
 
-    if (this.map === undefined) {
+    if (!defined(this.map)) {
         var wmsServer = request.substring(0, request.indexOf('?'));
         var url = wmsServer; //'http://' + uri.hostname() + uri.path();
         if (corsProxy.shouldUseProxy(url)) {
@@ -1420,31 +1416,6 @@ function crsIsMatch(crs, matchValue) {
      return false;
 }
 
-// Show csv table data
-GeoDataCollection.prototype._viewTable = function(request, layer) {
-    var that = this;
-        //load text here to let me control functions called after
-    loadText(request).then( function (text) {
-        var tableDataSource = new TableDataSource();
-        tableDataSource.loadText(text);
-        if (that.map === undefined) {
-            that.dataSourceCollection.add(tableDataSource);
-            layer.dataSource = tableDataSource;
-            that.add(layer);
-        }
-        else {
-            var pointList = tableDataSource.dataset.getPointList();
-            var dispPoints = [];
-            for (var i = 0; i < pointList.length; i++) {
-                dispPoints.push({ type: 'Point', coordinates: pointList[i].pos});
-            }
-            that.addGeoJsonLayer(dispPoints, layer);
-        }
-    }, function(err) {
-        loadErrorResponse(err);
-    });
-};
-
 // Load data file based on extension if loaded as DATA layer
 GeoDataCollection.prototype._viewData = function(url, layer) {
     var that = this;
@@ -1464,7 +1435,7 @@ GeoDataCollection.prototype._viewData = function(url, layer) {
         }, function(err) {
             loadErrorResponse(err);
         });
-    } else {
+    } else if (url) {
             //load text here to let me control functions called after
         loadText(url).then (function (text) {
             that.loadText(text, layer.name, format, layer);
@@ -1485,8 +1456,6 @@ GeoDataCollection.prototype.sendLayerRequest = function(layer) {
     if (!defined(layer.show)) {
         layer.show = true;
     }
-//    console.log('LAYER REQUEST:',request);
-    
     // Deal with the different data Services
     if (layer.type === 'WFS' || layer.type === 'REST' || layer.type === 'GME') {
         this._viewFeature(request, layer);
@@ -1946,31 +1915,42 @@ function getDataSourceExtent(dataSource) {
     var objects = collection.entities;
     var e0;
     
-    var julianDate = new JulianDate();
+    var dates = [];
+    var availability = collection.computeAvailability();
+    if (availability.isStartIncluded) {
+        dates.push(availability.start);
+    }
+    if (availability.isStopIncluded) {
+        dates.push(availability.stop);
+    }
+    if (dates.length === 0) {
+        dates.push(new JulianDate());
+    }
 
-    var cArray;
-
-    for (var i = 0; i < objects.length; i++) {
-        if (objects[i].positions) {
-            cArray = objects[i].positions.getValue(julianDate);
-        }
-        else if (objects[i].position) {
-            cArray = [objects[i].position.getValue(julianDate)];
-        }
-        else {
-            continue;
-        }
-        var cartArray = Ellipsoid.WGS84.cartesianArrayToCartographicArray(cArray);
-        var e1 = Rectangle.fromCartographicArray(cartArray);
-        if (e0 === undefined) {
-            e0 = e1;
-        }
-        else {
-            var west = Math.min(e0.west, e1.west);
-            var south = Math.min(e0.south, e1.south);
-            var east = Math.max(e0.east, e1.east);
-            var north = Math.max(e0.north, e1.north);
-            e0 = new Rectangle(west, south, east, north);
+    for (var t = 0; t < dates.length; t++) {
+        for (var i = 0; i < objects.length; i++) {
+            var cArray;
+            if (objects[i].positions) {
+                cArray = objects[i].positions.getValue(dates[t]);
+            }
+            else if (objects[i].position) {
+                cArray = [objects[i].position.getValue(dates[t])];
+            }
+            if (!defined(cArray) || !defined(cArray[0])) {
+                continue;
+            }
+            var cartArray = Ellipsoid.WGS84.cartesianArrayToCartographicArray(cArray);
+            var e1 = Rectangle.fromCartographicArray(cartArray);
+            if (e0 === undefined) {
+                e0 = e1;
+            }
+            else {
+                var west = Math.min(e0.west, e1.west);
+                var south = Math.min(e0.south, e1.south);
+                var east = Math.max(e0.east, e1.east);
+                var north = Math.max(e0.north, e1.north);
+                e0 = new Rectangle(west, south, east, north);
+            }
         }
     }
     return e0;
@@ -2226,8 +2206,8 @@ function getCesiumColor(clr) {
 */
 GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
     //set default layer styles
-    if (layer.style === undefined) {
-        var style = {line: {}, point: {}, polygon: {}, table: {}};
+    if (layer.style === undefined || layer.style.line) {
+        var style = layer.style || {line: {}, point: {}, polygon: {}, table: {}};
         style.line.color = getRandomColor(line_palette, layer.name);
         style.line.width = 2;
         style.point.color = getRandomColor(point_palette, layer.name);
@@ -2279,79 +2259,45 @@ GeoDataCollection.prototype.addGeoJsonLayer = function(geojson, layer) {
         layer.extent = _getGeoJsonExtent(geojson);
     }
     
-    if (this.map === undefined) {
-        //create the object
-        var newDataSource = new GeoJsonDataSource(name);
+    var newDataSource = new GeoJsonDataSource(name);
 
-        newDataSource.load(geojson).then(function() {
-            var entities = newDataSource.entities.entities;
+    newDataSource.load(geojson).then(function() {
+        var entities = newDataSource.entities.entities;
 
-            for (var i = 0; i < entities.length; ++i) {
-                var entity = entities[i];
-                var material;
+        for (var i = 0; i < entities.length; ++i) {
+            var entity = entities[i];
+            var material;
 
-                //update default point/line/polygon
-                var point = entity.point;
-                if (defined(point)) {
-                    point.color = new ConstantProperty(getCesiumColor(layer.style.point.color));
-                    point.pixelSize = new ConstantProperty(layer.style.point.size);
-                    point.outlineColor = new ConstantProperty(Color.BLACK);
-                    point.outlineWidth = new ConstantProperty(1);
-                }
-
-                var polyline = entity.polyline;
-                if (defined(polyline)) {
-                    material = new ColorMaterialProperty();
-                    material.color = new ConstantProperty(getCesiumColor(layer.style.line.color));
-                    polyline.material = material;
-                    polyline.width = new ConstantProperty(layer.style.line.width);
-                }
-
-                var polygon = entity.polygon;
-                if (defined(polygon)) {
-                    polygon.fill = new ConstantProperty(layer.style.polygon.fill);
-                    polygon.outline = new ConstantProperty(true);
-
-                    material = new ColorMaterialProperty();
-                    material.color = new ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
-                    polygon.material = material;
-                }
+            //update default point/line/polygon
+            var point = entity.point;
+            if (defined(point)) {
+                point.color = new ConstantProperty(getCesiumColor(layer.style.point.color));
+                point.pixelSize = new ConstantProperty(layer.style.point.size);
+                point.outlineColor = new ConstantProperty(Color.BLACK);
+                point.outlineWidth = new ConstantProperty(1);
             }
-        });
-        this.dataSourceCollection.add(newDataSource);
-            //add it as a layer
-        layer.dataSource = newDataSource;
-    }
-    else {
-        var geoJsonStyle = {
-            "color": layer.style.line.color.toCssColorString(),
-            "weight": layer.style.line.width,
-            "opacity": 0.9
-        };
 
-        var geojsonMarkerOptions = {
-            radius: layer.style.point.size / 2.0,
-            fillColor: layer.style.point.color.toCssColorString(),
-            fillOpacity: 0.9,
-            color: "#000",
-            weight: 1,
-            opacity: 0.9
-        };
-
-/*        
-         // icons will show up for leaflet print, but unable to set color
-        var geojsonIcon = L.icon({
-            iconUrl: 'images/pow32.png'
-        });
-*/
-        // GeoJSON
-        layer.primitive = L.geoJson(geojson, {
-            style: geoJsonStyle,
-            pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, geojsonMarkerOptions);
+            var polyline = entity.polyline;
+            if (defined(polyline)) {
+                material = new ColorMaterialProperty();
+                material.color = new ConstantProperty(getCesiumColor(layer.style.line.color));
+                polyline.material = material;
+                polyline.width = new ConstantProperty(layer.style.line.width);
             }
-        }).addTo(this.map);
-    }
+
+            var polygon = entity.polygon;
+            if (defined(polygon)) {
+                polygon.fill = new ConstantProperty(layer.style.polygon.fill);
+                polygon.outline = new ConstantProperty(true);
+
+                material = new ColorMaterialProperty();
+                material.color = new ConstantProperty(getCesiumColor(layer.style.polygon.fillcolor));
+                polygon.material = material;
+            }
+        }
+    });
+    this.dataSourceCollection.add(newDataSource);
+    layer.dataSource = newDataSource;
     return this.add(layer);
 };
 
