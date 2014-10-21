@@ -123,7 +123,7 @@ describe('WebMapServiceDataSourceViewModel', function() {
         expect(wmsViewModel.metadataUrl.indexOf('?')).toBe(0);
         expect(wmsViewModel.url).toBe('');
         expect(wmsViewModel.layers).toBe('');
-        expect(wmsViewModel.parameters.transparent).toBe(true);
+        expect(wmsViewModel.parameters).toBeUndefined();
         expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(true);
         expect(wmsViewModel.getFeatureInfoAsXml).toBe(true);
     });

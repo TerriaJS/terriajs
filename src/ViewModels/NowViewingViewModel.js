@@ -177,8 +177,9 @@ NowViewingViewModel.prototype.raise = function(item, index) {
  * is nonsensical to move this item down (e.g. it is already at the bottom), this method does nothing.
  *
  * @param {GeoDataItemViewModel} item The item to lower.
+ * @param {Number} [index] The index of the item of the list, if it is already known.
  */
-NowViewingViewModel.prototype.lower = function(item) {
+NowViewingViewModel.prototype.lower = function(item, index) {
     if (defined(index)) {
         if (this.items[index] !== item) {
             throw new DeveloperError('The provided index is not correct.');

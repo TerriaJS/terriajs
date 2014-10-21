@@ -152,12 +152,12 @@ GeoDataItemViewModel.prototype.updateFromJson = function(json) {
  * Serializes the data item to JSON.
  *
  * @param {Object} [options] Object with the following properties:
- * @param {Boolean} [options.enabledItemsOnly=true] true if only enabled data items (and their groups) should be serialized,
+ * @param {Boolean} [options.enabledItemsOnly=false] true if only enabled data items (and their groups) should be serialized,
  *                  or false if all data items should be serialized.
  * @param {GeoDataItemViewModel[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
  *        all of the data items that were not serialized because they were not enabled.  The array will be empty if
  *        options.enabledItemsOnly is false.
- * @param {Boolean} [options.skipItemsWithLocalData=true] true if items with a serializable 'data' property should be skipped entirely.
+ * @param {Boolean} [options.skipItemsWithLocalData=false] true if items with a serializable 'data' property should be skipped entirely.
  *                  This is useful to avoid creating a JSON data structure with potentially very large embedded data.
  * @param {GeoDataItemViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
@@ -167,14 +167,14 @@ GeoDataItemViewModel.prototype.updateFromJson = function(json) {
 GeoDataItemViewModel.prototype.serializeToJson = function(options) {
     options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
-    if (defaultValue(options.enabledItemsOnly, true) && this.isEnabled === false) {
+    if (defaultValue(options.enabledItemsOnly, false) && this.isEnabled === false) {
         if (defined(options.itemsSkippedBecauseTheyAreNotEnabled)) {
             options.itemsSkippedBecauseTheyAreNotEnabled.push(this);
         }
         return undefined;
     }
 
-    if (defaultValue(options.skipItemsWithLocalData, true) && defined(this.data)) {
+    if (defaultValue(options.skipItemsWithLocalData, false) && defined(this.data)) {
         if (defined(options.itemsSkippedBecauseTheyHaveLocalData)) {
             options.itemsSkippedBecauseTheyHaveLocalData.push(this);
         }

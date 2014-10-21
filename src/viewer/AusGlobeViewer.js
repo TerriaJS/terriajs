@@ -143,6 +143,7 @@ var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
                     that.captureCanvasCallback = function (dataUrl) {
                         var serializeOptions = {
                             enabledItemsOnly: true,
+                            skipItemsWithLocalData: true,
                             itemsSkippedBecauseTheyHaveLocalData: []
                         };
                         var jsonCatalog = that.catalog.serializeToJson(serializeOptions);
