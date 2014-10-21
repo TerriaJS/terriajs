@@ -541,6 +541,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         targetFrameRate : 40
     };
 
+    // Workaround for Firefox bug with WebGL and printing:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
     if (FeatureDetection.isFirefox()) {
         options.contextOptions = {webgl : {preserveDrawingBuffer : true}};
     }
