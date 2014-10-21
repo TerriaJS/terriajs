@@ -311,6 +311,14 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.context = context;
 
+    this.context.error.addEventListener(function(catalogError) {
+        var message = new PopupMessage({
+            container : document.body,
+            title: catalogError.title,
+            message: catalogError.message
+        });
+    });
+
     this.catalog = catalog;
 
     this.initialCamera = config.initialCamera;

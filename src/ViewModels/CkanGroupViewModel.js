@@ -18,6 +18,7 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
+var GeoDataCatalogError = require('./GeoDataCatalogError');
 var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
@@ -269,7 +270,7 @@ function filterBasedOnGetCapabilitiesResponse(viewModel, wmsLayersSource, resour
         if (layerSource.Name) {
             var resource = resources[layerSource.Name];
             if (resource) {
-                if (!defined(layerSource.MaxScaleDenominator) || layerSource.MaxScaleDenominator >= viewModel.minimumMaxScaleDenominator) {
+                if (!defined(viewModel.minimumMaxScaleDenominator) || !defined(layerSource.MaxScaleDenominator) || layerSource.MaxScaleDenominator >= viewModel.minimumMaxScaleDenominator) {
                     resource.__filtered = false;
                 }
             }

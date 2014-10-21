@@ -144,9 +144,7 @@ function getCapabilities(viewModel) {
 
         addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
     }, function(e) {
-        // TODO: view models should not create UI elements directly like this.
-        var message =new PopupMessage({
-            container: document.body,
+        viewModel.context.raiseEvent(new GeoDataCatalogError({
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WMS server.  \
@@ -160,7 +158,8 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
 problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-        });
+        }));
+
         viewModel.isOpen = false;
         viewModel._loadedUrl = undefined;
     });
