@@ -106,17 +106,6 @@ var AusGlobeViewer = function(geoDataManager) {
         menuItems : [
             {
                 svg : {
-                    path : 'm 23.1253,20.9122 5.475,-6.675 H 25.0699 C 24.2257,9.0502 19.7377,5.0872 14.3125,5.0872 8.2855,5.0872 3.3997,9.973 3.3997,16 c 0,6.027 4.8858,10.9128 10.9128,10.9128 2.7456,0 5.2476,-1.0218 7.1658,-2.6958 l -2.487,-3.0042 c -1.2414,1.1154 -2.8782,1.8 -4.6794,1.8 -3.873,0 -7.0128,-3.1392 -7.0128,-7.0128 0,-3.8736 3.1392,-7.0128 7.0128,-7.0128 3.2628,0 5.9964,2.2314 6.7782,5.25 h -3.2904 l 5.3256,6.675 z',
-                    width : 32,
-                    height : 32
-                },
-                tooltip : 'Refresh',
-                callback : function() {
-                    window.history.go(0);
-                }
-            },
-            {
-                svg : {
                     path : 'M 30.1,5.5 H 1.9 C 1.2376,5.5 0.7,6.0376 0.7,6.7 v 18.6 c 0,0.6624 0.5376,1.2 1.2,1.2 h 28.2 c 0.6624,0 1.2,-0.5376 1.2,-1.2 V 6.7 c 0,-0.6624 -0.537,-1.2 -1.2,-1.2 z m -12,18 c 0,0.6624 -0.5376,1.2 -1.2,1.2 H 3.7 c -0.6624,0 -1.2,-0.5376 -1.2,-1.2 v -7.2 c 0,-0.6624 0.5376,-1.2 1.2,-1.2 h 13.2 c 0.6624,0 1.2,0.5376 1.2,1.2 v 7.2 z',
                     width : 32,
                     height : 32
@@ -555,7 +544,13 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         targetFrameRate : 40
     };
 
-    //create CesiumViewer
+    // Workaround for Firefox bug with WebGL and printing:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
+    if (FeatureDetection.isFirefox()) {
+        options.contextOptions = {webgl : {preserveDrawingBuffer : true}};
+    }
+
+     //create CesiumViewer
     var viewer = new Viewer(container, options);
     viewer.extend(viewerEntityMixin);
 
