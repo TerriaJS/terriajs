@@ -253,9 +253,9 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
     var width = Property.getValueOrDefault(markerGraphics._width, time, undefined);
     var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
     var scale = Property.getValueOrDefault(markerGraphics._scale, time, 1.0);
-    var verticalOrigin = Property.getValueOrDefault(markerGraphics._verticalOrigin, time, undefined);
-    var horizontalOrigin = Property.getValueOrDefault(markerGraphics._horizontalOrigin, time, undefined);
-    var pixelOffset = Property.getValueOrDefault(markerGraphics._pixelOffset, time, new Cartesian2(0,0));
+    var verticalOrigin = Property.getValueOrDefault(markerGraphics._verticalOrigin, time, 0);
+    var horizontalOrigin = Property.getValueOrDefault(markerGraphics._horizontalOrigin, time, 0);
+    var pixelOffset = Property.getValueOrDefault(markerGraphics._pixelOffset, time, Cartesian2.ZERO);
 
     var iconOptions = {
         color: color.toCssColorString(),
@@ -336,9 +336,9 @@ LeafletGeomVisualizer.prototype._updateLabel = function(entity, time) {
     var font = Property.getValueOrDefault(labelGraphics._font, time, undefined);
     var scale = Property.getValueOrDefault(labelGraphics._scale, time, 1.0);
     var fillColor = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
-    var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, undefined);
-    var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, undefined);
-    var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, new Cartesian2(0,0));
+    var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, 0);
+    var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, 0);
+    var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, Cartesian2.ZERO);
 
     var iconOptions = {
         text: text,
