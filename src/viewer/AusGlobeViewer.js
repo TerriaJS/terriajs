@@ -802,6 +802,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //redisplay data
         this.map = map;
         this.context.leafletMap = map;
+        this.context.cesiumScene = undefined;
+        this.context.cesiumViewer = undefined;
 
         this.captureCanvas = function() {
             var that = this;
@@ -843,8 +845,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
-        this.scene = this.context.cesiumScene = this.viewer.scene;
+        this.scene = this.viewer.scene;
+        this.context.cesiumScene = this.scene;
         this.context.cesiumViewer = this.viewer;
+        this.context.leafletMap = undefined;
         this.frameChecker = new FrameChecker();
 
         // Make sure we re-render when data sources or imagery layers are added or removed.

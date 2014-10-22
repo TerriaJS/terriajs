@@ -4,6 +4,7 @@
 
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
@@ -191,7 +192,7 @@ NowViewingViewModel.prototype.lower = function(item, index) {
         }
     }
 
-    if (inedx === this.items.length - 1) {
+    if (index === this.items.length - 1) {
         return;
     }
 

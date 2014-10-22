@@ -228,65 +228,37 @@ GeoJsonDataSourceViewModel.prototype._hideInCesium = function() {
 };
 
 GeoJsonDataSourceViewModel.prototype._enableInLeaflet = function() {
-    if (defined(this._leafletLayer)) {
-        throw new DeveloperError('This data source is already enabled.');
-    }
-
-    var pointColor = getRandomColor(pointPalette, this.name);
-    var lineColor = getRandomColor(lineAndFillPalette, this.name);
-    var fillColor = Color.clone(lineColor);
-    fillColor.alpha = 0.75;
-
-    var pointSize = 10;
-    var lineWidth = 2;
-
-    var geoJsonStyle = {
-        "color": lineColor.toCssColorString(),
-        "weight": lineWidth,
-        "opacity": 0.9
-    };
-
-    var geojsonMarkerOptions = {
-        radius: pointSize / 2.0,
-        fillColor: pointColor.toCssColorString(),
-        fillOpacity: 0.9,
-        color: "#000",
-        weight: 1,
-        opacity: 0.9
-    };
-
-    this._leafletLayer = L.geoJson(undefined, {
-        style: geoJsonStyle,
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng, geojsonMarkerOptions);
-        }
-    });
-
-    loadGeoJsonInLeaflet(this);
+    this._enableInCesium();
 };
 
 GeoJsonDataSourceViewModel.prototype._disableInLeaflet = function() {
-    if (!defined(this._leafletLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._leafletLayer = undefined;
+    this._disableInCesium();
 };
 
 GeoJsonDataSourceViewModel.prototype._showInLeaflet = function() {
-    if (!defined(this._leafletLayer)) {
+    if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this.context.leafletMap.addLayer(this._leafletLayer);
+    var dataSources = this.context.leafletMap.dataSources;
+    if (dataSources.contains(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is already shown.');
+    }
+
+    dataSources.add(this._cesiumDataSource);
 };
 
 GeoJsonDataSourceViewModel.prototype._hideInLeaflet = function() {
-    if (!defined(this._leafletLayer)) {
+    if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this.context.leafletMap.removeLayer(this._leafletLayer);
+    var dataSources = this.context.leafletMap.dataSources;
+    if (!dataSources.contains(this._cesiumDataSource)) {
+        throw new DeveloperError('This data source is not shown.');
+    }
+
+    dataSources.remove(this._cesiumDataSource, false);
 };
 
 function updateViewModelFromData(viewModel, geoJson) {
