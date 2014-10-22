@@ -439,11 +439,25 @@ these extensions in order for National Map to know how to load it.'
         for (var i = 0; i < files.length; ++i) {
             var file = files[i];
             ga('send', 'event', 'uploadFile', 'dragDrop', file.name);
-            addFile(file);
 
-            // if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
-            //     when(readJson(file), loadCollection);
-            // }
+            if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
+                readJson(file).then(function(json) {
+                    if (json.catalog) {
+                        that.catalog.updateFromJson(json.catalog);
+                    }
+
+                    if (json.services) {
+                        // TODO: update the list of services rather than outright replacing it.
+                        that._viewer.services = json.services;
+                    }
+
+                    if (!json.catalog && !json.services) {
+                        addFile(file);
+                    }
+                });
+            } else {
+                addFile(file);
+            }
         }
     }
 
