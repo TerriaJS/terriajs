@@ -28,6 +28,7 @@ var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var readText = require('../readText');
 var runLater = require('../runLater');
 
 /**
@@ -53,10 +54,9 @@ var CsvDataSourceViewModel = function(context, url) {
     this.url = url;
 
     /**
-     * Gets or sets the CSV data, represented as an XML Document (not a string) or as a binary Blob.
-     * This property may also be a promise that will resolve to the CSV data.
+     * Gets or sets the CSV data, represented as a binary Blob, a string, or a Promise for one of those things.
      * This property is observable.
-     * @type {Document|Blob|Promise}
+     * @type {Blob|String|Promise}
      */
     this.data = undefined;
 
@@ -129,8 +129,12 @@ CsvDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this.data)) {
         var that = this;
         when(this.data, function(data) {
-            if (data instanceof Document) {
-                dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
+            if (data instanceof Blob) {
+                readText(data).then(function(text) {
+                    dataSource.loadText(text);
+                });
+            } else if (data instanceof String) {
+                dataSource.loadText(data);
             } else {
                 that.context.error.raiseEvent(new GeoDataCatalogError({
                     sender: that,

@@ -27,6 +27,7 @@ var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var readJson = require('../readJson');
 var runLater = require('../runLater');
 
 var lineAndFillPalette = {
@@ -77,14 +78,20 @@ var GeoJsonDataSourceViewModel = function(context, url) {
     this.url = url;
 
     /**
-     * Gets or sets the GeoJSON data, represented as an object literal (not a string).  This property
-     * may also be a promise that will resolve to the GeoJSON data.
+     * Gets or sets the GeoJSON data, represented as a binary blob, object literal, or a Promise for one of those things.
      * This property is observable.
-     * @type {Object|Promise}
+     * @type {Blob|Object|Promise}
      */
     this.data = undefined;
 
-    knockout.track(this, ['url', 'data']);
+    /**
+     * Gets or sets the URL from which the {@link GeoJsonDataSourceViewModel#data} was obtained.  This will be used
+     * to resolve any resources linked in the GeoJSON file, if any.
+     * @type {String}
+     */
+    this.dataSourceUrl = undefined;
+
+    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
 GeoJsonDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
@@ -147,11 +154,20 @@ GeoJsonDataSourceViewModel.prototype.load = function() {
         that._loadedUrl = that.url;
         that._loadedData = that.data;
 
-        if (that.data) {
-            when(that.data, function(json) {
-                that.data = json;
-                updateViewModelFromData(that, json);
-                that.isLoading = false;
+        if (defined(that.data)) {
+            when(that.data, function(data) {
+                var promise;
+                if (data instanceof Blob) {
+                    promise = readJson(data);
+                } else {
+                    promise = data;
+                }
+
+                when(promise, function(json) {
+                    that.data = json;
+                    updateViewModelFromData(that, json);
+                    that.isLoading = false;
+                });
             }).otherwise(function() {
                 that.isLoading = false;
             });
