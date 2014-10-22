@@ -27,6 +27,7 @@ var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var readXml = require('../readXml');
 var runLater = require('../runLater');
 
 var lineAndFillPalette = {
@@ -72,10 +73,9 @@ var KmlDataSourceViewModel = function(context, url) {
     this.url = url;
 
     /**
-     * Gets or sets the KML or KMZ data, represented as an XML Document (not a string) or as a binary Blob.
-     * This property may also be a promise that will resolve to the KML or KMZ data.
+     * Gets or sets the KML or KMZ data, represented as a binary Blob, DOM Document, or a Promise for one of those things.
      * This property is observable.
-     * @type {Document|Blob|Promise}
+     * @type {Blob|Document|Promise}
      */
     this.data = undefined;
 
@@ -139,6 +139,8 @@ defineProperties(KmlDataSourceViewModel.prototype, {
 KmlDataSourceViewModel.prototype.load = function() {
 };
 
+var kmzRegex = /\.kmz$/i;
+
 KmlDataSourceViewModel.prototype._enableInCesium = function() {
     if (defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is already enabled.');
@@ -152,7 +154,13 @@ KmlDataSourceViewModel.prototype._enableInCesium = function() {
             if (data instanceof Document) {
                 dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
             } else if (data instanceof Blob) {
-                dataSource.loadKmz(data, proxyUrl(that, that.dataSourceUrl));
+                if (that.dataSourceUrl && that.dataSourceUrl.match(kmzRegex)) {
+                    dataSource.loadKmz(data, proxyUrl(that, that.dataSourceUrl));
+                } else {
+                    readXml(data).then(function(xml) {
+                        dataSource.load(xml, proxyUrl(that, that.dataSourceUrl));
+                    });
+                }
             } else {
                 that.context.error.raiseEvent(new GeoDataCatalogError({
                     sender: that,

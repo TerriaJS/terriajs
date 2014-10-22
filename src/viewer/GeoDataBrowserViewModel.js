@@ -366,7 +366,8 @@ these extensions in order for National Map to know how to load it.'
         }
 
         newViewModel.name = name;
-        newViewModel.data = readJson(file);
+        newViewModel.data = file;
+        newViewModel.dataSourceUrl = file.name;
 
         // TODO: Remove this, it only exists to make the UI happy.
         var group = new GeoDataGroupViewModel(that.catalog.context);

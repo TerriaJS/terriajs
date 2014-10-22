@@ -191,7 +191,7 @@ GeoJsonDataSourceViewModel.prototype._enableInCesium = function() {
     }
 
     this._cesiumDataSource = new GeoJsonDataSource(this.name);
-    loadGeoJsonInCesium(this);
+    loadGeoJson(this);
 };
 
 GeoJsonDataSourceViewModel.prototype._disableInCesium = function() {
@@ -298,7 +298,7 @@ function updateViewModelFromData(viewModel, geoJson) {
 
     viewModel._readyData = geoJson;
 
-    loadGeoJsonInCesium(viewModel);
+    loadGeoJson(viewModel);
 }
 
 function nameIsDerivedFromUrl(name, url) {
@@ -323,7 +323,7 @@ function proxyUrl(context, url) {
     return url;
 }
 
-function loadGeoJsonInCesium(viewModel) {
+function loadGeoJson(viewModel) {
     if (!(viewModel._cesiumDataSource instanceof GeoJsonDataSource) || !defined(viewModel._readyData)) {
         return;
     }

@@ -5,12 +5,14 @@ var readText = require('./readText');
 
 var when = require('../third_party/cesium/Source/ThirdParty/when');
 
-function readJson(file) {
+var parser = new DOMParser();
+
+function readXml(file) {
     return when(readText(file), function(result) {
-        return JSON.parse(result);
+        return parser.parseFromString(result, 'application/xml');
     }, function(e) {
         throw e;
     });
 }
 
-module.exports = readJson;
+module.exports = readXml;
