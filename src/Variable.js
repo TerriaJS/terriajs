@@ -19,131 +19,132 @@ var VarType = require('./VarType');
 */
 var Variable = function () {
     this.vals = [];
-    this.fNoData = 1e-34;
-    this.min = undefined;
-    this.max = undefined;
-    this.type = undefined;
-    this.time_var = undefined;
-    this.enum_list = undefined;
+    this.varType = undefined;
+    this.noData = 1e-34;
+    this.minVal = undefined;
+    this.maxVal = undefined;
+    this.timeVar = undefined;
+    this.enumList = undefined;
 };
 
 Variable.prototype._calculateVarMinMax = function () {
     var vals = this.vals;
-    var min_val = Number.MAX_VALUE;
-    var max_val = -Number.MAX_VALUE;
+    var minVal = Number.MAX_VALUE;
+    var maxVal = -Number.MAX_VALUE;
     for (var i = 0; i < vals.length; i++) {
         if (vals[i] === undefined || vals[i] === null) {
-            vals[i] = this.fNoData;
+            vals[i] = this.noData;
         }
         else {
-            if (min_val > vals[i]) {
-                min_val = vals[i];
+            if (minVal > vals[i]) {
+                minVal = vals[i];
             }
-            if (max_val < vals[i]) {
-                max_val = vals[i];
+            if (maxVal < vals[i]) {
+                maxVal = vals[i];
             }
         }
     }
-    this.min = min_val;
-    this.max = max_val;
+    this.minVal = minVal;
+    this.maxVal = maxVal;
 };
 
 Variable.prototype._calculateTimeMinMax = function () {
     var vals = this.vals;
-    var min_val = vals[0];
-    var max_val = vals[0];
+    var minVal = vals[0];
+    var maxVal = vals[0];
     for (var i = 1; i < vals.length; i++) {
-        if (JulianDate.greaterThan(min_val, vals[i])) {
-            min_val = vals[i];
+        if (JulianDate.greaterThan(minVal, vals[i])) {
+            minVal = vals[i];
         }
-        if (JulianDate.lessThan(max_val, vals[i])) {
-            max_val = vals[i];
+        if (JulianDate.lessThan(maxVal, vals[i])) {
+            maxVal = vals[i];
         }
     }
-    this.min = min_val;
-    this.max = max_val;
+    this.minVal = minVal;
+    this.maxVal = maxVal;
 };
-
-function _isNumber(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
-function _swapDateFormat(v) {
-    var part = v.split(/[/-]/);
-    if (part.length === 3) {
-        v = part[1] + '/' + part[0] + '/' + part[2];
-    }
-    return v;
-}
 
 /**
 * Convert input time variable to Cesium Time variable
 *
 */
 Variable.prototype.processTimeVar = function () {
-    if (this.type !== VarType.TIME) {
+    if (this.varType !== VarType.TIME) {
         return;
     }
+    
+    function _isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    function _swapDateFormat(v) {
+        var part = v.split(/[/-]/);
+        if (part.length === 3) {
+            v = part[1] + '/' + part[0] + '/' + part[2];
+        }
+        return v;
+    }
+
     //time parsing functions
-    function time_string(v) { //  9/2/94 0:56
+    function timeString(v) { //  9/2/94 0:56
         return JulianDate.fromDate(new Date(v));
     }
-    function time_excel(v) {   // 40544.4533
+    function timeExcel(v) {   // 40544.4533
         var date = JulianDate.fromDate(new Date('January 1, 1970 0:00:00'));
         date = JulianDate.addDays(date, Math.floor(v) - 25569.0, date); //account for offset to 1900
         date = JulianDate.addSeconds(date, (v - Math.floor(v)) * 60 * 60 * 24, date);
         return date;
     }
-    function time_utc(v) {   //12321231414434
+    function timeUtc(v) {   //12321231414434
         return JulianDate.fromDate(Date.setTime(v));
     }
-    function time_sosus(v) {   //19912410952050
-        var date_str = v.toString();
-        var year = parseInt(date_str.substring(0, 4), 10);
-        var dayofyear = parseInt(date_str.substring(4, 7), 10);
-        if (date_str.length !== 14 || year < 1950 || year > 2050 || dayofyear > 366) {
+    function timeSosus(v) {   //19912410952050
+        var dateString = v.toString();
+        var year = parseInt(dateString.substring(0, 4), 10);
+        var dayofyear = parseInt(dateString.substring(4, 7), 10);
+        if (dateString.length !== 14 || year < 1950 || year > 2050 || dayofyear > 366) {
             return new JulianDate(0.0, 0.0);
         }
         var d = new Date();
         d.setUTCFullYear(year);
-        d.setUTCHours(date_str.substring(7, 9), date_str.substring(9, 11), date_str.substring(11, 13));
+        d.setUTCHours(dateString.substring(7, 9), dateString.substring(9, 11), dateString.substring(11, 13));
         var date = JulianDate.addDays(JulianDate.fromDate(d), dayofyear, new JulianDate());
         return date;
     }
     //create new Cessium time variable to attach to the variable
-    var time_var = new Variable();
+    var timeVar = new Variable();
     var vals = this.vals;
     //select time parsing function
     var parseFunc;
     if (parseInt(vals[0], 10) > 500000) {
-        if (time_sosus(vals[0]).dayNumber !== 0) {
-            parseFunc = time_sosus;
+        if (timeSosus(vals[0]).dayNumber !== 0) {
+            parseFunc = timeSosus;
         }
         else {
-            parseFunc = time_utc;
+            parseFunc = timeUtc;
         }
     }
     else if (_isNumber(vals[0])) {
-        parseFunc = time_excel;
+        parseFunc = timeExcel;
     }
     else {
-        parseFunc = time_string;
+        parseFunc = timeString;
     }
     //parse the time values
     var bSuccess = false;
     try {
         for (var i = 0; i < vals.length; i++) {
-            time_var.vals[i] = parseFunc(vals[i]);
+            timeVar.vals[i] = parseFunc(vals[i]);
         }
         bSuccess = true;
     }
     catch (err) {
-        if (parseFunc === time_string) {
+        if (parseFunc === timeString) {
             console.log('Trying swap of day and month in date strings');
-            time_var.vals = [];
+            timeVar.vals = [];
             try {
                 for (var i = 0; i < vals.length; i++) {
-                    time_var.vals[i] = parseFunc(_swapDateFormat(vals[i]));
+                    timeVar.vals[i] = parseFunc(_swapDateFormat(vals[i]));
                 }
                 bSuccess = true;
             }
@@ -152,38 +153,38 @@ Variable.prototype.processTimeVar = function () {
         }
     }
     if (bSuccess) {
-        time_var._calculateTimeMinMax();
-        this.time_var = time_var;
+        timeVar._calculateTimeMinMax();
+        this.timeVar = timeVar;
     }
     else {
-        this.type = VarType.SCALAR;
+        this.varType = VarType.SCALAR;
         console.log('Unable to parse time variable');
     }
 };
 
 
 /**
-* Convert input enum variable to values and enum_list
+* Convert input enum variable to values and enumList
 *
 */
 Variable.prototype.processEnumVar = function () {
-    if (this.type !== VarType.ENUM) {
+    if (this.varType !== VarType.ENUM) {
         return;
     }
     //create new enum list for the variable
-    var enum_list = [];
+    var enumList = [];
     for (var i = 0; i < this.vals.length; i++) {
-        if (this.vals[i] === this.fNoData) {
+        if (this.vals[i] === this.noData) {
             this.vals[i] = 'undefined';
         }
-        var n = enum_list.indexOf(this.vals[i]);
+        var n = enumList.indexOf(this.vals[i]);
         if (n === -1) {
-            n = enum_list.length;
-            enum_list.push(this.vals[i]);
+            n = enumList.length;
+            enumList.push(this.vals[i]);
         }
         this.vals[i] = parseFloat(n);
     }
-    this.enum_list = enum_list;
+    this.enumList = enumList;
     this._calculateVarMinMax();
 };
 
@@ -196,7 +197,7 @@ Variable.prototype.processEnumVar = function () {
 */
 Variable.prototype.guessVarType = function (name) {
     //functions to try to figure out position and time variables.
-    function match_col(name, hints) {
+    function matchColumn(name, hints) {
         name = name.toLowerCase();
         for (var h in hints) {
             if (hints.hasOwnProperty(h)) {
@@ -209,19 +210,19 @@ Variable.prototype.guessVarType = function (name) {
         return false;
     }
 
-    var hint_set = [
+    var hintSet = [
         { hints: ['lon'], type: VarType.LON },
         { hints: ['lat'], type: VarType.LAT },
         { hints: ['depth', 'height', 'elevation'], type: VarType.ALT },
         { hints: ['time', 'date'], type: VarType.TIME }];
 
-    for (var vt in hint_set) {
-        if (match_col(name, hint_set[vt].hints)) {
-            this.type = hint_set[vt].type;
+    for (var vt in hintSet) {
+        if (matchColumn(name, hintSet[vt].hints)) {
+            this.varType = hintSet[vt].type;
             return;
         }
     }
-    this.type = VarType.SCALAR;
+    this.varType = VarType.SCALAR;
 };
 
 /**
