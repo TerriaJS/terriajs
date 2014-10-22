@@ -434,7 +434,7 @@ function reprojectToGeographic(geoJson) {
         code = undefined;
     }
 
-    if (code !== 'EPSG:4326' && code !== 'EPSG:4283') {
+    if (defined(code) && code !== 'EPSG:4326' && code !== 'EPSG:4283') {
         filterValue(
             geoJson,
             'coordinates',
