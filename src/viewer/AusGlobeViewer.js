@@ -524,6 +524,8 @@ AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer 
 
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
+    var that = this;
+    
     var terrainProvider = new CesiumTerrainProvider({
             url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
         });
@@ -546,8 +548,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         targetFrameRate : 40
     };
 
-    // Workaround for Firefox bug with WebGL and printing:
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
     if (FeatureDetection.isFirefox()) {
         options.contextOptions = {webgl : {preserveDrawingBuffer : true}};
     }
@@ -562,6 +562,18 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         if (viewer.scene.terrainProvider instanceof CesiumTerrainProvider) {
             console.log('Switching to EllipsoidTerrainProvider.');
             viewer.scene.terrainProvider = new EllipsoidTerrainProvider();
+            if (!defined(that.TerrainMessageViewed)) {
+                var msg = new PopupMessage({
+                    container : document.body,
+                    title : 'Terrain Server Not Responding',
+                    message : '\
+The terrain server is not responding at the moment.  You can still use all the features of National \
+Map but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
+again later and the terrain server should be responding as expected.  If the issue persists, please contact \
+us via email at nationalmap@lists.nicta.com.au.'
+                });
+                that.TerrainMessageViewed = true;
+            }
         }
     });
 
@@ -603,8 +615,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     });
 */
 
-    var that = this;
-    
     var inputHandler = viewer.screenSpaceEventHandler;
 
     // Add double click zoom
