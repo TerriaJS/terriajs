@@ -5,6 +5,7 @@
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
@@ -86,11 +87,11 @@ var NavigationWidget = function(viewer, container) {
             } else if (that._viewModel.isTiltModerate) {
                 that._viewModel.isTiltModerate = false;
                 that._viewModel.isTiltExtreme = true;
-                animateToTilt(that._viewer.scene, 10.0);
+                animateToTilt(that._viewer.scene, 80.0);
             } else if (that._viewModel.isTiltExtreme) {
                 that._viewModel.isTiltExtreme = false;
                 that._viewModel.isTiltNone = true;
-                animateToTilt(that._viewer.scene, 90.0);
+                animateToTilt(that._viewer.scene, 0.0);
             }
         }),
         showTilt : true,
@@ -119,10 +120,24 @@ defineProperties(NavigationWidget.prototype, {
 });
 
 function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
-    durationMilliseconds = defaultValue(durationMilliseconds, 200);
+    durationMilliseconds = defaultValue(durationMilliseconds, 500);
 
-    var startTilt = scene.camera.tilt;
+        //get focus and camera position
+    var focus = getCameraFocus(scene);
+    var campos = Cartesian3.subtract(scene.camera.position, focus, cartesian3Scratch);
+
+        //get Tilt
+    var startTilt = Cartesian3.angleBetween(campos, focus);
     var endTilt = CesiumMath.toRadians(targetTiltDegrees);
+    var curTilt = 0;
+
+        //translate camera reference to focus
+    var trans = Matrix4.fromTranslation(focus);
+    var oldTrans = scene.camera.transform;
+    scene.camera.transform = trans;
+        //save the positon and translate camera in reference to current pos
+    var oldPos = scene.camera.position;
+    scene.camera.position = campos;
 
     var controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
@@ -140,19 +155,25 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
             if (scene.isDestroyed()) {
                 return;
             }
-            scene.camera.tilt = CesiumMath.lerp(startTilt, endTilt, value.time);
-        },
+            var amount = CesiumMath.lerp(startTilt, endTilt, value.time) - (startTilt + curTilt);
+            scene.camera.rotate(scene.camera.right, -amount);
+            curTilt += amount;
+       },
         complete : function() {
             if (controller.isDestroyed()) {
                 return;
             }
             controller.enableInputs = true;
+            scene.camera.position = Cartesian3.add(scene.camera.position, focus, cartesian3Scratch);
+            scene.camera.transform = oldTrans;
         },
         cancel: function() {
             if (controller.isDestroyed()) {
                 return;
             }
             controller.enableInputs = true;
+            scene.camera.position = Cartesian3.add(scene.camera.position, focus, cartesian3Scratch);
+            scene.camera.transform = oldTrans;
         }
     });
 }
