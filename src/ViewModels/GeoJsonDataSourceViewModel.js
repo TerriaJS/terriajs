@@ -156,9 +156,10 @@ GeoJsonDataSourceViewModel.prototype.load = function() {
             });
         } else {
             loadJson(that.url).then(function(json) {
-                updateViewModelFromData(that, json);
                 that.isLoading = false;
+                updateViewModelFromData(that, json);
             }).otherwise(function(e) {
+                that.isLoading = false;
                 that.context.error.raiseEvent(new GeoDataCatalogError({
                     sender: that,
                     title: 'Could not load JSON',

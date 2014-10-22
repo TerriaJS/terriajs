@@ -103,9 +103,9 @@ if (start) {
 
             catalog.isLoading = false;
 
-            var geoDataManager = new GeoDataCollection();
+            var viewer = new AusGlobeViewer(config, context, catalog, json.services);
 
-            var viewer = new AusGlobeViewer(geoDataManager, config, context, catalog);
+            document.getElementById('loadingIndicator').style.display = 'none';
         });
     });
 }

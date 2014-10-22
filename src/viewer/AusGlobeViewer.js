@@ -91,9 +91,7 @@ var LeafletVisualizer = require('../LeafletVisualizer');
 BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
-var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
-    this.geoDataManager = geoDataManager;
-
+var AusGlobeViewer = function(config, context, catalog, services) {
     this._distanceLegendBarWidth = undefined;
     this._distanceLegendLabel = undefined;
 
@@ -172,14 +170,23 @@ var AusGlobeViewer = function(geoDataManager, config, context, catalog) {
                 tooltip : 'Services',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
-                        var request = that.geoDataManager.getShareRequest({
+                        var serializeOptions = {
+                            enabledItemsOnly: true,
+                            skipItemsWithLocalData: false
+                        };
+                        var jsonCatalog = that.catalog.serializeToJson(serializeOptions);
+                        var request = {
+                            version: '0.0.03',
+                            camera: getCameraRect(that.scene, that.map),
                             image: dataUrl,
-                            camera: getCameraRect(that.scene, that.map)
-                        });
-                        var servicesPanel = new ServicesPanel({
-                            request : request,
-                            container : document.body,
-                            geoDataManager : that.geoDataManager
+                            catalog: jsonCatalog
+                        };
+
+                        var sharePanel = new ServicesPanel({
+                            request: request,
+                            container: document.body,
+                            catalog: that.catalog,
+                            services: that.services
                         });
                     };
                     that.captureCanvas();
@@ -274,37 +281,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     
     //TODO: perf test to set environment
 
-    // Event watchers for geoDataManager
-    this.geoDataManager.GeoDataAdded.addEventListener(function(collection, layer) {
-        console.log('Vis Layer Added:', layer.name);
-        layer.zoomTo = collection.zoomTo;
-        that.setCurrentDataset(layer);
-        collection.zoomTo = false;
-    });
-
-    this.geoDataManager.GeoDataRemoved.addEventListener(function(collection, layer) {
-        console.log('Vis Layer Removed:', layer.name);
-        that.setCurrentDataset(undefined);
-    });
-
-    this.geoDataManager.ViewerChanged.addEventListener(function(collection, obj) {
-        console.log('Viewer Changed:', (obj.scene?'Cesium':'Leaflet'));
-        that.scene = obj.scene;
-        that.map = obj.map;
-        that.context.cesiumScene = obj.scene;
-        that.context.cesiumViewer = obj.viewer;
-        that.context.leafletMap = obj.map;
-    });
-
-    this.geoDataManager.ShareRequest.addEventListener(function(collection, request) {
-        console.log('Share Request Event:');
-        var sharePanel = new SharePanel({
-            request : request,
-            container : document.body,
-            geoDataManager : that.geoDataManager
-        });
-    });
-
     this.scene = undefined;
     this.viewer = undefined;
     this.map = undefined;
@@ -320,6 +296,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         });
     });
 
+    this.services = defaultValue(services, []);
     this.catalog = catalog;
 
     this.initialCamera = config.initialCamera;
@@ -327,7 +304,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.geoDataBrowser = new GeoDataBrowser({
         viewer : that,
         container : leftArea,
-        dataManager : geoDataManager,
         mode3d: that.webGlSupported,
         catalog : catalog
     });
@@ -339,10 +315,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         if (that.frameChecker !== undefined) {
             that.frameChecker.forceFrameUpdate();
         }
-    });
-
-    when(that.geoDataManager.loadInitialUrl(window.location), function() {
-        document.getElementById('loadingIndicator').style.display = 'none';
     });
 };
 
@@ -539,7 +511,6 @@ AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer 
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     var options = {
-        dataSources : this.geoDataManager.dataSourceCollection,
         homeButton: false,
         sceneModePicker: false,
         navigationInstructionsInitiallyVisible: false,
@@ -774,7 +745,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.map = map;
         map.clock = new Clock();
-        map.dataSources = this.geoDataManager.dataSourceCollection;
+        map.dataSources = new DataSourceCollection();
 
         map.screenSpaceEventHandler = {
             setInputAction : function() {},
@@ -790,7 +761,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }
         this.dataSourceDisplay = new DataSourceDisplay({
             scene : map,
-            dataSourceCollection : this.geoDataManager.dataSourceCollection,
+            dataSourceCollection : map.dataSources,
             visualizersCallback: this.leafletVisualizer.visualizersCallback
         });
 
@@ -857,7 +828,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             selectFeatureLeaflet(that, e.latlng);
         });
 
-        this.geoDataManager.setViewer({scene: undefined, map: map});
         this.geoDataBrowser.viewModel.map = map;
     }
     else {
@@ -907,9 +877,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
                 that.frameChecker.forceFrameUpdate();
             }
 
-            //capture the scene image right after the render and make
-            //call to the GeoDataManager which saves scene data, which sets an event
-            // which is picked up to launch the share dialog
+            // Capture the scene image right after the render.
+            // With preserveDrawingBuffer: false on the WebGL canvas (the default), we can't rely
+            // on the canvas still having its image once we return from requestAnimationFrame.
             if (that.captureCanvasFlag === true) {
                 that.captureCanvasFlag = false;
                 var dataUrl = that.scene.canvas.toDataURL("image/jpeg");
@@ -923,7 +893,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.updateCameraFromRect(rect, 0);
 
-        this.geoDataManager.setViewer({scene: this.scene, viewer: this.viewer, map: undefined});
         this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);

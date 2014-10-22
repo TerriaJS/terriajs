@@ -7,6 +7,9 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 
 var corsProxy = require('../corsProxy');
+var createGeoDataItemFromType = require('../ViewModels/createGeoDataItemFromType');
+var createGeoDataItemFromUrl = require('../ViewModels/createGeoDataItemFromUrl');
+var GeoDataGroupViewModel = require('../ViewModels/GeoDataGroupViewModel');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
 
@@ -76,11 +79,11 @@ var ServicesPanel = function(options) {
     ';
     wrapper.appendChild(result);
 
-    var services = options.geoDataManager.getServices();
     var viewModel = this._viewModel = {
+        catalog : options.catalog,
         serviceInvoked : knockout.observable(false),
         request : options.request,
-        services : services,
+        services : options.services,
         selectedService : knockout.observable('0'),
         result : knockout.observable('Invoking service...'),
         hasLayer : knockout.observable(false),
@@ -107,20 +110,40 @@ var ServicesPanel = function(options) {
                         if (res.layer !== undefined) {
                             str += '<h3>---------------</h3>';
                             str += 'Click the load button below to load the page from the service.';
-                            viewModel.layer = res.layer;
+
+                            if (res.layer.type === 'DATA') {
+                                viewModel.layer = createGeoDataItemFromUrl(res.layer.url, viewModel.catalog.context);
+                            } else {
+                                viewModel.layer = createGeoDataItemFromType(res.layer.type, viewModel.catalog.context);
+                                viewModel.layer.updateFromJson(res.layer);
+                            }
+
+                            viewModel.layer.name = res.layer.name;
                             viewModel.hasLayer(true);
                         }
                         viewModel.result(str);
                     }
                 }
             };
-            xhr.open('POST', services[viewModel.selectedService() | 0].url);
+            xhr.open('POST', viewModel.services[viewModel.selectedService() | 0].url);
             xhr.send(formData);
         },
         load : function() {
             if (viewModel.hasLayer()) {
-                options.geoDataManager.zoomTo = true;
-                options.geoDataManager.sendLayerRequest(viewModel.layer);
+                var userAddedDataGroup = viewModel.catalog.userAddedDataGroup;
+                userAddedDataGroup.isOpen = true;
+
+                var group = userAddedDataGroup.findFirstItemByName(viewModel.services[viewModel.selectedService() | 0].name);
+                if (!defined(group)) {
+                    group = new GeoDataGroupViewModel(viewModel.catalog.context);
+                    group.name = viewModel.services[viewModel.selectedService() | 0].name;
+                    group.isOpen = true;
+                    viewModel.catalog.userAddedDataGroup.add(group);
+                }
+
+                group.add(viewModel.layer);
+                viewModel.layer.isEnabled = true;
+                viewModel.layer.zoomTo();
             }
             viewModel.close();
         }

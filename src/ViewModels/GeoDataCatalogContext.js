@@ -46,13 +46,13 @@ var GeoDataCatalogContext = function() {
     this.corsProxy = undefined;
 
     /**
-     * Gets or sets the event that is raised just before switching between between Cesium and Leaflet.
+     * Gets or sets the event that is raised just before switching between Cesium and Leaflet.
      * @type {Event}
      */
     this.beforeViewerChanged = new CesiumEvent();
 
     /**
-     * Gets or sets the event that is raised just after switching between between Cesium and Leaflet.
+     * Gets or sets the event that is raised just after switching between Cesium and Leaflet.
      * @type {Event}
      */
     this.afterViewerChanged = new CesiumEvent();

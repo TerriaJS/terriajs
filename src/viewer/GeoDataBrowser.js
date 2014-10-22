@@ -15,7 +15,6 @@ var GeoDataBrowser = function(options) {
 
     this._viewModel = new GeoDataBrowserViewModel({
         viewer : options.viewer,
-        dataManager : options.dataManager,
         map : options.map,
         //initUrl: options.initUrl,
         mode3d: options.mode3d,

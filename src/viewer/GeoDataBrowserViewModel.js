@@ -37,7 +37,6 @@ var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-e
 
 var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
-    this._dataManager = options.dataManager;
     this.map = options.map;
 
     //this.initUrl = options.initUrl;
@@ -391,7 +390,6 @@ these extensions in order for National Map to know how to load it.'
 
     this._clearAll = createCommand(function() {
         disableAll(that.content());
-        that._viewer.geoDataManager.removeAll();
         return false;
     });
 
@@ -423,41 +421,6 @@ these extensions in order for National Map to know how to load it.'
             }
         }
     });
-
-    function loadCkanCollection(collection, existingCollection) {
-        // Get the list of groups containing WMS data sources.
-        var url = collection.base_url + '/api/3/action/package_search?rows=100000&fq=res_format:wms';
-
-        if (corsProxy.shouldUseProxy(url)) {
-            url = corsProxy.getURL(url);
-        }
-
-        when(loadJson(url), function(result) {
-            var blacklist = that._viewer.geoDataManager.ckanBlacklist;
-
-            var existingGroups = {};
-
-            var items = result.result.results;
-            for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
-                var groups = items[itemIndex].groups;
-                for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-                    var group = groups[groupIndex];
-                    if (!existingGroups[group.name]) {
-                        if (!blacklist || blacklist.indexOf(group.display_name) < 0) {
-                            existingCollection.Layer.push(createCategory({
-                                data : {
-                                    name: group.display_name,
-                                    base_url: collection.base_url + '/api/3/action/package_search?rows=1000&fq=groups:' + group.name + '+res_format:wms',
-                                    type: 'CKAN'
-                                }
-                            }));
-                            existingGroups[group.name] = true;
-                        }
-                    }
-                }
-            }
-        });
-    }
 
     function noopHandler(evt) {
         evt.stopPropagation();
