@@ -8,6 +8,7 @@ var createGeoDataItemFromType = require('./createGeoDataItemFromType');
 var createGeoDataItemFromUrl = require('./createGeoDataItemFromUrl');
 var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 var GeoJsonDataSourceViewModel = require('./GeoJsonDataSourceViewModel');
+var KmlDataSourceViewModel = require('./KmlDataSourceViewModel');
 var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewModel');
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
 
@@ -21,6 +22,8 @@ var registerGeoDataViewModels = function() {
 
     createGeoDataItemFromUrl.register(matchesExtension('geojson'), GeoJsonDataSourceViewModel);
     createGeoDataItemFromUrl.register(matchesExtension('json'), GeoJsonDataSourceViewModel);
+    createGeoDataItemFromUrl.register(matchesExtension('kml'), KmlDataSourceViewModel);
+    createGeoDataItemFromUrl.register(matchesExtension('kmz'), KmlDataSourceViewModel);
 };
 
 function matchesExtension(extension) {

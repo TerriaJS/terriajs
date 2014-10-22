@@ -77,9 +77,10 @@ var GeoJsonDataSourceViewModel = function(context, url) {
     this.url = url;
 
     /**
-     * Gets or sets the GeoJSON data, represented as an object literal (not a string).
+     * Gets or sets the GeoJSON data, represented as an object literal (not a string).  This property
+     * may also be a promise that will resolve to the GeoJSON data.
      * This property is observable.
-     * @type {Object}
+     * @type {Object|Promise}
      */
     this.data = undefined;
 
@@ -298,7 +299,6 @@ function updateViewModelFromData(viewModel, geoJson) {
     viewModel._readyData = geoJson;
 
     loadGeoJsonInCesium(viewModel);
-    loadGeoJsonInLeaflet(viewModel);
 }
 
 function nameIsDerivedFromUrl(name, url) {
@@ -373,14 +373,6 @@ function loadGeoJsonInCesium(viewModel) {
             }
         }
     });
-}
-
-function loadGeoJsonInLeaflet(viewModel) {
-    if (!defined(viewModel._leafletLayer) || !defined(viewModel._readyData)) {
-        return;
-    }
-
-    viewModel._leafletLayer.addData(viewModel._readyData);
 }
 
 // Get a random color for the data based on the passed seed (usually dataset name)
