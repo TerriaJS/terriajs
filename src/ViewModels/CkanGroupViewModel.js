@@ -301,7 +301,7 @@ function populateGroupFromResults(viewModel, json) {
         if (defined(bboxString)) {
             var parts = bboxString.split(',');
             if (parts.length === 4) {
-                rectangle = Rectangle.fromDegrees(parts[0], parts[1], parts[2], parts[3])
+                rectangle = Rectangle.fromDegrees(parts[0], parts[1], parts[2], parts[3]);
             }
         }
 

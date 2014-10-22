@@ -140,7 +140,7 @@ CsvDataSourceViewModel.prototype._enableInCesium = function() {
                     sender: that,
                     title: 'Unexpected type of CSV data',
                     message: '\
-CsvDataSourceViewModel.data is expected to be a Document or Json Object, but it was neither. \
+CsvDataSourceViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
 This may indicate a bug in National Map or incorrect use of the National Map API. \
 If you believe it is a bug in National Map, please report it by emailing \
 <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'

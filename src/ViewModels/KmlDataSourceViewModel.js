@@ -166,7 +166,7 @@ KmlDataSourceViewModel.prototype._enableInCesium = function() {
                     sender: that,
                     title: 'Unexpected type of KML data',
                     message: '\
-KmlDataSourceViewModel.data is expected to be a Document or a Blob, but it was neither. \
+KmlDataSourceViewModel.data is expected to be an XML Document, Blob, or File, but it was none of these. \
 This may indicate a bug in National Map or incorrect use of the National Map API. \
 If you believe it is a bug in National Map, please report it by emailing \
 <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'

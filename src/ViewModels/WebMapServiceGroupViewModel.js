@@ -17,6 +17,7 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
+var GeoDataCatalogError = require('./GeoDataCatalogError');
 var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
 var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');

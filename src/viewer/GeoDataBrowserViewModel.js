@@ -442,24 +442,28 @@ these extensions in order for National Map to know how to load it.'
             ga('send', 'event', 'uploadFile', 'dragDrop', file.name);
 
             if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
-                readJson(file).then(function(json) {
-                    if (json.catalog) {
-                        that.catalog.updateFromJson(json.catalog);
-                    }
-
-                    if (json.services) {
-                        // TODO: update the list of services rather than outright replacing it.
-                        that._viewer.services = json.services;
-                    }
-
-                    if (!json.catalog && !json.services) {
-                        addFile(file);
-                    }
-                });
+                readAndHandleJsonFile(file);
             } else {
                 addFile(file);
             }
         }
+    }
+
+    function readAndHandleJsonFile(file) {
+        readJson(file).then(function(json) {
+            if (json.catalog) {
+                that.catalog.updateFromJson(json.catalog);
+            }
+
+            if (json.services) {
+                // TODO: update the list of services rather than outright replacing it.
+                that._viewer.services = json.services;
+            }
+
+            if (!json.catalog && !json.services) {
+                addFile(file);
+            }
+        });
     }
 
     document.addEventListener("dragenter", noopHandler, false);
@@ -493,7 +497,16 @@ these extensions in order for National Map to know how to load it.'
             }
 
             if (json.initialDataMenu) {
-                when(loadJson(json.initialDataMenu), loadCollection);
+                loadJson(json.initialDataMenu).then(function(json) {
+                    if (json.catalog) {
+                        that.catalog.updateFromJson(json.catalog);
+                    }
+
+                    if (json.services) {
+                        // TODO: update the list of services rather than outright replacing it.
+                        that._viewer.services = json.services;
+                    }
+                });
             }
         });
     }
