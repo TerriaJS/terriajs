@@ -11,6 +11,7 @@ var GeoJsonDataSourceViewModel = require('./GeoJsonDataSourceViewModel');
 var KmlDataSourceViewModel = require('./KmlDataSourceViewModel');
 var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewModel');
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
+var CsvDataSourceViewModel = require('./CsvDataSourceViewModel');
 
 var registerGeoDataViewModels = function() {
     createGeoDataItemFromType.register('ckan', CkanGroupViewModel);
@@ -24,6 +25,7 @@ var registerGeoDataViewModels = function() {
     createGeoDataItemFromUrl.register(matchesExtension('json'), GeoJsonDataSourceViewModel);
     createGeoDataItemFromUrl.register(matchesExtension('kml'), KmlDataSourceViewModel);
     createGeoDataItemFromUrl.register(matchesExtension('kmz'), KmlDataSourceViewModel);
+    createGeoDataItemFromUrl.register(matchesExtension('csv'), CsvDataSourceViewModel);
 };
 
 function matchesExtension(extension) {
