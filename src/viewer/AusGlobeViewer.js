@@ -299,13 +299,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     });
 
     this.selectViewer(this.webGlSupported);
-
-    // simple way to capture most ux redraw needs - catch all canvas clicks
-    $(document).click(function() {
-        if (that.frameChecker !== undefined) {
-            that.frameChecker.forceFrameUpdate();
-        }
-    });
 };
 
 // -------------------------------------------
@@ -317,7 +310,6 @@ var FrameChecker = function () {
     this._maxFPS = 40.0;
     this._skipCnt = 0;
     this._skipCntLim = 10.0; //start skip after 10 seconds
-    this._skipCntMax = 15.0; //redraw every few seconds regardless
 };
 
 // call to force draw - usually after long downloads/processes
@@ -339,12 +331,16 @@ FrameChecker.prototype.skipFrame = function(scene, date) {
         }
     }
 
+    // If terrain/imagery is loading, force another render immediately so that the loading
+    // happens as quickly as possible.
+    var surface = scene.globe._surface;
+    if (surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0) {
+        this._skipCnt = 0;
+    }
+
     if (this._skipCnt > (this._maxFPS * this._skipCntLim)) {
-        this._skipCntLim = 5.0; //then skip after every 5 seconds
-        if (this._skipCnt < (this._maxFPS * this._skipCntMax)) {
-            return true;
-        }
-        this._skipCnt = (this._maxFPS * this._skipCntLim);
+        this._skipCntLim = 3.0; //then skip after every 3 seconds
+        return true;
     }
 
     this._lastDate = date.clone(this._lastDate);
@@ -496,7 +492,6 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
     }
 };
 
-AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer !== undefined); };
 
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
@@ -584,6 +579,10 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     // Show mouse position and height if terrain on
     inputHandler.setInputAction( function (movement) {
+
+        if (that.frameChecker !== undefined) {
+            that.frameChecker.forceFrameUpdate();
+        }
 
         var pickRay = camera.getPickRay(movement.endPosition);
 
@@ -868,19 +867,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         // override the default render loop
         this.scene.base_render = this.scene.render;
         this.scene.render = function(date) {
+
             if (that.frameChecker.skipFrame(that.scene, date)) {
                 return;
             }
             that.scene.base_render(date);
 
             that.updateDistanceLegend();
-
-            // If terrain/imagery is loading, force another render immediately so that the loading
-            // happens as quickly as possible.
-            var surface = that.scene.globe._surface;
-            if (surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0) {
-                that.frameChecker.forceFrameUpdate();
-            }
 
             // Capture the scene image right after the render.
             // With preserveDrawingBuffer: false on the WebGL canvas (the default), we can't rely
@@ -1170,34 +1163,6 @@ var cartesian3Scratch = new Cartesian3();
 // -------------------------------------------
 // Camera management
 // -------------------------------------------
-function getCameraPos(scene) {
-    var ellipsoid = Ellipsoid.WGS84;
-    var cam_pos = scene.camera.position;
-    return ellipsoid.cartesianToCartographic(cam_pos);
-}
-
-//determine the distance from the camera to a point
-function getCameraDistance(scene, pos) {
-    var tx_pos = Ellipsoid.WGS84.cartographicToCartesian(
-        Cartographic.fromDegrees(pos[0], pos[1], pos[2]));
-    return Cartesian3.magnitude(Cartesian3.subtract(tx_pos, scene.camera.position, cartesian3Scratch));
-}
-
-
-function getCameraSeaLevel(scene) {
-    var ellipsoid = Ellipsoid.WGS84;
-    var cam_pos = scene.camera.position;
-    return ellipsoid.cartesianToCartographic(ellipsoid.scaleToGeodeticSurface(cam_pos));
-}
-
-
-function getCameraHeight(scene) {
-    var ellipsoid = Ellipsoid.WGS84;
-    var cam_pos = scene.camera.position;
-    var camPos = getCameraPos(scene);
-    var seaLevel = getCameraSeaLevel(scene);
-    return camPos.height - seaLevel.height;
-}
 
 //Camera extent approx for 2D viewer
 function getCameraFocus(scene) {

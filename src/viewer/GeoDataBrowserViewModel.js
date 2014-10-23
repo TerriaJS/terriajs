@@ -190,7 +190,7 @@ these extensions in order for National Map to know how to load it.'
     var currentBaseLayers;
 
     function removeBaseLayer() {
-        if (!defined(that._viewer.viewer)) {
+        if (!that._viewer.isCesium()) {
             that._viewer.map.removeLayer(that._viewer.mapBaseLayer);
             return;
         }
@@ -211,7 +211,7 @@ these extensions in order for National Map to know how to load it.'
     function switchToBingMaps(style) {
         removeBaseLayer();
 
-        if (!defined(that._viewer.viewer)) {
+        if (!that._viewer.isCesium()) {
             that._viewer.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey(), { type: style });
             that._viewer.map.addLayer(that._viewer.mapBaseLayer);
             return;
@@ -241,7 +241,7 @@ these extensions in order for National Map to know how to load it.'
     this._activateNasaBlackMarble = createCommand(function() {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'NASA Black Marble');
 
-        if (!defined(that._viewer.viewer)) {
+        if (!that._viewer.isCesium()) {
             var message = 'This imagery layer is not yet supported in 2D mode.';
             alert(message);
             return;
@@ -259,7 +259,7 @@ these extensions in order for National Map to know how to load it.'
     this._activateNaturalEarthII = createCommand(function() {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'Natural Earth II');
 
-        if (!defined(that._viewer.viewer)) {
+        if (!that._viewer.isCesium()) {
             var message = 'This imagery layer is not yet supported in 2D mode.';
             alert(message);
             return;
@@ -282,7 +282,7 @@ these extensions in order for National Map to know how to load it.'
 
         removeBaseLayer();
 
-        if (!defined(that._viewer.viewer)) {
+        if (!that._viewer.isCesium()) {
             that._viewer.mapBaseLayer = new L.esri.tiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer');
             that._viewer.map.addLayer(that._viewer.mapBaseLayer);
             return;
@@ -302,7 +302,7 @@ these extensions in order for National Map to know how to load it.'
     this._activateAustralianHydrography = createCommand(function() {
         ga('send', 'event', 'mapSettings', 'switchImagery', 'Australian Hydrography');
 
-        if (!defined(that._viewer.viewer)) {
+        if (!that._viewer.isCesium()) {
             var message = 'This imagery layer is not yet supported in 2D mode.';
             alert(message);
             return;
@@ -310,7 +310,7 @@ these extensions in order for National Map to know how to load it.'
         
         removeBaseLayer();
 
-        if (!defined(that._viewer.viewer)) {
+        if (!that._viewer.isCesium()) {
             that._viewer.mapBaseLayer = new L.esri.tiledMapLayer('http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer');
             that._viewer.map.addLayer(that._viewer.mapBaseLayer);
             return;
@@ -594,7 +594,7 @@ these extensions in order for National Map to know how to load it.'
                 }
 
                 var provider;
-                if (!defined(that._viewer.viewer)) {
+                if (!that._viewer.isCesium()) {
                     if (defined(proxy)) {
                         url = corsProxy.getURL(url);
                     }
@@ -701,7 +701,7 @@ these extensions in order for National Map to know how to load it.'
             var bareItem = komapping.toJS(request.item);
             var extent = getOGCLayerExtent(bareItem);
             var tilingScheme;
-            if (!defined(that._viewer.viewer)) {
+            if (!that._viewer.isCesium()) {
                 tilingScheme = new WebMercatorTilingScheme();
                 that._viewer.map.addLayer(request.provider);
             }
@@ -722,7 +722,7 @@ these extensions in order for National Map to know how to load it.'
 
                 for (var y = nw.y; y <= se.y; ++y) {
                     for (var x = nw.x; x <= se.x; ++x) {
-                        if (!defined(that._viewer.viewer)) {
+                        if (!that._viewer.isCesium()) {
                             var coords = new L.Point(x, y);
                             coords.z = level;
                             var url = request.provider.getTileUrl(coords);
@@ -736,7 +736,7 @@ these extensions in order for National Map to know how to load it.'
                     }
                 }
             }
-            if (!defined(that._viewer.viewer)) {
+            if (!that._viewer.isCesium()) {
                 that._viewer.map.removeLayer(request.provider);
             }
         }
