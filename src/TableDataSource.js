@@ -140,7 +140,7 @@ defineProperties(TableDataSource.prototype, {
  */
 TableDataSource.prototype.loadUrl = function (url) {
     var that = this;
-    return loadText(url).then(function() {
+    return loadText(url).then(function(text) {
         return that.loadText(text);
     });
 };
