@@ -173,6 +173,7 @@ these extensions in order for National Map to know how to load it.'
             that.catalog.userAddedDataGroup.items.push(group);
             that.catalog.userAddedDataGroup.isOpen = true;
             newViewModel.isEnabled = true;
+            newViewModel.zoomToAndUseClock();
         } else {
             ga('send', 'event', 'addDataUrl', that.addType, that.addDataUrl);
 
@@ -378,6 +379,7 @@ these extensions in order for National Map to know how to load it.'
         that.catalog.userAddedDataGroup.items.push(group);
         that.catalog.userAddedDataGroup.isOpen = true;
         newViewModel.isEnabled = true;
+        newViewModel.zoomToAndUseClock();
     }
 
     function disableAll(items) {

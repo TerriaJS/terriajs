@@ -19,6 +19,7 @@ var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var inherit = require('../inherit');
 var NowViewingViewModel = require('./NowViewingViewModel');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**
  * A data source in a {@link GeoDataGroupViewModel}.
@@ -327,43 +328,45 @@ var scratchRectangle = new Rectangle();
  * or not shown, this method does nothing.
  */
  GeoDataSourceViewModel.prototype.zoomTo = function() {
-    if (!this.isEnabled || !this.isShown || !defined(this.rectangle)) {
-        return;
-    }
+    runWhenDoneLoading(this, function(that) {
+        if (!defined(that.rectangle)) {
+            return;
+        }
 
-    if (this.rectangle.east - this.rectangle.west > 3.14) {
-        console.log('Extent is wider than half the world.  Ignoring zoomto');
-        return;
-    }
+        if (that.rectangle.east - that.rectangle.west > 3.14) {
+            console.log('Extent is wider than half the world.  Ignoring zoomto');
+            return;
+        }
 
-    ga('send', 'event', 'dataSource', 'zoomTo', this.name);
+        ga('send', 'event', 'dataSource', 'zoomTo', that.name);
 
-    var epsilon = CesiumMath.EPSILON3;
+        var epsilon = CesiumMath.EPSILON3;
 
-    var rect = Rectangle.clone(this.rectangle, scratchRectangle);
+        var rect = Rectangle.clone(that.rectangle, scratchRectangle);
 
-    if (rect.east - rect.west < epsilon) {
-        rect.east += epsilon;
-        rect.west -= epsilon;
-    }
+        if (rect.east - rect.west < epsilon) {
+            rect.east += epsilon;
+            rect.west -= epsilon;
+        }
 
-    if (rect.north - rect.south < epsilon) {
-        rect.north += epsilon;
-        rect.south -= epsilon;
-    }
+        if (rect.north - rect.south < epsilon) {
+            rect.north += epsilon;
+            rect.south -= epsilon;
+        }
 
-    var context = this.context;
+        var context = that.context;
 
-    if (defined(context.cesiumScene)) {
-        var flight = CameraFlightPath.createTweenRectangle(context.cesiumScene, {
-            destination : rect
-        });
-        context.cesiumScene.tweens.add(flight);
-    }
+        if (defined(context.cesiumScene)) {
+            var flight = CameraFlightPath.createTweenRectangle(context.cesiumScene, {
+                destination : rect
+            });
+            context.cesiumScene.tweens.add(flight);
+        }
 
-    if (defined(context.leafletMap)) {
-        context.leafletMap.fitBounds(rectangleToLatLngBounds(rect));
-    }
+        if (defined(context.leafletMap)) {
+            context.leafletMap.fitBounds(rectangleToLatLngBounds(rect));
+        }
+    });
 };
 
 /**
@@ -371,26 +374,28 @@ var scratchRectangle = new Rectangle();
  * has no clock settings, this method does nothing.
  */
 GeoDataSourceViewModel.prototype.useClock = function() {
-    if (!defined(this.clock)) {
-        return;
-    }
+    runWhenDoneLoading(this, function(that) {
+        if (!defined(that.clock)) {
+            return;
+        }
 
-    $('.cesium-viewer-animationContainer').css('visibility', 'visible');
-    $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
+        $('.cesium-viewer-animationContainer').css('visibility', 'visible');
+        $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
 
-    var mapClock;
-    if (defined(this.context.cesiumViewer)) {
-        mapClock = this.context.cesiumViewer.clock;
-        this.clock.getValue(mapClock);
-        this.context.cesiumViewer.timeline.zoomTo(mapClock.startTime, mapClock.stopTime);
-        this.context.cesiumViewer.forceResize();
-    }
+        var mapClock;
+        if (defined(that.context.cesiumViewer)) {
+            mapClock = that.context.cesiumViewer.clock;
+            that.clock.getValue(mapClock);
+            that.context.cesiumViewer.timeline.zoomTo(mapClock.startTime, mapClock.stopTime);
+            that.context.cesiumViewer.forceResize();
+        }
 
-    if (defined(this.context.leafletMap)) {
-        mapClock = this.context.leafletMap.clock;
-        this.clock.getValue(mapClock);
-        this.context.leafletMap.timeline.zoomTo(clock.startTime, clock.stopTime);
-    }
+        if (defined(that.context.leafletMap)) {
+            mapClock = that.context.leafletMap.clock;
+            that.clock.getValue(mapClock);
+            that.context.leafletMap.timeline.zoomTo(clock.startTime, clock.stopTime);
+        }
+    });
 };
 
 /**

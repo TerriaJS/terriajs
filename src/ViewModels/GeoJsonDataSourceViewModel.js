@@ -91,7 +91,13 @@ var GeoJsonDataSourceViewModel = function(context, url) {
      */
     this.dataSourceUrl = undefined;
 
-    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
+    /**
+     * Gets or sets a value indicating whether this data source is currently loading.  This property is observable.
+     * @type {Boolean}
+     */
+    this.isLoading = false;
+
+    knockout.track(this, ['url', 'data', 'dataSourceUrl', 'isLoading']);
 };
 
 GeoJsonDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
