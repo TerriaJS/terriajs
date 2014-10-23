@@ -18,6 +18,7 @@ var registerGeoDataViewModels = function() {
     createGeoDataItemFromType.register('esri-mapServer', ArcGisMapServerDataSourceViewModel);
     createGeoDataItemFromType.register('geojson', GeoJsonDataSourceViewModel);
     createGeoDataItemFromType.register('group', GeoDataGroupViewModel);
+    createGeoDataItemFromType.register('kml', KmlDataSourceViewModel);
     createGeoDataItemFromType.register('wms', WebMapServiceDataSourceViewModel);
     createGeoDataItemFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
 

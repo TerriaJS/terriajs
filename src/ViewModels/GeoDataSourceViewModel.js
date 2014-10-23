@@ -378,13 +378,18 @@ GeoDataSourceViewModel.prototype.useClock = function() {
     $('.cesium-viewer-animationContainer').css('visibility', 'visible');
     $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
 
+    var mapClock;
     if (defined(this.context.cesiumViewer)) {
-        this.clock.getValue(this.context.cesiumViewer.clock);
+        mapClock = this.context.cesiumViewer.clock;
+        this.clock.getValue(mapClock);
+        this.context.cesiumViewer.timeline.zoomTo(mapClock.startTime, mapClock.stopTime);
         this.context.cesiumViewer.forceResize();
     }
 
     if (defined(this.context.leafletMap)) {
-        this.clock.getValue(this.context.leafletMap.clock);
+        mapClock = this.context.leafletMap.clock;
+        this.clock.getValue(mapClock);
+        this.context.leafletMap.timeline.zoomTo(clock.startTime, clock.stopTime);
     }
 };
 

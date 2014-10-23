@@ -19,6 +19,7 @@ var Clock = require('../../third_party/cesium/Source/Core/Clock');
 var ClockRange = require('../../third_party/cesium/Source/Core/ClockRange');
 var Color = require('../../third_party/cesium/Source/Core/Color');
 var combine = require('../../third_party/cesium/Source/Core/combine');
+var Clock = require('../../third_party/cesium/Source/Core/Clock');
 var Credit = require('../../third_party/cesium/Source/Core/Credit');
 var DataSourceDisplay = require('../../third_party/cesium/Source/DataSources/DataSourceDisplay');
 var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
@@ -704,10 +705,12 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     this.context.beforeViewerChanged.raiseEvent();
 
     var bnds, rect;
-    var timeline = {}; 
     var cam = this.initialCamera;
 
     var that = this;
+
+    var timelineVisible = $('.cesium-viewer-animationContainer').css('visibility') === 'visible';
+    var previousClock;
 
     if (!bCesium) {
 
@@ -717,7 +720,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             rect = getCameraRect(this.scene);
             bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
                 [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
-            timeline = this.getTimelineSettings();
+
+            previousClock = this.viewer.clock;
 
             this._enableSelectExtent(false);
 
@@ -783,7 +787,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         ticker();
 
         this.createLeafletTimeline(map.clock);
-        this.updateTimeline(timeline.start, timeline.stop, timeline.cur);
+
+        Clock.clone(previousClock, map.clock);
+        map.timeline.zoomTo(map.clock.startTime, map.clock.stopTime);
 
         map.on("boxzoomend", function(e) {
             console.log(e.boxZoomBounds);
@@ -831,7 +837,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         if (defined(this.map)) {
             //get camera and timeline settings
             rect = getCameraRect(undefined, this.map);
-            timeline = this.getTimelineSettings();
+            previousClock = this.map.clock;
 
             this.removeLeafletTimeline();
             this.dataSourceDisplay.destroy();
@@ -895,7 +901,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);
-        this.updateTimeline(timeline.start, timeline.stop, timeline.cur);
+
+        Clock.clone(previousClock, this.viewer.clock);
 
         this._navigationWidget.showTilt = true;
         document.getElementById('ausglobe-title-position').style.visibility = 'visible';
@@ -903,6 +910,12 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     }
 
     this.context.afterViewerChanged.raiseEvent();
+
+    if (timelineVisible) {
+        showTimeline(this.viewer);
+    } else {
+        hideTimeline(this.viewer);
+    }
 };
 
 var offsetScratch = new Cartesian3();
