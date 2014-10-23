@@ -209,7 +209,7 @@ If you believe it is a bug in National Map, please report it by emailing \
         });
     } else {
         dataSource.loadUrl(proxyUrl(this, this.url));
-        that.rectangle = dataSource.dataset.getExtent();
+        this.rectangle = dataSource.dataset.getExtent();
     }
 };
 
