@@ -12,6 +12,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var createGeoDataItemFromType = require('./createGeoDataItemFromType');
 var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var inherit = require('../inherit');
+var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**
  * A group of data in the {@link GeoDataCatalogViewModel}.  A group can contain
@@ -135,24 +136,9 @@ GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
         return;
     }
 
-    // Load the group's items first, if we haven't already.
-    viewModel.load();
-
     // If the group is still loading, delay this operation until the loading is complete.
     // Otherwise, these changes could get clobbered by the load.
-    if (viewModel.isLoading) {
-        var subscription = knockout.getObservable(viewModel, 'isLoading').subscribe(function(newValue) {
-            if (newValue === false) {
-                // Done loading
-                subscription.dispose();
-                doUpdate();
-            }
-        });
-    } else {
-        doUpdate();
-    }
-
-    function doUpdate() {
+    runWhenDoneLoading(viewModel, function(viewModel) {
         // TODO: allow JSON to update the order of items as well.
 
         var items = json.items;
@@ -168,7 +154,7 @@ GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
 
             existingItem.updateFromJson(item);
         }
-    }
+    });
 };
 
 GeoDataGroupViewModel.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
