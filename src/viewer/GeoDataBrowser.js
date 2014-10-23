@@ -95,7 +95,7 @@ var GeoDataBrowser = function(options) {
                         <div class="ausglobe-accordion-category-item" data-bind="attr : { draggable: supportsReordering, title : name, nowViewingIndex : $index }, css: { \'ausglobe-accordion-category-item-enabled\': isShown }, event : { dragstart: $root.nowViewingDragStart.bind($root), dragenter: $root.nowViewingDragEnter.bind($root), dragend: $root.nowViewingDragEnd.bind($root) }">\
                             <img class="ausglobe-nowViewing-dragHandle" data-bind="visible: supportsReordering" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." title="Drag to reorder data sources." />\
                             <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                            <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomTo"></div>\
+                            <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomToAndUseClock"></div>\
                             <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                         </div>\
                     </div>\
@@ -125,7 +125,7 @@ var GeoDataBrowser = function(options) {
                             <div class="ausglobe-accordion-category-content" data-bind="foreach: items, css: { \'ausglobe-accordion-category-content-visible\': isOpen }">\
                                 <div class="ausglobe-accordion-category-item" data-bind="css: { \'ausglobe-accordion-category-item-enabled\': isEnabled }">\
                                     <div class="ausglobe-accordion-category-item-checkbox" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root._checkboxChecked : $root._checkboxUnchecked, width: 32, height: 32 }"></div>\
-                                    <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomTo"></div>\
+                                    <div class="ausglobe-accordion-category-item-label" data-bind="text: name, click: zoomToAndUseClock"></div>\
                                     <div class="ausglobe-accordion-category-item-infoButton" data-bind="click: $root.showInfoForItem">info</div>\
                                 </div>\
                             </div>\

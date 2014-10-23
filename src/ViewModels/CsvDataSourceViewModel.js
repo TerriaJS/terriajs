@@ -12,6 +12,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
@@ -45,6 +46,7 @@ var CsvDataSourceViewModel = function(context, url) {
     GeoDataSourceViewModel.call(this, context);
 
     this._cesiumDataSource = undefined;
+    this._clock = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
@@ -66,7 +68,23 @@ var CsvDataSourceViewModel = function(context, url) {
      */
     this.dataSourceUrl = undefined;
 
-    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
+    knockout.track(this, ['_clock', 'url', 'data', 'dataSourceUrl']);
+
+    delete this.__knockoutObservables.clock;
+    knockout.defineProperty(this, 'clock', {
+        get : function() {
+            if (defined(this._clock)) {
+                return this._clock;
+            } else if (defined(this._cesiumDataSource)) {
+                return this._cesiumDataSource.clock;
+            } else {
+                return undefined;
+            }
+        },
+        set : function(value) {
+            this._clock = clock;
+        }
+    });
 };
 
 CsvDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
@@ -107,8 +125,48 @@ defineProperties(CsvDataSourceViewModel.prototype, {
             result.serviceErrorMessage = 'This service does not have any details available.';
             return result;
         }
+    },
+
+    /**
+     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * When a property name in the returned object literal matches the name of a property on this instance, the value
+     * will be called as a function and passed a reference to this instance, a reference to the source JSON object
+     * literal, and the name of the property.
+     * @memberOf CsvDataSourceViewModel.prototype
+     * @type {Object}
+     */
+    updaters : {
+        get : function() {
+            return CsvDataSourceViewModel.defaultUpdaters;
+        }
+    },
+
+    /**
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * When a property name on the view-model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * JSON object literal, and the name of the property.
+     * @memberOf CsvDataSourceViewModel.prototype
+     * @type {Object}
+     */
+    serializers : {
+        get : function() {
+            return CsvDataSourceViewModel.defaultSerializers;
+        }
     }
 });
+
+CsvDataSourceViewModel.defaultUpdaters = clone(GeoDataSourceViewModel.defaultUpdaters);
+freezeObject(CsvDataSourceViewModel.defaultUpdaters);
+
+CsvDataSourceViewModel.defaultSerializers = clone(GeoDataSourceViewModel.defaultSerializers);
+
+// Serialize the underlying properties instead of the public views of them.
+CsvDataSourceViewModel.defaultSerializers.clock = function(viewModel, json, propertyName) {
+    json.clock = viewModel._clock;
+};
+
+freezeObject(CsvDataSourceViewModel.defaultSerializers);
 
 /**
  * Processes the CSV data supplied via the {@link CsvDataSourceViewModel#data} property.  If

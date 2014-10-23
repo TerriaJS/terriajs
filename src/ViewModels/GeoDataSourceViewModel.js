@@ -114,8 +114,15 @@ var GeoDataSourceViewModel = function(context) {
      */
     this.isLegendVisible = false;
 
+    /**
+     * Gets or sets the clock parameters for this data source.  If this property is undefined, this data source
+     * does not have any time-varying data.  This property is observable.
+     * @type {DataSourceClock}
+     */
+    this.clock = undefined;
+
     knockout.track(this, ['rectangle', 'legendUrl', 'dataUrlType', 'dataUrl', 'dataCustodian',
-                          'metadataUrl', 'isEnabled', 'isShown', 'isLegendVisible']);
+                          'metadataUrl', 'isEnabled', 'isShown', 'isLegendVisible', 'clock']);
 
     knockout.getObservable(this, 'isEnabled').subscribe(function(newValue) {
         // Load this data source's data (if we haven't already) when it is enabled.
@@ -357,6 +364,38 @@ var scratchRectangle = new Rectangle();
     if (defined(context.leafletMap)) {
         context.leafletMap.fitBounds(rectangleToLatLngBounds(rect));
     }
+};
+
+/**
+ * Uses the {@link GeoDataSourceViewModel#clock} settings from this data source.  If this data source
+ * has no clock settings, this method does nothing.
+ */
+GeoDataSourceViewModel.prototype.useClock = function() {
+    if (!defined(this.clock)) {
+        return;
+    }
+
+    $('.cesium-viewer-animationContainer').css('visibility', 'visible');
+    $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
+
+    if (defined(this.context.cesiumViewer)) {
+        this.clock.getValue(this.context.cesiumViewer.clock);
+        this.context.cesiumViewer.forceResize();
+    }
+
+    if (defined(this.context.leafletMap)) {
+        this.clock.getValue(this.context.leafletMap.clock);
+    }
+};
+
+/**
+ * Moves the camera so that the data source's bounding rectangle is visible, and updates the application clock according to this
+ * data source's clock settings.  This method simply calls {@link GeoDataSourceViewModel#zoomTo} and
+ * {@link GeoDataSourceViewModel#useClock}.
+ */
+GeoDataSourceViewModel.prototype.zoomToAndUseClock = function() {
+    this.zoomTo();
+    this.useClock();
 };
 
 /**
