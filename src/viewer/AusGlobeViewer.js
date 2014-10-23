@@ -701,6 +701,13 @@ AusGlobeViewer.prototype.isCesium = function() {
 };
 
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
+    var previousClock;
+    if (this.viewer) {
+        previousClock = Clock.clone(this.viewer.clock);
+    } else if (this.map) {
+        previousClock = Clock.clone(this.map.clock);
+    }
+
     this.context.beforeViewerChanged.raiseEvent();
 
     var bnds, rect;
@@ -719,8 +726,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             rect = getCameraRect(this.scene);
             bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
                 [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
-
-            previousClock = this.viewer.clock;
 
             this._enableSelectExtent(false);
 
@@ -836,7 +841,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         if (defined(this.map)) {
             //get camera and timeline settings
             rect = getCameraRect(undefined, this.map);
-            previousClock = this.map.clock;
 
             this.removeLeafletTimeline();
             this.dataSourceDisplay.destroy();
