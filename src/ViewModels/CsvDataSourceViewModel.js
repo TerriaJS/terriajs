@@ -45,8 +45,7 @@ var runLater = require('../runLater');
 var CsvDataSourceViewModel = function(context, url) {
     GeoDataSourceViewModel.call(this, context);
 
-    this._cesiumDataSource = undefined;
-    this._clock = undefined;
+    this._tableDataSource = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
@@ -68,23 +67,7 @@ var CsvDataSourceViewModel = function(context, url) {
      */
     this.dataSourceUrl = undefined;
 
-    knockout.track(this, ['_clock', 'url', 'data', 'dataSourceUrl']);
-
-    delete this.__knockoutObservables.clock;
-    knockout.defineProperty(this, 'clock', {
-        get : function() {
-            if (defined(this._clock)) {
-                return this._clock;
-            } else if (defined(this._cesiumDataSource)) {
-                return this._cesiumDataSource.clock;
-            } else {
-                return undefined;
-            }
-        },
-        set : function(value) {
-            this._clock = value;
-        }
-    });
+    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
 CsvDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
@@ -108,7 +91,7 @@ defineProperties(CsvDataSourceViewModel.prototype, {
      */
     typeName : {
         get : function() {
-            return 'CSV';
+            return 'Comma-Separated Values (CSV)';
         }
     },
 
@@ -125,48 +108,8 @@ defineProperties(CsvDataSourceViewModel.prototype, {
             result.serviceErrorMessage = 'This service does not have any details available.';
             return result;
         }
-    },
-
-    /**
-     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
-     * When a property name in the returned object literal matches the name of a property on this instance, the value
-     * will be called as a function and passed a reference to this instance, a reference to the source JSON object
-     * literal, and the name of the property.
-     * @memberOf CsvDataSourceViewModel.prototype
-     * @type {Object}
-     */
-    updaters : {
-        get : function() {
-            return CsvDataSourceViewModel.defaultUpdaters;
-        }
-    },
-
-    /**
-     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
-     * JSON object literal, and the name of the property.
-     * @memberOf CsvDataSourceViewModel.prototype
-     * @type {Object}
-     */
-    serializers : {
-        get : function() {
-            return CsvDataSourceViewModel.defaultSerializers;
-        }
     }
 });
-
-CsvDataSourceViewModel.defaultUpdaters = clone(GeoDataSourceViewModel.defaultUpdaters);
-freezeObject(CsvDataSourceViewModel.defaultUpdaters);
-
-CsvDataSourceViewModel.defaultSerializers = clone(GeoDataSourceViewModel.defaultSerializers);
-
-// Serialize the underlying properties instead of the public views of them.
-CsvDataSourceViewModel.defaultSerializers.clock = function(viewModel, json, propertyName) {
-    json.clock = viewModel._clock;
-};
-
-freezeObject(CsvDataSourceViewModel.defaultSerializers);
 
 /**
  * Processes the CSV data supplied via the {@link CsvDataSourceViewModel#data} property.  If
@@ -175,110 +118,111 @@ freezeObject(CsvDataSourceViewModel.defaultSerializers);
  * It is called automatically when the data source is enabled.
  */
 CsvDataSourceViewModel.prototype.load = function() {
+    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
+        return;
+    }
+
+    this.isLoading = true;
+
+    if (defined(this._tableDataSource)) {
+        this._tableDataSource.destroy();
+    }
+
+    this._tableDataSource = new TableDataSource();
+
+    var that = this;
+    runLater(function() {
+        that._loadedUrl = that.url;
+        that._loadedData = that.data;
+
+        if (defined(that.data)) {
+            when(that.data, function(data) {
+                if (data instanceof Blob) {
+                    readText(data).then(function(text) {
+                        that._tableDataSource.loadText(text);
+
+                        that.clock = that._tableDataSource.clock;
+                        that.rectangle = that._tableDataSource.dataset.getExtent();
+
+                        that.isLoading = false;
+                    });
+                } else if (data instanceof String) {
+                    that._tableDataSource.loadText(data);
+
+                    that.clock = that._tableDataSource.clock;
+                    that.rectangle = that._tableDataSource.dataset.getExtent();
+
+                    that.isLoading = false;
+                } else {
+                    that.context.error.raiseEvent(new GeoDataCatalogError({
+                        sender: that,
+                        title: 'Unexpected type of CSV data',
+                        message: '\
+    CsvDataSourceViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
+    This may indicate a bug in National Map or incorrect use of the National Map API. \
+    If you believe it is a bug in National Map, please report it by emailing \
+    <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
+                    }));
+                }
+            }).otherwise(function() {
+                that.isLoading = false;
+            });
+        } else if (defined(that.url)) {
+            that._tableDataSource.loadUrl(proxyUrl(that, that.url)).then(function() {
+                that.clock = that._tableDataSource.clock;
+                that.rectangle = that._tableDataSource.dataset.getExtent();
+                that.isLoading = false;
+            });
+        }
+    });
 };
 
 CsvDataSourceViewModel.prototype._enableInCesium = function() {
-    if (defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is already enabled.');
-    }
-
-    var dataSource = this._cesiumDataSource = new TableDataSource();
-
-    if (defined(this.data)) {
-        var that = this;
-        when(this.data, function(data) {
-            if (data instanceof Blob) {
-                readText(data).then(function(text) {
-                    dataSource.loadText(text);
-                    that.rectangle = dataSource.dataset.getExtent();
-                });
-            } else if (data instanceof String) {
-                dataSource.loadText(data);
-                that.rectangle = dataSource.dataset.getExtent();
-            } else {
-                that.context.error.raiseEvent(new GeoDataCatalogError({
-                    sender: that,
-                    title: 'Unexpected type of CSV data',
-                    message: '\
-CsvDataSourceViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
-This may indicate a bug in National Map or incorrect use of the National Map API. \
-If you believe it is a bug in National Map, please report it by emailing \
-<a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-                }));
-            }
-        });
-    } else {
-        dataSource.loadUrl(proxyUrl(this, this.url));
-        this.rectangle = dataSource.dataset.getExtent();
-    }
 };
 
 CsvDataSourceViewModel.prototype._disableInCesium = function() {
-    if (!defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._cesiumDataSource = undefined;
 };
 
 CsvDataSourceViewModel.prototype._showInCesium = function() {
-    if (!defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
     var dataSources = this.context.cesiumViewer.dataSources;
-    if (dataSources.contains(this._cesiumDataSource)) {
+    if (dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
 
-    dataSources.add(this._cesiumDataSource);
+    dataSources.add(this._tableDataSource);
 };
 
 CsvDataSourceViewModel.prototype._hideInCesium = function() {
-    if (!defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
     var dataSources = this.context.cesiumViewer.dataSources;
-    if (!dataSources.contains(this._cesiumDataSource)) {
+    if (!dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
 
-    dataSources.remove(this._cesiumDataSource, false);
+    dataSources.remove(this._tableDataSource, false);
 };
 
 CsvDataSourceViewModel.prototype._enableInLeaflet = function() {
-    this._enableInCesium();
 };
 
 CsvDataSourceViewModel.prototype._disableInLeaflet = function() {
-    this._disableInCesium();
 };
 
 CsvDataSourceViewModel.prototype._showInLeaflet = function() {
-    if (!defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
     var dataSources = this.context.leafletMap.dataSources;
-    if (dataSources.contains(this._cesiumDataSource)) {
+    if (dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
 
-    dataSources.add(this._cesiumDataSource);
+    dataSources.add(this._tableDataSource);
 };
 
 CsvDataSourceViewModel.prototype._hideInLeaflet = function() {
-    if (!defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
     var dataSources = this.context.leafletMap.dataSources;
-    if (!dataSources.contains(this._cesiumDataSource)) {
+    if (!dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
 
-    dataSources.remove(this._cesiumDataSource, false);
+    dataSources.remove(this._tableDataSource, false);
 };
 
 function proxyUrl(context, url) {

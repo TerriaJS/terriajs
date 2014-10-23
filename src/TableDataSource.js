@@ -18,7 +18,7 @@ var Color = require('../third_party/cesium/Source/Core/Color');
 var defineProperties = require('../third_party/cesium/Source/Core/defineProperties');
 var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
 var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
-
+var loadText = require('../third_party/cesium/Source/Core/loadText');
 
 /**
 * @class TableDataSource is a cesium based datasource for table based geodata
@@ -140,11 +140,8 @@ defineProperties(TableDataSource.prototype, {
  */
 TableDataSource.prototype.loadUrl = function (url) {
     var that = this;
-    this.dataset.loadUrl({ url: url, callback: function (data) {
-        that.setLeadTimeByPercent(0.0);
-        that.setTrailTimeByPercent(1.0);
-        that.czmlDataSource.load(that.getDataPointList(), 'TableDataSource');
-        }
+    return loadText(url).then(function() {
+        return that.loadText(text);
     });
 };
 

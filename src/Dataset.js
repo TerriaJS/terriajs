@@ -247,7 +247,7 @@ Dataset.prototype.loadUrl = function (description) {
     this.loadingData = true;
     var that = this;
     
-    loadText(this.dataUrl).then( function (text) { 
+    return loadText(this.dataUrl).then( function (text) { 
         that.loadText(text); 
     }, 
     function(err) { 
