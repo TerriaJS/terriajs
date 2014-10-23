@@ -82,7 +82,7 @@ var CsvDataSourceViewModel = function(context, url) {
             }
         },
         set : function(value) {
-            this._clock = clock;
+            this._clock = value;
         }
     });
 };
@@ -190,9 +190,11 @@ CsvDataSourceViewModel.prototype._enableInCesium = function() {
             if (data instanceof Blob) {
                 readText(data).then(function(text) {
                     dataSource.loadText(text);
+                    that.rectangle = dataSource.dataset.getExtent();
                 });
             } else if (data instanceof String) {
                 dataSource.loadText(data);
+                that.rectangle = dataSource.dataset.getExtent();
             } else {
                 that.context.error.raiseEvent(new GeoDataCatalogError({
                     sender: that,
@@ -207,6 +209,7 @@ If you believe it is a bug in National Map, please report it by emailing \
         });
     } else {
         dataSource.loadUrl(proxyUrl(this, this.url));
+        that.rectangle = dataSource.dataset.getExtent();
     }
 };
 
