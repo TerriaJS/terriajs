@@ -3,8 +3,8 @@
 /*global require,describe,it,expect*/
 
 var GeoDataCatalogContext = require('../../src/ViewModels/GeoDataCatalogContext');
-var ImageryLayerDataSourceViewModel = require('../../src/ViewModels/ImageryLayerDataSourceViewModel');
-var WebMapServiceDataSourceViewModel = require('../../src/ViewModels/WebMapServiceDataSourceViewModel');
+var ImageryLayerDataItemViewModel = require('../../src/ViewModels/ImageryLayerDataItemViewModel');
+var WebMapServiceDataItemViewModel = require('../../src/ViewModels/WebMapServiceDataItemViewModel');
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
@@ -13,10 +13,10 @@ var wmsViewModel;
 
 beforeEach(function() {
     context = new GeoDataCatalogContext();
-    wmsViewModel = new WebMapServiceDataSourceViewModel(context);
+    wmsViewModel = new WebMapServiceDataItemViewModel(context);
 });
 
-describe('WebMapServiceDataSourceViewModel', function() {
+describe('WebMapServiceDataItemViewModel', function() {
     it('has sensible type and typeName', function() {
         expect(wmsViewModel.type).toBe('wms');
         expect(wmsViewModel.typeName).toBe('Web Map Service (WMS)');
@@ -24,7 +24,7 @@ describe('WebMapServiceDataSourceViewModel', function() {
 
     it('throws if constructed without a context', function() {
         expect(function() {
-            var viewModel = new WebMapServiceDataSourceViewModel();
+            var viewModel = new WebMapServiceDataItemViewModel();
         }).toThrow();
     });
 
@@ -32,8 +32,8 @@ describe('WebMapServiceDataSourceViewModel', function() {
         expect(wmsViewModel).toBeDefined();
     });
 
-    it('is derived from ImageryLayerDataSourceViewModel', function() {
-        expect(wmsViewModel instanceof ImageryLayerDataSourceViewModel).toBe(true);
+    it('is derived from ImageryLayerDataItemViewModel', function() {
+        expect(wmsViewModel instanceof ImageryLayerDataItemViewModel).toBe(true);
     });
 
     it('derives legendUrl from url if legendUrl is not explicitly provided', function() {
@@ -148,7 +148,7 @@ describe('WebMapServiceDataSourceViewModel', function() {
 
         var json = wmsViewModel.serializeToJson();
 
-        var reconstructed = new WebMapServiceDataSourceViewModel(context);
+        var reconstructed = new WebMapServiceDataItemViewModel(context);
         reconstructed.updateFromJson(json);
 
         expect(reconstructed).toEqual(wmsViewModel);
