@@ -22,7 +22,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var corsProxy = require('../corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
-var GeoDataCatalogError = require('./GeoDataCatalogError');
+var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../inherit');
@@ -57,13 +57,13 @@ var pointPalette = {
  * @constructor
  * @extends CatalogItemViewModel
  * 
- * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {ApplicationViewModel} context The context for the group.
  * @param {String} [url] The URL from which to retrieve the GeoJSON data.
  */
 var GeoJsonItemViewModel = function(context, url) {
     CatalogItemViewModel.call(this, context);
 
-    this._cesiumDataSource = undefined;
+    this._geoJsonDataSource = undefined;
 
     this._loadedUrl = undefined;
     this._loadedData = undefined;
@@ -179,11 +179,11 @@ GeoJsonItemViewModel.prototype.load = function() {
             });
         } else {
             loadJson(that.url).then(function(json) {
-                that.isLoading = false;
                 updateViewModelFromData(that, json);
+                that.isLoading = false;
             }).otherwise(function(e) {
                 that.isLoading = false;
-                that.context.error.raiseEvent(new GeoDataCatalogError({
+                that.context.error.raiseEvent(new ViewModelError({
                     sender: that,
                     title: 'Could not load JSON',
                     message: '\
@@ -208,46 +208,46 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 };
 
 GeoJsonItemViewModel.prototype._enableInCesium = function() {
-    if (defined(this._cesiumDataSource)) {
+    if (defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    this._cesiumDataSource = new GeoJsonDataSource(this.name);
+    this._geoJsonDataSource = new GeoJsonDataSource(this.name);
     loadGeoJson(this);
 };
 
 GeoJsonItemViewModel.prototype._disableInCesium = function() {
-    if (!defined(this._cesiumDataSource)) {
+    if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._cesiumDataSource = undefined;
+    this._geoJsonDataSource = undefined;
 };
 
 GeoJsonItemViewModel.prototype._showInCesium = function() {
-    if (!defined(this._cesiumDataSource)) {
+    if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.cesiumViewer.dataSources;
-    if (dataSources.contains(this._cesiumDataSource)) {
+    var dataSources = this.context.dataSources;
+    if (dataSources.contains(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
 
-    dataSources.add(this._cesiumDataSource);
+    dataSources.add(this._geoJsonDataSource);
 };
 
 GeoJsonItemViewModel.prototype._hideInCesium = function() {
-    if (!defined(this._cesiumDataSource)) {
+    if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.cesiumViewer.dataSources;
-    if (!dataSources.contains(this._cesiumDataSource)) {
+    var dataSources = this.context.dataSources;
+    if (!dataSources.contains(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
 
-    dataSources.remove(this._cesiumDataSource, false);
+    dataSources.remove(this._geoJsonDataSource, false);
 };
 
 GeoJsonItemViewModel.prototype._enableInLeaflet = function() {
@@ -259,29 +259,11 @@ GeoJsonItemViewModel.prototype._disableInLeaflet = function() {
 };
 
 GeoJsonItemViewModel.prototype._showInLeaflet = function() {
-    if (!defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    var dataSources = this.context.leafletMap.dataSources;
-    if (dataSources.contains(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is already shown.');
-    }
-
-    dataSources.add(this._cesiumDataSource);
+    this._showInCesium();
 };
 
 GeoJsonItemViewModel.prototype._hideInLeaflet = function() {
-    if (!defined(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    var dataSources = this.context.leafletMap.dataSources;
-    if (!dataSources.contains(this._cesiumDataSource)) {
-        throw new DeveloperError('This data source is not shown.');
-    }
-
-    dataSources.remove(this._cesiumDataSource, false);
+    this._hideInCesium();
 };
 
 function updateViewModelFromData(viewModel, geoJson) {
@@ -346,7 +328,7 @@ function proxyUrl(context, url) {
 }
 
 function loadGeoJson(viewModel) {
-    if (!(viewModel._cesiumDataSource instanceof GeoJsonDataSource) || !defined(viewModel._readyData)) {
+    if (!(viewModel._geoJsonDataSource instanceof GeoJsonDataSource) || !defined(viewModel._readyData)) {
         return;
     }
 
@@ -359,7 +341,7 @@ function loadGeoJson(viewModel) {
     var pointSize = 10;
     var lineWidth = 2;
 
-    var dataSource = viewModel._cesiumDataSource;
+    var dataSource = viewModel._geoJsonDataSource;
     dataSource.load(viewModel._readyData).then(function() {
         var entities = dataSource.entities.entities;
 

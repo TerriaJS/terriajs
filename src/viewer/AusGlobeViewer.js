@@ -75,12 +75,14 @@ var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-e
 
 var corsProxy = require('../corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
-var GeoDataCatalogContext = require('../ViewModels/GeoDataCatalogContext');
+var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
 var CatalogViewModel = require('../ViewModels/CatalogViewModel');
-var readJson = require('../readJson');
+var CesiumViewModel = require('../ViewModels/CesiumViewModel');
+var LeafletViewModel = require('../ViewModels/LeafletViewModel');
 var NavigationWidget = require('./NavigationWidget');
 var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');
 var PopupMessage = require('./PopupMessage');
+var readJson = require('../readJson');
 var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
@@ -92,7 +94,7 @@ var LeafletVisualizer = require('../LeafletVisualizer');
 BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
-var AusGlobeViewer = function(config, context, catalog, services) {
+var AusGlobeViewer = function(config, application) {
     this._distanceLegendBarWidth = undefined;
     this._distanceLegendLabel = undefined;
 
@@ -134,7 +136,7 @@ var AusGlobeViewer = function(config, context, catalog, services) {
                             skipItemsWithLocalData: true,
                             itemsSkippedBecauseTheyHaveLocalData: []
                         };
-                        var jsonCatalog = that.catalog.serializeToJson(serializeOptions);
+                        var jsonCatalog = that.application.catalog.serializeToJson(serializeOptions);
                         var request = {
                             version: '0.0.03',
                             camera: getCameraRect(that.scene, that.map),
@@ -164,7 +166,7 @@ var AusGlobeViewer = function(config, context, catalog, services) {
                             enabledItemsOnly: true,
                             skipItemsWithLocalData: false
                         };
-                        var jsonCatalog = that.catalog.serializeToJson(serializeOptions);
+                        var jsonCatalog = that.application.catalog.serializeToJson(serializeOptions);
                         var request = {
                             version: '0.0.03',
                             camera: getCameraRect(that.scene, that.map),
@@ -175,8 +177,8 @@ var AusGlobeViewer = function(config, context, catalog, services) {
                         var sharePanel = new ServicesPanel({
                             request: request,
                             container: document.body,
-                            catalog: that.catalog,
-                            services: that.services
+                            catalog: that.application.catalog,
+                            services: that.application.services.services
                         });
                     };
                     that.captureCanvas();
@@ -276,18 +278,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.map = undefined;
 
 
-    this.context = context;
-
-    this.context.error.addEventListener(function(catalogError) {
-        var message = new PopupMessage({
-            container : document.body,
-            title: catalogError.title,
-            message: catalogError.message
-        });
-    });
-
-    this.services = defaultValue(services, []);
-    this.catalog = catalog;
+    this.application = application;
 
     this.initialCamera = config.initialCamera;
 
@@ -295,7 +286,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         viewer : that,
         container : leftArea,
         mode3d: that.webGlSupported,
-        catalog : catalog
+        catalog : this.application.catalog
     });
 
     this.selectViewer(this.webGlSupported);
@@ -496,6 +487,8 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
     var options = {
+        dataSources: this.application.dataSources,
+        clock: this.application.clock,
         homeButton: false,
         sceneModePicker: false,
         navigationInstructionsInitiallyVisible: false,
@@ -708,7 +701,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         previousClock = Clock.clone(this.map.clock);
     }
 
-    this.context.beforeViewerChanged.raiseEvent();
+    this.application.beforeViewerChanged.raiseEvent();
 
     var bnds, rect;
     var cam = this.initialCamera;
@@ -716,7 +709,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var that = this;
 
     var timelineVisible = $('.cesium-viewer-animationContainer').css('visibility') === 'visible';
-    var previousClock;
 
     if (!bCesium) {
 
@@ -747,8 +739,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         }).setView([-28.5, 135], 5);
 
         this.map = map;
-        map.clock = new Clock();
-        map.dataSources = new DataSourceCollection();
+        map.clock = this.application.clock;
+        map.dataSources = this.application.dataSources;
 
         map.screenSpaceEventHandler = {
             setInputAction : function() {},
@@ -811,9 +803,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         //redisplay data
         this.map = map;
-        this.context.leafletMap = map;
-        this.context.cesiumScene = undefined;
-        this.context.cesiumViewer = undefined;
+
+        this.application.leaflet = new LeafletViewModel(this.application, map);
+        this.application.cesium = undefined;
 
         this.captureCanvas = function() {
             var that = this;
@@ -855,9 +847,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
         this.scene = this.viewer.scene;
-        this.context.cesiumScene = this.scene;
-        this.context.cesiumViewer = this.viewer;
-        this.context.leafletMap = undefined;
+
+        this.application.cesium = new CesiumViewModel(this.application, this.viewer);
+        this.application.leaflet = undefined;
+
         this.frameChecker = new FrameChecker();
 
         // Make sure we re-render when data sources or imagery layers are added or removed.
@@ -906,7 +899,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     }
 
-    this.context.afterViewerChanged.raiseEvent();
+    this.application.afterViewerChanged.raiseEvent();
 
     if (timelineVisible) {
         showTimeline(this.viewer);
@@ -1356,7 +1349,7 @@ function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, 
 }
 
 function selectFeatureLeaflet(viewer, latlng) {
-    var dataSources = viewer.context.nowViewing.items;
+    var dataSources = viewer.application.nowViewing.items;
 
     var pickedLocation = new Cartographic(CesiumMath.toRadians(latlng.lng), CesiumMath.toRadians(latlng.lat));
     var pickedXY = viewer.map.latLngToContainerPoint(latlng, viewer.map.getZoom());

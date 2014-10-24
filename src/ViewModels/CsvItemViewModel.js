@@ -24,7 +24,7 @@ var TableDataSource = require('../TableDataSource');
 var corsProxy = require('../corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
-var GeoDataCatalogError = require('./GeoDataCatalogError');
+var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../inherit');
@@ -39,7 +39,7 @@ var runLater = require('../runLater');
  * @constructor
  * @extends CatalogItemViewModel
  * 
- * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {ApplicationViewModel} context The context for the group.
  * @param {String} [url] The URL from which to retrieve the CSV data.
  */
 var CsvItemViewModel = function(context, url) {
@@ -160,7 +160,7 @@ CsvItemViewModel.prototype.load = function() {
 
                     that.isLoading = false;
                 } else {
-                    that.context.error.raiseEvent(new GeoDataCatalogError({
+                    that.context.error.raiseEvent(new ViewModelError({
                         sender: that,
                         title: 'Unexpected type of CSV data',
                         message: '\
@@ -190,7 +190,7 @@ CsvItemViewModel.prototype._disableInCesium = function() {
 };
 
 CsvItemViewModel.prototype._showInCesium = function() {
-    var dataSources = this.context.cesiumViewer.dataSources;
+    var dataSources = this.context.dataSources;
     if (dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
@@ -199,7 +199,7 @@ CsvItemViewModel.prototype._showInCesium = function() {
 };
 
 CsvItemViewModel.prototype._hideInCesium = function() {
-    var dataSources = this.context.cesiumViewer.dataSources;
+    var dataSources = this.context.dataSources;
     if (!dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
@@ -214,21 +214,11 @@ CsvItemViewModel.prototype._disableInLeaflet = function() {
 };
 
 CsvItemViewModel.prototype._showInLeaflet = function() {
-    var dataSources = this.context.leafletMap.dataSources;
-    if (dataSources.contains(this._tableDataSource)) {
-        throw new DeveloperError('This data source is already shown.');
-    }
-
-    dataSources.add(this._tableDataSource);
+    this._showInCesium();
 };
 
 CsvItemViewModel.prototype._hideInLeaflet = function() {
-    var dataSources = this.context.leafletMap.dataSources;
-    if (!dataSources.contains(this._tableDataSource)) {
-        throw new DeveloperError('This data source is not shown.');
-    }
-
-    dataSources.remove(this._tableDataSource, false);
+    this._hideInCesium();
 };
 
 function proxyUrl(context, url) {

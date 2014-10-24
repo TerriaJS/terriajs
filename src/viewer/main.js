@@ -46,7 +46,7 @@ if (start) {
 
     var AusGlobeViewer = require('./AusGlobeViewer');
     var corsProxy = require('../corsProxy');
-    var GeoDataCatalogContext = require('../ViewModels/GeoDataCatalogContext');
+    var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
     var CatalogViewModel = require('../ViewModels/CatalogViewModel');
     var GeoDataCollection = require('../GeoDataCollection');
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
@@ -58,13 +58,15 @@ if (start) {
     KnockoutSanitizedHtmlBinding.register(knockout);
     registerCatalogViewModels();
 
-    var context = new GeoDataCatalogContext();
+    var application = new ApplicationViewModel();
 
-    context.nowViewing = new NowViewingViewModel(context);
-    context.corsProxy = corsProxy;
-
-    var catalog = new CatalogViewModel(context);
-    catalog.isLoading = true;
+    application.error.addEventListener(function(e) {
+        var message = new PopupMessage({
+            container : document.body,
+            title: e.title,
+            message: e.message
+        });
+    });
 
     var url = window.location;
     var uri = new URI(url);
@@ -73,6 +75,7 @@ if (start) {
     var configUrl = params.config || 'config.json';
 
     //get the server config to know how to handle urls and load initial one
+    application.catalog.isLoading = true;
     loadJson(configUrl).then( function(config) {
         // IE versions prior to 10 don't support CORS, so always use the proxy.
         var alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
@@ -81,7 +84,7 @@ if (start) {
 
         when(loadJson(params.data_menu || config.initialDataMenu || 'init_nm.json'), function(json) {
             try {
-                catalog.updateFromJson(json.catalog);
+                application.catalog.updateFromJson(json.catalog);
             } catch (e) {
                 var message = new PopupMessage({
                     container: document.body,
@@ -92,7 +95,7 @@ if (start) {
 
             if (params.start) {
                 var startData = JSON.parse(params.start);
-                catalog.updateFromJson(startData.catalog);
+                application.catalog.updateFromJson(startData.catalog);
                 config.initialCamera = {
                     west : CesiumMath.toDegrees(startData.camera.west),
                     south : CesiumMath.toDegrees(startData.camera.south),
@@ -101,9 +104,11 @@ if (start) {
                 };
             }
 
-            catalog.isLoading = false;
+            application.services.services = json.services;
 
-            var viewer = new AusGlobeViewer(config, context, catalog, json.services);
+            application.catalog.isLoading = false;
+
+            var viewer = new AusGlobeViewer(config, application);
 
             document.getElementById('loadingIndicator').style.display = 'none';
         });

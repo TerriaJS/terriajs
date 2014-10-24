@@ -20,7 +20,7 @@ var inherit = require('../inherit');
  * @extends CatalogItemViewModel
  * @abstract
  * 
- * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {ApplicationViewModel} context The context for the group.
  */
 var ImageryLayerItemViewModel = function(context) {
     CatalogItemViewModel.call(this, context);

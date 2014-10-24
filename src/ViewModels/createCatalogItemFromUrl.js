@@ -11,7 +11,7 @@ var mapping = [];
  * Creates a type derived from {@link CatalogMemberViewModel} based on a given URL.
  *
  * @param {String} url The derived type name.
- * @param {GeoDataCatalogContext} context The context for the item.
+ * @param {ApplicationViewModel} context The context for the item.
  * @returns {CatalogMemberViewModel} The constructed data item, or undefined if the URL is not supported.
  */
 var createCatalogItemFromUrl = function(url, context) {
@@ -55,7 +55,7 @@ var createCatalogItemFromUrl = function(url, context) {
   * Function interface for matching a URL to a {@link CatalogMemberViewModel} constructor
   * for that URL.
   * @callback createCatalogItemFromUrl~Constructor
-  * @param {GeoDataCatalogContext} context The context in which to create the {@link CatalogMemberViewModel}.
+  * @param {ApplicationViewModel} context The context in which to create the {@link CatalogMemberViewModel}.
   * @param {String} url The URL from which to obtain the data.
   * @returns {CatalogMemberViewModel} The created data item.
   */

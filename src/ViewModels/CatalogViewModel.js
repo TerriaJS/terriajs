@@ -14,7 +14,7 @@ var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 /**
  * The view model for the geospatial data catalog.
  *
- * @param {GeoDataCatalogContext} context The context for the catalog.
+ * @param {ApplicationViewModel} context The context for the catalog.
  *
  * @alias CatalogViewModel
  * @constructor
@@ -62,7 +62,7 @@ defineProperties(CatalogViewModel.prototype, {
     /**
      * Gets the context for this catalog.
      * @memberOf CatalogViewModel.prototype
-     * @type {GeoDataCatalogContext}
+     * @type {ApplicationViewModel}
      */
     context : {
         get : function() {

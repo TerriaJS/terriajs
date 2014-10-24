@@ -17,7 +17,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
  * @constructor
  * @abstract
  *
- * @param {GeoDataCatalogContext} context The context for the item.
+ * @param {ApplicationViewModel} context The context for the item.
  */
 var CatalogMemberViewModel = function(context) {
     if (!defined(context)) {
@@ -67,7 +67,7 @@ defineProperties(CatalogMemberViewModel.prototype, {
     /**
      * Gets the context for this data item.
      * @memberOf CatalogMemberViewModel.prototype
-     * @type {GeoDataCatalogContext}
+     * @type {ApplicationViewModel}
      */
     context : {
         get : function() {

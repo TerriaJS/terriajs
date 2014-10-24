@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,ga*/
+/*global require,ga,$*/
 
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
@@ -29,7 +29,7 @@ var runWhenDoneLoading = require('./runWhenDoneLoading');
  * @extends CatalogMemberViewModel
  * @abstract
  *
- * @param {GeoDataCatalogContext} context The context for the item.
+ * @param {ApplicationViewModel} context The context for the item.
  */
 var CatalogItemViewModel = function(context) {
     CatalogMemberViewModel.call(this, context);
@@ -356,15 +356,15 @@ var scratchRectangle = new Rectangle();
 
         var context = that.context;
 
-        if (defined(context.cesiumScene)) {
-            var flight = CameraFlightPath.createTweenRectangle(context.cesiumScene, {
+        if (defined(context.cesium)) {
+            var flight = CameraFlightPath.createTweenRectangle(context.cesium.scene, {
                 destination : rect
             });
-            context.cesiumScene.tweens.add(flight);
+            context.cesium.scene.tweens.add(flight);
         }
 
-        if (defined(context.leafletMap)) {
-            context.leafletMap.fitBounds(rectangleToLatLngBounds(rect));
+        if (defined(context.leaflet)) {
+            context.leaflet.map.fitBounds(rectangleToLatLngBounds(rect));
         }
     });
 };
@@ -382,18 +382,15 @@ CatalogItemViewModel.prototype.useClock = function() {
         $('.cesium-viewer-animationContainer').css('visibility', 'visible');
         $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
 
-        var mapClock;
-        if (defined(that.context.cesiumViewer)) {
-            mapClock = that.context.cesiumViewer.clock;
-            that.clock.getValue(mapClock);
-            that.context.cesiumViewer.timeline.zoomTo(mapClock.startTime, mapClock.stopTime);
-            that.context.cesiumViewer.forceResize();
+        that.clock.getValue(that.context.clock);
+
+        if (defined(that.context.cesium)) {
+            that.context.cesium.viewer.timeline.zoomTo(that.context.clock.startTime, that.context.clock.stopTime);
+            that.context.cesium.viewer.forceResize();
         }
 
-        if (defined(that.context.leafletMap)) {
-            mapClock = that.context.leafletMap.clock;
-            that.clock.getValue(mapClock);
-            that.context.leafletMap.timeline.zoomTo(clock.startTime, clock.stopTime);
+        if (defined(that.context.leaflet)) {
+            that.context.leaflet.map.timeline.zoomTo(hat.context.clock.startTime, hat.context.clock.stopTime);
         }
     });
 };
@@ -561,11 +558,11 @@ function isShownChanged(viewModel) {
 function enable(viewModel) {
     var context = viewModel.context;
 
-    if (defined(context.cesiumScene)) {
+    if (defined(context.cesium)) {
         viewModel._enableInCesium();
     }
 
-    if (defined(context.leafletMap)) {
+    if (defined(context.leaflet)) {
         viewModel._enableInLeaflet();
     }
 }
@@ -573,11 +570,11 @@ function enable(viewModel) {
 function disable(viewModel) {
     var context = viewModel.context;
 
-    if (defined(context.cesiumScene)) {
+    if (defined(context.cesium)) {
         viewModel._disableInCesium();
     }
 
-    if (defined(context.leafletMap)) {
+    if (defined(context.leaflet)) {
         viewModel._disableInLeaflet();
     }
 }
@@ -585,11 +582,11 @@ function disable(viewModel) {
 function show(viewModel) {
     var context = viewModel.context;
 
-    if (defined(context.cesiumScene)) {
+    if (defined(context.cesium)) {
         viewModel._showInCesium();
     }
 
-    if (defined(context.leafletMap)) {
+    if (defined(context.leaflet)) {
         viewModel._showInLeaflet();
     }
 }
@@ -597,11 +594,11 @@ function show(viewModel) {
 function hide(viewModel) {
     var context = viewModel.context;
 
-    if (defined(context.cesiumScene)) {
+    if (defined(context.cesium)) {
         viewModel._hideInCesium();
     }
 
-    if (defined(context.leafletMap)) {
+    if (defined(context.leaflet)) {
         viewModel._hideInLeaflet();
     }
 }

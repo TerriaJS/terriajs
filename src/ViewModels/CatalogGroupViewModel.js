@@ -23,7 +23,7 @@ var runWhenDoneLoading = require('./runWhenDoneLoading');
  * @constructor
  * @extends CatalogMemberViewModel
  * 
- * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {ApplicationViewModel} context The context for the group.
  */
 var CatalogGroupViewModel = function(context) {
     CatalogMemberViewModel.call(this, context);

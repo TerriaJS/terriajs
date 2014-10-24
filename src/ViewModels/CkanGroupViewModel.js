@@ -18,7 +18,7 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
-var GeoDataCatalogError = require('./GeoDataCatalogError');
+var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
@@ -33,7 +33,7 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
  * @constructor
  * @extends CatalogGroupViewModel
  * 
- * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {ApplicationViewModel} context The context for the group.
  */
 var CkanGroupViewModel = function(context) {
     CatalogGroupViewModel.call(this, context, 'ckan');
@@ -163,7 +163,7 @@ function packageSearch(viewModel) {
             populateGroupFromResults(viewModel, json);
         }
     }).otherwise(function() {
-        viewModel.context.error.raiseEvent(new GeoDataCatalogError({
+        viewModel.context.error.raiseEvent(new ViewModelError({
             sender: viewModel,
             title: 'Group is not available',
             message: '\

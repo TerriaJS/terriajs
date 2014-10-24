@@ -11,7 +11,7 @@ var mapping = {};
  * Creates a type derived from {@link CatalogMemberViewModel} based on a given type string.
  * 
  * @param {String} type The derived type name.
- * @param {GeoDataCatalogContext} context The context for the item.
+ * @param {ApplicationViewModel} context The context for the item.
  */
 var createCatalogMemberFromType = function(type, context) {
     var Constructor = mapping[type];
@@ -27,7 +27,7 @@ var createCatalogMemberFromType = function(type, context) {
  * 
  * @param {String} type The type name for which to register a constructor.
  * @param {Function} constructor The constructor for data items of this type.  The constructor is expected to take a
- *                               {@link GeoDataCatalogContext} as its first and only required parameter.
+ *                               {@link ApplicationViewModel} as its first and only required parameter.
  */
 createCatalogMemberFromType.register = function(type, constructor) {
     mapping[type] = constructor;

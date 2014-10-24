@@ -5,9 +5,10 @@
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 
 /**
- * A catalog or data source error.
+ * Represents an error that occurred in a view-model, especially an asynchronous one that cannot be raised
+ * by throwing an exception because no one would be able to catch it.
  *
- * @alias GeoDataCatalogError
+ * @alias ViewModelError
  * @constructor
  * 
  * @param {Object} options Object with the following properties:
@@ -15,7 +16,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
  * @param {String} [options.title='An error occurred'] A short title describing the error.
  * @param {String} options.message A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user.
  */
-var GeoDataCatalogError = function(options) {
+var ViewModelError = function(options) {
     /**
      * Gets or sets the object that raised the error.
      * @type {Object}
@@ -35,4 +36,4 @@ var GeoDataCatalogError = function(options) {
     this.message = options.message;
 };
 
-module.exports = GeoDataCatalogError;
+module.exports = ViewModelError;

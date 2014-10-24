@@ -44,7 +44,7 @@ defineProperties(NowViewingViewModel.prototype, {
     /**
      * Gets the context for this Now Viewing list.
      * @memberOf NowViewingViewModel.prototype
-     * @type {GeoDataCatalogContext}
+     * @type {ApplicationViewModel}
      */
     context : {
         get : function() {
@@ -161,11 +161,11 @@ NowViewingViewModel.prototype.raise = function(item, index) {
 
     var context = this.context;
 
-    if (defined(context.cesiumScene)) {
+    if (defined(context.cesium)) {
         raiseInCesium(this, item, this.items[index - 1]);
     }
 
-    if (defined(context.leafletMap)) {
+    if (defined(context.leaflet)) {
         raiseInLeaflet(this, item, this.items[index - 1]);
     }
 
@@ -205,11 +205,11 @@ NowViewingViewModel.prototype.lower = function(item, index) {
 
     var context = this.context;
 
-    if (defined(context.cesiumScene)) {
+    if (defined(context.cesium)) {
         lowerInCesium(this, item, itemBelow);
     }
 
-    if (defined(context.leafletMap)) {
+    if (defined(context.leaflet)) {
         lowerInLeaflet(this, item, itemBelow);
     }
 
@@ -266,7 +266,7 @@ function raiseInCesium(viewModel, item, itemAbove) {
         return;
     }
 
-    var scene = viewModel.context.cesiumScene;
+    var scene = viewModel.context.cesium.scene;
     scene.imageryLayers.raise(item.imageryLayer);
 }
 
@@ -275,7 +275,7 @@ function lowerInCesium(viewModel, item, itemBelow) {
         return;
     }
 
-    var scene = viewModel.context.cesiumScene;
+    var scene = viewModel.context.cesium.scene;
     scene.imageryLayers.lower(item.imageryLayer);
 }
 
@@ -292,7 +292,7 @@ function swapLeafletZIndices(viewModel, item, otherItem) {
         return;
     }
 
-    var map = viewModel.context.leafletMap;
+    var map = viewModel.context.leaflet.map;
 
     if (!defined(item.imageryLayer.options.zIndex) || !defined(item.imageryLayer.options.zIndex)) {
         // Set the current z-index of all layers.
@@ -325,21 +325,21 @@ function beforeViewerChanged(viewModel) {
         var dataSource = dataSources[i];
 
         if (dataSource.isShown) {
-            if (defined(context.cesiumScene)) {
+            if (defined(context.cesium)) {
                 dataSource._hideInCesium();
             }
 
-            if (defined(context.leafletMap)) {
+            if (defined(context.leaflet)) {
                 dataSource._hideInLeaflet();
             }
         }
 
         if (dataSource.isEnabled) {
-            if (defined(context.cesiumScene)) {
+            if (defined(context.cesium)) {
                 dataSource._disableInCesium();
             }
 
-            if (defined(context.leafletMap)) {
+            if (defined(context.leaflet)) {
                 dataSource._disableInLeaflet();
             }
         }
@@ -357,21 +357,21 @@ function afterViewerChanged(viewModel) {
         var dataSource = dataSources[i];
 
         if (dataSource.isEnabled) {
-            if (defined(context.cesiumScene)) {
+            if (defined(context.cesium)) {
                 dataSource._enableInCesium();
             }
 
-            if (defined(context.leafletMap)) {
+            if (defined(context.leaflet)) {
                 dataSource._enableInLeaflet();
             }
         }
 
         if (dataSource.isShown) {
-            if (defined(context.cesiumScene)) {
+            if (defined(context.cesium)) {
                 dataSource._showInCesium();
             }
 
-            if (defined(context.leafletMap)) {
+            if (defined(context.leaflet)) {
                 dataSource._showInLeaflet();
             }
         }

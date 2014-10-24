@@ -17,7 +17,7 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
-var GeoDataCatalogError = require('./GeoDataCatalogError');
+var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
@@ -32,7 +32,7 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
  * @constructor
  * @extends CatalogGroupViewModel
  * 
- * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {ApplicationViewModel} context The context for the group.
  */
 var WebMapServiceGroupViewModel = function(context) {
     CatalogGroupViewModel.call(this, context, 'wms-getCapabilities');
@@ -145,7 +145,7 @@ function getCapabilities(viewModel) {
 
         addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
     }, function(e) {
-        viewModel.context.raiseEvent(new GeoDataCatalogError({
+        viewModel.context.raiseEvent(new ViewModelError({
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WMS server.  \

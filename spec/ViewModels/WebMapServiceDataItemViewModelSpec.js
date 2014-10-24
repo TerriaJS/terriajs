@@ -2,17 +2,17 @@
 
 /*global require,describe,it,expect,beforeEach*/
 
-var GeoDataCatalogContext = require('../../src/ViewModels/GeoDataCatalogContext');
+var ApplicationViewModel = require('../../src/ViewModels/ApplicationViewModel');
 var ImageryLayerItemViewModel = require('../../src/ViewModels/ImageryLayerItemViewModel');
 var WebMapServiceItemViewModel = require('../../src/ViewModels/WebMapServiceItemViewModel');
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
-var context;
+var application;
 var wmsViewModel;
 
 beforeEach(function() {
-    context = new GeoDataCatalogContext();
+    application = new ApplicationViewModel();
     wmsViewModel = new WebMapServiceItemViewModel(context);
 });
 
@@ -148,7 +148,7 @@ describe('WebMapServiceDataItemViewModel', function() {
 
         var json = wmsViewModel.serializeToJson();
 
-        var reconstructed = new WebMapServiceItemViewModel(context);
+        var reconstructed = new WebMapServiceItemViewModel(application);
         reconstructed.updateFromJson(json);
 
         expect(reconstructed).toEqual(wmsViewModel);

@@ -31,7 +31,7 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
  * @constructor
  * @extends ImageryLayerItemViewModel
  * 
- * @param {GeoDataCatalogContext} context The context for the group.
+ * @param {ApplicationViewModel} context The context for the group.
  */
 var ArcGisMapServerItemViewModel = function(context) {
     ImageryLayerItemViewModel.call(this, context);
@@ -76,7 +76,7 @@ ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    var scene = this.context.cesiumScene;
+    var scene = this.context.cesium.scene;
 
     var imageryProvider = new ArcGisMapServerImageryProvider({
         url : cleanAndProxyUrl(this.context, this.url)
@@ -99,7 +99,7 @@ ArcGisMapServerItemViewModel.prototype._disableInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var scene = this.context.cesiumScene;
+    var scene = this.context.cesium.scene;
 
     scene.imageryLayers.remove(this._imageryLayer);
     this._imageryLayer = undefined;
@@ -110,7 +110,7 @@ ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    var map = this.context.leafletMap;
+    var map = this.context.leaflet.map;
 
     var options = {
         opacity : 0.0
@@ -128,7 +128,7 @@ ArcGisMapServerItemViewModel.prototype._disableInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.context.leafletMap;
+    var map = this.context.leaflet.map;
 
     map.removeLayer(this._imageryLayer);
     this._imageryLayer = undefined;
