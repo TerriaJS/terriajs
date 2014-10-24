@@ -15,7 +15,7 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var Scene = require('../../third_party/cesium/Source/Scene/Scene');
 
 var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
-var GeoDataItemViewModel = require('./GeoDataItemViewModel');
+var GeoDataMemberViewModel = require('./GeoDataMemberViewModel');
 var inherit = require('../inherit');
 var NowViewingViewModel = require('./NowViewingViewModel');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
@@ -26,13 +26,13 @@ var runWhenDoneLoading = require('./runWhenDoneLoading');
  *
  * @alias GeoDataSourceViewModel
  * @constructor
- * @extends GeoDataItemViewModel
+ * @extends GeoDataMemberViewModel
  * @abstract
  *
  * @param {GeoDataCatalogContext} context The context for the item.
  */
 var GeoDataSourceViewModel = function(context) {
-    GeoDataItemViewModel.call(this, context);
+    GeoDataMemberViewModel.call(this, context);
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
@@ -138,7 +138,7 @@ var GeoDataSourceViewModel = function(context) {
     }, this);
 };
 
-GeoDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+GeoDataSourceViewModel.prototype = inherit(GeoDataMemberViewModel.prototype);
 
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
 
@@ -205,7 +205,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link GeoDataMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
@@ -219,7 +219,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataMemberViewModel#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
@@ -246,11 +246,11 @@ GeoDataSourceViewModel.defaultMetadata.serviceErrorMessage = 'This service does 
 freezeObject(GeoDataSourceViewModel.defaultMetadata);
 
 /**
- * Gets or sets the set of default updater functions to use in {@link GeoDataItemViewModel#updateFromJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#updaters} property.
+ * Gets or sets the set of default updater functions to use in {@link GeoDataMemberViewModel#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#updaters} property.
  * @type {Object}
  */
-GeoDataSourceViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
+GeoDataSourceViewModel.defaultUpdaters = clone(GeoDataMemberViewModel.defaultUpdaters);
 GeoDataSourceViewModel.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
     if (defined(json.rectangle)) {
         viewModel.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
@@ -262,11 +262,11 @@ GeoDataSourceViewModel.defaultUpdaters.rectangle = function(viewModel, json, pro
 freezeObject(GeoDataSourceViewModel.defaultUpdaters);
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link GeoDataItemViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link GeoDataMemberViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#serializers} property.
  * @type {Object}
  */
-GeoDataSourceViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
+GeoDataSourceViewModel.defaultSerializers = clone(GeoDataMemberViewModel.defaultSerializers);
 GeoDataSourceViewModel.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
     if (defined(viewModel.rectangle)) {
         json.rectangle = [

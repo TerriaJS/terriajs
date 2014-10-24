@@ -80,7 +80,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link GeoDataMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
@@ -94,7 +94,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataMemberViewModel#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.

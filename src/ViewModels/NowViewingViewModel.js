@@ -19,7 +19,7 @@ var NowViewingViewModel = function(context) {
      * Gets the list of items that we are "now viewing".  It is recommended that you use
      * the methods on this instance instead of manipulating the list of items directly.
      * This property is observable.
-     * @type {GeoDataItemViewModel[]}
+     * @type {GeoDataMemberViewModel[]}
      */
     this.items = [];
 
@@ -91,7 +91,7 @@ NowViewingViewModel.prototype.destroy = function() {
 /**
  * Adds an item to the "Now Viewing" pane.
  *
- * @param {GeoDataItemViewModel} item The item to add.
+ * @param {GeoDataMemberViewModel} item The item to add.
  */
 NowViewingViewModel.prototype.add = function(item) {
     // Keep reorderable data sources (ie: imagery layers) below non-orderable ones (ie: GeoJSON).
@@ -111,7 +111,7 @@ NowViewingViewModel.prototype.add = function(item) {
 /**
  * Removes an item from the "Now Viewing" pane and from the map.
  *
- * @param {GeoDataItemViewModel} item The item to remove.
+ * @param {GeoDataMemberViewModel} item The item to remove.
  */
 NowViewingViewModel.prototype.remove = function(item) {
     item.isEnabled = false;
@@ -135,7 +135,7 @@ NowViewingViewModel.prototype.removeAll = function() {
  * Raises an item, making it displayed on top of the item that is currently above it.  If it
  * is nonsensical to move this item up (e.g. it is already at the top), this method does nothing.
  *
- * @param {GeoDataItemViewModel} item The item to raise.
+ * @param {GeoDataMemberViewModel} item The item to raise.
  * @param {Number} [index] The index of the item of the list, if it is already known.
  */
 NowViewingViewModel.prototype.raise = function(item, index) {
@@ -177,7 +177,7 @@ NowViewingViewModel.prototype.raise = function(item, index) {
  * Lowers an item, making it displayed below the item that is currently below it.  If it
  * is nonsensical to move this item down (e.g. it is already at the bottom), this method does nothing.
  *
- * @param {GeoDataItemViewModel} item The item to lower.
+ * @param {GeoDataMemberViewModel} item The item to lower.
  * @param {Number} [index] The index of the item of the list, if it is already known.
  */
 NowViewingViewModel.prototype.lower = function(item, index) {

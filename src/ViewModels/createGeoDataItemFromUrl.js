@@ -8,11 +8,11 @@ var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 var mapping = [];
 
 /**
- * Creates a type derived from {@link GeoDataItemViewModel} based on a given URL.
+ * Creates a type derived from {@link GeoDataMemberViewModel} based on a given URL.
  *
  * @param {String} url The derived type name.
  * @param {GeoDataCatalogContext} context The context for the item.
- * @returns {GeoDataItemViewModel} The constructed data item, or undefined if the URL is not supported.
+ * @returns {GeoDataMemberViewModel} The constructed data item, or undefined if the URL is not supported.
  */
 var createGeoDataItemFromUrl = function(url, context) {
     for (var i = 0; i < mapping.length; ++i) {
@@ -25,7 +25,7 @@ var createGeoDataItemFromUrl = function(url, context) {
 };
 
 /**
- * Registers a constructor for a given type of {@link GeoDataItemViewModel}.
+ * Registers a constructor for a given type of {@link GeoDataMemberViewModel}.
  * 
  * @param {createGeoDataItemFromUrl~Matcher} matcher A function that is given a URL to match as its only parameter.  If the function returns true, The type name for which to register a constructor.
  * @param {createGeoDataItemFromUrl~Constructor} constructor The constructor for data items that match the given matcher.
@@ -38,7 +38,7 @@ var createGeoDataItemFromUrl = function(url, context) {
 };
 
 /**
- * Function interface for matching a URL to a {@link GeoDataItemViewModel} constructor
+ * Function interface for matching a URL to a {@link GeoDataMemberViewModel} constructor
  * for that URL.
  * @callback createGeoDataItemFromUrl~Matcher
  * @param {String} url The URL to match.
@@ -52,12 +52,12 @@ var createGeoDataItemFromUrl = function(url, context) {
  */
 
  /**
-  * Function interface for matching a URL to a {@link GeoDataItemViewModel} constructor
+  * Function interface for matching a URL to a {@link GeoDataMemberViewModel} constructor
   * for that URL.
   * @callback createGeoDataItemFromUrl~Constructor
-  * @param {GeoDataCatalogContext} context The context in which to create the {@link GeoDataItemViewModel}.
+  * @param {GeoDataCatalogContext} context The context in which to create the {@link GeoDataMemberViewModel}.
   * @param {String} url The URL from which to obtain the data.
-  * @returns {GeoDataItemViewModel} The created data item.
+  * @returns {GeoDataMemberViewModel} The created data item.
   */
 
 module.exports = createGeoDataItemFromUrl;

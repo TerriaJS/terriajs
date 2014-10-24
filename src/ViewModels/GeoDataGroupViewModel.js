@@ -10,23 +10,23 @@ var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var createGeoDataItemFromType = require('./createGeoDataItemFromType');
-var GeoDataItemViewModel = require('./GeoDataItemViewModel');
+var GeoDataMemberViewModel = require('./GeoDataMemberViewModel');
 var inherit = require('../inherit');
 var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**
  * A group of data in the {@link GeoDataCatalogViewModel}.  A group can contain
- * {@link GeoDataItemViewModel|GeoDataItemViewModels} or other
+ * {@link GeoDataMemberViewModel|GeoDataMemberViewModels} or other
  * {@link GeoDataGroupViewModel|GeoDataGroupViewModels}.
  *
  * @alias GeoDataGroupViewModel
  * @constructor
- * @extends GeoDataItemViewModel
+ * @extends GeoDataMemberViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
 var GeoDataGroupViewModel = function(context) {
-    GeoDataItemViewModel.call(this, context);
+    GeoDataMemberViewModel.call(this, context);
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -44,7 +44,7 @@ var GeoDataGroupViewModel = function(context) {
 
     /**
      * Gets the collection of items in this group.  This property is observable.
-     * @type {GeoDataItemViewModel[]}
+     * @type {GeoDataMemberViewModel[]}
      */
     this.items = [];
 
@@ -70,7 +70,7 @@ var GeoDataGroupViewModel = function(context) {
     });
 };
 
-GeoDataGroupViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+GeoDataGroupViewModel.prototype = inherit(GeoDataMemberViewModel.prototype);
 
 defineProperties(GeoDataGroupViewModel.prototype, {
     /**
@@ -96,7 +96,7 @@ defineProperties(GeoDataGroupViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link GeoDataItemViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link GeoDataMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
@@ -110,7 +110,7 @@ defineProperties(GeoDataGroupViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link GeoDataItemViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link GeoDataMemberViewModel#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
@@ -125,11 +125,11 @@ defineProperties(GeoDataGroupViewModel.prototype, {
 });
 
 /**
- * Gets or sets the set of default updater functions to use in {@link GeoDataItemViewModel#updateFromJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#updaters} property.
+ * Gets or sets the set of default updater functions to use in {@link GeoDataMemberViewModel#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#updaters} property.
  * @type {Object}
  */
-GeoDataGroupViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
+GeoDataGroupViewModel.defaultUpdaters = clone(GeoDataMemberViewModel.defaultUpdaters);
 
 GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName) {
     if (!defined(json.items)) {
@@ -162,11 +162,11 @@ GeoDataGroupViewModel.defaultUpdaters.isLoading = function(viewModel, json, prop
 freezeObject(GeoDataGroupViewModel.defaultUpdaters);
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link GeoDataItemViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link GeoDataItemViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link GeoDataMemberViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#serializers} property.
  * @type {Object}
  */
-GeoDataGroupViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
+GeoDataGroupViewModel.defaultSerializers = clone(GeoDataMemberViewModel.defaultSerializers);
 
 GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     var items = json.items = [];
@@ -195,7 +195,7 @@ GeoDataGroupViewModel.prototype.load = function() {
 /**
  * Adds an item or group to this group.
  * 
- * @param {GeoDataItemViewModel} item The item to add.
+ * @param {GeoDataMemberViewModel} item The item to add.
  */
 GeoDataGroupViewModel.prototype.add = function(item) {
     this.items.push(item);
@@ -204,7 +204,7 @@ GeoDataGroupViewModel.prototype.add = function(item) {
 /**
  * Removes an item or group from this group.
  * 
- * @param {GeoDataItemViewModel} item The item to remove.
+ * @param {GeoDataMemberViewModel} item The item to remove.
  */
 GeoDataGroupViewModel.prototype.remove = function(item) {
     this.items.remove(item);
@@ -222,7 +222,7 @@ GeoDataGroupViewModel.prototype.toggleOpen = function() {
  * Finds the first item in this group that has the given name.  The search is case-sensitive.
  * 
  * @param {String} name The name of the item to find.
- * @return {GeoDataItemViewModel} The first item with the given name, or undefined if no item with that name exists.
+ * @return {GeoDataMemberViewModel} The first item with the given name, or undefined if no item with that name exists.
  */
 GeoDataGroupViewModel.prototype.findFirstItemByName = function(name) {
     for (var i = 0; i < this.items.length; ++i) {
