@@ -390,7 +390,7 @@ CatalogItemViewModel.prototype.useClock = function() {
         }
 
         if (defined(that.context.leaflet)) {
-            that.context.leaflet.map.timeline.zoomTo(hat.context.clock.startTime, hat.context.clock.stopTime);
+            that.context.leaflet.map.timeline.zoomTo(that.context.clock.startTime, that.context.clock.stopTime);
         }
     });
 };
