@@ -23,7 +23,7 @@ var corsProxy = require('../corsProxy');
 var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
 var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
 var GeoDataCatalogError = require('./GeoDataCatalogError');
-var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
+var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
@@ -51,17 +51,17 @@ var pointPalette = {
 };
 
 /**
- * A {@link GeoDataSourceViewModel} representing GeoJSON feature data.
+ * A {@link GeoDataItemViewModel} representing GeoJSON feature data.
  *
  * @alias GeoJsonDataSourceViewModel
  * @constructor
- * @extends GeoDataSourceViewModel
+ * @extends GeoDataItemViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  * @param {String} [url] The URL from which to retrieve the GeoJSON data.
  */
 var GeoJsonDataSourceViewModel = function(context, url) {
-    GeoDataSourceViewModel.call(this, context);
+    GeoDataItemViewModel.call(this, context);
 
     this._cesiumDataSource = undefined;
 
@@ -100,7 +100,7 @@ var GeoJsonDataSourceViewModel = function(context, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl', 'isLoading']);
 };
 
-GeoJsonDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
+GeoJsonDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
 defineProperties(GeoJsonDataSourceViewModel.prototype, {
     /**

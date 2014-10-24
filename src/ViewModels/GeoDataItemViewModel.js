@@ -24,14 +24,14 @@ var runWhenDoneLoading = require('./runWhenDoneLoading');
 /**
  * A data source in a {@link GeoDataGroupViewModel}.
  *
- * @alias GeoDataSourceViewModel
+ * @alias GeoDataItemViewModel
  * @constructor
  * @extends GeoDataMemberViewModel
  * @abstract
  *
  * @param {GeoDataCatalogContext} context The context for the item.
  */
-var GeoDataSourceViewModel = function(context) {
+var GeoDataItemViewModel = function(context) {
     GeoDataMemberViewModel.call(this, context);
 
     this._enabledDate = undefined;
@@ -59,11 +59,11 @@ var GeoDataSourceViewModel = function(context) {
     this.legendUrl = undefined;
 
     /**
-     * Gets or sets the type of the {@link GeoDataSourceViewModel#dataUrl}, or undefined if raw data for this data
+     * Gets or sets the type of the {@link GeoDataItemViewModel#dataUrl}, or undefined if raw data for this data
      * source is not available.  This property is observable.
      * Valid values are:
      *  * `direct` - A direct link to the data.
-     *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link GeoDataSourceViewModel#dataUrl} is not
+     *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link GeoDataItemViewModel#dataUrl} is not
      *            specified, the base URL will be this data source's URL.
      *  * `wfs-complete` - A complete, ready-to-use link to download features from a WFS server.
      * @type {String}
@@ -138,15 +138,15 @@ var GeoDataSourceViewModel = function(context) {
     }, this);
 };
 
-GeoDataSourceViewModel.prototype = inherit(GeoDataMemberViewModel.prototype);
+GeoDataItemViewModel.prototype = inherit(GeoDataMemberViewModel.prototype);
 
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
 
-defineProperties(GeoDataSourceViewModel.prototype, {
+defineProperties(GeoDataItemViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
      * Data sources that cannot be reordered are typically displayed above reorderable data sources.
-     * @memberOf GeoDataSourceViewModel.prototype
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Boolean}
      */
     supportsReordering : {
@@ -157,7 +157,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the opacity of this data source can be changed.
-     * @memberOf GeoDataSourceViewModel.prototype
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Boolean}
      */
     supportsOpacity : {
@@ -168,7 +168,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
     /**
      * Gets a value indicating whether this data source has a legend.
-     * @memberOf GeoDataSourceViewModel.prototype
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Boolean}
      */
     hasLegend : {
@@ -180,7 +180,7 @@ defineProperties(GeoDataSourceViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source's legend is an image in a
      * browser-supported format such as JPEG, PNG, or GIF.
-     * @memberOf GeoDataSourceViewModel.prototype
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Boolean}
      */
     legendIsImage : {
@@ -195,12 +195,12 @@ defineProperties(GeoDataSourceViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf GeoDataSourceViewModel.prototype
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {DataSourceMetadataViewModel}
      */
     metadata : {
         get : function() {
-            return GeoDataSourceViewModel.defaultMetadata;
+            return GeoDataItemViewModel.defaultMetadata;
         }
     },
 
@@ -209,12 +209,12 @@ defineProperties(GeoDataSourceViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf GeoDataSourceViewModel.prototype
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return GeoDataSourceViewModel.defaultUpdaters;
+            return GeoDataItemViewModel.defaultUpdaters;
         }
     },
 
@@ -223,35 +223,35 @@ defineProperties(GeoDataSourceViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf GeoDataSourceViewModel.prototype
+     * @memberOf GeoDataItemViewModel.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return GeoDataSourceViewModel.defaultSerializers;
+            return GeoDataItemViewModel.defaultSerializers;
         }
     }
 });
 
 /**
  * Gets or sets the default metadata to use for data sources that don't provide anything better from their
- * {@link GeoDataSourceViewModel#metadata} property.  The default simply indicates that no metadata is available.
+ * {@link GeoDataItemViewModel#metadata} property.  The default simply indicates that no metadata is available.
  * @type {DataSourceMetadataViewModel}
  */
-GeoDataSourceViewModel.defaultMetadata = new DataSourceMetadataViewModel();
-GeoDataSourceViewModel.defaultMetadata.isLoading = false;
-GeoDataSourceViewModel.defaultMetadata.dataSourceErrorMessage = 'This data source does not have any details available.';
-GeoDataSourceViewModel.defaultMetadata.serviceErrorMessage = 'This service does not have any details available.';
+GeoDataItemViewModel.defaultMetadata = new DataSourceMetadataViewModel();
+GeoDataItemViewModel.defaultMetadata.isLoading = false;
+GeoDataItemViewModel.defaultMetadata.dataSourceErrorMessage = 'This data source does not have any details available.';
+GeoDataItemViewModel.defaultMetadata.serviceErrorMessage = 'This service does not have any details available.';
 
-freezeObject(GeoDataSourceViewModel.defaultMetadata);
+freezeObject(GeoDataItemViewModel.defaultMetadata);
 
 /**
  * Gets or sets the set of default updater functions to use in {@link GeoDataMemberViewModel#updateFromJson}.  Types derived from this type
  * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#updaters} property.
  * @type {Object}
  */
-GeoDataSourceViewModel.defaultUpdaters = clone(GeoDataMemberViewModel.defaultUpdaters);
-GeoDataSourceViewModel.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
+GeoDataItemViewModel.defaultUpdaters = clone(GeoDataMemberViewModel.defaultUpdaters);
+GeoDataItemViewModel.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
     if (defined(json.rectangle)) {
         viewModel.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
     } else {
@@ -259,15 +259,15 @@ GeoDataSourceViewModel.defaultUpdaters.rectangle = function(viewModel, json, pro
     }
 };
 
-freezeObject(GeoDataSourceViewModel.defaultUpdaters);
+freezeObject(GeoDataItemViewModel.defaultUpdaters);
 
 /**
  * Gets or sets the set of default serializer functions to use in {@link GeoDataMemberViewModel#serializeToJson}.  Types derived from this type
  * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#serializers} property.
  * @type {Object}
  */
-GeoDataSourceViewModel.defaultSerializers = clone(GeoDataMemberViewModel.defaultSerializers);
-GeoDataSourceViewModel.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
+GeoDataItemViewModel.defaultSerializers = clone(GeoDataMemberViewModel.defaultSerializers);
+GeoDataItemViewModel.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
     if (defined(viewModel.rectangle)) {
         json.rectangle = [
             CesiumMath.toDegrees(viewModel.rectangle.west),
@@ -278,44 +278,44 @@ GeoDataSourceViewModel.defaultSerializers.rectangle = function(viewModel, json, 
     }
 };
 
-freezeObject(GeoDataSourceViewModel.defaultSerializers);
+freezeObject(GeoDataItemViewModel.defaultSerializers);
 
 /**
  * When implemented in a derived class, loads this data source it is not already loaded.  It is safe to
- * call this method multiple times.  The {@link GeoDataSourceViewModel#isLoading} flag will be set while the load is in progress.
+ * call this method multiple times.  The {@link GeoDataItemViewModel#isLoading} flag will be set while the load is in progress.
  * This method may do nothing if the data source does not do an lazy loading of its data.
  */
-GeoDataSourceViewModel.prototype.load = function() {
+GeoDataItemViewModel.prototype.load = function() {
 };
 
 /**
- * Toggles the {@link GeoDataSourceViewModel#isEnabled} property of this item.  If it is enabled, calling this method
+ * Toggles the {@link GeoDataItemViewModel#isEnabled} property of this item.  If it is enabled, calling this method
  * will disable it.  If it is disabled, calling this method will enable it.
  *
  * @returns {Boolean} true if the item is now enabled, false if it is now disabled.
  */
- GeoDataSourceViewModel.prototype.toggleEnabled = function() {
+ GeoDataItemViewModel.prototype.toggleEnabled = function() {
     this.isEnabled = !this.isEnabled;
     return this.isEnabled;
 };
 
 /**
- * Toggles the {@link GeoDataSourceViewModel#isShown} property of this item.  If it is shown, calling this method
+ * Toggles the {@link GeoDataItemViewModel#isShown} property of this item.  If it is shown, calling this method
  * will hide it.  If it is hidden, calling this method will show it.
  *
  * @returns {Boolean} true if the item is now shown, false if it is now hidden.
  */
- GeoDataSourceViewModel.prototype.toggleShown = function() {
+ GeoDataItemViewModel.prototype.toggleShown = function() {
     this.isShown = !this.isShown;
     return this.isShown;
 };
 
 /**
- * Toggles the {@link GeoDataSourceViewModel#isLegendVisible} property of this item.  If it is visible, calling this
+ * Toggles the {@link GeoDataItemViewModel#isLegendVisible} property of this item.  If it is visible, calling this
  * method will hide it.  If it is hidden, calling this method will make it visible.
  * @return {Boolean} true if the legend is now visible, false if it is now hidden.
  */
-GeoDataSourceViewModel.prototype.toggleLegendVisible = function() {
+GeoDataItemViewModel.prototype.toggleLegendVisible = function() {
     this.isLegendVisible = !this.isLegendVisible;
     return this.isLegendVisible;
 };
@@ -323,11 +323,11 @@ GeoDataSourceViewModel.prototype.toggleLegendVisible = function() {
 var scratchRectangle = new Rectangle();
 
 /**
- * Moves the camera so that the item's bounding rectangle is visible.  If {@link GeoDataSourceViewModel#rectangle} is
+ * Moves the camera so that the item's bounding rectangle is visible.  If {@link GeoDataItemViewModel#rectangle} is
  * undefined or covers more than about half the world in the longitude direction, or if the data source is not enabled
  * or not shown, this method does nothing.
  */
- GeoDataSourceViewModel.prototype.zoomTo = function() {
+ GeoDataItemViewModel.prototype.zoomTo = function() {
     runWhenDoneLoading(this, function(that) {
         if (!defined(that.rectangle)) {
             return;
@@ -370,10 +370,10 @@ var scratchRectangle = new Rectangle();
 };
 
 /**
- * Uses the {@link GeoDataSourceViewModel#clock} settings from this data source.  If this data source
+ * Uses the {@link GeoDataItemViewModel#clock} settings from this data source.  If this data source
  * has no clock settings, this method does nothing.
  */
-GeoDataSourceViewModel.prototype.useClock = function() {
+GeoDataItemViewModel.prototype.useClock = function() {
     runWhenDoneLoading(this, function(that) {
         if (!defined(that.clock)) {
             return;
@@ -400,115 +400,115 @@ GeoDataSourceViewModel.prototype.useClock = function() {
 
 /**
  * Moves the camera so that the data source's bounding rectangle is visible, and updates the application clock according to this
- * data source's clock settings.  This method simply calls {@link GeoDataSourceViewModel#zoomTo} and
- * {@link GeoDataSourceViewModel#useClock}.
+ * data source's clock settings.  This method simply calls {@link GeoDataItemViewModel#zoomTo} and
+ * {@link GeoDataItemViewModel#useClock}.
  */
-GeoDataSourceViewModel.prototype.zoomToAndUseClock = function() {
+GeoDataItemViewModel.prototype.zoomToAndUseClock = function() {
     this.zoomTo();
     this.useClock();
 };
 
 /**
  * When implemented in a derived class, enables this data source on the Cesium globe.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to true.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isEnabled} property to true.  This method will throw an exception
  * if the data source is already enabled.  Calling this method should NOT also show the data source
- * on the globe (see {@link GeoDataSourceViewModel#showInCesium}), so in some cases it may not do anything at all.
+ * on the globe (see {@link GeoDataItemViewModel#showInCesium}), so in some cases it may not do anything at all.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is already enabled.
  */
-GeoDataSourceViewModel.prototype._enableInCesium = function() {
+GeoDataItemViewModel.prototype._enableInCesium = function() {
     throw new DeveloperError('_enableInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, disables this data source on the Cesium globe.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to false.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isEnabled} property to false.  This method will throw an exception
  * if the data source is not enabled.  When implementing this method in a derived class, you can assume that
- * {@link GeoDataSourceViewModel#hideInCesium} will be called on a shown data source before this method is called.
+ * {@link GeoDataItemViewModel#hideInCesium} will be called on a shown data source before this method is called.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is not enabled.
  */
-GeoDataSourceViewModel.prototype._disableInCesium = function() {
+GeoDataItemViewModel.prototype._disableInCesium = function() {
     throw new DeveloperError('_disableInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, shows this data source on the Cesium globe.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to true.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isShown} property to true.  This method will throw an exception
  * if the data source is already shown or if it is not enabled.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is not enabled.
  * @throws {DeveloperError} If the data source is already shown.
  */
-GeoDataSourceViewModel.prototype._showInCesium = function() {
+GeoDataItemViewModel.prototype._showInCesium = function() {
     throw new DeveloperError('_showInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, hides this data source on the Cesium globe.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to false.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isShown} property to false.  This method will throw an exception
  * if the data source is not shown or if it is not enabled.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is not enabled.
  * @throws {DeveloperError} If the data source is not shown.
  */
-GeoDataSourceViewModel.prototype._hideInCesium = function() {
+GeoDataItemViewModel.prototype._hideInCesium = function() {
     throw new DeveloperError('_hideInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, enables this data source on the Leaflet map.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to true.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isEnabled} property to true.  This method will throw an exception
  * if the data source is already enabled.  Calling this method should NOT also show the data source
- * on the map (see {@link GeoDataSourceViewModel#showInLeaflet}), so in some cases it may not do anything at all.
+ * on the map (see {@link GeoDataItemViewModel#showInLeaflet}), so in some cases it may not do anything at all.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is already enabled.
  */
-GeoDataSourceViewModel.prototype._enableInLeaflet = function() {
+GeoDataItemViewModel.prototype._enableInLeaflet = function() {
     throw new DeveloperError('enableInLeaflet must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, disables this data source on the Leaflet map.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isEnabled} property to false.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isEnabled} property to false.  This method will throw an exception
  * if the data source is not enabled.  When implementing this method in a derived class, you can assume that
- * {@link GeoDataSourceViewModel#hideInLeaflet} will be called on a shown data source before this method is called.
+ * {@link GeoDataItemViewModel#hideInLeaflet} will be called on a shown data source before this method is called.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is not enabled.
  */
-GeoDataSourceViewModel.prototype._disableInLeaflet = function() {
+GeoDataItemViewModel.prototype._disableInLeaflet = function() {
     throw new DeveloperError('disableInLeaflet must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, shows this data source on the Leaflet map.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to true.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isShown} property to true.  This method will throw an exception
  * if the data source is already shown or if it is not enabled.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is not enabled.
  * @throws {DeveloperError} If the data source is already shown.
  */
-GeoDataSourceViewModel.prototype._showInLeaflet = function() {
+GeoDataItemViewModel.prototype._showInLeaflet = function() {
     throw new DeveloperError('_showInLeaflet must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, hides this data source on the Leaflet map.  You should not call this
- * directly, but instead set the {@link GeoDataSourceViewModel#isShown} property to false.  This method will throw an exception
+ * directly, but instead set the {@link GeoDataItemViewModel#isShown} property to false.  This method will throw an exception
  * if the data source is not shown or if it is not enabled.
  * @abstract
  * @protected
  * @throws {DeveloperError} If the data source is not enabled.
  * @throws {DeveloperError} If the data source is not shown.
  */
-GeoDataSourceViewModel.prototype._hideInLeaflet = function() {
+GeoDataItemViewModel.prototype._hideInLeaflet = function() {
     throw new DeveloperError('_hideInLeaflet must be implemented in the derived class.');
 };
 
@@ -606,4 +606,4 @@ function hide(viewModel) {
     }
 }
 
-module.exports = GeoDataSourceViewModel;
+module.exports = GeoDataItemViewModel;

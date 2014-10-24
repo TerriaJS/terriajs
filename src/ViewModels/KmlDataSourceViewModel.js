@@ -23,7 +23,7 @@ var corsProxy = require('../corsProxy');
 var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
 var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
 var GeoDataCatalogError = require('./GeoDataCatalogError');
-var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
+var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
@@ -51,17 +51,17 @@ var pointPalette = {
 };
 
 /**
- * A {@link GeoDataSourceViewModel} representing KML or KMZ feature data.
+ * A {@link GeoDataItemViewModel} representing KML or KMZ feature data.
  *
  * @alias KmlDataSourceViewModel
  * @constructor
- * @extends GeoDataSourceViewModel
+ * @extends GeoDataItemViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  * @param {String} [url] The URL from which to retrieve the KML or KMZ data.
  */
 var KmlDataSourceViewModel = function(context, url) {
-    GeoDataSourceViewModel.call(this, context);
+    GeoDataItemViewModel.call(this, context);
 
     this._cesiumDataSource = undefined;
 
@@ -89,7 +89,7 @@ var KmlDataSourceViewModel = function(context, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-KmlDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
+KmlDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
 defineProperties(KmlDataSourceViewModel.prototype, {
     /**

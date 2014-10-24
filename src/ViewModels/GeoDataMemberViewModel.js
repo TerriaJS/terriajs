@@ -10,7 +10,7 @@ var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 /**
- * A member of a {@link GeoDataGroupViewModel}.  A member may be a {@link GeoDataSourceViewModel} or a
+ * A member of a {@link GeoDataGroupViewModel}.  A member may be a {@link GeoDataItemViewModel} or a
  * {@link GeoDataGroupViewModel}.
  *
  * @alias GeoDataMemberViewModel

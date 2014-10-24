@@ -25,7 +25,7 @@ var corsProxy = require('../corsProxy');
 var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
 var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
 var GeoDataCatalogError = require('./GeoDataCatalogError');
-var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
+var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
@@ -33,17 +33,17 @@ var readText = require('../readText');
 var runLater = require('../runLater');
 
 /**
- * A {@link GeoDataSourceViewModel} representing CSV data.
+ * A {@link GeoDataItemViewModel} representing CSV data.
  *
  * @alias CsvDataSourceViewModel
  * @constructor
- * @extends GeoDataSourceViewModel
+ * @extends GeoDataItemViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  * @param {String} [url] The URL from which to retrieve the CSV data.
  */
 var CsvDataSourceViewModel = function(context, url) {
-    GeoDataSourceViewModel.call(this, context);
+    GeoDataItemViewModel.call(this, context);
 
     this._tableDataSource = undefined;
 
@@ -76,7 +76,7 @@ var CsvDataSourceViewModel = function(context, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl', 'isLoading']);
 };
 
-CsvDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
+CsvDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
 defineProperties(CsvDataSourceViewModel.prototype, {
     /**

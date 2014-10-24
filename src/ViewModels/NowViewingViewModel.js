@@ -225,7 +225,7 @@ NowViewingViewModel.prototype.toggleOpen = function() {
 };
 
 /**
- * Records the the index of each data source in the Now Viewing list in a {@link GeoDataSourceViewModel#nowViewingIndex} property
+ * Records the the index of each data source in the Now Viewing list in a {@link GeoDataItemViewModel#nowViewingIndex} property
  * on the data source.  This is used to save the state of the Now Viewing list and is not intended for general
  * use.
  * @private
@@ -237,7 +237,7 @@ NowViewingViewModel.prototype.recordNowViewingIndices = function() {
 };
 
 /**
- * Sorts the data sources in the Now Viewing list by their {@link GeoDataSourceViewModel#nowViewingIndex} properties.  This is used
+ * Sorts the data sources in the Now Viewing list by their {@link GeoDataItemViewModel#nowViewingIndex} properties.  This is used
  * to restore the state of the Now Viewing list and is not intended for general use.
  * @private
  */

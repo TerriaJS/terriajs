@@ -9,21 +9,21 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var GeoDataSourceViewModel = require('./GeoDataSourceViewModel');
+var GeoDataItemViewModel = require('./GeoDataItemViewModel');
 var inherit = require('../inherit');
 
 /**
- * A {@link GeoDataSourceViewModel} that is added to the map as a rasterized imagery layer.
+ * A {@link GeoDataItemViewModel} that is added to the map as a rasterized imagery layer.
  *
  * @alias ImageryLayerDataSourceViewModel
  * @constructor
- * @extends GeoDataSourceViewModel
+ * @extends GeoDataItemViewModel
  * @abstract
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
 var ImageryLayerDataSourceViewModel = function(context) {
-    GeoDataSourceViewModel.call(this, context);
+    GeoDataItemViewModel.call(this, context);
 
     this._imageryLayer = undefined;
 
@@ -41,7 +41,7 @@ var ImageryLayerDataSourceViewModel = function(context) {
     }, this);
 };
 
-ImageryLayerDataSourceViewModel.prototype = inherit(GeoDataSourceViewModel.prototype);
+ImageryLayerDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
 defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     /**
@@ -108,10 +108,10 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     }
 });
 
-ImageryLayerDataSourceViewModel.defaultUpdaters = clone(GeoDataSourceViewModel.defaultUpdaters);
+ImageryLayerDataSourceViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
 freezeObject(ImageryLayerDataSourceViewModel.defaultUpdaters);
 
-ImageryLayerDataSourceViewModel.defaultSerializers = clone(GeoDataSourceViewModel.defaultSerializers);
+ImageryLayerDataSourceViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
 freezeObject(ImageryLayerDataSourceViewModel.defaultSerializers);
 
 ImageryLayerDataSourceViewModel.prototype._showInCesium = function() {
