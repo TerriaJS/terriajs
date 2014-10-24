@@ -13,7 +13,7 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
 var CsvItemViewModel = require('./CsvItemViewModel');
 
-var registerGeoDataViewModels = function() {
+var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
     createCatalogMemberFromType.register('esri-mapServer', ArcGisMapServerItemViewModel);
     createCatalogMemberFromType.register('geojson', GeoJsonItemViewModel);
@@ -36,4 +36,4 @@ function matchesExtension(extension) {
     };
 }
 
-module.exports = registerGeoDataViewModels;
+module.exports = registerCatalogViewModels;

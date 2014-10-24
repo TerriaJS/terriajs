@@ -52,11 +52,11 @@ if (start) {
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
     var PopupMessage = require('./PopupMessage');
     var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');
-    var registerGeoDataViewModels = require('../ViewModels/registerGeoDataViewModels');
+    var registerCatalogViewModels = require('../ViewModels/registerCatalogViewModels');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
-    registerGeoDataViewModels();
+    registerCatalogViewModels();
 
     var context = new GeoDataCatalogContext();
 
