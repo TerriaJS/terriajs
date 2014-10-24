@@ -8,25 +8,25 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 
-var createGeoDataItemFromType = require('./createGeoDataItemFromType');
-var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
+var createCatalogMemberFromType = require('./createCatalogMemberFromType');
+var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 
 /**
  * The view model for the geospatial data catalog.
  *
  * @param {GeoDataCatalogContext} context The context for the catalog.
  *
- * @alias GeoDataCatalogViewModel
+ * @alias CatalogViewModel
  * @constructor
  */
-var GeoDataCatalogViewModel = function(context) {
+var CatalogViewModel = function(context) {
     if (!defined(context)) {
         throw new DeveloperError('context is required');
     }
 
     this._context = context;
 
-    this._group = new GeoDataGroupViewModel(context);
+    this._group = new CatalogGroupViewModel(context);
     this._group.name = 'Root Group';
 
     /**
@@ -49,7 +49,7 @@ var GeoDataCatalogViewModel = function(context) {
                 }
             }
 
-            group = new GeoDataGroupViewModel(this.context);
+            group = new CatalogGroupViewModel(this.context);
             group.name = 'User-Added Data';
             group.description = 'The group for data that was added by the user via the Add Data panel.';
             this.group.add(group);
@@ -58,10 +58,10 @@ var GeoDataCatalogViewModel = function(context) {
     });
 };
 
-defineProperties(GeoDataCatalogViewModel.prototype, {
+defineProperties(CatalogViewModel.prototype, {
     /**
      * Gets the context for this catalog.
-     * @memberOf GeoDataCatalogViewModel.prototype
+     * @memberOf CatalogViewModel.prototype
      * @type {GeoDataCatalogContext}
      */
     context : {
@@ -72,8 +72,8 @@ defineProperties(GeoDataCatalogViewModel.prototype, {
 
     /**
      * Gets the catalog's top-level group.
-     * @memberOf GeoDataCatalogViewModel.prototype
-     * @type {GeoDataGroupViewModel}
+     * @memberOf CatalogViewModel.prototype
+     * @type {CatalogGroupViewModel}
      */
     group : {
         get : function() {
@@ -90,7 +90,7 @@ defineProperties(GeoDataCatalogViewModel.prototype, {
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  */
-GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
+CatalogViewModel.prototype.updateFromJson = function(json) {
     if (!(json instanceof Array)) {
         throw new DeveloperError('JSON catalog description must be an array of groups.');
     }
@@ -108,7 +108,7 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
         // Find an existing group with the same name, if any.
         var existingGroup = this.group.findFirstItemByName(group.name);
         if (!defined(existingGroup)) {
-            existingGroup = createGeoDataItemFromType(group.type, this.context);
+            existingGroup = createCatalogMemberFromType(group.type, this.context);
             this.group.add(existingGroup);
         }
 
@@ -124,22 +124,22 @@ GeoDataCatalogViewModel.prototype.updateFromJson = function(json) {
  * @param {Object} [options] Object with the following properties:
  * @param {Boolean} [options.enabledItemsOnly=false] true if only enabled data items (and their groups) should be serialized,
  *                  or false if all data items should be serialized.
- * @param {GeoDataMemberViewModel[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
+ * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
  *        all of the data items that were not serialized because they were not enabled.  The array will be empty if
  *        options.enabledItemsOnly is false.
  * @param {Boolean} [options.skipItemsWithLocalData=false] true if items with a serializable 'data' property should be skipped entirely.
  *                  This is useful to avoid creating a JSON data structure with potentially very large embedded data.
- * @param {GeoDataMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
+ * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
  *        if options.skipItemsWithLocalData is false.
  * @return {Object} The serialized JSON object-literal.
  */
-GeoDataCatalogViewModel.prototype.serializeToJson = function(options) {
+CatalogViewModel.prototype.serializeToJson = function(options) {
     this.context.nowViewing.recordNowViewingIndices();
 
     var json = {};
-    GeoDataGroupViewModel.defaultSerializers.items(this.group, json, 'items', options);
+    CatalogGroupViewModel.defaultSerializers.items(this.group, json, 'items', options);
     return json.items;
 };
 
-module.exports = GeoDataCatalogViewModel;
+module.exports = CatalogViewModel;

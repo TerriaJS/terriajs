@@ -2,31 +2,31 @@
 
 /*global require*/
 
-var ArcGisMapServerDataItemViewModel = require('./ArcGisMapServerDataItemViewModel');
+var ArcGisMapServerItemViewModel = require('./ArcGisMapServerItemViewModel');
 var CkanGroupViewModel = require('./CkanGroupViewModel');
-var createGeoDataItemFromType = require('./createGeoDataItemFromType');
-var createGeoDataItemFromUrl = require('./createGeoDataItemFromUrl');
-var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
-var GeoJsonDataItemViewModel = require('./GeoJsonDataItemViewModel');
-var KmlDataItemViewModel = require('./KmlDataItemViewModel');
-var WebMapServiceDataItemViewModel = require('./WebMapServiceDataItemViewModel');
+var createCatalogMemberFromType = require('./createCatalogMemberFromType');
+var createCatalogItemFromUrl = require('./createCatalogItemFromUrl');
+var CatalogGroupViewModel = require('./CatalogGroupViewModel');
+var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
+var KmlItemViewModel = require('./KmlItemViewModel');
+var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
-var CsvDataItemViewModel = require('./CsvDataItemViewModel');
+var CsvItemViewModel = require('./CsvItemViewModel');
 
 var registerGeoDataViewModels = function() {
-    createGeoDataItemFromType.register('ckan', CkanGroupViewModel);
-    createGeoDataItemFromType.register('esri-mapServer', ArcGisMapServerDataItemViewModel);
-    createGeoDataItemFromType.register('geojson', GeoJsonDataItemViewModel);
-    createGeoDataItemFromType.register('group', GeoDataGroupViewModel);
-    createGeoDataItemFromType.register('kml', KmlDataItemViewModel);
-    createGeoDataItemFromType.register('wms', WebMapServiceDataItemViewModel);
-    createGeoDataItemFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
+    createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
+    createCatalogMemberFromType.register('esri-mapServer', ArcGisMapServerItemViewModel);
+    createCatalogMemberFromType.register('geojson', GeoJsonItemViewModel);
+    createCatalogMemberFromType.register('group', CatalogGroupViewModel);
+    createCatalogMemberFromType.register('kml', KmlItemViewModel);
+    createCatalogMemberFromType.register('wms', WebMapServiceItemViewModel);
+    createCatalogMemberFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
 
-    createGeoDataItemFromUrl.register(matchesExtension('geojson'), GeoJsonDataItemViewModel);
-    createGeoDataItemFromUrl.register(matchesExtension('json'), GeoJsonDataItemViewModel);
-    createGeoDataItemFromUrl.register(matchesExtension('kml'), KmlDataItemViewModel);
-    createGeoDataItemFromUrl.register(matchesExtension('kmz'), KmlDataItemViewModel);
-    createGeoDataItemFromUrl.register(matchesExtension('csv'), CsvDataItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('geojson'), GeoJsonItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('json'), GeoJsonItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('kml'), KmlItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('kmz'), KmlItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('csv'), CsvItemViewModel);
 };
 
 function matchesExtension(extension) {

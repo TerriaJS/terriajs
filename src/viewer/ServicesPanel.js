@@ -7,9 +7,9 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 
 var corsProxy = require('../corsProxy');
-var createGeoDataItemFromType = require('../ViewModels/createGeoDataItemFromType');
-var createGeoDataItemFromUrl = require('../ViewModels/createGeoDataItemFromUrl');
-var GeoDataGroupViewModel = require('../ViewModels/GeoDataGroupViewModel');
+var createCatalogMemberFromType = require('../ViewModels/createCatalogMemberFromType');
+var createCatalogItemFromUrl = require('../ViewModels/createCatalogItemFromUrl');
+var CatalogGroupViewModel = require('../ViewModels/CatalogGroupViewModel');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
 
@@ -112,9 +112,9 @@ var ServicesPanel = function(options) {
                             str += 'Click the load button below to load the page from the service.';
 
                             if (res.layer.type === 'DATA') {
-                                viewModel.layer = createGeoDataItemFromUrl(res.layer.url, viewModel.catalog.context);
+                                viewModel.layer = createCatalogItemFromUrl(res.layer.url, viewModel.catalog.context);
                             } else {
-                                viewModel.layer = createGeoDataItemFromType(res.layer.type, viewModel.catalog.context);
+                                viewModel.layer = createCatalogMemberFromType(res.layer.type, viewModel.catalog.context);
                                 viewModel.layer.updateFromJson(res.layer);
                             }
 
@@ -135,7 +135,7 @@ var ServicesPanel = function(options) {
 
                 var group = userAddedDataGroup.findFirstItemByName(viewModel.services[viewModel.selectedService() | 0].name);
                 if (!defined(group)) {
-                    group = new GeoDataGroupViewModel(viewModel.catalog.context);
+                    group = new CatalogGroupViewModel(viewModel.catalog.context);
                     group.name = viewModel.services[viewModel.selectedService() | 0].name;
                     group.isOpen = true;
                     viewModel.catalog.userAddedDataGroup.add(group);

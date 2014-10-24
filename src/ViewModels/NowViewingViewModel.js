@@ -19,7 +19,7 @@ var NowViewingViewModel = function(context) {
      * Gets the list of items that we are "now viewing".  It is recommended that you use
      * the methods on this instance instead of manipulating the list of items directly.
      * This property is observable.
-     * @type {GeoDataMemberViewModel[]}
+     * @type {CatalogMemberViewModel[]}
      */
     this.items = [];
 
@@ -91,7 +91,7 @@ NowViewingViewModel.prototype.destroy = function() {
 /**
  * Adds an item to the "Now Viewing" pane.
  *
- * @param {GeoDataMemberViewModel} item The item to add.
+ * @param {CatalogMemberViewModel} item The item to add.
  */
 NowViewingViewModel.prototype.add = function(item) {
     // Keep reorderable data sources (ie: imagery layers) below non-orderable ones (ie: GeoJSON).
@@ -111,7 +111,7 @@ NowViewingViewModel.prototype.add = function(item) {
 /**
  * Removes an item from the "Now Viewing" pane and from the map.
  *
- * @param {GeoDataMemberViewModel} item The item to remove.
+ * @param {CatalogMemberViewModel} item The item to remove.
  */
 NowViewingViewModel.prototype.remove = function(item) {
     item.isEnabled = false;
@@ -135,7 +135,7 @@ NowViewingViewModel.prototype.removeAll = function() {
  * Raises an item, making it displayed on top of the item that is currently above it.  If it
  * is nonsensical to move this item up (e.g. it is already at the top), this method does nothing.
  *
- * @param {GeoDataMemberViewModel} item The item to raise.
+ * @param {CatalogMemberViewModel} item The item to raise.
  * @param {Number} [index] The index of the item of the list, if it is already known.
  */
 NowViewingViewModel.prototype.raise = function(item, index) {
@@ -177,7 +177,7 @@ NowViewingViewModel.prototype.raise = function(item, index) {
  * Lowers an item, making it displayed below the item that is currently below it.  If it
  * is nonsensical to move this item down (e.g. it is already at the bottom), this method does nothing.
  *
- * @param {GeoDataMemberViewModel} item The item to lower.
+ * @param {CatalogMemberViewModel} item The item to lower.
  * @param {Number} [index] The index of the item of the list, if it is already known.
  */
 NowViewingViewModel.prototype.lower = function(item, index) {
@@ -225,7 +225,7 @@ NowViewingViewModel.prototype.toggleOpen = function() {
 };
 
 /**
- * Records the the index of each data source in the Now Viewing list in a {@link GeoDataItemViewModel#nowViewingIndex} property
+ * Records the the index of each data source in the Now Viewing list in a {@link CatalogItemViewModel#nowViewingIndex} property
  * on the data source.  This is used to save the state of the Now Viewing list and is not intended for general
  * use.
  * @private
@@ -237,7 +237,7 @@ NowViewingViewModel.prototype.recordNowViewingIndices = function() {
 };
 
 /**
- * Sorts the data sources in the Now Viewing list by their {@link GeoDataItemViewModel#nowViewingIndex} properties.  This is used
+ * Sorts the data sources in the Now Viewing list by their {@link CatalogItemViewModel#nowViewingIndex} properties.  This is used
  * to restore the state of the Now Viewing list and is not intended for general use.
  * @private
  */

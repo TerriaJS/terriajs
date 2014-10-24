@@ -23,8 +23,8 @@ var corsProxy = require('../corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
 var GeoDataCatalogError = require('./GeoDataCatalogError');
-var GeoDataItemViewModel = require('./GeoDataItemViewModel');
-var ImageryLayerDataItemViewModel = require('./ImageryLayerDataItemViewModel');
+var CatalogItemViewModel = require('./CatalogItemViewModel');
+var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var readXml = require('../readXml');
@@ -51,23 +51,23 @@ var pointPalette = {
 };
 
 /**
- * A {@link GeoDataItemViewModel} representing KML or KMZ feature data.
+ * A {@link CatalogItemViewModel} representing KML or KMZ feature data.
  *
- * @alias KmlDataItemViewModel
+ * @alias KmlItemViewModel
  * @constructor
- * @extends GeoDataItemViewModel
+ * @extends CatalogItemViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  * @param {String} [url] The URL from which to retrieve the KML or KMZ data.
  */
-var KmlDataItemViewModel = function(context, url) {
-    GeoDataItemViewModel.call(this, context);
+var KmlItemViewModel = function(context, url) {
+    CatalogItemViewModel.call(this, context);
 
     this._cesiumDataSource = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
-     * {@link GeoJsonDataItemViewModel#data} is defined.  This property is observable.
+     * {@link GeoJsonItemViewModel#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -80,7 +80,7 @@ var KmlDataItemViewModel = function(context, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link KmlDataItemViewModel#data} was obtained.  This will be used
+     * Gets or sets the URL from which the {@link KmlItemViewModel#data} was obtained.  This will be used
      * to resolve any resources linked in the KML file, if any.
      * @type {String}
      */
@@ -89,12 +89,12 @@ var KmlDataItemViewModel = function(context, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-KmlDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+KmlItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
 
-defineProperties(KmlDataItemViewModel.prototype, {
+defineProperties(KmlItemViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf KmlDataItemViewModel.prototype
+     * @memberOf KmlItemViewModel.prototype
      * @type {String}
      */
     type : {
@@ -105,7 +105,7 @@ defineProperties(KmlDataItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'KML'.
-     * @memberOf KmlDataItemViewModel.prototype
+     * @memberOf KmlItemViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -116,7 +116,7 @@ defineProperties(KmlDataItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf KmlDataItemViewModel.prototype
+     * @memberOf KmlItemViewModel.prototype
      * @type {MetadataViewModel}
      */
     metadata : {
@@ -131,17 +131,17 @@ defineProperties(KmlDataItemViewModel.prototype, {
 });
 
 /**
- * Processes the KML or KMZ data supplied via the {@link KmlDataItemViewModel#data} property.  If
- * {@link KmlDataItemViewModel#data} is undefined, this method downloads KML or KMZ data from 
- * {@link KmlDataItemViewModel#url} and processes that.  It is safe to call this method multiple times.
+ * Processes the KML or KMZ data supplied via the {@link KmlItemViewModel#data} property.  If
+ * {@link KmlItemViewModel#data} is undefined, this method downloads KML or KMZ data from 
+ * {@link KmlItemViewModel#url} and processes that.  It is safe to call this method multiple times.
  * It is called automatically when the data source is enabled.
  */
-KmlDataItemViewModel.prototype.load = function() {
+KmlItemViewModel.prototype.load = function() {
 };
 
 var kmzRegex = /\.kmz$/i;
 
-KmlDataItemViewModel.prototype._enableInCesium = function() {
+KmlItemViewModel.prototype._enableInCesium = function() {
     if (defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -166,7 +166,7 @@ KmlDataItemViewModel.prototype._enableInCesium = function() {
                     sender: that,
                     title: 'Unexpected type of KML data',
                     message: '\
-KmlDataItemViewModel.data is expected to be an XML Document, Blob, or File, but it was none of these. \
+KmlItemViewModel.data is expected to be an XML Document, Blob, or File, but it was none of these. \
 This may indicate a bug in National Map or incorrect use of the National Map API. \
 If you believe it is a bug in National Map, please report it by emailing \
 <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
@@ -178,7 +178,7 @@ If you believe it is a bug in National Map, please report it by emailing \
     }
 };
 
-KmlDataItemViewModel.prototype._disableInCesium = function() {
+KmlItemViewModel.prototype._disableInCesium = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -186,7 +186,7 @@ KmlDataItemViewModel.prototype._disableInCesium = function() {
     this._cesiumDataSource = undefined;
 };
 
-KmlDataItemViewModel.prototype._showInCesium = function() {
+KmlItemViewModel.prototype._showInCesium = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -199,7 +199,7 @@ KmlDataItemViewModel.prototype._showInCesium = function() {
     dataSources.add(this._cesiumDataSource);
 };
 
-KmlDataItemViewModel.prototype._hideInCesium = function() {
+KmlItemViewModel.prototype._hideInCesium = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -212,15 +212,15 @@ KmlDataItemViewModel.prototype._hideInCesium = function() {
     dataSources.remove(this._cesiumDataSource, false);
 };
 
-KmlDataItemViewModel.prototype._enableInLeaflet = function() {
+KmlItemViewModel.prototype._enableInLeaflet = function() {
     this._enableInCesium();
 };
 
-KmlDataItemViewModel.prototype._disableInLeaflet = function() {
+KmlItemViewModel.prototype._disableInLeaflet = function() {
     this._disableInCesium();
 };
 
-KmlDataItemViewModel.prototype._showInLeaflet = function() {
+KmlItemViewModel.prototype._showInLeaflet = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -233,7 +233,7 @@ KmlDataItemViewModel.prototype._showInLeaflet = function() {
     dataSources.add(this._cesiumDataSource);
 };
 
-KmlDataItemViewModel.prototype._hideInLeaflet = function() {
+KmlItemViewModel.prototype._hideInLeaflet = function() {
     if (!defined(this._cesiumDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -254,4 +254,4 @@ function proxyUrl(context, url) {
     return url;
 }
 
-module.exports = KmlDataItemViewModel;
+module.exports = KmlItemViewModel;

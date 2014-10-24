@@ -9,21 +9,21 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var GeoDataItemViewModel = require('./GeoDataItemViewModel');
+var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../inherit');
 
 /**
- * A {@link GeoDataItemViewModel} that is added to the map as a rasterized imagery layer.
+ * A {@link CatalogItemViewModel} that is added to the map as a rasterized imagery layer.
  *
- * @alias ImageryLayerDataItemViewModel
+ * @alias ImageryLayerItemViewModel
  * @constructor
- * @extends GeoDataItemViewModel
+ * @extends CatalogItemViewModel
  * @abstract
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
-var ImageryLayerDataItemViewModel = function(context) {
-    GeoDataItemViewModel.call(this, context);
+var ImageryLayerItemViewModel = function(context) {
+    CatalogItemViewModel.call(this, context);
 
     this._imageryLayer = undefined;
 
@@ -41,13 +41,13 @@ var ImageryLayerDataItemViewModel = function(context) {
     }, this);
 };
 
-ImageryLayerDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+ImageryLayerItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
 
-defineProperties(ImageryLayerDataItemViewModel.prototype, {
+defineProperties(ImageryLayerItemViewModel.prototype, {
     /**
      * Gets the Cesium or Leaflet imagery layer object associated with this data source.
      * This property is undefined if the data source is not enabled.
-     * @memberOf ImageryLayerDataItemViewModel.prototype
+     * @memberOf ImageryLayerItemViewModel.prototype
      * @type {Object}
      */
     imageryLayer : {
@@ -59,7 +59,7 @@ defineProperties(ImageryLayerDataItemViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
      * Data sources that cannot be reordered are typically displayed above reorderable data sources.
-     * @memberOf ImageryLayerDataItemViewModel.prototype
+     * @memberOf ImageryLayerItemViewModel.prototype
      * @type {Boolean}
      */
     supportsReordering : {
@@ -70,7 +70,7 @@ defineProperties(ImageryLayerDataItemViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the opacity of this data source can be changed.
-     * @memberOf ImageryLayerDataItemViewModel.prototype
+     * @memberOf ImageryLayerItemViewModel.prototype
      * @type {Boolean}
      */
     supportsOpacity : {
@@ -80,41 +80,41 @@ defineProperties(ImageryLayerDataItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link GeoDataMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf ImageryLayerDataItemViewModel.prototype
+     * @memberOf ImageryLayerItemViewModel.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return ImageryLayerDataItemViewModel.defaultUpdaters;
+            return ImageryLayerItemViewModel.defaultUpdaters;
         }
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link GeoDataMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf ImageryLayerDataItemViewModel.prototype
+     * @memberOf ImageryLayerItemViewModel.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return ImageryLayerDataItemViewModel.defaultSerializers;
+            return ImageryLayerItemViewModel.defaultSerializers;
         }
     }
 });
 
-ImageryLayerDataItemViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
-freezeObject(ImageryLayerDataItemViewModel.defaultUpdaters);
+ImageryLayerItemViewModel.defaultUpdaters = clone(CatalogItemViewModel.defaultUpdaters);
+freezeObject(ImageryLayerItemViewModel.defaultUpdaters);
 
-ImageryLayerDataItemViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
-freezeObject(ImageryLayerDataItemViewModel.defaultSerializers);
+ImageryLayerItemViewModel.defaultSerializers = clone(CatalogItemViewModel.defaultSerializers);
+freezeObject(ImageryLayerItemViewModel.defaultSerializers);
 
-ImageryLayerDataItemViewModel.prototype._showInCesium = function() {
+ImageryLayerItemViewModel.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -122,7 +122,7 @@ ImageryLayerDataItemViewModel.prototype._showInCesium = function() {
     this._imageryLayer.alpha = this.opacity;
 };
 
-ImageryLayerDataItemViewModel.prototype._hideInCesium = function() {
+ImageryLayerItemViewModel.prototype._hideInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -130,7 +130,7 @@ ImageryLayerDataItemViewModel.prototype._hideInCesium = function() {
     this._imageryLayer.alpha = 0.0;
 };
 
-ImageryLayerDataItemViewModel.prototype._showInLeaflet = function() {
+ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -138,7 +138,7 @@ ImageryLayerDataItemViewModel.prototype._showInLeaflet = function() {
     this._imageryLayer.setOpacity(this.opacity);
 };
 
-ImageryLayerDataItemViewModel.prototype._hideInLeaflet = function() {
+ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -158,4 +158,4 @@ function updateOpacity(viewModel) {
     }
 }
 
-module.exports = ImageryLayerDataItemViewModel;
+module.exports = ImageryLayerItemViewModel;

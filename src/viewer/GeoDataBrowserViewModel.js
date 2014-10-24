@@ -24,10 +24,10 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var corsProxy = require('../corsProxy');
-var createGeoDataItemFromType = require('../ViewModels/createGeoDataItemFromType');
-var createGeoDataItemFromUrl = require('../ViewModels/createGeoDataItemFromUrl');
+var createCatalogMemberFromType = require('../ViewModels/createCatalogMemberFromType');
+var createCatalogItemFromUrl = require('../ViewModels/createCatalogItemFromUrl');
 var GeoData = require('../GeoData');
-var GeoDataGroupViewModel = require('../ViewModels/GeoDataGroupViewModel');
+var CatalogGroupViewModel = require('../ViewModels/CatalogGroupViewModel');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../readJson');
@@ -140,7 +140,7 @@ Please select a file or service type from the drop-down list before clicking the
         } else if (that.addType === 'File') {
             ga('send', 'event', 'addDataUrl', 'File', that.addDataUrl);
 
-            newViewModel = createGeoDataItemFromUrl(that.addDataUrl, that.catalog.context);
+            newViewModel = createCatalogItemFromUrl(that.addDataUrl, that.catalog.context);
             if (!defined(newViewModel)) {
                 var message2 = new PopupMessage({
                     container : document.body,
@@ -165,7 +165,7 @@ these extensions in order for National Map to know how to load it.'
             newViewModel.name = name;
 
             // TODO: Remove this, it only exists to make the UI happy.
-            var group = new GeoDataGroupViewModel(that.catalog.context);
+            var group = new CatalogGroupViewModel(that.catalog.context);
             group.name = name;
             group.isOpen = true;
             group.items.push(newViewModel);
@@ -177,7 +177,7 @@ these extensions in order for National Map to know how to load it.'
         } else {
             ga('send', 'event', 'addDataUrl', that.addType, that.addDataUrl);
 
-            newViewModel = createGeoDataItemFromType(that.addType, that.catalog.context);
+            newViewModel = createCatalogMemberFromType(that.addType, that.catalog.context);
             newViewModel.name = that.addDataUrl;
             newViewModel.url = that.addDataUrl;
             that.catalog.userAddedDataGroup.items.push(newViewModel);
@@ -345,7 +345,7 @@ these extensions in order for National Map to know how to load it.'
     });
 
     function addFile(file) {
-        var newViewModel = createGeoDataItemFromUrl(file.name, that.catalog.context);
+        var newViewModel = createCatalogItemFromUrl(file.name, that.catalog.context);
         if (!defined(newViewModel)) {
             var message2 = new PopupMessage({
                 container : document.body,
@@ -371,7 +371,7 @@ these extensions in order for National Map to know how to load it.'
         newViewModel.dataSourceUrl = file.name;
 
         // TODO: Remove this, it only exists to make the UI happy.
-        var group = new GeoDataGroupViewModel(that.catalog.context);
+        var group = new CatalogGroupViewModel(that.catalog.context);
         group.name = name;
         group.isOpen = true;
         group.items.push(newViewModel);

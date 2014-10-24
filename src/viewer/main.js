@@ -47,7 +47,7 @@ if (start) {
     var AusGlobeViewer = require('./AusGlobeViewer');
     var corsProxy = require('../corsProxy');
     var GeoDataCatalogContext = require('../ViewModels/GeoDataCatalogContext');
-    var GeoDataCatalogViewModel = require('../ViewModels/GeoDataCatalogViewModel');
+    var CatalogViewModel = require('../ViewModels/CatalogViewModel');
     var GeoDataCollection = require('../GeoDataCollection');
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
     var PopupMessage = require('./PopupMessage');
@@ -63,7 +63,7 @@ if (start) {
     context.nowViewing = new NowViewingViewModel(context);
     context.corsProxy = corsProxy;
 
-    var catalog = new GeoDataCatalogViewModel(context);
+    var catalog = new CatalogViewModel(context);
     catalog.isLoading = true;
 
     var url = window.location;

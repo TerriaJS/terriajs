@@ -1,10 +1,10 @@
 'use strict';
 
-/*global require,describe,it,expect*/
+/*global require,describe,it,expect,beforeEach*/
 
 var GeoDataCatalogContext = require('../../src/ViewModels/GeoDataCatalogContext');
-var ImageryLayerDataItemViewModel = require('../../src/ViewModels/ImageryLayerDataItemViewModel');
-var WebMapServiceDataItemViewModel = require('../../src/ViewModels/WebMapServiceDataItemViewModel');
+var ImageryLayerItemViewModel = require('../../src/ViewModels/ImageryLayerItemViewModel');
+var WebMapServiceItemViewModel = require('../../src/ViewModels/WebMapServiceItemViewModel');
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
@@ -13,7 +13,7 @@ var wmsViewModel;
 
 beforeEach(function() {
     context = new GeoDataCatalogContext();
-    wmsViewModel = new WebMapServiceDataItemViewModel(context);
+    wmsViewModel = new WebMapServiceItemViewModel(context);
 });
 
 describe('WebMapServiceDataItemViewModel', function() {
@@ -24,7 +24,7 @@ describe('WebMapServiceDataItemViewModel', function() {
 
     it('throws if constructed without a context', function() {
         expect(function() {
-            var viewModel = new WebMapServiceDataItemViewModel();
+            var viewModel = new WebMapServiceItemViewModel();
         }).toThrow();
     });
 
@@ -33,7 +33,7 @@ describe('WebMapServiceDataItemViewModel', function() {
     });
 
     it('is derived from ImageryLayerDataItemViewModel', function() {
-        expect(wmsViewModel instanceof ImageryLayerDataItemViewModel).toBe(true);
+        expect(wmsViewModel instanceof ImageryLayerItemViewModel).toBe(true);
     });
 
     it('derives legendUrl from url if legendUrl is not explicitly provided', function() {
@@ -148,7 +148,7 @@ describe('WebMapServiceDataItemViewModel', function() {
 
         var json = wmsViewModel.serializeToJson();
 
-        var reconstructed = new WebMapServiceDataItemViewModel(context);
+        var reconstructed = new WebMapServiceItemViewModel(context);
         reconstructed.updateFromJson(json);
 
         expect(reconstructed).toEqual(wmsViewModel);

@@ -19,24 +19,24 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../corsProxy');
 var GeoDataCatalogError = require('./GeoDataCatalogError');
-var GeoDataGroupViewModel = require('./GeoDataGroupViewModel');
+var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var runLater = require('../runLater');
-var WebMapServiceDataItemViewModel = require('./WebMapServiceDataItemViewModel');
+var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 
 /**
- * A {@link GeoDataGroupViewModel} representing a collection of layers from a [CKAN](http://ckan.org) server.
+ * A {@link CatalogGroupViewModel} representing a collection of layers from a [CKAN](http://ckan.org) server.
  *
  * @alias CkanGroupViewModel
  * @constructor
- * @extends GeoDataGroupViewModel
+ * @extends CatalogGroupViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
 var CkanGroupViewModel = function(context) {
-    GeoDataGroupViewModel.call(this, context, 'ckan');
+    CatalogGroupViewModel.call(this, context, 'ckan');
 
     this._loadedUrl = undefined;
     this._loadedFilterQuery = undefined;
@@ -93,7 +93,7 @@ var CkanGroupViewModel = function(context) {
     knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
 };
 
-CkanGroupViewModel.prototype = inherit(GeoDataGroupViewModel.prototype);
+CkanGroupViewModel.prototype = inherit(CatalogGroupViewModel.prototype);
 
 defineProperties(CkanGroupViewModel.prototype, {
     /**
@@ -121,7 +121,7 @@ defineProperties(CkanGroupViewModel.prototype, {
 
 /**
  * Loads the items in this group by invoking the GetCapabilities service on the WMS server.
- * Each layer in the response becomes an item in the group.  The {@link GeoDataGroupViewModel#isLoading} flag will
+ * Each layer in the response becomes an item in the group.  The {@link CatalogGroupViewModel#isLoading} flag will
  * be set while the load is in progress.
  */
 CkanGroupViewModel.prototype.load = function() {
@@ -330,7 +330,7 @@ function populateGroupFromResults(viewModel, json) {
             uri.search('');
             var url = uri.toString();
 
-            var newItem = new WebMapServiceDataItemViewModel(viewModel.context);
+            var newItem = new WebMapServiceItemViewModel(viewModel.context);
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;
@@ -353,7 +353,7 @@ function populateGroupFromResults(viewModel, json) {
 
                 var existingGroup = viewModel.findFirstItemByName(group.display_name);
                 if (!defined(existingGroup)) {
-                    existingGroup = new GeoDataGroupViewModel(viewModel.context);
+                    existingGroup = new CatalogGroupViewModel(viewModel.context);
                     existingGroup.name = group.display_name;
                     viewModel.add(existingGroup);
                 }

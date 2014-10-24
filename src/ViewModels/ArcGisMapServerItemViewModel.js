@@ -19,22 +19,22 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var corsProxy = require('../corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
-var GeoDataItemViewModel = require('./GeoDataItemViewModel');
-var ImageryLayerDataItemViewModel = require('./ImageryLayerDataItemViewModel');
+var CatalogItemViewModel = require('./CatalogItemViewModel');
+var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 
 /**
- * A {@link ImageryLayerDataItemViewModel} representing a layer from an Esri ArcGIS MapServer.
+ * A {@link ImageryLayerItemViewModel} representing a layer from an Esri ArcGIS MapServer.
  *
- * @alias ArcGisMapServerDataItemViewModel
+ * @alias ArcGisMapServerItemViewModel
  * @constructor
- * @extends ImageryLayerDataItemViewModel
+ * @extends ImageryLayerItemViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
-var ArcGisMapServerDataItemViewModel = function(context) {
-    ImageryLayerDataItemViewModel.call(this, context);
+var ArcGisMapServerItemViewModel = function(context) {
+    ImageryLayerItemViewModel.call(this, context);
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -45,12 +45,12 @@ var ArcGisMapServerDataItemViewModel = function(context) {
     knockout.track(this, ['url']);
 };
 
-ArcGisMapServerDataItemViewModel.prototype = inherit(ImageryLayerDataItemViewModel.prototype);
+ArcGisMapServerItemViewModel.prototype = inherit(ImageryLayerItemViewModel.prototype);
 
-defineProperties(ArcGisMapServerDataItemViewModel.prototype, {
+defineProperties(ArcGisMapServerItemViewModel.prototype, {
     /**
      * Gets the type of data item represented by this instance.
-     * @memberOf ArcGisMapServerDataItemViewModel.prototype
+     * @memberOf ArcGisMapServerItemViewModel.prototype
      * @type {String}
      */
     type : {
@@ -61,7 +61,7 @@ defineProperties(ArcGisMapServerDataItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'Esri ArcGIS MapServer'.
-     * @memberOf ArcGisMapServerDataItemViewModel.prototype
+     * @memberOf ArcGisMapServerItemViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -71,7 +71,7 @@ defineProperties(ArcGisMapServerDataItemViewModel.prototype, {
     }
 });
 
-ArcGisMapServerDataItemViewModel.prototype._enableInCesium = function() {
+ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -94,7 +94,7 @@ ArcGisMapServerDataItemViewModel.prototype._enableInCesium = function() {
     scene.imageryLayers.add(this._imageryLayer);
 };
 
-ArcGisMapServerDataItemViewModel.prototype._disableInCesium = function() {
+ArcGisMapServerItemViewModel.prototype._disableInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -105,7 +105,7 @@ ArcGisMapServerDataItemViewModel.prototype._disableInCesium = function() {
     this._imageryLayer = undefined;
 };
 
-ArcGisMapServerDataItemViewModel.prototype._enableInLeaflet = function() {
+ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -123,7 +123,7 @@ ArcGisMapServerDataItemViewModel.prototype._enableInLeaflet = function() {
     map.addLayer(this._imageryLayer);
 };
 
-ArcGisMapServerDataItemViewModel.prototype._disableInLeaflet = function() {
+ArcGisMapServerItemViewModel.prototype._disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -153,4 +153,4 @@ function proxyUrl(context, url) {
     return url;
 }
 
-module.exports = ArcGisMapServerDataItemViewModel;
+module.exports = ArcGisMapServerItemViewModel;

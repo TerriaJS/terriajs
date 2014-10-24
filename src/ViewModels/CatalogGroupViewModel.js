@@ -9,24 +9,24 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var createGeoDataItemFromType = require('./createGeoDataItemFromType');
-var GeoDataMemberViewModel = require('./GeoDataMemberViewModel');
+var createCatalogMemberFromType = require('./createCatalogMemberFromType');
+var CatalogMemberViewModel = require('./CatalogMemberViewModel');
 var inherit = require('../inherit');
 var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**
- * A group of data in the {@link GeoDataCatalogViewModel}.  A group can contain
- * {@link GeoDataMemberViewModel|GeoDataMemberViewModels} or other
- * {@link GeoDataGroupViewModel|GeoDataGroupViewModels}.
+ * A group of data items and other groups in the {@link CatalogViewModel}.  A group can contain
+ * {@link CatalogMemberViewModel|CatalogMemberViewModels} or other
+ * {@link CatalogGroupViewModel|CatalogGroupViewModels}.
  *
- * @alias GeoDataGroupViewModel
+ * @alias CatalogGroupViewModel
  * @constructor
- * @extends GeoDataMemberViewModel
+ * @extends CatalogMemberViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
-var GeoDataGroupViewModel = function(context) {
-    GeoDataMemberViewModel.call(this, context);
+var CatalogGroupViewModel = function(context) {
+    CatalogMemberViewModel.call(this, context);
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -44,7 +44,7 @@ var GeoDataGroupViewModel = function(context) {
 
     /**
      * Gets the collection of items in this group.  This property is observable.
-     * @type {GeoDataMemberViewModel[]}
+     * @type {CatalogMemberViewModel[]}
      */
     this.items = [];
 
@@ -70,12 +70,12 @@ var GeoDataGroupViewModel = function(context) {
     });
 };
 
-GeoDataGroupViewModel.prototype = inherit(GeoDataMemberViewModel.prototype);
+CatalogGroupViewModel.prototype = inherit(CatalogMemberViewModel.prototype);
 
-defineProperties(GeoDataGroupViewModel.prototype, {
+defineProperties(CatalogGroupViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf GeoDataGroupViewModel.prototype
+     * @memberOf CatalogGroupViewModel.prototype
      * @type {String}
      */
     type : {
@@ -86,7 +86,7 @@ defineProperties(GeoDataGroupViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
-     * @memberOf GeoDataGroupViewModel.prototype
+     * @memberOf CatalogGroupViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -96,42 +96,42 @@ defineProperties(GeoDataGroupViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link GeoDataMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf GeoDataGroupViewModel.prototype
+     * @memberOf CatalogGroupViewModel.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return GeoDataGroupViewModel.defaultUpdaters;
+            return CatalogGroupViewModel.defaultUpdaters;
         }
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link GeoDataMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf GeoDataGroupViewModel.prototype
+     * @memberOf CatalogGroupViewModel.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return GeoDataGroupViewModel.defaultSerializers;
+            return CatalogGroupViewModel.defaultSerializers;
         }
     }
 });
 
 /**
- * Gets or sets the set of default updater functions to use in {@link GeoDataMemberViewModel#updateFromJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#updaters} property.
+ * Gets or sets the set of default updater functions to use in {@link CatalogMemberViewModel#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#updaters} property.
  * @type {Object}
  */
-GeoDataGroupViewModel.defaultUpdaters = clone(GeoDataMemberViewModel.defaultUpdaters);
+CatalogGroupViewModel.defaultUpdaters = clone(CatalogMemberViewModel.defaultUpdaters);
 
-GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName) {
+CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName) {
     if (!defined(json.items)) {
         return;
     }
@@ -148,7 +148,7 @@ GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
             // Find an existing item with the same name
             var existingItem = viewModel.findFirstItemByName(item.name);
             if (!defined(existingItem) || existingItem.type !== item.type) {
-                existingItem = createGeoDataItemFromType(item.type, viewModel.context);
+                existingItem = createCatalogMemberFromType(item.type, viewModel.context);
                 viewModel.add(existingItem);
             }
 
@@ -157,18 +157,18 @@ GeoDataGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
     });
 };
 
-GeoDataGroupViewModel.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
+CatalogGroupViewModel.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
 
-freezeObject(GeoDataGroupViewModel.defaultUpdaters);
+freezeObject(CatalogGroupViewModel.defaultUpdaters);
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link GeoDataMemberViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link GeoDataMemberViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
  * @type {Object}
  */
-GeoDataGroupViewModel.defaultSerializers = clone(GeoDataMemberViewModel.defaultSerializers);
+CatalogGroupViewModel.defaultSerializers = clone(CatalogMemberViewModel.defaultSerializers);
 
-GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+CatalogGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     var items = json.items = [];
 
     for (var i = 0; i < viewModel.items.length; ++i) {
@@ -179,42 +179,42 @@ GeoDataGroupViewModel.defaultSerializers.items = function(viewModel, json, prope
     }
 };
 
-GeoDataGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+CatalogGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
-freezeObject(GeoDataGroupViewModel.defaultSerializers);
+freezeObject(CatalogGroupViewModel.defaultSerializers);
 
 /**
  * When implemented in a derived class, loads the contents of this group, if the contents are not already loaded.  It is safe to
- * call this method multiple times.  The {@link GeoDataGroupViewModel#isLoading} flag will be set while the load is in progress.
- * This base-class implementation of this method does nothing because {@link GeoDataGroupViewModel} does not do an lazy loading
+ * call this method multiple times.  The {@link CatalogGroupViewModel#isLoading} flag will be set while the load is in progress.
+ * This base-class implementation of this method does nothing because {@link CatalogGroupViewModel} does not do an lazy loading
  * of its content.
  */
-GeoDataGroupViewModel.prototype.load = function() {
+CatalogGroupViewModel.prototype.load = function() {
 };
 
 /**
  * Adds an item or group to this group.
  * 
- * @param {GeoDataMemberViewModel} item The item to add.
+ * @param {CatalogMemberViewModel} item The item to add.
  */
-GeoDataGroupViewModel.prototype.add = function(item) {
+CatalogGroupViewModel.prototype.add = function(item) {
     this.items.push(item);
 };
 
 /**
  * Removes an item or group from this group.
  * 
- * @param {GeoDataMemberViewModel} item The item to remove.
+ * @param {CatalogMemberViewModel} item The item to remove.
  */
-GeoDataGroupViewModel.prototype.remove = function(item) {
+CatalogGroupViewModel.prototype.remove = function(item) {
     this.items.remove(item);
 };
 
 /**
- * Toggles the {@link GeoDataGroupViewModel#isOpen} property of this group.  If it is open, calling this method
+ * Toggles the {@link CatalogGroupViewModel#isOpen} property of this group.  If it is open, calling this method
  * will close it.  If it is closed, calling this method will open it.
  */
-GeoDataGroupViewModel.prototype.toggleOpen = function() {
+CatalogGroupViewModel.prototype.toggleOpen = function() {
     this.isOpen = !this.isOpen;
 };
 
@@ -222,9 +222,9 @@ GeoDataGroupViewModel.prototype.toggleOpen = function() {
  * Finds the first item in this group that has the given name.  The search is case-sensitive.
  * 
  * @param {String} name The name of the item to find.
- * @return {GeoDataMemberViewModel} The first item with the given name, or undefined if no item with that name exists.
+ * @return {CatalogMemberViewModel} The first item with the given name, or undefined if no item with that name exists.
  */
-GeoDataGroupViewModel.prototype.findFirstItemByName = function(name) {
+CatalogGroupViewModel.prototype.findFirstItemByName = function(name) {
     for (var i = 0; i < this.items.length; ++i) {
         if (this.items[i].name === name) {
             return this.items[i];
@@ -234,4 +234,4 @@ GeoDataGroupViewModel.prototype.findFirstItemByName = function(name) {
     return undefined;
 };
 
-module.exports = GeoDataGroupViewModel;
+module.exports = CatalogGroupViewModel;
