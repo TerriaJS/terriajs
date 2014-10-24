@@ -24,7 +24,7 @@ var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var runLater = require('../runLater');
-var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewModel');
+var WebMapServiceDataItemViewModel = require('./WebMapServiceDataItemViewModel');
 
 /**
  * A {@link GeoDataGroupViewModel} representing a collection of layers from a [CKAN](http://ckan.org) server.
@@ -330,7 +330,7 @@ function populateGroupFromResults(viewModel, json) {
             uri.search('');
             var url = uri.toString();
 
-            var newItem = new WebMapServiceDataSourceViewModel(viewModel.context);
+            var newItem = new WebMapServiceDataItemViewModel(viewModel.context);
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;

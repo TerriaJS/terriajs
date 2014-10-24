@@ -14,7 +14,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var Scene = require('../../third_party/cesium/Source/Scene/Scene');
 
-var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
+var MetadataViewModel = require('./MetadataViewModel');
 var GeoDataMemberViewModel = require('./GeoDataMemberViewModel');
 var inherit = require('../inherit');
 var NowViewingViewModel = require('./NowViewingViewModel');
@@ -196,7 +196,7 @@ defineProperties(GeoDataItemViewModel.prototype, {
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
      * @memberOf GeoDataItemViewModel.prototype
-     * @type {DataSourceMetadataViewModel}
+     * @type {MetadataViewModel}
      */
     metadata : {
         get : function() {
@@ -236,9 +236,9 @@ defineProperties(GeoDataItemViewModel.prototype, {
 /**
  * Gets or sets the default metadata to use for data sources that don't provide anything better from their
  * {@link GeoDataItemViewModel#metadata} property.  The default simply indicates that no metadata is available.
- * @type {DataSourceMetadataViewModel}
+ * @type {MetadataViewModel}
  */
-GeoDataItemViewModel.defaultMetadata = new DataSourceMetadataViewModel();
+GeoDataItemViewModel.defaultMetadata = new MetadataViewModel();
 GeoDataItemViewModel.defaultMetadata.isLoading = false;
 GeoDataItemViewModel.defaultMetadata.dataSourceErrorMessage = 'This data source does not have any details available.';
 GeoDataItemViewModel.defaultMetadata.serviceErrorMessage = 'This service does not have any details available.';

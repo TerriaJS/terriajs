@@ -23,7 +23,7 @@ var inherit = require('../inherit');
 var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var runLater = require('../runLater');
-var WebMapServiceDataSourceViewModel = require('./WebMapServiceDataSourceViewModel');
+var WebMapServiceDataItemViewModel = require('./WebMapServiceDataItemViewModel');
 
 /**
  * A {@link GeoDataGroupViewModel} representing a collection of layers from a Web Map Service (WMS) server.
@@ -205,7 +205,7 @@ function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetF
 }
 
 function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian) {
-    var result = new WebMapServiceDataSourceViewModel(viewModel.context);
+    var result = new WebMapServiceDataItemViewModel(viewModel.context);
 
     result.name = layer.Title;
     result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;

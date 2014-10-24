@@ -22,11 +22,11 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var TableDataSource = require('../TableDataSource');
 
 var corsProxy = require('../corsProxy');
-var DataSourceMetadataViewModel = require('./DataSourceMetadataViewModel');
-var DataSourceMetadataItemViewModel = require('./DataSourceMetadataItemViewModel');
+var MetadataViewModel = require('./MetadataViewModel');
+var MetadataItemViewModel = require('./MetadataItemViewModel');
 var GeoDataCatalogError = require('./GeoDataCatalogError');
 var GeoDataItemViewModel = require('./GeoDataItemViewModel');
-var ImageryLayerDataSourceViewModel = require('./ImageryLayerDataSourceViewModel');
+var ImageryLayerDataItemViewModel = require('./ImageryLayerDataItemViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var readText = require('../readText');
@@ -35,21 +35,21 @@ var runLater = require('../runLater');
 /**
  * A {@link GeoDataItemViewModel} representing CSV data.
  *
- * @alias CsvDataSourceViewModel
+ * @alias CsvDataItemViewModel
  * @constructor
  * @extends GeoDataItemViewModel
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  * @param {String} [url] The URL from which to retrieve the CSV data.
  */
-var CsvDataSourceViewModel = function(context, url) {
+var CsvDataItemViewModel = function(context, url) {
     GeoDataItemViewModel.call(this, context);
 
     this._tableDataSource = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
-     * {@link GeoJsonDataSourceViewModel#data} is defined.  This property is observable.
+     * {@link GeoJsonDataItemViewModel#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -62,7 +62,7 @@ var CsvDataSourceViewModel = function(context, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link CsvDataSourceViewModel#data} was obtained.
+     * Gets or sets the URL from which the {@link CsvDataItemViewModel#data} was obtained.
      * @type {String}
      */
     this.dataSourceUrl = undefined;
@@ -76,12 +76,12 @@ var CsvDataSourceViewModel = function(context, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl', 'isLoading']);
 };
 
-CsvDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+CsvDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
-defineProperties(CsvDataSourceViewModel.prototype, {
+defineProperties(CsvDataItemViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf CsvDataSourceViewModel.prototype
+     * @memberOf CsvDataItemViewModel.prototype
      * @type {String}
      */
     type : {
@@ -92,7 +92,7 @@ defineProperties(CsvDataSourceViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'CSV'.
-     * @memberOf CsvDataSourceViewModel.prototype
+     * @memberOf CsvDataItemViewModel.prototype
      * @type {String}
      */
     typeName : {
@@ -103,12 +103,12 @@ defineProperties(CsvDataSourceViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf CsvDataSourceViewModel.prototype
-     * @type {DataSourceMetadataViewModel}
+     * @memberOf CsvDataItemViewModel.prototype
+     * @type {MetadataViewModel}
      */
     metadata : {
         get : function() {
-            var result = new DataSourceMetadataViewModel();
+            var result = new MetadataViewModel();
             result.isLoading = false;
             result.dataSourceErrorMessage = 'This data source does not have any details available.';
             result.serviceErrorMessage = 'This service does not have any details available.';
@@ -118,12 +118,12 @@ defineProperties(CsvDataSourceViewModel.prototype, {
 });
 
 /**
- * Processes the CSV data supplied via the {@link CsvDataSourceViewModel#data} property.  If
- * {@link CsvDataSourceViewModel#data} is undefined, this method downloads CSV data from 
- * {@link CsvDataSourceViewModel#url} and processes that.  It is safe to call this method multiple times.
+ * Processes the CSV data supplied via the {@link CsvDataItemViewModel#data} property.  If
+ * {@link CsvDataItemViewModel#data} is undefined, this method downloads CSV data from 
+ * {@link CsvDataItemViewModel#url} and processes that.  It is safe to call this method multiple times.
  * It is called automatically when the data source is enabled.
  */
-CsvDataSourceViewModel.prototype.load = function() {
+CsvDataItemViewModel.prototype.load = function() {
     if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
         return;
     }
@@ -164,7 +164,7 @@ CsvDataSourceViewModel.prototype.load = function() {
                         sender: that,
                         title: 'Unexpected type of CSV data',
                         message: '\
-    CsvDataSourceViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
+    CsvDataItemViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
     This may indicate a bug in National Map or incorrect use of the National Map API. \
     If you believe it is a bug in National Map, please report it by emailing \
     <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
@@ -183,13 +183,13 @@ CsvDataSourceViewModel.prototype.load = function() {
     });
 };
 
-CsvDataSourceViewModel.prototype._enableInCesium = function() {
+CsvDataItemViewModel.prototype._enableInCesium = function() {
 };
 
-CsvDataSourceViewModel.prototype._disableInCesium = function() {
+CsvDataItemViewModel.prototype._disableInCesium = function() {
 };
 
-CsvDataSourceViewModel.prototype._showInCesium = function() {
+CsvDataItemViewModel.prototype._showInCesium = function() {
     var dataSources = this.context.cesiumViewer.dataSources;
     if (dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is already shown.');
@@ -198,7 +198,7 @@ CsvDataSourceViewModel.prototype._showInCesium = function() {
     dataSources.add(this._tableDataSource);
 };
 
-CsvDataSourceViewModel.prototype._hideInCesium = function() {
+CsvDataItemViewModel.prototype._hideInCesium = function() {
     var dataSources = this.context.cesiumViewer.dataSources;
     if (!dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is not shown.');
@@ -207,13 +207,13 @@ CsvDataSourceViewModel.prototype._hideInCesium = function() {
     dataSources.remove(this._tableDataSource, false);
 };
 
-CsvDataSourceViewModel.prototype._enableInLeaflet = function() {
+CsvDataItemViewModel.prototype._enableInLeaflet = function() {
 };
 
-CsvDataSourceViewModel.prototype._disableInLeaflet = function() {
+CsvDataItemViewModel.prototype._disableInLeaflet = function() {
 };
 
-CsvDataSourceViewModel.prototype._showInLeaflet = function() {
+CsvDataItemViewModel.prototype._showInLeaflet = function() {
     var dataSources = this.context.leafletMap.dataSources;
     if (dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is already shown.');
@@ -222,7 +222,7 @@ CsvDataSourceViewModel.prototype._showInLeaflet = function() {
     dataSources.add(this._tableDataSource);
 };
 
-CsvDataSourceViewModel.prototype._hideInLeaflet = function() {
+CsvDataItemViewModel.prototype._hideInLeaflet = function() {
     var dataSources = this.context.leafletMap.dataSources;
     if (!dataSources.contains(this._tableDataSource)) {
         throw new DeveloperError('This data source is not shown.');
@@ -239,4 +239,4 @@ function proxyUrl(context, url) {
     return url;
 }
 
-module.exports = CsvDataSourceViewModel;
+module.exports = CsvDataItemViewModel;

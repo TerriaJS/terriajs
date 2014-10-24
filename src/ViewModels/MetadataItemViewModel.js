@@ -5,7 +5,7 @@
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var DataSourceMetadataItemViewModel = function(name, value) {
+var MetadataItemViewModel = function(name, value) {
     /**
      * Gets or sets the name of the metadata item.  This property is observable.
      * @type {String}
@@ -20,7 +20,7 @@ var DataSourceMetadataItemViewModel = function(name, value) {
 
     /**
      * Gets the list of metadata items contained in this group.  This property is observable.
-     * @type {DataSourceMetadataItemViewModel[]}
+     * @type {MetadataItemViewModel[]}
      */
     this.items = [];
 
@@ -34,7 +34,7 @@ var DataSourceMetadataItemViewModel = function(name, value) {
     knockout.track(this, ['name', 'value', 'items', 'isOpen']);
 };
 
-defineProperties(DataSourceMetadataItemViewModel.prototype, {
+defineProperties(MetadataItemViewModel.prototype, {
     /**
      * Gets a value indicating whether this item has child items.
      * @type {Boolean}
@@ -53,11 +53,11 @@ defineProperties(DataSourceMetadataItemViewModel.prototype, {
 });
 
 /**
- * Toggles the {@link DataSourceMetadataItemViewModel#isOpen} property.  If this item's list of children is open,
+ * Toggles the {@link MetadataItemViewModel#isOpen} property.  If this item's list of children is open,
  * calling this method will close it.  If the list is closed, calling this method will open it.
  */
-DataSourceMetadataItemViewModel.prototype.toggleOpen = function() {
+MetadataItemViewModel.prototype.toggleOpen = function() {
     this.isOpen = !this.isOpen;
 };
 
-module.exports = DataSourceMetadataItemViewModel;
+module.exports = MetadataItemViewModel;

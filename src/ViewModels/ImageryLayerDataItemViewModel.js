@@ -15,14 +15,14 @@ var inherit = require('../inherit');
 /**
  * A {@link GeoDataItemViewModel} that is added to the map as a rasterized imagery layer.
  *
- * @alias ImageryLayerDataSourceViewModel
+ * @alias ImageryLayerDataItemViewModel
  * @constructor
  * @extends GeoDataItemViewModel
  * @abstract
  * 
  * @param {GeoDataCatalogContext} context The context for the group.
  */
-var ImageryLayerDataSourceViewModel = function(context) {
+var ImageryLayerDataItemViewModel = function(context) {
     GeoDataItemViewModel.call(this, context);
 
     this._imageryLayer = undefined;
@@ -41,13 +41,13 @@ var ImageryLayerDataSourceViewModel = function(context) {
     }, this);
 };
 
-ImageryLayerDataSourceViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
+ImageryLayerDataItemViewModel.prototype = inherit(GeoDataItemViewModel.prototype);
 
-defineProperties(ImageryLayerDataSourceViewModel.prototype, {
+defineProperties(ImageryLayerDataItemViewModel.prototype, {
     /**
      * Gets the Cesium or Leaflet imagery layer object associated with this data source.
      * This property is undefined if the data source is not enabled.
-     * @memberOf ImageryLayerDataSourceViewModel.prototype
+     * @memberOf ImageryLayerDataItemViewModel.prototype
      * @type {Object}
      */
     imageryLayer : {
@@ -59,7 +59,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
      * Data sources that cannot be reordered are typically displayed above reorderable data sources.
-     * @memberOf ImageryLayerDataSourceViewModel.prototype
+     * @memberOf ImageryLayerDataItemViewModel.prototype
      * @type {Boolean}
      */
     supportsReordering : {
@@ -70,7 +70,7 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the opacity of this data source can be changed.
-     * @memberOf ImageryLayerDataSourceViewModel.prototype
+     * @memberOf ImageryLayerDataItemViewModel.prototype
      * @type {Boolean}
      */
     supportsOpacity : {
@@ -84,12 +84,12 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf ImageryLayerDataSourceViewModel.prototype
+     * @memberOf ImageryLayerDataItemViewModel.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return ImageryLayerDataSourceViewModel.defaultUpdaters;
+            return ImageryLayerDataItemViewModel.defaultUpdaters;
         }
     },
 
@@ -98,23 +98,23 @@ defineProperties(ImageryLayerDataSourceViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf ImageryLayerDataSourceViewModel.prototype
+     * @memberOf ImageryLayerDataItemViewModel.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return ImageryLayerDataSourceViewModel.defaultSerializers;
+            return ImageryLayerDataItemViewModel.defaultSerializers;
         }
     }
 });
 
-ImageryLayerDataSourceViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
-freezeObject(ImageryLayerDataSourceViewModel.defaultUpdaters);
+ImageryLayerDataItemViewModel.defaultUpdaters = clone(GeoDataItemViewModel.defaultUpdaters);
+freezeObject(ImageryLayerDataItemViewModel.defaultUpdaters);
 
-ImageryLayerDataSourceViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
-freezeObject(ImageryLayerDataSourceViewModel.defaultSerializers);
+ImageryLayerDataItemViewModel.defaultSerializers = clone(GeoDataItemViewModel.defaultSerializers);
+freezeObject(ImageryLayerDataItemViewModel.defaultSerializers);
 
-ImageryLayerDataSourceViewModel.prototype._showInCesium = function() {
+ImageryLayerDataItemViewModel.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -122,7 +122,7 @@ ImageryLayerDataSourceViewModel.prototype._showInCesium = function() {
     this._imageryLayer.alpha = this.opacity;
 };
 
-ImageryLayerDataSourceViewModel.prototype._hideInCesium = function() {
+ImageryLayerDataItemViewModel.prototype._hideInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -130,7 +130,7 @@ ImageryLayerDataSourceViewModel.prototype._hideInCesium = function() {
     this._imageryLayer.alpha = 0.0;
 };
 
-ImageryLayerDataSourceViewModel.prototype._showInLeaflet = function() {
+ImageryLayerDataItemViewModel.prototype._showInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -138,7 +138,7 @@ ImageryLayerDataSourceViewModel.prototype._showInLeaflet = function() {
     this._imageryLayer.setOpacity(this.opacity);
 };
 
-ImageryLayerDataSourceViewModel.prototype._hideInLeaflet = function() {
+ImageryLayerDataItemViewModel.prototype._hideInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -158,4 +158,4 @@ function updateOpacity(viewModel) {
     }
 }
 
-module.exports = ImageryLayerDataSourceViewModel;
+module.exports = ImageryLayerDataItemViewModel;
