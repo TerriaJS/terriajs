@@ -548,6 +548,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         targetFrameRate : 40
     };
 
+    // Workaround for Firefox bug with WebGL and printing:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
     if (FeatureDetection.isFirefox()) {
         options.contextOptions = {webgl : {preserveDrawingBuffer : true}};
     }
@@ -556,7 +558,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     var viewer = new Viewer(container, options);
     viewer.extend(viewerEntityMixin);
 
-    //catch Cesium terrain profider down and switch to Ellipsoid
+    //catch Cesium terrain provider down and switch to Ellipsoid
     terrainProvider.errorEvent.addEventListener(function(err) {
         console.log('Terrain provider error.  ', err.message);
         if (viewer.scene.terrainProvider instanceof CesiumTerrainProvider) {
