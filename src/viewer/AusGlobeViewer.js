@@ -524,6 +524,12 @@ AusGlobeViewer.prototype._cesiumViewerActive = function() { return (this.viewer 
 
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
+    var that = this;
+    
+    var terrainProvider = new CesiumTerrainProvider({
+            url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+        });
+
     var options = {
         dataSources : this.geoDataManager.dataSourceCollection,
         homeButton: false,
@@ -533,12 +539,10 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         baseLayerPicker: false,
         navigationHelpButton: false,
         fullscreenButton : false,
+        terrainProvider : terrainProvider,
         imageryProvider : new BingMapsImageryProvider({
             url : '//dev.virtualearth.net',
             mapStyle : BingMapsStyle.AERIAL_WITH_LABELS
-        }),
-        terrainProvider : new CesiumTerrainProvider({
-            url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
         }),
         timeControlsInitiallyVisible : false,
         targetFrameRate : 40
@@ -553,6 +557,28 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
      //create CesiumViewer
     var viewer = new Viewer(container, options);
     viewer.extend(viewerEntityMixin);
+
+    //catch Cesium terrain provider down and switch to Ellipsoid
+    terrainProvider.errorEvent.addEventListener(function(err) {
+        console.log('Terrain provider error.  ', err.message);
+        if (viewer.scene.terrainProvider instanceof CesiumTerrainProvider) {
+            console.log('Switching to EllipsoidTerrainProvider.');
+            viewer.scene.terrainProvider = new EllipsoidTerrainProvider();
+            if (!defined(that.TerrainMessageViewed)) {
+                var msg = new PopupMessage({
+                    container : document.body,
+                    title : 'Terrain Server Not Responding',
+                    message : '\
+The terrain server is not responding at the moment.  You can still use all the features of National \
+Map but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
+again later and the terrain server should be responding as expected.  If the issue persists, please contact \
+us via email at nationalmap@lists.nicta.com.au.'
+                });
+                that.TerrainMessageViewed = true;
+            }
+        }
+    });
+
 
     var lastHeight = 0;
     viewer.scene.preRender.addEventListener(function(scene, time) {
@@ -591,8 +617,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     });
 */
 
-    var that = this;
-    
     var inputHandler = viewer.screenSpaceEventHandler;
 
     // Add double click zoom
