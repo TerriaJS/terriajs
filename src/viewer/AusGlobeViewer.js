@@ -486,6 +486,12 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
 
 AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
+    var that = this;
+    
+    var terrainProvider = new CesiumTerrainProvider({
+            url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+        });
+
     var options = {
         dataSources: this.application.dataSources,
         clock: this.application.clock,
@@ -496,12 +502,10 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         baseLayerPicker: false,
         navigationHelpButton: false,
         fullscreenButton : false,
+        terrainProvider : terrainProvider,
         imageryProvider : new BingMapsImageryProvider({
             url : '//dev.virtualearth.net',
             mapStyle : BingMapsStyle.AERIAL_WITH_LABELS
-        }),
-        terrainProvider : new CesiumTerrainProvider({
-            url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
         }),
         timeControlsInitiallyVisible : false,
         targetFrameRate : 40
@@ -516,6 +520,28 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
      //create CesiumViewer
     var viewer = new Viewer(container, options);
     viewer.extend(viewerEntityMixin);
+
+    //catch Cesium terrain provider down and switch to Ellipsoid
+    terrainProvider.errorEvent.addEventListener(function(err) {
+        console.log('Terrain provider error.  ', err.message);
+        if (viewer.scene.terrainProvider instanceof CesiumTerrainProvider) {
+            console.log('Switching to EllipsoidTerrainProvider.');
+            viewer.scene.terrainProvider = new EllipsoidTerrainProvider();
+            if (!defined(that.TerrainMessageViewed)) {
+                var msg = new PopupMessage({
+                    container : document.body,
+                    title : 'Terrain Server Not Responding',
+                    message : '\
+The terrain server is not responding at the moment.  You can still use all the features of National \
+Map but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
+again later and the terrain server should be responding as expected.  If the issue persists, please contact \
+us via email at nationalmap@lists.nicta.com.au.'
+                });
+                that.TerrainMessageViewed = true;
+            }
+        }
+    });
+
 
     var lastHeight = 0;
     viewer.scene.preRender.addEventListener(function(scene, time) {
@@ -554,8 +580,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     });
 */
 
-    var that = this;
-    
     var inputHandler = viewer.screenSpaceEventHandler;
 
     // Add double click zoom
@@ -1373,17 +1397,13 @@ function selectFeatureLeaflet(viewer, latlng) {
     selectFeatures(promises, viewer.map, latlng);
 }
 
-function formatPopup(title, text) {
-    return '<h3><center>'+title+'</center></h3>'+text;
-}
 
 function selectFeatures(promises, viewer, latlng) {
     var nextPromiseIndex = 0;
-    var popup;
 
     function waitForNextLayersResponse() {
         if (nextPromiseIndex >= promises.length) {
-            popup.setContent(formatPopup('None', 'No features found.'));
+            updatePopup( 'None', 'No features found.');
             return;
         }
 
@@ -1391,7 +1411,7 @@ function selectFeatures(promises, viewer, latlng) {
             function findGoodIdProperty(properties) {
                 for (var key in properties) {
                     if (properties.hasOwnProperty(key) && properties[key]) {
-                        if (/name/i.test(key) || /title/i.test(key)) {
+                        if (/name/i.test(key) || /title/i.test(key)|| /id/i.test(key)) {
                             return properties[key];
                         }
                     }
@@ -1482,9 +1502,9 @@ function selectFeatures(promises, viewer, latlng) {
             // Show information for the first selected feature.
             var feature = result.features[0];
             if (defined(feature)) {
-                popup.setContent( formatPopup( findGoodIdProperty(feature.properties), describe(feature.properties) ));
+                updatePopup( findGoodIdProperty(feature.properties), describe(feature.properties) );
             } else {
-                popup.setContent(formatPopup( 'None', 'No features found.'));
+                updatePopup( 'None', 'No features found.');
             }
         }, function() {
             waitForNextLayersResponse();
@@ -1493,12 +1513,17 @@ function selectFeatures(promises, viewer, latlng) {
 
     waitForNextLayersResponse();
 
-    // Add placeholder information to the infobox so the user knows something is happening.
-    var title = '<h3><center>None</center></h3>';
-    popup = L.popup({maxHeight: 520})
-        .setLatLng(latlng)
-        .setContent(formatPopup('None', 'Loading WMS feature information...'))
-        .openOn(viewer);
+        //create popup but don't show it
+    var popup = L.popup({maxHeight: 520 }).setLatLng(latlng);
+    function updatePopup(title, text) {
+        popup.setContent('<h3><center>'+title+'</center></h3>'+text);
+    }
+        // Show placeholder text to the infobox so the user knows something is happening.
+    updatePopup('', 'Loading WMS feature information...');
+
+        // Wait for .5 seconds to show to let double click through
+    setTimeout(function() { popup.openOn(viewer); }, 500);
+    
 }
 
 module.exports = AusGlobeViewer;
