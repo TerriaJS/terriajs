@@ -30,26 +30,6 @@ var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
 var readXml = require('../readXml');
 var runLater = require('../runLater');
 
-var lineAndFillPalette = {
-    minimumRed : 0.4,
-    minimumGreen : 0.4,
-    minimumBlue : 0.4,
-    maximumRed : 0.9,
-    maximumGreen : 0.9,
-    maximumBlue : 0.9,
-    alpha : 1.0
-};
-
-var pointPalette = {
-    minimumRed : 0.6,
-    minimumGreen : 0.6,
-    minimumBlue : 0.6,
-    maximumRed : 1.0,
-    maximumGreen : 1.0,
-    maximumBlue : 1.0,
-    alpha : 1.0
-};
-
 /**
  * A {@link CatalogItemViewModel} representing KML or KMZ feature data.
  *
