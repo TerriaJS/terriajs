@@ -4,10 +4,10 @@
 var VarType = require('./VarType');
 var Variable = require('./Variable');
 
-var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
-var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
-var loadText = require('../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../third_party/cesium/Source/Core/Rectangle');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 /*!
  * Copyright(c) 2012-2013 National ICT Australia Limited (NICTA).  All rights reserved.

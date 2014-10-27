@@ -16,9 +16,9 @@ var Scene = require('../../third_party/cesium/Source/Scene/Scene');
 
 var MetadataViewModel = require('./MetadataViewModel');
 var CatalogMemberViewModel = require('./CatalogMemberViewModel');
-var inherit = require('../inherit');
+var inherit = require('../Core/inherit');
 var NowViewingViewModel = require('./NowViewingViewModel');
-var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**

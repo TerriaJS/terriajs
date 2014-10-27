@@ -45,10 +45,9 @@ if (start) {
     var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
     var AusGlobeViewer = require('./AusGlobeViewer');
-    var corsProxy = require('../corsProxy');
+    var corsProxy = require('../Core/corsProxy');
     var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
     var CatalogViewModel = require('../ViewModels/CatalogViewModel');
-    var GeoDataCollection = require('../GeoDataCollection');
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
     var PopupMessage = require('./PopupMessage');
     var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');

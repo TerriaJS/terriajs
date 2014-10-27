@@ -73,7 +73,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
 var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
 
-var corsProxy = require('../corsProxy');
+var corsProxy = require('../Core/corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
 var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
 var CatalogViewModel = require('../ViewModels/CatalogViewModel');
@@ -82,13 +82,13 @@ var LeafletViewModel = require('../ViewModels/LeafletViewModel');
 var NavigationWidget = require('./NavigationWidget');
 var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');
 var PopupMessage = require('./PopupMessage');
-var readJson = require('../readJson');
+var readJson = require('../Core/readJson');
 var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
 var TitleWidget = require('./TitleWidget');
 
-var LeafletVisualizer = require('../LeafletVisualizer');
+var LeafletVisualizer = require('../Map/LeafletVisualizer');
 
 //use our own bing maps key
 BingMapsApi.defaultKey = undefined;

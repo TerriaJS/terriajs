@@ -23,14 +23,13 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
-var corsProxy = require('../corsProxy');
+var corsProxy = require('../Core/corsProxy');
 var createCatalogMemberFromType = require('../ViewModels/createCatalogMemberFromType');
 var createCatalogItemFromUrl = require('../ViewModels/createCatalogItemFromUrl');
-var GeoData = require('../GeoData');
 var CatalogGroupViewModel = require('../ViewModels/CatalogGroupViewModel');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
-var readJson = require('../readJson');
+var readJson = require('../Core/readJson');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
 var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');

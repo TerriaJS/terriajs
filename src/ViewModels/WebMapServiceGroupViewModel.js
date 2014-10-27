@@ -16,13 +16,13 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../corsProxy');
+var corsProxy = require('../Core/corsProxy');
 var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
-var inherit = require('../inherit');
+var inherit = require('../Core/inherit');
 var PopupMessage = require('../viewer/PopupMessage');
-var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
-var runLater = require('../runLater');
+var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
+var runLater = require('../Core/runLater');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 
 /**

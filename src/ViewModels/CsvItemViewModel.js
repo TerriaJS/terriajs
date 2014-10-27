@@ -18,19 +18,19 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var TableDataSource = require('../TableDataSource');
-var VarType = require('../VarType');
+var TableDataSource = require('../Map/TableDataSource');
+var VarType = require('../Map/VarType');
 
-var corsProxy = require('../corsProxy');
+var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
-var inherit = require('../inherit');
-var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
-var readText = require('../readText');
-var runLater = require('../runLater');
+var inherit = require('../Core/inherit');
+var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
+var readText = require('../Core/readText');
+var runLater = require('../Core/runLater');
 
 /**
  * A {@link CatalogItemViewModel} representing CSV data.

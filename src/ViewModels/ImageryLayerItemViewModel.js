@@ -10,7 +10,7 @@ var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var CatalogItemViewModel = require('./CatalogItemViewModel');
-var inherit = require('../inherit');
+var inherit = require('../Core/inherit');
 
 /**
  * A {@link CatalogItemViewModel} that is added to the map as a rasterized imagery layer.

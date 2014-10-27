@@ -16,13 +16,13 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
-var corsProxy = require('../corsProxy');
+var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
-var inherit = require('../inherit');
-var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
+var inherit = require('../Core/inherit');
+var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
  * A {@link ImageryLayerItemViewModel} representing a layer from an Esri ArcGIS MapServer.

@@ -5,7 +5,7 @@ var Clock = require('../../third_party/cesium/Source/Core/Clock');
 var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
 
 var CatalogViewModel = require('./CatalogViewModel');
-var corsProxy = require('../corsProxy');
+var corsProxy = require('../Core/corsProxy');
 var NowViewingViewModel = require('./NowViewingViewModel');
 var ServicesViewModel = require('./ServicesViewModel');
 

@@ -11,7 +11,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
 var CatalogMemberViewModel = require('./CatalogMemberViewModel');
-var inherit = require('../inherit');
+var inherit = require('../Core/inherit');
 var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**

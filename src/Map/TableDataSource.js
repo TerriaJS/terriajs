@@ -11,14 +11,14 @@ And writes a czml file for it to display
 
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
-var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../third_party/cesium/Source/Core/defined');
-var CzmlDataSource = require('../third_party/cesium/Source/DataSources/CzmlDataSource');
-var Color = require('../third_party/cesium/Source/Core/Color');
-var defineProperties = require('../third_party/cesium/Source/Core/defineProperties');
-var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
-var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
-var loadText = require('../third_party/cesium/Source/Core/loadText');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
+var Color = require('../../third_party/cesium/Source/Core/Color');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
 
 /**
 * @class TableDataSource is a cesium based datasource for table based geodata

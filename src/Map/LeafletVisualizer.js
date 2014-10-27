@@ -2,18 +2,18 @@
 "use strict";
 
 /*global require,L,URI,$,Document,alert,console*/
-var AssociativeArray = require('../third_party/cesium/Source/Core/AssociativeArray');
-var Cartesian2 = require('../third_party/cesium/Source/Core/Cartesian2');
-var Cartesian3 = require('../third_party/cesium/Source/Core/Cartesian3');
-var Color = require('../third_party/cesium/Source/Core/Color');
-var defined = require('../third_party/cesium/Source/Core/defined');
-var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
-var DeveloperError = require('../third_party/cesium/Source/Core/DeveloperError');
-var Property = require('../third_party/cesium/Source/DataSources/Property');
-var Ellipsoid = require('../third_party/cesium/Source/Core/Ellipsoid');
-var CesiumMath = require('../third_party/cesium/Source/Core/Math');
-var loadImage = require('../third_party/cesium/Source/Core/loadImage');
-var writeTextToCanvas = require('../third_party/cesium/Source/Core/writeTextToCanvas');
+var AssociativeArray = require('../../third_party/cesium/Source/Core/AssociativeArray');
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
+var Color = require('../../third_party/cesium/Source/Core/Color');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Property = require('../../third_party/cesium/Source/DataSources/Property');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
+var writeTextToCanvas = require('../../third_party/cesium/Source/Core/writeTextToCanvas');
  
 
 var defaultColor = Color.WHITE;
