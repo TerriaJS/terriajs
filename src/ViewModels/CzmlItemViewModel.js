@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,Document*/
+/*global require*/
 
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
@@ -8,11 +8,11 @@ var Color = require('../../third_party/cesium/Source/Core/Color');
 var ColorMaterialProperty = require('../../third_party/cesium/Source/DataSources/ColorMaterialProperty');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var ConstantProperty = require('../../third_party/cesium/Source/DataSources/ConstantProperty');
+var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var KmlDataSource = require('../../third_party/cesium/Source/DataSources/KmlDataSource');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
@@ -27,43 +27,43 @@ var CatalogItemViewModel = require('./CatalogItemViewModel');
 var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../inherit');
 var rectangleToLatLngBounds = require('../rectangleToLatLngBounds');
-var readXml = require('../readXml');
+var readJson = require('../readJson');
 var runLater = require('../runLater');
 
 /**
- * A {@link CatalogItemViewModel} representing KML or KMZ feature data.
+ * A {@link CatalogItemViewModel} representing Cesium Language (CZML) data.
  *
- * @alias KmlItemViewModel
+ * @alias CzmlItemViewModel
  * @constructor
  * @extends CatalogItemViewModel
  * 
  * @param {ApplicationViewModel} context The context for the group.
- * @param {String} [url] The URL from which to retrieve the KML or KMZ data.
+ * @param {String} [url] The URL from which to retrieve the CZML data.
  */
-var KmlItemViewModel = function(context, url) {
+var CzmlItemViewModel = function(context, url) {
     CatalogItemViewModel.call(this, context);
 
-    this._kmlDataSource = undefined;
+    this._czmlDataSource = undefined;
     this._loadedUrl = undefined;
     this._loadedData = undefined;
 
     /**
-     * Gets or sets the URL from which to retrieve KML or KMZ data.  This property is ignored if
-     * {@link KmlItemViewModel#data} is defined.  This property is observable.
+     * Gets or sets the URL from which to retrieve CZML data.  This property is ignored if
+     * {@link CzmlItemViewModel#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
 
     /**
-     * Gets or sets the KML or KMZ data, represented as a binary Blob, DOM Document, or a Promise for one of those things.
+     * Gets or sets the CZML data, represented as a binary Blob, JSON object literal, or a Promise for one of those things.
      * This property is observable.
-     * @type {Blob|Document|Promise}
+     * @type {Blob|Object|Promise}
      */
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link KmlItemViewModel#data} was obtained.  This will be used
-     * to resolve any resources linked in the KML file, if any.
+     * Gets or sets the URL from which the {@link CzmlItemViewModel#data} was obtained.  This will be used
+     * to resolve any resources linked in the CZML file, if any.
      * @type {String}
      */
     this.dataSourceUrl = undefined;
@@ -71,34 +71,34 @@ var KmlItemViewModel = function(context, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-KmlItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
+CzmlItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
 
-defineProperties(KmlItemViewModel.prototype, {
+defineProperties(CzmlItemViewModel.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf KmlItemViewModel.prototype
+     * @memberOf CzmlItemViewModel.prototype
      * @type {String}
      */
     type : {
         get : function() {
-            return 'kml';
+            return 'czml';
         }
     },
 
     /**
-     * Gets a human-readable name for this type of data source, 'KML'.
-     * @memberOf KmlItemViewModel.prototype
+     * Gets a human-readable name for this type of data source, 'Cesium Language (CZML)'.
+     * @memberOf CzmlItemViewModel.prototype
      * @type {String}
      */
     typeName : {
         get : function() {
-            return 'KML';
+            return 'Cesium Language (CZML)';
         }
     },
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf KmlItemViewModel.prototype
+     * @memberOf CzmlItemViewModel.prototype
      * @type {MetadataViewModel}
      */
     metadata : {
@@ -112,27 +112,25 @@ defineProperties(KmlItemViewModel.prototype, {
     }
 });
 
-var kmzRegex = /\.kmz$/i;
-
 /**
- * Processes the KML or KMZ data supplied via the {@link KmlItemViewModel#data} property.  If
- * {@link KmlItemViewModel#data} is undefined, this method downloads KML or KMZ data from 
- * {@link KmlItemViewModel#url} and processes that.  It is safe to call this method multiple times.
+ * Processes the CZML data supplied via the {@link CzmlItemViewModel#data} property.  If
+ * {@link CzmlItemViewModel#data} is undefined, this method downloads CZML data from 
+ * {@link CzmlItemViewModel#url} and processes that.  It is safe to call this method multiple times.
  * It is called automatically when the data source is enabled.
  */
-KmlItemViewModel.prototype.load = function() {
+CzmlItemViewModel.prototype.load = function() {
     if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
         return;
     }
 
     this.isLoading = true;
 
-    if (defined(this._kmlDataSource)) {
-        this._kmlDataSource.destroy();
+    if (defined(this._czmlDataSource)) {
+        this._czmlDataSource.destroy();
     }
 
-    var dataSource = new KmlDataSource();
-    this._kmlDataSource = dataSource;
+    var dataSource = new CzmlDataSource();
+    this._czmlDataSource = dataSource;
 
     var that = this;
     runLater(function() {
@@ -141,39 +139,19 @@ KmlItemViewModel.prototype.load = function() {
 
         if (defined(that.data)) {
             when(that.data, function(data) {
-                if (data instanceof Document) {
-                    dataSource.load(data, proxyUrl(that, that.dataSourceUrl)).then(function() {
+                if (data instanceof Blob) {
+                    readJson(data).then(function(data) {
+                        dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
                         doneLoading(that);
                     }).otherwise(function() {
                         errorLoading(that);
                     });
-                } else if (data instanceof Blob) {
-                    if (that.dataSourceUrl && that.dataSourceUrl.match(kmzRegex)) {
-                        dataSource.loadKmz(data, proxyUrl(that, that.dataSourceUrl)).then(function() {
-                            doneLoading(that);
-                        }).otherwise(function() {
-                            errorLoading(that);
-                        });
-                    } else {
-                        readXml(data).then(function(xml) {
-                            dataSource.load(xml, proxyUrl(that, that.dataSourceUrl)).then(function() {
-                                doneLoading(that);
-                            }).otherwise(function() {
-                                errorLoading(that);
-                            });
-                        });
-                    }
                 } else {
-                    that.context.error.raiseEvent(new ViewModelError({
-                        sender: that,
-                        title: 'Unexpected type of KML data',
-                        message: '\
-    KmlItemViewModel.data is expected to be an XML Document, Blob, or File, but it was none of these. \
-    This may indicate a bug in National Map or incorrect use of the National Map API. \
-    If you believe it is a bug in National Map, please report it by emailing \
-    <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-                    }));
+                    dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
+                    doneLoading(that);
                 }
+            }).otherwise(function() {
+                errorLoading(that);
             });
         } else {
             dataSource.loadUrl(proxyUrl(that, that.url)).then(function() {
@@ -185,36 +163,36 @@ KmlItemViewModel.prototype.load = function() {
     });
 };
 
-KmlItemViewModel.prototype._enable = function() {
+CzmlItemViewModel.prototype._enable = function() {
 };
 
-KmlItemViewModel.prototype._disable = function() {
+CzmlItemViewModel.prototype._disable = function() {
 };
 
-KmlItemViewModel.prototype._show = function() {
-    if (!defined(this._kmlDataSource)) {
+CzmlItemViewModel.prototype._show = function() {
+    if (!defined(this._czmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
     var dataSources = this.context.dataSources;
-    if (dataSources.contains(this._kmlDataSource)) {
+    if (dataSources.contains(this._czmlDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
 
-    dataSources.add(this._kmlDataSource);
+    dataSources.add(this._czmlDataSource);
 };
 
-KmlItemViewModel.prototype._hide = function() {
-    if (!defined(this._kmlDataSource)) {
+CzmlItemViewModel.prototype._hide = function() {
+    if (!defined(this._czmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
 
     var dataSources = this.context.dataSources;
-    if (!dataSources.contains(this._kmlDataSource)) {
+    if (!dataSources.contains(this._czmlDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
 
-    dataSources.remove(this._kmlDataSource, false);
+    dataSources.remove(this._czmlDataSource, false);
 };
 
 function proxyUrl(context, url) {
@@ -226,16 +204,16 @@ function proxyUrl(context, url) {
 }
 
 function doneLoading(viewModel) {
-    viewModel.clock = viewModel._kmlDataSource.clock;
+    viewModel.clock = viewModel._czmlDataSource.clock;
     viewModel.isLoading = false;
 }
 
 function errorLoading(viewModel) {
     viewModel.context.error.raiseEvent(new ViewModelError({
         sender: viewModel,
-        title: 'Error loading KML or KMZ',
+        title: 'Error loading CZML',
         message: '\
-An error occurred while loading a KML or KMZ file.  This may indicate that the file is invalid or that it \
+An error occurred while loading a CZML file.  This may indicate that the file is invalid or that it \
 is not supported by National Map.  If you would like assistance or further information, please email us \
 at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
     }));
@@ -246,4 +224,4 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     viewModel.isLoading = false;
 }
 
-module.exports = KmlItemViewModel;
+module.exports = CzmlItemViewModel;
