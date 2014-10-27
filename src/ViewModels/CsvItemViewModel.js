@@ -26,11 +26,14 @@ var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
-var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readText = require('../Core/readText');
 var runLater = require('../Core/runLater');
+
+var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
+var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 
 /**
  * A {@link CatalogItemViewModel} representing CSV data.
@@ -183,23 +186,80 @@ CsvItemViewModel.prototype._disableInCesium = function() {
 };
 
 CsvItemViewModel.prototype._showInCesium = function() {
-    //TODO: add wms stuff for region layer
-    var dataSources = this.context.dataSources;
-    if (dataSources.contains(this._tableDataSource)) {
-        throw new DeveloperError('This data source is already shown.');
-    }
 
-    dataSources.add(this._tableDataSource);
+    if (!defined(this.regionMapped)) {
+        var dataSources = this.context.dataSources;
+        if (dataSources.contains(this._tableDataSource)) {
+            throw new DeveloperError('This data source is already shown.');
+        }
+
+        dataSources.add(this._tableDataSource);
+    }
+    else {
+        var scene = this.context.cesium.scene;
+
+        var imageryProvider = new WebMapServiceImageryProvider({
+            url : proxyUrl(this.context, this.url),
+            layers : this.layer,
+            parameters : WebMapServiceItemViewModel.defaultParameters
+        });
+
+        imageryProvider.base_requestImage = imageryProvider.requestImage;
+        var that = this;
+        imageryProvider.requestImage = function(x, y, level) {
+            var imagePromise = imageryProvider.base_requestImage(x, y, level);
+            if (!defined(imagePromise)) {
+                return imagePromise;
+            }
+            
+            return when(imagePromise, function(image) {
+                if (defined(image)) {
+                    image = recolorImageWithCanvas(image, that.colorFunc);
+                }
+                return image;
+            });
+        };
+            //remap image layer featurePicking Func
+        imageryProvider.base_pickFeatures = imageryProvider.pickFeatures;
+        imageryProvider.pickFeatures = function(x, y, level, longitude, latitude) {
+            var featurePromise = imageryProvider.base_pickFeatures(x, y, level, longitude, latitude);
+            if (!defined(featurePromise)) {
+                return featurePromise;
+            }
+            
+            return when(featurePromise, function(results) {
+                if (defined(results)) {
+                    var id = results[0].data.properties[that.regionProp];
+                    var properties = that.rowProperties(parseInt(id,10));
+                    results[0].description = that.baseDataSource.describe(properties);
+                }
+                return results;
+            });
+        };
+
+        this._imageryLayer = new ImageryLayer(imageryProvider, {alpha : 0.6} );
+
+        scene.imageryLayers.add(this._imageryLayer);
+
+    }
 };
 
 CsvItemViewModel.prototype._hideInCesium = function() {
     //TODO: add wms stuff for region layer
     var dataSources = this.context.dataSources;
     if (!dataSources.contains(this._tableDataSource)) {
-        throw new DeveloperError('This data source is not shown.');
+//        throw new DeveloperError('This data source is not shown.');
     }
 
-    dataSources.remove(this._tableDataSource, false);
+    if (!defined(this.regionMapped)) {
+        dataSources.remove(this._tableDataSource, false);
+    }
+    else {
+        var scene = this.context.cesium.scene;
+
+        scene.imageryLayers.remove(this._imageryLayer);
+        this._imageryLayer = undefined;
+    }
 };
 
 CsvItemViewModel.prototype._enableInLeaflet = function() {
@@ -209,13 +269,45 @@ CsvItemViewModel.prototype._disableInLeaflet = function() {
 };
 
 CsvItemViewModel.prototype._showInLeaflet = function() {
-    //TODO: add wms stuff for region layer
-    this._showInCesium();
+
+    if (!defined(this.regionMapped)) {
+        this._showInCesium();
+    }
+    else {
+        var map = this.context.leaflet.map;
+
+        var options = {
+            layers : this.layer,
+            opacity : 0.6
+        };
+
+        options = combine(defaultValue(WebMapServiceItemViewModel.defaultParameters), options);
+
+        this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.context, this.url), options);
+
+        var that = this;
+        this._imageryLayer.setFilter(function () {
+            new L.CanvasFilter(this, {
+                channelFilter: function (image) {
+                    return recolorImage(image, that.colorFunc);
+                }
+           }).render();
+        });
+
+        map.addLayer(this._imageryLayer);
+    }
 };
 
 CsvItemViewModel.prototype._hideInLeaflet = function() {
-    //TODO: add wms stuff for region layer
-    this._hideInCesium();
+    if (!defined(this.regionMapped)) {
+        this._hideInCesium();
+    }
+    else {
+        var map = this.context.leaflet.map;
+
+        map.removeLayer(this._imageryLayer);
+        this._imageryLayer = undefined;
+    }
 };
 
 function proxyUrl(context, url) {
@@ -235,7 +327,23 @@ function loadTable(viewModel, text) {
 
     if (!viewModel._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
-        addRegionMap(viewModel);
+        if (addRegionMap(viewModel)) {
+            viewModel.regionMapped = true;
+        }
+        else {
+            viewModel.isLoading = false;
+            viewModel.context.error.raiseEvent(new ViewModelError({
+                sender: viewModel,
+                title: 'Could not load CSV file',
+                message: '\
+Could not find any location parameters for latitude and longitude and was not able to determine \
+a region mapping column.'
+            }));
+            viewModel.isEnabled = false;
+            viewModel._loadedUrl = undefined;
+            viewModel._loadedData = undefined;
+
+        }
     }
     else {
         viewModel.clock = viewModel._tableDataSource.clock;
@@ -419,7 +527,7 @@ function createRegionLookupFunc(viewModel) {
 }
 
 function setRegionVariable(viewModel, regionVar, regionType) {
-    if (viewModel.regionVar === regionVar && viewModel.regionType === regionType) {
+    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
         return;
     }
 
@@ -428,19 +536,15 @@ function setRegionVariable(viewModel, regionVar, regionType) {
     if (viewModel.regionType !== regionType) {
         viewModel.regionType = regionType;
 
-        viewModel.url = regionServer + '?service=wms&request=GetMap&layers=' + description.name;
+        viewModel.url = regionServer;
+        viewModel.layer = description.name;
 
         viewModel.regionProp = description.regionProp;
     }
     console.log('Region type:', viewModel.regionType, ', Region var:', viewModel.regionVar);
         
     var succeed = function() {
-         createRegionLookupFunc(viewModel);
-
-        //TODO: need to remove layer and start from scratch with new tiles
-
-        //that._viewMap(viewModel.url, layer);  can finally enable map
-
+        createRegionLookupFunc(viewModel);
         viewModel.isLoading = false;
     };
     var fail = function () {
@@ -508,7 +612,7 @@ function addRegionMap(viewModel) {
         }
         
         if (idx === -1) {
-            return;
+            return false;
         }
 
             //change current var if necessary
@@ -542,6 +646,8 @@ function addRegionMap(viewModel) {
     //TODO: figure out how sharing works or doesn't
     
     setRegionVariable(viewModel, viewModel.style.table.region, viewModel.style.table.regionType);
+
+    return true;
 }
 
 
