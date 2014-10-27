@@ -790,6 +790,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             that.dataSourceDisplay.update(clock.currentTime);
         });
 
+        that.leafletEventHelper = eventHelper;
+
         var ticker = function() {
             if (that.map === map) {
                 map.clock.tick();
@@ -857,6 +859,11 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         if (defined(this.map)) {
             //get camera and timeline settings
             rect = getCameraRect(undefined, this.map);
+
+            if (that.leafletEventHelper) {
+                that.leafletEventHelper.removeAll();
+                that.leafletEventHelper = undefined;
+            }
 
             this.removeLeafletTimeline();
             this.dataSourceDisplay.destroy();

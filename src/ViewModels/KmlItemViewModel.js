@@ -44,6 +44,8 @@ var KmlItemViewModel = function(context, url) {
     CatalogItemViewModel.call(this, context);
 
     this._kmlDataSource = undefined;
+    this._loadedUrl = undefined;
+    this._loadedData = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
@@ -110,6 +112,8 @@ defineProperties(KmlItemViewModel.prototype, {
     }
 });
 
+var kmzRegex = /\.kmz$/i;
+
 /**
  * Processes the KML or KMZ data supplied via the {@link KmlItemViewModel#data} property.  If
  * {@link KmlItemViewModel#data} is undefined, this method downloads KML or KMZ data from 
@@ -117,56 +121,74 @@ defineProperties(KmlItemViewModel.prototype, {
  * It is called automatically when the data source is enabled.
  */
 KmlItemViewModel.prototype.load = function() {
-};
+    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
+        return;
+    }
 
-var kmzRegex = /\.kmz$/i;
+    this.isLoading = true;
 
-KmlItemViewModel.prototype._enableInCesium = function() {
     if (defined(this._kmlDataSource)) {
-        throw new DeveloperError('This data source is already enabled.');
+        this._kmlDataSource.destroy();
     }
 
-    var dataSource = this._kmlDataSource = new KmlDataSource();
+    var dataSource = new KmlDataSource();
+    this._kmlDataSource = dataSource;
 
-    if (defined(this.data)) {
-        var that = this;
-        when(this.data, function(data) {
-            if (data instanceof Document) {
-                dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
-            } else if (data instanceof Blob) {
-                if (that.dataSourceUrl && that.dataSourceUrl.match(kmzRegex)) {
-                    dataSource.loadKmz(data, proxyUrl(that, that.dataSourceUrl));
-                } else {
-                    readXml(data).then(function(xml) {
-                        dataSource.load(xml, proxyUrl(that, that.dataSourceUrl));
+    var that = this;
+    runLater(function() {
+        that._loadedUrl = that.url;
+        that._loadedData = that.data;
+
+        if (defined(that.data)) {
+            when(that.data, function(data) {
+                if (data instanceof Document) {
+                    dataSource.load(data, proxyUrl(that, that.dataSourceUrl)).then(function() {
+                        doneLoading(that);
+                    }).otherwise(function() {
+                        errorLoading(that);
                     });
+                } else if (data instanceof Blob) {
+                    if (that.dataSourceUrl && that.dataSourceUrl.match(kmzRegex)) {
+                        dataSource.loadKmz(data, proxyUrl(that, that.dataSourceUrl)).then(function() {
+                            doneLoading(that);
+                        }).otherwise(function() {
+                            errorLoading(that);
+                        });
+                    } else {
+                        readXml(data).then(function(xml) {
+                            dataSource.load(xml, proxyUrl(that, that.dataSourceUrl)).then(function() {
+                                doneLoading(that);
+                            }).otherwise(function() {
+                                errorLoading(that);
+                            });
+                        });
+                    }
+                } else {
+                    that.context.error.raiseEvent(new ViewModelError({
+                        sender: that,
+                        title: 'Unexpected type of KML data',
+                        message: '\
+    KmlItemViewModel.data is expected to be an XML Document, Blob, or File, but it was none of these. \
+    This may indicate a bug in National Map or incorrect use of the National Map API. \
+    If you believe it is a bug in National Map, please report it by emailing \
+    <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
+                    }));
                 }
-            } else {
-                that.context.error.raiseEvent(new ViewModelError({
-                    sender: that,
-                    title: 'Unexpected type of KML data',
-                    message: '\
-KmlItemViewModel.data is expected to be an XML Document, Blob, or File, but it was none of these. \
-This may indicate a bug in National Map or incorrect use of the National Map API. \
-If you believe it is a bug in National Map, please report it by emailing \
-<a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-                }));
-            }
-        });
-    } else {
-        dataSource.loadUrl(proxyUrl(this, this.url));
-    }
+            });
+        } else {
+            dataSource.loadUrl(proxyUrl(this, this.url));
+        }
+
+    });
 };
 
-KmlItemViewModel.prototype._disableInCesium = function() {
-    if (!defined(this._kmlDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._kmlDataSource = undefined;
+KmlItemViewModel.prototype._enable = function() {
 };
 
-KmlItemViewModel.prototype._showInCesium = function() {
+KmlItemViewModel.prototype._disable = function() {
+};
+
+KmlItemViewModel.prototype._show = function() {
     if (!defined(this._kmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -179,7 +201,7 @@ KmlItemViewModel.prototype._showInCesium = function() {
     dataSources.add(this._kmlDataSource);
 };
 
-KmlItemViewModel.prototype._hideInCesium = function() {
+KmlItemViewModel.prototype._hide = function() {
     if (!defined(this._kmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -192,28 +214,32 @@ KmlItemViewModel.prototype._hideInCesium = function() {
     dataSources.remove(this._kmlDataSource, false);
 };
 
-KmlItemViewModel.prototype._enableInLeaflet = function() {
-    this._enableInCesium();
-};
-
-KmlItemViewModel.prototype._disableInLeaflet = function() {
-    this._disableInCesium();
-};
-
-KmlItemViewModel.prototype._showInLeaflet = function() {
-    this._showInLeaflet();
-};
-
-KmlItemViewModel.prototype._hideInLeaflet = function() {
-    this._hideInLeaflet();
-};
-
 function proxyUrl(context, url) {
     if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
         return context.corsProxy.getURL(url);
     }
 
     return url;
+}
+
+function doneLoading(viewModel) {
+    viewModel.clock = viewModel._kmlDataSource.clock;
+    viewModel.isLoading = false;
+}
+
+function errorLoading(viewModel) {
+    viewModel.context.error.raiseEvent(new ViewModelError({
+        sender: viewModel,
+        title: 'Error loading KML or KMZ',
+        message: '\
+An error occurred while loading a KML or KMZ file.  This may indicate that the file is invalid or that it \
+is not supported by National Map.  If you would like assistance or further information, please email us \
+at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
+    }));
+
+    viewModel._loadedUrl = undefined;
+    viewModel._loadedData = undefined;
+    viewModel.isLoading = false;
 }
 
 module.exports = KmlItemViewModel;

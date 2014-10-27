@@ -91,13 +91,7 @@ var GeoJsonItemViewModel = function(context, url) {
      */
     this.dataSourceUrl = undefined;
 
-    /**
-     * Gets or sets a value indicating whether this data source is currently loading.  This property is observable.
-     * @type {Boolean}
-     */
-    this.isLoading = false;
-
-    knockout.track(this, ['url', 'data', 'dataSourceUrl', 'isLoading']);
+    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
 GeoJsonItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
@@ -207,7 +201,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
     });
 };
 
-GeoJsonItemViewModel.prototype._enableInCesium = function() {
+GeoJsonItemViewModel.prototype._enable = function() {
     if (defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -216,7 +210,7 @@ GeoJsonItemViewModel.prototype._enableInCesium = function() {
     loadGeoJson(this);
 };
 
-GeoJsonItemViewModel.prototype._disableInCesium = function() {
+GeoJsonItemViewModel.prototype._disable = function() {
     if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -224,7 +218,7 @@ GeoJsonItemViewModel.prototype._disableInCesium = function() {
     this._geoJsonDataSource = undefined;
 };
 
-GeoJsonItemViewModel.prototype._showInCesium = function() {
+GeoJsonItemViewModel.prototype._show = function() {
     if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -237,7 +231,7 @@ GeoJsonItemViewModel.prototype._showInCesium = function() {
     dataSources.add(this._geoJsonDataSource);
 };
 
-GeoJsonItemViewModel.prototype._hideInCesium = function() {
+GeoJsonItemViewModel.prototype._hide = function() {
     if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -248,22 +242,6 @@ GeoJsonItemViewModel.prototype._hideInCesium = function() {
     }
 
     dataSources.remove(this._geoJsonDataSource, false);
-};
-
-GeoJsonItemViewModel.prototype._enableInLeaflet = function() {
-    this._enableInCesium();
-};
-
-GeoJsonItemViewModel.prototype._disableInLeaflet = function() {
-    this._disableInCesium();
-};
-
-GeoJsonItemViewModel.prototype._showInLeaflet = function() {
-    this._showInCesium();
-};
-
-GeoJsonItemViewModel.prototype._hideInLeaflet = function() {
-    this._hideInCesium();
 };
 
 function updateViewModelFromData(viewModel, geoJson) {

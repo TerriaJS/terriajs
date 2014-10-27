@@ -14,8 +14,7 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -67,13 +66,7 @@ var CsvItemViewModel = function(context, url) {
      */
     this.dataSourceUrl = undefined;
 
-    /**
-     * Gets or sets a value indicating whether this data source is currently loading.  This property is observable.
-     * @type {Boolean}
-     */
-    this.isLoading = false;
-
-    knockout.track(this, ['url', 'data', 'dataSourceUrl', 'isLoading']);
+    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
 CsvItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);

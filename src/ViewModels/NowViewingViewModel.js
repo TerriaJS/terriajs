@@ -325,23 +325,11 @@ function beforeViewerChanged(viewModel) {
         var dataSource = dataSources[i];
 
         if (dataSource.isShown) {
-            if (defined(context.cesium)) {
-                dataSource._hideInCesium();
-            }
-
-            if (defined(context.leaflet)) {
-                dataSource._hideInLeaflet();
-            }
+            dataSource._hide();
         }
 
         if (dataSource.isEnabled) {
-            if (defined(context.cesium)) {
-                dataSource._disableInCesium();
-            }
-
-            if (defined(context.leaflet)) {
-                dataSource._disableInLeaflet();
-            }
+            dataSource._disable();
         }
     }
 }
@@ -357,23 +345,11 @@ function afterViewerChanged(viewModel) {
         var dataSource = dataSources[i];
 
         if (dataSource.isEnabled) {
-            if (defined(context.cesium)) {
-                dataSource._enableInCesium();
-            }
-
-            if (defined(context.leaflet)) {
-                dataSource._enableInLeaflet();
-            }
+            dataSource._enable();
         }
 
         if (dataSource.isShown) {
-            if (defined(context.cesium)) {
-                dataSource._showInCesium();
-            }
-
-            if (defined(context.leaflet)) {
-                dataSource._showInLeaflet();
-            }
+            dataSource._show();
         }
     }
 }
