@@ -133,10 +133,6 @@ var CatalogItemViewModel = function(context) {
                           'isLoading']);
 
     knockout.getObservable(this, 'isEnabled').subscribe(function(newValue) {
-        // Load this data item's data (if we haven't already) when it is enabled.
-        if (newValue) {
-            this.load();
-        }
         isEnabledChanged(this);
     }, this);
 
@@ -612,7 +608,15 @@ function isEnabledChanged(viewModel) {
     var context = viewModel.context;
 
     if (viewModel.isEnabled) {
-        viewModel._enable();
+        // Load this data item's data (if we haven't already) when it is enabled.
+        viewModel.load();
+
+        runWhenDoneLoading(viewModel, function() {
+            if (viewModel.isEnabled) {
+                viewModel._enable();
+            }
+        });
+
         viewModel.isShown = true;
 
         context.nowViewing.add(viewModel);
@@ -637,7 +641,11 @@ function isShownChanged(viewModel) {
     var context = viewModel.context;
 
     if (viewModel.isShown) {
-        viewModel._show();
+        runWhenDoneLoading(viewModel, function() {
+            if (viewModel.isEnabled && viewModel.isShown) {
+                viewModel._show();
+            }
+        });
 
         ga('send', 'event', 'dataSource', 'shown', viewModel.name);
         viewModel._shownDate = Date.now();
