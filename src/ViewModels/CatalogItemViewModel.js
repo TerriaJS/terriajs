@@ -36,6 +36,8 @@ var CatalogItemViewModel = function(context) {
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
+    this._callToEnableIsPending = false;
+    this._callToShowIsPending = false;
 
     /**
      * The index of the item in the Now Viewing list.  Setting this property does not automatically change the order.
@@ -409,15 +411,16 @@ CatalogItemViewModel.prototype.zoomToAndUseClock = function() {
 };
 
 /**
- * Enables this data item on the globe or map.  You should not call this directly, but instead set the
- * {@link CatalogItemViewModel#isEnabled} property to true.  This method will throw an exception if the data item
- * is already enabled.  Calling this method should NOT also show the data item
- * on the globe (see {@link CatalogItemViewModel#_show}), so in some cases it may not do anything at all.  The base-class
- * implementation calls {@link CatalogItemViewModel#_enableInCesium} or {@link CatalogItemViewModel#_enableInLeaflet}
- * depending on which viewer is active, but derived classes that have identical enable logic for both viewers may override
- * this method instead of the viewer-specific ones.
+ * Enables this data item on the globe or map.  This method:
+ * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isEnabled} property to true.
+ * * Will not necessarily be called immediately when {@link CatalogItemViewModel#isEnabled} is set to true; it will be deferred until
+ *   {@link CatalogItemViewModel#isLoading} is false.
+ * * Should NOT also show the data item on the globe/map (see {@link CatalogItemViewModel#_show}), so in some cases it may not do
+ *   anything at all.
+ * * Calls {@link CatalogItemViewModel#_enableInCesium} or {@link CatalogItemViewModel#_enableInLeaflet} in the base-class implementation,
+ *   depending on which viewer is active.  Derived classes that have identical enable logic for both viewers may override
+ *   this method instead of the viewer-specific ones.
  * @protected
- * @throws {DeveloperError} If the data item is already enabled.
  */
 CatalogItemViewModel.prototype._enable = function() {
     var context = this.context;
@@ -432,15 +435,15 @@ CatalogItemViewModel.prototype._enable = function() {
 };
 
 /**
- * Disables this data item on the globe or map.  You should not call this directly, but instead set the
- * {@link CatalogItemViewModel#isEnabled} property to false.  This method will throw an exception if the data item
- * is not enabled.  When implementing this method in a derived class, you can assume that
- * {@link CatalogItemViewModel#hideInCesium} will be called on a shown data item before this method is called. The
- * base-class implementation calls {@link CatalogItemViewModel#_disableInCesium} or {@link CatalogItemViewModel#_disableInLeaflet}
- * depending on which viewer is active, but derived classes that have identical disable logic for both viewers may override
- * this method instead of the viewer-specific ones.
+ * Disables this data item on the globe or map.  This method:
+ * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isEnabled} property to false.
+ * * Will not be called if {@link CatalogItemViewModel#_enable} was not called (for example, because the previous call was deferred
+ *   while the data item loaded, and the user disabled the data item before the load completed).
+ * * Will only be called after {@link CatalogItemViewModel#_hide} when a shown data item is disabled.
+ * * Calls {@link CatalogItemViewModel#_disableInCesium} or {@link CatalogItemViewModel#_disableInLeaflet} in the base-class implementation,
+ *   depending on which viewer is active.  Derived classes that have identical disable logic for both viewers may override
+ *   this method instead of the viewer-specific ones.
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
  */
 CatalogItemViewModel.prototype._disable = function() {
     var context = this.context;
@@ -455,15 +458,15 @@ CatalogItemViewModel.prototype._disable = function() {
 };
 
 /**
- * Shows this data item on the globe or map.  You should not call this directly, but instead set the
- * {@link CatalogItemViewModel#isShown} property to true.  This method will throw an exception
- * if the data item is already shown or if it is not enabled.  The base class implementation calls
- * {@link CatalogItemViewModel#_showInCesium} or {@link CatalogItemViewModel#_showInLeaflet}
- * depending on which viewer is active, but derived classes that have identical show logic for both viewers
- * may override this method instead of the viewer-specific ones.
+ * Shows this data item on the globe or map.  This method:
+ * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isShown} property to true.
+ * * Will only be called after {@link CatalogItemViewModel#_enable}; you can count on that method having been called first.
+ * * Will not necessarily be called immediately when {@link CatalogItemViewModel#isShown} is set to true; it will be deferred until
+ *   {@link CatalogItemViewModel#isLoading} is false.
+ * * Calls {@link CatalogItemViewModel#_showInCesium} or {@link CatalogItemViewModel#_showInLeaflet} in the base-class implementation,
+ *   depending on which viewer is active.  Derived classes that have identical show logic for both viewers
+ *    may override this method instead of the viewer-specific ones.
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
- * @throws {DeveloperError} If the data item is already shown.
  */
 CatalogItemViewModel.prototype._show = function() {
     var context = this.context;
@@ -478,15 +481,14 @@ CatalogItemViewModel.prototype._show = function() {
 };
 
 /**
- * Hides this data item on the globe or map.  You should not call this directly, but instead set the
- * {@link CatalogItemViewModel#isShown} property to false.  This method will throw an exception
- * if the data item is not shown or if it is not enabled.  The base class implementation calls
- * {@link CatalogItemViewModel#_hideInCesium} or {@link CatalogItemViewModel#_hideInLeaflet}
- * depending on which viewer is active, but derived classes that have identical hide logic for both viewers
- * may override this method instead of the viewer-specific ones.
+ * Hides this data item on the globe or map.  This method:
+ * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isShown} property to false.
+ * * Will not be called if {@link CatalogItemViewModel#_show} was not called (for example, because the previous call was deferred
+ *   while the data item loaded, and the user hid the data item before the load completed).
+ * * Calls {@link CatalogItemViewModel#_hideInCesium} or {@link CatalogItemViewModel#_hideInLeaflet} in the base-class implementation,
+ *   depending on which viewer is active.  Derived classes that have identical hide logic for both viewers may override
+ *   this method instead of the viewer-specific ones.
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
- * @throws {DeveloperError} If the data item is not shown.
  */
 CatalogItemViewModel.prototype._hide = function() {
     var context = this.context;
@@ -502,12 +504,10 @@ CatalogItemViewModel.prototype._hide = function() {
 
 /**
  * When implemented in a derived class, enables this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to true.  This method will throw an exception
- * if the data item is already enabled.  Calling this method should NOT also show the data item
- * on the globe (see {@link CatalogItemViewModel#showInCesium}), so in some cases it may not do anything at all.
+ * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to true.  See
+ * {@link CatalogItemViewModel#_enable} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is already enabled.
  */
 CatalogItemViewModel.prototype._enableInCesium = function() {
     throw new DeveloperError('_enableInCesium must be implemented in the derived class.');
@@ -515,12 +515,10 @@ CatalogItemViewModel.prototype._enableInCesium = function() {
 
 /**
  * When implemented in a derived class, disables this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to false.  This method will throw an exception
- * if the data item is not enabled.  When implementing this method in a derived class, you can assume that
- * {@link CatalogItemViewModel#hideInCesium} will be called on a shown data item before this method is called.
+ * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to false.  See
+ * {@link CatalogItemViewModel#_disable} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
  */
 CatalogItemViewModel.prototype._disableInCesium = function() {
     throw new DeveloperError('_disableInCesium must be implemented in the derived class.');
@@ -528,12 +526,10 @@ CatalogItemViewModel.prototype._disableInCesium = function() {
 
 /**
  * When implemented in a derived class, shows this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to true.  This method will throw an exception
- * if the data item is already shown or if it is not enabled.
+ * directly, but instead set the {@link CatalogItemViewModel#isShown} property to true.  See
+ * {@link CatalogItemViewModel#_show} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
- * @throws {DeveloperError} If the data item is already shown.
  */
 CatalogItemViewModel.prototype._showInCesium = function() {
     throw new DeveloperError('_showInCesium must be implemented in the derived class.');
@@ -541,12 +537,10 @@ CatalogItemViewModel.prototype._showInCesium = function() {
 
 /**
  * When implemented in a derived class, hides this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to false.  This method will throw an exception
- * if the data item is not shown or if it is not enabled.
+ * directly, but instead set the {@link CatalogItemViewModel#isShown} property to false.  See
+ * {@link CatalogItemViewModel#_hide} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
- * @throws {DeveloperError} If the data item is not shown.
  */
 CatalogItemViewModel.prototype._hideInCesium = function() {
     throw new DeveloperError('_hideInCesium must be implemented in the derived class.');
@@ -554,12 +548,10 @@ CatalogItemViewModel.prototype._hideInCesium = function() {
 
 /**
  * When implemented in a derived class, enables this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to true.  This method will throw an exception
- * if the data item is already enabled.  Calling this method should NOT also show the data item
- * on the map (see {@link CatalogItemViewModel#showInLeaflet}), so in some cases it may not do anything at all.
+ * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to true.  See
+ * {@link CatalogItemViewModel#_enable} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is already enabled.
  */
 CatalogItemViewModel.prototype._enableInLeaflet = function() {
     throw new DeveloperError('enableInLeaflet must be implemented in the derived class.');
@@ -567,12 +559,10 @@ CatalogItemViewModel.prototype._enableInLeaflet = function() {
 
 /**
  * When implemented in a derived class, disables this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to false.  This method will throw an exception
- * if the data item is not enabled.  When implementing this method in a derived class, you can assume that
- * {@link CatalogItemViewModel#hideInLeaflet} will be called on a shown data item before this method is called.
+ * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to false.  See
+ * {@link CatalogItemViewModel#_disable} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
  */
 CatalogItemViewModel.prototype._disableInLeaflet = function() {
     throw new DeveloperError('disableInLeaflet must be implemented in the derived class.');
@@ -580,12 +570,10 @@ CatalogItemViewModel.prototype._disableInLeaflet = function() {
 
 /**
  * When implemented in a derived class, shows this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to true.  This method will throw an exception
- * if the data item is already shown or if it is not enabled.
+ * directly, but instead set the {@link CatalogItemViewModel#isShown} property to true.  See
+ * {@link CatalogItemViewModel#_show} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
- * @throws {DeveloperError} If the data item is already shown.
  */
 CatalogItemViewModel.prototype._showInLeaflet = function() {
     throw new DeveloperError('_showInLeaflet must be implemented in the derived class.');
@@ -593,12 +581,10 @@ CatalogItemViewModel.prototype._showInLeaflet = function() {
 
 /**
  * When implemented in a derived class, hides this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to false.  This method will throw an exception
- * if the data item is not shown or if it is not enabled.
+ * directly, but instead set the {@link CatalogItemViewModel#isShown} property to false.  See
+ * {@link CatalogItemViewModel#_hide} for more information.
  * @abstract
  * @protected
- * @throws {DeveloperError} If the data item is not enabled.
- * @throws {DeveloperError} If the data item is not shown.
  */
 CatalogItemViewModel.prototype._hideInLeaflet = function() {
     throw new DeveloperError('_hideInLeaflet must be implemented in the derived class.');
@@ -611,11 +597,17 @@ function isEnabledChanged(viewModel) {
         // Load this data item's data (if we haven't already) when it is enabled.
         viewModel.load();
 
-        runWhenDoneLoading(viewModel, function() {
-            if (viewModel.isEnabled) {
-                viewModel._enable();
-            }
-        });
+        // Tell this data item to enable itself on the map, but only after we're done loading and only if
+        // we haven't already queued a request to enable that is still pending.
+        if (!viewModel._callToEnableIsPending) {
+            viewModel._callToEnableIsPending = true;
+            runWhenDoneLoading(viewModel, function() {
+                viewModel._callToEnableIsPending = false;
+                if (viewModel.isEnabled) {
+                    viewModel._enable();
+                }
+            });
+        }
 
         viewModel.isShown = true;
 
@@ -625,7 +617,12 @@ function isEnabledChanged(viewModel) {
         viewModel._enabledDate = Date.now();
     } else {
         viewModel.isShown = false;
-        viewModel._disable();
+
+        // Disable this data item on the map, but only if the previous request to enable it has
+        // actually gone through.
+        if (!viewModel._callToEnableIsPending) {
+            viewModel._disable();
+        }
 
         context.nowViewing.remove(viewModel);
 
@@ -641,16 +638,26 @@ function isShownChanged(viewModel) {
     var context = viewModel.context;
 
     if (viewModel.isShown) {
-        runWhenDoneLoading(viewModel, function() {
-            if (viewModel.isEnabled && viewModel.isShown) {
-                viewModel._show();
-            }
-        });
+        // Tell this data item to show itself on the map, but only after we're done loading and only if
+        // we haven't already queued a request to show that is still pending.
+        if (!viewModel._callToShowIsPending) {
+            viewModel._callToShowIsPending = true;
+            runWhenDoneLoading(viewModel, function() {
+                viewModel._callToShowIsPending = false;
+                if (viewModel.isEnabled && viewModel.isShown) {
+                    viewModel._show();
+                }
+            });
+        }
 
         ga('send', 'event', 'dataSource', 'shown', viewModel.name);
         viewModel._shownDate = Date.now();
     } else {
-        viewModel._hide();
+        // Hide this data item on the map, but only if the previous request to show it has
+        // actually gone through.
+        if (!viewModel._callToShowIsPending) {
+            viewModel._hide();
+        }
 
         var duration;
         if (defined(viewModel._shownDate)) {
