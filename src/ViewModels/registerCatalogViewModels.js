@@ -24,6 +24,7 @@ var registerCatalogViewModels = function() {
 
     createCatalogItemFromUrl.register(matchesExtension('geojson'), GeoJsonItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('json'), GeoJsonItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('topojson'), GeoJsonItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('kml'), KmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('kmz'), KmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('csv'), CsvItemViewModel);
