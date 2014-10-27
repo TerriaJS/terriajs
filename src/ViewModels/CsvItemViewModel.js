@@ -231,7 +231,7 @@ CsvItemViewModel.prototype._showInCesium = function() {
                 if (defined(results)) {
                     var id = results[0].data.properties[that.regionProp];
                     var properties = that.rowProperties(parseInt(id,10));
-                    results[0].description = that.baseDataSource.describe(properties);
+                    results[0].description = that._tableDataSource.describe(properties);
                 }
                 return results;
             });

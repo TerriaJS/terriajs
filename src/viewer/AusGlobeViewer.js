@@ -300,8 +300,8 @@ var FrameChecker = function () {
     this._lastCam = new Matrix4();
     this._maxFPS = 40.0;
     this._skipCnt = 0;
-    this._skipWaitNorm = 3.0;
-    this._skipWaitLim = 10.0; //start skip after 10 seconds at launch
+    this._skipWaitNorm = 3.0; //start skip after launch
+    this._skipWaitLim = 10.0; //start skip at launch
 };
 
 // call to force draw - usually after long downloads/processes
@@ -313,7 +313,7 @@ FrameChecker.prototype.forceFrameUpdate = function() {
 FrameChecker.prototype.skipFrame = function(scene, date) {
     //check if anything actually changed
     if (this._lastDate) {
-        var bDateSame = this._lastDate.equals(date);
+        var bDateSame = !isTimelineVisible() || this._lastDate.equals(date);
         var bCamSame = this._lastCam.equalsEpsilon(scene.camera.viewMatrix, CesiumMath.EPSILON5);
         if (bDateSame && bCamSame) {
             this._skipCnt++;
@@ -718,6 +718,10 @@ AusGlobeViewer.prototype.isCesium = function() {
     return defined(this.viewer);
 };
 
+var isTimelineVisible = function() {
+    return $('.cesium-viewer-animationContainer').css('visibility') === 'visible';
+} 
+
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var previousClock;
     if (this.viewer) {
@@ -733,7 +737,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     var that = this;
 
-    var timelineVisible = $('.cesium-viewer-animationContainer').css('visibility') === 'visible';
+    var timelineVisible = isTimelineVisible();
 
     if (!bCesium) {
 
