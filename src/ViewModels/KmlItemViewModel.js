@@ -127,10 +127,6 @@ KmlItemViewModel.prototype.load = function() {
 
     this.isLoading = true;
 
-    if (defined(this._kmlDataSource)) {
-        this._kmlDataSource.destroy();
-    }
-
     var dataSource = new KmlDataSource();
     this._kmlDataSource = dataSource;
 
@@ -244,6 +240,7 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     viewModel._loadedData = undefined;
     viewModel.isEnabled = false;
     viewModel.isLoading = false;
+    viewModel._kmlDataSource = undefined;
 }
 
 module.exports = KmlItemViewModel;

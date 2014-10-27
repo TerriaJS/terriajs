@@ -125,10 +125,6 @@ CzmlItemViewModel.prototype.load = function() {
 
     this.isLoading = true;
 
-    if (defined(this._czmlDataSource)) {
-        this._czmlDataSource.destroy();
-    }
-
     var dataSource = new CzmlDataSource();
     this._czmlDataSource = dataSource;
 
@@ -222,6 +218,7 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     viewModel._loadedData = undefined;
     viewModel.isEnabled = false;
     viewModel.isLoading = false;
+    viewModel._czmlDataSource = undefined;
 }
 
 module.exports = CzmlItemViewModel;
