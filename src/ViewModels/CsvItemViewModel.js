@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,L,URI,Document*/
+/*global require,L,URI,Document,$*/
 
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
@@ -19,6 +19,7 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var TableDataSource = require('../TableDataSource');
+var VarType = require('../VarType');
 
 var corsProxy = require('../corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
@@ -161,7 +162,7 @@ CsvItemViewModel.prototype.load = function() {
                 loadTable(that, text);
             }).otherwise(function(e) {
                 that.isLoading = false;
-                that.context.error.raiseEvent(new GeoDataCatalogError({
+                that.context.error.raiseEvent(new ViewModelError({
                     sender: that,
                     title: 'Could not load CSV file',
                     message: '\
@@ -234,11 +235,11 @@ function loadTable(viewModel, text) {
 
     if (!viewModel._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
-        addRegionMap(that);
+        addRegionMap(viewModel);
     }
     else {
-        viewModel.clock = that._tableDataSource.clock;
-        viewModel.rectangle = that._tableDataSource.dataset.getExtent();
+        viewModel.clock = viewModel._tableDataSource.clock;
+        viewModel.rectangle = viewModel._tableDataSource.dataset.getExtent();
 
         viewModel.isLoading = false;
     }
@@ -291,53 +292,53 @@ function recolorImageWithCanvas(img, colorFunc) {
 var regionServer = 'http://geoserver.research.nicta.com.au/region_map/ows';
 var regionWmsMap = {
     'STE': {
-        "Name":"region_map:FID_STE_2011_AUST",
+        "name":"region_map:FID_STE_2011_AUST",
         "regionProp": "STE_CODE11",
         "aliases": ['state', 'ste']
     },
     'CED': {
-        "Name":"region_map:FID_CED_2011_AUST",
+        "name":"region_map:FID_CED_2011_AUST",
         "regionProp": "CED_CODE",
         "aliases": ['ced']
     },
     'SED': {
-        "Name":"region_map:FID_SED_2011_AUST",
+        "name":"region_map:FID_SED_2011_AUST",
         "regionProp": "SED_CODE",
         "aliases": ['sed']
     },
     'POA': {
-        "Name":"region_map:FID_POA_2011_AUST",
+        "name":"region_map:FID_POA_2011_AUST",
         "regionProp": "POA_CODE",
         "aliases": ['poa', 'postcode']
     },
     'LGA': {
-        "Name":"region_map:FID_LGA_2011_AUST",
+        "name":"region_map:FID_LGA_2011_AUST",
         "regionProp": "LGA_CODE11",
         "aliases": ['lga']
     },
     'SCC': {
-        "Name":"region_map:FID_SCC_2011_AUST",
+        "name":"region_map:FID_SCC_2011_AUST",
         "regionProp": "SCC_CODE",
         "aliases": ['scc', 'suburb']
     },
     'SA4': {
-        "Name":"region_map:FID_SA4_2011_AUST",
+        "name":"region_map:FID_SA4_2011_AUST",
         "regionProp": "SA4_CODE11",
         "aliases": ['sa4']
     },
     'SA3': {
-        "Name":"region_map:FID_SA3_2011_AUST",
+        "name":"region_map:FID_SA3_2011_AUST",
         "regionProp": "SA3_CODE11",
         "aliases": ['sa3']
     },
     'SA2': {
-        "Name":"region_map:FID_SA2_2011_AUST",
+        "name":"region_map:FID_SA2_2011_AUST",
         "regionProp": "SA2_MAIN11",
         "aliases": ['sa2']
     },
     'SA1': {
-        "Name":"region_map:FID_SA1_2011_AUST",
-         "regionProp": "SA1_7DIG11",
+        "name":"region_map:FID_SA1_2011_AUST",
+        "regionProp": "SA1_7DIG11",
         "aliases": ['sa1']
     }
 };
@@ -346,7 +347,7 @@ var regionWmsMap = {
 //TODO: need way to support a progress display on slow loads
 function loadRegionIDs(description, succeed, fail) {
     var url = regionServer + '?service=wfs&version=2.0&request=getPropertyValue';
-    url += '&typeNames=' + description.Name;
+    url += '&typenames=' + description.name;
     url += '&valueReference=' + description.regionProp;
     loadText(url).then(function (text) { 
         var obj = $.xml2json(text);
@@ -364,7 +365,6 @@ function loadRegionIDs(description, succeed, fail) {
         description.idMap = idMap;
         succeed();
     }, function(err) {
-        loadErrorResponse(err);
         fail();
     });
 }
@@ -382,10 +382,10 @@ function determineRegionVar(vars, aliases) {
 }
 
 function createRegionLookupFunc(viewModel) {
-    if (!defined(viewModel) || !defined(viewModel._cesiumDataSource) || !defined(viewModel._cesiumDataSource.dataset)) {
+    if (!defined(viewModel) || !defined(viewModel._tableDataSource) || !defined(viewModel._tableDataSource.dataset)) {
         return;
     }
-    var dataSource = viewModel._cesiumDataSource;
+    var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
     var vars = dataset.getVarList();
     var description = regionWmsMap[viewModel.regionType];
@@ -416,7 +416,7 @@ function createRegionLookupFunc(viewModel) {
         var rowIndex = codes.indexOf(code);
         return dataset.getDataRow(rowIndex);
     };
-};
+}
 
 function setRegionVariable(viewModel, regionVar, regionType) {
     if (viewModel.regionVar === regionVar && viewModel.regionType === regionType) {
@@ -426,12 +426,10 @@ function setRegionVariable(viewModel, regionVar, regionType) {
     viewModel.regionVar = regionVar;
     var description = regionWmsMap[regionType];
     if (viewModel.regionType !== regionType) {
-            //TODO: set these params correctly
         viewModel.regionType = regionType;
-        description.type = 'WMS';
-        description.base_url = regionServer;
 
-        viewModel.url = getOGCFeatureURL(description);  //TODO: figure out where this lives
+        viewModel.url = regionServer + '?service=wms&request=GetMap&layers=' + description.name;
+
         viewModel.regionProp = description.regionProp;
     }
     console.log('Region type:', viewModel.regionType, ', Region var:', viewModel.regionVar);
@@ -441,7 +439,7 @@ function setRegionVariable(viewModel, regionVar, regionType) {
 
         //TODO: need to remove layer and start from scratch with new tiles
 
-        //that._viewMap(layer.url, layer);  can finally enable map
+        //that._viewMap(viewModel.url, layer);  can finally enable map
 
         viewModel.isLoading = false;
     };
@@ -455,14 +453,14 @@ function setRegionVariable(viewModel, regionVar, regionType) {
     else {
         succeed();
     }
-};
+}
 
 function setRegionDataVariable(viewModel, newVar) {
-    if (!(viewModel._cesiumDataSource instanceof TableDataSource)) {
+    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
         return;
     }
 
-    var dataSource = viewModel._cesiumDataSource;
+    var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
     if (dataset.getCurrentVariable() === newVar) {
         return;
@@ -473,26 +471,26 @@ function setRegionDataVariable(viewModel, newVar) {
     console.log('Var set to:', newVar);
 
     //TODO: figure out how to flush wms layer and redraw
-};
+}
 
 function setRegionColorMap(viewModel, dataColorMap) {
-     if (!(viewModel._cesiumDataSource instanceof TableDataSource)) {
+     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
         return;
     }
 
-    viewModel._cesiumDataSource.setColorGradient(dataColorMap);
+    viewModel._tableDataSource.setColorGradient(dataColorMap);
     createRegionLookupFunc(viewModel);
 
     //TODO: figure out how to flush wms layer and redraw
 
-};
+}
 
 function addRegionMap(viewModel) {
-    if (!(viewModel._cesiumDataSource instanceof TableDataSource) || !defined(viewModel._readyData)) {
+    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
         return;
     }
     //see if we can do region mapping
-    var dataSource = viewModel._cesiumDataSource;
+    var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
     var vars = dataset.getVarList();
 
@@ -544,7 +542,7 @@ function addRegionMap(viewModel) {
     //TODO: figure out how sharing works or doesn't
     
     setRegionVariable(viewModel, viewModel.style.table.region, viewModel.style.table.regionType);
-};
+}
 
 
 

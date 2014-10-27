@@ -300,7 +300,8 @@ var FrameChecker = function () {
     this._lastCam = new Matrix4();
     this._maxFPS = 40.0;
     this._skipCnt = 0;
-    this._skipCntLim = 10.0; //start skip after 10 seconds
+    this._skipWaitNorm = 3.0;
+    this._skipWaitLim = 10.0; //start skip after 10 seconds at launch
 };
 
 // call to force draw - usually after long downloads/processes
@@ -329,8 +330,8 @@ FrameChecker.prototype.skipFrame = function(scene, date) {
         this._skipCnt = 0;
     }
 
-    if (this._skipCnt > (this._maxFPS * this._skipCntLim)) {
-        this._skipCntLim = 3.0; //then skip after every 3 seconds
+    if (this._skipCnt > (this._maxFPS * this._skipWaitLim)) {
+        this._skipWaitLim = this._skipWaitNorm; //go to normal skip wait
         return true;
     }
 
