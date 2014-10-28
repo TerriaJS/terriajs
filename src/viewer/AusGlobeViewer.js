@@ -764,6 +764,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
        //create leaflet viewer
         var map = L.map('cesiumContainer', {
+            worldCopyJump: true,
             zoomControl: false
         }).setView([-28.5, 135], 5);
 
