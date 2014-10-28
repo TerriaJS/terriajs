@@ -39,7 +39,6 @@ var GeoDataBrowserViewModel = function(options) {
     this.map = options.map;
 
     //this.initUrl = options.initUrl;
-    this.mode3d = options.mode3d;
 
     this._draggedNowViewingItem = undefined;
     this._dragPlaceholder = undefined;
@@ -56,7 +55,6 @@ var GeoDataBrowserViewModel = function(options) {
     this.openMapIndex = 0;
     this.imageryIsOpen = true;
     this.viewerSelectionIsOpen = false;
-    this.selectedViewer = this.mode3d ? 'Terrain' : '2D';
 
     this.catalog = options.catalog;
 
@@ -397,35 +395,6 @@ these extensions in order for National Map to know how to load it.'
     this._clearAll = createCommand(function() {
         disableAll(that.content());
         return false;
-    });
-
-    // Subscribe to a change in the selected viewer (2D/3D) in order to actually switch the viewer.
-    knockout.getObservable(this, 'selectedViewer').subscribe(function(value) {
-        if (value === '2D') {
-            if (that._viewer.isCesium()) {
-                ga('send', 'event', 'mapSettings', 'switchViewer', '2D');
-                that._viewer.selectViewer(false);
-            }
-        } else {
-            var switched = false;
-            if (!that._viewer.isCesium()) {
-                that._viewer.selectViewer(true);
-                switched = true;
-            }
-
-            var terrainProvider = that._viewer.scene.globe.terrainProvider;
-            if (value === 'Ellipsoid' && !(terrainProvider instanceof EllipsoidTerrainProvider)) {
-                ga('send', 'event', 'mapSettings', 'switchViewer', 'Smooth 3D');
-                that._viewer.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
-            } else if (value === 'Terrain' && !(terrainProvider instanceof CesiumTerrainProvider)) {
-                ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
-                that._viewer.scene.globe.terrainProvider = new CesiumTerrainProvider({
-                    url : 'http://cesiumjs.org/stk-terrain/tilesets/world/tiles'
-                });
-            } else if (switched) {
-                ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
-            }
-        }
     });
 
     function noopHandler(evt) {

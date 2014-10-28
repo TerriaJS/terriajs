@@ -3,11 +3,13 @@
 var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
 var Clock = require('../../third_party/cesium/Source/Core/Clock');
 var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var CatalogViewModel = require('./CatalogViewModel');
 var corsProxy = require('../Core/corsProxy');
 var NowViewingViewModel = require('./NowViewingViewModel');
 var ServicesViewModel = require('./ServicesViewModel');
+var ViewerMode = require('./ViewerMode');
 
 /**
  * The overall view-model for National Map.
@@ -22,6 +24,12 @@ var ApplicationViewModel = function() {
      * @type {CesiumEvent}
      */
     this.error = new CesiumEvent();
+
+    /**
+     * Gets or sets the map mode.
+     * @type {ViewerMode}
+     */
+    this.viewerMode = ViewerMode.CesiumTerrain;
 
     /**
      * Gets or sets the event that is raised just before switching between Cesium and Leaflet.
@@ -84,6 +92,8 @@ var ApplicationViewModel = function() {
      * @type {NowViewingViewModel}
      */
     this.nowViewing = new NowViewingViewModel(this);
+
+    knockout.track(this, ['viewerMode']);
 };
 
 module.exports = ApplicationViewModel;

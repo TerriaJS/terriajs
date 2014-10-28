@@ -250,7 +250,8 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
-        show : false
+        show : false,
+        alpha : this.opacity
         // Ideally we'd specify "rectangle : this.rectangle" here.
         // But lots of WMS data sources get the extent wrong, and even the ones that get it right
         // specify the extent of the geometry itself, not the representation of the geometry.  So that means,
@@ -279,7 +280,8 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
     var map = this.application.leaflet.map;
 
     var options = {
-        layers : this.layers
+        layers : this.layers,
+        opacity : this.opacity
         // Ideally we'd specify "bounds : rectangleToLatLngBounds(this.rectangle)" here.
         // See comment in _enableInCesium for an explanation of why we don't.
     };

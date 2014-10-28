@@ -192,9 +192,9 @@ var GeoDataBrowser = function(options) {
                 <div class="ausglobe-accordion-item-header-label">2D/3D</div>\
             </div>\
             <div class="ausglobe-accordion-item-content" data-bind="css: { \'ausglobe-accordion-item-content-visible\': viewerSelectionIsOpen }">\
-                <label class="ausglobe-viewer-radio-button"><input type="radio" name="viewer" value="2D" data-bind="checked: selectedViewer" /> 2D</label>\
-                <label class="ausglobe-viewer-radio-button"><input type="radio" name="viewer" value="Ellipsoid" data-bind="checked: selectedViewer" /> 3D Smooth Globe</label>\
-                <label class="ausglobe-viewer-radio-button"><input type="radio" name="viewer" value="Terrain" data-bind="checked: selectedViewer" /> 3D Terrain</label>\
+                <label class="ausglobe-viewer-radio-button"><input type="radio" name="viewer" value="2" data-bind="checkedValue: 2, checked: catalog.application.viewerMode" /> 2D</label>\
+                <label class="ausglobe-viewer-radio-button"><input type="radio" name="viewer" value="1" data-bind="checkedValue: 1, checked: catalog.application.viewerMode" /> 3D Smooth Globe</label>\
+                <label class="ausglobe-viewer-radio-button"><input type="radio" name="viewer" value="0" data-bind="checkedValue: 0, checked: catalog.application.viewerMode" /> 3D Terrain</label>\
             </div>\
         </div>';
 

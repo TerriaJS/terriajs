@@ -87,8 +87,8 @@ var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
 var TitleWidget = require('./TitleWidget');
-
 var LeafletVisualizer = require('../Map/LeafletVisualizer');
+var ViewerMode = require('../ViewModels/ViewerMode');
 
 //use our own bing maps key
 BingMapsApi.defaultKey = undefined;
@@ -289,7 +289,39 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     });
 
     this.selectViewer(this.webGlSupported);
+
+    knockout.getObservable(this.application, 'viewerMode').subscribe(function() {
+        changeViewer(this);
+    }, this);
 };
+
+function changeViewer(viewer) {
+    var application = viewer.application;
+    var newMode = application.viewerMode;
+
+    if (newMode === ViewerMode.Leaflet) {
+        ga('send', 'event', 'mapSettings', 'switchViewer', '2D');
+        viewer.selectViewer(false);
+    } else if (newMode === ViewerMode.CesiumTerrain) {
+        ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
+
+        if (defined(application.leaflet)) {
+            viewer.selectViewer(true);
+        } else {
+            application.cesium.scene.globe.terrainProvider = new CesiumTerrainProvider({
+                url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+            });
+        }
+    } else if (newMode === ViewerMode.CesiumEllipsoid) {
+        ga('send', 'event', 'mapSettings', 'switchViewer', 'Smooth 3D');
+
+        if (defined(application.leaflet)) {
+            viewer.selectViewer(true);
+        }
+
+        application.cesium.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
+    }
+}
 
 // -------------------------------------------
 // PERF: skip frames where reasonable
