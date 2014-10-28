@@ -379,24 +379,6 @@ these extensions in order for National Map to know how to load it.'
         newViewModel.zoomToAndUseClock();
     }
 
-    function disableAll(items) {
-        for (var i = 0; i < items.length; ++i) {
-            var item = items[i];
-            if (defined(item.isEnabled)) {
-                item.isEnabled(false);
-            }
-
-            if (defined(item.Layer)) {
-                disableAll(item.Layer());
-            }
-        }
-    }
-
-    this._clearAll = createCommand(function() {
-        disableAll(that.content());
-        return false;
-    });
-
     function noopHandler(evt) {
         evt.stopPropagation();
         evt.preventDefault();
@@ -811,16 +793,6 @@ these extensions in order for National Map to know how to load it.'
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {
-    sceneOrMap : {
-        get : function() {
-            if (defined(this._viewer.scene)) {
-                return this._viewer.scene;
-            } else {
-                return this._viewer.map;
-            }
-        }
-    },
-
     openAddData : {
         get : function() {
             return this._openAddData;
