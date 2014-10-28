@@ -259,6 +259,29 @@ NowViewingViewModel.prototype.sortByNowViewingIndices = function() {
     }
 };
 
+/**
+ * Updates the order of layers on the Leaflet map to match the order in the Now Viewing pane.
+ * @private
+ */
+NowViewingViewModel.prototype.updateLeafletLayerOrder = function() {
+    // Set the current z-index of all layers.
+    var items = this.items;
+
+    var reorderableZIndex = 100; // an arbitrary place to start
+    var fixedZIndex = 1000000; // fixed layers go on top of reorderable ones.
+
+    for (var i = items.length - 1; i >= 0; --i) {
+        var currentItem = items[i];
+        if (defined(currentItem.imageryLayer)) {
+            if (currentItem.supportsReordering) {
+                currentItem.imageryLayer.setZIndex(reorderableZIndex++);
+            } else {
+                currentItem.imageryLayer.setZIndex(fixedZIndex++);
+            }
+        }
+    }
+};
+
 // Raise and lower functions for the two maps.  Currently we can only raise and lower imagery layers.
 
 function raiseInCesium(viewModel, item, itemAbove) {
@@ -295,15 +318,7 @@ function swapLeafletZIndices(viewModel, item, otherItem) {
     var map = viewModel.context.leaflet.map;
 
     if (!defined(item.imageryLayer.options.zIndex) || !defined(item.imageryLayer.options.zIndex)) {
-        // Set the current z-index of all layers.
-        var items = viewModel.items;
-        var zIndex = 100; // an arbitrary place to start
-        for (var i = items.length - 1; i >= 0; --i) {
-            var currentItem = items[i];
-            if (currentItem.supportsReordering && defined(currentItem.imageryLayer)) {
-                currentItem.imageryLayer.setZIndex(zIndex++);
-            }
-        }
+        viewModel.updateLeafletLayerOrder();
     }
 
     // Swap the z-indices of the two layers.

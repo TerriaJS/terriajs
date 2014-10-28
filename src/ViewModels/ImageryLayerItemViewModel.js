@@ -119,7 +119,7 @@ ImageryLayerItemViewModel.prototype._showInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.alpha = this.opacity;
+    this._imageryLayer.show = true;
 };
 
 ImageryLayerItemViewModel.prototype._hideInCesium = function() {
@@ -127,7 +127,7 @@ ImageryLayerItemViewModel.prototype._hideInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.alpha = 0.0;
+    this._imageryLayer.show = false;
 };
 
 ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
@@ -135,7 +135,9 @@ ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.setOpacity(this.opacity);
+    var map = this.context.leaflet.map;
+    map.addLayer(this._imageryLayer);
+    this.context.nowViewing.updateLeafletLayerOrder();
 };
 
 ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
@@ -143,7 +145,8 @@ ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.setOpacity(0.0);
+    var map = this.context.leaflet.map;
+    map.removeLayer(this._imageryLayer);
 };
 
 function updateOpacity(viewModel) {

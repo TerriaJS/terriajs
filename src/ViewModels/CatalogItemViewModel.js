@@ -594,6 +594,8 @@ function isEnabledChanged(viewModel) {
     var context = viewModel.context;
 
     if (viewModel.isEnabled) {
+        context.nowViewing.add(viewModel);
+
         // Load this data item's data (if we haven't already) when it is enabled.
         viewModel.load();
 
@@ -610,8 +612,6 @@ function isEnabledChanged(viewModel) {
         }
 
         viewModel.isShown = true;
-
-        context.nowViewing.add(viewModel);
 
         ga('send', 'event', 'dataSource', 'added', viewModel.name);
         viewModel._enabledDate = Date.now();

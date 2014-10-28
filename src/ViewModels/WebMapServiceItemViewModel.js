@@ -250,7 +250,7 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
-        alpha : 0.0
+        show : false
         // Ideally we'd specify "rectangle : this.rectangle" here.
         // But lots of WMS data sources get the extent wrong, and even the ones that get it right
         // specify the extent of the geometry itself, not the representation of the geometry.  So that means,
@@ -267,7 +267,6 @@ WebMapServiceItemViewModel.prototype._disableInCesium = function() {
     }
 
     var scene = this.context.cesium.scene;
-
     scene.imageryLayers.remove(this._imageryLayer);
     this._imageryLayer = undefined;
 };
@@ -280,8 +279,7 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
     var map = this.context.leaflet.map;
 
     var options = {
-        layers : this.layers,
-        opacity : 0.0
+        layers : this.layers
         // Ideally we'd specify "bounds : rectangleToLatLngBounds(this.rectangle)" here.
         // See comment in _enableInCesium for an explanation of why we don't.
     };
@@ -289,7 +287,6 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
     options = combine(defaultValue(this.parameters, WebMapServiceItemViewModel.defaultParameters), options);
 
     this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.context, this.url), options);
-    map.addLayer(this._imageryLayer);
 };
 
 WebMapServiceItemViewModel.prototype._disableInLeaflet = function() {
@@ -297,9 +294,6 @@ WebMapServiceItemViewModel.prototype._disableInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.context.leaflet.map;
-
-    map.removeLayer(this._imageryLayer);
     this._imageryLayer = undefined;
 };
 
