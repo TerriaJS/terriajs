@@ -37,11 +37,11 @@ var runLater = require('../Core/runLater');
  * @constructor
  * @extends CatalogItemViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the CZML data.
  */
-var CzmlItemViewModel = function(context, url) {
-    CatalogItemViewModel.call(this, context);
+var CzmlItemViewModel = function(application, url) {
+    CatalogItemViewModel.call(this, application);
 
     this._czmlDataSource = undefined;
     this._loadedUrl = undefined;
@@ -170,7 +170,7 @@ CzmlItemViewModel.prototype._show = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.dataSources;
+    var dataSources = this.application.dataSources;
     if (dataSources.contains(this._czmlDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
@@ -183,7 +183,7 @@ CzmlItemViewModel.prototype._hide = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.dataSources;
+    var dataSources = this.application.dataSources;
     if (!dataSources.contains(this._czmlDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
@@ -191,9 +191,9 @@ CzmlItemViewModel.prototype._hide = function() {
     dataSources.remove(this._czmlDataSource, false);
 };
 
-function proxyUrl(context, url) {
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
-        return context.corsProxy.getURL(url);
+function proxyUrl(application, url) {
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
+        return application.corsProxy.getURL(url);
     }
 
     return url;
@@ -205,7 +205,7 @@ function doneLoading(viewModel) {
 }
 
 function errorLoading(viewModel) {
-    viewModel.context.error.raiseEvent(new ViewModelError({
+    viewModel.application.error.raiseEvent(new ViewModelError({
         sender: viewModel,
         title: 'Error loading CZML',
         message: '\

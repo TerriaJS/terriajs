@@ -29,10 +29,10 @@ var runWhenDoneLoading = require('./runWhenDoneLoading');
  * @extends CatalogMemberViewModel
  * @abstract
  *
- * @param {ApplicationViewModel} context The context for the item.
+ * @param {ApplicationViewModel} application The application.
  */
-var CatalogItemViewModel = function(context) {
-    CatalogMemberViewModel.call(this, context);
+var CatalogItemViewModel = function(application) {
+    CatalogMemberViewModel.call(this, application);
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
@@ -359,17 +359,17 @@ var scratchRectangle = new Rectangle();
             rect.south -= epsilon;
         }
 
-        var context = that.context;
+        var application = that.application;
 
-        if (defined(context.cesium)) {
-            var flight = CameraFlightPath.createTweenRectangle(context.cesium.scene, {
+        if (defined(application.cesium)) {
+            var flight = CameraFlightPath.createTweenRectangle(application.cesium.scene, {
                 destination : rect
             });
-            context.cesium.scene.tweens.add(flight);
+            application.cesium.scene.tweens.add(flight);
         }
 
-        if (defined(context.leaflet)) {
-            context.leaflet.map.fitBounds(rectangleToLatLngBounds(rect));
+        if (defined(application.leaflet)) {
+            application.leaflet.map.fitBounds(rectangleToLatLngBounds(rect));
         }
     });
 };
@@ -387,15 +387,15 @@ CatalogItemViewModel.prototype.useClock = function() {
         $('.cesium-viewer-animationContainer').css('visibility', 'visible');
         $('.cesium-viewer-timelineContainer').css('visibility', 'visible');
 
-        that.clock.getValue(that.context.clock);
+        that.clock.getValue(that.application.clock);
 
-        if (defined(that.context.cesium)) {
-            that.context.cesium.viewer.timeline.zoomTo(that.context.clock.startTime, that.context.clock.stopTime);
-            that.context.cesium.viewer.forceResize();
+        if (defined(that.application.cesium)) {
+            that.application.cesium.viewer.timeline.zoomTo(that.application.clock.startTime, that.application.clock.stopTime);
+            that.application.cesium.viewer.forceResize();
         }
 
-        if (defined(that.context.leaflet)) {
-            that.context.leaflet.map.timeline.zoomTo(that.context.clock.startTime, that.context.clock.stopTime);
+        if (defined(that.application.leaflet)) {
+            that.application.leaflet.map.timeline.zoomTo(that.application.clock.startTime, that.application.clock.stopTime);
         }
     });
 };
@@ -423,13 +423,13 @@ CatalogItemViewModel.prototype.zoomToAndUseClock = function() {
  * @protected
  */
 CatalogItemViewModel.prototype._enable = function() {
-    var context = this.context;
+    var application = this.application;
 
-    if (defined(context.cesium)) {
+    if (defined(application.cesium)) {
         this._enableInCesium();
     }
 
-    if (defined(context.leaflet)) {
+    if (defined(application.leaflet)) {
         this._enableInLeaflet();
     }
 };
@@ -446,13 +446,13 @@ CatalogItemViewModel.prototype._enable = function() {
  * @protected
  */
 CatalogItemViewModel.prototype._disable = function() {
-    var context = this.context;
+    var application = this.application;
 
-    if (defined(context.cesium)) {
+    if (defined(application.cesium)) {
         this._disableInCesium();
     }
 
-    if (defined(context.leaflet)) {
+    if (defined(application.leaflet)) {
         this._disableInLeaflet();
     }
 };
@@ -469,13 +469,13 @@ CatalogItemViewModel.prototype._disable = function() {
  * @protected
  */
 CatalogItemViewModel.prototype._show = function() {
-    var context = this.context;
+    var application = this.application;
 
-    if (defined(context.cesium)) {
+    if (defined(application.cesium)) {
         this._showInCesium();
     }
 
-    if (defined(context.leaflet)) {
+    if (defined(application.leaflet)) {
         this._showInLeaflet();
     }
 };
@@ -491,13 +491,13 @@ CatalogItemViewModel.prototype._show = function() {
  * @protected
  */
 CatalogItemViewModel.prototype._hide = function() {
-    var context = this.context;
+    var application = this.application;
 
-    if (defined(context.cesium)) {
+    if (defined(application.cesium)) {
         this._hideInCesium();
     }
 
-    if (defined(context.leaflet)) {
+    if (defined(application.leaflet)) {
         this._hideInLeaflet();
     }
 };
@@ -591,10 +591,10 @@ CatalogItemViewModel.prototype._hideInLeaflet = function() {
 };
 
 function isEnabledChanged(viewModel) {
-    var context = viewModel.context;
+    var application = viewModel.application;
 
     if (viewModel.isEnabled) {
-        context.nowViewing.add(viewModel);
+        application.nowViewing.add(viewModel);
 
         // Load this data item's data (if we haven't already) when it is enabled.
         viewModel.load();
@@ -624,7 +624,7 @@ function isEnabledChanged(viewModel) {
             viewModel._disable();
         }
 
-        context.nowViewing.remove(viewModel);
+        application.nowViewing.remove(viewModel);
 
         var duration;
         if (viewModel._enabledDate) {
@@ -635,7 +635,7 @@ function isEnabledChanged(viewModel) {
 }
 
 function isShownChanged(viewModel) {
-    var context = viewModel.context;
+    var application = viewModel.application;
 
     if (viewModel.isShown) {
         // Tell this data item to show itself on the map, but only after we're done loading and only if

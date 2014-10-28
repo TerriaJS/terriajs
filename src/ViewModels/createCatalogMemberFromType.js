@@ -11,15 +11,15 @@ var mapping = {};
  * Creates a type derived from {@link CatalogMemberViewModel} based on a given type string.
  * 
  * @param {String} type The derived type name.
- * @param {ApplicationViewModel} context The context for the item.
+ * @param {ApplicationViewModel} application The application.
  */
-var createCatalogMemberFromType = function(type, context) {
+var createCatalogMemberFromType = function(type, application) {
     var Constructor = mapping[type];
     if (!defined(Constructor)) {
         throw new RuntimeError('Unsupported CatalogMemberViewModel type: ' + type);
     }
 
-    return new Constructor(context);
+    return new Constructor(application);
 };
 
 /**

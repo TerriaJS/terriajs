@@ -20,10 +20,10 @@ var inherit = require('../Core/inherit');
  * @extends CatalogItemViewModel
  * @abstract
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  */
-var ImageryLayerItemViewModel = function(context) {
-    CatalogItemViewModel.call(this, context);
+var ImageryLayerItemViewModel = function(application) {
+    CatalogItemViewModel.call(this, application);
 
     this._imageryLayer = undefined;
 
@@ -135,9 +135,9 @@ ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.context.leaflet.map;
+    var map = this.application.leaflet.map;
     map.addLayer(this._imageryLayer);
-    this.context.nowViewing.updateLeafletLayerOrder();
+    this.application.nowViewing.updateLeafletLayerOrder();
 };
 
 ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
@@ -145,7 +145,7 @@ ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.context.leaflet.map;
+    var map = this.application.leaflet.map;
     map.removeLayer(this._imageryLayer);
 };
 

@@ -32,10 +32,10 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
  * @constructor
  * @extends CatalogGroupViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  */
-var WebMapServiceGroupViewModel = function(context) {
-    CatalogGroupViewModel.call(this, context, 'wms-getCapabilities');
+var WebMapServiceGroupViewModel = function(application) {
+    CatalogGroupViewModel.call(this, application, 'wms-getCapabilities');
 
     this._loadedUrl = undefined;
 
@@ -104,7 +104,7 @@ WebMapServiceGroupViewModel.prototype.load = function() {
 };
 
 function getCapabilities(viewModel) {
-    var url = cleanAndProxyUrl(viewModel.context, viewModel.url) + '?service=WMS&request=GetCapabilities';
+    var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '?service=WMS&request=GetCapabilities';
 
     return when(loadXML(url), function(xml) {
         var json = $.xml2json(xml);
@@ -145,7 +145,7 @@ function getCapabilities(viewModel) {
 
         addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
     }, function(e) {
-        viewModel.context.raiseEvent(new ViewModelError({
+        viewModel.application.raiseEvent(new ViewModelError({
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WMS server.  \
@@ -166,14 +166,14 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
     });
 }
 
-function cleanAndProxyUrl(context, url) {
+function cleanAndProxyUrl(application, url) {
     // Strip off the search portion of the URL
     var uri = new URI(url);
     uri.search('');
 
     var cleanedUrl = uri.toString();
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(cleanedUrl)) {
-        cleanedUrl = context.corsProxy.getURL(cleanedUrl, '1d');
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(cleanedUrl)) {
+        cleanedUrl = application.corsProxy.getURL(cleanedUrl, '1d');
     }
 
     return cleanedUrl;
@@ -205,7 +205,7 @@ function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetF
 }
 
 function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian) {
-    var result = new WebMapServiceItemViewModel(viewModel.context);
+    var result = new WebMapServiceItemViewModel(viewModel.application);
 
     result.name = layer.Title;
     result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;
