@@ -277,7 +277,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.viewer = undefined;
     this.map = undefined;
 
-
     this.application = application;
 
     this.initialCamera = config.initialCamera;
@@ -293,7 +292,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 };
 
 // -------------------------------------------
-// PERF: skip frames where reasonable - global vars for now
+// PERF: skip frames where reasonable
 // -------------------------------------------
 var FrameChecker = function () {
     this._lastDate = new JulianDate(0, 0.0);

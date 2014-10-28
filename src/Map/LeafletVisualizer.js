@@ -96,19 +96,19 @@ function cleanEntity(entity, group) {
         group.removeLayer(entity._geomPoint);
         entity._geomPoint = undefined;
     }
-    else if (defined(entity._geomBillboard)) {
+    if (defined(entity._geomBillboard)) {
         group.removeLayer(entity._geomBillboard);
         entity._geomBillboard = undefined;
     }
-    else if (defined(entity._geomLabel)) {
+    if (defined(entity._geomLabel)) {
         group.removeLayer(entity._geomLabel);
         entity._geomLabel = undefined;
     }
-    else if (defined(entity._geomPolyline)) {
+    if (defined(entity._geomPolyline)) {
         group.removeLayer(entity._geomPolyline);
         entity._geomPolyline = undefined;
     }
-    else if (defined(entity._geomPolygon)) {
+    if (defined(entity._geomPolygon)) {
         group.removeLayer(entity._geomPolygon);
         entity._geomPolygon = undefined;
     }
@@ -519,10 +519,11 @@ LeafletGeomVisualizer.prototype.isDestroyed = function() {
 LeafletGeomVisualizer.prototype.destroy = function() {
     var entities = this._entitiesToVisualize.values;
     for (var i = entities.length - 1; i > -1; i--) {
-        entities[i]._geomLayer = undefined;
+        entities[i]._geomPoint = undefined;
         entities[i]._geomBillboard = undefined;
         entities[i]._geomLabel = undefined;
-        entities[i]._geomPoint = undefined;
+        entities[i]._geomPolyline = undefined;
+        entities[i]._geomPolygon = undefined;
     }
     this._entityCollection.collectionChanged.removeEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
     this._map.removeLayer(this._featureGroup);

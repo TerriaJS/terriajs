@@ -246,10 +246,9 @@ CsvItemViewModel.prototype._showInCesium = function() {
 };
 
 CsvItemViewModel.prototype._hideInCesium = function() {
-    //TODO: add wms stuff for region layer
     var dataSources = this.application.dataSources;
     if (!dataSources.contains(this._tableDataSource)) {
-//        throw new DeveloperError('This data source is not shown.');
+        throw new DeveloperError('This data source is not shown.');
     }
 
     if (!defined(this.regionMapped)) {
@@ -319,6 +318,17 @@ CsvItemViewModel.prototype._hideInLeaflet = function() {
 
         map.removeLayer(this._imageryLayer);
         this._imageryLayer = undefined;
+    }
+};
+
+CsvItemViewModel.prototype._rebuild = function() {
+    if (defined(this.application.cesium)) {
+        this._hideInCesium();
+        this._showInCesium();
+    }
+    else {
+        this._hideInLeaflet();
+        this._showInLeaflet();
     }
 };
 
@@ -586,7 +596,7 @@ function setRegionDataVariable(viewModel, newVar) {
     
     console.log('Var set to:', newVar);
 
-    //TODO: figure out how to flush wms layer and redraw
+    viewModel._rebuild();
 }
 
 function setRegionColorMap(viewModel, dataColorMap) {
@@ -597,8 +607,7 @@ function setRegionColorMap(viewModel, dataColorMap) {
     viewModel._tableDataSource.setColorGradient(dataColorMap);
     createRegionLookupFunc(viewModel);
 
-    //TODO: figure out how to flush wms layer and redraw
-
+    viewModel._rebuild();
 }
 
 function addRegionMap(viewModel) {
