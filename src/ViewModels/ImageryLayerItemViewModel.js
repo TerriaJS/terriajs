@@ -20,10 +20,10 @@ var inherit = require('../Core/inherit');
  * @extends CatalogItemViewModel
  * @abstract
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  */
-var ImageryLayerItemViewModel = function(context) {
-    CatalogItemViewModel.call(this, context);
+var ImageryLayerItemViewModel = function(application) {
+    CatalogItemViewModel.call(this, application);
 
     this._imageryLayer = undefined;
 
@@ -119,7 +119,7 @@ ImageryLayerItemViewModel.prototype._showInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.alpha = this.opacity;
+    this._imageryLayer.show = true;
 };
 
 ImageryLayerItemViewModel.prototype._hideInCesium = function() {
@@ -127,7 +127,7 @@ ImageryLayerItemViewModel.prototype._hideInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.alpha = 0.0;
+    this._imageryLayer.show = false;
 };
 
 ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
@@ -135,7 +135,9 @@ ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.setOpacity(this.opacity);
+    var map = this.application.leaflet.map;
+    map.addLayer(this._imageryLayer);
+    this.application.nowViewing.updateLeafletLayerOrder();
 };
 
 ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
@@ -143,7 +145,8 @@ ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    this._imageryLayer.setOpacity(0.0);
+    var map = this.application.leaflet.map;
+    map.removeLayer(this._imageryLayer);
 };
 
 function updateOpacity(viewModel) {

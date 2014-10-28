@@ -23,10 +23,10 @@ var runWhenDoneLoading = require('./runWhenDoneLoading');
  * @constructor
  * @extends CatalogMemberViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  */
-var CatalogGroupViewModel = function(context) {
-    CatalogMemberViewModel.call(this, context);
+var CatalogGroupViewModel = function(application) {
+    CatalogMemberViewModel.call(this, application);
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -148,7 +148,7 @@ CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
             // Find an existing item with the same name
             var existingItem = viewModel.findFirstItemByName(item.name);
             if (!defined(existingItem) || existingItem.type !== item.type) {
-                existingItem = createCatalogMemberFromType(item.type, viewModel.context);
+                existingItem = createCatalogMemberFromType(item.type, viewModel.application);
                 viewModel.add(existingItem);
             }
 

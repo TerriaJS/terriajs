@@ -33,10 +33,10 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
  * @constructor
  * @extends CatalogGroupViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  */
-var CkanGroupViewModel = function(context) {
-    CatalogGroupViewModel.call(this, context, 'ckan');
+var CkanGroupViewModel = function(application) {
+    CatalogGroupViewModel.call(this, application, 'ckan');
 
     this._loadedUrl = undefined;
     this._loadedFilterQuery = undefined;
@@ -152,7 +152,7 @@ CkanGroupViewModel.prototype.load = function() {
 var wmsFormatRegex = /^wms$/i;
 
 function packageSearch(viewModel) {
-    var url = cleanAndProxyUrl(viewModel.context, viewModel.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(viewModel.filterQuery);
+    var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(viewModel.filterQuery);
 
     return when(loadJson(url), function(json) {
         if (viewModel.filterByWmsGetCapabilities) {
@@ -163,7 +163,7 @@ function packageSearch(viewModel) {
             populateGroupFromResults(viewModel, json);
         }
     }).otherwise(function() {
-        viewModel.context.error.raiseEvent(new ViewModelError({
+        viewModel.application.error.raiseEvent(new ViewModelError({
             sender: viewModel,
             title: 'Group is not available',
             message: '\
@@ -330,7 +330,7 @@ function populateGroupFromResults(viewModel, json) {
             uri.search('');
             var url = uri.toString();
 
-            var newItem = new WebMapServiceItemViewModel(viewModel.context);
+            var newItem = new WebMapServiceItemViewModel(viewModel.application);
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;
@@ -353,7 +353,7 @@ function populateGroupFromResults(viewModel, json) {
 
                 var existingGroup = viewModel.findFirstItemByName(group.display_name);
                 if (!defined(existingGroup)) {
-                    existingGroup = new CatalogGroupViewModel(viewModel.context);
+                    existingGroup = new CatalogGroupViewModel(viewModel.application);
                     existingGroup.name = group.display_name;
                     viewModel.add(existingGroup);
                 }
@@ -382,14 +382,14 @@ function populateGroupFromResults(viewModel, json) {
     }
 }
 
-function cleanAndProxyUrl(context, url) {
+function cleanAndProxyUrl(application, url) {
     // Strip off the search portion of the URL
     var uri = new URI(url);
     uri.search('');
 
     var cleanedUrl = uri.toString();
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(cleanedUrl)) {
-        cleanedUrl = context.corsProxy.getURL(cleanedUrl, '1d');
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(cleanedUrl)) {
+        cleanedUrl = application.corsProxy.getURL(cleanedUrl, '1d');
     }
 
     return cleanedUrl;

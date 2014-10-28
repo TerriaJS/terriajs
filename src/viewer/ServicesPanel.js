@@ -112,9 +112,9 @@ var ServicesPanel = function(options) {
                             str += 'Click the load button below to load the page from the service.';
 
                             if (res.layer.type === 'DATA') {
-                                viewModel.layer = createCatalogItemFromUrl(res.layer.url, viewModel.catalog.context);
+                                viewModel.layer = createCatalogItemFromUrl(res.layer.url, viewModel.catalog.application);
                             } else {
-                                viewModel.layer = createCatalogMemberFromType(res.layer.type, viewModel.catalog.context);
+                                viewModel.layer = createCatalogMemberFromType(res.layer.type, viewModel.catalog.application);
                                 viewModel.layer.updateFromJson(res.layer);
                             }
 
@@ -135,7 +135,7 @@ var ServicesPanel = function(options) {
 
                 var group = userAddedDataGroup.findFirstItemByName(viewModel.services[viewModel.selectedService() | 0].name);
                 if (!defined(group)) {
-                    group = new CatalogGroupViewModel(viewModel.catalog.context);
+                    group = new CatalogGroupViewModel(viewModel.catalog.application);
                     group.name = viewModel.services[viewModel.selectedService() | 0].name;
                     group.isOpen = true;
                     viewModel.catalog.userAddedDataGroup.add(group);

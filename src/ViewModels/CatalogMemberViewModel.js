@@ -17,14 +17,14 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
  * @constructor
  * @abstract
  *
- * @param {ApplicationViewModel} context The context for the item.
+ * @param {ApplicationViewModel} application The application.
  */
-var CatalogMemberViewModel = function(context) {
-    if (!defined(context)) {
-        throw new DeveloperError('context is required');
+var CatalogMemberViewModel = function(application) {
+    if (!defined(application)) {
+        throw new DeveloperError('application is required');
     }
 
-    this._context = context;
+    this._application = application;
 
     /**
      * Gets or sets the name of the item.  This property is observable.
@@ -65,13 +65,13 @@ defineProperties(CatalogMemberViewModel.prototype, {
     },
 
     /**
-     * Gets the context for this data item.
+     * Gets the application.
      * @memberOf CatalogMemberViewModel.prototype
      * @type {ApplicationViewModel}
      */
-    context : {
+    application : {
         get : function() {
-            return this._context;
+            return this._application;
         }
     },
 

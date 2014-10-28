@@ -42,11 +42,11 @@ var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer')
  * @constructor
  * @extends CatalogItemViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the CSV data.
  */
-var CsvItemViewModel = function(context, url) {
-    CatalogItemViewModel.call(this, context);
+var CsvItemViewModel = function(application, url) {
+    CatalogItemViewModel.call(this, application);
 
     this._tableDataSource = undefined;
 
@@ -148,7 +148,7 @@ CsvItemViewModel.prototype.load = function() {
                 } else if (data instanceof String) {
                     loadTable(that, data);
                 } else {
-                    that.context.error.raiseEvent(new ViewModelError({
+                    that.application.error.raiseEvent(new ViewModelError({
                         sender: that,
                         title: 'Unexpected type of CSV data',
                         message: '\
@@ -166,7 +166,7 @@ CsvItemViewModel.prototype.load = function() {
                 loadTable(that, text);
             }).otherwise(function(e) {
                 that.isLoading = false;
-                that.context.error.raiseEvent(new ViewModelError({
+                that.application.error.raiseEvent(new ViewModelError({
                     sender: that,
                     title: 'Could not load CSV file',
                     message: '\
@@ -189,7 +189,7 @@ CsvItemViewModel.prototype._disableInCesium = function() {
 CsvItemViewModel.prototype._showInCesium = function() {
 
     if (!defined(this.regionMapped)) {
-        var dataSources = this.context.dataSources;
+        var dataSources = this.application.dataSources;
         if (dataSources.contains(this._tableDataSource)) {
             throw new DeveloperError('This data source is already shown.');
         }
@@ -197,10 +197,10 @@ CsvItemViewModel.prototype._showInCesium = function() {
         dataSources.add(this._tableDataSource);
     }
     else {
-        var scene = this.context.cesium.scene;
+        var scene = this.application.cesium.scene;
 
         var imageryProvider = new WebMapServiceImageryProvider({
-            url : proxyUrl(this.context, this.url),
+            url : proxyUrl(this.application, this.url),
             layers : this.layers,
             parameters : WebMapServiceItemViewModel.defaultParameters
         });
@@ -247,7 +247,7 @@ CsvItemViewModel.prototype._showInCesium = function() {
 
 CsvItemViewModel.prototype._hideInCesium = function() {
     //TODO: add wms stuff for region layer
-    var dataSources = this.context.dataSources;
+    var dataSources = this.application.dataSources;
     if (!dataSources.contains(this._tableDataSource)) {
 //        throw new DeveloperError('This data source is not shown.');
     }
@@ -256,7 +256,7 @@ CsvItemViewModel.prototype._hideInCesium = function() {
         dataSources.remove(this._tableDataSource, false);
     }
     else {
-        var scene = this.context.cesium.scene;
+        var scene = this.application.cesium.scene;
 
         scene.imageryLayers.remove(this._imageryLayer);
         this._imageryLayer = undefined;
@@ -275,7 +275,7 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
         this._showInCesium();
     }
     else {
-        var map = this.context.leaflet.map;
+        var map = this.application.leaflet.map;
 
         var options = {
             layers : this.layers,
@@ -284,7 +284,7 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
 
         options = combine(defaultValue(WebMapServiceItemViewModel.defaultParameters), options);
 
-        this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.context, this.url), options);
+        this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.application, this.url), options);
 
         var that = this;
         this._imageryLayer.setFilter(function () {
@@ -299,7 +299,7 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
                     var properties = result.features[0].properties;
                     var id = properties[that.regionProp];
                     properties = combine(properties, that.rowProperties(parseInt(id,10)));
-                    properties['FID'] = undefined;
+                    properties.FID = undefined;
                     properties[that.regionProp] = undefined;
                     result.features[0].properties = properties;
                 }
@@ -315,16 +315,16 @@ CsvItemViewModel.prototype._hideInLeaflet = function() {
         this._hideInCesium();
     }
     else {
-        var map = this.context.leaflet.map;
+        var map = this.application.leaflet.map;
 
         map.removeLayer(this._imageryLayer);
         this._imageryLayer = undefined;
     }
 };
 
-function proxyUrl(context, url) {
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
-        return context.corsProxy.getURL(url);
+function proxyUrl(application, url) {
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
+        return application.corsProxy.getURL(url);
     }
 
     return url;
@@ -344,7 +344,7 @@ function loadTable(viewModel, text) {
         }
         else {
             viewModel.isLoading = false;
-            viewModel.context.error.raiseEvent(new ViewModelError({
+            viewModel.application.error.raiseEvent(new ViewModelError({
                 sender: viewModel,
                 title: 'Could not load CSV file',
                 message: '\

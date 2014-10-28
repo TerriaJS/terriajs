@@ -57,11 +57,11 @@ var pointPalette = {
  * @constructor
  * @extends CatalogItemViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the GeoJSON data.
  */
-var GeoJsonItemViewModel = function(context, url) {
-    CatalogItemViewModel.call(this, context);
+var GeoJsonItemViewModel = function(application, url) {
+    CatalogItemViewModel.call(this, application);
 
     this._geoJsonDataSource = undefined;
 
@@ -177,7 +177,7 @@ GeoJsonItemViewModel.prototype.load = function() {
                 that.isLoading = false;
             }).otherwise(function(e) {
                 that.isLoading = false;
-                that.context.error.raiseEvent(new ViewModelError({
+                that.application.error.raiseEvent(new ViewModelError({
                     sender: that,
                     title: 'Could not load JSON',
                     message: '\
@@ -223,7 +223,7 @@ GeoJsonItemViewModel.prototype._show = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.dataSources;
+    var dataSources = this.application.dataSources;
     if (dataSources.contains(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
@@ -236,7 +236,7 @@ GeoJsonItemViewModel.prototype._hide = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.dataSources;
+    var dataSources = this.application.dataSources;
     if (!dataSources.contains(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
@@ -297,9 +297,9 @@ function nameIsDerivedFromUrl(name, url) {
     return false;
 }
 
-function proxyUrl(context, url) {
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
-        return context.corsProxy.getURL(url);
+function proxyUrl(application, url) {
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
+        return application.corsProxy.getURL(url);
     }
 
     return url;

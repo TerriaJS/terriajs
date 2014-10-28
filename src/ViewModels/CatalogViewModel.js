@@ -14,19 +14,19 @@ var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 /**
  * The view model for the geospatial data catalog.
  *
- * @param {ApplicationViewModel} context The context for the catalog.
+ * @param {ApplicationViewModel} application The application.
  *
  * @alias CatalogViewModel
  * @constructor
  */
-var CatalogViewModel = function(context) {
-    if (!defined(context)) {
-        throw new DeveloperError('context is required');
+var CatalogViewModel = function(application) {
+    if (!defined(application)) {
+        throw new DeveloperError('application is required');
     }
 
-    this._context = context;
+    this._application = application;
 
-    this._group = new CatalogGroupViewModel(context);
+    this._group = new CatalogGroupViewModel(application);
     this._group.name = 'Root Group';
 
     /**
@@ -49,7 +49,7 @@ var CatalogViewModel = function(context) {
                 }
             }
 
-            group = new CatalogGroupViewModel(this.context);
+            group = new CatalogGroupViewModel(this.application);
             group.name = 'User-Added Data';
             group.description = 'The group for data that was added by the user via the Add Data panel.';
             this.group.add(group);
@@ -60,13 +60,13 @@ var CatalogViewModel = function(context) {
 
 defineProperties(CatalogViewModel.prototype, {
     /**
-     * Gets the context for this catalog.
+     * Gets the application.
      * @memberOf CatalogViewModel.prototype
      * @type {ApplicationViewModel}
      */
-    context : {
+    application : {
         get : function() {
-            return this._context;
+            return this._application;
         }
     },
 
@@ -108,14 +108,14 @@ CatalogViewModel.prototype.updateFromJson = function(json) {
         // Find an existing group with the same name, if any.
         var existingGroup = this.group.findFirstItemByName(group.name);
         if (!defined(existingGroup)) {
-            existingGroup = createCatalogMemberFromType(group.type, this.context);
+            existingGroup = createCatalogMemberFromType(group.type, this.application);
             this.group.add(existingGroup);
         }
 
         existingGroup.updateFromJson(group);
     }
 
-    this.context.nowViewing.sortByNowViewingIndices();
+    this.application.nowViewing.sortByNowViewingIndices();
 };
 
 /**
@@ -135,7 +135,7 @@ CatalogViewModel.prototype.updateFromJson = function(json) {
  * @return {Object} The serialized JSON object-literal.
  */
 CatalogViewModel.prototype.serializeToJson = function(options) {
-    this.context.nowViewing.recordNowViewingIndices();
+    this.application.nowViewing.recordNowViewingIndices();
 
     var json = {};
     CatalogGroupViewModel.defaultSerializers.items(this.group, json, 'items', options);

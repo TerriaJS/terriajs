@@ -60,7 +60,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this.catalog = options.catalog;
 
-    this.nowViewing = this.catalog.context.nowViewing;
+    this.nowViewing = this.catalog.application.nowViewing;
 
     knockout.track(this, ['showingDataPanel', 'showingMapPanel', 'showingLegendPanel', 'showingLegendButton', 'addDataIsOpen', 'addType', 'topLayerLegendUrl', 'addDataUrl',
                           'imageryIsOpen', 'viewerSelectionIsOpen', 'selectedViewer']);
@@ -139,7 +139,7 @@ Please select a file or service type from the drop-down list before clicking the
         } else if (that.addType === 'File') {
             ga('send', 'event', 'addDataUrl', 'File', that.addDataUrl);
 
-            newViewModel = createCatalogItemFromUrl(that.addDataUrl, that.catalog.context);
+            newViewModel = createCatalogItemFromUrl(that.addDataUrl, that.catalog.application);
             if (!defined(newViewModel)) {
                 var message2 = new PopupMessage({
                     container : document.body,
@@ -164,7 +164,7 @@ these extensions in order for National Map to know how to load it.'
             newViewModel.name = name;
 
             // TODO: Remove this, it only exists to make the UI happy.
-            var group = new CatalogGroupViewModel(that.catalog.context);
+            var group = new CatalogGroupViewModel(that.catalog.application);
             group.name = name;
             group.isOpen = true;
             group.items.push(newViewModel);
@@ -176,7 +176,7 @@ these extensions in order for National Map to know how to load it.'
         } else {
             ga('send', 'event', 'addDataUrl', that.addType, that.addDataUrl);
 
-            newViewModel = createCatalogMemberFromType(that.addType, that.catalog.context);
+            newViewModel = createCatalogMemberFromType(that.addType, that.catalog.application);
             newViewModel.name = that.addDataUrl;
             newViewModel.url = that.addDataUrl;
             that.catalog.userAddedDataGroup.items.push(newViewModel);
@@ -344,7 +344,7 @@ these extensions in order for National Map to know how to load it.'
     });
 
     function addFile(file) {
-        var newViewModel = createCatalogItemFromUrl(file.name, that.catalog.context);
+        var newViewModel = createCatalogItemFromUrl(file.name, that.catalog.application);
         if (!defined(newViewModel)) {
             var message2 = new PopupMessage({
                 container : document.body,
@@ -370,7 +370,7 @@ these extensions in order for National Map to know how to load it.'
         newViewModel.dataSourceUrl = file.name;
 
         // TODO: Remove this, it only exists to make the UI happy.
-        var group = new CatalogGroupViewModel(that.catalog.context);
+        var group = new CatalogGroupViewModel(that.catalog.application);
         group.name = name;
         group.isOpen = true;
         group.items.push(newViewModel);

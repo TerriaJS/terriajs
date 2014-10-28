@@ -11,14 +11,14 @@ var mapping = [];
  * Creates a type derived from {@link CatalogMemberViewModel} based on a given URL.
  *
  * @param {String} url The derived type name.
- * @param {ApplicationViewModel} context The context for the item.
+ * @param {ApplicationViewModel} application The application.
  * @returns {CatalogMemberViewModel} The constructed data item, or undefined if the URL is not supported.
  */
-var createCatalogItemFromUrl = function(url, context) {
+var createCatalogItemFromUrl = function(url, application) {
     for (var i = 0; i < mapping.length; ++i) {
         var matcher = mapping[i];
         if (matcher.matcher(url)) {
-            return new matcher.constructor(context, url);
+            return new matcher.constructor(application, url);
         }
     }
     return undefined;
@@ -55,7 +55,7 @@ var createCatalogItemFromUrl = function(url, context) {
   * Function interface for matching a URL to a {@link CatalogMemberViewModel} constructor
   * for that URL.
   * @callback createCatalogItemFromUrl~Constructor
-  * @param {ApplicationViewModel} context The context in which to create the {@link CatalogMemberViewModel}.
+  * @param {ApplicationViewModel} application The application.
   * @param {String} url The URL from which to obtain the data.
   * @returns {CatalogMemberViewModel} The created data item.
   */

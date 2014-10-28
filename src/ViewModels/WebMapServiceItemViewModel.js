@@ -31,10 +31,10 @@ var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
  * @constructor
  * @extends ImageryLayerItemViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application for the group.
  */
-var WebMapServiceItemViewModel = function(context) {
-    ImageryLayerItemViewModel.call(this, context);
+var WebMapServiceItemViewModel = function(application) {
+    ImageryLayerItemViewModel.call(this, application);
 
     this._metadata = undefined;
     this._dataUrl = undefined;
@@ -239,10 +239,10 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    var scene = this.context.cesium.scene;
+    var scene = this.application.cesium.scene;
 
     var imageryProvider = new WebMapServiceImageryProvider({
-        url : cleanAndProxyUrl(this.context, this.url),
+        url : cleanAndProxyUrl(this.application, this.url),
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
@@ -250,7 +250,7 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
-        alpha : 0.0
+        show : false
         // Ideally we'd specify "rectangle : this.rectangle" here.
         // But lots of WMS data sources get the extent wrong, and even the ones that get it right
         // specify the extent of the geometry itself, not the representation of the geometry.  So that means,
@@ -266,8 +266,7 @@ WebMapServiceItemViewModel.prototype._disableInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var scene = this.context.cesium.scene;
-
+    var scene = this.application.cesium.scene;
     scene.imageryLayers.remove(this._imageryLayer);
     this._imageryLayer = undefined;
 };
@@ -277,19 +276,17 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    var map = this.context.leaflet.map;
+    var map = this.application.leaflet.map;
 
     var options = {
-        layers : this.layers,
-        opacity : 0.0
+        layers : this.layers
         // Ideally we'd specify "bounds : rectangleToLatLngBounds(this.rectangle)" here.
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
     options = combine(defaultValue(this.parameters, WebMapServiceItemViewModel.defaultParameters), options);
 
-    this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.context, this.url), options);
-    map.addLayer(this._imageryLayer);
+    this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
 };
 
 WebMapServiceItemViewModel.prototype._disableInLeaflet = function() {
@@ -297,9 +294,6 @@ WebMapServiceItemViewModel.prototype._disableInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.context.leaflet.map;
-
-    map.removeLayer(this._imageryLayer);
     this._imageryLayer = undefined;
 };
 
@@ -310,8 +304,8 @@ WebMapServiceItemViewModel.defaultParameters = {
     style: ''
 };
 
-function cleanAndProxyUrl(context, url) {
-    return proxyUrl(context, cleanUrl(url));
+function cleanAndProxyUrl(application, url) {
+    return proxyUrl(application, cleanUrl(url));
 }
 
 function cleanUrl(url) {
@@ -321,9 +315,9 @@ function cleanUrl(url) {
     return uri.toString();
 }
 
-function proxyUrl(context, url) {
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
-        return context.corsProxy.getURL(url);
+function proxyUrl(application, url) {
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
+        return application.corsProxy.getURL(url);
     }
 
     return url;
@@ -334,7 +328,7 @@ function requestMetadata(viewModel) {
 
     result.isLoading = true;
 
-    result.promise = loadXML(proxyUrl(viewModel.context, viewModel.metadataUrl)).then(function(capabilities) {
+    result.promise = loadXML(proxyUrl(viewModel.application, viewModel.metadataUrl)).then(function(capabilities) {
         var json = $.xml2json(capabilities);
 
         if (json.Service) {

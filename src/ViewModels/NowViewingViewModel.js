@@ -11,8 +11,8 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 /**
  * The view-model for the "Now Viewing" pane.
  */
-var NowViewingViewModel = function(context) {
-    this._context = context;
+var NowViewingViewModel = function(application) {
+    this._application = application;
     this._eventSubscriptions = new EventHelper();
 
     /**
@@ -31,24 +31,24 @@ var NowViewingViewModel = function(context) {
 
     knockout.track(this, ['items', 'isOpen']);
 
-    this._eventSubscriptions.add(this.context.beforeViewerChanged, function() {
+    this._eventSubscriptions.add(this.application.beforeViewerChanged, function() {
         beforeViewerChanged(this);
     }, this);
 
-    this._eventSubscriptions.add(this.context.afterViewerChanged, function() {
+    this._eventSubscriptions.add(this.application.afterViewerChanged, function() {
         afterViewerChanged(this);
     }, this);
 };
 
 defineProperties(NowViewingViewModel.prototype, {
     /**
-     * Gets the context for this Now Viewing list.
+     * Gets the application.
      * @memberOf NowViewingViewModel.prototype
      * @type {ApplicationViewModel}
      */
-    context : {
+    application : {
         get : function() {
-            return this._context;
+            return this._application;
         }
     },
 
@@ -159,13 +159,13 @@ NowViewingViewModel.prototype.raise = function(item, index) {
         return;
     }
 
-    var context = this.context;
+    var application = this.application;
 
-    if (defined(context.cesium)) {
+    if (defined(application.cesium)) {
         raiseInCesium(this, item, this.items[index - 1]);
     }
 
-    if (defined(context.leaflet)) {
+    if (defined(application.leaflet)) {
         raiseInLeaflet(this, item, this.items[index - 1]);
     }
 
@@ -203,13 +203,13 @@ NowViewingViewModel.prototype.lower = function(item, index) {
         return;
     }
 
-    var context = this.context;
+    var application = this.application;
 
-    if (defined(context.cesium)) {
+    if (defined(application.cesium)) {
         lowerInCesium(this, item, itemBelow);
     }
 
-    if (defined(context.leaflet)) {
+    if (defined(application.leaflet)) {
         lowerInLeaflet(this, item, itemBelow);
     }
 
@@ -259,6 +259,29 @@ NowViewingViewModel.prototype.sortByNowViewingIndices = function() {
     }
 };
 
+/**
+ * Updates the order of layers on the Leaflet map to match the order in the Now Viewing pane.
+ * @private
+ */
+NowViewingViewModel.prototype.updateLeafletLayerOrder = function() {
+    // Set the current z-index of all layers.
+    var items = this.items;
+
+    var reorderableZIndex = 100; // an arbitrary place to start
+    var fixedZIndex = 1000000; // fixed layers go on top of reorderable ones.
+
+    for (var i = items.length - 1; i >= 0; --i) {
+        var currentItem = items[i];
+        if (defined(currentItem.imageryLayer)) {
+            if (currentItem.supportsReordering) {
+                currentItem.imageryLayer.setZIndex(reorderableZIndex++);
+            } else {
+                currentItem.imageryLayer.setZIndex(fixedZIndex++);
+            }
+        }
+    }
+};
+
 // Raise and lower functions for the two maps.  Currently we can only raise and lower imagery layers.
 
 function raiseInCesium(viewModel, item, itemAbove) {
@@ -266,7 +289,7 @@ function raiseInCesium(viewModel, item, itemAbove) {
         return;
     }
 
-    var scene = viewModel.context.cesium.scene;
+    var scene = viewModel.application.cesium.scene;
     scene.imageryLayers.raise(item.imageryLayer);
 }
 
@@ -275,7 +298,7 @@ function lowerInCesium(viewModel, item, itemBelow) {
         return;
     }
 
-    var scene = viewModel.context.cesium.scene;
+    var scene = viewModel.application.cesium.scene;
     scene.imageryLayers.lower(item.imageryLayer);
 }
 
@@ -292,18 +315,10 @@ function swapLeafletZIndices(viewModel, item, otherItem) {
         return;
     }
 
-    var map = viewModel.context.leaflet.map;
+    var map = viewModel.application.leaflet.map;
 
     if (!defined(item.imageryLayer.options.zIndex) || !defined(item.imageryLayer.options.zIndex)) {
-        // Set the current z-index of all layers.
-        var items = viewModel.items;
-        var zIndex = 100; // an arbitrary place to start
-        for (var i = items.length - 1; i >= 0; --i) {
-            var currentItem = items[i];
-            if (currentItem.supportsReordering && defined(currentItem.imageryLayer)) {
-                currentItem.imageryLayer.setZIndex(zIndex++);
-            }
-        }
+        viewModel.updateLeafletLayerOrder();
     }
 
     // Swap the z-indices of the two layers.
@@ -318,7 +333,7 @@ function beforeViewerChanged(viewModel) {
     // Hide and disable all data sources, without actually changing
     // their isEnabled and isShown flags.
 
-    var context = viewModel.context;
+    var application = viewModel.application;
     var dataSources = viewModel.items;
 
     for (var i = 0; i < dataSources.length; ++i) {
@@ -338,7 +353,7 @@ function afterViewerChanged(viewModel) {
     // Re-enable and re-show all data sources that were previously enabled or shown.
     // Work from the bottom data source up so that the correct order is created.
 
-    var context = viewModel.context;
+    var application = viewModel.application;
     var dataSources = viewModel.items;
 
     for (var i = dataSources.length - 1; i >= 0; --i) {

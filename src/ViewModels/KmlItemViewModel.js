@@ -37,11 +37,11 @@ var runLater = require('../Core/runLater');
  * @constructor
  * @extends CatalogItemViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the KML or KMZ data.
  */
-var KmlItemViewModel = function(context, url) {
-    CatalogItemViewModel.call(this, context);
+var KmlItemViewModel = function(application, url) {
+    CatalogItemViewModel.call(this, application);
 
     this._kmlDataSource = undefined;
     this._loadedUrl = undefined;
@@ -160,7 +160,7 @@ KmlItemViewModel.prototype.load = function() {
                         });
                     }
                 } else {
-                    that.context.error.raiseEvent(new ViewModelError({
+                    that.application.error.raiseEvent(new ViewModelError({
                         sender: that,
                         title: 'Unexpected type of KML data',
                         message: '\
@@ -192,7 +192,7 @@ KmlItemViewModel.prototype._show = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.dataSources;
+    var dataSources = this.application.dataSources;
     if (dataSources.contains(this._kmlDataSource)) {
         throw new DeveloperError('This data source is already shown.');
     }
@@ -205,7 +205,7 @@ KmlItemViewModel.prototype._hide = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var dataSources = this.context.dataSources;
+    var dataSources = this.application.dataSources;
     if (!dataSources.contains(this._kmlDataSource)) {
         throw new DeveloperError('This data source is not shown.');
     }
@@ -213,9 +213,9 @@ KmlItemViewModel.prototype._hide = function() {
     dataSources.remove(this._kmlDataSource, false);
 };
 
-function proxyUrl(context, url) {
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
-        return context.corsProxy.getURL(url);
+function proxyUrl(application, url) {
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
+        return application.corsProxy.getURL(url);
     }
 
     return url;
@@ -227,7 +227,7 @@ function doneLoading(viewModel) {
 }
 
 function errorLoading(viewModel) {
-    viewModel.context.error.raiseEvent(new ViewModelError({
+    viewModel.application.error.raiseEvent(new ViewModelError({
         sender: viewModel,
         title: 'Error loading KML or KMZ',
         message: '\

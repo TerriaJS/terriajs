@@ -31,10 +31,10 @@ var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
  * @constructor
  * @extends ImageryLayerItemViewModel
  * 
- * @param {ApplicationViewModel} context The context for the group.
+ * @param {ApplicationViewModel} application The application.
  */
-var ArcGisMapServerItemViewModel = function(context) {
-    ImageryLayerItemViewModel.call(this, context);
+var ArcGisMapServerItemViewModel = function(application) {
+    ImageryLayerItemViewModel.call(this, application);
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -76,10 +76,10 @@ ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    var scene = this.context.cesium.scene;
+    var scene = this.application.cesium.scene;
 
     var imageryProvider = new ArcGisMapServerImageryProvider({
-        url : cleanAndProxyUrl(this.context, this.url)
+        url : cleanAndProxyUrl(this.application, this.url)
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
@@ -99,7 +99,7 @@ ArcGisMapServerItemViewModel.prototype._disableInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var scene = this.context.cesium.scene;
+    var scene = this.application.cesium.scene;
 
     scene.imageryLayers.remove(this._imageryLayer);
     this._imageryLayer = undefined;
@@ -110,7 +110,7 @@ ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    var map = this.context.leaflet.map;
+    var map = this.application.leaflet.map;
 
     var options = {
         opacity : 0.0
@@ -118,8 +118,7 @@ ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
-    //this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.context, this.url), options);
-    this._imageryLayer = new L.esri.tiledMapLayer(cleanAndProxyUrl(this.context, this.url), options);
+    this._imageryLayer = new L.esri.tiledMapLayer(cleanAndProxyUrl(this.application, this.url), options);
     map.addLayer(this._imageryLayer);
 };
 
@@ -128,14 +127,14 @@ ArcGisMapServerItemViewModel.prototype._disableInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.context.leaflet.map;
+    var map = this.application.leaflet.map;
 
     map.removeLayer(this._imageryLayer);
     this._imageryLayer = undefined;
 };
 
-function cleanAndProxyUrl(context, url) {
-    return proxyUrl(context, cleanUrl(url));
+function cleanAndProxyUrl(application, url) {
+    return proxyUrl(application, cleanUrl(url));
 }
 
 function cleanUrl(url) {
@@ -145,9 +144,9 @@ function cleanUrl(url) {
     return uri.toString();
 }
 
-function proxyUrl(context, url) {
-    if (defined(context.corsProxy) && context.corsProxy.shouldUseProxy(url)) {
-        return context.corsProxy.getURL(url);
+function proxyUrl(application, url) {
+    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
+        return application.corsProxy.getURL(url);
     }
 
     return url;

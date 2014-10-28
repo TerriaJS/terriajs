@@ -13,7 +13,7 @@ var wmsViewModel;
 
 beforeEach(function() {
     application = new ApplicationViewModel();
-    wmsViewModel = new WebMapServiceItemViewModel(context);
+    wmsViewModel = new WebMapServiceItemViewModel(application);
 });
 
 describe('WebMapServiceDataItemViewModel', function() {
@@ -22,7 +22,7 @@ describe('WebMapServiceDataItemViewModel', function() {
         expect(wmsViewModel.typeName).toBe('Web Map Service (WMS)');
     });
 
-    it('throws if constructed without a context', function() {
+    it('throws if constructed without an application', function() {
         expect(function() {
             var viewModel = new WebMapServiceItemViewModel();
         }).toThrow();
