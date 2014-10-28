@@ -64,6 +64,7 @@ var CsvItemViewModel = function(context, url) {
      */
     this.data = undefined;
 
+
     /**
      * Gets or sets the URL from which the {@link CsvItemViewModel#data} was obtained.
      * @type {String}
@@ -200,7 +201,7 @@ CsvItemViewModel.prototype._showInCesium = function() {
 
         var imageryProvider = new WebMapServiceImageryProvider({
             url : proxyUrl(this.context, this.url),
-            layers : this.layer,
+            layers : this.layers,
             parameters : WebMapServiceItemViewModel.defaultParameters
         });
 
@@ -277,7 +278,7 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
         var map = this.context.leaflet.map;
 
         var options = {
-            layers : this.layer,
+            layers : this.layers,
             opacity : 0.6
         };
 
@@ -293,6 +294,17 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
                 }
            }).render();
         });
+        this.wmsFeatureInfoFilter = function(result) {
+                if (defined(result)) {
+                    var properties = result.features[0].properties;
+                    var id = properties[that.regionProp];
+                    properties = combine(properties, that.rowProperties(parseInt(id,10)));
+                    properties['FID'] = undefined;
+                    properties[that.regionProp] = undefined;
+                    result.features[0].properties = properties;
+                }
+                return result;
+            };
 
         map.addLayer(this._imageryLayer);
     }
@@ -537,7 +549,7 @@ function setRegionVariable(viewModel, regionVar, regionType) {
         viewModel.regionType = regionType;
 
         viewModel.url = regionServer;
-        viewModel.layer = description.name;
+        viewModel.layers = description.name;
 
         viewModel.regionProp = description.regionProp;
     }

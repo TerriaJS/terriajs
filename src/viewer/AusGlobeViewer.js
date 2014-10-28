@@ -720,7 +720,7 @@ AusGlobeViewer.prototype.isCesium = function() {
 
 var isTimelineVisible = function() {
     return $('.cesium-viewer-animationContainer').css('visibility') === 'visible';
-} 
+};
 
 AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     var previousClock;
@@ -1337,7 +1337,7 @@ AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMill
     }
 };
 
-function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, j, useWebMercator) {
+function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, j, useWebMercator, wmsFeatureInfoFilter) {
     var url = baseUrl;
     var indexOfQuestionMark = url.indexOf('?');
     if (indexOfQuestionMark >= 0 && indexOfQuestionMark < url.length - 1) {
@@ -1376,6 +1376,9 @@ function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, 
     }
 
     return when(loadJson(url), function(json) {
+        if (defined(wmsFeatureInfoFilter)) {
+            json = wmsFeatureInfoFilter(json);
+        }
         return json;
     }, function (e) {
         // If something goes wrong, try requesting XML instead of GeoJSON.  Then try to interpret it.
@@ -1395,11 +1398,12 @@ function selectFeatureLeaflet(viewer, latlng) {
     var promises = [];
     for (var i = dataSources.length - 1; i >=0 ; --i) {
         var dataSource = dataSources[i];
-        if (dataSource.type !== 'wms') {
-            continue;
+        if (dataSource.type === 'wms' || (dataSource.type === 'csv' && defined(dataSource.layers))) {
+            var useProxy = corsProxy.shouldUseProxy(dataSource.url);
+            promises.push(getWmsFeatureInfo(dataSource.url, useProxy, dataSource.layers, 
+                extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true, 
+                dataSource.wmsFeatureInfoFilter));
         }
-        var useProxy = corsProxy.shouldUseProxy(dataSource.url);
-        promises.push(getWmsFeatureInfo(dataSource.url, useProxy, dataSource.layers, extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y, true));
     }
 
     if (promises.length === 0) {
