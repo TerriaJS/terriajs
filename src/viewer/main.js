@@ -39,6 +39,7 @@ if (start) {
     var copyright = require('../CopyrightModule');
 
     var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+    var defined = require('../../third_party/cesium/Source/Core/defined');
     var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
     var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
@@ -67,47 +68,90 @@ if (start) {
         });
     });
 
+    var configFiles = [];
+
     var url = window.location;
     var uri = new URI(url);
-    var params = uri.search(true);
+    var urlParameters = uri.search(true);
 
-    var configUrl = params.config || 'config.json';
+    configFiles.push(urlParameters.config || 'config.json');
 
-    //get the server config to know how to handle urls and load initial one
+    var hash = uri.fragment();
+    if (defined(hash) && hash.length > 0) {
+        configFiles.push(hash + ".json");
+    }
+
+    var startData = urlParameters.start ? JSON.parse(urlParameters.start) : {};
+
     application.catalog.isLoading = true;
-    loadJson(configUrl).then( function(config) {
+
+    when.all(configFiles.map(loadJson), function(loadedConfigFiles) {
         // IE versions prior to 10 don't support CORS, so always use the proxy.
         var alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
 
-        corsProxy.setProxyList(config.proxyDomains, config.corsDomains, alwaysUseProxy);
+        // Determine the set of initialization sources, as well as the proxy and CORS domains to use.
+        var proxyDomains = [];
+        var corsDomains = [];
+        var camera;
 
-        when(loadJson(params.data_menu || config.initialDataMenu || 'init_nm.json'), function(json) {
-            try {
-                application.catalog.updateFromJson(json.catalog);
-            } catch (e) {
-                var message = new PopupMessage({
-                    container: document.body,
-                    title: 'An error occurred while loading the catalog',
-                    message: e.toString()
-                });
+        for (var i = 0; i < loadedConfigFiles.length; ++i) {
+            var loadedConfigFile = loadedConfigFiles[i];
+
+            if (defined(loadedConfigFile.initialDataMenu)) {
+                application.initSources.push(loadedConfigFile.initialDataMenu);
             }
 
-            if (params.start) {
-                var startData = JSON.parse(params.start);
-                application.catalog.updateFromJson(startData.catalog);
-                config.initialCamera = {
-                    west : CesiumMath.toDegrees(startData.camera.west),
-                    south : CesiumMath.toDegrees(startData.camera.south),
-                    east : CesiumMath.toDegrees(startData.camera.east),
-                    north : CesiumMath.toDegrees(startData.camera.north)
-                };
+            if (defined(loadedConfigFile.proxyDomains)) {
+                proxyDomains.push.apply(proxyDomains, loadedConfigFile.proxyDomains);
             }
 
-            application.services.services = json.services;
+            if (defined(loadedConfigFile.corsDomains)) {
+                proxyDomains.push.apply(corsDomains, loadedConfigFile.corsDomains);
+            }
+
+            if (defined(loadedConfigFile.initialCamera)) {
+                camera = loadedConfigFile.initialCamera;
+            }
+        }
+
+        corsProxy.setProxyList(proxyDomains, corsDomains, alwaysUseProxy);
+
+        if (defined(startData.initSources)) {
+            application.initSources.push.apply(application.initSources, startData.initSources);
+        }
+
+        function loadInitSource(source) {
+            if (typeof source === 'string') {
+                return loadJson(source);
+            } else {
+                return source;
+            }
+        }
+
+        when.all(application.initSources.map(loadInitSource), function(initJsons) {
+            // Load the various bits of the catalog.
+            var i;
+            for (i = 0; i < initJsons.length; ++i) {
+                var initJson = initJsons[i];
+
+                try {
+                    application.catalog.updateFromJson(initJson.catalog);
+                } catch(e) {
+                    var message = new PopupMessage({
+                        container: document.body,
+                        title: 'An error occurred while loading the catalog',
+                        message: e.toString()
+                    });
+                }
+
+                if (defined(initJson.camera)) {
+                    camera = initJson.camera;
+                }
+            }
 
             application.catalog.isLoading = false;
 
-            var viewer = new AusGlobeViewer(config, application);
+            var viewer = new AusGlobeViewer(application, camera);
 
             document.getElementById('loadingIndicator').style.display = 'none';
         });

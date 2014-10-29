@@ -74,7 +74,7 @@ var CsvItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-CsvItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
+inherit(CatalogItemViewModel, CsvItemViewModel);
 
 defineProperties(CsvItemViewModel.prototype, {
     /**

@@ -94,7 +94,7 @@ var ViewerMode = require('../ViewModels/ViewerMode');
 BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
-var AusGlobeViewer = function(config, application) {
+var AusGlobeViewer = function(application, initialCamera) {
     this._distanceLegendBarWidth = undefined;
     this._distanceLegendLabel = undefined;
 
@@ -134,7 +134,8 @@ var AusGlobeViewer = function(config, application) {
                         var serializeOptions = {
                             enabledItemsOnly: true,
                             skipItemsWithLocalData: true,
-                            itemsSkippedBecauseTheyHaveLocalData: []
+                            itemsSkippedBecauseTheyHaveLocalData: [],
+                            serializeSimpleGroups: true
                         };
                         var jsonCatalog = that.application.catalog.serializeToJson(serializeOptions);
                         var request = {
@@ -279,7 +280,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.application = application;
 
-    this.initialCamera = config.initialCamera;
+    this.initialCamera = initialCamera;
 
     this.geoDataBrowser = new GeoDataBrowser({
         viewer : that,

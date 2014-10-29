@@ -56,7 +56,7 @@ var WebMapServiceGroupViewModel = function(application) {
     knockout.track(this, ['url', 'dataCustodian']);
 };
 
-WebMapServiceGroupViewModel.prototype = inherit(CatalogGroupViewModel.prototype);
+inherit(CatalogGroupViewModel, WebMapServiceGroupViewModel);
 
 defineProperties(WebMapServiceGroupViewModel.prototype, {
     /**

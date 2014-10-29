@@ -71,7 +71,7 @@ var KmlItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-KmlItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
+inherit(CatalogItemViewModel, KmlItemViewModel);
 
 defineProperties(KmlItemViewModel.prototype, {
     /**

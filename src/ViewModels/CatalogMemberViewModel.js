@@ -155,6 +155,9 @@ CatalogMemberViewModel.prototype.updateFromJson = function(json) {
  * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
  *        if options.skipItemsWithLocalData is false.
+ * @param {Boolean} [options.serializeSimpleGroups=false] true to serialize more sophisticated groups, such as {@link CkanGroupViewModel},
+ *                  as simple a {@link CatalogGroupViewModel}.  This generally makes the serialized data smaller while still allowing
+ *                  the enabled items to be constructed later.
  * @return {Object} The serialized JSON object-literal.
  */
 CatalogMemberViewModel.prototype.serializeToJson = function(options) {

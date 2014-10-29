@@ -70,7 +70,7 @@ var CatalogGroupViewModel = function(application) {
     });
 };
 
-CatalogGroupViewModel.prototype = inherit(CatalogMemberViewModel.prototype);
+inherit(CatalogMemberViewModel, CatalogGroupViewModel);
 
 defineProperties(CatalogGroupViewModel.prototype, {
     /**
