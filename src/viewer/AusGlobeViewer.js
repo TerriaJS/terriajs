@@ -5,7 +5,8 @@
 
 "use strict";
 
-/*global require,L,URI,$,Document,html2canvas,alert,console*/
+/*global require,L,URI,$,Document,html2canvas,alert,console,ga*/
+
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
 var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
 var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
@@ -344,7 +345,7 @@ FrameChecker.prototype.forceFrameUpdate = function() {
 FrameChecker.prototype.skipFrame = function(scene, date) {
     //check if anything actually changed
     if (this._lastDate) {
-        var bDateSame = !isTimelineVisible() || this._lastDate.equals(date);
+        var bDateSame = this._lastDate.equals(date);
         var bCamSame = this._lastCam.equalsEpsilon(scene.camera.viewMatrix, CesiumMath.EPSILON5);
         if (bDateSame && bCamSame) {
             this._skipCnt++;
@@ -553,6 +554,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
     var viewer = new Viewer(container, options);
     viewer.extend(viewerEntityMixin);
 
+    viewer.clock.shouldAnimate = false;
+
     //catch Cesium terrain provider down and switch to Ellipsoid
     terrainProvider.errorEvent.addEventListener(function(err) {
         console.log('Terrain provider error.  ', err.message);
@@ -598,19 +601,13 @@ us via email at nationalmap@lists.nicta.com.au.'
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('CESIUM', undefined, 'http://cesiumjs.org/'));
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('BING', undefined, 'http://www.bing.com/'));
 
-    //TODO: set based on platform
-//        globe.tileCacheSize *= 2;
-/*
+
+    //Placeholder for now
     var monitor = new FrameRateMonitor.fromScene(scene);
-    monitor.minimumFrameRateAfterWarmup = 100;
-    monitor.minimumFrameRateDuringWarmup = 100;
-    monitor.warmupPeriod = 1;
-    monitor.samplingWindow = 1;
-    monitor.quietPeriod = 1;
     viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
-        console.log('too slow');
+        console.log('Unusually slow startup detected!!  Messagebox for user options - webgl fixes, 2d mode.');
     });
-*/
+
 
     var inputHandler = viewer.screenSpaceEventHandler;
 
