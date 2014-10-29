@@ -372,24 +372,22 @@ function getRandomColor(palette, seed) {
     return Color.fromRandom(palette);
 }
 
-// Get the CRS code from the GeoJSON
-function getCrsCode(geoJson) {
-    var code;
+//  TODO: get new proj4 strings from REST service
+//  requires asynchronous layer loading so on hold for now
+function addProj4Text(code) {
+        //try to get from a service
+    var url = 'http://geospace.research.nicta.com.au/proj4def/' + code;
+    var promise = loadText(url).then(function (proj4Text) {
+        console.log('Adding new string for ', code, ': ', proj4Text, ' before loading datasource');
+        proj4_epsg[code] = proj4Text;
+    }, function(err) {
+        loadErrorResponse(err);
+    });
+}
 
-    if (!defined(geoJson.crs)) {
-        return undefined;
-    } else if (geoJson.crs.type === 'EPSG') {
-        code = geoJson.crs.properties.code;
-    } else if (geoJson.crs.type === 'name' &&
-               defined(geoJson.crs.properties) &&
-               defined(geoJson.crs.properties.name) &&
-               geoJson.crs.properties.name.indexOf('EPSG:') === 0) {
-        code = geoJson.crs.properties.name.substring(5);
-    } else {
-        return undefined;
-    }
-
-    return 'EPSG:' + code;
+// Set the Cesium Reproject func if not already set - return false if can't set
+function supportedProjection(code) {
+    return proj4_epsg.hasOwnProperty(code);
 }
 
 function reprojectToGeographic(geoJson) {

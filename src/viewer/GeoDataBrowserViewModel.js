@@ -475,8 +475,6 @@ these extensions in order for National Map to know how to load it.'
 
     this.maxLevel = knockout.observable(5);
 
-    var numWaitingFor;
-
     this.showPopulateCache = function() {
         var uri = new URI(window.location);
         var hash = uri.fragment();
@@ -488,152 +486,34 @@ these extensions in order for National Map to know how to load it.'
     };
 
     this.populateCache = function(mode) {
-        function waitForAllToFinishLoading() {
-            numWaitingFor = 0;
-            if (mode !== "all" || (that.content().length > 0 && areAllDoneLoading(that.content()))) {
-                var requests = [];
 
-                getAllRequests(mode, requests, that.content());
+        var requests = [];
 
-                console.log('Requesting tiles from ' + requests.length + ' data sources.');
+        getAllRequests(mode, requests, that.catalog.group);
 
-                requestTiles(requests, that.maxLevel());
-            } else {
-                setTimeout(waitForAllToFinishLoading, 5000);
-            }
-        }
+        console.log('Requesting tiles from ' + requests.length + ' data sources.');
 
-        waitForAllToFinishLoading();
+        requestTiles(requests, that.maxLevel());
     };
 
-    function areAllDoneLoading(layers) {
-        var allDone = true;
-
-        for (var i = 0; i < layers.length; ++i) {
-            var item = layers[i];
-            if (item.Layer) {
-                if (item.isOpen && !item.isOpen()) {
-                    ++numWaitingFor;
-                    allDone = false;
-                    item.isOpen(true);
-                } else if (item.isLoading && item.isLoading()) {
-                    ++numWaitingFor;
-                    allDone = false;
+    function getAllRequests(mode, requests, group) {
+        for (var i = 0; i < group.items.length; ++i) {
+            var item = group.items[i];
+            if (item instanceof CatalogGroupViewModel) {
+                if (item.isOpen) {
+                    getAllRequests(mode, requests, item);
                 }
-                allDone = areAllDoneLoading(item.Layer()) && allDone;
-            }
-        }
-
-        return allDone;
-    }
-
-    function getAllRequests(mode, requests, layers) {
-        for (var i = 0; i < layers.length; ++i) {
-            var item = layers[i];
-            if (item.Layer) {
-                if (mode !== 'opened' || (item.isOpen && item.isOpen())) {
-                    getAllRequests(mode, requests, item.Layer());
-                } else if (mode === 'enabled' && item.isEnabled && item.isEnabled()) {
-                    getAllRequests(mode, requests, item.Layer());
-                }
-            } else if (item.type() === 'WMS' && (mode !== 'enabled' || item.isEnabled())) {
-                var url = item.base_url();
-                var proxy;
-                if (corsProxy.shouldUseProxy(url)) {
-                    proxy = corsProxy;
-                } else {
-                    proxy = undefined;
-                }
-
-                var provider;
-                if (!that._viewer.isCesium()) {
-                    if (defined(proxy)) {
-                        url = corsProxy.getURL(url);
-                    }
-                    provider = new L.tileLayer.wms(url, {
-                        layers: item.Name(),
-                        format: 'image/png',
-                        transparent: true,
-                        exceptions: 'application/vnd.ogc.se_xml'
-                    });
-                }
-                else {
-                    var wmsOptions = {
-                        url: url,
-                        layers : item.Name(),
-                        parameters: {
-                            format: 'image/png',
-                            transparent: true,
-                            styles: '',
-                            exceptions: 'application/vnd.ogc.se_xml'
-                        },
-                        proxy: proxy
-                    };
-
-                    var crs;
-                    if (defined(item.CRS)) {
-                        crs = item.CRS();
-                    } else if (defined(item.SRS)) {
-                        crs = item.SRS();
-                    } else {
-                        crs = undefined;
-                    }
-                    if (defined(crs)) {
-                        if (crsIsMatch(crs, 'EPSG:4326')) {
-                            // Standard Geographic
-                        } else if (crsIsMatch(crs, 'CRS:84')) {
-                            // Another name for EPSG:4326
-                            wmsOptions.parameters.srs = 'CRS:84';
-                        } else if (crsIsMatch(crs, 'EPSG:4283')) {
-                            // Australian system that is equivalent to EPSG:4326.
-                            wmsOptions.parameters.srs = 'EPSG:4283';
-                        } else if (crsIsMatch(crs, 'EPSG:3857')) {
-                            // Standard Web Mercator
-                            wmsOptions.tilingScheme = new WebMercatorTilingScheme();
-                        } else if (crsIsMatch(crs, 'EPSG:900913')) {
-                            // Older code for Web Mercator
-                            wmsOptions.tilingScheme = new WebMercatorTilingScheme();
-                            wmsOptions.parameters.srs = 'EPSG:900913';
-                        } else {
-                            // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
-                        }
-                    }
-
-                    provider = new WebMapServiceImageryProvider(wmsOptions);
-                }
+            } else if (item.type === 'wms' && (mode === 'opened' || item.isEnabled)) {
                 requests.push({
-                    item : item,
-                    provider : provider
+                    item : item
                 });
             }
         }
     }
 
-    // From StackOverflow: http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-    function shuffle(array) {
-        var currentIndex = array.length,
-            temporaryValue, randomIndex;
-
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-
-            // Pick a remaining element...
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            // And swap it with the current element.
-            temporaryValue = array[currentIndex];
-            array[currentIndex] = array[randomIndex];
-            array[randomIndex] = temporaryValue;
-        }
-
-        return array;
-    }
-
     function requestTiles(requests, maxLevel) {
         var urls = [];
         var names = [];
-
         var name;
 
         loadImage.createImage = function(url, crossOrigin, deferred) {
@@ -650,19 +530,25 @@ these extensions in order for National Map to know how to load it.'
         var i;
         for (i = 0; i < requests.length; ++i) {
             var request = requests[i];
-            var bareItem = komapping.toJS(request.item);
-            var extent = getOGCLayerExtent(bareItem);
+            var extent = request.item.rectangle;
+            name = request.item.name;
+
+            var enabledHere = false;
+             if (!request.item.isEnabled) {
+                request.item._enable();
+                enabledHere = true;
+             }
+
             var tilingScheme;
             if (!that._viewer.isCesium()) {
+                request.provider = request.item._imageryLayer;
                 tilingScheme = new WebMercatorTilingScheme();
                 that._viewer.map.addLayer(request.provider);
             }
             else {
+                request.provider = request.item._imageryLayer.imageryProvider;
                 tilingScheme = request.provider.tilingScheme;
             }
-
-
-            name = bareItem.Title;
 
             for (var level = 0; level <= maxLevel; ++level) {
                 var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
@@ -688,21 +574,19 @@ these extensions in order for National Map to know how to load it.'
                     }
                 }
             }
-            if (!that._viewer.isCesium()) {
-                that._viewer.map.removeLayer(request.provider);
+            if (enabledHere) {
+                if (!that._viewer.isCesium()) {
+                   that._viewer.map.removeLayer(request.provider);
+                }
+                request.item._disable();
             }
         }
 
         loadImage.createImage = loadImage.defaultCreateImage;
         throttleRequestByServer.maximumRequestsPerServer = oldMax;
 
-        console.log('Requesting ' + urls.length + ' URLs!');
+        console.log('Caching ' + urls.length + ' URLs');
 
-        // Do requests in random order for better performance; successive requests are
-        // less likely to be to the same server.
-        //shuffle(urls);
-
-        var blacklistFailedServers = false;
         var maxRequests = 2;
         var nextRequestIndex = 0;
         var inFlight = 0;
@@ -715,37 +599,24 @@ these extensions in order for National Map to know how to load it.'
 
         function getNextUrl() {
             var url;
-            var baseUrl;
 
-            do {
-                if (nextRequestIndex >= urls.length) {
-                    return undefined;
-                }
+            if (nextRequestIndex >= urls.length) {
+                return undefined;
+            }
 
-                if ((nextRequestIndex % 10) === 0) {
-                    console.log('Finished ' + nextRequestIndex + ' URLs.');
-                }
+            if ((nextRequestIndex % 10) === 0) {
+                console.log('Finished ' + nextRequestIndex + ' URLs.');
+            }
 
-                url = urls[nextRequestIndex];
-                name = names[nextRequestIndex];
-                ++nextRequestIndex;
-
-                var queryIndex = url.indexOf('?');
-                baseUrl = url;
-                if (queryIndex >= 0) {
-                    baseUrl = url.substring(0, queryIndex);
-                }
-
-            } while (blacklist[baseUrl]);
+            url = urls[nextRequestIndex];
+            name = names[nextRequestIndex]; //track for error reporting
+            ++nextRequestIndex;
 
             return {
                 url: url,
-                baseUrl: baseUrl,
                 name: name
             };
         }
-
-        var blacklist = {};
 
         function doNext() {
             var next = getNextUrl();
@@ -763,12 +634,7 @@ these extensions in order for National Map to know how to load it.'
             loadWithXhr({
                 url : next.url
             }).then(doneUrl).otherwise(function() {
-                if (blacklistFailedServers) {
-                    console.log('Blacklisting ' + next.baseUrl + ' because it returned an error while working on layer ' + next.name);
-                    blacklist[next.baseUrl] = true;
-                } else {
-                    console.log(next.baseUrl + ' returned an error while working on layer ' + next.name);
-                }
+                console.log('Returned an error while working on layer: ' + next.name);
                 doneUrl();
             });
         }

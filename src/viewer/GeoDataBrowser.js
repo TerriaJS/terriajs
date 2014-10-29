@@ -60,16 +60,9 @@ var GeoDataBrowser = function(options) {
     var populateOpenButton = document.createElement('div');
     populateOpenButton.className = 'ausglobe-panel-button';
     populateOpenButton.title = 'Populate cache for data sources that are in open data panel categories';
-    populateOpenButton.innerHTML = '<div class="ausglobe-panel-button-label">Open</div>';
+    populateOpenButton.innerHTML = '<div class="ausglobe-panel-button-label">Opened</div>';
     populateOpenButton.setAttribute('data-bind', 'visible: showPopulateCache(), click: function() { populateCache("opened"); }');
     wrapper.appendChild(populateOpenButton);
-
-    var populateAllButton = document.createElement('div');
-    populateAllButton.className = 'ausglobe-panel-button';
-    populateAllButton.title = 'Populate cache for all data sources';
-    populateAllButton.innerHTML = '<div class="ausglobe-panel-button-label">All</div>';
-    populateAllButton.setAttribute('data-bind', 'visible: showPopulateCache(), click: function() { populateCache("all"); }');
-    wrapper.appendChild(populateAllButton);
 
     var maxLevel = document.createElement('div');
     maxLevel.className = 'ausglobe-panel-button';
