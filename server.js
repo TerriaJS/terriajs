@@ -92,6 +92,10 @@ if (cluster.isMaster) {
     var compression = require('compression');
     var request = require('request');
     var path = require('path');
+    var cors = require('cors');
+    var proj4 = require('proj4');
+
+    require('proj4js-defs/epsg')(proj4);
 
     var yargs = require('yargs').options({
         'port' : {
@@ -131,6 +135,7 @@ if (cluster.isMaster) {
 
     var app = express();
     app.use(compression());
+    app.use(cors());
     app.disable('etag');
     app.use(express.static(path.join(__dirname, 'public')));
 
@@ -190,6 +195,18 @@ if (cluster.isMaster) {
             res.send(code, body);
         });
     });
+
+    //provide REST service for proj4 definition strings
+    app.get('/proj4def/:crs', function(req, res, next) {
+        var crs = req.param('crs');
+        var epsg = proj4.defs[crs.toUpperCase()];
+        if (epsg !== undefined) {
+            res.send(epsg, 200);
+        } else {
+            res.send('no proj4 definition', 500);
+        }
+    });
+
 
     app.listen(argv.port, argv.public ? undefined : 'localhost');
 }

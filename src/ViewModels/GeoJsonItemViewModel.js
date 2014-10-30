@@ -16,6 +16,7 @@ var GeoJsonDataSource = require('../../third_party/cesium/Source/DataSources/Geo
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -271,16 +272,18 @@ function updateViewModelFromData(viewModel, geoJson) {
     }
 
     // Reproject the features if they're not already EPSG:4326.
-    reprojectToGeographic(geoJson);
+    var promise = reprojectToGeographic(geoJson);
 
-    // If we don't already have a rectangle, compute one.
-    if (!defined(viewModel.rectangle) || Rectangle.equals(viewModel.rectangle, Rectangle.MAX_VALUE)) {
-        viewModel.rectangle = getGeoJsonExtent(geoJson);
-    }
+    when(promise, function() {
+        // If we don't already have a rectangle, compute one.
+        if (!defined(viewModel.rectangle) || Rectangle.equals(viewModel.rectangle, Rectangle.MAX_VALUE)) {
+            viewModel.rectangle = getGeoJsonExtent(geoJson);
+        }
 
-    viewModel._readyData = geoJson;
+        viewModel._readyData = geoJson;
 
-    loadGeoJson(viewModel);
+        loadGeoJson(viewModel);
+    });
 }
 
 function nameIsDerivedFromUrl(name, url) {
@@ -372,23 +375,23 @@ function getRandomColor(palette, seed) {
     return Color.fromRandom(palette);
 }
 
-//  TODO: get new proj4 strings from REST service
-//  requires asynchronous layer loading so on hold for now
-function addProj4Text(code) {
-        //try to get from a service
-    var url = 'http://geospace.research.nicta.com.au/proj4def/' + code;
-    var promise = loadText(url).then(function (proj4Text) {
-        console.log('Adding new string for ', code, ': ', proj4Text, ' before loading datasource');
-        proj4_epsg[code] = proj4Text;
-    }, function(err) {
-        loadErrorResponse(err);
-    });
-}
-
 // Set the Cesium Reproject func if not already set - return false if can't set
-function supportedProjection(code) {
-    return proj4_epsg.hasOwnProperty(code);
-}
+function checkProjection(code) {
+    if (proj4_epsg.hasOwnProperty(code)) {
+        return true;
+    }
+
+    //TODO: figure out right way to get host address
+    var url = 'http://localhost/proj4def/' + code;
+//    var url = 'http://nationalmap.nicta.com.au/proj4def/' + code;
+    return when(loadText(url), function (proj4Text) {
+            proj4_epsg[code] = proj4Text;
+            console.log('Added new string for', code, '=', proj4Text);
+            return true;
+        }, function(err) {
+            return false;
+        });
+ }
 
 function reprojectToGeographic(geoJson) {
     var code;
@@ -406,25 +409,33 @@ function reprojectToGeographic(geoJson) {
         code = undefined;
     }
 
-    if (defined(code) && code !== 'EPSG:4326' && code !== 'EPSG:4283') {
-        filterValue(
-            geoJson,
-            'coordinates',
-            function(obj, prop) {
-                obj[prop] = filterArray(
-                    obj[prop],
-                    function(pts) {
-                        return reprojectPointList(pts, code);
-                    });
-            });
-    }
-
     geoJson.crs = {
         type: 'EPSG',
         properties: {
             code: '4326'
         }
     };
+
+    if (!defined(code) || code === 'EPSG:4326' || code === 'EPSG:4283') {
+        return true;
+    }
+
+   return when(checkProjection(code), function(result) {
+        if (result) {
+            filterValue(
+                geoJson,
+                'coordinates',
+                function(obj, prop) {
+                    obj[prop] = filterArray(
+                        obj[prop],
+                        function(pts) {
+                            return reprojectPointList(pts, code);
+                        });
+                });
+        } else {
+            throw new DeveloperError('The crs code for this datasource is unsupported.');
+        }
+    });
 }
 
 // Reproject a point list based on the supplied crs code
