@@ -38,7 +38,16 @@ var CatalogMemberViewModel = function(application) {
      */
     this.description = '';
 
-    knockout.track(this, ['name', 'description']);
+    /**
+     * Gets or sets a value indicating whether this member was supplied by the user rather than loaded from one of the
+     * {@link ApplicationViewModel#initSources}.  User-supplied members must be treated more carefully when, for example,
+     * serializing enabled members for sharing.  This property is observable.
+     * @type {Boolean}
+     * @default true
+     */
+    this.isUserSupplied = true;
+
+    knockout.track(this, ['name', 'description', 'isUserSupplied']);
 };
 
 defineProperties(CatalogMemberViewModel.prototype, {
@@ -125,15 +134,27 @@ CatalogMemberViewModel.defaultSerializers = {
 freezeObject(CatalogMemberViewModel.defaultSerializers);
 
 /**
- * Updates the data item from a JSON object-literal description of it.
+ * Updates the catalog member from a JSON object-literal description of it.
+ * Existing collections with the same name as a collection in the JSON description are
+ * updated.  If the description contains a collection with a name that does not yet exist,
+ * it is created.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
+ * @param {Object} [options] Object with the following properties:
+ * @param {Boolean} [options.onlyUpdateExistingItems] true to only update existing items and never create new ones, or false is new items
+ *                                                    may be created by this update.
+ * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMemberViewModel#isUserSupplied} property of updated catalog members
+ *                                           to the given value.  If not specified, the property is left unchanged.
  */
-CatalogMemberViewModel.prototype.updateFromJson = function(json) {
+CatalogMemberViewModel.prototype.updateFromJson = function(json, options) {
+    if (defined(options) && defined(options.isUserSupplied)) {
+        this.isUserSupplied = options.isUserSupplied;
+    }
+
     for (var propertyName in this) {
         if (this.hasOwnProperty(propertyName) && defined(json[propertyName]) && propertyName.length > 0 && propertyName[0] !== '_') {
             if (this.updaters && this.updaters[propertyName]) {
-                this.updaters[propertyName](this, json, propertyName);
+                this.updaters[propertyName](this, json, propertyName, options);
             } else {
                 this[propertyName] = json[propertyName];
             }
@@ -155,13 +176,19 @@ CatalogMemberViewModel.prototype.updateFromJson = function(json) {
  * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
  *        if options.skipItemsWithLocalData is false.
- * @param {Boolean} [options.serializeSimpleGroups=false] true to serialize more sophisticated groups, such as {@link CkanGroupViewModel},
- *                  as simple a {@link CatalogGroupViewModel}.  This generally makes the serialized data smaller while still allowing
- *                  the enabled items to be constructed later.
+ * @param {Boolean} [options.serializeTogglesOnly=false] true to only serialize toggle properties such as {@link CatalogGroupViewModel#isOpen}, and
+ *                  {@link CatalogItemViewModel#isEnabled}, and {@link CatalogItemViewModel#isLegendVisible}, rather than serializing all properties needed to completely
+ *                  recreate the catalog.
+ * @param {Boolean} [options.userSuppliedOnly=false] true to only serialize catalog members (and their containing groups) that have been identified as having been
+ *                  supplied by the user ({@link CatalogMemberViewModel#isUserSupplied} is true); false to serialize all catalog members.
  * @return {Object} The serialized JSON object-literal.
  */
 CatalogMemberViewModel.prototype.serializeToJson = function(options) {
     options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+
+    if (defaultValue(options.userSuppliedOnly, false) && !this.isUserSupplied) {
+        return undefined;
+    }
 
     if (defaultValue(options.enabledItemsOnly, false) && this.isEnabled === false) {
         if (defined(options.itemsSkippedBecauseTheyAreNotEnabled)) {
@@ -177,12 +204,20 @@ CatalogMemberViewModel.prototype.serializeToJson = function(options) {
         return undefined;
     }
 
-    var result = {
-        type: this.type
-    };
+    var result = {};
+
+    var filterFunction = function() { return true; };
+    if (options.serializeTogglesOnly) {
+        filterFunction = function(propertyName) {
+            return propertyName === 'name' || propertyName === 'items' || propertyName === 'isEnabled' ||
+                   propertyName === 'isOpen' || propertyName === 'isLegendVisible';
+        };
+    } else {
+        result.type = this.type;
+    }
 
     for (var propertyName in this) {
-        if (this.hasOwnProperty(propertyName) && propertyName.length > 0 && propertyName[0] !== '_') {
+        if (this.hasOwnProperty(propertyName) && propertyName.length > 0 && propertyName[0] !== '_' && filterFunction(propertyName)) {
             if (this.serializers && this.serializers[propertyName]) {
                 this.serializers[propertyName](this, result, propertyName, options);
             } else {
@@ -192,7 +227,7 @@ CatalogMemberViewModel.prototype.serializeToJson = function(options) {
     }
 
     // Only serialize a group if the group has items in it.
-    if (!defined(this.isEnabled) && (!defined(result.items) || result.items.length === 0)) {
+    if (defined(this.items) && (!defined(result.items) || result.items.length === 0)) {
         return undefined;
     }
 

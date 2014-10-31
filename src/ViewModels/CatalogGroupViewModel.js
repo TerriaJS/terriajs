@@ -8,6 +8,7 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
 var CatalogMemberViewModel = require('./CatalogMemberViewModel');
@@ -131,7 +132,7 @@ defineProperties(CatalogGroupViewModel.prototype, {
  */
 CatalogGroupViewModel.defaultUpdaters = clone(CatalogMemberViewModel.defaultUpdaters);
 
-CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName) {
+CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName, options) {
     if (!defined(json.items)) {
         return;
     }
@@ -141,18 +142,30 @@ CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
     runWhenDoneLoading(viewModel, function(viewModel) {
         // TODO: allow JSON to update the order of items as well.
 
+        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+        var onlyUpdateExistingItems = defaultValue(options.onlyUpdateExistingItems, false);
+
         var items = json.items;
         for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
             var item = items[itemIndex];
 
             // Find an existing item with the same name
             var existingItem = viewModel.findFirstItemByName(item.name);
-            if (!defined(existingItem) || existingItem.type !== item.type) {
+            if (!defined(existingItem)) {
+                // Skip this item entirely if we're not allowed to create it.
+                if (onlyUpdateExistingItems) {
+                    continue;
+                }
+
+                if (!defined(item.type)) {
+                    throw new RuntimeError('An item must have a type.');
+                }
+
                 existingItem = createCatalogMemberFromType(item.type, viewModel.application);
                 viewModel.add(existingItem);
             }
 
-            existingItem.updateFromJson(item);
+            existingItem.updateFromJson(item, options);
         }
     });
 };

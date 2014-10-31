@@ -2,6 +2,7 @@
 
 /*global require*/
 
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
@@ -53,6 +54,9 @@ var CatalogViewModel = function(application) {
             group.name = 'User-Added Data';
             group.description = 'The group for data that was added by the user via the Add Data panel.';
             this.group.add(group);
+
+            this.application.initSources.push(group);
+
             return group;
         }
     });
@@ -89,11 +93,19 @@ defineProperties(CatalogViewModel.prototype, {
  * it is created.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
+ * @param {Object} [options] Object with the following properties:
+ * @param {Boolean} [options.onlyUpdateExistingItems] true to only update existing items and never create new ones, or false is new items
+ *                                                    may be created by this update.
+ * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMemberViewModel#isUserSupplied} property of updated catalog members
+ *                                           to the given value.  If not specified, the property is left unchanged.
  */
-CatalogViewModel.prototype.updateFromJson = function(json) {
+CatalogViewModel.prototype.updateFromJson = function(json, options) {
     if (!(json instanceof Array)) {
         throw new DeveloperError('JSON catalog description must be an array of groups.');
     }
+
+    options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+    var onlyUpdateExistingItems = defaultValue(options.onlyUpdateExistingItems, false);
 
     for (var groupIndex = 0; groupIndex < json.length; ++groupIndex) {
         var group = json[groupIndex];
@@ -101,18 +113,25 @@ CatalogViewModel.prototype.updateFromJson = function(json) {
         if (!defined(group.name)) {
             throw new RuntimeError('A group must have a name.');
         }
-        if (!defined(group.type)) {
-            throw new RuntimeError('A group must have a type.');
-        }
 
         // Find an existing group with the same name, if any.
         var existingGroup = this.group.findFirstItemByName(group.name);
         if (!defined(existingGroup)) {
+            // Skip this item entirely if we're not allowed to create it.
+            if (onlyUpdateExistingItems) {
+                continue;
+            }
+
+            if (!defined(group.type)) {
+                throw new RuntimeError('A group must have a type.');
+            }
+
             existingGroup = createCatalogMemberFromType(group.type, this.application);
+
             this.group.add(existingGroup);
         }
 
-        existingGroup.updateFromJson(group);
+        existingGroup.updateFromJson(group, options);
     }
 
     this.application.nowViewing.sortByNowViewingIndices();
@@ -132,6 +151,11 @@ CatalogViewModel.prototype.updateFromJson = function(json) {
  * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
  *        if options.skipItemsWithLocalData is false.
+ * @param {Boolean} [options.serializeTogglesOnly=false] true to only serialize toggle properties such as {@link CatalogGroupViewModel#isOpen}, and
+ *                  {@link CatalogItemViewModel#isEnabled}, and {@link CatalogItemViewModel#isLegendVisible}, rather than serializing all properties needed to completely
+ *                  recreate the catalog.
+ * @param {Boolean} [options.userSuppliedOnly=false] true to only serialize catalog members (and their containing groups) that have been identified as having been
+ *                  supplied by the user ({@link CatalogMemberViewModel#isUserSupplied} is true); false to serialize all catalog members.
  * @return {Object} The serialized JSON object-literal.
  */
 CatalogViewModel.prototype.serializeToJson = function(options) {

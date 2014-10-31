@@ -403,16 +403,20 @@ these extensions in order for National Map to know how to load it.'
 
     function readAndHandleJsonFile(file) {
         readJson(file).then(function(json) {
-            if (json.catalog) {
-                that.catalog.updateFromJson(json.catalog);
-            }
+            if (json.catalog || json.services) {
+                that.catalog.application.initSources.push(json);
 
-            if (json.services) {
-                // TODO: update the list of services rather than outright replacing it.
-                that._viewer.services = json.services;
-            }
+                if (json.catalog) {
+                    that.catalog.updateFromJson(json.catalog, {
+                        isUserSupplied: false
+                    });
+                }
 
-            if (!json.catalog && !json.services) {
+                if (json.services) {
+                    // TODO: update the list of services rather than outright replacing it.
+                    that._viewer.services = json.services;
+                }
+            } else {
                 addFile(file);
             }
         });

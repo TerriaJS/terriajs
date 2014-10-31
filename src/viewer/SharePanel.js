@@ -59,7 +59,7 @@ var SharePanel = function(options) {
     var img = request.image;
     request.image = undefined;
     var requestStr = JSON.stringify(request);
-    var url = visServer + '?start=' + encodeURIComponent(requestStr);
+    var url = visServer + '#start=' + encodeURIComponent(requestStr);
     request.image = img;
 
     var viewModel = this._viewModel = {
