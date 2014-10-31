@@ -243,5 +243,22 @@ if (cluster.isMaster) {
     });
 
 
+    //sample simple NM service
+    app.post('/nm_service_1', function(req, res, next) {
+        //receive the posted object
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+            //create a layer for NM to display
+            var obj = {
+                name: 'Bikes Available', 
+                type: 'DATA', 
+                proxy: false,
+                url: 'http://nationalmap.nicta.com.au/test/bike_racks.geojson'
+            };
+            //send a response with the object and display text
+            res.json({ displayHtml: 'Here are the available bike racks.', layer: obj});
+        });
+    });
+
     app.listen(argv.port, argv.public ? undefined : 'localhost');
 }
