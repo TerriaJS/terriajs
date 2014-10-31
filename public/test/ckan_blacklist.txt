@@ -42,3 +42,11 @@ Vicmap Elevation - Ground Type Rock Outcrop
 Tailings Licences - Expired
 Geological polygons (1:100,000)
 Geologically Significant Features
+
+Statewide Landuse (1:100,000)
+Vicmap Hydro - Watercourse Streams
+Mallee - Calcareous dunefields (EVC_2005)
+Coastal Scrubs Grasslands and Woodlands (EVC_2005)
+Riparian Forests or Woodlands (EVC_1750)
+Vicmap Transport - Road Network
+Rainforests (EVC_2005)
