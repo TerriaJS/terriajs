@@ -9,8 +9,10 @@
     "request": "*",
     "supervisor": "^0.4.1",
     "yargs": "1.2.6",
+    "ogr2ogr": "~0.4.1",
     "proj4js-defs": "0.0.1",
-    "proj4": "~2.2.1"
+    "proj4": "~2.2.1",
+    "formidable": "~1.0.15"
   },
   "devDependencies": {
     "browserify": "^4.2.3",

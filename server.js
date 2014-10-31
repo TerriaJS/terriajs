@@ -89,12 +89,16 @@ if (cluster.isMaster) {
     /*jshint es3:false*/
 
     var express = require('express');
+    var fs = require('fs');
     var compression = require('compression');
     var request = require('request');
     var path = require('path');
     var cors = require('cors');
+    var formidable = require('formidable');
+    var ogr2ogr = require('ogr2ogr');
     var proj4 = require('proj4');
 
+    //TODO: check if this loads the file into each core and if so then,
     require('proj4js-defs/epsg')(proj4);
 
     var yargs = require('yargs').options({
@@ -201,10 +205,41 @@ if (cluster.isMaster) {
         var crs = req.param('crs');
         var epsg = proj4.defs[crs.toUpperCase()];
         if (epsg !== undefined) {
-            res.send(epsg, 200);
+            res.status(200).send(epsg);
         } else {
-            res.send('no proj4 definition', 500);
+            res.status(500).send('no proj4 definition');
         }
+    });
+
+    // provide conversion to geojson service
+    // reguires install of gdal on server: sudo apt-get install gdal-bin
+    app.post('/convert', function(req, res, next) {
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+            var fname = files.input_file.name;
+            console.log('Converting', fname);
+            var hint = '';
+            //simple hint for now, might need to crack zip files going forward
+            if (fname.toLowerCase().indexOf('.zip') === fname.length-4) {
+                hint = 'shp';
+            }
+
+            var input = fs.createReadStream(files.input_file.path);
+            var ogr = ogr2ogr(input, hint)
+                            .skipfailures()
+                            .options(['-t_srs', 'EPSG:4326']);
+
+            ogr.exec(function (er, data) {
+                if (er) { 
+                    console.error(er);
+                }
+                if (data !== undefined) {
+                    res.status(200).send(JSON.stringify(data));
+                } else {
+                    res.status(500).send('Unable to convert data');
+                }
+            })
+        });
     });
 
 

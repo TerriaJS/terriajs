@@ -402,11 +402,12 @@ function reprojectToGeographic(geoJson) {
         code = 'EPSG:' + geoJson.crs.properties.code;
     } else if (geoJson.crs.type === 'name' &&
                defined(geoJson.crs.properties) &&
-               defined(geoJson.crs.properties.name) &&
-               geoJson.crs.properties.name.indexOf('EPSG:') === 0) {
-        code = geoJson.crs.properties.name;
-    } else {
-        code = undefined;
+               defined(geoJson.crs.properties.name)) {
+        if (geoJson.crs.properties.name.indexOf('EPSG:') === 0) {
+            code = geoJson.crs.properties.name;
+        } else if (geoJson.crs.properties.name.indexOf('CRS84') !== -1) {
+            code = 'EPSG:4326';
+        }
     }
 
     geoJson.crs = {
