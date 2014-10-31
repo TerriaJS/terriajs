@@ -19,7 +19,6 @@ var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
