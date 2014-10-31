@@ -28,17 +28,17 @@ Vicmap Transport - Highways
 Vicmap Transport - Local Roads
 Vicmap Transport - Tracks
 Vicmap Transport - 4wd Tracks
-Coal Seam and Haunted Hills Formation Floor
-Coal Seam and Overburden Thickness
-Seismic Survey Points
 Vicmap Property Map Polygons
 Vicmap Property Address Map Polygons
 Vicmap Property Map Polygons
 Vicmap Property Annotation Text
-Alluvial mineralisation and mined alluvial workings line (1:100,00)
-Borehole geology
 Vicmap Elevation - Ground Type Sand
 Vicmap Elevation - Ground Type Rock Outcrop
+Coal Seam and Haunted Hills Formation Floor
+Coal Seam and Overburden Thickness
+Seismic Survey Points
+Alluvial mineralisation and mined alluvial workings line (1:100,00)
+Borehole geology
 Tailings Licences - Expired
 Geological polygons (1:100,000)
 Geologically Significant Features
