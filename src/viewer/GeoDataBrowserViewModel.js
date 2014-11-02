@@ -353,7 +353,7 @@ these extensions in order for National Map to know how to load it.'
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                    if (oXHR.status === 200) {
+                    if (xhr.status === 200) {
                         file.json = JSON.parse(xhr.responseText);
                         file.newName =  file.name + '.geojson';
                     } else {
