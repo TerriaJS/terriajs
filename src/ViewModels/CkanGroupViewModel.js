@@ -273,6 +273,9 @@ function filterBasedOnGetCapabilitiesResponse(viewModel, wmsLayersSource, resour
                 if (!defined(viewModel.minimumMaxScaleDenominator) || !defined(layerSource.MaxScaleDenominator) || layerSource.MaxScaleDenominator >= viewModel.minimumMaxScaleDenominator) {
                     resource.__filtered = false;
                 }
+                else {
+                    console.log('Provider Feedback: Filtering out ' + layerSource.Title + ' (' + layerSource.Name + ') because its MaxScaleDenominator is ' + layerSource.MaxScaleDenominator);
+                }
             }
         }
 
@@ -288,6 +291,7 @@ function populateGroupFromResults(viewModel, json) {
         var item = items[itemIndex];
 
         if (viewModel.blacklist && viewModel.blacklist[item.title]) {
+            console.log('Provider Feedback: Filtering out ' + item.title + ' (' + item.name + ') because it is blacklisted.');
             continue;
         }
 
