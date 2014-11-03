@@ -340,8 +340,47 @@ these extensions in order for National Map to know how to load it.'
         }
     });
 
+    function ogrConversionService(file) {
+        file.convertAttempted = true;
+        if (file.size < 1000000) {
+            //TODO: check against list of support extensions to avoid unnecessary forwarding?
+            //TODO: need to confirm with user??
+
+            // generate form to submit file for conversion
+            var formData = new FormData();
+            formData.append('input_file', file);
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        file.json = JSON.parse(xhr.responseText);
+                        file.newName =  file.name + '.geojson';
+                    } else {
+                        console.log('Unable to convert', file.name);
+                    }                  
+                    addFile(file);
+                 }
+            };
+            //TODO: figure out right way to get host address
+            var url = 'http://localhost/convert';
+ //           var url = 'http://nationalmap.nicta.com.au/convert';
+            xhr.open('POST', url);
+            xhr.send(formData);
+            console.log('Attempting to convert file via our ogrservice');
+            return true;
+        }
+        return false;
+    }
+
     function addFile(file) {
-        var newViewModel = createCatalogItemFromUrl(file.name, that.catalog.application);
+        var name = file.newName || file.name;
+        var newViewModel = createCatalogItemFromUrl(name, that.catalog.application);
+        if (!defined(newViewModel) && !defined(file.convertAttempted)) {
+            if (ogrConversionService(file)) {
+                return;
+            }
+        }
         if (!defined(newViewModel)) {
             var message2 = new PopupMessage({
                 container : document.body,
@@ -356,14 +395,13 @@ these extensions in order for National Map to know how to load it.'
             return;
         }
 
-        var name = file.name;
         var lastSlashIndex = name.lastIndexOf('/');
         if (lastSlashIndex >= 0) {
             name = name.substring(lastSlashIndex + 1);
         }
 
         newViewModel.name = name;
-        newViewModel.data = file;
+        newViewModel.data = file.json || file;
         newViewModel.dataSourceUrl = file.name;
 
         // TODO: Remove this, it only exists to make the UI happy.

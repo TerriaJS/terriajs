@@ -9,7 +9,7 @@
         {
             "name": "NM Sample Service",
             "description": "A service returning bike racks on the Gold Coast",
-            "url": "http://geospace.research.nicta.com.au/nm_service_1",
+            "url": "http://nationalmap.nicta.com.au/nm_service_1",
             "request": "POST"
         }
     ]
