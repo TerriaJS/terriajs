@@ -247,8 +247,6 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
 
     var scene = this.application.cesium.scene;
 
-    var tmp = defaultValue(this.parameters, WebMapServiceItemViewModel.defaultParameters);
-
     var imageryProvider = new WebMapServiceImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url),
         layers : this.layers,
