@@ -67,6 +67,7 @@ var WebMapServiceItemViewModel = function(application) {
      * If this property is undefiend, the default tiling scheme of the provider is used.
      * @type {Object}
      */
+
     this.tilingScheme = undefined;
     /**
      * Gets or sets a value indicating whether we should request information about individual features on click

@@ -10,6 +10,7 @@ var CzmlItemViewModel = require('./CzmlItemViewModel');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
 var KmlItemViewModel = require('./KmlItemViewModel');
+var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
 var CsvItemViewModel = require('./CsvItemViewModel');
@@ -23,6 +24,7 @@ var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('kml', KmlItemViewModel);
     createCatalogMemberFromType.register('wms', WebMapServiceItemViewModel);
     createCatalogMemberFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
+    createCatalogMemberFromType.register('wfs', WebFeatureServiceItemViewModel);
 
     createCatalogItemFromUrl.register(matchesExtension('czm'), CzmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('czml'), CzmlItemViewModel);
