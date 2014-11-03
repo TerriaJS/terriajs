@@ -1,4 +1,11 @@
 {
+    "camera": {
+        "west": 140,
+        "south": -39,
+        "east": 150,
+        "north": -34
+    },
+    "services": [],
     "catalog": [
         {
             "name": "Victorian Government",

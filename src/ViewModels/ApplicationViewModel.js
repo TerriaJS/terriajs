@@ -76,6 +76,14 @@ var ApplicationViewModel = function() {
     this.leaflet = undefined;
 
     /**
+     * Gets or sets the list of sources from which the catalog was populated.  A source may be a string, in which case it
+     * is expected to be a URL of an init file (like init_nm.json), or it can be a JSON-style object literal which is
+     * the init content itself.
+     * @type {Array}
+     */
+    this.initSources = [];
+
+    /**
      * Gets or sets the catalog of geospatial data.
      * @type {CatalogViewModel}
      */

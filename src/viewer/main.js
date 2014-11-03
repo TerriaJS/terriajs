@@ -39,6 +39,8 @@ if (start) {
     var copyright = require('../CopyrightModule');
 
     var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+    var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+    var defined = require('../../third_party/cesium/Source/Core/defined');
     var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
     var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
@@ -58,6 +60,7 @@ if (start) {
     registerCatalogViewModels();
 
     var application = new ApplicationViewModel();
+    application.catalog.isLoading = true;
 
     application.error.addEventListener(function(e) {
         var message = new PopupMessage({
@@ -69,47 +72,128 @@ if (start) {
 
     var url = window.location;
     var uri = new URI(url);
-    var params = uri.search(true);
+    var urlParameters = uri.search(true);
+    var hash = uri.fragment();
 
-    var configUrl = params.config || 'config.json';
+    loadJson(urlParameters.config || 'config.json').then(function(config) {
+        // Always initialize from init_nm.json
+        application.initSources.push('init_nm.json');
 
-    //get the server config to know how to handle urls and load initial one
-    application.catalog.isLoading = true;
-    loadJson(configUrl).then( function(config) {
-        // IE versions prior to 10 don't support CORS, so always use the proxy.
-        var alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
+        // If the URL includes a hash, try loading the corresponding init file.
+        var startData = {};
+        if (defined(hash) && hash.length > 0) {
+            if (hash.indexOf('start=') === 0) {
+                startData = JSON.parse(decodeURIComponent(hash.substring(6)));
+            } else {
+                application.initSources.push('init_' + hash + ".json");
+            }
+        }
 
-        corsProxy.setProxyList(config.proxyDomains, config.corsDomains, alwaysUseProxy);
+        var initSources = application.initSources.slice();
 
-        when(loadJson(params.data_menu || config.initialDataMenu || 'init_nm.json'), function(json) {
-            try {
-                application.catalog.updateFromJson(json.catalog);
-            } catch (e) {
-                var message = new PopupMessage({
-                    container: document.body,
-                    title: 'An error occurred while loading the catalog',
-                    message: e.toString()
-                });
+        // Include any initSources specified in the URL.
+        if (defined(startData.initSources)) {
+            for (var i = 0; i < startData.initSources.length; ++i) {
+                var initSource = startData.initSources[i];
+                if (initSources.indexOf(initSource) < 0) {
+                    initSources.push(initSource);
+
+                    // Only add external files to the application's list of init sources.
+                    if (typeof initSource === 'string') {
+                        application.initSources.push(initSource);
+                    }
+                }
+            }
+        }
+
+        // Load all of the init sources.
+        when.all(initSources.map(loadInitSource), function(initSources) {
+            var corsDomains = [];
+            var camera;
+            var i;
+            var initSource;
+
+            for (i = 0; i < initSources.length; ++i) {
+                initSource = initSources[i];
+                if (!defined(initSource)) {
+                    continue;
+                }
+
+                // Extract the list of CORS-ready domains from the init sources.
+                if (defined(initSource.corsDomains)) {
+                    corsDomains.push.apply(corsDomains, initSource.corsDomains);
+                }
+
+                // The last init source to specify a camera position wins.
+                if (defined(initSource.camera)) {
+                    camera = initSource.camera;
+                }
             }
 
-            if (params.start) {
-                var startData = JSON.parse(params.start);
-                application.catalog.updateFromJson(startData.catalog);
-                config.initialCamera = {
-                    west : CesiumMath.toDegrees(startData.camera.west),
-                    south : CesiumMath.toDegrees(startData.camera.south),
-                    east : CesiumMath.toDegrees(startData.camera.east),
-                    north : CesiumMath.toDegrees(startData.camera.north)
-                };
-            }
+            // Configure the proxy.
+            // IE versions prior to 10 don't support CORS, so always use the proxy.
+            var alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
+            corsProxy.setProxyList(config.proxyDomains, corsDomains, alwaysUseProxy);
 
-            application.services.services = json.services;
+            // Make another pass over the init sources to update the catalog and load services.
+            for (i = 0; i < initSources.length; ++i) {
+                initSource = initSources[i];
+                if (!defined(initSource)) {
+                    continue;
+                }
+
+                if (defined(initSource.catalog)) {
+                    var isUserSupplied;
+                    if (initSource.isFromExternalFile) {
+                        isUserSupplied = false;
+                    } else if (initSource.catalogOnlyUpdatesExistingItems) {
+                        isUserSupplied = undefined;
+                    } else {
+                        isUserSupplied = true;
+                    }
+
+                    try {
+                        application.catalog.updateFromJson(initSource.catalog, {
+                            onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
+                            isUserSupplied: isUserSupplied
+                        });
+                    } catch(e) {
+                        var message = new PopupMessage({
+                            container: document.body,
+                            title: 'An error occurred while loading the catalog',
+                            message: e.toString()
+                        });
+                    }
+                }
+
+                if (defined(initSource.services)) {
+                    application.services.services.push.apply(application.services, initSource.services);
+                }
+            }
 
             application.catalog.isLoading = false;
 
-            var viewer = new AusGlobeViewer(config, application);
+            var viewer = new AusGlobeViewer(application, camera);
 
             document.getElementById('loadingIndicator').style.display = 'none';
         });
     });
+}
+
+function loadInitSource(source) {
+    if (typeof source === 'string') {
+        return loadJson(source).then(function(initSource) {
+            initSource.isFromExternalFile = true;
+            return initSource;
+        }).otherwise(function() {
+            var message = new PopupMessage({
+                container : document.body,
+                title: 'Error loading initialization source',
+                message: 'An error occurred while loading initialization information from ' + source + '.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.'
+            });
+            return undefined;
+        });
+    } else {
+        return source;
+    }
 }

@@ -19,6 +19,7 @@ var CatalogMemberViewModel = require('./CatalogMemberViewModel');
 var inherit = require('../Core/inherit');
 var NowViewingViewModel = require('./NowViewingViewModel');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
+var runLater = require('../Core/runLater');
 var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**
@@ -143,7 +144,7 @@ var CatalogItemViewModel = function(application) {
     }, this);
 };
 
-CatalogItemViewModel.prototype = inherit(CatalogMemberViewModel.prototype);
+inherit(CatalogMemberViewModel, CatalogItemViewModel);
 
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
 

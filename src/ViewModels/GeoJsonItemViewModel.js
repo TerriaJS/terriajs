@@ -95,7 +95,7 @@ var GeoJsonItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-GeoJsonItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
+inherit(CatalogItemViewModel, GeoJsonItemViewModel);
 
 defineProperties(GeoJsonItemViewModel.prototype, {
     /**

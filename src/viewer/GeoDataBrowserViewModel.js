@@ -440,16 +440,17 @@ these extensions in order for National Map to know how to load it.'
 
     function readAndHandleJsonFile(file) {
         readJson(file).then(function(json) {
-            if (json.catalog) {
-                that.catalog.updateFromJson(json.catalog);
-            }
+            if (json.catalog || json.services) {
+                if (json.catalog) {
+                    that.catalog.updateFromJson(json.catalog, {
+                        isUserSupplied: true
+                    });
+                }
 
-            if (json.services) {
-                // TODO: update the list of services rather than outright replacing it.
-                that._viewer.services = json.services;
-            }
-
-            if (!json.catalog && !json.services) {
+                if (json.services) {
+                    that._viewer.application.services.services.push.apply(that._viewer.application.services.services, json.services);
+                }
+            } else {
                 addFile(file);
             }
         });

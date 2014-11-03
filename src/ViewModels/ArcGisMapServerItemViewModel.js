@@ -45,7 +45,7 @@ var ArcGisMapServerItemViewModel = function(application) {
     knockout.track(this, ['url']);
 };
 
-ArcGisMapServerItemViewModel.prototype = inherit(ImageryLayerItemViewModel.prototype);
+inherit(ImageryLayerItemViewModel, ArcGisMapServerItemViewModel);
 
 defineProperties(ArcGisMapServerItemViewModel.prototype, {
     /**

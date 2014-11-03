@@ -77,6 +77,7 @@ var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-e
 var corsProxy = require('../Core/corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
 var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
+var CatalogGroupViewModel = require('../ViewModels/CatalogGroupViewModel');
 var CatalogViewModel = require('../ViewModels/CatalogViewModel');
 var CesiumViewModel = require('../ViewModels/CesiumViewModel');
 var LeafletViewModel = require('../ViewModels/LeafletViewModel');
@@ -95,7 +96,7 @@ var ViewerMode = require('../ViewModels/ViewerMode');
 BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
-var AusGlobeViewer = function(config, application) {
+var AusGlobeViewer = function(application, initialCamera) {
     this._distanceLegendBarWidth = undefined;
     this._distanceLegendLabel = undefined;
 
@@ -123,7 +124,7 @@ var AusGlobeViewer = function(config, application) {
                     }
                 }
             },
-            {  //This currently also houses print, but print could be moved here as well
+            {
                 svg : {
                     path : 'm 22.6786,19.8535 c -0.8256,0 -1.5918,0.2514 -2.229,0.6822 l -7.1958,-4.1694 c 0.0198,-0.1638 0.0492,-0.3252 0.0492,-0.4944 0,-0.2934 -0.0366,-0.5778 -0.096,-0.8532 l 6.9978,-3.7554 c 0.6816,0.5442 1.5342,0.8844 2.4738,0.8844 2.199,0 3.9822,-1.7832 3.9822,-3.9822 0,-2.199 -1.7832,-3.9816 -3.9822,-3.9816 -2.199,0 -3.9816,1.7826 -3.9816,3.9816 0,0.1434 0.0276,0.279 0.042,0.4188 l -7.2198,3.9702 c -0.6306,-0.4182 -1.3854,-0.6648 -2.1978,-0.6648 -2.1996,0 -3.9822,1.7826 -3.9822,3.9822 0,2.1984 1.7826,3.9816 3.9822,3.9816 0.906,0 1.731,-0.3144 2.4,-0.8238 l 7.0398,4.1628 c -0.0342,0.2106 -0.0642,0.4224 -0.0642,0.642 0,2.199 1.7826,3.9816 3.9816,3.9816 2.199,0 3.9822,-1.7826 3.9822,-3.9816 -6e-4,-2.1984 -1.7832,-3.981 -3.9822,-3.981 z',
                     width : 32,
@@ -132,23 +133,58 @@ var AusGlobeViewer = function(config, application) {
                 tooltip : 'Share',
                 callback : function() {
                     that.captureCanvasCallback = function (dataUrl) {
-                        var serializeOptions = {
-                            enabledItemsOnly: true,
+                        var camera = getCameraRect(that.scene, that.map);
+
+                        var request = {
+                            version: '0.0.03',
+                            image: dataUrl,
+                            initSources: that.application.initSources.slice()
+                        };
+
+                        var initSources = request.initSources;
+
+                        // Add an init source with user-added catalog members.
+                        var userDataSerializeOptions = {
+                            userSuppliedOnly: true,
                             skipItemsWithLocalData: true,
                             itemsSkippedBecauseTheyHaveLocalData: []
                         };
-                        var jsonCatalog = that.application.catalog.serializeToJson(serializeOptions);
-                        var request = {
-                            version: '0.0.03',
-                            camera: getCameraRect(that.scene, that.map),
-                            image: dataUrl,
-                            catalog: jsonCatalog
-                        };
+
+                        var userAddedCatalog = that.application.catalog.serializeToJson(userDataSerializeOptions);
+                        if (userAddedCatalog.length > 0) {
+                            initSources.push({
+                                catalog: userAddedCatalog,
+                                catalogIsUserSupplied: true
+                            });
+                        }
+
+                        // Add an init source with the enabled/opened catalog members.
+                        var enabledAndOpenedCatalog = that.application.catalog.serializeToJson({
+                            enabledItemsOnly: true,
+                            skipItemsWithLocalData: true,
+                            serializeTogglesOnly: true,
+                        });
+                        if (enabledAndOpenedCatalog.length > 0) {
+                            initSources.push({
+                                catalog: enabledAndOpenedCatalog,
+                                catalogOnlyUpdatesExistingItems: true
+                            });
+                        }
+
+                        // Add an init source with the camera position.
+                        initSources.push({
+                            camera: {
+                                west: CesiumMath.toDegrees(camera.west),
+                                south: CesiumMath.toDegrees(camera.south),
+                                east: CesiumMath.toDegrees(camera.east),
+                                north: CesiumMath.toDegrees(camera.north)
+                            }
+                        });
 
                         var sharePanel = new SharePanel({
                             request: request,
                             container: document.body,
-                            itemsSkippedBecauseTheyHaveLocalData: serializeOptions.itemsSkippedBecauseTheyHaveLocalData
+                            itemsSkippedBecauseTheyHaveLocalData: userDataSerializeOptions.itemsSkippedBecauseTheyHaveLocalData
                         });
                     };
                     that.captureCanvas();
@@ -280,7 +316,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.application = application;
 
-    this.initialCamera = config.initialCamera;
+    this.initialCamera = initialCamera;
 
     this.geoDataBrowser = new GeoDataBrowser({
         viewer : that,
