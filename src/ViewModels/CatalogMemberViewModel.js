@@ -40,7 +40,7 @@ var CatalogMemberViewModel = function(application) {
 
     /**
      * Gets or sets a value indicating whether this member was supplied by the user rather than loaded from one of the
-     * {@link ApplicationViewModel#initSources}.  User-supplied members must be treated more carefully when, for example,
+     * {@link ApplicationViewModel#initSources}.  User-supplied members must be serialized completely when, for example,
      * serializing enabled members for sharing.  This property is observable.
      * @type {Boolean}
      * @default true

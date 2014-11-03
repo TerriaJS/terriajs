@@ -192,37 +192,6 @@ CkanGroupViewModel.prototype.load = function() {
     });
 };
 
-/**
- * Serializes the group item to JSON.
- *
- * @param {Object} [options] Object with the following properties:
- * @param {Boolean} [options.enabledItemsOnly=false] true if only enabled data items (and their groups) should be serialized,
- *                  or false if all data items should be serialized.
- * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
- *        all of the data items that were not serialized because they were not enabled.  The array will be empty if
- *        options.enabledItemsOnly is false.
- * @param {Boolean} [options.skipItemsWithLocalData=false] true if items with a serializable 'data' property should be skipped entirely.
- *                  This is useful to avoid creating a JSON data structure with potentially very large embedded data.
- * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
- *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
- *        if options.skipItemsWithLocalData is false.
- * @param {Boolean} [options.serializeSimpleGroups=false] true to serialize more sophisticated groups, such as {@link CkanGroupViewModel},
- *                  as simple a {@link CatalogGroupViewModel}.  This generally makes the serialized data smaller while still allowing
- *                  the enabled items to be constructed later.
- * @return {Object} The serialized JSON object-literal.
- */
-CkanGroupViewModel.prototype.serializeToJson = function(options) {
-    var result = CatalogGroupViewModel.prototype.serializeToJson.call(this, options);
-
-    if (defined(result) && defaultValue(options.serializeSimpleGroups, false)) {
-        delete result.url;
-        delete result.blacklist;
-        delete result.filterQuery;
-    }
-
-    return result;
-};
-
 // The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
 var wmsFormatRegex = /^wms$/i;
 

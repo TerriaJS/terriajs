@@ -410,8 +410,7 @@ these extensions in order for National Map to know how to load it.'
                 }
 
                 if (json.services) {
-                    // TODO: update the list of services rather than outright replacing it.
-                    that._viewer.services = json.services;
+                    that._viewer.application.services.services.push.apply(that._viewer.application.services.services, json.services);
                 }
             } else {
                 addFile(file);
