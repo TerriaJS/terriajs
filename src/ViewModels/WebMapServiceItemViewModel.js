@@ -63,6 +63,12 @@ var WebMapServiceItemViewModel = function(application) {
     this.parameters = undefined;
 
     /**
+     * Gets or sets the tiling scheme to pass to the WMS server when requesting images.
+     * If this property is undefiend, the default tiling scheme of the provider is used.
+     * @type {Object}
+     */
+    this.tilingScheme = undefined;
+    /**
      * Gets or sets a value indicating whether we should request information about individual features on click
      * as GeoJSON.  If getFeatureInfoAsXml is true as well, feature information will be requested first as GeoJSON,
      * and then as XML if the GeoJSON request fails.  If both are false, this data item will not support feature picking at all.
@@ -80,7 +86,7 @@ var WebMapServiceItemViewModel = function(application) {
      */
     this.getFeatureInfoAsXml = true;
 
-    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml']);
+    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'tilingScheme']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.dataUrl;
@@ -241,12 +247,15 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
 
     var scene = this.application.cesium.scene;
 
+    var tmp = defaultValue(this.parameters, WebMapServiceItemViewModel.defaultParameters);
+
     var imageryProvider = new WebMapServiceImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url),
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : defaultValue(this.parameters, WebMapServiceItemViewModel.defaultParameters)
+        parameters : combine(this.parameters, WebMapServiceItemViewModel.defaultParameters),
+        tilingScheme : this.tilingScheme
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
