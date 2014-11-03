@@ -89,16 +89,25 @@ if (start) {
             }
         }
 
+        var initSources = application.initSources.slice();
+
         // Include any initSources specified in the URL.
         if (defined(startData.initSources)) {
-            var nonDuplicateInitSources = startData.initSources.filter(function(element) {
-                return application.initSources.indexOf(element) < 0;
-            });
-            application.initSources.push.apply(application.initSources, nonDuplicateInitSources);
+            for (var i = 0; i < startData.initSources.length; ++i) {
+                var initSource = startData.initSources[i];
+                if (initSources.indexOf(initSource) < 0) {
+                    initSources.push(initSource);
+
+                    // Only add external files to the application's list of init sources.
+                    if (typeof initSource === 'string') {
+                        application.initSources.push(initSource);
+                    }
+                }
+            }
         }
 
         // Load all of the init sources.
-        when.all(application.initSources.map(loadInitSource), function(initSources) {
+        when.all(initSources.map(loadInitSource), function(initSources) {
             var corsDomains = [];
             var camera;
             var i;
@@ -134,10 +143,19 @@ if (start) {
                 }
 
                 if (defined(initSource.catalog)) {
+                    var isUserSupplied;
+                    if (initSource.isFromExternalFile) {
+                        isUserSupplied = false;
+                    } else if (initSource.catalogOnlyUpdatesExistingItems) {
+                        isUserSupplied = undefined;
+                    } else {
+                        isUserSupplied = true;
+                    }
+
                     try {
                         application.catalog.updateFromJson(initSource.catalog, {
                             onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
-                            isUserSupplied: defaultValue(initSource.catalogIsUserSupplied, false)
+                            isUserSupplied: isUserSupplied
                         });
                     } catch(e) {
                         var message = new PopupMessage({
@@ -164,7 +182,10 @@ if (start) {
 
 function loadInitSource(source) {
     if (typeof source === 'string') {
-        return loadJson(source).otherwise(function() {
+        return loadJson(source).then(function(initSource) {
+            initSource.isFromExternalFile = true;
+            return initSource;
+        }).otherwise(function() {
             var message = new PopupMessage({
                 container : document.body,
                 title: 'Error loading initialization source',

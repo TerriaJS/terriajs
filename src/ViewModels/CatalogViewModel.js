@@ -55,8 +55,6 @@ var CatalogViewModel = function(application) {
             group.description = 'The group for data that was added by the user via the Add Data panel.';
             this.group.add(group);
 
-            this.application.initSources.push(group);
-
             return group;
         }
     });
