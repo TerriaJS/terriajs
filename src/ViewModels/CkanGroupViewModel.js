@@ -9,6 +9,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
@@ -93,7 +94,7 @@ var CkanGroupViewModel = function(application) {
     knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
 };
 
-CkanGroupViewModel.prototype = inherit(CatalogGroupViewModel.prototype);
+inherit(CatalogGroupViewModel, CkanGroupViewModel);
 
 defineProperties(CkanGroupViewModel.prototype, {
     /**
@@ -116,8 +117,51 @@ defineProperties(CkanGroupViewModel.prototype, {
         get : function() {
             return 'CKAN Group';
         }
+    },
+
+    /**
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * When a property name on the view-model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * JSON object literal, and the name of the property.
+     * @memberOf CatalogGroupViewModel.prototype
+     * @type {Object}
+     */
+    serializers : {
+        get : function() {
+            return CkanGroupViewModel.defaultSerializers;
+        }
     }
 });
+
+/**
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
+ * @type {Object}
+ */
+CkanGroupViewModel.defaultSerializers = clone(CatalogGroupViewModel.defaultSerializers);
+
+CkanGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+    // Only serialize toggles in contained items, because other properties are loaded from CKAN.
+    var previousSerializeTogglesOnly = options.serializeTogglesOnly;
+    options.serializeTogglesOnly = true;
+
+    // Only serlize enabled items as well.  This isn't quite right - ideally we'd serialize any
+    // property of any item if the property's value is changed from what was loaded from CKAN -
+    // but this gives us reasonable results for sharing and is a lot less work than the ideal
+    // solution.
+    var previousEnabledItemsOnly = options.enabledItemsOnly;
+    options.enabledItemsOnly = true;
+
+    CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
+
+    options.enabledItemsOnly = previousEnabledItemsOnly;
+    options.serializeTogglesOnly = previousSerializeTogglesOnly;
+};
+
+CkanGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+
+freezeObject(CkanGroupViewModel.defaultSerializers);
 
 /**
  * Loads the items in this group by invoking the GetCapabilities service on the WMS server.
@@ -152,6 +196,10 @@ CkanGroupViewModel.prototype.load = function() {
 var wmsFormatRegex = /^wms$/i;
 
 function packageSearch(viewModel) {
+    if (!defined(viewModel.url) || viewModel.url.length === 0) {
+        return when(undefined);
+    }
+
     var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(viewModel.filterQuery);
 
     return when(loadJson(url), function(json) {

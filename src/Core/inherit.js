@@ -2,10 +2,11 @@
 
 /*global require*/
 
-var inherit = function(proto) {
+var inherit = function(base, derived) {
     function F() {}
-    F.prototype = proto;
-    return new F();
+    F.prototype = base.prototype;
+    derived.prototype = new F();
+    derived.prototype.constructor = derived;
 };
 
 module.exports = inherit;

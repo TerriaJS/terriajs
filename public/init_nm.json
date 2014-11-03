@@ -1,4 +1,17 @@
 {
+    "corsDomains" : [
+        "research.nicta.com.au",
+        "data.gov.au",
+        "ga.gov.au",
+        "corsproxy.com"
+    ],
+    "camera": {
+        "west": 105,
+        "south": -45,
+        "east": 155,
+        "north": -5
+    },
+    "services": [],
     "catalog": [
         {
             "name": "National Data Sets",
@@ -2309,7 +2322,5 @@
                 }
             ]
         }
-    ],
-    "services": [
     ]
 }

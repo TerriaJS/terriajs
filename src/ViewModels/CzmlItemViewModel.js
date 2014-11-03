@@ -71,7 +71,7 @@ var CzmlItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-CzmlItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
+inherit(CatalogItemViewModel, CzmlItemViewModel);
 
 defineProperties(CzmlItemViewModel.prototype, {
     /**

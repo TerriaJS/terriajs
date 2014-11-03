@@ -1,9 +1,0 @@
-{
-    "initialDataMenu": "init_vic.json",
-    "initialCamera": {
-        "west": 140,
-        "south": -39,
-        "east": 150,
-        "north": -34
-    }
-}

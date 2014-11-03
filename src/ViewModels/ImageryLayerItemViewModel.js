@@ -41,7 +41,7 @@ var ImageryLayerItemViewModel = function(application) {
     }, this);
 };
 
-ImageryLayerItemViewModel.prototype = inherit(CatalogItemViewModel.prototype);
+inherit(CatalogItemViewModel, ImageryLayerItemViewModel);
 
 defineProperties(ImageryLayerItemViewModel.prototype, {
     /**

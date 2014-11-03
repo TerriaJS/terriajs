@@ -151,7 +151,7 @@ var WebMapServiceItemViewModel = function(application) {
     });
 };
 
-WebMapServiceItemViewModel.prototype = inherit(ImageryLayerItemViewModel.prototype);
+inherit(ImageryLayerItemViewModel, WebMapServiceItemViewModel);
 
 defineProperties(WebMapServiceItemViewModel.prototype, {
     /**
