@@ -26,6 +26,7 @@ var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var runLater = require('../Core/runLater');
+var xmlToGeoJson = require('../Map/xmlToGeoJson');
 
 /**
  * A {@link ImageryLayerItemViewModel} representing a layer from a Web Map Service (WMS) server.
@@ -44,6 +45,8 @@ var WebFeatureServiceItemViewModel = function(application) {
     this._dataUrlType = undefined;
     this._metadataUrl = undefined;
     this._geoJsonViewModel = undefined;
+    this._loadedUrl = undefined;
+    this._loadedTypeNames = undefined;
 
     /**
      * Gets or sets the URL of the WFS server.  This property is observable.
@@ -52,18 +55,10 @@ var WebFeatureServiceItemViewModel = function(application) {
     this.url = '';
 
     /**
-     * Gets or sets the WFS type names to include.  To specify multiple type names, separate them
-     * with a commas.  This property is observable.
+     * Gets or sets the WFS feature type names.
      * @type {String}
      */
     this.typeNames = '';
-
-    /**
-     * Gets or sets the additional parameters to pass to the WFS server when requesting images.
-     * If this property is undefiend, {@link WebFeatureServiceItemViewModel.defaultParameters} is used.
-     * @type {Object}
-     */
-    this.parameters = undefined;
 
     /**
      * Gets or sets a value indicating whether we should request GeoJSON from the WFS server.  If this property
@@ -83,7 +78,7 @@ var WebFeatureServiceItemViewModel = function(application) {
      */
     this.requestGml = true;
 
-    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', 'url', 'layers', 'parameters']);
+    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', 'url', 'typeNames', 'requestGeoJson', 'requestGml']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.dataUrl;
@@ -95,7 +90,7 @@ var WebFeatureServiceItemViewModel = function(application) {
             }
 
             if (this.dataUrlType === 'wfs') {
-                url = cleanUrl(url) + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + this.layers + '&srsName=EPSG%3A4326&maxFeatures=1000';
+                url = cleanUrl(url) + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + this.typeNames + '&srsName=EPSG%3A4326&maxFeatures=1000';
             }
 
             return url;
@@ -164,14 +159,14 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
      * @memberOf WebFeatureServiceItemViewModel.prototype
      * @type {MetadataViewModel}
      */
-    metadata : {
+    /*metadata : {
         get : function() {
             if (!defined(this._metadata)) {
                 this._metadata = requestMetadata(this);
             }
             return this._metadata;
         }
-    },
+    },*/
 
     /**
      * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
@@ -285,13 +280,6 @@ WebFeatureServiceItemViewModel.prototype._hide = function() {
     }
 };
 
-WebFeatureServiceItemViewModel.defaultParameters = {
-    transparent: true,
-    format: 'image/png',
-    exceptions: 'application/vnd.ogc.se_xml',
-    style: ''
-};
-
 function loadGeoJson(viewModel) {
     var promise = loadJson(buildGeoJsonUrl(viewModel)).then(function(json) {
         return json;
@@ -317,9 +305,9 @@ function buildGeoJsonUrl(viewModel) {
     return url + '?' + objectToQuery({
         service: 'WFS',
         request: 'GetFeature',
-        typeNames: viewModel.typeNames,
-        version: '1.1.0',
-        outputFormat: 'application/json',
+        typeName: viewModel.typeNames,
+        version: '1.0.0',
+        outputFormat: 'JSON',
         srsName: 'EPSG:4326'
     });
 }
@@ -329,9 +317,8 @@ function buildGmlUrl(viewModel) {
     return url + '?' + objectToQuery({
         service: 'WFS',
         request: 'GetFeature',
-        typeNames: viewModel.typeNames,
-        version: '1.1.0',
-        outputFormat: 'text/xml',
+        typeName: viewModel.typeNames,
+        version: '1.0.0',
         srsName: 'EPSG:4326'
     });
 }

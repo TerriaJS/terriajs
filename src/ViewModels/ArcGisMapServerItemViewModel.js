@@ -83,7 +83,8 @@ ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
-        alpha : 0.0
+        show: false,
+        alpha : this.opacity
         // Ideally we'd specify "rectangle : this.rectangle" here.
         // But lots of data sources get the extent wrong, and even the ones that get it right
         // specify the extent of the geometry itself, not the representation of the geometry.  So that means,
@@ -113,13 +114,12 @@ ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
     var map = this.application.leaflet.map;
 
     var options = {
-        opacity : 0.0
+        opacity : this.opacity
         // Ideally we'd specify "bounds : rectangleToLatLngBounds(this.rectangle)" here.
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
     this._imageryLayer = new L.esri.tiledMapLayer(cleanAndProxyUrl(this.application, this.url), options);
-    map.addLayer(this._imageryLayer);
 };
 
 ArcGisMapServerItemViewModel.prototype._disableInLeaflet = function() {
@@ -127,9 +127,6 @@ ArcGisMapServerItemViewModel.prototype._disableInLeaflet = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
-    var map = this.application.leaflet.map;
-
-    map.removeLayer(this._imageryLayer);
     this._imageryLayer = undefined;
 };
 

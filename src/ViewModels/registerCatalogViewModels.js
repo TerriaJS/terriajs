@@ -17,6 +17,7 @@ var CsvItemViewModel = require('./CsvItemViewModel');
 
 var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
+    createCatalogMemberFromType.register('csv', CsvItemViewModel);
     createCatalogMemberFromType.register('czml', CzmlItemViewModel);
     createCatalogMemberFromType.register('esri-mapServer', ArcGisMapServerItemViewModel);
     createCatalogMemberFromType.register('geojson', GeoJsonItemViewModel);
