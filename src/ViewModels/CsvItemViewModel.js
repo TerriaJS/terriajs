@@ -246,17 +246,21 @@ CsvItemViewModel.prototype._showInCesium = function() {
 };
 
 CsvItemViewModel.prototype._hideInCesium = function() {
-    var dataSources = this.application.dataSources;
-    if (!dataSources.contains(this._tableDataSource)) {
-        throw new DeveloperError('This data source is not shown.');
-    }
 
     if (!defined(this.regionMapped)) {
+        var dataSources = this.application.dataSources;
+        if (!dataSources.contains(this._tableDataSource)) {
+            throw new DeveloperError('This data source is not shown.');
+        }
+        
         dataSources.remove(this._tableDataSource, false);
     }
     else {
+        if (!defined(this._imageryLayer)) {
+            throw new DeveloperError('This data source is not enabled.');
+        }
+        
         var scene = this.application.cesium.scene;
-
         scene.imageryLayers.remove(this._imageryLayer);
         this._imageryLayer = undefined;
     }
@@ -274,13 +278,16 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
         this._showInCesium();
     }
     else {
+        if (defined(this._imageryLayer)) {
+            throw new DeveloperError('This data source is already enabled.');
+        }
+        
         var map = this.application.leaflet.map;
-
+        
         var options = {
             layers : this.layers,
             opacity : 0.6
         };
-
         options = combine(defaultValue(WebMapServiceItemViewModel.defaultParameters), options);
 
         this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.application, this.url), options);
@@ -314,8 +321,11 @@ CsvItemViewModel.prototype._hideInLeaflet = function() {
         this._hideInCesium();
     }
     else {
-        var map = this.application.leaflet.map;
+        if (!defined(this._imageryLayer)) {
+            throw new DeveloperError('This data source is not enabled.');
+        }
 
+        var map = this.application.leaflet.map;
         map.removeLayer(this._imageryLayer);
         this._imageryLayer = undefined;
     }
