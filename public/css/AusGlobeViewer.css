@@ -278,6 +278,24 @@ a.ausglobe-title-menuItem:hover {
     .ausglobe-title-menuItem {display: none; }
 }
 
+.ausglobe-search-container {
+    background-color:white;
+    position: absolute;
+    margin-left: 1px;
+    width: 248px;
+}
+
+.ausglobe-search-container > ul {
+    list-style-type: none;
+    margin-left: -50px;
+
+}
+
+.ausglobe-search-container > ul > li:hover {
+    background-color: darkblue;
+    color:white;
+}
+
 .ausglobe-left-area {
     position: absolute;
     left: 20px;
@@ -573,7 +591,7 @@ a.ausglobe-title-menuItem:hover {
     display: inline-block;
     top: 80px;
     left: 20px;
-    z-index: 999; /* required for IE9 */
+    z-index: 1010; /* required for IE9 */
     background-color: rgba(0, 0, 0, 0.65);
     padding: 15px;
     border: 1px solid gray;
@@ -629,7 +647,7 @@ a.ausglobe-title-menuItem:hover {
     top: 0;
     bottom: 0;
     background-color: rgba(0,0,0,0.8);
-    z-index: 1000; /* required for IE9 */
+    z-index: 1100; /* required for IE9 */
 }
 
 .ausglobe-info {

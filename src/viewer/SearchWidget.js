@@ -69,7 +69,33 @@ click: search,\
 cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, width: 32, height: 32 }');
     form.appendChild(searchButton);
 
+    var dropDownList = document.createElement('select');
+    dropDownList.setAttribute('data-bind','\
+    value: searchProvider\
+    ');
+    for (var i = 0; i < viewModel._searchProviders.length; i++) {
+        var provider = viewModel._searchProviders[i];
+        var option = document.createElement('option');
+        option.setAttribute('value',provider.key);
+        option.innerText = provider.alias;
+        dropDownList.appendChild(option);
+    }
+    form.appendChild(dropDownList);
     container.appendChild(form);
+    var resultsContainer = document.createElement('div');
+    resultsContainer.setAttribute('id', 'searchResultsPreview');
+    resultsContainer.setAttribute('data-bind','visible: displayResults');
+    resultsContainer.className = 'ausglobe-search-container';
+    var resultsList = document.createElement('ul');
+    resultsList.setAttribute('data-bind', '\
+    foreach:resultsList\
+    ');
+    var resultsItem = document.createElement('li');
+    resultsItem.setAttribute('data-bind','text:name, click:$parent.selectSearchResults');
+
+    resultsList.appendChild(resultsItem);
+    resultsContainer.appendChild(resultsList);
+    form.appendChild(resultsContainer);
 
     knockout.applyBindings(viewModel, form);
 
