@@ -15,6 +15,7 @@ var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel')
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 var CsvItemViewModel = require('./CsvItemViewModel');
+var GpxItemViewModel = require('./GpxItemViewModel');
 
 var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
@@ -28,6 +29,7 @@ var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
     createCatalogMemberFromType.register('wfs', WebFeatureServiceItemViewModel);
     createCatalogMemberFromType.register('wfs-getCapabilities', WebFeatureServiceGroupViewModel);
+    createCatalogMemberFromType.register('gpx', GpxItemViewModel);
 
     createCatalogItemFromUrl.register(matchesExtension('czm'), CzmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('czml'), CzmlItemViewModel);
@@ -37,6 +39,7 @@ var registerCatalogViewModels = function() {
     createCatalogItemFromUrl.register(matchesExtension('kml'), KmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('kmz'), KmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('csv'), CsvItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('gpx'), GpxItemViewModel);
 };
 
 function matchesExtension(extension) {
