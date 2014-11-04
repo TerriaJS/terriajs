@@ -94,8 +94,10 @@ if (cluster.isMaster) {
     var request = require('request');
     var path = require('path');
     var cors = require('cors');
+    var config = require('./config');
     var formidable = require('formidable');
     var ogr2ogr = require('ogr2ogr');
+    var mongoose = require('mongoose');
     var proj4 = require('proj4');
 
     //TODO: check if this loads the file into each core and if so then,
@@ -142,6 +144,8 @@ if (cluster.isMaster) {
     app.use(cors());
     app.disable('etag');
     app.use(express.static(path.join(__dirname, 'public')));
+    app.set('dbUrl', config.db[app.settings.env]);
+    mongoose.connect(app.get('dbUrl'));
 
     var upstreamProxy = argv['upstream-proxy'];
     var bypassUpstreamProxyHosts = {};
@@ -151,6 +155,10 @@ if (cluster.isMaster) {
         });
     }
 
+    app.get('/ping', function(req, res){
+      res.send('OK');
+    });
+    
     app.get('/proxy/*', function(req, res, next) {
         // look for request like http://localhost:8080/proxy/http://example.com/file?query=1
         var remoteUrl = getRemoteUrlFromParam(req);
@@ -240,6 +248,28 @@ if (cluster.isMaster) {
                 }
             })
         });
+    });
+
+    // define the visSchema
+    var NMSchema = new mongoose.Schema({
+        //set by server
+        date: String,      //use date type
+        //generated in viewer
+        version: String,
+        layers: String,    //change to Array
+        camera: String,    //change to Object
+        image_url: String,
+        thumb_url: String
+    });
+    
+    //'imagemagick' replace by create thumbnail in browser
+
+    //Share record storage
+    app.post('/upload', function(req, res, next) {
+    });
+
+    
+    app.get('/get/:id', function(req, res, next) {
     });
 
 
