@@ -51,7 +51,7 @@ var CsvItemViewModel = function(application, url) {
     this._tableDataSource = undefined;
 
     /**
-     * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
+     * Gets or sets the URL from which to retrieve CSV data.  This property is ignored if
      * {@link GeoJsonItemViewModel#data} is defined.  This property is observable.
      * @type {String}
      */
@@ -104,7 +104,7 @@ defineProperties(CsvItemViewModel.prototype, {
      * @memberOf CsvItemViewModel.prototype
      * @type {MetadataViewModel}
      */
-    metadata : {
+    metadata : {  //TODO: return metadata if tableDataSource defined
         get : function() {
             var result = new MetadataViewModel();
             result.isLoading = false;

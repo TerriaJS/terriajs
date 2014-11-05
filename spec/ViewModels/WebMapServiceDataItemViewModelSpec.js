@@ -5,6 +5,7 @@
 var ApplicationViewModel = require('../../src/ViewModels/ApplicationViewModel');
 var ImageryLayerItemViewModel = require('../../src/ViewModels/ImageryLayerItemViewModel');
 var WebMapServiceItemViewModel = require('../../src/ViewModels/WebMapServiceItemViewModel');
+var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
@@ -88,6 +89,7 @@ describe('WebMapServiceDataItemViewModel', function() {
                 custom: true,
                 awesome: 'maybe'
             },
+            tilingScheme: new WebMercatorTilingScheme(),
             getFeatureInfoAsGeoJson: false,
             getFeatureInfoAsXml: false
         });
@@ -106,6 +108,7 @@ describe('WebMapServiceDataItemViewModel', function() {
             custom: true,
             awesome: 'maybe'
         });
+        expect(wmsViewModel.tilingScheme instanceof WebMercatorTilingScheme).toBe(true);
         expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(false);
         expect(wmsViewModel.getFeatureInfoAsXml).toBe(false);
     });
@@ -124,6 +127,7 @@ describe('WebMapServiceDataItemViewModel', function() {
         expect(wmsViewModel.url).toBe('');
         expect(wmsViewModel.layers).toBe('');
         expect(wmsViewModel.parameters).toBeUndefined();
+        expect(wmsViewModel.tilingScheme).toBeUndefined();
         expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(true);
         expect(wmsViewModel.getFeatureInfoAsXml).toBe(true);
     });
