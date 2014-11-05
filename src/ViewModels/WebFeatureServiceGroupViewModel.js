@@ -142,7 +142,7 @@ function getCapabilities(viewModel) {
             addFeatureTypes(viewModel, json.FeatureTypeList.FeatureType, viewModel.items, undefined, supportsJsonGetFeature, dataCustodian);
         }
     }, function(e) {
-        viewModel.application.raiseEvent(new ViewModelError({
+        viewModel.application.error.raiseEvent(new ViewModelError({
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WFS server.  \

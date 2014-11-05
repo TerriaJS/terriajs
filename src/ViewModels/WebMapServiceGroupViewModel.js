@@ -146,7 +146,7 @@ function getCapabilities(viewModel) {
 
         addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
     }, function(e) {
-        viewModel.application.raiseEvent(new ViewModelError({
+        viewModel.application.error.raiseEvent(new ViewModelError({
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WMS server.  \
