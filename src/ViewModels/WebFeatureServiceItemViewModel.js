@@ -306,7 +306,7 @@ function buildGeoJsonUrl(viewModel) {
         service: 'WFS',
         request: 'GetFeature',
         typeName: viewModel.typeNames,
-        version: '1.0.0',
+        version: '1.1.0',
         outputFormat: 'JSON',
         srsName: 'EPSG:4326'
     });
@@ -318,7 +318,7 @@ function buildGmlUrl(viewModel) {
         service: 'WFS',
         request: 'GetFeature',
         typeName: viewModel.typeNames,
-        version: '1.0.0',
+        version: '1.1.0',
         srsName: 'EPSG:4326'
     });
 }
