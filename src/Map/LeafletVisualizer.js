@@ -2,18 +2,18 @@
 "use strict";
 
 /*global require,L,URI,$,Document,alert,console*/
-var AssociativeArray = require('../third_party/cesium/Source/Core/AssociativeArray');
-var Cartesian2 = require('../third_party/cesium/Source/Core/Cartesian2');
-var Cartesian3 = require('../third_party/cesium/Source/Core/Cartesian3');
-var Color = require('../third_party/cesium/Source/Core/Color');
-var defined = require('../third_party/cesium/Source/Core/defined');
-var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
-var DeveloperError = require('../third_party/cesium/Source/Core/DeveloperError');
-var Property = require('../third_party/cesium/Source/DataSources/Property');
-var Ellipsoid = require('../third_party/cesium/Source/Core/Ellipsoid');
-var CesiumMath = require('../third_party/cesium/Source/Core/Math');
-var loadImage = require('../third_party/cesium/Source/Core/loadImage');
-var writeTextToCanvas = require('../third_party/cesium/Source/Core/writeTextToCanvas');
+var AssociativeArray = require('../../third_party/cesium/Source/Core/AssociativeArray');
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
+var Color = require('../../third_party/cesium/Source/Core/Color');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Property = require('../../third_party/cesium/Source/DataSources/Property');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
+var writeTextToCanvas = require('../../third_party/cesium/Source/Core/writeTextToCanvas');
  
 
 var defaultColor = Color.WHITE;
@@ -96,19 +96,19 @@ function cleanEntity(entity, group) {
         group.removeLayer(entity._geomPoint);
         entity._geomPoint = undefined;
     }
-    else if (defined(entity._geomBillboard)) {
+    if (defined(entity._geomBillboard)) {
         group.removeLayer(entity._geomBillboard);
         entity._geomBillboard = undefined;
     }
-    else if (defined(entity._geomLabel)) {
+    if (defined(entity._geomLabel)) {
         group.removeLayer(entity._geomLabel);
         entity._geomLabel = undefined;
     }
-    else if (defined(entity._geomPolyline)) {
+    if (defined(entity._geomPolyline)) {
         group.removeLayer(entity._geomPolyline);
         entity._geomPolyline = undefined;
     }
-    else if (defined(entity._geomPolygon)) {
+    if (defined(entity._geomPolygon)) {
         group.removeLayer(entity._geomPolygon);
         entity._geomPolygon = undefined;
     }
@@ -253,9 +253,9 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
     var width = Property.getValueOrDefault(markerGraphics._width, time, undefined);
     var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
     var scale = Property.getValueOrDefault(markerGraphics._scale, time, 1.0);
-    var verticalOrigin = Property.getValueOrDefault(markerGraphics._verticalOrigin, time, undefined);
-    var horizontalOrigin = Property.getValueOrDefault(markerGraphics._horizontalOrigin, time, undefined);
-    var pixelOffset = Property.getValueOrDefault(markerGraphics._pixelOffset, time, new Cartesian2(0,0));
+    var verticalOrigin = Property.getValueOrDefault(markerGraphics._verticalOrigin, time, 0);
+    var horizontalOrigin = Property.getValueOrDefault(markerGraphics._horizontalOrigin, time, 0);
+    var pixelOffset = Property.getValueOrDefault(markerGraphics._pixelOffset, time, Cartesian2.ZERO);
 
     var iconOptions = {
         color: color.toCssColorString(),
@@ -336,9 +336,9 @@ LeafletGeomVisualizer.prototype._updateLabel = function(entity, time) {
     var font = Property.getValueOrDefault(labelGraphics._font, time, undefined);
     var scale = Property.getValueOrDefault(labelGraphics._scale, time, 1.0);
     var fillColor = Property.getValueOrDefault(labelGraphics._fillColor, time, defaultColor);
-    var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, undefined);
-    var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, undefined);
-    var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, new Cartesian2(0,0));
+    var verticalOrigin = Property.getValueOrDefault(labelGraphics._verticalOrigin, time, 0);
+    var horizontalOrigin = Property.getValueOrDefault(labelGraphics._horizontalOrigin, time, 0);
+    var pixelOffset = Property.getValueOrDefault(labelGraphics._pixelOffset, time, Cartesian2.ZERO);
 
     var iconOptions = {
         text: text,
@@ -519,10 +519,11 @@ LeafletGeomVisualizer.prototype.isDestroyed = function() {
 LeafletGeomVisualizer.prototype.destroy = function() {
     var entities = this._entitiesToVisualize.values;
     for (var i = entities.length - 1; i > -1; i--) {
-        entities[i]._geomLayer = undefined;
+        entities[i]._geomPoint = undefined;
         entities[i]._geomBillboard = undefined;
         entities[i]._geomLabel = undefined;
-        entities[i]._geomPoint = undefined;
+        entities[i]._geomPolyline = undefined;
+        entities[i]._geomPolygon = undefined;
     }
     this._entityCollection.collectionChanged.removeEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
     this._map.removeLayer(this._featureGroup);

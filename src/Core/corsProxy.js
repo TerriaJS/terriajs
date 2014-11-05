@@ -2,6 +2,8 @@
 
 /*global require,URI*/
 
+var defined = require('../../third_party/cesium/Source/Core/defined');
+
 var corsProxy = {
     getURL : function(resource, proxyFlag) {
         var flag = (proxyFlag === undefined) ? '' : '_' + proxyFlag + '/';
@@ -9,15 +11,6 @@ var corsProxy = {
     },
     proxyDomains : []
 };
-
-corsProxy.withCredentials = function(username, password) {
-    return {
-        getURL : function(resource) {
-            return '//' + username + ':' + password + '@' + window.location.host + corsProxy.getURL(resource);
-        }
-    };
-};
-
 
 corsProxy.shouldUseProxy = function(url) {
 
@@ -37,6 +30,10 @@ corsProxy.shouldUseProxy = function(url) {
 
 //Non CORS hosts we proxy to
 function proxyAllowedHost(host, domains) {
+    if (!defined(domains)) {
+        return false;
+    }
+
     host = host.toLowerCase();
     //check that host is from one of these domains
     for (var i = 0; i < domains.length; i++) {

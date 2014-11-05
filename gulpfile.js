@@ -31,7 +31,7 @@ var workerGlob = [
     '!./third_party/cesium/Source/Workers/transferTypedArrayTest.js',
     '!./third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
 ];
-var specGlob = './spec/*.js';
+var specGlob = './spec/**/*.js';
 
 
 // Create the build directory, because browserify flips out if the directory that might
@@ -77,8 +77,10 @@ gulp.task('lint', function(){
 });
 
 gulp.task('docs', function(){
-    return gulp.src('src/*.js')
-        .pipe(jsdoc('./public/doc'));
+    return gulp.src('src/**/*.js')
+        .pipe(jsdoc('./public/doc', undefined, {
+            plugins : ['plugins/markdown']
+        }));
 });
 
 gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper']);

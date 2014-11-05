@@ -89,9 +89,19 @@ if (cluster.isMaster) {
     /*jshint es3:false*/
 
     var express = require('express');
+    var fs = require('fs');
     var compression = require('compression');
     var request = require('request');
     var path = require('path');
+    var cors = require('cors');
+    var config = require('./config');
+    var formidable = require('formidable');
+    var ogr2ogr = require('ogr2ogr');
+    var mongoose = require('mongoose');
+    var proj4 = require('proj4');
+
+    //TODO: check if this loads the file into each core and if so then,
+    require('proj4js-defs/epsg')(proj4);
 
     var yargs = require('yargs').options({
         'port' : {
@@ -131,8 +141,11 @@ if (cluster.isMaster) {
 
     var app = express();
     app.use(compression());
+    app.use(cors());
     app.disable('etag');
     app.use(express.static(path.join(__dirname, 'public')));
+    app.set('dbUrl', config.db[app.settings.env]);
+    mongoose.connect(app.get('dbUrl'));
 
     var upstreamProxy = argv['upstream-proxy'];
     var bypassUpstreamProxyHosts = {};
@@ -142,6 +155,10 @@ if (cluster.isMaster) {
         });
     }
 
+    app.get('/ping', function(req, res){
+      res.send('OK');
+    });
+    
     app.get('/proxy/*', function(req, res, next) {
         // look for request like http://localhost:8080/proxy/http://example.com/file?query=1
         var remoteUrl = getRemoteUrlFromParam(req);
@@ -188,6 +205,88 @@ if (cluster.isMaster) {
             }
 
             res.send(code, body);
+        });
+    });
+
+    //provide REST service for proj4 definition strings
+    app.get('/proj4def/:crs', function(req, res, next) {
+        var crs = req.param('crs');
+        var epsg = proj4.defs[crs.toUpperCase()];
+        if (epsg !== undefined) {
+            res.status(200).send(epsg);
+        } else {
+            res.status(500).send('no proj4 definition');
+        }
+    });
+
+    // provide conversion to geojson service
+    // reguires install of gdal on server: sudo apt-get install gdal-bin
+    app.post('/convert', function(req, res, next) {
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+            var fname = files.input_file.name;
+            console.log('Converting', fname);
+            var hint = '';
+            //simple hint for now, might need to crack zip files going forward
+            if (fname.toLowerCase().indexOf('.zip') === fname.length-4) {
+                hint = 'shp';
+            }
+
+            var input = fs.createReadStream(files.input_file.path);
+            var ogr = ogr2ogr(input, hint)
+                            .skipfailures()
+                            .options(['-t_srs', 'EPSG:4326']);
+
+            ogr.exec(function (er, data) {
+                if (er) { 
+                    console.error(er);
+                }
+                if (data !== undefined) {
+                    res.status(200).send(JSON.stringify(data));
+                } else {
+                    res.status(500).send('Unable to convert data');
+                }
+            })
+        });
+    });
+
+    // define the visSchema
+    var NMSchema = new mongoose.Schema({
+        //set by server
+        date: String,      //use date type
+        //generated in viewer
+        version: String,
+        layers: String,    //change to Array
+        camera: String,    //change to Object
+        image_url: String,
+        thumb_url: String
+    });
+    
+    //'imagemagick' replace by create thumbnail in browser
+
+    //Share record storage
+    app.post('/upload', function(req, res, next) {
+    });
+
+    
+    app.get('/get/:id', function(req, res, next) {
+    });
+
+
+    //sample simple NM service
+    app.post('/nm_service_1', function(req, res, next) {
+        //receive the posted object
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+            //create a layer for NM to display
+            var obj = {
+                name: 'Bikes Available', 
+                type: 'DATA', 
+                proxy: false,
+                url: 'http://nationalmap.nicta.com.au/test/bike_racks.geojson'
+            };
+            //send a response with the object and display text
+            res.json({ displayHtml: 'Here are the available bike racks.', layer: obj});
         });
     });
 

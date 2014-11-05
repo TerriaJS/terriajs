@@ -725,6 +725,10 @@ a.ausglobe-title-menuItem:hover {
     border-bottom: 1px solid #9A9A9B;
 }
 
+.ausglobe-message-header {
+    border-bottom: 1px solid #9A9A9B;
+}
+
 .ausglobe-info-content {
     position: relative;
     overflow: auto;
@@ -732,7 +736,24 @@ a.ausglobe-title-menuItem:hover {
     padding: 15px;
 }
 
+.ausglobe-message-content {
+    position: relative;
+    overflow: auto;
+    height: 215px;
+    padding: 15px;
+}
+
 .ausglobe-info-close-button {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    cursor: pointer;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #0099CC;
+}
+
+.ausglobe-message-close-button {
     position: absolute;
     right: 10px;
     top: 4px;

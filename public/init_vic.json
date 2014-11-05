@@ -1,9 +1,73 @@
 {
-    "name": "Data Collections",
-    "Layer": [{
-        "name": "Victorian Government",
-        "type": "CKAN",
-        "base_url": "http://www.data.vic.gov.au/data",
-        "Layer": []
-    }]
+    "camera": {
+        "west": 140,
+        "south": -39,
+        "east": 150,
+        "north": -34
+    },
+    "services": [],
+    "catalog": [
+        {
+            "name": "Victorian Government",
+            "type": "ckan",
+            "url": "http://www.data.vic.gov.au/data",
+            "filterQuery": "res_format:wms",
+            "filterByWmsGetCapabilities": true,
+            "minimumMaxScaleDenominator": 1e10,
+            "blacklist": {
+                "Atmosphere & Climate": true,
+                "Vicmap Property layers": true,
+                "Vicmap Property datasets": true,
+
+                "Bioregional Conservation Status - Endangered (EVC_2005)": true,
+                "Native Vegetation - Modelled Extent 2005": true,
+                "Heathy Woodlands - Dry and/or better drained (EVC_2005)": true,
+                "Heathy Woodlands - Damp and/or less well-drained (EVC_2005)": true,
+                "Riparian Forests or Woodlands (EVC_2005)": true,
+                "Sub-alpine Grasslands, Shrublands or Woodlands - Shrublands or Grasslands (EVC_2005)": true,
+                "Montane Grasslands,  Shrublands or Woodlands - Woodlands (EVC_2005)": true,
+                "Plains Grasslands and Chenopod Shrublands - Clay soils (EVC_2005)": true,
+                "Plains Woodlands or Forests - Poorly-draining (EVC_2005)": true,
+                "Plains Woodlands or Forests - Lunettes or beach ridges or shallow sands (EVC_2005)": true,
+                "Herb-rich Woodlands - Alluvial terraces and/or creeklines (EVC_2005)": true,
+                "Herb-rich Woodlands - Damp Sands (EVC_2005)": true,
+                "Riparian Forests or Woodlands (EVC_2005)": true,
+                "Dry Forests - Exposed and/or lower altitude (EVC_2005)": true,
+                "Lower Slopes or Hills Woodlands - Seasonally inundated and/or shrubby (EVC_2005)": true,
+                "Mallee - Clay plains (EVC_2005)": true,
+                "Mallee - Sandstone ridges and rises (EVC_1750)": true,
+                "Vicmap Vegetation - Tree Density - Scattered": true,
+                "Vicmap Vegetation - Tree Density - Medium": true,
+                "Vicmap Vegetation - Tree Density - Dense": true,
+                "Vicmap Elevation - Contours": true,
+                "Vicmap Transport - Foot Bridges": true,
+                "Vicmap Transport - Highways": true,
+                "Vicmap Transport - Local Roads": true,
+                "Vicmap Transport - Tracks": true,
+                "Vicmap Transport - 4wd Tracks": true,
+                "Coal Seam and Haunted Hills Formation Floor": true,
+                "Coal Seam and Overburden Thickness": true,
+                "Seismic Survey Points": true,
+                "Vicmap Property Map Polygons": true,
+                "Vicmap Property Address Map Polygons": true,
+                "Vicmap Property Map Polygons": true,
+                "Vicmap Property Annotation Text": true,
+                "Alluvial mineralisation and mined alluvial workings line (1:100,00)": true,
+                "Borehole geology": true,
+                "Vicmap Elevation - Ground Type Sand": true,
+                "Vicmap Elevation - Ground Type Rock Outcrop": true,
+                "Tailings Licences - Expired": true,
+                "Geological polygons (1:100,000)": true,
+                "Geologically Significant Features": true,
+
+                "Statewide Landuse (1:100,000)": true,
+                "Vicmap Hydro - Watercourse Streams": true,
+                "Mallee - Calcareous dunefields (EVC_2005)": true,
+                "Coastal Scrubs Grasslands and Woodlands (EVC_2005)": true,
+                "Riparian Forests or Woodlands (EVC_1750)": true,
+                "Vicmap Transport - Road Network": true,
+                "Rainforests (EVC_2005)": true
+            }
+        }
+    ]
 }
