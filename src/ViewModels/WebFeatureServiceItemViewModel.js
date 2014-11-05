@@ -90,7 +90,7 @@ var WebFeatureServiceItemViewModel = function(application) {
             }
 
             if (this.dataUrlType === 'wfs') {
-                url = cleanUrl(url) + '?service=WFS&version=1.0.0&request=GetFeature&typeName=' + this.typeNames + '&srsName=EPSG%3A4326&maxFeatures=1000';
+                url = cleanUrl(url) + '?service=WFS&version=1.1.0&request=GetFeature&typeName=' + this.typeNames + '&srsName=EPSG%3A4326&maxFeatures=1000';
             }
 
             return url;
@@ -121,7 +121,7 @@ var WebFeatureServiceItemViewModel = function(application) {
                 return this._metadataUrl;
             }
 
-            return cleanUrl(this.url) + '?service=WFS&version=1.0.0&request=GetCapabilities';
+            return cleanUrl(this.url) + '?service=WFS&version=1.1.0&request=GetCapabilities';
         },
         set : function(value) {
             this._metadataUrl = value;
