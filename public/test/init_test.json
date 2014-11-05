@@ -144,12 +144,12 @@
                 },
                 {
                     "name": "data.gov.au",
-                    "base_url": "http://data.gov.au/geoserver/ows",
+                    "url": "http://data.gov.au/geoserver/ows",
                     "type": "wfs-getCapabilities"
                 },
                 {
                     "name": "Western Australia",
-                    "base_url": "http://www2.landgate.wa.gov.au/ows/wfspublic_4326/wfs",
+                    "url": "http://www2.landgate.wa.gov.au/ows/wfspublic_4326/wfs",
                     "type": "wfs-getCapabilities"
                 }
             ]

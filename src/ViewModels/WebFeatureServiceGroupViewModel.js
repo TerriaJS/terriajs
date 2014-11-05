@@ -13,7 +13,6 @@ var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer')
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -24,7 +23,8 @@ var inherit = require('../Core/inherit');
 var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var runLater = require('../Core/runLater');
-var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
+var unionRectangles = require('../Map/unionRectangles');
+var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel');
 
 /**
  * A {@link CatalogGroupViewModel} representing a collection of feature types from a Web Feature Service (WFS) server.
@@ -105,46 +105,42 @@ WebFeatureServiceGroupViewModel.prototype.load = function() {
 };
 
 function getCapabilities(viewModel) {
-    var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '?service=WFS&version=1.0.0&request=GetCapabilities';
+    var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '?service=WFS&version=1.1.0&request=GetCapabilities';
 
     return when(loadXML(url), function(xml) {
         var json = $.xml2json(xml);
 
-        var supportsJsonGetFeatureInfo = false;
+        var supportsJsonGetFeature = false;
 
-        if (defined(json.Capability.Request) &&
-            defined(json.Capability.Request.GetFeatureInfo) &&
-            defined(json.Capability.Request.GetFeatureInfo.Format)) {
-
-            var format = json.Capability.Request.GetFeatureInfo.Format;
-            if (format === 'application/json') {
-                supportsJsonGetFeatureInfo = true;
-            } else if (defined(format.indexOf) && format.indexOf('application/json') >= 0) {
-                supportsJsonGetFeatureInfo = true;
+        if (defined(json.OperationsMetadata)) {
+            var getFeatureOperation = findElementByName(json.OperationsMetadata.Operation, 'GetFeature');
+            if (defined(getFeatureOperation)) {
+                var outputFormatParameter = findElementByName(getFeatureOperation.Parameter, 'outputFormat');
+                if (defined(outputFormatParameter) && defined(outputFormatParameter.Value)) {
+                    supportsJsonGetFeature = outputFormatParameter.Value.indexOf('json') >= 0 ||
+                                             outputFormatParameter.Value.indexOf('JSON') >= 0 ||
+                                             outputFormatParameter.Value.indexOf('application/json') >= 0;
+                }
             }
         }
 
         var dataCustodian = viewModel.dataCustodian;
-        if (!defined(dataCustodian) && defined(json.Service.ContactInformation)) {
-            var contactInfo = json.Service.ContactInformation;
+        if (!defined(dataCustodian) && defined(json.ServiceProvider) && defined(json.ServiceProvider.ProviderName)) {
+            dataCustodian = json.ServiceProvider.ProviderName;
 
-            var text = '';
-
-            var primary = contactInfo.ContactPersonPrimary;
-            if (defined(primary)) {
-                if (defined(primary.ContactOrganization) && primary.ContactOrganization.length > 0) {
-                    text += primary.ContactOrganization + '<br/>';
-                }
+            if (defined(json.ServiceProvider.ProviderSite) && defined(json.ServiceProvider.ProviderSite.href)) {
+                dataCustodian = '[' + dataCustodian + '](' + json.ServiceProvider.ProviderSite.href + ')';
             }
 
-            if (defined(contactInfo.ContactElectronicMailAddress) && contactInfo.ContactElectronicMailAddress.length > 0) {
-                text += '[' + contactInfo.ContactElectronicMailAddress + '](mailto:' + contactInfo.ContactElectronicMailAddress + ')<br/>'; 
+            if (defined(json.ServiceProvider.ServiceContact) && defined(json.ServiceProvider.ServiceContact.Address) && defined(json.ServiceProvider.ServiceContact.Address.ElectronicMailAddress)) {
+                dataCustodian += '<br/>';
+                dataCustodian += '[' + json.ServiceProvider.ServiceContact.Address.ElectronicMailAddress + '](mailto:' + json.ServiceProvider.ServiceContact.Address.ElectronicMailAddress + ')<br/>'; 
             }
-
-            dataCustodian = text;
         }
 
-        addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
+        if (defined(json.FeatureTypeList)) {
+            addFeatureTypes(viewModel, json.FeatureTypeList.FeatureType, viewModel.items, undefined, supportsJsonGetFeature, dataCustodian);
+        }
     }, function(e) {
         viewModel.application.raiseEvent(new ViewModelError({
             title: 'Group is not available',
@@ -167,6 +163,20 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
     });
 }
 
+function findElementByName(list, name) {
+    if (!defined(list)) {
+        return undefined;
+    }
+
+    for (var i = 0; i < list.length; ++i) {
+        if (list[i].name === name) {
+            return list[i];
+        }
+    }
+
+    return undefined;
+}
+
 function cleanAndProxyUrl(application, url) {
     // Strip off the search portion of the URL
     var uri = new URI(url);
@@ -180,44 +190,30 @@ function cleanAndProxyUrl(application, url) {
     return cleanedUrl;
 }
 
-function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetFeatureInfo, dataCustodian) {
-    if (!(layers instanceof Array)) {
-        layers = [layers];
+function addFeatureTypes(viewModel, featureTypes, items, parent, supportsJsonGetFeature, dataCustodian) {
+    if (!(featureTypes instanceof Array)) {
+        featureTypes = [featureTypes];
     }
 
-    for (var i = 0; i < layers.length; ++i) {
-        var layer = layers[i];
-
-        // Record this layer's parent, so we can walk up the layer hierarchy looking for inherited properties.
-        layer.parent = parent;
-
-        if (defined(layer.Layer)) {
-            // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
-            // in the 'layers' parameter of a GetMap request.  This is true in 1.0.0 and 1.3.0 as well.
-            if (defined(layer.Name) && layer.Name.length > 0) {
-                items.push(createWfsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian));
-            }
-            addLayersRecursively(viewModel, layer.Layer, items, layer, supportsJsonGetFeatureInfo, dataCustodian);
-        }
-        else {
-            items.push(createWfsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian));
-        }
+    for (var i = 0; i < featureTypes.length; ++i) {
+        var featureType = featureTypes[i];
+        items.push(createWfsDataSource(viewModel, featureType, supportsJsonGetFeature, dataCustodian));
     }
 }
 
-function createWfsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian) {
-    var result = new WebMapServiceItemViewModel(viewModel.application);
+function createWfsDataSource(viewModel, featureType, supportsJsonGetFeature, dataCustodian) {
+    var result = new WebFeatureServiceItemViewModel(viewModel.application);
 
-    result.name = layer.Title;
-    result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;
+    result.name = featureType.Title;
+    result.description = defined(featureType.Abstract) && featureType.Abstract.length > 0 ? featureType.Abstract : viewModel.description;
     result.dataCustodian = dataCustodian;
     result.url = viewModel.url;
-    result.layers = layer.Name;
+    result.typeNames = featureType.Name;
 
     result.description = '';
 
     var viewModelHasDescription = defined(viewModel.description) && viewModel.description.length > 0;
-    var layerHasAbstract = defined(layer.Abstract) && layer.Abstract.length > 0;
+    var layerHasAbstract = defined(featureType.Abstract) && featureType.Abstract.length > 0;
 
     if (viewModelHasDescription) {
         result.description += viewModel.description;
@@ -228,78 +224,50 @@ function createWfsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataC
     }
 
     if (layerHasAbstract) {
-        result.description += layer.Abstract;
+        result.description += featureType.Abstract;
     }
 
+    result.requestGeoJson = supportsJsonGetFeature;
+    result.requestGml = true;
 
-    var queryable = defaultValue(getInheritableProperty(layer, 'queryable'), false);
+    var boundingBoxes = featureType.WGS84BoundingBox;
 
-    result.getFeatureInfoAsGeoJson = queryable && supportsJsonGetFeatureInfo;
-    result.getFeatureInfoAsXml = queryable;
-
-    var egbb = getInheritableProperty(layer, 'EX_GeographicBoundingBox'); // required in WMS 1.3.0
-    if (defined(egbb)) {
-        result.rectangle = Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
-    } else {
-        var llbb = getInheritableProperty(layer, 'LatLonBoundingBox'); // required in WMS 1.0.0 through 1.1.1
-        if (defined(llbb)) {
-            result.rectangle = Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
+    var rectangle;
+    if (boundingBoxes instanceof Array) {
+        rectangle = wgs84BoundingBoxToRectangle(boundingBoxes[0]);
+        for (var i = 1; i < boundingBoxes.length; ++i) {
+            rectangle = unionRectangles(rectangle, wgs84BoundingBoxToRectangle(boundingBoxes[i]));
         }
-    }
-
-    var crs;
-    if (defined(layer.CRS)) {
-        crs = layer.CRS;
+    } else if (defined(boundingBoxes)) {
+        rectangle = wgs84BoundingBoxToRectangle(boundingBoxes);
     } else {
-        crs = layer.SRS;
+        rectangle = Rectangle.MAX_VALUE;
     }
 
-    if (defined(crs)) {
-        if (crsIsMatch(crs, 'EPSG:4326')) {
-            // Standard Geographic
-        } else if (crsIsMatch(crs, 'CRS:84')) {
-            // Another name for EPSG:4326
-            result.parameters = {srs: 'CRS:84'};
-        } else if (crsIsMatch(crs, 'EPSG:4283')) {
-            // Australian system that is equivalent to EPSG:4326.
-            result.parameters = {srs: 'EPSG:4283'};
-        } else if (crsIsMatch(crs, 'EPSG:3857')) {
-            // Standard Web Mercator
-            result.tilingScheme = new WebMercatorTilingScheme();
-        } else if (crsIsMatch(crs, 'EPSG:900913')) {
-            // Older code for Web Mercator
-            result.tilingScheme = new WebMercatorTilingScheme();
-            result.parameters = {srs: 'EPSG:900913'};
-        } else {
-            // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
-        }
-    }
-
+    result.rectangle = rectangle;
 
     return result;
 }
 
-function crsIsMatch(crs, matchValue) {
-    if (crs === matchValue) {
-        return true;
+function wgs84BoundingBoxToRectangle(boundingBox) {
+    if (!defined(boundingBox)) {
+        return Rectangle.MAX_VALUE;
     }
 
-    if (crs instanceof Array && crs.indexOf(matchValue) >= 0) {
-        return true;
+    var lowerCorner = boundingBox.LowerCorner;
+    var upperCorner = boundingBox.UpperCorner;
+    if (!defined(lowerCorner) || !defined(upperCorner)) {
+        return Rectangle.MAX_VALUE;
     }
 
-     return false;
+    var lowerCoordinates = lowerCorner.split(' ');
+    var upperCoordinates = upperCorner.split(' ');
+    if (lowerCoordinates.length !== 2 || upperCoordinates.length !== 2) {
+        return Rectangle.MAX_VALUE;
+    }
+
+    return Rectangle.fromDegrees(lowerCoordinates[0], lowerCoordinates[1], upperCoordinates[0], upperCoordinates[1]);
 }
 
-function getInheritableProperty(layer, name) {
-    while (defined(layer)) {
-        if (defined(layer[name])) {
-            return layer[name];
-        }
-        layer = layer.parent;
-    }
-
-    return undefined;
-}
 
 module.exports = WebFeatureServiceGroupViewModel;
