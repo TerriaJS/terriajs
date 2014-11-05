@@ -115,6 +115,7 @@ defineProperties(CsvItemViewModel.prototype, {
     }
 });
 
+
 /**
  * Processes the CSV data supplied via the {@link CsvItemViewModel#data} property.  If
  * {@link CsvItemViewModel#data} is undefined, this method downloads CSV data from 
