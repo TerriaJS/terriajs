@@ -26,7 +26,7 @@ var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var runLater = require('../Core/runLater');
-var xmlToGeoJson = require('../Map/xmlToGeoJson');
+var gmlToGeoJson = require('../Map/gmlToGeoJson');
 
 /**
  * A {@link ImageryLayerItemViewModel} representing a layer from a Web Map Service (WMS) server.
@@ -296,7 +296,7 @@ function loadGeoJson(viewModel) {
 
 function loadGml(viewModel) {
     return loadXML(buildGmlUrl(viewModel)).then(function(xml) {
-        return xmlToGeoJson(xml);
+        return gmlToGeoJson(xml);
     });
 }
 
