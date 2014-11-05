@@ -2,7 +2,7 @@
 
 /*global require,$*/
 
-function xmlToGeoJson(xml) {
+function gmlToGeoJson(xml) {
     var json = $.xml2json(xml);
 
     var newObj = {type: "FeatureCollection", crs: {"type":"EPSG","properties":{"code":"4326"}}, features: []};
@@ -67,4 +67,4 @@ function gml2coord(posList) {
     return coords;
 }
 
-module.exports = xmlToGeoJson;
+module.exports = gmlToGeoJson;
