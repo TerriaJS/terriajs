@@ -142,9 +142,9 @@ defineProperties(CkanGroupViewModel.prototype, {
 CkanGroupViewModel.defaultSerializers = clone(CatalogGroupViewModel.defaultSerializers);
 
 CkanGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
-    // Only serialize toggles in contained items, because other properties are loaded from CKAN.
-    var previousSerializeTogglesOnly = options.serializeTogglesOnly;
-    options.serializeTogglesOnly = true;
+    // Only serialize minimal properties in contained items, because other properties are loaded from CKAN.
+    var previousSerializeForSharing = options.serializeForSharing;
+    options.serializeForSharing = true;
 
     // Only serlize enabled items as well.  This isn't quite right - ideally we'd serialize any
     // property of any item if the property's value is changed from what was loaded from CKAN -
@@ -156,7 +156,7 @@ CkanGroupViewModel.defaultSerializers.items = function(viewModel, json, property
     CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
-    options.serializeTogglesOnly = previousSerializeTogglesOnly;
+    options.serializeForSharing = previousSerializeForSharing;
 };
 
 CkanGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};

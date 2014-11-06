@@ -105,6 +105,18 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
         get : function() {
             return ImageryLayerItemViewModel.defaultSerializers;
         }
+    },
+
+    /**
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMemberViewModel#serializeToJson} is called
+     * and the `serializeForSharing` flag is set in the options.
+     * @memberOf ImageryLayerItemViewModel.prototype
+     * @type {String[]}
+     */
+    propertiesForSharing : {
+        get : function() {
+            return ImageryLayerItemViewModel.defaultPropertiesForSharing;
+        }
     }
 });
 
@@ -113,6 +125,16 @@ freezeObject(ImageryLayerItemViewModel.defaultUpdaters);
 
 ImageryLayerItemViewModel.defaultSerializers = clone(CatalogItemViewModel.defaultSerializers);
 freezeObject(ImageryLayerItemViewModel.defaultSerializers);
+
+/**
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItemViewModel}-derived object with the
+ * `serializeForSharing` flag set in the options.
+ * @type {String[]}
+ */
+ImageryLayerItemViewModel.defaultPropertiesForSharing = clone(CatalogItemViewModel.defaultPropertiesForSharing);
+ImageryLayerItemViewModel.defaultPropertiesForSharing.push('opacity');
+
+freezeObject(ImageryLayerItemViewModel.defaultPropertiesForSharing);
 
 ImageryLayerItemViewModel.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {

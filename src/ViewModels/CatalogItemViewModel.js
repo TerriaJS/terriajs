@@ -236,6 +236,18 @@ defineProperties(CatalogItemViewModel.prototype, {
         get : function() {
             return CatalogItemViewModel.defaultSerializers;
         }
+    },
+
+    /**
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMemberViewModel#serializeToJson} is called
+     * and the `serializeForSharing` flag is set in the options.
+     * @memberOf CatalogItemViewModel.prototype
+     * @type {String[]}
+     */
+    propertiesForSharing : {
+        get : function() {
+            return CatalogItemViewModel.defaultPropertiesForSharing;
+        }
     }
 });
 
@@ -285,6 +297,19 @@ CatalogItemViewModel.defaultSerializers.rectangle = function(viewModel, json, pr
 };
 
 freezeObject(CatalogItemViewModel.defaultSerializers);
+
+/**
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItemViewModel}-derived object with the
+ * `serializeForSharing` flag set in the options.
+ * @type {String[]}
+ */
+CatalogItemViewModel.defaultPropertiesForSharing = clone(CatalogMemberViewModel.defaultPropertiesForSharing);
+CatalogItemViewModel.defaultPropertiesForSharing.push('isEnabled');
+CatalogItemViewModel.defaultPropertiesForSharing.push('isShown');
+CatalogItemViewModel.defaultPropertiesForSharing.push('isLegendVisible');
+CatalogItemViewModel.defaultPropertiesForSharing.push('nowViewingIndex');
+
+freezeObject(CatalogItemViewModel.defaultPropertiesForSharing);
 
 /**
  * When implemented in a derived class, loads this data item it is not already loaded.  It is safe to
