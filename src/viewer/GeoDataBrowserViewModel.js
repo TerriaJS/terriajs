@@ -341,6 +341,10 @@ these extensions in order for National Map to know how to load it.'
     });
 
     function ogrConversionService(file) {
+        if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
+            return false;
+        }
+
         file.convertAttempted = true;
         if (file.size < 1000000) {
             //TODO: check against list of support extensions to avoid unnecessary forwarding?
@@ -350,23 +354,19 @@ these extensions in order for National Map to know how to load it.'
             var formData = new FormData();
             formData.append('input_file', file);
 
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        file.json = JSON.parse(xhr.responseText);
-                        file.newName =  file.name + '.geojson';
-                    } else {
-                        console.log('Unable to convert', file.name);
-                    }                  
-                    addFile(file);
-                 }
-            };
-            //TODO: figure out right way to get host address
-            var url = 'http://localhost/convert';
- //           var url = 'http://nationalmap.nicta.com.au/convert';
-            xhr.open('POST', url);
-            xhr.send(formData);
+            loadWithXhr({
+                url : 'http://localhost/convert',
+                method : 'POST',
+                data : formData
+            }).then(function(response) {
+                file.json = JSON.parse(response);
+                file.newName =  file.name + '.geojson';
+                addFile(file);
+            }).otherwise(function() {
+                console.log('Unable to convert', file.name);
+                addFile(file);
+            });
+
             console.log('Attempting to convert file via our ogrservice');
             return true;
         }

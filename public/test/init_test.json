@@ -68,6 +68,11 @@
                             "url": "test/sample.gpx"
                         },
                         {
+                            "name": "Airports",
+                            "type": "ogr",
+                            "url": "test/aircraftfacilitypoints.zip"
+                        },
+                        {
                             "name": "Ferry Routes (GeoJSON via WFS)",
                             "type": "wfs",
                             "url": "http://www.ga.gov.au/gis/services/topography/Australian_Topography/MapServer/WFSServer",
