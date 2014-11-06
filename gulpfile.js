@@ -71,7 +71,7 @@ gulp.task('watch-specs', ['prepare-cesium'], function() {
 gulp.task('watch', ['watch-app', 'watch-specs']);
 
 gulp.task('lint', function(){
-    return gulp.src('src/**/*.js')
+    return gulp.src(['src/**/*.js', 'spec/**/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
