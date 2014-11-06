@@ -137,6 +137,13 @@ Please select a file or service type from the drop-down list before clicking the
             ga('send', 'event', 'addDataUrl', 'File', that.addDataUrl);
 
             newViewModel = createCatalogItemFromUrl(that.addDataUrl, that.catalog.application);
+            if (newViewModel.type === 'ogr' ) {
+                    //TODO: popup message with buttons
+                if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
+                    return;
+                }
+            }
+
             if (!defined(newViewModel)) {
                 var message2 = new PopupMessage({
                     container : document.body,
@@ -340,47 +347,16 @@ these extensions in order for National Map to know how to load it.'
         }
     });
 
-    function ogrConversionService(file) {
-        if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
-            return false;
-        }
-
-        file.convertAttempted = true;
-        if (file.size < 1000000) {
-            //TODO: check against list of support extensions to avoid unnecessary forwarding?
-            //TODO: need to confirm with user??
-
-            // generate form to submit file for conversion
-            var formData = new FormData();
-            formData.append('input_file', file);
-
-            loadWithXhr({
-                url : 'http://localhost/convert',
-                method : 'POST',
-                data : formData
-            }).then(function(response) {
-                file.json = JSON.parse(response);
-                file.newName =  file.name + '.geojson';
-                addFile(file);
-            }).otherwise(function() {
-                console.log('Unable to convert', file.name);
-                addFile(file);
-            });
-
-            console.log('Attempting to convert file via our ogrservice');
-            return true;
-        }
-        return false;
-    }
-
     function addFile(file) {
         var name = file.newName || file.name;
         var newViewModel = createCatalogItemFromUrl(name, that.catalog.application);
-        if (!defined(newViewModel) && !defined(file.convertAttempted)) {
-            if (ogrConversionService(file)) {
+        if (newViewModel.type === 'ogr' ) {
+                //TODO: popup message with buttons
+            if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
                 return;
             }
         }
+
         if (!defined(newViewModel)) {
             var message2 = new PopupMessage({
                 container : document.body,

@@ -31,7 +31,7 @@ var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('wfs', WebFeatureServiceItemViewModel);
     createCatalogMemberFromType.register('wfs-getCapabilities', WebFeatureServiceGroupViewModel);
     createCatalogMemberFromType.register('gpx', GpxItemViewModel);
-//    createCatalogMemberFromType.register('ogr', OgrItemViewModel);
+    createCatalogMemberFromType.register('ogr', OgrItemViewModel);
 
     createCatalogItemFromUrl.register(matchesExtension('czm'), CzmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('czml'), CzmlItemViewModel);
@@ -42,7 +42,7 @@ var registerCatalogViewModels = function() {
     createCatalogItemFromUrl.register(matchesExtension('kmz'), KmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('csv'), CsvItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('gpx'), GpxItemViewModel);
-//    createCatalogItemFromUrl.register(matchesExtension('*'), OgrItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('*'), OgrItemViewModel);
 };
 
 function matchesExtension(extension) {

@@ -19,6 +19,7 @@ var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
 var readXml = require('../Core/readXml');
 var runLater = require('../Core/runLater');
+var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
 var readText = require('../Core/readText');
@@ -76,7 +77,7 @@ defineProperties(OgrItemViewModel.prototype, {
      */
     type : {
         get : function() {
-            return 'gpx';
+            return 'ogr';
         }
     },
 
@@ -87,7 +88,7 @@ defineProperties(OgrItemViewModel.prototype, {
      */
     typeName : {
         get : function() {
-            return 'GPX';
+            return 'OGR';
         }
     },
 
@@ -128,16 +129,9 @@ OgrItemViewModel.prototype.load = function() {
 
         if (defined(that.data)) {
             when(that.data, function(data) {
-                var promise;
                 if (data instanceof Blob) {
-                    promise = readText(data);
-                } else {
-                    promise = data;
+                    loadOgrData(that, data);
                 }
-
-                when(promise, function(text) {
-                    loadOgrText(that, text);
-                });
             });
         } else {
             loadText(proxyUrl(that, that.url)).then(function(text) {
@@ -182,10 +176,32 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function loadOgrText(viewModel, text) {
+function loadOgrData(viewModel, file) {
 
-    var dom = (new DOMParser()).parseFromString(text, 'text/xml');    
-    var geojson = toGeoJSON.gpx(dom);
+    if (file.size > 1000000) {
+        errorLoading(viewModel);
+        return;
+    }
+
+    // generate form to submit file for conversion
+    var formData = new FormData();
+    formData.append('input_file', file);
+
+    loadWithXhr({
+        url : 'http://localhost/convert',
+        method : 'POST',
+        data : formData
+    }).then(function(response) {
+        loadGeoJsonText(viewModel, JSON.parse(response));
+    }).otherwise(function() {
+        errorLoading(viewModel);
+    });
+
+    console.log('Attempting to convert file via our ogrservice');
+}
+
+
+function loadGeoJsonText(viewModel, geojson) {
 
     viewModel._geoJsonViewModel.data = geojson;
 
@@ -203,9 +219,9 @@ function loadOgrText(viewModel, text) {
 function errorLoading(viewModel) {
     viewModel.application.error.raiseEvent(new ViewModelError({
         sender: viewModel,
-        title: 'Error loading GPX',
+        title: 'Error converting file',
         message: '\
-An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it \
+An error occurred while attempting to convert file.  This may indicate that the file is invalid or that it \
 is not supported by National Map.  If you would like assistance or further information, please email us \
 at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
     }));
