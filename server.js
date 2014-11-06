@@ -224,6 +224,7 @@ if (cluster.isMaster) {
     app.post('/convert', function(req, res, next) {
         var form = new formidable.IncomingForm();
         form.parse(req, function(err, fields, files) {
+            //TODO: handle url case
             var fname = files.input_file.name;
             console.log('Converting', fname);
             var hint = '';

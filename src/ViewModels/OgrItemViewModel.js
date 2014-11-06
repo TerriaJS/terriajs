@@ -129,16 +129,18 @@ OgrItemViewModel.prototype.load = function() {
 
         if (defined(that.data)) {
             when(that.data, function(data) {
-                if (data instanceof Blob) {
-                    loadOgrData(that, data);
+                if (!(data instanceof Blob)) {
+                    //create a file blob
+                    data = new Blob([data], {
+                        type : 'text/html', 
+                        name: that.dataSourceUrl, 
+                        lastModifiedDate: new Date()
+                    });
                 }
+                loadOgrData(that, data);
             });
         } else {
-            loadText(proxyUrl(that, that.url)).then(function(text) {
-                loadOgrText(that, text);
-            }).otherwise(function() {
-                errorLoading(that);
-            });
+            loadOgrData(that, undefined, that.url);
         }
     });
 };
@@ -176,16 +178,19 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function loadOgrData(viewModel, file) {
-
-    if (file.size > 1000000) {
-        errorLoading(viewModel);
-        return;
-    }
+function loadOgrData(viewModel, file, url) {
 
     // generate form to submit file for conversion
     var formData = new FormData();
-    formData.append('input_file', file);
+    if (defined(file)) {
+        if (file.size > 1000000) {
+            errorLoading(viewModel);
+            return;
+        }
+        formData.append('input_file', file);
+    } else if (defined(url)) {
+        formData.append('input_url', url);
+    }
 
     loadWithXhr({
         url : 'http://localhost/convert',
