@@ -214,7 +214,7 @@ function geocode(viewModel) {
         latitudeDegrees = center.lat;
     }
 
-    var promise = jsonp(viewModel._url + 'REST/v1/Locations?userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
+    var promise = jsonp(viewModel._url + 'REST/v1/Locations?culture=en-AU&userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
         parameters : {
             query : query,
             key : viewModel._key
