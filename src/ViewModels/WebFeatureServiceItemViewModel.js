@@ -248,6 +248,7 @@ WebFeatureServiceItemViewModel.prototype.load = function() {
         var subscription = knockout.getObservable(that._geoJsonViewModel, 'isLoading').subscribe(function(newValue) {
             if (newValue === false) {
                 subscription.dispose();
+                that.rectangle = that._geoJsonViewModel.rectangle;
                 that.isLoading = false;
             }
         });

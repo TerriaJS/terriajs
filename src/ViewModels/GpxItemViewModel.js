@@ -7,7 +7,6 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
@@ -21,7 +20,7 @@ var inherit = require('../Core/inherit');
 var readXml = require('../Core/readXml');
 var runLater = require('../Core/runLater');
 
-var GeoJsonDataSource = require('../../third_party/cesium/Source/DataSources/GeoJsonDataSource');
+var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
 var readText = require('../Core/readText');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
 
@@ -39,7 +38,7 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var GpxItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
-    this._gpxDataSource = undefined;
+    this._geoJsonViewModel = undefined;
     this._loadedUrl = undefined;
     this._loadedData = undefined;
 
@@ -120,9 +119,7 @@ GpxItemViewModel.prototype.load = function() {
     }
 
     this.isLoading = true;
-
-    var dataSource = new GeoJsonDataSource();
-    this._gpxDataSource = dataSource;
+    this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
 
     var that = this;
     runLater(function() {
@@ -153,36 +150,29 @@ GpxItemViewModel.prototype.load = function() {
 };
 
 GpxItemViewModel.prototype._enable = function() {
+    if (defined(this._geoJsonViewModel)) {
+        this._geoJsonViewModel._enable();
+    }
 };
 
 GpxItemViewModel.prototype._disable = function() {
+    if (defined(this._geoJsonViewModel)) {
+        this._geoJsonViewModel._disable();
+    }
 };
 
 GpxItemViewModel.prototype._show = function() {
-    if (!defined(this._gpxDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
+    if (defined(this._geoJsonViewModel)) {
+        this._geoJsonViewModel._show();
     }
-
-    var dataSources = this.application.dataSources;
-    if (dataSources.contains(this._gpxDataSource)) {
-        throw new DeveloperError('This data source is already shown.');
-    }
-
-    dataSources.add(this._gpxDataSource);
 };
 
 GpxItemViewModel.prototype._hide = function() {
-    if (!defined(this._gpxDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
+    if (defined(this._geoJsonViewModel)) {
+        this._geoJsonViewModel._hide();
     }
-
-    var dataSources = this.application.dataSources;
-    if (!dataSources.contains(this._gpxDataSource)) {
-        throw new DeveloperError('This data source is not shown.');
-    }
-
-    dataSources.remove(this._gpxDataSource, false);
 };
+
 
 function proxyUrl(application, url) {
     if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
@@ -197,16 +187,17 @@ function loadGpxText(viewModel, text) {
     var dom = (new DOMParser()).parseFromString(text, 'text/xml');    
     var geojson = toGeoJSON.gpx(dom);
 
-    viewModel._gpxDataSource.load(geojson, proxyUrl(viewModel, viewModel.dataSourceUrl)).then(function() {
-        doneLoading(viewModel);
-    }).otherwise(function() {
-        errorLoading(viewModel);
-    });
-}
+    viewModel._geoJsonViewModel.data = geojson;
 
-function doneLoading(viewModel) {
-    viewModel.clock = viewModel._gpxDataSource.clock;
-    viewModel.isLoading = false;
+    var subscription = knockout.getObservable(viewModel._geoJsonViewModel, 'isLoading').subscribe(function(newValue) {
+        if (newValue === false) {
+            subscription.dispose();
+            viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
+            viewModel.isLoading = false;
+        }
+    });
+
+    viewModel._geoJsonViewModel.load();
 }
 
 function errorLoading(viewModel) {
@@ -223,7 +214,7 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     viewModel._loadedData = undefined;
     viewModel.isEnabled = false;
     viewModel.isLoading = false;
-    viewModel._gpxDataSource = undefined;
+    viewModel._geoJsonViewModel = undefined;
 }
 
 module.exports = GpxItemViewModel;
