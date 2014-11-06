@@ -33,5 +33,5 @@ describe('unionRectangles', function() {
         var result = unionRectangles(rectangle1, rectangle2, output);
         expect(result).toBe(output);
         expect(result).toEqual(new Rectangle(-1.0, 0.9, 1.3, 1.4));
-    })
+    });
 });
