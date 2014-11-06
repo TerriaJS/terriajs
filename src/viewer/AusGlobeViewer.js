@@ -162,7 +162,7 @@ var AusGlobeViewer = function(application, initialCamera) {
                         var enabledAndOpenedCatalog = that.application.catalog.serializeToJson({
                             enabledItemsOnly: true,
                             skipItemsWithLocalData: true,
-                            serializeTogglesOnly: true,
+                            serializeForSharing: true,
                         });
                         if (enabledAndOpenedCatalog.length > 0) {
                             initSources.push({

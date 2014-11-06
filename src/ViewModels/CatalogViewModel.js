@@ -149,9 +149,10 @@ CatalogViewModel.prototype.updateFromJson = function(json, options) {
  * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
  *        if options.skipItemsWithLocalData is false.
- * @param {Boolean} [options.serializeTogglesOnly=false] true to only serialize toggle properties such as {@link CatalogGroupViewModel#isOpen}, and
- *                  {@link CatalogItemViewModel#isEnabled}, and {@link CatalogItemViewModel#isLegendVisible}, rather than serializing all properties needed to completely
- *                  recreate the catalog.
+ * @param {Boolean} [options.serializeForSharing=false] true to only serialize properties that are typically necessary for sharing this member
+ *                                                      with other users, such as {@link CatalogGroupViewModel#isOpen}, {@link CatalogItemViewModel#isEnabled},
+ *                                                      {@link CatalogItemViewModel#isLegendVisible}, and {@link ImageryLayerViewModel#opacity},
+ *                                                      rather than serializing all properties needed to completely recreate the catalog.
  * @param {Boolean} [options.userSuppliedOnly=false] true to only serialize catalog members (and their containing groups) that have been identified as having been
  *                  supplied by the user ({@link CatalogMemberViewModel#isUserSupplied} is true); false to serialize all catalog members.
  * @return {Object} The serialized JSON object-literal.

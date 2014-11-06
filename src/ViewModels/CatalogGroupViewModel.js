@@ -122,6 +122,18 @@ defineProperties(CatalogGroupViewModel.prototype, {
         get : function() {
             return CatalogGroupViewModel.defaultSerializers;
         }
+    },
+
+    /**
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMemberViewModel#serializeToJson} is called
+     * and the `serializeForSharing` flag is set in the options.
+     * @memberOf CatalogGroupViewModel.prototype
+     * @type {String[]}
+     */
+    propertiesForSharing : {
+        get : function() {
+            return CatalogGroupViewModel.defaultPropertiesForSharing;
+        }
     }
 });
 
@@ -195,6 +207,17 @@ CatalogGroupViewModel.defaultSerializers.items = function(viewModel, json, prope
 CatalogGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
 freezeObject(CatalogGroupViewModel.defaultSerializers);
+
+/**
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItemViewModel}-derived object with the
+ * `serializeForSharing` flag set in the options.
+ * @type {String[]}
+ */
+CatalogGroupViewModel.defaultPropertiesForSharing = clone(CatalogMemberViewModel.defaultPropertiesForSharing);
+CatalogGroupViewModel.defaultPropertiesForSharing.push('items');
+CatalogGroupViewModel.defaultPropertiesForSharing.push('isOpened');
+
+freezeObject(CatalogGroupViewModel.defaultPropertiesForSharing);
 
 /**
  * When implemented in a derived class, loads the contents of this group, if the contents are not already loaded.  It is safe to
