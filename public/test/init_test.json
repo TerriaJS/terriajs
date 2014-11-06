@@ -63,6 +63,17 @@
                             "url": "test/vic_police.kmz"
                         },
                         {
+                            "name": "Route in England (GPX)",
+                            "type": "gpx",
+                            "url": "test/sample.gpx"
+                        },
+                        {
+                            "name": "Ferry Routes (GeoJSON via WFS)",
+                            "type": "wfs",
+                            "url": "http://www.ga.gov.au/gis/services/topography/Australian_Topography/MapServer/WFSServer",
+                            "typeNames": "topography_Australian_Topography:Ferry_Routes"
+                        },
+                        {
                             "name": "SEIFA 2011 (POA)",
                             "type": "csv",
                             "url": "test/SEIFA_POA_2011.csv",
