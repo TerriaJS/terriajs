@@ -229,6 +229,9 @@ if (cluster.isMaster) {
 
             if (fields.input_url !== undefined) {
                 fpath = fields.input_url;
+                if (fpath.indexOf('http') !== 0 && fpath.indexOf('public') !== 0) {
+                    fpath = 'public/' + fpath;
+                }
                 fname = fpath;
             } else if (files.input_file !== undefined) {
                 if (files.input_file.size <= maxSize) {

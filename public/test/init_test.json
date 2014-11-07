@@ -70,7 +70,7 @@
                         {
                             "name": "Airports",
                             "type": "ogr",
-                            "url": "test/aircraftfacilitypoints.zip"
+                            "url": "test/airports.zip"
                         },
                         {
                             "name": "Ferry Routes (GeoJSON via WFS)",
