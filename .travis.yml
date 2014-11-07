@@ -12,6 +12,7 @@ deploy:
   local-dir: public
   acl: public_read
   region: ap-southeast-2
+  endpoint: s3-ap-southeast-2.amazonaws.com
   skip_cleanup: true
   on:
     repo: NICTA/nationalmap
