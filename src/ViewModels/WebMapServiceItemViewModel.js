@@ -255,9 +255,9 @@ WebMapServiceItemViewModel.defaultSerializers.tilingScheme = function(viewModel,
     if (viewModel.tilingScheme instanceof GeographicTilingScheme) {
         json.tilingScheme = 'geographic';
     } else if (viewModel.tilingScheme instanceof WebMercatorTilingScheme) {
-        json.tilingScheme = 'web-mercator'
+        json.tilingScheme = 'web-mercator';
     } else {
-        json.tilingScheme = tilingScheme;
+        json.tilingScheme = viewModel.tilingScheme;
     }
 };
 freezeObject(WebMapServiceItemViewModel.defaultSerializers);
