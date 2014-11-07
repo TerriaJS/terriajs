@@ -11,4 +11,4 @@ addons:
       secure: bZaE6jTmJ535UpEtNISbIpGcmifIeo8R5MktTJQ0Rnw3OwJjPEWl5r44r5Vf5sKjg846nYqI+HVRAw9876nAaGvytjfkhUJJJ7cIGtFN7fmEXemsJcRbg8bA6aOXQVpNo7+x8GidcD/GSNlUFpUZkanJySKP1qnE78luqr8PkCo=
     bucket: nationalmap-build-artifacts
     paths:
-    - $(find public | tr "\n" ":")
+    - public/
