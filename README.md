@@ -1,5 +1,8 @@
+
 National Map
 ============
+
+[![Build Status](https://travis-ci.org/NICTA/nationalmap.svg?branch=master)](https://travis-ci.org/NICTA/nationalmap)
 
 The [National Map](http://nationalmap.nicta.com.au) is a website for map-based access to Australian spatial data from government agencies. The current version of the National Map is a "beta" service and we will be making lots of changes while we experiment with how users want to use the site and the data services. Later in 2014, it will become a fully supported stable "production" site. The site is being made available in time for [govhack 2014](http://govhack.org/) to help developers access data through the National Map and also to build new value-add applications which extend its functionality.
 
