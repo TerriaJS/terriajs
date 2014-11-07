@@ -10,11 +10,13 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
+var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
@@ -221,6 +223,17 @@ defineProperties(WebMapServiceItemViewModel.prototype, {
 });
 
 WebMapServiceItemViewModel.defaultUpdaters = clone(ImageryLayerItemViewModel.defaultUpdaters);
+
+WebMapServiceItemViewModel.defaultUpdaters.tilingScheme = function(viewModel, json, propertyName, options) {
+    if (json.tilingScheme === 'geographic') {
+        viewModel.tilingScheme = new GeographicTilingScheme();
+    } else if (json.tilingScheme === 'web-mercator') {
+        viewModel.tilingScheme = new WebMercatorTilingScheme();
+    } else {
+        viewModel.tilingScheme = json.tilingScheme;
+    }
+};
+
 freezeObject(WebMapServiceItemViewModel.defaultUpdaters);
 
 WebMapServiceItemViewModel.defaultSerializers = clone(ImageryLayerItemViewModel.defaultSerializers);
@@ -238,7 +251,15 @@ WebMapServiceItemViewModel.defaultSerializers.metadataUrl = function(viewModel, 
 WebMapServiceItemViewModel.defaultSerializers.legendUrl = function(viewModel, json, propertyName) {
     json.legendUrl = viewModel._legendUrl;
 };
-
+WebMapServiceItemViewModel.defaultSerializers.tilingScheme = function(viewModel, json, propertyName) {
+    if (viewModel.tilingScheme instanceof GeographicTilingScheme) {
+        json.tilingScheme = 'geographic';
+    } else if (viewModel.tilingScheme instanceof WebMercatorTilingScheme) {
+        json.tilingScheme = 'web-mercator'
+    } else {
+        json.tilingScheme = tilingScheme;
+    }
+};
 freezeObject(WebMapServiceItemViewModel.defaultSerializers);
 
 WebMapServiceItemViewModel.prototype._enableInCesium = function() {
