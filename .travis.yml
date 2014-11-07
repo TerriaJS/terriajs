@@ -1,5 +1,14 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 script:
-  - gulp lint docs release
+- gulp lint docs release
+addons:
+  artifacts:
+    key:
+      secure: c05KlnnQ8r4ciWRcj2BLWsazDyTFYyD/+933n8pI989H1y8TZkcdaLx/czRLqttYX2farZ2NRQ7jEx0ZBCSmgn7MEIBnIsr+kVt/iv3C2zgeyQZ6B/sCCofHSaPRLI6zrSErtZSlLNnFKCcWc3q7LJ7RZfh04N9ZP8Si4xtcgeg=
+    secret:
+      secure: bZaE6jTmJ535UpEtNISbIpGcmifIeo8R5MktTJQ0Rnw3OwJjPEWl5r44r5Vf5sKjg846nYqI+HVRAw9876nAaGvytjfkhUJJJ7cIGtFN7fmEXemsJcRbg8bA6aOXQVpNo7+x8GidcD/GSNlUFpUZkanJySKP1qnE78luqr8PkCo=
+    bucket: nationalmap-build-artifacts
+    paths:
+    - $(ls -R public/ | tr "\n" ":")
