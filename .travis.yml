@@ -10,6 +10,7 @@ deploy:
     secure: Q3E6wps0GOEAtHXiylkVIbZTjZCWMwYA4LG0ofaFdKTSa9Qzfu75rubuiDRInmK+Fhj+mXL1HbMKhSWfrmE49RIcuS8ntcYT+dop3JnOnH+ikaMDYN6NwhsnXsgF0sChV5hW+9M0K/0Ev0L/5DBF6366v1IivHJtTf16gsB6Akk=
   bucket: nationalmap-build-artifacts
   local-dir: public
+  upload-dir: $TRAVIS_BRANCH/$TRAVIS_BUILD_NUMBER
   acl: public_read
   region: ap-southeast-2
   endpoint: s3-ap-southeast-2.amazonaws.com
