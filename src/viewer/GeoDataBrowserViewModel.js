@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,ga,alert,L,URI*/
+/*global require,ga,alert,L,URI,confirm*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
