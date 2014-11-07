@@ -12,3 +12,7 @@ deploy:
   local-dir: public
   acl: public_read
   region: ap-southeast-2
+  skip_cleanup: true
+  on:
+    repo: NICTA/nationalmap
+    all_branches: true
