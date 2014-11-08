@@ -18,6 +18,8 @@ var CsvItemViewModel = require('./CsvItemViewModel');
 var GpxItemViewModel = require('./GpxItemViewModel');
 var OgrItemViewModel = require('./OgrItemViewModel');
 
+var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
+
 var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
     createCatalogMemberFromType.register('csv', CsvItemViewModel);
@@ -31,7 +33,6 @@ var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('wfs', WebFeatureServiceItemViewModel);
     createCatalogMemberFromType.register('wfs-getCapabilities', WebFeatureServiceGroupViewModel);
     createCatalogMemberFromType.register('gpx', GpxItemViewModel);
-    createCatalogMemberFromType.register('ogr', OgrItemViewModel);
 
     createCatalogItemFromUrl.register(matchesExtension('czm'), CzmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('czml'), CzmlItemViewModel);
@@ -42,7 +43,12 @@ var registerCatalogViewModels = function() {
     createCatalogItemFromUrl.register(matchesExtension('kmz'), KmlItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('csv'), CsvItemViewModel);
     createCatalogItemFromUrl.register(matchesExtension('gpx'), GpxItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('*'), OgrItemViewModel);
+
+    if (!(FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] <= 9)) {
+        createCatalogMemberFromType.register('ogr', OgrItemViewModel);
+        createCatalogItemFromUrl.register(matchesExtension('*'), OgrItemViewModel);
+    }
+
 };
 
 function matchesExtension(extension) {

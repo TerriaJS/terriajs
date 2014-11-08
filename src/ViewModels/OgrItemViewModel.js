@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,Document,$,toGeoJSON*/
+/*global require,Document*/
 
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -27,14 +27,14 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
 
 
 /**
- * A {@link CatalogItemViewModel} representing GPX data.
+ * A {@link CatalogItemViewModel} representing ogr2ogr supported data formats.
  *
  * @alias OgrItemViewModel
  * @constructor
  * @extends GeoJsonItemViewModel
  * 
  * @param {ApplicationViewModel} application The application.
- * @param {String} [url] The URL from which to retrieve the GPX data.
+ * @param {String} [url] The URL from which to retrieve the OGR data.
  */
 var OgrItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
@@ -44,7 +44,7 @@ var OgrItemViewModel = function(application, url) {
     this._loadedData = undefined;
 
     /**
-     * Gets or sets the URL from which to retrieve GPX data.  This property is ignored if
+     * Gets or sets the URL from which to retrieve OGR data.  This property is ignored if
      * {@link OgrItemViewModel#data} is defined.  This property is observable.
      * @type {String}
      */
@@ -82,13 +82,13 @@ defineProperties(OgrItemViewModel.prototype, {
     },
 
     /**
-     * Gets a human-readable name for this type of data source, 'GPX'.
+     * Gets a human-readable name for this type of data source.
      * @memberOf OgrItemViewModel.prototype
      * @type {String}
      */
     typeName : {
         get : function() {
-            return 'OGR';
+            return 'Unknown / Converted to GeoJSON';
         }
     },
 
@@ -110,8 +110,8 @@ defineProperties(OgrItemViewModel.prototype, {
 
 /**
  * Processes the Ogr data supplied via the {@link OgrItemViewModel#data} property.  If
- * {@link OgrItemViewModel#data} is undefined, this method downloads GPX data from 
- * {@link OgrItemViewModel#url} and processes that.  It is safe to call this method multiple times.
+ * {@link OgrItemViewModel#data} is undefined, this method downloads ogr2ogr supported formats data from 
+ * {@link OgrItemViewModel#url} and processes it into GeoJson.  It is safe to call this method multiple times.
  * It is called automatically when the data source is enabled.
  */
 OgrItemViewModel.prototype.load = function() {
@@ -132,7 +132,7 @@ OgrItemViewModel.prototype.load = function() {
                 if (!(data instanceof Blob)) {
                     //create a file blob
                     data = new Blob([data], {
-                        type : 'text/html', 
+                        type : 'application/octet-stream', 
                         name: that.dataSourceUrl, 
                         lastModifiedDate: new Date()
                     });
@@ -189,11 +189,14 @@ function loadOgrData(viewModel, file, url) {
         }
         formData.append('input_file', file);
     } else if (defined(url)) {
+        
+        //TODO: !!! fix up to point to server if relative
+
         formData.append('input_url', url);
     }
 
     loadWithXhr({
-        url : 'http://localhost/convert',
+        url : '/convert',
         method : 'POST',
         data : formData
     }).then(function(response) {

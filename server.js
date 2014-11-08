@@ -228,11 +228,10 @@ if (cluster.isMaster) {
             var maxSize = 1000000;
 
             if (fields.input_url !== undefined) {
-                fpath = fields.input_url;
-                if (fpath.indexOf('http') !== 0 && fpath.indexOf('public') !== 0) {
-                    fpath = 'public/' + fpath;
+                if (fpath.indexOf('http') === 0) {
+                    fpath = fields.input_url;
+                    fname = fpath;
                 }
-                fname = fpath;
             } else if (files.input_file !== undefined) {
                 if (files.input_file.size <= maxSize) {
                     fpath = files.input_file.path;

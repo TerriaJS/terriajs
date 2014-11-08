@@ -173,11 +173,16 @@ CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
                     throw new RuntimeError('An item must have a type.');
                 }
 
-                existingItem = createCatalogMemberFromType(item.type, viewModel.application);
-                viewModel.add(existingItem);
+                try {
+                    existingItem = createCatalogMemberFromType(item.type, viewModel.application);
+                    viewModel.add(existingItem);
+                } catch (e) {
+                    console.log('Catalog Error:', e.message);
+                }
             }
-
-            existingItem.updateFromJson(item, options);
+            if (defined(existingItem)) {
+                existingItem.updateFromJson(item, options);
+            }
         }
     });
 };

@@ -137,13 +137,6 @@ Please select a file or service type from the drop-down list before clicking the
             ga('send', 'event', 'addDataUrl', 'File', that.addDataUrl);
 
             newViewModel = createCatalogItemFromUrl(that.addDataUrl, that.catalog.application);
-            if (newViewModel.type === 'ogr' ) {
-                    //TODO: popup message with buttons
-                if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
-                    return;
-                }
-            }
-
             if (!defined(newViewModel)) {
                 var message2 = new PopupMessage({
                     container : document.body,
@@ -156,6 +149,13 @@ files (.csv).  The file extension of the file in the user-specified URL must mat
 these extensions in order for National Map to know how to load it.'
                 });
                 return;
+            }
+
+            if (newViewModel.type === 'ogr' ) {
+                    //TODO: popup message with buttons
+                if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
+                    return;
+                }
             }
 
             var lastSlashIndex = that.addDataUrl.lastIndexOf('/');
@@ -350,12 +350,6 @@ these extensions in order for National Map to know how to load it.'
     function addFile(file) {
         var name = file.newName || file.name;
         var newViewModel = createCatalogItemFromUrl(name, that.catalog.application);
-        if (newViewModel.type === 'ogr' ) {
-                //TODO: popup message with buttons
-            if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
-                return;
-            }
-        }
 
         if (!defined(newViewModel)) {
             var message2 = new PopupMessage({
@@ -369,6 +363,13 @@ files (.csv).  The file extension of the file in the user-specified URL must mat
 these extensions in order for National Map to know how to load it.'
             });
             return;
+        }
+
+        if (newViewModel.type === 'ogr' ) {
+                //TODO: popup message with buttons
+            if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
+                return;
+            }
         }
 
         var lastSlashIndex = name.lastIndexOf('/');
