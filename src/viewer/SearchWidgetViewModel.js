@@ -406,10 +406,10 @@ function geocode(viewModel) {
         latitudeDegrees = center.lat;
     }
 
-    var promise = jsonp(viewModel._url + 'REST/v1/Locations?userLocation=' + latitudeDegrees + ',' + longitudeDegrees, {
-        parameters: {
-            query: query,
-            key: viewModel._key
+    var promise = jsonp(viewModel._url + 'REST/v1/Locations?culture=en-AU&userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
+        parameters : {
+            query : query,
+            key : viewModel._key
         },
         callbackParameterName: 'jsonp'
     });
@@ -426,7 +426,6 @@ function geocode(viewModel) {
         }
 
         var resourceSet = result.resourceSets[0];
-        console.log(resourceSet);
         if (resourceSet.resources.length === 0) {
             viewModel.searchText = viewModel._searchText + ' (not found)';
             return;
@@ -445,7 +444,6 @@ function geocode(viewModel) {
 
         viewModel._searchText = resource.name;
         var bbox = resource.bbox;
-        console.log(bbox);
         var south = bbox[0];
         var west = bbox[1];
         var north = bbox[2];

@@ -11,14 +11,14 @@ And writes a czml file for it to display
 
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
-var defaultValue = require('../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../third_party/cesium/Source/Core/defined');
-var CzmlDataSource = require('../third_party/cesium/Source/DataSources/CzmlDataSource');
-var Color = require('../third_party/cesium/Source/Core/Color');
-var defineProperties = require('../third_party/cesium/Source/Core/defineProperties');
-var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
-var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
-
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
+var Color = require('../../third_party/cesium/Source/Core/Color');
+var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
+var loadText = require('../../third_party/cesium/Source/Core/loadText');
 
 /**
 * @class TableDataSource is a cesium based datasource for table based geodata
@@ -140,11 +140,8 @@ defineProperties(TableDataSource.prototype, {
  */
 TableDataSource.prototype.loadUrl = function (url) {
     var that = this;
-    this.dataset.loadUrl({ url: url, callback: function (data) {
-        that.setLeadTimeByPercent(0.0);
-        that.setTrailTimeByPercent(1.0);
-        that.czmlDataSource.load(that.getDataPointList(), 'TableDataSource');
-        }
+    return loadText(url).then(function(text) {
+        return that.loadText(text);
     });
 };
 
@@ -238,7 +235,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         rec.availability = rec.billboard.show[1].interval;
     }
     else {
-        rec.billboard.show[0]['boolean'] = true;
+        rec.billboard.show[0].boolean = true;
         rec.billboard.show[1].interval = undefined;
     }
     return rec;

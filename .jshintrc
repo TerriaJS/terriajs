@@ -3,7 +3,6 @@
   "camelcase": false,
   "curly": true,
   "eqeqeq": true,
-  "es3": true,
   "forin": true,
   "immed": true,
   "latedef": "nofunc",

@@ -5,8 +5,8 @@
  * Copyright(c) 2012-2013 National ICT Australia Limited (NICTA).  All rights reserved.
  */
 
-var destroyObject = require('../third_party/cesium/Source/Core/destroyObject');
-var JulianDate = require('../third_party/cesium/Source/Core/JulianDate');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var VarType = require('./VarType');
 
 /**
