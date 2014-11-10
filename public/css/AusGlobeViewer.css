@@ -48,6 +48,10 @@ a:hover {
     z-index: 999; /* required for IE9 */
 }
 
+.ui-front {
+    z-index:1010;
+}
+
 .menu {
     position: absolute;
     display: block;
@@ -276,24 +280,6 @@ a.ausglobe-title-menuItem:hover {
 @media screen and (max-width: 520px)
 {
     .ausglobe-title-menuItem {display: none; }
-}
-
-.ausglobe-search-container {
-    background-color:white;
-    position: absolute;
-    margin-left: 1px;
-    width: 248px;
-}
-
-.ausglobe-search-container > ul {
-    list-style-type: none;
-    margin-left: -50px;
-
-}
-
-.ausglobe-search-container > ul > li:hover {
-    background-color: darkblue;
-    color:white;
 }
 
 .ausglobe-left-area {
@@ -640,6 +626,18 @@ a.ausglobe-title-menuItem:hover {
     background-color: #48b;
 }
 
+.ausglobe-search-provider-container {
+    margin-bottom: -10px;
+}
+
+.ausglobe-search-provider-container > label {
+    display:inline-block;
+    color:white;
+}
+
+.ausglobe-search-provider-container > label > input {
+    display: inline-block !important;
+}
 .ausglobe-info-container {
     position: fixed;
     left: 0;

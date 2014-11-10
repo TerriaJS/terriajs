@@ -7,6 +7,8 @@ var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject'
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
 var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var runLater = require('../Core/runLater');
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var SearchWidgetViewModel = require('./SearchWidgetViewModel');
@@ -60,6 +62,7 @@ var SearchWidget = function(options) {
     textBox.setAttribute('data-bind', '\
 value: searchText,\
 valueUpdate: "afterkeydown"');
+    textBox.setAttribute('id','ausglobe-search-input');
     form.appendChild(textBox);
 
     var searchButton = document.createElement('span');
@@ -68,40 +71,62 @@ valueUpdate: "afterkeydown"');
 click: search,\
 cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, width: 32, height: 32 }');
     form.appendChild(searchButton);
-
-    var dropDownList = document.createElement('select');
-    dropDownList.setAttribute('data-bind','\
-    value: searchProvider\
-    ');
+    var radioContainer = document.createElement('div');
+    radioContainer.setAttribute('class','ausglobe-search-provider-container')
     for (var i = 0; i < viewModel._searchProviders.length; i++) {
         var provider = viewModel._searchProviders[i];
-        var option = document.createElement('option');
-        option.setAttribute('value',provider.key);
-        option.innerText = provider.alias;
-        dropDownList.appendChild(option);
-    }
-    form.appendChild(dropDownList);
-    container.appendChild(form);
-    var resultsContainer = document.createElement('div');
-    resultsContainer.setAttribute('id', 'searchResultsPreview');
-    resultsContainer.setAttribute('data-bind','visible: displayResults');
-    resultsContainer.className = 'ausglobe-search-container';
-    var resultsList = document.createElement('ul');
-    resultsList.setAttribute('data-bind', '\
-    foreach:resultsList\
-    ');
-    var resultsItem = document.createElement('li');
-    resultsItem.setAttribute('data-bind','text:name, click:$parent.selectSearchResults');
+        var radioButtonLabel = document.createElement('label');
+        var radioButton = document.createElement('input');
+        radioButton.setAttribute('type','radio');
+        radioButton.setAttribute('value',provider.key);
+        radioButton.setAttribute('data-bind','checked:searchProvider');
+        radioButton.setAttribute('class','ausglobe-viewer-radio-button');
+        radioButtonLabel.appendChild(radioButton);
+        radioButtonLabel.innerHTML += provider.alias;
 
-    resultsList.appendChild(resultsItem);
-    resultsContainer.appendChild(resultsList);
-    form.appendChild(resultsContainer);
+        radioContainer.appendChild(radioButtonLabel);
+    }
+
+    form.appendChild(radioContainer);
+    container.appendChild(form);
 
     knockout.applyBindings(viewModel, form);
 
     this._container = container;
     this._viewModel = viewModel;
     this._form = form;
+    $('#ausglobe-search-input').autocomplete({
+        source: function (request, response) {
+            var provider = viewModel.getCurrentSearchProvider();
+            if(!provider.hasTypeAhead) {
+                return;
+            }
+            when(provider.handleAutoComplete(viewModel.searchText), function(data) {
+                if(data == null || data.length == 0) {
+                    data.push({name:'No results...'});
+                }
+                response(data);
+            });
+        },
+        focus: function( event, ui ) {
+            viewModel.searchText = ui.item.name;
+            return false;
+        },
+        select: function(event, ui) {
+            var provider = viewModel.getCurrentSearchProvider();
+            var resultItem = ui.item;
+            provider.selectResult(resultItem);
+            //Due to widget updating field, knockout overwrites value.
+            //Below resets after knockout.
+            runLater(function  () {
+                viewModel.searchText = ui.item.name;
+            });
+        }
+    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+        return $( "<li>" )
+            .append( "<a>" + item.name + " - " + item.state_id + "</a>" )
+            .appendTo( ul );
+    };
 };
 
 defineProperties(SearchWidget.prototype, {

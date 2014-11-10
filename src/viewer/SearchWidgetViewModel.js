@@ -16,7 +16,7 @@ var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var corsProxy = require('../corsProxy');
+var corsProxy = require('../Core/corsProxy');
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var komapping = require('../../public/third_party/knockout.mapping');
@@ -54,26 +54,25 @@ var SearchWidgetViewModel = function (options) {
     this._viewer = options.viewer;
     this._ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84);
     this._flightDuration = defaultValue(options.flightDuration, 1500);
-    this._searchText = knockout.observable('');
+    this._searchText = '';
     this._searchProvider = 'bing'; //Default search provider
     this._isSearchInProgress = false;
     this._geocodeInProgress = undefined;
     this._resultsList = [];
 
     var that = this;
-    this._searchText.subscribe(function (newVal) {
+    //this._searchText.subscribe(function (newVal) {
         //Below has an issue with searchText being changed too 'Searching...' on the input
         //If the user keeps typing, input value binds to 'Searching...' + last characters typed...
-//        var currentSearchProvider = getCurrentSearchProvider();
-//        if(currentSearchProvider.hasTypeAhead) {
-//            currentSearchProvider.searchCommand();
-//        }
-    });
+        //var currentSearchProvider = getCurrentSearchProvider();
+        //if(currentSearchProvider.hasTypeAhead) {
+        //    currentSearchProvider.searchCommand();
+        //}
+    //});
     this._searchCommand = createCommand(function () {
         getCurrentSearchProvider().searchCommand();
     });
-
-    function getCurrentSearchProvider() {
+    this.getCurrentSearchProvider = function() {
         var provider = null;
         for (var i = 0; i < that._searchProviders.length; i++) {
             var searchProvider = that._searchProviders[i];
@@ -87,6 +86,10 @@ var SearchWidgetViewModel = function (options) {
             throw new DeveloperError('Specified search provider does not exist')
         }
         return provider;
+    };
+
+    function getCurrentSearchProvider() {
+        return that.getCurrentSearchProvider();
     }
 
     that._searchProviders = [];
@@ -94,7 +97,6 @@ var SearchWidgetViewModel = function (options) {
         key: 'bing',
         alias: 'Bing',
         searchCommand: function () {
-            console.log(that.isSearchInProgress);
             if (that.isSearchInProgress) {
                 cancelGeocode(that);
             } else {
@@ -117,10 +119,13 @@ var SearchWidgetViewModel = function (options) {
                 searchGazetteer(that);
             }
         },
+        handleAutoComplete: function (query) {
+            return searchGazetteer(that);
+        },
         selectResult: function (resultItem) {
             //Server does not return information of a bounding box, just a location.
             //bboxSize is used to expand a point
-            var bboxSize = 0.5;
+            var bboxSize = 0.2;
             var locLat = resultItem.location.split(',')[0];
             var locLng = resultItem.location.split(',')[1];
             var south = parseFloat(locLat) + bboxSize / 2;
@@ -129,6 +134,7 @@ var SearchWidgetViewModel = function (options) {
             var east = parseFloat(locLng) + bboxSize / 2;
             var rectangle = Rectangle.fromDegrees(west, south, east, north);
             var viewModel = that;
+
             if (viewModel._viewer.viewer) {
                 // Cesium
                 var camera = viewModel._viewer.scene.camera;
@@ -159,6 +165,7 @@ var SearchWidgetViewModel = function (options) {
                 ]);
             }
             viewModel._resultsList = [];
+            viewModel.searchText = viewModel._searchText;
         },
         hasTypeAhead: true
     });
@@ -185,9 +192,9 @@ var SearchWidgetViewModel = function (options) {
     this.searchText = undefined;
     knockout.defineProperty(this, 'searchText', {
         get: function () {
-            if (this.isSearchInProgress) {
-                return 'Searching...';
-            }
+            //if (that.isSearchInProgress) {
+            //    return 'Searching...';
+            //}
             return this._searchText;
         },
         set: function (value) {
@@ -332,15 +339,19 @@ function searchGazetteer(viewModel) {
     viewModel._isSearchInProgress = true;
     var url = 'http://www.ga.gov.au/gazetteer-search/select/?q=name:*' + query + '*';
     url = corsProxy.getURL(url);
+    var deferred = when.defer();
     when(loadXML(url), function (solarQueryResponse) {
         var json = $.xml2json(solarQueryResponse);
         if (defined(json.result) && json.result.doc.length > 0) {
             viewModel._resultsList = _parseSolrResults(json.result.doc, ['name', 'location', 'state_id']);
         } else {
-            viewModel.searchText = viewModel._searchText + ' (not found)';
+            viewModel._resultsList = [];
         }
         viewModel._isSearchInProgress = false;
+
+        deferred.resolve(viewModel._resultsList);
     });
+    return deferred.promise;
 }
 
 /**
@@ -351,6 +362,9 @@ function searchGazetteer(viewModel) {
  */
 function _parseSolrResults(docs, keysOfInterest, valueTypes) {
     var results = [];
+    if(docs == null) {
+        return results;
+    }
     valueTypes = valueTypes || ['str'];
     for (var i = 0; i < docs.length; i++) {
         var doc = docs[i];
@@ -372,7 +386,6 @@ function _parseSolrResults(docs, keysOfInterest, valueTypes) {
                 }
             }
             if (validResult) {
-                console.log(resultObj);
                 results.push(resultObj);
             }
         }
@@ -391,7 +404,7 @@ function geocode(viewModel) {
     ga('send', 'event', 'search', 'start', query);
 
     viewModel._isSearchInProgress = true;
-
+    viewModel._searchText = 'Searching...'
     var longitudeDegrees;
     var latitudeDegrees;
 
@@ -419,7 +432,7 @@ function geocode(viewModel) {
             return;
         }
         viewModel._isSearchInProgress = false;
-
+        viewModel._searchText = query;
         if (result.resourceSets.length === 0) {
             viewModel.searchText = viewModel._searchText + ' (not found)';
             return;
@@ -441,7 +454,6 @@ function geocode(viewModel) {
                 break;
             }
         }
-
         viewModel._searchText = resource.name;
         var bbox = resource.bbox;
         var south = bbox[0];
