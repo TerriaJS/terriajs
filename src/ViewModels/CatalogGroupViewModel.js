@@ -33,7 +33,7 @@ var CatalogGroupViewModel = function(application) {
     CatalogMemberViewModel.call(this, application);
 
     this._loadingPromise = undefined;
-    this._loadInfluencingValues = undefined;
+    this._lastLoadInfluencingValues = undefined;
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -265,6 +265,7 @@ CatalogGroupViewModel.prototype.load = function() {
 
         return that._load();
     }).then(function() {
+        that._loadingPromise = undefined;
         that.isLoading = false;
     }).otherwise(function(e) {
         that._lastLoadInfluencingValues = undefined;
@@ -284,6 +285,7 @@ CatalogGroupViewModel.prototype.load = function() {
  * @protected
  */
 CatalogGroupViewModel.prototype._load = function() {
+    return when();
 };
 
 var emptyArray = freezeObject([]);

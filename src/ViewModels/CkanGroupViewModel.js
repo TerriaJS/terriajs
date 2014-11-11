@@ -39,13 +39,6 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 var CkanGroupViewModel = function(application) {
     CatalogGroupViewModel.call(this, application, 'ckan');
 
-    this._loadedUrl = undefined;
-    this._loadedFilterQuery = undefined;
-    this._loadedBlacklist = undefined;
-    this._loadedFilterByWmsGetCapabilities = undefined;
-    this._loadedMinimumMaxScaleDenominator = undefined;
-    this._loadingPromise = undefined;
-
     /**
      * Gets or sets the URL of the CKAN server.  This property is observable.
      * @type {String}
@@ -167,14 +160,9 @@ CkanGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, prop
 freezeObject(CkanGroupViewModel.defaultSerializers);
 
 CkanGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
-    return [this.url, this.filterQuery, this.blacklist, this.filterByWmsGetCapabilities];
+    return [this.url, this.filterQuery, this.blacklist, this.filterByWmsGetCapabilities, this.minimumMaxScaleDenominator];
 };
 
-/**
- * Loads the items in this group by invoking the GetCapabilities service on the WMS server.
- * Each layer in the response becomes an item in the group.  The {@link CatalogGroupViewModel#isLoading} flag will
- * be set while the load is in progress.
- */
 CkanGroupViewModel.prototype._load = function() {
     if (!defined(this.url) || this.url.length === 0) {
         return undefined;
