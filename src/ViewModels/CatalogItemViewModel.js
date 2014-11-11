@@ -389,6 +389,9 @@ var emptyArray = freezeObject([]);
  * @protected
  */
 CatalogItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    // In the future, we can implement auto-reloading when any of these properties change.  Just create a knockout
+    // computed property that calls this method and subscribe to change notifications on that computed property.
+    // (Will need to use the rateLimit extender, presumably).
     return emptyArray;
 };
 

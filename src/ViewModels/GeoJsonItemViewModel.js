@@ -138,6 +138,8 @@ GeoJsonItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
 };
 
 GeoJsonItemViewModel.prototype._load = function() {
+    this._geoJsonDataSource = new GeoJsonDataSource(this.name);
+
     var that = this;
 
     if (defined(that.data)) {
@@ -151,14 +153,14 @@ GeoJsonItemViewModel.prototype._load = function() {
 
             return when(promise, function(json) {
                 that.data = json;
-                updateViewModelFromData(that, json);
+                return updateViewModelFromData(that, json);
             });
         });
     } else {
         return loadJson(that.url).then(function(json) {
-            updateViewModelFromData(that, json);
+            return updateViewModelFromData(that, json);
         }).otherwise(function(e) {
-            return new ViewModelError({
+            throw new ViewModelError({
                 sender: that,
                 title: 'Could not load JSON',
                 message: '\
@@ -179,20 +181,9 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 };
 
 GeoJsonItemViewModel.prototype._enable = function() {
-    if (defined(this._geoJsonDataSource)) {
-        throw new DeveloperError('This data source is already enabled.');
-    }
-
-    this._geoJsonDataSource = new GeoJsonDataSource(this.name);
-    loadGeoJson(this);
 };
 
 GeoJsonItemViewModel.prototype._disable = function() {
-    if (!defined(this._geoJsonDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._geoJsonDataSource = undefined;
 };
 
 GeoJsonItemViewModel.prototype._show = function() {
@@ -250,7 +241,7 @@ function updateViewModelFromData(viewModel, geoJson) {
     // Reproject the features if they're not already EPSG:4326.
     var promise = reprojectToGeographic(geoJson);
 
-    when(promise, function() {
+    return when(promise, function() {
         // If we don't already have a rectangle, compute one.
         if (!defined(viewModel.rectangle) || Rectangle.equals(viewModel.rectangle, Rectangle.MAX_VALUE)) {
             viewModel.rectangle = getGeoJsonExtent(geoJson);
@@ -258,7 +249,7 @@ function updateViewModelFromData(viewModel, geoJson) {
 
         viewModel._readyData = geoJson;
 
-        loadGeoJson(viewModel);
+        return loadGeoJson(viewModel);
     });
 }
 
@@ -285,10 +276,6 @@ function proxyUrl(application, url) {
 }
 
 function loadGeoJson(viewModel) {
-    if (!(viewModel._geoJsonDataSource instanceof GeoJsonDataSource) || !defined(viewModel._readyData)) {
-        return;
-    }
-
     var fillPolygons = false;
     var pointColor = getRandomColor(pointPalette, viewModel.name);
     var lineColor = getRandomColor(lineAndFillPalette, viewModel.name);
@@ -299,7 +286,7 @@ function loadGeoJson(viewModel) {
     var lineWidth = 2;
 
     var dataSource = viewModel._geoJsonDataSource;
-    dataSource.load(viewModel._readyData).then(function() {
+    return dataSource.load(viewModel._readyData).then(function() {
         var entities = dataSource.entities.entities;
 
         for (var i = 0; i < entities.length; ++i) {
