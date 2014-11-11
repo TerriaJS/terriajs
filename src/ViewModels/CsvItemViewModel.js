@@ -49,7 +49,6 @@ var CsvItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._tableDataSource = undefined;
-    this._loadingPromise = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve CSV data.  This property is ignored if
