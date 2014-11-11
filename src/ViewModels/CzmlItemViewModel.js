@@ -106,6 +106,10 @@ defineProperties(CzmlItemViewModel.prototype, {
     }
 });
 
+CzmlItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
+
 CzmlItemViewModel.prototype._load = function() {
     var dataSource = new CzmlDataSource();
     this._czmlDataSource = dataSource;

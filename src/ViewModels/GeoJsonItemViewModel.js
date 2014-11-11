@@ -65,11 +65,6 @@ var GeoJsonItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._geoJsonDataSource = undefined;
-
-    this._loadedUrl = undefined;
-    this._loadedData = undefined;
-    this._loadingPromise = undefined;
-    
     this._readyData = undefined;
 
     /**
@@ -138,53 +133,35 @@ defineProperties(GeoJsonItemViewModel.prototype, {
     }
 });
 
-/**
- * Processes the GeoJSON data supplied via the {@link GeoJsonItemViewModel#data} property.  If
- * {@link GeoJsonItemViewModel#data} is undefined, this method downloads GeoJSON data from 
- * {@link GeoJsonItemViewModel#url} and processes that.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-GeoJsonItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
-        return;
-    }
+GeoJsonItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
 
-    this.isLoading = true;
-
+GeoJsonItemViewModel.prototype._load = function() {
     var that = this;
-    this._loadingPromise = runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedData = that.data;
 
-        if (defined(that.data)) {
-            when(that.data, function(data) {
-                var promise;
-                if (data instanceof Blob) {
-                    promise = readJson(data);
-                } else {
-                    promise = data;
-                }
+    if (defined(that.data)) {
+        return when(that.data, function(data) {
+            var promise;
+            if (data instanceof Blob) {
+                promise = readJson(data);
+            } else {
+                promise = data;
+            }
 
-                when(promise, function(json) {
-                    that.data = json;
-                    updateViewModelFromData(that, json);
-                    that.isLoading = false;
-                    that._loadingPromise = undefined;
-                });
-            }).otherwise(function() {
-                that.isLoading = false;
-                that._loadingPromise = undefined;
-            });
-        } else {
-            loadJson(that.url).then(function(json) {
+            return when(promise, function(json) {
+                that.data = json;
                 updateViewModelFromData(that, json);
-                that.isLoading = false;
-            }).otherwise(function(e) {
-                that.isLoading = false;
-                that.application.error.raiseEvent(new ViewModelError({
-                    sender: that,
-                    title: 'Could not load JSON',
-                    message: '\
+            });
+        });
+    } else {
+        return loadJson(that.url).then(function(json) {
+            updateViewModelFromData(that, json);
+        }).otherwise(function(e) {
+            return new ViewModelError({
+                sender: that,
+                title: 'Could not load JSON',
+                message: '\
 An error occurred while retrieving JSON data from the provided link.  \
 <p>If you entered the link manually, please verify that the link is correct.</p>\
 <p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
@@ -196,15 +173,9 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the data source you\'re trying to add is temporarily unavailable or there is a \
 problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-                }));
-                that.isEnabled = false;
-                that._loadedUrl = undefined;
-                that._loadedData = undefined;
-                that._loadingPromise = undefined;
             });
-        }
-    });
-    return this._loadingPromise;
+        });
+    }
 };
 
 GeoJsonItemViewModel.prototype._enable = function() {
