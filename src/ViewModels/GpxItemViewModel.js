@@ -41,6 +41,7 @@ var GpxItemViewModel = function(application, url) {
     this._geoJsonViewModel = undefined;
     this._loadedUrl = undefined;
     this._loadedData = undefined;
+    this._loadingPromise = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GPX data.  This property is ignored if
@@ -122,7 +123,7 @@ GpxItemViewModel.prototype.load = function() {
     this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
 
     var that = this;
-    runLater(function() {
+    this._loadingPromise = runLater(function() {
         that._loadedUrl = that.url;
         that._loadedData = that.data;
 
@@ -147,6 +148,7 @@ GpxItemViewModel.prototype.load = function() {
             });
         }
     });
+    return this._loadingPromise;
 };
 
 GpxItemViewModel.prototype._enable = function() {
@@ -194,6 +196,7 @@ function loadGpxText(viewModel, text) {
             subscription.dispose();
             viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
             viewModel.isLoading = false;
+            viewModel._loadingPromise = undefined;
         }
     });
 
@@ -215,6 +218,7 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     viewModel.isEnabled = false;
     viewModel.isLoading = false;
     viewModel._geoJsonViewModel = undefined;
+    viewModel._loadingPromise = undefined;
 }
 
 module.exports = GpxItemViewModel;

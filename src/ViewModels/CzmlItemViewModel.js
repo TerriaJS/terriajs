@@ -46,6 +46,7 @@ var CzmlItemViewModel = function(application, url) {
     this._czmlDataSource = undefined;
     this._loadedUrl = undefined;
     this._loadedData = undefined;
+    this._loadingPromise = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve CZML data.  This property is ignored if
@@ -129,7 +130,7 @@ CzmlItemViewModel.prototype.load = function() {
     this._czmlDataSource = dataSource;
 
     var that = this;
-    runLater(function() {
+    this._loadingPromise = runLater(function() {
         that._loadedUrl = that.url;
         that._loadedData = that.data;
 
@@ -157,6 +158,7 @@ CzmlItemViewModel.prototype.load = function() {
             });
         }
     });
+    return this._loadingPromise;
 };
 
 CzmlItemViewModel.prototype._enable = function() {
@@ -201,6 +203,7 @@ function proxyUrl(application, url) {
 
 function doneLoading(viewModel) {
     viewModel.clock = viewModel._czmlDataSource.clock;
+    viewModel._loadingPromise = undefined;
     viewModel.isLoading = false;
 }
 
@@ -216,6 +219,7 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
 
     viewModel._loadedUrl = undefined;
     viewModel._loadedData = undefined;
+    viewModel._loadingPromise = undefined;
     viewModel.isEnabled = false;
     viewModel.isLoading = false;
     viewModel._czmlDataSource = undefined;

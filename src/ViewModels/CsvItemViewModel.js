@@ -49,6 +49,7 @@ var CsvItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._tableDataSource = undefined;
+    this._loadingPromise = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve CSV data.  This property is ignored if
@@ -136,7 +137,7 @@ CsvItemViewModel.prototype.load = function() {
     this._tableDataSource = new TableDataSource();
 
     var that = this;
-    runLater(function() {
+    this._loadingPromise = runLater(function() {
         that._loadedUrl = that.url;
         that._loadedData = that.data;
 
@@ -160,6 +161,7 @@ CsvItemViewModel.prototype.load = function() {
                     }));
                 }
             }).otherwise(function() {
+                that._loadingPromise = undefined;
                 that.isLoading = false;
             });
         } else if (defined(that.url)) {
@@ -173,12 +175,14 @@ CsvItemViewModel.prototype.load = function() {
                     message: '\
 An error occurred while retrieving CSV data from the provided link.'
                 }));
+                that._loadingPromise = undefined;
                 that.isEnabled = false;
                 that._loadedUrl = undefined;
                 that._loadedData = undefined;
             });
         }
     });
+    return this._loadingPromise;
 };
 
 CsvItemViewModel.prototype._enableInCesium = function() {
@@ -382,6 +386,7 @@ a region mapping column.'
         viewModel.clock = viewModel._tableDataSource.clock;
         viewModel.rectangle = viewModel._tableDataSource.dataset.getExtent();
 
+        viewModel._loadingPromise = undefined;
         viewModel.isLoading = false;
     }
 }

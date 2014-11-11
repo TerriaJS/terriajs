@@ -68,6 +68,7 @@ var GeoJsonItemViewModel = function(application, url) {
 
     this._loadedUrl = undefined;
     this._loadedData = undefined;
+    this._loadingPromise = undefined;
     
     this._readyData = undefined;
 
@@ -151,7 +152,7 @@ GeoJsonItemViewModel.prototype.load = function() {
     this.isLoading = true;
 
     var that = this;
-    runLater(function() {
+    this._loadingPromise = runLater(function() {
         that._loadedUrl = that.url;
         that._loadedData = that.data;
 
@@ -168,9 +169,11 @@ GeoJsonItemViewModel.prototype.load = function() {
                     that.data = json;
                     updateViewModelFromData(that, json);
                     that.isLoading = false;
+                    that._loadingPromise = undefined;
                 });
             }).otherwise(function() {
                 that.isLoading = false;
+                that._loadingPromise = undefined;
             });
         } else {
             loadJson(that.url).then(function(json) {
@@ -197,9 +200,11 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
                 that.isEnabled = false;
                 that._loadedUrl = undefined;
                 that._loadedData = undefined;
+                that._loadingPromise = undefined;
             });
         }
     });
+    return this._loadingPromise;
 };
 
 GeoJsonItemViewModel.prototype._enable = function() {

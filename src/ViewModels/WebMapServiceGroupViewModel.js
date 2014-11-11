@@ -40,6 +40,7 @@ var WebMapServiceGroupViewModel = function(application) {
     CatalogGroupViewModel.call(this, application, 'wms-getCapabilities');
 
     this._loadedUrl = undefined;
+    this._loadingPromise = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -117,10 +118,12 @@ WebMapServiceGroupViewModel.defaultSerializers.items = function(viewModel, json,
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
+    var result = CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;
+
+    return result;
 };
 
 WebMapServiceGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
@@ -134,18 +137,22 @@ freezeObject(WebMapServiceGroupViewModel.defaultSerializers);
  */
 WebMapServiceGroupViewModel.prototype.load = function() {
     if (this.url === this._loadedUrl || this.isLoading) {
-        return;
+        return this._loadingPromise;
     }
 
     this.isLoading = true;
 
     var that = this;
-    runLater(function() {
+    
+    this._loadingPromise = runLater(function() {
         that._loadedUrl = that.url;
-        getCapabilities(that).always(function() {
+        return getCapabilities(that).always(function() {
+            this._loadingPromise = undefined;
             that.isLoading = false;
         });
     });
+
+    return this._loadingPromise;
 };
 
 function getCapabilities(viewModel) {

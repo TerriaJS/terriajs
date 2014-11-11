@@ -46,6 +46,7 @@ var KmlItemViewModel = function(application, url) {
     this._kmlDataSource = undefined;
     this._loadedUrl = undefined;
     this._loadedData = undefined;
+    this._loadingPromise = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve KML or KMZ data.  This property is ignored if
@@ -131,7 +132,7 @@ KmlItemViewModel.prototype.load = function() {
     this._kmlDataSource = dataSource;
 
     var that = this;
-    runLater(function() {
+    this._loadingPromise = runLater(function() {
         that._loadedUrl = that.url;
         that._loadedData = that.data;
 
@@ -179,6 +180,7 @@ KmlItemViewModel.prototype.load = function() {
             });
         }
     });
+    return this._loadingPromise;
 };
 
 KmlItemViewModel.prototype._enable = function() {

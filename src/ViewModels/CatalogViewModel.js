@@ -8,6 +8,7 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
@@ -88,7 +89,8 @@ defineProperties(CatalogViewModel.prototype, {
  * Updates the catalog from a JSON object-literal description of the available collections.
  * Existing collections with the same name as a collection in the JSON description are
  * updated.  If the description contains a collection with a name that does not yet exist,
- * it is created.
+ * it is created.  Because parts of the update may happen asynchronously, this method
+ * returns at Promise that will resolve when the update is completely done.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  * @param {Object} [options] Object with the following properties:
@@ -96,6 +98,7 @@ defineProperties(CatalogViewModel.prototype, {
  *                                                    may be created by this update.
  * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMemberViewModel#isUserSupplied} property of updated catalog members
  *                                           to the given value.  If not specified, the property is left unchanged.
+ * @returns {Promise} A promise that resolves when the update is complete.
  */
 CatalogViewModel.prototype.updateFromJson = function(json, options) {
     if (!(json instanceof Array)) {
@@ -104,6 +107,8 @@ CatalogViewModel.prototype.updateFromJson = function(json, options) {
 
     options = defaultValue(options, defaultValue.EMPTY_OBJECT);
     var onlyUpdateExistingItems = defaultValue(options.onlyUpdateExistingItems, false);
+
+    var promises = [];
 
     for (var groupIndex = 0; groupIndex < json.length; ++groupIndex) {
         var group = json[groupIndex];
@@ -129,10 +134,13 @@ CatalogViewModel.prototype.updateFromJson = function(json, options) {
             this.group.add(existingGroup);
         }
 
-        existingGroup.updateFromJson(group, options);
+        promises.push(existingGroup.updateFromJson(group, options));
     }
 
-    this.application.nowViewing.sortByNowViewingIndices();
+    var that = this;
+    return when.all(promises, function() {
+        that.application.nowViewing.sortByNowViewingIndices();
+    });
 };
 
 /**
