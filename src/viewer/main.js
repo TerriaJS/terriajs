@@ -84,7 +84,7 @@ if (start) {
         if (defined(hash) && hash.length > 0) {
             if (hash.indexOf('start=') === 0) {
                 startData = JSON.parse(decodeURIComponent(hash.substring(6)));
-            } else {
+            } else if (hash.toLowerCase() !== 'populate-cache') {
                 application.initSources.push('init_' + hash + ".json");
             }
         }
