@@ -25,7 +25,6 @@ var MetadataItemViewModel = require('./MetadataItemViewModel');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
-var runLater = require('../Core/runLater');
 var gmlToGeoJson = require('../Map/gmlToGeoJson');
 
 /**

@@ -29,7 +29,6 @@ var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readText = require('../Core/readText');
-var runLater = require('../Core/runLater');
 
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');

@@ -28,7 +28,6 @@ var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readXml = require('../Core/readXml');
-var runLater = require('../Core/runLater');
 
 /**
  * A {@link CatalogItemViewModel} representing KML or KMZ feature data.

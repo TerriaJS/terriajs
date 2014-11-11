@@ -18,7 +18,6 @@ var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
 var readXml = require('../Core/readXml');
-var runLater = require('../Core/runLater');
 
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
 var readText = require('../Core/readText');

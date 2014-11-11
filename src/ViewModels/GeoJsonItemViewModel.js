@@ -29,7 +29,6 @@ var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readJson = require('../Core/readJson');
-var runLater = require('../Core/runLater');
 
 var lineAndFillPalette = {
     minimumRed : 0.4,

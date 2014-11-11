@@ -24,7 +24,6 @@ var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../Core/inherit');
 var PopupMessage = require('../viewer/PopupMessage');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
-var runLater = require('../Core/runLater');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 
 /**
