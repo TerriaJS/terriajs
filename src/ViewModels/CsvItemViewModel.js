@@ -116,20 +116,11 @@ defineProperties(CsvItemViewModel.prototype, {
     }
 });
 
+CsvItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
 
-/**
- * Processes the CSV data supplied via the {@link CsvItemViewModel#data} property.  If
- * {@link CsvItemViewModel#data} is undefined, this method downloads CSV data from 
- * {@link CsvItemViewModel#url} and processes that.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-CsvItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
-        return;
-    }
-
-    this.isLoading = true;
-
+CsvItemViewModel.prototype._load = function() {
     if (defined(this._tableDataSource)) {
         this._tableDataSource.destroy();
     }
@@ -137,52 +128,39 @@ CsvItemViewModel.prototype.load = function() {
     this._tableDataSource = new TableDataSource();
 
     var that = this;
-    this._loadingPromise = runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedData = that.data;
 
-        if (defined(that.data)) {
-            when(that.data, function(data) {
-                if (data instanceof Blob) {
-                    readText(data).then(function(text) {
-                        loadTable(that, text);
-                    });
-                } else if (data instanceof String) {
-                    loadTable(that, data);
-                } else {
-                    that.application.error.raiseEvent(new ViewModelError({
-                        sender: that,
-                        title: 'Unexpected type of CSV data',
-                        message: '\
-    CsvItemViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
-    This may indicate a bug in National Map or incorrect use of the National Map API. \
-    If you believe it is a bug in National Map, please report it by emailing \
-    <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-                    }));
-                }
-            }).otherwise(function() {
-                that._loadingPromise = undefined;
-                that.isLoading = false;
-            });
-        } else if (defined(that.url)) {
-            loadText(proxyUrl(that, that.url)).then(function(text) {
-                loadTable(that, text);
-            }).otherwise(function(e) {
-                that.isLoading = false;
-                that.application.error.raiseEvent(new ViewModelError({
+    if (defined(this.data)) {
+        return when(that.data, function(data) {
+            if (data instanceof Blob) {
+                return readText(data).then(function(text) {
+                    loadTable(that, text);
+                });
+            } else if (data instanceof String) {
+                loadTable(that, data);
+            } else {
+                throw new ViewModelError({
                     sender: that,
-                    title: 'Could not load CSV file',
+                    title: 'Unexpected type of CSV data',
                     message: '\
+CsvItemViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
+This may indicate a bug in National Map or incorrect use of the National Map API. \
+If you believe it is a bug in National Map, please report it by emailing \
+<a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
+                });
+            }
+        });
+    } else if (defined(that.url)) {
+        return loadText(proxyUrl(that, that.url)).then(function(text) {
+            loadTable(that, text);
+        }).otherwise(function(e) {
+            throw new ViewModelError({
+                sender: that,
+                title: 'Could not load CSV file',
+                message: '\
 An error occurred while retrieving CSV data from the provided link.'
-                }));
-                that._loadingPromise = undefined;
-                that.isEnabled = false;
-                that._loadedUrl = undefined;
-                that._loadedData = undefined;
             });
-        }
-    });
-    return this._loadingPromise;
+        });
+    }
 };
 
 CsvItemViewModel.prototype._enableInCesium = function() {
@@ -368,26 +346,18 @@ function loadTable(viewModel, text) {
             viewModel.regionMapped = true;
         }
         else {
-            viewModel.isLoading = false;
-            viewModel.application.error.raiseEvent(new ViewModelError({
+            throw new ViewModelError({
                 sender: viewModel,
                 title: 'Could not load CSV file',
                 message: '\
 Could not find any location parameters for latitude and longitude and was not able to determine \
 a region mapping column.'
-            }));
-            viewModel.isEnabled = false;
-            viewModel._loadedUrl = undefined;
-            viewModel._loadedData = undefined;
-
+            });
         }
     }
     else {
         viewModel.clock = viewModel._tableDataSource.clock;
         viewModel.rectangle = viewModel._tableDataSource.dataset.getExtent();
-
-        viewModel._loadingPromise = undefined;
-        viewModel.isLoading = false;
     }
 }
 

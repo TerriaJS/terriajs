@@ -715,11 +715,14 @@ function isEnabledChanged(viewModel) {
                 if (viewModel.isEnabled) {
                     viewModel._enable();
                 }
-            }).always(function() {
+            });
+
+            raiseErrorOnRejectedPromise(viewModel.application, loadPromise);
+
+            loadPromise.always(function() {
                 resolvedOrRejected = true;
                 viewModel._loadForEnablePromise = undefined;
             });
-            raiseErrorOnRejectedPromise(viewModel.application, loadPromise);
 
             // Make sure we know about it when the promise already resolved/rejected.
             viewModel._loadForEnablePromise = resolvedOrRejected ? undefined : loadPromise;
