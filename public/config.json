@@ -1,6 +1,5 @@
 {
     "proxyDomains" : [
-        "research.nicta.com.au",
         "gov.au",
         "arcgis.com"
     ]
