@@ -9,6 +9,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
@@ -80,8 +81,51 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
         get : function() {
             return 'Web Feature Service (WFS) Group';
         }
+    },
+
+    /**
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * When a property name on the view-model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * JSON object literal, and the name of the property.
+     * @memberOf WebFeatureServiceGroupViewModel.prototype
+     * @type {Object}
+     */
+    serializers : {
+        get : function() {
+            return WebMapServiceGroupViewModel.defaultSerializers;
+        }
     }
 });
+
+/**
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
+ * @type {Object}
+ */
+WebFeatureServiceGroupViewModel.defaultSerializers = clone(CatalogGroupViewModel.defaultSerializers);
+
+WebFeatureServiceGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+    // Only serialize minimal properties in contained items, because other properties are loaded from GetCapabilities.
+    var previousSerializeForSharing = options.serializeForSharing;
+    options.serializeForSharing = true;
+
+    // Only serlize enabled items as well.  This isn't quite right - ideally we'd serialize any
+    // property of any item if the property's value is changed from what was loaded from GetCapabilities -
+    // but this gives us reasonable results for sharing and is a lot less work than the ideal
+    // solution.
+    var previousEnabledItemsOnly = options.enabledItemsOnly;
+    options.enabledItemsOnly = true;
+
+    CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
+
+    options.enabledItemsOnly = previousEnabledItemsOnly;
+    options.serializeForSharing = previousSerializeForSharing;
+};
+
+WebFeatureServiceGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+
+freezeObject(WebFeatureServiceGroupViewModel.defaultSerializers);
 
 /**
  * Loads the items in this group by invoking the GetCapabilities service on the WFS server.
