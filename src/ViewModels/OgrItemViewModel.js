@@ -189,9 +189,10 @@ function loadOgrData(viewModel, file, url) {
         }
         formData.append('input_file', file);
     } else if (defined(url)) {
-        
-        //TODO: !!! fix up to point to server if relative
-
+        // fix up url to server if relative
+        if (url.indexOf('http') !== 0) {
+            url = 'http://'+document.location.host+'/'+url;
+        }
         formData.append('input_url', url);
     }
 

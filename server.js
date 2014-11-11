@@ -228,7 +228,7 @@ if (cluster.isMaster) {
             var maxSize = 1000000;
 
             if (fields.input_url !== undefined) {
-                if (fpath.indexOf('http') === 0) {
+                if (fields.input_url.indexOf('http') === 0) {
                     fpath = fields.input_url;
                     fname = fpath;
                 }
