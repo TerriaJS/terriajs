@@ -1,6 +1,5 @@
 {
     "corsDomains" : [
-        "research.nicta.com.au",
         "data.gov.au",
         "ga.gov.au",
         "corsproxy.com"
