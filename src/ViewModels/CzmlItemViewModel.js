@@ -183,8 +183,6 @@ function proxyUrl(application, url) {
 
 function doneLoading(viewModel) {
     viewModel.clock = viewModel._czmlDataSource.clock;
-    viewModel._loadingPromise = undefined;
-    viewModel.isLoading = false;
 }
 
 function errorLoading(viewModel) {
