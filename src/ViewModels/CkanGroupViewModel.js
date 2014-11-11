@@ -124,7 +124,7 @@ defineProperties(CkanGroupViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf CatalogGroupViewModel.prototype
+     * @memberOf CkanGroupViewModel.prototype
      * @type {Object}
      */
     serializers : {

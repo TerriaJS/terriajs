@@ -212,11 +212,13 @@ CatalogMemberViewModel.prototype.updateFromJson = function(json, options) {
 CatalogMemberViewModel.prototype.serializeToJson = function(options) {
     options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
+    var enabledItemsOnly = defaultValue(options.enabledItemsOnly, false);
+
     if (defaultValue(options.userSuppliedOnly, false) && !this.isUserSupplied) {
         return undefined;
     }
 
-    if (defaultValue(options.enabledItemsOnly, false) && this.isEnabled === false) {
+    if (enabledItemsOnly && this.isEnabled === false) {
         if (defined(options.itemsSkippedBecauseTheyAreNotEnabled)) {
             options.itemsSkippedBecauseTheyAreNotEnabled.push(this);
         }
@@ -253,7 +255,7 @@ CatalogMemberViewModel.prototype.serializeToJson = function(options) {
     }
 
     // Only serialize a group if the group has items in it.
-    if (defined(this.items) && (!defined(result.items) || result.items.length === 0)) {
+    if (enabledItemsOnly && defined(this.items) && (!defined(result.items) || result.items.length === 0)) {
         return undefined;
     }
 
