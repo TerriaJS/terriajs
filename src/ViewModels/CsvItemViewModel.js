@@ -49,6 +49,7 @@ var CsvItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._tableDataSource = undefined;
+    this._regionMapped = false;
 
     /**
      * Gets or sets the URL from which to retrieve CSV data.  This property is ignored if
@@ -189,7 +190,7 @@ CsvItemViewModel.prototype._disableInCesium = function() {
 
 CsvItemViewModel.prototype._showInCesium = function() {
 
-    if (!defined(this.regionMapped)) {
+    if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
         if (dataSources.contains(this._tableDataSource)) {
             throw new DeveloperError('This data source is already shown.');
@@ -248,7 +249,7 @@ CsvItemViewModel.prototype._showInCesium = function() {
 
 CsvItemViewModel.prototype._hideInCesium = function() {
 
-    if (!defined(this.regionMapped)) {
+    if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
         if (!dataSources.contains(this._tableDataSource)) {
             throw new DeveloperError('This data source is not shown.');
@@ -275,7 +276,7 @@ CsvItemViewModel.prototype._disableInLeaflet = function() {
 
 CsvItemViewModel.prototype._showInLeaflet = function() {
 
-    if (!defined(this.regionMapped)) {
+    if (!this._regionMapped) {
         this._showInCesium();
     }
     else {
@@ -318,7 +319,7 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
 };
 
 CsvItemViewModel.prototype._hideInLeaflet = function() {
-    if (!defined(this.regionMapped)) {
+    if (!this._regionMapped) {
         this._hideInCesium();
     }
     else {
@@ -360,10 +361,7 @@ function loadTable(viewModel, text) {
 
     if (!viewModel._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
-        if (addRegionMap(viewModel)) {
-            viewModel.regionMapped = true;
-        }
-        else {
+        if (!addRegionMap(viewModel)) {
             viewModel.isLoading = false;
             viewModel.application.error.raiseEvent(new ViewModelError({
                 sender: viewModel,
@@ -477,11 +475,12 @@ var regionWmsMap = {
         "regionProp": "SA2_MAIN11",
         "aliases": ['sa2']
     },
-    'SA1': {
-        "name":"region_map:FID_SA1_2011_AUST",
-        "regionProp": "SA1_7DIG11",
-        "aliases": ['sa1']
-    }
+// COMMENTING OUT SA1: it works, but server performance is just too slow to be widely usable
+//    'SA1': {
+//        "name":"region_map:FID_SA1_2011_AUST",
+//        "regionProp": "SA1_7DIG11",
+//        "aliases": ['sa1']
+//    }
 };
 
 //TODO: if we add enum capability and then can work with any unique field
@@ -490,6 +489,7 @@ function loadRegionIDs(description, succeed, fail) {
     var url = regionServer + '?service=wfs&version=2.0&request=getPropertyValue';
     url += '&typenames=' + description.name;
     url += '&valueReference=' + description.regionProp;
+    url = corsProxy.getURL(url);
     loadText(url).then(function (text) { 
         var obj = $.xml2json(text);
 
@@ -532,8 +532,8 @@ function createRegionLookupFunc(viewModel) {
     var description = regionWmsMap[viewModel.regionType];
  
     var codes = dataset.getDataValues(viewModel.regionVar);
-    var ids = description.idMap;
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
+    var ids = description.idMap;
     var lookup = new Array(ids.length);
     for (var i = 0; i < codes.length; i++) {
         var id = ids.indexOf(codes[i]);
@@ -578,6 +578,7 @@ function setRegionVariable(viewModel, regionVar, regionType) {
         
     var succeed = function() {
         createRegionLookupFunc(viewModel);
+        viewModel._regionMapped = true;
         viewModel.isLoading = false;
     };
     var fail = function () {
