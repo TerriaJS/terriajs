@@ -12,8 +12,10 @@ var runLater = require('../Core/runLater');
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var SearchWidgetViewModel = require('./SearchWidgetViewModel');
+var KnockoutAutoCompleteBinding = require('./KnockoutAutoCompleteBinding');
 
 SvgPathBindingHandler.register(knockout);
+KnockoutAutoCompleteBinding.register(knockout);
 
 var startSearchPath = 'M29.772,26.433l-7.126-7.126c0.96-1.583,1.523-3.435,1.524-5.421C24.169,8.093,19.478,3.401,13.688,3.399C7.897,3.401,3.204,8.093,3.204,13.885c0,5.789,4.693,10.481,10.484,10.481c1.987,0,3.839-0.563,5.422-1.523l7.128,7.127L29.772,26.433zM7.203,13.885c0.006-3.582,2.903-6.478,6.484-6.486c3.579,0.008,6.478,2.904,6.484,6.486c-0.007,3.58-2.905,6.476-6.484,6.484C10.106,20.361,7.209,17.465,7.203,13.885z';
 var stopSearchPath = 'M24.778,21.419 19.276,15.917 24.777,10.415 21.949,7.585 16.447,13.087 10.945,7.585 8.117,10.415 13.618,15.917 8.116,21.419 10.946,24.248 16.447,18.746 21.948,24.248z';
@@ -61,7 +63,14 @@ var SearchWidget = function(options) {
     textBox.setAttribute('placeholder', 'Enter an address or landmark...');
     textBox.setAttribute('data-bind', '\
 value: searchText,\
-valueUpdate: "afterkeydown"');
+valueUpdate: "afterkeydown",\
+autoComplete: { \
+    source:autoCompleteResults, \
+    select:selectAutoComplete, \
+    focus: focusAutoComplete, \
+    render:renderAutoComplete, \
+    hideMenu: displayResults \
+}');
     textBox.setAttribute('id','ausglobe-search-input');
     form.appendChild(textBox);
 
@@ -72,7 +81,7 @@ click: search,\
 cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, width: 32, height: 32 }');
     form.appendChild(searchButton);
     var radioContainer = document.createElement('div');
-    radioContainer.setAttribute('class','ausglobe-search-provider-container')
+    radioContainer.setAttribute('class','ausglobe-search-provider-container');
     for (var i = 0; i < viewModel._searchProviders.length; i++) {
         var provider = viewModel._searchProviders[i];
         var radioButtonLabel = document.createElement('label');
@@ -83,7 +92,6 @@ cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, 
         radioButton.setAttribute('class','ausglobe-viewer-radio-button');
         radioButtonLabel.appendChild(radioButton);
         radioButtonLabel.innerHTML += provider.alias;
-
         radioContainer.appendChild(radioButtonLabel);
     }
 
@@ -95,38 +103,6 @@ cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, 
     this._container = container;
     this._viewModel = viewModel;
     this._form = form;
-    $('#ausglobe-search-input').autocomplete({
-        source: function (request, response) {
-            var provider = viewModel.getCurrentSearchProvider();
-            if(!provider.hasTypeAhead) {
-                return;
-            }
-            when(provider.handleAutoComplete(viewModel.searchText), function(data) {
-                if(data == null || data.length == 0) {
-                    data.push({name:'No results...'});
-                }
-                response(data);
-            });
-        },
-        focus: function( event, ui ) {
-            viewModel.searchText = ui.item.name;
-            return false;
-        },
-        select: function(event, ui) {
-            var provider = viewModel.getCurrentSearchProvider();
-            var resultItem = ui.item;
-            provider.selectResult(resultItem);
-            //Due to widget updating field, knockout overwrites value.
-            //Below resets after knockout.
-            runLater(function  () {
-                viewModel.searchText = ui.item.name;
-            });
-        }
-    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
-        return $( "<li>" )
-            .append( "<a>" + item.name + " - " + item.state_id + "</a>" )
-            .appendTo( ul );
-    };
 };
 
 defineProperties(SearchWidget.prototype, {
