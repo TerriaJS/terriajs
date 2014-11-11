@@ -77,7 +77,7 @@ var SearchWidgetViewModel = function (options) {
         }
 
         if(provider === null) {
-            throw new DeveloperError('Specified search provider does not exist')
+            throw new DeveloperError('Specified search provider does not exist');
         }
         return provider;
     };
@@ -233,7 +233,7 @@ var SearchWidgetViewModel = function (options) {
             return function (resultItem) {
                 var provider = that.getCurrentSearchProvider();
                 provider.selectResult(resultItem);
-            }
+            };
         }
     });
 
@@ -251,7 +251,7 @@ var SearchWidgetViewModel = function (options) {
                     console.log('Error with autoComplete for search ' + provider.alias);
                     console.log(error);
                 });
-            }
+            };
         }
     });
 
@@ -275,7 +275,7 @@ var SearchWidgetViewModel = function (options) {
                 runLater(function  () {
                     that.searchText = ui.item.name;
                 });
-            }
+            };
         }
     });
 
@@ -395,7 +395,7 @@ function searchGazetteer(viewModel, selectFirst) {
         deferred.resolve(viewModel._resultsList);
     }, function (error) {
         viewModel._resultsList = [];
-        viewModel._resultsList.push({name: 'There was a problem with search...'})
+        viewModel._resultsList.push({name: 'There was a problem with search...'});
         deferred.reject(error);
     });
     return deferred.promise;
@@ -409,7 +409,7 @@ function searchGazetteer(viewModel, selectFirst) {
  */
 function _parseSolrResults(docs, keysOfInterest, valueTypes) {
     var results = [];
-    if(docs == null) {
+    if(!defined(docs)) {
         return results;
     }
     valueTypes = valueTypes || ['str'];
@@ -451,7 +451,7 @@ function geocode(viewModel) {
     ga('send', 'event', 'search', 'start', query);
 
     viewModel._isSearchInProgress = true;
-    viewModel._searchText = 'Searching...'
+    viewModel._searchText = 'Searching...';
     var longitudeDegrees;
     var latitudeDegrees;
 
