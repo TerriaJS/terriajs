@@ -93,7 +93,7 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
      */
     serializers : {
         get : function() {
-            return WebMapServiceGroupViewModel.defaultSerializers;
+            return WebFeatureServiceGroupViewModel.defaultSerializers;
         }
     }
 });
