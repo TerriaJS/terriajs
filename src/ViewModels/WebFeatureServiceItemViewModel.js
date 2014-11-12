@@ -25,7 +25,6 @@ var MetadataItemViewModel = require('./MetadataItemViewModel');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
-var runLater = require('../Core/runLater');
 var gmlToGeoJson = require('../Map/gmlToGeoJson');
 
 /**
@@ -40,13 +39,10 @@ var gmlToGeoJson = require('../Map/gmlToGeoJson');
 var WebFeatureServiceItemViewModel = function(application) {
     CatalogItemViewModel.call(this, application);
 
-    this._metadata = undefined;
     this._dataUrl = undefined;
     this._dataUrlType = undefined;
     this._metadataUrl = undefined;
     this._geoJsonViewModel = undefined;
-    this._loadedUrl = undefined;
-    this._loadedTypeNames = undefined;
 
     /**
      * Gets or sets the URL of the WFS server.  This property is observable.
@@ -155,20 +151,6 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
     },
 
     /**
-     * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf WebFeatureServiceItemViewModel.prototype
-     * @type {MetadataViewModel}
-     */
-    /*metadata : {
-        get : function() {
-            if (!defined(this._metadata)) {
-                this._metadata = requestMetadata(this);
-            }
-            return this._metadata;
-        }
-    },*/
-
-    /**
      * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
@@ -214,46 +196,28 @@ WebFeatureServiceItemViewModel.defaultSerializers.metadataUrl = function(viewMod
 };
 freezeObject(WebFeatureServiceItemViewModel.defaultSerializers);
 
-/**
- * Processes the feature data supplied via the {@link GeoJsonItemViewModel#data} property.  If
- * {@link GeoJsonItemViewModel#data} is undefined, this method downloads GeoJSON data from 
- * {@link GeoJsonItemViewModel#url} and processes that.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-WebFeatureServiceItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.typeNames === this._loadedTypeNames) || this.isLoading === true) {
+WebFeatureServiceItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.typeNames, this.requestGeoJson, this.requestGml];
+};
+
+WebFeatureServiceItemViewModel.prototype._load = function() {
+    this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
+
+
+    var promise;
+    if (this.requestGeoJson) {
+        promise = loadGeoJson(this);
+    } else if (this.requestGml) {
+        promise = loadGml(this);
+    } else {
         return;
     }
 
-    this.isLoading = true;
-    this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
+    this._geoJsonViewModel.data = promise;
 
     var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedTypeNames = that.typeNames;
-
-        var promise;
-        if (that.requestGeoJson) {
-            promise = loadGeoJson(that);
-        } else if (that.requestGml) {
-            promise = loadGml(that);
-        } else {
-            that.isLoading = false;
-            return;
-        }
-
-        that._geoJsonViewModel.data = promise;
-
-        var subscription = knockout.getObservable(that._geoJsonViewModel, 'isLoading').subscribe(function(newValue) {
-            if (newValue === false) {
-                subscription.dispose();
-                that.rectangle = that._geoJsonViewModel.rectangle;
-                that.isLoading = false;
-            }
-        });
-
-        that._geoJsonViewModel.load();
+    return that._geoJsonViewModel.load().then(function() {
+        that.rectangle = that._geoJsonViewModel.rectangle;
     });
 };
 

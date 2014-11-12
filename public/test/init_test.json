@@ -14,7 +14,7 @@
                             "url": "test/cemeteries.geojson"
                         },
                         {
-                            "name": "Bike Racks (GeoJSON:reproj",
+                            "name": "Bike Racks (GeoJSON:reproj)",
                             "type": "geojson",
                             "url": "test/bike_racks.geojson"
                         },

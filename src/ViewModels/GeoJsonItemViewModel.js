@@ -29,7 +29,6 @@ var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readJson = require('../Core/readJson');
-var runLater = require('../Core/runLater');
 
 var lineAndFillPalette = {
     minimumRed : 0.4,
@@ -65,10 +64,6 @@ var GeoJsonItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._geoJsonDataSource = undefined;
-
-    this._loadedUrl = undefined;
-    this._loadedData = undefined;
-    
     this._readyData = undefined;
 
     /**
@@ -137,51 +132,37 @@ defineProperties(GeoJsonItemViewModel.prototype, {
     }
 });
 
-/**
- * Processes the GeoJSON data supplied via the {@link GeoJsonItemViewModel#data} property.  If
- * {@link GeoJsonItemViewModel#data} is undefined, this method downloads GeoJSON data from 
- * {@link GeoJsonItemViewModel#url} and processes that.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-GeoJsonItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
-        return;
-    }
+GeoJsonItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
 
-    this.isLoading = true;
+GeoJsonItemViewModel.prototype._load = function() {
+    this._geoJsonDataSource = new GeoJsonDataSource(this.name);
 
     var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedData = that.data;
 
-        if (defined(that.data)) {
-            when(that.data, function(data) {
-                var promise;
-                if (data instanceof Blob) {
-                    promise = readJson(data);
-                } else {
-                    promise = data;
-                }
+    if (defined(that.data)) {
+        return when(that.data, function(data) {
+            var promise;
+            if (data instanceof Blob) {
+                promise = readJson(data);
+            } else {
+                promise = data;
+            }
 
-                when(promise, function(json) {
-                    that.data = json;
-                    updateViewModelFromData(that, json);
-                    that.isLoading = false;
-                });
-            }).otherwise(function() {
-                that.isLoading = false;
+            return when(promise, function(json) {
+                that.data = json;
+                return updateViewModelFromData(that, json);
             });
-        } else {
-            loadJson(that.url).then(function(json) {
-                updateViewModelFromData(that, json);
-                that.isLoading = false;
-            }).otherwise(function(e) {
-                that.isLoading = false;
-                that.application.error.raiseEvent(new ViewModelError({
-                    sender: that,
-                    title: 'Could not load JSON',
-                    message: '\
+        });
+    } else {
+        return loadJson(that.url).then(function(json) {
+            return updateViewModelFromData(that, json);
+        }).otherwise(function(e) {
+            throw new ViewModelError({
+                sender: that,
+                title: 'Could not load JSON',
+                message: '\
 An error occurred while retrieving JSON data from the provided link.  \
 <p>If you entered the link manually, please verify that the link is correct.</p>\
 <p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
@@ -193,30 +174,15 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the data source you\'re trying to add is temporarily unavailable or there is a \
 problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-                }));
-                that.isEnabled = false;
-                that._loadedUrl = undefined;
-                that._loadedData = undefined;
             });
-        }
-    });
+        });
+    }
 };
 
 GeoJsonItemViewModel.prototype._enable = function() {
-    if (defined(this._geoJsonDataSource)) {
-        throw new DeveloperError('This data source is already enabled.');
-    }
-
-    this._geoJsonDataSource = new GeoJsonDataSource(this.name);
-    loadGeoJson(this);
 };
 
 GeoJsonItemViewModel.prototype._disable = function() {
-    if (!defined(this._geoJsonDataSource)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._geoJsonDataSource = undefined;
 };
 
 GeoJsonItemViewModel.prototype._show = function() {
@@ -274,7 +240,7 @@ function updateViewModelFromData(viewModel, geoJson) {
     // Reproject the features if they're not already EPSG:4326.
     var promise = reprojectToGeographic(geoJson);
 
-    when(promise, function() {
+    return when(promise, function() {
         // If we don't already have a rectangle, compute one.
         if (!defined(viewModel.rectangle) || Rectangle.equals(viewModel.rectangle, Rectangle.MAX_VALUE)) {
             viewModel.rectangle = getGeoJsonExtent(geoJson);
@@ -282,7 +248,7 @@ function updateViewModelFromData(viewModel, geoJson) {
 
         viewModel._readyData = geoJson;
 
-        loadGeoJson(viewModel);
+        return loadGeoJson(viewModel);
     });
 }
 
@@ -309,10 +275,6 @@ function proxyUrl(application, url) {
 }
 
 function loadGeoJson(viewModel) {
-    if (!(viewModel._geoJsonDataSource instanceof GeoJsonDataSource) || !defined(viewModel._readyData)) {
-        return;
-    }
-
     var fillPolygons = false;
     var pointColor = getRandomColor(pointPalette, viewModel.name);
     var lineColor = getRandomColor(lineAndFillPalette, viewModel.name);
@@ -323,7 +285,7 @@ function loadGeoJson(viewModel) {
     var lineWidth = 2;
 
     var dataSource = viewModel._geoJsonDataSource;
-    dataSource.load(viewModel._readyData).then(function() {
+    return dataSource.load(viewModel._readyData).then(function() {
         var entities = dataSource.entities.entities;
 
         for (var i = 0; i < entities.length; ++i) {

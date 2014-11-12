@@ -135,6 +135,8 @@ if (start) {
             var alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
             corsProxy.setProxyList(config.proxyDomains, corsDomains, alwaysUseProxy);
 
+            var promises = [];
+
             // Make another pass over the init sources to update the catalog and load services.
             for (i = 0; i < initSources.length; ++i) {
                 initSource = initSources[i];
@@ -153,10 +155,10 @@ if (start) {
                     }
 
                     try {
-                        application.catalog.updateFromJson(initSource.catalog, {
+                        promises.push(application.catalog.updateFromJson(initSource.catalog, {
                             onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
                             isUserSupplied: isUserSupplied
-                        });
+                        }));
                     } catch(e) {
                         var message = new PopupMessage({
                             container: document.body,
@@ -171,11 +173,13 @@ if (start) {
                 }
             }
 
-            application.catalog.isLoading = false;
+            when.all(promises, function() {
+                application.catalog.isLoading = false;
 
-            var viewer = new AusGlobeViewer(application, camera);
+                var viewer = new AusGlobeViewer(application, camera);
 
-            document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('loadingIndicator').style.display = 'none';
+            });
         });
     });
 }
