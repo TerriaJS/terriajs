@@ -6,20 +6,15 @@ var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Sc
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
 var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
 var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
-var CesiumTerrainProvider = require('../../third_party/cesium/Source/Core/CesiumTerrainProvider');
-var combine = require('../../third_party/cesium/Source/Core/combine');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
-var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var corsProxy = require('../Core/corsProxy');
@@ -30,8 +25,6 @@ var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
 var readJson = require('../Core/readJson');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var komapping = require('../../public/third_party/knockout.mapping');
-var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
 
 var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
@@ -116,7 +109,7 @@ var GeoDataBrowserViewModel = function(options) {
 
     this._showInfoForItem = createCommand(function(item) {
         ga('send', 'event', 'dataSource', 'info', item.name);
-        var popup = new GeoDataInfoPopup({
+        GeoDataInfoPopup.open({
             container : document.body,
             dataSource : item
         });
@@ -126,7 +119,7 @@ var GeoDataBrowserViewModel = function(options) {
         var newViewModel;
 
         if (that.addType === 'NotSpecified') {
-            var message = new PopupMessage({
+            PopupMessage.open({
                 container : document.body,
                 title : 'Please select a file or service type',
                 message : '\
@@ -138,7 +131,7 @@ Please select a file or service type from the drop-down list before clicking the
 
             newViewModel = createCatalogItemFromUrl(that.addDataUrl, that.catalog.application);
             if (!defined(newViewModel)) {
-                var message2 = new PopupMessage({
+                PopupMessage.open({
                     container : document.body,
                     title : 'File format not supported',
                     message : '\
@@ -355,7 +348,7 @@ and the file will not be uploaded or added to the map.')) {
         var newViewModel = createCatalogItemFromUrl(name, that.catalog.application);
 
         if (!defined(newViewModel)) {
-            var message2 = new PopupMessage({
+            PopupMessage.open({
                 container : document.body,
                 title : 'File format not supported',
                 message : '\
@@ -663,19 +656,6 @@ and the file will not be uploaded or added to the map.')) {
         for (i = 0; i < maxRequests; ++i) {
             doNext();
         }
-    }
-
-
-    function crsIsMatch(crs, matchValue) {
-        if (crs === matchValue) {
-            return true;
-        }
-
-        if (crs instanceof Array && crs.indexOf(matchValue) >= 0) {
-            return true;
-        }
-
-         return false;
     }
 };
 

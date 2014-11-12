@@ -2,28 +2,19 @@
 
 /*global require,URI,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../Core/corsProxy');
 var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../Core/inherit');
-var PopupMessage = require('../viewer/PopupMessage');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 
 /**

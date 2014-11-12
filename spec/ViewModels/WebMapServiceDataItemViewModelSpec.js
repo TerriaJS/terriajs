@@ -25,7 +25,7 @@ describe('WebMapServiceDataItemViewModel', function() {
 
     it('throws if constructed without an application', function() {
         expect(function() {
-            var viewModel = new WebMapServiceItemViewModel();
+            var viewModel = new WebMapServiceItemViewModel(); // jshint ignore:line
         }).toThrow();
     });
 

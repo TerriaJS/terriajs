@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,it,expect*/
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 

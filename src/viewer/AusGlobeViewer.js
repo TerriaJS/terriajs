@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,L,URI,$,Document,html2canvas,alert,console,ga*/
+/*global require,L,URI,$,Document,html2canvas,console,ga*/
 
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
 var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
@@ -19,22 +19,16 @@ var CesiumTerrainProvider = require('../../third_party/cesium/Source/Core/Cesium
 var Clock = require('../../third_party/cesium/Source/Core/Clock');
 var ClockRange = require('../../third_party/cesium/Source/Core/ClockRange');
 var Color = require('../../third_party/cesium/Source/Core/Color');
-var combine = require('../../third_party/cesium/Source/Core/combine');
 var Clock = require('../../third_party/cesium/Source/Core/Clock');
 var Credit = require('../../third_party/cesium/Source/Core/Credit');
 var DataSourceDisplay = require('../../third_party/cesium/Source/DataSources/DataSourceDisplay');
-var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
-var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var EllipsoidGeodesic = require('../../third_party/cesium/Source/Core/EllipsoidGeodesic');
 var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/EllipsoidTerrainProvider');
-var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
 var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
-var GeographicProjection = require('../../third_party/cesium/Source/Core/GeographicProjection');
-var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var Fullscreen = require('../../third_party/cesium/Source/Core/Fullscreen');
 var InfoBox = require('../../third_party/cesium/Source/Widgets/InfoBox/InfoBox');
@@ -42,49 +36,36 @@ var Intersections2D = require('../../third_party/cesium/Source/Core/Intersection
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var KeyboardEventModifier = require('../../third_party/cesium/Source/Core/KeyboardEventModifier');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Material = require('../../third_party/cesium/Source/Scene/Material');
 var Matrix3 = require('../../third_party/cesium/Source/Core/Matrix3');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
-var PolylineCollection = require('../../third_party/cesium/Source/Scene/PolylineCollection');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var RectanglePrimitive = require('../../third_party/cesium/Source/Scene/RectanglePrimitive');
-var sampleTerrain = require('../../third_party/cesium/Source/Core/sampleTerrain');
-var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
 var ScreenSpaceEventHandler = require('../../third_party/cesium/Source/Core/ScreenSpaceEventHandler');
 var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 var Viewer = require('../../third_party/cesium/Source/Widgets/Viewer/Viewer');
 var viewerEntityMixin = require('../../third_party/cesium/Source/Widgets/Viewer/viewerEntityMixin');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var Animation = require('../../third_party/cesium/Source/Widgets/Animation/Animation');
 var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animation/AnimationViewModel');
 var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timeline');
-var subscribeAndEvaluate = require('../../third_party/cesium/Source/Widgets/subscribeAndEvaluate');
 var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
 var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
 
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var komapping = require('../../public/third_party/knockout.mapping');
-var knockoutES5 = require('../../third_party/cesium/Source/ThirdParty/knockout-es5');
 
 var corsProxy = require('../Core/corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
-var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
-var CatalogGroupViewModel = require('../ViewModels/CatalogGroupViewModel');
-var CatalogViewModel = require('../ViewModels/CatalogViewModel');
 var CesiumViewModel = require('../ViewModels/CesiumViewModel');
 var LeafletViewModel = require('../ViewModels/LeafletViewModel');
 var NavigationWidget = require('./NavigationWidget');
-var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');
 var PopupMessage = require('./PopupMessage');
-var readJson = require('../Core/readJson');
 var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
@@ -181,7 +162,7 @@ var AusGlobeViewer = function(application, initialCamera) {
                             }
                         });
 
-                        var sharePanel = new SharePanel({
+                        SharePanel.open({
                             request: request,
                             container: document.body,
                             itemsSkippedBecauseTheyHaveLocalData: userDataSerializeOptions.itemsSkippedBecauseTheyHaveLocalData
@@ -211,7 +192,7 @@ var AusGlobeViewer = function(application, initialCamera) {
                             catalog: jsonCatalog
                         };
 
-                        var sharePanel = new ServicesPanel({
+                        ServicesPanel.open({
                             request: request,
                             container: document.body,
                             catalog: that.application.catalog,
@@ -295,7 +276,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, 2D
     }
 
     if (document.body.clientWidth < 520 || document.body.clientHeight < 400) {
-        var smallScreenMessage = new PopupMessage({
+        PopupMessage.open({
             container : document.body,
             title : 'Small screen or window',
             message : '\
@@ -330,6 +311,10 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     knockout.getObservable(this.application, 'viewerMode').subscribe(function() {
         changeViewer(this);
     }, this);
+};
+
+AusGlobeViewer.create = function(application, initialCamera) {
+    return new AusGlobeViewer(application, initialCamera);
 };
 
 function changeViewer(viewer) {
@@ -599,7 +584,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             console.log('Switching to EllipsoidTerrainProvider.');
             viewer.scene.terrainProvider = new EllipsoidTerrainProvider();
             if (!defined(that.TerrainMessageViewed)) {
-                var msg = new PopupMessage({
+                PopupMessage.open({
                     container : document.body,
                     title : 'Terrain Server Not Responding',
                     message : '\
@@ -627,9 +612,7 @@ us via email at nationalmap@lists.nicta.com.au.'
 
 
     var scene = viewer.scene;
-    var canvas = scene.canvas;
     var globe = scene.globe;
-    var ellipsoid = globe.ellipsoid;
     var camera = scene.camera;
 
     globe.depthTestAgainstTerrain = false;
@@ -1009,7 +992,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     }
 };
 
-var offsetScratch = new Cartesian3();
 var geodesic = new EllipsoidGeodesic();
 
 var distances = [
@@ -1221,7 +1203,7 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
     }
     
     //table info
-    var tableData, start, finish, current;
+    var start, finish;
     if (layer.dataSource !== undefined) {
         var collection = layer.dataSource.entities;
         var availability = collection.computeAvailability();
@@ -1293,8 +1275,6 @@ function flyToPosition(scene, position, durationMilliseconds) {
     var camera = scene.camera;
     var startPosition = camera.position;
     var endPosition = position;
-    var heading = camera.heading;
-    var tilt = camera.tilt;
 
     durationMilliseconds = defaultValue(durationMilliseconds, 200);
 
@@ -1455,7 +1435,6 @@ function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, 
 function selectFeatureLeaflet(viewer, latlng) {
     var dataSources = viewer.application.nowViewing.items;
 
-    var pickedLocation = new Cartographic(CesiumMath.toRadians(latlng.lng), CesiumMath.toRadians(latlng.lat));
     var pickedXY = viewer.map.latLngToContainerPoint(latlng, viewer.map.getZoom());
     var bounds = viewer.map.getBounds();
     var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));

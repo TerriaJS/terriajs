@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,$*/
+/*global $*/
 
 function gmlToGeoJson(xml) {
     var json = $.xml2json(xml);

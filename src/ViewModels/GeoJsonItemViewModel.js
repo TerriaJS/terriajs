@@ -1,33 +1,25 @@
 'use strict';
 
-/*global require,L,URI,$,proj4,proj4_epsg*/
+/*global require,proj4,proj4_epsg*/
 
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var clone = require('../../third_party/cesium/Source/Core/clone');
 var Color = require('../../third_party/cesium/Source/Core/Color');
 var ColorMaterialProperty = require('../../third_party/cesium/Source/DataSources/ColorMaterialProperty');
-var combine = require('../../third_party/cesium/Source/Core/combine');
 var ConstantProperty = require('../../third_party/cesium/Source/DataSources/ConstantProperty');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var GeoJsonDataSource = require('../../third_party/cesium/Source/DataSources/GeoJsonDataSource');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
-var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readJson = require('../Core/readJson');
 
 var lineAndFillPalette = {
@@ -156,7 +148,7 @@ GeoJsonItemViewModel.prototype._load = function() {
             });
         });
     } else {
-        return loadJson(that.url).then(function(json) {
+        return loadJson(proxyUrl(that.application, that.url)).then(function(json) {
             return updateViewModelFromData(that, json);
         }).otherwise(function(e) {
             throw new ViewModelError({

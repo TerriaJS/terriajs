@@ -5,25 +5,21 @@
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var Scene = require('../../third_party/cesium/Source/Scene/Scene');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var arraysAreEqual = require('../Core/arraysAreEqual');
 var MetadataViewModel = require('./MetadataViewModel');
 var CatalogMemberViewModel = require('./CatalogMemberViewModel');
 var inherit = require('../Core/inherit');
-var NowViewingViewModel = require('./NowViewingViewModel');
 var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var runLater = require('../Core/runLater');
-var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**
  * A data item in a {@link CatalogGroupViewModel}.
@@ -755,8 +751,6 @@ function isEnabledChanged(viewModel) {
 }
 
 function isShownChanged(viewModel) {
-    var application = viewModel.application;
-
     if (viewModel.isShown) {
         // If the item is not enabled, do that first.  This way things will work even if isShown is
         // deserialized before isEnabled.

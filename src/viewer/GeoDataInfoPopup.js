@@ -1,14 +1,9 @@
 "use strict";
 
-/*global require,$*/
-var defined = require('../../third_party/cesium/Source/Core/defined');
+/*global require*/
 var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 
-var corsProxy = require('../Core/corsProxy');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var komapping = require('../../public/third_party/knockout.mapping');
 
 var GeoDataInfoPopup = function(options) {
     var container = getElement(options.container);
@@ -159,6 +154,10 @@ var GeoDataInfoPopup = function(options) {
     };
 
     knockout.applyBindings(this._viewModel, wrapper);
+};
+
+GeoDataInfoPopup.open = function(options) {
+    return new GeoDataInfoPopup(options);
 };
 
 module.exports = GeoDataInfoPopup;
