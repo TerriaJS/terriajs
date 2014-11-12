@@ -1,33 +1,23 @@
 'use strict';
 
-/*global require,L,URI,Document,$*/
+/*global require,L,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var Color = require('../../third_party/cesium/Source/Core/Color');
-var ColorMaterialProperty = require('../../third_party/cesium/Source/DataSources/ColorMaterialProperty');
 var combine = require('../../third_party/cesium/Source/Core/combine');
-var ConstantProperty = require('../../third_party/cesium/Source/DataSources/ConstantProperty');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var TableDataSource = require('../Map/TableDataSource');
 var VarType = require('../Map/VarType');
 
-var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readText = require('../Core/readText');
 
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
@@ -504,7 +494,6 @@ function createRegionLookupFunc(viewModel) {
     }
     var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
-    var vars = dataset.getVarList();
     var description = regionWmsMap[viewModel.regionType];
  
     var codes = dataset.getDataValues(viewModel.regionVar);
@@ -567,35 +556,6 @@ function setRegionVariable(viewModel, regionVar, regionType) {
     else {
         succeed();
     }
-}
-
-function setRegionDataVariable(viewModel, newVar) {
-    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
-        return;
-    }
-
-    var dataSource = viewModel._tableDataSource;
-    var dataset = dataSource.dataset;
-    if (dataset.getCurrentVariable() === newVar) {
-        return;
-    }
-    dataset.setCurrentVariable({ variable: newVar}); 
-    createRegionLookupFunc(viewModel);
-    
-    console.log('Var set to:', newVar);
-
-    viewModel._rebuild();
-}
-
-function setRegionColorMap(viewModel, dataColorMap) {
-     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
-        return;
-    }
-
-    viewModel._tableDataSource.setColorGradient(dataColorMap);
-    createRegionLookupFunc(viewModel);
-
-    viewModel._rebuild();
 }
 
 function addRegionMap(viewModel) {

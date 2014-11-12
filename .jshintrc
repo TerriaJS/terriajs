@@ -15,7 +15,7 @@
   "quotmark": false,
   "regexp": false,
   "undef": true,
-  "unused": false,
+  "unused": "vars",
   "strict": true,
   "trailing": true,
   "asi": false,
