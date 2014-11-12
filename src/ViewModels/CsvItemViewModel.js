@@ -10,6 +10,7 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var corsProxy = require('../Core/corsProxy');
 
 var TableDataSource = require('../Map/TableDataSource');
 var VarType = require('../Map/VarType');
@@ -122,10 +123,10 @@ CsvItemViewModel.prototype._load = function() {
         return when(that.data, function(data) {
             if (data instanceof Blob) {
                 return readText(data).then(function(text) {
-                    loadTable(that, text);
+                    return loadTable(that, text);
                 });
             } else if (data instanceof String) {
-                loadTable(that, data);
+                return loadTable(that, data);
             } else {
                 throw new ViewModelError({
                     sender: that,
@@ -140,7 +141,7 @@ If you believe it is a bug in National Map, please report it by emailing \
         });
     } else if (defined(that.url)) {
         return loadText(proxyUrl(that, that.url)).then(function(text) {
-            loadTable(that, text);
+            return loadTable(that, text);
         }).otherwise(function(e) {
             throw new ViewModelError({
                 sender: that,
@@ -331,18 +332,17 @@ function loadTable(viewModel, text) {
 
     if (!viewModel._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
-        if (addRegionMap(viewModel)) {
-            viewModel.regionMapped = true;
-        }
-        else {
-            throw new ViewModelError({
-                sender: viewModel,
-                title: 'Could not load CSV file',
-                message: '\
+        return when(addRegionMap(viewModel), function() {
+            if (viewModel._regionMapped !== true) {
+                throw new ViewModelError({
+                    sender: viewModel,
+                    title: 'Could not load CSV file',
+                    message: '\
 Could not find any location parameters for latitude and longitude and was not able to determine \
 a region mapping column.'
-            });
-        }
+                });
+            }
+        });
     }
     else {
         viewModel.clock = viewModel._tableDataSource.clock;
@@ -450,13 +450,16 @@ var regionWmsMap = {
 };
 
 //TODO: if we add enum capability and then can work with any unique field
-//TODO: need way to support a progress display on slow loads
-function loadRegionIDs(description, succeed, fail) {
+function loadRegionIDs(description) {
+    if (defined(description.idMap)) {
+        return;
+    }
+
     var url = regionServer + '?service=wfs&version=2.0&request=getPropertyValue';
     url += '&typenames=' + description.name;
     url += '&valueReference=' + description.regionProp;
     url = corsProxy.getURL(url);
-    loadText(url).then(function (text) { 
+    return loadText(url).then(function (text) { 
         var obj = $.xml2json(text);
 
         if (!defined(obj.member)) {
@@ -470,9 +473,8 @@ function loadRegionIDs(description, succeed, fail) {
             idMap.push(parseInt(obj.member[i][description.regionProp],10));
         }
         description.idMap = idMap;
-        succeed();
     }, function(err) {
-        fail();
+        console.log(err);
     });
 }
 
@@ -541,22 +543,42 @@ function setRegionVariable(viewModel, regionVar, regionType) {
     }
     console.log('Region type:', viewModel.regionType, ', Region var:', viewModel.regionVar);
         
-    var succeed = function() {
+    return when(loadRegionIDs(description), function() {
         createRegionLookupFunc(viewModel);
         viewModel._regionMapped = true;
-        viewModel.isLoading = false;
-    };
-    var fail = function () {
-        console.log('failed to load region ids from server');
-    };
-
-    if (!defined(description.idMap)) {
-        loadRegionIDs(description, succeed, fail);
-    }
-    else {
-        succeed();
-    }
+    });
 }
+
+/*
+function setRegionDataVariable(viewModel, newVar) {
+    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
+        return;
+    }
+
+    var dataSource = viewModel._tableDataSource;
+    var dataset = dataSource.dataset;
+    if (dataset.getCurrentVariable() === newVar) {
+        return;
+    }
+    dataset.setCurrentVariable({ variable: newVar}); 
+    createRegionLookupFunc(viewModel);
+    
+    console.log('Var set to:', newVar);
+
+    viewModel._rebuild();
+}
+
+function setRegionColorMap(viewModel, dataColorMap) {
+     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
+        return;
+    }
+
+    viewModel._tableDataSource.setColorGradient(dataColorMap);
+    createRegionLookupFunc(viewModel);
+
+    viewModel._rebuild();
+}
+*/
 
 function addRegionMap(viewModel) {
     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
@@ -581,7 +603,7 @@ function addRegionMap(viewModel) {
         }
         
         if (idx === -1) {
-            return false;
+            return;
         }
 
             //change current var if necessary
@@ -614,9 +636,7 @@ function addRegionMap(viewModel) {
     
     //TODO: figure out how sharing works or doesn't
     
-    setRegionVariable(viewModel, viewModel.style.table.region, viewModel.style.table.regionType);
-
-    return true;
+    return setRegionVariable(viewModel, viewModel.style.table.region, viewModel.style.table.regionType);
 }
 
 
