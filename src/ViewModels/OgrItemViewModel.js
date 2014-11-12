@@ -111,6 +111,19 @@ OgrItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
 };
 
 OgrItemViewModel.prototype._load = function() {
+    if (typeof FormData === 'undefined') {
+        throw new ViewModelError({
+            sender: this,
+            title: 'Legacy browser not supported',
+            message: '\
+Your web browser does not support the "FormData" type, which is required by the National Map conversion service.  \
+We recommend you upgrade to the latest version of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, \
+<a href="https://www.apple.com/au/osx/how-to-upgrade/" target="_blank">Apple Safari</a>, or \
+<a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>.'
+        });
+    }
+
     this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
 
     var that = this;
@@ -155,15 +168,6 @@ OgrItemViewModel.prototype._hide = function() {
         this._geoJsonViewModel._hide();
     }
 };
-
-
-function proxyUrl(application, url) {
-    if (defined(application.corsProxy) && application.corsProxy.shouldUseProxy(url)) {
-        return application.corsProxy.getURL(url);
-    }
-
-    return url;
-}
 
 function loadOgrData(viewModel, file, url) {
 
