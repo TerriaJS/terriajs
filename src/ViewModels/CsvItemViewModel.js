@@ -602,8 +602,25 @@ function addRegionMap(viewModel) {
             }
         }
         
+        //quick hack to test out filtering the region data from region_id
         if (idx === -1) {
-            return;
+            idx = vars.indexOf('region_id');
+            if (idx === -1) {
+                return;
+            }
+            var code = dataset.getDataValue('region_id', 0);
+            regionType = code.replace(/[0-9]/g, '');
+            var vals = dataset.getDataValues('region_id');
+            var new_vals = [];
+            for (var i = 0; i < vals.length; i++) {
+                var id = dataset.getDataValue('region_id', vals[i]).replace( /^\D+/g, '');
+                new_vals.push(parseInt(id,10));
+            }
+            dataset.variables['region_id'].vals = new_vals;
+            dataset.variables[regionType] = dataset.variables['region_id'];
+            delete dataset.variables['region_id'];
+            vars = dataset.getVarList();
+            idx = vars.indexOf(regionType);
         }
 
             //change current var if necessary
