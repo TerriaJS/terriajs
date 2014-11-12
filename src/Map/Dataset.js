@@ -182,7 +182,6 @@ Dataset.prototype._processVariables = function () {
 */
 Dataset.prototype.loadJson = function (jsonTable) {
 
-    var dataObject = { positions: [], dataValues: [] };
     this.dataShape = undefined;
 
     //create the variable set

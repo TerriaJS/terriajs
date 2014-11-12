@@ -2,7 +2,6 @@
 
 /*global require,L,URI,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
@@ -14,17 +13,13 @@ var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/Geogr
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
-var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
-var CatalogItemViewModel = require('./CatalogItemViewModel');
 var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
  * A {@link ImageryLayerItemViewModel} representing a layer from a Web Map Service (WMS) server.
@@ -305,8 +300,6 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
-
-    var map = this.application.leaflet.map;
 
     var options = {
         layers : this.layers,

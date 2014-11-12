@@ -2,25 +2,14 @@
 
 /*global require*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var Color = require('../../third_party/cesium/Source/Core/Color');
-var ColorMaterialProperty = require('../../third_party/cesium/Source/DataSources/ColorMaterialProperty');
-var combine = require('../../third_party/cesium/Source/Core/combine');
-var ConstantProperty = require('../../third_party/cesium/Source/DataSources/ConstantProperty');
 var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');

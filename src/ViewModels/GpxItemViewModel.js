@@ -1,23 +1,16 @@
 'use strict';
 
-/*global require,Document,$,toGeoJSON*/
+/*global require,toGeoJSON*/
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
-var readXml = require('../Core/readXml');
 
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
 var readText = require('../Core/readText');

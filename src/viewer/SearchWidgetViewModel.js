@@ -12,7 +12,6 @@ var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
-var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
 

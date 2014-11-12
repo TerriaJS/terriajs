@@ -1,4 +1,4 @@
-/*global require,$*/
+/*global require*/
 "use strict";
 
 var Dataset = require('./Dataset');
@@ -11,7 +11,6 @@ And writes a czml file for it to display
 
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
 var Color = require('../../third_party/cesium/Source/Core/Color');

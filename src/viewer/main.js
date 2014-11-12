@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,$,URI*/
+/*global require,URI*/
 
 var start = true;
 
@@ -12,7 +12,7 @@ if (typeof window === 'undefined') {
     start = false;
 } else {
     if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
-        var oldBrowserMessage = new PopupMessage({
+        PopupMessage.open({
             container : document.body,
             title : 'Internet Explorer 8 or earlier detected',
             message : '\
@@ -36,10 +36,8 @@ if (start) {
 
     window.CESIUM_BASE_URL = 'build/Cesium/';
 
-    var copyright = require('../CopyrightModule');
+    var copyright = require('../CopyrightModule'); // jshint ignore:line
 
-    var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-    var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
     var defined = require('../../third_party/cesium/Source/Core/defined');
     var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -49,10 +47,8 @@ if (start) {
     var AusGlobeViewer = require('./AusGlobeViewer');
     var corsProxy = require('../Core/corsProxy');
     var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
-    var CatalogViewModel = require('../ViewModels/CatalogViewModel');
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
     var PopupMessage = require('./PopupMessage');
-    var NowViewingViewModel = require('../ViewModels/NowViewingViewModel');
     var registerCatalogViewModels = require('../ViewModels/registerCatalogViewModels');
 
     SvgPathBindingHandler.register(knockout);
@@ -63,7 +59,7 @@ if (start) {
     application.catalog.isLoading = true;
 
     application.error.addEventListener(function(e) {
-        var message = new PopupMessage({
+        PopupMessage.open({
             container : document.body,
             title: e.title,
             message: e.message
@@ -160,7 +156,7 @@ if (start) {
                             isUserSupplied: isUserSupplied
                         }));
                     } catch(e) {
-                        var message = new PopupMessage({
+                        PopupMessage.open({
                             container: document.body,
                             title: 'An error occurred while loading the catalog',
                             message: e.toString()
@@ -176,7 +172,7 @@ if (start) {
             when.all(promises, function() {
                 application.catalog.isLoading = false;
 
-                var viewer = new AusGlobeViewer(application, camera);
+                AusGlobeViewer.create(application, camera);
 
                 document.getElementById('loadingIndicator').style.display = 'none';
             });
@@ -190,7 +186,7 @@ function loadInitSource(source) {
             initSource.isFromExternalFile = true;
             return initSource;
         }).otherwise(function() {
-            var message = new PopupMessage({
+            PopupMessage.open({
                 container : document.body,
                 title: 'Error loading initialization source',
                 message: 'An error occurred while loading initialization information from ' + source + '.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.'

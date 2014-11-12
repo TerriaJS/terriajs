@@ -1,30 +1,19 @@
 'use strict';
 
-/*global require,L,URI,$*/
+/*global require,URI*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var combine = require('../../third_party/cesium/Source/Core/combine');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var objectToQuery = require('../../third_party/cesium/Source/Core/objectToQuery');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 
-var corsProxy = require('../Core/corsProxy');
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
-var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var gmlToGeoJson = require('../Map/gmlToGeoJson');
 
 /**
