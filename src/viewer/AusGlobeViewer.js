@@ -55,8 +55,6 @@ var Animation = require('../../third_party/cesium/Source/Widgets/Animation/Anima
 var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animation/AnimationViewModel');
 var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timeline');
 var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
-var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
-
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
@@ -621,11 +619,11 @@ us via email at nationalmap@lists.nicta.com.au.'
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('BING', undefined, 'http://www.bing.com/'));
 
 
-    //Placeholder for now
-    var monitor = new FrameRateMonitor.fromScene(scene);
-    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
-        console.log('Unusually slow startup detected!!  Messagebox for user options - webgl fixes, 2d mode.');
-    });
+    //Placeholder for now - commenting out since the warning doesn't mean much when we stop the render loop
+//    var monitor = new FrameRateMonitor.fromScene(scene);
+//    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
+//        console.log('Unusually slow startup detected!!  Messagebox for user options - webgl fixes, 2d mode.');
+//    });
 
 
     var inputHandler = viewer.screenSpaceEventHandler;

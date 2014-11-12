@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,ga,alert,L,URI*/
+/*global require,ga,alert,L,URI,confirm*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
@@ -142,6 +142,16 @@ files (.csv).  The file extension of the file in the user-specified URL must mat
 these extensions in order for National Map to know how to load it.'
                 });
                 return;
+            }
+
+            if (newViewModel.type === 'ogr' ) {
+                    //TODO: popup message with buttons
+                if (!confirm('\
+This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
+format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
+and the file will not be uploaded or added to the map.')) {
+                    return;
+                }
             }
 
             var lastSlashIndex = that.addDataUrl.lastIndexOf('/');
@@ -333,47 +343,10 @@ these extensions in order for National Map to know how to load it.'
         }
     });
 
-    function ogrConversionService(file) {
-        file.convertAttempted = true;
-        if (file.size < 1000000) {
-            //TODO: check against list of support extensions to avoid unnecessary forwarding?
-            //TODO: need to confirm with user??
-
-            // generate form to submit file for conversion
-            var formData = new FormData();
-            formData.append('input_file', file);
-
-            var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        file.json = JSON.parse(xhr.responseText);
-                        file.newName =  file.name + '.geojson';
-                    } else {
-                        console.log('Unable to convert', file.name);
-                    }                  
-                    addFile(file);
-                 }
-            };
-            //TODO: figure out right way to get host address
-            var url = 'http://localhost/convert';
- //           var url = 'http://nationalmap.nicta.com.au/convert';
-            xhr.open('POST', url);
-            xhr.send(formData);
-            console.log('Attempting to convert file via our ogrservice');
-            return true;
-        }
-        return false;
-    }
-
     function addFile(file) {
         var name = file.newName || file.name;
         var newViewModel = createCatalogItemFromUrl(name, that.catalog.application);
-        if (!defined(newViewModel) && !defined(file.convertAttempted)) {
-            if (ogrConversionService(file)) {
-                return;
-            }
-        }
+
         if (!defined(newViewModel)) {
             PopupMessage.open({
                 container : document.body,
@@ -386,6 +359,16 @@ files (.csv).  The file extension of the file in the user-specified URL must mat
 these extensions in order for National Map to know how to load it.'
             });
             return;
+        }
+
+        if (newViewModel.type === 'ogr' ) {
+                //TODO: popup message with buttons
+            if (!confirm('\
+This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
+format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
+and the file will not be uploaded or added to the map.')) {
+                return;
+            }
         }
 
         var lastSlashIndex = name.lastIndexOf('/');
