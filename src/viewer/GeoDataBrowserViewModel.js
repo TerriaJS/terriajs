@@ -153,7 +153,10 @@ these extensions in order for National Map to know how to load it.'
 
             if (newViewModel.type === 'ogr' ) {
                     //TODO: popup message with buttons
-                if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
+                if (!confirm('\
+This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
+format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
+and the file will not be uploaded or added to the map.')) {
                     return;
                 }
             }
@@ -367,7 +370,10 @@ these extensions in order for National Map to know how to load it.'
 
         if (newViewModel.type === 'ogr' ) {
                 //TODO: popup message with buttons
-            if (!confirm('No local format handler.  Click OK to try to convert via our web service.')) {
+            if (!confirm('\
+This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
+format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
+and the file will not be uploaded or added to the map.')) {
                 return;
             }
         }
