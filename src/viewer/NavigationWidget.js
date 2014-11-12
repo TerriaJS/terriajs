@@ -2,15 +2,12 @@
 
 /*global require,ga*/
 
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
-var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
-var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var Ray = require('../../third_party/cesium/Source/Core/Ray');
 var IntersectionTests = require('../../third_party/cesium/Source/Core/IntersectionTests');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -135,8 +132,7 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
     var trans = Matrix4.fromTranslation(focus);
     var oldTrans = scene.camera.transform;
     scene.camera.transform = trans;
-        //save the positon and translate camera in reference to current pos
-    var oldPos = scene.camera.position;
+        //translate camera in reference to current pos
     scene.camera.position = campos;
 
     var controller = scene.screenSpaceCameraController;

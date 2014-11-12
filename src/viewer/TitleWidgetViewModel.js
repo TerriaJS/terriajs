@@ -21,7 +21,6 @@ var TitleWidgetViewModel = function(options) {
         };
     });
 
-    var that = this;
     this._selectMenuItem = createCommand(function(menuItem) {
         ga('send', 'event', 'titleMenu', 'click', menuItem.tooltip);
         if (defined(menuItem.callback)) {

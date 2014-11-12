@@ -1,7 +1,5 @@
 'use strict';
 
-/*global require*/
-
 var LeafletViewModel = function(application, map) {
     /**
      * Gets or sets the Leaflet {@link Map} instance.

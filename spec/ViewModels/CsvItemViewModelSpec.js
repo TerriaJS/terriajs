@@ -3,7 +3,6 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var ApplicationViewModel = require('../../src/ViewModels/ApplicationViewModel');
-var ImageryLayerItemViewModel = require('../../src/ViewModels/ImageryLayerItemViewModel');
 var CatalogItemViewModel = require('../../src/ViewModels/CatalogItemViewModel');
 var CsvItemViewModel = require('../../src/ViewModels/CsvItemViewModel');
 
@@ -25,7 +24,7 @@ describe('CsvDataItemViewModel', function() {
 
     it('throws if constructed without an application', function() {
         expect(function() {
-            var viewModel = new CsvItemViewModel();
+            var viewModel = new CsvItemViewModel(); // jshint ignore:line
         }).toThrow();
     });
 
