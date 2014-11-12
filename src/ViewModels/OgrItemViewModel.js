@@ -108,41 +108,30 @@ defineProperties(OgrItemViewModel.prototype, {
     }
 });
 
-/**
- * Processes the Ogr data supplied via the {@link OgrItemViewModel#data} property.  If
- * {@link OgrItemViewModel#data} is undefined, this method downloads ogr2ogr supported formats data from 
- * {@link OgrItemViewModel#url} and processes it into GeoJson.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-OgrItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
-        return;
-    }
+OgrItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
 
-    this.isLoading = true;
+OgrItemViewModel.prototype._load = function() {
     this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
 
     var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedData = that.data;
 
-        if (defined(that.data)) {
-            when(that.data, function(data) {
-                if (!(data instanceof Blob)) {
-                    //create a file blob
-                    data = new Blob([data], {
-                        type : 'application/octet-stream', 
-                        name: that.dataSourceUrl, 
-                        lastModifiedDate: new Date()
-                    });
-                }
-                loadOgrData(that, data);
-            });
-        } else {
-            loadOgrData(that, undefined, that.url);
-        }
-    });
+    if (defined(that.data)) {
+        return when(that.data, function(data) {
+            if (!(data instanceof Blob)) {
+                //create a file blob
+                data = new Blob([data], {
+                    type : 'application/octet-stream', 
+                    name: that.dataSourceUrl, 
+                    lastModifiedDate: new Date()
+                });
+            }
+            return loadOgrData(that, data);
+        });
+    } else {
+        return loadOgrData(that, undefined, that.url);
+    }
 };
 
 OgrItemViewModel.prototype._enable = function() {
@@ -196,50 +185,34 @@ function loadOgrData(viewModel, file, url) {
         formData.append('input_url', url);
     }
 
-    loadWithXhr({
+    return loadWithXhr({
         url : '/convert',
         method : 'POST',
         data : formData
     }).then(function(response) {
-        loadGeoJsonText(viewModel, JSON.parse(response));
+        viewModel._geoJsonViewModel.data = JSON.parse(response);
+
+        return viewModel._geoJsonViewModel.load().then(function() {
+            viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
+            viewModel.clock = viewModel._geoJsonViewModel.clock;
+        });
     }).otherwise(function() {
         errorLoading(viewModel);
     });
 
-    console.log('Attempting to convert file via our ogrservice');
+    console.log('Attempting to convert file via the NM ogr2ogr web service');
 }
 
-
-function loadGeoJsonText(viewModel, geojson) {
-
-    viewModel._geoJsonViewModel.data = geojson;
-
-    var subscription = knockout.getObservable(viewModel._geoJsonViewModel, 'isLoading').subscribe(function(newValue) {
-        if (newValue === false) {
-            subscription.dispose();
-            viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
-            viewModel.isLoading = false;
-        }
-    });
-
-    viewModel._geoJsonViewModel.load();
-}
 
 function errorLoading(viewModel) {
-    viewModel.application.error.raiseEvent(new ViewModelError({
+    throw new ViewModelError({
         sender: viewModel,
-        title: 'Error converting file',
+        title: 'Error converting file to GeoJson',
         message: '\
-An error occurred while attempting to convert file.  This may indicate that the file is invalid or that it \
-is not supported by National Map.  If you would like assistance or further information, please email us \
+An error occurred while attempting to convert this file to GeoJson.  This may indicate that the file is invalid or that it \
+is not supported by the National Map conversion service.  If you would like assistance or further information, please email us \
 at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-    }));
-
-    viewModel._loadedUrl = undefined;
-    viewModel._loadedData = undefined;
-    viewModel.isEnabled = false;
-    viewModel.isLoading = false;
-    viewModel._geoJsonViewModel = undefined;
+    });
 }
 
 module.exports = OgrItemViewModel;
