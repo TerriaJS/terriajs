@@ -40,8 +40,6 @@ var OgrItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._geoJsonViewModel = undefined;
-    this._loadedUrl = undefined;
-    this._loadedData = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve OGR data.  This property is ignored if
@@ -173,7 +171,7 @@ function loadOgrData(viewModel, file, url) {
     var formData = new FormData();
     if (defined(file)) {
         if (file.size > 1000000) {
-            errorLoading(viewModel);
+            errorLoading(viewModel, 'The file size is greater than the 1Mb limit of the National Map conversion service.');
             return;
         }
         formData.append('input_file', file);
@@ -184,6 +182,8 @@ function loadOgrData(viewModel, file, url) {
         }
         formData.append('input_url', url);
     }
+
+    console.log('Attempting to convert file via the NM ogr2ogr web service');
 
     return loadWithXhr({
         url : '/convert',
@@ -199,18 +199,18 @@ function loadOgrData(viewModel, file, url) {
     }).otherwise(function() {
         errorLoading(viewModel);
     });
-
-    console.log('Attempting to convert file via the NM ogr2ogr web service');
 }
 
 
-function errorLoading(viewModel) {
+function errorLoading(viewModel, msg) {
+    if (!defined(msg)) {
+        msg = 'This may indicate that the file is invalid or that it is not supported by the National Map conversion service.';
+    }
     throw new ViewModelError({
         sender: viewModel,
         title: 'Error converting file to GeoJson',
         message: '\
-An error occurred while attempting to convert this file to GeoJson.  This may indicate that the file is invalid or that it \
-is not supported by the National Map conversion service.  If you would like assistance or further information, please email us \
+An error occurred while attempting to convert this file to GeoJson.  ' + msg + '  If you would like assistance or further information, please email us \
 at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
     });
 }
