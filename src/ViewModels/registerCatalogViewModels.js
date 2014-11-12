@@ -18,8 +18,6 @@ var CsvItemViewModel = require('./CsvItemViewModel');
 var GpxItemViewModel = require('./GpxItemViewModel');
 var OgrItemViewModel = require('./OgrItemViewModel');
 
-var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
-
 var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
     createCatalogMemberFromType.register('csv', CsvItemViewModel);

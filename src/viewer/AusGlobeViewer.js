@@ -55,8 +55,6 @@ var Animation = require('../../third_party/cesium/Source/Widgets/Animation/Anima
 var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animation/AnimationViewModel');
 var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timeline');
 var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
-var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
-
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
