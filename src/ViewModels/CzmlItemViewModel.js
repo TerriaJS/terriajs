@@ -15,7 +15,6 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -24,11 +23,8 @@ var MetadataViewModel = require('./MetadataViewModel');
 var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
-var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readJson = require('../Core/readJson');
-var runLater = require('../Core/runLater');
 
 /**
  * A {@link CatalogItemViewModel} representing Cesium Language (CZML) data.
@@ -44,8 +40,6 @@ var CzmlItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._czmlDataSource = undefined;
-    this._loadedUrl = undefined;
-    this._loadedData = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve CZML data.  This property is ignored if
@@ -112,51 +106,39 @@ defineProperties(CzmlItemViewModel.prototype, {
     }
 });
 
-/**
- * Processes the CZML data supplied via the {@link CzmlItemViewModel#data} property.  If
- * {@link CzmlItemViewModel#data} is undefined, this method downloads CZML data from 
- * {@link CzmlItemViewModel#url} and processes that.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-CzmlItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
-        return;
-    }
+CzmlItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
 
-    this.isLoading = true;
-
+CzmlItemViewModel.prototype._load = function() {
     var dataSource = new CzmlDataSource();
     this._czmlDataSource = dataSource;
 
     var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedData = that.data;
 
-        if (defined(that.data)) {
-            when(that.data, function(data) {
-                if (data instanceof Blob) {
-                    readJson(data).then(function(data) {
-                        dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
-                        doneLoading(that);
-                    }).otherwise(function() {
-                        errorLoading(that);
-                    });
-                } else {
+    if (defined(that.data)) {
+        return when(that.data, function(data) {
+            if (data instanceof Blob) {
+                return readJson(data).then(function(data) {
                     dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
                     doneLoading(that);
-                }
-            }).otherwise(function() {
-                errorLoading(that);
-            });
-        } else {
-            dataSource.loadUrl(proxyUrl(that, that.url)).then(function() {
+                }).otherwise(function() {
+                    errorLoading(that);
+                });
+            } else {
+                dataSource.load(data, proxyUrl(that, that.dataSourceUrl));
                 doneLoading(that);
-            }).otherwise(function() {
-                errorLoading(that);
-            });
-        }
-    });
+            }
+        }).otherwise(function() {
+            errorLoading(that);
+        });
+    } else {
+        return dataSource.loadUrl(proxyUrl(that, that.url)).then(function() {
+            doneLoading(that);
+        }).otherwise(function() {
+            errorLoading(that);
+        });
+    }
 };
 
 CzmlItemViewModel.prototype._enable = function() {
@@ -201,24 +183,17 @@ function proxyUrl(application, url) {
 
 function doneLoading(viewModel) {
     viewModel.clock = viewModel._czmlDataSource.clock;
-    viewModel.isLoading = false;
 }
 
 function errorLoading(viewModel) {
-    viewModel.application.error.raiseEvent(new ViewModelError({
+    throw new ViewModelError({
         sender: viewModel,
         title: 'Error loading CZML',
         message: '\
 An error occurred while loading a CZML file.  This may indicate that the file is invalid or that it \
 is not supported by National Map.  If you would like assistance or further information, please email us \
 at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-    }));
-
-    viewModel._loadedUrl = undefined;
-    viewModel._loadedData = undefined;
-    viewModel.isEnabled = false;
-    viewModel.isLoading = false;
-    viewModel._czmlDataSource = undefined;
+    });
 }
 
 module.exports = CzmlItemViewModel;
