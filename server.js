@@ -145,7 +145,7 @@ if (cluster.isMaster) {
     app.disable('etag');
     app.use(express.static(path.join(__dirname, 'public')));
     app.set('dbUrl', config.db[app.settings.env]);
-    mongoose.connect(app.get('dbUrl'));
+//    mongoose.connect(app.get('dbUrl'));
 
     var upstreamProxy = argv['upstream-proxy'];
     var bypassUpstreamProxyHosts = {};

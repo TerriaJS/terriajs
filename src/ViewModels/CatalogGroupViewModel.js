@@ -9,11 +9,14 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var arraysAreEqual = require('../Core/arraysAreEqual');
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
 var CatalogMemberViewModel = require('./CatalogMemberViewModel');
 var inherit = require('../Core/inherit');
-var runWhenDoneLoading = require('./runWhenDoneLoading');
+var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
+var runLater = require('../Core/runLater');
 
 /**
  * A group of data items and other groups in the {@link CatalogViewModel}.  A group can contain
@@ -28,6 +31,9 @@ var runWhenDoneLoading = require('./runWhenDoneLoading');
  */
 var CatalogGroupViewModel = function(application) {
     CatalogMemberViewModel.call(this, application);
+
+    this._loadingPromise = undefined;
+    this._lastLoadInfluencingValues = undefined;
 
     /**
      * Gets or sets a value indicating whether the group is currently expanded and showing
@@ -56,7 +62,7 @@ var CatalogGroupViewModel = function(application) {
     knockout.getObservable(this, 'isOpen').subscribe(function(newValue) {
         // Load this group's items (if we haven't already) when it is opened.
         if (newValue) {
-            that.load();
+            raiseErrorOnRejectedPromise(that.application, that.load());
         }
     });
 
@@ -66,7 +72,7 @@ var CatalogGroupViewModel = function(application) {
         // If this spins you into a stack overflow, verify that your derived-class load method only
         // loads when it actually needs to do so!
         if (newValue === false && that.isOpen) {
-            that.load();
+            raiseErrorOnRejectedPromise(that.application, that.load());
         }
     });
 };
@@ -145,13 +151,10 @@ defineProperties(CatalogGroupViewModel.prototype, {
 CatalogGroupViewModel.defaultUpdaters = clone(CatalogMemberViewModel.defaultUpdaters);
 
 CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName, options) {
-    if (!defined(json.items)) {
-        return;
-    }
+    // Let the group finish loading first.  Otherwise, these changes could get clobbered by the load.
+    return when(viewModel.load(), function() {
+        var promises = [];
 
-    // If the group is still loading, delay this operation until the loading is complete.
-    // Otherwise, these changes could get clobbered by the load.
-    runWhenDoneLoading(viewModel, function(viewModel) {
         // TODO: allow JSON to update the order of items as well.
 
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
@@ -181,9 +184,11 @@ CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
                 }
             }
             if (defined(existingItem)) {
-                existingItem.updateFromJson(item, options);
+                promises.push(existingItem.updateFromJson(item, options));
             }
         }
+
+        return when.all(promises);
     });
 };
 
@@ -225,12 +230,80 @@ CatalogGroupViewModel.defaultPropertiesForSharing.push('isOpened');
 freezeObject(CatalogGroupViewModel.defaultPropertiesForSharing);
 
 /**
- * When implemented in a derived class, loads the contents of this group, if the contents are not already loaded.  It is safe to
+ * Loads the contents of this group, if the contents are not already loaded.  It is safe to
  * call this method multiple times.  The {@link CatalogGroupViewModel#isLoading} flag will be set while the load is in progress.
- * This base-class implementation of this method does nothing because {@link CatalogGroupViewModel} does not do an lazy loading
- * of its content.
+ * Derived classes should implement {@link CatalogGroupViewModel#_load} to perform the actual loading for the group.
+ * Derived classes may optionally implement {@link CatalogGroupViewModel#_getValuesThatInfluenceLoad} to provide an array containing
+ * the current value of all properties that influence this group's load process.  Each time that {@link CatalogGroupViewModel#load}
+ * is invoked, these values are checked against the list of values returned last time, and {@link CatalogGroupViewModel#_load} is
+ * invoked again if they are different.  If {@link CatalogGroupViewModel#_getValuesThatInfluenceLoad} is undefined or returns an
+ * empty array, {@link CatalogGroupViewModel#_load} will only be invoked once, no matter how many times
+ * {@link CatalogGroupViewModel#load} is invoked.
+ *
+ * @returns {Promise} A promise that resolves when the load is complete, or undefined if the group is already loaded.
+ * 
  */
 CatalogGroupViewModel.prototype.load = function() {
+    if (defined(this._loadingPromise)) {
+        // Load already in progress.
+        return this._loadingPromise;
+    }
+
+    var loadInfluencingValues = [];
+    if (defined(this._getValuesThatInfluenceLoad)) {
+        loadInfluencingValues = this._getValuesThatInfluenceLoad();
+    }
+
+    if (arraysAreEqual(loadInfluencingValues, this._lastLoadInfluencingValues)) {
+        // Already loaded, and nothing has changed to force a re-load.
+        return undefined;
+    }
+
+    this.isLoading = true;
+
+    var that = this;
+    this._loadingPromise = runLater(function() {
+        that._lastLoadInfluencingValues = [];
+        if (defined(that._getValuesThatInfluenceLoad)) {
+            that._lastLoadInfluencingValues = that._getValuesThatInfluenceLoad();
+        }
+
+        return that._load();
+    }).then(function() {
+        that._loadingPromise = undefined;
+        that.isLoading = false;
+    }).otherwise(function(e) {
+        that._lastLoadInfluencingValues = undefined;
+        that._loadingPromise = undefined;
+        that.isOpen = false;
+        that.isLoading = false;
+        throw e;
+    });
+
+    return this._loadingPromise;
+};
+
+/**
+ * When implemented in a derived class, this method loads the group.  The base class implementation does nothing.
+ * This method should not be called directly; call {@link CatalogGroupViewModel#load} instead.
+ * @return {Promise} A promise that resolves when the load is complete.
+ * @protected
+ */
+CatalogGroupViewModel.prototype._load = function() {
+    return when();
+};
+
+var emptyArray = freezeObject([]);
+
+/**
+ * When implemented in a derived class, gets an array containing the current value of all properties that
+ * influence this group's load process.  See {@link CatalogGroupViewModel#load} for more information on when and
+ * how this is used.  The base class implementation returns an empty array.
+ * @return {Array} The array of values that influence the load process.
+ * @protected
+ */
+CatalogGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return emptyArray;
 };
 
 /**
