@@ -172,6 +172,22 @@
                     "type": "group",
                     "items": [
                         {
+                            "name": "Catchment Scale Land Use",
+                            "type": "wms",
+                            "layers": "catchment-scale-land-use-of-australia-update-march-2014:clum_50m0314m",
+                            "url": "http://data.gov.au/geoserver/ows",
+                            "description": "This dataset is the most current national compilation of catchment scale land use data for Australia (CLUM), as at March 2014. It is a seamless raster dataset that combines land use data for all state and territory jurisdictions, compiled at a resolution of 50 metres by 50 metres. It has been compiled from vector land use datasets collected as part of state and territory mapping programs through the Australian Collaborative Land Use and Management Program (ACLUMP). Catchment scale land use data was produced by combining land tenure and other types of land use information, fine-scale satellite data and information collected in the field. The date of mapping (1997 to 2012) and scale of mapping (1:25 000 to 1:250 000) vary, reflecting the source data capture date and scale. This information is provided in a supporting polygon dataset.<br/><br/>The CLUM data shows a single dominant land use for a given area, based on the primary management objective of the land manager (as identified by state and territory agencies). Land use is classified according to the Australian Land Use and Management (ALUM) Classification version 7, a three-tiered hierarchical structure. There are five primary classes, identified in order of increasing levels of intervention or potential impact on the natural landscape. Water is included separately as a sixth primary class. Primary and secondary levels relate to the principal land use. Tertiary classes may include additional information on commodity groups, specific commodities, land management practices or vegetation information.<br/>[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[data.gov.au](http://www.data.gov.au/)",
+                            "dataUrl": "http://www.data.gov.au/dataset/catchment-scale-land-use-of-australia-update-march-2014",
+                            "dataUrlType": "direct",
+                            "rectangle": [
+                                "109.49189",
+                                "-44.37510828010957",
+                                "157.22944155237877",
+                                "-8.195534"
+                            ]
+                        },
+                        {
                             "name": "Gravity Image",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
                             "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer/legend",
