@@ -7,9 +7,6 @@ var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject'
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
 var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
-var runLater = require('../Core/runLater');
-
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var SearchWidgetViewModel = require('./SearchWidgetViewModel');
 var KnockoutAutoCompleteBinding = require('./KnockoutAutoCompleteBinding');

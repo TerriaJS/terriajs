@@ -107,6 +107,8 @@ var SearchWidgetViewModel = function (options) {
                 gazetteerSearchProvider.selectResult(results[0]);
                 that._searchText = results[0].name;
                 that._resultsList = [];
+            },function() {
+                cancelGazetteer(that);
             });
         },
         handleAutoComplete: function (query) {
