@@ -14,7 +14,7 @@
                             "url": "test/cemeteries.geojson"
                         },
                         {
-                            "name": "Bike Racks (GeoJSON:reproj",
+                            "name": "Bike Racks (GeoJSON:reproj)",
                             "type": "geojson",
                             "url": "test/bike_racks.geojson"
                         },
@@ -66,6 +66,11 @@
                             "name": "Route in England (GPX)",
                             "type": "gpx",
                             "url": "test/sample.gpx"
+                        },
+                        {
+                            "name": "Airports",
+                            "type": "ogr",
+                            "url": "test/airports.zip"
                         },
                         {
                             "name": "Ferry Routes (GeoJSON via WFS)",

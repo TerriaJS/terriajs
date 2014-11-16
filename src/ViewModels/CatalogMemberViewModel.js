@@ -8,6 +8,7 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 /**
  * A member of a {@link CatalogGroupViewModel}.  A member may be a {@link CatalogItemViewModel} or a
@@ -88,7 +89,8 @@ defineProperties(CatalogMemberViewModel.prototype, {
      * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
-     * literal, and the name of the property.
+     * literal, and the name of the property.  If part of the update happens asynchronously, the updater function should
+     * return a Promise that resolves when it is complete.
      * @memberOf CatalogMemberViewModel.prototype
      * @type {Object}
      */
@@ -160,7 +162,8 @@ freezeObject(CatalogMemberViewModel.defaultPropertiesForSharing);
  * Updates the catalog member from a JSON object-literal description of it.
  * Existing collections with the same name as a collection in the JSON description are
  * updated.  If the description contains a collection with a name that does not yet exist,
- * it is created.
+ * it is created.  Because parts of the update may happen asynchronously, this method
+ * returns at Promise that will resolve when the update is completely done.
  *
  * @param {Object} json The JSON description.  The JSON should be in the form of an object literal, not a string.
  * @param {Object} [options] Object with the following properties:
@@ -168,21 +171,26 @@ freezeObject(CatalogMemberViewModel.defaultPropertiesForSharing);
  *                                                    may be created by this update.
  * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMemberViewModel#isUserSupplied} property of updated catalog members
  *                                           to the given value.  If not specified, the property is left unchanged.
- */
+  * @returns {Promise} A promise that resolves when the update is complete.
+*/
 CatalogMemberViewModel.prototype.updateFromJson = function(json, options) {
     if (defined(options) && defined(options.isUserSupplied)) {
         this.isUserSupplied = options.isUserSupplied;
     }
 
+    var promises = [];
+
     for (var propertyName in this) {
         if (this.hasOwnProperty(propertyName) && defined(json[propertyName]) && propertyName.length > 0 && propertyName[0] !== '_') {
             if (this.updaters && this.updaters[propertyName]) {
-                this.updaters[propertyName](this, json, propertyName, options);
+                promises.push(this.updaters[propertyName](this, json, propertyName, options));
             } else {
                 this[propertyName] = json[propertyName];
             }
         }
     }
+
+    return when.all(promises);
 };
 
 /**

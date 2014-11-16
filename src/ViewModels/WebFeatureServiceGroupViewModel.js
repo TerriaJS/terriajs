@@ -2,28 +2,17 @@
 
 /*global require,URI,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var combine = require('../../third_party/cesium/Source/Core/combine');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../Core/corsProxy');
 var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../Core/inherit');
-var PopupMessage = require('../viewer/PopupMessage');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
-var runLater = require('../Core/runLater');
 var unionRectangles = require('../Map/unionRectangles');
 var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel');
 
@@ -38,8 +27,6 @@ var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel')
  */
 var WebFeatureServiceGroupViewModel = function(application) {
     CatalogGroupViewModel.call(this, application, 'wfs-getCapabilities');
-
-    this._loadedUrl = undefined;
 
     /**
      * Gets or sets the URL of the WFS server.  This property is observable.
@@ -127,31 +114,15 @@ WebFeatureServiceGroupViewModel.defaultSerializers.isLoading = function(viewMode
 
 freezeObject(WebFeatureServiceGroupViewModel.defaultSerializers);
 
-/**
- * Loads the items in this group by invoking the GetCapabilities service on the WFS server.
- * Each layer in the response becomes an item in the group.  The {@link CatalogGroupViewModel#isLoading} flag will
- * be set while the load is in progress.
- */
-WebFeatureServiceGroupViewModel.prototype.load = function() {
-    if (this.url === this._loadedUrl || this.isLoading) {
-        return;
-    }
-
-    this.isLoading = true;
-
-    var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        getCapabilities(that).always(function() {
-            that.isLoading = false;
-        });
-    });
+WebFeatureServiceGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url];
 };
 
-function getCapabilities(viewModel) {
-    var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '?service=WFS&version=1.1.0&request=GetCapabilities';
+WebFeatureServiceGroupViewModel.prototype._load = function() {
+    var url = cleanAndProxyUrl(this.application, this.url) + '?service=WFS&version=1.1.0&request=GetCapabilities';
 
-    return when(loadXML(url), function(xml) {
+    var that = this;
+    return loadXML(url).then(function(xml) {
         var json = $.xml2json(xml);
 
         var supportsJsonGetFeature = false;
@@ -168,7 +139,7 @@ function getCapabilities(viewModel) {
             }
         }
 
-        var dataCustodian = viewModel.dataCustodian;
+        var dataCustodian = that.dataCustodian;
         if (!defined(dataCustodian) && defined(json.ServiceProvider) && defined(json.ServiceProvider.ProviderName)) {
             dataCustodian = json.ServiceProvider.ProviderName;
 
@@ -183,10 +154,10 @@ function getCapabilities(viewModel) {
         }
 
         if (defined(json.FeatureTypeList)) {
-            addFeatureTypes(viewModel, json.FeatureTypeList.FeatureType, viewModel.items, undefined, supportsJsonGetFeature, dataCustodian);
+            addFeatureTypes(that, json.FeatureTypeList.FeatureType, that.items, undefined, supportsJsonGetFeature, dataCustodian);
         }
-    }, function(e) {
-        viewModel.application.error.raiseEvent(new ViewModelError({
+    }).otherwise(function(e) {
+        throw new ViewModelError({
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WFS server.  \
@@ -200,12 +171,9 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
 problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-        }));
-
-        viewModel.isOpen = false;
-        viewModel._loadedUrl = undefined;
+        });
     });
-}
+};
 
 function findElementByName(list, name) {
     if (!defined(list)) {

@@ -2,29 +2,19 @@
 
 /*global require,URI,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../Core/corsProxy');
 var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../Core/inherit');
-var PopupMessage = require('../viewer/PopupMessage');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
-var runLater = require('../Core/runLater');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 
 /**
@@ -38,8 +28,6 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
  */
 var WebMapServiceGroupViewModel = function(application) {
     CatalogGroupViewModel.call(this, application, 'wms-getCapabilities');
-
-    this._loadedUrl = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -117,41 +105,27 @@ WebMapServiceGroupViewModel.defaultSerializers.items = function(viewModel, json,
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
+    var result = CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;
+
+    return result;
 };
 
 WebMapServiceGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
 freezeObject(WebMapServiceGroupViewModel.defaultSerializers);
 
-/**
- * Loads the items in this group by invoking the GetCapabilities service on the WMS server.
- * Each layer in the response becomes an item in the group.  The {@link CatalogGroupViewModel#isLoading} flag will
- * be set while the load is in progress.
- */
-WebMapServiceGroupViewModel.prototype.load = function() {
-    if (this.url === this._loadedUrl || this.isLoading) {
-        return;
-    }
-
-    this.isLoading = true;
-
-    var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        getCapabilities(that).always(function() {
-            that.isLoading = false;
-        });
-    });
+WebMapServiceGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url];
 };
 
-function getCapabilities(viewModel) {
-    var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '?service=WMS&request=GetCapabilities';
+WebMapServiceGroupViewModel.prototype._load = function() {
+    var url = cleanAndProxyUrl(this.application, this.url) + '?service=WMS&request=GetCapabilities';
 
-    return when(loadXML(url), function(xml) {
+    var that = this;
+    return loadXML(url).then(function(xml) {
         var json = $.xml2json(xml);
 
         var supportsJsonGetFeatureInfo = false;
@@ -168,7 +142,7 @@ function getCapabilities(viewModel) {
             }
         }
 
-        var dataCustodian = viewModel.dataCustodian;
+        var dataCustodian = that.dataCustodian;
         if (!defined(dataCustodian) && defined(json.Service.ContactInformation)) {
             var contactInfo = json.Service.ContactInformation;
 
@@ -188,9 +162,10 @@ function getCapabilities(viewModel) {
             dataCustodian = text;
         }
 
-        addLayersRecursively(viewModel, json.Capability.Layer, viewModel.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
-    }, function(e) {
-        viewModel.application.error.raiseEvent(new ViewModelError({
+        addLayersRecursively(that, json.Capability.Layer, that.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
+    }).otherwise(function(e) {
+        throw new ViewModelError({
+            sender: that,
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WMS server.  \
@@ -204,12 +179,9 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
 problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-        }));
-
-        viewModel.isOpen = false;
-        viewModel._loadedUrl = undefined;
+        });
     });
-}
+};
 
 function cleanAndProxyUrl(application, url) {
     // Strip off the search portion of the URL

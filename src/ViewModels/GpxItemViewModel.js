@@ -1,24 +1,16 @@
 'use strict';
 
-/*global require,Document,$,toGeoJSON*/
+/*global require,toGeoJSON*/
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
-var readXml = require('../Core/readXml');
-var runLater = require('../Core/runLater');
 
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
 var readText = require('../Core/readText');
@@ -39,8 +31,6 @@ var GpxItemViewModel = function(application, url) {
     CatalogItemViewModel.call(this, application);
 
     this._geoJsonViewModel = undefined;
-    this._loadedUrl = undefined;
-    this._loadedData = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GPX data.  This property is ignored if
@@ -107,46 +97,35 @@ defineProperties(GpxItemViewModel.prototype, {
     }
 });
 
-/**
- * Processes the Gpx data supplied via the {@link GpxItemViewModel#data} property.  If
- * {@link GpxItemViewModel#data} is undefined, this method downloads GPX data from 
- * {@link GpxItemViewModel#url} and processes that.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-GpxItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
-        return;
-    }
+GpxItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
 
-    this.isLoading = true;
+GpxItemViewModel.prototype._load = function() {
     this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
 
     var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedData = that.data;
 
-        if (defined(that.data)) {
-            when(that.data, function(data) {
-                var promise;
-                if (data instanceof Blob) {
-                    promise = readText(data);
-                } else {
-                    promise = data;
-                }
+    if (defined(that.data)) {
+        return when(that.data, function(data) {
+            var promise;
+            if (data instanceof Blob) {
+                promise = readText(data);
+            } else {
+                promise = data;
+            }
 
-                when(promise, function(text) {
-                    loadGpxText(that, text);
-                });
+            return when(promise, function(text) {
+                return loadGpxText(that, text);
             });
-        } else {
-            loadText(proxyUrl(that, that.url)).then(function(text) {
-                loadGpxText(that, text);
-            }).otherwise(function() {
-                errorLoading(that);
-            });
-        }
-    });
+        });
+    } else {
+        return loadText(proxyUrl(that, that.url)).then(function(text) {
+            return loadGpxText(that, text);
+        }).otherwise(function() {
+            errorLoading(that);
+        });
+    }
 };
 
 GpxItemViewModel.prototype._enable = function() {
@@ -189,32 +168,21 @@ function loadGpxText(viewModel, text) {
 
     viewModel._geoJsonViewModel.data = geojson;
 
-    var subscription = knockout.getObservable(viewModel._geoJsonViewModel, 'isLoading').subscribe(function(newValue) {
-        if (newValue === false) {
-            subscription.dispose();
-            viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
-            viewModel.isLoading = false;
-        }
+    return viewModel._geoJsonViewModel.load().then(function() {
+        viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
+        viewModel.clock = viewModel._geoJsonViewModel.clock;
     });
-
-    viewModel._geoJsonViewModel.load();
 }
 
 function errorLoading(viewModel) {
-    viewModel.application.error.raiseEvent(new ViewModelError({
+    throw new ViewModelError({
         sender: viewModel,
         title: 'Error loading GPX',
         message: '\
 An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it \
 is not supported by National Map.  If you would like assistance or further information, please email us \
 at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-    }));
-
-    viewModel._loadedUrl = undefined;
-    viewModel._loadedData = undefined;
-    viewModel.isEnabled = false;
-    viewModel.isLoading = false;
-    viewModel._geoJsonViewModel = undefined;
+    });
 }
 
 module.exports = GpxItemViewModel;

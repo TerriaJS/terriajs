@@ -1,35 +1,24 @@
 'use strict';
 
-/*global require,L,URI,Document,$*/
+/*global require,L,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var Color = require('../../third_party/cesium/Source/Core/Color');
-var ColorMaterialProperty = require('../../third_party/cesium/Source/DataSources/ColorMaterialProperty');
 var combine = require('../../third_party/cesium/Source/Core/combine');
-var ConstantProperty = require('../../third_party/cesium/Source/DataSources/ConstantProperty');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var TableDataSource = require('../Map/TableDataSource');
 var VarType = require('../Map/VarType');
 
-var corsProxy = require('../Core/corsProxy');
 var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
 var ViewModelError = require('./ViewModelError');
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var readText = require('../Core/readText');
-var runLater = require('../Core/runLater');
 
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
@@ -115,20 +104,11 @@ defineProperties(CsvItemViewModel.prototype, {
     }
 });
 
+CsvItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.data];
+};
 
-/**
- * Processes the CSV data supplied via the {@link CsvItemViewModel#data} property.  If
- * {@link CsvItemViewModel#data} is undefined, this method downloads CSV data from 
- * {@link CsvItemViewModel#url} and processes that.  It is safe to call this method multiple times.
- * It is called automatically when the data source is enabled.
- */
-CsvItemViewModel.prototype.load = function() {
-    if ((this.url === this._loadedUrl && this.data === this._loadedData) || this.isLoading === true) {
-        return;
-    }
-
-    this.isLoading = true;
-
+CsvItemViewModel.prototype._load = function() {
     if (defined(this._tableDataSource)) {
         this._tableDataSource.destroy();
     }
@@ -136,49 +116,39 @@ CsvItemViewModel.prototype.load = function() {
     this._tableDataSource = new TableDataSource();
 
     var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedData = that.data;
 
-        if (defined(that.data)) {
-            when(that.data, function(data) {
-                if (data instanceof Blob) {
-                    readText(data).then(function(text) {
-                        loadTable(that, text);
-                    });
-                } else if (data instanceof String) {
-                    loadTable(that, data);
-                } else {
-                    that.application.error.raiseEvent(new ViewModelError({
-                        sender: that,
-                        title: 'Unexpected type of CSV data',
-                        message: '\
-    CsvItemViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
-    This may indicate a bug in National Map or incorrect use of the National Map API. \
-    If you believe it is a bug in National Map, please report it by emailing \
-    <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
-                    }));
-                }
-            }).otherwise(function() {
-                that.isLoading = false;
-            });
-        } else if (defined(that.url)) {
-            loadText(proxyUrl(that, that.url)).then(function(text) {
-                loadTable(that, text);
-            }).otherwise(function(e) {
-                that.isLoading = false;
-                that.application.error.raiseEvent(new ViewModelError({
+    if (defined(this.data)) {
+        return when(that.data, function(data) {
+            if (data instanceof Blob) {
+                return readText(data).then(function(text) {
+                    loadTable(that, text);
+                });
+            } else if (data instanceof String) {
+                loadTable(that, data);
+            } else {
+                throw new ViewModelError({
                     sender: that,
-                    title: 'Could not load CSV file',
+                    title: 'Unexpected type of CSV data',
                     message: '\
+CsvItemViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
+This may indicate a bug in National Map or incorrect use of the National Map API. \
+If you believe it is a bug in National Map, please report it by emailing \
+<a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
+                });
+            }
+        });
+    } else if (defined(that.url)) {
+        return loadText(proxyUrl(that, that.url)).then(function(text) {
+            loadTable(that, text);
+        }).otherwise(function(e) {
+            throw new ViewModelError({
+                sender: that,
+                title: 'Could not load CSV file',
+                message: '\
 An error occurred while retrieving CSV data from the provided link.'
-                }));
-                that.isEnabled = false;
-                that._loadedUrl = undefined;
-                that._loadedData = undefined;
             });
-        }
-    });
+        });
+    }
 };
 
 CsvItemViewModel.prototype._enableInCesium = function() {
@@ -364,25 +334,18 @@ function loadTable(viewModel, text) {
             viewModel.regionMapped = true;
         }
         else {
-            viewModel.isLoading = false;
-            viewModel.application.error.raiseEvent(new ViewModelError({
+            throw new ViewModelError({
                 sender: viewModel,
                 title: 'Could not load CSV file',
                 message: '\
 Could not find any location parameters for latitude and longitude and was not able to determine \
 a region mapping column.'
-            }));
-            viewModel.isEnabled = false;
-            viewModel._loadedUrl = undefined;
-            viewModel._loadedData = undefined;
-
+            });
         }
     }
     else {
         viewModel.clock = viewModel._tableDataSource.clock;
         viewModel.rectangle = viewModel._tableDataSource.dataset.getExtent();
-
-        viewModel.isLoading = false;
     }
 }
 
@@ -528,7 +491,6 @@ function createRegionLookupFunc(viewModel) {
     }
     var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
-    var vars = dataset.getVarList();
     var description = regionWmsMap[viewModel.regionType];
  
     var codes = dataset.getDataValues(viewModel.regionVar);
@@ -590,35 +552,6 @@ function setRegionVariable(viewModel, regionVar, regionType) {
     else {
         succeed();
     }
-}
-
-function setRegionDataVariable(viewModel, newVar) {
-    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
-        return;
-    }
-
-    var dataSource = viewModel._tableDataSource;
-    var dataset = dataSource.dataset;
-    if (dataset.getCurrentVariable() === newVar) {
-        return;
-    }
-    dataset.setCurrentVariable({ variable: newVar}); 
-    createRegionLookupFunc(viewModel);
-    
-    console.log('Var set to:', newVar);
-
-    viewModel._rebuild();
-}
-
-function setRegionColorMap(viewModel, dataColorMap) {
-     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
-        return;
-    }
-
-    viewModel._tableDataSource.setColorGradient(dataColorMap);
-    createRegionLookupFunc(viewModel);
-
-    viewModel._rebuild();
 }
 
 function addRegionMap(viewModel) {

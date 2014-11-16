@@ -2,29 +2,20 @@
 
 /*global require,URI,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var combine = require('../../third_party/cesium/Source/Core/combine');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../Core/corsProxy');
 var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../Core/inherit');
-var PopupMessage = require('../viewer/PopupMessage');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
-var runLater = require('../Core/runLater');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 
 /**
@@ -38,12 +29,6 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
  */
 var CkanGroupViewModel = function(application) {
     CatalogGroupViewModel.call(this, application, 'ckan');
-
-    this._loadedUrl = undefined;
-    this._loadedFilterQuery = undefined;
-    this._loadedBlacklist = undefined;
-    this._loadedFilterByWmsGetCapabilities = undefined;
-    this._loadedMinimumMaxScaleDenominator = undefined;
 
     /**
      * Gets or sets the URL of the CKAN server.  This property is observable.
@@ -153,66 +138,42 @@ CkanGroupViewModel.defaultSerializers.items = function(viewModel, json, property
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
+    var result = CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;
+
+    return result;
 };
 
 CkanGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
 freezeObject(CkanGroupViewModel.defaultSerializers);
 
-/**
- * Loads the items in this group by invoking the GetCapabilities service on the WMS server.
- * Each layer in the response becomes an item in the group.  The {@link CatalogGroupViewModel#isLoading} flag will
- * be set while the load is in progress.
- */
-CkanGroupViewModel.prototype.load = function() {
-    if (this.isLoading ||
-        (this.url === this._loadedUrl &&
-         this.filterQuery === this._loadedFilterQuery &&
-         this.blacklist === this._loadedBlacklist &&
-         this.filterByWmsGetCapabilities === this._loadedFilterByWmsGetCapabilities)) {
-
-        return;
-    }
-
-    this.isLoading = true;
-
-    var that = this;
-    runLater(function() {
-        that._loadedUrl = that.url;
-        that._loadedFilterQuery = that.filterQuery;
-        that._loadedBlacklist = that.blacklist;
-        that._loadedFilterByWmsGetCapabilities = that.filterByWmsGetCapabilities;
-        packageSearch(that).always(function() {
-            that.isLoading = false;
-        });
-    });
+CkanGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    return [this.url, this.filterQuery, this.blacklist, this.filterByWmsGetCapabilities, this.minimumMaxScaleDenominator];
 };
 
-// The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
-var wmsFormatRegex = /^wms$/i;
-
-function packageSearch(viewModel) {
-    if (!defined(viewModel.url) || viewModel.url.length === 0) {
-        return when(undefined);
+CkanGroupViewModel.prototype._load = function() {
+    if (!defined(this.url) || this.url.length === 0) {
+        return undefined;
     }
 
-    var url = cleanAndProxyUrl(viewModel.application, viewModel.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(viewModel.filterQuery);
+    var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(this.filterQuery);
 
-    return when(loadJson(url), function(json) {
-        if (viewModel.filterByWmsGetCapabilities) {
-            return when(filterResultsByGetCapabilities(viewModel, json), function() {
-                populateGroupFromResults(viewModel, json);
+    var that = this;
+
+    return loadJson(url).then(function(json) {
+        if (that.filterByWmsGetCapabilities) {
+            return when(filterResultsByGetCapabilities(that, json), function() {
+                populateGroupFromResults(that, json);
             });
         } else {
-            populateGroupFromResults(viewModel, json);
+            populateGroupFromResults(that, json);
         }
     }).otherwise(function() {
-        viewModel.application.error.raiseEvent(new ViewModelError({
-            sender: viewModel,
+        throw new ViewModelError({
+            sender: that,
             title: 'Group is not available',
             message: '\
 An error occurred while invoking package_search on the CKAN server.  \
@@ -226,15 +187,12 @@ National Map itself.</p>\
 <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
 problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
 sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-        }));
-
-        viewModel.isOpen = false;
-        viewModel._loadedUrl = undefined;
-        viewModel._loadedFilterQuery = undefined;
-        viewModel._loadedBlacklist = undefined;
-        viewModel._loadedFilterByWmsGetCapabilities = undefined;
+        });
     });
-}
+};
+
+// The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
+var wmsFormatRegex = /^wms$/i;
 
 function filterResultsByGetCapabilities(viewModel, json) {
     var wmsServers = {};

@@ -1,7 +1,5 @@
 'use strict';
 
-/*global require*/
-
 var CesiumViewModel = function(application, viewer) {
     /**
      * Gets or sets the Cesium {@link Viewer} instance.
