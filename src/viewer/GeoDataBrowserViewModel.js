@@ -23,6 +23,7 @@ var createCatalogItemFromUrl = require('../ViewModels/createCatalogItemFromUrl')
 var CatalogGroupViewModel = require('../ViewModels/CatalogGroupViewModel');
 var GeoDataInfoPopup = require('./GeoDataInfoPopup');
 var PopupMessage = require('./PopupMessage');
+var raiseErrorOnRejectedPromise = require('../ViewModels/raiseErrorOnRejectedPromise');
 var readJson = require('../Core/readJson');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
@@ -415,10 +416,12 @@ and the file will not be uploaded or added to the map.')) {
     }
 
     function readAndHandleJsonFile(file) {
-        readJson(file).then(function(json) {
+        raiseErrorOnRejectedPromise(that.catalog.application, readJson(file).then(function(json) {
+            var promise;
+
             if (json.catalog || json.services) {
                 if (json.catalog) {
-                    that.catalog.updateFromJson(json.catalog, {
+                    promise = that.catalog.updateFromJson(json.catalog, {
                         isUserSupplied: true
                     });
                 }
@@ -429,7 +432,9 @@ and the file will not be uploaded or added to the map.')) {
             } else {
                 addFile(file);
             }
-        });
+
+            return promise;
+        }));
     }
 
     document.addEventListener("dragenter", noopHandler, false);

@@ -7,8 +7,12 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var ViewModelError = require('./ViewModelError');
 
 var raiseErrorOnRejectedPromise = function(application, promise) {
+    if (!defined(application)) {
+        throw new DeveloperError('application is required.');
+    }
+
     if (defined(promise)) {
-        promise.otherwise(function(e) {
+        return promise.otherwise(function(e) {
             if (e instanceof ViewModelError) {
                 application.error.raiseEvent(e);
             } else {

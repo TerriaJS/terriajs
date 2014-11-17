@@ -49,6 +49,7 @@ if (start) {
     var ApplicationViewModel = require('../ViewModels/ApplicationViewModel');
     var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
     var PopupMessage = require('./PopupMessage');
+    var raiseErrorOnRejectedPromise = require('../ViewModels/raiseErrorOnRejectedPromise');
     var registerCatalogViewModels = require('../ViewModels/registerCatalogViewModels');
 
     SvgPathBindingHandler.register(knockout);
@@ -71,7 +72,9 @@ if (start) {
     var urlParameters = uri.search(true);
     var hash = uri.fragment();
 
-    loadJson(urlParameters.config || 'config.json').then(function(config) {
+    var camera;
+
+    var loadPromise = loadJson(urlParameters.config || 'config.json').then(function(config) {
         // Always initialize from init_nm.json
         application.initSources.push('init_nm.json');
 
@@ -103,9 +106,8 @@ if (start) {
         }
 
         // Load all of the init sources.
-        when.all(initSources.map(loadInitSource), function(initSources) {
+        return when.all(initSources.map(loadInitSource), function(initSources) {
             var corsDomains = [];
-            var camera;
             var i;
             var initSource;
 
@@ -169,14 +171,18 @@ if (start) {
                 }
             }
 
-            when.all(promises, function() {
-                application.catalog.isLoading = false;
-
-                AusGlobeViewer.create(application, camera);
-
-                document.getElementById('loadingIndicator').style.display = 'none';
-            });
+            return when.all(promises);
         });
+    });
+
+    loadPromise = raiseErrorOnRejectedPromise(application, loadPromise);
+
+    loadPromise.always(function() {
+        application.catalog.isLoading = false;
+
+        AusGlobeViewer.create(application, camera);
+
+        document.getElementById('loadingIndicator').style.display = 'none';
     });
 }
 
