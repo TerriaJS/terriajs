@@ -105,6 +105,18 @@ defineProperties(CatalogGroupViewModel.prototype, {
     },
 
     /**
+     * Gets a value indicating whether the items in this group (and their sub-items, if any) should be sorted when
+     * {@link CatalogGroupViewModel#load} is complete.
+     * @memberOf CatalogGroupViewModel.prototype
+     * @type {Boolean}
+     */
+    sortItemsOnLoad : {
+        get : function() {
+            return true;
+        }
+    },
+
+    /**
      * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
@@ -267,7 +279,9 @@ CatalogGroupViewModel.prototype.load = function() {
 
         return that._load();
     }).then(function() {
-        that.sortItems();
+        if (defaultValue(that.sortItemsOnLoad, true)) {
+            that.sortItems(true);
+        }
         that._loadingPromise = undefined;
         that.isLoading = false;
     }).otherwise(function(e) {
