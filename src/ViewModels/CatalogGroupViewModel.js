@@ -197,7 +197,11 @@ CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
             promises.push(existingItem.updateFromJson(item, options));
         }
 
-        return when.all(promises);
+        return when.all(promises, function() {
+            if (defaultValue(json.sortItemsOnLoad, true)) {
+                viewModel.sortItems();
+            }
+        });
     });
 };
 
