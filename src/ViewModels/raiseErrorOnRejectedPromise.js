@@ -19,9 +19,9 @@ var raiseErrorOnRejectedPromise = function(application, promise) {
             } else {
                 application.error.raiseEvent(new ViewModelError({
                     sender: undefined,
-                    title: 'An unknown error occurred',
+                    title: 'An error occurred',
                     message: '\
-<p>National Map experienced an unknown error.  Please report this by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.  \
+<p>National Map experienced an error.  Please report this by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.  \
 Details of the error are below.</p>\
 <p><pre>' + e.toString() + '</pre></p>'
                 }));
