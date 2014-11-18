@@ -8,9 +8,11 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 var CatalogItemViewModel = require('./CatalogItemViewModel');
 var inherit = require('../Core/inherit');
+var ViewModelError = require('./ViewModelError');
 
 /**
  * A {@link CatalogItemViewModel} that is added to the map as a rasterized imagery layer.
@@ -26,6 +28,7 @@ var ImageryLayerItemViewModel = function(application) {
     CatalogItemViewModel.call(this, application);
 
     this._imageryLayer = undefined;
+    this._errorEventUnsubscribe = undefined;
 
     /**
      * Gets or sets the opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is
@@ -141,6 +144,42 @@ ImageryLayerItemViewModel.prototype._showInCesium = function() {
         throw new DeveloperError('This data source is not enabled.');
     }
 
+    var imageryProvider = this._imageryLayer.imageryProvider;
+    var errorEvent = imageryProvider.errorEvent;
+
+    if (defined(errorEvent)) {
+        var that = this;
+        this._errorEventUnsubscribe = errorEvent.addEventListener(function(tileProviderError) {
+            // We're only concerned about failures for tiles that actually overlap this item's extent.
+            if (defined(that.extent)) {
+                var tilingScheme = imageryProvider.tilingScheme;
+                var tileExtent = tilingScheme.tileXYToRectangle(tileProviderError.x, tileProviderError.y, tileProviderError.level);
+                var intersection = Rectangle.intersectWith(tileExtent, that.extent);
+                if (Rectangle.isEmpty(intersection)) {
+                    return;
+                }
+            }
+
+            // Retry once.
+            if (tileProviderError.timesRetried === 0) {
+                tileProviderError.retry = true;
+                return;
+            }
+
+            // After two failures, advise the user that something is wrong and disable the catalog item.
+            that.application.error.raiseEvent(new ViewModelError({
+                sender: that,
+                title: 'Error accessing catalogue item',
+                message: '\
+An error occurred while attempting to download tiles for catalogue item ' + that.name + '.  This may indicate that there is a \
+problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item \
+is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.'
+            }));
+
+            that.isShown = false;
+        });
+    }
+
     this._imageryLayer.show = true;
 };
 
@@ -150,6 +189,10 @@ ImageryLayerItemViewModel.prototype._hideInCesium = function() {
     }
 
     this._imageryLayer.show = false;
+
+    if (defined(this._errorEventUnsubscribe)) {
+        this._errorEventUnsubscribe();
+    }
 };
 
 ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
