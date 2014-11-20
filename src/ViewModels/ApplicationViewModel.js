@@ -134,10 +134,8 @@ var ApplicationViewModel = function() {
  */
 ApplicationViewModel.prototype.start = function(options) {
     var applicationUrl = defaultValue(options.applicationUrl, '');
-    var configUrl = defaultValue(options.configUrl, 'config.json');
 
     var uri = new URI(applicationUrl);
-    var urlParameters = uri.search(true);
     var hash = uri.fragment();
 
     var that = this;

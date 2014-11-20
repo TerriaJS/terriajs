@@ -44,7 +44,7 @@ if (start) {
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
     var ApplicationViewModel = require('./ViewModels/ApplicationViewModel');
     var KnockoutSanitizedHtmlBinding = require('./viewer/KnockoutSanitizedHtmlBinding');
-    var raiseErrorOnRejectedPromise = require('./ViewModels/raiseErrorOnRejectedPromise');
+    var raiseErrorToUser = require('./ViewModels/raiseErrorToUser');
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
     SvgPathBindingHandler.register(knockout);
@@ -62,16 +62,14 @@ if (start) {
         });
     });
 
-    var startPromise = application.start({
+    application.start({
         applicationUrl: window.location,
         configUrl: 'config.json',
         initializationUrl: 'init_nm.json',
         useUrlHashAsInitSource: true
-    });
-
-    startPromise = raiseErrorOnRejectedPromise(application, startPromise);
-
-    startPromise.always(function() {
+    }).otherwise(function(e) {
+        raiseErrorToUser(application, e);
+    }).always(function() {
         application.catalog.isLoading = false;
 
         AusGlobeViewer.create(application, application.initialBoundingBox);
