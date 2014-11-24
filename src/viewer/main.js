@@ -6,6 +6,7 @@ var start = true;
 
 var PopupMessage = require('./PopupMessage');
 var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
+var createCatalogMemberFromType = require('../ViewModels/createCatalogMemberFromType');
 
 // If we're not in a normal browser environment (Web Worker maybe?), do nothing.
 if (typeof window === 'undefined') {
@@ -73,6 +74,16 @@ if (start) {
     var hash = uri.fragment();
 
     var camera;
+    var initSourceFromWMSGetCapabilities = false;
+    var loadExternalWMS = function (url) {
+        var corsUrl = '/proxy/_1d/' + url;
+        var newViewModel = createCatalogMemberFromType('wms-getCapabilities', application);
+        newViewModel.name = url;
+        newViewModel.url = corsUrl;
+        application.catalog.userAddedDataGroup.items.push(newViewModel);
+        newViewModel.isOpen = true;
+        application.catalog.userAddedDataGroup.isOpen = true;
+    };
 
     var loadPromise = loadJson(urlParameters.config || 'config.json').then(function(config) {
         // Always initialize from init_nm.json
@@ -83,6 +94,8 @@ if (start) {
         if (defined(hash) && hash.length > 0) {
             if (hash.indexOf('start=') === 0) {
                 startData = JSON.parse(decodeURIComponent(hash.substring(6)));
+            } else if(hash.indexOf('remoteWMS=') === 0) {
+                initSourceFromWMSGetCapabilities = true;
             } else if (hash.toLowerCase() !== 'populate-cache') {
                 application.initSources.push('init_' + hash + ".json");
             }
@@ -180,7 +193,12 @@ if (start) {
     loadPromise.always(function() {
         application.catalog.isLoading = false;
 
-        AusGlobeViewer.create(application, camera);
+        var viewer = AusGlobeViewer.create(application, camera);
+        //If loaded from parsed wms get capabilities url, pop open data menu
+        if(initSourceFromWMSGetCapabilities) {
+            loadExternalWMS(hash.substr('remoteWMS='.length));
+            viewer.geoDataBrowser.viewModel.showingDataPanel = true;
+        }
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });
