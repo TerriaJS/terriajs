@@ -70,9 +70,14 @@ if (start) {
     }).otherwise(function(e) {
         raiseErrorToUser(application, e);
     }).always(function() {
+        // Watch the hash portion of the URL.  If it changes, try to interpret as an init source.
+        window.addEventListener("hashchange", function() {
+            application.updateApplicationUrl(window.location);
+        }, false);
+
         application.catalog.isLoading = false;
 
-        AusGlobeViewer.create(application, application.initialBoundingBox);
+        AusGlobeViewer.create(application);
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });

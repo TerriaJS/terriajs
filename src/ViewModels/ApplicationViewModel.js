@@ -9,6 +9,7 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var queryToObject = require('../../third_party/cesium/Source/Core/queryToObject');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -90,6 +91,15 @@ var ApplicationViewModel = function() {
     this.leaflet = undefined;
 
     /**
+     * Gets or sets the collection of user properties.  User properties
+     * can be set by specifying them in the hash portion of the URL.  For example, if the application URL is
+     * `http://localhost:3001/#foo=bar&someproperty=true`, this object will contain a property named 'foo' with the
+     * value 'bar' and a property named 'someproperty' with the value 'true'.
+     * @type {Object}
+     */
+    this.userProperties = {};
+
+    /**
      * Gets or sets the list of sources from which the catalog was populated.  A source may be a string, in which case it
      * is expected to be a URL of an init file (like init_nm.json), or it can be a JSON-style object literal which is
      * the init content itself.
@@ -115,7 +125,10 @@ var ApplicationViewModel = function() {
      */
     this.nowViewing = new NowViewingViewModel(this);
 
-    knockout.track(this, ['viewerMode']);
+    knockout.track(this, ['viewerMode', 'initialBoundingBox']);
+
+    // IE versions prior to 10 don't support CORS, so always use the proxy.
+    corsProxy.alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
 };
 
 /**
@@ -135,106 +148,138 @@ var ApplicationViewModel = function() {
 ApplicationViewModel.prototype.start = function(options) {
     var applicationUrl = defaultValue(options.applicationUrl, '');
 
-    var uri = new URI(applicationUrl);
-    var hash = uri.fragment();
-
     var that = this;
     return loadJson(options.configUrl).then(function(config) {
+        corsProxy.proxyDomains.push.apply(corsProxy.proxyDomains, config.proxyDomains);
+
         if (defined(options.initializationUrl)) {
             that.initSources.push(options.initializationUrl);
         }
 
-        // If the URL includes a hash, try loading the corresponding init file.
-        var startData = {};
-        if (defaultValue(options.useApplicationUrlHashAsInitSource, true)) {
-            if (defined(hash) && hash.length > 0) {
-                if (hash.indexOf('start=') === 0) {
-                    startData = JSON.parse(decodeURIComponent(hash.substring(6)));
-                } else if (hash.toLowerCase() !== 'populate-cache') {
-                    that.initSources.push('init_' + hash + ".json");
-                }
-            }
-        }
-
-        var initSources = that.initSources.slice();
-
-        // Include any initSources specified in the URL.
-        if (defined(startData.initSources)) {
-            for (var i = 0; i < startData.initSources.length; ++i) {
-                var initSource = startData.initSources[i];
-                if (initSources.indexOf(initSource) < 0) {
-                    initSources.push(initSource);
-
-                    // Only add external files to the application's list of init sources.
-                    if (typeof initSource === 'string') {
-                        that.initSources.push(initSource);
-                    }
-                }
-            }
-        }
-
-        // Load all of the init sources.
-        return when.all(initSources.map(loadInitSource), function(initSources) {
-            var corsDomains = [];
-            var i;
-            var initSource;
-
-            for (i = 0; i < initSources.length; ++i) {
-                initSource = initSources[i];
-                if (!defined(initSource)) {
-                    continue;
-                }
-
-                // Extract the list of CORS-ready domains from the init sources.
-                if (defined(initSource.corsDomains)) {
-                    corsDomains.push.apply(corsDomains, initSource.corsDomains);
-                }
-
-                // The last init source to specify a camera position wins.
-                if (defined(initSource.camera)) {
-                    that.initialBoundingBox = initSource.camera;
-                }
-            }
-
-            // Configure the proxy.
-            // IE versions prior to 10 don't support CORS, so always use the proxy.
-            var alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
-            corsProxy.setProxyList(config.proxyDomains, corsDomains, alwaysUseProxy);
-
-            var promises = [];
-
-            // Make another pass over the init sources to update the catalog and load services.
-            for (i = 0; i < initSources.length; ++i) {
-                initSource = initSources[i];
-                if (!defined(initSource)) {
-                    continue;
-                }
-
-                if (defined(initSource.catalog)) {
-                    var isUserSupplied;
-                    if (initSource.isFromExternalFile) {
-                        isUserSupplied = false;
-                    } else if (initSource.catalogOnlyUpdatesExistingItems) {
-                        isUserSupplied = undefined;
-                    } else {
-                        isUserSupplied = true;
-                    }
-
-                    promises.push(that.catalog.updateFromJson(initSource.catalog, {
-                        onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
-                        isUserSupplied: isUserSupplied
-                    }));
-                }
-
-                if (defined(initSource.services)) {
-                    that.services.services.push.apply(that.services, initSource.services);
-                }
-            }
-
-            return when.all(promises);
-        });
+        return that.updateApplicationUrl(applicationUrl);
     });
 };
+
+/**
+ * Updates the state of the application based on the hash portion of a URL.
+ * @param {String} newUrl The new URL of the application.
+ * @return {Promise} A promise that resolves when any new init sources specified in the URL have been loaded.
+ */
+ApplicationViewModel.prototype.updateApplicationUrl = function(newUrl) {
+    var uri = new URI(newUrl);
+    var hash = uri.fragment();
+    var hashProperties = queryToObject(hash);
+
+    var initSources = this.initSources.slice();
+    interpretHash(hashProperties, this.userProperties, this.initSources, initSources);
+
+    return loadInitSources(this, initSources);
+};
+
+/**
+ * Gets the value of a user property.  If the property doesn't exist, it is created as an observable property with the 
+ * value undefined.  This way, if it becomes defined in the future, anyone depending on the value will be notified.
+ * @param {String} propertyName The name of the user property for which to get the value.
+ * @return {Object} The value of the property, or undefined if the property does not exist.
+ */
+ApplicationViewModel.prototype.getUserProperty = function(propertyName) {
+    if (!knockout.getObservable(this.userProperties, propertyName)) {
+        this.userProperties[propertyName] = undefined;
+        knockout.track(this.userProperties, [propertyName]);
+    }
+    return this.userProperties[propertyName];
+};
+
+function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources) {
+    for (var property in hashProperties) {
+        if (hashProperties.hasOwnProperty(property)) {
+            var propertyValue = hashProperties[property];
+
+            if (property === 'start') {
+                var startData = JSON.parse(propertyValue);
+
+                // Include any initSources specified in the URL.
+                if (defined(startData.initSources)) {
+                    for (var i = 0; i < startData.initSources.length; ++i) {
+                        var initSource = startData.initSources[i];
+                        if (temporaryInitSources.indexOf(initSource) < 0) {
+                            temporaryInitSources.push(initSource);
+
+                            // Only add external files to the application's list of init sources.
+                            if (typeof initSource === 'string' && persistentInitSources.indexOf(initSource) < 0) {
+                                persistentInitSources.push(initSource);
+                            }
+                        }
+                    }
+                }
+            } else if (defined(propertyValue) && propertyValue.length > 0) {
+                userProperties[property] = propertyValue;
+                knockout.track(userProperties, [property]);
+            } else {
+                var initSourceFile = 'init_' + property + '.json';
+                persistentInitSources.push(initSourceFile);
+                temporaryInitSources.push(initSourceFile);
+            }
+        }
+    }
+}
+
+function loadInitSources(viewModel, initSources) {
+    return when.all(initSources.map(loadInitSource), function(initSources) {
+        var i;
+        var initSource;
+
+        for (i = 0; i < initSources.length; ++i) {
+            initSource = initSources[i];
+            if (!defined(initSource)) {
+                continue;
+            }
+
+            // Extract the list of CORS-ready domains from the init sources.
+            if (defined(initSource.corsDomains)) {
+                corsProxy.corsDomains.push.apply(corsProxy.corsDomains, initSource.corsDomains);
+            }
+
+            // The last init source to specify a camera position wins.
+            if (defined(initSource.camera)) {
+                viewModel.initialBoundingBox = Rectangle.fromDegrees(initSource.camera.west, initSource.camera.south, initSource.camera.east, initSource.camera.north);
+            }
+        }
+
+        var promises = [];
+
+        // Make another pass over the init sources to update the catalog and load services.
+        // We do this in a second pass to ensure the proxy is configured correctly first.
+        for (i = 0; i < initSources.length; ++i) {
+            initSource = initSources[i];
+            if (!defined(initSource)) {
+                continue;
+            }
+
+            if (defined(initSource.catalog)) {
+                var isUserSupplied;
+                if (initSource.isFromExternalFile) {
+                    isUserSupplied = false;
+                } else if (initSource.catalogOnlyUpdatesExistingItems) {
+                    isUserSupplied = undefined;
+                } else {
+                    isUserSupplied = true;
+                }
+
+                promises.push(viewModel.catalog.updateFromJson(initSource.catalog, {
+                    onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
+                    isUserSupplied: isUserSupplied
+                }));
+            }
+
+            if (defined(initSource.services)) {
+                viewModel.services.services.push.apply(viewModel.services, initSource.services);
+            }
+        }
+
+        return when.all(promises);
+    });
+}
 
 function loadInitSource(source) {
     if (typeof source === 'string') {
