@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,ga,alert,L,URI,confirm*/
+/*global require,ga,alert,L,confirm*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
@@ -10,7 +10,6 @@ var createCommand = require('../../third_party/cesium/Source/Widgets/createComma
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
@@ -442,63 +441,11 @@ and the file will not be uploaded or added to the map.')) {
     document.addEventListener("dragover", noopHandler, false);
     document.addEventListener("drop", dropHandler, false);
 
-    handleHash(this);
-
-    window.addEventListener("hashchange", function() {
-        handleHash(that);
-    }, false);
-
-    function handleHash(viewModel) {
-        var uri = new URI(window.location);
-        var hash = uri.fragment();
-
-        if (hash.length === 0 || !hashIsSafe(hash)) {
-            return;
-        }
-
-        // Try loading hash.json.
-        loadJson(hash + '.json').then(function(json) {
-            if (json.initialCamera) {
-                var rectangle = Rectangle.fromDegrees(
-                    json.initialCamera.west,
-                    json.initialCamera.south,
-                    json.initialCamera.east,
-                    json.initialCamera.north);
-                viewModel._viewer.updateCameraFromRect(rectangle, 3000);
-            }
-
-            if (json.initialDataMenu) {
-                loadJson(json.initialDataMenu).then(function(json) {
-                    if (json.catalog) {
-                        that.catalog.updateFromJson(json.catalog);
-                    }
-
-                    if (json.services) {
-                        // TODO: update the list of services rather than outright replacing it.
-                        that._viewer.services = json.services;
-                    }
-                });
-            }
-        });
-    }
-
-    function hashIsSafe(hash) {
-        var safe = true;
-        for (var i = 0; i < hash.length; ++i) {
-            safe = safe && (hash[i] >= 'a' && hash[i] <= 'z' ||
-                            hash[i] >= 'A' && hash[i] <= 'Z' ||
-                            hash[i] >= '0' && hash[i] <= '9');
-        }
-        return safe;
-    }
-
     this.maxLevel = knockout.observable(5);
 
     this.showPopulateCache = function() {
-        var uri = new URI(window.location);
-        var hash = uri.fragment();
-
-        if (hash === 'populate-cache') {
+        var populateCache = that.catalog.application.getUserProperty('populate-cache');
+        if (populateCache && populateCache !== 'false' && populateCache !== 'no' && populateCache !== '0') {
             return true;
         }
         return false;

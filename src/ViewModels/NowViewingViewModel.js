@@ -335,6 +335,9 @@ function beforeViewerChanged(viewModel) {
 
     for (var i = 0; i < dataSources.length; ++i) {
         var dataSource = dataSources[i];
+        if (defined(dataSource._loadForEnablePromise)) {
+            continue;
+        }
 
         if (dataSource.isShown) {
             dataSource._hide();
@@ -354,6 +357,9 @@ function afterViewerChanged(viewModel) {
 
     for (var i = dataSources.length - 1; i >= 0; --i) {
         var dataSource = dataSources[i];
+        if (defined(dataSource._loadForEnablePromise)) {
+            continue;
+        }
 
         if (dataSource.isEnabled) {
             dataSource._enable();
