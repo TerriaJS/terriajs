@@ -2,7 +2,8 @@
     "corsDomains" : [
         "data.gov.au",
         "ga.gov.au",
-        "corsproxy.com"
+        "corsproxy.com",
+        "programs.communications.gov.au"
     ],
     "camera": {
         "west": 105,
@@ -32,11 +33,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Map",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Availability",
@@ -50,11 +51,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband Availabilty",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Availability",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Availabilty no Borders",
@@ -68,11 +69,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband Availabilty no outline",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Availability_no_outline",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Quality",
@@ -86,11 +87,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband Quality",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Quality",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband ADSL Quality",
@@ -104,11 +105,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband ADSL Quality",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_ADSL_Quality",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband ADSL Quality no Borders",
@@ -122,11 +123,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband ADSL Quality no outline",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_ADSL_Quality_no_outline",
+                            "parameters": {
+                                "tiled": true
+                            }
                         }
                     ]
                 },
