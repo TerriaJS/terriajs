@@ -5,7 +5,7 @@
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 
-var ViewModelError = require('./ViewModelError');
+var raiseErrorToUser = require('./raiseErrorToUser');
 
 var raiseErrorOnRejectedPromise = function(application, promise) {
     if (!defined(application)) {
@@ -14,18 +14,7 @@ var raiseErrorOnRejectedPromise = function(application, promise) {
 
     if (defined(promise)) {
         return promise.otherwise(function(e) {
-            if (e instanceof ViewModelError) {
-                application.error.raiseEvent(e);
-            } else {
-                application.error.raiseEvent(new ViewModelError({
-                    sender: undefined,
-                    title: 'An error occurred',
-                    message: '\
-<p>National Map experienced an error.  Please report this by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.  \
-Details of the error are below.</p>\
-<p><pre>' + e.toString() + '</pre></p>'
-                }));
-            }
+            raiseErrorToUser(application, e);
         });
     }
 };
