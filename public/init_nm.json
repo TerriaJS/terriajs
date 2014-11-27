@@ -2,7 +2,8 @@
     "corsDomains" : [
         "data.gov.au",
         "ga.gov.au",
-        "corsproxy.com"
+        "corsproxy.com",
+        "programs.communications.gov.au"
     ],
     "camera": {
         "west": 105,
@@ -33,7 +34,10 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Map"
+                            "layers": "MyBroadband_Map",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Availability",
@@ -48,7 +52,10 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Availability"
+                            "layers": "MyBroadband_Availability",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Availabilty no Borders",
@@ -63,7 +70,10 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Availability_no_outline"
+                            "layers": "MyBroadband_Availability_no_outline",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Quality",
@@ -78,7 +88,10 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Quality"
+                            "layers": "MyBroadband_Quality",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband ADSL Quality",
@@ -93,7 +106,10 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_ADSL_Quality"
+                            "layers": "MyBroadband_ADSL_Quality",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband ADSL Quality no Borders",
@@ -108,7 +124,10 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_ADSL_Quality_no_outline"
+                            "layers": "MyBroadband_ADSL_Quality_no_outline",
+                            "parameters": {
+                                "tiled": true
+                            }
                         }
                     ]
                 },
