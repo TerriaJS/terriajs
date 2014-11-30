@@ -252,10 +252,12 @@ CatalogMemberViewModel.prototype.serializeToJson = function(options) {
         result.type = this.type;
     }
 
+    var promises = [];
+
     for (var propertyName in this) {
         if (this.hasOwnProperty(propertyName) && propertyName.length > 0 && propertyName[0] !== '_' && filterFunction(propertyName)) {
             if (this.serializers && this.serializers[propertyName]) {
-                this.serializers[propertyName](this, result, propertyName, options);
+                promises.push(this.serializers[propertyName](this, result, propertyName, options));
             } else {
                 result[propertyName] = this[propertyName];
             }

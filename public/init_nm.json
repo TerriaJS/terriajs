@@ -2,7 +2,8 @@
     "corsDomains" : [
         "data.gov.au",
         "ga.gov.au",
-        "corsproxy.com"
+        "corsproxy.com",
+        "programs.communications.gov.au"
     ],
     "camera": {
         "west": 105,
@@ -23,7 +24,6 @@
                         {
                             "name": "Broadband Map",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
-                            "legendUrl": "",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
                                 "112.93529999999998",
@@ -32,11 +32,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Map",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Availability",
@@ -50,11 +50,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband Availabilty",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Availability",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Availabilty no Borders",
@@ -68,11 +68,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband Availabilty no outline",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Availability_no_outline",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband Quality",
@@ -86,11 +86,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband Quality",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_Quality",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband ADSL Quality",
@@ -104,11 +104,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband ADSL Quality",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_ADSL_Quality",
+                            "parameters": {
+                                "tiled": true
+                            }
                         },
                         {
                             "name": "Broadband ADSL Quality no Borders",
@@ -122,11 +122,11 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "https://programs.communications.gov.au/WMS",
-                            "layers": "MyBroadband ADSL Quality no outline",
-                            "getFeatureInfoAsGeoJson": false,
-                            "dataUrl": "https://programs.communications.gov.au/WFS?service=WFS&request=GetFeature&version=1.0.0&typeName=commswfs:MBBPts&maxFeatures=1000",
-                            "dataUrlType": "wfs-complete"
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "MyBroadband_ADSL_Quality_no_outline",
+                            "parameters": {
+                                "tiled": true
+                            }
                         }
                     ]
                 },
@@ -171,6 +171,22 @@
                     "name": "Land",
                     "type": "group",
                     "items": [
+                        {
+                            "name": "Catchment Scale Land Use",
+                            "type": "wms",
+                            "layers": "catchment-scale-land-use-of-australia-update-march-2014:clum_50m0314m",
+                            "url": "http://data.gov.au/geoserver/ows",
+                            "description": "This dataset is the most current national compilation of catchment scale land use data for Australia (CLUM), as at March 2014. It is a seamless raster dataset that combines land use data for all state and territory jurisdictions, compiled at a resolution of 50 metres by 50 metres. It has been compiled from vector land use datasets collected as part of state and territory mapping programs through the Australian Collaborative Land Use and Management Program (ACLUMP). Catchment scale land use data was produced by combining land tenure and other types of land use information, fine-scale satellite data and information collected in the field. The date of mapping (1997 to 2012) and scale of mapping (1:25 000 to 1:250 000) vary, reflecting the source data capture date and scale. This information is provided in a supporting polygon dataset.<br/><br/>The CLUM data shows a single dominant land use for a given area, based on the primary management objective of the land manager (as identified by state and territory agencies). Land use is classified according to the Australian Land Use and Management (ALUM) Classification version 7, a three-tiered hierarchical structure. There are five primary classes, identified in order of increasing levels of intervention or potential impact on the natural landscape. Water is included separately as a sixth primary class. Primary and secondary levels relate to the principal land use. Tertiary classes may include additional information on commodity groups, specific commodities, land management practices or vegetation information.<br/>[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[data.gov.au](http://www.data.gov.au/)",
+                            "dataUrl": "http://www.data.gov.au/dataset/catchment-scale-land-use-of-australia-update-march-2014",
+                            "dataUrlType": "direct",
+                            "rectangle": [
+                                "109.49189",
+                                "-44.37510828010957",
+                                "157.22944155237877",
+                                "-8.195534"
+                            ]
+                        },
                         {
                             "name": "Gravity Image",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",

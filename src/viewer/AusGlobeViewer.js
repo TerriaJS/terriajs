@@ -55,8 +55,6 @@ var Animation = require('../../third_party/cesium/Source/Widgets/Animation/Anima
 var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animation/AnimationViewModel');
 var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timeline');
 var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
-var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
-
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
@@ -66,6 +64,7 @@ var CesiumViewModel = require('../ViewModels/CesiumViewModel');
 var LeafletViewModel = require('../ViewModels/LeafletViewModel');
 var NavigationWidget = require('./NavigationWidget');
 var PopupMessage = require('./PopupMessage');
+var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var SearchWidget = require('./SearchWidget');
 var ServicesPanel = require('./ServicesPanel');
 var SharePanel = require('./SharePanel');
@@ -77,7 +76,7 @@ var ViewerMode = require('../ViewModels/ViewerMode');
 BingMapsApi.defaultKey = undefined;
 
 //Initialize the selected viewer - Cesium or Leaflet
-var AusGlobeViewer = function(application, initialCamera) {
+var AusGlobeViewer = function(application) {
     this._distanceLegendBarWidth = undefined;
     this._distanceLegendLabel = undefined;
 
@@ -242,7 +241,7 @@ var AusGlobeViewer = function(application, initialCamera) {
     var uri = new URI(url);
     var params = uri.search(true);
 
-    this.webGlSupported = (params.map === '2d') ? false : true;
+    this.webGlSupported = (application.userProperties.map === '2d' || params.map === '2d') ? false : true;
     
     var noWebGLMessage;
     
@@ -297,8 +296,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.application = application;
 
-    this.initialCamera = initialCamera;
-
     this.geoDataBrowser = new GeoDataBrowser({
         viewer : that,
         container : leftArea,
@@ -311,10 +308,14 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     knockout.getObservable(this.application, 'viewerMode').subscribe(function() {
         changeViewer(this);
     }, this);
+
+    knockout.getObservable(this.application, 'initialBoundingBox').subscribe(function() {
+        that.updateCameraFromRect(that.application.initialBoundingBox, 2000);
+    });
 };
 
-AusGlobeViewer.create = function(application, initialCamera) {
-    return new AusGlobeViewer(application, initialCamera);
+AusGlobeViewer.create = function(application) {
+    return new AusGlobeViewer(application);
 };
 
 function changeViewer(viewer) {
@@ -621,11 +622,11 @@ us via email at nationalmap@lists.nicta.com.au.'
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('BING', undefined, 'http://www.bing.com/'));
 
 
-    //Placeholder for now
-    var monitor = new FrameRateMonitor.fromScene(scene);
-    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
-        console.log('Unusually slow startup detected!!  Messagebox for user options - webgl fixes, 2d mode.');
-    });
+    //Placeholder for now - commenting out since the warning doesn't mean much when we stop the render loop
+//    var monitor = new FrameRateMonitor.fromScene(scene);
+//    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
+//        console.log('Unusually slow startup detected!!  Messagebox for user options - webgl fixes, 2d mode.');
+//    });
 
 
     var inputHandler = viewer.screenSpaceEventHandler;
@@ -780,7 +781,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     this.application.beforeViewerChanged.raiseEvent();
 
     var bnds, rect;
-    var cam = this.initialCamera;
 
     var that = this;
 
@@ -806,7 +806,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.viewer = undefined;
         }
         else {
-            bnds = [[cam.south, cam.west], [cam.north, cam.east]];
+            bnds = rectangleToLatLngBounds(this.application.initialBoundingBox);
         }
 
        //create leaflet viewer
@@ -925,7 +925,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.map = undefined;
         }
         else {
-            rect = new Rectangle.fromDegrees(cam.west, cam.south, cam.east, cam.north);
+            rect = this.application.initialBoundingBox;
          }
 
         //create Cesium viewer

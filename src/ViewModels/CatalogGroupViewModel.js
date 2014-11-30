@@ -18,6 +18,8 @@ var inherit = require('../Core/inherit');
 var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
 var runLater = require('../Core/runLater');
 
+var naturalSort = require('javascript-natural-sort');
+
 /**
  * A group of data items and other groups in the {@link CatalogViewModel}.  A group can contain
  * {@link CatalogMemberViewModel|CatalogMemberViewModels} or other
@@ -103,6 +105,18 @@ defineProperties(CatalogGroupViewModel.prototype, {
     },
 
     /**
+     * Gets a value indicating whether the items in this group (and their sub-items, if any) should be sorted when
+     * {@link CatalogGroupViewModel#load} is complete.
+     * @memberOf CatalogGroupViewModel.prototype
+     * @type {Boolean}
+     */
+    sortItemsOnLoad : {
+        get : function() {
+            return true;
+        }
+    },
+
+    /**
      * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
@@ -183,7 +197,11 @@ CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
             promises.push(existingItem.updateFromJson(item, options));
         }
 
-        return when.all(promises);
+        return when.all(promises, function() {
+            if (defaultValue(json.sortItemsOnLoad, true)) {
+                viewModel.sortItems();
+            }
+        });
     });
 };
 
@@ -265,6 +283,9 @@ CatalogGroupViewModel.prototype.load = function() {
 
         return that._load();
     }).then(function() {
+        if (defaultValue(that.sortItemsOnLoad, true)) {
+            that.sortItems(true);
+        }
         that._loadingPromise = undefined;
         that.isLoading = false;
     }).otherwise(function(e) {
@@ -341,6 +362,27 @@ CatalogGroupViewModel.prototype.findFirstItemByName = function(name) {
     }
 
     return undefined;
+};
+
+/**
+ * Sorts the items in this group.
+ *
+ * @param {Boolean} [sortRecursively=false] true to sort the items in sub-groups as well; false to sort only the items in this group.
+ */
+CatalogGroupViewModel.prototype.sortItems = function(sortRecursively) {
+    naturalSort.insensitive = true;
+    this.items.sort(function(a, b) {
+        return naturalSort(a.name, b.name);
+    });
+
+    if (defaultValue(sortRecursively, false)) {
+        for (var i = 0; i < this.items.length; ++i) {
+            var item = this.items[i];
+            if (defined(item.sortItems)) {
+                item.sortItems(sortRecursively);
+            }
+        }
+    }
 };
 
 module.exports = CatalogGroupViewModel;

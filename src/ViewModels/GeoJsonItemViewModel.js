@@ -335,9 +335,7 @@ function checkProjection(code) {
         return true;
     }
 
-    //TODO: figure out right way to get host address
-    var url = 'http://localhost/proj4def/' + code;
-//    var url = 'http://nationalmap.nicta.com.au/proj4def/' + code;
+    var url = '/proj4def/' + code;
     return when(loadText(url), function (proj4Text) {
             proj4_epsg[code] = proj4Text;
             console.log('Added new string for', code, '=', proj4Text);
