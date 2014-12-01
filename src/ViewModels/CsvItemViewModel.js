@@ -40,6 +40,7 @@ var CsvItemViewModel = function(application, url) {
 
     this._tableDataSource = undefined;
     this._regionMapped = false;
+    this._legendUrl = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve CSV data.  This property is ignored if
@@ -62,7 +63,18 @@ var CsvItemViewModel = function(application, url) {
      */
     this.dataSourceUrl = undefined;
 
-    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
+    knockout.track(this, ['url', 'data', 'dataSourceUrl', '_legendUrl']);
+    delete this.__knockoutObservables.legendUrl;
+    knockout.defineProperty(this, 'legendUrl', {
+        get : function() {
+            if (defined(this._legendUrl)) {
+                return this._legendUrl;
+            }
+        },
+        set : function(value) {
+            this._legendUrl = value;
+        }
+    });
 };
 
 inherit(CatalogItemViewModel, CsvItemViewModel);
@@ -342,11 +354,15 @@ Could not find any location parameters for latitude and longitude and was not ab
 a region mapping column.'
                 });
             }
+            else {
+                viewModel._legendUrl = viewModel._tableDataSource.getLegendGraphic();
+            }
         });
     }
     else {
         viewModel.clock = viewModel._tableDataSource.clock;
         viewModel.rectangle = viewModel._tableDataSource.dataset.getExtent();
+        viewModel._legendUrl = viewModel._tableDataSource.getLegendGraphic();
     }
 }
 
