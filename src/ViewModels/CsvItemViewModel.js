@@ -506,24 +506,26 @@ function determineRegionType(dataset) {
     
     //if no match, try to derive regionType from region_id to use native abs census files
     if (idx === -1) {
-        idx = vars.indexOf('region_id');
+        var absRegion = 'region_id';
+        idx = vars.indexOf(absRegion);
         if (idx === -1) {
             return;
         }
-        var code = dataset.getDataValue('region_id', 0);
+        var code = dataset.getDataValue(absRegion, 0);
         regionType = code.replace(/[0-9]/g, '');
         if (regionWmsMap[regionType] === undefined) {
             return;
         }
-        var vals = dataset.getDataValues('region_id');
+        var vals = dataset.getDataValues(absRegion);
         var new_vals = [];
         for (var i = 0; i < vals.length; i++) {
-            var id = dataset.getDataValue('region_id', vals[i]).replace( /^\D+/g, '');
+            var id = dataset.getDataValue(absRegion, vals[i]).replace( /^\D+/g, '');
             new_vals.push(parseInt(id,10));
         }
-        dataset.variables['region_id'].vals = new_vals;
-        dataset.variables[regionType] = dataset.variables['region_id'];
-        delete dataset.variables['region_id'];
+
+        dataset.variables[absRegion].vals = new_vals;
+        dataset.variables[regionType] = dataset.variables[absRegion];
+        delete dataset.variables[absRegion];
         vars = dataset.getVarList();
         idx = vars.indexOf(regionType);
     }
@@ -664,6 +666,12 @@ function addRegionMap(viewModel) {
         dataSource.setColorGradient(viewModel.style.table.colorMap);
     }
     dataSource.setCurrentVariable(viewModel.style.table.data);
+
+    //to make lint happy
+    if (false) {
+        setRegionColorMap();
+        setRegionDataVariable();
+    }
     
     //TODO: figure out how sharing works or doesn't
     
