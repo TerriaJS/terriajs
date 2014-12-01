@@ -450,14 +450,14 @@ var regionWmsMap = {
 };
 
 //TODO: if we add enum capability and then can work with any unique field
-function loadRegionIDs(description) {
-    if (defined(description.idMap)) {
+function loadRegionIDs(regionDescriptor) {
+    if (defined(regionDescriptor.idMap)) {
         return;
     }
 
     var url = regionServer + '?service=wfs&version=2.0&request=getPropertyValue';
-    url += '&typenames=' + description.name;
-    url += '&valueReference=' + description.regionProp;
+    url += '&typenames=' + regionDescriptor.name;
+    url += '&valueReference=' + regionDescriptor.regionProp;
     url = corsProxy.getURL(url);
     return loadText(url).then(function (text) { 
         var obj = $.xml2json(text);
@@ -467,12 +467,11 @@ function loadRegionIDs(description) {
         }
 
         var idMap = [];
-            //for now this turns ids into numbers since they are that way in table data
-            //btw: since javascript uses doubles this is not a problem for the numerical ids
+            //this turns ids into numbers since they are that way in table data
         for (var i = 0; i < obj.member.length; i++) {
-            idMap.push(parseInt(obj.member[i][description.regionProp],10));
+            idMap.push(parseInt(obj.member[i][regionDescriptor.regionProp],10));
         }
-        description.idMap = idMap;
+        regionDescriptor.idMap = idMap;
     }, function(err) {
         console.log(err);
     });
@@ -490,18 +489,60 @@ function determineRegionVar(vars, aliases) {
     return -1;
 }
 
+function determineRegionType(dataset) {
+    var vars = dataset.getVarList();
+
+    var regionType;
+    var idx = -1;
+    //try to figure out the region variable
+    for (regionType in regionWmsMap) {
+        if (regionWmsMap.hasOwnProperty(regionType)) {
+            idx = determineRegionVar(vars, regionWmsMap[regionType].aliases);
+            if (idx !== -1) {
+                break;
+            }
+        }
+    }
+    
+    //if no match, try to derive regionType from region_id to use native abs census files
+    if (idx === -1) {
+        idx = vars.indexOf('region_id');
+        if (idx === -1) {
+            return;
+        }
+        var code = dataset.getDataValue('region_id', 0);
+        regionType = code.replace(/[0-9]/g, '');
+        if (regionWmsMap[regionType] === undefined) {
+            return;
+        }
+        var vals = dataset.getDataValues('region_id');
+        var new_vals = [];
+        for (var i = 0; i < vals.length; i++) {
+            var id = dataset.getDataValue('region_id', vals[i]).replace( /^\D+/g, '');
+            new_vals.push(parseInt(id,10));
+        }
+        dataset.variables['region_id'].vals = new_vals;
+        dataset.variables[regionType] = dataset.variables['region_id'];
+        delete dataset.variables['region_id'];
+        vars = dataset.getVarList();
+        idx = vars.indexOf(regionType);
+    }
+    return { idx: idx, regionType: regionType};
+}
+
 function createRegionLookupFunc(viewModel) {
     if (!defined(viewModel) || !defined(viewModel._tableDataSource) || !defined(viewModel._tableDataSource.dataset)) {
         return;
     }
     var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
-    var description = regionWmsMap[viewModel.regionType];
+    var regionDescriptor = regionWmsMap[viewModel.regionType];
  
     var codes = dataset.getDataValues(viewModel.regionVar);
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
-    var ids = description.idMap;
+    var ids = regionDescriptor.idMap;
     var lookup = new Array(ids.length);
+    // get value for each id
     for (var i = 0; i < codes.length; i++) {
         var id = ids.indexOf(codes[i]);
         lookup[id] = vals[i];
@@ -511,15 +552,16 @@ function createRegionLookupFunc(viewModel) {
     for (var idx = dataset.getMinVal(); idx <= dataset.getMaxVal(); idx++) {
         colors[idx] = dataSource._mapValue2Color(idx);
     }
-    //   create colorFunc used by the region mapper
+    //   color lookup function used by the region mapper
     viewModel.colorFunc = function(id) {
         return colors[lookup[id]];
     };
-    // can be used to get point data
+    // used to get current variable data
     viewModel.valFunc = function(code) {
         var rowIndex = codes.indexOf(code);
         return vals[rowIndex];
     };
+    // used to get all region data properties
     viewModel.rowProperties = function(code) {
         var rowIndex = codes.indexOf(code);
         return dataset.getDataRow(rowIndex);
@@ -532,24 +574,24 @@ function setRegionVariable(viewModel, regionVar, regionType) {
     }
 
     viewModel.regionVar = regionVar;
-    var description = regionWmsMap[regionType];
+    var regionDescriptor = regionWmsMap[regionType];
     if (viewModel.regionType !== regionType) {
         viewModel.regionType = regionType;
 
         viewModel.url = regionServer;
-        viewModel.layers = description.name;
+        viewModel.layers = regionDescriptor.name;
 
-        viewModel.regionProp = description.regionProp;
+        viewModel.regionProp = regionDescriptor.regionProp;
     }
     console.log('Region type:', viewModel.regionType, ', Region var:', viewModel.regionVar);
         
-    return when(loadRegionIDs(description), function() {
+    return when(loadRegionIDs(regionDescriptor), function() {
         createRegionLookupFunc(viewModel);
         viewModel._regionMapped = true;
     });
 }
 
-/*
+
 function setRegionDataVariable(viewModel, newVar) {
     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
         return;
@@ -557,10 +599,7 @@ function setRegionDataVariable(viewModel, newVar) {
 
     var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
-    if (dataset.getCurrentVariable() === newVar) {
-        return;
-    }
-    dataset.setCurrentVariable({ variable: newVar}); 
+    dataset.setCurrentVariable({ variable: newVar});
     createRegionLookupFunc(viewModel);
     
     console.log('Var set to:', newVar);
@@ -578,7 +617,7 @@ function setRegionColorMap(viewModel, dataColorMap) {
 
     viewModel._rebuild();
 }
-*/
+
 
 function addRegionMap(viewModel) {
     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
@@ -587,48 +626,23 @@ function addRegionMap(viewModel) {
     //see if we can do region mapping
     var dataSource = viewModel._tableDataSource;
     var dataset = dataSource.dataset;
-    var vars = dataset.getVarList();
 
     //if viewModel includes style/var info then use that
     if (!defined(viewModel.style) || !defined(viewModel.style.table)) {
-        var regionType;
-        var idx = -1;
-        for (regionType in regionWmsMap) {
-            if (regionWmsMap.hasOwnProperty(regionType)) {
-                idx = determineRegionVar(vars, regionWmsMap[regionType].aliases);
-                if (idx !== -1) {
-                    break;
-                }
-            }
+        var regionObj = determineRegionType(dataset);
+        if (regionObj === undefined) {
+            return;
         }
-        
-        //quick hack to test out filtering the region data from region_id
-        if (idx === -1) {
-            idx = vars.indexOf('region_id');
-            if (idx === -1) {
-                return;
-            }
-            var code = dataset.getDataValue('region_id', 0);
-            regionType = code.replace(/[0-9]/g, '');
-            var vals = dataset.getDataValues('region_id');
-            var new_vals = [];
-            for (var i = 0; i < vals.length; i++) {
-                var id = dataset.getDataValue('region_id', vals[i]).replace( /^\D+/g, '');
-                new_vals.push(parseInt(id,10));
-            }
-            dataset.variables['region_id'].vals = new_vals;
-            dataset.variables[regionType] = dataset.variables['region_id'];
-            delete dataset.variables['region_id'];
-            vars = dataset.getVarList();
-            idx = vars.indexOf(regionType);
-        }
+        var idx = regionObj.idx;
+        var regionType = regionObj.regionType;
 
             //change current var if necessary
         var dataVar = dataset.getCurrentVariable();
+        var vars = dataset.getVarList();
         if (dataVar === vars[idx]) {
-            dataVar = vars[idx+1];
+            dataVar = (idx === 0) ? vars[1] : vars[0];
         }
-        
+            //set default style if none set
         var style = {line: {}, point: {}, polygon: {}, table: {}};
         style.table.lat = undefined;
         style.table.lon = undefined;
