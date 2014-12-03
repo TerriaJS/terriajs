@@ -155,7 +155,9 @@ TableDataSource.prototype.loadText = function (text) {
     this.dataset.loadText(text);
     this.setLeadTimeByPercent(0.0);
     this.setTrailTimeByPercent(1.0);
-    this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
+    if (this.dataset.hasLocationData()) {
+        this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
+    }
 };
 
 /**
@@ -166,7 +168,9 @@ TableDataSource.prototype.loadText = function (text) {
 */
 TableDataSource.prototype.setCurrentVariable = function (varName) {
     this.dataset.setCurrentVariable({ variable: varName});
-    this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
+    if (this.dataset.hasLocationData()) {
+        this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
+    }
 };
 
 var startScratch = new JulianDate();

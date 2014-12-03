@@ -275,15 +275,50 @@ Dataset.prototype.setCurrentVariable = function (description) {
 function _float_equals(a, b) { return (Math.abs((a - b) / b) < 0.00001); }
 
 /**
-* Get the current variable
+* Get the current variable name
 *
-* @returns {Object} the current variable
+* @returns {Object} the current variable name
 *
 */
 Dataset.prototype.getCurrentVariable = function () {
     return this.varTypeSet[VarType.SCALAR];
 };
 
+/**
+* Get the current variable
+*
+* @returns {Object} the current variable
+*
+*/
+Dataset.prototype.getVariable = function (varName) {
+    return this.variables[varName];
+};
+
+/**
+* Add a variable to a dataset
+*
+* @returns {Object} the current variable
+*
+*/
+Dataset.prototype.addVariable = function (varName, variable) {
+    this.variables[varName] = variable;
+    if (variable.minVal === undefined || variable.maxVal === undefined) {
+        this.variables[varName]._calculateVarMinMax();
+    }
+};
+
+
+/**
+* Remove a variable from the dataset
+*
+* @returns {Object} the current variable
+*
+*/
+Dataset.prototype.removeVariable = function (varName) {
+    if (this.variables[varName] !== undefined) {
+        delete this.variables[varName];
+    }
+};
 
 /**
 * Get a data value
