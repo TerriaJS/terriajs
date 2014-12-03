@@ -342,11 +342,15 @@ Could not find any location parameters for latitude and longitude and was not ab
 a region mapping column.'
                 });
             }
+            else {
+                viewModel.legendUrl = viewModel._tableDataSource.getLegendGraphic();
+            }
         });
     }
     else {
         viewModel.clock = viewModel._tableDataSource.clock;
         viewModel.rectangle = viewModel._tableDataSource.dataset.getExtent();
+        viewModel.legendUrl = viewModel._tableDataSource.getLegendGraphic();
     }
 }
 
