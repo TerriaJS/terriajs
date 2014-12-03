@@ -62,7 +62,7 @@ var CsvItemViewModel = function(application, url) {
      */
     this.dataSourceUrl = undefined;
 
-    knockout.track(this, ['url', 'data', 'dataSourceUrl', 'legendUrl']);
+    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
 inherit(CatalogItemViewModel, CsvItemViewModel);
