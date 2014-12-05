@@ -1,0 +1,16 @@
+<div class="explorer-panel" data-bind="visible: isVisible">
+    <div class="explorer-panel-close"></div>
+    <ul class="explorer-panel-tab-area" data-bind="foreach: items">
+        <li class="explorer-panel-tab"
+            data-bind="text: name,
+                       visible: isVisible,
+                       style: { width: $root.tabWidth },
+                       css: { 'explorer-panel-tab-active': isActive },
+                       click: activate">
+        </li>
+    </ul>
+    <!-- ko foreach: items -->
+    <div class="explorer-panel-body" data-bind="visible: isActive, text: name">
+    </div>
+    <!-- /ko -->
+</div>

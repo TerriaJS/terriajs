@@ -1,0 +1,56 @@
+.explorer-panel {
+    .panel;
+    position: absolute;
+    left: 10px;
+    width: 395px;
+    top: 140px;
+    bottom: 2px; 
+}
+
+.explorer-panel-close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-left: 1px solid @panel-border-color;
+    border-bottom: 1px solid @panel-border-color;
+}
+
+.explorer-panel-tab-area {
+    position:absolute;
+    left: 0;
+    top: 0;
+    width: 355px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    display: table;
+}
+
+.explorer-panel-tab {
+    position: relative;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: normal;
+    color: @explorer-inactive-tab-color;
+    display: table-cell;
+    border-bottom: 1px solid @panel-border-color;
+    cursor: pointer;
+}
+
+.explorer-panel-tab-active {
+    border-bottom: 1px solid @highlight-color;
+    color: @highlight-color;
+}
+
+.explorer-panel-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 40px;
+    bottom: 0;
+}

@@ -86,7 +86,7 @@ var AusGlobeViewer = function(application) {
     this.captureCanvas = function() { console.log('capture call unset'); };
     this.captureCanvasCallback = function(dataUrl) { console.log('callback unset'); };
 
-    var titleWidget = new TitleWidget({
+    /*var titleWidget = new TitleWidget({
         container : document.body,
         menuItems : [
             {
@@ -235,7 +235,7 @@ var AusGlobeViewer = function(application) {
 
     var leftArea = document.createElement('div');
     leftArea.className = 'ausglobe-left-area';
-    document.body.appendChild(leftArea);
+    document.body.appendChild(leftArea);*/
 
     var url = window.location;
     var uri = new URI(url);
@@ -296,12 +296,12 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.application = application;
 
-    this.geoDataBrowser = new GeoDataBrowser({
+    /*this.geoDataBrowser = new GeoDataBrowser({
         viewer : that,
         container : leftArea,
         mode3d: that.webGlSupported,
         catalog : this.application.catalog
-    });
+    });*/
 
     this.selectViewer(this.webGlSupported);
 
@@ -683,11 +683,11 @@ us via email at nationalmap@lists.nicta.com.au.'
             var maxDiff = Math.max(approximateHeight - minHeight, maxHeight - approximateHeight);
             errorBar = Math.min(errorBar, maxDiff);
 
-            document.getElementById('ausglobe-title-position').innerHTML = cartographicToDegreeString(intersection, errorBar);
+            //document.getElementById('ausglobe-title-position').innerHTML = cartographicToDegreeString(intersection, errorBar);
 
             debounceSampleAccurateHeight(globe, intersection);
         } else {
-            document.getElementById('ausglobe-title-position').innerHTML = '';
+            //document.getElementById('ausglobe-title-position').innerHTML = '';
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
@@ -752,7 +752,7 @@ function sampleAccurateHeight(terrainProvider, position) {
             tileRequestInFlight = undefined;
             if (Cartographic.equals(position, lastHeightSamplePosition)) {
                 position.height = terrainData.interpolateHeight(tilingScheme.tileXYToRectangle(foundTileID.x, foundTileID.y, foundLevel), position.longitude, position.latitude);
-                document.getElementById('ausglobe-title-position').innerHTML = cartographicToDegreeString(position);
+                //document.getElementById('ausglobe-title-position').innerHTML = cartographicToDegreeString(position);
             } else {
                 // Mouse moved since we started this request, so the result isn't useful.  Try again next time.
             }
@@ -877,8 +877,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.addLayer(this.mapBaseLayer);
 
         //document.getElementById('controls').style.visibility = 'hidden';
-        this._navigationWidget.showTilt = false;
-        document.getElementById('ausglobe-title-position').style.visibility = 'hidden';
+        //this._navigationWidget.showTilt = false;
+        //document.getElementById('ausglobe-title-position').style.visibility = 'hidden';
 
         //redisplay data
         this.map = map;
@@ -906,7 +906,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             selectFeatureLeaflet(that, e.latlng);
         });
 
-        this.geoDataBrowser.viewModel.map = map;
+        //this.geoDataBrowser.viewModel.map = map;
     }
     else {
         if (defined(this.map)) {
@@ -954,7 +954,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             }
             that.scene.base_render(date);
 
-            that.updateDistanceLegend();
+            //that.updateDistanceLegend();
 
             // Capture the scene image right after the render.
             // With preserveDrawingBuffer: false on the WebGL canvas (the default), we can't rely
@@ -972,14 +972,14 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.updateCameraFromRect(rect, 0);
 
-        this.geoDataBrowser.viewModel.map = undefined;
+        //this.geoDataBrowser.viewModel.map = undefined;
 
         this._enableSelectExtent(true);
 
         Clock.clone(previousClock, this.viewer.clock);
 
-        this._navigationWidget.showTilt = true;
-        document.getElementById('ausglobe-title-position').style.visibility = 'visible';
+        //this._navigationWidget.showTilt = true;
+        //document.getElementById('ausglobe-title-position').style.visibility = 'visible';
 
     }
 

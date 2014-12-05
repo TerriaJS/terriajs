@@ -1,0 +1,36 @@
+.brand-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: @brand-bar-width + 34px;
+    height: 68px;
+}
+
+.brand-bar-body {
+    .opaque-to-input;
+    background-color: @brand-bar-background-color;
+    opacity: @brand-bar-opacity;
+    box-shadow: 5px 5px 5px #111111;
+}
+
+.brand-bar-main {
+    &:extend(.brand-bar-body);
+    position: absolute;
+    width: @brand-bar-width;
+    height: 68px;
+    top: 0;
+    left: 0;
+}
+
+.brand-bar-slant {
+    &:extend(.brand-bar-body);
+    position: absolute;
+    left: @brand-bar-width;
+    top: 0;
+    width: 34px;
+    height: 68px;
+    transform: skewX(-25deg);
+    transform-origin: top;
+    -webkit-transform: skewX(-25deg);
+    -webkit-transform-origin: 0 0;
+}

@@ -47,6 +47,11 @@ if (start) {
     var raiseErrorToUser = require('./ViewModels/raiseErrorToUser');
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
+    var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
+    var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
+    var ExplorerTabViewModel = require('./ViewModels/ExplorerTabViewModel');
+    var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
+
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
     registerCatalogViewModels();
@@ -78,6 +83,16 @@ if (start) {
         application.catalog.isLoading = false;
 
         AusGlobeViewer.create(application);
+
+        var ui = document.getElementById('ui');
+
+        BrandBarViewModel.create(ui, {});
+        SearchPanelViewModel.create(ui, {});
+
+        var explorer = ExplorerPanelViewModel.create(ui, {});
+        var dataCatalog = explorer.addTab(new ExplorerTabViewModel('Data Catalogue'));
+        var nowViewing = explorer.addTab(new ExplorerTabViewModel('Now Viewing'));
+        explorer.activateTab(dataCatalog);
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });
