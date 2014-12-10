@@ -7,3 +7,4 @@ third_party
 varnish
 gulpfile.js
 npm-debug.log
+*.tar
