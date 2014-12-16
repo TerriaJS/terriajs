@@ -12,30 +12,29 @@ var html = fs.readFileSync(__dirname + '/../Views/ExplorerPanel.html', 'utf8');
 
 var ExplorerPanelViewModel = function(options) {
     this.isVisible = true;
-    this.items = [];
+    this.tabs = [];
 
-    knockout.track(this, ['isVisible', 'items']);
+    knockout.track(this, ['isVisible', 'tabs']);
 };
 
-ExplorerPanelViewModel.create = function(container, options) {
-    container = defaultValue(container, document.body);
-
+/**
+ * Shows this panel by adding it to the DOM inside a given container element.
+ * @param {DOMNode} container The DOM node to which to add this panel.
+ */
+ExplorerPanelViewModel.prototype.show = function(container) {
     var fragment = createFragmentFromTemplate(html);
     var element = fragment.childNodes[0];
     container.appendChild(element);
 
-    var viewModel = new ExplorerPanelViewModel(options);
-    knockout.applyBindings(viewModel, element);
-
-    return viewModel;
+    knockout.applyBindings(this, element);
 };
 
 ExplorerPanelViewModel.prototype.addTab = function(tabViewModel) {
-    this.items.push(tabViewModel);
+    this.tabs.push(tabViewModel);
 
     tabViewModel.panel = this;
 
-    if (this.items.length === 1) {
+    if (this.tabs.length === 1) {
         this.activateTab(tabViewModel);
     }
 
@@ -43,8 +42,8 @@ ExplorerPanelViewModel.prototype.addTab = function(tabViewModel) {
 };
 
 ExplorerPanelViewModel.prototype.activateTab = function(tab) {
-    for (var i = 0; i < this.items.length; ++i) {
-        this.items[i].isActive = false;
+    for (var i = 0; i < this.tabs.length; ++i) {
+        this.tabs[i].isActive = false;
     }
 
     tab.isActive = true;

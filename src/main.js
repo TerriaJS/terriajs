@@ -48,8 +48,9 @@ if (start) {
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
+    var DataCatalogueTabViewModel = require('./ViewModels/DataCatalogueTabViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
-    var ExplorerTabViewModel = require('./ViewModels/ExplorerTabViewModel');
+    var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
     var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
 
     SvgPathBindingHandler.register(knockout);
@@ -82,17 +83,43 @@ if (start) {
 
         application.catalog.isLoading = false;
 
+        var CatalogGroupViewModel = require('./ViewModels/CatalogGroupViewModel');
+        var nds = application.catalog.group.findFirstItemByName('National Data Sets');
+
+        var level1 = new CatalogGroupViewModel(application);
+        level1.name = 'Level 1';
+        nds.items.push(level1);
+
+        var level2 = new CatalogGroupViewModel(application);
+        level2.name = 'Level 2';
+        level1.items.push(level2);
+
+        var level3 = new CatalogGroupViewModel(application);
+        level3.name = 'Level 3';
+        level2.items.push(level3);
+
         AusGlobeViewer.create(application);
 
         var ui = document.getElementById('ui');
 
+        knockout.bindingHandlers.embeddedComponent = {
+            init : function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+                var component = knockout.unwrap(valueAccessor());
+                component.show(element);
+                return { controlsDescendantBindings: true };
+            },
+            update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
+            }
+        };
+
         BrandBarViewModel.create(ui, {});
         SearchPanelViewModel.create(ui, {});
 
-        var explorer = ExplorerPanelViewModel.create(ui, {});
-        var dataCatalog = explorer.addTab(new ExplorerTabViewModel('Data Catalogue'));
-        var nowViewing = explorer.addTab(new ExplorerTabViewModel('Now Viewing'));
-        explorer.activateTab(dataCatalog);
+        var explorer = new ExplorerPanelViewModel({});
+        explorer.show(ui);
+
+        var dataCatalog = explorer.addTab(new DataCatalogueTabViewModel(application.catalog));
+        var nowViewing = explorer.addTab(new NowViewingTabViewModel(application.nowViewing));
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });
