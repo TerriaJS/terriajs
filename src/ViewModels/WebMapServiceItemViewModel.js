@@ -308,7 +308,7 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
-    options = combine(defaultValue(this.parameters, WebMapServiceItemViewModel.defaultParameters), options);
+    options = combine(combine(this.parameters, WebMapServiceItemViewModel.defaultParameters), options);
 
     this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
 };
@@ -325,7 +325,7 @@ WebMapServiceItemViewModel.defaultParameters = {
     transparent: true,
     format: 'image/png',
     exceptions: 'application/vnd.ogc.se_xml',
-    style: ''
+    styles: ''
 };
 
 function cleanAndProxyUrl(application, url) {
