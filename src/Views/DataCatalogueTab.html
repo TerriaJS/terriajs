@@ -1,11 +1,21 @@
 <script type="text/html" id="data-catalog-item-template">
     <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
         <!-- ko if: typeof items === 'undefined' -->
-        <div class="data-catalog-item-label" data-bind="text: name"></div>
+            <div class="data-catalog-item-label" data-bind="text: name"></div>
         <!-- /ko -->
 
         <!-- ko if: typeof items !== 'undefined' -->
             <div class="data-catalog-group-label" data-bind="text: name, click: toggleOpen"></div>
+
+            <!-- ko if: isOpen && (isLoading || items.length === 0) -->
+                <div class="data-catalog-group-contents">
+                    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 1)">
+                        <div class="data-catalog-item-label" data-bind="if: isLoading">Loading...</div>
+                        <div class="data-catalog-item-label" data-bind="if: !isLoading">This group does not contain any data items.</div>
+                    </div>
+                </div>
+            <!-- /ko -->
+
             <!-- ko if: isOpen -->
                 <div class="data-catalog-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
             <!-- /ko -->
@@ -18,6 +28,6 @@
         <div class="data-catalog-top-group-label" data-bind="text: name"></div>
     </div>
     <!-- ko if: typeof items !== 'undefined' && isOpen -->
-    <div class="data-catalog-top-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
+        <div class="data-catalog-top-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
     <!-- /ko -->
 </div>
