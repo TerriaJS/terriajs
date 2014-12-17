@@ -1,16 +1,16 @@
-<div class="explorer-panel" data-bind="visible: isVisible">
-    <div class="explorer-panel-close"></div>
-    <ul class="explorer-panel-tab-area" data-bind="foreach: tabs">
-        <li class="explorer-panel-tab"
+<div class="explorer-panel" data-bind="css: { 'explorer-panel-collapsed': !isOpen }">
+    <div class="explorer-panel-close" data-bind="click: toggleOpen"></div>
+    <div class="explorer-panel-tab-area" data-bind="foreach: tabs">
+        <div class="explorer-panel-tab"
             data-bind="text: name,
                        visible: isVisible,
                        style: { width: $root.tabWidth },
                        css: { 'explorer-panel-tab-active': isActive },
                        click: activate">
-        </li>
-    </ul>
-    <!-- ko foreach: tabs -->
-    <div class="explorer-panel-body" data-bind="visible: isActive, embeddedComponent: $data">
+        </div>
     </div>
-    <!-- /ko -->
+    <div data-bind="visible: isOpen, foreach: tabs">
+      <div class="explorer-panel-body" data-bind="visible: isActive, embeddedComponent: $data">
+      </div>
+    </div>
 </div>

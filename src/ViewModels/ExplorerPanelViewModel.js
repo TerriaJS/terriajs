@@ -11,10 +11,10 @@ var createFragmentFromTemplate = require('../Core/createFragmentFromTemplate');
 var html = fs.readFileSync(__dirname + '/../Views/ExplorerPanel.html', 'utf8');
 
 var ExplorerPanelViewModel = function(options) {
-    this.isVisible = true;
+    this.isOpen = true;
     this.tabs = [];
 
-    knockout.track(this, ['isVisible', 'tabs']);
+    knockout.track(this, ['isOpen', 'tabs']);
 };
 
 /**
@@ -47,6 +47,12 @@ ExplorerPanelViewModel.prototype.activateTab = function(tab) {
     }
 
     tab.isActive = true;
+
+    this.isOpen = true;
+};
+
+ExplorerPanelViewModel.prototype.toggleOpen = function() {
+    this.isOpen = !this.isOpen;
 };
 
 module.exports = ExplorerPanelViewModel;

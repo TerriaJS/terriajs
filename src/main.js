@@ -48,7 +48,7 @@ if (start) {
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
-    var DataCatalogueTabViewModel = require('./ViewModels/DataCatalogueTabViewModel');
+    var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
     var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
@@ -118,7 +118,7 @@ if (start) {
         var explorer = new ExplorerPanelViewModel({});
         explorer.show(ui);
 
-        var dataCatalog = explorer.addTab(new DataCatalogueTabViewModel(application.catalog));
+        var dataCatalog = explorer.addTab(new DataCatalogTabViewModel(application.catalog));
         var nowViewing = explorer.addTab(new NowViewingTabViewModel(application.nowViewing));
 
         document.getElementById('loadingIndicator').style.display = 'none';
