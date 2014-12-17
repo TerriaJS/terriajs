@@ -275,7 +275,7 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "http://z/geotopo_250k/ows",
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
                             "layers": "bores"
                         },
                         {
