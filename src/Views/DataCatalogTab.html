@@ -1,11 +1,15 @@
 <script type="text/html" id="data-catalog-item-template">
-    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
-        <!-- ko if: typeof items === 'undefined' -->
+    <!-- ko if: typeof items === 'undefined' -->
+        <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+            <div class="data-catalog-icon clickable" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }"></div>
             <div class="data-catalog-item-label" data-bind="text: name"></div>
-        <!-- /ko -->
+        </div>
+    <!-- /ko -->
 
-        <!-- ko if: typeof items !== 'undefined' -->
-            <div class="data-catalog-group-label" data-bind="text: name, click: toggleOpen"></div>
+    <!-- ko if: typeof items !== 'undefined' -->
+        <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+            <div class="data-catalog-icon clickable" data-bind="click: toggleOpen, cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+            <div class="data-catalog-group-label clickable" data-bind="click: toggleOpen, text: name"></div>
 
             <!-- ko if: isOpen && (isLoading || items.length === 0) -->
                 <div class="data-catalog-group-contents">
@@ -19,8 +23,8 @@
             <!-- ko if: isOpen -->
                 <div class="data-catalog-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
             <!-- /ko -->
-        <!-- /ko -->
-    </div>
+        </div>
+    <!-- /ko -->
 </script>
 
 <div class="data-catalog-top-group" data-bind="foreach: catalog.group.items">
