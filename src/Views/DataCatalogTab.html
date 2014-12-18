@@ -8,7 +8,7 @@
                 <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomTo"></div>
                 <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
                 <div class="data-catalog-item-info">
-                    <div class="data-catalog-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
+                    <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
     <div class="data-catalog-top-group-header" data-bind="click: toggleOpen">
         <div class="data-catalog-top-group-label" data-bind="text: name"></div>
         <div class="data-catalog-icon-holder">
-            <div class="data-catalog-icon" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+            <div class="data-catalog-top-group-icon" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
         </div>
     </div>
     <!-- ko if: typeof items !== 'undefined' && isOpen -->
