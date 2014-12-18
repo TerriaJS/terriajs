@@ -16,7 +16,6 @@
         {
             "name": "National Data Sets",
             "type": "group",
-            "sortItemsOnLoad": false,
             "items": [
                 {
                     "name": "Broadband",
@@ -128,138 +127,6 @@
                             "parameters": {
                                 "tiled": true
                             }
-                        }
-                    ]
-                },
-                {
-                    "name": "Boundaries",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "States & Territories",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "96.816941408",
-                                "-43.74050960205765",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:STE_2011_AUST"
-                        },
-                        {
-                            "name": "Local Government Areas",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "112.92111395999997",
-                                "-43.74050957905761",
-                                "153.63872711999997",
-                                "-9.142175969703604"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:LGA_2011_AUST"
-                        },
-                        {
-                            "name": "Postal Areas",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "96.816941408",
-                                "-43.59821500205783",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:POA_2011_AUST"
-                        },
-                        {
-                            "name": "Commonwealth Electoral Divisions",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "96.816941408",
-                                "-43.740509602057614",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:CED_2011_AUST"
-                        },
-                        {
-                            "name": "State Electoral Divisions",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "112.921113952",
-                                "-43.740509602057614",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SED_2011_AUST"
-                        },
-                        {
-                            "name": "State Suburbs",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "96.816941408",
-                                "-43.740509602057614",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:SSC_2011_AUST"
-                        },
-                        {
-                            "name": "Australian Drainage Divisions",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "112.921113952",
-                                "-43.740509602057614",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:ADD_2011_AUST"
-                        },
-                        {
-                            "name": "Natural Resource Management Regions",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "96.816941408",
-                                "-43.740509602057614",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:NRMR_2011_AUST"
-                        },
-                        {
-                            "name": "Tourism Regions",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
-                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                            "rectangle": [
-                                "112.921113952",
-                                "-43.740509602057614",
-                                "159.109219008",
-                                "-9.142175976703609"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                            "layers": "admin_bnds:TR_2011_AUST"
                         }
                     ]
                 },
@@ -1172,6 +1039,138 @@
                             "type": "wms",
                             "url": "http://www.ga.gov.au/gis/services/hazards/EarthquakeHazard/MapServer/WMSServer",
                             "layers": "earthquakeHazard,hazardContours"
+                        }
+                    ]
+                },
+                {
+                    "name": "National Boundaries",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "States & Territories",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "96.816941408",
+                                "-43.74050960205765",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:STE_2011_AUST"
+                        },
+                        {
+                            "name": "Local Government Areas",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "112.92111395999997",
+                                "-43.74050957905761",
+                                "153.63872711999997",
+                                "-9.142175969703604"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:LGA_2011_AUST"
+                        },
+                        {
+                            "name": "Postal Areas",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "96.816941408",
+                                "-43.59821500205783",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:POA_2011_AUST"
+                        },
+                        {
+                            "name": "Commonwealth Electoral Divisions",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "96.816941408",
+                                "-43.740509602057614",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:CED_2011_AUST"
+                        },
+                        {
+                            "name": "State Electoral Divisions",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "112.921113952",
+                                "-43.740509602057614",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:SED_2011_AUST"
+                        },
+                        {
+                            "name": "State Suburbs",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "96.816941408",
+                                "-43.740509602057614",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:SSC_2011_AUST"
+                        },
+                        {
+                            "name": "Australian Drainage Divisions",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "112.921113952",
+                                "-43.740509602057614",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:ADD_2011_AUST"
+                        },
+                        {
+                            "name": "Natural Resource Management Regions",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "96.816941408",
+                                "-43.740509602057614",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:NRMR_2011_AUST"
+                        },
+                        {
+                            "name": "Tourism Regions",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                            "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
+                            "rectangle": [
+                                "112.921113952",
+                                "-43.740509602057614",
+                                "159.109219008",
+                                "-9.142175976703609"
+                            ],
+                            "type": "wms",
+                            "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                            "layers": "admin_bnds:TR_2011_AUST"
                         }
                     ]
                 },
