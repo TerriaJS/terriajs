@@ -3,7 +3,6 @@
 /*global require*/
 var fs = require('fs');
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var createFragmentFromTemplate = require('../Core/createFragmentFromTemplate');

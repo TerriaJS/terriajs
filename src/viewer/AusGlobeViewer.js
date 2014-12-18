@@ -30,7 +30,6 @@ var EllipsoidTerrainProvider = require('../../third_party/cesium/Source/Core/Ell
 var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
 var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var Fullscreen = require('../../third_party/cesium/Source/Core/Fullscreen');
 var InfoBox = require('../../third_party/cesium/Source/Widgets/InfoBox/InfoBox');
 var Intersections2D = require('../../third_party/cesium/Source/Core/Intersections2D');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
@@ -59,16 +58,10 @@ var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewM
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var corsProxy = require('../Core/corsProxy');
-var GeoDataBrowser = require('./GeoDataBrowser');
 var CesiumViewModel = require('../ViewModels/CesiumViewModel');
 var LeafletViewModel = require('../ViewModels/LeafletViewModel');
-var NavigationWidget = require('./NavigationWidget');
 var PopupMessage = require('./PopupMessage');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
-var SearchWidget = require('./SearchWidget');
-var ServicesPanel = require('./ServicesPanel');
-var SharePanel = require('./SharePanel');
-var TitleWidget = require('./TitleWidget');
 var LeafletVisualizer = require('../Map/LeafletVisualizer');
 var ViewerMode = require('../ViewModels/ViewerMode');
 
@@ -1222,7 +1215,7 @@ AusGlobeViewer.prototype.setCurrentDataset = function(layer) {
 // -------------------------------------------
 // Text Formatting
 // -------------------------------------------
-function cartographicToDegreeString(cartographic, errorBar) {
+/*function cartographicToDegreeString(cartographic, errorBar) {
     var strNS = cartographic.latitude < 0 ? 'S' : 'N';
     var strWE = cartographic.longitude < 0 ? 'W' : 'E';
     var text = 'Lat: ' + Math.abs(CesiumMath.toDegrees(cartographic.latitude)).toFixed(3) + '&deg; ' + strNS +
@@ -1236,7 +1229,7 @@ function cartographicToDegreeString(cartographic, errorBar) {
         text += ' m';
     }
     return text;
-}
+}*/
 
 var cartesian3Scratch = new Cartesian3();
 

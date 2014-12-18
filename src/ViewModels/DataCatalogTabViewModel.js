@@ -1,13 +1,10 @@
 'use strict';
 
-/*global require*/
-var createFragmentFromTemplate = require('../Core/createFragmentFromTemplate');
+/*global require,ga*/
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
 var GeoDataInfoPopup = require('../viewer/GeoDataInfoPopup');
 var inherit = require('../Core/inherit');
 var loadView = require('../Core/loadView');
-
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var DataCatalogTabViewModel = function(catalog) {
     ExplorerTabViewModel.call(this);

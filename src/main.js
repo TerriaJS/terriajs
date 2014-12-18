@@ -118,8 +118,8 @@ if (start) {
         var explorer = new ExplorerPanelViewModel({});
         explorer.show(ui);
 
-        var dataCatalog = explorer.addTab(new DataCatalogTabViewModel(application.catalog));
-        var nowViewing = explorer.addTab(new NowViewingTabViewModel(application.nowViewing));
+        explorer.addTab(new DataCatalogTabViewModel(application.catalog));
+        explorer.addTab(new NowViewingTabViewModel(application.nowViewing));
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });

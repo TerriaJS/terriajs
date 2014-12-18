@@ -7,8 +7,6 @@ var createFragmentFromTemplate = require('../Core/createFragmentFromTemplate');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
 var inherit = require('../Core/inherit');
 
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-
 var html = fs.readFileSync(__dirname + '/../Views/NowViewingTab.html', 'utf8');
 
 var NowViewingTabViewModel = function(nowViewing) {
