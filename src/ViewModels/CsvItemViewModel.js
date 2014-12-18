@@ -398,7 +398,7 @@ function recolorImageWithCanvas(img, colorFunc) {
 }
 
 
-var regionServer = 'http://geoserver.research.nicta.com.au/region_map/ows';
+var regionServer = 'http://geoserver-nm.nicta.com.au/region_map/ows';
 var regionWmsMap = {
     'STE': {
         "name":"region_map:FID_STE_2011_AUST",
