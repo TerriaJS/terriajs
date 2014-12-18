@@ -4,7 +4,6 @@
 
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
@@ -308,7 +307,7 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
-    options = combine(defaultValue(this.parameters, WebMapServiceItemViewModel.defaultParameters), options);
+    options = combine(combine(this.parameters, WebMapServiceItemViewModel.defaultParameters), options);
 
     this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
 };

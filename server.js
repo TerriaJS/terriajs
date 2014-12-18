@@ -152,7 +152,7 @@ if (cluster.isMaster) {
     }
 
     app.get('/ping', function(req, res){
-      res.send('OK');
+      res.status(200).send('OK');
     });
     
     app.get('/proxy/*', function(req, res, next) {
@@ -167,7 +167,7 @@ if (cluster.isMaster) {
         }
 
         if (!remoteUrl) {
-            return res.send(400, 'No url specified.');
+            return res.status(400).send('No url specified.');
         }
 
         if (!remoteUrl.protocol) {
@@ -181,7 +181,7 @@ if (cluster.isMaster) {
 
         //If you want to run a CORS proxy to data source, remove this section
         if (!proxyAllowedHost(remoteUrl.host)) {
-            res.send(400, 'Host is not in list of allowed hosts: ' + remoteUrl.host);
+            res.status(400).send('Host is not in list of allowed hosts: ' + remoteUrl.host);
             return;
         }
  
@@ -200,7 +200,7 @@ if (cluster.isMaster) {
                 res.header(filterHeaders(req, response.headers));
             }
 
-            res.send(code, body);
+            res.status(code).send(body);
         });
     });
 
