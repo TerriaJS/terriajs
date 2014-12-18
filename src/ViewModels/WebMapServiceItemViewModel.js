@@ -325,8 +325,7 @@ WebMapServiceItemViewModel.defaultParameters = {
     transparent: true,
     format: 'image/png',
     exceptions: 'application/vnd.ogc.se_xml',
-    styles: '',
-    tiled: true
+    styles: ''
 };
 
 function cleanAndProxyUrl(application, url) {
