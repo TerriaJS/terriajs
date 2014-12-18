@@ -11,6 +11,8 @@ var createFragmentFromTemplate = require('../Core/createFragmentFromTemplate');
 var html = fs.readFileSync(__dirname + '/../Views/BrandBar.html', 'utf8');
 
 var BrandBarViewModel = function(options) {
+    this.name = options.name;
+    this.leftLogo = options.leftLogo;
 };
 
 BrandBarViewModel.create = function(container, options) {

@@ -57,7 +57,7 @@ gulp.task('build-css', function() {
         .pipe(gulp.dest('./public/build'));
 });
 
-gulp.task('build', ['build-app', 'build-specs']);
+gulp.task('build', ['build-css', 'build-app', 'build-specs']);
 
 gulp.task('release-app', ['prepare-cesium'], function() {
     return build(appJSName, appEntryJSName, true);
@@ -67,7 +67,7 @@ gulp.task('release-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(specGlob), true);
 });
 
-gulp.task('release', ['release-app', 'release-specs']);
+gulp.task('release', ['build-css', 'release-app', 'release-specs']);
 
 gulp.task('watch-app', ['prepare-cesium'], function() {
     return watch(appJSName, appEntryJSName, false);

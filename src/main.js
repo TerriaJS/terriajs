@@ -112,7 +112,10 @@ if (start) {
             }
         };
 
-        BrandBarViewModel.create(ui, {});
+        BrandBarViewModel.create(ui, {
+            name: 'NATIONAL<br/><strong>MAP</strong> <small>beta</small>',
+            leftLogo: 'images/gov-brand.png'
+        });
         SearchPanelViewModel.create(ui, {});
 
         var explorer = new ExplorerPanelViewModel({});

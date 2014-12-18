@@ -10,16 +10,18 @@
     .opaque-to-input;
     background-color: @brand-bar-background-color;
     opacity: @brand-bar-opacity;
-    box-shadow: 5px 5px 5px #111111;
 }
 
 .brand-bar-main {
     &:extend(.brand-bar-body);
     position: absolute;
-    width: @brand-bar-width;
+    width: @brand-bar-width - 10px;
     height: 68px;
     top: 0;
     left: 0;
+    display: table;
+    padding-left: 10px;
+    z-index: 1;
 }
 
 .brand-bar-slant {
@@ -33,4 +35,26 @@
     transform-origin: top;
     -webkit-transform: skewX(-25deg);
     -webkit-transform-origin: 0 0;
+    z-index: 0;
+}
+
+.brand-bar-element {
+    display: table-cell;
+    height: 68px;
+    vertical-align: middle;
+}
+
+.brand-bar-name {
+    color: #ffffff;
+    font-family: @default-font;
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+.brand-bar-name strong {
+    font-weight: bolder;
+}
+
+.brand-bar-name small {
+    font-weight: lighter;
 }
