@@ -275,8 +275,10 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "bores"
+                            "layers": "Hydrography:bores"
+
                         },
                         {
                             "name": "Canal Areas",
@@ -289,8 +291,10 @@
                                 "-32.253269999147996"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "canalareas"
+                            "layers": "Hydrography:canalareas"
+
                         },
                         {
                             "name": "Canal Lines",
@@ -303,8 +307,10 @@
                                 "-12.524599999600033"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "canallines"
+                            "layers": "Hydrography:canallines"
+
                         },
                         {
                             "name": "Estuary",
@@ -318,7 +324,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFEstuary"
+                            "layers": "ahgf_shcarto:AHGFEstuary"
                         },
                         {
                             "name": "Flats",
@@ -331,8 +337,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "flats"
+                            "layers": "Hydrography:flats"
+
                         },
                         {
                             "name": "Foreshore Flats",
@@ -345,8 +353,10 @@
                                 "-9.007109999707835"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "foreshoreflats"
+                            "layers": "Hydrography:foreshoreflats"
+
                         },
                         {
                             "name": "Lakes",
@@ -359,8 +369,10 @@
                                 "-8.93787999971001"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "lakes"
+                            "layers": "Hydrography:lakes"
+
                         },
                         {
                             "name": "Locks",
@@ -373,8 +385,10 @@
                                 "-33.996729999124945"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "locks"
+                            "layers": "Hydrography:locks"
+
                         },
                         {
                             "name": "Reef Areas",
@@ -387,8 +401,10 @@
                                 "-8.998569999708106"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marinehazardareas"
+                            "layers": "Hydrography:marinehazardareas"
+
                         },
                         {
                             "name": "Reef Points",
@@ -401,8 +417,10 @@
                                 "-9.063349999706077"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marinehazardpoints"
+                            "layers": "Hydrography:marinehazardpoints"
+
                         },
                         {
                             "name": "Pondage Areas",
@@ -415,8 +433,10 @@
                                 "-12.191229999610012"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pondageareas"
+                            "layers": "Hydrography:pondageareas"
+
                         },
                         {
                             "name": "Rapid Areas",
@@ -429,8 +449,10 @@
                                 "-12.680119999595398"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "rapidareas"
+                            "layers": "Hydrography:rapidareas"
+
                         },
                         {
                             "name": "Rapid Lines",
@@ -443,8 +465,10 @@
                                 "-10.70548999965513"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "rapidlines"
+                            "layers": "Hydrography:rapidlines"
+
                         },
                         {
                             "name": "Reservoirs",
@@ -457,8 +481,10 @@
                                 "-10.571689999659238"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "reservoirs"
+                            "layers": "Hydrography:reservoirs"
+
                         },
                         {
                             "name": "Spillways",
@@ -471,8 +497,10 @@
                                 "-20.977869999368615"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "spillways"
+                            "layers": "Hydrography:spillways"
+
                         },
                         {
                             "name": "Springs",
@@ -485,8 +513,10 @@
                                 "-11.523879999630154"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "springs"
+                            "layers": "Hydrography:springs"
+
                         },
                         {
                             "name": "Streams",
@@ -500,7 +530,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFMappedStream"
+                            "layers": "ahgf_shcarto:AHGFMappedStream"
                         },
                         {
                             "name": "Stream Nodes",
@@ -514,7 +544,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFMappedNode"
+                            "layers": "ahgf_shcarto:AHGFMappedNode"
                         },
                         {
                             "name": "Stream Network",
@@ -528,7 +558,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFNetworkStream"
+                            "layers": "ahgf_shn:AHGFNetworkStream"
                         },
                         {
                             "name": "Stream Network Nodes",
@@ -542,7 +572,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFNetworkNode"
+                            "layers": "ahgf_shn:AHGFNetworkNode"
                         },
                         {
                             "name": "Structure",
@@ -556,7 +586,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFStructure"
+                            "layers": "ahgf_shcarto:AHGFStructure"
                         },
                         {
                             "name": "Waterbodies",
@@ -570,7 +600,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterbody"
+                            "layers": "ahgf_shcarto:AHGFWaterbody"
                         },
                         {
                             "name": "Water Course Areas",
@@ -583,8 +613,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watercourseareas"
+                            "layers": "Hydrography:watercourseareas"
+
                         },
                         {
                             "name": "Water Course Lines",
@@ -597,8 +629,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watercourselines"
+                            "layers": "Hydrography:watercourselines"
+
                         },
                         {
                             "name": "Waterfall Points",
@@ -611,8 +645,10 @@
                                 "-10.643249999657044"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterfallpoints"
+                            "layers": "Hydrography:waterfallpoints"
+
                         },
                         {
                             "name": "Waterholes",
@@ -625,8 +661,10 @@
                                 "-6.2859093933647605"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterholes"
+                            "layers": "Hydrography:waterholes"
+
                         },
                         {
                             "name": "Water Points",
@@ -639,8 +677,10 @@
                                 "-10.072709999674638"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterpoints"
+                            "layers": "Hydrography:waterpoints"
+
                         },
                         {
                             "name": "Water Pipeline",
@@ -654,7 +694,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterPipeline"
+                            "layers": "ahgf_shcarto:AHGFWaterPipeline"
                         },
                         {
                             "name": "Water Storage",
@@ -668,7 +708,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFDam"
+                            "layers": "ahgf_shcarto:AHGFDam"
                         },
                         {
                             "name": "River Region",
@@ -682,7 +722,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "RiverRegion"
+                            "layers": "ahgf_hrr:RiverRegion"
                         },
                         {
                             "name": "Catchment",
@@ -696,7 +736,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFContractedCatchment"
+                            "layers": "ahgf_hrc:AHGFContractedCatchment"
                         },
                         {
                             "name": " Drainage Division",
@@ -710,7 +750,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AWRADrainageDivision"
+                            "layers": "ahgf_hrr:AWRADrainageDivision"
                         },
                         {
                             "name": "NCB Level1 Drainage Division",
@@ -724,7 +764,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "NCBLevel1DrainageDivision"
+                            "layers": "ahgf_shcatch:NCBLevel1DrainageDivision"
                         },
                         {
                             "name": "NCB Level2 Drainage Basin Group",
@@ -738,7 +778,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "NCBLevel2DrainageBasinGroup"
+                            "layers": "ahgf_shcatch:NCBLevel2DrainageBasinGroup"
                         }
                     ]
                 },
@@ -759,7 +799,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferContour"
+                            "layers": "ahgf_gwc:AHGFAquiferContour"
                         },
                         {
                             "name": "Water Table Aquifer",
@@ -773,7 +813,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterTableAquifer"
+                            "layers": "ahgf_gwc:AHGFWaterTableAquifer"
                         },
                         {
                             "name": "Surficial Hydrogeologic Unit",
@@ -787,7 +827,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFSurficialHydrogeologicUnit"
+                            "layers": "ahgf_gwc:AHGFSurficialHydrogeologicUnit"
                         },
                         {
                             "name": "Aquifer Boundary",
@@ -801,7 +841,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferBoundary"
+                            "layers": "ahgf_gwc:AHGFAquiferBoundary"
                         },
                         {
                             "name": "Aquifer Outcrop",
@@ -815,7 +855,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferOutcrop"
+                            "layers": "ahgf_gwc:AHGFAquiferOutcrop"
                         },
                         {
                             "name": "Aquifer Salinity",
@@ -829,7 +869,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWAquiferSalinity"
+                            "layers": "ahgf_gwc:IGWAquiferSalinity"
                         },
                         {
                             "name": "Aquifer Yield",
@@ -843,7 +883,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWAquiferYield"
+                            "layers": "ahgf_gwc:IGWAquiferYield"
                         },
                         {
                             "name": "Water Table Yield",
@@ -857,7 +897,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableYield"
+                            "layers": "ahgf_gwc:IGWWaterTableYield"
                         },
                         {
                             "name": "Water Table Salinity",
@@ -871,10 +911,10 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableSalinity"
+                            "layers": "ahgf_gwc:IGWWaterTableSalinity"
                         },
                         {
-                            "name": "IGWWaterTableHydraulicConductivity",
+                            "name": "Water Table Hydraulic Conductivity",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                             "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
@@ -885,7 +925,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableHydraulicConductivity"
+                            "layers": "ahgf_gwc:IGWWaterTableHydraulicConductivity"
                         },
                         {
                             "name": "WaterTableAquifer",
@@ -899,7 +939,7 @@
                             ],
                             "type": "wms",
                             "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterTableAquifer"
+                            "layers": "ahgf_gwc:AHGFWaterTableAquifer"
                         }
                     ]
                 },
@@ -918,8 +958,10 @@
                                 "-12.41999999960316"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "benchmarks"
+                            "layers": "Elevation:benchmarks"
+
                         },
                         {
                             "name": "Contours",
@@ -932,8 +974,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "contours"
+                            "layers": "Elevation:contours"
+
                         },
                         {
                             "name": "Horizontal Control Points",
@@ -946,8 +990,10 @@
                                 "-10.462999999662589"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "horizontalcontrolpoints"
+                            "layers": "Elevation:horizontalcontrolpoints"
+
                         },
                         {
                             "name": "Spot Elevations",
@@ -960,8 +1006,10 @@
                                 "-9.004409999707923"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "spotelevations"
+                            "layers": "Elevation:spotelevations"
+
                         },
                         {
                             "name": "SRTM 1 sec DEM Image",
@@ -1008,8 +1056,10 @@
                                 "-12.581149999598347"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "caves"
+                            "layers": "Terrain:caves"
+
                         },
                         {
                             "name": "Craters",
@@ -1022,8 +1072,10 @@
                                 "-18.183079999439965"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "craters"
+                            "layers": "Terrain:craters"
+
                         },
                         {
                             "name": "Deformations",
@@ -1036,8 +1088,10 @@
                                 "-12.909959999588562"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "deformationareas"
+                            "layers": "Terrain:deformationareas"
+
                         },
                         {
                             "name": "Cliffs",
@@ -1050,8 +1104,10 @@
                                 "-11.006909999645897"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "discontinuities"
+                            "layers": "Terrain:discontinuities"
+
                         },
                         {
                             "name": "Pinnacles",
@@ -1064,8 +1120,10 @@
                                 "-11.944649999617436"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pinnacles"
+                            "layers": "Terrain:pinnacles"
+
                         },
                         {
                             "name": "Sand Ridges",
@@ -1078,8 +1136,10 @@
                                 "-10.576659999659086"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "sandridges"
+                            "layers": "Terrain:sandridges"
+
                         },
                         {
                             "name": "Sands",
@@ -1092,8 +1152,10 @@
                                 "-9.845259999681689"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "sands"
+                            "layers": "Terrain:sands"
+
                         }
                     ]
                 },
@@ -1112,8 +1174,10 @@
                                 "-11.62904999962697"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "clearedlines"
+                            "layers": "Vegetation:clearedlines"
+
                         },
                         {
                             "name": "Cultivated Areas",
@@ -1126,8 +1190,10 @@
                                 "-9.04530999970664"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cultivatedareas"
+                            "layers": "Vegetation:cultivatedareas"
+
                         },
                         {
                             "name": "Native Vegetation Areas",
@@ -1140,8 +1206,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "nativevegetationareas"
+                            "layers": "Vegetation:nativevegetationareas"
+
                         },
                         {
                             "name": "Windbreaks",
@@ -1154,8 +1222,10 @@
                                 "-24.201429999293836"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "windbreaks"
+                            "layers": "Vegetation:windbreaks"
+
                         }
                     ]
                 },
@@ -1174,8 +1244,10 @@
                                 "-21.102919999365557"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "buildingareas"
+                            "layers": "Habitation:buildingareas"
+
                         },
                         {
                             "name": "Building Points",
@@ -1188,8 +1260,10 @@
                                 "-9.128069999704051"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "buildingpoints"
+                            "layers": "Habitation:buildingpoints"
+
                         },
                         {
                             "name": "Builtup Areas",
@@ -1202,8 +1276,10 @@
                                 "-9.067499999705948"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "builtupareas"
+                            "layers": "Habitation:builtupareas"
+
                         },
                         {
                             "name": "Cemetery Areas",
@@ -1216,8 +1292,10 @@
                                 "-16.905399999474405"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cemeteryareas"
+                            "layers": "Habitation:cemeteryareas"
+
                         },
                         {
                             "name": "Cemetery Points",
@@ -1230,8 +1308,10 @@
                                 "-15.079179999525442"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cemeterypoints"
+                            "layers": "Habitation:cemeterypoints"
+
                         },
                         {
                             "name": "Homesteads",
@@ -1244,8 +1324,10 @@
                                 "-11.169479999640936"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "homesteads"
+                            "layers": "Habitation:homesteads"
+
                         },
                         {
                             "name": "Placenames",
@@ -1258,8 +1340,10 @@
                                 "-8.936219999710062"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "placenames"
+                            "layers": "Habitation:placenames"
+
                         },
                         {
                             "name": "Populated Places",
@@ -1272,8 +1356,10 @@
                                 "-10.183389999671217"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "populatedplaces"
+                            "layers": "Habitation:populatedplaces"
+
                         },
                         {
                             "name": "Recreation Areas",
@@ -1286,8 +1372,10 @@
                                 "-11.395799999634049"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "recreationareas"
+                            "layers": "Habitation:recreationareas"
+
                         }
                     ]
                 },
@@ -1306,8 +1394,10 @@
                                 "-9.088949999705271"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "aircraftfacilitypoints"
+                            "layers": "Transport:aircraftfacilitypoints"
+
                         },
                         {
                             "name": "Barrier Points",
@@ -1320,8 +1410,10 @@
                                 "-11.439839999632706"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "barrierpoints"
+                            "layers": "Transport:barrierpoints"
+
                         },
                         {
                             "name": "Ferry Routes",
@@ -1334,8 +1426,10 @@
                                 "-10.584439999658853"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "ferryroutelines"
+                            "layers": "Transport:ferryroutelines"
+
                         },
                         {
                             "name": "Foot Tracks",
@@ -1348,8 +1442,10 @@
                                 "-14.099749999553625"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "foottracks"
+                            "layers": "Transport:foottracks"
+
                         },
                         {
                             "name": "Railway Bridges",
@@ -1362,8 +1458,10 @@
                                 "-16.387539999488673"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaybridgepoints"
+                            "layers": "Transport:railwaybridgepoints"
+
                         },
                         {
                             "name": "Railway Crossings",
@@ -1376,8 +1474,10 @@
                                 "-12.482379999601294"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaycrossinglines"
+                            "layers": "Transport:railwaycrossinglines"
+
                         },
                         {
                             "name": "Railways",
@@ -1390,8 +1490,10 @@
                                 "-12.435059999602709"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railways"
+                            "layers": "Transport:railways"
+
                         },
                         {
                             "name": "Railway Stop",
@@ -1404,8 +1506,10 @@
                                 "-12.4720799996016"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaystoppoints"
+                            "layers": "Transport:railwaystoppoints"
+
                         },
                         {
                             "name": "Railway Tunnel Lines",
@@ -1418,8 +1522,10 @@
                                 "-16.861979999475594"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaytunnellines"
+                            "layers": "Transport:railwaytunnellines"
+
                         },
                         {
                             "name": "Road Crossing Lines",
@@ -1432,8 +1538,10 @@
                                 "-11.161099999641191"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadcrossinglines"
+                            "layers": "Transport:roadcrossinglines"
+
                         },
                         {
                             "name": "Road Crossing Points",
@@ -1446,8 +1554,10 @@
                                 "-10.970479999647017"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadcrossingpoints"
+                            "layers": "Transport:roadcrossingpoints"
+
                         },
                         {
                             "name": "Roads",
@@ -1460,8 +1570,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roads"
+                            "layers": "Transport:roads"
+
                         },
                         {
                             "name": "Road Tunnel Lines",
@@ -1474,8 +1586,10 @@
                                 "-25.080719999274965"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadtunnellines"
+                            "layers": "Transport:roadtunnellines"
+
                         }
                     ]
                 },
@@ -1494,8 +1608,10 @@
                                 "-16.819299999476762"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "aerialcableways"
+                            "layers": "Infrastructure:aerialcableways"
+
                         },
                         {
                             "name": "Conveyors",
@@ -1508,8 +1624,10 @@
                                 "-12.184729999610212"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "conveyors"
+                            "layers": "Infrastructure:conveyors"
+
                         },
                         {
                             "name": "Damwalls",
@@ -1522,8 +1640,10 @@
                                 "-10.571689999659238"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "damwalls"
+                            "layers": "Infrastructure:damwalls"
+
                         },
                         {
                             "name": "Fences",
@@ -1536,8 +1656,10 @@
                                 "-10.895739999649303"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "fences"
+                            "layers": "Infrastructure:fences"
+
                         },
                         {
                             "name": "Marine Infrastructure Lines",
@@ -1550,8 +1672,10 @@
                                 "-9.062449999706104"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marineinfrastructurelines"
+                            "layers": "Infrastructure:marineinfrastructurelines"
+
                         },
                         {
                             "name": "Marine Infrastructure Points",
@@ -1564,8 +1688,10 @@
                                 "-9.140769999703654"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marineinfrastructurepoints"
+                            "layers": "Infrastructure:marineinfrastructurepoints"
+
                         },
                         {
                             "name": "Mine Areas",
@@ -1578,8 +1704,10 @@
                                 "-11.872959999619598"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mineareas"
+                            "layers": "Infrastructure:mineareas"
+
                         },
                         {
                             "name": "Mine Points",
@@ -1592,8 +1720,10 @@
                                 "-10.575569999659121"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "minepoints"
+                            "layers": "Infrastructure:minepoints"
+
                         },
                         {
                             "name": "Petroleum Wells",
@@ -1606,8 +1736,10 @@
                                 "-15.323399999518502"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "petroleumwells"
+                            "layers": "Infrastructure:petroleumwells"
+
                         },
                         {
                             "name": "Storage Tanks",
@@ -1620,8 +1752,10 @@
                                 "-12.426089999602983"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "storagetanks"
+                            "layers": "Infrastructure:storagetanks"
+
                         },
                         {
                             "name": "Vertical Obstructions",
@@ -1634,8 +1768,10 @@
                                 "-9.080289999705544"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "verticalobstructions"
+                            "layers": "Infrastructure:verticalobstructions"
+
                         },
                         {
                             "name": "Waste Management Facilities",
@@ -1662,8 +1798,10 @@
                                 "-9.951769999678387"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watertanks"
+                            "layers": "Infrastructure:watertanks"
+
                         },
                         {
                             "name": "Wind Pumps",
@@ -1676,8 +1814,10 @@
                                 "-11.177569999640692"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "windpumps"
+                            "layers": "Infrastructure:windpumps"
+
                         },
                         {
                             "name": "Yards",
@@ -1690,8 +1830,10 @@
                                 "-10.624669999657616"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "yards"
+                            "layers": "Infrastructure:yards"
+
                         }
                     ]
                 },
@@ -1710,8 +1852,10 @@
                                 "-10.903989999649047"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pipelines"
+                            "layers": "Utility:pipelines"
+
                         }
                     ]
                 },
@@ -1730,8 +1874,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "frameworkboundaries"
+                            "layers": "Framework:frameworkboundaries"
+
                         },
                         {
                             "name": "Geodata Indexes",
@@ -1744,8 +1890,10 @@
                                 "-8.999999999708061"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "geodataindexes"
+                            "layers": "Framework:geodataindexes"
+
                         },
                         {
                             "name": "Islands",
@@ -1758,8 +1906,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "islands"
+                            "layers": "Framework:islands"
+
                         },
                         {
                             "name": "Large Area Features",
@@ -1772,8 +1922,10 @@
                                 "-10.687579999655679"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "largeareafeatures"
+                            "layers": "Framework:largeareafeatures"
+
                         },
                         {
                             "name": "Locations",
@@ -1786,8 +1938,10 @@
                                 "-8.95829999970937"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "locations"
+                            "layers": "Framework:locations"
+
                         },
                         {
                             "name": "Mainlands",
@@ -1800,8 +1954,10 @@
                                 "-10.687579999655679"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mainlands"
+                            "layers": "Framework:mainlands"
+
                         },
                         {
                             "name": "mapindexes",
@@ -1814,8 +1970,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mapindexes"
+                            "layers": "Framework:mapindexes"
+
                         },
                         {
                             "name": "Prohibited Areas",
@@ -1828,8 +1986,10 @@
                                 "-12.584149999598258"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "prohibitedareas"
+                            "layers": "Framework:prohibitedareas"
+
                         },
                         {
                             "name": "Reserves",
@@ -1842,8 +2002,10 @@
                                 "-9.088049999705305"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "reserves"
+                            "layers": "Framework:reserves"
+
                         },
                         {
                             "name": "Seas",
@@ -1856,8 +2018,10 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
+
                             "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "seas"
+                            "layers": "Framework:seas"
+
                         }
                     ]
                 },
