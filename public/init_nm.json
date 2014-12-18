@@ -131,39 +131,821 @@
                     ]
                 },
                 {
-                    "name": "Social and Economic",
+                    "name": "Elevation",
                     "type": "group",
                     "items": [
                         {
-                            "name": "Population Estimates",
+                            "name": "Benchmarks",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "113.50982",
+                                "-38.647199999079525",
+                                "149.92117",
+                                "-12.41999999960316"
                             ],
                             "type": "wms",
-                            "url": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer",
-                            "layers": "7",
-                            "getFeatureInfoAsGeoJson": false
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Elevation:benchmarks"
+
                         },
                         {
-                            "name": "Taxation Statistics 2011-2012",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[data.gov.au](http://www.data.gov.au/)",
+                            "name": "Contours",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "112.92137",
+                                "-43.74297999905761",
+                                "153.63857000000004",
+                                "-8.93332999971015"
                             ],
                             "type": "wms",
-                            "url": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms",
-                            "layers": "95d9e550_8b36_4273_8df7_2b76c140e73a",
-                            "dataUrl": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wfs?service=WFS&ve…3_8df7_2b76c140e73a&srsName=EPSG%3A4326&maxFeatures=1000&outputFormat=json",
-                            "dataUrlType": "wfs-complete"
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Elevation:contours"
+
+                        },
+                        {
+                            "name": "Horizontal Control Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.06265",
+                                "-43.51730999905795",
+                                "153.55039",
+                                "-10.462999999662589"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Elevation:horizontalcontrolpoints"
+
+                        },
+                        {
+                            "name": "Spot Elevations",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93472",
+                                "-43.657359999057725",
+                                "153.63573999999997",
+                                "-9.004409999707923"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Elevation:spotelevations"
+
+                        },
+                        {
+                            "name": "SRTM 1 sec DEM Image",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93472",
+                                "-43.657359999057725",
+                                "153.63573999999997",
+                                "-9.004409999707923"
+                            ],
+                            "type": "wms",
+                            "url": "http://www.ga.gov.au/gisimg/services/topography/dem_s_1s/ImageServer/WMSServer",
+                            "layers": "0"
+                        },
+                        {
+                            "name": "Flow Grid Direction Image",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93472",
+                                "-43.657359999057725",
+                                "153.63573999999997",
+                                "-9.004409999707923"
+                            ],
+                            "type": "wms",
+                            "url": "http://www.ga.gov.au/thredds/wms/national_grids/d8-9s.nc",
+                            "layers": "Flow_Direction_Grid_to_accompany_9_Second_Digital_Elevation_Model_of_Australia_Version_3"
+                        }
+                    ]
+                },
+                {
+                    "name": "Framework",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Framework Boundaries",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.88333",
+                                "-43.99999999905729",
+                                "154.1",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:frameworkboundaries"
+
+                        },
+                        {
+                            "name": "Geodata Indexes",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.88333",
+                                "-43.99999999905729",
+                                "153.99999999999997",
+                                "-8.999999999708061"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:geodataindexes"
+
+                        },
+                        {
+                            "name": "Islands",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.92137",
+                                "-43.74297999905761",
+                                "153.5799",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:islands"
+
+                        },
+                        {
+                            "name": "Large Area Features",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "116.04361",
+                                "-39.13573999907615",
+                                "152.60876000000002",
+                                "-10.687579999655679"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:largeareafeatures"
+
+                        },
+                        {
+                            "name": "Locations",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.92903",
+                                "-43.64227999905775",
+                                "153.63850000000002",
+                                "-8.95829999970937"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:locations"
+
+                        },
+                        {
+                            "name": "Mainlands",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.15627999999998",
+                                "-43.64304999905776",
+                                "153.63857000000004",
+                                "-10.687579999655679"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:mainlands"
+
+                        },
+                        {
+                            "name": "mapindexes",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.88333",
+                                "-43.99999999905729",
+                                "154.1",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:mapindexes"
+
+                        },
+                        {
+                            "name": "Prohibited Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.72448",
+                                "-42.67827999905975",
+                                "153.45784999999998",
+                                "-12.584149999598258"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:prohibitedareas"
+
+                        },
+                        {
+                            "name": "Reserves",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.97143",
+                                "-43.74297999905761",
+                                "153.60127",
+                                "-9.088049999705305"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:reserves"
+
+                        },
+                        {
+                            "name": "Seas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.88333",
+                                "-43.99999999905729",
+                                "154.1",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Framework:seas"
+
+                        }
+                    ]
+                },
+                {
+                    "name": "Ground Water",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Aquifer Contours",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "legendUrl": "",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "130.9294316820001",
+                                "-41.24101109706462",
+                                "151.640955901",
+                                "-12.157000677611002"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:AHGFAquiferContour"
+                        },
+                        {
+                            "name": "Water Table Aquifer",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.92137000000001",
+                                "-43.65854999905766",
+                                "153.63857000000004",
+                                "-9.219939999701113"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:AHGFWaterTableAquifer"
+                        },
+                        {
+                            "name": "Surficial Hydrogeologic Unit",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.92137000000001",
+                                "-43.65854999905766",
+                                "153.63857000000004",
+                                "-9.219939999701113"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:AHGFSurficialHydrogeologicUnit"
+                        },
+                        {
+                            "name": "Aquifer Boundary",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.92137000000001",
+                                "-39.135739999076094",
+                                "152.49040280900007",
+                                "-12.243238350608436"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:AHGFAquiferBoundary"
+                        },
+                        {
+                            "name": "Aquifer Outcrop",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.8055180570001",
+                                "-38.755833332078694",
+                                "152.49040280900002",
+                                "-13.441636424572783"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:AHGFAquiferOutcrop"
+                        },
+                        {
+                            "name": "Aquifer Salinity",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.92137000000001",
+                                "-38.97436811707721",
+                                "148.91107675700005",
+                                "-20.97124299936873"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:IGWAquiferSalinity"
+                        },
+                        {
+                            "name": "Aquifer Yield",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "138.73545507400001",
+                                "-38.97436810607722",
+                                "148.9098995590001",
+                                "-31.999839353151554"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:IGWAquiferYield"
+                        },
+                        {
+                            "name": "Water Table Yield",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "129.00048000000004",
+                                "-39.135739999076094",
+                                "153.63857000000007",
+                                "-10.965879999647115"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:IGWWaterTableYield"
+                        },
+                        {
+                            "name": "Water Table Salinity",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.92137000000001",
+                                "-43.643049999057716",
+                                "153.63857000000007",
+                                "-10.687579999655645"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:IGWWaterTableSalinity"
+                        },
+                        {
+                            "name": "Water Table Hydraulic Conductivity",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "140.96334594200005",
+                                "-37.68073353908695",
+                                "152.49056374800008",
+                                "-24.586309583285477"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:IGWWaterTableHydraulicConductivity"
+                        },
+                        {
+                            "name": "WaterTableAquifer",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.92137000000001",
+                                "-43.65854999905766",
+                                "153.63857000000004",
+                                "-9.219939999701113"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_gwc:AHGFWaterTableAquifer"
+                        }
+                    ]
+                },
+                {
+                    "name": "Habitation",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Building Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "141.62655",
+                                "-41.12735999906517",
+                                "152.80475",
+                                "-21.102919999365557"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:buildingareas"
+
+                        },
+                        {
+                            "name": "Building Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.94450000000002",
+                                "-43.65456999905773",
+                                "153.62926",
+                                "-9.128069999704051"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:buildingpoints"
+
+                        },
+                        {
+                            "name": "Builtup Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.53047",
+                                "-43.17193999905859",
+                                "153.63702",
+                                "-9.067499999705948"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:builtupareas"
+
+                        },
+                        {
+                            "name": "Cemetery Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.64094000000001",
+                                "-42.85204999905929",
+                                "153.0669",
+                                "-16.905399999474405"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:cemeteryareas"
+
+                        },
+                        {
+                            "name": "Cemetery Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "118.51832000000002",
+                                "-37.96838999908467",
+                                "152.39647",
+                                "-15.079179999525442"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:cemeterypoints"
+
+                        },
+                        {
+                            "name": "Homesteads",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.20027",
+                                "-42.76347999905952",
+                                "152.92311",
+                                "-11.169479999640936"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:homesteads"
+
+                        },
+                        {
+                            "name": "Placenames",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.01127",
+                                "-43.63024999905778",
+                                "153.61196000000004",
+                                "-8.936219999710062"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:placenames"
+
+                        },
+                        {
+                            "name": "Populated Places",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.53641999999999",
+                                "-43.314229999058306",
+                                "153.61194",
+                                "-10.183389999671217"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:populatedplaces"
+
+                        },
+                        {
+                            "name": "Recreation Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.54947",
+                                "-43.165569999058604",
+                                "153.61335",
+                                "-11.395799999634049"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Habitation:recreationareas"
+
+                        }
+                    ]
+                },
+                {
+                    "name": "Infrastructure",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Aerial Cableways",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "145.63916",
+                                "-37.845019999085665",
+                                "153.47854999999998",
+                                "-16.819299999476762"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:aerialcableways"
+
+                        },
+                        {
+                            "name": "Conveyors",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "115.65124",
+                                "-41.48786999906365",
+                                "151.91119",
+                                "-12.184729999610212"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:conveyors"
+
+                        },
+                        {
+                            "name": "Damwalls",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "115.00212",
+                                "-43.18769999905856",
+                                "153.30629",
+                                "-10.571689999659238"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:damwalls"
+
+                        },
+                        {
+                            "name": "Fences",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.92895",
+                                "-35.37394999910903",
+                                "152.97735999999998",
+                                "-10.895739999649303"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:fences"
+
+                        },
+                        {
+                            "name": "Marine Infrastructure Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.32462999999998",
+                                "-43.16099999905862",
+                                "153.59193",
+                                "-9.062449999706104"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:marineinfrastructurelines"
+
+                        },
+                        {
+                            "name": "Marine Infrastructure Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.97203",
+                                "-43.657359999057725",
+                                "153.63569999999999",
+                                "-9.140769999703654"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:marineinfrastructurepoints"
+
+                        },
+                        {
+                            "name": "Mine Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.36167000000002",
+                                "-43.43038999905809",
+                                "153.50486000000004",
+                                "-11.872959999619598"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:mineareas"
+
+                        },
+                        {
+                            "name": "Mine Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.36334",
+                                "-43.46653999905804",
+                                "153.60394",
+                                "-10.575569999659121"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:minepoints"
+
+                        },
+                        {
+                            "name": "Petroleum Wells",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.9964",
+                                "-38.596209999079896",
+                                "152.48242000000002",
+                                "-15.323399999518502"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:petroleumwells"
+
+                        },
+                        {
+                            "name": "Storage Tanks",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.63004999999998",
+                                "-41.127119999065165",
+                                "153.16552999999996",
+                                "-12.426089999602983"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:storagetanks"
+
+                        },
+                        {
+                            "name": "Vertical Obstructions",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.52788",
+                                "-43.37782999905819",
+                                "153.58229000000003",
+                                "-9.080289999705544"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:verticalobstructions"
+
+                        },
+                        {
+                            "name": "Waste Management Facilities",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93472",
+                                "-43.657359999057725",
+                                "153.63573999999997",
+                                "-9.004409999707923"
+                            ],
+                            "type": "wms",
+                            "url": "http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WMSServer",
+                            "layers": "0"
+                        },
+                        {
+                            "name": "Water Tanks",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93187000000002",
+                                "-42.75848999905954",
+                                "153.00634",
+                                "-9.951769999678387"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:watertanks"
+
+                        },
+                        {
+                            "name": "Wind Pumps",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.50105",
+                                "-35.85509999910395",
+                                "151.48511",
+                                "-11.177569999640692"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:windpumps"
+
+                        },
+                        {
+                            "name": "Yards",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.18122",
+                                "-34.994069999113215",
+                                "148.48095",
+                                "-10.624669999657616"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Infrastructure:yards"
+
                         }
                     ]
                 },
@@ -261,1608 +1043,7 @@
                     ]
                 },
                 {
-                    "name": "Surface Water",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Bores",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "bores"
-                        },
-                        {
-                            "name": "Canal Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "115.70707",
-                                "-38.08189999908377",
-                                "145.17220000000003",
-                                "-32.253269999147996"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "canalareas"
-                        },
-                        {
-                            "name": "Canal Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.35391999999999",
-                                "-42.85120999905931",
-                                "153.59005",
-                                "-12.524599999600033"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "canallines"
-                        },
-                        {
-                            "name": "Estuary",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.6089684320001",
-                                "-43.59020860705779",
-                                "153.62495056300006",
-                                "-10.835983610651068"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFEstuary"
-                        },
-                        {
-                            "name": "Flats",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.00808000000002",
-                                "-43.60604999905781",
-                                "153.61275",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "flats"
-                        },
-                        {
-                            "name": "Foreshore Flats",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.00706",
-                                "-43.511829999057966",
-                                "153.57853",
-                                "-9.007109999707835"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "foreshoreflats"
-                        },
-                        {
-                            "name": "Lakes",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.99395",
-                                "-43.55222999905789",
-                                "153.61302",
-                                "-8.93787999971001"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "lakes"
-                        },
-                        {
-                            "name": "Locks",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "138.80938",
-                                "-35.94260999910306",
-                                "144.46688000000003",
-                                "-33.996729999124945"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "locks"
-                        },
-                        {
-                            "name": "Reef Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.92034999999998",
-                                "-43.5473099990579",
-                                "153.54714",
-                                "-8.998569999708106"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marinehazardareas"
-                        },
-                        {
-                            "name": "Reef Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.11903999999998",
-                                "-43.66633999905772",
-                                "153.62995",
-                                "-9.063349999706077"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marinehazardpoints"
-                        },
-                        {
-                            "name": "Pondage Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.31874",
-                                "-42.10062999906144",
-                                "153.3509",
-                                "-12.191229999610012"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pondageareas"
-                        },
-                        {
-                            "name": "Rapid Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "131.03977",
-                                "-33.995369999124954",
-                                "149.38968999999997",
-                                "-12.680119999595398"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "rapidareas"
-                        },
-                        {
-                            "name": "Rapid Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "131.66452",
-                                "-43.20146999905853",
-                                "149.13695",
-                                "-10.70548999965513"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "rapidlines"
-                        },
-                        {
-                            "name": "Reservoirs",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.99601",
-                                "-43.19763999905853",
-                                "153.56568",
-                                "-10.571689999659238"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "reservoirs"
-                        },
-                        {
-                            "name": "Spillways",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "117.10128000000002",
-                                "-42.103829999061425",
-                                "153.28249",
-                                "-20.977869999368615"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "spillways"
-                        },
-                        {
-                            "name": "Springs",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.13676",
-                                "-38.23244999908261",
-                                "147.96741000000003",
-                                "-11.523879999630154"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "springs"
-                        },
-                        {
-                            "name": "Streams",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.37534500000005",
-                                "-43.629381999057735",
-                                "153.63207400000002",
-                                "-9.242297499700408"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFMappedStream"
-                        },
-                        {
-                            "name": "Stream Nodes",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.37534500000005",
-                                "-43.629381999057735",
-                                "153.6320740000001",
-                                "-9.242297499700424"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFMappedNode"
-                        },
-                        {
-                            "name": "Stream Network",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.10056181999998",
-                                "-47.81318817937922",
-                                "154.86193818000004",
-                                "-5.051811819379163"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFNetworkStream"
-                        },
-                        {
-                            "name": "Stream Network Nodes",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.33375",
-                                "-43.628749999057746",
-                                "153.62875000000008",
-                                "-9.23624999970059"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFNetworkNode"
-                        },
-                        {
-                            "name": "Structure",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.76872500000002",
-                                "-43.58274499905778",
-                                "153.5956600000001",
-                                "-10.64324999965701"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFStructure"
-                        },
-                        {
-                            "name": "Waterbodies",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.80691",
-                                "-43.00307999905891",
-                                "152.89131000000003",
-                                "-10.903989999649017"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterbody"
-                        },
-                        {
-                            "name": "Water Course Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.56261000000002",
-                                "-43.58998999905784",
-                                "153.58856",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watercourseareas"
-                        },
-                        {
-                            "name": "Water Course Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.37533999999998",
-                                "-43.629399999057775",
-                                "153.6321",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watercourselines"
-                        },
-                        {
-                            "name": "Waterfall Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "115.84323",
-                                "-43.49497999905798",
-                                "153.04724000000002",
-                                "-10.643249999657044"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterfallpoints"
-                        },
-                        {
-                            "name": "Waterholes",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.89583439399999",
-                                "-47.40775060536477",
-                                "154.01767560599998",
-                                "-6.2859093933647605"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterholes"
-                        },
-                        {
-                            "name": "Water Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.76517999999999",
-                                "-38.63448999907962",
-                                "153.09347999999997",
-                                "-10.072709999674638"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "waterpoints"
-                        },
-                        {
-                            "name": "Water Pipeline",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.80691",
-                                "-43.00307999905891",
-                                "152.89131000000003",
-                                "-10.903989999649017"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterPipeline"
-                        },
-                        {
-                            "name": "Water Storage",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.9318700000001",
-                                "-42.75848999905948",
-                                "153.00634000000005",
-                                "-9.951769999678337"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFDam"
-                        },
-                        {
-                            "name": "River Region",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.9225",
-                                "-43.64250000005773",
-                                "153.63750000000013",
-                                "-9.229999999700832"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "RiverRegion"
-                        },
-                        {
-                            "name": "Catchment",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.9225",
-                                "-43.73999999905757",
-                                "153.63750000000002",
-                                "-9.197499999701808"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFContractedCatchment"
-                        },
-                        {
-                            "name": " Drainage Division",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "111.24438730279999",
-                                "-48.47186269657931",
-                                "155.3156126972001",
-                                "-4.400637302179204"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AWRADrainageDivision"
-                        },
-                        {
-                            "name": "NCB Level1 Drainage Division",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.9225",
-                                "-43.73999999905757",
-                                "153.63750000000002",
-                                "-9.197499999701801"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "NCBLevel1DrainageDivision"
-                        },
-                        {
-                            "name": "NCB Level2 Drainage Basin Group",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.9225",
-                                "-43.73999999905757",
-                                "153.63750000000013",
-                                "-9.197499999701803"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "NCBLevel2DrainageBasinGroup"
-                        }
-                    ]
-                },
-                {
-                    "name": "Ground Water",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Aquifer Contours",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "legendUrl": "",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "130.9294316820001",
-                                "-41.24101109706462",
-                                "151.640955901",
-                                "-12.157000677611002"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferContour"
-                        },
-                        {
-                            "name": "Water Table Aquifer",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.92137000000001",
-                                "-43.65854999905766",
-                                "153.63857000000004",
-                                "-9.219939999701113"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterTableAquifer"
-                        },
-                        {
-                            "name": "Surficial Hydrogeologic Unit",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.92137000000001",
-                                "-43.65854999905766",
-                                "153.63857000000004",
-                                "-9.219939999701113"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFSurficialHydrogeologicUnit"
-                        },
-                        {
-                            "name": "Aquifer Boundary",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.92137000000001",
-                                "-39.135739999076094",
-                                "152.49040280900007",
-                                "-12.243238350608436"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferBoundary"
-                        },
-                        {
-                            "name": "Aquifer Outcrop",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "113.8055180570001",
-                                "-38.755833332078694",
-                                "152.49040280900002",
-                                "-13.441636424572783"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFAquiferOutcrop"
-                        },
-                        {
-                            "name": "Aquifer Salinity",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.92137000000001",
-                                "-38.97436811707721",
-                                "148.91107675700005",
-                                "-20.97124299936873"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWAquiferSalinity"
-                        },
-                        {
-                            "name": "Aquifer Yield",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "138.73545507400001",
-                                "-38.97436810607722",
-                                "148.9098995590001",
-                                "-31.999839353151554"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWAquiferYield"
-                        },
-                        {
-                            "name": "Water Table Yield",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "129.00048000000004",
-                                "-39.135739999076094",
-                                "153.63857000000007",
-                                "-10.965879999647115"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableYield"
-                        },
-                        {
-                            "name": "Water Table Salinity",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.92137000000001",
-                                "-43.643049999057716",
-                                "153.63857000000007",
-                                "-10.687579999655645"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableSalinity"
-                        },
-                        {
-                            "name": "IGWWaterTableHydraulicConductivity",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "140.96334594200005",
-                                "-37.68073353908695",
-                                "152.49056374800008",
-                                "-24.586309583285477"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "IGWWaterTableHydraulicConductivity"
-                        },
-                        {
-                            "name": "WaterTableAquifer",
-                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
-                            "rectangle": [
-                                "112.92137000000001",
-                                "-43.65854999905766",
-                                "153.63857000000004",
-                                "-9.219939999701113"
-                            ],
-                            "type": "wms",
-                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                            "layers": "AHGFWaterTableAquifer"
-                        }
-                    ]
-                },
-                {
-                    "name": "Elevation",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Benchmarks",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.50982",
-                                "-38.647199999079525",
-                                "149.92117",
-                                "-12.41999999960316"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "benchmarks"
-                        },
-                        {
-                            "name": "Contours",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.92137",
-                                "-43.74297999905761",
-                                "153.63857000000004",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "contours"
-                        },
-                        {
-                            "name": "Horizontal Control Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.06265",
-                                "-43.51730999905795",
-                                "153.55039",
-                                "-10.462999999662589"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "horizontalcontrolpoints"
-                        },
-                        {
-                            "name": "Spot Elevations",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93472",
-                                "-43.657359999057725",
-                                "153.63573999999997",
-                                "-9.004409999707923"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "spotelevations"
-                        },
-                        {
-                            "name": "SRTM 1 sec DEM Image",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93472",
-                                "-43.657359999057725",
-                                "153.63573999999997",
-                                "-9.004409999707923"
-                            ],
-                            "type": "wms",
-                            "url": "http://www.ga.gov.au/gisimg/services/topography/dem_s_1s/ImageServer/WMSServer",
-                            "layers": "0"
-                        },
-                        {
-                            "name": "Flow Grid Direction Image",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93472",
-                                "-43.657359999057725",
-                                "153.63573999999997",
-                                "-9.004409999707923"
-                            ],
-                            "type": "wms",
-                            "url": "http://www.ga.gov.au/thredds/wms/national_grids/d8-9s.nc",
-                            "layers": "Flow_Direction_Grid_to_accompany_9_Second_Digital_Elevation_Model_of_Australia_Version_3"
-                        }
-                    ]
-                },
-                {
-                    "name": "Terrain",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Caves",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.40833999999998",
-                                "-42.73787999905959",
-                                "153.12877",
-                                "-12.581149999598347"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "caves"
-                        },
-                        {
-                            "name": "Craters",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "127.38872000000002",
-                                "-37.79733999908604",
-                                "145.12202",
-                                "-18.183079999439965"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "craters"
-                        },
-                        {
-                            "name": "Deformations",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "115.73604000000003",
-                                "-36.794289999094765",
-                                "152.29494000000003",
-                                "-12.909959999588562"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "deformationareas"
-                        },
-                        {
-                            "name": "Cliffs",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.92144999999998",
-                                "-43.65648999905773",
-                                "153.46622",
-                                "-11.006909999645897"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "discontinuities"
-                        },
-                        {
-                            "name": "Pinnacles",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.35003000000002",
-                                "-35.99436999910254",
-                                "152.91039",
-                                "-11.944649999617436"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pinnacles"
-                        },
-                        {
-                            "name": "Sand Ridges",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93216999999999",
-                                "-38.869929999077954",
-                                "153.3485",
-                                "-10.576659999659086"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "sandridges"
-                        },
-                        {
-                            "name": "Sands",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.9297",
-                                "-43.55226999905789",
-                                "153.50303",
-                                "-9.845259999681689"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "sands"
-                        }
-                    ]
-                },
-                {
-                    "name": "Vegetation",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Cleared Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.30741",
-                                "-35.68676999910569",
-                                "151.17083",
-                                "-11.62904999962697"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "clearedlines"
-                        },
-                        {
-                            "name": "Cultivated Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.66133",
-                                "-43.44901999905807",
-                                "153.54656",
-                                "-9.04530999970664"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cultivatedareas"
-                        },
-                        {
-                            "name": "Native Vegetation Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93226",
-                                "-43.658549999057726",
-                                "153.63769",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "nativevegetationareas"
-                        },
-                        {
-                            "name": "Windbreaks",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.99020999999999",
-                                "-41.16088999906501",
-                                "151.58246",
-                                "-24.201429999293836"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "windbreaks"
-                        }
-                    ]
-                },
-                {
-                    "name": "Habitation",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Building Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "141.62655",
-                                "-41.12735999906517",
-                                "152.80475",
-                                "-21.102919999365557"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "buildingareas"
-                        },
-                        {
-                            "name": "Building Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.94450000000002",
-                                "-43.65456999905773",
-                                "153.62926",
-                                "-9.128069999704051"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "buildingpoints"
-                        },
-                        {
-                            "name": "Builtup Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.53047",
-                                "-43.17193999905859",
-                                "153.63702",
-                                "-9.067499999705948"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "builtupareas"
-                        },
-                        {
-                            "name": "Cemetery Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.64094000000001",
-                                "-42.85204999905929",
-                                "153.0669",
-                                "-16.905399999474405"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cemeteryareas"
-                        },
-                        {
-                            "name": "Cemetery Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "118.51832000000002",
-                                "-37.96838999908467",
-                                "152.39647",
-                                "-15.079179999525442"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "cemeterypoints"
-                        },
-                        {
-                            "name": "Homesteads",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.20027",
-                                "-42.76347999905952",
-                                "152.92311",
-                                "-11.169479999640936"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "homesteads"
-                        },
-                        {
-                            "name": "Placenames",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.01127",
-                                "-43.63024999905778",
-                                "153.61196000000004",
-                                "-8.936219999710062"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "placenames"
-                        },
-                        {
-                            "name": "Populated Places",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.53641999999999",
-                                "-43.314229999058306",
-                                "153.61194",
-                                "-10.183389999671217"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "populatedplaces"
-                        },
-                        {
-                            "name": "Recreation Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.54947",
-                                "-43.165569999058604",
-                                "153.61335",
-                                "-11.395799999634049"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "recreationareas"
-                        }
-                    ]
-                },
-                {
-                    "name": "Transport",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Aircraft Facilites",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.15955999999998",
-                                "-43.651859999057734",
-                                "153.56134999999998",
-                                "-9.088949999705271"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "aircraftfacilitypoints"
-                        },
-                        {
-                            "name": "Barrier Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.60042999999999",
-                                "-34.738279999116116",
-                                "146.93454000000003",
-                                "-11.439839999632706"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "barrierpoints"
-                        },
-                        {
-                            "name": "Ferry Routes",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "115.2094",
-                                "-43.14290999905865",
-                                "153.52870000000001",
-                                "-10.584439999658853"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "ferryroutelines"
-                        },
-                        {
-                            "name": "Foot Tracks",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.52908",
-                                "-43.61136999905781",
-                                "153.41766",
-                                "-14.099749999553625"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "foottracks"
-                        },
-                        {
-                            "name": "Railway Bridges",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.95969",
-                                "-38.58041999908001",
-                                "153.13596000000004",
-                                "-16.387539999488673"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaybridgepoints"
-                        },
-                        {
-                            "name": "Railway Crossings",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.64339",
-                                "-42.75558999905954",
-                                "153.34807",
-                                "-12.482379999601294"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaycrossinglines"
-                        },
-                        {
-                            "name": "Railways",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.62627",
-                                "-43.45491999905806",
-                                "153.61314",
-                                "-12.435059999602709"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railways"
-                        },
-                        {
-                            "name": "Railway Stop",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.61421",
-                                "-42.87814999905925",
-                                "153.61116",
-                                "-12.4720799996016"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaystoppoints"
-                        },
-                        {
-                            "name": "Railway Tunnel Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "119.11392999999998",
-                                "-42.48963999906026",
-                                "153.52849",
-                                "-16.861979999475594"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "railwaytunnellines"
-                        },
-                        {
-                            "name": "Road Crossing Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.32183",
-                                "-43.583039999057846",
-                                "153.58248",
-                                "-11.161099999641191"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadcrossinglines"
-                        },
-                        {
-                            "name": "Road Crossing Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "114.00941000000002",
-                                "-42.89165999905921",
-                                "153.59565999999998",
-                                "-10.970479999647017"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadcrossingpoints"
-                        },
-                        {
-                            "name": "Roads",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93174000000002",
-                                "-43.58748999905784",
-                                "153.63281",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roads"
-                        },
-                        {
-                            "name": "Road Tunnel Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "115.85188999999998",
-                                "-37.829839999085785",
-                                "151.67768999999998",
-                                "-25.080719999274965"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "roadtunnellines"
-                        }
-                    ]
-                },
-                {
-                    "name": "Infrastructure",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Aerial Cableways",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "145.63916",
-                                "-37.845019999085665",
-                                "153.47854999999998",
-                                "-16.819299999476762"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "aerialcableways"
-                        },
-                        {
-                            "name": "Conveyors",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "115.65124",
-                                "-41.48786999906365",
-                                "151.91119",
-                                "-12.184729999610212"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "conveyors"
-                        },
-                        {
-                            "name": "Damwalls",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "115.00212",
-                                "-43.18769999905856",
-                                "153.30629",
-                                "-10.571689999659238"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "damwalls"
-                        },
-                        {
-                            "name": "Fences",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.92895",
-                                "-35.37394999910903",
-                                "152.97735999999998",
-                                "-10.895739999649303"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "fences"
-                        },
-                        {
-                            "name": "Marine Infrastructure Lines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.32462999999998",
-                                "-43.16099999905862",
-                                "153.59193",
-                                "-9.062449999706104"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marineinfrastructurelines"
-                        },
-                        {
-                            "name": "Marine Infrastructure Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.97203",
-                                "-43.657359999057725",
-                                "153.63569999999999",
-                                "-9.140769999703654"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "marineinfrastructurepoints"
-                        },
-                        {
-                            "name": "Mine Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.36167000000002",
-                                "-43.43038999905809",
-                                "153.50486000000004",
-                                "-11.872959999619598"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mineareas"
-                        },
-                        {
-                            "name": "Mine Points",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.36334",
-                                "-43.46653999905804",
-                                "153.60394",
-                                "-10.575569999659121"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "minepoints"
-                        },
-                        {
-                            "name": "Petroleum Wells",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.9964",
-                                "-38.596209999079896",
-                                "152.48242000000002",
-                                "-15.323399999518502"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "petroleumwells"
-                        },
-                        {
-                            "name": "Storage Tanks",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.63004999999998",
-                                "-41.127119999065165",
-                                "153.16552999999996",
-                                "-12.426089999602983"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "storagetanks"
-                        },
-                        {
-                            "name": "Vertical Obstructions",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.52788",
-                                "-43.37782999905819",
-                                "153.58229000000003",
-                                "-9.080289999705544"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "verticalobstructions"
-                        },
-                        {
-                            "name": "Waste Management Facilities",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93472",
-                                "-43.657359999057725",
-                                "153.63573999999997",
-                                "-9.004409999707923"
-                            ],
-                            "type": "wms",
-                            "url": "http://www.ga.gov.au/gis/services/topography/National_Waste_Management_Facilities/MapServer/WMSServer",
-                            "layers": "0"
-                        },
-                        {
-                            "name": "Water Tanks",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.93187000000002",
-                                "-42.75848999905954",
-                                "153.00634",
-                                "-9.951769999678387"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "watertanks"
-                        },
-                        {
-                            "name": "Wind Pumps",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.50105",
-                                "-35.85509999910395",
-                                "151.48511",
-                                "-11.177569999640692"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "windpumps"
-                        },
-                        {
-                            "name": "Yards",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.18122",
-                                "-34.994069999113215",
-                                "148.48095",
-                                "-10.624669999657616"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "yards"
-                        }
-                    ]
-                },
-                {
-                    "name": "Utility",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Pipelines",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.67812999999998",
-                                "-43.00307999905895",
-                                "153.15454",
-                                "-10.903989999649047"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "pipelines"
-                        }
-                    ]
-                },
-                {
-                    "name": "Framework",
-                    "type": "group",
-                    "items": [
-                        {
-                            "name": "Framework Boundaries",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.88333",
-                                "-43.99999999905729",
-                                "154.1",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "frameworkboundaries"
-                        },
-                        {
-                            "name": "Geodata Indexes",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.88333",
-                                "-43.99999999905729",
-                                "153.99999999999997",
-                                "-8.999999999708061"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "geodataindexes"
-                        },
-                        {
-                            "name": "Islands",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.92137",
-                                "-43.74297999905761",
-                                "153.5799",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "islands"
-                        },
-                        {
-                            "name": "Large Area Features",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "116.04361",
-                                "-39.13573999907615",
-                                "152.60876000000002",
-                                "-10.687579999655679"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "largeareafeatures"
-                        },
-                        {
-                            "name": "Locations",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.92903",
-                                "-43.64227999905775",
-                                "153.63850000000002",
-                                "-8.95829999970937"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "locations"
-                        },
-                        {
-                            "name": "Mainlands",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.15627999999998",
-                                "-43.64304999905776",
-                                "153.63857000000004",
-                                "-10.687579999655679"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mainlands"
-                        },
-                        {
-                            "name": "mapindexes",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.88333",
-                                "-43.99999999905729",
-                                "154.1",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "mapindexes"
-                        },
-                        {
-                            "name": "Prohibited Areas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "113.72448",
-                                "-42.67827999905975",
-                                "153.45784999999998",
-                                "-12.584149999598258"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "prohibitedareas"
-                        },
-                        {
-                            "name": "Reserves",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.97143",
-                                "-43.74297999905761",
-                                "153.60127",
-                                "-9.088049999705305"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "reserves"
-                        },
-                        {
-                            "name": "Seas",
-                            "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                            "rectangle": [
-                                "112.88333",
-                                "-43.99999999905729",
-                                "154.1",
-                                "-8.93332999971015"
-                            ],
-                            "type": "wms",
-                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
-                            "layers": "seas"
-                        }
-                    ]
-                },
-                {
-                    "name": "Boundaries",
+                    "name": "National Boundaries",
                     "type": "group",
                     "items": [
                         {
@@ -1990,6 +1171,43 @@
                             "type": "wms",
                             "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
                             "layers": "admin_bnds:TR_2011_AUST"
+                        }
+                    ]
+                },
+                {
+                    "name": "Social and Economic",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Population Estimates",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93529999999998",
+                                "-38.208809999082796",
+                                "152.06206",
+                                "-11.05104999964455"
+                            ],
+                            "type": "wms",
+                            "url": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer",
+                            "layers": "7",
+                            "getFeatureInfoAsGeoJson": false
+                        },
+                        {
+                            "name": "Taxation Statistics 2011-2012",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[data.gov.au](http://www.data.gov.au/)",
+                            "rectangle": [
+                                "112.93529999999998",
+                                "-38.208809999082796",
+                                "152.06206",
+                                "-11.05104999964455"
+                            ],
+                            "type": "wms",
+                            "url": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms",
+                            "layers": "95d9e550_8b36_4273_8df7_2b76c140e73a",
+                            "dataUrl": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wfs?service=WFS&ve…3_8df7_2b76c140e73a&srsName=EPSG%3A4326&maxFeatures=1000&outputFormat=json",
+                            "dataUrlType": "wfs-complete"
                         }
                     ]
                 },
@@ -2290,6 +1508,952 @@
                             "type": "wms",
                             "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
                             "layers": "admin_bnds:RA_2011_AUST"
+                        }
+                    ]
+                },
+                {
+                    "name": "Surface Water",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Bores",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93529999999998",
+                                "-38.208809999082796",
+                                "152.06206",
+                                "-11.05104999964455"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:bores"
+
+                        },
+                        {
+                            "name": "Canal Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "115.70707",
+                                "-38.08189999908377",
+                                "145.17220000000003",
+                                "-32.253269999147996"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:canalareas"
+
+                        },
+                        {
+                            "name": "Canal Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.35391999999999",
+                                "-42.85120999905931",
+                                "153.59005",
+                                "-12.524599999600033"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:canallines"
+
+                        },
+                        {
+                            "name": "Estuary",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.6089684320001",
+                                "-43.59020860705779",
+                                "153.62495056300006",
+                                "-10.835983610651068"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcarto:AHGFEstuary"
+                        },
+                        {
+                            "name": "Flats",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.00808000000002",
+                                "-43.60604999905781",
+                                "153.61275",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:flats"
+
+                        },
+                        {
+                            "name": "Foreshore Flats",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.00706",
+                                "-43.511829999057966",
+                                "153.57853",
+                                "-9.007109999707835"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:foreshoreflats"
+
+                        },
+                        {
+                            "name": "Lakes",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.99395",
+                                "-43.55222999905789",
+                                "153.61302",
+                                "-8.93787999971001"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:lakes"
+
+                        },
+                        {
+                            "name": "Locks",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "138.80938",
+                                "-35.94260999910306",
+                                "144.46688000000003",
+                                "-33.996729999124945"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:locks"
+
+                        },
+                        {
+                            "name": "Reef Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.92034999999998",
+                                "-43.5473099990579",
+                                "153.54714",
+                                "-8.998569999708106"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:marinehazardareas"
+
+                        },
+                        {
+                            "name": "Reef Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.11903999999998",
+                                "-43.66633999905772",
+                                "153.62995",
+                                "-9.063349999706077"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:marinehazardpoints"
+
+                        },
+                        {
+                            "name": "Pondage Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.31874",
+                                "-42.10062999906144",
+                                "153.3509",
+                                "-12.191229999610012"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:pondageareas"
+
+                        },
+                        {
+                            "name": "Rapid Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "131.03977",
+                                "-33.995369999124954",
+                                "149.38968999999997",
+                                "-12.680119999595398"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:rapidareas"
+
+                        },
+                        {
+                            "name": "Rapid Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "131.66452",
+                                "-43.20146999905853",
+                                "149.13695",
+                                "-10.70548999965513"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:rapidlines"
+
+                        },
+                        {
+                            "name": "Reservoirs",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.99601",
+                                "-43.19763999905853",
+                                "153.56568",
+                                "-10.571689999659238"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:reservoirs"
+
+                        },
+                        {
+                            "name": "Spillways",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "117.10128000000002",
+                                "-42.103829999061425",
+                                "153.28249",
+                                "-20.977869999368615"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:spillways"
+
+                        },
+                        {
+                            "name": "Springs",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.13676",
+                                "-38.23244999908261",
+                                "147.96741000000003",
+                                "-11.523879999630154"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:springs"
+
+                        },
+                        {
+                            "name": "Streams",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.37534500000005",
+                                "-43.629381999057735",
+                                "153.63207400000002",
+                                "-9.242297499700408"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcarto:AHGFMappedStream"
+                        },
+                        {
+                            "name": "Stream Nodes",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.37534500000005",
+                                "-43.629381999057735",
+                                "153.6320740000001",
+                                "-9.242297499700424"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcarto:AHGFMappedNode"
+                        },
+                        {
+                            "name": "Stream Network",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.10056181999998",
+                                "-47.81318817937922",
+                                "154.86193818000004",
+                                "-5.051811819379163"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shn:AHGFNetworkStream"
+                        },
+                        {
+                            "name": "Stream Network Nodes",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.33375",
+                                "-43.628749999057746",
+                                "153.62875000000008",
+                                "-9.23624999970059"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shn:AHGFNetworkNode"
+                        },
+                        {
+                            "name": "Structure",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.76872500000002",
+                                "-43.58274499905778",
+                                "153.5956600000001",
+                                "-10.64324999965701"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcarto:AHGFStructure"
+                        },
+                        {
+                            "name": "Waterbodies",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.80691",
+                                "-43.00307999905891",
+                                "152.89131000000003",
+                                "-10.903989999649017"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcarto:AHGFWaterbody"
+                        },
+                        {
+                            "name": "Water Course Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.56261000000002",
+                                "-43.58998999905784",
+                                "153.58856",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:watercourseareas"
+
+                        },
+                        {
+                            "name": "Water Course Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.37533999999998",
+                                "-43.629399999057775",
+                                "153.6321",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:watercourselines"
+
+                        },
+                        {
+                            "name": "Waterfall Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "115.84323",
+                                "-43.49497999905798",
+                                "153.04724000000002",
+                                "-10.643249999657044"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:waterfallpoints"
+
+                        },
+                        {
+                            "name": "Waterholes",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.89583439399999",
+                                "-47.40775060536477",
+                                "154.01767560599998",
+                                "-6.2859093933647605"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:waterholes"
+
+                        },
+                        {
+                            "name": "Water Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.76517999999999",
+                                "-38.63448999907962",
+                                "153.09347999999997",
+                                "-10.072709999674638"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Hydrography:waterpoints"
+
+                        },
+                        {
+                            "name": "Water Pipeline",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "113.80691",
+                                "-43.00307999905891",
+                                "152.89131000000003",
+                                "-10.903989999649017"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcarto:AHGFWaterPipeline"
+                        },
+                        {
+                            "name": "Water Storage",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.9318700000001",
+                                "-42.75848999905948",
+                                "153.00634000000005",
+                                "-9.951769999678337"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcarto:AHGFDam"
+                        },
+                        {
+                            "name": "River Region",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.9225",
+                                "-43.64250000005773",
+                                "153.63750000000013",
+                                "-9.229999999700832"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_hrr:RiverRegion"
+                        },
+                        {
+                            "name": "Catchment",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.9225",
+                                "-43.73999999905757",
+                                "153.63750000000002",
+                                "-9.197499999701808"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_hrc:AHGFContractedCatchment"
+                        },
+                        {
+                            "name": " Drainage Division",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "111.24438730279999",
+                                "-48.47186269657931",
+                                "155.3156126972001",
+                                "-4.400637302179204"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_hrr:AWRADrainageDivision"
+                        },
+                        {
+                            "name": "NCB Level1 Drainage Division",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.9225",
+                                "-43.73999999905757",
+                                "153.63750000000002",
+                                "-9.197499999701801"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcatch:NCBLevel1DrainageDivision"
+                        },
+                        {
+                            "name": "NCB Level2 Drainage Basin Group",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                            "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                            "rectangle": [
+                                "112.9225",
+                                "-43.73999999905757",
+                                "153.63750000000013",
+                                "-9.197499999701803"
+                            ],
+                            "type": "wms",
+                            "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                            "layers": "ahgf_shcatch:NCBLevel2DrainageBasinGroup"
+                        }
+                    ]
+                },
+                {
+                    "name": "Terrain",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Caves",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.40833999999998",
+                                "-42.73787999905959",
+                                "153.12877",
+                                "-12.581149999598347"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Terrain:caves"
+
+                        },
+                        {
+                            "name": "Craters",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "127.38872000000002",
+                                "-37.79733999908604",
+                                "145.12202",
+                                "-18.183079999439965"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Terrain:craters"
+
+                        },
+                        {
+                            "name": "Deformations",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "115.73604000000003",
+                                "-36.794289999094765",
+                                "152.29494000000003",
+                                "-12.909959999588562"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Terrain:deformationareas"
+
+                        },
+                        {
+                            "name": "Cliffs",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.92144999999998",
+                                "-43.65648999905773",
+                                "153.46622",
+                                "-11.006909999645897"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Terrain:discontinuities"
+
+                        },
+                        {
+                            "name": "Pinnacles",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.35003000000002",
+                                "-35.99436999910254",
+                                "152.91039",
+                                "-11.944649999617436"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Terrain:pinnacles"
+
+                        },
+                        {
+                            "name": "Sand Ridges",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93216999999999",
+                                "-38.869929999077954",
+                                "153.3485",
+                                "-10.576659999659086"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Terrain:sandridges"
+
+                        },
+                        {
+                            "name": "Sands",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.9297",
+                                "-43.55226999905789",
+                                "153.50303",
+                                "-9.845259999681689"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Terrain:sands"
+
+                        }
+                    ]
+                },
+                {
+                    "name": "Transport",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Aircraft Facilites",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.15955999999998",
+                                "-43.651859999057734",
+                                "153.56134999999998",
+                                "-9.088949999705271"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:aircraftfacilitypoints"
+
+                        },
+                        {
+                            "name": "Barrier Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.60042999999999",
+                                "-34.738279999116116",
+                                "146.93454000000003",
+                                "-11.439839999632706"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:barrierpoints"
+
+                        },
+                        {
+                            "name": "Ferry Routes",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "115.2094",
+                                "-43.14290999905865",
+                                "153.52870000000001",
+                                "-10.584439999658853"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:ferryroutelines"
+
+                        },
+                        {
+                            "name": "Foot Tracks",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.52908",
+                                "-43.61136999905781",
+                                "153.41766",
+                                "-14.099749999553625"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:foottracks"
+
+                        },
+                        {
+                            "name": "Railway Bridges",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.95969",
+                                "-38.58041999908001",
+                                "153.13596000000004",
+                                "-16.387539999488673"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:railwaybridgepoints"
+
+                        },
+                        {
+                            "name": "Railway Crossings",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.64339",
+                                "-42.75558999905954",
+                                "153.34807",
+                                "-12.482379999601294"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:railwaycrossinglines"
+
+                        },
+                        {
+                            "name": "Railways",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.62627",
+                                "-43.45491999905806",
+                                "153.61314",
+                                "-12.435059999602709"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:railways"
+
+                        },
+                        {
+                            "name": "Railway Stop",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.61421",
+                                "-42.87814999905925",
+                                "153.61116",
+                                "-12.4720799996016"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:railwaystoppoints"
+
+                        },
+                        {
+                            "name": "Railway Tunnel Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "119.11392999999998",
+                                "-42.48963999906026",
+                                "153.52849",
+                                "-16.861979999475594"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:railwaytunnellines"
+
+                        },
+                        {
+                            "name": "Road Crossing Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.32183",
+                                "-43.583039999057846",
+                                "153.58248",
+                                "-11.161099999641191"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:roadcrossinglines"
+
+                        },
+                        {
+                            "name": "Road Crossing Points",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.00941000000002",
+                                "-42.89165999905921",
+                                "153.59565999999998",
+                                "-10.970479999647017"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:roadcrossingpoints"
+
+                        },
+                        {
+                            "name": "Roads",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93174000000002",
+                                "-43.58748999905784",
+                                "153.63281",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:roads"
+
+                        },
+                        {
+                            "name": "Road Tunnel Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "115.85188999999998",
+                                "-37.829839999085785",
+                                "151.67768999999998",
+                                "-25.080719999274965"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Transport:roadtunnellines"
+
+                        }
+                    ]
+                },
+                {
+                    "name": "Utility",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Pipelines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.67812999999998",
+                                "-43.00307999905895",
+                                "153.15454",
+                                "-10.903989999649047"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Utility:pipelines"
+
+                        }
+                    ]
+                },
+                {
+                    "name": "Vegetation",
+                    "type": "group",
+                    "items": [
+                        {
+                            "name": "Cleared Lines",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.30741",
+                                "-35.68676999910569",
+                                "151.17083",
+                                "-11.62904999962697"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Vegetation:clearedlines"
+
+                        },
+                        {
+                            "name": "Cultivated Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "113.66133",
+                                "-43.44901999905807",
+                                "153.54656",
+                                "-9.04530999970664"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Vegetation:cultivatedareas"
+
+                        },
+                        {
+                            "name": "Native Vegetation Areas",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "112.93226",
+                                "-43.658549999057726",
+                                "153.63769",
+                                "-8.93332999971015"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Vegetation:nativevegetationareas"
+
+                        },
+                        {
+                            "name": "Windbreaks",
+                            "description": "[Licence](http://www.ga.gov.au/copyright)",
+                            "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                            "rectangle": [
+                                "114.99020999999999",
+                                "-41.16088999906501",
+                                "151.58246",
+                                "-24.201429999293836"
+                            ],
+                            "type": "wms",
+
+                            "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                            "layers": "Vegetation:windbreaks"
+
                         }
                     ]
                 }
