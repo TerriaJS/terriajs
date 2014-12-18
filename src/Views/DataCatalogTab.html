@@ -18,9 +18,9 @@
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
                 <div class="data-catalog-icon-holder">
-                    <div class="data-catalog-icon clickable" data-bind="click: toggleOpen, cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                    <div class="data-catalog-icon clickable" data-bind="click: toggleOpen, cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
                 </div>
-                <div class="data-catalog-group-label clickable" data-bind="click: toggleOpen, text: name"></div>
+                <div class="data-catalog-group-label clickable" data-bind="click: toggleOpen, text: name, css: { 'data-catalog-opened-group': isOpen }"></div>
             </div>
 
             <!-- ko if: isOpen && (isLoading || items.length === 0) -->
