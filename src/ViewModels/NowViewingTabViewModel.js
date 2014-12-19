@@ -1,9 +1,8 @@
 'use strict';
 
-/*global require*/
+/*global require,ga*/
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 
-var createFragmentFromTemplate = require('../Core/createFragmentFromTemplate');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
 var inherit = require('../Core/inherit');
 var loadView = require('../Core/loadView');
@@ -35,10 +34,10 @@ NowViewingTabViewModel.prototype.show = function(container) {
 
 NowViewingTabViewModel.prototype.showInfo = function(item) {
     ga('send', 'event', 'dataSource', 'info', item.name);
-    GeoDataInfoPopup.open({
-        container : document.body,
-        dataSource : item
-    });
+    // GeoDataInfoPopup.open({
+    //     container : document.body,
+    //     dataSource : item
+    // });
 };
 
 module.exports = NowViewingTabViewModel;
