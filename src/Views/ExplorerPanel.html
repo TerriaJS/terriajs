@@ -1,5 +1,8 @@
 <div class="explorer-panel" data-bind="css: { 'explorer-panel-collapsed': !isOpen }">
-    <div class="explorer-panel-close" data-bind="click: toggleOpen"></div>
+    <div class="explorer-panel-close" data-bind="click: toggleOpen">
+        <div class="explorer-panel-close-icon clickable" data-bind="visible: isOpen, cesiumSvgPath: { path: svgClose, width: 14, height: 14 }"></div>
+        <div class="explorer-panel-open-icon clickable" data-bind="visible: !isOpen, cesiumSvgPath: { path: svgMenu, width: 22, height: 16 }"></div>
+    </div>
     <div class="explorer-panel-tab-area" data-bind="foreach: tabs">
         <div class="explorer-panel-tab"
             data-bind="text: name,
