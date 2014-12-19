@@ -1,28 +1,44 @@
 'use strict';
 
 /*global require*/
-var fs = require('fs');
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 
 var createFragmentFromTemplate = require('../Core/createFragmentFromTemplate');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
 var inherit = require('../Core/inherit');
+var loadView = require('../Core/loadView');
 
-var html = fs.readFileSync(__dirname + '/../Views/NowViewingTab.html', 'utf8');
+var svgCheckboxChecked = require('../Core/svgCheckboxChecked');
+var svgCheckboxUnchecked = require('../Core/svgCheckboxUnchecked');
+var svgArrowDown = require('../Core/svgArrowDown');
+var svgArrowRight = require('../Core/svgArrowRight');
+var svgInfo = require('../Core/svgInfo');
 
-var NowViewingTabViewModel = function(nowViewing) {
+var NowViewingTabViewModel = function(options) {
     ExplorerTabViewModel.call(this);
 
     this.name = 'Now Viewing';
-    this.nowViewing = nowViewing;
+    this.nowViewing = options.nowViewing;
+
+    this.svgCheckboxChecked = defaultValue(options.svgCheckboxChecked, svgCheckboxChecked);
+    this.svgCheckboxUnchecked = defaultValue(options.svgCheckboxUnchecked, svgCheckboxUnchecked);
+    this.svgArrowDown = defaultValue(options.svgArrowDown, svgArrowDown);
+    this.svgArrowRight = defaultValue(options.svgArrowRight, svgArrowRight);
+    this.svgInfo = defaultValue(options.svgInfo, svgInfo);
 };
 
 inherit(ExplorerTabViewModel, NowViewingTabViewModel);
 
 NowViewingTabViewModel.prototype.show = function(container) {
-    var fragment = createFragmentFromTemplate(html);
-    container.appendChild(fragment);
+    loadView(require('fs').readFileSync(__dirname + '/../Views/NowViewingTab.html', 'utf8'), container, this);
+};
 
-    //knockout.applyBindings(this, element);
+NowViewingTabViewModel.prototype.showInfo = function(item) {
+    ga('send', 'event', 'dataSource', 'info', item.name);
+    GeoDataInfoPopup.open({
+        container : document.body,
+        dataSource : item
+    });
 };
 
 module.exports = NowViewingTabViewModel;
