@@ -1,6 +1,6 @@
 <div class="now-viewing">
     <div class="now-viewing-toolbar">
-        <div class="now-viewing-clear-all">Clear All</div>
+        <div class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Clear All</div>
     </div>
 
     <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
