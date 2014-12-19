@@ -12,11 +12,15 @@ fi
 echo '*** Building NM'
 npm install
 git submodule update
+#update key
+mv src/viewer/AusGlobeViewer.js src/viewer/AusGlobeViewer_orig.js
+sed 's/BingMapsApi.defaultKey = undefined/BingMapsApi.defaultKey = "Aowa32_DmAxInFM948JlflrBYsiqRIm-SqH1-zp8Btp4Bk-9K6gMKkpUNbPnrSsk"/' src/viewer/AusGlobeViewer_orig.js >src/viewer/AusGlobeViewer.js
 gulp release
+mv -f src/viewer/AusGlobeViewer_orig.js src/viewer/AusGlobeViewer.js
 
 echo '*** Initialize Docker'
-sudo docker rm $(sudo docker ps -a -q)
-sudo docker rmi $(sudo docker images -a -q)
+sudo docker rm -f $(sudo docker ps -a -q)
+sudo docker rmi -f $(sudo docker images -a -q)
 rm nm_backend.tar
 rm nm_varnish.tar
 
@@ -40,6 +44,8 @@ echo '*** Run these commands on new instance to start NM'
 
 echo 'sudo apt-get install -y docker.io'
 
+echo 'sudo docker rm -f $(sudo docker ps -a -q)'
+echo 'sudo docker rmi -f $(sudo docker images -a -q)'
 echo 'sudo docker load < nm_backend.tar'
 echo 'sudo docker load < nm_varnish.tar'
 
