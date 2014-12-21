@@ -9,8 +9,28 @@
                 <div class="now-viewing-item-icon clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
             </div>
             <div class="now-viewing-item-label clickable" data-bind="text: name, click: zoomTo, css { 'now-viewing-shown-item': isShown }"></div>
+
+            <div class="now-viewing-item-arrow-holder">
+                <div class="now-viewing-item-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+            </div>
+
             <div class="now-viewing-item-info">
                 <div class="now-viewing-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
+            </div>
+        </div>
+        <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
+            <!-- ko if: legendIsImage -->
+            <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
+            <!-- /ko -->
+            <!-- ko if: hasLegend && !legendIsImage -->
+            <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
+            <!-- /ko -->
+            <!-- ko if: !hasLegend -->
+            <div class="now-viewing-legend-text">No legend available for this data item.</div>
+            <!-- /ko -->
+            <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
+                OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
+                <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
             </div>
         </div>
     </div>
