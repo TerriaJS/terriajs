@@ -16,9 +16,9 @@
         </div>
         <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
             <div class="now-viewing-action-menu">
-                <div class="now-viewing-action clickable" data-bind="click: zoomTo">Zoom To</div>
-                <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)">Info</div>
-                <div class="now-viewing-action clickable" data-bind="click: toggleEnabled">Remove</div>
+                <div class="now-viewing-action clickable" data-bind="click: zoomTo" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
+                <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
             </div>
 
             <!-- ko if: legendIsImage -->
