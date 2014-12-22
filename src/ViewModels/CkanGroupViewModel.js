@@ -301,8 +301,13 @@ function populateGroupFromResults(viewModel, json) {
             continue;
         }
 
-        var textDescription = item.notes.replace(/\n/g, '<br/>');
-        if (defined(item.license_url)) {
+        var textDescription = '';
+
+        if (item.notes) {
+            textDescription = item.notes.replace(/\n/g, '<br/>');
+        }
+
+        if (item.license_url) {
             textDescription += '<br/>[Licence](' + item.license_url + ')';
         }
 
