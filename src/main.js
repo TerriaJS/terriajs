@@ -49,6 +49,7 @@ if (start) {
 
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
+    //var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
     var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
     var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
@@ -150,6 +151,9 @@ if (start) {
 
         var locationBar = new LocationBarViewModel(application, document.getElementById('cesiumContainer'));
         locationBar.show(ui);
+
+        //var distanceLegend = new DistanceLegendViewModel(application);
+        //distanceLegend.show(ui);
 
         var explorer = new ExplorerPanelViewModel({});
         explorer.show(ui);
