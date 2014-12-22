@@ -1,0 +1,23 @@
+<div class="menu-bar" data-bind="foreach: items">
+    <!-- ko if: href -->
+    <a class="menu-bar-item" data-bind="attr: { href: href, title: tooltip }" target="_blank">
+        <!-- ko if: image -->
+        <img class="menu-bar-item-image" data-bind="attr: { src: image, width: imageWidth, height: imageHeight }" />
+        <!-- /ko -->
+        <!-- ko if: label -->
+        <div class="menu-bar-item-label" data-bind="text: label"></div>
+        <!-- /ko -->
+    </a>
+    <!-- /ko -->
+
+    <!-- ko if: !href -->
+    <div class="menu-bar-item" data-bind="click: execute, attr: { title: tooltip }">
+        <!-- ko if: image -->
+        <img class="menu-bar-item-image" data-bind="attr: { src: image, width: imageWidth, height: imageHeight }" />
+        <!-- /ko -->
+        <!-- ko if: label -->
+        <div class="menu-bar-item-label" data-bind="text: label"></div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+</div>

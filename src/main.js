@@ -50,6 +50,8 @@ if (start) {
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
+    var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
+    var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
     var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
 
@@ -117,6 +119,33 @@ if (start) {
             leftLogo: 'images/gov-brand.png'
         });
         SearchPanelViewModel.create(ui, {});
+
+        var menuBar = new MenuBarViewModel();
+        menuBar.items.push(new MenuBarItemViewModel({
+            label: 'Add data',
+            tooltip: 'Add your own data to the map.',
+            callback: function() {
+                console.log('add');
+            }
+        }));
+        menuBar.items.push(new MenuBarItemViewModel({
+            label: 'Share',
+            tooltip: 'Share your map with others.',
+            callback: function() {
+                console.log('share');
+            }
+        }));
+        menuBar.items.push(new MenuBarItemViewModel({
+            label: 'About',
+            tooltip: 'About National Map.',
+            href: 'http://nicta.github.io/nationalmap/public/info.html'
+        }));
+        menuBar.items.push(new MenuBarItemViewModel({
+            label: 'Help',
+            tooltip: 'Help using National Map.',
+            href: 'http://nicta.github.io/nationalmap/public/faq.html'
+        }));
+        menuBar.show(ui);
 
         var explorer = new ExplorerPanelViewModel({});
         explorer.show(ui);
