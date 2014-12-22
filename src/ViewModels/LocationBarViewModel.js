@@ -95,6 +95,10 @@ function updateCoordinatesFromCesium(viewModel, position) {
 }
 
 function updateCoordinatesFromLeaflet(viewModel, position) {
+    // TODO: correctly calculate these for Leaflet.
+    viewModel.latitude = undefined;
+    viewModel.longitude = undefined;
+    viewModel.elevation = undefined;
 }
 
 function cartographicToFields(viewModel, coordinates, errorBar) {
