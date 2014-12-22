@@ -1,0 +1,11 @@
+<div class="location-bar" data-bind="visible: latitude && longitude">
+    <div class="location-bar-label">LAT</div>
+    <div class="location-bar-value" data-bind="text: latitude"></div>
+    <div class="location-bar-label">LON</div>
+    <div class="location-bar-value" data-bind="text: longitude"></div>
+
+    <!-- ko if: elevation -->
+    <div class="location-bar-label">ELEV</div>
+    <div class="location-bar-value" data-bind="text: elevation"></div>
+    <!-- /ko -->
+</div>

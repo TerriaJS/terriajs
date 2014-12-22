@@ -50,6 +50,7 @@ if (start) {
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
+    var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
     var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
     var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
@@ -146,6 +147,9 @@ if (start) {
             href: 'http://nicta.github.io/nationalmap/public/faq.html'
         }));
         menuBar.show(ui);
+
+        var locationBar = new LocationBarViewModel(application, document.getElementById('cesiumContainer'));
+        locationBar.show(ui);
 
         var explorer = new ExplorerPanelViewModel({});
         explorer.show(ui);
