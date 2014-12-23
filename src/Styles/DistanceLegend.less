@@ -1,30 +1,32 @@
-.location-bar {
+.distance-legend {
     .opaque-to-input;
     position: absolute;
-    right: 170px;
+    right: 25px;
     bottom: 30px;
     height: 30px;
+    width: 125px;
     border-radius: 15px;
     background-color: rgba(47,53,60,80%);
     padding-left: 5px;
     padding-right: 5px;
 }
 
-.location-bar-label {
+.distance-legend-label {
     display: inline-block;
     font-family: @default-font;
     font-weight: bold;
     font-size: 16px;
     line-height: 30px;
     color: #ffffff;
-    padding-left: 10px;
+    width: 125px;
+    text-align: center;
 }
 
-.location-bar-value {
-    display: inline-block;
-    font-family: @default-font;
-    font-size: 16px;
-    line-height: 30px;
-    color: #ffffff;
-    padding-right: 10px;
+.distance-legend-scale-bar {
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
+    border-bottom: 1px solid #ffffff;
+    position: absolute;
+    height: 10px;
+    top: 15px;
 }

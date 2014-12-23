@@ -1,9 +1,13 @@
 'use strict';
 
 /*global require*/
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var EllipsoidGeodesic = require('../../third_party/cesium/Source/Core/EllipsoidGeodesic');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+
+var loadView = require('../Core/loadView');
 
 var DistanceLegendViewModel = function(application) {
     if (!defined(application)) {
@@ -13,30 +17,54 @@ var DistanceLegendViewModel = function(application) {
     this.application = application;
     this.removeSubscription = undefined;
 
-    this.distance = undefined;
-    this.barLength = undefined;
+    this.distanceLabel = undefined;
+    this.barWidth = undefined;
 
-    knockout.track(this, ['distance', 'barLength']);
+    knockout.track(this, ['distanceLabel', 'barWidth']);
 
     this.application.beforeViewerChanged.addEventListener(function() {
         if (defined(this.removeSubscription)) {
             this.removeSubscription();
+            this.removeSubscription = undefined;
         }
     }, this);
 
-    this.application.afterViewerChanged.addEventListener(function() {
-        if (defined(this.application.cesium)) {
-            var scene = this.application.cesium.scene;
-            this.removeSubscription = scene.postRender.addEventListener(function() {
+    var that = this;
+
+    function addUpdateSubscription() {
+        if (defined(that.application.cesium)) {
+            var scene = that.application.cesium.scene;
+            that.removeSubscription = scene.postRender.addEventListener(function() {
                 updateDistanceLegend(this, scene);
-            }, this);
+            }, that);
         }
+    }
+
+    addUpdateSubscription();
+
+    this.application.afterViewerChanged.addEventListener(function() {
+        addUpdateSubscription();
     }, this);
 };
 
+DistanceLegendViewModel.prototype.show = function(container) {
+    loadView(require('fs').readFileSync(__dirname + '/../Views/DistanceLegend.html', 'utf8'), container, this);
+};
+
+var geodesic = new EllipsoidGeodesic();
+
+var distances = [
+    1, 2, 3, 5,
+    10, 20, 30, 50,
+    100, 200, 300, 500,
+    1000, 2000, 3000, 5000,
+    10000, 20000, 30000, 50000,
+    100000, 200000, 300000, 500000,
+    1000000, 2000000, 3000000, 5000000,
+    10000000, 20000000, 30000000, 50000000];
+
 function updateDistanceLegend(viewModel, scene) {
     // Find the distance between two pixels at the bottom center of the screen.
-    var scene = this.scene;
     var width = scene.canvas.clientWidth;
     var height = scene.canvas.clientHeight;
 
@@ -48,7 +76,8 @@ function updateDistanceLegend(viewModel, scene) {
     var rightPosition = globe.pick(right, scene);
 
     if (!defined(leftPosition) || !defined(rightPosition)) {
-        document.getElementById('ausglobe-title-scale').style.visibility = 'hidden';
+        viewModel.barWidth = undefined;
+        viewModel.distanceLabel = undefined;
         return;
     }
 
@@ -58,8 +87,8 @@ function updateDistanceLegend(viewModel, scene) {
     geodesic.setEndPoints(leftCartographic, rightCartographic);
     var pixelDistance = geodesic.surfaceDistance;
 
-    // Find the first distance that makes the scale bar less than 150 pixels.
-    var maxBarWidth = 150;
+    // Find the first distance that makes the scale bar less than 100 pixels.
+    var maxBarWidth = 100;
     var distance;
     for (var i = distances.length - 1; !defined(distance) && i >= 0; --i) {
         if (distances[i] / pixelDistance < maxBarWidth) {
@@ -75,17 +104,11 @@ function updateDistanceLegend(viewModel, scene) {
             label = distance.toString() + ' m';
         }
 
-        var barWidth = (distance / pixelDistance) | 0;
-        if (barWidth !== this._distanceLegendBarWidth || label !== this._distanceLegendLabel) {
-            document.getElementById('ausglobe-title-scale').style.visibility = 'visible';
-            document.getElementById('ausglobe-title-scale-label').textContent = label;
-            document.getElementById('ausglobe-title-scale-bar').style.width = barWidth.toString() + 'px';
-
-            this._distanceLegendBarWidth = barWidth;
-            this._distanceLegendLabel = label;
-        }
+        viewModel.barWidth = (distance / pixelDistance) | 0;
+        viewModel.distanceLabel = label;
     } else {
-        document.getElementById('ausglobe-title-scale').style.visibility = 'hidden';
+        viewModel.barWidth = undefined;
+        viewModel.distanceLabel = undefined;
     }
 }
 
