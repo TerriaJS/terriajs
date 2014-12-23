@@ -15,10 +15,10 @@ var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 var loadView = require('../Core/loadView');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
-var svgZoomIn = require('../Core/svgZoomIn');
-var svgZoomOut = require('../Core/svgZoomOut');
-var svgReset = require('../Core/svgReset');
-var svgTilt = require('../Core/svgTilt');
+var svgZoomIn = require('../SvgPaths/svgZoomIn');
+var svgZoomOut = require('../SvgPaths/svgZoomOut');
+var svgReset = require('../SvgPaths/svgReset');
+var svgTilt = require('../SvgPaths/svgTilt');
 
 var NavigationViewModel = function(application) {
     this.application = application;
@@ -27,6 +27,9 @@ var NavigationViewModel = function(application) {
     this.svgZoomOut = svgZoomOut;
     this.svgReset = svgReset;
     this.svgTilt = svgTilt;
+
+    this._tiltInProgress = false;
+    this._nextTilt = undefined;
 
     this.showTilt = true;
     this.currentTilt = 0;
@@ -123,7 +126,7 @@ NavigationViewModel.prototype.tilt = function() {
         }
 
         this.currentTilt = tilts[index];
-        animateToTilt(scene, this.currentTilt);
+        animateToTilt(this, scene, this.currentTilt);
     }
 };
 
@@ -181,11 +184,20 @@ function flyToPosition(scene, position, durationMilliseconds) {
     });
 }
 
-function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
+function animateToTilt(viewModel, scene, targetTiltDegrees, durationMilliseconds) {
+    if (viewModel._tiltInProgress) {
+        viewModel._nextTilt = targetTiltDegrees;
+        return;
+    }
+
     durationMilliseconds = defaultValue(durationMilliseconds, 500);
 
     // Get focus and camera position
     var focus = getCameraFocus(scene);
+    if (!defined(focus)) {
+        return;
+    }
+
     var campos = Cartesian3.subtract(scene.camera.position, focus, cartesian3Scratch);
 
     // Get tilt
@@ -198,11 +210,13 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
     var oldTrans = scene.camera.transform;
     scene.camera.transform = trans;
 
-    // Translate camera in reference to current pos
-    scene.camera.position = campos;
+    Cartesian3.clone(campos, scene.camera.position);
 
+    // Translate camera in reference to current pos
     var controller = scene.screenSpaceCameraController;
     controller.enableInputs = false;
+
+    viewModel._tiltInProgress = true;
 
     scene.tweens.add({
         duration : durationMilliseconds / 1000.0,
@@ -226,16 +240,24 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
                 return;
             }
             controller.enableInputs = true;
-            scene.camera.position = Cartesian3.add(scene.camera.position, focus, cartesian3Scratch);
+            scene.camera.position = Cartesian3.add(scene.camera.position, focus, scene.camera.position);
             scene.camera.transform = oldTrans;
+            viewModel._tiltInProgress = false;
+
+            if (defined(viewModel._nextTilt)) {
+                var nextTilt = viewModel._nextTilt;
+                viewModel._nextTilt = undefined;
+                animateToTilt(viewModel, scene, nextTilt, durationMilliseconds);
+            }
         },
         cancel: function() {
             if (controller.isDestroyed()) {
                 return;
             }
             controller.enableInputs = true;
-            scene.camera.position = Cartesian3.add(scene.camera.position, focus, cartesian3Scratch);
+            scene.camera.position = Cartesian3.add(scene.camera.position, focus, scene.camera.position);
             scene.camera.transform = oldTrans;
+            viewModel._tiltInProgress = false;
         }
     });
 }

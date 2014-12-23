@@ -160,7 +160,7 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
                 return;
             }
             controller.enableInputs = true;
-            scene.camera.position = Cartesian3.add(scene.camera.position, focus, cartesian3Scratch);
+            scene.camera.position = Cartesian3.add(scene.camera.position, focus, scene.camera.position);
             scene.camera.transform = oldTrans;
         },
         cancel: function() {
@@ -168,7 +168,7 @@ function animateToTilt(scene, targetTiltDegrees, durationMilliseconds) {
                 return;
             }
             controller.enableInputs = true;
-            scene.camera.position = Cartesian3.add(scene.camera.position, focus, cartesian3Scratch);
+            scene.camera.position = Cartesian3.add(scene.camera.position, focus, scene.camera.position);
             scene.camera.transform = oldTrans;
         }
     });

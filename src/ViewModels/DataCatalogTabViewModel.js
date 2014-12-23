@@ -8,11 +8,11 @@ var GeoDataInfoPopup = require('../viewer/GeoDataInfoPopup');
 var inherit = require('../Core/inherit');
 var loadView = require('../Core/loadView');
 
-var svgCheckboxChecked = require('../Core/svgCheckboxChecked');
-var svgCheckboxUnchecked = require('../Core/svgCheckboxUnchecked');
-var svgArrowDown = require('../Core/svgArrowDown');
-var svgArrowRight = require('../Core/svgArrowRight');
-var svgInfo = require('../Core/svgInfo');
+var svgCheckboxChecked = require('../SvgPaths/svgCheckboxChecked');
+var svgCheckboxUnchecked = require('../SvgPaths/svgCheckboxUnchecked');
+var svgArrowDown = require('../SvgPaths/svgArrowDown');
+var svgArrowRight = require('../SvgPaths/svgArrowRight');
+var svgInfo = require('../SvgPaths/svgInfo');
 
 var DataCatalogTabViewModel = function(options) {
     ExplorerTabViewModel.call(this);
