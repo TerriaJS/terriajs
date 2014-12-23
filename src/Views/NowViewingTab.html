@@ -21,6 +21,11 @@
                 <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
             </div>
 
+            <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
+                OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
+                <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
+            </div>
+
             <!-- ko if: legendIsImage -->
             <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
             <!-- /ko -->
@@ -30,10 +35,6 @@
             <!-- ko if: !hasLegend -->
             <div class="now-viewing-legend-text">No legend available for this data item.</div>
             <!-- /ko -->
-            <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
-                OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
-                <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
-            </div>
         </div>
     </div>
 
