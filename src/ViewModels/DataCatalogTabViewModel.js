@@ -3,8 +3,8 @@
 /*global require,ga*/
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 
+var CatalogItemInfoViewModel = require('./CatalogItemInfoViewModel');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
-var GeoDataInfoPopup = require('../viewer/GeoDataInfoPopup');
 var inherit = require('../Core/inherit');
 var loadView = require('../Core/loadView');
 
@@ -35,10 +35,8 @@ DataCatalogTabViewModel.prototype.show = function(container) {
 
 DataCatalogTabViewModel.prototype.showInfo = function(item) {
     ga('send', 'event', 'dataSource', 'info', item.name);
-    GeoDataInfoPopup.open({
-        container : document.body,
-        dataSource : item
-    });
+    var info = new CatalogItemInfoViewModel(item);
+    info.show(document.getElementById('ui'));
 };
 
 module.exports = DataCatalogTabViewModel;

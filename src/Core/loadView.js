@@ -26,6 +26,8 @@ var loadView = function(htmlString, container, viewModel) {
             knockout.applyBindings(viewModel, node);
         }
     }
+
+    return nodes;
 };
 
 module.exports = loadView;
