@@ -54,6 +54,7 @@ if (start) {
     var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
     var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
     var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
+    var NavigationViewModel = require('./ViewModels/NavigationViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
     var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
 
@@ -154,6 +155,9 @@ if (start) {
 
         var distanceLegend = new DistanceLegendViewModel(application);
         distanceLegend.show(ui);
+
+        var navigation = new NavigationViewModel(application);
+        navigation.show(ui);
 
         var explorer = new ExplorerPanelViewModel({});
         explorer.show(ui);
