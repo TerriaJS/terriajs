@@ -236,8 +236,6 @@ var AusGlobeViewer = function(application) {
 
     this.webGlSupported = (application.userProperties.map === '2d' || params.map === '2d') ? false : true;
     
-    var noWebGLMessage;
-    
     if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
         PopupMessageViewModel.open('ui', {
             title : 'Unsupported browser version detected',
