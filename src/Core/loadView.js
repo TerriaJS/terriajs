@@ -7,7 +7,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var createFragmentFromTemplate = require('./createFragmentFromTemplate');
 
 var loadView = function(htmlString, container, viewModel) {
-    var container = getElement(container);
+    container = getElement(container);
 
     var fragment = createFragmentFromTemplate(htmlString);
 
