@@ -4,7 +4,7 @@
 
 var start = true;
 
-var PopupMessage = require('./viewer/PopupMessage');
+var PopupMessageViewModel = require('./ViewModels/PopupMessageViewModel');
 var FeatureDetection = require('../third_party/cesium/Source/Core/FeatureDetection');
 
 // If we're not in a normal browser environment (Web Worker maybe?), do nothing.
@@ -12,8 +12,7 @@ if (typeof window === 'undefined') {
     start = false;
 } else {
     if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
-        PopupMessage.open({
-            container : document.body,
+        PopupMessageViewModel.open('ui', {
             title : 'Internet Explorer 8 or earlier detected',
             message : '\
     National Map requires Internet Explorer 9 or later.  For the best experience, we recommend \
@@ -66,8 +65,7 @@ if (start) {
     application.catalog.isLoading = true;
 
     application.error.addEventListener(function(e) {
-        PopupMessage.open({
-            container: document.body,
+        PopupMessageViewModel.open('ui', {
             title: e.title,
             message: e.message
         });

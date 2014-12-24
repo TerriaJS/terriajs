@@ -60,7 +60,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var corsProxy = require('../Core/corsProxy');
 var CesiumViewModel = require('../ViewModels/CesiumViewModel');
 var LeafletViewModel = require('../ViewModels/LeafletViewModel');
-var PopupMessage = require('./PopupMessage');
+var PopupMessageViewModel = require('../ViewModels/PopupMessageViewModel');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var LeafletVisualizer = require('../Map/LeafletVisualizer');
 var ViewerMode = require('../ViewModels/ViewerMode');
@@ -239,8 +239,7 @@ var AusGlobeViewer = function(application) {
     var noWebGLMessage;
     
     if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
-        noWebGLMessage = new PopupMessage({
-            container : document.body,
+        PopupMessageViewModel.open('ui', {
             title : 'Unsupported browser version detected',
             message : '\
 The National Map is not designed to work on versions of Internet Explorer older than 9.0. \
@@ -253,8 +252,7 @@ and stability issues.'
 
     //catch problems 
     if (this.webGlSupported && !supportsWebgl()) {
-        noWebGLMessage = new PopupMessage({
-            container : document.body,
+        PopupMessageViewModel.open('ui', {
             title : 'WebGL not supported',
             message : '\
 National Map works best with a web browser that supports <a href="http://get.webgl.com" target="_blank">WebGL</a>, \
@@ -268,8 +266,7 @@ Your web browser does not appear to support WebGL, so you will see a limited, 2D
     }
 
     if (document.body.clientWidth < 520 || document.body.clientHeight < 400) {
-        PopupMessage.open({
-            container : document.body,
+        PopupMessageViewModel.open('ui', {
             title : 'Small screen or window',
             message : '\
 Hello!<br/>\
@@ -578,8 +575,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
             console.log('Switching to EllipsoidTerrainProvider.');
             viewer.scene.terrainProvider = new EllipsoidTerrainProvider();
             if (!defined(that.TerrainMessageViewed)) {
-                PopupMessage.open({
-                    container : document.body,
+                PopupMessageViewModel.open('ui', {
                     title : 'Terrain Server Not Responding',
                     message : '\
 The terrain server is not responding at the moment.  You can still use all the features of National \

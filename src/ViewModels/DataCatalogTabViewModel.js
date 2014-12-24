@@ -35,8 +35,7 @@ DataCatalogTabViewModel.prototype.show = function(container) {
 
 DataCatalogTabViewModel.prototype.showInfo = function(item) {
     ga('send', 'event', 'dataSource', 'info', item.name);
-    var info = new CatalogItemInfoViewModel(item);
-    info.show(document.getElementById('ui'));
+    CatalogItemInfoViewModel.open('ui', item);
 };
 
 module.exports = DataCatalogTabViewModel;

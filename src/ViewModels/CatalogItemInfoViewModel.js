@@ -26,10 +26,16 @@ CatalogItemInfoViewModel.prototype.close = function() {
 };
 
 CatalogItemInfoViewModel.prototype.closeIfClickOnBackground = function(viewModel, e) {
-    if (e.target.className === 'catalog-item-info-container') {
+    if (e.target.className === 'modal-background') {
         this.close();
     }
     return true;
+};
+
+CatalogItemInfoViewModel.open = function(container, catalogItem) {
+    var viewModel = new CatalogItemInfoViewModel(catalogItem);
+    viewModel.show(container);
+    return viewModel;
 };
 
 module.exports = CatalogItemInfoViewModel;

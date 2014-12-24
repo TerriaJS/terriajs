@@ -1,11 +1,14 @@
 'use strict';
 
 /*global require*/
-var createFragmentFromTemplate = require('./createFragmentFromTemplate');
-
+var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
+var createFragmentFromTemplate = require('./createFragmentFromTemplate');
+
 var loadView = function(htmlString, container, viewModel) {
+    var container = getElement(container);
+
     var fragment = createFragmentFromTemplate(htmlString);
 
     // Sadly, fragment.childNodes doesn't have a slice function.
