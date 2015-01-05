@@ -115,7 +115,7 @@ if (start) {
             }
         };
 
-        BrandBarViewModel.create(ui, {
+        var brandBar = BrandBarViewModel.create(ui, {
             name: 'NATIONAL<br/><strong>MAP</strong> <small>beta</small>',
             leftLogo: 'images/gov-brand.png'
         });
@@ -166,6 +166,18 @@ if (start) {
         explorer.addTab(new NowViewingTabViewModel({
             nowViewing: application.nowViewing
         }));
+
+        knockout.getObservable(brandBar, 'explorerPanelIsOpen').subscribe(function() {
+            explorer.isOpen = brandBar.explorerPanelIsOpen;
+
+            if (brandBar.explorerPanelIsOpen) {
+                setTimeout(function() {
+                    document.getElementById('cesiumContainer').style.left = '395px';
+                }, 250);
+            } else {
+                document.getElementById('cesiumContainer').style.left = '0';
+            }
+        });
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });

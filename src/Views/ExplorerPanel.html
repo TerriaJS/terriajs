@@ -12,7 +12,7 @@
                        click: activate">
         </div>
     </div>
-    <div data-bind="visible: isOpen, foreach: tabs">
+    <div data-bind="isOpen, foreach: tabs">
       <div class="explorer-panel-body" data-bind="visible: isActive, embeddedComponent: $data">
       </div>
     </div>

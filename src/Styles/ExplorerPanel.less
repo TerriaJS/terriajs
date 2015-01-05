@@ -1,18 +1,30 @@
 .explorer-panel {
     .panel;
     position: absolute;
-    left: 10px;
+    left: 0;
     width: 395px;
-    top: 140px;
-    bottom: 2px; 
+    top: 119px;
+    bottom: 0;
+
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
 }
 
 .explorer-panel-collapsed {
-    bottom: auto;
-    height: 40px;
+    left: -395px;
+
+    -webkit-transition: left 0.25s;
+    -moz-transition: left 0.25s;
+    -ms-transition: left 0.25s;
+    -o-transition: left 0.25s;
+    transition: left 0.25s;
 }
 
 .explorer-panel-close {
+    display: none;
     position: absolute;
     right: 0;
     top: 0;
@@ -25,8 +37,8 @@
 .explorer-panel-tab-area {
     position:absolute;
     left: 0;
-    top: 0;
-    width: 355px;
+    top: 15px;
+    width: 395px;
     height: 40px;
     margin: 0;
     padding: 0;
@@ -50,15 +62,15 @@
 }
 
 .explorer-panel-collapsed .explorer-panel-tab-active {
-    border-bottom: 1px solid #ffffff;
-    color: #ffffff;
+    //border-bottom: 1px solid #ffffff;
+    //color: #ffffff;
 }
 
 .explorer-panel-body {
     position: absolute;
     left: 0;
     right: 0;
-    top: 40px;
+    top: 55px;
     bottom: 0;
     overflow: auto;
 }
