@@ -172,7 +172,7 @@ if (start) {
 
             if (brandBar.explorerPanelIsOpen) {
                 setTimeout(function() {
-                    document.getElementById('cesiumContainer').style.left = '395px';
+                    document.getElementById('cesiumContainer').style.left = '350px';
                 }, 250);
             } else {
                 document.getElementById('cesiumContainer').style.left = '0';

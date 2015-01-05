@@ -2,7 +2,7 @@
     .panel;
     position: absolute;
     left: 0;
-    width: 395px;
+    width: @explorer-panel-width;
     top: 119px;
     bottom: 0;
 
@@ -14,7 +14,7 @@
 }
 
 .explorer-panel-collapsed {
-    left: -395px;
+    left: -@explorer-panel-width;
 
     -webkit-transition: left 0.25s;
     -moz-transition: left 0.25s;
@@ -38,7 +38,7 @@
     position:absolute;
     left: 0;
     top: 15px;
-    width: 395px;
+    width: @explorer-panel-width;
     height: 40px;
     margin: 0;
     padding: 0;
