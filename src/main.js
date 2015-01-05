@@ -170,12 +170,14 @@ if (start) {
         knockout.getObservable(brandBar, 'explorerPanelIsOpen').subscribe(function() {
             explorer.isOpen = brandBar.explorerPanelIsOpen;
 
+            var cesiumContainer = document.getElementById('cesiumContainer');
+
             if (brandBar.explorerPanelIsOpen) {
-                setTimeout(function() {
-                    document.getElementById('cesiumContainer').style.left = '350px';
-                }, 250);
+                if (cesiumContainer.className.indexOf(' map-displaced') < 0) {
+                    cesiumContainer.className += ' map-displaced';
+                }
             } else {
-                document.getElementById('cesiumContainer').style.left = '0';
+                cesiumContainer.className = cesiumContainer.className.replace(' map-displaced', '');
             }
         });
 
