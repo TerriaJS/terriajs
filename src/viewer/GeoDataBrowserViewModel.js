@@ -26,6 +26,8 @@ var raiseErrorOnRejectedPromise = require('../ViewModels/raiseErrorOnRejectedPro
 var readJson = require('../Core/readJson');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
+
 var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
     this.map = options.map;
@@ -451,6 +453,20 @@ and the file will not be uploaded or added to the map.')) {
         return false;
     };
 
+    function postToCkan(url, dataObj, func) {
+        return loadWithXhr({
+            url : url,
+            method : "POST",
+            data : JSON.stringify(dataObj),
+            headers : {'Authorization' : '847db839-94d1-4d6f-9a66-161f5fe7c41f'},
+            responseType : 'json'
+        }).then(function(result) {
+            func(result);
+        }).otherwise(function() {
+            console.log('Returned an error while working on url', url);
+        });
+    }
+
     this.populateCache = function(mode) {
 
         var requests = [];
@@ -459,7 +475,54 @@ and the file will not be uploaded or added to the map.')) {
 
         console.log('Requesting tiles from ' + requests.length + ' data sources.');
 
-        requestTiles(requests, that.maxLevel());
+        var groups = [];
+        var orgs = [];
+        var orgsCkan = [];
+        var groupsCkan = [];
+        var packagesCkan = [];
+
+        for (var i = 0; i < requests.length; ++i) {
+            if (groups.indexOf(requests[i].group) === -1) {
+                groups.push(requests[i].group);
+            }
+            if (orgs.indexOf(requests[i].item.dataCustodian) === -1) {
+                orgs.push(requests[i].item.dataCustodian);
+            }
+        }
+
+        console.log(groups, orgs);
+
+        var func = function(result) {
+            console.log(result);
+        };
+
+        var dataObj = {"all_fields" : true};
+        var p1 = postToCkan(
+            'http://localhost/api/3/action/organization_list', 
+            {"all_fields" : true}, 
+            function(results) {orgsCkan = results.result}
+        );
+        var p2 = postToCkan(
+            'http://localhost/api/3/action/group_list', 
+            {"all_fields" : true}, 
+            function(results) {groupsCkan = results.result}
+        );
+        var p3 = postToCkan(
+            'http://localhost/api/3/action/current_package_list_with_resources', 
+            {}, 
+            function(results) {packagesCkan = results.result}
+        );
+
+        when.all([p1, p2, p3]).then(function() {
+            console.log(orgsCkan, groupsCkan, packagesCkan);
+        })
+
+        //TODO
+        //Get list of orgs, groups, and packages from CKAN
+        //  When completed create requests for missing orgs/groups, and update packages
+        //    then run requests
+
+//        requestTiles(requests, that.maxLevel());
     };
 
     function getAllRequests(mode, requests, group) {
@@ -471,7 +534,8 @@ and the file will not be uploaded or added to the map.')) {
                 }
             } else if (item.type === 'wms' && (mode === 'opened' || item.isEnabled)) {
                 requests.push({
-                    item : item
+                    item : item,
+                    group : group.name
                 });
             }
         }
@@ -481,7 +545,7 @@ and the file will not be uploaded or added to the map.')) {
         var urls = [];
         var names = [];
         var name;
-
+/*
         loadImage.createImage = function(url, crossOrigin, deferred) {
             urls.push(url);
             names.push(name);
@@ -550,10 +614,10 @@ and the file will not be uploaded or added to the map.')) {
 
         loadImage.createImage = loadImage.defaultCreateImage;
         throttleRequestByServer.maximumRequestsPerServer = oldMax;
-
+*/
         console.log('Caching ' + urls.length + ' URLs');
 
-        var maxRequests = 2;
+        var maxRequests = 1;
         var nextRequestIndex = 0;
         var inFlight = 0;
         var urlsRequested = 0;

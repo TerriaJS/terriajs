@@ -219,11 +219,11 @@ function filterResultsByGetCapabilities(viewModel, json) {
             // Extract the layer name from the WMS URL.
             var uri = new URI(wmsUrl);
             var params = uri.search(true);
-            var layerName = params.LAYERS;
+            var layerName = resource.wms_layer || params.LAYERS;
 
             // Remove the query portion of the WMS URL.
             uri.search('');
-            var url = uri.toString();
+            var url = resource.wms_api_url || uri.toString();
 
             if (!defined(wmsServers[url])) {
                 wmsServers[url] = {};
@@ -312,7 +312,7 @@ function populateGroupFromResults(viewModel, json) {
         }
 
         var rectangle;
-        var bboxString = item.geo_coverage;
+        var bboxString = item.geo_coverage || item.resources[0].geo_coverage;
         if (defined(bboxString)) {
             var parts = bboxString.split(',');
             if (parts.length === 4) {
@@ -348,8 +348,8 @@ function populateGroupFromResults(viewModel, json) {
             var newItem = new WebMapServiceItemViewModel(viewModel.application);
             newItem.name = item.title;
             newItem.description = textDescription;
-            newItem.url = url;
-            newItem.layers = layerName;
+            newItem.url = resource.wms_api_url || url;
+            newItem.layers = resource.wms_layer || layerName;
             newItem.rectangle = rectangle;
 
             if (defined(viewModel.dataCustodian)) {
