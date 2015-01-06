@@ -208,7 +208,7 @@ function filterResultsByGetCapabilities(viewModel, json) {
                 continue;
             }
 
-            var wmsUrl = resource.wms_url;
+            var wmsUrl = resource.wms_api_url || resource.wms_url;
             if (!defined(wmsUrl)) {
                 wmsUrl = resource.url;
                 if (!defined(wmsUrl)) {
@@ -223,7 +223,7 @@ function filterResultsByGetCapabilities(viewModel, json) {
 
             // Remove the query portion of the WMS URL.
             uri.search('');
-            var url = resource.wms_api_url || uri.toString();
+            var url = uri.toString();
 
             if (!defined(wmsServers[url])) {
                 wmsServers[url] = {};

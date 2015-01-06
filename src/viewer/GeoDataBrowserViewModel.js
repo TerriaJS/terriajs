@@ -27,6 +27,7 @@ var readJson = require('../Core/readJson');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 
 var GeoDataBrowserViewModel = function(options) {
     this._viewer = options.viewer;
@@ -467,7 +468,21 @@ and the file will not be uploaded or added to the map.')) {
         });
     }
 
+    function getCkanName(name) {
+        var ckanName = name.toLowerCase().replace(/\W/g,'-');
+        return ckanName;
+    }
+
+    function getCkanRect(rect) {
+        return CesiumMath.toDegrees(rect.west).toFixed(4) + ',' +
+            CesiumMath.toDegrees(rect.south).toFixed(4) + ',' +
+            CesiumMath.toDegrees(rect.east).toFixed(4) + ',' +
+            CesiumMath.toDegrees(rect.north).toFixed(4);
+    }
+
     this.populateCache = function(mode) {
+
+        return this.populateCkan(mode);
 
         var requests = [];
 
@@ -475,54 +490,7 @@ and the file will not be uploaded or added to the map.')) {
 
         console.log('Requesting tiles from ' + requests.length + ' data sources.');
 
-        var groups = [];
-        var orgs = [];
-        var orgsCkan = [];
-        var groupsCkan = [];
-        var packagesCkan = [];
-
-        for (var i = 0; i < requests.length; ++i) {
-            if (groups.indexOf(requests[i].group) === -1) {
-                groups.push(requests[i].group);
-            }
-            if (orgs.indexOf(requests[i].item.dataCustodian) === -1) {
-                orgs.push(requests[i].item.dataCustodian);
-            }
-        }
-
-        console.log(groups, orgs);
-
-        var func = function(result) {
-            console.log(result);
-        };
-
-        var dataObj = {"all_fields" : true};
-        var p1 = postToCkan(
-            'http://localhost/api/3/action/organization_list', 
-            {"all_fields" : true}, 
-            function(results) {orgsCkan = results.result}
-        );
-        var p2 = postToCkan(
-            'http://localhost/api/3/action/group_list', 
-            {"all_fields" : true}, 
-            function(results) {groupsCkan = results.result}
-        );
-        var p3 = postToCkan(
-            'http://localhost/api/3/action/current_package_list_with_resources', 
-            {}, 
-            function(results) {packagesCkan = results.result}
-        );
-
-        when.all([p1, p2, p3]).then(function() {
-            console.log(orgsCkan, groupsCkan, packagesCkan);
-        })
-
-        //TODO
-        //Get list of orgs, groups, and packages from CKAN
-        //  When completed create requests for missing orgs/groups, and update packages
-        //    then run requests
-
-//        requestTiles(requests, that.maxLevel());
+        requestTiles(requests, that.maxLevel());
     };
 
     function getAllRequests(mode, requests, group) {
@@ -545,7 +513,7 @@ and the file will not be uploaded or added to the map.')) {
         var urls = [];
         var names = [];
         var name;
-/*
+
         loadImage.createImage = function(url, crossOrigin, deferred) {
             urls.push(url);
             names.push(name);
@@ -614,7 +582,7 @@ and the file will not be uploaded or added to the map.')) {
 
         loadImage.createImage = loadImage.defaultCreateImage;
         throttleRequestByServer.maximumRequestsPerServer = oldMax;
-*/
+
         console.log('Caching ' + urls.length + ' URLs');
 
         var maxRequests = 1;
@@ -673,6 +641,126 @@ and the file will not be uploaded or added to the map.')) {
             doNext();
         }
     }
+
+    
+    this.populateCkan = function(mode) {
+
+        var requests = [];
+
+        getAllRequests(mode, requests, that.catalog.group);
+
+        var groups = [];
+        var orgs = [];
+        var orgsCkan = [];
+        var groupsCkan = [];
+        var packagesCkan = [];
+
+        for (var i = 0; i < requests.length; ++i) {
+            var gname = getCkanName(requests[i].group);
+            if (groups[gname] === undefined) {
+                groups[gname] = requests[i].group;
+            }
+            var oname = getCkanName(requests[i].item.dataCustodian);
+            if (orgs[oname] === undefined) {
+                orgs[oname] = requests[i].item.dataCustodian;
+            }
+        }
+
+        var dataObj = {"all_fields" : true};
+        var promises = []
+        promises[0] = postToCkan(
+            'http://localhost/api/3/action/organization_list', 
+            {}, 
+            function(results) {orgsCkan = results.result}
+        );
+        promises[1] = postToCkan(
+            'http://localhost/api/3/action/group_list', 
+            {}, 
+            function(results) {groupsCkan = results.result}
+        );
+        promises[2] = postToCkan(
+            'http://localhost/api/3/action/package_list', 
+            {}, 
+            function(results) {packagesCkan = results.result}
+        );
+
+        when.all(promises).then(function() {
+            var ckanRequests = [], i, j, found;
+            for (var ckanName in groups) {
+                found = false;
+                for (var j = 0; j < groupsCkan.length; j++) {
+                    if (ckanName === groupsCkan[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+                ckanRequests.push( {
+                    "url": 'http://localhost/api/3/action/group_' + (found ? 'update' : 'create'),
+                    "data" : {"name": ckanName, "title": groups[ckanName], "id": (found ? ckanName : '')}
+                });
+            }
+            for (var ckanName in orgs) {
+               found = false;
+                for (var j = 0; j < orgsCkan.length; j++) {
+                    if (ckanName === orgsCkan[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+                ckanRequests.push({
+                    "url": 'http://localhost/api/3/action/organization_' + (found ? 'update' : 'create'),
+                    "data" : {"name": ckanName, "title": orgs[ckanName], "id": (found ? ckanName : '')}
+                });
+            }
+            for (var i = 0; i < requests.length; i++) {
+                found = false;
+                for (var j = 0; j < packagesCkan.length; j++) {
+                    if (getCkanName(requests[i].item.name) === packagesCkan[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+               ckanRequests.push({
+                    "url": 'http://localhost/api/3/action/package_' + (found ? 'update' : 'create'),
+                    "data" : {
+                        "name": getCkanName(requests[i].item.name), 
+                        "title": requests[i].item.name, 
+                        "license_id": "cc-by", 
+                        "notes": requests[i].item.description, 
+                        "owner_org": getCkanName(requests[i].item.dataCustodian),
+                        "groups": [ { "name": getCkanName(requests[i].group)} ],
+                        "resources": [ {
+                            "wms_layer": requests[i].item.layers, 
+                            "wms_api_url": requests[i].item.url, 
+                            "url": requests[i].item.url, 
+                            "format": "wms", 
+                            "name": "WMS link",
+                            "geo_coverage": getCkanRect(requests[i].item.rectangle)
+                        } ]
+                    }
+                });
+            }
+
+            var currentIndex = 0;
+            console.log('Starting ckan tasks:', ckanRequests.length);
+            var sendNext = function() {
+                if (currentIndex < ckanRequests.length) {
+                    postToCkan(
+                        ckanRequests[currentIndex].url, 
+                        ckanRequests[currentIndex].data, 
+                        function() { 
+                            currentIndex++;
+                            if ((currentIndex % 5) === 0 || currentIndex === ckanRequests.length) {
+                                console.log('Completed', currentIndex, 'ckan tasks out of', ckanRequests.length)
+                            }
+                            sendNext(); 
+                        }
+                    );
+                }
+            };
+            sendNext();
+        })
+    };
 };
 
 defineProperties(GeoDataBrowserViewModel.prototype, {
