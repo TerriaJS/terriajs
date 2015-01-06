@@ -26,6 +26,10 @@
     fill: #CCCCCC;
 }
 
+.now-viewing-item-details {
+    padding-bottom: 10px;
+}
+
 .now-viewing-shown-item {
 }
 
@@ -45,7 +49,11 @@
 }
 
 .now-viewing-toolbar {
+    position: absolute;
     height: 40px;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .now-viewing-clear-all {
@@ -59,13 +67,18 @@
 }
 
 .now-viewing-list {
-    position: relative;
+    position: absolute;
     overflow: auto;
+    top: 40px;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .now-viewing-no-items {
     padding-left: 16px;
     padding-top: 16px;
+    padding-bottom: 10px;
     color: #ffffff;
     font-weight: lighter;
     border-top: 1px solid @panel-border-color;

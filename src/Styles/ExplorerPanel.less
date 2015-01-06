@@ -97,6 +97,8 @@
     overflow-y: auto;
     width: @explorer-panel-width;
     left: 0;
+    top: 0;
+    bottom: 0;
 
     -webkit-transition: left @explorer-panel-tab-switch-animation-length ease-out;
     -moz-transition: left @explorer-panel-tab-switch-animation-length ease-out;
@@ -106,7 +108,11 @@
 }
 
 .explorer-panel-body-pane {
-    position: relative;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .explorer-panel-frame-inactive-left {
