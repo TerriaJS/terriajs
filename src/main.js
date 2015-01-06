@@ -55,7 +55,7 @@ if (start) {
     var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
     var NavigationViewModel = require('./ViewModels/NavigationViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
-    var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
+    //var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
@@ -115,7 +115,7 @@ if (start) {
             }
         };
 
-        var brandBar = BrandBarViewModel.create(ui, {
+        BrandBarViewModel.create(ui, {
             name: 'NATIONAL<br/><strong>MAP</strong> <small>beta</small>',
             leftLogo: 'images/gov-brand.png'
         });
