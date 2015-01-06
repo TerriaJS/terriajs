@@ -17,8 +17,8 @@
             <div class="explorer-panel-collapse-button-icon" data-bind="cesiumSvgPath: { path: svgCollapse, width: 6, height: 9 }, css: { 'brand-bar-menu-icon-highlighted': isOpen }"></div>
         </div>
     </div>
-    <div data-bind="isOpen, foreach: tabs">
-        <div class="explorer-panel-body" data-bind="visible: isActive, embeddedComponent: $data">
+    <div class="explorer-panel-body" data-bind="isOpen, foreach: tabs, css: { 'explorer-panel-body-collapsed': !$root.isOpen }">
+        <div class="explorer-panel-body-pane" data-bind="embeddedComponent: $data, visible: isActive">
         </div>
     </div>
 </div>
