@@ -86,20 +86,23 @@ if (start) {
 
         application.catalog.isLoading = false;
 
-        var CatalogGroupViewModel = require('./ViewModels/CatalogGroupViewModel');
+        // Start with "National Data Sets" open.
         var nds = application.catalog.group.findFirstItemByName('National Data Sets');
+        nds.isOpen = true;
 
-        var level1 = new CatalogGroupViewModel(application);
-        level1.name = 'Level 1';
-        nds.items.push(level1);
+        // var CatalogGroupViewModel = require('./ViewModels/CatalogGroupViewModel');
 
-        var level2 = new CatalogGroupViewModel(application);
-        level2.name = 'Level 2';
-        level1.items.push(level2);
+        // var level1 = new CatalogGroupViewModel(application);
+        // level1.name = 'Level 1';
+        // nds.items.push(level1);
 
-        var level3 = new CatalogGroupViewModel(application);
-        level3.name = 'Level 3';
-        level2.items.push(level3);
+        // var level2 = new CatalogGroupViewModel(application);
+        // level2.name = 'Level 2';
+        // level1.items.push(level2);
+
+        // var level3 = new CatalogGroupViewModel(application);
+        // level3.name = 'Level 3';
+        // level2.items.push(level3);
 
         AusGlobeViewer.create(application);
 
