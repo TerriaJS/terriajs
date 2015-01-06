@@ -82,12 +82,51 @@
     bottom: 0;
     overflow: auto;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.26);
+    overflow-x: hidden;
 
     -webkit-transition: left @explorer-panel-close-animation-length ease-out;
     -moz-transition: left @explorer-panel-close-animation-length ease-out;
     -ms-transition: left @explorer-panel-close-animation-length ease-out;
     -o-transition: left @explorer-panel-close-animation-length ease-out;
     transition: left @explorer-panel-close-animation-length ease-out;
+}
+
+.explorer-panel-frame {
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: @explorer-panel-width;
+    left: 0;
+
+    -webkit-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -moz-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -ms-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -o-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    transition: left @explorer-panel-tab-switch-animation-length ease-out;
+}
+
+.explorer-panel-body-pane {
+    position: relative;
+}
+
+.explorer-panel-frame-inactive-left {
+    left: -@explorer-panel-width;
+
+    -webkit-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -moz-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -ms-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -o-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    transition: left @explorer-panel-tab-switch-animation-length ease-out;
+}
+
+.explorer-panel-frame-inactive-right {
+    left: @explorer-panel-width;
+
+    -webkit-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -moz-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -ms-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    -o-transition: left @explorer-panel-tab-switch-animation-length ease-out;
+    transition: left @explorer-panel-tab-switch-animation-length ease-out;
 }
 
 .explorer-panel-body-collapsed {
@@ -172,4 +211,8 @@
     -ms-transition: -ms-transform @explorer-panel-close-animation-length ease-out;
     -o-transition: -o-transform @explorer-panel-close-animation-length ease-out;
     transition: transform @explorer-panel-close-animation-length ease-out;
+}
+
+.foo {
+    position: absolute;
 }
