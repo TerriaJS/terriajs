@@ -129,11 +129,17 @@
     width: 40px;
     height: 40px;
 
-    -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
+    // -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
+    // -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
+    // -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
+    // -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
+    // transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
+
+    -webkit-transition: -webkit-transform @explorer-panel-close-animation-length ease-out;
+    -moz-transition: -moz-transform @explorer-panel-close-animation-length ease-out;
+    -ms-transition: -ms-transform @explorer-panel-close-animation-length ease-out;
+    -o-transition: -o-transform @explorer-panel-close-animation-length ease-out;
+    transition: transform @explorer-panel-close-animation-length ease-out;
 }
 
 .explorer-panel-collapse-button-icon {
@@ -147,12 +153,23 @@
 }
 
 .explorer-panel-collapsed .explorer-panel-collapse-button {
-    left: -44px;
-    opacity: 0.0;
+    //left: -44px;
+    //opacity: 0.0;
+    -webkit-transform: rotate(-0.5turn);
+    -moz-transform: rotate(-0.5turn);
+    -ms-transform: rotate(-0.5turn);
+    -o-transform: rotate(-0.5turn);
+    transform: rotate(-0.5turn);
 
-    -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
+    // -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
+    // -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
+    // -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
+    // -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
+    // transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
+
+    -webkit-transition: -webkit-transform @explorer-panel-close-animation-length ease-out;
+    -moz-transition: -moz-transform @explorer-panel-close-animation-length ease-out;
+    -ms-transition: -ms-transform @explorer-panel-close-animation-length ease-out;
+    -o-transition: -o-transform @explorer-panel-close-animation-length ease-out;
+    transition: transform @explorer-panel-close-animation-length ease-out;
 }
