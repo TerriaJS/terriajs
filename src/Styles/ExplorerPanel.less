@@ -3,24 +3,17 @@
     position: absolute;
     left: 0;
     width: @explorer-panel-width;
-    top: 119px;
+    top: 69px;
     bottom: 0;
 
-    -webkit-transition: left 0.25s ease-out;
-    -moz-transition: left 0.25s ease-out;
-    -ms-transition: left 0.25s ease-out;
-    -o-transition: left 0.25s ease-out;
-    transition: left 0.25s ease-out;
+    -webkit-transition: left @explorer-panel-close-animation-length ease-out;
+    -moz-transition: left @explorer-panel-close-animation-length ease-out;
+    -ms-transition: left @explorer-panel-close-animation-length ease-out;
+    -o-transition: left @explorer-panel-close-animation-length ease-out;
+    transition: left @explorer-panel-close-animation-length ease-out;
 }
 
 .explorer-panel-collapsed {
-    left: -@explorer-panel-width;
-
-    -webkit-transition: left 0.25s ease-out;
-    -moz-transition: left 0.25s ease-out;
-    -ms-transition: left 0.25s ease-out;
-    -o-transition: left 0.25s ease-out;
-    transition: left 0.25s ease-out;
 }
 
 .explorer-panel-close {
@@ -34,31 +27,45 @@
     border-bottom: 1px solid @panel-border-color;
 }
 
-.explorer-panel-tab-area {
+.explorer-panel-header {
     position:absolute;
     left: 0;
-    top: 15px;
+    top: 0;
     width: @explorer-panel-width;
     height: 40px;
     margin: 0;
     padding: 0;
-    display: table;
     border-bottom: 1px solid @panel-border-color;
+    background-color: #757f88;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.26);
+}
+
+.explorer-panel-tab-area {
+    position:absolute;
+    left: 8px;
+    top: 0;
+    right: 50px;
+    height: 40px;
+    margin: 0;
+    padding: 0;
+    display: table;
 }
 
 .explorer-panel-tab {
     line-height: 39px;
-    text-align: center;
+    //text-align: center;
     font-size: 16px;
     font-weight: normal;
-    color: @explorer-inactive-tab-color;
+    color: #cccccc;
     display: table-cell;
     cursor: pointer;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .explorer-panel-tab-active {
     border-bottom: 1px solid @highlight-color;
-    color: @highlight-color;
+    color: #ffffff;
 }
 
 .explorer-panel-collapsed .explorer-panel-tab-active {
@@ -68,11 +75,29 @@
 
 .explorer-panel-body {
     position: absolute;
+    background-color: @panel-background-color;
     left: 0;
-    right: 0;
-    top: 55px;
+    width: @explorer-panel-width;
+    top: 40px;
     bottom: 0;
     overflow: auto;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.26);
+
+    -webkit-transition: left @explorer-panel-close-animation-length ease-out;
+    -moz-transition: left @explorer-panel-close-animation-length ease-out;
+    -ms-transition: left @explorer-panel-close-animation-length ease-out;
+    -o-transition: left @explorer-panel-close-animation-length ease-out;
+    transition: left @explorer-panel-close-animation-length ease-out;
+}
+
+.explorer-panel-collapsed .explorer-panel-body {
+    left: -@explorer-panel-width;
+
+    -webkit-transition: left @explorer-panel-close-animation-length ease-out;
+    -moz-transition: left @explorer-panel-close-animation-length ease-out;
+    -ms-transition: left @explorer-panel-close-animation-length ease-out;
+    -o-transition: left @explorer-panel-close-animation-length ease-out;
+    transition: left @explorer-panel-close-animation-length ease-out;
 }
 
 .explorer-panel-close {
@@ -95,4 +120,39 @@
     fill: #cccccc;
     left: 9px;
     top: 12px;
+}
+
+.explorer-panel-collapse-button {
+    position: absolute;
+    left: @explorer-panel-width - 44px;
+    top: 0;
+    width: 40px;
+    height: 40px;
+
+    -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out @explorer-panel-close-animation-length*3/4;
+    -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out @explorer-panel-close-animation-length*3/4;
+    -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out @explorer-panel-close-animation-length*3/4;
+    -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out @explorer-panel-close-animation-length*3/4;
+    transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out @explorer-panel-close-animation-length*3/4;
+}
+
+.explorer-panel-collapse-button-icon {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    fill: #cccccc;
+    left: 13px;
+    top: 13px;
+    background-color: #757f88;
+}
+
+.explorer-panel-collapsed .explorer-panel-collapse-button {
+    left: -44px;
+    opacity: 0.0;
+
+    -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out;
+    -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out;
+    -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out;
+    -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out;
+    transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 ease-out;
 }

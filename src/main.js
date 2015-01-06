@@ -119,7 +119,7 @@ if (start) {
             name: 'NATIONAL<br/><strong>MAP</strong> <small>beta</small>',
             leftLogo: 'images/gov-brand.png'
         });
-        SearchPanelViewModel.create(ui, {});
+        //SearchPanelViewModel.create(ui, {});
 
         var menuBar = new MenuBarViewModel();
         menuBar.items.push(new MenuBarItemViewModel({
@@ -167,12 +167,16 @@ if (start) {
             nowViewing: application.nowViewing
         }));
 
-        knockout.getObservable(brandBar, 'explorerPanelIsOpen').subscribe(function() {
-            explorer.isOpen = brandBar.explorerPanelIsOpen;
+        var searchTab = new NowViewingTabViewModel({
+            nowViewing: application.nowViewing
+        });
+        searchTab.name = 'Search';
+        explorer.addTab(searchTab);
 
+        knockout.getObservable(explorer, 'isOpen').subscribe(function() {
             var cesiumContainer = document.getElementById('cesiumContainer');
 
-            if (brandBar.explorerPanelIsOpen) {
+            if (explorer.isOpen) {
                 if (cesiumContainer.className.indexOf(' map-displaced') < 0) {
                     cesiumContainer.className += ' map-displaced';
                 }

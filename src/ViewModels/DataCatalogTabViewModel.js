@@ -17,7 +17,7 @@ var svgInfo = require('../SvgPaths/svgInfo');
 var DataCatalogTabViewModel = function(options) {
     ExplorerTabViewModel.call(this);
 
-    this.name = 'Data Catalogue';
+    this.name = 'Catalogue';
     this.catalog = options.catalog;
 
     this.svgCheckboxChecked = defaultValue(options.svgCheckboxChecked, svgCheckboxChecked);
