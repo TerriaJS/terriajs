@@ -307,7 +307,7 @@ function populateGroupFromResults(viewModel, json) {
             textDescription = item.notes.replace(/\n/g, '<br/>');
         }
 
-        if (item.license_url) {
+        if (item.license_url && item.notes.indexOf('[Licence]') === -1) {
             textDescription += '<br/>[Licence](' + item.license_url + ')';
         }
 
