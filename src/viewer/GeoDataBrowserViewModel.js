@@ -449,7 +449,7 @@ and the file will not be uploaded or added to the map.')) {
     this.showPopulateCache = function() {
         var populateCache = that.catalog.application.getUserProperty('populate-cache');
         if (populateCache && populateCache !== 'false' && populateCache !== 'no' && populateCache !== '0') {
-            if (populateCache === '2') {
+            if (populateCache !== '1') {
                 that.maxLevel('http://localhost');
             }
             return true;
@@ -460,8 +460,8 @@ and the file will not be uploaded or added to the map.')) {
     this.populateCache = function(mode) {
 
         var populateCache = this.catalog.application.getUserProperty('populate-cache');
-        if (populateCache === '2') {
-            return this.populateCkan(mode);
+        if (populateCache !== '1') {
+            return this.populateCkan(mode, that.maxLevel(), populateCache);
         }
 
         var requests = [];
@@ -649,7 +649,7 @@ and the file will not be uploaded or added to the map.')) {
             CesiumMath.toDegrees(rect.north).toFixed(4);
     }
 
-    this.populateCkan = function(mode) {
+    this.populateCkan = function(mode, server, apiKey) {
 
         var requests = [];
 
@@ -661,8 +661,8 @@ and the file will not be uploaded or added to the map.')) {
         var groupsCkan = [];
         var packagesCkan = [];
 
-        var ckanServer = that.maxLevel();
-        var ckanApiKey = 'ea1f92e0-9376-4683-98ff-db9885bd3c95'; //get from url?
+        var ckanServer = server; //get from entry field in ui (maxLevels)
+        var ckanApiKey = apiKey; //get from url - #populate-cache=xxxxxxxxx
 
         for (var i = 0; i < requests.length; ++i) {
             var gname = getCkanName(requests[i].group);

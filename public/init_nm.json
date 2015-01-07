@@ -16,7 +16,7 @@
         {
             "name": "National Data Sets",
             "type": "ckan",
-            "url": "http://localhost",
+            "url": "http://54.79.126.100",
             "filterQuery": "fq=res_format%3aWMS",
             "filterByWmsGetCapabilities": false,
             "minimumMaxScaleDenominator": 1e10,
