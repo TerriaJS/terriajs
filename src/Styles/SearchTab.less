@@ -1,0 +1,126 @@
+.search-tab {
+}
+
+.search-tab-form {
+    position: absolute;
+    height: 40px;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #a1a3a6;
+}
+
+.search-tab-input {
+    border: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 40px;
+    width: @explorer-panel-width;
+    background-color: #a1a3a6;
+    color: #ffffff;
+    line-height: 38px;
+    padding-left: 16px;
+}
+
+.search-tab-input::-webkit-input-placeholder {
+    color: #ffffff;
+    font-style: italic;
+}
+
+.search-tab-input:-moz-placeholder {
+    color: #ffffff;
+    opacity: 1;
+    font-style: italic;
+}
+
+.search-tab-input::-moz-placeholder {
+    color: #ffffff;
+    opacity: 1;
+    font-style: italic;
+}
+
+.search-tab-input:-ms-input-placeholder {
+    color: #ffffff;
+    font-style: italic;
+}
+
+.search-tab-results-area {
+    position: absolute;
+    top: 40px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.search-tab-provider-header {
+    display: table;
+    width: 100%;
+    line-height: 40px;
+    border-bottom: 1px solid @panel-border-color;
+    border-top: 1px solid @panel-border-color;
+    cursor: pointer;
+}
+
+.search-tab-provider-label {
+    display: table-cell;
+    padding-left: 16px;
+    font-size: 16px;
+    color: #FFFFFF;
+}
+
+.search-tab-provider-icon-holder {
+    display: table-cell;
+    width: 20px;
+}
+
+.search-tab-provider-icon {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    fill: #CCCCCC;
+    margin-right: 16px;
+}
+
+.search-tab-provider-result {
+    line-height: 30px;
+    padding-left: 16px;
+}
+
+.search-tab-provider-result-clickable {
+    .clickable;
+}
+
+.search-tab-provider-result-clickable .search-tab-provider-result-label:hover {
+    text-decoration: underline;
+}
+
+.search-tab-provider-result-top-row {
+    display: table;
+    width: 100%;
+}
+
+.search-tab-provider-result-label {
+    display: table-cell;
+    font-size: 16px;
+    color: #CCCCCC;
+    font-weight: lighter;
+}
+
+.search-tab-provider-message {
+    font-size: 16px;
+    color: #CCCCCC;
+    font-weight: lighter;
+    font-style: italic;
+    padding-left: 16px;
+    padding-top: 5px;
+}
+
+.search-tab-provider-searching {
+    font-size: 16px;
+    color: #CCCCCC;
+    font-weight: lighter;
+    font-style: italic;
+    padding-left: 16px;
+    padding-top: 5px;
+}

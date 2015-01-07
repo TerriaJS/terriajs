@@ -46,6 +46,7 @@ if (start) {
     var raiseErrorToUser = require('./ViewModels/raiseErrorToUser');
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
+    var BingMapsSearchProviderViewModel = require('./ViewModels/BingMapsSearchProviderViewModel');
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
     var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
@@ -55,7 +56,7 @@ if (start) {
     var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
     var NavigationViewModel = require('./ViewModels/NavigationViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
-    //var SearchPanelViewModel = require('./ViewModels/SearchPanelViewModel');
+    var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
@@ -90,22 +91,10 @@ if (start) {
         var nds = application.catalog.group.findFirstItemByName('National Data Sets');
         nds.isOpen = true;
 
-        // var CatalogGroupViewModel = require('./ViewModels/CatalogGroupViewModel');
-
-        // var level1 = new CatalogGroupViewModel(application);
-        // level1.name = 'Level 1';
-        // nds.items.push(level1);
-
-        // var level2 = new CatalogGroupViewModel(application);
-        // level2.name = 'Level 2';
-        // level1.items.push(level2);
-
-        // var level3 = new CatalogGroupViewModel(application);
-        // level3.name = 'Level 3';
-        // level2.items.push(level3);
-
+        // Create the map/globe.
         AusGlobeViewer.create(application);
 
+        // Create the user interface.
         var ui = document.getElementById('ui');
 
         knockout.bindingHandlers.embeddedComponent = {
@@ -122,7 +111,6 @@ if (start) {
             name: 'NATIONAL<br/><strong>MAP</strong> <small>beta</small>',
             leftLogo: 'images/gov-brand.png'
         });
-        //SearchPanelViewModel.create(ui, {});
 
         var menuBar = new MenuBarViewModel();
         menuBar.items.push(new MenuBarItemViewModel({
@@ -170,10 +158,10 @@ if (start) {
             nowViewing: application.nowViewing
         }));
 
-        var searchTab = new NowViewingTabViewModel({
-            nowViewing: application.nowViewing
-        });
-        searchTab.name = 'Search';
+        var searchTab = new SearchTabViewModel(application);
+        searchTab.searchProviders.push(new BingMapsSearchProviderViewModel({
+            application: application
+        }));
         explorer.addTab(searchTab);
 
         knockout.getObservable(explorer, 'isOpen').subscribe(function() {
