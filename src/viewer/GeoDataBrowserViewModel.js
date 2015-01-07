@@ -449,40 +449,20 @@ and the file will not be uploaded or added to the map.')) {
     this.showPopulateCache = function() {
         var populateCache = that.catalog.application.getUserProperty('populate-cache');
         if (populateCache && populateCache !== 'false' && populateCache !== 'no' && populateCache !== '0') {
+            if (populateCache === '2') {
+                that.maxLevel('http://localhost');
+            }
             return true;
         }
         return false;
     };
 
-    function postToCkan(url, dataObj, func) {
-        return loadWithXhr({
-            url : url,
-            method : "POST",
-            data : JSON.stringify(dataObj),
-            headers : {'Authorization' : '847db839-94d1-4d6f-9a66-161f5fe7c41f'},
-            responseType : 'json'
-        }).then(function(result) {
-            func(result);
-        }).otherwise(function() {
-            console.log('Returned an error while working on url', url);
-        });
-    }
-
-    function getCkanName(name) {
-        var ckanName = name.toLowerCase().replace(/\W/g,'-');
-        return ckanName;
-    }
-
-    function getCkanRect(rect) {
-        return CesiumMath.toDegrees(rect.west).toFixed(4) + ',' +
-            CesiumMath.toDegrees(rect.south).toFixed(4) + ',' +
-            CesiumMath.toDegrees(rect.east).toFixed(4) + ',' +
-            CesiumMath.toDegrees(rect.north).toFixed(4);
-    }
-
     this.populateCache = function(mode) {
 
-        return this.populateCkan(mode);
+        var populateCache = this.catalog.application.getUserProperty('populate-cache');
+        if (populateCache === '2') {
+            return this.populateCkan(mode);
+        }
 
         var requests = [];
 
@@ -643,6 +623,32 @@ and the file will not be uploaded or added to the map.')) {
     }
 
     
+    function postToCkan(url, dataObj, func, apiKey) {
+        return loadWithXhr({
+            url : url,
+            method : "POST",
+            data : JSON.stringify(dataObj),
+            headers : {'Authorization' : apiKey},
+            responseType : 'json'
+        }).then(function(result) {
+            func(result);
+        }).otherwise(function() {
+            console.log('Returned an error while working on url', url);
+        });
+    }
+
+    function getCkanName(name) {
+        var ckanName = name.toLowerCase().replace(/\W/g,'-');
+        return ckanName;
+    }
+
+    function getCkanRect(rect) {
+        return CesiumMath.toDegrees(rect.west).toFixed(4) + ',' +
+            CesiumMath.toDegrees(rect.south).toFixed(4) + ',' +
+            CesiumMath.toDegrees(rect.east).toFixed(4) + ',' +
+            CesiumMath.toDegrees(rect.north).toFixed(4);
+    }
+
     this.populateCkan = function(mode) {
 
         var requests = [];
@@ -654,6 +660,9 @@ and the file will not be uploaded or added to the map.')) {
         var orgsCkan = [];
         var groupsCkan = [];
         var packagesCkan = [];
+
+        var ckanServer = that.maxLevel();
+        var ckanApiKey = 'ea1f92e0-9376-4683-98ff-db9885bd3c95'; //get from url?
 
         for (var i = 0; i < requests.length; ++i) {
             var gname = getCkanName(requests[i].group);
@@ -668,19 +677,22 @@ and the file will not be uploaded or added to the map.')) {
 
         var promises = [];
         promises[0] = postToCkan(
-            'http://localhost/api/3/action/organization_list', 
+            ckanServer + '/api/3/action/organization_list', 
             {}, 
-            function(results) { orgsCkan = results.result; }
+            function(results) { orgsCkan = results.result; },
+            ckanApiKey
         );
         promises[1] = postToCkan(
-            'http://localhost/api/3/action/group_list', 
+            ckanServer + '/api/3/action/group_list', 
             {}, 
-            function(results) { groupsCkan = results.result; }
+            function(results) { groupsCkan = results.result; },
+            ckanApiKey
         );
         promises[2] = postToCkan(
-            'http://localhost/api/3/action/package_list', 
+            ckanServer + '/api/3/action/package_list', 
             {}, 
-            function(results) { packagesCkan = results.result; }
+            function(results) { packagesCkan = results.result; },
+            ckanApiKey
         );
 
         when.all(promises).then(function() {
@@ -695,7 +707,7 @@ and the file will not be uploaded or added to the map.')) {
                         }
                     }
                     ckanRequests.push( {
-                        "url": 'http://localhost/api/3/action/group_' + (found ? 'update' : 'create'),
+                        "url": ckanServer + '/api/3/action/group_' + (found ? 'update' : 'create'),
                         "data" : {"name": ckanName, "title": groups[ckanName], "id": (found ? ckanName : '')}
                     });
                 }
@@ -710,7 +722,7 @@ and the file will not be uploaded or added to the map.')) {
                         }
                     }
                     ckanRequests.push({
-                        "url": 'http://localhost/api/3/action/organization_' + (found ? 'update' : 'create'),
+                        "url": ckanServer + '/api/3/action/organization_' + (found ? 'update' : 'create'),
                         "data" : {"name": ckanName, "title": orgs[ckanName], "id": (found ? ckanName : '')}
                     });
                 }
@@ -724,7 +736,7 @@ and the file will not be uploaded or added to the map.')) {
                     }
                 }
                ckanRequests.push({
-                    "url": 'http://localhost/api/3/action/package_' + (found ? 'update' : 'create'),
+                    "url": ckanServer + '/api/3/action/package_' + (found ? 'update' : 'create'),
                     "data" : {
                         "name": getCkanName(requests[i].item.name), 
                         "title": requests[i].item.name, 
@@ -757,7 +769,8 @@ and the file will not be uploaded or added to the map.')) {
                                 console.log('Completed', currentIndex, 'ckan tasks out of', ckanRequests.length);
                             }
                             sendNext(); 
-                        }
+                        },
+                        ckanApiKey
                     );
                 }
             };
