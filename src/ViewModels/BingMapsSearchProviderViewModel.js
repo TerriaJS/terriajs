@@ -157,7 +157,7 @@ function createZoomToFunction(viewModel, resource) {
             // Leaflet
             application.leaflet.map.fitBounds([[south, west], [north, east]]);
         }
-    }
+    };
 }
 
 module.exports = BingMapsSearchProviderViewModel;
