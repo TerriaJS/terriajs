@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require*/
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
@@ -42,6 +43,19 @@ SearchTabViewModel.prototype.show = function(container) {
 SearchTabViewModel.prototype.search = function() {
     for (var i = 0; i < this.searchProviders.length; ++i) {
         this.searchProviders[i].search(this.searchText);
+    }
+};
+
+SearchTabViewModel.prototype.activateFirstResult = function() {
+    for (var i = 0; i < this.searchProviders.length; ++i) {
+        var searchProvider = this.searchProviders[i];
+        for (var j = 0; j < searchProvider.searchResults.length; ++j) {
+            var searchResult = searchProvider.searchResults[j];
+            if (defined(searchResult.clickAction)) {
+                searchResult.clickAction();
+                return;
+            }
+        }
     }
 };
 
