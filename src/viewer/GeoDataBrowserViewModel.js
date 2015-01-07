@@ -666,55 +666,58 @@ and the file will not be uploaded or added to the map.')) {
             }
         }
 
-        var dataObj = {"all_fields" : true};
-        var promises = []
+        var promises = [];
         promises[0] = postToCkan(
             'http://localhost/api/3/action/organization_list', 
             {}, 
-            function(results) {orgsCkan = results.result}
+            function(results) { orgsCkan = results.result; }
         );
         promises[1] = postToCkan(
             'http://localhost/api/3/action/group_list', 
             {}, 
-            function(results) {groupsCkan = results.result}
+            function(results) { groupsCkan = results.result; }
         );
         promises[2] = postToCkan(
             'http://localhost/api/3/action/package_list', 
             {}, 
-            function(results) {packagesCkan = results.result}
+            function(results) { packagesCkan = results.result; }
         );
 
         when.all(promises).then(function() {
-            var ckanRequests = [], i, j, found;
-            for (var ckanName in groups) {
-                found = false;
-                for (var j = 0; j < groupsCkan.length; j++) {
-                    if (ckanName === groupsCkan[j]) {
-                        found = true;
-                        break;
+            var ckanRequests = [], ckanName, i, j, found;
+            for (ckanName in groups) {
+                if (groups.hasOwnProperty(ckanName)) {
+                    found = false;
+                    for (j = 0; j < groupsCkan.length; j++) {
+                        if (ckanName === groupsCkan[j]) {
+                            found = true;
+                            break;
+                        }
                     }
+                    ckanRequests.push( {
+                        "url": 'http://localhost/api/3/action/group_' + (found ? 'update' : 'create'),
+                        "data" : {"name": ckanName, "title": groups[ckanName], "id": (found ? ckanName : '')}
+                    });
                 }
-                ckanRequests.push( {
-                    "url": 'http://localhost/api/3/action/group_' + (found ? 'update' : 'create'),
-                    "data" : {"name": ckanName, "title": groups[ckanName], "id": (found ? ckanName : '')}
-                });
             }
-            for (var ckanName in orgs) {
-               found = false;
-                for (var j = 0; j < orgsCkan.length; j++) {
-                    if (ckanName === orgsCkan[j]) {
-                        found = true;
-                        break;
+            for (ckanName in orgs) {
+                if (orgs.hasOwnProperty(ckanName)) {
+                    found = false;
+                    for (j = 0; j < orgsCkan.length; j++) {
+                        if (ckanName === orgsCkan[j]) {
+                            found = true;
+                            break;
+                        }
                     }
+                    ckanRequests.push({
+                        "url": 'http://localhost/api/3/action/organization_' + (found ? 'update' : 'create'),
+                        "data" : {"name": ckanName, "title": orgs[ckanName], "id": (found ? ckanName : '')}
+                    });
                 }
-                ckanRequests.push({
-                    "url": 'http://localhost/api/3/action/organization_' + (found ? 'update' : 'create'),
-                    "data" : {"name": ckanName, "title": orgs[ckanName], "id": (found ? ckanName : '')}
-                });
             }
-            for (var i = 0; i < requests.length; i++) {
+            for (i = 0; i < requests.length; i++) {
                 found = false;
-                for (var j = 0; j < packagesCkan.length; j++) {
+                for (j = 0; j < packagesCkan.length; j++) {
                     if (getCkanName(requests[i].item.name) === packagesCkan[j]) {
                         found = true;
                         break;
@@ -751,7 +754,7 @@ and the file will not be uploaded or added to the map.')) {
                         function() { 
                             currentIndex++;
                             if ((currentIndex % 5) === 0 || currentIndex === ckanRequests.length) {
-                                console.log('Completed', currentIndex, 'ckan tasks out of', ckanRequests.length)
+                                console.log('Completed', currentIndex, 'ckan tasks out of', ckanRequests.length);
                             }
                             sendNext(); 
                         }
@@ -759,7 +762,7 @@ and the file will not be uploaded or added to the map.')) {
                 }
             };
             sendNext();
-        })
+        });
     };
 };
 

@@ -167,6 +167,8 @@ CkanGroupViewModel.prototype._load = function() {
         return undefined;
     }
 
+    //FYI: to filter by group the filterQuery param should be set to something like 
+    //  'q=groups%3dSurface%20Water&fq=res_format%3aWMS' in init_xx.json
     var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery;
 
     var that = this;
