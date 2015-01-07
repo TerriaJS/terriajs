@@ -76,6 +76,14 @@ var CkanGroupViewModel = function(application) {
      */
     this.minimumMaxScaleDenominator = undefined;
 
+    /**
+     * Gets or sets any extra wms parameters that should be added to the wms query urls in this CKAN group.
+     * If this property is undefined or if {@link CkanGroupViewModel#filterByWmsGetCapabilities} then no parameters are added
+     * This property is observable.
+     * @type {Object}
+     */
+    this.wmsParameters = undefined;
+
     knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
 };
 
@@ -159,7 +167,7 @@ CkanGroupViewModel.prototype._load = function() {
         return undefined;
     }
 
-    var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(this.filterQuery);
+    var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery;
 
     var that = this;
 
@@ -351,6 +359,8 @@ function populateGroupFromResults(viewModel, json) {
             newItem.url = resource.wms_api_url || url;
             newItem.layers = resource.wms_layer || layerName;
             newItem.rectangle = rectangle;
+              //This should be deprecated and done on a server by server basis when feasible
+            newItem.parameters = viewModel.wmsParameters;
 
             if (defined(viewModel.dataCustodian)) {
                 newItem.dataCustodian = viewModel.dataCustodian;

@@ -17,9 +17,10 @@
             "name": "National Data Sets",
             "type": "ckan",
             "url": "http://localhost",
-            "filterQuery": "res_format:WMS",
+            "filterQuery": "fq=res_format%3aWMS",
             "filterByWmsGetCapabilities": false,
             "minimumMaxScaleDenominator": 1e10,
+            "wmsParameters": {"tiled" : true},
             "blacklist": {
             }
         },
