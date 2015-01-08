@@ -31,6 +31,7 @@ var BingMapsSearchProviderViewModel = function(options) {
     this.key = BingMapsApi.getKey(options.key);
     this.flightDurationSeconds = defaultValue(options.flightDurationSeconds, 1.5);
     this.primaryCountry = defaultValue(options.primaryCountry, 'Australia');
+    this.culture = defaultValue(options.culture, 'en-au');
 };
 
 inherit(SearchProviderViewModel, BingMapsSearchProviderViewModel);
@@ -69,7 +70,7 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
         latitudeDegrees = center.lat;
     }
 
-    var promise = jsonp(this.url + 'REST/v1/Locations?culture=en-au&userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
+    var promise = jsonp(this.url + 'REST/v1/Locations?culture=' + this.culture + '&userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
         parameters : {
             query : searchText,
             key : this.key
