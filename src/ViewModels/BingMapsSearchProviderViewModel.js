@@ -110,11 +110,13 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
             }
 
             var list = primaryCountryLocations;
+            var isImportant = true;
 
             var country = resource.address ? resource.address.countryRegion : undefined;
             if (defined(that.primaryCountry) && country !== that.primaryCountry) {
                 // Add this location to the list of other locations.
                 list = otherLocations;
+                isImportant = false;
 
                 // Add the country to the name, if it's not already there.
                 if (defined(country) && name.lastIndexOf(country) !== name.length - country.length) {
@@ -124,6 +126,7 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
 
             list.push(new SearchResultViewModel({
                 name: name,
+                isImportant: isImportant,
                 clickAction: createZoomToFunction(that, resource)
             }));
         }

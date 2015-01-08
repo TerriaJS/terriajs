@@ -12,7 +12,7 @@
             </div>
             <div class="search-tab-provider-message" data-bind="visible: searchMessage, text: searchMessage"></div>
             <div class="search-tab-provider-results" data-bind="visible: isOpen, foreach: searchResults">
-                <div class="search-tab-provider-result" data-bind="css: { 'search-tab-provider-result-clickable': typeof clickAction !== 'undefined' }, click: clickAction">
+                <div class="search-tab-provider-result" data-bind="css: { 'search-tab-provider-result-clickable': typeof clickAction !== 'undefined', 'search-tab-provider-result-important': isImportant }, click: clickAction">
                     <div class="search-tab-provider-result-top-row">
                         <!--<div class="data-catalog-icon-holder">
                             <div class="data-catalog-icon clickable" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
