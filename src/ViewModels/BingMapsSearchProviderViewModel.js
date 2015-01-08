@@ -30,6 +30,7 @@ var BingMapsSearchProviderViewModel = function(options) {
     }
     this.key = BingMapsApi.getKey(options.key);
     this.flightDurationSeconds = defaultValue(options.flightDurationSeconds, 1.5);
+    this.primaryCountry = defaultValue(options.primaryCountry, 'Australia');
 };
 
 inherit(SearchProviderViewModel, BingMapsSearchProviderViewModel);
@@ -94,38 +95,40 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
             return;
         }
 
-        var i;
+        var primaryCountryLocations = [];
+        var otherLocations = [];
 
-        // Locations in Australia go on top.
-        for (i = 0; i < resourceSet.resources.length; ++i) {
+        // Locations in the primary country go on top, locations elsewhere go undernearth and we add
+        // the country name to them.
+        for (var i = 0; i < resourceSet.resources.length; ++i) {
             var resource = resourceSet.resources[i];
-            if (defined(resource.name) && resource.address && resource.address.countryRegion === 'Australia') {
-                resource = resourceSet.resources[i];
-                that.searchResults.push(new SearchResultViewModel({
-                    name: resource.name,
-                    clickAction: createZoomToFunction(that, resource)
-                }));
+
+            var name = resource.name;
+            if (!defined(name)) {
+                continue;
             }
-        }
 
-        // Locations elsewhere go underneath, and we add the country name to them.
-        for (i = 0; i < resourceSet.resources.length; ++i) {
-            var resource = resourceSet.resources[i];
-            if (defined(resource.name) && (!resource.address || resource.address.countryRegion !== 'Australia')) {
-                resource = resourceSet.resources[i];
+            var list = primaryCountryLocations;
 
-                var nameWithCountry = resource.name;
-                var country = resource.address ? resource.address.countryRegion : undefined;
-                if (country && nameWithCountry.lastIndexOf(country) !== nameWithCountry.length - country.length) {
-                    nameWithCountry += ', ' + country;
+            var country = resource.address ? resource.address.countryRegion : undefined;
+            if (defined(that.primaryCountry) && country !== that.primaryCountry) {
+                // Add this location to the list of other locations.
+                list = otherLocations;
+
+                // Add the country to the name, if it's not already there.
+                if (defined(country) && name.lastIndexOf(country) !== name.length - country.length) {
+                    name += ', ' + country;
                 }
-
-                that.searchResults.push(new SearchResultViewModel({
-                    name: nameWithCountry,
-                    clickAction: createZoomToFunction(that, resource)
-                }));
             }
+
+            list.push(new SearchResultViewModel({
+                name: name,
+                clickAction: createZoomToFunction(that, resource)
+            }));
         }
+
+        that.searchResults.push.apply(that.searchResults, primaryCountryLocations);
+        that.searchResults.push.apply(that.searchResults, otherLocations);
 
         if (that.searchResults.length === 0) {
             that.searchMessage = 'Sorry, no locations match your search query.';
