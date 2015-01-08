@@ -94,12 +94,34 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
             return;
         }
 
-        for (var i = 0; i < resourceSet.resources.length; ++i) {
+        var i;
+
+        // Locations in Australia go on top.
+        for (i = 0; i < resourceSet.resources.length; ++i) {
             var resource = resourceSet.resources[i];
-            if (defined(resource.name)) {
+            if (defined(resource.name) && resource.address && resource.address.countryRegion === 'Australia') {
                 resource = resourceSet.resources[i];
                 that.searchResults.push(new SearchResultViewModel({
                     name: resource.name,
+                    clickAction: createZoomToFunction(that, resource)
+                }));
+            }
+        }
+
+        // Locations elsewhere go underneath, and we add the country name to them.
+        for (i = 0; i < resourceSet.resources.length; ++i) {
+            var resource = resourceSet.resources[i];
+            if (defined(resource.name) && (!resource.address || resource.address.countryRegion !== 'Australia')) {
+                resource = resourceSet.resources[i];
+
+                var nameWithCountry = resource.name;
+                var country = resource.address ? resource.address.countryRegion : undefined;
+                if (country && nameWithCountry.lastIndexOf(country) !== nameWithCountry.length - country.length) {
+                    nameWithCountry += ', ' + country;
+                }
+
+                that.searchResults.push(new SearchResultViewModel({
+                    name: nameWithCountry,
                     clickAction: createZoomToFunction(that, resource)
                 }));
             }
