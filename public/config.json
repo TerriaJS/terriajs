@@ -2,7 +2,8 @@
     "proxyDomains" : [
         "nicta.com.au",
         "gov.au",
-        "arcgis.com"
+        "arcgis.com",
+        "unep.ch:8080"
     ]
 }
 
