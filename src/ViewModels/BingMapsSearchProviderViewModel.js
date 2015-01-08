@@ -68,7 +68,7 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
         latitudeDegrees = center.lat;
     }
 
-    var promise = jsonp(this.url + 'REST/v1/Locations?culture=en-AU&userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
+    var promise = jsonp(this.url + 'REST/v1/Locations?culture=en-au&userLocation=' + latitudeDegrees + ',' + longitudeDegrees , {
         parameters : {
             query : searchText,
             key : this.key
