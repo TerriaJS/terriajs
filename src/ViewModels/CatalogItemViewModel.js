@@ -2,7 +2,6 @@
 
 /*global require,ga,$*/
 
-var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -18,7 +17,6 @@ var MetadataViewModel = require('./MetadataViewModel');
 var CatalogMemberViewModel = require('./CatalogMemberViewModel');
 var inherit = require('../Core/inherit');
 var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var runLater = require('../Core/runLater');
 
 /**

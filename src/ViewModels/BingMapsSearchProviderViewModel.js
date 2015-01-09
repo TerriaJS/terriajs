@@ -6,13 +6,11 @@ var SearchProviderViewModel = require('./SearchProviderViewModel');
 var SearchResultViewModel = require('./SearchResultViewModel');
 
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
-var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var jsonp = require('../../third_party/cesium/Source/Core/jsonp');
-var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 var BingMapsSearchProviderViewModel = function(options) {
