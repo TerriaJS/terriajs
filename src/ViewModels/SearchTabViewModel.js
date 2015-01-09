@@ -1,15 +1,19 @@
 'use strict';
 
-/*global require*/
+/*global require,ga*/
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
+var CatalogItemInfoViewModel = require('./CatalogItemInfoViewModel');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
 var inherit = require('../Core/inherit');
 var loadView = require('../Core/loadView');
 
 var svgArrowDown = require('../SvgPaths/svgArrowDown');
 var svgArrowRight = require('../SvgPaths/svgArrowRight');
+var svgCheckboxChecked = require('../SvgPaths/svgCheckboxChecked');
+var svgCheckboxUnchecked = require('../SvgPaths/svgCheckboxUnchecked');
+var svgInfo = require('../SvgPaths/svgInfo');
 
 var SearchTabViewModel = function(application) {
     ExplorerTabViewModel.call(this);
@@ -24,6 +28,9 @@ var SearchTabViewModel = function(application) {
 
     this.svgArrowDown = svgArrowDown;
     this.svgArrowRight = svgArrowRight;
+    this.svgCheckboxChecked = svgCheckboxChecked;
+    this.svgCheckboxUnchecked = svgCheckboxUnchecked;
+    this.svgInfo = svgInfo;
 
     var searchTextObservable = knockout.getObservable(this, 'searchText');
 
@@ -57,6 +64,11 @@ SearchTabViewModel.prototype.activateFirstResult = function() {
             }
         }
     }
+};
+
+SearchTabViewModel.prototype.showInfo = function(item) {
+    ga('send', 'event', 'dataSource', 'info', item.name);
+    CatalogItemInfoViewModel.open('ui', item);
 };
 
 module.exports = SearchTabViewModel;
