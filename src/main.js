@@ -47,6 +47,7 @@ if (start) {
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
     var BingMapsSearchProviderViewModel = require('./ViewModels/BingMapsSearchProviderViewModel');
+    var CatalogItemNameSearchProviderViewModel = require('./ViewModels/CatalogItemNameSearchProviderViewModel');
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
     var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
@@ -165,6 +166,9 @@ if (start) {
             application: application
         }));
         searchTab.searchProviders.push(new GazetteerSearchProviderViewModel({
+            application: application
+        }));
+        searchTab.searchProviders.push(new CatalogItemNameSearchProviderViewModel({
             application: application
         }));
 
