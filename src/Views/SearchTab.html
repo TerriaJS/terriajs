@@ -51,28 +51,21 @@
                     <div class="search-tab-provider-icon" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
                 </div>
             </div>
-            <div class="search-tab-provider-message" data-bind="visible: searchMessage, text: searchMessage"></div>
+            <div class="search-tab-provider-message" data-bind="visible: isOpen && searchMessage, text: searchMessage"></div>
             <div class="search-tab-provider-results" data-bind="visible: isOpen, foreach: searchResults">
                 <!-- ko if: typeof catalogItem === 'undefined' -->
-                <div class="search-tab-provider-result" data-bind="css: { 'search-tab-provider-result-clickable': typeof clickAction !== 'undefined', 'search-tab-provider-result-important': isImportant }, click: clickAction">
-                    <div class="search-tab-provider-result-top-row">
-                        <!--<div class="data-catalog-icon-holder">
-                            <div class="data-catalog-icon clickable" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
+                    <div class="search-tab-provider-result" data-bind="css: { 'search-tab-provider-result-clickable': typeof clickAction !== 'undefined', 'search-tab-provider-result-important': isImportant }, click: clickAction">
+                        <div class="search-tab-provider-result-top-row">
+                            <div class="search-tab-provider-result-label" data-bind="text: name"></div>
                         </div>
-                        <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomTo"></div>-->
-                        <div class="search-tab-provider-result-label" data-bind="text: name"></div>
-                        <!--<div class="data-catalog-item-info">
-                            <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
-                        </div>-->
                     </div>
-                </div>
                 <!-- /ko -->
                 <!-- ko if: typeof catalogItem !== 'undefined' -->
-                <div class="search-tab-provider-result" data-bind="template: { name: 'search-catalog-item-template', data: catalogItem }, attr: { title: tooltip }">
-                </div>
+                    <div class="search-tab-provider-result" data-bind="template: { name: 'search-catalog-item-template', data: catalogItem }, attr: { title: tooltip }">
+                    </div>
                 <!-- /ko -->
             </div>
-            <div class="search-tab-provider-searching" data-bind="visible: isSearching">Searching...</div>
+            <div class="search-tab-provider-searching" data-bind="visible: isOpen && isSearching">Searching...</div>
         </div>
     </div>
 </div>
