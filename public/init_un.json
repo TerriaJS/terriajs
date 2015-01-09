@@ -1,0 +1,30 @@
+{
+    "corsDomains" : [
+        "data.gov.au",
+        "ga.gov.au",
+        "corsproxy.com",
+        "programs.communications.gov.au"
+    ],
+    "camera": {
+        "west": 60,
+        "south": 0,
+        "east": 160,
+        "north": 90
+    },
+    "services": [],
+    "catalog": [
+        {
+            "name": "UN Global Resiliance",
+            "type": "group",
+            "items": [
+                {
+                    "name": "PREVIEW Global Risk Data Platform",
+                    "description": "The PREVIEW Global Risk Data Platform is a multiple agencies effort to share spatial data information on global risk from natural hazard",
+                    "dataCustodian": "[UNISDR](http://preview.grid.unep.ch/)",
+                    "url": "http://preview.grid.unep.ch:8080/geoserver/wms",
+                    "type": "wms-getCapabilities"
+                }
+            ]
+        }
+    ]
+}
