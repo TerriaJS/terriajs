@@ -91,6 +91,13 @@ var ApplicationViewModel = function() {
     this.leaflet = undefined;
 
     /**
+     * Gets or sets a reference to either {@link ApplicationViewModel#cesium} or {@link ApplicationViewModel#leaflet},
+     * whichever is currently in use.
+     * @type {CesiumViewModel|LeafletViewModel}
+     */
+    this.currentViewer = undefined;
+
+    /**
      * Gets or sets the collection of user properties.  User properties
      * can be set by specifying them in the hash portion of the URL.  For example, if the application URL is
      * `http://localhost:3001/#foo=bar&someproperty=true`, this object will contain a property named 'foo' with the

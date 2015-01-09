@@ -872,6 +872,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.application.leaflet = new LeafletViewModel(this.application, map);
         this.application.cesium = undefined;
+        this.application.currentViewer = this.application.leaflet;
 
         this.captureCanvas = function() {
             var that = this;
@@ -921,6 +922,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.application.cesium = new CesiumViewModel(this.application, this.viewer);
         this.application.leaflet = undefined;
+        this.application.currentViewer = this.application.cesium;
 
         this.frameChecker = new FrameChecker();
 

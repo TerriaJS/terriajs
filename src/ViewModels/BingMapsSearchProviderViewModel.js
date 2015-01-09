@@ -158,34 +158,7 @@ function createZoomToFunction(viewModel, resource) {
 
     return function() {
         var application = viewModel.application;
-
-        if (defined(application.cesium)) {
-            // Cesium
-            var scene = application.cesium.scene;
-            var camera = scene.camera;
-            var position = camera.getRectangleCameraCoordinates(rectangle);
-            if (!defined(position)) {
-                // This can happen during a scene mode transition.
-                return;
-            }
-
-            var options = {
-                destination: position,
-                duration: viewModel.flightDurationSeconds,
-                complete: function () {
-                    var screenSpaceCameraController = scene.screenSpaceCameraController;
-                    screenSpaceCameraController.ellipsoid = scene.globe.ellipsoid;
-                },
-                endReferenceFrame: Matrix4.IDENTITY,
-                convert: false
-            };
-
-            var flight = CameraFlightPath.createTween(scene, options);
-            scene.tweens.add(flight);
-        } else if (defined(application.leaflet)) {
-            // Leaflet
-            application.leaflet.map.fitBounds([[south, west], [north, east]]);
-        }
+        application.currentViewer.zoomTo(rectangle, viewModel.flightDurationSeconds);
     };
 }
 

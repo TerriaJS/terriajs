@@ -460,18 +460,9 @@ var scratchRectangle = new Rectangle();
             rect.south -= epsilon;
         }
 
+
         var application = that.application;
-
-        if (defined(application.cesium)) {
-            var flight = CameraFlightPath.createTweenRectangle(application.cesium.scene, {
-                destination : rect
-            });
-            application.cesium.scene.tweens.add(flight);
-        }
-
-        if (defined(application.leaflet)) {
-            application.leaflet.map.fitBounds(rectangleToLatLngBounds(rect));
-        }
+        application.currentViewer.zoomTo(rect);
     });
 };
 
