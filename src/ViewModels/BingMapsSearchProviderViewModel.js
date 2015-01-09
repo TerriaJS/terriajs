@@ -45,7 +45,7 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
     this.searchResults.removeAll();
     this.searchMessage = undefined;
 
-    ga('send', 'event', 'search', 'start', searchText);
+    ga('send', 'event', 'search', 'bing', searchText);
 
     // If there is already a search in progress, cancel it.
     if (defined(this._geocodeInProgress)) {
@@ -135,7 +135,7 @@ BingMapsSearchProviderViewModel.prototype.search = function(searchText) {
         if (that.searchResults.length === 0) {
             that.searchMessage = 'Sorry, no locations match your search query.';
         }
-    }, function() {
+    }).otherwise(function() {
         if (geocodeInProgress.cancel) {
             return;
         }

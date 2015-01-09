@@ -51,6 +51,7 @@ if (start) {
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
     var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
+    var GazetteerSearchProviderViewModel = require('./ViewModels/GazetteerSearchProviderViewModel');
     var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
     var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
     var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
@@ -159,9 +160,14 @@ if (start) {
         }));
 
         var searchTab = new SearchTabViewModel(application);
+        
         searchTab.searchProviders.push(new BingMapsSearchProviderViewModel({
             application: application
         }));
+        searchTab.searchProviders.push(new GazetteerSearchProviderViewModel({
+            application: application
+        }));
+
         explorer.addTab(searchTab);
 
         knockout.getObservable(explorer, 'isOpen').subscribe(function() {
