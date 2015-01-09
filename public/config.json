@@ -4,6 +4,9 @@
         "gov.au",
         "arcgis.com",
         "unep.ch:8080"
+    ],
+    "initializationUrls" : [
+    	"init_un.json"
     ]
 }
 

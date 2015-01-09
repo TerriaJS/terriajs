@@ -153,8 +153,13 @@ WebMapServiceGroupViewModel.prototype._load = function() {
         if (defined(json.Capability.VendorSpecificCapabilities) &&
             defined(json.Capability.VendorSpecificCapabilities.TileSet)) {
 
-            //TODO: go through TiledSet array and look for     SRS === "EPSG:4326"
-            that.parameters = combine(that.parameters, {'tiled': true});
+            var tileSet = json.Capability.VendorSpecificCapabilities.TileSet;
+            for (var i = 0; i < tileSet.length; i++) {
+                if (tileSet[i].SRS ===  "EPSG:4326") {
+                    that.parameters = combine(that.parameters, {'tiled': true});
+                    break;
+                }
+            }
         }
 
         var dataCustodian = that.dataCustodian;
