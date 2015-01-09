@@ -53,7 +53,8 @@ function findMatchingItemsRecursively(viewModel, searchExpression, group, path) 
     for (var i = 0; viewModel.searchResults.length < viewModel.maxResults && i < items.length; ++i) {
         var item = items[i];
 
-        if (searchExpression.test(item.name)) {
+        // Match non-top-level items whose name contain the search text.
+        if (path.length > 1 && searchExpression.test(item.name)) {
             viewModel.searchResults.push(new SearchResultViewModel({
                 name: item.name,
                 isImportant: true,
