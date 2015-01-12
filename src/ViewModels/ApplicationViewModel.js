@@ -197,7 +197,11 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
         if (hashProperties.hasOwnProperty(property)) {
             var propertyValue = hashProperties[property];
 
-            if (property === 'start') {
+            if (property === 'clear') {
+                persistentInitSources.length = 0;
+                temporaryInitSources.length = 0;
+            }
+            else if (property === 'start') {
                 var startData = JSON.parse(propertyValue);
 
                 // Include any initSources specified in the URL.
