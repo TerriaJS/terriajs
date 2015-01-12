@@ -46,6 +46,7 @@ if (start) {
     var raiseErrorToUser = require('./ViewModels/raiseErrorToUser');
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
+    var AddDataPanelViewModel = require('./ViewModels/AddDataPanelViewModel');
     var BingMapsSearchProviderViewModel = require('./ViewModels/BingMapsSearchProviderViewModel');
     var CatalogItemNameSearchProviderViewModel = require('./ViewModels/CatalogItemNameSearchProviderViewModel');
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
@@ -119,7 +120,9 @@ if (start) {
             label: 'Add data',
             tooltip: 'Add your own data to the map.',
             callback: function() {
-                console.log('add');
+                AddDataPanelViewModel.open(ui, {
+                    application: application
+                });
             }
         }));
         menuBar.items.push(new MenuBarItemViewModel({

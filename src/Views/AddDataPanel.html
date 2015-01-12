@@ -1,0 +1,34 @@
+<div class="modal-background" data-bind="click: closeIfClickOnBackground">
+    <div class="add-data-panel">
+        <div class="add-data-header">
+            <div class="add-data-close-button" data-bind="click: close">&times;</div>
+            <h1>Add your own data</h1>
+        </div>
+        <div class="add-data-content">
+            <p>
+                Use this panel to add data to the map from your local system or from elsewhere on the web.  Data added in this way is
+                not saved or made visible to others unless you explicitly share it by using the Share panel.
+            </p>
+            <p>
+                <h2>Supported data formats:</h2>
+                GeoJSON, KML, KMZ, CSV (with lat/lon columns), CZML, and more.
+            </p>
+            <p class="add-data-content-new-section">
+                Enter a web link for a single data file or for a WMS or WFS service:
+                <div class="add-data-weblink-input-holder">
+                    <form class="add-data-weblink-form" data-bind="submit: addWebLink">
+                        <input class="add-data-weblink-input" type="text" placeholder="e.g. http://data.gov.au/geoserver/ows" data-bind="value: webLink" />
+                    </form>
+                </div>
+            </p>
+            <p class="add-data-content-new-section">
+                Or,
+                <span class="add-data-select-file-button" data-bind="click: selectFileToUpload">browse to select a local data file to upload</span>
+                <input type="file" style="display: none;" id="add-data-panel-upload-file" data-bind="event: { change: addUploadedFile }" />
+            </p>
+            <p>
+                <strong>TIP:</strong> you can also drag data files directly onto the map.
+            </p>
+        </div>
+    </div>
+</div>
