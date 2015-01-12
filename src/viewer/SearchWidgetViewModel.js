@@ -14,7 +14,7 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
+var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var corsProxy = require('../Core/corsProxy');
 var runLater = require('../Core/runLater');
 
@@ -381,13 +381,13 @@ function searchGazetteer(viewModel, selectFirst) {
     ga('send', 'event', 'search', 'start', query);
 
     viewModel._isSearchInProgress = true;
-    var url = 'http://www.ga.gov.au/gazetteer-search/select/?q=name:*' + query + '*';
+    var url = 'http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*' + query + '*';
     url = corsProxy.getURL(url);
     var deferred = when.defer();
-    when(loadXML(url), function (solarQueryResponse) {
-        var json = $.xml2json(solarQueryResponse);
-        if (defined(json.result) && json.result.numFound > 0) {
-            viewModel._resultsList = _parseSolrResults(json.result.doc, ['name', 'location', 'state_id']);
+    when(loadJson(url), function (solarQueryResponse) {
+        var json = solarQueryResponse;
+        if (defined(json.response) && json.response.numFound > 0) {
+            viewModel._resultsList = json.response.docs;
         } else {
             viewModel._resultsList = [{name:'No results...',numFound:0}];
         }
@@ -400,45 +400,6 @@ function searchGazetteer(viewModel, selectFirst) {
         deferred.reject(error);
     });
     return deferred.promise;
-}
-
-/**
- * Parses the xml2json result from a Solr query into an object with properties of interest
- *
- * Solr returns a very generic document making it ugly to parse.
- * valueTypes is defaulted as just containing 'str' as this is the default Solr schema.
- */
-function _parseSolrResults(docs, keysOfInterest, valueTypes) {
-    var results = [];
-    if(!defined(docs)) {
-        return results;
-    }
-    valueTypes = valueTypes || ['str'];
-    for (var i = 0; i < docs.length; i++) {
-        var doc = docs[i];
-        for (var valueTypesIndex = 0; valueTypesIndex < valueTypes.length; valueTypesIndex++) {
-            var valueType = valueTypes[valueTypesIndex];
-            if (!defined(valueType)) {
-                continue;
-            }
-            var resultObj = {};
-            var validResult = false;
-            for (var k = 0; k < keysOfInterest.length; k++) {
-                var key = keysOfInterest[k];
-                for (var j = 0; j < doc[valueType].length > 0; j++) {
-                    var singleResult = doc[valueType][j];
-                    if (singleResult.name === key) {
-                        validResult = true;
-                        resultObj[key] = singleResult.text;
-                    }
-                }
-            }
-            if (validResult) {
-                results.push(resultObj);
-            }
-        }
-    }
-    return results;
 }
 
 function geocode(viewModel) {
