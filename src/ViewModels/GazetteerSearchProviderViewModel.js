@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,ga,$*/
+/*global require,ga*/
 var corsProxy = require('../Core/corsProxy');
 var inherit = require('../Core/inherit');
 var SearchProviderViewModel = require('./SearchProviderViewModel');
@@ -10,7 +10,7 @@ var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
+var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 var GazetteerSearchProviderViewModel = function(options) {
@@ -22,7 +22,7 @@ var GazetteerSearchProviderViewModel = function(options) {
     this._geocodeInProgress = undefined;
 
     this.name = 'Official Place Names';
-    this.url = defaultValue(options.url, 'http://www.ga.gov.au/gazetteer-search/select/');
+    this.url = defaultValue(options.url, 'http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/');
     this.forceUseOfProxy = defaultValue(options.forceUseOfProxy, true);
     this.flightDurationSeconds = defaultValue(options.flightDurationSeconds, 1.5);
 };
@@ -69,7 +69,7 @@ GazetteerSearchProviderViewModel.prototype.search = function(searchText) {
         url = corsProxy.getURL(url);
     }
 
-    var promise = loadXML(url);
+    var promise = loadJson(url);
 
     var that = this;
     var geocodeInProgress = this._geocodeInProgress = promise.then(function(solarQueryResponse) {
@@ -78,10 +78,8 @@ GazetteerSearchProviderViewModel.prototype.search = function(searchText) {
         }
         that.isSearching = false;
 
-        var json = $.xml2json(solarQueryResponse);
-        if (defined(json.result) && json.result.numFound > 0) {
-            var results =parseSolrResults(that.searchResults, json.result.doc, ['name', 'location', 'state_id']);
-            results.forEach(function(result) {
+        if (defined(solarQueryResponse.response) && solarQueryResponse.response.numFound > 0) {
+            solarQueryResponse.response.docs.forEach(function(result) {
                 that.searchResults.push(new SearchResultViewModel({
                     name: result.name,
                     isImportant: true,
@@ -102,48 +100,6 @@ GazetteerSearchProviderViewModel.prototype.search = function(searchText) {
         that.searchMessage = 'An error occurred while searching.  Please check your internet connection or try again later.';
     });
 };
-
-/**
- * Parses the xml2json result from a Solr query into an object with properties of interest
- *
- * Solr returns a very generic document making it ugly to parse.
- * valueTypes is defaulted as just containing 'str' as this is the default Solr schema.
- */
-function parseSolrResults(docs, keysOfInterest, valueTypes) {
-    var results = [];
-
-    if(!defined(docs)) {
-        return results;
-    }
-
-    valueTypes = valueTypes || ['str'];
-    for (var i = 0; i < docs.length; i++) {
-        var doc = docs[i];
-        for (var valueTypesIndex = 0; valueTypesIndex < valueTypes.length; valueTypesIndex++) {
-            var valueType = valueTypes[valueTypesIndex];
-            if (!defined(valueType)) {
-                continue;
-            }
-            var resultObj = {};
-            var validResult = false;
-            for (var k = 0; k < keysOfInterest.length; k++) {
-                var key = keysOfInterest[k];
-                for (var j = 0; j < doc[valueType].length > 0; j++) {
-                    var singleResult = doc[valueType][j];
-                    if (singleResult.name === key) {
-                        validResult = true;
-                        resultObj[key] = singleResult.text;
-                    }
-                }
-            }
-            if (validResult) {
-                results.push(resultObj);
-            }
-        }
-    }
-
-    return results;
-}
 
 function createZoomToFunction(viewModel, resource) {
     // Server does not return information of a bounding box, just a location.
