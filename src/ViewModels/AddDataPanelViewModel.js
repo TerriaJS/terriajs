@@ -56,7 +56,7 @@ AddDataPanelViewModel.prototype.addUploadedFile = function() {
         var file = files[i];
         ga('send', 'event', 'uploadFile', 'browse', file.name);
 
-        addFile(this, file);
+        addFileOrUrl(this, file);
     }
 
     this.close();
@@ -93,45 +93,7 @@ AddDataPanelViewModel.prototype.addWebLink = function() {
             that.close();
         }).otherwise(function() {
             // WFS GetCapabilities failed too, try treating this as a single data file.
-            var dataFile = createCatalogItemFromUrl(that.webLink, that.application);
-            if (!defined(dataFile)) {
-                throw new ViewModelError({
-                    container : document.body,
-                    title : 'File format not supported',
-                    message : '\
-The specified file does not appear to be a format that is supported by National Map.  National Map \
-supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
-Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \
-files (.csv).  The file extension of the file in the user-specified URL must match one of \
-these extensions in order for National Map to know how to load it.'
-                });
-            }
-
-            if (dataFile.type === 'ogr' ) {
-                    //TODO: popup message with buttons
-                if (!confirm('\
-This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
-format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
-and the file will not be uploaded or added to the map.')) {
-                    return;
-                }
-            }
-
-            var lastSlashIndex = that.webLink.lastIndexOf('/');
-
-            var name = that.webLink;
-            if (lastSlashIndex >= 0) {
-                name = name.substring(lastSlashIndex + 1);
-            }
-
-            dataFile.name = name;
-
-            var catalog = that.application.catalog;
-            catalog.userAddedDataGroup.items.push(dataFile);
-            catalog.userAddedDataGroup.isOpen = true;
-            dataFile.isEnabled = true;
-            dataFile.zoomToAndUseClock();
-
+            addFileOrUrl(that, that.webLink);
             that.close();
         });
     });
@@ -143,8 +105,10 @@ AddDataPanelViewModel.open = function(container, options) {
     return viewModel;
 };
 
-function addFile(viewModel, file) {
-    var name = file.newName || file.name;
+function addFileOrUrl(viewModel, fileOrUrl) {
+    var isUrl = typeof fileOrUrl === 'string';
+
+    var name = isUrl ? fileOrUrl : fileOrUrl.name;
     var newViewModel = createCatalogItemFromUrl(name, viewModel.application);
 
     if (!defined(newViewModel)) {
@@ -176,8 +140,13 @@ and the file will not be uploaded or added to the map.')) {
     }
 
     newViewModel.name = name;
-    newViewModel.data = file.json || file;
-    newViewModel.dataSourceUrl = file.name;
+
+    if (isUrl) {
+        newViewModel.url = fileOrUrl;
+    } else {
+        newViewModel.data = fileOrUrl;
+        newViewModel.dataSourceUrl = fileOrUrl.name;
+    }
 
     var catalog = viewModel.application.catalog;
     catalog.userAddedDataGroup.items.push(newViewModel);
