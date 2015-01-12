@@ -1,7 +1,5 @@
 'use strict';
 
-/*global require*/
-
 /**
  * Identifies the map viewer mode to use.
  * @alias ViewerMode

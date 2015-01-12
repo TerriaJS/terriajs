@@ -315,8 +315,6 @@ function swapLeafletZIndices(viewModel, item, otherItem) {
         return;
     }
 
-    var map = viewModel.application.leaflet.map;
-
     if (!defined(item.imageryLayer.options.zIndex) || !defined(item.imageryLayer.options.zIndex)) {
         viewModel.updateLeafletLayerOrder();
     }
@@ -333,7 +331,6 @@ function beforeViewerChanged(viewModel) {
     // Hide and disable all data sources, without actually changing
     // their isEnabled and isShown flags.
 
-    var application = viewModel.application;
     var dataSources = viewModel.items;
 
     for (var i = 0; i < dataSources.length; ++i) {
@@ -353,7 +350,6 @@ function afterViewerChanged(viewModel) {
     // Re-enable and re-show all data sources that were previously enabled or shown.
     // Work from the bottom data source up so that the correct order is created.
 
-    var application = viewModel.application;
     var dataSources = viewModel.items;
 
     for (var i = dataSources.length - 1; i >= 0; --i) {

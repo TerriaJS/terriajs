@@ -5,22 +5,21 @@
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var Scene = require('../../third_party/cesium/Source/Scene/Scene');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var arraysAreEqual = require('../Core/arraysAreEqual');
 var MetadataViewModel = require('./MetadataViewModel');
 var CatalogMemberViewModel = require('./CatalogMemberViewModel');
 var inherit = require('../Core/inherit');
-var NowViewingViewModel = require('./NowViewingViewModel');
+var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var runLater = require('../Core/runLater');
-var runWhenDoneLoading = require('./runWhenDoneLoading');
 
 /**
  * A data item in a {@link CatalogGroupViewModel}.
@@ -37,8 +36,9 @@ var CatalogItemViewModel = function(application) {
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
-    this._callToEnableIsPending = false;
-    this._callToShowIsPending = false;
+    this._loadForEnablePromise = undefined;
+    this._loadingPromise = undefined;
+    this._lastLoadInfluencingValues = undefined;
 
     /**
      * The index of the item in the Now Viewing list.  Setting this property does not automatically change the order.
@@ -312,11 +312,83 @@ CatalogItemViewModel.defaultPropertiesForSharing.push('nowViewingIndex');
 freezeObject(CatalogItemViewModel.defaultPropertiesForSharing);
 
 /**
- * When implemented in a derived class, loads this data item it is not already loaded.  It is safe to
+ * Loads this catalog item, if it's not already loaded.  It is safe to
  * call this method multiple times.  The {@link CatalogItemViewModel#isLoading} flag will be set while the load is in progress.
- * This method may do nothing if the data item does not do an lazy loading of its data.
+ * Derived classes should implement {@link CatalogItemViewModel#_load} to perform the actual loading for the item.
+ * Derived classes may optionally implement {@link CatalogItemViewModel#_getValuesThatInfluenceLoad} to provide an array containing
+ * the current value of all properties that influence this item's load process.  Each time that {@link CatalogItemViewModel#load}
+ * is invoked, these values are checked against the list of values returned last time, and {@link CatalogItemViewModel#_load} is
+ * invoked again if they are different.  If {@link CatalogItemViewModel#_getValuesThatInfluenceLoad} is undefined or returns an
+ * empty array, {@link CatalogItemViewModel#_load} will only be invoked once, no matter how many times
+ * {@link CatalogItemViewModel#load} is invoked.
+ *
+ * @returns {Promise} A promise that resolves when the load is complete, or undefined if the item is already loaded.
+ * 
  */
 CatalogItemViewModel.prototype.load = function() {
+    if (defined(this._loadingPromise)) {
+        // Load already in progress.
+        return this._loadingPromise;
+    }
+
+    var loadInfluencingValues = [];
+    if (defined(this._getValuesThatInfluenceLoad)) {
+        loadInfluencingValues = this._getValuesThatInfluenceLoad();
+    }
+
+    if (arraysAreEqual(loadInfluencingValues, this._lastLoadInfluencingValues)) {
+        // Already loaded, and nothing has changed to force a re-load.
+        return undefined;
+    }
+
+    this.isLoading = true;
+
+    var that = this;
+    this._loadingPromise = runLater(function() {
+        that._lastLoadInfluencingValues = [];
+        if (defined(that._getValuesThatInfluenceLoad)) {
+            that._lastLoadInfluencingValues = that._getValuesThatInfluenceLoad();
+        }
+
+        return that._load();
+    }).then(function() {
+        that._loadingPromise = undefined;
+        that.isLoading = false;
+    }).otherwise(function(e) {
+        that._lastLoadInfluencingValues = undefined;
+        that._loadingPromise = undefined;
+        that.isEnabled = false;
+        that.isLoading = false;
+        throw e;
+    });
+
+    return this._loadingPromise;
+};
+
+/**
+ * When implemented in a derived class, this method loads the item.  The base class implementation does nothing.
+ * This method should not be called directly; call {@link CatalogItemViewModel#load} instead.
+ * @return {Promise} A promise that resolves when the load is complete.
+ * @protected
+ */
+CatalogItemViewModel.prototype._load = function() {
+    return when();
+};
+
+var emptyArray = freezeObject([]);
+
+/**
+ * When implemented in a derived class, gets an array containing the current value of all properties that
+ * influence this item's load process.  See {@link CatalogItemViewModel#load} for more information on when and
+ * how this is used.  The base class implementation returns an empty array.
+ * @return {Array} The array of values that influence the load process.
+ * @protected
+ */
+CatalogItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+    // In the future, we can implement auto-reloading when any of these properties change.  Just create a knockout
+    // computed property that calls this method and subscribe to change notifications on that computed property.
+    // (Will need to use the rateLimit extender, presumably).
+    return emptyArray;
 };
 
 /**
@@ -356,10 +428,13 @@ var scratchRectangle = new Rectangle();
 /**
  * Moves the camera so that the item's bounding rectangle is visible.  If {@link CatalogItemViewModel#rectangle} is
  * undefined or covers more than about half the world in the longitude direction, or if the data item is not enabled
- * or not shown, this method does nothing.
+ * or not shown, this method does nothing.  Because the zoom may happen asynchronously (for example, if the item's
+ * rectangle is not yet known), this method returns a Promise that resolves when the zoom animation starts.
+ * @returns {Promise} A promise that resolves when the zoom animation starts.
  */
  CatalogItemViewModel.prototype.zoomTo = function() {
-    runWhenDoneLoading(this, function(that) {
+    var that = this;
+    return when(this.load(), function() {
         if (!defined(that.rectangle)) {
             return;
         }
@@ -402,10 +477,14 @@ var scratchRectangle = new Rectangle();
 
 /**
  * Uses the {@link CatalogItemViewModel#clock} settings from this data item.  If this data item
- * has no clock settings, this method does nothing.
+ * has no clock settings, this method does nothing.  Because the clock update may happen asynchronously
+ * (for example, if the item's clock parameters are not yet known), this method returns a Promise that
+ * resolves when the clock has been updated.
+ * @returns {Promise} A promise that resolves when the clock has been updated.
  */
 CatalogItemViewModel.prototype.useClock = function() {
-    runWhenDoneLoading(this, function(that) {
+    var that = this;
+    return when(this.load(), function() {
         if (!defined(that.clock)) {
             return;
         }
@@ -429,11 +508,13 @@ CatalogItemViewModel.prototype.useClock = function() {
 /**
  * Moves the camera so that the data item's bounding rectangle is visible, and updates the application clock according to this
  * data item's clock settings.  This method simply calls {@link CatalogItemViewModel#zoomTo} and
- * {@link CatalogItemViewModel#useClock}.
+ * {@link CatalogItemViewModel#useClock}.  Because the zoom and clock update may happen asynchronously (for example, if the item's
+ * rectangle is not yet known), this method returns a Promise that resolves when the zoom animation starts and the clock
+ * has been updated.
+ * @returns {Promise} A promise that resolves when the clock has been updated and the zoom animation has started.
  */
 CatalogItemViewModel.prototype.zoomToAndUseClock = function() {
-    this.zoomTo();
-    this.useClock();
+    return when.all([this.zoomTo(), this.useClock()]);
 };
 
 /**
@@ -622,19 +703,28 @@ function isEnabledChanged(viewModel) {
     if (viewModel.isEnabled) {
         application.nowViewing.add(viewModel);
 
-        // Load this data item's data (if we haven't already) when it is enabled.
-        viewModel.load();
+        // Load this catalog item's data (if we haven't already) when it is enabled.
+        // Don't actually enable until the load finishes.
+        // Be careful not to call _enable multiple times or to call _enable
+        // after the item has already been disabled.
+        if (!defined(viewModel._loadForEnablePromise)) {
+            var resolvedOrRejected = false;
 
-        // Tell this data item to enable itself on the map, but only after we're done loading and only if
-        // we haven't already queued a request to enable that is still pending.
-        if (!viewModel._callToEnableIsPending) {
-            viewModel._callToEnableIsPending = true;
-            runWhenDoneLoading(viewModel, function() {
-                viewModel._callToEnableIsPending = false;
+            var loadPromise = when(viewModel.load(), function() {
                 if (viewModel.isEnabled) {
                     viewModel._enable();
                 }
             });
+
+            raiseErrorOnRejectedPromise(viewModel.application, loadPromise);
+
+            loadPromise.always(function() {
+                resolvedOrRejected = true;
+                viewModel._loadForEnablePromise = undefined;
+            });
+
+            // Make sure we know about it when the promise already resolved/rejected.
+            viewModel._loadForEnablePromise = resolvedOrRejected ? undefined : loadPromise;
         }
 
         viewModel.isShown = true;
@@ -646,7 +736,7 @@ function isEnabledChanged(viewModel) {
 
         // Disable this data item on the map, but only if the previous request to enable it has
         // actually gone through.
-        if (!viewModel._callToEnableIsPending) {
+        if (!defined(viewModel._loadForEnablePromise)) {
             viewModel._disable();
         }
 
@@ -661,27 +751,24 @@ function isEnabledChanged(viewModel) {
 }
 
 function isShownChanged(viewModel) {
-    var application = viewModel.application;
-
     if (viewModel.isShown) {
-        // Tell this data item to show itself on the map, but only after we're done loading and only if
-        // we haven't already queued a request to show that is still pending.
-        if (!viewModel._callToShowIsPending) {
-            viewModel._callToShowIsPending = true;
-            runWhenDoneLoading(viewModel, function() {
-                viewModel._callToShowIsPending = false;
-                if (viewModel.isEnabled && viewModel.isShown) {
-                    viewModel._show();
-                }
-            });
-        }
+        // If the item is not enabled, do that first.  This way things will work even if isShown is
+        // deserialized before isEnabled.
+        viewModel.isEnabled = true;
+
+        // If enabling is waiting on an async load, we need to wait on it, too.
+        when(viewModel._loadForEnablePromise, function() {
+            if (viewModel.isEnabled && viewModel.isShown) {
+                viewModel._show();
+            }
+        });
 
         ga('send', 'event', 'dataSource', 'shown', viewModel.name);
         viewModel._shownDate = Date.now();
     } else {
         // Hide this data item on the map, but only if the previous request to show it has
         // actually gone through.
-        if (!viewModel._callToShowIsPending) {
+        if (!defined(viewModel._loadForEnablePromise)) {
             viewModel._hide();
         }
 

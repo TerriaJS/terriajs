@@ -1,7 +1,5 @@
 'use strict';
 
-/*global require*/
-
 var inherit = function(base, derived) {
     function F() {}
     F.prototype = base.prototype;

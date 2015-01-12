@@ -12,14 +12,14 @@ var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
-var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var corsProxy = require('../Core/corsProxy');
+var runLater = require('../Core/runLater');
+
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var komapping = require('../../public/third_party/knockout.mapping');
 
 /**
  * The view model for the {@link Geocoder} widget.
@@ -61,17 +61,10 @@ var SearchWidgetViewModel = function (options) {
     this._resultsList = [];
 
     var that = this;
-    //this._searchText.subscribe(function (newVal) {
-        //Below has an issue with searchText being changed too 'Searching...' on the input
-        //If the user keeps typing, input value binds to 'Searching...' + last characters typed...
-        //var currentSearchProvider = getCurrentSearchProvider();
-        //if(currentSearchProvider.hasTypeAhead) {
-        //    currentSearchProvider.searchCommand();
-        //}
-    //});
     this._searchCommand = createCommand(function () {
-        getCurrentSearchProvider().searchCommand();
+        that.getCurrentSearchProvider().searchCommand();
     });
+
     this.getCurrentSearchProvider = function() {
         var provider = null;
         for (var i = 0; i < that._searchProviders.length; i++) {
@@ -88,12 +81,8 @@ var SearchWidgetViewModel = function (options) {
         return provider;
     };
 
-    function getCurrentSearchProvider() {
-        return that.getCurrentSearchProvider();
-    }
-
     that._searchProviders = [];
-    that._searchProviders.push({
+    var bingSearchProvider = {
         key: 'bing',
         alias: 'Bing',
         searchCommand: function () {
@@ -107,17 +96,20 @@ var SearchWidgetViewModel = function (options) {
 
         },
         hasTypeAhead: false
-    });
+    };
+    that._searchProviders.push(bingSearchProvider);
 
-    that._searchProviders.push({
+    var gazetteerSearchProvider = {
         key: 'gazetteer',
-        alias: 'Geoscience',
+        alias: 'Australian Places',
         searchCommand: function () {
-            if (that.isSearchInProgress) {
-
-            } else {
-                searchGazetteer(that);
-            }
+            when(searchGazetteer(that), function (results) {
+                gazetteerSearchProvider.selectResult(results[0]);
+                that._searchText = results[0].name;
+                that._resultsList = [];
+            },function() {
+                cancelGazetteer(that);
+            });
         },
         handleAutoComplete: function (query) {
             return searchGazetteer(that);
@@ -168,7 +160,9 @@ var SearchWidgetViewModel = function (options) {
             viewModel.searchText = viewModel._searchText;
         },
         hasTypeAhead: true
-    });
+    };
+
+    that._searchProviders.push(gazetteerSearchProvider);
 
     knockout.track(this, ['_searchText', '_isSearchInProgress', '_searchProvider', '_resultsList']);
 
@@ -192,9 +186,6 @@ var SearchWidgetViewModel = function (options) {
     this.searchText = undefined;
     knockout.defineProperty(this, 'searchText', {
         get: function () {
-            //if (that.isSearchInProgress) {
-            //    return 'Searching...';
-            //}
             return this._searchText;
         },
         set: function (value) {
@@ -241,16 +232,69 @@ var SearchWidgetViewModel = function (options) {
     knockout.defineProperty(this,'selectSearchResults',{
         get: function () {
             return function (resultItem) {
-                for (var i = 0; i < that._searchProviders.length; i++) {
-                    var provider = that._searchProviders[i];
-                    if(provider.key === that._searchProvider) {
-                        provider.selectResult(resultItem);
-                        break;
-                    }
-                }
+                var provider = that.getCurrentSearchProvider();
+                provider.selectResult(resultItem);
             };
         }
     });
+
+
+    knockout.defineProperty(this,'autoCompleteResults', {
+        get: function () {
+            return function (request, response) {
+                var provider = that.getCurrentSearchProvider();
+                if(!provider.hasTypeAhead) {
+                    return;
+                }
+                when(provider.handleAutoComplete(that.searchText), function(data) {
+                    response(data);
+                }, function (error) {
+                    console.log('Error with autoComplete for search ' + provider.alias);
+                    console.log(error);
+                });
+            };
+        }
+    });
+
+    knockout.defineProperty(this,'focusAutoComplete', {
+        get: function () {
+            return function (event, ui) {
+                that.searchText = ui.item.name;
+                return false;
+            };
+        }
+    });
+
+    knockout.defineProperty(this, 'selectAutoComplete',{
+        get: function () {
+            return function (event, ui) {
+                var provider = that.getCurrentSearchProvider();
+                var resultItem = ui.item;
+                provider.selectResult(resultItem);
+                //Due to widget updating field, knockout overwrites value.
+                //Below resets after knockout.
+                runLater(function  () {
+                    that.searchText = ui.item.name;
+                });
+            };
+        }
+    });
+
+    knockout.defineProperty(this, 'renderAutoComplete', {
+       get: function () {
+        return function( ul, item ) {
+            if(item.state_id) {
+                return $( "<li>" )
+                    .append( "<a>" + item.name + " - " + item.state_id + "</a>" )
+                    .appendTo( ul );
+            }
+            return $( "<li>" )
+                .append( "<a>" + item.name + "</a>" )
+                .appendTo( ul );
+        };
+       }
+    });
+
 };
 
 defineProperties(SearchWidgetViewModel.prototype, {
@@ -326,7 +370,7 @@ defineProperties(SearchWidgetViewModel.prototype, {
     }
 });
 
-function searchGazetteer(viewModel) {
+function searchGazetteer(viewModel, selectFirst) {
     var query = viewModel.searchText;
 
     if (/^\s*$/.test(query)) {
@@ -337,21 +381,64 @@ function searchGazetteer(viewModel) {
     ga('send', 'event', 'search', 'start', query);
 
     viewModel._isSearchInProgress = true;
-    var url = 'http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*' + query + '*';
+    var url = 'http://www.ga.gov.au/gazetteer-search/select/?q=name:*' + query + '*';
     url = corsProxy.getURL(url);
     var deferred = when.defer();
-    when(loadJson(url), function (solarQueryResponse) {
-        var json = solarQueryResponse;
-        if (defined(json.response) && json.response.docs.length > 0) {
-            viewModel._resultsList = json.response.docs;
+    when(loadXML(url), function (solarQueryResponse) {
+        var json = $.xml2json(solarQueryResponse);
+        if (defined(json.result) && json.result.numFound > 0) {
+            viewModel._resultsList = _parseSolrResults(json.result.doc, ['name', 'location', 'state_id']);
         } else {
-            viewModel._resultsList = [];
+            viewModel._resultsList = [{name:'No results...',numFound:0}];
         }
         viewModel._isSearchInProgress = false;
 
         deferred.resolve(viewModel._resultsList);
+    }, function (error) {
+        viewModel._resultsList = [];
+        viewModel._resultsList.push({name: 'There was a problem with search...'});
+        deferred.reject(error);
     });
     return deferred.promise;
+}
+
+/**
+ * Parses the xml2json result from a Solr query into an object with properties of interest
+ *
+ * Solr returns a very generic document making it ugly to parse.
+ * valueTypes is defaulted as just containing 'str' as this is the default Solr schema.
+ */
+function _parseSolrResults(docs, keysOfInterest, valueTypes) {
+    var results = [];
+    if(!defined(docs)) {
+        return results;
+    }
+    valueTypes = valueTypes || ['str'];
+    for (var i = 0; i < docs.length; i++) {
+        var doc = docs[i];
+        for (var valueTypesIndex = 0; valueTypesIndex < valueTypes.length; valueTypesIndex++) {
+            var valueType = valueTypes[valueTypesIndex];
+            if (!defined(valueType)) {
+                continue;
+            }
+            var resultObj = {};
+            var validResult = false;
+            for (var k = 0; k < keysOfInterest.length; k++) {
+                var key = keysOfInterest[k];
+                for (var j = 0; j < doc[valueType].length > 0; j++) {
+                    var singleResult = doc[valueType][j];
+                    if (singleResult.name === key) {
+                        validResult = true;
+                        resultObj[key] = singleResult.text;
+                    }
+                }
+            }
+            if (validResult) {
+                results.push(resultObj);
+            }
+        }
+    }
+    return results;
 }
 
 function geocode(viewModel) {
@@ -470,6 +557,13 @@ function cancelGeocode(viewModel) {
         viewModel._geocodeInProgress.cancel = true;
         viewModel._geocodeInProgress = undefined;
     }
+}
+
+function cancelGazetteer(viewModel) {
+    ga('send', 'event', 'search', 'cancel');
+
+    viewModel._isSearchInProgress = false;
+    viewModel._resultsList = [];
 }
 
 module.exports = SearchWidgetViewModel;
