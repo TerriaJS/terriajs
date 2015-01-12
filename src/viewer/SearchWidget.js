@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require*/
+/*global require, $*/
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
@@ -72,7 +72,7 @@ click: search,\
 cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, width: 32, height: 32 }');
     form.appendChild(searchButton);
     var radioContainer = document.createElement('div');
-    radioContainer.setAttribute('class','ausglobe-search-provider-container')
+    radioContainer.setAttribute('class','ausglobe-search-provider-container');
     for (var i = 0; i < viewModel._searchProviders.length; i++) {
         var provider = viewModel._searchProviders[i];
         var radioButtonLabel = document.createElement('label');
@@ -102,7 +102,7 @@ cesiumSvgPath: { path: isSearchInProgress ? _stopSearchPath : _startSearchPath, 
                 return;
             }
             when(provider.handleAutoComplete(viewModel.searchText), function(data) {
-                if(data == null || data.length == 0) {
+                if(defined(data) || data.length === 0) {
                     data.push({name:'No results...'});
                 }
                 response(data);

@@ -15,7 +15,7 @@ var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlig
 var SceneMode = require('../../third_party/cesium/Source/Scene/SceneMode');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 var createCommand = require('../../third_party/cesium/Source/Widgets/createCommand');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
+var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var corsProxy = require('../Core/corsProxy');
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -83,7 +83,7 @@ var SearchWidgetViewModel = function (options) {
         }
 
         if(provider === null) {
-            throw new DeveloperError('Specified search provider does not exist')
+            throw new DeveloperError('Specified search provider does not exist');
         }
         return provider;
     };
@@ -248,7 +248,7 @@ var SearchWidgetViewModel = function (options) {
                         break;
                     }
                 }
-            }
+            };
         }
     });
 };
@@ -337,13 +337,13 @@ function searchGazetteer(viewModel) {
     ga('send', 'event', 'search', 'start', query);
 
     viewModel._isSearchInProgress = true;
-    var url = 'http://www.ga.gov.au/gazetteer-search/select/?q=name:*' + query + '*';
+    var url = 'http://www.ga.gov.au/gazetteer-search/gazetteer2012/select/?q=name:*' + query + '*';
     url = corsProxy.getURL(url);
     var deferred = when.defer();
-    when(loadXML(url), function (solarQueryResponse) {
-        var json = $.xml2json(solarQueryResponse);
-        if (defined(json.result) && json.result.doc.length > 0) {
-            viewModel._resultsList = _parseSolrResults(json.result.doc, ['name', 'location', 'state_id']);
+    when(loadJson(url), function (solarQueryResponse) {
+        var json = solarQueryResponse;
+        if (defined(json.response) && json.response.docs.length > 0) {
+            viewModel._resultsList = json.response.docs;
         } else {
             viewModel._resultsList = [];
         }
@@ -352,45 +352,6 @@ function searchGazetteer(viewModel) {
         deferred.resolve(viewModel._resultsList);
     });
     return deferred.promise;
-}
-
-/**
- * Parses the xml2json result from a Solr query into an object with properties of interest
- *
- * Solr returns a very generic document making it ugly to parse.
- * valueTypes is defaulted as just containing 'str' as this is the default Solr schema.
- */
-function _parseSolrResults(docs, keysOfInterest, valueTypes) {
-    var results = [];
-    if(docs == null) {
-        return results;
-    }
-    valueTypes = valueTypes || ['str'];
-    for (var i = 0; i < docs.length; i++) {
-        var doc = docs[i];
-        for (var valueTypesIndex = 0; valueTypesIndex < valueTypes.length; valueTypesIndex++) {
-            var valueType = valueTypes[valueTypesIndex];
-            if (!defined(valueType)) {
-                continue;
-            }
-            var resultObj = {};
-            var validResult = false;
-            for (var k = 0; k < keysOfInterest.length; k++) {
-                var key = keysOfInterest[k];
-                for (var j = 0; j < doc[valueType].length > 0; j++) {
-                    var singleResult = doc[valueType][j];
-                    if (singleResult.name === key) {
-                        validResult = true;
-                        resultObj[key] = singleResult.text;
-                    }
-                }
-            }
-            if (validResult) {
-                results.push(resultObj);
-            }
-        }
-    }
-    return results;
 }
 
 function geocode(viewModel) {
@@ -404,7 +365,7 @@ function geocode(viewModel) {
     ga('send', 'event', 'search', 'start', query);
 
     viewModel._isSearchInProgress = true;
-    viewModel._searchText = 'Searching...'
+    viewModel._searchText = 'Searching...';
     var longitudeDegrees;
     var latitudeDegrees;
 
