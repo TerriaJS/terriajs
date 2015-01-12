@@ -126,6 +126,19 @@ WebMapServiceGroupViewModel.prototype._load = function() {
 
     var that = this;
     return loadXML(url).then(function(xml) {
+        // Is this really a GetCapabilities response?
+        if (!xml || !xml.documentElement || xml.documentElement.localName !== 'WMS_Capabilities') {
+            throw new ViewModelError({
+                title: 'Invalid WMS server',
+                message: '\
+An error occurred while invoking GetCapabilities on the WMS server.  The server\'s response does not appear to be a valid GetCapabilities document.  \
+<p>If you entered the link manually, please verify that the link is correct.</p>\
+<p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
+problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
+sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
+            });
+        }
+
         var json = $.xml2json(xml);
 
         var supportsJsonGetFeatureInfo = false;
