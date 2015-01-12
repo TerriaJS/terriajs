@@ -291,6 +291,8 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         catalog : this.application.catalog
     });*/
 
+    ga('send', 'event', 'startup', 'initialViewer', this.webGlSupported ? 'cesium' : 'leaflet');
+
     this.selectViewer(this.webGlSupported);
 
     knockout.getObservable(this.application, 'viewerMode').subscribe(function() {
