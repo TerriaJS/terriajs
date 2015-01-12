@@ -56,8 +56,10 @@ AddDataPanelViewModel.prototype.addUploadedFile = function() {
         var file = files[i];
         ga('send', 'event', 'uploadFile', 'browse', file.name);
 
-        //addFile(file);
+        addFile(this, file);
     }
+
+    this.close();
 };
 
 AddDataPanelViewModel.prototype.addWebLink = function() {
@@ -140,5 +142,48 @@ AddDataPanelViewModel.open = function(container, options) {
     viewModel.show(container);
     return viewModel;
 };
+
+function addFile(viewModel, file) {
+    var name = file.newName || file.name;
+    var newViewModel = createCatalogItemFromUrl(name, viewModel.application);
+
+    if (!defined(newViewModel)) {
+        throw new ViewModelError({
+            container : document.body,
+            title : 'File format not supported',
+            message : '\
+The specified file does not appear to be a format that is supported by National Map.  National Map \
+supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
+Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \
+files (.csv).  The file extension of the file in the user-specified URL must match one of \
+these extensions in order for National Map to know how to load it.'
+        });
+    }
+
+    if (newViewModel.type === 'ogr' ) {
+            //TODO: popup message with buttons
+        if (!confirm('\
+This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
+format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
+and the file will not be uploaded or added to the map.')) {
+            return;
+        }
+    }
+
+    var lastSlashIndex = name.lastIndexOf('/');
+    if (lastSlashIndex >= 0) {
+        name = name.substring(lastSlashIndex + 1);
+    }
+
+    newViewModel.name = name;
+    newViewModel.data = file.json || file;
+    newViewModel.dataSourceUrl = file.name;
+
+    var catalog = viewModel.application.catalog;
+    catalog.userAddedDataGroup.items.push(newViewModel);
+    catalog.userAddedDataGroup.isOpen = true;
+    newViewModel.isEnabled = true;
+    newViewModel.zoomToAndUseClock();
+}
 
 module.exports = AddDataPanelViewModel;
