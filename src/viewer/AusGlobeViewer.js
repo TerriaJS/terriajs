@@ -912,6 +912,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.on('zoomend', function (e) {
             that.updateScaleFromLeaflet();
         });
+
+        map.on('moveend', function (e) {
+            that.updateScaleFromLeaflet();
+        });
     }
     else {
         if (defined(this.map)) {
