@@ -66,7 +66,7 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
      */
     typeName : {
         get : function() {
-            return 'Web Feature Service (WFS) Group';
+            return 'Web Feature Service (WFS) Server';
         }
     },
 

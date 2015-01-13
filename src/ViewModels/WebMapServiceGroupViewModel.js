@@ -67,7 +67,7 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
      */
     typeName : {
         get : function() {
-            return 'Web Map Service (WMS) Group';
+            return 'Web Map Service (WMS) Server';
         }
     },
 

@@ -75,7 +75,7 @@ defineProperties(KmlItemViewModel.prototype, {
      */
     typeName : {
         get : function() {
-            return 'KML';
+            return 'KML or KMZ';
         }
     },
 

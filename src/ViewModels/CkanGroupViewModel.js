@@ -100,7 +100,7 @@ defineProperties(CkanGroupViewModel.prototype, {
      */
     typeName : {
         get : function() {
-            return 'CKAN Group';
+            return 'CKAN Server';
         }
     },
 

@@ -2,14 +2,17 @@
 
 /*global require,ga,confirm*/
 var createCatalogItemFromUrl = require('./createCatalogItemFromUrl');
+var createCatalogMemberFromType = require('./createCatalogMemberFromType');
 var loadView = require('../Core/loadView');
 var ViewModelError = require('./ViewModelError');
 var WebFeatureServiceGroupViewModel = require('./WebFeatureServiceGroupViewModel');
 var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
 
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var AddDataPanelViewModel = function(options) {
     if (!defined(options) || !defined(options.application)) {
@@ -21,9 +24,10 @@ var AddDataPanelViewModel = function(options) {
 
     this._domNodes = undefined;
 
-    this.webLink = '';
+    this.url = '';
+    this.dataType ='auto';
 
-    knockout.track(this, ['webLink']);
+    knockout.track(this, ['url', 'dataType']);
 };
 
 AddDataPanelViewModel.prototype.show = function(container) {
@@ -45,6 +49,15 @@ AddDataPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e
 };
 
 AddDataPanelViewModel.prototype.selectFileToUpload = function() {
+    // We can't add a WMS or WFS server from a file.
+    if (this.dataType === 'wms-getCapabilities' || this.dataType === 'wfs-getCapabilities') {
+        this.application.error.raiseEvent(new ViewModelError({
+            title: 'A service cannot be added from a local file',
+            message: 'Sorry, a WMS or WFS server can only be added by providing a URL to the server.  Please select a different type of file, or choose "Auto-detect".'
+        }));
+        return;
+    }
+
     var element = document.getElementById('add-data-panel-upload-file');
     element.click();
 };
@@ -52,50 +65,63 @@ AddDataPanelViewModel.prototype.selectFileToUpload = function() {
 AddDataPanelViewModel.prototype.addUploadedFile = function() {
     var uploadFileElement = document.getElementById('add-data-panel-upload-file');
     var files = uploadFileElement.files;
-    for (var i = 0; i < files.length; ++i) {
-        var file = files[i];
-        ga('send', 'event', 'uploadFile', 'browse', file.name);
 
-        addFileOrUrl(this, file);
+    if (files.length > 0) {
+        var promises = [];
+
+        for (var i = 0; i < files.length; ++i) {
+            var file = files[i];
+            ga('send', 'event', 'uploadFile', 'browse', file.name);
+
+            promises.push(addCatalogItem(this.application, loadFileOrUrl(this.application, file, this.dataType)));
+        }
+
+        // Attempt to clear the selected file, so the onchange event is fired even if the user selects
+        // the same file again.  This may not work in all browsers.
+        try { uploadFileElement.value = ''; } catch(e) {}
+        try { uploadFileElement.value = null; } catch(e) {}
+
+        var that = this;
+        when.all(promises, function() {
+            that.close();
+        });
     }
-
-    this.close();
 };
 
-AddDataPanelViewModel.prototype.addWebLink = function() {
-    ga('send', 'event', 'addDataUrl', this.webLink);
+var wfsUrlRegex = /\bwfs\b/i;
+
+AddDataPanelViewModel.prototype.addUrl = function() {
+    ga('send', 'event', 'addDataUrl', this.url);
 
     var that = this;
 
-    // First try to interpret the URL as a WMS.
-    var wms = new WebMapServiceGroupViewModel(this.application);
-    wms.name = this.webLink;
-    wms.url = this.webLink;
+    var promise;
+    if (this.dataType === 'auto') {
+        // Does this look like a WFS URL?  If so, try that first (before WMS).
+        // This accounts for the fact that a single URL often works as both WMS and WFS.
+        if (wfsUrlRegex.test(this.url)) {
+            promise = loadWfs(that).otherwise(function() {
+                return loadWms(that).otherwise(function() {
+                    return loadFile(that);
+                });
+            });
+        } else {
+            promise = loadWms(that).otherwise(function() {
+                return loadWfs(that).otherwise(function() {
+                    return loadFile(that);
+                });
+            });
+        }
+    } else if (this.dataType === 'wms-getCapabilities') {
+        promise = loadWms(this);
+    } else if (this.dataType === 'wfs-getCapabilities') {
+        promise = loadWfs(this);
+    } else {
+        promise = loadFile(this);
+    }
 
-    wms.load().then(function() {
-        // WMS GetCapabilities was successful, so add this WMS to the catalog.
-        that.application.catalog.userAddedDataGroup.items.push(wms);
-        wms.isOpen = true;
-        that.application.catalog.userAddedDataGroup.isOpen = true;
+    addCatalogItem(this.application, promise).then(function() {
         that.close();
-    }).otherwise(function() {
-        // WMS GetCapabilities failed, try WFS
-        var wfs = new WebFeatureServiceGroupViewModel(that.application);
-        wfs.name = that.webLink;
-        wfs.url = that.webLink;
-
-        return wfs.load().then(function() {
-            // WFS GetCapabilities was successful, so add this WFS to the catalog.
-            that.application.catalog.userAddedDataGroup.items.push(wfs);
-            wfs.isOpen = true;
-            that.application.catalog.userAddedDataGroup.isOpen = true;
-
-            that.close();
-        }).otherwise(function() {
-            // WFS GetCapabilities failed too, try treating this as a single data file.
-            addFileOrUrl(that, that.webLink);
-            that.close();
-        });
     });
 };
 
@@ -105,33 +131,85 @@ AddDataPanelViewModel.open = function(container, options) {
     return viewModel;
 };
 
-function addFileOrUrl(viewModel, fileOrUrl) {
+function addCatalogItem(application, newCatalogItemPromise) {
+    return newCatalogItemPromise.then(function(newCatalogItem) {
+        if (!defined(newCatalogItem)) {
+            return;
+        }
+
+        application.catalog.userAddedDataGroup.items.push(newCatalogItem);
+
+        if (defined(newCatalogItem.isOpen)) {
+            newCatalogItem.isOpen = true;
+        }
+
+        if (defined(newCatalogItem.isEnabled)) {
+            newCatalogItem.isEnabled = true;
+        }
+
+        if (defined(newCatalogItem.zoomToAndUseClock)) {
+            newCatalogItem.zoomToAndUseClock();
+        }
+
+        application.catalog.userAddedDataGroup.isOpen = true;
+    }).otherwise(function(e) {
+        if (!(e instanceof ViewModelError)) {
+            e = new ViewModelError({
+                title: 'Data could not be added',
+                message: 'The specified data could not be added because it is invalid or does not have the expected format.'
+            });
+        }
+
+        application.error.raiseEvent(e);
+
+        return when.reject(e);
+    });
+}
+
+function loadWms(viewModel) {
+    var wms = new WebMapServiceGroupViewModel(viewModel.application);
+    wms.name = viewModel.url;
+    wms.url = viewModel.url;
+
+    return wms.load().then(function() {
+        return wms;
+    });
+}
+
+function loadWfs(viewModel) {
+    var wfs = new WebFeatureServiceGroupViewModel(viewModel.application);
+    wfs.name = viewModel.url;
+    wfs.url = viewModel.url;
+
+    return wfs.load().then(function() {
+        return wfs;
+    });
+}
+
+function loadFile(viewModel) {
+    return loadFileOrUrl(viewModel.application, viewModel.url, viewModel.dataType);
+}
+
+function loadFileOrUrl(application, fileOrUrl, dataType) {
     var isUrl = typeof fileOrUrl === 'string';
+    dataType = defaultValue(dataType, 'auto');
 
     var name = isUrl ? fileOrUrl : fileOrUrl.name;
-    var newViewModel = createCatalogItemFromUrl(name, viewModel.application);
 
-    if (!defined(newViewModel)) {
-        throw new ViewModelError({
-            container : document.body,
-            title : 'File format not supported',
-            message : '\
-The specified file does not appear to be a format that is supported by National Map.  National Map \
-supports Cesium Language (.czml), GeoJSON (.geojson or .json), TopoJSON (.topojson or .json), \
-Keyhole Markup Language (.kml or .kmz), GPS Exchange Format (.gpx), and some comma-separated value \
-files (.csv).  The file extension of the file in the user-specified URL must match one of \
-these extensions in order for National Map to know how to load it.'
-        });
-    }
-
-    if (newViewModel.type === 'ogr' ) {
-            //TODO: popup message with buttons
+    var newCatalogItem;
+    if (dataType === 'auto') {
+        newCatalogItem = createCatalogItemFromUrl(name, application);
+    } else if (dataType === 'other') {
         if (!confirm('\
 This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
 format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
 and the file will not be uploaded or added to the map.')) {
-            return;
+            return when();
         }
+
+        newCatalogItem = createCatalogMemberFromType('ogr', application);
+    } else {
+        newCatalogItem = createCatalogMemberFromType(dataType, application);
     }
 
     var lastSlashIndex = name.lastIndexOf('/');
@@ -139,20 +217,18 @@ and the file will not be uploaded or added to the map.')) {
         name = name.substring(lastSlashIndex + 1);
     }
 
-    newViewModel.name = name;
+    newCatalogItem.name = name;
 
     if (isUrl) {
-        newViewModel.url = fileOrUrl;
+        newCatalogItem.url = fileOrUrl;
     } else {
-        newViewModel.data = fileOrUrl;
-        newViewModel.dataSourceUrl = fileOrUrl.name;
+        newCatalogItem.data = fileOrUrl;
+        newCatalogItem.dataSourceUrl = fileOrUrl.name;
     }
 
-    var catalog = viewModel.application.catalog;
-    catalog.userAddedDataGroup.items.push(newViewModel);
-    catalog.userAddedDataGroup.isOpen = true;
-    newViewModel.isEnabled = true;
-    newViewModel.zoomToAndUseClock();
+    return newCatalogItem.load().then(function() {
+        return newCatalogItem;
+    });
 }
 
 module.exports = AddDataPanelViewModel;
