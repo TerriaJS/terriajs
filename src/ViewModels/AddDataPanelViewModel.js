@@ -199,10 +199,18 @@ function loadFileOrUrl(application, fileOrUrl, dataType) {
     var newCatalogItem;
     if (dataType === 'auto') {
         newCatalogItem = createCatalogItemFromUrl(name, application);
-    } else if (dataType === 'other') {
-        if (!confirm('\
+
+        if (newCatalogItem.type === 'ogr' && !confirm('\
 This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
 format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
+and the file will not be uploaded or added to the map.')) {
+            return when();
+        }
+
+    } else if (dataType === 'other') {
+        if (!confirm('\
+In order to convert this file to a format supported by National Map, it must be uploaded to the National Map conversion service. \
+Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
 and the file will not be uploaded or added to the map.')) {
             return when();
         }
