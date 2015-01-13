@@ -3,6 +3,9 @@
         "nicta.com.au",
         "gov.au",
         "arcgis.com"
+    ],
+    "initializationUrls" : [
+    	"init_nm.json"
     ]
 }
 
