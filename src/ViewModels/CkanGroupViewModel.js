@@ -321,6 +321,8 @@ function populateGroupFromResults(viewModel, json) {
             textDescription += '<br/>[Licence](' + item.license_url + ')';
         }
 
+        //TODO: fix extras usage
+
         var rectangle;
         var bboxString = item.geo_coverage || item.extras[0].value;
         if (defined(bboxString)) {
@@ -367,7 +369,7 @@ function populateGroupFromResults(viewModel, json) {
             if (defined(viewModel.dataCustodian)) {
                 newItem.dataCustodian = viewModel.dataCustodian;
             } else if (item.organization && item.organization.title) {
-                newItem.dataCustodian = item.organization.title;
+                newItem.dataCustodian = item.organization.description || item.organization.title;
             }
 
             var groups = item.groups;

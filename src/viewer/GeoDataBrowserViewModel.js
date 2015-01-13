@@ -450,7 +450,8 @@ and the file will not be uploaded or added to the map.')) {
         var populateCache = that.catalog.application.getUserProperty('populate-cache');
         if (populateCache && populateCache !== 'false' && populateCache !== 'no' && populateCache !== '0') {
             if (populateCache !== '1') {
-                that.maxLevel('http://54.79.126.100'); //!!!'http://localhost');
+//                that.maxLevel('http://localhost');
+                that.maxLevel('http://54.79.117.201');
             }
             return true;
         }
@@ -667,11 +668,16 @@ and the file will not be uploaded or added to the map.')) {
         for (var i = 0; i < requests.length; ++i) {
             var gname = getCkanName(requests[i].group);
             if (groups[gname] === undefined) {
-                groups[gname] = requests[i].group;
+                groups[gname] = { title: requests[i].group };
             }
-            var oname = getCkanName(requests[i].item.dataCustodian);
+            var orgTitle = requests[i].item.dataCustodian;
+            var links = orgTitle.match(/[^[\]]+(?=])/g);
+            if (links.length > 0) {
+                orgTitle = links[0];  //use first link text as title
+            }
+            var oname = getCkanName(orgTitle);
             if (orgs[oname] === undefined) {
-                orgs[oname] = requests[i].item.dataCustodian;
+                orgs[oname] = { title: orgTitle, description: requests[i].item.dataCustodian };
             }
         }
 
@@ -708,7 +714,7 @@ and the file will not be uploaded or added to the map.')) {
                     }
                     ckanRequests.push( {
                         "url": ckanServer + '/api/3/action/group_' + (found ? 'update' : 'create'),
-                        "data" : {"name": ckanName, "title": groups[ckanName], "id": (found ? ckanName : '')}
+                        "data" : {"name": ckanName, "title": groups[ckanName].title, "id": (found ? ckanName : '')}
                     });
                 }
             }
@@ -723,7 +729,8 @@ and the file will not be uploaded or added to the map.')) {
                     }
                     ckanRequests.push({
                         "url": ckanServer + '/api/3/action/organization_' + (found ? 'update' : 'create'),
-                        "data" : {"name": ckanName, "title": orgs[ckanName], "id": (found ? ckanName : '')}
+                        "data" : {"name": ckanName, "title": orgs[ckanName].title, 
+                                "description": orgs[ckanName].description, "id": (found ? ckanName : '')}
                     });
                 }
             }
