@@ -450,7 +450,7 @@ and the file will not be uploaded or added to the map.')) {
         var populateCache = that.catalog.application.getUserProperty('populate-cache');
         if (populateCache && populateCache !== 'false' && populateCache !== 'no' && populateCache !== '0') {
             if (populateCache !== '1') {
-                that.maxLevel('http://localhost');
+                that.maxLevel('http://54.79.126.100'); //!!!'http://localhost');
             }
             return true;
         }
@@ -735,7 +735,9 @@ and the file will not be uploaded or added to the map.')) {
                         break;
                     }
                 }
-               ckanRequests.push({
+                var wmsString = "?service=WMS&version=1.1.1&request=GetMap&width=256&height=256&format=image/png";
+                var bboxString = getCkanRect(requests[i].item.rectangle);
+                ckanRequests.push({
                     "url": ckanServer + '/api/3/action/package_' + (found ? 'update' : 'create'),
                     "data" : {
                         "name": getCkanName(requests[i].item.name), 
@@ -743,14 +745,14 @@ and the file will not be uploaded or added to the map.')) {
                         "license_id": "cc-by", 
                         "notes": requests[i].item.description, 
                         "owner_org": getCkanName(requests[i].item.dataCustodian),
-                        "groups": [ { "name": getCkanName(requests[i].group)} ],
+                        "groups": [ { "name": getCkanName(requests[i].group) } ],
+                        "extras": [ { "key": "geo_coverage", "value":  bboxString} ],
                         "resources": [ {
                             "wms_layer": requests[i].item.layers, 
                             "wms_api_url": requests[i].item.url, 
-                            "url": requests[i].item.url, 
+                            "url": requests[i].item.url+wmsString+'&layers='+requests[i].item.layers+'&bbox='+bboxString, 
                             "format": "wms", 
                             "name": "WMS link",
-                            "geo_coverage": getCkanRect(requests[i].item.rectangle)
                         } ]
                     }
                 });

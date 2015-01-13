@@ -218,7 +218,7 @@ function filterResultsByGetCapabilities(viewModel, json) {
                 continue;
             }
 
-            var wmsUrl = resource.wms_api_url || resource.wms_url;
+            var wmsUrl = resource.wms_url;
             if (!defined(wmsUrl)) {
                 wmsUrl = resource.url;
                 if (!defined(wmsUrl)) {
@@ -229,7 +229,7 @@ function filterResultsByGetCapabilities(viewModel, json) {
             // Extract the layer name from the WMS URL.
             var uri = new URI(wmsUrl);
             var params = uri.search(true);
-            var layerName = resource.wms_layer || params.LAYERS;
+            var layerName = params.LAYERS;
 
             // Remove the query portion of the WMS URL.
             uri.search('');
@@ -322,7 +322,7 @@ function populateGroupFromResults(viewModel, json) {
         }
 
         var rectangle;
-        var bboxString = item.geo_coverage || item.resources[0].geo_coverage;
+        var bboxString = item.geo_coverage || item.extras[0].value;
         if (defined(bboxString)) {
             var parts = bboxString.split(',');
             if (parts.length === 4) {
@@ -349,7 +349,7 @@ function populateGroupFromResults(viewModel, json) {
             // Extract the layer name from the WMS URL.
             var uri = new URI(wmsUrl);
             var params = uri.search(true);
-            var layerName = params.LAYERS;
+            var layerName = params.LAYERS || params.layers;
 
             // Remove the query portion of the WMS URL.
             uri.search('');
@@ -358,8 +358,8 @@ function populateGroupFromResults(viewModel, json) {
             var newItem = new WebMapServiceItemViewModel(viewModel.application);
             newItem.name = item.title;
             newItem.description = textDescription;
-            newItem.url = resource.wms_api_url || url;
-            newItem.layers = resource.wms_layer || layerName;
+            newItem.url = url;
+            newItem.layers = layerName;
             newItem.rectangle = rectangle;
               //This should be deprecated and done on a server by server basis when feasible
             newItem.parameters = viewModel.wmsParameters;
