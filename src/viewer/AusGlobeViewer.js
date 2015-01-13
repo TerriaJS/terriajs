@@ -897,6 +897,15 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         });
 
         //this.geoDataBrowser.viewModel.map = map;
+
+        that.updateScaleFromLeaflet();
+        map.on('zoomend', function (e) {
+            that.updateScaleFromLeaflet();
+        });
+
+        map.on('moveend', function (e) {
+            that.updateScaleFromLeaflet();
+        });
     }
     else {
         if (defined(this.map)) {
@@ -1048,6 +1057,19 @@ AusGlobeViewer.prototype.updateDistanceLegend = function() {
     } else {
         document.getElementById('ausglobe-title-scale').style.visibility = 'hidden';
     }
+};
+
+AusGlobeViewer.prototype.updateScaleFromLeaflet= function() {
+    var map = this.map;
+    var halfHeight = map.getSize().y / 2;
+    var maxPixelWidth = 100;
+    var maxMeters = map.containerPointToLatLng([0, halfHeight]).distanceTo(
+        map.containerPointToLatLng([maxPixelWidth, halfHeight]));
+
+    var meters = L.control.scale()._getRoundNum(maxMeters);
+    var label = meters < 1000 ? meters + ' m' : (meters / 1000) + ' km';
+    $('#ausglobe-title-scale-label').text(label);
+    $('#ausglobe-title-scale-bar').width((meters / maxMeters) * maxPixelWidth);
 };
 
 //Check for webgl support

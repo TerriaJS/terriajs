@@ -78,7 +78,6 @@ if (start) {
     application.start({
         applicationUrl: window.location,
         configUrl: 'config.json',
-        initializationUrl: 'init_nm.json',
         useUrlHashAsInitSource: true
     }).otherwise(function(e) {
         raiseErrorToUser(application, e);

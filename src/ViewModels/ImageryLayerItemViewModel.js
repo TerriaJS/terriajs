@@ -160,8 +160,8 @@ ImageryLayerItemViewModel.prototype._showInCesium = function() {
                 }
             }
 
-            // Retry once.
-            if (tileProviderError.timesRetried === 0) {
+            // Retry 3 times.
+            if (tileProviderError.timesRetried < 3) {
                 tileProviderError.retry = true;
                 return;
             }

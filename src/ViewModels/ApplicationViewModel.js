@@ -145,8 +145,6 @@ var ApplicationViewModel = function() {
  * @param {String} [options.applicationUrl] The URL of the application.  Typically this is obtained from window.location.  This URL, if
  *                                          supplied, is parsed for startup parameters.
  * @param {String} [options.configUrl='config.json'] The URL of the file containing configuration information, such as the list of domains to proxy.
- * @param {String} [options.initializationUrl] The URL of the main file containing initialization information, such as the list of
- *                                             catalog items.
  * @param {Boolean} [options.useApplicationUrlHashAsInitSource=true] true to parse the applicationUrl as an init source.  The hash may be of the form
  *                                                                   'start=???', where ??? is a JSON-encoded initialization object, or it may be
  *                                                                   a simple string.  If it's a simple string, a file named 'init_' + hash + '.json'
@@ -159,8 +157,12 @@ ApplicationViewModel.prototype.start = function(options) {
     return loadJson(options.configUrl).then(function(config) {
         corsProxy.proxyDomains.push.apply(corsProxy.proxyDomains, config.proxyDomains);
 
-        if (defined(options.initializationUrl)) {
-            that.initSources.push(options.initializationUrl);
+        var initializationUrls = config.initializationUrls;
+
+        if (defined(initializationUrls)) {
+            for (var i = 0; i < initializationUrls.length; i++) {
+                that.initSources.push(initializationUrls[i]);
+            }
         }
 
         return that.updateApplicationUrl(applicationUrl);
@@ -202,7 +204,11 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
         if (hashProperties.hasOwnProperty(property)) {
             var propertyValue = hashProperties[property];
 
-            if (property === 'start') {
+            if (property === 'clean') {
+                persistentInitSources.length = 0;
+                temporaryInitSources.length = 0;
+            }
+            else if (property === 'start') {
                 var startData = JSON.parse(propertyValue);
 
                 // Include any initSources specified in the URL.

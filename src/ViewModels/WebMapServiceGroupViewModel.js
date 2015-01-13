@@ -3,6 +3,7 @@
 /*global require,URI,$*/
 
 var clone = require('../../third_party/cesium/Source/Core/clone');
+var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
@@ -43,7 +44,14 @@ var WebMapServiceGroupViewModel = function(application) {
      */
     this.dataCustodian = undefined;
 
-    knockout.track(this, ['url', 'dataCustodian']);
+    /**
+     * Gets or sets the additional parameters to pass to the WMS server when requesting images.
+     * If this property is undefiend, {@link WebMapServiceItemViewModel.defaultParameters} is used.
+     * @type {Object}
+     */
+    this.parameters = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian', 'parameters']);
 };
 
 inherit(CatalogGroupViewModel, WebMapServiceGroupViewModel);
@@ -122,7 +130,7 @@ WebMapServiceGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
 };
 
 WebMapServiceGroupViewModel.prototype._load = function() {
-    var url = cleanAndProxyUrl(this.application, this.url) + '?service=WMS&request=GetCapabilities';
+    var url = cleanAndProxyUrl(this.application, this.url) + '?service=WMS&request=GetCapabilities&version=1.1.1&tiled=true';
 
     var that = this;
     return loadXML(url).then(function(xml) {
@@ -152,6 +160,18 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
                 supportsJsonGetFeatureInfo = true;
             } else if (defined(format.indexOf) && format.indexOf('application/json') >= 0) {
                 supportsJsonGetFeatureInfo = true;
+            }
+        }
+
+        if (defined(json.Capability.VendorSpecificCapabilities) &&
+            defined(json.Capability.VendorSpecificCapabilities.TileSet)) {
+
+            var tileSet = json.Capability.VendorSpecificCapabilities.TileSet;
+            for (var i = 0; i < tileSet.length; i++) {
+                if (tileSet[i].SRS ===  "EPSG:4326") {
+                    that.parameters = combine(that.parameters, {'tiled': true});
+                    break;
+                }
             }
         }
 
@@ -242,6 +262,7 @@ function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataC
     result.dataCustodian = dataCustodian;
     result.url = viewModel.url;
     result.layers = layer.Name;
+    result.parameters = viewModel.parameters;
 
     result.description = '';
 
@@ -288,17 +309,17 @@ function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataC
             // Standard Geographic
         } else if (crsIsMatch(crs, 'CRS:84')) {
             // Another name for EPSG:4326
-            result.parameters = {srs: 'CRS:84'};
+            result.parameters = combine(result.parameters, {srs: 'CRS:84'});
         } else if (crsIsMatch(crs, 'EPSG:4283')) {
             // Australian system that is equivalent to EPSG:4326.
-            result.parameters = {srs: 'EPSG:4283'};
+            result.parameters = combine(result.parameters, {srs: 'EPSG:4283'});
         } else if (crsIsMatch(crs, 'EPSG:3857')) {
             // Standard Web Mercator
             result.tilingScheme = new WebMercatorTilingScheme();
         } else if (crsIsMatch(crs, 'EPSG:900913')) {
             // Older code for Web Mercator
             result.tilingScheme = new WebMercatorTilingScheme();
-            result.parameters = {srs: 'EPSG:900913'};
+            result.parameters = combine(result.parameters, {srs: 'EPSG:900913'});
         } else {
             // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
         }
