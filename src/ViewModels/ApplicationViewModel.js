@@ -197,7 +197,7 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
         if (hashProperties.hasOwnProperty(property)) {
             var propertyValue = hashProperties[property];
 
-            if (property === 'clear') {
+            if (property === 'clean') {
                 persistentInitSources.length = 0;
                 temporaryInitSources.length = 0;
             }
