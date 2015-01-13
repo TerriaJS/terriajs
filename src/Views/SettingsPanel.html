@@ -1,0 +1,13 @@
+<div class="settings-panel" data-bind="css: { 'settings-panel-hidden': !isVisible }">
+    <!--<div class="settings-panel-callout"></div>-->
+    <div class="settings-panel-body">
+        <div class="settings-panel-section">
+            <div class="settings-panel-section-header">Globe view</div>
+            <div class="settings-panel-section-content">
+                <div class="settings-panel-map-view-button" data-bind="click: select2D, css: { 'settings-panel-map-view-button-selected': application.viewerMode === 2 }">2D</div>
+                <div class="settings-panel-map-view-button" data-bind="click: select3DSmooth, css: { 'settings-panel-map-view-button-selected': application.viewerMode === 1 }">3D Smooth</div>
+                <div class="settings-panel-map-view-button" data-bind="click: select3DTerrain, css: { 'settings-panel-map-view-button-selected': application.viewerMode === 0 }">3D Terrain</div>
+            </div>
+        </div>
+    </div>
+</div>

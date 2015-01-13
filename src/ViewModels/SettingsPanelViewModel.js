@@ -1,0 +1,53 @@
+'use strict';
+
+/*global require*/
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+
+var loadView = require('../Core/loadView');
+var ViewerMode = require('./ViewerMode');
+
+var SettingsPanelViewModel = function(options) {
+    if (!defined(options) || !defined(options.application)) {
+        throw new DeveloperError('options.application is required.');
+    }
+
+    this.application = options.application;
+
+    this._domNodes = undefined;
+
+    this.isVisible = defaultValue(options.isVisible, true);
+
+    knockout.track(this, ['isVisible']);
+};
+
+SettingsPanelViewModel.prototype.show = function(container) {
+    if (!defined(this._domNodes)) {
+        this._domNodes = loadView(require('fs').readFileSync(__dirname + '/../Views/SettingsPanel.html', 'utf8'), container, this);
+    }
+};
+
+SettingsPanelViewModel.prototype.close = function() {
+    if (defined(this._domNodes)) {
+        for (var i = 0; i < this._domNodes.length; ++i) {
+            var node = this._domNodes[i];
+            node.parentElement.removeChild(node);
+        }
+    }
+};
+
+SettingsPanelViewModel.prototype.select2D = function() {
+    this.application.viewerMode = ViewerMode.Leaflet;
+};
+
+SettingsPanelViewModel.prototype.select3DSmooth = function() {
+    this.application.viewerMode = ViewerMode.CesiumEllipsoid;
+};
+
+SettingsPanelViewModel.prototype.select3DTerrain = function() {
+    this.application.viewerMode = ViewerMode.CesiumTerrain;
+};
+
+module.exports = SettingsPanelViewModel;

@@ -60,6 +60,7 @@ if (start) {
     var NavigationViewModel = require('./ViewModels/NavigationViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
+    var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
@@ -114,6 +115,12 @@ if (start) {
             leftLogo: 'images/gov-brand.png'
         });
 
+        var settingsPanel = new SettingsPanelViewModel({
+            application: application,
+            isVisible: false
+        });
+        settingsPanel.show(ui);
+
         var menuBar = new MenuBarViewModel();
         menuBar.items.push(new MenuBarItemViewModel({
             label: 'Add data',
@@ -122,6 +129,13 @@ if (start) {
                 AddDataPanelViewModel.open(ui, {
                     application: application
                 });
+            }
+        }));
+        menuBar.items.push(new MenuBarItemViewModel({
+            label: 'Settings',
+            tooltip: 'Change the map mode (2D/3D) and base map.',
+            callback: function() {
+                settingsPanel.isVisible = !settingsPanel.isVisible;
             }
         }));
         menuBar.items.push(new MenuBarItemViewModel({

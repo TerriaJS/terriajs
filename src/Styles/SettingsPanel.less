@@ -1,0 +1,59 @@
+.settings-panel {
+    .panel;
+    background-color: @panel-background-color;
+    top: 104px;
+    right: 100px;
+    width: 300px;
+    position: absolute;
+
+    -webkit-transition: right @explorer-panel-close-animation-length ease-out;
+    -moz-transition: right @explorer-panel-close-animation-length ease-out;
+    -ms-transition: right @explorer-panel-close-animation-length ease-out;
+    -o-transition: right @explorer-panel-close-animation-length ease-out;
+    transition: right @explorer-panel-close-animation-length ease-out;
+}
+
+.settings-panel-hidden {
+    right: -300px;
+
+    -webkit-transition: right @explorer-panel-close-animation-length ease-out;
+    -moz-transition: right @explorer-panel-close-animation-length ease-out;
+    -ms-transition: right @explorer-panel-close-animation-length ease-out;
+    -o-transition: right @explorer-panel-close-animation-length ease-out;
+    transition: right @explorer-panel-close-animation-length ease-out;
+}
+
+.settings-panel-callout {
+}
+
+.settings-panel-body {
+    color: #ffffff;
+}
+
+.settings-panel-section {
+}
+
+.settings-panel-section-header {
+    padding: 5px;
+    background-color: @brand-bar-background-color;
+}
+
+.settings-panel-section-content {
+    font-weight: lighter;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.settings-panel-map-view-button {
+    .clickable;
+    display: inline;
+    border: 1px solid @panel-border-color;
+    padding: 5px;
+}
+
+.settings-panel-map-view-button-selected {
+    background-color: @highlight-color;
+    color: #ffffff;
+}
