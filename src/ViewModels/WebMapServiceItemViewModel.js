@@ -108,8 +108,8 @@ var WebMapServiceItemViewModel = function(application) {
     delete this.__knockoutObservables.dataUrlType;
     knockout.defineProperty(this, 'dataUrlType', {
         get : function() {
-            if (defined(this._dataUrlType)) {
-                return this._dataUrlType;
+            if (defined(this._dataUrl)) {
+                return 'direct';
             } else {
                 return 'wfs';
             }
@@ -139,8 +139,8 @@ var WebMapServiceItemViewModel = function(application) {
             if (defined(this._legendUrl)) {
                 return this._legendUrl;
             }
-
-            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
+            var layer = this.layers.split(',')[0];
+            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + layer;
         },
         set : function(value) {
             this._legendUrl = value;

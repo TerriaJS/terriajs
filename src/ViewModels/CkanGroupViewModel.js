@@ -17,6 +17,7 @@ var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 var inherit = require('../Core/inherit');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
+var ArcGisMapServerItemViewModel = require('./ArcGisMapServerItemViewModel');
 
 /**
  * A {@link CatalogGroupViewModel} representing a collection of layers from a [CKAN](http://ckan.org) server.
@@ -167,42 +168,56 @@ CkanGroupViewModel.prototype._load = function() {
         return undefined;
     }
 
+    var handleResults = function(json) {
+            if (that.filterByWmsGetCapabilities) {
+                return when(filterResultsByGetCapabilities(that, json), function() {
+                    populateGroupFromResults(that, json);
+                });
+            } else {
+                populateGroupFromResults(that, json);
+            }
+        };
+
+    var handleError = function() {
+            throw new ViewModelError({
+                sender: that,
+                title: 'Group is not available',
+                message: '\
+    An error occurred while invoking package_search on the CKAN server.  \
+    <p>If you entered the link manually, please verify that the link is correct.</p>\
+    <p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
+    server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
+    please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \
+    Map team by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> \
+    and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by \
+    National Map itself.</p>\
+    <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
+    problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
+    sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
+            });
+        };
+
     //FYI: to filter by group the filterQuery param should be set to something like 
     //  'q=groups%3dSurface%20Water&fq=res_format%3aWMS' in init_xx.json
-    var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery;
+    var promises = [];
+    if (!(this.filterQuery instanceof Array)) {
+        this.filterQuery = [this.filterQuery];
+    }
+    for (var i = 0; i < this.filterQuery.length; i++) {
+        var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery[i];
 
-    var that = this;
+        var that = this;
 
-    return loadJson(url).then(function(json) {
-        if (that.filterByWmsGetCapabilities) {
-            return when(filterResultsByGetCapabilities(that, json), function() {
-                populateGroupFromResults(that, json);
-            });
-        } else {
-            populateGroupFromResults(that, json);
-        }
-    }).otherwise(function() {
-        throw new ViewModelError({
-            sender: that,
-            title: 'Group is not available',
-            message: '\
-An error occurred while invoking package_search on the CKAN server.  \
-<p>If you entered the link manually, please verify that the link is correct.</p>\
-<p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
-server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
-please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \
-Map team by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> \
-and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by \
-National Map itself.</p>\
-<p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
-problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
-sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-        });
-    });
+        var promise = loadJson(url).then(handleResults).otherwise(handleError);
+
+        promises.push(promise);
+    }
+    return promises;
 };
 
 // The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
 var wmsFormatRegex = /^wms$/i;
+var esriRestFormatRegex = /^esri rest$/i;
 
 function filterResultsByGetCapabilities(viewModel, json) {
     var wmsServers = {};
@@ -321,10 +336,15 @@ function populateGroupFromResults(viewModel, json) {
             textDescription += '<br/>[Licence](' + item.license_url + ')';
         }
 
-        //TODO: fix extras usage
+        var extras = [];
+        for (var idx = 0; idx < item.extras.length; idx++) {
+            extras[item.extras[idx].key] = item.extras[idx].value;
+        }
+
+        var dataUrl = extras.data_url;
 
         var rectangle;
-        var bboxString = item.geo_coverage || item.extras[0].value;
+        var bboxString = item.geo_coverage || extras.geo_coverage;
         if (defined(bboxString)) {
             var parts = bboxString.split(',');
             if (parts.length === 4) {
@@ -336,7 +356,7 @@ function populateGroupFromResults(viewModel, json) {
         var resources = item.resources;
         for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
             var resource = resources[resourceIndex];
-            if (resource.__filtered || !resource.format.match(wmsFormatRegex)) {
+            if (resource.__filtered || (!resource.format.match(wmsFormatRegex) && !resource.format.match(esriRestFormatRegex))) {
                 continue;
             }
 
@@ -357,7 +377,12 @@ function populateGroupFromResults(viewModel, json) {
             uri.search('');
             var url = uri.toString();
 
-            var newItem = new WebMapServiceItemViewModel(viewModel.application);
+            var newItem;
+            if (resource.format.match(esriRestFormatRegex)) {
+                newItem = new ArcGisMapServerItemViewModel(viewModel.application);
+            } else {
+                newItem = new WebMapServiceItemViewModel(viewModel.application);
+            }
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;
@@ -365,6 +390,7 @@ function populateGroupFromResults(viewModel, json) {
             newItem.rectangle = rectangle;
               //This should be deprecated and done on a server by server basis when feasible
             newItem.parameters = viewModel.wmsParameters;
+            newItem.dataUrl = dataUrl;
 
             if (defined(viewModel.dataCustodian)) {
                 newItem.dataCustodian = viewModel.dataCustodian;

@@ -17,7 +17,7 @@
             "name": "National Data Sets",
             "type": "ckan",
             "url": "http://54.79.117.201",
-            "filterQuery": "fq=res_format%3aWMS",
+            "filterQuery": [ "q=res_format:WMS", "q=res_format:%22Esri%20REST%22" ],
             "filterByWmsGetCapabilities": false,
             "minimumMaxScaleDenominator": 1e10,
             "wmsParameters": {"tiled" : true},

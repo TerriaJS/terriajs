@@ -43,7 +43,7 @@ defineProperties(ArcGisMapServerItemViewModel.prototype, {
      */
     type : {
         get : function() {
-            return 'esri-mapServer';
+            return 'esri-rest';
         }
     },
 
@@ -65,6 +65,8 @@ ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
     }
 
     var scene = this.application.cesium.scene;
+
+    this.legendUrl = this.url + '/legend';
 
     var imageryProvider = new ArcGisMapServerImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url)
@@ -98,6 +100,8 @@ ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
+
+    this.legendUrl = this.url + '/legend';
 
     var options = {
         opacity : this.opacity

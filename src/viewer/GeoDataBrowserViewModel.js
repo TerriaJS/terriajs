@@ -460,28 +460,28 @@ and the file will not be uploaded or added to the map.')) {
 
     this.populateCache = function(mode) {
 
-        var populateCache = this.catalog.application.getUserProperty('populate-cache');
-        if (populateCache !== '1') {
-            return this.populateCkan(mode, that.maxLevel(), populateCache);
-        }
-
         var requests = [];
 
-        getAllRequests(mode, requests, that.catalog.group);
+        var populateCache = this.catalog.application.getUserProperty('populate-cache');
 
+        if (populateCache !== '1') {
+            getAllRequests(['wms', 'esri-rest'], mode, requests, that.catalog.group);
+            return this.populateCkan(requests, that.maxLevel(), populateCache);
+        }
+
+        getAllRequests(['wms'], mode, requests, that.catalog.group);
         console.log('Requesting tiles from ' + requests.length + ' data sources.');
-
         requestTiles(requests, that.maxLevel());
     };
 
-    function getAllRequests(mode, requests, group) {
+    function getAllRequests(types, mode, requests, group) {
         for (var i = 0; i < group.items.length; ++i) {
             var item = group.items[i];
             if (item instanceof CatalogGroupViewModel) {
                 if (item.isOpen) {
-                    getAllRequests(mode, requests, item);
+                    getAllRequests(types, mode, requests, item);
                 }
-            } else if (item.type === 'wms' && (mode === 'opened' || item.isEnabled)) {
+            } else if ((types.indexOf(item.type) !== -1) && (mode === 'opened' || item.isEnabled)) {
                 requests.push({
                     item : item,
                     group : group.name
@@ -650,11 +650,7 @@ and the file will not be uploaded or added to the map.')) {
             CesiumMath.toDegrees(rect.north).toFixed(4);
     }
 
-    this.populateCkan = function(mode, server, apiKey) {
-
-        var requests = [];
-
-        getAllRequests(mode, requests, that.catalog.group);
+    this.populateCkan = function(requests, server, apiKey) {
 
         var groups = [];
         var orgs = [];
@@ -675,6 +671,7 @@ and the file will not be uploaded or added to the map.')) {
             if (links.length > 0) {
                 orgTitle = links[0];  //use first link text as title
             }
+            requests[i].owner_org = orgTitle;
             var oname = getCkanName(orgTitle);
             if (orgs[oname] === undefined) {
                 orgs[oname] = { title: orgTitle, description: requests[i].item.dataCustodian };
@@ -742,8 +739,28 @@ and the file will not be uploaded or added to the map.')) {
                         break;
                     }
                 }
-                var wmsString = "?service=WMS&version=1.1.1&request=GetMap&width=256&height=256&format=image/png";
                 var bboxString = getCkanRect(requests[i].item.rectangle);
+                var extrasList = [ { "key": "geo_coverage", "value":  bboxString} ];
+                if (requests[i].item.dataUrlType === 'direct') {
+                    extrasList.push({ "key": "data_url", "value":  requests[i].item.dataUrl});
+                }
+                var resource;
+                if (requests[i].item.type === 'wms') {
+                    var wmsString = "?service=WMS&version=1.1.1&request=GetMap&width=256&height=256&format=image/png";
+                    resource = {
+                        "wms_layer": requests[i].item.layers, 
+                        "wms_api_url": requests[i].item.url, 
+                        "url": requests[i].item.url+wmsString+'&layers='+requests[i].item.layers+'&bbox='+bboxString, 
+                        "format": "WMS", 
+                        "name": "WMS link",
+                    };
+                } else if (requests[i].item.type === 'esri-rest') {
+                    resource = {
+                        "url": requests[i].item.url, 
+                        "format": "Esri REST", 
+                        "name": "ESRI REST link"
+                    };
+                }
                 ckanRequests.push({
                     "url": ckanServer + '/api/3/action/package_' + (found ? 'update' : 'create'),
                     "data" : {
@@ -751,16 +768,10 @@ and the file will not be uploaded or added to the map.')) {
                         "title": requests[i].item.name, 
                         "license_id": "cc-by", 
                         "notes": requests[i].item.description, 
-                        "owner_org": getCkanName(requests[i].item.dataCustodian),
+                        "owner_org": getCkanName(requests[i].owner_org),
                         "groups": [ { "name": getCkanName(requests[i].group) } ],
-                        "extras": [ { "key": "geo_coverage", "value":  bboxString} ],
-                        "resources": [ {
-                            "wms_layer": requests[i].item.layers, 
-                            "wms_api_url": requests[i].item.url, 
-                            "url": requests[i].item.url+wmsString+'&layers='+requests[i].item.layers+'&bbox='+bboxString, 
-                            "format": "wms", 
-                            "name": "WMS link",
-                        } ]
+                        "extras": extrasList,
+                        "resources": [ resource ]
                     }
                 });
             }

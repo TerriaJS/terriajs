@@ -41,7 +41,6 @@
                         {
                             "name": "Broadband Availability",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
-                            "legendUrl": "https://programs.communications.gov.au/NBNBSL/images/mybroadband/availability.png",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
                                 "112.93529999999998",
@@ -59,7 +58,6 @@
                         {
                             "name": "Broadband Availabilty no Borders",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
-                            "legendUrl": "https://programs.communications.gov.au/NBNBSL/images/mybroadband/availability.png",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
                                 "112.93529999999998",
@@ -77,7 +75,6 @@
                         {
                             "name": "Broadband Quality",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
-                            "legendUrl": "https://programs.communications.gov.au/NBNBSL/images/mybroadband/quality.png",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
                                 "112.93529999999998",
@@ -95,7 +92,6 @@
                         {
                             "name": "Broadband ADSL Quality",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
-                            "legendUrl": "https://programs.communications.gov.au/NBNBSL/images/mybroadband/adsl_quality.png",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
                                 "112.93529999999998",
@@ -113,7 +109,6 @@
                         {
                             "name": "Broadband ADSL Quality no Borders",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
-                            "legendUrl": "https://programs.communications.gov.au/NBNBSL/images/mybroadband/adsl_quality.png",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
                                 "112.93529999999998",
@@ -401,7 +396,6 @@
                         {
                             "name": "Aquifer Contours",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "legendUrl": "",
                             "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "130.9294316820001",
@@ -961,7 +955,6 @@
                             "description": "This dataset is the most current national compilation of catchment scale land use data for Australia (CLUM), as at March 2014. It is a seamless raster dataset that combines land use data for all state and territory jurisdictions, compiled at a resolution of 50 metres by 50 metres. It has been compiled from vector land use datasets collected as part of state and territory mapping programs through the Australian Collaborative Land Use and Management Program (ACLUMP). Catchment scale land use data was produced by combining land tenure and other types of land use information, fine-scale satellite data and information collected in the field. The date of mapping (1997 to 2012) and scale of mapping (1:25 000 to 1:250 000) vary, reflecting the source data capture date and scale. This information is provided in a supporting polygon dataset.<br/><br/>The CLUM data shows a single dominant land use for a given area, based on the primary management objective of the land manager (as identified by state and territory agencies). Land use is classified according to the Australian Land Use and Management (ALUM) Classification version 7, a three-tiered hierarchical structure. There are five primary classes, identified in order of increasing levels of intervention or potential impact on the natural landscape. Water is included separately as a sixth primary class. Primary and secondary levels relate to the principal land use. Tertiary classes may include additional information on commodity groups, specific commodities, land management practices or vegetation information.<br/>[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                             "dataCustodian": "[data.gov.au](http://www.data.gov.au/)",
                             "dataUrl": "http://www.data.gov.au/dataset/catchment-scale-land-use-of-australia-update-march-2014",
-                            "dataUrlType": "direct",
                             "rectangle": [
                                 "109.49189",
                                 "-44.37510828010957",
@@ -972,7 +965,6 @@
                         {
                             "name": "Gravity Image",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "105.930454436693",
@@ -980,13 +972,12 @@
                                 "162.097118856693",
                                 "-7.92768801894694"
                             ],
-                            "type": "esri-mapServer",
+                            "type": "esri-rest",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer"
                         },
                         {
                             "name": "Land Cover",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Landcover_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "110",
@@ -994,13 +985,12 @@
                                 "155.00919",
                                 "-7.92768801894694"
                             ],
-                            "type": "esri-mapServer",
+                            "type": "esri-rest",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_observation/Landcover_WM/MapServer"
                         },
                         {
                             "name": "Magnetic Image",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Magnetic_Image_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "106",
@@ -1008,13 +998,12 @@
                                 "172",
                                 "-8"
                             ],
-                            "type": "esri-mapServer",
+                            "type": "esri-rest",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_observation/Magnetic_Image_WM/MapServer"
                         },
                         {
                             "name": "Surface Geology",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_science/GA_Surface_Geology_of_Australia_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "105.930454436693",
@@ -1022,13 +1011,12 @@
                                 "162.097118856693",
                                 "-7.92768801894694"
                             ],
-                            "type": "esri-mapServer",
+                            "type": "esri-rest",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_science/GA_Surface_Geology_of_Australia_WM/MapServer"
                         },
                         {
                             "name": "Earthquake Hazard",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/hazards/EarthquakeHazard/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "106",
@@ -1204,10 +1192,9 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms",
+                            "url": "http://data.gov.au/geoserver/taxation-statistics-2011-12/ows",
                             "layers": "95d9e550_8b36_4273_8df7_2b76c140e73a",
-                            "dataUrl": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wfs?service=WFS&ve…3_8df7_2b76c140e73a&srsName=EPSG%3A4326&maxFeatures=1000&outputFormat=json",
-                            "dataUrlType": "wfs-complete"
+                            "dataUrl": "https://data.gov.au/dataset/taxation-statistics-2011-12"
                         }
                     ]
                 },
@@ -2475,9 +2462,7 @@
                     "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                     "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                     "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                    "type": "wms-getCapabilities",
-                    "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                    "dataUrlType": "wfs"
+                    "type": "wms-getCapabilities"
                 },
                 {
                     "name": "Boundaries (Australia Bureau of Statistics)",
