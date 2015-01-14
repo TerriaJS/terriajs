@@ -142,14 +142,6 @@ var ApplicationViewModel = function() {
 
     // IE versions prior to 10 don't support CORS, so always use the proxy.
     corsProxy.alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
-
-    this.beforeViewerChanged.addEventListener(function() {
-        beforeViewerChanged(this);
-    }, this);
-
-    this.afterViewerChanged.addEventListener(function() {
-        afterViewerChanged(this);
-    }, this);
 };
 
 /**
@@ -321,26 +313,6 @@ function loadInitSource(source) {
         });
     } else {
         return source;
-    }
-}
-
-function beforeViewerChanged(viewModel) {
-    // Hide and disable the base map, without actually changing
-    // its isEnabled and isShown flags.
-    var baseMap = viewModel.baseMap;
-    if (defined(baseMap)) {
-        baseMap._hide();
-        baseMap._disable();
-    }
-}
-
-function afterViewerChanged(viewModel) {
-    // Re-enable and re-show the basemap in the new viewer.
-    var baseMap = viewModel.baseMap;
-    if (defined(baseMap)) {
-        baseMap._enable();
-        baseMap._show();
-        baseMap.lowerToBottom();
     }
 }
 

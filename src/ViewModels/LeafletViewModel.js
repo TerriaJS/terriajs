@@ -1,4 +1,6 @@
 'use strict';
+
+/*global require*/
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 var LeafletViewModel = function(application, map) {

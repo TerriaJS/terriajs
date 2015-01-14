@@ -38,6 +38,7 @@ if (start) {
     var copyright = require('./CopyrightModule'); // jshint ignore:line
 
     var BingMapsStyle = require('../third_party/cesium/Source/Scene/BingMapsStyle');
+    var defined = require('../third_party/cesium/Source/Core/defined');
     var SvgPathBindingHandler = require('../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../third_party/cesium/Source/ThirdParty/knockout');
 
@@ -52,6 +53,7 @@ if (start) {
     var BaseMapViewModel = require('./ViewModels/BaseMapViewModel');
     var BingMapsItemViewModel = require('./ViewModels/BingMapsItemViewModel');
     var BingMapsSearchProviderViewModel = require('./ViewModels/BingMapsSearchProviderViewModel');
+    var CatalogGroupViewModel = require('./ViewModels/CatalogGroupViewModel');
     var CatalogItemNameSearchProviderViewModel = require('./ViewModels/CatalogItemNameSearchProviderViewModel');
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
@@ -65,6 +67,7 @@ if (start) {
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
+    var WebMapServiceItemViewModel = require('./ViewModels/WebMapServiceItemViewModel');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
@@ -96,7 +99,9 @@ if (start) {
 
         // Start with "National Data Sets" open.
         var nds = application.catalog.group.findFirstItemByName('National Data Sets');
-        nds.isOpen = true;
+        if (defined(nds)) {
+            nds.isOpen = true;
+        }
 
         // Create the map/globe.
         AusGlobeViewer.create(application);
@@ -126,24 +131,93 @@ if (start) {
             leftLogo: 'images/gov-brand.png'
         });
 
+        // Create the various base layer options.
+        var naturalEarthII = new WebMapServiceItemViewModel(application);
+        naturalEarthII.name = 'Natural Earth II';
+        naturalEarthII.url = 'http://geoserver-nm.nicta.com.au/imagery/natural-earth-ii/wms';
+        naturalEarthII.layers = 'natural-earth-ii:NE2_HR_LC_SR_W_DR';
+        naturalEarthII.parameters = {
+            tiled: true
+        };
+        naturalEarthII.opacity = 1.0;
+
+        var australianTopoOverlay = new ArcGisMapServerItemViewModel(application);
+        australianTopoOverlay.name = 'Australian Topography';
+        australianTopoOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer';
+        australianTopoOverlay.opacity = 1.0;
+
+        var australianTopo = new CatalogGroupViewModel(application);
+        australianTopo.name = 'Australian Topography';
+        australianTopo.items.push(naturalEarthII);
+        australianTopo.items.push(australianTopoOverlay);
+
+        var blackMarble = new WebMapServiceItemViewModel(application);
+        blackMarble.name = 'NASA Black Marble';
+        blackMarble.url = 'http://geoserver-nm.nicta.com.au/imagery/nasa-black-marble/wms';
+        blackMarble.layers = 'nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo';
+        blackMarble.parameters = {
+            tiled: true
+        };
+        blackMarble.opacity = 1.0;
+
+        var bingMapsAerial = new BingMapsItemViewModel(application);
+        bingMapsAerial.name = 'Bing Maps Aerial';
+        bingMapsAerial.mapStyle = BingMapsStyle.AERIAL;
+        bingMapsAerial.opacity = 1.0;
+
+        var bingMapsRoads = new BingMapsItemViewModel(application);
+        bingMapsRoads.name = 'Bing Maps Roads';
+        bingMapsRoads.mapStyle = BingMapsStyle.ROAD;
+        bingMapsRoads.opacity = 1.0;
+
+        var australianHydroOverlay = new ArcGisMapServerItemViewModel(application);
+        australianHydroOverlay.name = 'Australian Hydrography';
+        australianHydroOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer';
+        australianHydroOverlay.opacity = 1.0;
+
+        var australianHydro = new CatalogGroupViewModel(application);
+        australianHydro.name = 'Australian Hydrography';
+        australianHydro.items.push(naturalEarthII);
+        australianHydro.items.push(australianHydroOverlay);
+
         var settingsPanel = new SettingsPanelViewModel({
             application: application,
             isVisible: false
         });
 
         settingsPanel.baseMaps.push(new BaseMapViewModel({
+            image: 'images/australian-topo.png',
+            catalogItem: australianTopo,
+        }));
+
+        settingsPanel.baseMaps.push(new BaseMapViewModel({
             image: 'images/bing-aerial-labels.png',
             catalogItem: defaultBaseMap
         }));
 
-        var australianTopo = new ArcGisMapServerItemViewModel(application);
-        australianTopo.name = 'Australian Topography';
-        australianTopo.url = 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer';
-        australianTopo.opacity = 1.0;
+        settingsPanel.baseMaps.push(new BaseMapViewModel({
+            image: 'images/bing-aerial.png',
+            catalogItem: bingMapsAerial,
+        }));
 
         settingsPanel.baseMaps.push(new BaseMapViewModel({
-            image: 'images/australian-topo.png',
-            catalogItem: australianTopo,
+            image: 'images/bing-maps-roads.png',
+            catalogItem: bingMapsRoads,
+        }));
+
+        settingsPanel.baseMaps.push(new BaseMapViewModel({
+            image: 'images/hydro.png',
+            catalogItem: australianHydro,
+        }));
+
+        settingsPanel.baseMaps.push(new BaseMapViewModel({
+            image: 'images/black-marble.png',
+            catalogItem: blackMarble,
+        }));
+
+        settingsPanel.baseMaps.push(new BaseMapViewModel({
+            image: 'images/natural-earth.png',
+            catalogItem: naturalEarthII,
         }));
 
         settingsPanel.show(ui);

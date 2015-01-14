@@ -301,7 +301,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this._previousBaseMap = this.application.baseMap;
 
     knockout.getObservable(this.application, 'baseMap').subscribe(function() {
-        changeBaseMap(this);
+        changeBaseMap(this, this.application.baseMap);
     }, this);
 
     knockout.getObservable(this.application, 'initialBoundingBox').subscribe(function() {
@@ -341,19 +341,37 @@ function changeViewer(viewer) {
     }
 }
 
-function changeBaseMap(viewer) {
-    var application = viewer.application;
-    var newBaseMap = application.baseMap;
+function changeBaseMap(viewer, newBaseMap) {
+    var i;
 
     if (defined(viewer._previousBaseMap)) {
-        viewer._previousBaseMap._hide();
-        viewer._previousBaseMap._disable();
+        if (defined(viewer._previousBaseMap.items)) {
+            for (i = 0; i < viewer._previousBaseMap.items.length; ++i) {
+                viewer._previousBaseMap.items[i]._hide();
+                viewer._previousBaseMap.items[i]._disable();
+            }
+        } else {
+            viewer._previousBaseMap._hide();
+            viewer._previousBaseMap._disable();
+        }
     }
 
-    newBaseMap._enable();
-    newBaseMap._show();
+    if (defined(newBaseMap)) {
+        if (defined(newBaseMap.items)) {
+            for (i = 0; i < newBaseMap.items.length; ++i) {
+                newBaseMap.items[i]._enable();
+                newBaseMap.items[i]._show();
+            }
 
-    newBaseMap.lowerToBottom();
+            for (i = newBaseMap.items.length - 1; i >= 0; --i) {
+                newBaseMap.items[i].lowerToBottom();
+            }
+        } else {
+            newBaseMap._enable();
+            newBaseMap._show();
+            newBaseMap.lowerToBottom();
+        }
+    }
 
     viewer._previousBaseMap = newBaseMap;
 }
@@ -788,6 +806,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         previousClock = Clock.clone(this.map.clock);
     }
 
+    changeBaseMap(this, undefined);
+
     this.application.beforeViewerChanged.raiseEvent();
 
     var bnds, rect;
@@ -1005,6 +1025,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     }
 
     this.application.afterViewerChanged.raiseEvent();
+
+    changeBaseMap(this, this.application.baseMap);
 
     if (timelineVisible) {
         showTimeline(this.viewer);
