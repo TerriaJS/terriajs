@@ -353,6 +353,8 @@ function changeBaseMap(viewer) {
     newBaseMap._enable();
     newBaseMap._show();
 
+    newBaseMap.lowerToBottom();
+
     viewer._previousBaseMap = newBaseMap;
 }
 

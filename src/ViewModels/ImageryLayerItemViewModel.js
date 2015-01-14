@@ -139,6 +139,24 @@ ImageryLayerItemViewModel.defaultPropertiesForSharing.push('opacity');
 
 freezeObject(ImageryLayerItemViewModel.defaultPropertiesForSharing);
 
+/**
+ * Lowers this imagery layer to the bottom, underneath all other layers.  If this item is not enabled or not shown,
+ * this method does nothing.
+  */
+ImageryLayerItemViewModel.prototype.lowerToBottom = function() {
+    if (!defined(this._imageryLayer)) {
+        return;
+    }
+
+    if (defined(this.application.cesium)) {
+        this.application.cesium.scene.imageryLayers.lowerToBottom(this._imageryLayer);
+    }
+
+    if (defined(this.application.leaflet)) {
+        this._imageryLayer.setZIndex(0);
+    }
+};
+
 ImageryLayerItemViewModel.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');

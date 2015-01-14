@@ -42,7 +42,7 @@ var ApplicationViewModel = function() {
 
     /**
      * Gets or sets the current base map.
-     * @type {CatalogItemViewModel}
+     * @type {ImageryLayerItemViewModel}
      */
     this.baseMap = undefined;
 
