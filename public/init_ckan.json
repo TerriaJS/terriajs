@@ -14,7 +14,7 @@
     "services": [],
     "catalog": [
         {
-            "name": "National Data Sets",
+            "name": "National Data Sets CKAN",
             "type": "ckan",
             "url": "http://54.79.117.201",
             "filterQuery": [ "q=res_format:WMS", "q=res_format:%22Esri%20REST%22" ],

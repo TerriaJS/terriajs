@@ -197,9 +197,6 @@ CkanGroupViewModel.prototype._load = function() {
     //FYI: to filter by group the filterQuery param should be set to something like 
     //  'q=groups%3dSurface%20Water&fq=res_format%3aWMS' in init_xx.json
     var promises = [];
-    if (!(this.filterQuery instanceof Array)) {
-        this.filterQuery = [this.filterQuery];
-    }
     for (var i = 0; i < this.filterQuery.length; i++) {
         var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery[i];
 
@@ -336,13 +333,15 @@ function populateGroupFromResults(viewModel, json) {
             textDescription = item.notes.replace(/\n/g, '<br/>');
         }
 
-        if (item.license_url && item.notes.indexOf('[Licence]') === -1) {
+        if (item.license_url && (item.notes === null || item.notes.indexOf('[Licence]') === -1)) {
             textDescription += '<br/>[Licence](' + item.license_url + ')';
         }
 
-        var extras = [];
-        for (var idx = 0; idx < item.extras.length; idx++) {
-            extras[item.extras[idx].key] = item.extras[idx].value;
+        var extras = {};
+        if (item.extras !== undefined) {
+            for (var idx = 0; idx < item.extras.length; idx++) {
+                extras[item.extras[idx].key] = item.extras[idx].value;
+            }
         }
 
         var dataUrl = extras.data_url;
@@ -356,7 +355,7 @@ function populateGroupFromResults(viewModel, json) {
             }
         }
 
-        // Currently, we only support WMS layers.
+        // Currently, we support WMS and Esri REST layers.
         var resources = item.resources;
         for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
             var resource = resources[resourceIndex];
