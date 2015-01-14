@@ -340,6 +340,7 @@ function afterViewerChanged(viewModel) {
     if (defined(baseMap)) {
         baseMap._enable();
         baseMap._show();
+        baseMap.lowerToBottom();
     }
 }
 
