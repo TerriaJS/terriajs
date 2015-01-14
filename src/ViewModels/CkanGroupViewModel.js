@@ -168,14 +168,11 @@ CkanGroupViewModel.prototype._load = function() {
         return undefined;
     }
 
+    var that = this;
+
+    var allResults = {result: {results: []}};
     var handleResults = function(json) {
-            if (that.filterByWmsGetCapabilities) {
-                return when(filterResultsByGetCapabilities(that, json), function() {
-                    populateGroupFromResults(that, json);
-                });
-            } else {
-                populateGroupFromResults(that, json);
-            }
+            allResults.result.results = allResults.result.results.concat(json.result.results);
         };
 
     var handleError = function() {
@@ -206,13 +203,20 @@ CkanGroupViewModel.prototype._load = function() {
     for (var i = 0; i < this.filterQuery.length; i++) {
         var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery[i];
 
-        var that = this;
-
         var promise = loadJson(url).then(handleResults).otherwise(handleError);
 
         promises.push(promise);
     }
-    return promises;
+
+    return when.all(promises).then(function() {
+            if (that.filterByWmsGetCapabilities) {
+                return when(filterResultsByGetCapabilities(that, allResults), function() {
+                    populateGroupFromResults(that, allResults);
+                });
+            } else {
+                populateGroupFromResults(that, allResults);
+            }
+        });
 };
 
 // The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
