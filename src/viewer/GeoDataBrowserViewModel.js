@@ -450,8 +450,7 @@ and the file will not be uploaded or added to the map.')) {
         var populateCache = that.catalog.application.getUserProperty('populate-cache');
         if (populateCache && populateCache !== 'false' && populateCache !== 'no' && populateCache !== '0') {
             if (populateCache !== '1') {
-//                that.maxLevel('http://localhost');
-                that.maxLevel('http://54.79.117.201');
+                that.maxLevel('http://localhost');
             }
             return true;
         }
@@ -566,7 +565,7 @@ and the file will not be uploaded or added to the map.')) {
 
         console.log('Caching ' + urls.length + ' URLs');
 
-        var maxRequests = 1;
+        var maxRequests = 2;
         var nextRequestIndex = 0;
         var inFlight = 0;
         var urlsRequested = 0;
