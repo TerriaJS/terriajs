@@ -13,14 +13,19 @@ var MenuBarItemViewModel = function(options) {
     this.tooltip = options.tooltip;
     this.callback = options.callback;
     this.href = options.href;
+    this.observableToToggle = options.observableToToggle;
     this.visible = defaultValue(options.visible, true);
 
-    knockout.track(this, ['label', 'image', 'imageWidth', 'imageHeight', 'tooltip', 'href', 'visible']);
+    knockout.track(this, ['label', 'image', 'imageWidth', 'imageHeight', 'tooltip', 'href', 'isToggle', 'observableToToggle', 'visible']);
 };
 
 MenuBarItemViewModel.prototype.execute = function() {
     if (defined(this.callback)) {
         this.callback(this);
+    }
+
+    if (defined(this.observableToToggle)) {
+        this.observableToToggle = !this.observableToToggle;
     }
 };
 

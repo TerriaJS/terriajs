@@ -134,9 +134,7 @@ if (start) {
         menuBar.items.push(new MenuBarItemViewModel({
             label: 'Settings',
             tooltip: 'Change the map mode (2D/3D) and base map.',
-            callback: function() {
-                settingsPanel.isVisible = !settingsPanel.isVisible;
-            }
+            observableToToggle: knockout.getObservable(settingsPanel, 'isVisible')
         }));
         menuBar.items.push(new MenuBarItemViewModel({
             label: 'Share',
