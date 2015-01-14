@@ -37,6 +37,7 @@ if (start) {
 
     var copyright = require('./CopyrightModule'); // jshint ignore:line
 
+    var BingMapsStyle = require('../third_party/cesium/Source/Scene/BingMapsStyle');
     var SvgPathBindingHandler = require('../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../third_party/cesium/Source/ThirdParty/knockout');
 
@@ -47,6 +48,9 @@ if (start) {
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
     var AddDataPanelViewModel = require('./ViewModels/AddDataPanelViewModel');
+    var ArcGisMapServerItemViewModel = require('./ViewModels/ArcGisMapServerItemViewModel');
+    var BaseMapViewModel = require('./ViewModels/BaseMapViewModel');
+    var BingMapsItemViewModel = require('./ViewModels/BingMapsItemViewModel');
     var BingMapsSearchProviderViewModel = require('./ViewModels/BingMapsSearchProviderViewModel');
     var CatalogItemNameSearchProviderViewModel = require('./ViewModels/CatalogItemNameSearchProviderViewModel');
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
@@ -97,6 +101,13 @@ if (start) {
         // Create the map/globe.
         AusGlobeViewer.create(application);
 
+        var defaultBaseMap = new BingMapsItemViewModel(application);
+        defaultBaseMap.name = 'Bing Maps Aerial with Labels';
+        defaultBaseMap.mapStyle = BingMapsStyle.AERIAL_WITH_LABELS;
+        defaultBaseMap.opacity = 1.0;
+
+        application.baseMap = defaultBaseMap;
+
         // Create the user interface.
         var ui = document.getElementById('ui');
 
@@ -119,6 +130,22 @@ if (start) {
             application: application,
             isVisible: false
         });
+
+        settingsPanel.baseMaps.push(new BaseMapViewModel({
+            image: 'images/bing-aerial-labels.png',
+            catalogItem: defaultBaseMap
+        }));
+
+        var australianTopo = new ArcGisMapServerItemViewModel(application);
+        australianTopo.name = 'Australian Topography';
+        australianTopo.url = 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer';
+        australianTopo.opacity = 1.0;
+
+        settingsPanel.baseMaps.push(new BaseMapViewModel({
+            image: 'images/australian-topo.png',
+            catalogItem: australianTopo,
+        }));
+
         settingsPanel.show(ui);
 
         var menuBar = new MenuBarViewModel();

@@ -19,8 +19,10 @@ var SettingsPanelViewModel = function(options) {
     this._domNodes = undefined;
 
     this.isVisible = defaultValue(options.isVisible, true);
+    this.baseMaps = [];
+    this.mouseOverBaseMap = undefined;
 
-    knockout.track(this, ['isVisible']);
+    knockout.track(this, ['isVisible', 'baseMaps', 'mouseOverBaseMap']);
 };
 
 SettingsPanelViewModel.prototype.show = function(container) {
@@ -48,6 +50,18 @@ SettingsPanelViewModel.prototype.select3DSmooth = function() {
 
 SettingsPanelViewModel.prototype.select3DTerrain = function() {
     this.application.viewerMode = ViewerMode.CesiumTerrain;
+};
+
+SettingsPanelViewModel.prototype.changeHighlightedBaseMap = function(baseMap) {
+    this.mouseOverBaseMap = baseMap;
+};
+
+SettingsPanelViewModel.prototype.selectBaseMap = function(baseMap) {
+    this.application.baseMap = baseMap.catalogItem;
+};
+
+SettingsPanelViewModel.prototype.resetHightedBaseMap = function() {
+    this.mouseOverBaseMap = undefined;
 };
 
 module.exports = SettingsPanelViewModel;

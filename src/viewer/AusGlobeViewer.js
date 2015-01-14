@@ -8,8 +8,6 @@
 /*global require,L,URI,$,Document,html2canvas,console,ga*/
 
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
-var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
-var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
@@ -43,6 +41,7 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var RectanglePrimitive = require('../../third_party/cesium/Source/Scene/RectanglePrimitive');
 var ScreenSpaceEventHandler = require('../../third_party/cesium/Source/Core/ScreenSpaceEventHandler');
 var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
+var SingleTileImageryProvider = require('../../third_party/cesium/Source/Scene/SingleTileImageryProvider');
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 var Viewer = require('../../third_party/cesium/Source/Widgets/Viewer/Viewer');
@@ -299,6 +298,12 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
         changeViewer(this);
     }, this);
 
+    this._previousBaseMap = this.application.baseMap;
+
+    knockout.getObservable(this.application, 'baseMap').subscribe(function() {
+        changeBaseMap(this);
+    }, this);
+
     knockout.getObservable(this.application, 'initialBoundingBox').subscribe(function() {
         that.updateCameraFromRect(that.application.initialBoundingBox, 2000);
     });
@@ -334,6 +339,21 @@ function changeViewer(viewer) {
 
         application.cesium.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
     }
+}
+
+function changeBaseMap(viewer) {
+    var application = viewer.application;
+    var newBaseMap = application.baseMap;
+
+    if (defined(viewer._previousBaseMap)) {
+        viewer._previousBaseMap._hide();
+        viewer._previousBaseMap._disable();
+    }
+
+    newBaseMap._enable();
+    newBaseMap._show();
+
+    viewer._previousBaseMap = newBaseMap;
 }
 
 // -------------------------------------------
@@ -548,10 +568,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         navigationHelpButton: false,
         fullscreenButton : false,
         terrainProvider : terrainProvider,
-        imageryProvider : new BingMapsImageryProvider({
-            url : '//dev.virtualearth.net',
-            mapStyle : BingMapsStyle.AERIAL_WITH_LABELS
-        }),
+        imageryProvider : new SingleTileImageryProvider({ url: 'images/nicta.png' }),
         timeControlsInitiallyVisible : false,
         targetFrameRate : 40
     };
@@ -565,6 +582,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
      //create CesiumViewer
     var viewer = new Viewer(container, options);
     viewer.extend(viewerEntityMixin);
+
+    viewer.scene.imageryLayers.removeAll();
 
     viewer.clock.shouldAnimate = false;
 
@@ -862,8 +881,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.fitBounds(bnds);
 
         //Bing Maps Layer by default
-        this.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey(), { type: 'AerialWithLabels' });
-        map.addLayer(this.mapBaseLayer);
+        //this.mapBaseLayer = new L.BingLayer(BingMapsApi.getKey(), { type: 'AerialWithLabels' });
+        //map.addLayer(this.mapBaseLayer);
 
         //document.getElementById('controls').style.visibility = 'hidden';
         //this._navigationWidget.showTilt = false;
