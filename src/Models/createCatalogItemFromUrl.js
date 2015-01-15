@@ -6,7 +6,7 @@ var mapping = [];
  * Creates a type derived from {@link CatalogMember} based on a given URL.
  *
  * @param {String} url The derived type name.
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  * @returns {CatalogMember} The constructed data item, or undefined if the URL is not supported.
  */
 var createCatalogItemFromUrl = function(url, application) {
@@ -50,7 +50,7 @@ var createCatalogItemFromUrl = function(url, application) {
   * Function interface for matching a URL to a {@link CatalogMember} constructor
   * for that URL.
   * @callback createCatalogItemFromUrl~Constructor
-  * @param {ApplicationViewModel} application The application.
+  * @param {Application} application The application.
   * @param {String} url The URL from which to obtain the data.
   * @returns {CatalogMember} The created data item.
   */

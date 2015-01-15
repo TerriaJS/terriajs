@@ -24,13 +24,13 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
  * @constructor
  * @extends GeoJsonCatalogItem
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  * @param {String} [url] The URL from which to retrieve the GPX data.
  */
 var GpxCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
-    this._geoJsonViewModel = undefined;
+    this._geoJsonItem = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GPX data.  This property is ignored if
@@ -102,7 +102,7 @@ GpxCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
 };
 
 GpxCatalogItem.prototype._load = function() {
-    this._geoJsonViewModel = new GeoJsonCatalogItem(this.application);
+    this._geoJsonItem = new GeoJsonCatalogItem(this.application);
 
     var that = this;
 
@@ -129,26 +129,26 @@ GpxCatalogItem.prototype._load = function() {
 };
 
 GpxCatalogItem.prototype._enable = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._enable();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._enable();
     }
 };
 
 GpxCatalogItem.prototype._disable = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._disable();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._disable();
     }
 };
 
 GpxCatalogItem.prototype._show = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._show();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._show();
     }
 };
 
 GpxCatalogItem.prototype._hide = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._hide();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._hide();
     }
 };
 
@@ -161,22 +161,22 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function loadGpxText(viewModel, text) {
+function loadGpxText(gpxItem, text) {
 
     var dom = (new DOMParser()).parseFromString(text, 'text/xml');    
     var geojson = toGeoJSON.gpx(dom);
 
-    viewModel._geoJsonViewModel.data = geojson;
+    gpxItem._geoJsonItem.data = geojson;
 
-    return viewModel._geoJsonViewModel.load().then(function() {
-        viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
-        viewModel.clock = viewModel._geoJsonViewModel.clock;
+    return gpxItem._geoJsonItem.load().then(function() {
+        gpxItem.rectangle = gpxItem._geoJsonItem.rectangle;
+        gpxItem.clock = gpxItem._geoJsonItem.clock;
     });
 }
 
-function errorLoading(viewModel) {
+function errorLoading(gpxItem) {
     throw new ModelError({
-        sender: viewModel,
+        sender: gpxItem,
         title: 'Error loading GPX',
         message: '\
 An error occurred while loading a GPX file.  This may indicate that the file is invalid or that it \

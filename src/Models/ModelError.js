@@ -5,7 +5,7 @@
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 
 /**
- * Represents an error that occurred in a view-model, especially an asynchronous one that cannot be raised
+ * Represents an error that occurred in a model, especially an asynchronous one that cannot be raised
  * by throwing an exception because no one would be able to catch it.
  *
  * @alias ModelError

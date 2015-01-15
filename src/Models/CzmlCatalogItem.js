@@ -22,7 +22,7 @@ var readJson = require('../Core/readJson');
  * @constructor
  * @extends CatalogItem
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  * @param {String} [url] The URL from which to retrieve the CZML data.
  */
 var CzmlCatalogItem = function(application, url) {
@@ -170,13 +170,13 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function doneLoading(viewModel) {
-    viewModel.clock = viewModel._czmlDataSource.clock;
+function doneLoading(czmlItem) {
+    czmlItem.clock = czmlItem._czmlDataSource.clock;
 }
 
-function errorLoading(viewModel) {
+function errorLoading(czmlItem) {
     throw new ModelError({
-        sender: viewModel,
+        sender: czmlItem,
         title: 'Error loading CZML',
         message: '\
 An error occurred while loading a CZML file.  This may indicate that the file is invalid or that it \

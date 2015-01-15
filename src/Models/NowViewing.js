@@ -9,7 +9,7 @@ var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 /**
- * The view-model for the "Now Viewing" pane.
+ * The model for the "Now Viewing" pane.
  */
 var NowViewing = function(application) {
     this._application = application;
@@ -44,7 +44,7 @@ defineProperties(NowViewing.prototype, {
     /**
      * Gets the application.
      * @memberOf NowViewing.prototype
-     * @type {ApplicationViewModel}
+     * @type {Application}
      */
     application : {
         get : function() {
@@ -284,39 +284,39 @@ NowViewing.prototype.updateLeafletLayerOrder = function() {
 
 // Raise and lower functions for the two maps.  Currently we can only raise and lower imagery layers.
 
-function raiseInCesium(viewModel, item, itemAbove) {
+function raiseInCesium(nowViewing, item, itemAbove) {
     if (!defined(item.imageryLayer) || !defined(itemAbove.imageryLayer)) {
         return;
     }
 
-    var scene = viewModel.application.cesium.scene;
+    var scene = nowViewing.application.cesium.scene;
     scene.imageryLayers.raise(item.imageryLayer);
 }
 
-function lowerInCesium(viewModel, item, itemBelow) {
+function lowerInCesium(nowViewing, item, itemBelow) {
     if (!defined(item.imageryLayer) || !defined(itemBelow.imageryLayer)) {
         return;
     }
 
-    var scene = viewModel.application.cesium.scene;
+    var scene = nowViewing.application.cesium.scene;
     scene.imageryLayers.lower(item.imageryLayer);
 }
 
-function raiseInLeaflet(viewModel, item, itemAbove) {
-    swapLeafletZIndices(viewModel, item, itemAbove);
+function raiseInLeaflet(nowViewing, item, itemAbove) {
+    swapLeafletZIndices(nowViewing, item, itemAbove);
 }
 
-function lowerInLeaflet(viewModel, item, itemBelow) {
-    swapLeafletZIndices(viewModel, item, itemBelow);
+function lowerInLeaflet(nowViewing, item, itemBelow) {
+    swapLeafletZIndices(nowViewing, item, itemBelow);
 }
 
-function swapLeafletZIndices(viewModel, item, otherItem) {
+function swapLeafletZIndices(nowViewing, item, otherItem) {
     if (!defined(item.imageryLayer) || !defined(otherItem.imageryLayer)) {
         return;
     }
 
     if (!defined(item.imageryLayer.options.zIndex) || !defined(item.imageryLayer.options.zIndex)) {
-        viewModel.updateLeafletLayerOrder();
+        nowViewing.updateLeafletLayerOrder();
     }
 
     // Swap the z-indices of the two layers.
@@ -327,11 +327,11 @@ function swapLeafletZIndices(viewModel, item, otherItem) {
     otherItem.imageryLayer.setZIndex(itemIndex);
 }
 
-function beforeViewerChanged(viewModel) {
+function beforeViewerChanged(nowViewing) {
     // Hide and disable all data sources, without actually changing
     // their isEnabled and isShown flags.
 
-    var dataSources = viewModel.items;
+    var dataSources = nowViewing.items;
 
     for (var i = 0; i < dataSources.length; ++i) {
         var dataSource = dataSources[i];
@@ -349,11 +349,11 @@ function beforeViewerChanged(viewModel) {
     }
 }
 
-function afterViewerChanged(viewModel) {
+function afterViewerChanged(nowViewing) {
     // Re-enable and re-show all data sources that were previously enabled or shown.
     // Work from the bottom data source up so that the correct order is created.
 
-    var dataSources = viewModel.items;
+    var dataSources = nowViewing.items;
 
     for (var i = dataSources.length - 1; i >= 0; --i) {
         var dataSource = dataSources[i];

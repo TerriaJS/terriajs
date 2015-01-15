@@ -19,7 +19,7 @@ var inherit = require('../Core/inherit');
  * @constructor
  * @extends ImageryLayerCatalogItem
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var ArcGisMapServerCatalogItem = function(application) {
     ImageryLayerCatalogItem.call(this, application);

@@ -25,7 +25,7 @@ var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
  * @constructor
  * @extends CatalogGroup
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var WebMapServiceCatalogGroup = function(application) {
     CatalogGroup.call(this, application, 'wms-getCapabilities');
@@ -81,8 +81,8 @@ defineProperties(WebMapServiceCatalogGroup.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf WebMapServiceCatalogGroup.prototype
      * @type {Object}
@@ -101,7 +101,7 @@ defineProperties(WebMapServiceCatalogGroup.prototype, {
  */
 WebMapServiceCatalogGroup.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
-WebMapServiceCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+WebMapServiceCatalogGroup.defaultSerializers.items = function(wmsGroup, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from GetCapabilities.
     var previousSerializeForSharing = options.serializeForSharing;
     options.serializeForSharing = true;
@@ -113,7 +113,7 @@ WebMapServiceCatalogGroup.defaultSerializers.items = function(viewModel, json, p
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    var result = CatalogGroup.defaultSerializers.items(viewModel, json, propertyName, options);
+    var result = CatalogGroup.defaultSerializers.items(wmsGroup, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;
@@ -121,7 +121,7 @@ WebMapServiceCatalogGroup.defaultSerializers.items = function(viewModel, json, p
     return result;
 };
 
-WebMapServiceCatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+WebMapServiceCatalogGroup.defaultSerializers.isLoading = function(wmsGroup, json, propertyName, options) {};
 
 freezeObject(WebMapServiceCatalogGroup.defaultSerializers);
 
@@ -229,7 +229,7 @@ function cleanAndProxyUrl(application, url) {
     return cleanedUrl;
 }
 
-function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetFeatureInfo, dataCustodian) {
+function addLayersRecursively(wmsGroup, layers, items, parent, supportsJsonGetFeatureInfo, dataCustodian) {
     if (!(layers instanceof Array)) {
         layers = [layers];
     }
@@ -244,36 +244,36 @@ function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetF
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
             // in the 'layers' parameter of a GetMap request.  This is true in 1.0.0 and 1.3.0 as well.
             if (defined(layer.Name) && layer.Name.length > 0) {
-                items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian));
+                items.push(createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCustodian));
             }
-            addLayersRecursively(viewModel, layer.Layer, items, layer, supportsJsonGetFeatureInfo, dataCustodian);
+            addLayersRecursively(wmsGroup, layer.Layer, items, layer, supportsJsonGetFeatureInfo, dataCustodian);
         }
         else {
-            items.push(createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian));
+            items.push(createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCustodian));
         }
     }
 }
 
-function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian) {
-    var result = new WebMapServiceCatalogItem(viewModel.application);
+function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCustodian) {
+    var result = new WebMapServiceCatalogItem(wmsGroup.application);
 
     result.name = layer.Title;
-    result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;
+    result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : wmsGroup.description;
     result.dataCustodian = dataCustodian;
-    result.url = viewModel.url;
+    result.url = wmsGroup.url;
     result.layers = layer.Name;
-    result.parameters = viewModel.parameters;
+    result.parameters = wmsGroup.parameters;
 
     result.description = '';
 
-    var viewModelHasDescription = defined(viewModel.description) && viewModel.description.length > 0;
+    var wmsGroupHasDescription = defined(wmsGroup.description) && wmsGroup.description.length > 0;
     var layerHasAbstract = defined(layer.Abstract) && layer.Abstract.length > 0;
 
-    if (viewModelHasDescription) {
-        result.description += viewModel.description;
+    if (wmsGroupHasDescription) {
+        result.description += wmsGroup.description;
     }
 
-    if (viewModelHasDescription && layerHasAbstract) {
+    if (wmsGroupHasDescription && layerHasAbstract) {
         result.description += '<br/>';
     }
 

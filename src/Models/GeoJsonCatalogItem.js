@@ -49,7 +49,7 @@ var pointPalette = {
  * @constructor
  * @extends CatalogItem
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  * @param {String} [url] The URL from which to retrieve the GeoJSON data.
  */
 var GeoJsonCatalogItem = function(application, url) {
@@ -144,12 +144,12 @@ GeoJsonCatalogItem.prototype._load = function() {
 
             return when(promise, function(json) {
                 that.data = json;
-                return updateViewModelFromData(that, json);
+                return updateModelFromData(that, json);
             });
         });
     } else {
         return loadJson(proxyUrl(that.application, that.url)).then(function(json) {
-            return updateViewModelFromData(that, json);
+            return updateModelFromData(that, json);
         }).otherwise(function(e) {
             throw new ModelError({
                 sender: that,
@@ -203,7 +203,7 @@ GeoJsonCatalogItem.prototype._hide = function() {
     dataSources.remove(this._geoJsonDataSource, false);
 };
 
-function updateViewModelFromData(viewModel, geoJson) {
+function updateModelFromData(geoJsonItem, geoJson) {
     // If this GeoJSON data is an object literal with a single property, treat that
     // property as the name of the data source, and the property's value as the
     // actual GeoJSON.
@@ -224,8 +224,8 @@ function updateViewModelFromData(viewModel, geoJson) {
         geoJson = geoJson[propertyName];
 
         // If we don't already have a name, or our name is just derived from our URL, update the name.
-        if (!defined(viewModel.name) || viewModel.name.length === 0 || nameIsDerivedFromUrl(viewModel.name, viewModel.url)) {
-            viewModel.name = name;
+        if (!defined(geoJsonItem.name) || geoJsonItem.name.length === 0 || nameIsDerivedFromUrl(geoJsonItem.name, geoJsonItem.url)) {
+            geoJsonItem.name = name;
         }
     }
 
@@ -234,13 +234,13 @@ function updateViewModelFromData(viewModel, geoJson) {
 
     return when(promise, function() {
         // If we don't already have a rectangle, compute one.
-        if (!defined(viewModel.rectangle) || Rectangle.equals(viewModel.rectangle, Rectangle.MAX_VALUE)) {
-            viewModel.rectangle = getGeoJsonExtent(geoJson);
+        if (!defined(geoJsonItem.rectangle) || Rectangle.equals(geoJsonItem.rectangle, Rectangle.MAX_VALUE)) {
+            geoJsonItem.rectangle = getGeoJsonExtent(geoJson);
         }
 
-        viewModel._readyData = geoJson;
+        geoJsonItem._readyData = geoJson;
 
-        return loadGeoJson(viewModel);
+        return loadGeoJson(geoJsonItem);
     });
 }
 
@@ -266,18 +266,18 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function loadGeoJson(viewModel) {
+function loadGeoJson(geoJsonItem) {
     var fillPolygons = false;
-    var pointColor = getRandomColor(pointPalette, viewModel.name);
-    var lineColor = getRandomColor(lineAndFillPalette, viewModel.name);
+    var pointColor = getRandomColor(pointPalette, geoJsonItem.name);
+    var lineColor = getRandomColor(lineAndFillPalette, geoJsonItem.name);
     var fillColor = Color.clone(lineColor);
     fillColor.alpha = 0.75;
 
     var pointSize = 10;
     var lineWidth = 2;
 
-    var dataSource = viewModel._geoJsonDataSource;
-    return dataSource.load(viewModel._readyData).then(function() {
+    var dataSource = geoJsonItem._geoJsonDataSource;
+    return dataSource.load(geoJsonItem._readyData).then(function() {
         var entities = dataSource.entities.entities;
 
         for (var i = 0; i < entities.length; ++i) {

@@ -22,7 +22,7 @@ var ModelError = require('./ModelError');
  * @extends CatalogItem
  * @abstract
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var ImageryLayerCatalogItem = function(application) {
     CatalogItem.call(this, application);
@@ -98,8 +98,8 @@ defineProperties(ImageryLayerCatalogItem.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf ImageryLayerCatalogItem.prototype
      * @type {Object}
@@ -232,14 +232,14 @@ ImageryLayerCatalogItem.prototype._hideInLeaflet = function() {
     map.removeLayer(this._imageryLayer);
 };
 
-function updateOpacity(viewModel) {
-    if (defined(viewModel._imageryLayer) && viewModel.isEnabled && viewModel.isShown) {
-        if (defined(viewModel._imageryLayer.alpha)) {
-            viewModel._imageryLayer.alpha = viewModel.opacity;
+function updateOpacity(imageryLayerItem) {
+    if (defined(imageryLayerItem._imageryLayer) && imageryLayerItem.isEnabled && imageryLayerItem.isShown) {
+        if (defined(imageryLayerItem._imageryLayer.alpha)) {
+            imageryLayerItem._imageryLayer.alpha = imageryLayerItem.opacity;
         }
 
-        if (defined(viewModel._imageryLayer.setOpacity)) {
-            viewModel._imageryLayer.setOpacity(viewModel.opacity);
+        if (defined(imageryLayerItem._imageryLayer.setOpacity)) {
+            imageryLayerItem._imageryLayer.setOpacity(imageryLayerItem.opacity);
         }
     }
 }

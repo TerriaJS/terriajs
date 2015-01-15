@@ -23,7 +23,7 @@ var gmlToGeoJson = require('../Map/gmlToGeoJson');
  * @constructor
  * @extends CatalogItem
  * 
- * @param {ApplicationViewModel} application The application for the group.
+ * @param {Application} application The application for the group.
  */
 var WebFeatureServiceCatalogItem = function(application) {
     CatalogItem.call(this, application);
@@ -31,7 +31,7 @@ var WebFeatureServiceCatalogItem = function(application) {
     this._dataUrl = undefined;
     this._dataUrlType = undefined;
     this._metadataUrl = undefined;
-    this._geoJsonViewModel = undefined;
+    this._geoJsonItem = undefined;
 
     /**
      * Gets or sets the URL of the WFS server.  This property is observable.
@@ -155,8 +155,8 @@ defineProperties(WebFeatureServiceCatalogItem.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf WebFeatureServiceCatalogItem.prototype
      * @type {Object}
@@ -174,14 +174,14 @@ freezeObject(WebFeatureServiceCatalogItem.defaultUpdaters);
 WebFeatureServiceCatalogItem.defaultSerializers = clone(CatalogItem.defaultSerializers);
 
 // Serialize the underlying properties instead of the public views of them.
-WebFeatureServiceCatalogItem.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {
-    json.dataUrl = viewModel._dataUrl;
+WebFeatureServiceCatalogItem.defaultSerializers.dataUrl = function(wfsItem, json, propertyName) {
+    json.dataUrl = wfsItem._dataUrl;
 };
-WebFeatureServiceCatalogItem.defaultSerializers.dataUrlType = function(viewModel, json, propertyName) {
-    json.dataUrlType = viewModel._dataUrlType;
+WebFeatureServiceCatalogItem.defaultSerializers.dataUrlType = function(wfsItem, json, propertyName) {
+    json.dataUrlType = wfsItem._dataUrlType;
 };
-WebFeatureServiceCatalogItem.defaultSerializers.metadataUrl = function(viewModel, json, propertyName) {
-    json.metadataUrl = viewModel._metadataUrl;
+WebFeatureServiceCatalogItem.defaultSerializers.metadataUrl = function(wfsItem, json, propertyName) {
+    json.metadataUrl = wfsItem._metadataUrl;
 };
 freezeObject(WebFeatureServiceCatalogItem.defaultSerializers);
 
@@ -190,7 +190,7 @@ WebFeatureServiceCatalogItem.prototype._getValuesThatInfluenceLoad = function() 
 };
 
 WebFeatureServiceCatalogItem.prototype._load = function() {
-    this._geoJsonViewModel = new GeoJsonCatalogItem(this.application);
+    this._geoJsonItem = new GeoJsonCatalogItem(this.application);
 
 
     var promise;
@@ -202,76 +202,76 @@ WebFeatureServiceCatalogItem.prototype._load = function() {
         return;
     }
 
-    this._geoJsonViewModel.data = promise;
+    this._geoJsonItem.data = promise;
 
     var that = this;
-    return that._geoJsonViewModel.load().then(function() {
-        that.rectangle = that._geoJsonViewModel.rectangle;
+    return that._geoJsonItem.load().then(function() {
+        that.rectangle = that._geoJsonItem.rectangle;
     });
 };
 
 WebFeatureServiceCatalogItem.prototype._enable = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._enable();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._enable();
     }
 };
 
 WebFeatureServiceCatalogItem.prototype._disable = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._disable();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._disable();
     }
 };
 
 WebFeatureServiceCatalogItem.prototype._show = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._show();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._show();
     }
 };
 
 WebFeatureServiceCatalogItem.prototype._hide = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._hide();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._hide();
     }
 };
 
-function loadGeoJson(viewModel) {
-    var promise = loadJson(buildGeoJsonUrl(viewModel)).then(function(json) {
+function loadGeoJson(wfsItem) {
+    var promise = loadJson(buildGeoJsonUrl(wfsItem)).then(function(json) {
         return json;
     });
 
-    if (viewModel.requestGml) {
+    if (wfsItem.requestGml) {
         promise = promise.otherwise(function() {
-            return loadGml(viewModel);
+            return loadGml(wfsItem);
         });
     }
 
     return promise;
 }
 
-function loadGml(viewModel) {
-    return loadXML(buildGmlUrl(viewModel)).then(function(xml) {
+function loadGml(wfsItem) {
+    return loadXML(buildGmlUrl(wfsItem)).then(function(xml) {
         return gmlToGeoJson(xml);
     });
 }
 
-function buildGeoJsonUrl(viewModel) {
-    var url = cleanAndProxyUrl(viewModel.application, viewModel.url);
+function buildGeoJsonUrl(wfsItem) {
+    var url = cleanAndProxyUrl(wfsItem.application, wfsItem.url);
     return url + '?' + objectToQuery({
         service: 'WFS',
         request: 'GetFeature',
-        typeName: viewModel.typeNames,
+        typeName: wfsItem.typeNames,
         version: '1.1.0',
         outputFormat: 'JSON',
         srsName: 'EPSG:4326'
     });
 }
 
-function buildGmlUrl(viewModel) {
-    var url = cleanAndProxyUrl(viewModel.application, viewModel.url);
+function buildGmlUrl(wfsItem) {
+    var url = cleanAndProxyUrl(wfsItem.application, wfsItem.url);
     return url + '?' + objectToQuery({
         service: 'WFS',
         request: 'GetFeature',
-        typeName: viewModel.typeNames,
+        typeName: wfsItem.typeNames,
         version: '1.1.0',
         srsName: 'EPSG:4326'
     });

@@ -12,7 +12,7 @@ var mapping = {};
  * Creates a type derived from {@link CatalogMember} based on a given type string.
  * 
  * @param {String} type The derived type name.
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var createCatalogMemberFromType = function(type, application) {
     var Constructor = mapping[type];
@@ -33,7 +33,7 @@ This error may also indicate an attempt to load a newer catalogue file in an old
  * 
  * @param {String} type The type name for which to register a constructor.
  * @param {Function} constructor The constructor for data items of this type.  The constructor is expected to take a
- *                               {@link ApplicationViewModel} as its first and only required parameter.
+ *                               {@link Application} as its first and only required parameter.
  */
 createCatalogMemberFromType.register = function(type, constructor) {
     mapping[type] = constructor;

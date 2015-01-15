@@ -25,7 +25,7 @@ var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
  * @constructor
  * @extends CatalogGroup
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var CkanCatalogGroup = function(application) {
     CatalogGroup.call(this, application, 'ckan');
@@ -106,8 +106,8 @@ defineProperties(CkanCatalogGroup.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf CkanCatalogGroup.prototype
      * @type {Object}
@@ -126,7 +126,7 @@ defineProperties(CkanCatalogGroup.prototype, {
  */
 CkanCatalogGroup.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
-CkanCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+CkanCatalogGroup.defaultSerializers.items = function(ckanGroup, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from CKAN.
     var previousSerializeForSharing = options.serializeForSharing;
     options.serializeForSharing = true;
@@ -138,7 +138,7 @@ CkanCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyNa
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    var result = CatalogGroup.defaultSerializers.items(viewModel, json, propertyName, options);
+    var result = CatalogGroup.defaultSerializers.items(ckanGroup, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;
@@ -146,7 +146,7 @@ CkanCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyNa
     return result;
 };
 
-CkanCatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+CkanCatalogGroup.defaultSerializers.isLoading = function(ckanGroup, json, propertyName, options) {};
 
 freezeObject(CkanCatalogGroup.defaultSerializers);
 
@@ -194,7 +194,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 // The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
 var wmsFormatRegex = /^wms$/i;
 
-function filterResultsByGetCapabilities(viewModel, json) {
+function filterResultsByGetCapabilities(ckanGroup, json) {
     var wmsServers = {};
 
     var items = json.result.results;
@@ -242,14 +242,14 @@ function filterResultsByGetCapabilities(viewModel, json) {
                 getCapabilitiesUrl = corsProxy.getURL(getCapabilitiesUrl, '1d');
             }
 
-            promises.push(filterBasedOnGetCapabilities(viewModel, getCapabilitiesUrl, wmsServers[wmsServer]));
+            promises.push(filterBasedOnGetCapabilities(ckanGroup, getCapabilitiesUrl, wmsServers[wmsServer]));
         }
     }
 
     return when.all(promises);
 }
 
-function filterBasedOnGetCapabilities(viewModel, getCapabilitiesUrl, resources) {
+function filterBasedOnGetCapabilities(ckanGroup, getCapabilitiesUrl, resources) {
     // Initially assume all resources will be filtered.
     for (var name in resources) {
         if (resources.hasOwnProperty(name)) {
@@ -259,13 +259,13 @@ function filterBasedOnGetCapabilities(viewModel, getCapabilitiesUrl, resources) 
 
     return loadText(getCapabilitiesUrl).then(function(getCapabilitiesXml) {
         var getCapabilitiesJson = $.xml2json(getCapabilitiesXml);
-        filterBasedOnGetCapabilitiesResponse(viewModel, getCapabilitiesJson.Capability.Layer, resources);
+        filterBasedOnGetCapabilitiesResponse(ckanGroup, getCapabilitiesJson.Capability.Layer, resources);
     }).otherwise(function() {
         // Do nothing - all resources will be filtered.
     });
 }
 
-function filterBasedOnGetCapabilitiesResponse(viewModel, wmsLayersSource, resources) {
+function filterBasedOnGetCapabilitiesResponse(ckanGroup, wmsLayersSource, resources) {
     if (defined(wmsLayersSource) && !(wmsLayersSource instanceof Array)) {
         wmsLayersSource = [wmsLayersSource];
     }
@@ -276,7 +276,7 @@ function filterBasedOnGetCapabilitiesResponse(viewModel, wmsLayersSource, resour
         if (layerSource.Name) {
             var resource = resources[layerSource.Name];
             if (resource) {
-                if (!defined(viewModel.minimumMaxScaleDenominator) || !defined(layerSource.MaxScaleDenominator) || layerSource.MaxScaleDenominator >= viewModel.minimumMaxScaleDenominator) {
+                if (!defined(ckanGroup.minimumMaxScaleDenominator) || !defined(layerSource.MaxScaleDenominator) || layerSource.MaxScaleDenominator >= ckanGroup.minimumMaxScaleDenominator) {
                     resource.__filtered = false;
                 }
                 else {
@@ -286,17 +286,17 @@ function filterBasedOnGetCapabilitiesResponse(viewModel, wmsLayersSource, resour
         }
 
         if (layerSource.Layer) {
-            filterBasedOnGetCapabilitiesResponse(viewModel, layerSource.Layer, resources);
+            filterBasedOnGetCapabilitiesResponse(ckanGroup, layerSource.Layer, resources);
         }
     }
 }
 
-function populateGroupFromResults(viewModel, json) {
+function populateGroupFromResults(ckanGroup, json) {
     var items = json.result.results;
     for (var itemIndex = 0; itemIndex < items.length; ++itemIndex) {
         var item = items[itemIndex];
 
-        if (viewModel.blacklist && viewModel.blacklist[item.title]) {
+        if (ckanGroup.blacklist && ckanGroup.blacklist[item.title]) {
             console.log('Provider Feedback: Filtering out ' + item.title + ' (' + item.name + ') because it is blacklisted.');
             continue;
         }
@@ -345,15 +345,15 @@ function populateGroupFromResults(viewModel, json) {
             uri.search('');
             var url = uri.toString();
 
-            var newItem = new WebMapServiceCatalogItem(viewModel.application);
+            var newItem = new WebMapServiceCatalogItem(ckanGroup.application);
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;
             newItem.layers = layerName;
             newItem.rectangle = rectangle;
 
-            if (defined(viewModel.dataCustodian)) {
-                newItem.dataCustodian = viewModel.dataCustodian;
+            if (defined(ckanGroup.dataCustodian)) {
+                newItem.dataCustodian = ckanGroup.dataCustodian;
             } else if (item.organization && item.organization.title) {
                 newItem.dataCustodian = item.organization.title;
             }
@@ -362,15 +362,15 @@ function populateGroupFromResults(viewModel, json) {
             for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                 var group = groups[groupIndex];
 
-                if (viewModel.blacklist && viewModel.blacklist[group.display_name]) {
+                if (ckanGroup.blacklist && ckanGroup.blacklist[group.display_name]) {
                     continue;
                 }
 
-                var existingGroup = viewModel.findFirstItemByName(group.display_name);
+                var existingGroup = ckanGroup.findFirstItemByName(group.display_name);
                 if (!defined(existingGroup)) {
-                    existingGroup = new CatalogGroup(viewModel.application);
+                    existingGroup = new CatalogGroup(ckanGroup.application);
                     existingGroup.name = group.display_name;
-                    viewModel.add(existingGroup);
+                    ckanGroup.add(existingGroup);
                 }
 
                 existingGroup.add(newItem);
@@ -390,10 +390,10 @@ function populateGroupFromResults(viewModel, json) {
         }
     }
 
-    viewModel.items.sort(compareNames);
+    ckanGroup.items.sort(compareNames);
 
-    for (var i = 0; i < viewModel.items.length; ++i) {
-        viewModel.items[i].items.sort(compareNames);
+    for (var i = 0; i < ckanGroup.items.length; ++i) {
+        ckanGroup.items[i].items.sort(compareNames);
     }
 }
 

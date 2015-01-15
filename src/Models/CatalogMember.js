@@ -18,7 +18,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
  * @constructor
  * @abstract
  *
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var CatalogMember = function(application) {
     if (!defined(application)) {
@@ -41,7 +41,7 @@ var CatalogMember = function(application) {
 
     /**
      * Gets or sets a value indicating whether this member was supplied by the user rather than loaded from one of the
-     * {@link ApplicationViewModel#initSources}.  User-supplied members must be serialized completely when, for example,
+     * {@link Application#initSources}.  User-supplied members must be serialized completely when, for example,
      * serializing enabled members for sharing.  This property is observable.
      * @type {Boolean}
      * @default true
@@ -77,7 +77,7 @@ defineProperties(CatalogMember.prototype, {
     /**
      * Gets the application.
      * @memberOf CatalogMember.prototype
-     * @type {ApplicationViewModel}
+     * @type {Application}
      */
     application : {
         get : function() {
@@ -102,8 +102,8 @@ defineProperties(CatalogMember.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf CatalogMember.prototype
      * @type {Object}
@@ -209,9 +209,9 @@ CatalogMember.prototype.updateFromJson = function(json, options) {
  *        if options.skipItemsWithLocalData is false.
  * @param {Boolean} [options.serializeForSharing=false] true to only serialize properties that are typically necessary for sharing this member
  *                                                      with other users, such as {@link CatalogGroup#isOpen}, {@link CatalogItem#isEnabled},
- *                                                      {@link CatalogItem#isLegendVisible}, and {@link ImageryLayerViewModel#opacity},
+ *                                                      {@link CatalogItem#isLegendVisible}, and {@link ImageryLayerCatalogItem#opacity},
  *                                                      rather than serializing all properties needed to completely recreate the catalog.  The set of properties
- *                                                      that is serialized when this property is true is given by each view-model's
+ *                                                      that is serialized when this property is true is given by each model's
  *                                                      {@link CatalogMember#propertiesForSharing} property.
  * @param {Boolean} [options.userSuppliedOnly=false] true to only serialize catalog members (and their containing groups) that have been identified as having been
  *                  supplied by the user ({@link CatalogMember#isUserSupplied} is true); false to serialize all catalog members.

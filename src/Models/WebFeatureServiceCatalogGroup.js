@@ -23,7 +23,7 @@ var WebFeatureServiceCatalogItem = require('./WebFeatureServiceCatalogItem');
  * @constructor
  * @extends CatalogGroup
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var WebFeatureServiceCatalogGroup = function(application) {
     CatalogGroup.call(this, application, 'wfs-getCapabilities');
@@ -72,8 +72,8 @@ defineProperties(WebFeatureServiceCatalogGroup.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf WebFeatureServiceCatalogGroup.prototype
      * @type {Object}
@@ -92,7 +92,7 @@ defineProperties(WebFeatureServiceCatalogGroup.prototype, {
  */
 WebFeatureServiceCatalogGroup.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
-WebFeatureServiceCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+WebFeatureServiceCatalogGroup.defaultSerializers.items = function(wfsGroup, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from GetCapabilities.
     var previousSerializeForSharing = options.serializeForSharing;
     options.serializeForSharing = true;
@@ -104,13 +104,13 @@ WebFeatureServiceCatalogGroup.defaultSerializers.items = function(viewModel, jso
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    CatalogGroup.defaultSerializers.items(viewModel, json, propertyName, options);
+    CatalogGroup.defaultSerializers.items(wfsGroup, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;
 };
 
-WebFeatureServiceCatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+WebFeatureServiceCatalogGroup.defaultSerializers.isLoading = function(wfsGroup, json, propertyName, options) {};
 
 freezeObject(WebFeatureServiceCatalogGroup.defaultSerializers);
 
@@ -215,36 +215,36 @@ function cleanAndProxyUrl(application, url) {
     return cleanedUrl;
 }
 
-function addFeatureTypes(viewModel, featureTypes, items, parent, supportsJsonGetFeature, dataCustodian) {
+function addFeatureTypes(wfsGroup, featureTypes, items, parent, supportsJsonGetFeature, dataCustodian) {
     if (!(featureTypes instanceof Array)) {
         featureTypes = [featureTypes];
     }
 
     for (var i = 0; i < featureTypes.length; ++i) {
         var featureType = featureTypes[i];
-        items.push(createWfsDataSource(viewModel, featureType, supportsJsonGetFeature, dataCustodian));
+        items.push(createWfsDataSource(wfsGroup, featureType, supportsJsonGetFeature, dataCustodian));
     }
 }
 
-function createWfsDataSource(viewModel, featureType, supportsJsonGetFeature, dataCustodian) {
-    var result = new WebFeatureServiceCatalogItem(viewModel.application);
+function createWfsDataSource(wfsGroup, featureType, supportsJsonGetFeature, dataCustodian) {
+    var result = new WebFeatureServiceCatalogItem(wfsGroup.application);
 
     result.name = featureType.Title;
-    result.description = defined(featureType.Abstract) && featureType.Abstract.length > 0 ? featureType.Abstract : viewModel.description;
+    result.description = defined(featureType.Abstract) && featureType.Abstract.length > 0 ? featureType.Abstract : wfsGroup.description;
     result.dataCustodian = dataCustodian;
-    result.url = viewModel.url;
+    result.url = wfsGroup.url;
     result.typeNames = featureType.Name;
 
     result.description = '';
 
-    var viewModelHasDescription = defined(viewModel.description) && viewModel.description.length > 0;
+    var wfsGroupHasDescription = defined(wfsGroup.description) && wfsGroup.description.length > 0;
     var layerHasAbstract = defined(featureType.Abstract) && featureType.Abstract.length > 0;
 
-    if (viewModelHasDescription) {
-        result.description += viewModel.description;
+    if (wfsGroupHasDescription) {
+        result.description += wfsGroup.description;
     }
 
-    if (viewModelHasDescription && layerHasAbstract) {
+    if (wfsGroupHasDescription && layerHasAbstract) {
         result.description += '<br/>';
     }
 

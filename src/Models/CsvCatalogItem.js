@@ -32,7 +32,7 @@ var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer')
  * @constructor
  * @extends CatalogItem
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  * @param {String} [url] The URL from which to retrieve the CSV data.
  */
 var CsvCatalogItem = function(application, url) {
@@ -327,15 +327,15 @@ function proxyUrl(application, url) {
 
 //////////////////////////////////////////////////////////////////////////
 
-function loadTable(viewModel, text) {
-    viewModel._tableDataSource.loadText(text);
+function loadTable(csvItem, text) {
+    csvItem._tableDataSource.loadText(text);
 
-    if (!viewModel._tableDataSource.dataset.hasLocationData()) {
+    if (!csvItem._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
-        return when(addRegionMap(viewModel), function() {
-            if (viewModel._regionMapped !== true) {
+        return when(addRegionMap(csvItem), function() {
+            if (csvItem._regionMapped !== true) {
                 throw new ModelError({
-                    sender: viewModel,
+                    sender: csvItem,
                     title: 'Could not load CSV file',
                     message: '\
 Could not find any location parameters for latitude and longitude and was not able to determine \
@@ -343,14 +343,14 @@ a region mapping column.'
                 });
             }
             else {
-                viewModel.legendUrl = viewModel._tableDataSource.getLegendGraphic();
+                csvItem.legendUrl = csvItem._tableDataSource.getLegendGraphic();
             }
         });
     }
     else {
-        viewModel.clock = viewModel._tableDataSource.clock;
-        viewModel.rectangle = viewModel._tableDataSource.dataset.getExtent();
-        viewModel.legendUrl = viewModel._tableDataSource.getLegendGraphic();
+        csvItem.clock = csvItem._tableDataSource.clock;
+        csvItem.rectangle = csvItem._tableDataSource.dataset.getExtent();
+        csvItem.legendUrl = csvItem._tableDataSource.getLegendGraphic();
     }
 }
 
@@ -536,15 +536,15 @@ function determineRegionType(dataset) {
     return { idx: idx, regionType: regionType};
 }
 
-function createRegionLookupFunc(viewModel) {
-    if (!defined(viewModel) || !defined(viewModel._tableDataSource) || !defined(viewModel._tableDataSource.dataset)) {
+function createRegionLookupFunc(csvItem) {
+    if (!defined(csvItem) || !defined(csvItem._tableDataSource) || !defined(csvItem._tableDataSource.dataset)) {
         return;
     }
-    var dataSource = viewModel._tableDataSource;
+    var dataSource = csvItem._tableDataSource;
     var dataset = dataSource.dataset;
-    var regionDescriptor = regionWmsMap[viewModel.regionType];
+    var regionDescriptor = regionWmsMap[csvItem.regionType];
  
-    var codes = dataset.getDataValues(viewModel.regionVar);
+    var codes = dataset.getDataValues(csvItem.regionVar);
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
     var ids = regionDescriptor.idMap;
     var lookup = new Array(ids.length);
@@ -559,82 +559,82 @@ function createRegionLookupFunc(viewModel) {
         colors[idx] = dataSource._mapValue2Color(idx);
     }
     //   color lookup function used by the region mapper
-    viewModel.colorFunc = function(id) {
+    csvItem.colorFunc = function(id) {
         return colors[lookup[id]];
     };
     // used to get current variable data
-    viewModel.valFunc = function(code) {
+    csvItem.valFunc = function(code) {
         var rowIndex = codes.indexOf(code);
         return vals[rowIndex];
     };
     // used to get all region data properties
-    viewModel.rowProperties = function(code) {
+    csvItem.rowProperties = function(code) {
         var rowIndex = codes.indexOf(code);
         return dataset.getDataRow(rowIndex);
     };
 }
 
-function setRegionVariable(viewModel, regionVar, regionType) {
-    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
+function setRegionVariable(csvItem, regionVar, regionType) {
+    if (!(csvItem._tableDataSource instanceof TableDataSource)) {
         return;
     }
 
-    viewModel.regionVar = regionVar;
+    csvItem.regionVar = regionVar;
     var regionDescriptor = regionWmsMap[regionType];
-    if (viewModel.regionType !== regionType) {
-        viewModel.regionType = regionType;
+    if (csvItem.regionType !== regionType) {
+        csvItem.regionType = regionType;
 
-        viewModel.url = regionServer;
-        viewModel.layers = regionDescriptor.name;
+        csvItem.url = regionServer;
+        csvItem.layers = regionDescriptor.name;
 
-        viewModel.regionProp = regionDescriptor.regionProp;
+        csvItem.regionProp = regionDescriptor.regionProp;
     }
-    console.log('Region type:', viewModel.regionType, ', Region var:', viewModel.regionVar);
+    console.log('Region type:', csvItem.regionType, ', Region var:', csvItem.regionVar);
         
     return when(loadRegionIDs(regionDescriptor), function() {
-        createRegionLookupFunc(viewModel);
-        viewModel._regionMapped = true;
+        createRegionLookupFunc(csvItem);
+        csvItem._regionMapped = true;
     });
 }
 
 
-function setRegionDataVariable(viewModel, newVar) {
-    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
+function setRegionDataVariable(csvItem, newVar) {
+    if (!(csvItem._tableDataSource instanceof TableDataSource)) {
         return;
     }
 
-    var dataSource = viewModel._tableDataSource;
+    var dataSource = csvItem._tableDataSource;
     var dataset = dataSource.dataset;
     dataset.setCurrentVariable({ variable: newVar});
-    createRegionLookupFunc(viewModel);
+    createRegionLookupFunc(csvItem);
     
     console.log('Var set to:', newVar);
 
-    viewModel._rebuild();
+    csvItem._rebuild();
 }
 
-function setRegionColorMap(viewModel, dataColorMap) {
-     if (!(viewModel._tableDataSource instanceof TableDataSource)) {
+function setRegionColorMap(csvItem, dataColorMap) {
+     if (!(csvItem._tableDataSource instanceof TableDataSource)) {
         return;
     }
 
-    viewModel._tableDataSource.setColorGradient(dataColorMap);
-    createRegionLookupFunc(viewModel);
+    csvItem._tableDataSource.setColorGradient(dataColorMap);
+    createRegionLookupFunc(csvItem);
 
-    viewModel._rebuild();
+    csvItem._rebuild();
 }
 
 
-function addRegionMap(viewModel) {
-    if (!(viewModel._tableDataSource instanceof TableDataSource)) {
+function addRegionMap(csvItem) {
+    if (!(csvItem._tableDataSource instanceof TableDataSource)) {
         return;
     }
     //see if we can do region mapping
-    var dataSource = viewModel._tableDataSource;
+    var dataSource = csvItem._tableDataSource;
     var dataset = dataSource.dataset;
 
-    //if viewModel includes style/var info then use that
-    if (!defined(viewModel.style) || !defined(viewModel.style.table)) {
+    //if csvItem includes style/var info then use that
+    if (!defined(csvItem.style) || !defined(csvItem.style.table)) {
         var regionObj = determineRegionType(dataset);
         if (regionObj === undefined) {
             return;
@@ -663,13 +663,13 @@ function addRegionMap(viewModel) {
             {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
             {offset: 1.0, color: 'rgba(0,0,200,1.0)'}
         ];
-        viewModel.style = style;
+        csvItem.style = style;
     }
 
-    if (defined(viewModel.style.table.colorMap)) {
-        dataSource.setColorGradient(viewModel.style.table.colorMap);
+    if (defined(csvItem.style.table.colorMap)) {
+        dataSource.setColorGradient(csvItem.style.table.colorMap);
     }
-    dataSource.setCurrentVariable(viewModel.style.table.data);
+    dataSource.setCurrentVariable(csvItem.style.table.data);
 
     //to make lint happy
     if (false) {
@@ -679,7 +679,7 @@ function addRegionMap(viewModel) {
     
     //TODO: figure out how sharing works or doesn't
     
-    return setRegionVariable(viewModel, viewModel.style.table.region, viewModel.style.table.regionType);
+    return setRegionVariable(csvItem, csvItem.style.table.region, csvItem.style.table.regionType);
 }
 
 

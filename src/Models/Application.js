@@ -243,7 +243,7 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
     }
 }
 
-function loadInitSources(viewModel, initSources) {
+function loadInitSources(application, initSources) {
     return when.all(initSources.map(loadInitSource), function(initSources) {
         var i;
         var initSource;
@@ -261,7 +261,7 @@ function loadInitSources(viewModel, initSources) {
 
             // The last init source to specify a camera position wins.
             if (defined(initSource.camera)) {
-                viewModel.initialBoundingBox = Rectangle.fromDegrees(initSource.camera.west, initSource.camera.south, initSource.camera.east, initSource.camera.north);
+                application.initialBoundingBox = Rectangle.fromDegrees(initSource.camera.west, initSource.camera.south, initSource.camera.east, initSource.camera.north);
             }
         }
 
@@ -285,14 +285,14 @@ function loadInitSources(viewModel, initSources) {
                     isUserSupplied = true;
                 }
 
-                promises.push(viewModel.catalog.updateFromJson(initSource.catalog, {
+                promises.push(application.catalog.updateFromJson(initSource.catalog, {
                     onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
                     isUserSupplied: isUserSupplied
                 }));
             }
 
             if (defined(initSource.services)) {
-                viewModel.services.services.push.apply(viewModel.services, initSource.services);
+                application.services.services.push.apply(application.services, initSource.services);
             }
         }
 

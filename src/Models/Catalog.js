@@ -16,7 +16,7 @@ var CatalogGroup = require('./CatalogGroup');
 /**
  * The view model for the geospatial data catalog.
  *
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  *
  * @alias Catalog
  * @constructor
@@ -65,7 +65,7 @@ defineProperties(Catalog.prototype, {
     /**
      * Gets the application.
      * @memberOf Catalog.prototype
-     * @type {ApplicationViewModel}
+     * @type {Application}
      */
     application : {
         get : function() {
@@ -159,7 +159,7 @@ Catalog.prototype.updateFromJson = function(json, options) {
  *        if options.skipItemsWithLocalData is false.
  * @param {Boolean} [options.serializeForSharing=false] true to only serialize properties that are typically necessary for sharing this member
  *                                                      with other users, such as {@link CatalogGroup#isOpen}, {@link CatalogItem#isEnabled},
- *                                                      {@link CatalogItem#isLegendVisible}, and {@link ImageryLayerViewModel#opacity},
+ *                                                      {@link CatalogItem#isLegendVisible}, and {@link ImageryLayerCatalogItem#opacity},
  *                                                      rather than serializing all properties needed to completely recreate the catalog.
  * @param {Boolean} [options.userSuppliedOnly=false] true to only serialize catalog members (and their containing groups) that have been identified as having been
  *                  supplied by the user ({@link CatalogMember#isUserSupplied} is true); false to serialize all catalog members.

@@ -27,7 +27,7 @@ var runLater = require('../Core/runLater');
  * @extends CatalogMember
  * @abstract
  *
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var CatalogItem = function(application) {
     CatalogMember.call(this, application);
@@ -224,8 +224,8 @@ defineProperties(CatalogItem.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf CatalogItem.prototype
      * @type {Object}
@@ -267,11 +267,11 @@ freezeObject(CatalogItem.defaultMetadata);
  * @type {Object}
  */
 CatalogItem.defaultUpdaters = clone(CatalogMember.defaultUpdaters);
-CatalogItem.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
+CatalogItem.defaultUpdaters.rectangle = function(catalogItem, json, propertyName) {
     if (defined(json.rectangle)) {
-        viewModel.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
+        catalogItem.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
     } else {
-        viewModel.rectangle = Rectangle.MAX_VALUE;
+        catalogItem.rectangle = Rectangle.MAX_VALUE;
     }
 };
 
@@ -283,13 +283,13 @@ freezeObject(CatalogItem.defaultUpdaters);
  * @type {Object}
  */
 CatalogItem.defaultSerializers = clone(CatalogMember.defaultSerializers);
-CatalogItem.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
-    if (defined(viewModel.rectangle)) {
+CatalogItem.defaultSerializers.rectangle = function(catalogItem, json, propertyName) {
+    if (defined(catalogItem.rectangle)) {
         json.rectangle = [
-            CesiumMath.toDegrees(viewModel.rectangle.west),
-            CesiumMath.toDegrees(viewModel.rectangle.south),
-            CesiumMath.toDegrees(viewModel.rectangle.east),
-            CesiumMath.toDegrees(viewModel.rectangle.north)
+            CesiumMath.toDegrees(catalogItem.rectangle.west),
+            CesiumMath.toDegrees(catalogItem.rectangle.south),
+            CesiumMath.toDegrees(catalogItem.rectangle.east),
+            CesiumMath.toDegrees(catalogItem.rectangle.north)
         ];
     }
 };
@@ -686,88 +686,88 @@ CatalogItem.prototype._hideInLeaflet = function() {
     throw new DeveloperError('_hideInLeaflet must be implemented in the derived class.');
 };
 
-function isEnabledChanged(viewModel) {
-    var application = viewModel.application;
+function isEnabledChanged(catalogItem) {
+    var application = catalogItem.application;
 
-    if (viewModel.isEnabled) {
-        application.nowViewing.add(viewModel);
+    if (catalogItem.isEnabled) {
+        application.nowViewing.add(catalogItem);
 
         // Load this catalog item's data (if we haven't already) when it is enabled.
         // Don't actually enable until the load finishes.
         // Be careful not to call _enable multiple times or to call _enable
         // after the item has already been disabled.
-        if (!defined(viewModel._loadForEnablePromise)) {
+        if (!defined(catalogItem._loadForEnablePromise)) {
             var resolvedOrRejected = false;
 
-            var loadPromise = when(viewModel.load(), function() {
-                if (viewModel.isEnabled) {
-                    viewModel._enable();
+            var loadPromise = when(catalogItem.load(), function() {
+                if (catalogItem.isEnabled) {
+                    catalogItem._enable();
                 }
             });
 
-            raiseErrorOnRejectedPromise(viewModel.application, loadPromise);
+            raiseErrorOnRejectedPromise(catalogItem.application, loadPromise);
 
             loadPromise.always(function() {
                 resolvedOrRejected = true;
-                viewModel._loadForEnablePromise = undefined;
+                catalogItem._loadForEnablePromise = undefined;
             });
 
             // Make sure we know about it when the promise already resolved/rejected.
-            viewModel._loadForEnablePromise = resolvedOrRejected ? undefined : loadPromise;
+            catalogItem._loadForEnablePromise = resolvedOrRejected ? undefined : loadPromise;
         }
 
-        viewModel.isShown = true;
+        catalogItem.isShown = true;
 
-        ga('send', 'event', 'dataSource', 'added', viewModel.name);
-        viewModel._enabledDate = Date.now();
+        ga('send', 'event', 'dataSource', 'added', catalogItem.name);
+        catalogItem._enabledDate = Date.now();
     } else {
-        viewModel.isShown = false;
+        catalogItem.isShown = false;
 
         // Disable this data item on the map, but only if the previous request to enable it has
         // actually gone through.
-        if (!defined(viewModel._loadForEnablePromise)) {
-            viewModel._disable();
+        if (!defined(catalogItem._loadForEnablePromise)) {
+            catalogItem._disable();
         }
 
-        application.nowViewing.remove(viewModel);
+        application.nowViewing.remove(catalogItem);
 
         var duration;
-        if (viewModel._enabledDate) {
-            duration = ((Date.now() - viewModel._enabledDate) / 1000.0) | 0;
+        if (catalogItem._enabledDate) {
+            duration = ((Date.now() - catalogItem._enabledDate) / 1000.0) | 0;
         }
-        ga('send', 'event', 'dataSource', 'removed', viewModel.name, duration);
+        ga('send', 'event', 'dataSource', 'removed', catalogItem.name, duration);
     }
 }
 
-function isShownChanged(viewModel) {
-    if (viewModel.isShown) {
+function isShownChanged(catalogItem) {
+    if (catalogItem.isShown) {
         // If the item is not enabled, do that first.  This way things will work even if isShown is
         // deserialized before isEnabled.
-        viewModel.isEnabled = true;
+        catalogItem.isEnabled = true;
 
         // If enabling is waiting on an async load, we need to wait on it, too.
-        when(viewModel._loadForEnablePromise, function() {
-            if (viewModel.isEnabled && viewModel.isShown) {
-                viewModel._show();
+        when(catalogItem._loadForEnablePromise, function() {
+            if (catalogItem.isEnabled && catalogItem.isShown) {
+                catalogItem._show();
             }
         });
 
-        ga('send', 'event', 'dataSource', 'shown', viewModel.name);
-        viewModel._shownDate = Date.now();
+        ga('send', 'event', 'dataSource', 'shown', catalogItem.name);
+        catalogItem._shownDate = Date.now();
     } else {
         // Hide this data item on the map, but only if the previous request to show it has
         // actually gone through.
-        if (!defined(viewModel._loadForEnablePromise)) {
-            viewModel._hide();
+        if (!defined(catalogItem._loadForEnablePromise)) {
+            catalogItem._hide();
         }
 
         var duration;
-        if (defined(viewModel._shownDate)) {
-            duration = ((Date.now() - viewModel._shownDate) / 1000.0) | 0;
-        } else if (viewModel._enabledDate) {
-            duration = ((Date.now() - viewModel._enabledDate) / 1000.0) | 0;
+        if (defined(catalogItem._shownDate)) {
+            duration = ((Date.now() - catalogItem._shownDate) / 1000.0) | 0;
+        } else if (catalogItem._enabledDate) {
+            duration = ((Date.now() - catalogItem._enabledDate) / 1000.0) | 0;
         }
-        ga('send', 'event', 'dataSource', 'hidden', viewModel.name, duration);
+        ga('send', 'event', 'dataSource', 'hidden', catalogItem.name, duration);
     }
 }
 

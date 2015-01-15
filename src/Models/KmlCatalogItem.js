@@ -22,7 +22,7 @@ var readXml = require('../Core/readXml');
  * @constructor
  * @extends CatalogItem
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  * @param {String} [url] The URL from which to retrieve the KML or KMZ data.
  */
 var KmlCatalogItem = function(application, url) {
@@ -192,13 +192,13 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function doneLoading(viewModel) {
-    viewModel.clock = viewModel._kmlDataSource.clock;
+function doneLoading(kmlItem) {
+    kmlItem.clock = kmlItem._kmlDataSource.clock;
 }
 
-function errorLoading(viewModel) {
+function errorLoading(kmlItem) {
     throw new ModelError({
-        sender: viewModel,
+        sender: kmlItem,
         title: 'Error loading KML or KMZ',
         message: '\
 An error occurred while loading a KML or KMZ file.  This may indicate that the file is invalid or that it \

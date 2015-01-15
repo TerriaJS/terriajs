@@ -29,7 +29,7 @@ var naturalSort = require('javascript-natural-sort');
  * @constructor
  * @extends CatalogMember
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  */
 var CatalogGroup = function(application) {
     CatalogMember.call(this, application);
@@ -132,8 +132,8 @@ defineProperties(CatalogGroup.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf CatalogGroup.prototype
      * @type {Object}
@@ -164,9 +164,9 @@ defineProperties(CatalogGroup.prototype, {
  */
 CatalogGroup.defaultUpdaters = clone(CatalogMember.defaultUpdaters);
 
-CatalogGroup.defaultUpdaters.items = function(viewModel, json, propertyName, options) {
+CatalogGroup.defaultUpdaters.items = function(catalogGroup, json, propertyName, options) {
     // Let the group finish loading first.  Otherwise, these changes could get clobbered by the load.
-    return when(viewModel.load(), function() {
+    return when(catalogGroup.load(), function() {
         var promises = [];
 
         // TODO: allow JSON to update the order of items as well.
@@ -179,7 +179,7 @@ CatalogGroup.defaultUpdaters.items = function(viewModel, json, propertyName, opt
             var item = items[itemIndex];
 
             // Find an existing item with the same name
-            var existingItem = viewModel.findFirstItemByName(item.name);
+            var existingItem = catalogGroup.findFirstItemByName(item.name);
             if (!defined(existingItem)) {
                 // Skip this item entirely if we're not allowed to create it.
                 if (onlyUpdateExistingItems) {
@@ -190,8 +190,8 @@ CatalogGroup.defaultUpdaters.items = function(viewModel, json, propertyName, opt
                     throw new RuntimeError('An item must have a type.');
                 }
 
-                existingItem = createCatalogMemberFromType(item.type, viewModel.application);
-                viewModel.add(existingItem);
+                existingItem = createCatalogMemberFromType(item.type, catalogGroup.application);
+                catalogGroup.add(existingItem);
             }
 
             promises.push(existingItem.updateFromJson(item, options));
@@ -199,13 +199,13 @@ CatalogGroup.defaultUpdaters.items = function(viewModel, json, propertyName, opt
 
         return when.all(promises, function() {
             if (defaultValue(json.sortItemsOnLoad, true)) {
-                viewModel.sortItems();
+                catalogGroup.sortItems();
             }
         });
     });
 };
 
-CatalogGroup.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
+CatalogGroup.defaultUpdaters.isLoading = function(catalogGroup, json, propertyName) {};
 
 freezeObject(CatalogGroup.defaultUpdaters);
 
@@ -216,18 +216,18 @@ freezeObject(CatalogGroup.defaultUpdaters);
  */
 CatalogGroup.defaultSerializers = clone(CatalogMember.defaultSerializers);
 
-CatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+CatalogGroup.defaultSerializers.items = function(catalogGroup, json, propertyName, options) {
     var items = json.items = [];
 
-    for (var i = 0; i < viewModel.items.length; ++i) {
-        var item = viewModel.items[i].serializeToJson(options);
+    for (var i = 0; i < catalogGroup.items.length; ++i) {
+        var item = catalogGroup.items[i].serializeToJson(options);
         if (defined(item)) {
             items.push(item);
         }
     }
 };
 
-CatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+CatalogGroup.defaultSerializers.isLoading = function(catalogGroup, json, propertyName, options) {};
 
 freezeObject(CatalogGroup.defaultSerializers);
 

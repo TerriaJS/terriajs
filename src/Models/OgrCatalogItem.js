@@ -21,13 +21,13 @@ var ModelError = require('./ModelError');
  * @constructor
  * @extends GeoJsonCatalogItem
  * 
- * @param {ApplicationViewModel} application The application.
+ * @param {Application} application The application.
  * @param {String} [url] The URL from which to retrieve the OGR data.
  */
 var OgrCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
-    this._geoJsonViewModel = undefined;
+    this._geoJsonItem = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve OGR data.  This property is ignored if
@@ -112,7 +112,7 @@ We recommend you upgrade to the latest version of <a href="http://www.google.com
         });
     }
 
-    this._geoJsonViewModel = new GeoJsonCatalogItem(this.application);
+    this._geoJsonItem = new GeoJsonCatalogItem(this.application);
 
     var that = this;
 
@@ -134,36 +134,36 @@ We recommend you upgrade to the latest version of <a href="http://www.google.com
 };
 
 OgrCatalogItem.prototype._enable = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._enable();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._enable();
     }
 };
 
 OgrCatalogItem.prototype._disable = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._disable();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._disable();
     }
 };
 
 OgrCatalogItem.prototype._show = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._show();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._show();
     }
 };
 
 OgrCatalogItem.prototype._hide = function() {
-    if (defined(this._geoJsonViewModel)) {
-        this._geoJsonViewModel._hide();
+    if (defined(this._geoJsonItem)) {
+        this._geoJsonItem._hide();
     }
 };
 
-function loadOgrData(viewModel, file, url) {
+function loadOgrData(ogrItem, file, url) {
 
     // generate form to submit file for conversion
     var formData = new FormData();
     if (defined(file)) {
         if (file.size > 1000000) {
-            errorLoading(viewModel, 'The file size is greater than the 1Mb limit of the National Map conversion service.');
+            errorLoading(ogrItem, 'The file size is greater than the 1Mb limit of the National Map conversion service.');
             return;
         }
         formData.append('input_file', file);
@@ -182,24 +182,24 @@ function loadOgrData(viewModel, file, url) {
         method : 'POST',
         data : formData
     }).then(function(response) {
-        viewModel._geoJsonViewModel.data = JSON.parse(response);
+        ogrItem._geoJsonItem.data = JSON.parse(response);
 
-        return viewModel._geoJsonViewModel.load().then(function() {
-            viewModel.rectangle = viewModel._geoJsonViewModel.rectangle;
-            viewModel.clock = viewModel._geoJsonViewModel.clock;
+        return ogrItem._geoJsonItem.load().then(function() {
+            ogrItem.rectangle = ogrItem._geoJsonItem.rectangle;
+            ogrItem.clock = ogrItem._geoJsonItem.clock;
         });
     }).otherwise(function() {
-        errorLoading(viewModel);
+        errorLoading(ogrItem);
     });
 }
 
 
-function errorLoading(viewModel, msg) {
+function errorLoading(ogrItem, msg) {
     if (!defined(msg)) {
         msg = 'This may indicate that the file is invalid or that it is not supported by the National Map conversion service.';
     }
     throw new ModelError({
-        sender: viewModel,
+        sender: ogrItem,
         title: 'Error converting file to GeoJson',
         message: '\
 An error occurred while attempting to convert this file to GeoJson.  ' + msg + '  If you would like assistance or further information, please email us \

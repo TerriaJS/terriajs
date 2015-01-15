@@ -27,7 +27,7 @@ var inherit = require('../Core/inherit');
  * @constructor
  * @extends ImageryLayerCatalogItem
  * 
- * @param {ApplicationViewModel} application The application for the group.
+ * @param {Application} application The application for the group.
  */
 var WebMapServiceCatalogItem = function(application) {
     ImageryLayerCatalogItem.call(this, application);
@@ -203,8 +203,8 @@ defineProperties(WebMapServiceCatalogItem.prototype, {
 
     /**
      * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
-     * When a property name on the view-model matches the name of a property in the serializers object lieral,
-     * the value will be called as a function and passed a reference to the view-model, a reference to the destination
+     * When a property name on the model matches the name of a property in the serializers object lieral,
+     * the value will be called as a function and passed a reference to the model, a reference to the destination
      * JSON object literal, and the name of the property.
      * @memberOf WebMapServiceCatalogItem.prototype
      * @type {Object}
@@ -218,13 +218,13 @@ defineProperties(WebMapServiceCatalogItem.prototype, {
 
 WebMapServiceCatalogItem.defaultUpdaters = clone(ImageryLayerCatalogItem.defaultUpdaters);
 
-WebMapServiceCatalogItem.defaultUpdaters.tilingScheme = function(viewModel, json, propertyName, options) {
+WebMapServiceCatalogItem.defaultUpdaters.tilingScheme = function(wmsItem, json, propertyName, options) {
     if (json.tilingScheme === 'geographic') {
-        viewModel.tilingScheme = new GeographicTilingScheme();
+        wmsItem.tilingScheme = new GeographicTilingScheme();
     } else if (json.tilingScheme === 'web-mercator') {
-        viewModel.tilingScheme = new WebMercatorTilingScheme();
+        wmsItem.tilingScheme = new WebMercatorTilingScheme();
     } else {
-        viewModel.tilingScheme = json.tilingScheme;
+        wmsItem.tilingScheme = json.tilingScheme;
     }
 };
 
@@ -233,25 +233,25 @@ freezeObject(WebMapServiceCatalogItem.defaultUpdaters);
 WebMapServiceCatalogItem.defaultSerializers = clone(ImageryLayerCatalogItem.defaultSerializers);
 
 // Serialize the underlying properties instead of the public views of them.
-WebMapServiceCatalogItem.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {
-    json.dataUrl = viewModel._dataUrl;
+WebMapServiceCatalogItem.defaultSerializers.dataUrl = function(wmsItem, json, propertyName) {
+    json.dataUrl = wmsItem._dataUrl;
 };
-WebMapServiceCatalogItem.defaultSerializers.dataUrlType = function(viewModel, json, propertyName) {
-    json.dataUrlType = viewModel._dataUrlType;
+WebMapServiceCatalogItem.defaultSerializers.dataUrlType = function(wmsItem, json, propertyName) {
+    json.dataUrlType = wmsItem._dataUrlType;
 };
-WebMapServiceCatalogItem.defaultSerializers.metadataUrl = function(viewModel, json, propertyName) {
-    json.metadataUrl = viewModel._metadataUrl;
+WebMapServiceCatalogItem.defaultSerializers.metadataUrl = function(wmsItem, json, propertyName) {
+    json.metadataUrl = wmsItem._metadataUrl;
 };
-WebMapServiceCatalogItem.defaultSerializers.legendUrl = function(viewModel, json, propertyName) {
-    json.legendUrl = viewModel._legendUrl;
+WebMapServiceCatalogItem.defaultSerializers.legendUrl = function(wmsItem, json, propertyName) {
+    json.legendUrl = wmsItem._legendUrl;
 };
-WebMapServiceCatalogItem.defaultSerializers.tilingScheme = function(viewModel, json, propertyName) {
-    if (viewModel.tilingScheme instanceof GeographicTilingScheme) {
+WebMapServiceCatalogItem.defaultSerializers.tilingScheme = function(wmsItem, json, propertyName) {
+    if (wmsItem.tilingScheme instanceof GeographicTilingScheme) {
         json.tilingScheme = 'geographic';
-    } else if (viewModel.tilingScheme instanceof WebMercatorTilingScheme) {
+    } else if (wmsItem.tilingScheme instanceof WebMercatorTilingScheme) {
         json.tilingScheme = 'web-mercator';
     } else {
-        json.tilingScheme = viewModel.tilingScheme;
+        json.tilingScheme = wmsItem.tilingScheme;
     }
 };
 freezeObject(WebMapServiceCatalogItem.defaultSerializers);
@@ -346,12 +346,12 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function requestMetadata(viewModel) {
+function requestMetadata(wmsItem) {
     var result = new Metadata();
 
     result.isLoading = true;
 
-    result.promise = loadXML(proxyUrl(viewModel.application, viewModel.metadataUrl)).then(function(capabilities) {
+    result.promise = loadXML(proxyUrl(wmsItem.application, wmsItem.metadataUrl)).then(function(capabilities) {
         var json = $.xml2json(capabilities);
 
         if (json.Service) {
@@ -362,7 +362,7 @@ function requestMetadata(viewModel) {
 
         var layer;
         if (defined(json.Capability)) {
-            layer = findLayer(json.Capability.Layer, viewModel.layers);
+            layer = findLayer(json.Capability.Layer, wmsItem.layers);
         }
         if (layer) {
             populateMetadataGroup(result.dataSourceMetadata, layer);
