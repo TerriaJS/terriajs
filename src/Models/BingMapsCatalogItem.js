@@ -11,20 +11,20 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
+var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 
 /**
- * A {@link ImageryLayerItemViewModel} representing a layer from the Bing Maps server.
+ * A {@link ImageryLayerCatalogItem} representing a layer from the Bing Maps server.
  *
  * @alias BingMapsCatalogItem
  * @constructor
- * @extends ImageryLayerItemViewModel
+ * @extends ImageryLayerCatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  */
 var BingMapsCatalogItem = function(application) {
-    ImageryLayerItemViewModel.call(this, application);
+    ImageryLayerCatalogItem.call(this, application);
 
     /**
      * Gets or sets the style of the Bing Maps map to use.
@@ -42,7 +42,7 @@ var BingMapsCatalogItem = function(application) {
     knockout.track(this, ['mapStyle', 'key']);
 };
 
-inherit(ImageryLayerItemViewModel, BingMapsCatalogItem);
+inherit(ImageryLayerCatalogItem, BingMapsCatalogItem);
 
 defineProperties(BingMapsCatalogItem.prototype, {
     /**

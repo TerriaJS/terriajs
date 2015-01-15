@@ -11,21 +11,21 @@ var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var objectToQuery = require('../../third_party/cesium/Source/Core/objectToQuery');
 
-var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
+var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var gmlToGeoJson = require('../Map/gmlToGeoJson');
 
 /**
- * A {@link ImageryLayerItemViewModel} representing a layer from a Web Map Service (WMS) server.
+ * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
  *
- * @alias WebFeatureServiceItemViewModel
+ * @alias WebFeatureServiceCatalogItem
  * @constructor
  * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application for the group.
  */
-var WebFeatureServiceItemViewModel = function(application) {
+var WebFeatureServiceCatalogItem = function(application) {
     CatalogItem.call(this, application);
 
     this._dataUrl = undefined;
@@ -47,7 +47,7 @@ var WebFeatureServiceItemViewModel = function(application) {
 
     /**
      * Gets or sets a value indicating whether we should request GeoJSON from the WFS server.  If this property
-     * and {@link WebFeatureServiceItemViewModel#requestGeoJson} are both true, we'll request GeoJSON first and
+     * and {@link WebFeatureServiceCatalogItem#requestGeoJson} are both true, we'll request GeoJSON first and
      * only fall back on trying GML if the GeoJSON request fails.
      * @type {Boolean}
      * @default true
@@ -56,7 +56,7 @@ var WebFeatureServiceItemViewModel = function(application) {
 
     /**
      * Gets or sets a value indicating whether we should request GML from the WFS server.  If this property
-     * and {@link WebFeatureServiceItemViewModel#requestGeoJson} are both true, we'll request GeoJSON first and
+     * and {@link WebFeatureServiceCatalogItem#requestGeoJson} are both true, we'll request GeoJSON first and
      * only fall back on trying GML if the GeoJSON request fails.
      * @type {Boolean}
      * @default true
@@ -114,12 +114,12 @@ var WebFeatureServiceItemViewModel = function(application) {
     });
 };
 
-inherit(CatalogItem, WebFeatureServiceItemViewModel);
+inherit(CatalogItem, WebFeatureServiceCatalogItem);
 
-defineProperties(WebFeatureServiceItemViewModel.prototype, {
+defineProperties(WebFeatureServiceCatalogItem.prototype, {
     /**
      * Gets the type of data item represented by this instance.
-     * @memberOf WebFeatureServiceItemViewModel.prototype
+     * @memberOf WebFeatureServiceCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -130,7 +130,7 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'Web Feature Service (WFS)'.
-     * @memberOf WebFeatureServiceItemViewModel.prototype
+     * @memberOf WebFeatureServiceCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -144,12 +144,12 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf WebFeatureServiceItemViewModel.prototype
+     * @memberOf WebFeatureServiceCatalogItem.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return WebFeatureServiceItemViewModel.defaultUpdaters;
+            return WebFeatureServiceCatalogItem.defaultUpdaters;
         }
     },
 
@@ -158,39 +158,39 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf WebFeatureServiceItemViewModel.prototype
+     * @memberOf WebFeatureServiceCatalogItem.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return WebFeatureServiceItemViewModel.defaultSerializers;
+            return WebFeatureServiceCatalogItem.defaultSerializers;
         }
     }
 });
 
-WebFeatureServiceItemViewModel.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
-freezeObject(WebFeatureServiceItemViewModel.defaultUpdaters);
+WebFeatureServiceCatalogItem.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
+freezeObject(WebFeatureServiceCatalogItem.defaultUpdaters);
 
-WebFeatureServiceItemViewModel.defaultSerializers = clone(CatalogItem.defaultSerializers);
+WebFeatureServiceCatalogItem.defaultSerializers = clone(CatalogItem.defaultSerializers);
 
 // Serialize the underlying properties instead of the public views of them.
-WebFeatureServiceItemViewModel.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {
+WebFeatureServiceCatalogItem.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {
     json.dataUrl = viewModel._dataUrl;
 };
-WebFeatureServiceItemViewModel.defaultSerializers.dataUrlType = function(viewModel, json, propertyName) {
+WebFeatureServiceCatalogItem.defaultSerializers.dataUrlType = function(viewModel, json, propertyName) {
     json.dataUrlType = viewModel._dataUrlType;
 };
-WebFeatureServiceItemViewModel.defaultSerializers.metadataUrl = function(viewModel, json, propertyName) {
+WebFeatureServiceCatalogItem.defaultSerializers.metadataUrl = function(viewModel, json, propertyName) {
     json.metadataUrl = viewModel._metadataUrl;
 };
-freezeObject(WebFeatureServiceItemViewModel.defaultSerializers);
+freezeObject(WebFeatureServiceCatalogItem.defaultSerializers);
 
-WebFeatureServiceItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+WebFeatureServiceCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.typeNames, this.requestGeoJson, this.requestGml];
 };
 
-WebFeatureServiceItemViewModel.prototype._load = function() {
-    this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
+WebFeatureServiceCatalogItem.prototype._load = function() {
+    this._geoJsonViewModel = new GeoJsonCatalogItem(this.application);
 
 
     var promise;
@@ -210,25 +210,25 @@ WebFeatureServiceItemViewModel.prototype._load = function() {
     });
 };
 
-WebFeatureServiceItemViewModel.prototype._enable = function() {
+WebFeatureServiceCatalogItem.prototype._enable = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._enable();
     }
 };
 
-WebFeatureServiceItemViewModel.prototype._disable = function() {
+WebFeatureServiceCatalogItem.prototype._disable = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._disable();
     }
 };
 
-WebFeatureServiceItemViewModel.prototype._show = function() {
+WebFeatureServiceCatalogItem.prototype._show = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._show();
     }
 };
 
-WebFeatureServiceItemViewModel.prototype._hide = function() {
+WebFeatureServiceCatalogItem.prototype._hide = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._hide();
     }
@@ -296,4 +296,4 @@ function proxyUrl(application, url) {
     return url;
 }
 
-module.exports = WebFeatureServiceItemViewModel;
+module.exports = WebFeatureServiceCatalogItem;

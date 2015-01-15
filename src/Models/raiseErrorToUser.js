@@ -2,13 +2,13 @@
 
 /*global require*/
 
-var ViewModelError = require('../Models/ViewModelError');
+var ModelError = require('../Models/ModelError');
 
 var raiseErrorToUser = function(application, error) {
-    if (error instanceof ViewModelError) {
+    if (error instanceof ModelError) {
         application.error.raiseEvent(error);
     } else {
-        application.error.raiseEvent(new ViewModelError({
+        application.error.raiseEvent(new ModelError({
             sender: undefined,
             title: 'An error occurred',
             message: '\

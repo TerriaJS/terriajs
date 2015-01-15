@@ -4,7 +4,7 @@
 
 var defined = require('../../third_party/cesium/Source/Core/defined');
 
-var ViewModelError = require('./ViewModelError');
+var ModelError = require('./ModelError');
 
 var mapping = {};
 
@@ -17,7 +17,7 @@ var mapping = {};
 var createCatalogMemberFromType = function(type, application) {
     var Constructor = mapping[type];
     if (!defined(Constructor)) {
-        throw new ViewModelError({
+        throw new ModelError({
             title: 'Unsupported catalogue item type',
             message: '\
 Unknown catalogue item type: ' + type + '.  If you are loading your own catalogue, please verify that it is correct. \

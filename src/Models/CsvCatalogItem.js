@@ -15,14 +15,14 @@ var corsProxy = require('../Core/corsProxy');
 var TableDataSource = require('../Map/TableDataSource');
 var VarType = require('../Map/VarType');
 
-var MetadataViewModel = require('./MetadataViewModel');
-var ViewModelError = require('./ViewModelError');
+var Metadata = require('./Metadata');
+var ModelError = require('./ModelError');
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readText = require('../Core/readText');
 
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
-var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
+var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 
 /**
@@ -43,7 +43,7 @@ var CsvCatalogItem = function(application, url) {
 
     /**
      * Gets or sets the URL from which to retrieve CSV data.  This property is ignored if
-     * {@link GeoJsonItemViewModel#data} is defined.  This property is observable.
+     * {@link GeoJsonCatalogItem#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -93,11 +93,11 @@ defineProperties(CsvCatalogItem.prototype, {
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
      * @memberOf CsvCatalogItem.prototype
-     * @type {MetadataViewModel}
+     * @type {Metadata}
      */
     metadata : {  //TODO: return metadata if tableDataSource defined
         get : function() {
-            var result = new MetadataViewModel();
+            var result = new Metadata();
             result.isLoading = false;
             result.dataSourceErrorMessage = 'This data source does not have any details available.';
             result.serviceErrorMessage = 'This service does not have any details available.';
@@ -128,7 +128,7 @@ CsvCatalogItem.prototype._load = function() {
             } else if (data instanceof String) {
                 return loadTable(that, data);
             } else {
-                throw new ViewModelError({
+                throw new ModelError({
                     sender: that,
                     title: 'Unexpected type of CSV data',
                     message: '\
@@ -143,7 +143,7 @@ If you believe it is a bug in National Map, please report it by emailing \
         return loadText(proxyUrl(that, that.url)).then(function(text) {
             return loadTable(that, text);
         }).otherwise(function(e) {
-            throw new ViewModelError({
+            throw new ModelError({
                 sender: that,
                 title: 'Could not load CSV file',
                 message: '\
@@ -175,7 +175,7 @@ CsvCatalogItem.prototype._showInCesium = function() {
         var imageryProvider = new WebMapServiceImageryProvider({
             url : proxyUrl(this.application, this.url),
             layers : this.layers,
-            parameters : WebMapServiceItemViewModel.defaultParameters
+            parameters : WebMapServiceCatalogItem.defaultParameters
         });
 
         imageryProvider.base_requestImage = imageryProvider.requestImage;
@@ -261,7 +261,7 @@ CsvCatalogItem.prototype._showInLeaflet = function() {
             layers : this.layers,
             opacity : 0.6
         };
-        options = combine(defaultValue(WebMapServiceItemViewModel.defaultParameters), options);
+        options = combine(defaultValue(WebMapServiceCatalogItem.defaultParameters), options);
 
         this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.application, this.url), options);
 
@@ -334,7 +334,7 @@ function loadTable(viewModel, text) {
         console.log('No locaton date found in csv file - trying to match based on region');
         return when(addRegionMap(viewModel), function() {
             if (viewModel._regionMapped !== true) {
-                throw new ViewModelError({
+                throw new ModelError({
                     sender: viewModel,
                     title: 'Could not load CSV file',
                     message: '\

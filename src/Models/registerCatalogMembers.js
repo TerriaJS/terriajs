@@ -3,46 +3,46 @@
 /*global require*/
 
 var ArcGisMapServerCatalogItem = require('./ArcGisMapServerCatalogItem');
-var CkanGroupViewModel = require('./CkanGroupViewModel');
+var CkanCatalogGroup = require('./CkanCatalogGroup');
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
 var createCatalogItemFromUrl = require('./createCatalogItemFromUrl');
-var CzmlItemViewModel = require('./CzmlItemViewModel');
+var CzmlCatalogItem = require('./CzmlCatalogItem');
 var CatalogGroup = require('./CatalogGroup');
-var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
-var KmlItemViewModel = require('./KmlItemViewModel');
-var WebFeatureServiceGroupViewModel = require('./WebFeatureServiceGroupViewModel');
-var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel');
-var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
-var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
+var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');
+var KmlCatalogItem = require('./KmlCatalogItem');
+var WebFeatureServiceCatalogGroup = require('./WebFeatureServiceCatalogGroup');
+var WebFeatureServiceCatalogItem = require('./WebFeatureServiceCatalogItem');
+var WebMapServiceCatalogGroup = require('./WebMapServiceCatalogGroup');
+var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
 var CsvCatalogItem = require('./CsvCatalogItem');
-var GpxItemViewModel = require('./GpxItemViewModel');
-var OgrItemViewModel = require('./OgrItemViewModel');
+var GpxCatalogItem = require('./GpxCatalogItem');
+var OgrCatalogItem = require('./OgrCatalogItem');
 
 var registerCatalogMembers = function() {
-    createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
+    createCatalogMemberFromType.register('ckan', CkanCatalogGroup);
     createCatalogMemberFromType.register('csv', CsvCatalogItem);
-    createCatalogMemberFromType.register('czml', CzmlItemViewModel);
+    createCatalogMemberFromType.register('czml', CzmlCatalogItem);
     createCatalogMemberFromType.register('esri-mapServer', ArcGisMapServerCatalogItem);
-    createCatalogMemberFromType.register('geojson', GeoJsonItemViewModel);
-    createCatalogMemberFromType.register('gpx', GpxItemViewModel);
+    createCatalogMemberFromType.register('geojson', GeoJsonCatalogItem);
+    createCatalogMemberFromType.register('gpx', GpxCatalogItem);
     createCatalogMemberFromType.register('group', CatalogGroup);
-    createCatalogMemberFromType.register('kml', KmlItemViewModel);
-    createCatalogMemberFromType.register('ogr', OgrItemViewModel);
-    createCatalogMemberFromType.register('wfs', WebFeatureServiceItemViewModel);
-    createCatalogMemberFromType.register('wfs-getCapabilities', WebFeatureServiceGroupViewModel);
-    createCatalogMemberFromType.register('wms', WebMapServiceItemViewModel);
-    createCatalogMemberFromType.register('wms-getCapabilities', WebMapServiceGroupViewModel);
+    createCatalogMemberFromType.register('kml', KmlCatalogItem);
+    createCatalogMemberFromType.register('ogr', OgrCatalogItem);
+    createCatalogMemberFromType.register('wfs', WebFeatureServiceCatalogItem);
+    createCatalogMemberFromType.register('wfs-getCapabilities', WebFeatureServiceCatalogGroup);
+    createCatalogMemberFromType.register('wms', WebMapServiceCatalogItem);
+    createCatalogMemberFromType.register('wms-getCapabilities', WebMapServiceCatalogGroup);
 
     createCatalogItemFromUrl.register(matchesExtension('csv'), CsvCatalogItem);
-    createCatalogItemFromUrl.register(matchesExtension('czm'), CzmlItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('czml'), CzmlItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('geojson'), GeoJsonItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('gpx'), GpxItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('json'), GeoJsonItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('kml'), KmlItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('kmz'), KmlItemViewModel);
-    createCatalogItemFromUrl.register(matchesExtension('topojson'), GeoJsonItemViewModel);
-    createCatalogItemFromUrl.register(matchAll, OgrItemViewModel);
+    createCatalogItemFromUrl.register(matchesExtension('czm'), CzmlCatalogItem);
+    createCatalogItemFromUrl.register(matchesExtension('czml'), CzmlCatalogItem);
+    createCatalogItemFromUrl.register(matchesExtension('geojson'), GeoJsonCatalogItem);
+    createCatalogItemFromUrl.register(matchesExtension('gpx'), GpxCatalogItem);
+    createCatalogItemFromUrl.register(matchesExtension('json'), GeoJsonCatalogItem);
+    createCatalogItemFromUrl.register(matchesExtension('kml'), KmlCatalogItem);
+    createCatalogItemFromUrl.register(matchesExtension('kmz'), KmlCatalogItem);
+    createCatalogItemFromUrl.register(matchesExtension('topojson'), GeoJsonCatalogItem);
+    createCatalogItemFromUrl.register(matchAll, OgrCatalogItem);
 };
 
 function matchesExtension(extension) {

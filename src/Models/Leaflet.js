@@ -6,7 +6,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
-var LeafletViewModel = function(application, map) {
+var Leaflet = function(application, map) {
     /**
      * Gets or sets the Leaflet {@link Map} instance.
      * @type {Map}
@@ -18,7 +18,7 @@ var LeafletViewModel = function(application, map) {
  * Gets the current extent of the camera.  This may be approximate if the viewer does not have a strictly rectangular view.
  * @return {Rectangle} The current visible extent.
  */
-LeafletViewModel.prototype.getCurrentExtent = function() {
+Leaflet.prototype.getCurrentExtent = function() {
     var bounds = this.map.getBounds();
     return Rectangle.fromDegrees(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
 };
@@ -28,7 +28,7 @@ LeafletViewModel.prototype.getCurrentExtent = function() {
  *
  * @param {Rectangle} extent The extent to which to zoom.
  */
-LeafletViewModel.prototype.zoomTo = function(extent) {
+Leaflet.prototype.zoomTo = function(extent) {
     this.map.fitBounds(rectangleToLatLngBounds(extent));
 };
 
@@ -36,7 +36,7 @@ LeafletViewModel.prototype.zoomTo = function(extent) {
  * Captures a screenshot of the map.
  * @return {Promise} A promise that resolves to a data URL when the screenshot is ready.
  */
-LeafletViewModel.prototype.captureScreenshot = function() {
+Leaflet.prototype.captureScreenshot = function() {
     var deferred = when.defer();
 
     // Temporarily hide the map credits.
@@ -69,4 +69,4 @@ LeafletViewModel.prototype.captureScreenshot = function() {
     return deferred.promise;
 };
 
-module.exports = LeafletViewModel;
+module.exports = Leaflet;

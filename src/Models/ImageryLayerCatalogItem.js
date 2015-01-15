@@ -12,19 +12,19 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
-var ViewModelError = require('./ViewModelError');
+var ModelError = require('./ModelError');
 
 /**
  * A {@link CatalogItem} that is added to the map as a rasterized imagery layer.
  *
- * @alias ImageryLayerItemViewModel
+ * @alias ImageryLayerCatalogItem
  * @constructor
  * @extends CatalogItem
  * @abstract
  * 
  * @param {ApplicationViewModel} application The application.
  */
-var ImageryLayerItemViewModel = function(application) {
+var ImageryLayerCatalogItem = function(application) {
     CatalogItem.call(this, application);
 
     this._imageryLayer = undefined;
@@ -44,13 +44,13 @@ var ImageryLayerItemViewModel = function(application) {
     }, this);
 };
 
-inherit(CatalogItem, ImageryLayerItemViewModel);
+inherit(CatalogItem, ImageryLayerCatalogItem);
 
-defineProperties(ImageryLayerItemViewModel.prototype, {
+defineProperties(ImageryLayerCatalogItem.prototype, {
     /**
      * Gets the Cesium or Leaflet imagery layer object associated with this data source.
      * This property is undefined if the data source is not enabled.
-     * @memberOf ImageryLayerItemViewModel.prototype
+     * @memberOf ImageryLayerCatalogItem.prototype
      * @type {Object}
      */
     imageryLayer : {
@@ -62,7 +62,7 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
     /**
      * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
      * Data sources that cannot be reordered are typically displayed above reorderable data sources.
-     * @memberOf ImageryLayerItemViewModel.prototype
+     * @memberOf ImageryLayerCatalogItem.prototype
      * @type {Boolean}
      */
     supportsReordering : {
@@ -73,7 +73,7 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the opacity of this data source can be changed.
-     * @memberOf ImageryLayerItemViewModel.prototype
+     * @memberOf ImageryLayerCatalogItem.prototype
      * @type {Boolean}
      */
     supportsOpacity : {
@@ -87,12 +87,12 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf ImageryLayerItemViewModel.prototype
+     * @memberOf ImageryLayerCatalogItem.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return ImageryLayerItemViewModel.defaultUpdaters;
+            return ImageryLayerCatalogItem.defaultUpdaters;
         }
     },
 
@@ -101,49 +101,49 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf ImageryLayerItemViewModel.prototype
+     * @memberOf ImageryLayerCatalogItem.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return ImageryLayerItemViewModel.defaultSerializers;
+            return ImageryLayerCatalogItem.defaultSerializers;
         }
     },
 
     /**
      * Gets the set of names of the properties to be serialized for this object when {@link CatalogMember#serializeToJson} is called
      * and the `serializeForSharing` flag is set in the options.
-     * @memberOf ImageryLayerItemViewModel.prototype
+     * @memberOf ImageryLayerCatalogItem.prototype
      * @type {String[]}
      */
     propertiesForSharing : {
         get : function() {
-            return ImageryLayerItemViewModel.defaultPropertiesForSharing;
+            return ImageryLayerCatalogItem.defaultPropertiesForSharing;
         }
     }
 });
 
-ImageryLayerItemViewModel.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
-freezeObject(ImageryLayerItemViewModel.defaultUpdaters);
+ImageryLayerCatalogItem.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
+freezeObject(ImageryLayerCatalogItem.defaultUpdaters);
 
-ImageryLayerItemViewModel.defaultSerializers = clone(CatalogItem.defaultSerializers);
-freezeObject(ImageryLayerItemViewModel.defaultSerializers);
+ImageryLayerCatalogItem.defaultSerializers = clone(CatalogItem.defaultSerializers);
+freezeObject(ImageryLayerCatalogItem.defaultSerializers);
 
 /**
  * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItem}-derived object with the
  * `serializeForSharing` flag set in the options.
  * @type {String[]}
  */
-ImageryLayerItemViewModel.defaultPropertiesForSharing = clone(CatalogItem.defaultPropertiesForSharing);
-ImageryLayerItemViewModel.defaultPropertiesForSharing.push('opacity');
+ImageryLayerCatalogItem.defaultPropertiesForSharing = clone(CatalogItem.defaultPropertiesForSharing);
+ImageryLayerCatalogItem.defaultPropertiesForSharing.push('opacity');
 
-freezeObject(ImageryLayerItemViewModel.defaultPropertiesForSharing);
+freezeObject(ImageryLayerCatalogItem.defaultPropertiesForSharing);
 
 /**
  * Lowers this imagery layer to the bottom, underneath all other layers.  If this item is not enabled or not shown,
  * this method does nothing.
   */
-ImageryLayerItemViewModel.prototype.lowerToBottom = function() {
+ImageryLayerCatalogItem.prototype.lowerToBottom = function() {
     if (!defined(this._imageryLayer)) {
         return;
     }
@@ -157,7 +157,7 @@ ImageryLayerItemViewModel.prototype.lowerToBottom = function() {
     }
 };
 
-ImageryLayerItemViewModel.prototype._showInCesium = function() {
+ImageryLayerCatalogItem.prototype._showInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -185,7 +185,7 @@ ImageryLayerItemViewModel.prototype._showInCesium = function() {
             }
 
             // After two failures, advise the user that something is wrong and disable the catalog item.
-            that.application.error.raiseEvent(new ViewModelError({
+            that.application.error.raiseEvent(new ModelError({
                 sender: that,
                 title: 'Error accessing catalogue item',
                 message: '\
@@ -201,7 +201,7 @@ is invalid.  The catalogue item has been hidden from the map.  You may re-show i
     this._imageryLayer.show = true;
 };
 
-ImageryLayerItemViewModel.prototype._hideInCesium = function() {
+ImageryLayerCatalogItem.prototype._hideInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -213,7 +213,7 @@ ImageryLayerItemViewModel.prototype._hideInCesium = function() {
     }
 };
 
-ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
+ImageryLayerCatalogItem.prototype._showInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -223,7 +223,7 @@ ImageryLayerItemViewModel.prototype._showInLeaflet = function() {
     this.application.nowViewing.updateLeafletLayerOrder();
 };
 
-ImageryLayerItemViewModel.prototype._hideInLeaflet = function() {
+ImageryLayerCatalogItem.prototype._hideInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -244,4 +244,4 @@ function updateOpacity(viewModel) {
     }
 }
 
-module.exports = ImageryLayerItemViewModel;
+module.exports = ImageryLayerCatalogItem;

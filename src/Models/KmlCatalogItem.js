@@ -9,8 +9,8 @@ var KmlDataSource = require('../../third_party/cesium/Source/DataSources/KmlData
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var MetadataViewModel = require('./MetadataViewModel');
-var ViewModelError = require('./ViewModelError');
+var Metadata = require('./Metadata');
+var ModelError = require('./ModelError');
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readXml = require('../Core/readXml');
@@ -18,21 +18,21 @@ var readXml = require('../Core/readXml');
 /**
  * A {@link CatalogItem} representing KML or KMZ feature data.
  *
- * @alias KmlItemViewModel
+ * @alias KmlCatalogItem
  * @constructor
  * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the KML or KMZ data.
  */
-var KmlItemViewModel = function(application, url) {
+var KmlCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
     this._kmlDataSource = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve KML or KMZ data.  This property is ignored if
-     * {@link KmlItemViewModel#data} is defined.  This property is observable.
+     * {@link KmlCatalogItem#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -45,7 +45,7 @@ var KmlItemViewModel = function(application, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link KmlItemViewModel#data} was obtained.  This will be used
+     * Gets or sets the URL from which the {@link KmlCatalogItem#data} was obtained.  This will be used
      * to resolve any resources linked in the KML file, if any.
      * @type {String}
      */
@@ -54,12 +54,12 @@ var KmlItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItem, KmlItemViewModel);
+inherit(CatalogItem, KmlCatalogItem);
 
-defineProperties(KmlItemViewModel.prototype, {
+defineProperties(KmlCatalogItem.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf KmlItemViewModel.prototype
+     * @memberOf KmlCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -70,7 +70,7 @@ defineProperties(KmlItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'KML'.
-     * @memberOf KmlItemViewModel.prototype
+     * @memberOf KmlCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -81,12 +81,12 @@ defineProperties(KmlItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf KmlItemViewModel.prototype
-     * @type {MetadataViewModel}
+     * @memberOf KmlCatalogItem.prototype
+     * @type {Metadata}
      */
     metadata : {
         get : function() {
-            var result = new MetadataViewModel();
+            var result = new Metadata();
             result.isLoading = false;
             result.dataSourceErrorMessage = 'This data source does not have any details available.';
             result.serviceErrorMessage = 'This service does not have any details available.';
@@ -95,13 +95,13 @@ defineProperties(KmlItemViewModel.prototype, {
     }
 });
 
-KmlItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+KmlCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.data];
 };
 
 var kmzRegex = /\.kmz$/i;
 
-KmlItemViewModel.prototype._load = function() {
+KmlCatalogItem.prototype._load = function() {
     var dataSource = new KmlDataSource();
     this._kmlDataSource = dataSource;
 
@@ -132,11 +132,11 @@ KmlItemViewModel.prototype._load = function() {
                     });
                 }
             } else {
-                throw new ViewModelError({
+                throw new ModelError({
                     sender: that,
                     title: 'Unexpected type of KML data',
                     message: '\
-KmlItemViewModel.data is expected to be an XML Document, Blob, or File, but it was none of these. \
+KmlCatalogItem.data is expected to be an XML Document, Blob, or File, but it was none of these. \
 This may indicate a bug in National Map or incorrect use of the National Map API. \
 If you believe it is a bug in National Map, please report it by emailing \
 <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
@@ -152,13 +152,13 @@ If you believe it is a bug in National Map, please report it by emailing \
     }
 };
 
-KmlItemViewModel.prototype._enable = function() {
+KmlCatalogItem.prototype._enable = function() {
 };
 
-KmlItemViewModel.prototype._disable = function() {
+KmlCatalogItem.prototype._disable = function() {
 };
 
-KmlItemViewModel.prototype._show = function() {
+KmlCatalogItem.prototype._show = function() {
     if (!defined(this._kmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -171,7 +171,7 @@ KmlItemViewModel.prototype._show = function() {
     dataSources.add(this._kmlDataSource);
 };
 
-KmlItemViewModel.prototype._hide = function() {
+KmlCatalogItem.prototype._hide = function() {
     if (!defined(this._kmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -197,7 +197,7 @@ function doneLoading(viewModel) {
 }
 
 function errorLoading(viewModel) {
-    throw new ViewModelError({
+    throw new ModelError({
         sender: viewModel,
         title: 'Error loading KML or KMZ',
         message: '\
@@ -207,4 +207,4 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     });
 }
 
-module.exports = KmlItemViewModel;
+module.exports = KmlCatalogItem;

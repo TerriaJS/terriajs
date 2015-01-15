@@ -9,29 +9,29 @@ var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var CatalogItem = require('./CatalogItem');
-var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
+var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');
 var inherit = require('../Core/inherit');
-var MetadataViewModel = require('./MetadataViewModel');
-var ViewModelError = require('./ViewModelError');
+var Metadata = require('./Metadata');
+var ModelError = require('./ModelError');
 
 /**
  * A {@link CatalogItem} representing ogr2ogr supported data formats.
  *
- * @alias OgrItemViewModel
+ * @alias OgrCatalogItem
  * @constructor
- * @extends GeoJsonItemViewModel
+ * @extends GeoJsonCatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the OGR data.
  */
-var OgrItemViewModel = function(application, url) {
+var OgrCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
     this._geoJsonViewModel = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve OGR data.  This property is ignored if
-     * {@link OgrItemViewModel#data} is defined.  This property is observable.
+     * {@link OgrCatalogItem#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -44,7 +44,7 @@ var OgrItemViewModel = function(application, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link OgrItemViewModel#data} was obtained.  This may be used
+     * Gets or sets the URL from which the {@link OgrCatalogItem#data} was obtained.  This may be used
      * to resolve any resources linked in the Ogr file, if any.
      * @type {String}
      */
@@ -53,12 +53,12 @@ var OgrItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItem, OgrItemViewModel);
+inherit(CatalogItem, OgrCatalogItem);
 
-defineProperties(OgrItemViewModel.prototype, {
+defineProperties(OgrCatalogItem.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf OgrItemViewModel.prototype
+     * @memberOf OgrCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -69,7 +69,7 @@ defineProperties(OgrItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source.
-     * @memberOf OgrItemViewModel.prototype
+     * @memberOf OgrCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -80,12 +80,12 @@ defineProperties(OgrItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf OgrItemViewModel.prototype
-     * @type {MetadataViewModel}
+     * @memberOf OgrCatalogItem.prototype
+     * @type {Metadata}
      */
     metadata : {
         get : function() {
-            var result = new MetadataViewModel();
+            var result = new Metadata();
             result.isLoading = false;
             result.dataSourceErrorMessage = 'This data source does not have any details available.';
             result.serviceErrorMessage = 'This service does not have any details available.';
@@ -94,13 +94,13 @@ defineProperties(OgrItemViewModel.prototype, {
     }
 });
 
-OgrItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+OgrCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.data];
 };
 
-OgrItemViewModel.prototype._load = function() {
+OgrCatalogItem.prototype._load = function() {
     if (typeof FormData === 'undefined') {
-        throw new ViewModelError({
+        throw new ModelError({
             sender: this,
             title: 'Legacy browser not supported',
             message: '\
@@ -112,7 +112,7 @@ We recommend you upgrade to the latest version of <a href="http://www.google.com
         });
     }
 
-    this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
+    this._geoJsonViewModel = new GeoJsonCatalogItem(this.application);
 
     var that = this;
 
@@ -133,25 +133,25 @@ We recommend you upgrade to the latest version of <a href="http://www.google.com
     }
 };
 
-OgrItemViewModel.prototype._enable = function() {
+OgrCatalogItem.prototype._enable = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._enable();
     }
 };
 
-OgrItemViewModel.prototype._disable = function() {
+OgrCatalogItem.prototype._disable = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._disable();
     }
 };
 
-OgrItemViewModel.prototype._show = function() {
+OgrCatalogItem.prototype._show = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._show();
     }
 };
 
-OgrItemViewModel.prototype._hide = function() {
+OgrCatalogItem.prototype._hide = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._hide();
     }
@@ -198,7 +198,7 @@ function errorLoading(viewModel, msg) {
     if (!defined(msg)) {
         msg = 'This may indicate that the file is invalid or that it is not supported by the National Map conversion service.';
     }
-    throw new ViewModelError({
+    throw new ModelError({
         sender: viewModel,
         title: 'Error converting file to GeoJson',
         message: '\
@@ -207,4 +207,4 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     });
 }
 
-module.exports = OgrItemViewModel;
+module.exports = OgrCatalogItem;

@@ -15,10 +15,10 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var Catalog = require('./Catalog');
 var corsProxy = require('../Core/corsProxy');
-var NowViewingViewModel = require('./NowViewingViewModel');
-var ServicesViewModel = require('./ServicesViewModel');
+var NowViewing = require('./NowViewing');
+var Services = require('./Services');
 var ViewerMode = require('./ViewerMode');
-var ViewModelError = require('./ViewModelError');
+var ModelError = require('./ModelError');
 
 /**
  * The overall model for National Map.
@@ -28,7 +28,7 @@ var ViewModelError = require('./ViewModelError');
 var Application = function() {
     /**
      * An event that is raised when a user-facing error occurs.  This is especially useful for errors that happen asynchronously and so
-     * cannot be raised as an exception because no one would be able to catch it.  Subscribers are passed the {@link ViewModelError}
+     * cannot be raised as an exception because no one would be able to catch it.  Subscribers are passed the {@link ModelError}
      * that occurred as the only function parameter.
      * @type {CesiumEvent}
      */
@@ -42,7 +42,7 @@ var Application = function() {
 
     /**
      * Gets or sets the current base map.
-     * @type {ImageryLayerItemViewModel}
+     * @type {ImageryLayerCatalogItem}
      */
     this.baseMap = undefined;
 
@@ -92,14 +92,14 @@ var Application = function() {
     /**
      * Gets or sets properties related to the Leaflet map.  If the application is in 3D mode, this property will be
      * undefined and {@link Application#cesium} will be set.
-     * @type {LeafletViewModel}
+     * @type {Leaflet}
      */
     this.leaflet = undefined;
 
     /**
      * Gets or sets a reference to either {@link Application#cesium} or {@link Application#leaflet},
      * whichever is currently in use.
-     * @type {Cesium|LeafletViewModel}
+     * @type {Cesium|Leaflet}
      */
     this.currentViewer = undefined;
 
@@ -128,15 +128,15 @@ var Application = function() {
 
     /**
      * Gets or sets the add-on services known to the application.
-     * @type {ServicesViewModel}
+     * @type {Services}
      */
-    this.services = new ServicesViewModel(this);
+    this.services = new Services(this);
 
     /**
      * Gets or sets the collection of geospatial data that is currently enabled.
-     * @type {NowViewingViewModel}
+     * @type {NowViewing}
      */
-    this.nowViewing = new NowViewingViewModel(this);
+    this.nowViewing = new NowViewing(this);
 
     knockout.track(this, ['viewerMode', 'baseMap', 'initialBoundingBox']);
 
@@ -306,7 +306,7 @@ function loadInitSource(source) {
             initSource.isFromExternalFile = true;
             return initSource;
         }).otherwise(function() {
-            throw new ViewModelError({
+            throw new ModelError({
                 title: 'Error loading initialization source',
                 message: 'An error occurred while loading initialization information from ' + source + '.  This may indicate that you followed an invalid link or that there is a problem with your Internet connection.'
             });

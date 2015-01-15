@@ -13,7 +13,7 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var arraysAreEqual = require('../Core/arraysAreEqual');
-var MetadataViewModel = require('./MetadataViewModel');
+var Metadata = require('./Metadata');
 var CatalogMember = require('./CatalogMember');
 var inherit = require('../Core/inherit');
 var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
@@ -200,7 +200,7 @@ defineProperties(CatalogItem.prototype, {
     /**
      * Gets the metadata associated with this data item and the server that provided it, if applicable.
      * @memberOf CatalogItem.prototype
-     * @type {MetadataViewModel}
+     * @type {Metadata}
      */
     metadata : {
         get : function() {
@@ -252,9 +252,9 @@ defineProperties(CatalogItem.prototype, {
 /**
  * Gets or sets the default metadata to use for data items that don't provide anything better from their
  * {@link CatalogItem#metadata} property.  The default simply indicates that no metadata is available.
- * @type {MetadataViewModel}
+ * @type {Metadata}
  */
-CatalogItem.defaultMetadata = new MetadataViewModel();
+CatalogItem.defaultMetadata = new Metadata();
 CatalogItem.defaultMetadata.isLoading = false;
 CatalogItem.defaultMetadata.dataSourceErrorMessage = 'This data item does not have any details available.';
 CatalogItem.defaultMetadata.serviceErrorMessage = 'This service does not have any details available.';

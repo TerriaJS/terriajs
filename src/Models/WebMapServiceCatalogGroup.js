@@ -13,21 +13,21 @@ var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
-var ViewModelError = require('./ViewModelError');
+var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
 var inherit = require('../Core/inherit');
-var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
+var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
 
 /**
  * A {@link CatalogGroup} representing a collection of layers from a Web Map Service (WMS) server.
  *
- * @alias WebMapServiceGroupViewModel
+ * @alias WebMapServiceCatalogGroup
  * @constructor
  * @extends CatalogGroup
  * 
  * @param {ApplicationViewModel} application The application.
  */
-var WebMapServiceGroupViewModel = function(application) {
+var WebMapServiceCatalogGroup = function(application) {
     CatalogGroup.call(this, application, 'wms-getCapabilities');
 
     /**
@@ -46,7 +46,7 @@ var WebMapServiceGroupViewModel = function(application) {
 
     /**
      * Gets or sets the additional parameters to pass to the WMS server when requesting images.
-     * If this property is undefiend, {@link WebMapServiceItemViewModel.defaultParameters} is used.
+     * If this property is undefiend, {@link WebMapServiceCatalogItem.defaultParameters} is used.
      * @type {Object}
      */
     this.parameters = undefined;
@@ -54,12 +54,12 @@ var WebMapServiceGroupViewModel = function(application) {
     knockout.track(this, ['url', 'dataCustodian', 'parameters']);
 };
 
-inherit(CatalogGroup, WebMapServiceGroupViewModel);
+inherit(CatalogGroup, WebMapServiceCatalogGroup);
 
-defineProperties(WebMapServiceGroupViewModel.prototype, {
+defineProperties(WebMapServiceCatalogGroup.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf WebMapServiceGroupViewModel.prototype
+     * @memberOf WebMapServiceCatalogGroup.prototype
      * @type {String}
      */
     type : {
@@ -70,7 +70,7 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
-     * @memberOf WebMapServiceGroupViewModel.prototype
+     * @memberOf WebMapServiceCatalogGroup.prototype
      * @type {String}
      */
     typeName : {
@@ -84,12 +84,12 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf WebMapServiceGroupViewModel.prototype
+     * @memberOf WebMapServiceCatalogGroup.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return WebMapServiceGroupViewModel.defaultSerializers;
+            return WebMapServiceCatalogGroup.defaultSerializers;
         }
     }
 });
@@ -99,9 +99,9 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
  * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-WebMapServiceGroupViewModel.defaultSerializers = clone(CatalogGroup.defaultSerializers);
+WebMapServiceCatalogGroup.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
-WebMapServiceGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+WebMapServiceCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from GetCapabilities.
     var previousSerializeForSharing = options.serializeForSharing;
     options.serializeForSharing = true;
@@ -121,22 +121,22 @@ WebMapServiceGroupViewModel.defaultSerializers.items = function(viewModel, json,
     return result;
 };
 
-WebMapServiceGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+WebMapServiceCatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
-freezeObject(WebMapServiceGroupViewModel.defaultSerializers);
+freezeObject(WebMapServiceCatalogGroup.defaultSerializers);
 
-WebMapServiceGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+WebMapServiceCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url];
 };
 
-WebMapServiceGroupViewModel.prototype._load = function() {
+WebMapServiceCatalogGroup.prototype._load = function() {
     var url = cleanAndProxyUrl(this.application, this.url) + '?service=WMS&request=GetCapabilities&version=1.1.1&tiled=true';
 
     var that = this;
     return loadXML(url).then(function(xml) {
         // Is this really a GetCapabilities response?
         if (!xml || !xml.documentElement || xml.documentElement.localName !== 'WMS_Capabilities') {
-            throw new ViewModelError({
+            throw new ModelError({
                 title: 'Invalid WMS server',
                 message: '\
 An error occurred while invoking GetCapabilities on the WMS server.  The server\'s response does not appear to be a valid GetCapabilities document.  \
@@ -197,7 +197,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 
         addLayersRecursively(that, json.Capability.Layer, that.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
     }).otherwise(function(e) {
-        throw new ViewModelError({
+        throw new ModelError({
             sender: that,
             title: 'Group is not available',
             message: '\
@@ -255,7 +255,7 @@ function addLayersRecursively(viewModel, layers, items, parent, supportsJsonGetF
 }
 
 function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataCustodian) {
-    var result = new WebMapServiceItemViewModel(viewModel.application);
+    var result = new WebMapServiceCatalogItem(viewModel.application);
 
     result.name = layer.Title;
     result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : viewModel.description;
@@ -352,4 +352,4 @@ function getInheritableProperty(layer, name) {
     return undefined;
 }
 
-module.exports = WebMapServiceGroupViewModel;
+module.exports = WebMapServiceCatalogGroup;

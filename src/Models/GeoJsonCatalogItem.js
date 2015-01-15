@@ -16,8 +16,8 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var MetadataViewModel = require('./MetadataViewModel');
-var ViewModelError = require('./ViewModelError');
+var Metadata = require('./Metadata');
+var ModelError = require('./ModelError');
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readJson = require('../Core/readJson');
@@ -45,14 +45,14 @@ var pointPalette = {
 /**
  * A {@link CatalogItem} representing GeoJSON feature data.
  *
- * @alias GeoJsonItemViewModel
+ * @alias GeoJsonCatalogItem
  * @constructor
  * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the GeoJSON data.
  */
-var GeoJsonItemViewModel = function(application, url) {
+var GeoJsonCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
     this._geoJsonDataSource = undefined;
@@ -60,7 +60,7 @@ var GeoJsonItemViewModel = function(application, url) {
 
     /**
      * Gets or sets the URL from which to retrieve GeoJSON data.  This property is ignored if
-     * {@link GeoJsonItemViewModel#data} is defined.  This property is observable.
+     * {@link GeoJsonCatalogItem#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -73,7 +73,7 @@ var GeoJsonItemViewModel = function(application, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link GeoJsonItemViewModel#data} was obtained.  This will be used
+     * Gets or sets the URL from which the {@link GeoJsonCatalogItem#data} was obtained.  This will be used
      * to resolve any resources linked in the GeoJSON file, if any.
      * @type {String}
      */
@@ -82,12 +82,12 @@ var GeoJsonItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItem, GeoJsonItemViewModel);
+inherit(CatalogItem, GeoJsonCatalogItem);
 
-defineProperties(GeoJsonItemViewModel.prototype, {
+defineProperties(GeoJsonCatalogItem.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf GeoJsonItemViewModel.prototype
+     * @memberOf GeoJsonCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -98,7 +98,7 @@ defineProperties(GeoJsonItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'GeoJSON'.
-     * @memberOf GeoJsonItemViewModel.prototype
+     * @memberOf GeoJsonCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -109,13 +109,13 @@ defineProperties(GeoJsonItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf GeoJsonItemViewModel.prototype
-     * @type {MetadataViewModel}
+     * @memberOf GeoJsonCatalogItem.prototype
+     * @type {Metadata}
      */
     metadata : {
         get : function() {
             // TODO: maybe return the FeatureCollection's properties?
-            var result = new MetadataViewModel();
+            var result = new Metadata();
             result.isLoading = false;
             result.dataSourceErrorMessage = 'This data source does not have any details available.';
             result.serviceErrorMessage = 'This service does not have any details available.';
@@ -124,11 +124,11 @@ defineProperties(GeoJsonItemViewModel.prototype, {
     }
 });
 
-GeoJsonItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+GeoJsonCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.data];
 };
 
-GeoJsonItemViewModel.prototype._load = function() {
+GeoJsonCatalogItem.prototype._load = function() {
     this._geoJsonDataSource = new GeoJsonDataSource(this.name);
 
     var that = this;
@@ -151,7 +151,7 @@ GeoJsonItemViewModel.prototype._load = function() {
         return loadJson(proxyUrl(that.application, that.url)).then(function(json) {
             return updateViewModelFromData(that, json);
         }).otherwise(function(e) {
-            throw new ViewModelError({
+            throw new ModelError({
                 sender: that,
                 title: 'Could not load JSON',
                 message: '\
@@ -171,13 +171,13 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
     }
 };
 
-GeoJsonItemViewModel.prototype._enable = function() {
+GeoJsonCatalogItem.prototype._enable = function() {
 };
 
-GeoJsonItemViewModel.prototype._disable = function() {
+GeoJsonCatalogItem.prototype._disable = function() {
 };
 
-GeoJsonItemViewModel.prototype._show = function() {
+GeoJsonCatalogItem.prototype._show = function() {
     if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -190,7 +190,7 @@ GeoJsonItemViewModel.prototype._show = function() {
     dataSources.add(this._geoJsonDataSource);
 };
 
-GeoJsonItemViewModel.prototype._hide = function() {
+GeoJsonCatalogItem.prototype._hide = function() {
     if (!defined(this._geoJsonDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -467,4 +467,4 @@ function getGeoJsonExtent(geoJson) {
     return Rectangle.fromDegrees(ext.west, ext.south, ext.east, ext.north);
 }
 
-module.exports = GeoJsonItemViewModel;
+module.exports = GeoJsonCatalogItem;

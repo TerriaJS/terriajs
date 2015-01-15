@@ -9,8 +9,8 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var MetadataViewModel = require('./MetadataViewModel');
-var ViewModelError = require('./ViewModelError');
+var Metadata = require('./Metadata');
+var ModelError = require('./ModelError');
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readJson = require('../Core/readJson');
@@ -18,21 +18,21 @@ var readJson = require('../Core/readJson');
 /**
  * A {@link CatalogItem} representing Cesium Language (CZML) data.
  *
- * @alias CzmlItemViewModel
+ * @alias CzmlCatalogItem
  * @constructor
  * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the CZML data.
  */
-var CzmlItemViewModel = function(application, url) {
+var CzmlCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
     this._czmlDataSource = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve CZML data.  This property is ignored if
-     * {@link CzmlItemViewModel#data} is defined.  This property is observable.
+     * {@link CzmlCatalogItem#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -45,7 +45,7 @@ var CzmlItemViewModel = function(application, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link CzmlItemViewModel#data} was obtained.  This will be used
+     * Gets or sets the URL from which the {@link CzmlCatalogItem#data} was obtained.  This will be used
      * to resolve any resources linked in the CZML file, if any.
      * @type {String}
      */
@@ -54,12 +54,12 @@ var CzmlItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItem, CzmlItemViewModel);
+inherit(CatalogItem, CzmlCatalogItem);
 
-defineProperties(CzmlItemViewModel.prototype, {
+defineProperties(CzmlCatalogItem.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf CzmlItemViewModel.prototype
+     * @memberOf CzmlCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -70,7 +70,7 @@ defineProperties(CzmlItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'Cesium Language (CZML)'.
-     * @memberOf CzmlItemViewModel.prototype
+     * @memberOf CzmlCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -81,12 +81,12 @@ defineProperties(CzmlItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf CzmlItemViewModel.prototype
-     * @type {MetadataViewModel}
+     * @memberOf CzmlCatalogItem.prototype
+     * @type {Metadata}
      */
     metadata : {
         get : function() {
-            var result = new MetadataViewModel();
+            var result = new Metadata();
             result.isLoading = false;
             result.dataSourceErrorMessage = 'This data source does not have any details available.';
             result.serviceErrorMessage = 'This service does not have any details available.';
@@ -95,11 +95,11 @@ defineProperties(CzmlItemViewModel.prototype, {
     }
 });
 
-CzmlItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+CzmlCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.data];
 };
 
-CzmlItemViewModel.prototype._load = function() {
+CzmlCatalogItem.prototype._load = function() {
     var dataSource = new CzmlDataSource();
     this._czmlDataSource = dataSource;
 
@@ -130,13 +130,13 @@ CzmlItemViewModel.prototype._load = function() {
     }
 };
 
-CzmlItemViewModel.prototype._enable = function() {
+CzmlCatalogItem.prototype._enable = function() {
 };
 
-CzmlItemViewModel.prototype._disable = function() {
+CzmlCatalogItem.prototype._disable = function() {
 };
 
-CzmlItemViewModel.prototype._show = function() {
+CzmlCatalogItem.prototype._show = function() {
     if (!defined(this._czmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -149,7 +149,7 @@ CzmlItemViewModel.prototype._show = function() {
     dataSources.add(this._czmlDataSource);
 };
 
-CzmlItemViewModel.prototype._hide = function() {
+CzmlCatalogItem.prototype._hide = function() {
     if (!defined(this._czmlDataSource)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -175,7 +175,7 @@ function doneLoading(viewModel) {
 }
 
 function errorLoading(viewModel) {
-    throw new ViewModelError({
+    throw new ModelError({
         sender: viewModel,
         title: 'Error loading CZML',
         message: '\
@@ -185,4 +185,4 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     });
 }
 
-module.exports = CzmlItemViewModel;
+module.exports = CzmlCatalogItem;

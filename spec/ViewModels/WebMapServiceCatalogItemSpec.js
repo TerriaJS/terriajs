@@ -3,8 +3,8 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var Application = require('../../src/Models/Application');
-var ImageryLayerItemViewModel = require('../../src/Models/ImageryLayerItemViewModel');
-var WebMapServiceItemViewModel = require('../../src/Models/WebMapServiceItemViewModel');
+var ImageryLayerCatalogItem = require('../../src/Models/ImageryLayerCatalogItem');
+var WebMapServiceCatalogItem = require('../../src/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
@@ -14,7 +14,7 @@ var wmsViewModel;
 
 beforeEach(function() {
     application = new Application();
-    wmsViewModel = new WebMapServiceItemViewModel(application);
+    wmsViewModel = new WebMapServiceCatalogItem(application);
 });
 
 describe('WebMapServiceDataItemViewModel', function() {
@@ -25,7 +25,7 @@ describe('WebMapServiceDataItemViewModel', function() {
 
     it('throws if constructed without an application', function() {
         expect(function() {
-            var viewModel = new WebMapServiceItemViewModel(); // jshint ignore:line
+            var viewModel = new WebMapServiceCatalogItem(); // jshint ignore:line
         }).toThrow();
     });
 
@@ -34,7 +34,7 @@ describe('WebMapServiceDataItemViewModel', function() {
     });
 
     it('is derived from ImageryLayerDataItemViewModel', function() {
-        expect(wmsViewModel instanceof ImageryLayerItemViewModel).toBe(true);
+        expect(wmsViewModel instanceof ImageryLayerCatalogItem).toBe(true);
     });
 
     it('derives legendUrl from url if legendUrl is not explicitly provided', function() {
@@ -152,7 +152,7 @@ describe('WebMapServiceDataItemViewModel', function() {
 
         var json = wmsViewModel.serializeToJson();
 
-        var reconstructed = new WebMapServiceItemViewModel(application);
+        var reconstructed = new WebMapServiceCatalogItem(application);
         reconstructed.updateFromJson(json);
 
         expect(reconstructed).toEqual(wmsViewModel);

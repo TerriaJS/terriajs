@@ -7,12 +7,12 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var MetadataViewModel = require('./MetadataViewModel');
-var ViewModelError = require('./ViewModelError');
+var Metadata = require('./Metadata');
+var ModelError = require('./ModelError');
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 
-var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
+var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');
 var readText = require('../Core/readText');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
 
@@ -20,21 +20,21 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
 /**
  * A {@link CatalogItem} representing GPX data.
  *
- * @alias GpxItemViewModel
+ * @alias GpxCatalogItem
  * @constructor
- * @extends GeoJsonItemViewModel
+ * @extends GeoJsonCatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the GPX data.
  */
-var GpxItemViewModel = function(application, url) {
+var GpxCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
     this._geoJsonViewModel = undefined;
 
     /**
      * Gets or sets the URL from which to retrieve GPX data.  This property is ignored if
-     * {@link GpxItemViewModel#data} is defined.  This property is observable.
+     * {@link GpxCatalogItem#data} is defined.  This property is observable.
      * @type {String}
      */
     this.url = url;
@@ -47,7 +47,7 @@ var GpxItemViewModel = function(application, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link GpxItemViewModel#data} was obtained.  This may be used
+     * Gets or sets the URL from which the {@link GpxCatalogItem#data} was obtained.  This may be used
      * to resolve any resources linked in the Gpx file, if any.
      * @type {String}
      */
@@ -56,12 +56,12 @@ var GpxItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItem, GpxItemViewModel);
+inherit(CatalogItem, GpxCatalogItem);
 
-defineProperties(GpxItemViewModel.prototype, {
+defineProperties(GpxCatalogItem.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf GpxItemViewModel.prototype
+     * @memberOf GpxCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -72,7 +72,7 @@ defineProperties(GpxItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'GPX'.
-     * @memberOf GpxItemViewModel.prototype
+     * @memberOf GpxCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -83,12 +83,12 @@ defineProperties(GpxItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf GpxItemViewModel.prototype
-     * @type {MetadataViewModel}
+     * @memberOf GpxCatalogItem.prototype
+     * @type {Metadata}
      */
     metadata : {
         get : function() {
-            var result = new MetadataViewModel();
+            var result = new Metadata();
             result.isLoading = false;
             result.dataSourceErrorMessage = 'This data source does not have any details available.';
             result.serviceErrorMessage = 'This service does not have any details available.';
@@ -97,12 +97,12 @@ defineProperties(GpxItemViewModel.prototype, {
     }
 });
 
-GpxItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+GpxCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.data];
 };
 
-GpxItemViewModel.prototype._load = function() {
-    this._geoJsonViewModel = new GeoJsonItemViewModel(this.application);
+GpxCatalogItem.prototype._load = function() {
+    this._geoJsonViewModel = new GeoJsonCatalogItem(this.application);
 
     var that = this;
 
@@ -128,25 +128,25 @@ GpxItemViewModel.prototype._load = function() {
     }
 };
 
-GpxItemViewModel.prototype._enable = function() {
+GpxCatalogItem.prototype._enable = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._enable();
     }
 };
 
-GpxItemViewModel.prototype._disable = function() {
+GpxCatalogItem.prototype._disable = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._disable();
     }
 };
 
-GpxItemViewModel.prototype._show = function() {
+GpxCatalogItem.prototype._show = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._show();
     }
 };
 
-GpxItemViewModel.prototype._hide = function() {
+GpxCatalogItem.prototype._hide = function() {
     if (defined(this._geoJsonViewModel)) {
         this._geoJsonViewModel._hide();
     }
@@ -175,7 +175,7 @@ function loadGpxText(viewModel, text) {
 }
 
 function errorLoading(viewModel) {
-    throw new ViewModelError({
+    throw new ModelError({
         sender: viewModel,
         title: 'Error loading GPX',
         message: '\
@@ -185,4 +185,4 @@ at <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.a
     });
 }
 
-module.exports = GpxItemViewModel;
+module.exports = GpxCatalogItem;

@@ -10,22 +10,22 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
-var ViewModelError = require('./ViewModelError');
+var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
 var inherit = require('../Core/inherit');
 var unionRectangles = require('../Map/unionRectangles');
-var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel');
+var WebFeatureServiceCatalogItem = require('./WebFeatureServiceCatalogItem');
 
 /**
  * A {@link CatalogGroup} representing a collection of feature types from a Web Feature Service (WFS) server.
  *
- * @alias WebFeatureServiceGroupViewModel
+ * @alias WebFeatureServiceCatalogGroup
  * @constructor
  * @extends CatalogGroup
  * 
  * @param {ApplicationViewModel} application The application.
  */
-var WebFeatureServiceGroupViewModel = function(application) {
+var WebFeatureServiceCatalogGroup = function(application) {
     CatalogGroup.call(this, application, 'wfs-getCapabilities');
 
     /**
@@ -45,12 +45,12 @@ var WebFeatureServiceGroupViewModel = function(application) {
     knockout.track(this, ['url', 'dataCustodian']);
 };
 
-inherit(CatalogGroup, WebFeatureServiceGroupViewModel);
+inherit(CatalogGroup, WebFeatureServiceCatalogGroup);
 
-defineProperties(WebFeatureServiceGroupViewModel.prototype, {
+defineProperties(WebFeatureServiceCatalogGroup.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf WebFeatureServiceGroupViewModel.prototype
+     * @memberOf WebFeatureServiceCatalogGroup.prototype
      * @type {String}
      */
     type : {
@@ -61,7 +61,7 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Feature Service (WFS)'.
-     * @memberOf WebFeatureServiceGroupViewModel.prototype
+     * @memberOf WebFeatureServiceCatalogGroup.prototype
      * @type {String}
      */
     typeName : {
@@ -75,12 +75,12 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf WebFeatureServiceGroupViewModel.prototype
+     * @memberOf WebFeatureServiceCatalogGroup.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return WebFeatureServiceGroupViewModel.defaultSerializers;
+            return WebFeatureServiceCatalogGroup.defaultSerializers;
         }
     }
 });
@@ -90,9 +90,9 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
  * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-WebFeatureServiceGroupViewModel.defaultSerializers = clone(CatalogGroup.defaultSerializers);
+WebFeatureServiceCatalogGroup.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
-WebFeatureServiceGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+WebFeatureServiceCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from GetCapabilities.
     var previousSerializeForSharing = options.serializeForSharing;
     options.serializeForSharing = true;
@@ -110,22 +110,22 @@ WebFeatureServiceGroupViewModel.defaultSerializers.items = function(viewModel, j
     options.serializeForSharing = previousSerializeForSharing;
 };
 
-WebFeatureServiceGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+WebFeatureServiceCatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
-freezeObject(WebFeatureServiceGroupViewModel.defaultSerializers);
+freezeObject(WebFeatureServiceCatalogGroup.defaultSerializers);
 
-WebFeatureServiceGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+WebFeatureServiceCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url];
 };
 
-WebFeatureServiceGroupViewModel.prototype._load = function() {
+WebFeatureServiceCatalogGroup.prototype._load = function() {
     var url = cleanAndProxyUrl(this.application, this.url) + '?service=WFS&version=1.1.0&request=GetCapabilities';
 
     var that = this;
     return loadXML(url).then(function(xml) {
         // Is this really a GetCapabilities response?
         if (!xml || !xml.documentElement || xml.documentElement.localName !== 'WFS_Capabilities') {
-            throw new ViewModelError({
+            throw new ModelError({
                 title: 'Invalid WFS server',
                 message: '\
 An error occurred while invoking GetCapabilities on the WFS server.  The server\'s response does not appear to be a valid GetCapabilities document.  \
@@ -170,7 +170,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
             addFeatureTypes(that, json.FeatureTypeList.FeatureType, that.items, undefined, supportsJsonGetFeature, dataCustodian);
         }
     }).otherwise(function(e) {
-        throw new ViewModelError({
+        throw new ModelError({
             title: 'Group is not available',
             message: '\
 An error occurred while invoking GetCapabilities on the WFS server.  \
@@ -227,7 +227,7 @@ function addFeatureTypes(viewModel, featureTypes, items, parent, supportsJsonGet
 }
 
 function createWfsDataSource(viewModel, featureType, supportsJsonGetFeature, dataCustodian) {
-    var result = new WebFeatureServiceItemViewModel(viewModel.application);
+    var result = new WebFeatureServiceCatalogItem(viewModel.application);
 
     result.name = featureType.Title;
     result.description = defined(featureType.Abstract) && featureType.Abstract.length > 0 ? featureType.Abstract : viewModel.description;
@@ -295,4 +295,4 @@ function wgs84BoundingBoxToRectangle(boundingBox) {
 }
 
 
-module.exports = WebFeatureServiceGroupViewModel;
+module.exports = WebFeatureServiceCatalogGroup;

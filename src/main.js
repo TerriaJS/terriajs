@@ -67,7 +67,7 @@ if (start) {
     var ArcGisMapServerCatalogItem = require('./Models/ArcGisMapServerCatalogItem');
     var BingMapsCatalogItem = require('./Models/BingMapsCatalogItem');
     var CatalogGroup = require('./Models/CatalogGroup');
-    var WebMapServiceItemViewModel = require('./Models/WebMapServiceItemViewModel');
+    var WebMapServiceCatalogItem = require('./Models/WebMapServiceCatalogItem');
     var registerCatalogMembers = require('./Models/registerCatalogMembers');
     var raiseErrorToUser = require('./Models/raiseErrorToUser');
 
@@ -134,7 +134,7 @@ if (start) {
         });
 
         // Create the various base layer options.
-        var naturalEarthII = new WebMapServiceItemViewModel(application);
+        var naturalEarthII = new WebMapServiceCatalogItem(application);
         naturalEarthII.name = 'Natural Earth II';
         naturalEarthII.url = 'http://geoserver-nm.nicta.com.au/imagery/natural-earth-ii/wms';
         naturalEarthII.layers = 'natural-earth-ii:NE2_HR_LC_SR_W_DR';
@@ -153,7 +153,7 @@ if (start) {
         australianTopo.items.push(naturalEarthII);
         australianTopo.items.push(australianTopoOverlay);
 
-        var blackMarble = new WebMapServiceItemViewModel(application);
+        var blackMarble = new WebMapServiceCatalogItem(application);
         blackMarble.name = 'NASA Black Marble';
         blackMarble.url = 'http://geoserver-nm.nicta.com.au/imagery/nasa-black-marble/wms';
         blackMarble.layers = 'nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo';

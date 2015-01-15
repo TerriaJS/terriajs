@@ -58,7 +58,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var corsProxy = require('../Core/corsProxy');
 var Cesium = require('../Models/Cesium');
-var LeafletViewModel = require('../Models/LeafletViewModel');
+var Leaflet = require('../Models/Leaflet');
 var PopupMessageViewModel = require('../ViewModels/PopupMessageViewModel');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var LeafletVisualizer = require('../Map/LeafletVisualizer');
@@ -913,7 +913,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //redisplay data
         this.map = map;
 
-        this.application.leaflet = new LeafletViewModel(this.application, map);
+        this.application.leaflet = new Leaflet(this.application, map);
         this.application.cesium = undefined;
         this.application.currentViewer = this.application.leaflet;
 

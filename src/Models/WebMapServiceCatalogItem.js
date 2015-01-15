@@ -15,22 +15,22 @@ var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
-var MetadataViewModel = require('./MetadataViewModel');
-var MetadataItemViewModel = require('./MetadataItemViewModel');
-var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
+var Metadata = require('./Metadata');
+var MetadataItem = require('./MetadataItem');
+var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 
 /**
- * A {@link ImageryLayerItemViewModel} representing a layer from a Web Map Service (WMS) server.
+ * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
  *
- * @alias WebMapServiceItemViewModel
+ * @alias WebMapServiceCatalogItem
  * @constructor
- * @extends ImageryLayerItemViewModel
+ * @extends ImageryLayerCatalogItem
  * 
  * @param {ApplicationViewModel} application The application for the group.
  */
-var WebMapServiceItemViewModel = function(application) {
-    ImageryLayerItemViewModel.call(this, application);
+var WebMapServiceCatalogItem = function(application) {
+    ImageryLayerCatalogItem.call(this, application);
 
     this._metadata = undefined;
     this._dataUrl = undefined;
@@ -53,7 +53,7 @@ var WebMapServiceItemViewModel = function(application) {
 
     /**
      * Gets or sets the additional parameters to pass to the WMS server when requesting images.
-     * If this property is undefiend, {@link WebMapServiceItemViewModel.defaultParameters} is used.
+     * If this property is undefiend, {@link WebMapServiceCatalogItem.defaultParameters} is used.
      * @type {Object}
      */
     this.parameters = undefined;
@@ -148,12 +148,12 @@ var WebMapServiceItemViewModel = function(application) {
     });
 };
 
-inherit(ImageryLayerItemViewModel, WebMapServiceItemViewModel);
+inherit(ImageryLayerCatalogItem, WebMapServiceCatalogItem);
 
-defineProperties(WebMapServiceItemViewModel.prototype, {
+defineProperties(WebMapServiceCatalogItem.prototype, {
     /**
      * Gets the type of data item represented by this instance.
-     * @memberOf WebMapServiceItemViewModel.prototype
+     * @memberOf WebMapServiceCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -164,7 +164,7 @@ defineProperties(WebMapServiceItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'Web Map Service (WMS)'.
-     * @memberOf WebMapServiceItemViewModel.prototype
+     * @memberOf WebMapServiceCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -175,8 +175,8 @@ defineProperties(WebMapServiceItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf WebMapServiceItemViewModel.prototype
-     * @type {MetadataViewModel}
+     * @memberOf WebMapServiceCatalogItem.prototype
+     * @type {Metadata}
      */
     metadata : {
         get : function() {
@@ -192,12 +192,12 @@ defineProperties(WebMapServiceItemViewModel.prototype, {
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf WebMapServiceItemViewModel.prototype
+     * @memberOf WebMapServiceCatalogItem.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return WebMapServiceItemViewModel.defaultUpdaters;
+            return WebMapServiceCatalogItem.defaultUpdaters;
         }
     },
 
@@ -206,19 +206,19 @@ defineProperties(WebMapServiceItemViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf WebMapServiceItemViewModel.prototype
+     * @memberOf WebMapServiceCatalogItem.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return WebMapServiceItemViewModel.defaultSerializers;
+            return WebMapServiceCatalogItem.defaultSerializers;
         }
     }
 });
 
-WebMapServiceItemViewModel.defaultUpdaters = clone(ImageryLayerItemViewModel.defaultUpdaters);
+WebMapServiceCatalogItem.defaultUpdaters = clone(ImageryLayerCatalogItem.defaultUpdaters);
 
-WebMapServiceItemViewModel.defaultUpdaters.tilingScheme = function(viewModel, json, propertyName, options) {
+WebMapServiceCatalogItem.defaultUpdaters.tilingScheme = function(viewModel, json, propertyName, options) {
     if (json.tilingScheme === 'geographic') {
         viewModel.tilingScheme = new GeographicTilingScheme();
     } else if (json.tilingScheme === 'web-mercator') {
@@ -228,24 +228,24 @@ WebMapServiceItemViewModel.defaultUpdaters.tilingScheme = function(viewModel, js
     }
 };
 
-freezeObject(WebMapServiceItemViewModel.defaultUpdaters);
+freezeObject(WebMapServiceCatalogItem.defaultUpdaters);
 
-WebMapServiceItemViewModel.defaultSerializers = clone(ImageryLayerItemViewModel.defaultSerializers);
+WebMapServiceCatalogItem.defaultSerializers = clone(ImageryLayerCatalogItem.defaultSerializers);
 
 // Serialize the underlying properties instead of the public views of them.
-WebMapServiceItemViewModel.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {
+WebMapServiceCatalogItem.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {
     json.dataUrl = viewModel._dataUrl;
 };
-WebMapServiceItemViewModel.defaultSerializers.dataUrlType = function(viewModel, json, propertyName) {
+WebMapServiceCatalogItem.defaultSerializers.dataUrlType = function(viewModel, json, propertyName) {
     json.dataUrlType = viewModel._dataUrlType;
 };
-WebMapServiceItemViewModel.defaultSerializers.metadataUrl = function(viewModel, json, propertyName) {
+WebMapServiceCatalogItem.defaultSerializers.metadataUrl = function(viewModel, json, propertyName) {
     json.metadataUrl = viewModel._metadataUrl;
 };
-WebMapServiceItemViewModel.defaultSerializers.legendUrl = function(viewModel, json, propertyName) {
+WebMapServiceCatalogItem.defaultSerializers.legendUrl = function(viewModel, json, propertyName) {
     json.legendUrl = viewModel._legendUrl;
 };
-WebMapServiceItemViewModel.defaultSerializers.tilingScheme = function(viewModel, json, propertyName) {
+WebMapServiceCatalogItem.defaultSerializers.tilingScheme = function(viewModel, json, propertyName) {
     if (viewModel.tilingScheme instanceof GeographicTilingScheme) {
         json.tilingScheme = 'geographic';
     } else if (viewModel.tilingScheme instanceof WebMercatorTilingScheme) {
@@ -254,9 +254,9 @@ WebMapServiceItemViewModel.defaultSerializers.tilingScheme = function(viewModel,
         json.tilingScheme = viewModel.tilingScheme;
     }
 };
-freezeObject(WebMapServiceItemViewModel.defaultSerializers);
+freezeObject(WebMapServiceCatalogItem.defaultSerializers);
 
-WebMapServiceItemViewModel.prototype._enableInCesium = function() {
+WebMapServiceCatalogItem.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -268,7 +268,7 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : combine(this.parameters, WebMapServiceItemViewModel.defaultParameters),
+        parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
         tilingScheme : this.tilingScheme
     });
 
@@ -285,7 +285,7 @@ WebMapServiceItemViewModel.prototype._enableInCesium = function() {
     scene.imageryLayers.add(this._imageryLayer);
 };
 
-WebMapServiceItemViewModel.prototype._disableInCesium = function() {
+WebMapServiceCatalogItem.prototype._disableInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -295,7 +295,7 @@ WebMapServiceItemViewModel.prototype._disableInCesium = function() {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
+WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -307,12 +307,12 @@ WebMapServiceItemViewModel.prototype._enableInLeaflet = function() {
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
-    options = combine(combine(this.parameters, WebMapServiceItemViewModel.defaultParameters), options);
+    options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
 
     this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
 };
 
-WebMapServiceItemViewModel.prototype._disableInLeaflet = function() {
+WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -320,7 +320,7 @@ WebMapServiceItemViewModel.prototype._disableInLeaflet = function() {
     this._imageryLayer = undefined;
 };
 
-WebMapServiceItemViewModel.defaultParameters = {
+WebMapServiceCatalogItem.defaultParameters = {
     transparent: true,
     format: 'image/png',
     exceptions: 'application/vnd.ogc.se_xml',
@@ -347,7 +347,7 @@ function proxyUrl(application, url) {
 }
 
 function requestMetadata(viewModel) {
-    var result = new MetadataViewModel();
+    var result = new Metadata();
 
     result.isLoading = true;
 
@@ -413,7 +413,7 @@ function populateMetadataGroup(metadataGroup, sourceMetadata) {
                 for (var i = 0; i < value.length; ++i) {
                     var subValue = value[i];
 
-                    dest = new MetadataItemViewModel();
+                    dest = new MetadataItem();
                     dest.name = name + ' (' + subValue.CRS + ')';
                     dest.value = subValue;
 
@@ -422,7 +422,7 @@ function populateMetadataGroup(metadataGroup, sourceMetadata) {
                     metadataGroup.items.push(dest);
                 }
             } else {
-                dest = new MetadataItemViewModel();
+                dest = new MetadataItem();
                 dest.name = name;
                 dest.value = value;
 
@@ -434,4 +434,4 @@ function populateMetadataGroup(metadataGroup, sourceMetadata) {
     }
 }
 
-module.exports = WebMapServiceItemViewModel;
+module.exports = WebMapServiceCatalogItem;

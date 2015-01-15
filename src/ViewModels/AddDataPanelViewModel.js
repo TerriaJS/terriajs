@@ -4,9 +4,9 @@
 var createCatalogItemFromUrl = require('../Models/createCatalogItemFromUrl');
 var createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
 var loadView = require('../Core/loadView');
-var ViewModelError = require('../Models/ViewModelError');
-var WebFeatureServiceGroupViewModel = require('../Models/WebFeatureServiceGroupViewModel');
-var WebMapServiceGroupViewModel = require('../Models/WebMapServiceGroupViewModel');
+var ModelError = require('../Models/ModelError');
+var WebFeatureServiceCatalogGroup = require('../Models/WebFeatureServiceCatalogGroup');
+var WebMapServiceCatalogGroup = require('../Models/WebMapServiceCatalogGroup');
 
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -51,7 +51,7 @@ AddDataPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e
 AddDataPanelViewModel.prototype.selectFileToUpload = function() {
     // We can't add a WMS or WFS server from a file.
     if (this.dataType === 'wms-getCapabilities' || this.dataType === 'wfs-getCapabilities') {
-        this.application.error.raiseEvent(new ViewModelError({
+        this.application.error.raiseEvent(new ModelError({
             title: 'A service cannot be added from a local file',
             message: 'Sorry, a WMS or WFS server can only be added by providing a URL to the server.  Please select a different type of file, or choose "Auto-detect".'
         }));
@@ -153,8 +153,8 @@ function addCatalogItem(application, newCatalogItemPromise) {
 
         application.catalog.userAddedDataGroup.isOpen = true;
     }).otherwise(function(e) {
-        if (!(e instanceof ViewModelError)) {
-            e = new ViewModelError({
+        if (!(e instanceof ModelError)) {
+            e = new ModelError({
                 title: 'Data could not be added',
                 message: 'The specified data could not be added because it is invalid or does not have the expected format.'
             });
@@ -167,7 +167,7 @@ function addCatalogItem(application, newCatalogItemPromise) {
 }
 
 function loadWms(viewModel) {
-    var wms = new WebMapServiceGroupViewModel(viewModel.application);
+    var wms = new WebMapServiceCatalogGroup(viewModel.application);
     wms.name = viewModel.url;
     wms.url = viewModel.url;
 
@@ -177,7 +177,7 @@ function loadWms(viewModel) {
 }
 
 function loadWfs(viewModel) {
-    var wfs = new WebFeatureServiceGroupViewModel(viewModel.application);
+    var wfs = new WebFeatureServiceCatalogGroup(viewModel.application);
     wfs.name = viewModel.url;
     wfs.url = viewModel.url;
 

@@ -8,7 +8,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
  * Represents an error that occurred in a view-model, especially an asynchronous one that cannot be raised
  * by throwing an exception because no one would be able to catch it.
  *
- * @alias ViewModelError
+ * @alias ModelError
  * @constructor
  * 
  * @param {Object} options Object with the following properties:
@@ -16,7 +16,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
  * @param {String} [options.title='An error occurred'] A short title describing the error.
  * @param {String} options.message A detailed message describing the error.  This message may be HTML and it should be sanitized before display to the user.
  */
-var ViewModelError = function(options) {
+var ModelError = function(options) {
     /**
      * Gets or sets the object that raised the error.
      * @type {Object}
@@ -36,4 +36,4 @@ var ViewModelError = function(options) {
     this.message = options.message;
 };
 
-module.exports = ViewModelError;
+module.exports = ModelError;

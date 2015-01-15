@@ -9,20 +9,20 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
+var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 
 /**
- * A {@link ImageryLayerItemViewModel} representing a layer from an Esri ArcGIS MapServer.
+ * A {@link ImageryLayerCatalogItem} representing a layer from an Esri ArcGIS MapServer.
  *
  * @alias ArcGisMapServerCatalogItem
  * @constructor
- * @extends ImageryLayerItemViewModel
+ * @extends ImageryLayerCatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  */
 var ArcGisMapServerCatalogItem = function(application) {
-    ImageryLayerItemViewModel.call(this, application);
+    ImageryLayerCatalogItem.call(this, application);
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -33,7 +33,7 @@ var ArcGisMapServerCatalogItem = function(application) {
     knockout.track(this, ['url']);
 };
 
-inherit(ImageryLayerItemViewModel, ArcGisMapServerCatalogItem);
+inherit(ImageryLayerCatalogItem, ArcGisMapServerCatalogItem);
 
 defineProperties(ArcGisMapServerCatalogItem.prototype, {
     /**

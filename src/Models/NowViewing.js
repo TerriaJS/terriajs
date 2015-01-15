@@ -11,7 +11,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 /**
  * The view-model for the "Now Viewing" pane.
  */
-var NowViewingViewModel = function(application) {
+var NowViewing = function(application) {
     this._application = application;
     this._eventSubscriptions = new EventHelper();
 
@@ -40,10 +40,10 @@ var NowViewingViewModel = function(application) {
     }, this);
 };
 
-defineProperties(NowViewingViewModel.prototype, {
+defineProperties(NowViewing.prototype, {
     /**
      * Gets the application.
-     * @memberOf NowViewingViewModel.prototype
+     * @memberOf NowViewing.prototype
      * @type {ApplicationViewModel}
      */
     application : {
@@ -54,7 +54,7 @@ defineProperties(NowViewingViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the "Now Viewing" pane has one or more items.
-     * @memberOf NowViewingViewModel.prototype
+     * @memberOf NowViewing.prototype
      * @type {Boolean}
      */
     hasItems : {
@@ -66,7 +66,7 @@ defineProperties(NowViewingViewModel.prototype, {
     /**
      * Gets a value indicating whether the "Now Viewing" pane has at list own data
      * source that is currently shown.
-     * @memberOf NowViewingViewModel.prototype
+     * @memberOf NowViewing.prototype
      * @type {Boolean}
      */
     hasShownItems : {
@@ -84,7 +84,7 @@ defineProperties(NowViewingViewModel.prototype, {
 /**
  * Destroys this instance, including unsubscribing it from any events.
  */
-NowViewingViewModel.prototype.destroy = function() {
+NowViewing.prototype.destroy = function() {
     this._eventSubscriptions.removeAll();
 };
 
@@ -93,7 +93,7 @@ NowViewingViewModel.prototype.destroy = function() {
  *
  * @param {CatalogMember} item The item to add.
  */
-NowViewingViewModel.prototype.add = function(item) {
+NowViewing.prototype.add = function(item) {
     // Keep reorderable data sources (ie: imagery layers) below non-orderable ones (ie: GeoJSON).
     if (item.supportsReordering) {
         var index = 0;
@@ -113,7 +113,7 @@ NowViewingViewModel.prototype.add = function(item) {
  *
  * @param {CatalogMember} item The item to remove.
  */
-NowViewingViewModel.prototype.remove = function(item) {
+NowViewing.prototype.remove = function(item) {
     item.isEnabled = false;
     this.items.remove(item);
 };
@@ -121,7 +121,7 @@ NowViewingViewModel.prototype.remove = function(item) {
 /**
  * Removes all data sources from the "Now Viewing" pane and from the map.
  */
-NowViewingViewModel.prototype.removeAll = function() {
+NowViewing.prototype.removeAll = function() {
     // Work backwards through the list of items because setting isEnabled=false
     // will usually remove the item from the list.
     for (var i = this.items.length - 1; i >= 0; --i) {
@@ -138,7 +138,7 @@ NowViewingViewModel.prototype.removeAll = function() {
  * @param {CatalogMember} item The item to raise.
  * @param {Number} [index] The index of the item of the list, if it is already known.
  */
-NowViewingViewModel.prototype.raise = function(item, index) {
+NowViewing.prototype.raise = function(item, index) {
     if (defined(index)) {
         if (this.items[index] !== item) {
             throw new DeveloperError('The provided index is not correct.');
@@ -180,7 +180,7 @@ NowViewingViewModel.prototype.raise = function(item, index) {
  * @param {CatalogMember} item The item to lower.
  * @param {Number} [index] The index of the item of the list, if it is already known.
  */
-NowViewingViewModel.prototype.lower = function(item, index) {
+NowViewing.prototype.lower = function(item, index) {
     if (defined(index)) {
         if (this.items[index] !== item) {
             throw new DeveloperError('The provided index is not correct.');
@@ -218,9 +218,9 @@ NowViewingViewModel.prototype.lower = function(item, index) {
 };
 
 /**
- * Toggles the {@link NowViewingViewModel#isOpen} flag.  If it's open, it is closed.  If it's closed, it is opened.
+ * Toggles the {@link NowViewing#isOpen} flag.  If it's open, it is closed.  If it's closed, it is opened.
  */
-NowViewingViewModel.prototype.toggleOpen = function() {
+NowViewing.prototype.toggleOpen = function() {
     this.isOpen = !this.isOpen;
 };
 
@@ -230,7 +230,7 @@ NowViewingViewModel.prototype.toggleOpen = function() {
  * use.
  * @private
  */
-NowViewingViewModel.prototype.recordNowViewingIndices = function() {
+NowViewing.prototype.recordNowViewingIndices = function() {
     for (var i = 0; i < this.items.length; ++i) {
         this.items[i].nowViewingIndex = i;
     }
@@ -241,7 +241,7 @@ NowViewingViewModel.prototype.recordNowViewingIndices = function() {
  * to restore the state of the Now Viewing list and is not intended for general use.
  * @private
  */
-NowViewingViewModel.prototype.sortByNowViewingIndices = function() {
+NowViewing.prototype.sortByNowViewingIndices = function() {
     var sortedItems = this.items.slice();
     sortedItems.sort(function(a, b) {
         return a.nowViewingIndex - b.nowViewingIndex;
@@ -263,7 +263,7 @@ NowViewingViewModel.prototype.sortByNowViewingIndices = function() {
  * Updates the order of layers on the Leaflet map to match the order in the Now Viewing pane.
  * @private
  */
-NowViewingViewModel.prototype.updateLeafletLayerOrder = function() {
+NowViewing.prototype.updateLeafletLayerOrder = function() {
     // Set the current z-index of all layers.
     var items = this.items;
 
@@ -371,4 +371,4 @@ function afterViewerChanged(viewModel) {
     }
 }
 
-module.exports = NowViewingViewModel;
+module.exports = NowViewing;

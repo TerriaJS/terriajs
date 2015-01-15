@@ -2,27 +2,27 @@
 
 /*global require*/
 
-var MetadataItemViewModel = require('./MetadataItemViewModel');
+var MetadataItem = require('./MetadataItem');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 /**
  * Represents the metadata associated with a data source.
  *
- * @alias MetadataViewModel
+ * @alias Metadata
  * @function
  */
-var MetadataViewModel = function() {
+var Metadata = function() {
     /**
      * Gets or sets the metadata group for the data source itself.
-     * @type {MetadataItemViewModel}
+     * @type {MetadataItem}
      */
-    this.dataSourceMetadata = new MetadataItemViewModel();
+    this.dataSourceMetadata = new MetadataItem();
 
     /**
      * Gets or sets the metadata group for the service 
-     * @type {MetadataItemViewModel}
+     * @type {MetadataItem}
      */
-    this.serviceMetadata = new MetadataItemViewModel();
+    this.serviceMetadata = new MetadataItem();
 
     /**
      * Gets or sets a promise that, when resolved, indicates that the metadata groups are
@@ -54,4 +54,4 @@ var MetadataViewModel = function() {
     knockout.track(this, ['dataSourceMetadata', 'serviceMetadata', 'dataSourceErrorMessage', 'serviceErrorMessage', 'isLoading']);
 };
 
-module.exports = MetadataViewModel;
+module.exports = Metadata;

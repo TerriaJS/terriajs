@@ -13,21 +13,21 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var corsProxy = require('../Core/corsProxy');
-var ViewModelError = require('./ViewModelError');
+var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
 var inherit = require('../Core/inherit');
-var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
+var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
 
 /**
  * A {@link CatalogGroup} representing a collection of layers from a [CKAN](http://ckan.org) server.
  *
- * @alias CkanGroupViewModel
+ * @alias CkanCatalogGroup
  * @constructor
  * @extends CatalogGroup
  * 
  * @param {ApplicationViewModel} application The application.
  */
-var CkanGroupViewModel = function(application) {
+var CkanCatalogGroup = function(application) {
     CatalogGroup.call(this, application, 'ckan');
 
     /**
@@ -70,7 +70,7 @@ var CkanGroupViewModel = function(application) {
 
     /**
      * Gets or sets the minimum MaxScaleDenominator that is allowed for a WMS dataset to be included in this CKAN group.
-     * If this property is undefined or if {@link CkanGroupViewModel#filterByWmsGetCapabilities} is false, no
+     * If this property is undefined or if {@link CkanCatalogGroup#filterByWmsGetCapabilities} is false, no
      * filtering based on MaxScaleDenominator is performed.  This property is observable.
      * @type {Number}
      */
@@ -79,12 +79,12 @@ var CkanGroupViewModel = function(application) {
     knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
 };
 
-inherit(CatalogGroup, CkanGroupViewModel);
+inherit(CatalogGroup, CkanCatalogGroup);
 
-defineProperties(CkanGroupViewModel.prototype, {
+defineProperties(CkanCatalogGroup.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf CkanGroupViewModel.prototype
+     * @memberOf CkanCatalogGroup.prototype
      * @type {String}
      */
     type : {
@@ -95,7 +95,7 @@ defineProperties(CkanGroupViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
-     * @memberOf CkanGroupViewModel.prototype
+     * @memberOf CkanCatalogGroup.prototype
      * @type {String}
      */
     typeName : {
@@ -109,12 +109,12 @@ defineProperties(CkanGroupViewModel.prototype, {
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf CkanGroupViewModel.prototype
+     * @memberOf CkanCatalogGroup.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return CkanGroupViewModel.defaultSerializers;
+            return CkanCatalogGroup.defaultSerializers;
         }
     }
 });
@@ -124,9 +124,9 @@ defineProperties(CkanGroupViewModel.prototype, {
  * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-CkanGroupViewModel.defaultSerializers = clone(CatalogGroup.defaultSerializers);
+CkanCatalogGroup.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
-CkanGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+CkanCatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from CKAN.
     var previousSerializeForSharing = options.serializeForSharing;
     options.serializeForSharing = true;
@@ -146,15 +146,15 @@ CkanGroupViewModel.defaultSerializers.items = function(viewModel, json, property
     return result;
 };
 
-CkanGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+CkanCatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
-freezeObject(CkanGroupViewModel.defaultSerializers);
+freezeObject(CkanCatalogGroup.defaultSerializers);
 
-CkanGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+CkanCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.filterQuery, this.blacklist, this.filterByWmsGetCapabilities, this.minimumMaxScaleDenominator];
 };
 
-CkanGroupViewModel.prototype._load = function() {
+CkanCatalogGroup.prototype._load = function() {
     if (!defined(this.url) || this.url.length === 0) {
         return undefined;
     }
@@ -172,7 +172,7 @@ CkanGroupViewModel.prototype._load = function() {
             populateGroupFromResults(that, json);
         }
     }).otherwise(function() {
-        throw new ViewModelError({
+        throw new ModelError({
             sender: that,
             title: 'Group is not available',
             message: '\
@@ -345,7 +345,7 @@ function populateGroupFromResults(viewModel, json) {
             uri.search('');
             var url = uri.toString();
 
-            var newItem = new WebMapServiceItemViewModel(viewModel.application);
+            var newItem = new WebMapServiceCatalogItem(viewModel.application);
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;
@@ -410,4 +410,4 @@ function cleanAndProxyUrl(application, url) {
     return cleanedUrl;
 }
 
-module.exports = CkanGroupViewModel;
+module.exports = CkanCatalogGroup;
