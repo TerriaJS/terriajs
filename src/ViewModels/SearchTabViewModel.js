@@ -26,6 +26,10 @@ var SearchTabViewModel = function(application) {
 
     knockout.track(this, ['name', 'searchText', 'searchProviders']);
 
+    // Knockout's hasFocus binding doesn't work with a knockout-es5 property (as of v3.2.0).
+    // So, just use a regular observable.
+    this.searchBoxHasFocus = knockout.observable(false);
+
     this.svgArrowDown = svgArrowDown;
     this.svgArrowRight = svgArrowRight;
     this.svgCheckboxChecked = svgCheckboxChecked;
@@ -38,6 +42,13 @@ var SearchTabViewModel = function(application) {
 
     searchTextObservable.subscribe(function() {
         this.search();
+    }, this);
+
+    // Focus the search box when the tab is activated.
+    knockout.getObservable(this, 'isActive').subscribe(function(newValue) {
+        if (newValue) {
+            this.searchBoxHasFocus(true);
+        }
     }, this);
 };
 

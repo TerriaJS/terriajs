@@ -41,7 +41,7 @@
 
 <div class="search-tab">
     <form class="search-tab-form" data-bind="submit: activateFirstResult">
-        <input class="search-tab-input" placeholder="Search address, landmark, or data set" type="search" data-bind="value: searchText, valueUpdate: 'input'" />
+        <input class="search-tab-input" placeholder="Search address, landmark, or data set" type="search" data-bind="value: searchText, valueUpdate: 'input', hasFocus: searchBoxHasFocus" />
     </form>
     <div class="search-tab-results-area" data-bind="visible: searchText, foreach: searchProviders">
         <div class="search-tab-provider">
