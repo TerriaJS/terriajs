@@ -1474,7 +1474,7 @@ function selectFeatureLeaflet(viewer, latlng) {
     var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
 
     var promises = [];
-    for (var i = dataSources.length - 1; i >=0 ; --i) {
+    for (var i = 0; i < dataSources.length ; ++i) {
         var dataSource = dataSources[i];
         if (dataSource.type === 'wms' || (dataSource.type === 'csv' && defined(dataSource.layers))) {
             var useProxy = corsProxy.shouldUseProxy(dataSource.url);
