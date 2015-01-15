@@ -70,3 +70,12 @@ button.cesium-infoBox-camera {
 .leaflet-container {
     cursor: auto;
 }
+
+@media print {
+    .map-displaced {
+        left: 0;
+    }
+    .cesium-infoBox {
+        display: none;
+    }
+}
