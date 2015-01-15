@@ -44,7 +44,7 @@ if (start) {
 
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
     var ApplicationViewModel = require('./ViewModels/ApplicationViewModel');
-    var KnockoutSanitizedHtmlBinding = require('./viewer/KnockoutSanitizedHtmlBinding');
+    var KnockoutSanitizedHtmlBinding = require('./Core/KnockoutSanitizedHtmlBinding');
     var raiseErrorToUser = require('./ViewModels/raiseErrorToUser');
     var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 

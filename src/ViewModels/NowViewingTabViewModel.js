@@ -2,6 +2,7 @@
 
 /*global require,ga*/
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var CatalogItemInfoViewModel = require('./CatalogItemInfoViewModel');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
@@ -25,6 +26,23 @@ var NowViewingTabViewModel = function(options) {
     this.svgArrowDown = defaultValue(options.svgArrowDown, svgArrowDown);
     this.svgArrowRight = defaultValue(options.svgArrowRight, svgArrowRight);
     this.svgInfo = defaultValue(options.svgInfo, svgInfo);
+
+    var that = this;
+    knockout.getObservable(this, 'isActive').subscribe(function(newValue) {
+        // Make sure that at least one item is showing its legend when this tab is activated.
+        if (newValue) {
+            var nowViewingItems = that.nowViewing.items;
+
+            var oneIsOpen = false;
+            for (var i = 0; !oneIsOpen && i < nowViewingItems.length; ++i) {
+                oneIsOpen = nowViewingItems[i].isLegendVisible;
+            }
+
+            if (!oneIsOpen && nowViewingItems.length > 0) {
+                nowViewingItems[0].isLegendVisible = true;
+            }
+        }
+    });
 };
 
 inherit(ExplorerTabViewModel, NowViewingTabViewModel);
