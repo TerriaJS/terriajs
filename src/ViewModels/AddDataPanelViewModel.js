@@ -1,12 +1,12 @@
 'use strict';
 
 /*global require,ga,confirm*/
-var createCatalogItemFromUrl = require('./createCatalogItemFromUrl');
-var createCatalogMemberFromType = require('./createCatalogMemberFromType');
+var createCatalogItemFromUrl = require('../Models/createCatalogItemFromUrl');
+var createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
 var loadView = require('../Core/loadView');
-var ViewModelError = require('./ViewModelError');
-var WebFeatureServiceGroupViewModel = require('./WebFeatureServiceGroupViewModel');
-var WebMapServiceGroupViewModel = require('./WebMapServiceGroupViewModel');
+var ViewModelError = require('../Models/ViewModelError');
+var WebFeatureServiceGroupViewModel = require('../Models/WebFeatureServiceGroupViewModel');
+var WebMapServiceGroupViewModel = require('../Models/WebMapServiceGroupViewModel');
 
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');

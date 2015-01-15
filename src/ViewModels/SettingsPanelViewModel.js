@@ -7,7 +7,7 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var loadView = require('../Core/loadView');
-var ViewerMode = require('./ViewerMode');
+var ViewerMode = require('../Models/ViewerMode');
 
 var SettingsPanelViewModel = function(options) {
     if (!defined(options) || !defined(options.application)) {

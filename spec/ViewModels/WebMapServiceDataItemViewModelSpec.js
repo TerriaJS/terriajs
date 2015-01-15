@@ -2,9 +2,9 @@
 
 /*global require,describe,it,expect,beforeEach*/
 
-var ApplicationViewModel = require('../../src/ViewModels/ApplicationViewModel');
-var ImageryLayerItemViewModel = require('../../src/ViewModels/ImageryLayerItemViewModel');
-var WebMapServiceItemViewModel = require('../../src/ViewModels/WebMapServiceItemViewModel');
+var ApplicationViewModel = require('../../src/Models/ApplicationViewModel');
+var ImageryLayerItemViewModel = require('../../src/Models/ImageryLayerItemViewModel');
+var WebMapServiceItemViewModel = require('../../src/Models/WebMapServiceItemViewModel');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');

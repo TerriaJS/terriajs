@@ -2,7 +2,7 @@
 
 /*global require*/
 
-var ViewModelError = require('./ViewModelError');
+var ViewModelError = require('../Models/ViewModelError');
 
 var raiseErrorToUser = function(application, error) {
     if (error instanceof ViewModelError) {

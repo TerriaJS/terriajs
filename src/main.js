@@ -43,17 +43,11 @@ if (start) {
     var knockout = require('../third_party/cesium/Source/ThirdParty/knockout');
 
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
-    var ApplicationViewModel = require('./ViewModels/ApplicationViewModel');
     var KnockoutSanitizedHtmlBinding = require('./Core/KnockoutSanitizedHtmlBinding');
-    var raiseErrorToUser = require('./ViewModels/raiseErrorToUser');
-    var registerCatalogViewModels = require('./ViewModels/registerCatalogViewModels');
 
     var AddDataPanelViewModel = require('./ViewModels/AddDataPanelViewModel');
-    var ArcGisMapServerItemViewModel = require('./ViewModels/ArcGisMapServerItemViewModel');
     var BaseMapViewModel = require('./ViewModels/BaseMapViewModel');
-    var BingMapsItemViewModel = require('./ViewModels/BingMapsItemViewModel');
     var BingMapsSearchProviderViewModel = require('./ViewModels/BingMapsSearchProviderViewModel');
-    var CatalogGroupViewModel = require('./ViewModels/CatalogGroupViewModel');
     var CatalogItemNameSearchProviderViewModel = require('./ViewModels/CatalogItemNameSearchProviderViewModel');
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
@@ -68,7 +62,14 @@ if (start) {
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
     var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
-    var WebMapServiceItemViewModel = require('./ViewModels/WebMapServiceItemViewModel');
+
+    var ApplicationViewModel = require('./Models/ApplicationViewModel');
+    var ArcGisMapServerItemViewModel = require('./Models/ArcGisMapServerItemViewModel');
+    var BingMapsItemViewModel = require('./Models/BingMapsItemViewModel');
+    var CatalogGroupViewModel = require('./Models/CatalogGroupViewModel');
+    var WebMapServiceItemViewModel = require('./Models/WebMapServiceItemViewModel');
+    var registerCatalogViewModels = require('./Models/registerCatalogViewModels');
+    var raiseErrorToUser = require('./Models/raiseErrorToUser');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);

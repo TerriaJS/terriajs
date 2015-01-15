@@ -57,12 +57,12 @@ var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewM
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var corsProxy = require('../Core/corsProxy');
-var CesiumViewModel = require('../ViewModels/CesiumViewModel');
-var LeafletViewModel = require('../ViewModels/LeafletViewModel');
+var CesiumViewModel = require('../Models/CesiumViewModel');
+var LeafletViewModel = require('../Models/LeafletViewModel');
 var PopupMessageViewModel = require('../ViewModels/PopupMessageViewModel');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var LeafletVisualizer = require('../Map/LeafletVisualizer');
-var ViewerMode = require('../ViewModels/ViewerMode');
+var ViewerMode = require('../Models/ViewerMode');
 
 //use our own bing maps key
 BingMapsApi.defaultKey = undefined;

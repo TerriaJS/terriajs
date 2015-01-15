@@ -2,9 +2,9 @@
 
 /*global require,describe,it,expect,beforeEach*/
 
-var ApplicationViewModel = require('../../src/ViewModels/ApplicationViewModel');
-var CatalogItemViewModel = require('../../src/ViewModels/CatalogItemViewModel');
-var CsvItemViewModel = require('../../src/ViewModels/CsvItemViewModel');
+var ApplicationViewModel = require('../../src/Models/ApplicationViewModel');
+var CatalogItemViewModel = require('../../src/Models/CatalogItemViewModel');
+var CsvItemViewModel = require('../../src/Models/CsvItemViewModel');
 
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 

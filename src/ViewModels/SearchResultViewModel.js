@@ -5,7 +5,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
+var raiseErrorOnRejectedPromise = require('../Models/raiseErrorOnRejectedPromise');
 
 var SearchResultViewModel = function(options) {
     this.name = defaultValue(options.name, 'Unknown');
