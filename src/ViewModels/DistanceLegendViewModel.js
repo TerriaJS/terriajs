@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require*/
+/*global require,L*/
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
@@ -35,8 +35,24 @@ var DistanceLegendViewModel = function(application) {
         if (defined(that.application.cesium)) {
             var scene = that.application.cesium.scene;
             that.removeSubscription = scene.postRender.addEventListener(function() {
-                updateDistanceLegend(this, scene);
+                updateDistanceLegendCesium(this, scene);
             }, that);
+        } else if (defined(that.application.leaflet)) {
+            var map = that.application.leaflet.map;
+
+            var potentialChangeCallback = function potentialChangeCallback() {
+                updateDistanceLegendLeaflet(that, map);
+            };
+
+            that.removeSubscription = function() {
+                map.off('zoomend', potentialChangeCallback);
+                map.off('moveend', potentialChangeCallback);
+            };
+
+            map.on('zoomend', potentialChangeCallback);
+            map.on('moveend', potentialChangeCallback);
+
+            updateDistanceLegendLeaflet(that, map);
         }
     }
 
@@ -63,7 +79,7 @@ var distances = [
     1000000, 2000000, 3000000, 5000000,
     10000000, 20000000, 30000000, 50000000];
 
-function updateDistanceLegend(viewModel, scene) {
+function updateDistanceLegendCesium(viewModel, scene) {
     // Find the distance between two pixels at the bottom center of the screen.
     var width = scene.canvas.clientWidth;
     var height = scene.canvas.clientHeight;
@@ -110,6 +126,19 @@ function updateDistanceLegend(viewModel, scene) {
         viewModel.barWidth = undefined;
         viewModel.distanceLabel = undefined;
     }
+}
+
+function updateDistanceLegendLeaflet(viewModel, map) {
+    var halfHeight = map.getSize().y / 2;
+    var maxPixelWidth = 100;
+    var maxMeters = map.containerPointToLatLng([0, halfHeight]).distanceTo(
+        map.containerPointToLatLng([maxPixelWidth, halfHeight]));
+
+    var meters = L.control.scale()._getRoundNum(maxMeters);
+    var label = meters < 1000 ? meters + ' m' : (meters / 1000) + ' km';
+
+    viewModel.barWidth = (meters / maxMeters) * maxPixelWidth;
+    viewModel.distanceLabel = label;
 }
 
 module.exports = DistanceLegendViewModel;
