@@ -5,10 +5,10 @@
     <div class="navigation-control" data-bind="click: resetView">
         <div class="navigation-control-icon-reset" data-bind="cesiumSvgPath: { path: svgReset, width: 15, height: 15 }"></div>
     </div>
-    <div class="navigation-control" data-bind="click: zoomOut">
+    <div class="navigation-control" data-bind="click: zoomOut, css: { 'navigation-control-last': !showTilt }">
         <div class="navigation-control-icon-zoom-out" data-bind="cesiumSvgPath: { path: svgZoomOut, width: 22, height: 22 }"></div>
     </div>
-    <div class="navigation-control-last" data-bind="click: tilt">
+    <div class="navigation-control-last" data-bind="click: tilt, visible: showTilt">
         <div class="navigation-control-icon-tilt" data-bind="cesiumSvgPath: { path: svgTilt, width: 32, height: 32 }"></div>
     </div>
 </div>
