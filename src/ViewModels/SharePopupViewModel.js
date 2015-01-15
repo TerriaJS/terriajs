@@ -1,28 +1,84 @@
 'use strict';
 
 /*global require,URI*/
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var loadView = require('../Core/loadView');
 
 var SharePopupViewModel = function(options) {
-    this.request = options.request;
-    
+    this.application = options.application;
+    this._domNodes = undefined;
+
+    this.imageUrl = '';
+    this.url = '';
+    this.embedCode = '';
+    this.itemsSkippedBecauseTheyHaveLocalData = [];
+
+    knockout.track(this, ['imageUrl', 'url', 'embedCode', 'itemsSkippedBecauseTheyHaveLocalData']);
+
+    // Build the share URL.
+    var camera = this.application.currentViewer.getCurrentExtent();
+
+    var request = {
+        version: '0.0.03',
+        initSources: this.application.initSources.slice()
+    };
+
+    var initSources = request.initSources;
+
+    // Add an init source with user-added catalog members.
+    var userDataSerializeOptions = {
+        userSuppliedOnly: true,
+        skipItemsWithLocalData: true,
+        itemsSkippedBecauseTheyHaveLocalData: []
+    };
+
+    var userAddedCatalog = this.application.catalog.serializeToJson(userDataSerializeOptions);
+    if (userAddedCatalog.length > 0) {
+        initSources.push({
+            catalog: userAddedCatalog,
+            catalogIsUserSupplied: true
+        });
+    }
+
+    // Add an init source with the enabled/opened catalog members.
+    var enabledAndOpenedCatalog = this.application.catalog.serializeToJson({
+        enabledItemsOnly: true,
+        skipItemsWithLocalData: true,
+        serializeForSharing: true,
+    });
+
+    if (enabledAndOpenedCatalog.length > 0) {
+        initSources.push({
+            catalog: enabledAndOpenedCatalog,
+            catalogOnlyUpdatesExistingItems: true
+        });
+    }
+
+    // Add an init source with the camera position.
+    initSources.push({
+        camera: {
+            west: CesiumMath.toDegrees(camera.west),
+            south: CesiumMath.toDegrees(camera.south),
+            east: CesiumMath.toDegrees(camera.east),
+            north: CesiumMath.toDegrees(camera.north)
+        }
+    });
+
     var uri = new URI(window.location);
     var visServer = uri.protocol() + '://' + uri.host();
 
-    var request = options.request;
-    var img = request.image;
-    request.image = undefined;
-    var requestStr = JSON.stringify(request);
-    var url = visServer + '#start=' + encodeURIComponent(requestStr);
-    request.image = img;
+    var requestString = JSON.stringify(request);
 
-    this.url = url;
-    this.embedCode = '<iframe style="width: 720px; height: 405px; border: none;" src="' + url + '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>';
-    this.itemsSkippedBecauseTheyHaveLocalData = options.itemsSkippedBecauseTheyHaveLocalData;
+    this.url = visServer + '#start=' + encodeURIComponent(requestString);
+    this.embedCode = '<iframe style="width: 720px; height: 405px; border: none;" src="' + this.url + '" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>';
+    this.itemsSkippedBecauseTheyHaveLocalData.push.apply(this.itemsSkippedBecauseTheyHaveLocalData, userDataSerializeOptions.itemsSkippedBecauseTheyHaveLocalData);
 
-    knockout.track(this, ['url', 'embedCode', 'itemsSkippedBecauseTheyHaveLocalData']);
+    var that = this;
+    this.application.currentViewer.captureScreenshot().then(function(dataUrl) {
+        that.imageUrl = dataUrl;
+    });
 };
 
 SharePopupViewModel.prototype.show = function(container) {

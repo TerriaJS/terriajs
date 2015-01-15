@@ -67,6 +67,7 @@ if (start) {
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
+    var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
     var WebMapServiceItemViewModel = require('./ViewModels/WebMapServiceItemViewModel');
 
     SvgPathBindingHandler.register(knockout);
@@ -241,7 +242,9 @@ if (start) {
             label: 'Share',
             tooltip: 'Share your map with others.',
             callback: function() {
-                console.log('share');
+                SharePopupViewModel.open(ui, {
+                    application: application
+                });
             }
         }));
         menuBar.items.push(new MenuBarItemViewModel({

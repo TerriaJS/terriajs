@@ -1,0 +1,53 @@
+@share-popup-height: 600px;
+
+.share-popup {
+    .modal;
+    width: 600px;
+    height: @share-popup-height;
+}
+
+.share-popup-header {
+    line-height: 40px;
+    border-bottom: 1px solid #9A9A9B;
+}
+
+.share-popup-header h1 {
+    font-size: 16px;
+    padding-left: 15px;
+    margin: 0;
+}
+
+.share-popup-close-button {
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #0099CC;
+}
+
+.share-popup-content {
+    font-weight: lighter;
+    padding: 15px;
+    overflow: auto;
+    height: @share-popup-height - 40px - 30px;
+}
+
+.share-popup-right {
+}
+
+.share-popup-label {
+    padding-top: 15px;
+}
+
+.share-popup-label ul {
+    list-style: disc inside none;
+}
+
+.share-popup-label li {
+    padding-left: 10px;
+}
+
+.share-popup-label input {
+    width: 550px;
+}
