@@ -18,7 +18,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var MetadataViewModel = require('./MetadataViewModel');
 var ViewModelError = require('./ViewModelError');
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readJson = require('../Core/readJson');
 
@@ -43,17 +43,17 @@ var pointPalette = {
 };
 
 /**
- * A {@link CatalogItemViewModel} representing GeoJSON feature data.
+ * A {@link CatalogItem} representing GeoJSON feature data.
  *
  * @alias GeoJsonItemViewModel
  * @constructor
- * @extends CatalogItemViewModel
+ * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the GeoJSON data.
  */
 var GeoJsonItemViewModel = function(application, url) {
-    CatalogItemViewModel.call(this, application);
+    CatalogItem.call(this, application);
 
     this._geoJsonDataSource = undefined;
     this._readyData = undefined;
@@ -82,7 +82,7 @@ var GeoJsonItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItemViewModel, GeoJsonItemViewModel);
+inherit(CatalogItem, GeoJsonItemViewModel);
 
 defineProperties(GeoJsonItemViewModel.prototype, {
     /**

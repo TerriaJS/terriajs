@@ -57,7 +57,7 @@ var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewM
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var corsProxy = require('../Core/corsProxy');
-var CesiumViewModel = require('../Models/CesiumViewModel');
+var Cesium = require('../Models/Cesium');
 var LeafletViewModel = require('../Models/LeafletViewModel');
 var PopupMessageViewModel = require('../ViewModels/PopupMessageViewModel');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
@@ -963,7 +963,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.viewer = this._createCesiumViewer('cesiumContainer');
         this.scene = this.viewer.scene;
 
-        this.application.cesium = new CesiumViewModel(this.application, this.viewer);
+        this.application.cesium = new Cesium(this.application, this.viewer);
         this.application.leaflet = undefined;
         this.application.currentViewer = this.application.cesium;
 

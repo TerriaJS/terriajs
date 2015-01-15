@@ -11,24 +11,24 @@ var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
-var CatalogGroupViewModel = require('./CatalogGroupViewModel');
+var CatalogGroup = require('./CatalogGroup');
 
 /**
  * The view model for the geospatial data catalog.
  *
  * @param {ApplicationViewModel} application The application.
  *
- * @alias CatalogViewModel
+ * @alias Catalog
  * @constructor
  */
-var CatalogViewModel = function(application) {
+var Catalog = function(application) {
     if (!defined(application)) {
         throw new DeveloperError('application is required');
     }
 
     this._application = application;
 
-    this._group = new CatalogGroupViewModel(application);
+    this._group = new CatalogGroup(application);
     this._group.name = 'Root Group';
 
     /**
@@ -51,7 +51,7 @@ var CatalogViewModel = function(application) {
                 }
             }
 
-            group = new CatalogGroupViewModel(this.application);
+            group = new CatalogGroup(this.application);
             group.name = 'User-Added Data';
             group.description = 'The group for data that was added by the user via the Add Data panel.';
             this.group.add(group);
@@ -61,10 +61,10 @@ var CatalogViewModel = function(application) {
     });
 };
 
-defineProperties(CatalogViewModel.prototype, {
+defineProperties(Catalog.prototype, {
     /**
      * Gets the application.
-     * @memberOf CatalogViewModel.prototype
+     * @memberOf Catalog.prototype
      * @type {ApplicationViewModel}
      */
     application : {
@@ -75,8 +75,8 @@ defineProperties(CatalogViewModel.prototype, {
 
     /**
      * Gets the catalog's top-level group.
-     * @memberOf CatalogViewModel.prototype
-     * @type {CatalogGroupViewModel}
+     * @memberOf Catalog.prototype
+     * @type {CatalogGroup}
      */
     group : {
         get : function() {
@@ -96,11 +96,11 @@ defineProperties(CatalogViewModel.prototype, {
  * @param {Object} [options] Object with the following properties:
  * @param {Boolean} [options.onlyUpdateExistingItems] true to only update existing items and never create new ones, or false is new items
  *                                                    may be created by this update.
- * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMemberViewModel#isUserSupplied} property of updated catalog members
+ * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMember#isUserSupplied} property of updated catalog members
  *                                           to the given value.  If not specified, the property is left unchanged.
  * @returns {Promise} A promise that resolves when the update is complete.
  */
-CatalogViewModel.prototype.updateFromJson = function(json, options) {
+Catalog.prototype.updateFromJson = function(json, options) {
     if (!(json instanceof Array)) {
         throw new DeveloperError('JSON catalog description must be an array of groups.');
     }
@@ -149,28 +149,28 @@ CatalogViewModel.prototype.updateFromJson = function(json, options) {
  * @param {Object} [options] Object with the following properties:
  * @param {Boolean} [options.enabledItemsOnly=false] true if only enabled data items (and their groups) should be serialized,
  *                  or false if all data items should be serialized.
- * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
+ * @param {CatalogMember[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
  *        all of the data items that were not serialized because they were not enabled.  The array will be empty if
  *        options.enabledItemsOnly is false.
  * @param {Boolean} [options.skipItemsWithLocalData=false] true if items with a serializable 'data' property should be skipped entirely.
  *                  This is useful to avoid creating a JSON data structure with potentially very large embedded data.
- * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
+ * @param {CatalogMember[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
  *        if options.skipItemsWithLocalData is false.
  * @param {Boolean} [options.serializeForSharing=false] true to only serialize properties that are typically necessary for sharing this member
- *                                                      with other users, such as {@link CatalogGroupViewModel#isOpen}, {@link CatalogItemViewModel#isEnabled},
- *                                                      {@link CatalogItemViewModel#isLegendVisible}, and {@link ImageryLayerViewModel#opacity},
+ *                                                      with other users, such as {@link CatalogGroup#isOpen}, {@link CatalogItem#isEnabled},
+ *                                                      {@link CatalogItem#isLegendVisible}, and {@link ImageryLayerViewModel#opacity},
  *                                                      rather than serializing all properties needed to completely recreate the catalog.
  * @param {Boolean} [options.userSuppliedOnly=false] true to only serialize catalog members (and their containing groups) that have been identified as having been
- *                  supplied by the user ({@link CatalogMemberViewModel#isUserSupplied} is true); false to serialize all catalog members.
+ *                  supplied by the user ({@link CatalogMember#isUserSupplied} is true); false to serialize all catalog members.
  * @return {Object} The serialized JSON object-literal.
  */
-CatalogViewModel.prototype.serializeToJson = function(options) {
+Catalog.prototype.serializeToJson = function(options) {
     this.application.nowViewing.recordNowViewingIndices();
 
     var json = {};
-    CatalogGroupViewModel.defaultSerializers.items(this.group, json, 'items', options);
+    CatalogGroup.defaultSerializers.items(this.group, json, 'items', options);
     return json.items;
 };
 
-module.exports = CatalogViewModel;
+module.exports = Catalog;

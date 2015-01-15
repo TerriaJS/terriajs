@@ -11,22 +11,22 @@ var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 var ViewModelError = require('./ViewModelError');
-var CatalogGroupViewModel = require('./CatalogGroupViewModel');
+var CatalogGroup = require('./CatalogGroup');
 var inherit = require('../Core/inherit');
 var unionRectangles = require('../Map/unionRectangles');
 var WebFeatureServiceItemViewModel = require('./WebFeatureServiceItemViewModel');
 
 /**
- * A {@link CatalogGroupViewModel} representing a collection of feature types from a Web Feature Service (WFS) server.
+ * A {@link CatalogGroup} representing a collection of feature types from a Web Feature Service (WFS) server.
  *
  * @alias WebFeatureServiceGroupViewModel
  * @constructor
- * @extends CatalogGroupViewModel
+ * @extends CatalogGroup
  * 
  * @param {ApplicationViewModel} application The application.
  */
 var WebFeatureServiceGroupViewModel = function(application) {
-    CatalogGroupViewModel.call(this, application, 'wfs-getCapabilities');
+    CatalogGroup.call(this, application, 'wfs-getCapabilities');
 
     /**
      * Gets or sets the URL of the WFS server.  This property is observable.
@@ -45,7 +45,7 @@ var WebFeatureServiceGroupViewModel = function(application) {
     knockout.track(this, ['url', 'dataCustodian']);
 };
 
-inherit(CatalogGroupViewModel, WebFeatureServiceGroupViewModel);
+inherit(CatalogGroup, WebFeatureServiceGroupViewModel);
 
 defineProperties(WebFeatureServiceGroupViewModel.prototype, {
     /**
@@ -71,7 +71,7 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
@@ -86,11 +86,11 @@ defineProperties(WebFeatureServiceGroupViewModel.prototype, {
 });
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMember#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-WebFeatureServiceGroupViewModel.defaultSerializers = clone(CatalogGroupViewModel.defaultSerializers);
+WebFeatureServiceGroupViewModel.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
 WebFeatureServiceGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from GetCapabilities.
@@ -104,7 +104,7 @@ WebFeatureServiceGroupViewModel.defaultSerializers.items = function(viewModel, j
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
+    CatalogGroup.defaultSerializers.items(viewModel, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;

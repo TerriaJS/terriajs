@@ -63,19 +63,19 @@ if (start) {
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
     var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
 
-    var ApplicationViewModel = require('./Models/ApplicationViewModel');
-    var ArcGisMapServerItemViewModel = require('./Models/ArcGisMapServerItemViewModel');
-    var BingMapsItemViewModel = require('./Models/BingMapsItemViewModel');
-    var CatalogGroupViewModel = require('./Models/CatalogGroupViewModel');
+    var Application = require('./Models/Application');
+    var ArcGisMapServerCatalogItem = require('./Models/ArcGisMapServerCatalogItem');
+    var BingMapsCatalogItem = require('./Models/BingMapsCatalogItem');
+    var CatalogGroup = require('./Models/CatalogGroup');
     var WebMapServiceItemViewModel = require('./Models/WebMapServiceItemViewModel');
-    var registerCatalogViewModels = require('./Models/registerCatalogViewModels');
+    var registerCatalogMembers = require('./Models/registerCatalogMembers');
     var raiseErrorToUser = require('./Models/raiseErrorToUser');
 
     SvgPathBindingHandler.register(knockout);
     KnockoutSanitizedHtmlBinding.register(knockout);
-    registerCatalogViewModels();
+    registerCatalogMembers();
 
-    var application = new ApplicationViewModel();
+    var application = new Application();
     application.catalog.isLoading = true;
 
     application.error.addEventListener(function(e) {
@@ -108,7 +108,7 @@ if (start) {
         // Create the map/globe.
         AusGlobeViewer.create(application);
 
-        var defaultBaseMap = new BingMapsItemViewModel(application);
+        var defaultBaseMap = new BingMapsCatalogItem(application);
         defaultBaseMap.name = 'Bing Maps Aerial with Labels';
         defaultBaseMap.mapStyle = BingMapsStyle.AERIAL_WITH_LABELS;
         defaultBaseMap.opacity = 1.0;
@@ -143,12 +143,12 @@ if (start) {
         };
         naturalEarthII.opacity = 1.0;
 
-        var australianTopoOverlay = new ArcGisMapServerItemViewModel(application);
+        var australianTopoOverlay = new ArcGisMapServerCatalogItem(application);
         australianTopoOverlay.name = 'Australian Topography';
         australianTopoOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer';
         australianTopoOverlay.opacity = 1.0;
 
-        var australianTopo = new CatalogGroupViewModel(application);
+        var australianTopo = new CatalogGroup(application);
         australianTopo.name = 'Australian Topography';
         australianTopo.items.push(naturalEarthII);
         australianTopo.items.push(australianTopoOverlay);
@@ -162,22 +162,22 @@ if (start) {
         };
         blackMarble.opacity = 1.0;
 
-        var bingMapsAerial = new BingMapsItemViewModel(application);
+        var bingMapsAerial = new BingMapsCatalogItem(application);
         bingMapsAerial.name = 'Bing Maps Aerial';
         bingMapsAerial.mapStyle = BingMapsStyle.AERIAL;
         bingMapsAerial.opacity = 1.0;
 
-        var bingMapsRoads = new BingMapsItemViewModel(application);
+        var bingMapsRoads = new BingMapsCatalogItem(application);
         bingMapsRoads.name = 'Bing Maps Roads';
         bingMapsRoads.mapStyle = BingMapsStyle.ROAD;
         bingMapsRoads.opacity = 1.0;
 
-        var australianHydroOverlay = new ArcGisMapServerItemViewModel(application);
+        var australianHydroOverlay = new ArcGisMapServerCatalogItem(application);
         australianHydroOverlay.name = 'Australian Hydrography';
         australianHydroOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer';
         australianHydroOverlay.opacity = 1.0;
 
-        var australianHydro = new CatalogGroupViewModel(application);
+        var australianHydro = new CatalogGroup(application);
         australianHydro.name = 'Australian Hydrography';
         australianHydro.items.push(naturalEarthII);
         australianHydro.items.push(australianHydroOverlay);

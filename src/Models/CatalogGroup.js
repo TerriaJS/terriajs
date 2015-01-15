@@ -13,7 +13,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var arraysAreEqual = require('../Core/arraysAreEqual');
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
-var CatalogMemberViewModel = require('./CatalogMemberViewModel');
+var CatalogMember = require('./CatalogMember');
 var inherit = require('../Core/inherit');
 var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
 var runLater = require('../Core/runLater');
@@ -21,18 +21,18 @@ var runLater = require('../Core/runLater');
 var naturalSort = require('javascript-natural-sort');
 
 /**
- * A group of data items and other groups in the {@link CatalogViewModel}.  A group can contain
- * {@link CatalogMemberViewModel|CatalogMemberViewModels} or other
- * {@link CatalogGroupViewModel|CatalogGroupViewModels}.
+ * A group of data items and other groups in the {@link Catalog}.  A group can contain
+ * {@link CatalogMember|CatalogMembers} or other
+ * {@link CatalogGroup|CatalogGroups}.
  *
- * @alias CatalogGroupViewModel
+ * @alias CatalogGroup
  * @constructor
- * @extends CatalogMemberViewModel
+ * @extends CatalogMember
  * 
  * @param {ApplicationViewModel} application The application.
  */
-var CatalogGroupViewModel = function(application) {
-    CatalogMemberViewModel.call(this, application);
+var CatalogGroup = function(application) {
+    CatalogMember.call(this, application);
 
     this._loadingPromise = undefined;
     this._lastLoadInfluencingValues = undefined;
@@ -53,7 +53,7 @@ var CatalogGroupViewModel = function(application) {
 
     /**
      * Gets the collection of items in this group.  This property is observable.
-     * @type {CatalogMemberViewModel[]}
+     * @type {CatalogMember[]}
      */
     this.items = [];
 
@@ -79,12 +79,12 @@ var CatalogGroupViewModel = function(application) {
     });
 };
 
-inherit(CatalogMemberViewModel, CatalogGroupViewModel);
+inherit(CatalogMember, CatalogGroup);
 
-defineProperties(CatalogGroupViewModel.prototype, {
+defineProperties(CatalogGroup.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf CatalogGroupViewModel.prototype
+     * @memberOf CatalogGroup.prototype
      * @type {String}
      */
     type : {
@@ -95,7 +95,7 @@ defineProperties(CatalogGroupViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
-     * @memberOf CatalogGroupViewModel.prototype
+     * @memberOf CatalogGroup.prototype
      * @type {String}
      */
     typeName : {
@@ -106,8 +106,8 @@ defineProperties(CatalogGroupViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the items in this group (and their sub-items, if any) should be sorted when
-     * {@link CatalogGroupViewModel#load} is complete.
-     * @memberOf CatalogGroupViewModel.prototype
+     * {@link CatalogGroup#load} is complete.
+     * @memberOf CatalogGroup.prototype
      * @type {Boolean}
      */
     sortItemsOnLoad : {
@@ -117,54 +117,54 @@ defineProperties(CatalogGroupViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMember#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf CatalogGroupViewModel.prototype
+     * @memberOf CatalogGroup.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return CatalogGroupViewModel.defaultUpdaters;
+            return CatalogGroup.defaultUpdaters;
         }
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf CatalogGroupViewModel.prototype
+     * @memberOf CatalogGroup.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return CatalogGroupViewModel.defaultSerializers;
+            return CatalogGroup.defaultSerializers;
         }
     },
 
     /**
-     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMemberViewModel#serializeToJson} is called
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMember#serializeToJson} is called
      * and the `serializeForSharing` flag is set in the options.
-     * @memberOf CatalogGroupViewModel.prototype
+     * @memberOf CatalogGroup.prototype
      * @type {String[]}
      */
     propertiesForSharing : {
         get : function() {
-            return CatalogGroupViewModel.defaultPropertiesForSharing;
+            return CatalogGroup.defaultPropertiesForSharing;
         }
     }
 });
 
 /**
- * Gets or sets the set of default updater functions to use in {@link CatalogMemberViewModel#updateFromJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#updaters} property.
+ * Gets or sets the set of default updater functions to use in {@link CatalogMember#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#updaters} property.
  * @type {Object}
  */
-CatalogGroupViewModel.defaultUpdaters = clone(CatalogMemberViewModel.defaultUpdaters);
+CatalogGroup.defaultUpdaters = clone(CatalogMember.defaultUpdaters);
 
-CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, propertyName, options) {
+CatalogGroup.defaultUpdaters.items = function(viewModel, json, propertyName, options) {
     // Let the group finish loading first.  Otherwise, these changes could get clobbered by the load.
     return when(viewModel.load(), function() {
         var promises = [];
@@ -205,18 +205,18 @@ CatalogGroupViewModel.defaultUpdaters.items = function(viewModel, json, property
     });
 };
 
-CatalogGroupViewModel.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
+CatalogGroup.defaultUpdaters.isLoading = function(viewModel, json, propertyName) {};
 
-freezeObject(CatalogGroupViewModel.defaultUpdaters);
+freezeObject(CatalogGroup.defaultUpdaters);
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMember#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-CatalogGroupViewModel.defaultSerializers = clone(CatalogMemberViewModel.defaultSerializers);
+CatalogGroup.defaultSerializers = clone(CatalogMember.defaultSerializers);
 
-CatalogGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
+CatalogGroup.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     var items = json.items = [];
 
     for (var i = 0; i < viewModel.items.length; ++i) {
@@ -227,36 +227,36 @@ CatalogGroupViewModel.defaultSerializers.items = function(viewModel, json, prope
     }
 };
 
-CatalogGroupViewModel.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
+CatalogGroup.defaultSerializers.isLoading = function(viewModel, json, propertyName, options) {};
 
-freezeObject(CatalogGroupViewModel.defaultSerializers);
+freezeObject(CatalogGroup.defaultSerializers);
 
 /**
- * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItemViewModel}-derived object with the
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItem}-derived object with the
  * `serializeForSharing` flag set in the options.
  * @type {String[]}
  */
-CatalogGroupViewModel.defaultPropertiesForSharing = clone(CatalogMemberViewModel.defaultPropertiesForSharing);
-CatalogGroupViewModel.defaultPropertiesForSharing.push('items');
-CatalogGroupViewModel.defaultPropertiesForSharing.push('isOpened');
+CatalogGroup.defaultPropertiesForSharing = clone(CatalogMember.defaultPropertiesForSharing);
+CatalogGroup.defaultPropertiesForSharing.push('items');
+CatalogGroup.defaultPropertiesForSharing.push('isOpened');
 
-freezeObject(CatalogGroupViewModel.defaultPropertiesForSharing);
+freezeObject(CatalogGroup.defaultPropertiesForSharing);
 
 /**
  * Loads the contents of this group, if the contents are not already loaded.  It is safe to
- * call this method multiple times.  The {@link CatalogGroupViewModel#isLoading} flag will be set while the load is in progress.
- * Derived classes should implement {@link CatalogGroupViewModel#_load} to perform the actual loading for the group.
- * Derived classes may optionally implement {@link CatalogGroupViewModel#_getValuesThatInfluenceLoad} to provide an array containing
- * the current value of all properties that influence this group's load process.  Each time that {@link CatalogGroupViewModel#load}
- * is invoked, these values are checked against the list of values returned last time, and {@link CatalogGroupViewModel#_load} is
- * invoked again if they are different.  If {@link CatalogGroupViewModel#_getValuesThatInfluenceLoad} is undefined or returns an
- * empty array, {@link CatalogGroupViewModel#_load} will only be invoked once, no matter how many times
- * {@link CatalogGroupViewModel#load} is invoked.
+ * call this method multiple times.  The {@link CatalogGroup#isLoading} flag will be set while the load is in progress.
+ * Derived classes should implement {@link CatalogGroup#_load} to perform the actual loading for the group.
+ * Derived classes may optionally implement {@link CatalogGroup#_getValuesThatInfluenceLoad} to provide an array containing
+ * the current value of all properties that influence this group's load process.  Each time that {@link CatalogGroup#load}
+ * is invoked, these values are checked against the list of values returned last time, and {@link CatalogGroup#_load} is
+ * invoked again if they are different.  If {@link CatalogGroup#_getValuesThatInfluenceLoad} is undefined or returns an
+ * empty array, {@link CatalogGroup#_load} will only be invoked once, no matter how many times
+ * {@link CatalogGroup#load} is invoked.
  *
  * @returns {Promise} A promise that resolves when the load is complete, or undefined if the group is already loaded.
  * 
  */
-CatalogGroupViewModel.prototype.load = function() {
+CatalogGroup.prototype.load = function() {
     if (defined(this._loadingPromise)) {
         // Load already in progress.
         return this._loadingPromise;
@@ -301,11 +301,11 @@ CatalogGroupViewModel.prototype.load = function() {
 
 /**
  * When implemented in a derived class, this method loads the group.  The base class implementation does nothing.
- * This method should not be called directly; call {@link CatalogGroupViewModel#load} instead.
+ * This method should not be called directly; call {@link CatalogGroup#load} instead.
  * @return {Promise} A promise that resolves when the load is complete.
  * @protected
  */
-CatalogGroupViewModel.prototype._load = function() {
+CatalogGroup.prototype._load = function() {
     return when();
 };
 
@@ -313,38 +313,38 @@ var emptyArray = freezeObject([]);
 
 /**
  * When implemented in a derived class, gets an array containing the current value of all properties that
- * influence this group's load process.  See {@link CatalogGroupViewModel#load} for more information on when and
+ * influence this group's load process.  See {@link CatalogGroup#load} for more information on when and
  * how this is used.  The base class implementation returns an empty array.
  * @return {Array} The array of values that influence the load process.
  * @protected
  */
-CatalogGroupViewModel.prototype._getValuesThatInfluenceLoad = function() {
+CatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
     return emptyArray;
 };
 
 /**
  * Adds an item or group to this group.
  * 
- * @param {CatalogMemberViewModel} item The item to add.
+ * @param {CatalogMember} item The item to add.
  */
-CatalogGroupViewModel.prototype.add = function(item) {
+CatalogGroup.prototype.add = function(item) {
     this.items.push(item);
 };
 
 /**
  * Removes an item or group from this group.
  * 
- * @param {CatalogMemberViewModel} item The item to remove.
+ * @param {CatalogMember} item The item to remove.
  */
-CatalogGroupViewModel.prototype.remove = function(item) {
+CatalogGroup.prototype.remove = function(item) {
     this.items.remove(item);
 };
 
 /**
- * Toggles the {@link CatalogGroupViewModel#isOpen} property of this group.  If it is open, calling this method
+ * Toggles the {@link CatalogGroup#isOpen} property of this group.  If it is open, calling this method
  * will close it.  If it is closed, calling this method will open it.
  */
-CatalogGroupViewModel.prototype.toggleOpen = function() {
+CatalogGroup.prototype.toggleOpen = function() {
     this.isOpen = !this.isOpen;
 };
 
@@ -352,9 +352,9 @@ CatalogGroupViewModel.prototype.toggleOpen = function() {
  * Finds the first item in this group that has the given name.  The search is case-sensitive.
  * 
  * @param {String} name The name of the item to find.
- * @return {CatalogMemberViewModel} The first item with the given name, or undefined if no item with that name exists.
+ * @return {CatalogMember} The first item with the given name, or undefined if no item with that name exists.
  */
-CatalogGroupViewModel.prototype.findFirstItemByName = function(name) {
+CatalogGroup.prototype.findFirstItemByName = function(name) {
     for (var i = 0; i < this.items.length; ++i) {
         if (this.items[i].name === name) {
             return this.items[i];
@@ -369,7 +369,7 @@ CatalogGroupViewModel.prototype.findFirstItemByName = function(name) {
  *
  * @param {Boolean} [sortRecursively=false] true to sort the items in sub-groups as well; false to sort only the items in this group.
  */
-CatalogGroupViewModel.prototype.sortItems = function(sortRecursively) {
+CatalogGroup.prototype.sortItems = function(sortRecursively) {
     naturalSort.insensitive = true;
     this.items.sort(function(a, b) {
         return naturalSort(a.name, b.name);
@@ -385,4 +385,4 @@ CatalogGroupViewModel.prototype.sortItems = function(sortRecursively) {
     }
 };
 
-module.exports = CatalogGroupViewModel;
+module.exports = CatalogGroup;

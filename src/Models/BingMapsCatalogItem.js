@@ -17,13 +17,13 @@ var inherit = require('../Core/inherit');
 /**
  * A {@link ImageryLayerItemViewModel} representing a layer from the Bing Maps server.
  *
- * @alias BingMapsItemViewModel
+ * @alias BingMapsCatalogItem
  * @constructor
  * @extends ImageryLayerItemViewModel
  * 
  * @param {ApplicationViewModel} application The application.
  */
-var BingMapsItemViewModel = function(application) {
+var BingMapsCatalogItem = function(application) {
     ImageryLayerItemViewModel.call(this, application);
 
     /**
@@ -42,12 +42,12 @@ var BingMapsItemViewModel = function(application) {
     knockout.track(this, ['mapStyle', 'key']);
 };
 
-inherit(ImageryLayerItemViewModel, BingMapsItemViewModel);
+inherit(ImageryLayerItemViewModel, BingMapsCatalogItem);
 
-defineProperties(BingMapsItemViewModel.prototype, {
+defineProperties(BingMapsCatalogItem.prototype, {
     /**
      * Gets the type of data item represented by this instance.
-     * @memberOf BingMapsItemViewModel.prototype
+     * @memberOf BingMapsCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -58,7 +58,7 @@ defineProperties(BingMapsItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'Bing Maps'.
-     * @memberOf BingMapsItemViewModel.prototype
+     * @memberOf BingMapsCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -68,7 +68,7 @@ defineProperties(BingMapsItemViewModel.prototype, {
     }
 });
 
-BingMapsItemViewModel.prototype._enableInCesium = function() {
+BingMapsCatalogItem.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -89,7 +89,7 @@ BingMapsItemViewModel.prototype._enableInCesium = function() {
     scene.imageryLayers.add(this._imageryLayer);
 };
 
-BingMapsItemViewModel.prototype._disableInCesium = function() {
+BingMapsCatalogItem.prototype._disableInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -100,7 +100,7 @@ BingMapsItemViewModel.prototype._disableInCesium = function() {
     this._imageryLayer = undefined;
 };
 
-BingMapsItemViewModel.prototype._enableInLeaflet = function() {
+BingMapsCatalogItem.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -118,7 +118,7 @@ BingMapsItemViewModel.prototype._enableInLeaflet = function() {
     this._imageryLayer = new L.BingLayer(key, options);
 };
 
-BingMapsItemViewModel.prototype._disableInLeaflet = function() {
+BingMapsCatalogItem.prototype._disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -126,4 +126,4 @@ BingMapsItemViewModel.prototype._disableInLeaflet = function() {
     this._imageryLayer = undefined;
 };
 
-module.exports = BingMapsItemViewModel;
+module.exports = BingMapsCatalogItem;

@@ -12,7 +12,7 @@ var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var CesiumViewModel = function(application, viewer) {
+var Cesium = function(application, viewer) {
     /**
      * Gets or sets the Cesium {@link Viewer} instance.
      * @type {Viewer}
@@ -32,7 +32,7 @@ var cartesian3Scratch = new Cartesian3();
  * Gets the current extent of the camera.  This may be approximate if the viewer does not have a strictly rectangular view.
  * @return {Rectangle} The current visible extent.
  */
-CesiumViewModel.prototype.getCurrentExtent = function() {
+Cesium.prototype.getCurrentExtent = function() {
     var scene = this.scene;
 
     var width = scene.canvas.clientWidth;
@@ -58,7 +58,7 @@ CesiumViewModel.prototype.getCurrentExtent = function() {
  * @param {Rectangle} extent The extent to which to zoom.
  * @param {Number} [flightDurationSeconds=3.0] The length of the flight animation in seconds.
  */
-CesiumViewModel.prototype.zoomTo = function(extent, flightDurationSeconds) {
+Cesium.prototype.zoomTo = function(extent, flightDurationSeconds) {
     if (!defined(extent)) {
         throw new DeveloperError('extent is required.');
     }
@@ -74,7 +74,7 @@ CesiumViewModel.prototype.zoomTo = function(extent, flightDurationSeconds) {
  * Captures a screenshot of the map.
  * @return {Promise} A promise that resolves to a data URL when the screenshot is ready.
  */
-CesiumViewModel.prototype.captureScreenshot = function() {
+Cesium.prototype.captureScreenshot = function() {
     var deferred = when.defer();
 
     var removeCallback = this.scene.postRender.addEventListener(function() {
@@ -89,4 +89,4 @@ CesiumViewModel.prototype.captureScreenshot = function() {
     return deferred.promise;
 };
 
-module.exports = CesiumViewModel;
+module.exports = Cesium;

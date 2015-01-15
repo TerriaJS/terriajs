@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach*/
 
-var ApplicationViewModel = require('../../src/Models/ApplicationViewModel');
+var Application = require('../../src/Models/Application');
 var ImageryLayerItemViewModel = require('../../src/Models/ImageryLayerItemViewModel');
 var WebMapServiceItemViewModel = require('../../src/Models/WebMapServiceItemViewModel');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
@@ -13,7 +13,7 @@ var application;
 var wmsViewModel;
 
 beforeEach(function() {
-    application = new ApplicationViewModel();
+    application = new Application();
     wmsViewModel = new WebMapServiceItemViewModel(application);
 });
 

@@ -188,7 +188,7 @@ defineProperties(WebMapServiceItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMember#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
@@ -202,7 +202,7 @@ defineProperties(WebMapServiceItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.

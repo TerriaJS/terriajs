@@ -10,22 +10,22 @@ var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var ViewModelError = require('./ViewModelError');
 
 /**
- * A {@link CatalogItemViewModel} that is added to the map as a rasterized imagery layer.
+ * A {@link CatalogItem} that is added to the map as a rasterized imagery layer.
  *
  * @alias ImageryLayerItemViewModel
  * @constructor
- * @extends CatalogItemViewModel
+ * @extends CatalogItem
  * @abstract
  * 
  * @param {ApplicationViewModel} application The application.
  */
 var ImageryLayerItemViewModel = function(application) {
-    CatalogItemViewModel.call(this, application);
+    CatalogItem.call(this, application);
 
     this._imageryLayer = undefined;
     this._errorEventUnsubscribe = undefined;
@@ -44,7 +44,7 @@ var ImageryLayerItemViewModel = function(application) {
     }, this);
 };
 
-inherit(CatalogItemViewModel, ImageryLayerItemViewModel);
+inherit(CatalogItem, ImageryLayerItemViewModel);
 
 defineProperties(ImageryLayerItemViewModel.prototype, {
     /**
@@ -83,7 +83,7 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMember#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
@@ -97,7 +97,7 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
@@ -111,7 +111,7 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMemberViewModel#serializeToJson} is called
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMember#serializeToJson} is called
      * and the `serializeForSharing` flag is set in the options.
      * @memberOf ImageryLayerItemViewModel.prototype
      * @type {String[]}
@@ -123,18 +123,18 @@ defineProperties(ImageryLayerItemViewModel.prototype, {
     }
 });
 
-ImageryLayerItemViewModel.defaultUpdaters = clone(CatalogItemViewModel.defaultUpdaters);
+ImageryLayerItemViewModel.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
 freezeObject(ImageryLayerItemViewModel.defaultUpdaters);
 
-ImageryLayerItemViewModel.defaultSerializers = clone(CatalogItemViewModel.defaultSerializers);
+ImageryLayerItemViewModel.defaultSerializers = clone(CatalogItem.defaultSerializers);
 freezeObject(ImageryLayerItemViewModel.defaultSerializers);
 
 /**
- * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItemViewModel}-derived object with the
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItem}-derived object with the
  * `serializeForSharing` flag set in the options.
  * @type {String[]}
  */
-ImageryLayerItemViewModel.defaultPropertiesForSharing = clone(CatalogItemViewModel.defaultPropertiesForSharing);
+ImageryLayerItemViewModel.defaultPropertiesForSharing = clone(CatalogItem.defaultPropertiesForSharing);
 ImageryLayerItemViewModel.defaultPropertiesForSharing.push('opacity');
 
 freezeObject(ImageryLayerItemViewModel.defaultPropertiesForSharing);

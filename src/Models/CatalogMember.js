@@ -11,16 +11,16 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 /**
- * A member of a {@link CatalogGroupViewModel}.  A member may be a {@link CatalogItemViewModel} or a
- * {@link CatalogGroupViewModel}.
+ * A member of a {@link CatalogGroup}.  A member may be a {@link CatalogItem} or a
+ * {@link CatalogGroup}.
  *
- * @alias CatalogMemberViewModel
+ * @alias CatalogMember
  * @constructor
  * @abstract
  *
  * @param {ApplicationViewModel} application The application.
  */
-var CatalogMemberViewModel = function(application) {
+var CatalogMember = function(application) {
     if (!defined(application)) {
         throw new DeveloperError('application is required');
     }
@@ -51,32 +51,32 @@ var CatalogMemberViewModel = function(application) {
     knockout.track(this, ['name', 'description', 'isUserSupplied']);
 };
 
-defineProperties(CatalogMemberViewModel.prototype, {
+defineProperties(CatalogMember.prototype, {
     /**
      * Gets the type of data item represented by this instance.
-     * @memberOf CatalogMemberViewModel.prototype
+     * @memberOf CatalogMember.prototype
      * @type {String}
      */
     type : {
         get : function() {
-            throw new DeveloperError('Types derived from CatalogMemberViewModel must implement a "type" property.');
+            throw new DeveloperError('Types derived from CatalogMember must implement a "type" property.');
         }
     },
 
     /**
      * Gets a human-readable name for this type of data source, such as 'Web Map Service (WMS)'.
-     * @memberOf CatalogMemberViewModel.prototype
+     * @memberOf CatalogMember.prototype
      * @type {String}
      */
     typeName : {
         get : function() {
-            throw new DeveloperError('Types derived from CatalogMemberViewModel must implement a "typeName" property.');
+            throw new DeveloperError('Types derived from CatalogMember must implement a "typeName" property.');
         }
     },
 
     /**
      * Gets the application.
-     * @memberOf CatalogMemberViewModel.prototype
+     * @memberOf CatalogMember.prototype
      * @type {ApplicationViewModel}
      */
     application : {
@@ -86,77 +86,77 @@ defineProperties(CatalogMemberViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMember#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.  If part of the update happens asynchronously, the updater function should
      * return a Promise that resolves when it is complete.
-     * @memberOf CatalogMemberViewModel.prototype
+     * @memberOf CatalogMember.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return CatalogMemberViewModel.defaultUpdaters;
+            return CatalogMember.defaultUpdaters;
         }
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf CatalogMemberViewModel.prototype
+     * @memberOf CatalogMember.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return CatalogMemberViewModel.defaultSerializers;
+            return CatalogMember.defaultSerializers;
         }
     },
 
     /**
-     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMemberViewModel#serializeToJson} is called
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMember#serializeToJson} is called
      * and the `serializeForSharing` flag is set in the options.
-     * @memberOf CatalogMemberViewModel.prototype
+     * @memberOf CatalogMember.prototype
      * @type {String[]}
      */
     propertiesForSharing : {
         get : function() {
-            return CatalogMemberViewModel.defaultPropertiesForSharing;
+            return CatalogMember.defaultPropertiesForSharing;
         }
     }
 });
 
 /**
- * Gets or sets the set of default updater functions to use in {@link CatalogMemberViewModel#updateFromJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#updaters} property.
+ * Gets or sets the set of default updater functions to use in {@link CatalogMember#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#updaters} property.
  * @type {Object}
  */
-CatalogMemberViewModel.defaultUpdaters = {
+CatalogMember.defaultUpdaters = {
 };
 
-freezeObject(CatalogMemberViewModel.defaultUpdaters);
+freezeObject(CatalogMember.defaultUpdaters);
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMember#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-CatalogMemberViewModel.defaultSerializers = {
+CatalogMember.defaultSerializers = {
 };
 
-freezeObject(CatalogMemberViewModel.defaultSerializers);
+freezeObject(CatalogMember.defaultSerializers);
 
 /**
- * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogMemberViewModel}-derived object with the
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogMember}-derived object with the
  * `serializeForSharing` flag set in the options.
  * @type {String[]}
  */
-CatalogMemberViewModel.defaultPropertiesForSharing = [
+CatalogMember.defaultPropertiesForSharing = [
     'name'
 ];
 
-freezeObject(CatalogMemberViewModel.defaultPropertiesForSharing);
+freezeObject(CatalogMember.defaultPropertiesForSharing);
 
 /**
  * Updates the catalog member from a JSON object-literal description of it.
@@ -169,11 +169,11 @@ freezeObject(CatalogMemberViewModel.defaultPropertiesForSharing);
  * @param {Object} [options] Object with the following properties:
  * @param {Boolean} [options.onlyUpdateExistingItems] true to only update existing items and never create new ones, or false is new items
  *                                                    may be created by this update.
- * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMemberViewModel#isUserSupplied} property of updated catalog members
+ * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMember#isUserSupplied} property of updated catalog members
  *                                           to the given value.  If not specified, the property is left unchanged.
   * @returns {Promise} A promise that resolves when the update is complete.
 */
-CatalogMemberViewModel.prototype.updateFromJson = function(json, options) {
+CatalogMember.prototype.updateFromJson = function(json, options) {
     if (defined(options) && defined(options.isUserSupplied)) {
         this.isUserSupplied = options.isUserSupplied;
     }
@@ -199,25 +199,25 @@ CatalogMemberViewModel.prototype.updateFromJson = function(json, options) {
  * @param {Object} [options] Object with the following properties:
  * @param {Boolean} [options.enabledItemsOnly=false] true if only enabled data items (and their groups) should be serialized,
  *                  or false if all data items should be serialized.
- * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
+ * @param {CatalogMember[]} [options.itemsSkippedBecauseTheyAreNotEnabled] An array that, if provided, is populated on return with
  *        all of the data items that were not serialized because they were not enabled.  The array will be empty if
  *        options.enabledItemsOnly is false.
  * @param {Boolean} [options.skipItemsWithLocalData=false] true if items with a serializable 'data' property should be skipped entirely.
  *                  This is useful to avoid creating a JSON data structure with potentially very large embedded data.
- * @param {CatalogMemberViewModel[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
+ * @param {CatalogMember[]} [options.itemsSkippedBecauseTheyHaveLocalData] An array that, if provided, is populated on return
  *        with all of the data items that were not serialized because they have a serializable 'data' property.  The array will be empty
  *        if options.skipItemsWithLocalData is false.
  * @param {Boolean} [options.serializeForSharing=false] true to only serialize properties that are typically necessary for sharing this member
- *                                                      with other users, such as {@link CatalogGroupViewModel#isOpen}, {@link CatalogItemViewModel#isEnabled},
- *                                                      {@link CatalogItemViewModel#isLegendVisible}, and {@link ImageryLayerViewModel#opacity},
+ *                                                      with other users, such as {@link CatalogGroup#isOpen}, {@link CatalogItem#isEnabled},
+ *                                                      {@link CatalogItem#isLegendVisible}, and {@link ImageryLayerViewModel#opacity},
  *                                                      rather than serializing all properties needed to completely recreate the catalog.  The set of properties
  *                                                      that is serialized when this property is true is given by each view-model's
- *                                                      {@link CatalogMemberViewModel#propertiesForSharing} property.
+ *                                                      {@link CatalogMember#propertiesForSharing} property.
  * @param {Boolean} [options.userSuppliedOnly=false] true to only serialize catalog members (and their containing groups) that have been identified as having been
- *                  supplied by the user ({@link CatalogMemberViewModel#isUserSupplied} is true); false to serialize all catalog members.
+ *                  supplied by the user ({@link CatalogMember#isUserSupplied} is true); false to serialize all catalog members.
  * @return {Object} The serialized JSON object-literal.
  */
-CatalogMemberViewModel.prototype.serializeToJson = function(options) {
+CatalogMember.prototype.serializeToJson = function(options) {
     options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
     var enabledItemsOnly = defaultValue(options.enabledItemsOnly, false);
@@ -272,4 +272,4 @@ CatalogMemberViewModel.prototype.serializeToJson = function(options) {
     return result;
 };
 
-module.exports = CatalogMemberViewModel;
+module.exports = CatalogMember;

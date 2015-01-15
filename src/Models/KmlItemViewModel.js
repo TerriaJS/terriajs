@@ -11,22 +11,22 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var MetadataViewModel = require('./MetadataViewModel');
 var ViewModelError = require('./ViewModelError');
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readXml = require('../Core/readXml');
 
 /**
- * A {@link CatalogItemViewModel} representing KML or KMZ feature data.
+ * A {@link CatalogItem} representing KML or KMZ feature data.
  *
  * @alias KmlItemViewModel
  * @constructor
- * @extends CatalogItemViewModel
+ * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the KML or KMZ data.
  */
 var KmlItemViewModel = function(application, url) {
-    CatalogItemViewModel.call(this, application);
+    CatalogItem.call(this, application);
 
     this._kmlDataSource = undefined;
 
@@ -54,7 +54,7 @@ var KmlItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItemViewModel, KmlItemViewModel);
+inherit(CatalogItem, KmlItemViewModel);
 
 defineProperties(KmlItemViewModel.prototype, {
     /**

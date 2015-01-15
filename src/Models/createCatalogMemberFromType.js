@@ -9,7 +9,7 @@ var ViewModelError = require('./ViewModelError');
 var mapping = {};
 
 /**
- * Creates a type derived from {@link CatalogMemberViewModel} based on a given type string.
+ * Creates a type derived from {@link CatalogMember} based on a given type string.
  * 
  * @param {String} type The derived type name.
  * @param {ApplicationViewModel} application The application.
@@ -29,7 +29,7 @@ This error may also indicate an attempt to load a newer catalogue file in an old
 };
 
 /**
- * Registers a constructor for a given type of {@link CatalogMemberViewModel}.
+ * Registers a constructor for a given type of {@link CatalogMember}.
  * 
  * @param {String} type The type name for which to register a constructor.
  * @param {Function} constructor The constructor for data items of this type.  The constructor is expected to take a

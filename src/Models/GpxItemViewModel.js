@@ -9,7 +9,7 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var MetadataViewModel = require('./MetadataViewModel');
 var ViewModelError = require('./ViewModelError');
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
@@ -18,7 +18,7 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
 
 
 /**
- * A {@link CatalogItemViewModel} representing GPX data.
+ * A {@link CatalogItem} representing GPX data.
  *
  * @alias GpxItemViewModel
  * @constructor
@@ -28,7 +28,7 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
  * @param {String} [url] The URL from which to retrieve the GPX data.
  */
 var GpxItemViewModel = function(application, url) {
-    CatalogItemViewModel.call(this, application);
+    CatalogItem.call(this, application);
 
     this._geoJsonViewModel = undefined;
 
@@ -56,7 +56,7 @@ var GpxItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItemViewModel, GpxItemViewModel);
+inherit(CatalogItem, GpxItemViewModel);
 
 defineProperties(GpxItemViewModel.prototype, {
     /**

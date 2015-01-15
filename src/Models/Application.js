@@ -13,7 +13,7 @@ var queryToObject = require('../../third_party/cesium/Source/Core/queryToObject'
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var CatalogViewModel = require('./CatalogViewModel');
+var Catalog = require('./Catalog');
 var corsProxy = require('../Core/corsProxy');
 var NowViewingViewModel = require('./NowViewingViewModel');
 var ServicesViewModel = require('./ServicesViewModel');
@@ -21,11 +21,11 @@ var ViewerMode = require('./ViewerMode');
 var ViewModelError = require('./ViewModelError');
 
 /**
- * The overall view-model for National Map.
- * @alias ApplicationViewModel
+ * The overall model for National Map.
+ * @alias Application
  * @constructor
  */
-var ApplicationViewModel = function() {
+var Application = function() {
     /**
      * An event that is raised when a user-facing error occurs.  This is especially useful for errors that happen asynchronously and so
      * cannot be raised as an exception because no one would be able to catch it.  Subscribers are passed the {@link ViewModelError}
@@ -84,22 +84,22 @@ var ApplicationViewModel = function() {
 
     /**
      * Gets or sets properties related to the Cesium globe.  If the application is in 2D mode, this property will be
-     * undefined and {@link ApplicationViewModel#leaflet} will be set.
-     * @type {CesiumViewModel}
+     * undefined and {@link Application#leaflet} will be set.
+     * @type {Cesium}
      */
     this.cesium = undefined;
 
     /**
      * Gets or sets properties related to the Leaflet map.  If the application is in 3D mode, this property will be
-     * undefined and {@link ApplicationViewModel#cesium} will be set.
+     * undefined and {@link Application#cesium} will be set.
      * @type {LeafletViewModel}
      */
     this.leaflet = undefined;
 
     /**
-     * Gets or sets a reference to either {@link ApplicationViewModel#cesium} or {@link ApplicationViewModel#leaflet},
+     * Gets or sets a reference to either {@link Application#cesium} or {@link Application#leaflet},
      * whichever is currently in use.
-     * @type {CesiumViewModel|LeafletViewModel}
+     * @type {Cesium|LeafletViewModel}
      */
     this.currentViewer = undefined;
 
@@ -122,9 +122,9 @@ var ApplicationViewModel = function() {
 
     /**
      * Gets or sets the catalog of geospatial data.
-     * @type {CatalogViewModel}
+     * @type {Catalog}
      */
-    this.catalog = new CatalogViewModel(this);
+    this.catalog = new Catalog(this);
 
     /**
      * Gets or sets the add-on services known to the application.
@@ -156,7 +156,7 @@ var ApplicationViewModel = function() {
  *                                                                   a simple string.  If it's a simple string, a file named 'init_' + hash + '.json'
  *                                                                   will be loaded as the init source.  For example, #vic will load init_vic.json.
  */
-ApplicationViewModel.prototype.start = function(options) {
+Application.prototype.start = function(options) {
     var applicationUrl = defaultValue(options.applicationUrl, '');
 
     var that = this;
@@ -180,7 +180,7 @@ ApplicationViewModel.prototype.start = function(options) {
  * @param {String} newUrl The new URL of the application.
  * @return {Promise} A promise that resolves when any new init sources specified in the URL have been loaded.
  */
-ApplicationViewModel.prototype.updateApplicationUrl = function(newUrl) {
+Application.prototype.updateApplicationUrl = function(newUrl) {
     var uri = new URI(newUrl);
     var hash = uri.fragment();
     var hashProperties = queryToObject(hash);
@@ -197,7 +197,7 @@ ApplicationViewModel.prototype.updateApplicationUrl = function(newUrl) {
  * @param {String} propertyName The name of the user property for which to get the value.
  * @return {Object} The value of the property, or undefined if the property does not exist.
  */
-ApplicationViewModel.prototype.getUserProperty = function(propertyName) {
+Application.prototype.getUserProperty = function(propertyName) {
     if (!knockout.getObservable(this.userProperties, propertyName)) {
         this.userProperties[propertyName] = undefined;
         knockout.track(this.userProperties, [propertyName]);
@@ -316,4 +316,4 @@ function loadInitSource(source) {
     }
 }
 
-module.exports = ApplicationViewModel;
+module.exports = Application;

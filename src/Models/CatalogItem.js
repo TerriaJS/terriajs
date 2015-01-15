@@ -14,23 +14,23 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var arraysAreEqual = require('../Core/arraysAreEqual');
 var MetadataViewModel = require('./MetadataViewModel');
-var CatalogMemberViewModel = require('./CatalogMemberViewModel');
+var CatalogMember = require('./CatalogMember');
 var inherit = require('../Core/inherit');
 var raiseErrorOnRejectedPromise = require('./raiseErrorOnRejectedPromise');
 var runLater = require('../Core/runLater');
 
 /**
- * A data item in a {@link CatalogGroupViewModel}.
+ * A data item in a {@link CatalogGroup}.
  *
- * @alias CatalogItemViewModel
+ * @alias CatalogItem
  * @constructor
- * @extends CatalogMemberViewModel
+ * @extends CatalogMember
  * @abstract
  *
  * @param {ApplicationViewModel} application The application.
  */
-var CatalogItemViewModel = function(application) {
-    CatalogMemberViewModel.call(this, application);
+var CatalogItem = function(application) {
+    CatalogMember.call(this, application);
 
     this._enabledDate = undefined;
     this._shownDate = undefined;
@@ -60,11 +60,11 @@ var CatalogItemViewModel = function(application) {
     this.legendUrl = undefined;
 
     /**
-     * Gets or sets the type of the {@link CatalogItemViewModel#dataUrl}, or undefined if raw data for this data
+     * Gets or sets the type of the {@link CatalogItem#dataUrl}, or undefined if raw data for this data
      * source is not available.  This property is observable.
      * Valid values are:
      *  * `direct` - A direct link to the data.
-     *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link CatalogItemViewModel#dataUrl} is not
+     *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link CatalogItem#dataUrl} is not
      *            specified, the base URL will be this data item's URL.
      *  * `wfs-complete` - A complete, ready-to-use link to download features from a WFS server.
      * @type {String}
@@ -142,15 +142,15 @@ var CatalogItemViewModel = function(application) {
     }, this);
 };
 
-inherit(CatalogMemberViewModel, CatalogItemViewModel);
+inherit(CatalogMember, CatalogItem);
 
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
 
-defineProperties(CatalogItemViewModel.prototype, {
+defineProperties(CatalogItem.prototype, {
     /**
      * Gets a value indicating whether this data item, when enabled, can be reordered with respect to other data items.
      * Data items that cannot be reordered are typically displayed above reorderable data items.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {Boolean}
      */
     supportsReordering : {
@@ -161,7 +161,7 @@ defineProperties(CatalogItemViewModel.prototype, {
 
     /**
      * Gets a value indicating whether the opacity of this data item can be changed.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {Boolean}
      */
     supportsOpacity : {
@@ -172,7 +172,7 @@ defineProperties(CatalogItemViewModel.prototype, {
 
     /**
      * Gets a value indicating whether this data item has a legend.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {Boolean}
      */
     hasLegend : {
@@ -184,7 +184,7 @@ defineProperties(CatalogItemViewModel.prototype, {
     /**
      * Gets a value indicating whether this data item's legend is an image in a
      * browser-supported format such as JPEG, PNG, or GIF.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {Boolean}
      */
     legendIsImage : {
@@ -199,75 +199,75 @@ defineProperties(CatalogItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data item and the server that provided it, if applicable.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {MetadataViewModel}
      */
     metadata : {
         get : function() {
-            return CatalogItemViewModel.defaultMetadata;
+            return CatalogItem.defaultMetadata;
         }
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMember#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {Object}
      */
     updaters : {
         get : function() {
-            return CatalogItemViewModel.defaultUpdaters;
+            return CatalogItem.defaultUpdaters;
         }
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {Object}
      */
     serializers : {
         get : function() {
-            return CatalogItemViewModel.defaultSerializers;
+            return CatalogItem.defaultSerializers;
         }
     },
 
     /**
-     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMemberViewModel#serializeToJson} is called
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMember#serializeToJson} is called
      * and the `serializeForSharing` flag is set in the options.
-     * @memberOf CatalogItemViewModel.prototype
+     * @memberOf CatalogItem.prototype
      * @type {String[]}
      */
     propertiesForSharing : {
         get : function() {
-            return CatalogItemViewModel.defaultPropertiesForSharing;
+            return CatalogItem.defaultPropertiesForSharing;
         }
     }
 });
 
 /**
  * Gets or sets the default metadata to use for data items that don't provide anything better from their
- * {@link CatalogItemViewModel#metadata} property.  The default simply indicates that no metadata is available.
+ * {@link CatalogItem#metadata} property.  The default simply indicates that no metadata is available.
  * @type {MetadataViewModel}
  */
-CatalogItemViewModel.defaultMetadata = new MetadataViewModel();
-CatalogItemViewModel.defaultMetadata.isLoading = false;
-CatalogItemViewModel.defaultMetadata.dataSourceErrorMessage = 'This data item does not have any details available.';
-CatalogItemViewModel.defaultMetadata.serviceErrorMessage = 'This service does not have any details available.';
+CatalogItem.defaultMetadata = new MetadataViewModel();
+CatalogItem.defaultMetadata.isLoading = false;
+CatalogItem.defaultMetadata.dataSourceErrorMessage = 'This data item does not have any details available.';
+CatalogItem.defaultMetadata.serviceErrorMessage = 'This service does not have any details available.';
 
-freezeObject(CatalogItemViewModel.defaultMetadata);
+freezeObject(CatalogItem.defaultMetadata);
 
 /**
- * Gets or sets the set of default updater functions to use in {@link CatalogMemberViewModel#updateFromJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#updaters} property.
+ * Gets or sets the set of default updater functions to use in {@link CatalogMember#updateFromJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#updaters} property.
  * @type {Object}
  */
-CatalogItemViewModel.defaultUpdaters = clone(CatalogMemberViewModel.defaultUpdaters);
-CatalogItemViewModel.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
+CatalogItem.defaultUpdaters = clone(CatalogMember.defaultUpdaters);
+CatalogItem.defaultUpdaters.rectangle = function(viewModel, json, propertyName) {
     if (defined(json.rectangle)) {
         viewModel.rectangle = Rectangle.fromDegrees(json.rectangle[0], json.rectangle[1], json.rectangle[2], json.rectangle[3]);
     } else {
@@ -275,15 +275,15 @@ CatalogItemViewModel.defaultUpdaters.rectangle = function(viewModel, json, prope
     }
 };
 
-freezeObject(CatalogItemViewModel.defaultUpdaters);
+freezeObject(CatalogItem.defaultUpdaters);
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMember#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-CatalogItemViewModel.defaultSerializers = clone(CatalogMemberViewModel.defaultSerializers);
-CatalogItemViewModel.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
+CatalogItem.defaultSerializers = clone(CatalogMember.defaultSerializers);
+CatalogItem.defaultSerializers.rectangle = function(viewModel, json, propertyName) {
     if (defined(viewModel.rectangle)) {
         json.rectangle = [
             CesiumMath.toDegrees(viewModel.rectangle.west),
@@ -294,36 +294,36 @@ CatalogItemViewModel.defaultSerializers.rectangle = function(viewModel, json, pr
     }
 };
 
-freezeObject(CatalogItemViewModel.defaultSerializers);
+freezeObject(CatalogItem.defaultSerializers);
 
 /**
- * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItemViewModel}-derived object with the
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItem}-derived object with the
  * `serializeForSharing` flag set in the options.
  * @type {String[]}
  */
-CatalogItemViewModel.defaultPropertiesForSharing = clone(CatalogMemberViewModel.defaultPropertiesForSharing);
-CatalogItemViewModel.defaultPropertiesForSharing.push('isEnabled');
-CatalogItemViewModel.defaultPropertiesForSharing.push('isShown');
-CatalogItemViewModel.defaultPropertiesForSharing.push('isLegendVisible');
-CatalogItemViewModel.defaultPropertiesForSharing.push('nowViewingIndex');
+CatalogItem.defaultPropertiesForSharing = clone(CatalogMember.defaultPropertiesForSharing);
+CatalogItem.defaultPropertiesForSharing.push('isEnabled');
+CatalogItem.defaultPropertiesForSharing.push('isShown');
+CatalogItem.defaultPropertiesForSharing.push('isLegendVisible');
+CatalogItem.defaultPropertiesForSharing.push('nowViewingIndex');
 
-freezeObject(CatalogItemViewModel.defaultPropertiesForSharing);
+freezeObject(CatalogItem.defaultPropertiesForSharing);
 
 /**
  * Loads this catalog item, if it's not already loaded.  It is safe to
- * call this method multiple times.  The {@link CatalogItemViewModel#isLoading} flag will be set while the load is in progress.
- * Derived classes should implement {@link CatalogItemViewModel#_load} to perform the actual loading for the item.
- * Derived classes may optionally implement {@link CatalogItemViewModel#_getValuesThatInfluenceLoad} to provide an array containing
- * the current value of all properties that influence this item's load process.  Each time that {@link CatalogItemViewModel#load}
- * is invoked, these values are checked against the list of values returned last time, and {@link CatalogItemViewModel#_load} is
- * invoked again if they are different.  If {@link CatalogItemViewModel#_getValuesThatInfluenceLoad} is undefined or returns an
- * empty array, {@link CatalogItemViewModel#_load} will only be invoked once, no matter how many times
- * {@link CatalogItemViewModel#load} is invoked.
+ * call this method multiple times.  The {@link CatalogItem#isLoading} flag will be set while the load is in progress.
+ * Derived classes should implement {@link CatalogItem#_load} to perform the actual loading for the item.
+ * Derived classes may optionally implement {@link CatalogItem#_getValuesThatInfluenceLoad} to provide an array containing
+ * the current value of all properties that influence this item's load process.  Each time that {@link CatalogItem#load}
+ * is invoked, these values are checked against the list of values returned last time, and {@link CatalogItem#_load} is
+ * invoked again if they are different.  If {@link CatalogItem#_getValuesThatInfluenceLoad} is undefined or returns an
+ * empty array, {@link CatalogItem#_load} will only be invoked once, no matter how many times
+ * {@link CatalogItem#load} is invoked.
  *
  * @returns {Promise} A promise that resolves when the load is complete, or undefined if the item is already loaded.
  * 
  */
-CatalogItemViewModel.prototype.load = function() {
+CatalogItem.prototype.load = function() {
     if (defined(this._loadingPromise)) {
         // Load already in progress.
         return this._loadingPromise;
@@ -365,11 +365,11 @@ CatalogItemViewModel.prototype.load = function() {
 
 /**
  * When implemented in a derived class, this method loads the item.  The base class implementation does nothing.
- * This method should not be called directly; call {@link CatalogItemViewModel#load} instead.
+ * This method should not be called directly; call {@link CatalogItem#load} instead.
  * @return {Promise} A promise that resolves when the load is complete.
  * @protected
  */
-CatalogItemViewModel.prototype._load = function() {
+CatalogItem.prototype._load = function() {
     return when();
 };
 
@@ -377,12 +377,12 @@ var emptyArray = freezeObject([]);
 
 /**
  * When implemented in a derived class, gets an array containing the current value of all properties that
- * influence this item's load process.  See {@link CatalogItemViewModel#load} for more information on when and
+ * influence this item's load process.  See {@link CatalogItem#load} for more information on when and
  * how this is used.  The base class implementation returns an empty array.
  * @return {Array} The array of values that influence the load process.
  * @protected
  */
-CatalogItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+CatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     // In the future, we can implement auto-reloading when any of these properties change.  Just create a knockout
     // computed property that calls this method and subscribe to change notifications on that computed property.
     // (Will need to use the rateLimit extender, presumably).
@@ -390,33 +390,33 @@ CatalogItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
 };
 
 /**
- * Toggles the {@link CatalogItemViewModel#isEnabled} property of this item.  If it is enabled, calling this method
+ * Toggles the {@link CatalogItem#isEnabled} property of this item.  If it is enabled, calling this method
  * will disable it.  If it is disabled, calling this method will enable it.
  *
  * @returns {Boolean} true if the item is now enabled, false if it is now disabled.
  */
- CatalogItemViewModel.prototype.toggleEnabled = function() {
+ CatalogItem.prototype.toggleEnabled = function() {
     this.isEnabled = !this.isEnabled;
     return this.isEnabled;
 };
 
 /**
- * Toggles the {@link CatalogItemViewModel#isShown} property of this item.  If it is shown, calling this method
+ * Toggles the {@link CatalogItem#isShown} property of this item.  If it is shown, calling this method
  * will hide it.  If it is hidden, calling this method will show it.
  *
  * @returns {Boolean} true if the item is now shown, false if it is now hidden.
  */
- CatalogItemViewModel.prototype.toggleShown = function() {
+ CatalogItem.prototype.toggleShown = function() {
     this.isShown = !this.isShown;
     return this.isShown;
 };
 
 /**
- * Toggles the {@link CatalogItemViewModel#isLegendVisible} property of this item.  If it is visible, calling this
+ * Toggles the {@link CatalogItem#isLegendVisible} property of this item.  If it is visible, calling this
  * method will hide it.  If it is hidden, calling this method will make it visible.
  * @return {Boolean} true if the legend is now visible, false if it is now hidden.
  */
-CatalogItemViewModel.prototype.toggleLegendVisible = function() {
+CatalogItem.prototype.toggleLegendVisible = function() {
     this.isLegendVisible = !this.isLegendVisible;
     return this.isLegendVisible;
 };
@@ -424,13 +424,13 @@ CatalogItemViewModel.prototype.toggleLegendVisible = function() {
 var scratchRectangle = new Rectangle();
 
 /**
- * Moves the camera so that the item's bounding rectangle is visible.  If {@link CatalogItemViewModel#rectangle} is
+ * Moves the camera so that the item's bounding rectangle is visible.  If {@link CatalogItem#rectangle} is
  * undefined or covers more than about half the world in the longitude direction, or if the data item is not enabled
  * or not shown, this method does nothing.  Because the zoom may happen asynchronously (for example, if the item's
  * rectangle is not yet known), this method returns a Promise that resolves when the zoom animation starts.
  * @returns {Promise} A promise that resolves when the zoom animation starts.
  */
- CatalogItemViewModel.prototype.zoomTo = function() {
+ CatalogItem.prototype.zoomTo = function() {
     var that = this;
     return when(this.load(), function() {
         if (!defined(that.rectangle)) {
@@ -465,13 +465,13 @@ var scratchRectangle = new Rectangle();
 };
 
 /**
- * Uses the {@link CatalogItemViewModel#clock} settings from this data item.  If this data item
+ * Uses the {@link CatalogItem#clock} settings from this data item.  If this data item
  * has no clock settings, this method does nothing.  Because the clock update may happen asynchronously
  * (for example, if the item's clock parameters are not yet known), this method returns a Promise that
  * resolves when the clock has been updated.
  * @returns {Promise} A promise that resolves when the clock has been updated.
  */
-CatalogItemViewModel.prototype.useClock = function() {
+CatalogItem.prototype.useClock = function() {
     var that = this;
     return when(this.load(), function() {
         if (!defined(that.clock)) {
@@ -496,29 +496,29 @@ CatalogItemViewModel.prototype.useClock = function() {
 
 /**
  * Moves the camera so that the data item's bounding rectangle is visible, and updates the application clock according to this
- * data item's clock settings.  This method simply calls {@link CatalogItemViewModel#zoomTo} and
- * {@link CatalogItemViewModel#useClock}.  Because the zoom and clock update may happen asynchronously (for example, if the item's
+ * data item's clock settings.  This method simply calls {@link CatalogItem#zoomTo} and
+ * {@link CatalogItem#useClock}.  Because the zoom and clock update may happen asynchronously (for example, if the item's
  * rectangle is not yet known), this method returns a Promise that resolves when the zoom animation starts and the clock
  * has been updated.
  * @returns {Promise} A promise that resolves when the clock has been updated and the zoom animation has started.
  */
-CatalogItemViewModel.prototype.zoomToAndUseClock = function() {
+CatalogItem.prototype.zoomToAndUseClock = function() {
     return when.all([this.zoomTo(), this.useClock()]);
 };
 
 /**
  * Enables this data item on the globe or map.  This method:
- * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isEnabled} property to true.
- * * Will not necessarily be called immediately when {@link CatalogItemViewModel#isEnabled} is set to true; it will be deferred until
- *   {@link CatalogItemViewModel#isLoading} is false.
- * * Should NOT also show the data item on the globe/map (see {@link CatalogItemViewModel#_show}), so in some cases it may not do
+ * * Should not be called directly.  Instead, set the {@link CatalogItem#isEnabled} property to true.
+ * * Will not necessarily be called immediately when {@link CatalogItem#isEnabled} is set to true; it will be deferred until
+ *   {@link CatalogItem#isLoading} is false.
+ * * Should NOT also show the data item on the globe/map (see {@link CatalogItem#_show}), so in some cases it may not do
  *   anything at all.
- * * Calls {@link CatalogItemViewModel#_enableInCesium} or {@link CatalogItemViewModel#_enableInLeaflet} in the base-class implementation,
+ * * Calls {@link CatalogItem#_enableInCesium} or {@link CatalogItem#_enableInLeaflet} in the base-class implementation,
  *   depending on which viewer is active.  Derived classes that have identical enable logic for both viewers may override
  *   this method instead of the viewer-specific ones.
  * @protected
  */
-CatalogItemViewModel.prototype._enable = function() {
+CatalogItem.prototype._enable = function() {
     var application = this.application;
 
     if (defined(application.cesium)) {
@@ -532,16 +532,16 @@ CatalogItemViewModel.prototype._enable = function() {
 
 /**
  * Disables this data item on the globe or map.  This method:
- * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isEnabled} property to false.
- * * Will not be called if {@link CatalogItemViewModel#_enable} was not called (for example, because the previous call was deferred
+ * * Should not be called directly.  Instead, set the {@link CatalogItem#isEnabled} property to false.
+ * * Will not be called if {@link CatalogItem#_enable} was not called (for example, because the previous call was deferred
  *   while the data item loaded, and the user disabled the data item before the load completed).
- * * Will only be called after {@link CatalogItemViewModel#_hide} when a shown data item is disabled.
- * * Calls {@link CatalogItemViewModel#_disableInCesium} or {@link CatalogItemViewModel#_disableInLeaflet} in the base-class implementation,
+ * * Will only be called after {@link CatalogItem#_hide} when a shown data item is disabled.
+ * * Calls {@link CatalogItem#_disableInCesium} or {@link CatalogItem#_disableInLeaflet} in the base-class implementation,
  *   depending on which viewer is active.  Derived classes that have identical disable logic for both viewers may override
  *   this method instead of the viewer-specific ones.
  * @protected
  */
-CatalogItemViewModel.prototype._disable = function() {
+CatalogItem.prototype._disable = function() {
     var application = this.application;
 
     if (defined(application.cesium)) {
@@ -555,16 +555,16 @@ CatalogItemViewModel.prototype._disable = function() {
 
 /**
  * Shows this data item on the globe or map.  This method:
- * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isShown} property to true.
- * * Will only be called after {@link CatalogItemViewModel#_enable}; you can count on that method having been called first.
- * * Will not necessarily be called immediately when {@link CatalogItemViewModel#isShown} is set to true; it will be deferred until
- *   {@link CatalogItemViewModel#isLoading} is false.
- * * Calls {@link CatalogItemViewModel#_showInCesium} or {@link CatalogItemViewModel#_showInLeaflet} in the base-class implementation,
+ * * Should not be called directly.  Instead, set the {@link CatalogItem#isShown} property to true.
+ * * Will only be called after {@link CatalogItem#_enable}; you can count on that method having been called first.
+ * * Will not necessarily be called immediately when {@link CatalogItem#isShown} is set to true; it will be deferred until
+ *   {@link CatalogItem#isLoading} is false.
+ * * Calls {@link CatalogItem#_showInCesium} or {@link CatalogItem#_showInLeaflet} in the base-class implementation,
  *   depending on which viewer is active.  Derived classes that have identical show logic for both viewers
  *    may override this method instead of the viewer-specific ones.
  * @protected
  */
-CatalogItemViewModel.prototype._show = function() {
+CatalogItem.prototype._show = function() {
     var application = this.application;
 
     if (defined(application.cesium)) {
@@ -578,15 +578,15 @@ CatalogItemViewModel.prototype._show = function() {
 
 /**
  * Hides this data item on the globe or map.  This method:
- * * Should not be called directly.  Instead, set the {@link CatalogItemViewModel#isShown} property to false.
- * * Will not be called if {@link CatalogItemViewModel#_show} was not called (for example, because the previous call was deferred
+ * * Should not be called directly.  Instead, set the {@link CatalogItem#isShown} property to false.
+ * * Will not be called if {@link CatalogItem#_show} was not called (for example, because the previous call was deferred
  *   while the data item loaded, and the user hid the data item before the load completed).
- * * Calls {@link CatalogItemViewModel#_hideInCesium} or {@link CatalogItemViewModel#_hideInLeaflet} in the base-class implementation,
+ * * Calls {@link CatalogItem#_hideInCesium} or {@link CatalogItem#_hideInLeaflet} in the base-class implementation,
  *   depending on which viewer is active.  Derived classes that have identical hide logic for both viewers may override
  *   this method instead of the viewer-specific ones.
  * @protected
  */
-CatalogItemViewModel.prototype._hide = function() {
+CatalogItem.prototype._hide = function() {
     var application = this.application;
 
     if (defined(application.cesium)) {
@@ -600,89 +600,89 @@ CatalogItemViewModel.prototype._hide = function() {
 
 /**
  * When implemented in a derived class, enables this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to true.  See
- * {@link CatalogItemViewModel#_enable} for more information.
+ * directly, but instead set the {@link CatalogItem#isEnabled} property to true.  See
+ * {@link CatalogItem#_enable} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._enableInCesium = function() {
+CatalogItem.prototype._enableInCesium = function() {
     throw new DeveloperError('_enableInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, disables this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to false.  See
- * {@link CatalogItemViewModel#_disable} for more information.
+ * directly, but instead set the {@link CatalogItem#isEnabled} property to false.  See
+ * {@link CatalogItem#_disable} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._disableInCesium = function() {
+CatalogItem.prototype._disableInCesium = function() {
     throw new DeveloperError('_disableInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, shows this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to true.  See
- * {@link CatalogItemViewModel#_show} for more information.
+ * directly, but instead set the {@link CatalogItem#isShown} property to true.  See
+ * {@link CatalogItem#_show} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._showInCesium = function() {
+CatalogItem.prototype._showInCesium = function() {
     throw new DeveloperError('_showInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, hides this data item on the Cesium globe.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to false.  See
- * {@link CatalogItemViewModel#_hide} for more information.
+ * directly, but instead set the {@link CatalogItem#isShown} property to false.  See
+ * {@link CatalogItem#_hide} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._hideInCesium = function() {
+CatalogItem.prototype._hideInCesium = function() {
     throw new DeveloperError('_hideInCesium must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, enables this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to true.  See
- * {@link CatalogItemViewModel#_enable} for more information.
+ * directly, but instead set the {@link CatalogItem#isEnabled} property to true.  See
+ * {@link CatalogItem#_enable} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._enableInLeaflet = function() {
+CatalogItem.prototype._enableInLeaflet = function() {
     throw new DeveloperError('enableInLeaflet must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, disables this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isEnabled} property to false.  See
- * {@link CatalogItemViewModel#_disable} for more information.
+ * directly, but instead set the {@link CatalogItem#isEnabled} property to false.  See
+ * {@link CatalogItem#_disable} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._disableInLeaflet = function() {
+CatalogItem.prototype._disableInLeaflet = function() {
     throw new DeveloperError('disableInLeaflet must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, shows this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to true.  See
- * {@link CatalogItemViewModel#_show} for more information.
+ * directly, but instead set the {@link CatalogItem#isShown} property to true.  See
+ * {@link CatalogItem#_show} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._showInLeaflet = function() {
+CatalogItem.prototype._showInLeaflet = function() {
     throw new DeveloperError('_showInLeaflet must be implemented in the derived class.');
 };
 
 /**
  * When implemented in a derived class, hides this data item on the Leaflet map.  You should not call this
- * directly, but instead set the {@link CatalogItemViewModel#isShown} property to false.  See
- * {@link CatalogItemViewModel#_hide} for more information.
+ * directly, but instead set the {@link CatalogItem#isShown} property to false.  See
+ * {@link CatalogItem#_hide} for more information.
  * @abstract
  * @protected
  */
-CatalogItemViewModel.prototype._hideInLeaflet = function() {
+CatalogItem.prototype._hideInLeaflet = function() {
     throw new DeveloperError('_hideInLeaflet must be implemented in the derived class.');
 };
 
@@ -771,4 +771,4 @@ function isShownChanged(viewModel) {
     }
 }
 
-module.exports = CatalogItemViewModel;
+module.exports = CatalogItem;

@@ -17,7 +17,7 @@ var VarType = require('../Map/VarType');
 
 var MetadataViewModel = require('./MetadataViewModel');
 var ViewModelError = require('./ViewModelError');
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readText = require('../Core/readText');
 
@@ -26,17 +26,17 @@ var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 
 /**
- * A {@link CatalogItemViewModel} representing CSV data.
+ * A {@link CatalogItem} representing CSV data.
  *
- * @alias CsvItemViewModel
+ * @alias CsvCatalogItem
  * @constructor
- * @extends CatalogItemViewModel
+ * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the CSV data.
  */
-var CsvItemViewModel = function(application, url) {
-    CatalogItemViewModel.call(this, application);
+var CsvCatalogItem = function(application, url) {
+    CatalogItem.call(this, application);
 
     this._tableDataSource = undefined;
     this._regionMapped = false;
@@ -57,7 +57,7 @@ var CsvItemViewModel = function(application, url) {
 
 
     /**
-     * Gets or sets the URL from which the {@link CsvItemViewModel#data} was obtained.
+     * Gets or sets the URL from which the {@link CsvCatalogItem#data} was obtained.
      * @type {String}
      */
     this.dataSourceUrl = undefined;
@@ -65,12 +65,12 @@ var CsvItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItemViewModel, CsvItemViewModel);
+inherit(CatalogItem, CsvCatalogItem);
 
-defineProperties(CsvItemViewModel.prototype, {
+defineProperties(CsvCatalogItem.prototype, {
     /**
      * Gets the type of data member represented by this instance.
-     * @memberOf CsvItemViewModel.prototype
+     * @memberOf CsvCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -81,7 +81,7 @@ defineProperties(CsvItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'CSV'.
-     * @memberOf CsvItemViewModel.prototype
+     * @memberOf CsvCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -92,7 +92,7 @@ defineProperties(CsvItemViewModel.prototype, {
 
     /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
-     * @memberOf CsvItemViewModel.prototype
+     * @memberOf CsvCatalogItem.prototype
      * @type {MetadataViewModel}
      */
     metadata : {  //TODO: return metadata if tableDataSource defined
@@ -106,11 +106,11 @@ defineProperties(CsvItemViewModel.prototype, {
     }
 });
 
-CsvItemViewModel.prototype._getValuesThatInfluenceLoad = function() {
+CsvCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
     return [this.url, this.data];
 };
 
-CsvItemViewModel.prototype._load = function() {
+CsvCatalogItem.prototype._load = function() {
     if (defined(this._tableDataSource)) {
         this._tableDataSource.destroy();
     }
@@ -132,7 +132,7 @@ CsvItemViewModel.prototype._load = function() {
                     sender: that,
                     title: 'Unexpected type of CSV data',
                     message: '\
-CsvItemViewModel.data is expected to be a Blob, File, or String, but it was not any of these. \
+CsvCatalogItem.data is expected to be a Blob, File, or String, but it was not any of these. \
 This may indicate a bug in National Map or incorrect use of the National Map API. \
 If you believe it is a bug in National Map, please report it by emailing \
 <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.'
@@ -153,13 +153,13 @@ An error occurred while retrieving CSV data from the provided link.'
     }
 };
 
-CsvItemViewModel.prototype._enableInCesium = function() {
+CsvCatalogItem.prototype._enableInCesium = function() {
 };
 
-CsvItemViewModel.prototype._disableInCesium = function() {
+CsvCatalogItem.prototype._disableInCesium = function() {
 };
 
-CsvItemViewModel.prototype._showInCesium = function() {
+CsvCatalogItem.prototype._showInCesium = function() {
 
     if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
@@ -218,7 +218,7 @@ CsvItemViewModel.prototype._showInCesium = function() {
     }
 };
 
-CsvItemViewModel.prototype._hideInCesium = function() {
+CsvCatalogItem.prototype._hideInCesium = function() {
 
     if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
@@ -239,13 +239,13 @@ CsvItemViewModel.prototype._hideInCesium = function() {
     }
 };
 
-CsvItemViewModel.prototype._enableInLeaflet = function() {
+CsvCatalogItem.prototype._enableInLeaflet = function() {
 };
 
-CsvItemViewModel.prototype._disableInLeaflet = function() {
+CsvCatalogItem.prototype._disableInLeaflet = function() {
 };
 
-CsvItemViewModel.prototype._showInLeaflet = function() {
+CsvCatalogItem.prototype._showInLeaflet = function() {
 
     if (!this._regionMapped) {
         this._showInCesium();
@@ -289,7 +289,7 @@ CsvItemViewModel.prototype._showInLeaflet = function() {
     }
 };
 
-CsvItemViewModel.prototype._hideInLeaflet = function() {
+CsvCatalogItem.prototype._hideInLeaflet = function() {
     if (!this._regionMapped) {
         this._hideInCesium();
     }
@@ -304,7 +304,7 @@ CsvItemViewModel.prototype._hideInLeaflet = function() {
     }
 };
 
-CsvItemViewModel.prototype._rebuild = function() {
+CsvCatalogItem.prototype._rebuild = function() {
     if (defined(this.application.cesium)) {
         this._hideInCesium();
         this._showInCesium();
@@ -684,4 +684,4 @@ function addRegionMap(viewModel) {
 
 
 
-module.exports = CsvItemViewModel;
+module.exports = CsvCatalogItem;

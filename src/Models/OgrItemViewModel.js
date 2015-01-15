@@ -8,14 +8,14 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
 var inherit = require('../Core/inherit');
 var MetadataViewModel = require('./MetadataViewModel');
 var ViewModelError = require('./ViewModelError');
 
 /**
- * A {@link CatalogItemViewModel} representing ogr2ogr supported data formats.
+ * A {@link CatalogItem} representing ogr2ogr supported data formats.
  *
  * @alias OgrItemViewModel
  * @constructor
@@ -25,7 +25,7 @@ var ViewModelError = require('./ViewModelError');
  * @param {String} [url] The URL from which to retrieve the OGR data.
  */
 var OgrItemViewModel = function(application, url) {
-    CatalogItemViewModel.call(this, application);
+    CatalogItem.call(this, application);
 
     this._geoJsonViewModel = undefined;
 
@@ -53,7 +53,7 @@ var OgrItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItemViewModel, OgrItemViewModel);
+inherit(CatalogItem, OgrItemViewModel);
 
 defineProperties(OgrItemViewModel.prototype, {
     /**

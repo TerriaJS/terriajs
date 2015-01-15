@@ -12,7 +12,7 @@ var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var objectToQuery = require('../../third_party/cesium/Source/Core/objectToQuery');
 
 var GeoJsonItemViewModel = require('./GeoJsonItemViewModel');
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var gmlToGeoJson = require('../Map/gmlToGeoJson');
 
@@ -21,12 +21,12 @@ var gmlToGeoJson = require('../Map/gmlToGeoJson');
  *
  * @alias WebFeatureServiceItemViewModel
  * @constructor
- * @extends CatalogItemViewModel
+ * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application for the group.
  */
 var WebFeatureServiceItemViewModel = function(application) {
-    CatalogItemViewModel.call(this, application);
+    CatalogItem.call(this, application);
 
     this._dataUrl = undefined;
     this._dataUrlType = undefined;
@@ -114,7 +114,7 @@ var WebFeatureServiceItemViewModel = function(application) {
     });
 };
 
-inherit(CatalogItemViewModel, WebFeatureServiceItemViewModel);
+inherit(CatalogItem, WebFeatureServiceItemViewModel);
 
 defineProperties(WebFeatureServiceItemViewModel.prototype, {
     /**
@@ -140,7 +140,7 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to update individual properties in {@link CatalogMemberViewModel#updateFromJson}.
+     * Gets the set of functions used to update individual properties in {@link CatalogMember#updateFromJson}.
      * When a property name in the returned object literal matches the name of a property on this instance, the value
      * will be called as a function and passed a reference to this instance, a reference to the source JSON object
      * literal, and the name of the property.
@@ -154,7 +154,7 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
@@ -168,10 +168,10 @@ defineProperties(WebFeatureServiceItemViewModel.prototype, {
     }
 });
 
-WebFeatureServiceItemViewModel.defaultUpdaters = clone(CatalogItemViewModel.defaultUpdaters);
+WebFeatureServiceItemViewModel.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
 freezeObject(WebFeatureServiceItemViewModel.defaultUpdaters);
 
-WebFeatureServiceItemViewModel.defaultSerializers = clone(CatalogItemViewModel.defaultSerializers);
+WebFeatureServiceItemViewModel.defaultSerializers = clone(CatalogItem.defaultSerializers);
 
 // Serialize the underlying properties instead of the public views of them.
 WebFeatureServiceItemViewModel.defaultSerializers.dataUrl = function(viewModel, json, propertyName) {

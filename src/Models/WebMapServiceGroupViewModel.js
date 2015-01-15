@@ -14,21 +14,21 @@ var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
 var ViewModelError = require('./ViewModelError');
-var CatalogGroupViewModel = require('./CatalogGroupViewModel');
+var CatalogGroup = require('./CatalogGroup');
 var inherit = require('../Core/inherit');
 var WebMapServiceItemViewModel = require('./WebMapServiceItemViewModel');
 
 /**
- * A {@link CatalogGroupViewModel} representing a collection of layers from a Web Map Service (WMS) server.
+ * A {@link CatalogGroup} representing a collection of layers from a Web Map Service (WMS) server.
  *
  * @alias WebMapServiceGroupViewModel
  * @constructor
- * @extends CatalogGroupViewModel
+ * @extends CatalogGroup
  * 
  * @param {ApplicationViewModel} application The application.
  */
 var WebMapServiceGroupViewModel = function(application) {
-    CatalogGroupViewModel.call(this, application, 'wms-getCapabilities');
+    CatalogGroup.call(this, application, 'wms-getCapabilities');
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -54,7 +54,7 @@ var WebMapServiceGroupViewModel = function(application) {
     knockout.track(this, ['url', 'dataCustodian', 'parameters']);
 };
 
-inherit(CatalogGroupViewModel, WebMapServiceGroupViewModel);
+inherit(CatalogGroup, WebMapServiceGroupViewModel);
 
 defineProperties(WebMapServiceGroupViewModel.prototype, {
     /**
@@ -80,7 +80,7 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
     },
 
     /**
-     * Gets the set of functions used to serialize individual properties in {@link CatalogMemberViewModel#serializeToJson}.
+     * Gets the set of functions used to serialize individual properties in {@link CatalogMember#serializeToJson}.
      * When a property name on the view-model matches the name of a property in the serializers object lieral,
      * the value will be called as a function and passed a reference to the view-model, a reference to the destination
      * JSON object literal, and the name of the property.
@@ -95,11 +95,11 @@ defineProperties(WebMapServiceGroupViewModel.prototype, {
 });
 
 /**
- * Gets or sets the set of default serializer functions to use in {@link CatalogMemberViewModel#serializeToJson}.  Types derived from this type
- * should expose this instance - cloned and modified if necesary - through their {@link CatalogMemberViewModel#serializers} property.
+ * Gets or sets the set of default serializer functions to use in {@link CatalogMember#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
  * @type {Object}
  */
-WebMapServiceGroupViewModel.defaultSerializers = clone(CatalogGroupViewModel.defaultSerializers);
+WebMapServiceGroupViewModel.defaultSerializers = clone(CatalogGroup.defaultSerializers);
 
 WebMapServiceGroupViewModel.defaultSerializers.items = function(viewModel, json, propertyName, options) {
     // Only serialize minimal properties in contained items, because other properties are loaded from GetCapabilities.
@@ -113,7 +113,7 @@ WebMapServiceGroupViewModel.defaultSerializers.items = function(viewModel, json,
     var previousEnabledItemsOnly = options.enabledItemsOnly;
     options.enabledItemsOnly = true;
 
-    var result = CatalogGroupViewModel.defaultSerializers.items(viewModel, json, propertyName, options);
+    var result = CatalogGroup.defaultSerializers.items(viewModel, json, propertyName, options);
 
     options.enabledItemsOnly = previousEnabledItemsOnly;
     options.serializeForSharing = previousSerializeForSharing;

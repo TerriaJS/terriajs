@@ -11,22 +11,22 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var MetadataViewModel = require('./MetadataViewModel');
 var ViewModelError = require('./ViewModelError');
-var CatalogItemViewModel = require('./CatalogItemViewModel');
+var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var readJson = require('../Core/readJson');
 
 /**
- * A {@link CatalogItemViewModel} representing Cesium Language (CZML) data.
+ * A {@link CatalogItem} representing Cesium Language (CZML) data.
  *
  * @alias CzmlItemViewModel
  * @constructor
- * @extends CatalogItemViewModel
+ * @extends CatalogItem
  * 
  * @param {ApplicationViewModel} application The application.
  * @param {String} [url] The URL from which to retrieve the CZML data.
  */
 var CzmlItemViewModel = function(application, url) {
-    CatalogItemViewModel.call(this, application);
+    CatalogItem.call(this, application);
 
     this._czmlDataSource = undefined;
 
@@ -54,7 +54,7 @@ var CzmlItemViewModel = function(application, url) {
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
 
-inherit(CatalogItemViewModel, CzmlItemViewModel);
+inherit(CatalogItem, CzmlItemViewModel);
 
 defineProperties(CzmlItemViewModel.prototype, {
     /**

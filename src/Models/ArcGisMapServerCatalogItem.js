@@ -15,13 +15,13 @@ var inherit = require('../Core/inherit');
 /**
  * A {@link ImageryLayerItemViewModel} representing a layer from an Esri ArcGIS MapServer.
  *
- * @alias ArcGisMapServerItemViewModel
+ * @alias ArcGisMapServerCatalogItem
  * @constructor
  * @extends ImageryLayerItemViewModel
  * 
  * @param {ApplicationViewModel} application The application.
  */
-var ArcGisMapServerItemViewModel = function(application) {
+var ArcGisMapServerCatalogItem = function(application) {
     ImageryLayerItemViewModel.call(this, application);
 
     /**
@@ -33,12 +33,12 @@ var ArcGisMapServerItemViewModel = function(application) {
     knockout.track(this, ['url']);
 };
 
-inherit(ImageryLayerItemViewModel, ArcGisMapServerItemViewModel);
+inherit(ImageryLayerItemViewModel, ArcGisMapServerCatalogItem);
 
-defineProperties(ArcGisMapServerItemViewModel.prototype, {
+defineProperties(ArcGisMapServerCatalogItem.prototype, {
     /**
      * Gets the type of data item represented by this instance.
-     * @memberOf ArcGisMapServerItemViewModel.prototype
+     * @memberOf ArcGisMapServerCatalogItem.prototype
      * @type {String}
      */
     type : {
@@ -49,7 +49,7 @@ defineProperties(ArcGisMapServerItemViewModel.prototype, {
 
     /**
      * Gets a human-readable name for this type of data source, 'Esri ArcGIS MapServer'.
-     * @memberOf ArcGisMapServerItemViewModel.prototype
+     * @memberOf ArcGisMapServerCatalogItem.prototype
      * @type {String}
      */
     typeName : {
@@ -59,7 +59,7 @@ defineProperties(ArcGisMapServerItemViewModel.prototype, {
     }
 });
 
-ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
+ArcGisMapServerCatalogItem.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -83,7 +83,7 @@ ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
     scene.imageryLayers.add(this._imageryLayer);
 };
 
-ArcGisMapServerItemViewModel.prototype._disableInCesium = function() {
+ArcGisMapServerCatalogItem.prototype._disableInCesium = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -94,7 +94,7 @@ ArcGisMapServerItemViewModel.prototype._disableInCesium = function() {
     this._imageryLayer = undefined;
 };
 
-ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
+ArcGisMapServerCatalogItem.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
@@ -108,7 +108,7 @@ ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
     this._imageryLayer = new L.esri.tiledMapLayer(cleanAndProxyUrl(this.application, this.url), options);
 };
 
-ArcGisMapServerItemViewModel.prototype._disableInLeaflet = function() {
+ArcGisMapServerCatalogItem.prototype._disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
@@ -135,4 +135,4 @@ function proxyUrl(application, url) {
     return url;
 }
 
-module.exports = ArcGisMapServerItemViewModel;
+module.exports = ArcGisMapServerCatalogItem;

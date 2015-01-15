@@ -3,11 +3,11 @@
 var mapping = [];
 
 /**
- * Creates a type derived from {@link CatalogMemberViewModel} based on a given URL.
+ * Creates a type derived from {@link CatalogMember} based on a given URL.
  *
  * @param {String} url The derived type name.
  * @param {ApplicationViewModel} application The application.
- * @returns {CatalogMemberViewModel} The constructed data item, or undefined if the URL is not supported.
+ * @returns {CatalogMember} The constructed data item, or undefined if the URL is not supported.
  */
 var createCatalogItemFromUrl = function(url, application) {
     for (var i = 0; i < mapping.length; ++i) {
@@ -20,7 +20,7 @@ var createCatalogItemFromUrl = function(url, application) {
 };
 
 /**
- * Registers a constructor for a given type of {@link CatalogMemberViewModel}.
+ * Registers a constructor for a given type of {@link CatalogMember}.
  * 
  * @param {createCatalogItemFromUrl~Matcher} matcher A function that is given a URL to match as its only parameter.  If the function returns true, The type name for which to register a constructor.
  * @param {createCatalogItemFromUrl~Constructor} constructor The constructor for data items that match the given matcher.
@@ -33,7 +33,7 @@ var createCatalogItemFromUrl = function(url, application) {
 };
 
 /**
- * Function interface for matching a URL to a {@link CatalogMemberViewModel} constructor
+ * Function interface for matching a URL to a {@link CatalogMember} constructor
  * for that URL.
  * @callback createCatalogItemFromUrl~Matcher
  * @param {String} url The URL to match.
@@ -47,12 +47,12 @@ var createCatalogItemFromUrl = function(url, application) {
  */
 
  /**
-  * Function interface for matching a URL to a {@link CatalogMemberViewModel} constructor
+  * Function interface for matching a URL to a {@link CatalogMember} constructor
   * for that URL.
   * @callback createCatalogItemFromUrl~Constructor
   * @param {ApplicationViewModel} application The application.
   * @param {String} url The URL from which to obtain the data.
-  * @returns {CatalogMemberViewModel} The created data item.
+  * @returns {CatalogMember} The created data item.
   */
 
 module.exports = createCatalogItemFromUrl;
