@@ -2,6 +2,7 @@
 
 /*global require*/
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var loadView = require('../Core/loadView');
@@ -22,7 +23,9 @@ PopupMessageViewModel.prototype.show = function(container) {
 PopupMessageViewModel.prototype.close = function() {
     for (var i = 0; i < this._domNodes.length; ++i) {
         var node = this._domNodes[i];
-        node.parentElement.removeChild(node);
+        if (defined(node.parentElement)) {
+            node.parentElement.removeChild(node);
+        }
     }
 };
 

@@ -36,7 +36,9 @@ AddDataPanelViewModel.prototype.show = function(container) {
 AddDataPanelViewModel.prototype.close = function() {
     for (var i = 0; i < this._domNodes.length; ++i) {
         var node = this._domNodes[i];
-        node.parentElement.removeChild(node);
+        if (defined(node.parentElement)) {
+            node.parentElement.removeChild(node);
+        }
     }
 };
 

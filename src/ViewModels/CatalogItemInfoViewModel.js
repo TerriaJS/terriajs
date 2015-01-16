@@ -1,6 +1,8 @@
 'use strict';
 
 /*global require*/
+var defined = require('../../third_party/cesium/Source/Core/defined');
+
 var loadView = require('../Core/loadView');
 
 var svgArrowDown = require('../SvgPaths/svgArrowDown');
@@ -21,7 +23,9 @@ CatalogItemInfoViewModel.prototype.show = function(container) {
 CatalogItemInfoViewModel.prototype.close = function() {
     for (var i = 0; i < this._domNodes.length; ++i) {
         var node = this._domNodes[i];
-        node.parentElement.removeChild(node);
+        if (defined(node.parentElement)) {
+            node.parentElement.removeChild(node);
+        }
     }
 };
 
