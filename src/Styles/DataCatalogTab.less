@@ -2,8 +2,8 @@
     display: table;
     width: 100%;
     line-height: 40px;
-    border-bottom: 1px solid @panel-border-color;
-    border-top: 1px solid @panel-border-color;
+    border-bottom: @panel-element-border;
+    border-top: @panel-element-border;
     cursor: pointer;
 }
 
@@ -11,14 +11,14 @@
     display: table-cell;
     padding-left: 16px;
     font-size: 16px;
-    color: #FFFFFF;
+    color: @panel-emphasized-text-color;
 }
 
 .data-catalog-top-group-icon {
     position: relative;
     width: 15px;
     height: 15px;
-    fill: #CCCCCC;
+    fill: @panel-emphasized-text-color;
     margin-right: 16px;
 }
 
@@ -38,14 +38,14 @@
 .data-catalog-item-label {
     display: table-cell;
     font-size: 16px;
-    color: #CCCCCC;
+    color: @panel-text-color;
     font-weight: lighter;
 }
 
 .data-catalog-group-label {
     display: table-cell;
     font-size: 16px;
-    color: #CCCCCC;
+    color: @panel-text-color;
 }
 
 .data-catalog-group-contents {
@@ -54,8 +54,8 @@
 }
 
 .data-catalog-opened-group {
-    color: #ffffff;
-    fill: #ffffff;
+    color: @panel-emphasized-text-color;
+    fill: @panel-emphasized-text-color;
 }
 
 .data-catalog-indent0 {
@@ -77,7 +77,7 @@
     position: relative;
     width: 15px;
     height: 15px;
-    fill: #CCCCCC;
+    fill: @panel-text-color;
 }
 
 .data-catalog-icon-holder {
@@ -96,12 +96,12 @@
     position: relative;
     width: 18px;
     height: 18px;
-    fill: #CCCCCC;
+    fill: @panel-text-color;
     margin-right: 16px;
 }
 
 .data-catalog-enabled-item {
     font-weight: normal;
-    color: @highlight-color;
-    fill: @highlight-color;
+    color: @panel-selected-text-color;
+    fill: @panel-selected-text-color;
 }

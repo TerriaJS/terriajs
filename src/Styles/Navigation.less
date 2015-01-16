@@ -1,19 +1,14 @@
 .navigation-controls {
-    .opaque-to-input;
-    position: absolute;
+    .floating-vertical;
     right: 25px;
     top: 155px;
     width: 35px;
-    border-radius: 15px;
-    background-color: rgba(47,53,60,80%);
-    padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 .navigation-control {
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #555555;
+    border-bottom: @floating-element-border;
 }
 
 .navigation-control-last {
@@ -26,7 +21,7 @@
     left: 8px;
     width: 22px;
     height: 22px;
-    fill: #ffffff;
+    fill: @floating-text-color;
 }
 
 .navigation-control-icon-zoom-out {
@@ -34,7 +29,7 @@
     left: 8px;
     width: 22px;
     height: 22px;
-    fill: #ffffff;
+    fill: @floating-text-color;
 }
 
 .navigation-control-icon-reset {
@@ -42,7 +37,7 @@
     left: 10px;
     width: 15px;
     height: 15px;
-    fill: #ffffff;
+    fill: @floating-text-color;
 }
 
 .navigation-control-icon-tilt {
@@ -50,11 +45,5 @@
     left: 7px;
     width: 24px;
     height: 24px;
-    fill: #ffffff;
-}
-
-@media print {
-    .navigation-controls {
-        display: none;
-    }
+    fill: @floating-text-color;
 }

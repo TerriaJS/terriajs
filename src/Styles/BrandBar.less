@@ -6,9 +6,8 @@
     width: @brand-bar-width;
     height: 68px;
     background-color: @brand-bar-background-color;
-    opacity: @brand-bar-opacity;
-    border-bottom: 1px solid #282828;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.26);
+    opacity: 1.0;
+    box-shadow: @panel-box-shadow;
 }
 
 .brand-bar-main {
@@ -19,21 +18,6 @@
     left: 0;
     display: table;
     padding-left: 10px;
-    z-index: 1;
-}
-
-.brand-bar-slant {
-    display: none;
-    position: absolute;
-    left: @brand-bar-width;
-    top: 0;
-    width: 34px;
-    height: 68px;
-    transform: skewX(-25deg);
-    transform-origin: top;
-    -webkit-transform: skewX(-25deg);
-    -webkit-transform-origin: 0 0;
-    z-index: 0;
 }
 
 .brand-bar-element {
@@ -55,30 +39,6 @@
 
 .brand-bar-name small {
     font-weight: lighter;
-}
-
-.brand-bar-show-hide-explorer-panel {
-    position: absolute;
-    left: 16px;
-    top: 68px;
-    width: 40px;
-    height: 40px;
-    border: 1px solid @panel-border-color;
-}
-
-.brand-bar-menu-icon {
-    position: relative;
-    width: 14px;
-    height: 14px;
-    fill: #cccccc;
-    left: 13px;
-    top: 13px;
-
-}
-
-.brand-bar-menu-icon-highlighted {
-    fill: #ffffff;
-    background-color: #284D52;
 }
 
 @media print {

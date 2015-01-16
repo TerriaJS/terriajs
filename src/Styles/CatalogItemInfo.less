@@ -10,14 +10,16 @@
 
 .catalog-item-info-baseUrl {
     padding: 10px;
-    background-color: #F2F2F2;
-    border: 1px solid #CCCCCC;
+    background-color: @panel-form-input-background-color;
+    color: @panel-form-input-text-color;
+    border: @panel-element-border;
 }
 
 .catalog-item-info-table {
-    background-color: #E3E3E3;
+    background-color: @panel-form-input-background-color;
     padding: 5px;
-    color: #000000;
+    color: @panel-form-input-text-color;
+    border: @panel-element-border;
 }
 
 .catalog-item-info-table td {
@@ -25,7 +27,9 @@
 }
 
 .catalog-item-info-header {
-    border-bottom: 1px solid #9A9A9B;
+    border-bottom: @panel-element-border;
+    color: @panel-emphasized-text-color;
+    font-family: @default-font;
 }
 
 .catalog-item-info-content {
@@ -42,7 +46,7 @@
     cursor: pointer;
     font-size: 18pt;
     font-weight: bold;
-    color: #0099CC;
+    color: @panel-emphasized-text-color;
 }
 
 .catalog-item-info h1 {
@@ -70,7 +74,7 @@
 .catalog-item-info-description {
     font-size: 10pt;
     font-weight: normal;
-    color: #cccccc;
+    color: @panel-text-color;
     word-break: break-word;
 }
 

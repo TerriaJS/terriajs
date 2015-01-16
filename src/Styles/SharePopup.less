@@ -8,7 +8,7 @@
 
 .share-popup-header {
     line-height: 40px;
-    border-bottom: 1px solid #9A9A9B;
+    border-bottom: @panel-element-border;
 }
 
 .share-popup-header h1 {
@@ -23,7 +23,7 @@
     cursor: pointer;
     font-size: 18pt;
     font-weight: bold;
-    color: #0099CC;
+    color: @panel-emphasized-text-color;
 }
 
 .share-popup-content {
@@ -31,6 +31,7 @@
     padding: 15px;
     overflow: auto;
     height: @share-popup-height - 40px - 30px;
+    color: @panel-text-color;
 }
 
 .share-popup-right {

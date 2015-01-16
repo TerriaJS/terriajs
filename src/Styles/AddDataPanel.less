@@ -8,10 +8,11 @@
 
 .add-data-header {
     line-height: 40px;
-    border-bottom: 1px solid #9A9A9B;
+    border-bottom: @panel-element-border;
 }
 
 .add-data-header h1 {
+    color: @panel-emphasized-text-color;
     font-size: 16px;
     padding-left: 15px;
     margin: 0;
@@ -23,7 +24,7 @@
     cursor: pointer;
     font-size: 18pt;
     font-weight: bold;
-    color: #0099CC;
+    color: @panel-emphasized-text-color;
 }
 
 .add-data-content {
@@ -47,7 +48,7 @@
 .add-data-select-file-button {
     font-weight: bold;
     cursor: pointer;
-    color: #66CCFF;
+    color: @highlight-color;
 }
 
 .add-data-select-file-button:hover {
@@ -58,7 +59,7 @@
     position: relative;
     width: 100%;
     height: 40px;
-    background-color: #838689;
+    background-color: @panel-form-input-background-color;
     margin-top: 5px;
 }
 
@@ -68,7 +69,7 @@
 .add-data-url-input-inner-holder {
     position: absolute;
     height: 40px;
-    background-color: #838689;
+    background-color: @panel-form-input-background-color;
     left: @add-data-url-input-padding * 2 + @add-data-url-input-border + @add-data-url-input-border;
     right: 40px;
     top: 0;
@@ -80,31 +81,31 @@
     padding-right: @add-data-url-input-padding;
     border: @add-data-url-input-border;
     width: 100%;
-    background-color: #838689;
-    color: #ffffff;
+    background-color: @panel-form-input-background-color;
+    color: @panel-form-input-text-color;
     line-height: 38px;
     margin-left: -(@add-data-url-input-padding * 2 + @add-data-url-input-border + @add-data-url-input-border);
 }
 
 .add-data-url-input::-webkit-input-placeholder {
-    color: #ffffff;
+    color: @panel-form-input-text-color;
     font-style: italic;
 }
 
 .add-data-url-input:-moz-placeholder {
-    color: #ffffff;
+    color: @panel-form-input-text-color;
     opacity: 1;
     font-style: italic;
 }
 
 .add-data-url-input::-moz-placeholder {
-    color: #ffffff;
+    color: @panel-form-input-text-color;
     opacity: 1;
     font-style: italic;
 }
 
 .add-data-url-input:-ms-input-placeholder {
-    color: #ffffff;
+    color: @panel-form-input-text-color;
     font-style: italic;
 }
 
@@ -124,8 +125,8 @@ p.add-data-content-new-section {
 
 .add-data-content-type-select {
     display: block;
-    background-color: #838689;
-    color: #ffffff;
+    background-color: @panel-form-input-background-color;
+    color: @panel-form-input-text-color;
     height: 40px;
     border: 0;
     margin-top: 5px;
@@ -133,11 +134,11 @@ p.add-data-content-new-section {
 
 .add-data-url-add-button {
     position: absolute;
-    background-color: #a1a3a6;
+    background-color: @panel-form-button-background-color;
     border: 0;
     height: 40px;
     width: 40px;
-    color: #ffffff;
+    color: @panel-form-button-text-color;
     right: 0;
     top: 0;
     bottom: 0;

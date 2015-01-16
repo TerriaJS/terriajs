@@ -1,13 +1,8 @@
 .menu-bar {
-    .opaque-to-input;
-    position: absolute;
+    .floating-horizontal;
     right: 25px;
     top: 20px;
     height: 30px;
-    border-radius: 15px;
-    background-color: rgba(47,53,60,80%);
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
 .menu-bar-item {
@@ -15,7 +10,7 @@
     font-family: @default-font;
     font-size: 16px;
     line-height: 30px;
-    color: #ffffff;
+    color: @menu-bar-text-color;
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
@@ -26,7 +21,8 @@
 }
 
 .menu-bar-item-enabled {
-    background-color: #757f88;
+    background-color: @menu-bar-active-background-color;
+    color: @menu-bar-active-text-color;
 }
 
 @media print {

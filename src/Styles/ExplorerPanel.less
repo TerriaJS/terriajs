@@ -3,7 +3,7 @@
     position: absolute;
     left: 0;
     width: @explorer-panel-width;
-    top: 69px;
+    top: 68px;
     bottom: 0;
 
     -webkit-transition: left @explorer-panel-close-animation-length ease-out;
@@ -16,6 +16,20 @@
 .explorer-panel-collapsed {
 }
 
+.explorer-panel-collapsed .explorer-panel-collapse-button {
+    -webkit-transform: rotate(-0.5turn);
+    -moz-transform: rotate(-0.5turn);
+    -ms-transform: rotate(-0.5turn);
+    -o-transform: rotate(-0.5turn);
+    transform: rotate(-0.5turn);
+
+    -webkit-transition: -webkit-transform @explorer-panel-close-animation-length ease-out;
+    -moz-transition: -moz-transform @explorer-panel-close-animation-length ease-out;
+    -ms-transition: -ms-transform @explorer-panel-close-animation-length ease-out;
+    -o-transition: -o-transform @explorer-panel-close-animation-length ease-out;
+    transition: transform @explorer-panel-close-animation-length ease-out;
+}
+
 .explorer-panel-close {
     display: none;
     position: absolute;
@@ -23,8 +37,8 @@
     top: 0;
     width: 40px;
     height: 40px;
-    border-left: 1px solid @panel-border-color;
-    border-bottom: 1px solid @panel-border-color;
+    border-left: @panel-element-border;
+    border-bottom: @panel-element-border;
 }
 
 .explorer-panel-header {
@@ -35,9 +49,9 @@
     height: 40px;
     margin: 0;
     padding: 0;
-    border-bottom: 1px solid @panel-border-color;
-    background-color: #757f88;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.26);
+    border-bottom: @panel-element-border;
+    background-color: @explorer-panel-header-background-color;
+    box-shadow: @panel-box-shadow;
 }
 
 .explorer-panel-tab-area {
@@ -53,10 +67,9 @@
 
 .explorer-panel-tab {
     line-height: 39px;
-    //text-align: center;
     font-size: 16px;
     font-weight: normal;
-    color: #cccccc;
+    color: @explorer-panel-inactive-tab-text-color;
     display: table-cell;
     cursor: pointer;
     padding-left: 8px;
@@ -64,13 +77,8 @@
 }
 
 .explorer-panel-tab-active {
-    border-bottom: 1px solid @highlight-color;
-    color: #ffffff;
-}
-
-.explorer-panel-collapsed .explorer-panel-tab-active {
-    //border-bottom: 1px solid #ffffff;
-    //color: #ffffff;
+    border-bottom: 1px solid @explorer-panel-active-tab-underline-color;
+    color: @explorer-panel-active-tab-text-color;
 }
 
 .explorer-panel-body {
@@ -81,7 +89,7 @@
     top: 40px;
     bottom: 0;
     overflow: auto;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.26);
+    box-shadow: @panel-box-shadow;
     overflow-x: hidden;
 
     -webkit-transition: left @explorer-panel-close-animation-length ease-out;
@@ -153,7 +161,7 @@
     position: relative;
     width: 14px;
     height: 14px;
-    fill: #cccccc;
+    fill: @explorer-panel-inactive-tab-text-color;
     left: 13px;
     top: 13px;
 }
@@ -162,7 +170,7 @@
     position: relative;
     width: 22px;
     height: 16px;
-    fill: #cccccc;
+    fill: @explorer-panel-inactive-tab-text-color;
     left: 9px;
     top: 12px;
 }
@@ -173,12 +181,6 @@
     top: 0;
     width: 40px;
     height: 40px;
-
-    // -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    // -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    // -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    // -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
-    // transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4 @explorer-panel-close-animation-length*3/4;
 
     -webkit-transition: -webkit-transform @explorer-panel-close-animation-length ease-out;
     -moz-transition: -moz-transform @explorer-panel-close-animation-length ease-out;
@@ -191,36 +193,9 @@
     position: relative;
     width: 14px;
     height: 14px;
-    fill: #cccccc;
+    fill: @explorer-panel-inactive-tab-text-color;
     left: 13px;
     top: 13px;
-    background-color: #757f88;
-}
-
-.explorer-panel-collapsed .explorer-panel-collapse-button {
-    //left: -44px;
-    //opacity: 0.0;
-    -webkit-transform: rotate(-0.5turn);
-    -moz-transform: rotate(-0.5turn);
-    -ms-transform: rotate(-0.5turn);
-    -o-transform: rotate(-0.5turn);
-    transform: rotate(-0.5turn);
-
-    // -webkit-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    // -moz-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    // -ms-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    // -o-transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-    // transition: left @explorer-panel-close-animation-length ease-out, opacity @explorer-panel-close-animation-length/4;
-
-    -webkit-transition: -webkit-transform @explorer-panel-close-animation-length ease-out;
-    -moz-transition: -moz-transform @explorer-panel-close-animation-length ease-out;
-    -ms-transition: -ms-transform @explorer-panel-close-animation-length ease-out;
-    -o-transition: -o-transform @explorer-panel-close-animation-length ease-out;
-    transition: transform @explorer-panel-close-animation-length ease-out;
-}
-
-.foo {
-    position: absolute;
 }
 
 @media print {
