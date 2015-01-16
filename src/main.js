@@ -297,6 +297,15 @@ if (start) {
             } else {
                 cesiumContainer.className = cesiumContainer.className.replace(' map-displaced', '');
             }
+
+            // Resize Leaflet once the animation finishes.
+            if (defined(application.leaflet)) {
+                setTimeout(function() {
+                    if (defined(application.leaflet)) {
+                        application.leaflet.map.invalidateSize();
+                    }
+                }, 300);
+            }
         });
 
         document.getElementById('loadingIndicator').style.display = 'none';
