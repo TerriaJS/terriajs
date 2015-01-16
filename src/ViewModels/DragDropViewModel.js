@@ -9,7 +9,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var addUserCatalogMember = require('../Models/addUserCatalogMember');
 var createCatalogItemFromFileOrUrl = require('../Models/createCatalogItemFromFileOrUrl');
-//var loadView = require('../Core/loadView');
+var loadView = require('../Core/loadView');
 var raiseErrorOnRejectedPromise = require('../Models/raiseErrorOnRejectedPromise');
 var readJson = require('../Core/readJson');
 
@@ -35,21 +35,48 @@ var DragDropViewModel = function(options) {
 
     var that = this;
 
-    function noopHandler(evt) {
-        evt.stopPropagation();
+    this.dropTarget.addEventListener("dragenter", function(evt) {
         evt.preventDefault();
-    }
 
-    this.dropTarget.addEventListener("dragenter", noopHandler, false);
-    this.dropTarget.addEventListener("dragexit", noopHandler, false);
-    this.dropTarget.addEventListener("dragover", noopHandler, false);
+        console.log('enter: ' + evt.target.className);
+
+        that.showDropMessage = true;
+    }, false);
+
+    this.dropTarget.addEventListener("dragover", function(evt) {
+        evt.preventDefault();
+        evt.dataTransfer.dropEffect = 'copy';
+    }, false);
+
+    this.dropTarget.addEventListener("dragleave", function(evt) {
+        evt.preventDefault();
+
+        if (evt.target.className === 'drag-drop') {
+            that.showDropMessage = false;
+        }
+    }, false);
+
     this.dropTarget.addEventListener("drop", function(evt) {
-        return dropHandler(that, evt);
+        evt.preventDefault();
+
+        that.showDropMessage = false;
+
+        var files = evt.dataTransfer.files;
+        for (var i = 0; i < files.length; ++i) {
+            var file = files[i];
+            ga('send', 'event', 'uploadFile', 'dragDrop', file.name);
+
+            if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
+                readAndHandleJsonFile(that, file);
+            } else {
+                addFile(that, file);
+            }
+        }
     }, false);
 };
 
 DragDropViewModel.prototype.show = function(container) {
-    //loadView(require('fs').readFileSync(__dirname + '/../Views/DropDrag.html', 'utf8'), container, this);
+    loadView(require('fs').readFileSync(__dirname + '/../Views/DragDrop.html', 'utf8'), container, this);
 };
 
 DragDropViewModel.create = function(container, options) {
@@ -57,23 +84,6 @@ DragDropViewModel.create = function(container, options) {
     viewModel.show(container);
     return viewModel;
 };
-
-function dropHandler(viewModel, evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-
-    var files = evt.dataTransfer.files;
-    for (var i = 0; i < files.length; ++i) {
-        var file = files[i];
-        ga('send', 'event', 'uploadFile', 'dragDrop', file.name);
-
-        if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
-            readAndHandleJsonFile(viewModel, file);
-        } else {
-            addFile(viewModel, file);
-        }
-    }
-}
 
 function readAndHandleJsonFile(viewModel, file) {
     raiseErrorOnRejectedPromise(viewModel.application, readJson(file).then(function(json) {
