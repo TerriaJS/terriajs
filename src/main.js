@@ -39,11 +39,10 @@ if (start) {
 
     var BingMapsStyle = require('../third_party/cesium/Source/Scene/BingMapsStyle');
     var defined = require('../third_party/cesium/Source/Core/defined');
-    var SvgPathBindingHandler = require('../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
     var knockout = require('../third_party/cesium/Source/ThirdParty/knockout');
 
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
-    var KnockoutSanitizedHtmlBinding = require('./Core/KnockoutSanitizedHtmlBinding');
+    var registerKnockoutBindings = require('./Core/registerKnockoutBindings');
 
     var AddDataPanelViewModel = require('./ViewModels/AddDataPanelViewModel');
     var BaseMapViewModel = require('./ViewModels/BaseMapViewModel');
@@ -52,6 +51,7 @@ if (start) {
     var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
     var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
     var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
+    var DragDropViewModel = require('./ViewModels/DragDropViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
     var GazetteerSearchProviderViewModel = require('./ViewModels/GazetteerSearchProviderViewModel');
     var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
@@ -71,8 +71,7 @@ if (start) {
     var registerCatalogMembers = require('./Models/registerCatalogMembers');
     var raiseErrorToUser = require('./Models/raiseErrorToUser');
 
-    SvgPathBindingHandler.register(knockout);
-    KnockoutSanitizedHtmlBinding.register(knockout);
+    registerKnockoutBindings();
     registerCatalogMembers();
 
     var application = new Application();
@@ -117,16 +116,6 @@ if (start) {
 
         // Create the user interface.
         var ui = document.getElementById('ui');
-
-        knockout.bindingHandlers.embeddedComponent = {
-            init : function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-                var component = knockout.unwrap(valueAccessor());
-                component.show(element);
-                return { controlsDescendantBindings: true };
-            },
-            update: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-            }
-        };
 
         BrandBarViewModel.create(ui, {
             name: 'NATIONAL<br/><strong>MAP</strong> <small>beta</small>',
@@ -292,6 +281,11 @@ if (start) {
         }));
 
         explorer.addTab(searchTab);
+
+        DragDropViewModel.create(ui, {
+            application: application,
+            dropTarget: document
+        });
 
         knockout.getObservable(explorer, 'isOpen').subscribe(function() {
             var cesiumContainer = document.getElementById('cesiumContainer');

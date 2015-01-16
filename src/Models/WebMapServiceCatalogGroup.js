@@ -135,7 +135,7 @@ WebMapServiceCatalogGroup.prototype._load = function() {
     var that = this;
     return loadXML(url).then(function(xml) {
         // Is this really a GetCapabilities response?
-        if (!xml || !xml.documentElement || xml.documentElement.localName !== 'WMS_Capabilities') {
+        if (!xml || !xml.documentElement || (xml.documentElement.localName !== 'WMS_Capabilities' && xml.documentElement.localName !== 'WMT_MS_Capabilities')) {
             throw new ModelError({
                 title: 'Invalid WMS server',
                 message: '\

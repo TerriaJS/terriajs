@@ -1,14 +1,13 @@
 'use strict';
 
-/*global require,ga,confirm*/
-var createCatalogItemFromUrl = require('../Models/createCatalogItemFromUrl');
-var createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
+/*global require,ga*/
+var addUserCatalogMember = require('../Models/addUserCatalogMember');
+var createCatalogItemFromFileOrUrl = require('../Models/createCatalogItemFromFileOrUrl');
 var loadView = require('../Core/loadView');
 var ModelError = require('../Models/ModelError');
 var WebFeatureServiceCatalogGroup = require('../Models/WebFeatureServiceCatalogGroup');
 var WebMapServiceCatalogGroup = require('../Models/WebMapServiceCatalogGroup');
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -73,7 +72,7 @@ AddDataPanelViewModel.prototype.addUploadedFile = function() {
             var file = files[i];
             ga('send', 'event', 'uploadFile', 'browse', file.name);
 
-            promises.push(addCatalogItem(this.application, loadFileOrUrl(this.application, file, this.dataType)));
+            promises.push(addUserCatalogMember(this.application, createCatalogItemFromFileOrUrl(this.application, file, this.dataType, true)));
         }
 
         // Attempt to clear the selected file, so the onchange event is fired even if the user selects
@@ -120,7 +119,7 @@ AddDataPanelViewModel.prototype.addUrl = function() {
         promise = loadFile(this);
     }
 
-    addCatalogItem(this.application, promise).then(function() {
+    addUserCatalogMember(this.application, promise).then(function() {
         that.close();
     });
 };
@@ -130,41 +129,6 @@ AddDataPanelViewModel.open = function(container, options) {
     viewModel.show(container);
     return viewModel;
 };
-
-function addCatalogItem(application, newCatalogItemPromise) {
-    return newCatalogItemPromise.then(function(newCatalogItem) {
-        if (!defined(newCatalogItem)) {
-            return;
-        }
-
-        application.catalog.userAddedDataGroup.items.push(newCatalogItem);
-
-        if (defined(newCatalogItem.isOpen)) {
-            newCatalogItem.isOpen = true;
-        }
-
-        if (defined(newCatalogItem.isEnabled)) {
-            newCatalogItem.isEnabled = true;
-        }
-
-        if (defined(newCatalogItem.zoomToAndUseClock)) {
-            newCatalogItem.zoomToAndUseClock();
-        }
-
-        application.catalog.userAddedDataGroup.isOpen = true;
-    }).otherwise(function(e) {
-        if (!(e instanceof ModelError)) {
-            e = new ModelError({
-                title: 'Data could not be added',
-                message: 'The specified data could not be added because it is invalid or does not have the expected format.'
-            });
-        }
-
-        application.error.raiseEvent(e);
-
-        return when.reject(e);
-    });
-}
 
 function loadWms(viewModel) {
     var wms = new WebMapServiceCatalogGroup(viewModel.application);
@@ -187,56 +151,7 @@ function loadWfs(viewModel) {
 }
 
 function loadFile(viewModel) {
-    return loadFileOrUrl(viewModel.application, viewModel.url, viewModel.dataType);
-}
-
-function loadFileOrUrl(application, fileOrUrl, dataType) {
-    var isUrl = typeof fileOrUrl === 'string';
-    dataType = defaultValue(dataType, 'auto');
-
-    var name = isUrl ? fileOrUrl : fileOrUrl.name;
-
-    var newCatalogItem;
-    if (dataType === 'auto') {
-        newCatalogItem = createCatalogItemFromUrl(name, application);
-
-        if (newCatalogItem.type === 'ogr' && !confirm('\
-This file type is not directly supported by National Map.  However, it may be possible to convert it to a known \
-format using the National Map conversion service.  Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
-and the file will not be uploaded or added to the map.')) {
-            return when();
-        }
-
-    } else if (dataType === 'other') {
-        if (!confirm('\
-In order to convert this file to a format supported by National Map, it must be uploaded to the National Map conversion service. \
-Click OK to upload the file to the National Map conversion service now.  Or, click Cancel \
-and the file will not be uploaded or added to the map.')) {
-            return when();
-        }
-
-        newCatalogItem = createCatalogMemberFromType('ogr', application);
-    } else {
-        newCatalogItem = createCatalogMemberFromType(dataType, application);
-    }
-
-    var lastSlashIndex = name.lastIndexOf('/');
-    if (lastSlashIndex >= 0) {
-        name = name.substring(lastSlashIndex + 1);
-    }
-
-    newCatalogItem.name = name;
-
-    if (isUrl) {
-        newCatalogItem.url = fileOrUrl;
-    } else {
-        newCatalogItem.data = fileOrUrl;
-        newCatalogItem.dataSourceUrl = fileOrUrl.name;
-    }
-
-    return newCatalogItem.load().then(function() {
-        return newCatalogItem;
-    });
+    return createCatalogItemFromFileOrUrl(viewModel.application, viewModel.url, viewModel.dataType, true);
 }
 
 module.exports = AddDataPanelViewModel;

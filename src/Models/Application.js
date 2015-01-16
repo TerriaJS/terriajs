@@ -205,6 +205,42 @@ Application.prototype.getUserProperty = function(propertyName) {
     return this.userProperties[propertyName];
 };
 
+Application.prototype.addInitSource = function(initSource) {
+    // Extract the list of CORS-ready domains.
+    if (defined(initSource.corsDomains)) {
+        corsProxy.corsDomains.push.apply(corsProxy.corsDomains, initSource.corsDomains);
+    }
+
+    // The last init source to specify a camera position wins.
+    if (defined(initSource.camera)) {
+        this.initialBoundingBox = Rectangle.fromDegrees(initSource.camera.west, initSource.camera.south, initSource.camera.east, initSource.camera.north);
+    }
+
+    // Populate the list of services.
+    if (defined(initSource.services)) {
+        this.services.services.push.apply(this.services, initSource.services);
+    }
+
+    // Populate the catalog
+    if (defined(initSource.catalog)) {
+        var isUserSupplied;
+        if (initSource.isFromExternalFile) {
+            isUserSupplied = false;
+        } else if (initSource.catalogOnlyUpdatesExistingItems) {
+            isUserSupplied = undefined;
+        } else {
+            isUserSupplied = true;
+        }
+
+        return this.catalog.updateFromJson(initSource.catalog, {
+            onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
+            isUserSupplied: isUserSupplied
+        });
+    } else {
+        return when();
+    }
+};
+
 function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources) {
     for (var property in hashProperties) {
         if (hashProperties.hasOwnProperty(property)) {
@@ -245,55 +281,14 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
 
 function loadInitSources(application, initSources) {
     return when.all(initSources.map(loadInitSource), function(initSources) {
-        var i;
-        var initSource;
-
-        for (i = 0; i < initSources.length; ++i) {
-            initSource = initSources[i];
-            if (!defined(initSource)) {
-                continue;
-            }
-
-            // Extract the list of CORS-ready domains from the init sources.
-            if (defined(initSource.corsDomains)) {
-                corsProxy.corsDomains.push.apply(corsProxy.corsDomains, initSource.corsDomains);
-            }
-
-            // The last init source to specify a camera position wins.
-            if (defined(initSource.camera)) {
-                application.initialBoundingBox = Rectangle.fromDegrees(initSource.camera.west, initSource.camera.south, initSource.camera.east, initSource.camera.north);
-            }
-        }
-
         var promises = [];
 
-        // Make another pass over the init sources to update the catalog and load services.
-        // We do this in a second pass to ensure the proxy is configured correctly first.
-        for (i = 0; i < initSources.length; ++i) {
-            initSource = initSources[i];
+        for (var i = 0; i < initSources.length; ++i) {
+            var initSource = initSources[i];
             if (!defined(initSource)) {
                 continue;
             }
-
-            if (defined(initSource.catalog)) {
-                var isUserSupplied;
-                if (initSource.isFromExternalFile) {
-                    isUserSupplied = false;
-                } else if (initSource.catalogOnlyUpdatesExistingItems) {
-                    isUserSupplied = undefined;
-                } else {
-                    isUserSupplied = true;
-                }
-
-                promises.push(application.catalog.updateFromJson(initSource.catalog, {
-                    onlyUpdateExistingItems: initSource.catalogOnlyUpdatesExistingItems,
-                    isUserSupplied: isUserSupplied
-                }));
-            }
-
-            if (defined(initSource.services)) {
-                application.services.services.push.apply(application.services, initSource.services);
-            }
+            application.addInitSource(initSource);
         }
 
         return when.all(promises);
