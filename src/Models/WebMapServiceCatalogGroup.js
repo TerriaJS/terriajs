@@ -134,6 +134,10 @@ WebMapServiceCatalogGroup.prototype._load = function() {
 
     var that = this;
     return loadXML(url).then(function(xml) {
+        if (typeof xml === 'string') {
+            xml = $.parseXML(xml);
+        }
+
         // Is this really a GetCapabilities response?
         if (!xml || !xml.documentElement || (xml.documentElement.localName !== 'WMS_Capabilities' && xml.documentElement.localName !== 'WMT_MS_Capabilities')) {
             throw new ModelError({

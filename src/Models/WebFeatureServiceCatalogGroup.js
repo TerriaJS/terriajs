@@ -123,6 +123,10 @@ WebFeatureServiceCatalogGroup.prototype._load = function() {
 
     var that = this;
     return loadXML(url).then(function(xml) {
+        if (typeof xml === 'string') {
+            xml = $.parseXML(xml);
+        }
+
         // Is this really a GetCapabilities response?
         if (!xml || !xml.documentElement || xml.documentElement.localName !== 'WFS_Capabilities') {
             throw new ModelError({
