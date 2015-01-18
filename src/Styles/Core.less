@@ -76,6 +76,11 @@ a:hover {
     color: @panel-emphasized-text-color;
 }
 
+#ui {
+    // This keeps the UI above the map in IE9.
+    z-index: 1000;
+}
+
 @media print {
     .full-window {
         position: initial;
