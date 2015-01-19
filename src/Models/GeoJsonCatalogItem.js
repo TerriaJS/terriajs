@@ -136,7 +136,7 @@ GeoJsonCatalogItem.prototype._load = function() {
     if (defined(that.data)) {
         return when(that.data, function(data) {
             var promise;
-            if (data instanceof Blob) {
+            if (typeof Blob !== 'undefined' && data instanceof Blob) {
                 promise = readJson(data);
             } else {
                 promise = data;
