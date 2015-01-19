@@ -8,12 +8,19 @@
 .menu-bar-item {
     display: inline-block;
     font-family: @default-font;
-    font-size: 16px;
+    font-size: 14px;
+    font-weight: 300;
     line-height: 30px;
     color: @menu-bar-text-color;
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
+    border-right: 1px solid rgb(100,100,100);
+    border-right: 1px solid rgba(100,100,100, 0.6);
+}
+
+.menu-bar-item:last-child {
+    border: none;
 }
 
 .menu-bar-item:hover {
