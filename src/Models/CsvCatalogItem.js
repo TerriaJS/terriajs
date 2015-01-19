@@ -140,7 +140,7 @@ If you believe it is a bug in National Map, please report it by emailing \
             }
         });
     } else if (defined(that.url)) {
-        return loadText(proxyUrl(that, that.url)).then(function(text) {
+        return loadText(proxyUrl(that.application, that.url)).then(function(text) {
             return loadTable(that, text);
         }).otherwise(function(e) {
             throw new ModelError({
