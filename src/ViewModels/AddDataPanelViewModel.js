@@ -50,6 +50,21 @@ AddDataPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e
 };
 
 AddDataPanelViewModel.prototype.selectFileToUpload = function() {
+    // If the browser doesn't have the FileReader type, this is an old browser (like IE9) that can't ready a user-selected
+    // file from JavaScript without an ugly hack like bouncing it off a server first.  So tell the user this is not supported.
+    if (typeof FileReader === 'undefined') {
+        this.application.error.raiseEvent(new ModelError({
+            title: 'File API not supported',
+            message: '\
+Sorry, your web browser does not support the File API, which National Map requires in order to \
+add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend \
+<a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a> or the latest version of \
+<a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> or \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.'
+        }));
+        return;
+    }
+
     // We can't add a WMS or WFS server from a file.
     if (this.dataType === 'wms-getCapabilities' || this.dataType === 'wfs-getCapabilities') {
         this.application.error.raiseEvent(new ModelError({
@@ -66,6 +81,19 @@ AddDataPanelViewModel.prototype.selectFileToUpload = function() {
 AddDataPanelViewModel.prototype.addUploadedFile = function() {
     var uploadFileElement = document.getElementById('add-data-panel-upload-file');
     var files = uploadFileElement.files;
+
+    if (!defined(files)) {
+        this.application.error.raiseEvent(new ModelError({
+            title: 'File API not supported',
+            message: '\
+Sorry, your web browser does not support the File API, which National Map requires in order to \
+add data from a file on your system.  Please upgrade your web browser.  For the best experience, we recommend \
+<a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a> or the latest version of \
+<a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> or \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.'
+        }));
+        return;
+    }
 
     if (files.length > 0) {
         var promises = [];
