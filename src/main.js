@@ -22,6 +22,19 @@ if (typeof window === 'undefined') {
         });
 
         start = false;
+    } else if (typeof Object.create === 'undefined') {
+        PopupMessageViewModel.open('ui', {
+            title : 'Very old browser detected',
+            message : '\
+    National Map requires a web browser with support for ECMAScript 5, a feature that has been available in all major browsers since 2009 but that does \
+    not appear to be supported by your current browser.  Please update your browser \
+    and try again.  For the best experience, we recommend \
+    <a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a> or the latest version of \
+    <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> or \
+    <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.'
+        });
+
+        start = false;
     }
 }
 

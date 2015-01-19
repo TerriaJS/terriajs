@@ -13,7 +13,13 @@ var PopupMessageViewModel = function(options) {
     this.title = defaultValue(options.title, 'Information');
     this.message = options.message;
 
-    knockout.track(this, ['title', 'message']);
+    // On really old browsers (IE8 for example), knockout.track will throw because
+    // the browser doesn't support ES5 properties.  If that happens, we just continue
+    // as if nothing happened so that we can still show the message.
+    try {
+        knockout.track(this, ['title', 'message']);
+    } catch (e) {
+    }
 };
 
 PopupMessageViewModel.prototype.show = function(container) {
