@@ -31,7 +31,7 @@ var NavigationViewModel = function(application) {
     this._tiltInProgress = false;
     this._nextTilt = undefined;
 
-    this.showTilt = true;
+    this.showTilt = defined(this.application.cesium);
     this.currentTilt = 0;
 
     knockout.track(this, ['showTilt', 'currentTilt']);
