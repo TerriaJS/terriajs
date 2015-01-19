@@ -306,8 +306,10 @@ TableDataSource.prototype._mapValue2Color = function (pntVal) {
     var color = [0, 0, 0, 0];
     if (normPoint !== undefined) {
         var colorIndex = Math.floor(normPoint * (colors.data.length / 4 - 1)) * 4;
-        color = colors.data.subarray(colorIndex, colorIndex+4);
-        color[3] *= this.color.alpha;
+        color[0] = colors.data[colorIndex];
+        color[1] = colors.data[colorIndex + 1];
+        color[2] = colors.data[colorIndex + 2];
+        color[3] = colors.data[colorIndex + 3] * this.color.alpha;
     }
     return color;
 };
