@@ -51,7 +51,7 @@
 
 .cesium-infoBox-body {
     max-height: 462px;
-    font-family: "Open Sans", sans-serif;
+    font-family: @default-font;
     font-size: 14px;
     font-weight: 300;
 }
@@ -61,6 +61,14 @@
     font-size: 15px;
     font-weight: 600;
     color: white;
+}
+
+.cesium-timeline-main {
+    z-index: 1000;
+}
+
+.cesium-viewer-animationContainer {
+    z-index: 1000;
 }
 
 button.cesium-infoBox-camera {
