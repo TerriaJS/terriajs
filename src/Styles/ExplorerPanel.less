@@ -1,5 +1,6 @@
 .explorer-panel {
     .panel;
+    .transparent-to-input;
     position: absolute;
     left: 0;
     width: @explorer-panel-width;
@@ -30,18 +31,8 @@
     transition: transform @explorer-panel-close-animation-length ease-out;
 }
 
-.explorer-panel-close {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 40px;
-    height: 40px;
-    border-left: @panel-element-border;
-    border-bottom: @panel-element-border;
-}
-
 .explorer-panel-header {
+    .opaque-to-input;
     position:absolute;
     left: 0;
     top: 0;
@@ -82,6 +73,7 @@
 }
 
 .explorer-panel-body {
+    .opaque-to-input;
     position: absolute;
     background-color: @panel-background-color;
     left: 0;
