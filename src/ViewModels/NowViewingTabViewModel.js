@@ -82,6 +82,7 @@ NowViewingTabViewModel.prototype.dragStart = function(viewModel, e) {
     var that = this;
     this._dragPlaceholder.addEventListener('drop', function(e) {
         that._itemDropped = true;
+        e.preventDefault();
     }, false);
 
     this._dragPlaceholder.addEventListener('dragenter', function(e) {
@@ -133,7 +134,7 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
         return;
     }
 
-    console.log('dragEnter: ' + e.currentTarget.className);
+    console.log('dragEnter or dragOver');
 
     e.originalEvent.dataTransfer.dropEffect = 'move';
 
@@ -146,28 +147,14 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
     var targetIndex;
 
     var parent = e.currentTarget.parentElement;
-    if (parent.className !== 'now-viewing-list') {
-        console.log('parent is unexpected');
-    }
-
     var siblings = parent.childNodes;
     for (var i = 0; i < siblings.length; ++i) {
         if (siblings[i] === this._dragPlaceholder) {
-            if (siblings[i].className !== 'now-viewing-drop-target') {
-                console.log('placeholder is unexpected');
-            }
             placeholderIndex = i;
         }
         if (siblings[i] === e.currentTarget) {
-            if (siblings[i].className !== 'now-viewing-item') {
-                console.log('target is unexpected');
-            }
             targetIndex = i;
         }
-    }
-
-    if (!defined(targetIndex)) {
-        console.log('targetIndex is undefined');
     }
 
     var insertBefore = true;
@@ -176,10 +163,6 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
     }
 
     if (this._dragPlaceholder.parentElement) {
-        if (!defined(placeholderIndex)) {
-            console.log('placeholderIndex is undefined');
-        }
-
         this._dragPlaceholder.parentElement.removeChild(this._dragPlaceholder);
     }
 

@@ -35,8 +35,22 @@ var DragDropViewModel = function(options) {
 
     var that = this;
 
+    // Chrome and Firefox can't agree on how to check if a string is included in the list of data transfer types.
+    // Firefox has 'includes' and 'contains' but not 'indexOf', while Chrome only has 'indexOf'.
+    // So we do this the hard way.
+    function arrayContains(array, value) {
+        for (var i = 0; i < array.length; ++i) {
+            console.log(array[i]);
+            if (array[i] === value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     this.dropTarget.addEventListener("dragenter", function(evt) {
-        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+        if (!evt.dataTransfer.types || !arrayContains(evt.dataTransfer.types, 'Files')) {
             return;
         }
 
@@ -45,7 +59,7 @@ var DragDropViewModel = function(options) {
     }, false);
 
     this.dropTarget.addEventListener("dragover", function(evt) {
-        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+        if (!evt.dataTransfer.types || !arrayContains(evt.dataTransfer.types, 'Files')) {
             return;
         }
 
@@ -54,7 +68,7 @@ var DragDropViewModel = function(options) {
     }, false);
 
     this.dropTarget.addEventListener("dragleave", function(evt) {
-        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+        if (!evt.dataTransfer.types || !arrayContains(evt.dataTransfer.types, 'Files')) {
             return;
         }
 
@@ -66,7 +80,7 @@ var DragDropViewModel = function(options) {
     }, false);
 
     this.dropTarget.addEventListener("drop", function(evt) {
-        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+        if (!evt.dataTransfer.types || !arrayContains(evt.dataTransfer.types, 'Files')) {
             return;
         }
 
