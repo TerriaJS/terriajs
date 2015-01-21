@@ -2,6 +2,7 @@
 
 /*global require,ga*/
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var CatalogItemInfoViewModel = require('./CatalogItemInfoViewModel');
@@ -26,6 +27,10 @@ var NowViewingTabViewModel = function(options) {
     this.svgArrowDown = defaultValue(options.svgArrowDown, svgArrowDown);
     this.svgArrowRight = defaultValue(options.svgArrowRight, svgArrowRight);
     this.svgInfo = defaultValue(options.svgInfo, svgInfo);
+
+    this._draggedItem = undefined;
+    this._itemDropped = false;
+    this._dragPlaceholder = undefined;
 
     var that = this;
     knockout.getObservable(this, 'isActive').subscribe(function(newValue) {
@@ -54,6 +59,145 @@ NowViewingTabViewModel.prototype.show = function(container) {
 NowViewingTabViewModel.prototype.showInfo = function(item) {
     ga('send', 'event', 'dataSource', 'info', item.name);
     CatalogItemInfoViewModel.open('ui', item);
+};
+
+NowViewingTabViewModel.prototype.dragStart = function(viewModel, e) {
+    ga('send', 'event', 'dataSource', 'reorder', viewModel.name);
+
+    // The user drags .now-viewing-item-top-row, but really we want to drag the entire .now-viewing-item, its parent.
+    if (!e.target || !e.target.parentElement) {
+        return;
+    }
+    
+    this._draggedItem = e.target.parentElement;
+    this._itemDropped = false;
+
+    // If the item's legend is open, close it before starting the drag.
+    viewModel.isLegendVisible = false;
+
+    this._dragPlaceholder = document.createElement('div');
+    this._dragPlaceholder.className = 'now-viewing-drop-target';
+    this._dragPlaceholder.style.height = this._draggedItem.clientHeight + 'px';
+
+    var that = this;
+    this._dragPlaceholder.addEventListener('drop', function(e) {
+        that._itemDropped = true;
+    }, false);
+
+    this._dragPlaceholder.addEventListener('dragenter', function(e) {
+        e.preventDefault();
+    }, false);
+
+    this._dragPlaceholder.addEventListener('dragover', function(e) {
+        e.preventDefault();
+    }, false);
+
+    e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
+
+    return true;
+};
+
+NowViewingTabViewModel.prototype.dragEnd = function(viewModel, e) {
+    if (this._itemDropped) {
+        var draggedItemIndex = this._draggedItem.getAttribute('nowViewingIndex') | 0;
+        var placeholderIndex = this._dragPlaceholder.getAttribute('nowViewingIndex') | 0;
+
+        while (draggedItemIndex > placeholderIndex) {
+            this.nowViewing.raise(viewModel);
+            --draggedItemIndex;
+        }
+        while (draggedItemIndex < placeholderIndex) {
+            this.nowViewing.lower(viewModel);
+            ++draggedItemIndex;
+        }
+    }
+
+    if (defined(this._draggedItem)) {
+        this._draggedItem.style.display = 'block';
+    }
+
+    if (defined(this._dragPlaceholder)) {
+        if (this._dragPlaceholder.parentElement) {
+            this._dragPlaceholder.parentElement.removeChild(this._dragPlaceholder);
+        }
+        this._dragPlaceholder = undefined;
+    }
+};
+
+NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
+    if (!defined(this._draggedItem)) {
+        return;
+    }
+
+    console.log('dragEnter: ' + e.currentTarget.className);
+
+    e.originalEvent.dataTransfer.dropEffect = 'move';
+
+    this._draggedItem.style.display = 'none';
+
+    // Add the placeholder above the entered element.
+    // If the placeholder is already above the entered element, move it below.
+    // TODO: this logic is imperfect, but good enough for now.
+    var placeholderIndex;
+    var targetIndex;
+
+    var parent = e.currentTarget.parentElement;
+    if (parent.className !== 'now-viewing-list') {
+        console.log('parent is unexpected');
+    }
+
+    var siblings = parent.childNodes;
+    for (var i = 0; i < siblings.length; ++i) {
+        if (siblings[i] === this._dragPlaceholder) {
+            if (siblings[i].className !== 'now-viewing-drop-target') {
+                console.log('placeholder is unexpected');
+            }
+            placeholderIndex = i;
+        }
+        if (siblings[i] === e.currentTarget) {
+            if (siblings[i].className !== 'now-viewing-item') {
+                console.log('target is unexpected');
+            }
+            targetIndex = i;
+        }
+    }
+
+    if (!defined(targetIndex)) {
+        console.log('targetIndex is undefined');
+    }
+
+    var insertBefore = true;
+    if (placeholderIndex === targetIndex - 1) {
+        insertBefore = false;
+    }
+
+    if (this._dragPlaceholder.parentElement) {
+        if (!defined(placeholderIndex)) {
+            console.log('placeholderIndex is undefined');
+        }
+
+        this._dragPlaceholder.parentElement.removeChild(this._dragPlaceholder);
+    }
+
+    var nodeToInsertBefore;
+    if (insertBefore) {
+        nodeToInsertBefore = e.currentTarget;
+        this._dragPlaceholder.setAttribute('nowViewingIndex', nodeToInsertBefore.getAttribute('nowViewingIndex'));
+    } else {
+        nodeToInsertBefore = siblings[targetIndex + 1];
+
+        // IE doesn't like to insert before undefined, but null is fine.
+        if (!nodeToInsertBefore || !defined(nodeToInsertBefore.getAttribute)) {
+            nodeToInsertBefore = null;
+            this._dragPlaceholder.setAttribute('nowViewingIndex', this.nowViewing.items.length);
+        } else {
+            this._dragPlaceholder.setAttribute('nowViewingIndex', nodeToInsertBefore.getAttribute('nowViewingIndex'));
+        }
+    }
+
+    e.currentTarget.parentElement.insertBefore(this._dragPlaceholder, nodeToInsertBefore);
+
+    e.originalEvent.preventDefault();
 };
 
 module.exports = NowViewingTabViewModel;

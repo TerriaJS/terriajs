@@ -36,19 +36,28 @@ var DragDropViewModel = function(options) {
     var that = this;
 
     this.dropTarget.addEventListener("dragenter", function(evt) {
+        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+            return;
+        }
+
         evt.preventDefault();
-
-        console.log('enter: ' + evt.target.className);
-
         that.showDropMessage = true;
     }, false);
 
     this.dropTarget.addEventListener("dragover", function(evt) {
+        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+            return;
+        }
+
         evt.preventDefault();
         evt.dataTransfer.dropEffect = 'copy';
     }, false);
 
     this.dropTarget.addEventListener("dragleave", function(evt) {
+        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+            return;
+        }
+
         evt.preventDefault();
 
         if (evt.target.className === 'drag-drop') {
@@ -57,6 +66,10 @@ var DragDropViewModel = function(options) {
     }, false);
 
     this.dropTarget.addEventListener("drop", function(evt) {
+        if (!evt.dataTransfer.types || evt.dataTransfer.types.indexOf('Files') < 0) {
+            return;
+        }
+
         evt.preventDefault();
 
         that.showDropMessage = false;

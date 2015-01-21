@@ -16,7 +16,6 @@
 .now-viewing-item-icon-holder {
     display: table-cell;
     width: 20px;
-    padding-left: 16px;
 }
 
 .now-viewing-item-icon {
@@ -24,6 +23,18 @@
     width: 15px;
     height: 15px;
     fill: @panel-emphasized-text-color;
+}
+
+.now-viewing-item-drag-handle-holder {
+    display: table-cell;
+    width: 20px;
+    padding-left: 16px;
+    line-height: 40px;
+}
+
+.now-viewing-item-drag-handle {
+    position: relative;
+    top: 5px;
 }
 
 .now-viewing-item-details {
@@ -126,4 +137,9 @@
 
 .now-viewing-action:hover {
     text-decoration: underline;
+}
+
+.now-viewing-drop-target {
+    position: relative;
+    border: 1px dashed gray;
 }
