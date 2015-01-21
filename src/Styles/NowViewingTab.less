@@ -2,6 +2,7 @@
     display: table;
     width: 100%;
     line-height: 40px;
+    background-color: rgba(0,0,0, 0.2);
     border-bottom: @panel-element-border;
     border-top: @panel-element-border;
     cursor: pointer;
@@ -9,7 +10,7 @@
 
 .now-viewing-item-label {
     display: table-cell;
-    font-size: 16px;
+    font-size: 0.95em;
     color: @panel-emphasized-text-color;
 }
 
@@ -56,9 +57,9 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: darken(@panel-background-color, 10%);
+    background-color: darken(@panel-background-color, 5%);
     font-style: italic;
-    font-size: 16px;
+    font-size: 0.95em;
     color: @highlight-color;
     line-height: 38px;
     padding-left: 16px;
@@ -115,7 +116,7 @@
 }
 
 .now-viewing-item-opacity {
-    padding-left: 20px;
+    padding-left: 15px;
     padding-top: 10px;
     padding-bottom: 10px;
     color: @panel-emphasized-text-color;
@@ -126,13 +127,17 @@
 }
 
 .now-viewing-action-menu {
-    padding-left: 20px;
+    padding-left: 10px;
+    margin-top: 5px;
+    margin-left: 155px;
     color: @highlight-color;
 }
 
 .now-viewing-action {
     display: inline-block;
-    padding: 10px;
+    padding: 5px;
+    font-size: 0.9em;
+    font-style: italic;
 }
 
 .now-viewing-action:hover {
