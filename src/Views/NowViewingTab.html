@@ -31,7 +31,9 @@
                 </div>
 
                 <!-- ko if: legendIsImage -->
-                <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
+                <a data-bind="attr: { href: legendUrl }" target="_blank">
+                    <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
+                </a>
                 <!-- /ko -->
                 <!-- ko if: hasLegend && !legendIsImage -->
                 <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
