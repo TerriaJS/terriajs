@@ -165,35 +165,15 @@ function changeViewer(viewer) {
 }
 
 function changeBaseMap(viewer, newBaseMap) {
-    var i;
-
     if (defined(viewer._previousBaseMap)) {
-        if (defined(viewer._previousBaseMap.items)) {
-            for (i = 0; i < viewer._previousBaseMap.items.length; ++i) {
-                viewer._previousBaseMap.items[i]._hide();
-                viewer._previousBaseMap.items[i]._disable();
-            }
-        } else {
-            viewer._previousBaseMap._hide();
-            viewer._previousBaseMap._disable();
-        }
+        viewer._previousBaseMap._hide();
+        viewer._previousBaseMap._disable();
     }
 
     if (defined(newBaseMap)) {
-        if (defined(newBaseMap.items)) {
-            for (i = 0; i < newBaseMap.items.length; ++i) {
-                newBaseMap.items[i]._enable();
-                newBaseMap.items[i]._show();
-            }
-
-            for (i = newBaseMap.items.length - 1; i >= 0; --i) {
-                newBaseMap.items[i].lowerToBottom();
-            }
-        } else {
-            newBaseMap._enable();
-            newBaseMap._show();
-            newBaseMap.lowerToBottom();
-        }
+        newBaseMap._enable();
+        newBaseMap._show();
+        newBaseMap.lowerToBottom();
     }
 
     viewer._previousBaseMap = newBaseMap;

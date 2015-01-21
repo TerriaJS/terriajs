@@ -19,7 +19,7 @@ var NowViewing = function(application) {
      * Gets the list of items that we are "now viewing".  It is recommended that you use
      * the methods on this instance instead of manipulating the list of items directly.
      * This property is observable.
-     * @type {CatalogMember[]}
+     * @type {CatalogItem[]}
      */
     this.items = [];
 

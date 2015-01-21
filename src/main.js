@@ -79,7 +79,7 @@ if (start) {
     var Application = require('./Models/Application');
     var ArcGisMapServerCatalogItem = require('./Models/ArcGisMapServerCatalogItem');
     var BingMapsCatalogItem = require('./Models/BingMapsCatalogItem');
-    var CatalogGroup = require('./Models/CatalogGroup');
+    var CompositeCatalogItem = require('./Models/CompositeCatalogItem');
     var WebMapServiceCatalogItem = require('./Models/WebMapServiceCatalogItem');
     var registerCatalogMembers = require('./Models/registerCatalogMembers');
     var raiseErrorToUser = require('./Models/raiseErrorToUser');
@@ -150,10 +150,8 @@ if (start) {
         australianTopoOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer';
         australianTopoOverlay.opacity = 1.0;
 
-        var australianTopo = new CatalogGroup(application);
+        var australianTopo = new CompositeCatalogItem(application, [naturalEarthII, australianTopoOverlay]);
         australianTopo.name = 'Australian Topography';
-        australianTopo.items.push(naturalEarthII);
-        australianTopo.items.push(australianTopoOverlay);
 
         var blackMarble = new WebMapServiceCatalogItem(application);
         blackMarble.name = 'NASA Black Marble';
@@ -179,10 +177,8 @@ if (start) {
         australianHydroOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/AusHydro_WM/MapServer';
         australianHydroOverlay.opacity = 1.0;
 
-        var australianHydro = new CatalogGroup(application);
+        var australianHydro = new CompositeCatalogItem(application, [naturalEarthII, australianHydroOverlay]);
         australianHydro.name = 'Australian Hydrography';
-        australianHydro.items.push(naturalEarthII);
-        australianHydro.items.push(australianHydroOverlay);
 
         var settingsPanel = new SettingsPanelViewModel({
             application: application,
