@@ -4,7 +4,7 @@
     </div>
 
     <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
-        <div class="now-viewing-item" data-bind="attr: { nowViewingIndex: $index }, event : { dragenter: $root.dragEnter.bind($root) }">
+        <div class="now-viewing-item" data-bind="attr: { nowViewingIndex: $index }, event : { dragenter: $root.dragEnter.bind($root), dragover: $root.dragEnter.bind($root) }">
             <div class="now-viewing-item-top-row" data-bind="attr: { draggable: supportsReordering, nowViewingIndex: $index }, event : { dragstart: $root.dragStart.bind($root), dragend: $root.dragEnd.bind($root) }">
                 <div class="now-viewing-item-drag-handle-holder">
                     <img class="now-viewing-item-drag-handle" data-bind="visible: supportsReordering" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." title="Drag to reorder data sources." />

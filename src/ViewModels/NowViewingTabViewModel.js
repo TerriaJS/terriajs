@@ -102,6 +102,10 @@ NowViewingTabViewModel.prototype.dragEnd = function(viewModel, e) {
         var draggedItemIndex = this._draggedItem.getAttribute('nowViewingIndex') | 0;
         var placeholderIndex = this._dragPlaceholder.getAttribute('nowViewingIndex') | 0;
 
+        if (placeholderIndex >= draggedItemIndex) {
+            --placeholderIndex;
+        }
+
         while (draggedItemIndex > placeholderIndex) {
             this.nowViewing.raise(viewModel);
             --draggedItemIndex;
