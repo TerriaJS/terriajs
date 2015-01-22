@@ -43,7 +43,6 @@ var SingleTileImageryProvider = require('../../third_party/cesium/Source/Scene/S
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 var Viewer = require('../../third_party/cesium/Source/Widgets/Viewer/Viewer');
-var viewerEntityMixin = require('../../third_party/cesium/Source/Widgets/Viewer/viewerEntityMixin');
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -239,7 +238,7 @@ var DrawExtentHelper = function (scene, handler) {
     this._scene = scene;
     this._ellipsoid = scene.globe.ellipsoid;
     this._finishHandler = handler;
-    this._mouseHandler = new ScreenSpaceEventHandler(scene.canvas);
+    this._mouseHandler = new ScreenSpaceEventHandler(scene.canvas, false);
     this.active = false;
 };
 
@@ -407,7 +406,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
      //create CesiumViewer
     var viewer = new Viewer(container, options);
-    viewer.extend(viewerEntityMixin);
 
     viewer.scene.imageryLayers.removeAll();
 
@@ -547,7 +545,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.destroy = function() {};
 
         map.infoBox = new InfoBox(document.body);
-        viewerEntityMixin(map);
 
         if (!defined(this.leafletVisualizer)) {
             this.leafletVisualizer = new LeafletVisualizer();
