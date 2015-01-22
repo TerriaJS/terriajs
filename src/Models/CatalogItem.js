@@ -737,6 +737,8 @@ function isEnabledChanged(catalogItem) {
         }
         ga('send', 'event', 'dataSource', 'removed', catalogItem.name, duration);
     }
+
+    catalogItem.application.currentViewer.notifyRepaintRequired();
 }
 
 function isShownChanged(catalogItem) {
@@ -769,6 +771,8 @@ function isShownChanged(catalogItem) {
         }
         ga('send', 'event', 'dataSource', 'hidden', catalogItem.name, duration);
     }
+
+    catalogItem.application.currentViewer.notifyRepaintRequired();
 }
 
 module.exports = CatalogItem;

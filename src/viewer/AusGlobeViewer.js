@@ -177,6 +177,10 @@ function changeBaseMap(viewer, newBaseMap) {
     }
 
     viewer._previousBaseMap = newBaseMap;
+
+    if (defined(viewer.application.currentViewer)) {
+        viewer.application.currentViewer.notifyRepaintRequired();
+    }
 }
 
 // -------------------------------------------
@@ -506,6 +510,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
             //shut down existing cesium
         if (defined(this.viewer)) {
+            this.application.cesium.destroy();
+
             //get camera and timeline settings
             rect = getCameraRect(this.scene);
             bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
@@ -617,6 +623,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     }
     else {
         if (defined(this.map)) {
+            this.application.leaflet.destroy();
+
             //get camera and timeline settings
             rect = getCameraRect(undefined, this.map);
 
@@ -652,29 +660,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.viewer.dataSources.dataSourceAdded.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
         this.viewer.dataSources.dataSourceRemoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
-
-        // override the default render loop
-        this.scene.base_render = this.scene.render;
-        this.scene.render = function(date) {
-
-            if (that.frameChecker.skipFrame(that.scene, date)) {
-                return;
-            }
-            that.scene.base_render(date);
-
-            // Capture the scene image right after the render.
-            // With preserveDrawingBuffer: false on the WebGL canvas (the default), we can't rely
-            // on the canvas still having its image once we return from requestAnimationFrame.
-            if (that.captureCanvasFlag === true) {
-                that.captureCanvasFlag = false;
-                var dataUrl = that.scene.canvas.toDataURL("image/jpeg");
-                that.captureCanvasCallback(dataUrl);
-            }
-        };
-
-        this.captureCanvas = function() {
-            that.captureCanvasFlag = true;
-        };
 
         this.updateCameraFromRect(rect, 0);
 

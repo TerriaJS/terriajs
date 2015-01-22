@@ -68,6 +68,8 @@ NavigationViewModel.prototype.zoomIn = function() {
 
         flyToPosition(scene, endPosition);
     }
+
+    this.application.currentViewer.notifyRepaintRequired();
 };
 
 NavigationViewModel.prototype.zoomOut = function() {
@@ -87,6 +89,8 @@ NavigationViewModel.prototype.zoomOut = function() {
 
         flyToPosition(scene, endPosition);
     }
+
+    this.application.currentViewer.notifyRepaintRequired();
 };
 
 NavigationViewModel.prototype.resetView = function() {
@@ -106,6 +110,8 @@ NavigationViewModel.prototype.resetView = function() {
             duration: 1.5
         });
     }
+
+    this.application.currentViewer.notifyRepaintRequired();
 };
 
 var tilts = [0, 40, 80];
@@ -128,6 +134,8 @@ NavigationViewModel.prototype.tilt = function() {
         this.currentTilt = tilts[index];
         animateToTilt(this, scene, this.currentTilt);
     }
+
+    this.application.currentViewer.notifyRepaintRequired();
 };
 
 function getCameraFocus(scene) {

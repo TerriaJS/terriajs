@@ -315,6 +315,8 @@ if (start) {
                     }
                 }, 300);
             }
+
+            application.currentViewer.notifyRepaintRequired();
         });
 
         document.getElementById('loadingIndicator').style.display = 'none';
