@@ -233,7 +233,7 @@ if (start) {
             }
         }));
         menuBar.items.push(new MenuBarItemViewModel({
-            label: 'Settings',
+            label: 'Maps',
             tooltip: 'Change the map mode (2D/3D) and base map.',
             observableToToggle: knockout.getObservable(settingsPanel, 'isVisible')
         }));
