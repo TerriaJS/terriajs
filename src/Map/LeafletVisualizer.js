@@ -246,7 +246,7 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
 
     var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
     var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
-    var imageUrl = Property.getValueOrDefault(markerGraphics._image, time, undefined);
+    var image = Property.getValueOrDefault(markerGraphics._image, time, undefined);
     var height = Property.getValueOrDefault(markerGraphics._height, time, undefined);
     var width = Property.getValueOrDefault(markerGraphics._width, time, undefined);
     var color = Property.getValueOrDefault(markerGraphics._color, time, defaultColor);
@@ -254,6 +254,17 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
     var verticalOrigin = Property.getValueOrDefault(markerGraphics._verticalOrigin, time, 0);
     var horizontalOrigin = Property.getValueOrDefault(markerGraphics._horizontalOrigin, time, 0);
     var pixelOffset = Property.getValueOrDefault(markerGraphics._pixelOffset, time, Cartesian2.ZERO);
+
+    var imageUrl;
+    if (defined(image)) {
+        if (typeof image === 'string') {
+            imageUrl = image;
+        } else if (defined(image.toDataURL)) {
+            imageUrl = image.toDataURL();
+        } else {
+            imageUrl = image.src;
+        }
+    }
 
     var iconOptions = {
         color: color.toCssColorString(),
