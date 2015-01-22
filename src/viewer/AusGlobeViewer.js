@@ -396,8 +396,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         fullscreenButton : false,
         terrainProvider : terrainProvider,
         imageryProvider : new SingleTileImageryProvider({ url: 'images/nicta.png' }),
-        timeControlsInitiallyVisible : false,
-        targetFrameRate : 40
+        timeControlsInitiallyVisible : false
     };
 
     // Workaround for Firefox bug with WebGL and printing:

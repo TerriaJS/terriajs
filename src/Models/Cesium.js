@@ -38,6 +38,8 @@ var Cesium = function(application, viewer) {
 
     // Force a repaint when the mouse moves or the window changes size.
     this.viewer.canvas.addEventListener('mousemove', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.addEventListener('mousedown', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.addEventListener('mouseup', this._boundNotifyRepaintRequired, false);
     window.addEventListener('resize', this._boundNotifyRepaintRequired, false);
 };
 
@@ -48,6 +50,9 @@ Cesium.prototype.destroy = function() {
     }
 
     this.viewer.canvas.removeEventListener('mousemove', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.removeEventListener('mousedown', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.removeEventListener('mouseup', this._boundNotifyRepaintRequired, false);
+
     window.removeEventListener('resize', this._boundNotifyRepaintRequired, false);
 
     return destroyObject(this);
