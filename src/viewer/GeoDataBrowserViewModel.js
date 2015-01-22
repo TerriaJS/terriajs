@@ -464,7 +464,7 @@ and the file will not be uploaded or added to the map.')) {
         var populateCache = this.catalog.application.getUserProperty('populate-cache');
 
         if (populateCache !== '1') {
-            getAllRequests(['wms', 'esri-rest'], mode, requests, that.catalog.group);
+            getAllRequests(['wms', 'esri-mapService'], mode, requests, that.catalog.group);
             return this.populateCkan(requests, that.maxLevel(), populateCache);
         }
 
@@ -753,7 +753,7 @@ and the file will not be uploaded or added to the map.')) {
                         "format": "WMS", 
                         "name": "WMS link",
                     };
-                } else if (requests[i].item.type === 'esri-rest') {
+                } else if (requests[i].item.type === 'esri-mapService') {
                     resource = {
                         "url": requests[i].item.url, 
                         "format": "Esri REST", 

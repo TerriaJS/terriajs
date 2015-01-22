@@ -2,12 +2,14 @@
 
 /*global require,L,URI*/
 
+var clone = require('../../third_party/cesium/Source/Core/clone');
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var CatalogGroupViewModel = require('./CatalogGroupViewModel');
 
 var ImageryLayerItemViewModel = require('./ImageryLayerItemViewModel');
 var inherit = require('../Core/inherit');
@@ -24,13 +26,30 @@ var inherit = require('../Core/inherit');
 var ArcGisMapServerItemViewModel = function(application) {
     ImageryLayerItemViewModel.call(this, application);
 
+    this._legendUrl = undefined;
+
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
      * @type {String}
      */
     this.url = '';
 
-    knockout.track(this, ['url']);
+    knockout.track(this, ['url', '_legendUrl']);
+
+    // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
+    delete this.__knockoutObservables.legendUrl;
+    knockout.defineProperty(this, 'legendUrl', {
+        get : function() {
+            if (defined(this._legendUrl)) {
+                return this._legendUrl;
+            }
+            return cleanUrl(this.url) + '/legend';
+        },
+        set : function(value) {
+            this._legendUrl = value;
+        }
+    });
+
 };
 
 inherit(ImageryLayerItemViewModel, ArcGisMapServerItemViewModel);
@@ -43,7 +62,7 @@ defineProperties(ArcGisMapServerItemViewModel.prototype, {
      */
     type : {
         get : function() {
-            return 'esri-rest';
+            return 'esri-mapService';
         }
     },
 
@@ -59,14 +78,23 @@ defineProperties(ArcGisMapServerItemViewModel.prototype, {
     }
 });
 
+/**
+ * Gets or sets the set of default serializer functions to use in {@link ArcGisMapServerItemViewModel#serializeToJson}.  Types derived from this type
+ * should expose this instance - cloned and modified if necesary - through their {@link ArcGisMapServerItemViewModel#serializers} property.
+ * @type {Object}
+ */
+ArcGisMapServerItemViewModel.defaultSerializers = clone(CatalogGroupViewModel.defaultSerializers);
+
+ArcGisMapServerItemViewModel.defaultSerializers.legendUrl = function(viewModel, json, propertyName) {
+    json.legendUrl = viewModel._legendUrl;
+};
+
 ArcGisMapServerItemViewModel.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
 
     var scene = this.application.cesium.scene;
-
-    this.legendUrl = this.url + '/legend';
 
     var imageryProvider = new ArcGisMapServerImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url)
@@ -100,8 +128,6 @@ ArcGisMapServerItemViewModel.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is already enabled.');
     }
-
-    this.legendUrl = this.url + '/legend';
 
     var options = {
         opacity : this.opacity

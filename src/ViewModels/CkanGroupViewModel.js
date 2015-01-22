@@ -46,11 +46,15 @@ var CkanGroupViewModel = function(application) {
     this.dataCustodian = undefined;
 
     /**
-     * Gets or sets the filter query to pass to CKAN when querying the available data sources and their groups.  If this is string,
-     * it is passed to CKAN in the "fq" query parameter.  If it is an array of strings, each string in the array is passed to CKAN
-     * as an independent "fq" query parameter.  See the [Solr documentation](http://wiki.apache.org/solr/CommonQueryParameters#fq) for
-     * information about filter queries.  This property is observable.
-     * @type {String|String[]}
+     * Gets or sets the filter query to pass to CKAN when querying the available data sources and their groups.  Each string in the 
+     * array is passed to CKAN as an independent search string and the results are concatenated to create the complete list.  The
+     * search string is equivlent to what would be in the parameters segment of the url calling the CKAN search api.
+     * See the [Solr documentation](http://wiki.apache.org/solr/CommonQueryParameters#fq) for information about filter queries.
+     *   To get all the datasets with wms resources the query array would be ['fq=res_format%3awms']
+     *   To get all the datasets in the Surface Water group it would be ['q=groups%3dSurface%20Water&fq=res_format%3aWMS']
+     *   And to get both wms and esri-mapService datasets it would be ['q=res_format:WMS', 'q=res_format:%22Esri%20REST%22' ]
+     * This property is observable.
+     * @type {String[]}
      */
     this.filterQuery = undefined;
 
@@ -79,13 +83,14 @@ var CkanGroupViewModel = function(application) {
 
     /**
      * Gets or sets any extra wms parameters that should be added to the wms query urls in this CKAN group.
-     * If this property is undefined or if {@link CkanGroupViewModel#filterByWmsGetCapabilities} then no parameters are added
+     * If this property is undefined or if {@link CkanGroupViewModel#wmsParameters} then no extra 
+     * parameters are added.
      * This property is observable.
      * @type {Object}
      */
     this.wmsParameters = undefined;
 
-    knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
+    knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist', 'wmsParameters']);
 };
 
 inherit(CatalogGroupViewModel, CkanGroupViewModel);
@@ -170,11 +175,6 @@ CkanGroupViewModel.prototype._load = function() {
 
     var that = this;
 
-    var allResults = {result: {results: []}};
-    var handleResults = function(json) {
-            allResults.result.results = allResults.result.results.concat(json.result.results);
-        };
-
     var handleError = function() {
             throw new ViewModelError({
                 sender: that,
@@ -191,29 +191,35 @@ CkanGroupViewModel.prototype._load = function() {
     <p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
     problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
     sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
-            });
-        };
+        });
+    };
 
-    //FYI: to filter by group the filterQuery param should be set to something like 
-    //  'q=groups%3dSurface%20Water&fq=res_format%3aWMS' in init_xx.json
     var promises = [];
     for (var i = 0; i < this.filterQuery.length; i++) {
         var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery[i];
 
-        var promise = loadJson(url).then(handleResults).otherwise(handleError);
+        var promise = loadJson(url).otherwise(handleError);
 
         promises.push(promise);
     }
 
-    return when.all(promises).then(function() {
-            if (that.filterByWmsGetCapabilities) {
-                return when(filterResultsByGetCapabilities(that, allResults), function() {
-                    populateGroupFromResults(that, allResults);
-                });
-            } else {
+    return when.all(promises).then( function(queryResults) {
+        if (!defined(queryResults)) {
+            return;
+        }
+        var allResults = queryResults[0];
+        for (var p = 1; p < queryResults.length; p++) {
+            allResults.result.results = allResults.result.results.concat(queryResults[p].result.results);
+        }
+
+        if (that.filterByWmsGetCapabilities) {
+            return when(filterResultsByGetCapabilities(that, allResults), function() {
                 populateGroupFromResults(that, allResults);
-            }
-        });
+            });
+        } else {
+            populateGroupFromResults(that, allResults);
+        }
+    });
 };
 
 // The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
@@ -338,7 +344,7 @@ function populateGroupFromResults(viewModel, json) {
         }
 
         var extras = {};
-        if (item.extras !== undefined) {
+        if (defined(item.extras)) {
             for (var idx = 0; idx < item.extras.length; idx++) {
                 extras[item.extras[idx].key] = item.extras[idx].value;
             }

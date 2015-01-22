@@ -22,7 +22,7 @@ var registerCatalogViewModels = function() {
     createCatalogMemberFromType.register('ckan', CkanGroupViewModel);
     createCatalogMemberFromType.register('csv', CsvItemViewModel);
     createCatalogMemberFromType.register('czml', CzmlItemViewModel);
-    createCatalogMemberFromType.register('esri-rest', ArcGisMapServerItemViewModel);
+    createCatalogMemberFromType.register('esri-mapService', ArcGisMapServerItemViewModel);
     createCatalogMemberFromType.register('geojson', GeoJsonItemViewModel);
     createCatalogMemberFromType.register('gpx', GpxItemViewModel);
     createCatalogMemberFromType.register('group', CatalogGroupViewModel);

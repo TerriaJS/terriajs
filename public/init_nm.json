@@ -972,7 +972,7 @@
                                 "162.097118856693",
                                 "-7.92768801894694"
                             ],
-                            "type": "esri-rest",
+                            "type": "esri-mapService",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer"
                         },
                         {
@@ -985,7 +985,7 @@
                                 "155.00919",
                                 "-7.92768801894694"
                             ],
-                            "type": "esri-rest",
+                            "type": "esri-mapService",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_observation/Landcover_WM/MapServer"
                         },
                         {
@@ -998,7 +998,7 @@
                                 "172",
                                 "-8"
                             ],
-                            "type": "esri-rest",
+                            "type": "esri-mapService",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_observation/Magnetic_Image_WM/MapServer"
                         },
                         {
@@ -1011,7 +1011,7 @@
                                 "162.097118856693",
                                 "-7.92768801894694"
                             ],
-                            "type": "esri-rest",
+                            "type": "esri-mapService",
                             "url": "http://www.ga.gov.au/gis/rest/services/earth_science/GA_Surface_Geology_of_Australia_WM/MapServer"
                         },
                         {
