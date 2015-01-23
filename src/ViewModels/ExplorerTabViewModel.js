@@ -10,10 +10,11 @@ var ExplorerTabViewModel = function(name) {
     this.panel = undefined;
 
     this.name = defaultValue(name, 'Unknown');
+    this.badgeText = undefined;
     this.isVisible = true;
     this.isActive = false;
 
-    knockout.track(this, ['name', 'isVisible', 'isActive']);
+    knockout.track(this, ['name', 'badgeText', 'isVisible', 'isActive']);
 };
 
 ExplorerTabViewModel.prototype.activate = function() {

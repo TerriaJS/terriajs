@@ -2,11 +2,13 @@
     <div class="explorer-panel-header"> 
         <div class="explorer-panel-tab-area" data-bind="foreach: tabs">
           <div class="explorer-panel-tab"
-              data-bind="text: name,
-                         visible: isVisible,
-                         style: { width: $root.tabWidth },
+              data-bind="visible: isVisible,
                          css: { 'explorer-panel-tab-active': isActive },
                          click: activate">
+            <div class="explorer-panel-tab-content">
+              <div data-bind="text: name"></div>
+              <div class="explorer-panel-tab-badge" data-bind="text: badgeText, visible: typeof badgeText !== 'undefined'"></div>
+            </div>
           </div>
         </div>
         <div class="explorer-panel-collapse-button clickable" data-bind="click: toggleOpen">

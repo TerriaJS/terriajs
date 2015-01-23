@@ -21,6 +21,7 @@ var NowViewingTabViewModel = function(options) {
 
     this.name = 'Now Viewing';
     this.nowViewing = options.nowViewing;
+    this.badgeText = this.nowViewing.items.length === 0 ? undefined : this.nowViewing.items.length;
 
     this.svgCheckboxChecked = defaultValue(options.svgCheckboxChecked, svgCheckboxChecked);
     this.svgCheckboxUnchecked = defaultValue(options.svgCheckboxUnchecked, svgCheckboxUnchecked);
@@ -48,6 +49,10 @@ var NowViewingTabViewModel = function(options) {
             }
         }
     });
+
+    knockout.getObservable(this.nowViewing, 'items').subscribe(function() {
+        this.badgeText = this.nowViewing.items.length === 0 ? undefined : this.nowViewing.items.length;
+    }, this);
 };
 
 inherit(ExplorerTabViewModel, NowViewingTabViewModel);
