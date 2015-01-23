@@ -114,7 +114,7 @@ var CatalogItem = function(application) {
      * This property is observable.
      * @type {Boolean}
      */
-    this.isLegendVisible = false;
+    this.isLegendVisible = true;
 
     /**
      * Gets or sets the clock parameters for this data item.  If this property is undefined, this data item
