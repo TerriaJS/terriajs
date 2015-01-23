@@ -185,15 +185,13 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
         }
     }
 
-    if (this._dragPlaceholder.parentElement) {
-        this._dragPlaceholder.parentElement.removeChild(this._dragPlaceholder);
-    }
-
+    var doInsert = false;
     var nodeToInsertBefore;
-    if (insertBefore) {
+    if (insertBefore && placeholderIndex !== targetIndex - 1) {
         nodeToInsertBefore = e.currentTarget;
         this._dragPlaceholder.setAttribute('nowViewingIndex', nodeToInsertBefore.getAttribute('nowViewingIndex'));
-    } else {
+        doInsert = true;
+    } else if (!insertBefore && placeholderIndex !== targetIndex + 1) {
         nodeToInsertBefore = siblings[targetIndex + 1];
 
         // IE doesn't like to insert before undefined, but null is fine.
@@ -203,9 +201,16 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
         } else {
             this._dragPlaceholder.setAttribute('nowViewingIndex', nodeToInsertBefore.getAttribute('nowViewingIndex'));
         }
+        doInsert = true;
     }
 
-    e.currentTarget.parentElement.insertBefore(this._dragPlaceholder, nodeToInsertBefore);
+    if (doInsert) {
+        if (this._dragPlaceholder.parentElement) {
+            this._dragPlaceholder.parentElement.removeChild(this._dragPlaceholder);
+        }
+
+        e.currentTarget.parentElement.insertBefore(this._dragPlaceholder, nodeToInsertBefore);
+    }
 
     e.originalEvent.preventDefault();
 };
