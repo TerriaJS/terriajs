@@ -1,11 +1,6 @@
-.settings-panel {
-    .panel;
-    background-color: @panel-background-color;
-    top: 60px;
-    right: 100px;
-    width: 260px;
-    position: absolute;
-    box-shadow: @panel-box-shadow;
+.settings-panel-background {
+    .modal-background;
+    background-color: rgba(0,0,0,0);
 
     -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
     -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
@@ -14,7 +9,17 @@
     transition: opacity @explorer-panel-close-animation-length ease-out;
 }
 
-.settings-panel-hidden {
+.settings-panel {
+    .panel;
+    background-color: @panel-background-color;
+    top: 60px;
+    right: 100px;
+    width: 260px;
+    position: absolute;
+    box-shadow: @panel-box-shadow;
+}
+
+.settings-panel-background-hidden {
     opacity: 0;
     visibility: hidden;
 
@@ -26,6 +31,7 @@
 }
 
 .settings-panel-callout {
+    .transparent-to-input;
     width: 0px;
     height: 0px;
     position: absolute;
@@ -89,6 +95,16 @@
 
 .settings-panel-base-map-button:hover {
     border: 1px solid @panel-emphasized-text-color;
+}
+
+.settings-panel-close-button {
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    cursor: pointer;
+    font-size: 18pt;
+    font-weight: bold;
+    color: @panel-emphasized-text-color;
 }
 
 @media print {
