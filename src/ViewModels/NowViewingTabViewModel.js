@@ -33,6 +33,8 @@ var NowViewingTabViewModel = function(options) {
     this._itemDropped = false;
     this._dragPlaceholder = undefined;
 
+    this._lastNumberOfItems = -1;
+
     var that = this;
     knockout.getObservable(this, 'isActive').subscribe(function(newValue) {
         // Make sure that at least one item is showing its legend when this tab is activated.
@@ -52,6 +54,12 @@ var NowViewingTabViewModel = function(options) {
 
     knockout.getObservable(this.nowViewing, 'items').subscribe(function() {
         this.badgeText = this.nowViewing.items.length === 0 ? undefined : this.nowViewing.items.length;
+
+        if (this.nowViewing.items.length > this._lastNumberOfItems) {
+            this.popBadge();
+        }
+
+        this._lastNumberOfItems = this.nowViewing.items.length;
     }, this);
 };
 

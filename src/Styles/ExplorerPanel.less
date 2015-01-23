@@ -71,6 +71,8 @@
     position: relative;
 }
 
+@explorer-panel-badge-pop-duration: 0.125s;
+
 .explorer-panel-tab-badge {
     position: absolute;
     top: 2px;
@@ -84,6 +86,22 @@
     padding-left: 3px;
     padding-right: 3px;
     line-height: 11px;
+
+    -webkit-transition: -webkit-transform @explorer-panel-badge-pop-duration ease-out;
+    -moz-transition: -moz-transform @explorer-panel-badge-pop-duration ease-out;
+    -ms-transition: -ms-transform @explorer-panel-badge-pop-duration ease-out;
+    -o-transition: -o-transform @explorer-panel-badge-pop-duration ease-out;
+    transition: transform @explorer-panel-badge-pop-duration ease-out;
+}
+
+.explorer-panel-tab-badge-pop {
+    transform: scale(1.25, 1.25);
+
+    -webkit-transition: -webkit-transform @explorer-panel-badge-pop-duration ease-out;
+    -moz-transition: -moz-transform @explorer-panel-badge-pop-duration ease-out;
+    -ms-transition: -ms-transform @explorer-panel-badge-pop-duration ease-out;
+    -o-transition: -o-transform @explorer-panel-badge-pop-duration ease-out;
+    transition: transform @explorer-panel-badge-pop-duration ease-out;
 }
 
 .explorer-panel-tab-active {
