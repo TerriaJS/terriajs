@@ -174,7 +174,15 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
 
     var insertBefore = true;
     if (placeholderIndex === targetIndex - 1) {
-        insertBefore = false;
+        var placeholderRect = this._dragPlaceholder.getBoundingClientRect();
+        var placeholderHeight = placeholderRect.bottom - placeholderRect.top;
+
+        var targetRect = e.currentTarget.getBoundingClientRect();
+        var currentY = e.originalEvent.clientY;
+
+        if (currentY > targetRect.bottom - placeholderHeight) {
+            insertBefore = false;
+        }
     }
 
     if (this._dragPlaceholder.parentElement) {
