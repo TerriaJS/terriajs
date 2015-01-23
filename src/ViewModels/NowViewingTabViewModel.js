@@ -128,6 +128,10 @@ NowViewingTabViewModel.prototype.dragEnd = function(viewModel, e) {
             this.nowViewing.lower(viewModel);
             ++draggedItemIndex;
         }
+
+        // Reordering will trigger a badge pop because we remove/re-add items.
+        // Cancel the pop.
+        this.unpopBadge();
     }
 
     if (defined(this._draggedItem)) {
@@ -146,8 +150,6 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
     if (!defined(this._draggedItem)) {
         return;
     }
-
-    console.log('dragEnter or dragOver');
 
     e.originalEvent.dataTransfer.dropEffect = 'move';
 

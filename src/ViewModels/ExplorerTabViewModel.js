@@ -15,6 +15,8 @@ var ExplorerTabViewModel = function(name) {
     this.isVisible = true;
     this.isActive = false;
 
+    this._popTimeoutID = undefined;
+
     knockout.track(this, ['name', 'badgeText', 'badgeIsPopped', 'isVisible', 'isActive']);
 };
 
@@ -31,13 +33,20 @@ ExplorerTabViewModel.prototype.popBadge = function() {
     this.badgeIsPopped = false;
 
     // Delay the pop slightly, in case the badge just appeared.
-    var that = this;
-    setTimeout(function() {
-        that.badgeIsPopped = true;
-    }, 50);
+    if (!defined(this._popTimeoutID)) {
+        var that = this;
+        this._popTimeoutID = setTimeout(function() {
+            that._popTimeoutID = undefined;
+            that.badgeIsPopped = true;
+        }, 50);
+    }
 };
 
 ExplorerTabViewModel.prototype.unpopBadge = function() {
+    if (defined(this._popTimeoutID)) {
+        clearTimeout(this._popTimeoutID);
+        this._popTimeoutID = undefined;
+    }
     this.badgeIsPopped = false;
 };
 
