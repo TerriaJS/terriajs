@@ -53,8 +53,8 @@ var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewM
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
-var runLater = require('../Core/runLater');
+//var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
+//var runLater = require('../Core/runLater');
 
 var corsProxy = require('../Core/corsProxy');
 var Cesium = require('../Models/Cesium');
