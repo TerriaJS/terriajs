@@ -58,6 +58,9 @@ var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewM
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
+var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
+var runLater = require('../Core/runLater');
+
 var corsProxy = require('../Core/corsProxy');
 var GeoDataBrowser = require('./GeoDataBrowser');
 var CesiumViewModel = require('../ViewModels/CesiumViewModel');
@@ -621,14 +624,6 @@ us via email at nationalmap@lists.nicta.com.au.'
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('CESIUM', undefined, 'http://cesiumjs.org/'));
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('BING', undefined, 'http://www.bing.com/'));
 
-
-    //Placeholder for now - commenting out since the warning doesn't mean much when we stop the render loop
-//    var monitor = new FrameRateMonitor.fromScene(scene);
-//    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
-//        console.log('Unusually slow startup detected!!  Messagebox for user options - webgl fixes, 2d mode.');
-//    });
-
-
     var inputHandler = viewer.screenSpaceEventHandler;
 
     // Add double click zoom
@@ -690,6 +685,30 @@ us via email at nationalmap@lists.nicta.com.au.'
             document.getElementById('ausglobe-title-position').innerHTML = '';
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
+
+    //Simple monitor to start up and switch to 2D if seem to be stuck.
+    this.monitor = new FrameRateMonitor({ 
+        scene: scene, 
+        minimumFrameRateDuringWarmup: 2,
+        minimumFrameRateAfterWarmup: 0,
+        samplingWindow: 2
+    });
+    this.monitor.lowFrameRate.addEventListener( function() {
+        if (!defined(that.slow3DPerformanceMessageViewed)) {
+            PopupMessage.open({
+                container : document.body,
+                title : 'Unusually Slow Performance Detected',
+                message : '\
+It appears that your system is capable of running National Map in 3D mode, but is having significant performance issues. \
+We are automatically switching to 2D mode to help resolve this issue.  If you want to switch back to 3D mode you can select \
+that option from the Maps button.'
+            });
+            that.slow3DPerformanceMessageViewed = true;
+            runLater(function() { 
+                that.selectViewer(false); 
+            });
+        }
+    });
 
     return viewer;
 };
@@ -802,6 +821,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
 
+            this.monitor.destroy();
             this.viewer.destroy();
             this.viewer = undefined;
         }
