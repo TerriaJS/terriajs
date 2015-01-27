@@ -215,4 +215,13 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
     e.originalEvent.preventDefault();
 };
 
+NowViewingTabViewModel.prototype.selectStart = function(viewModel, e) {
+    if (!viewModel.supportsReordering || !e || !e.currentTarget || !e.currentTarget.dragDrop) {
+        return;
+    }
+
+    e.currentTarget.dragDrop();
+    return false;
+};
+
 module.exports = NowViewingTabViewModel;
