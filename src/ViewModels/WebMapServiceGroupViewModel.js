@@ -284,6 +284,7 @@ function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataC
         }
     }
 
+    //TODO: better spot for this? - should figure out tiled as well since that can be layer specific
     var crs;
     if (defined(layer.parent.CRS)) {
         crs = layer.parent.CRS;
