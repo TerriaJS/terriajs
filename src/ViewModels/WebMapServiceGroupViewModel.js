@@ -11,7 +11,7 @@ var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
+var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 
 var ViewModelError = require('./ViewModelError');
 var CatalogGroupViewModel = require('./CatalogGroupViewModel');
@@ -155,7 +155,7 @@ WebMapServiceGroupViewModel.prototype._load = function() {
 
             var tileSet = json.Capability.VendorSpecificCapabilities.TileSet;
             for (var i = 0; i < tileSet.length; i++) {
-                if (tileSet[i].SRS ===  "EPSG:4326") {
+                if (tileSet[i].SRS ===  "EPSG:3857") {
                     that.parameters = combine(that.parameters, {'tiled': true});
                     break;
                 }
@@ -285,30 +285,31 @@ function createWmsDataSource(viewModel, layer, supportsJsonGetFeatureInfo, dataC
     }
 
     var crs;
-    if (defined(layer.CRS)) {
-        crs = layer.CRS;
+    if (defined(layer.parent.CRS)) {
+        crs = layer.parent.CRS;
     } else {
-        crs = layer.SRS;
+        crs = layer.parent.SRS;
     }
 
     if (defined(crs)) {
-        if (crsIsMatch(crs, 'EPSG:4326')) {
+        if (crsIsMatch(crs, 'EPSG:3857')) {
+            // Standard Web Mercator
+        } else if (crsIsMatch(crs, 'EPSG:900913')) {
+            // Older code for Web Mercator
+            result.parameters = combine(result.parameters, {srs: 'EPSG:900913'});
+        } else if (crsIsMatch(crs, 'EPSG:4326')) {
             // Standard Geographic
+            result.tilingScheme = new GeographicTilingScheme();
         } else if (crsIsMatch(crs, 'CRS:84')) {
             // Another name for EPSG:4326
+            result.tilingScheme = new GeographicTilingScheme();
             result.parameters = combine(result.parameters, {srs: 'CRS:84'});
         } else if (crsIsMatch(crs, 'EPSG:4283')) {
             // Australian system that is equivalent to EPSG:4326.
+            result.tilingScheme = new GeographicTilingScheme();
             result.parameters = combine(result.parameters, {srs: 'EPSG:4283'});
-        } else if (crsIsMatch(crs, 'EPSG:3857')) {
-            // Standard Web Mercator
-            result.tilingScheme = new WebMercatorTilingScheme();
-        } else if (crsIsMatch(crs, 'EPSG:900913')) {
-            // Older code for Web Mercator
-            result.tilingScheme = new WebMercatorTilingScheme();
-            result.parameters = combine(result.parameters, {srs: 'EPSG:900913'});
         } else {
-            // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+            // No known supported CRS listed.  Try the default, EPSG:3857, and hope for the best.
         }
     }
 
