@@ -34,6 +34,7 @@ var Cesium = function(application, viewer) {
     this._lastCameraMoveTime = 0;
 
     this._removePostRenderListener = this.scene.postRender.addEventListener(postRender.bind(undefined, this));
+    this._removeInfoBoxCloseListener = undefined;
     this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
 
     // Force a repaint when the mouse moves or the window changes size.
@@ -41,12 +42,22 @@ var Cesium = function(application, viewer) {
     this.viewer.canvas.addEventListener('mousedown', this._boundNotifyRepaintRequired, false);
     this.viewer.canvas.addEventListener('mouseup', this._boundNotifyRepaintRequired, false);
     window.addEventListener('resize', this._boundNotifyRepaintRequired, false);
+
+    // Force a repaint when the feature info box is closed.  Cesium can't close its info box
+    // when the clock is not ticking, for reasons that are not clear.
+    if (defined(this.viewer.infoBox)) {
+        this._removeInfoBoxCloseListener = this.viewer.infoBox.viewModel.closeClicked.addEventListener(this._boundNotifyRepaintRequired);
+    }
 };
 
 Cesium.prototype.destroy = function() {
     if (defined(this._removePostRenderListener)) {
         this._removePostRenderListener();
         this._removePostRenderListener = undefined;
+    }
+
+    if (defined(this._removeInfoBoxCloseListener)) {
+        this._removeInfoBoxCloseListener();
     }
 
     this.viewer.canvas.removeEventListener('mousemove', this._boundNotifyRepaintRequired, false);
