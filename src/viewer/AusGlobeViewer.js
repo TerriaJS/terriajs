@@ -307,6 +307,9 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     });
 
     this.selectViewer(this.webGlSupported);
+    if(!this.webGlSupported) {
+        this.application.viewerMode = ViewerMode.Leaflet;
+    }
 
     knockout.getObservable(this.application, 'viewerMode').subscribe(function() {
         changeViewer(this);
