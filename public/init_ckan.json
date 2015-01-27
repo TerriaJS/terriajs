@@ -16,7 +16,7 @@
         {
             "name": "National Data Sets CKAN",
             "type": "ckan",
-            "url": "http://54.79.117.201",
+            "url": "http://ckan-nm.nicta.com.au",
             "filterQuery": [ "q=res_format:WMS", "q=res_format:%22Esri%20REST%22" ],
             "filterByWmsGetCapabilities": false,
             "minimumMaxScaleDenominator": 1e10,
@@ -40,9 +40,7 @@
                     "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                     "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                     "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                    "type": "wms-getCapabilities",
-                    "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                    "dataUrlType": "wfs"
+                    "type": "wms-getCapabilities"
                 },
                 {
                     "name": "Boundaries (Australia Bureau of Statistics)",

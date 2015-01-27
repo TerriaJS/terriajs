@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,ga,alert,L,confirm*/
+/*global require,ga,alert,L,URI,confirm*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
@@ -649,6 +649,12 @@ and the file will not be uploaded or added to the map.')) {
             CesiumMath.toDegrees(rect.north).toFixed(4);
     }
 
+    function cleanUrl(url) {
+        var uri = new URI(url);
+        uri.search('');
+        return uri.toString();
+    }
+
     this.populateCkan = function(requests, server, apiKey) {
 
         var groups = [];
@@ -740,8 +746,22 @@ and the file will not be uploaded or added to the map.')) {
                 }
                 var bboxString = getCkanRect(requests[i].item.rectangle);
                 var extrasList = [ { "key": "geo_coverage", "value":  bboxString} ];
-                if (requests[i].item.dataUrlType === 'direct') {
-                    extrasList.push({ "key": "data_url", "value":  requests[i].item.dataUrl});
+                if (defined(requests[i].item.dataUrlType) && requests[i].item.dataUrlType !== 'wfs') {
+                    extrasList.push({ "key": "data_url_type", "value":  requests[i].item.dataUrlType});
+                }
+                if (defined(requests[i].item.dataUrl)) {
+                    var dataUrl = undefined;
+                    if (requests[i].item.dataUrlType === 'wfs') {
+                        var baseUrl = cleanUrl(requests[i].item.dataUrl);
+                        if ((baseUrl !== requests[i].item.url)) {
+                            dataUrl = baseUrl;
+                        }
+                    } else if (requests[i].item.dataUrlType !== 'none') {
+                        dataUrl = requests[i].item.dataUrl;
+                    }
+                    if (defined (dataUrl)) {
+                        extrasList.push({ "key": "data_url", "value":  dataUrl});
+                    }
                 }
                 var resource;
                 if (requests[i].item.type === 'wms') {

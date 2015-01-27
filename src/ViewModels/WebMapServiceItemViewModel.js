@@ -108,8 +108,8 @@ var WebMapServiceItemViewModel = function(application) {
     delete this.__knockoutObservables.dataUrlType;
     knockout.defineProperty(this, 'dataUrlType', {
         get : function() {
-            if (defined(this._dataUrl)) {
-                return 'direct';
+            if (defined(this._dataUrlType)) {
+                return this._dataUrlType;
             } else {
                 return 'wfs';
             }

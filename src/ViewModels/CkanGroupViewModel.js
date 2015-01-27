@@ -351,6 +351,7 @@ function populateGroupFromResults(viewModel, json) {
         }
 
         var dataUrl = extras.data_url;
+        var dataUrlType = extras.data_url_type;
 
         var rectangle;
         var bboxString = item.geo_coverage || extras.geo_coverage;
@@ -397,9 +398,10 @@ function populateGroupFromResults(viewModel, json) {
             newItem.url = url;
             newItem.layers = layerName;
             newItem.rectangle = rectangle;
+            newItem.dataUrl = dataUrl;
+            newItem.dataUrlType = dataUrlType;
               //This should be deprecated and done on a server by server basis when feasible
             newItem.parameters = viewModel.wmsParameters;
-            newItem.dataUrl = dataUrl;
 
             if (defined(viewModel.dataCustodian)) {
                 newItem.dataCustodian = viewModel.dataCustodian;
