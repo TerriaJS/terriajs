@@ -82,4 +82,8 @@ SearchTabViewModel.prototype.showInfo = function(item) {
     CatalogItemInfoViewModel.open('ui', item);
 };
 
+SearchTabViewModel.prototype.clearSearchText = function() {
+    this.searchText = '';
+};
+
 module.exports = SearchTabViewModel;
