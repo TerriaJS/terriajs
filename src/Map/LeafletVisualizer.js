@@ -462,7 +462,8 @@ LeafletGeomVisualizer.prototype._updatePolygon = function(entity, time) {
     var positions, polygon, description;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polygonGraphics._show, time, true);
     if (show) {
-        positions = Property.getValueOrUndefined(polygonGraphics._positions, time);
+        var hierarchy = Property.getValueOrUndefined(polygonGraphics._hierarchy, time);
+        positions = hierarchy ? hierarchy.positions : undefined;
         description = Property.getValueOrUndefined(entity._description, time);
         show = defined(positions);
     }
