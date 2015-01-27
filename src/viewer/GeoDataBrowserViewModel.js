@@ -750,7 +750,7 @@ and the file will not be uploaded or added to the map.')) {
                     extrasList.push({ "key": "data_url_type", "value":  requests[i].item.dataUrlType});
                 }
                 if (defined(requests[i].item.dataUrl)) {
-                    var dataUrl = undefined;
+                    var dataUrl = "";
                     if (requests[i].item.dataUrlType === 'wfs') {
                         var baseUrl = cleanUrl(requests[i].item.dataUrl);
                         if ((baseUrl !== requests[i].item.url)) {
@@ -759,7 +759,7 @@ and the file will not be uploaded or added to the map.')) {
                     } else if (requests[i].item.dataUrlType !== 'none') {
                         dataUrl = requests[i].item.dataUrl;
                     }
-                    if (defined (dataUrl)) {
+                    if (dataUrl !== "") {
                         extrasList.push({ "key": "data_url", "value":  dataUrl});
                     }
                 }
