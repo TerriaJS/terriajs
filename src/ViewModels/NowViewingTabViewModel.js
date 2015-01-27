@@ -216,6 +216,7 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
 };
 
 NowViewingTabViewModel.prototype.selectStart = function(viewModel, e) {
+    // This function works around problems in IE9 where block divs are not draggable even when draggable="true".
     if (!viewModel.supportsReordering || !e || !e.currentTarget || !e.currentTarget.dragDrop) {
         return;
     }

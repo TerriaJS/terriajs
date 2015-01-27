@@ -75,9 +75,9 @@ var AusGlobeViewer = function(application) {
     var uri = new URI(url);
     var params = uri.search(true);
 
-    this.webGlSupported = (application.userProperties.map === '2d' || params.map === '2d') ? false : true;
+    var useCesium = (application.userProperties.map === '2d' || params.map === '2d') ? false : true;
     
-    if (this.webGlSupported && !supportsWebgl()) {
+    if (useCesium && !supportsWebgl()) {
         PopupMessageViewModel.open('ui', {
             title : 'WebGL not supported',
             message : '\
@@ -88,7 +88,7 @@ including the latest versions of <a href="http://www.google.com/chrome" target="
 <a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
 Your web browser does not appear to support WebGL, so you will see a limited, 2D-only experience.'
         });
-        this.webGlSupported = false;
+        useCesium = false;
     }
 
     if (document.body.clientWidth < 520 || document.body.clientHeight < 400) {
@@ -103,6 +103,8 @@ For a better experience we\'d suggest you visit the application from a larger sc
 If you\'re on a desktop or laptop, consider increasing the size of your window.'
         });
     }
+
+    application.viewerMode = useCesium ? ViewerMode.CesiumTerrain : ViewerMode.Leaflet;
     
     //TODO: perf test to set environment
 
@@ -112,9 +114,9 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.application = application;
 
-    ga('send', 'event', 'startup', 'initialViewer', this.webGlSupported ? 'cesium' : 'leaflet');
+    ga('send', 'event', 'startup', 'initialViewer', useCesium ? 'cesium' : 'leaflet');
 
-    this.selectViewer(this.webGlSupported);
+    this.selectViewer(useCesium);
 
     knockout.getObservable(this.application, 'viewerMode').subscribe(function() {
         changeViewer(this);
@@ -140,26 +142,44 @@ function changeViewer(viewer) {
     var newMode = application.viewerMode;
 
     if (newMode === ViewerMode.Leaflet) {
-        ga('send', 'event', 'mapSettings', 'switchViewer', '2D');
-        viewer.selectViewer(false);
-    } else if (newMode === ViewerMode.CesiumTerrain) {
-        ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
-
-        if (defined(application.leaflet)) {
-            viewer.selectViewer(true);
-        } else {
-            application.cesium.scene.globe.terrainProvider = new CesiumTerrainProvider({
-                url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+        if (!application.leaflet) {
+            ga('send', 'event', 'mapSettings', 'switchViewer', '2D');
+            viewer.selectViewer(false);
+        }
+    } else {
+        if (!supportsWebgl()) {
+            PopupMessageViewModel.open('ui', {
+                title : 'WebGL not supported',
+                message : '\
+Your web browser cannot display the map in 3D because it does not support WebGL.  Please upgrade to the \
+latest version of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, \
+<a href="https://www.apple.com/au/osx/how-to-upgrade/" target="_blank">Apple Safari</a>, or \
+<a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>.'
             });
-        }
-    } else if (newMode === ViewerMode.CesiumEllipsoid) {
-        ga('send', 'event', 'mapSettings', 'switchViewer', 'Smooth 3D');
 
-        if (defined(application.leaflet)) {
-            viewer.selectViewer(true);
-        }
+            application.viewerMode = ViewerMode.Leaflet;
+        } else {
+            if (newMode === ViewerMode.CesiumTerrain) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
 
-        application.cesium.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
+                if (defined(application.leaflet)) {
+                    viewer.selectViewer(true);
+                } else {
+                    application.cesium.scene.globe.terrainProvider = new CesiumTerrainProvider({
+                        url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+                    });
+                }
+            } else if (newMode === ViewerMode.CesiumEllipsoid) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', 'Smooth 3D');
+
+                if (defined(application.leaflet)) {
+                    viewer.selectViewer(true);
+                }
+
+                application.cesium.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
+            }
+        }
     }
 }
 
