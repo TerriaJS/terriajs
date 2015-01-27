@@ -686,11 +686,10 @@ us via email at nationalmap@lists.nicta.com.au.'
         }
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
-    //Catch really bad start up and switch to 2D
-    //TODO: if we add a popup yes/no we could do this more interactively
+    //Simple monitor to start up and switch to 2D if seem to be stuck.
     this.monitor = new FrameRateMonitor({ 
         scene: scene, 
-        minimumFrameRateDuringWarmup: 1,
+        minimumFrameRateDuringWarmup: 2,
         minimumFrameRateAfterWarmup: 0,
         samplingWindow: 2
     });
