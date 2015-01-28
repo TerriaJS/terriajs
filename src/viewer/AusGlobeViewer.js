@@ -53,8 +53,8 @@ var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewM
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-//var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
-//var runLater = require('../Core/runLater');
+var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
+var runLater = require('../Core/runLater');
 
 var corsProxy = require('../Core/corsProxy');
 var Cesium = require('../Models/Cesium');
@@ -490,27 +490,27 @@ us via email at nationalmap@lists.nicta.com.au.'
         ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     //Simple monitor to start up and switch to 2D if seem to be stuck.
-//     this.monitor = new FrameRateMonitor({ 
-//         scene: scene, 
-//         minimumFrameRateDuringWarmup: 2,
-//         minimumFrameRateAfterWarmup: 0,
-//         samplingWindow: 2
-//     });
-//     this.monitor.lowFrameRate.addEventListener( function() {
-//         if (!defined(that.slow3DPerformanceMessageViewed)) {
-//             PopupMessageViewModel.open('ui', {
-//                 title : 'Unusually Slow Performance Detected',
-//                 message : '\
-// It appears that your system is capable of running National Map in 3D mode, but is having significant performance issues. \
-// We are automatically switching to 2D mode to help resolve this issue.  If you want to switch back to 3D mode you can select \
-// that option from the Maps button.'
-//             });
-//             that.slow3DPerformanceMessageViewed = true;
-//             runLater(function() { 
-//                 that.selectViewer(false); 
-//             });
-//         }
-//     });
+     this.monitor = new FrameRateMonitor({ 
+         scene: scene, 
+         minimumFrameRateDuringWarmup: 0.5,
+         minimumFrameRateAfterWarmup: 0,
+         samplingWindow: 2
+     });
+     this.monitor.lowFrameRate.addEventListener( function() {
+         if (!defined(that.slow3DPerformanceMessageViewed)) {
+             PopupMessageViewModel.open('ui', {
+                 title : 'Unusually Slow Performance Detected',
+                 message : '\
+ It appears that your system is capable of running National Map in 3D mode, but is having significant performance issues. \
+ We are automatically switching to 2D mode to help resolve this issue.  If you want to switch back to 3D mode you can select \
+ that option from the Maps button.'
+             });
+             that.slow3DPerformanceMessageViewed = true;
+             runLater(function() { 
+                 that.selectViewer(false); 
+             });
+         }
+     });
 
     return viewer;
 };
@@ -559,7 +559,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
 
-            //this.monitor.destroy();
+            this.monitor.destroy();
             this.viewer.destroy();
             this.viewer = undefined;
         }
