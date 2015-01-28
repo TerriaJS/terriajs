@@ -40,15 +40,41 @@ var NavigationViewModel = function(application) {
     this.showTilt = defined(this.application.cesium);
     this.currentTilt = 0;
 
-    knockout.track(this, ['showTilt', 'currentTilt']);
+    this.showCompass = defined(this.application.cesium);
+    this.heading = this.application.cesium.scene.camera.heading;
 
-    application.afterViewerChanged.addEventListener(function() {
-        if (defined(this.application.cesium)) {
-            this.showTilt = true;
+    this._unsubcribeFromPostRender = undefined;
+
+    knockout.track(this, ['showTilt', 'currentTilt', 'heading']);
+
+    var that = this;
+
+    function viewerChange() {
+        if (defined(that.application.cesium)) {
+            if (that._unsubcribeFromPostRender) {
+                that._unsubcribeFromPostRender();
+                that._unsubcribeFromPostRender = undefined;
+            }
+
+            that.showTilt = true;
+            that.showCompass = true;
+
+            that._unsubcribeFromPostRender = that.application.cesium.scene.postRender.addEventListener(function() {
+                that.heading = that.application.cesium.scene.camera.heading;
+            });
         } else {
-            this.showTilt = false;
+            if (that._unsubcribeFromPostRender) {
+                that._unsubcribeFromPostRender();
+                that._unsubcribeFromPostRender = undefined;
+            }
+            that.showTilt = false;
+            that.showCompass = false;
         }
-    }, this);
+    }
+
+    application.afterViewerChanged.addEventListener(viewerChange);
+
+    viewerChange();
 };
 
 NavigationViewModel.prototype.show = function(container) {

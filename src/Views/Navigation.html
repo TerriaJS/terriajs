@@ -1,6 +1,6 @@
 <div class="compass">
     <div class="compass-rotation-marker" data-bind="cesiumSvgPath: { path: svgCompassRotationMarker, width: 145, height: 145 }"></div>
-    <div class="compass-outer-ring" data-bind="cesiumSvgPath: { path: svgCompassOuterRing, width: 145, height: 145 }"></div>
+    <div class="compass-outer-ring" data-bind="style: { transform: 'rotate(-' + heading + 'rad)' }, cesiumSvgPath: { path: svgCompassOuterRing, width: 145, height: 145 }"></div>
     <div class="compass-gyro" data-bind="cesiumSvgPath: { path: svgCompassGyro, width: 145, height: 145 }"></div>
 </div>
 <div class="navigation-controls">
