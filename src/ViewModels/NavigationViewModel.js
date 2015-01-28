@@ -42,10 +42,11 @@ var NavigationViewModel = function(application) {
 
     this.showCompass = defined(this.application.cesium);
     this.heading = this.application.cesium.scene.camera.heading;
+    this.isOrbiting = false;
 
     this._unsubcribeFromPostRender = undefined;
 
-    knockout.track(this, ['showTilt', 'currentTilt', 'heading']);
+    knockout.track(this, ['showTilt', 'currentTilt', 'heading', 'isOrbiting']);
 
     var that = this;
 
