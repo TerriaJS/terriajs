@@ -1,7 +1,7 @@
 .navigation-controls {
     .floating-vertical;
     right: 25px;
-    top: 155px;
+    top: 200px;
     width: 35px;
     border: 1px solid rgba(255,255,255,0.1);
 }
@@ -48,6 +48,45 @@
     width: 24px;
     height: 24px;
     fill: @floating-text-color;
+}
+
+.compass {
+    .opaque-to-input;
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    width: 145px;
+    height: 145px;
+    
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+}
+
+.compass-outer-ring {
+    position: absolute;
+    top: 15px;
+    width: 145px;
+    height: 145px;
+    fill: #CCC;
+}
+
+.compass-gyro {
+    position: absolute;
+    top: 15px;
+    width: 145px;
+    height: 145px;
+    fill: #CCC;
+}
+
+.compass-rotation-marker {
+    position: absolute;
+    top: 15px;
+    width: 145px;
+    height: 145px;
+    fill: @highlight-color;
 }
 
 // Don't display the nav controls on small screens like mobile phones.

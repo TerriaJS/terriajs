@@ -19,6 +19,9 @@ var svgZoomIn = require('../SvgPaths/svgZoomIn');
 var svgZoomOut = require('../SvgPaths/svgZoomOut');
 var svgReset = require('../SvgPaths/svgReset');
 var svgTilt = require('../SvgPaths/svgTilt');
+var svgCompassOuterRing = require('../SvgPaths/svgCompassOuterRing');
+var svgCompassGyro = require('../SvgPaths/svgCompassGyro');
+var svgCompassRotationMarker = require('../SvgPaths/svgCompassRotationMarker');
 
 var NavigationViewModel = function(application) {
     this.application = application;
@@ -27,6 +30,9 @@ var NavigationViewModel = function(application) {
     this.svgZoomOut = svgZoomOut;
     this.svgReset = svgReset;
     this.svgTilt = svgTilt;
+    this.svgCompassOuterRing = svgCompassOuterRing;
+    this.svgCompassGyro = svgCompassGyro;
+    this.svgCompassRotationMarker = svgCompassRotationMarker;
 
     this._tiltInProgress = false;
     this._nextTilt = undefined;
