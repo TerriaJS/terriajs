@@ -1,0 +1,24 @@
+<div class="explorer-panel" data-bind="css: { 'explorer-panel-collapsed': !isOpen }">
+    <div class="explorer-panel-header"> 
+        <div class="explorer-panel-tab-area" data-bind="foreach: tabs">
+          <div class="explorer-panel-tab"
+              data-bind="visible: isVisible,
+                         css: { 'explorer-panel-tab-active': isActive },
+                         click: activate">
+            <div class="explorer-panel-tab-content">
+              <div data-bind="text: name"></div>
+              <div class="explorer-panel-tab-badge" data-bind="text: badgeText, visible: typeof badgeText !== 'undefined', css: { 'explorer-panel-tab-badge-pop': badgeIsPopped }, event: { transitionend: unpopBadge }"></div>
+            </div>
+          </div>
+        </div>
+        <div class="explorer-panel-collapse-button clickable" data-bind="click: toggleOpen">
+            <div class="explorer-panel-collapse-button-icon" data-bind="cesiumSvgPath: { path: svgCollapse, width: 6, height: 9 }, css: { 'brand-bar-menu-icon-highlighted': isOpen }"></div>
+        </div>
+    </div>
+    <div class="explorer-panel-body" data-bind="isOpen, foreach: tabs, css: { 'explorer-panel-body-collapsed': !$root.isOpen }">
+      <div class="explorer-panel-frame" data-bind="css: { 'explorer-panel-frame-inactive-left': !isActive && $index() < $root.activeTabIndex, 'explorer-panel-frame-inactive-right': !isActive && $index() > $root.activeTabIndex }">
+        <div class="explorer-panel-body-pane" data-bind="embeddedComponent: $data">
+        </div>
+      </div>
+    </div>
+</div>
