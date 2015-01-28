@@ -559,7 +559,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
 
-            this.monitor.destroy();
+            //this.monitor.destroy();
             this.viewer.destroy();
             this.viewer = undefined;
         }
