@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,ga*/
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
@@ -42,11 +43,16 @@ var NavigationViewModel = function(application) {
 
     this.showCompass = defined(this.application.cesium);
     this.heading = this.application.cesium.scene.camera.heading;
+
     this.isOrbiting = false;
+    this.isRotating = false;
+    this.initialRotationAngle = undefined;
+    this.mouseMoveFunction = undefined;
+    this.mouseUpFunction = undefined;
 
     this._unsubcribeFromPostRender = undefined;
 
-    knockout.track(this, ['showTilt', 'currentTilt', 'heading', 'isOrbiting']);
+    knockout.track(this, ['showTilt', 'currentTilt', 'heading', 'isOrbiting', 'isRotating']);
 
     var that = this;
 
@@ -169,6 +175,77 @@ NavigationViewModel.prototype.tilt = function() {
     }
 
     this.application.currentViewer.notifyRepaintRequired();
+};
+
+var vectorScratch = new Cartesian2();
+
+NavigationViewModel.prototype.handleMouseDown = function(viewModel, e) {
+    var compassElement = e.currentTarget;
+    var compassRectangle = e.currentTarget.getBoundingClientRect();
+    var maxDistance = compassRectangle.width / 2.0;
+    var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
+    var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
+    var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+    var distanceFromCenter = Cartesian2.magnitude(vector);
+
+    var distanceFraction = distanceFromCenter / maxDistance;
+
+    var nominalTotalRadius = 145;
+    var norminalGyroRadius = 50;
+
+    if (distanceFraction < norminalGyroRadius / nominalTotalRadius) {
+        console.log('gyro');
+    } else if (distanceFraction < 1.0) {
+        console.log('start rotating!');
+
+        this.isRotating = true;
+        this.initialRotationAngle = Math.atan2(vector.y, vector.x);
+
+        var that = this;
+        this.mouseMoveFunction = function(e) {
+            var compassRectangle = compassElement.getBoundingClientRect();
+            var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
+            var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
+            var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+            var angle = Math.atan2(vector.y, vector.x);
+
+            var camera = that.application.cesium.scene.camera;
+
+            console.log('angle: ' + angle);
+
+            camera.setView({
+                heading : CesiumMath.zeroToTwoPi(angle)
+            });
+
+            that.application.cesium.notifyRepaintRequired();
+        };
+
+        this.mouseUpFunction = function(e) {
+            console.log('done rotating');
+            that.isRotating = false;
+            document.removeEventListener('mousemove', that.mouseMoveFunction, false);
+            document.removeEventListener('mouseup', that.mouseUpFunction, false);
+
+            that.mouseMoveFunction = undefined;
+            that.mouseUpFunction = undefined;
+        };
+
+        document.addEventListener('mousemove', this.mouseMoveFunction, false);
+        document.addEventListener('mouseup', this.mouseUpFunction, false);
+    } else {
+        console.log('none');
+        return true;
+    }
+};
+
+NavigationViewModel.prototype.startRotate = function() {
+    if (!defined(this.application.cesium)) {
+        return;
+    }
+
+    ga('send', 'event', 'navigation', 'click', 'rotate');
+
+    console.log('rotate');
 };
 
 function getCameraFocus(scene) {

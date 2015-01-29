@@ -1,4 +1,4 @@
-<div class="compass">
+<div class="compass" data-bind="event: { mousedown: handleMouseDown }">
     <div class="compass-rotation-marker" data-bind="visible: isOrbiting, cesiumSvgPath: { path: svgCompassRotationMarker, width: 145, height: 145 }"></div>
     <div class="compass-outer-ring" title="Click and drag to rotate the camera" data-bind="style: { transform: 'rotate(-' + heading + 'rad)' }, cesiumSvgPath: { path: svgCompassOuterRing, width: 145, height: 145 }"></div>
     <div class="compass-gyro" data-bind="cesiumSvgPath: { path: svgCompassGyro, width: 145, height: 145 }"></div>
