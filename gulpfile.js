@@ -10,6 +10,7 @@ var browserify = require('browserify');
 var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
+var less = require('gulp-less');
 var uglify = require('gulp-uglify');
 var jasmine = require('gulp-jasmine');
 var exec = require('child_process').exec;
@@ -48,7 +49,15 @@ gulp.task('build-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(specGlob), false);
 });
 
-gulp.task('build', ['build-app', 'build-specs']);
+gulp.task('build-css', function() {
+    return gulp.src('./src/main.less')
+        .pipe(less({
+
+        }))
+        .pipe(gulp.dest('./public/build'));
+});
+
+gulp.task('build', ['build-css', 'build-app', 'build-specs']);
 
 gulp.task('release-app', ['prepare-cesium'], function() {
     return build(appJSName, appEntryJSName, true);
@@ -58,7 +67,7 @@ gulp.task('release-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(specGlob), true);
 });
 
-gulp.task('release', ['release-app', 'release-specs']);
+gulp.task('release', ['build-css', 'release-app', 'release-specs']);
 
 gulp.task('watch-app', ['prepare-cesium'], function() {
     return watch(appJSName, appEntryJSName, false);
@@ -68,7 +77,11 @@ gulp.task('watch-specs', ['prepare-cesium'], function() {
     return watch(specJSName, glob.sync(specGlob), false);
 });
 
-gulp.task('watch', ['watch-app', 'watch-specs']);
+gulp.task('watch-css', ['build-css'], function() {
+    return gulp.watch(['./src/main.less', './src/Styles/*.less'], ['build-css']);
+});
+
+gulp.task('watch', ['watch-app', 'watch-specs', 'watch-css']);
 
 gulp.task('lint', function(){
     return gulp.src(['src/**/*.js', 'spec/**/*.js'])
@@ -157,11 +170,11 @@ function bundle(name, bundler, minify, catchErrors) {
 }
 
 function build(name, files, minify) {
-    return bundle(name, browserify(files).transform('deamdify'), minify, false);
+    return bundle(name, browserify(files).transform('brfs').transform('deamdify'), minify, false);
 }
 
 function watch(name, files, minify) {
-    var bundler = watchify(files).transform('deamdify');
+    var bundler = watchify(files).transform('brfs').transform('deamdify');
 
     function rebundle() {
         var start = new Date();

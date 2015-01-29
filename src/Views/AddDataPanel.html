@@ -1,0 +1,51 @@
+<div class="modal-background" data-bind="click: closeIfClickOnBackground">
+    <div class="add-data-panel">
+        <div class="add-data-header">
+            <div class="add-data-close-button" data-bind="click: close">&times;</div>
+            <h1>Add data</h1>
+        </div>
+        <div class="add-data-content">
+            <p>
+                Use this panel to add data to the map from your local system or from elsewhere on the web.
+            </p>
+            <p>
+                Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel.
+            </p>
+            <form class="add-data-form" data-bind="submit: addUrl">
+                <h2>Step 1</h2>
+                <label class="add-data-content-type">
+                    Select the type of file or web service to add:
+                    <select class="add-data-content-type-select" data-bind="value: dataType">
+                        <option value="auto">Auto-detect (recommended)</option>
+                        <option value="wms-getCapabilities">Web Map Service (WMS) Server</option>
+                        <option value="wfs-getCapabilities">Web Feature Service (WFS) Server</option>
+                        <option value="geojson">GeoJSON</option>
+                        <option value="kml">KML or KMZ</option>
+                        <option value="csv">CSV</option>
+                        <option value="czml">CZML</option>
+                        <option value="gpx">GPX</option>
+                        <option value="other">Other (use conversion service)</option>
+                    </select>
+                </label>
+
+                <h2>Step 2</h2>
+                <div class="add-data-select-file-button" data-bind="click: selectFileToUpload">Browse to select a local data file to upload</div>
+                <input type="file" style="display: none;" id="add-data-panel-upload-file" data-bind="event: { change: addUploadedFile }" />
+
+                <div class="add-data-or">-or-</div>
+
+                Enter the URL of the data file or web service:
+                <div class="add-data-url-input-outer-holder">
+                    <div class="add-data-url-input-inner-holder">
+                        <input class="add-data-url-input" type="text" placeholder="e.g. http://data.gov.au/geoserver/wms" data-bind="value: url" />
+                    </div>
+                    <input class="add-data-url-add-button" type="submit" value="Add" />
+                </div>
+
+                <div class="add-data-tip">
+                    <strong>TIP:</strong> you can also drag data files directly onto the map.
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

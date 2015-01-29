@@ -1,0 +1,64 @@
+.navigation-controls {
+    .floating-vertical;
+    right: 25px;
+    top: 155px;
+    width: 35px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.navigation-control {
+    .clickable;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: @floating-element-border;
+}
+
+.navigation-control-last {
+    .navigation-control;
+    border-bottom: 0;
+}
+
+.navigation-control-icon-zoom-in {
+    position: relative;
+    left: 8px;
+    width: 22px;
+    height: 22px;
+    fill: @floating-text-color;
+}
+
+.navigation-control-icon-zoom-out {
+    position: relative;
+    left: 8px;
+    width: 22px;
+    height: 22px;
+    fill: @floating-text-color;
+}
+
+.navigation-control-icon-reset {
+    position: relative;
+    left: 10px;
+    width: 15px;
+    height: 15px;
+    fill: @floating-text-color;
+}
+
+.navigation-control-icon-tilt {
+    position: relative;
+    left: 7px;
+    width: 24px;
+    height: 24px;
+    fill: @floating-text-color;
+}
+
+// Don't display the nav controls on small screens like mobile phones.
+@media screen and (max-width: 400px) {
+    .navigation-controls {
+        display: none;
+    }
+}
+
+@media print {
+    .navigation-controls {
+        display: none;
+    }
+}

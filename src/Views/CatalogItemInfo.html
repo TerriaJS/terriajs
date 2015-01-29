@@ -1,0 +1,117 @@
+<script type="text/html" id="catalog-item-info-item-template">
+    <tr>
+        <td class="catalog-item-info-properties-name-cell" data-bind="click: toggleOpen, css: 'catalog-item-info-properties-level' + $parents.length + (hasChildren ? ' catalog-item-info-properties-parent' : '')">
+            <!-- ko if: hasChildren && isOpen -->
+            <div class="catalog-item-info-properties-arrow" data-bind="cesiumSvgPath: { path: $root.svgArrowDown, width: 32, height: 32 }"></div>
+            <!-- /ko -->
+            <!-- ko if: hasChildren && !isOpen -->
+            <div class="catalog-item-info-properties-arrow" data-bind="cesiumSvgPath: { path: $root.svgArrowRight, width: 32, height: 32 }"></div>
+            <!-- /ko -->
+            <!-- ko if: !hasChildren -->
+            <div class="catalog-item-info-properties-arrow"></div>
+            <!-- /ko -->
+            <div class="catalog-item-info-properties-name" data-bind="text: name"></div>
+        </td>
+        <!-- ko if: hasChildren -->
+            <td></td>
+        <!-- /ko -->
+        <!-- ko if: valueIsArray -->
+            <td data-bind="foreach: value">
+                <span data-bind="if: $index() !== 0">; </span>
+                <span data-bind="text: $data"></span>
+            </td>
+        <!-- /ko -->
+        <!-- ko ifnot: hasChildren || valueIsArray -->
+            <td data-bind="text: value"></td>
+        <!-- /ko -->
+    </tr>
+    <!-- ko if: hasChildren && isOpen -->
+        <!-- ko template: { name: 'catalog-item-info-item-template', foreach: items } -->
+        <!-- /ko -->
+    <!-- /ko -->
+</script>
+
+<div class="modal-background" data-bind="click: closeIfClickOnBackground">
+    <div class="catalog-item-info" data-bind="css : { loadingIndicator : catalogItem.metadata.isLoading }">
+        <div class="catalog-item-info-header">
+            <div class="catalog-item-info-close-button" data-bind="click: close">&times;</div>
+            <h1 data-bind="text: catalogItem.name"></h1>
+        </div>
+        <div class="catalog-item-info-content">
+            <div class="catalog-item-info-section">
+                <!-- ko if: catalogItem.description -->
+                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.description"></div>
+                <!-- /ko -->
+                <!-- ko if: !catalogItem.description -->
+                <div class="catalog-item-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>
+                <!-- /ko -->
+            </div>
+            <div class="catalog-item-info-section">
+                <h2>Data Custodian</h2>
+                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.dataCustodian"></div>
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
+                <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
+                <input class="catalog-item-info-baseUrl" readonly type="text" data-bind="value: catalogItem.url" size="80" onclick="this.select();" />
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.metadataUrl">
+                <h2>Metadata URL</h2>
+                <a class="catalog-item-info-description" data-bind="attr: { href: catalogItem.metadataUrl }, text: catalogItem.metadataUrl" target="_blank"></a>
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wfs' || catalogItem.dataUrlType === 'wfs-complete'">
+                <h2>Data URL</h2>
+                <div class="catalog-item-info-description">
+                    Use the link below to download GeoJSON data.  See the
+                    <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>
+                    for more information on customising URL query parameters.
+                    <div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'direct'">
+                <h2>Data URL</h2>
+                <div class="catalog-item-info-description">
+                    Use the link below to download data directly.
+                    <div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="catalog-item-info-section">
+                <h2>Data Details</h2>
+                <div class="catalog-item-info-table">
+                    <!-- ko if: catalogItem.metadata.dataSourceMetadata.hasChildren -->
+                    <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.dataSourceMetadata.items }">
+                    </table>
+                    <!-- /ko -->
+                    <!-- ko if: catalogItem.metadata.catalogItemErrorMessage -->
+                    <table>
+                        <tr>
+                            <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
+                                <div class="catalog-item-info-properties-arrow"></div>
+                                <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.catalogItemErrorMessage"></div>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- /ko -->
+                </div>
+            </div>
+            <div class="catalog-item-info-section">
+                <h2>Service Details</h2>
+                <div class="catalog-item-info-table">
+                    <!-- ko if: catalogItem.metadata.serviceMetadata.hasChildren -->
+                    <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.serviceMetadata.items }">
+                    </table>
+                    <!-- /ko -->
+                    <!-- ko if: catalogItem.metadata.serviceErrorMessage -->
+                    <table>
+                        <tr>
+                            <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
+                                <div class="catalog-item-info-properties-arrow"></div>
+                                <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.serviceErrorMessage"></div>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

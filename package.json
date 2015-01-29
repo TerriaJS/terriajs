@@ -21,6 +21,7 @@
     "yargs": "1.2.6"
   },
   "devDependencies": {
+    "brfs": "^1.2.0",
     "browserify": "^4.2.3",
     "deamdify": "^0.1.1",
     "exorcist": "^0.1.6",
@@ -31,10 +32,12 @@
     "gulp-jasmine": "~0.2.0",
     "gulp-jsdoc": "^0.1.4",
     "gulp-jshint": "~1.6.1",
+    "gulp-less": "^1.3.6",
     "gulp-sourcemaps": "1.1.0",
     "gulp-uglify": "0.3.1",
     "gulp-util": "^3.0.0",
     "gulp-watch": "~0.6.5",
+    "less": "^2.1.1",
     "vinyl-buffer": "0.0.0",
     "vinyl-source-stream": "^0.1.1",
     "vinyl-transform": "0.0.1",

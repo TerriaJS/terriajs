@@ -1,0 +1,88 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    background: #000;
+    font-size: 16px;
+    font-family: @default-font;
+}
+
+.full-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+
+    -webkit-transition: left @explorer-panel-close-animation-length ease-out;
+    -moz-transition: left @explorer-panel-close-animation-length ease-out;
+    -ms-transition: left @explorer-panel-close-animation-length ease-out;
+    -o-transition: left @explorer-panel-close-animation-length ease-out;
+    transition: left @explorer-panel-close-animation-length ease-out;
+}
+
+.transparent-to-input {
+    pointer-events: none;
+}
+
+.opaque-to-input {
+    pointer-events: auto;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: @highlight-color;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.modal-background {
+    .opaque-to-input;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000; /* required for IE9 */
+}
+
+.modal {
+    position: absolute;
+    margin: auto;
+    background-color: @panel-background-color;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    max-height: 100%;
+    max-width: 100%;
+    font-family: @default-font;
+    color: @panel-emphasized-text-color;
+}
+
+#ui {
+    // This keeps the UI above the map in IE9.
+    z-index: 1000;
+}
+
+@media print {
+    .full-window {
+        position: initial;
+    }
+}
