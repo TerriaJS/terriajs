@@ -1,0 +1,41 @@
+.menu-bar {
+    .floating-horizontal;
+    right: 25px;
+    top: 20px;
+    height: 30px;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding-left: 9px;
+}
+
+.menu-bar-item {
+    display: inline-block;
+    font-family: @default-font;
+    font-size: 0.9em;
+    font-weight: 300;
+    line-height: 30px;
+    color: @menu-bar-text-color;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    border-right: @panel-element-border;
+    margin-left: -4px;
+}
+
+.menu-bar-item:last-child {
+    border: none;
+}
+
+.menu-bar-item:hover {
+    text-decoration: underline;
+}
+
+.menu-bar-item-enabled {
+    background-color: @menu-bar-active-background-color;
+    color: @menu-bar-active-text-color;
+}
+
+@media print {
+    .menu-bar {
+        display: none;
+    }
+}

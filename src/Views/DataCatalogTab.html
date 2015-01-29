@@ -1,0 +1,61 @@
+<script type="text/html" id="data-catalog-item-template">
+    <!-- ko if: typeof items === 'undefined' -->
+        <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+            <div class="data-catalog-member-top-row">
+                <div class="data-catalog-icon-holder">
+                    <div class="data-catalog-icon clickable" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
+                </div>
+                <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock"></div>
+                <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
+                <div class="data-catalog-item-info">
+                    <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
+                </div>
+            </div>
+        </div>
+    <!-- /ko -->
+
+    <!-- ko if: typeof items !== 'undefined' -->
+        <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+            <div class="data-catalog-member-top-row">
+                <div class="data-catalog-icon-holder">
+                    <div class="data-catalog-icon clickable" data-bind="click: toggleOpen, cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
+                </div>
+                <div class="data-catalog-group-label clickable" data-bind="click: toggleOpen, text: name, css: { 'data-catalog-opened-group': isOpen }"></div>
+            </div>
+
+            <!-- ko if: isOpen && (isLoading || items.length === 0) -->
+                <div class="data-catalog-group-contents">
+                    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 1)">
+                        <div class="data-catalog-item-label" data-bind="if: isLoading">Loading...</div>
+                        <div class="data-catalog-item-label" data-bind="if: !isLoading">This group does not contain any data items.</div>
+                    </div>
+                </div>
+            <!-- /ko -->
+
+            <!-- ko if: isOpen -->
+                <div class="data-catalog-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
+            <!-- /ko -->
+        </div>
+    <!-- /ko -->
+</script>
+
+<div class="data-catalog-top-group" data-bind="foreach: catalog.group.items">
+    <div class="data-catalog-top-group-header" data-bind="click: toggleOpen">
+        <div class="data-catalog-top-group-label" data-bind="text: name"></div>
+        <div class="data-catalog-icon-holder">
+            <div class="data-catalog-top-group-icon" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+        </div>
+    </div>
+    <!-- ko if: isLoading -->
+        <div class="data-catalog-top-group-contents">
+            <div class="data-catalog-member">
+                <div class="data-catalog-member-top-row">
+                    <div class="data-catalog-item-label">Loading...</div>
+                </div>
+            </div>
+        </div>
+    <!-- /ko -->
+    <!-- ko if: typeof items !== 'undefined' && isOpen -->
+        <div class="data-catalog-top-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
+    <!-- /ko -->
+</div>

@@ -1,0 +1,54 @@
+<div class="now-viewing">
+    <div class="now-viewing-toolbar">
+        <span class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Remove All</span>
+    </div>
+
+    <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
+        <div class="now-viewing-item" data-bind="attr: { nowViewingIndex: $index }, event : { dragenter: $root.dragEnter.bind($root), dragover: $root.dragEnter.bind($root) }">
+            <div class="now-viewing-item-top-row" data-bind="attr: { draggable: supportsReordering, nowViewingIndex: $index }, event : { dragstart: $root.dragStart.bind($root), dragend: $root.dragEnd.bind($root), selectstart: $root.selectStart.bind($root) }">
+                <div class="now-viewing-item-drag-handle-holder">
+                    <img class="now-viewing-item-drag-handle" data-bind="visible: supportsReordering" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." title="Drag to reorder data sources." />
+                </div>
+                <div class="now-viewing-item-icon-holder">
+                    <div class="now-viewing-item-icon clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                </div>
+                <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
+
+                <div class="now-viewing-item-arrow-holder">
+                    <div class="now-viewing-item-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                </div>
+            </div>
+            <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
+                <div class="now-viewing-action-menu">
+                    <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                    <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
+                    <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
+                </div>
+
+                <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
+                    OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
+                    <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
+                </div>
+
+                <!-- ko if: legendIsImage -->
+                <a data-bind="attr: { href: legendUrl }" target="_blank">
+                    <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
+                </a>
+                <!-- /ko -->
+                <!-- ko if: hasLegend && !legendIsImage -->
+                <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
+                <!-- /ko -->
+                <!-- ko if: !hasLegend -->
+                <div class="now-viewing-legend-text">No legend available for this data item.</div>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+
+    <div class="now-viewing-list" data-bind="visible: nowViewing.items.length === 0">
+        <div class="now-viewing-no-items">
+            Add data using the Data Catalogue tab.
+        </div>
+    </div>
+</div>
+
