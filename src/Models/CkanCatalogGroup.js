@@ -83,8 +83,7 @@ var CkanCatalogGroup = function(application) {
 
     /**
      * Gets or sets any extra wms parameters that should be added to the wms query urls in this CKAN group.
-     * If this property is undefined or if {@link CkanGroupViewModel#wmsParameters} then no extra 
-     * parameters are added.
+     * If this property is undefined then no extra parameters are added.
      * This property is observable.
      * @type {Object}
      */
