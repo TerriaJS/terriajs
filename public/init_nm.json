@@ -36,7 +36,8 @@
                             "layers": "MyBroadband_Map",
                             "parameters": {
                                 "tiled": true
-                            }
+                            },
+                            "dataUrlType": "none"
                         },
                         {
                             "name": "Broadband Availability",
@@ -53,7 +54,8 @@
                             "layers": "MyBroadband_Availability",
                             "parameters": {
                                 "tiled": true
-                            }
+                            },
+                            "dataUrlType": "none"
                         },
                         {
                             "name": "Broadband Availabilty no Borders",
@@ -70,7 +72,8 @@
                             "layers": "MyBroadband_Availability_no_outline",
                             "parameters": {
                                 "tiled": true
-                            }
+                            },
+                            "dataUrlType": "none"
                         },
                         {
                             "name": "Broadband Quality",
@@ -87,7 +90,8 @@
                             "layers": "MyBroadband_Quality",
                             "parameters": {
                                 "tiled": true
-                            }
+                            },
+                            "dataUrlType": "none"
                         },
                         {
                             "name": "Broadband ADSL Quality",
@@ -104,7 +108,8 @@
                             "layers": "MyBroadband_ADSL_Quality",
                             "parameters": {
                                 "tiled": true
-                            }
+                            },
+                            "dataUrlType": "none"
                         },
                         {
                             "name": "Broadband ADSL Quality no Borders",
@@ -121,7 +126,8 @@
                             "layers": "MyBroadband_ADSL_Quality_no_outline",
                             "parameters": {
                                 "tiled": true
-                            }
+                            },
+                            "dataUrlType": "none"
                         }
                     ]
                 },
@@ -396,7 +402,6 @@
                         {
                             "name": "Aquifer Contours",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
-                            "legendUrl": "",
                             "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                             "rectangle": [
                                 "130.9294316820001",
@@ -967,7 +972,6 @@
                         {
                             "name": "Gravity Image",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Gravity_Image_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "105.930454436693",
@@ -981,7 +985,6 @@
                         {
                             "name": "Land Cover",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Landcover_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "110",
@@ -995,7 +998,6 @@
                         {
                             "name": "Magnetic Image",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_observation/Magnetic_Image_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "106",
@@ -1009,7 +1011,6 @@
                         {
                             "name": "Surface Geology",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/earth_science/GA_Surface_Geology_of_Australia_WM/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "105.930454436693",
@@ -1023,7 +1024,6 @@
                         {
                             "name": "Earthquake Hazard",
                             "description": "[Licence](http://www.ga.gov.au/copyright)",
-                            "legendUrl": "http://www.ga.gov.au/gis/rest/services/hazards/EarthquakeHazard/MapServer/legend",
                             "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
                             "rectangle": [
                                 "106",
@@ -1033,7 +1033,8 @@
                             ],
                             "type": "wms",
                             "url": "http://www.ga.gov.au/gis/services/hazards/EarthquakeHazard/MapServer/WMSServer",
-                            "layers": "earthquakeHazard,hazardContours"
+                            "layers": "earthquakeHazard,hazardContours",
+                            "dataUrlType": "none"
                         }
                     ]
                 },
@@ -1199,10 +1200,10 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wms",
+                            "url": "http://data.gov.au/geoserver/taxation-statistics-2011-12/ows",
                             "layers": "95d9e550_8b36_4273_8df7_2b76c140e73a",
-                            "dataUrl": "http://data.gov.au/geoserver/taxation-statistics-2011-12/wfs?service=WFS&ve…3_8df7_2b76c140e73a&srsName=EPSG%3A4326&maxFeatures=1000&outputFormat=json",
-                            "dataUrlType": "wfs-complete"
+                            "dataUrl": "https://data.gov.au/dataset/taxation-statistics-2011-12",
+                            "dataUrlType": "direct"
                         }
                     ]
                 },
@@ -2470,9 +2471,7 @@
                     "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                     "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                     "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                    "type": "wms-getCapabilities",
-                    "dataUrl": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                    "dataUrlType": "wfs"
+                    "type": "wms-getCapabilities"
                 },
                 {
                     "name": "Boundaries (Australia Bureau of Statistics)",

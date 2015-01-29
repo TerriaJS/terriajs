@@ -67,6 +67,7 @@ var CatalogItem = function(application) {
      *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link CatalogItem#dataUrl} is not
      *            specified, the base URL will be this data item's URL.
      *  * `wfs-complete` - A complete, ready-to-use link to download features from a WFS server.
+     *  * `none` - There is no data link.
      * @type {String}
      */
     this.dataUrlType = undefined;

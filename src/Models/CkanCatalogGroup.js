@@ -17,6 +17,7 @@ var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
 var inherit = require('../Core/inherit');
 var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
+var ArcGisMapServerCatalogItem = require('./ArcGisMapServerCatalogItem');
 
 /**
  * A {@link CatalogGroup} representing a collection of layers from a [CKAN](http://ckan.org) server.
@@ -45,11 +46,15 @@ var CkanCatalogGroup = function(application) {
     this.dataCustodian = undefined;
 
     /**
-     * Gets or sets the filter query to pass to CKAN when querying the available data sources and their groups.  If this is string,
-     * it is passed to CKAN in the "fq" query parameter.  If it is an array of strings, each string in the array is passed to CKAN
-     * as an independent "fq" query parameter.  See the [Solr documentation](http://wiki.apache.org/solr/CommonQueryParameters#fq) for
-     * information about filter queries.  This property is observable.
-     * @type {String|String[]}
+     * Gets or sets the filter query to pass to CKAN when querying the available data sources and their groups.  Each string in the 
+     * array is passed to CKAN as an independent search string and the results are concatenated to create the complete list.  The
+     * search string is equivlent to what would be in the parameters segment of the url calling the CKAN search api.
+     * See the [Solr documentation](http://wiki.apache.org/solr/CommonQueryParameters#fq) for information about filter queries.
+     *   To get all the datasets with wms resources the query array would be ['fq=res_format%3awms']
+     *   To get all the datasets in the Surface Water group it would be ['q=groups%3dSurface%20Water&fq=res_format%3aWMS']
+     *   And to get both wms and esri-mapService datasets it would be ['q=res_format:WMS', 'q=res_format:%22Esri%20REST%22' ]
+     * This property is observable.
+     * @type {String[]}
      */
     this.filterQuery = undefined;
 
@@ -76,7 +81,15 @@ var CkanCatalogGroup = function(application) {
      */
     this.minimumMaxScaleDenominator = undefined;
 
-    knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist']);
+    /**
+     * Gets or sets any extra wms parameters that should be added to the wms query urls in this CKAN group.
+     * If this property is undefined then no extra parameters are added.
+     * This property is observable.
+     * @type {Object}
+     */
+    this.wmsParameters = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist', 'wmsParameters']);
 };
 
 inherit(CatalogGroup, CkanCatalogGroup);
@@ -159,17 +172,32 @@ CkanCatalogGroup.prototype._load = function() {
         return undefined;
     }
 
-    var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&fq=' + encodeURIComponent(this.filterQuery);
-
     var that = this;
 
-    return loadJson(url).then(function(json) {
+    var promises = [];
+    for (var i = 0; i < this.filterQuery.length; i++) {
+        var url = cleanAndProxyUrl(this.application, this.url) + '/api/3/action/package_search?rows=100000&' + this.filterQuery[i];
+
+        var promise = loadJson(url);
+
+        promises.push(promise);
+    }
+
+    return when.all(promises).then( function(queryResults) {
+        if (!defined(queryResults)) {
+            return;
+        }
+        var allResults = queryResults[0];
+        for (var p = 1; p < queryResults.length; p++) {
+            allResults.result.results = allResults.result.results.concat(queryResults[p].result.results);
+        }
+
         if (that.filterByWmsGetCapabilities) {
-            return when(filterResultsByGetCapabilities(that, json), function() {
-                populateGroupFromResults(that, json);
+            return when(filterResultsByGetCapabilities(that, allResults), function() {
+                populateGroupFromResults(that, allResults);
             });
         } else {
-            populateGroupFromResults(that, json);
+            populateGroupFromResults(that, allResults);
         }
     }).otherwise(function() {
         throw new ModelError({
@@ -193,6 +221,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 
 // The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
 var wmsFormatRegex = /^wms$/i;
+var esriRestFormatRegex = /^esri rest$/i;
 
 function filterResultsByGetCapabilities(ckanGroup, json) {
     var wmsServers = {};
@@ -307,12 +336,22 @@ function populateGroupFromResults(ckanGroup, json) {
             textDescription = item.notes.replace(/\n/g, '<br/>');
         }
 
-        if (item.license_url) {
+        if (item.license_url && (item.notes === null || item.notes.indexOf('[Licence]') === -1)) {
             textDescription += '<br/>[Licence](' + item.license_url + ')';
         }
 
+        var extras = {};
+        if (defined(item.extras)) {
+            for (var idx = 0; idx < item.extras.length; idx++) {
+                extras[item.extras[idx].key] = item.extras[idx].value;
+            }
+        }
+
+        var dataUrl = extras.data_url;
+        var dataUrlType = extras.data_url_type;
+
         var rectangle;
-        var bboxString = item.geo_coverage;
+        var bboxString = item.geo_coverage || extras.geo_coverage;
         if (defined(bboxString)) {
             var parts = bboxString.split(',');
             if (parts.length === 4) {
@@ -320,11 +359,11 @@ function populateGroupFromResults(ckanGroup, json) {
             }
         }
 
-        // Currently, we only support WMS layers.
+        // Currently, we support WMS and Esri REST layers.
         var resources = item.resources;
         for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
             var resource = resources[resourceIndex];
-            if (resource.__filtered || !resource.format.match(wmsFormatRegex)) {
+            if (resource.__filtered || (!resource.format.match(wmsFormatRegex) && !resource.format.match(esriRestFormatRegex))) {
                 continue;
             }
 
@@ -339,23 +378,32 @@ function populateGroupFromResults(ckanGroup, json) {
             // Extract the layer name from the WMS URL.
             var uri = new URI(wmsUrl);
             var params = uri.search(true);
-            var layerName = params.LAYERS;
+            var layerName = params.LAYERS || params.layers;
 
             // Remove the query portion of the WMS URL.
             uri.search('');
             var url = uri.toString();
 
-            var newItem = new WebMapServiceCatalogItem(ckanGroup.application);
+            var newItem;
+            if (resource.format.match(esriRestFormatRegex)) {
+                newItem = new ArcGisMapServerCatalogItem(ckanGroup.application);
+            } else {
+                newItem = new WebMapServiceCatalogItem(ckanGroup.application);
+            }
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;
             newItem.layers = layerName;
             newItem.rectangle = rectangle;
+            newItem.dataUrl = dataUrl;
+            newItem.dataUrlType = dataUrlType;
+              //This should be deprecated and done on a server by server basis when feasible
+            newItem.parameters = ckanGroup.wmsParameters;
 
             if (defined(ckanGroup.dataCustodian)) {
                 newItem.dataCustodian = ckanGroup.dataCustodian;
             } else if (item.organization && item.organization.title) {
-                newItem.dataCustodian = item.organization.title;
+                newItem.dataCustodian = item.organization.description || item.organization.title;
             }
 
             var groups = item.groups;

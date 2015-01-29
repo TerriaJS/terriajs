@@ -139,8 +139,8 @@ var WebMapServiceCatalogItem = function(application) {
             if (defined(this._legendUrl)) {
                 return this._legendUrl;
             }
-
-            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + this.layers;
+            var layer = this.layers.split(',')[0];
+            return cleanUrl(this.url) + '?service=WMS&version=1.3.0&request=GetLegendGraphic&format=image/png&layer=' + layer;
         },
         set : function(value) {
             this._legendUrl = value;
@@ -269,7 +269,7 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
         parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : this.tilingScheme
+        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme()
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
@@ -324,7 +324,8 @@ WebMapServiceCatalogItem.defaultParameters = {
     transparent: true,
     format: 'image/png',
     exceptions: 'application/vnd.ogc.se_xml',
-    styles: ''
+    styles: '',
+    tiled: true
 };
 
 function cleanAndProxyUrl(application, url) {
