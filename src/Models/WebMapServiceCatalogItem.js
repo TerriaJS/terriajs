@@ -14,7 +14,6 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var ImageryProvider = require('../../third_party/cesium/Source/Scene/ImageryProvider');
 
 var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
