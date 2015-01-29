@@ -198,8 +198,12 @@ NavigationViewModel.prototype.handleMouseDown = function(viewModel, e) {
     } else if (distanceFraction < 1.0) {
         console.log('start rotating!');
 
+        document.removeEventListener('mousemove', this.mouseMoveFunction, false);
+        document.removeEventListener('mouseup', this.mouseUpFunction, false);
+
         this.isRotating = true;
-        this.initialRotationAngle = Math.atan2(vector.y, vector.x);
+        this.initialRotationAngle = Math.atan2(-vector.y, vector.x);
+        this.initialRotationHeading = this.application.cesium.scene.camera.heading;
 
         var that = this;
         this.mouseMoveFunction = function(e) {
@@ -207,14 +211,21 @@ NavigationViewModel.prototype.handleMouseDown = function(viewModel, e) {
             var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
             var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
             var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
-            var angle = Math.atan2(vector.y, vector.x);
+            var angle = Math.atan2(-vector.y, vector.x);
+
+            if (angle < that.initialRotationAngle) {
+                angle += CesiumMath.TWO_PI;
+            }
+
+            var angleDifference = angle - that.initialRotationAngle;
+            var newHeading = CesiumMath.zeroToTwoPi(that.initialRotationHeading + angleDifference);
 
             var camera = that.application.cesium.scene.camera;
 
-            console.log('angle: ' + angle);
+            console.log('new heading: ' + newHeading);
 
             camera.setView({
-                heading : CesiumMath.zeroToTwoPi(angle)
+                heading : newHeading
             });
 
             that.application.cesium.notifyRepaintRequired();
