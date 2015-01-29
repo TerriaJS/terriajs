@@ -269,7 +269,7 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
         parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : this.tilingScheme === undefined ? new WebMercatorTilingScheme() : this.tilingScheme
+        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme()
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
