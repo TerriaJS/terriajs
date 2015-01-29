@@ -311,41 +311,13 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
     options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
 
     this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
-
-    //Rerouting the plumbing to make urls match for Cesium and Leaflet for better caching
-    this.cesiumWmsUrlMatch = true;
-    if (this.cesiumWmsUrlMatch) {
-            //create cesium wms provider
-        this._CesiumImageryProvider = new WebMapServiceImageryProvider({
-            url : cleanAndProxyUrl(this.application, this.url),
-            layers : this.layers,
-            getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
-            getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-            parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
-            tilingScheme : this.tilingScheme === undefined ? new WebMercatorTilingScheme() : this.tilingScheme
-        });
-            //set it up so we can use it to get the url string based on tile coords
-        ImageryProvider.oldLoadImage = ImageryProvider.loadImage;
-        ImageryProvider.loadImage = function (param1, url) {
-            return url;
-        };
-        var that = this;
-            //change the leaflet getTileUrl to the cesium version
-        this._imageryLayer.getTileUrl = function(coords) {
-            return that._CesiumImageryProvider.requestImage(coords.x, coords.y, coords.z);
-        };
-    }
 };
 
 WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
         throw new DeveloperError('This data source is not enabled.');
     }
-        //if we changed functions, change them back
-    if (this.cesiumWmsUrlMatch) {
-        ImageryProvider.loadImage = ImageryProvider.oldLoadImage;
-        this._CesiumImageryProvider = undefined;
-    }
+
     this._imageryLayer = undefined;
 };
 
