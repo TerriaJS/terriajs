@@ -24,13 +24,30 @@ var inherit = require('../Core/inherit');
 var ArcGisMapServerCatalogItem = function(application) {
     ImageryLayerCatalogItem.call(this, application);
 
+    this._legendUrl = undefined;
+
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
      * @type {String}
      */
     this.url = '';
 
-    knockout.track(this, ['url']);
+    knockout.track(this, ['url', '_legendUrl']);
+
+    // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
+    delete this.__knockoutObservables.legendUrl;
+    knockout.defineProperty(this, 'legendUrl', {
+        get : function() {
+            if (defined(this._legendUrl)) {
+                return this._legendUrl;
+            }
+            return cleanUrl(this.url) + '/legend';
+        },
+        set : function(value) {
+            this._legendUrl = value;
+        }
+    });
+
 };
 
 inherit(ImageryLayerCatalogItem, ArcGisMapServerCatalogItem);
@@ -58,6 +75,7 @@ defineProperties(ArcGisMapServerCatalogItem.prototype, {
         }
     }
 });
+
 
 ArcGisMapServerCatalogItem.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
