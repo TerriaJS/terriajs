@@ -143,10 +143,22 @@ NavigationViewModel.prototype.resetView = function() {
 
     if (defined(this.application.cesium)) {
         var scene = this.application.cesium.scene;
-        var camera = scene.camera;
-        camera.flyToRectangle({
-            destination: bbox,
-            duration: 1.5
+
+        var destination = scene.camera.getRectangleCameraCoordinates(bbox);
+
+        var direction = Cartesian3.normalize(destination, new Cartesian3());
+        Cartesian3.negate(direction, direction);
+        var right = Cartesian3.cross(direction, Cartesian3.UNIT_Z, new Cartesian3());
+        var up = Cartesian3.cross(right, direction, new Cartesian3());
+
+        scene.camera.flyTo({
+            destination : destination,
+            orientation : {
+                direction: direction,
+                up : up,
+            },
+            duration : 1.5,
+            endTransform : Matrix4.IDENTITY
         });
     }
 
