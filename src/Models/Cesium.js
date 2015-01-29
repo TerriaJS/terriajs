@@ -29,6 +29,14 @@ var Cesium = function(application, viewer) {
      */
     this.scene = viewer.scene;
 
+
+    /**
+     * Gets or sets whether the viewer has stopped rendering since startup or last set to false.
+     * @type {Scene}
+     */
+    this.stoppedRendering = false;
+
+
     this._lastClockTime = new JulianDate(0, 0.0);
     this._lastCameraViewMatrix = new Matrix4();
     this._lastCameraMoveTime = 0;
@@ -169,6 +177,7 @@ function postRender(cesium, date) {
     if (!cameraMovedInLastSecond && !tilesWaiting && !cesium.viewer.clock.shouldAnimate) {
         console.log('stopping rendering @ ' + getTimestamp());
         cesium.viewer.useDefaultRenderLoop = false;
+        cesium.stoppedRendering = true;
     }
 
     Matrix4.clone(scene.camera.viewMatrix, cesium._lastCameraViewMatrix);

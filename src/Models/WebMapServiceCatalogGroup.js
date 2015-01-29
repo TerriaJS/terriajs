@@ -11,7 +11,7 @@ var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
+var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 
 var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
@@ -172,7 +172,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 
             var tileSet = json.Capability.VendorSpecificCapabilities.TileSet;
             for (var i = 0; i < tileSet.length; i++) {
-                if (tileSet[i].SRS ===  "EPSG:4326") {
+                if (tileSet[i].SRS ===  "EPSG:3857") {
                     that.parameters = combine(that.parameters, {'tiled': true});
                     break;
                 }
@@ -303,29 +303,30 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCu
 
     var crs;
     if (defined(layer.CRS)) {
-        crs = layer.CRS;
+        crs = getInheritableProperty(layer, 'CRS', true);
     } else {
-        crs = layer.SRS;
+        crs = getInheritableProperty(layer, 'SRS', true);
     }
 
     if (defined(crs)) {
-        if (crsIsMatch(crs, 'EPSG:4326')) {
+        if (crsIsMatch(crs, 'EPSG:3857')) {
+            // Standard Web Mercator
+        } else if (crsIsMatch(crs, 'EPSG:900913')) {
+            // Older code for Web Mercator
+            result.parameters = combine(result.parameters, {srs: 'EPSG:900913'});
+        } else if (crsIsMatch(crs, 'EPSG:4326')) {
             // Standard Geographic
+            result.tilingScheme = new GeographicTilingScheme();
         } else if (crsIsMatch(crs, 'CRS:84')) {
             // Another name for EPSG:4326
+            result.tilingScheme = new GeographicTilingScheme();
             result.parameters = combine(result.parameters, {srs: 'CRS:84'});
         } else if (crsIsMatch(crs, 'EPSG:4283')) {
             // Australian system that is equivalent to EPSG:4326.
+            result.tilingScheme = new GeographicTilingScheme();
             result.parameters = combine(result.parameters, {srs: 'EPSG:4283'});
-        } else if (crsIsMatch(crs, 'EPSG:3857')) {
-            // Standard Web Mercator
-            result.tilingScheme = new WebMercatorTilingScheme();
-        } else if (crsIsMatch(crs, 'EPSG:900913')) {
-            // Older code for Web Mercator
-            result.tilingScheme = new WebMercatorTilingScheme();
-            result.parameters = combine(result.parameters, {srs: 'EPSG:900913'});
         } else {
-            // No known supported CRS listed.  Try the default, EPSG:4326, and hope for the best.
+            // No known supported CRS listed.  Try the default, EPSG:3857, and hope for the best.
         }
     }
 
@@ -345,15 +346,20 @@ function crsIsMatch(crs, matchValue) {
      return false;
 }
 
-function getInheritableProperty(layer, name) {
+function getInheritableProperty(layer, name, appendValues) {
+    var value = [];
     while (defined(layer)) {
         if (defined(layer[name])) {
-            return layer[name];
+            if (appendValues) {
+                value = value.concat((layer[name] instanceof Array) ? layer[name] : [layer[name]]);
+            } else {
+                return layer[name];
+            }
         }
         layer = layer.parent;
     }
 
-    return undefined;
+    return value.length > 0 ? value : undefined;
 }
 
 module.exports = WebMapServiceCatalogGroup;
