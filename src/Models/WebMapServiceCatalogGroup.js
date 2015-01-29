@@ -301,12 +301,11 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCu
         }
     }
 
-    //TODO: better spot for this? - should figure out tiled as well since that can be layer specific
     var crs;
-    if (defined(layer.parent.CRS)) {
-        crs = layer.parent.CRS;
+    if (defined(layer.CRS)) {
+        crs = getInheritableProperty(layer, 'CRS', true);
     } else {
-        crs = layer.parent.SRS;
+        crs = getInheritableProperty(layer, 'SRS', true);
     }
 
     if (defined(crs)) {
@@ -347,15 +346,20 @@ function crsIsMatch(crs, matchValue) {
      return false;
 }
 
-function getInheritableProperty(layer, name) {
+function getInheritableProperty(layer, name, appendValues) {
+    var value = [];
     while (defined(layer)) {
         if (defined(layer[name])) {
-            return layer[name];
+            if (appendValues) {
+                value = value.concat((layer[name] instanceof Array) ? layer[name] : [layer[name]]);
+            } else {
+                return layer[name];
+            }
         }
         layer = layer.parent;
     }
 
-    return undefined;
+    return value.length > 0 ? value : undefined;
 }
 
 module.exports = WebMapServiceCatalogGroup;
