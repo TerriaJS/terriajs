@@ -46,6 +46,7 @@ var NavigationViewModel = function(application) {
 
     this.isOrbiting = false;
     this.orbitCursorAngle = 0;
+    this.orbitCursorOpacity = 0.0;
     this.orbitMouseMoveFunction = undefined;
     this.orbitMouseUpFunction = undefined;
 
@@ -232,8 +233,12 @@ function orbit(viewModel, compassElement, cursorVector) {
         var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
         var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
         var angle = Math.atan2(-vector.y, vector.x);
+        var distance = Cartesian2.magnitude(vector);
+        var maxDistance = compassRectangle.width / 2.0;
+        var distanceFraction = distance / maxDistance;
 
         viewModel.orbitCursorAngle = CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO);
+        viewModel.orbitCursorOpacity = distanceFraction * 0.5 + 0.5;
 
         console.log(viewModel.orbitCursorAngle);
 
