@@ -7,6 +7,7 @@ var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var IntersectionTests = require('../../third_party/cesium/Source/Core/IntersectionTests');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
@@ -47,6 +48,7 @@ var NavigationViewModel = function(application) {
     this.isOrbiting = false;
     this.orbitCursorAngle = 0;
     this.orbitCursorOpacity = 0.0;
+    this.orbitLastTimestamp = 0;
     this.orbitMouseMoveFunction = undefined;
     this.orbitMouseUpFunction = undefined;
 
@@ -225,35 +227,54 @@ function orbit(viewModel, compassElement, cursorVector) {
     document.removeEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
     document.removeEventListener('mouseup', viewModel.orbitMouseUpFunction, false);
 
-    viewModel.orbitMouseMoveFunction = function(e) {
-        viewModel.isOrbiting = true;
+    if (defined(viewModel.orbitTickFunction)) {
+        viewModel.application.clock.onTick.removeEventListener(viewModel.orbitTickFunction);
+    }
 
-        var compassRectangle = compassElement.getBoundingClientRect();
-        var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
-        var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
-        var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+    viewModel.orbitMouseMoveFunction = undefined;
+    viewModel.orbitMouseUpFunction = undefined;
+    viewModel.orbitTickFunction = undefined;
+
+    viewModel.isOrbiting = true;
+
+    viewModel.orbitTickFunction = function(e) {
+        var timestamp = getTimestamp();
+        var deltaT = timestamp - viewModel.orbitLastTimestamp;
+        var rate = (viewModel.orbitCursorOpacity - 0.5) * 1 / 1000; // one radian per second
+        var distance = deltaT * rate;
+
+        var angle = viewModel.orbitCursorAngle + CesiumMath.PI_OVER_TWO;
+        var x = Math.cos(angle) * distance;
+        var y = Math.sin(angle) * distance;
+
+        var camera = viewModel.application.cesium.scene.camera;
+        camera.rotateLeft(x);
+        camera.rotateUp(y);
+
+        viewModel.application.cesium.notifyRepaintRequired();
+
+        viewModel.orbitLastTimestamp = timestamp;
+    };
+
+    function updateAngleAndOpacity(vector, compassWidth) {
         var angle = Math.atan2(-vector.y, vector.x);
         var distance = Cartesian2.magnitude(vector);
-        var maxDistance = compassRectangle.width / 2.0;
+        var maxDistance = compassWidth / 2.0;
         var distanceFraction = distance / maxDistance;
 
         viewModel.orbitCursorAngle = CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO);
         viewModel.orbitCursorOpacity = distanceFraction * 0.5 + 0.5;
-
-        console.log(viewModel.orbitCursorAngle);
-
-        // var angleDifference = angle - viewModel.initialRotationCursorAngle;
-        // var newHeading = CesiumMath.zeroToTwoPi(viewModel.initialRotationCameraAngle + angleDifference);
-
-        // var camera = viewModel.application.cesium.scene.camera;
-
-        // console.log('new heading: ' + newHeading);
-
-        // camera.setView({
-        //     heading : newHeading
-        // });
+        viewModel.orbitLastTimestamp = getTimestamp();
 
         viewModel.application.cesium.notifyRepaintRequired();
+    }
+
+    viewModel.orbitMouseMoveFunction = function(e) {
+        var compassRectangle = compassElement.getBoundingClientRect();
+        var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
+        var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
+        var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+        updateAngleAndOpacity(vector, compassRectangle.width);
     };
 
     viewModel.orbitMouseUpFunction = function(e) {
@@ -264,18 +285,29 @@ function orbit(viewModel, compassElement, cursorVector) {
         document.removeEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
         document.removeEventListener('mouseup', viewModel.orbitMouseUpFunction, false);
 
-        viewModel.mouseMoveFunction = undefined;
-        viewModel.mouseUpFunction = undefined;
+        if (defined(viewModel.orbitTickFunction)) {
+            viewModel.application.clock.onTick.removeEventListener(viewModel.orbitTickFunction);
+        }
+
+        viewModel.orbitMouseMoveFunction = undefined;
+        viewModel.orbitMouseUpFunction = undefined;
+        viewModel.orbitTickFunction = undefined;
     };
 
     document.addEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
     document.addEventListener('mouseup', viewModel.orbitMouseUpFunction, false);
+    viewModel.application.clock.onTick.addEventListener(viewModel.orbitTickFunction);
+
+    updateAngleAndOpacity(cursorVector, compassElement.getBoundingClientRect().width);
 }
 
 function rotate(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
     document.removeEventListener('mousemove', viewModel.rotateMouseMoveFunction, false);
     document.removeEventListener('mouseup', viewModel.rotateMouseUpFunction, false);
+
+    viewModel.rotateMouseMoveFunction = undefined;
+    viewModel.rotateMouseUpFunction = undefined;
 
     viewModel.isRotating = true;
     viewModel.initialRotationCursorAngle = Math.atan2(-cursorVector.y, cursorVector.x);
@@ -308,8 +340,8 @@ function rotate(viewModel, compassElement, cursorVector) {
         document.removeEventListener('mousemove', viewModel.rotateMouseMoveFunction, false);
         document.removeEventListener('mouseup', viewModel.rotateMouseUpFunction, false);
 
-        viewModel.mouseMoveFunction = undefined;
-        viewModel.mouseUpFunction = undefined;
+        viewModel.rotateMouseMoveFunction = undefined;
+        viewModel.rotateMouseUpFunction = undefined;
     };
 
     document.addEventListener('mousemove', viewModel.rotateMouseMoveFunction, false);
