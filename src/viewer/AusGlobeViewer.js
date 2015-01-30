@@ -690,9 +690,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //Simple monitor to start up and switch to 2D if seem to be stuck.
         if (!defined(this.checkedStartupPerformance)) {
             this.checkedStartupPerformance = true;
+            var uri = new URI(window.location);
+            var params = uri.search(true);
+            var frameRate = (defined(params.fps)) ? params.fps : 5;
+
             this.monitor = new FrameRateMonitor({ 
                 scene: this.scene, 
-                minimumFrameRateDuringWarmup: 5,
+                minimumFrameRateDuringWarmup: frameRate,
                 minimumFrameRateAfterWarmup: 0,
                 samplingWindow: 2
             });
