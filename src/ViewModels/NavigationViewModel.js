@@ -218,7 +218,6 @@ NavigationViewModel.prototype.handleMouseDown = function(viewModel, e) {
     } else if (distanceFraction < 1.0) {
         rotate(this, compassElement, vector);
     } else {
-        console.log('none');
         return true;
     }
 };
@@ -303,7 +302,6 @@ function orbit(viewModel, compassElement, cursorVector) {
     viewModel.orbitMouseUpFunction = function(e) {
         // TODO: if mouse didn't move, reset view to looking down, north is up?
 
-        console.log('done rotating');
         viewModel.isOrbiting = false;
         document.removeEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
         document.removeEventListener('mouseup', viewModel.orbitMouseUpFunction, false);
@@ -348,8 +346,6 @@ function rotate(viewModel, compassElement, cursorVector) {
 
         var camera = viewModel.application.cesium.scene.camera;
 
-        console.log('new heading: ' + newHeading);
-
         camera.setView({
             heading : newHeading
         });
@@ -358,7 +354,6 @@ function rotate(viewModel, compassElement, cursorVector) {
     };
 
     viewModel.rotateMouseUpFunction = function(e) {
-        console.log('done rotating');
         viewModel.isRotating = false;
         document.removeEventListener('mousemove', viewModel.rotateMouseMoveFunction, false);
         document.removeEventListener('mouseup', viewModel.rotateMouseUpFunction, false);
