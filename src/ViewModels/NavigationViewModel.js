@@ -281,12 +281,13 @@ function orbit(viewModel, compassElement, cursorVector) {
 
     function updateAngleAndOpacity(vector, compassWidth) {
         var angle = Math.atan2(-vector.y, vector.x);
+        viewModel.orbitCursorAngle = CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO);
+
         var distance = Cartesian2.magnitude(vector);
         var maxDistance = compassWidth / 2.0;
         var distanceFraction = Math.min(distance / maxDistance, 1.0);
-
-        viewModel.orbitCursorAngle = CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO);
-        viewModel.orbitCursorOpacity = distanceFraction * 0.5 + 0.5;
+        var easedOpacity = 0.5 * distanceFraction * distanceFraction + 0.5;
+        viewModel.orbitCursorOpacity = easedOpacity;
 
         viewModel.application.cesium.notifyRepaintRequired();
     }
