@@ -12,6 +12,7 @@ var IntersectionTests = require('../../third_party/cesium/Source/Core/Intersecti
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Ray = require('../../third_party/cesium/Source/Core/Ray');
+var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 
 var loadView = require('../Core/loadView');
@@ -222,6 +223,12 @@ NavigationViewModel.prototype.handleMouseDown = function(viewModel, e) {
     }
 };
 
+var oldTransformScratch = new Matrix4();
+var newTransformScratch = new Matrix4();
+var centerScratch = new Cartesian3();
+var windowPositionScratch = new Cartesian2();
+var pickRayScratch = new Ray();
+
 function orbit(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
     document.removeEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
@@ -236,20 +243,36 @@ function orbit(viewModel, compassElement, cursorVector) {
     viewModel.orbitTickFunction = undefined;
 
     viewModel.isOrbiting = true;
+    viewModel.orbitLastTimestamp = getTimestamp();
 
     viewModel.orbitTickFunction = function(e) {
         var timestamp = getTimestamp();
         var deltaT = timestamp - viewModel.orbitLastTimestamp;
-        var rate = (viewModel.orbitCursorOpacity - 0.5) * 1 / 1000; // one radian per second
+        var rate = (viewModel.orbitCursorOpacity - 0.5) * 5 / 1000; // five radian per second
         var distance = deltaT * rate;
 
         var angle = viewModel.orbitCursorAngle + CesiumMath.PI_OVER_TWO;
         var x = Math.cos(angle) * distance;
         var y = Math.sin(angle) * distance;
 
-        var camera = viewModel.application.cesium.scene.camera;
-        camera.rotateLeft(x);
-        camera.rotateUp(y);
+        var scene = viewModel.application.cesium.scene;
+        var camera = scene.camera;
+
+        var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
+
+        var windowPosition = windowPositionScratch;
+        windowPosition.x = scene.canvas.clientWidth / 2;
+        windowPosition.y = scene.canvas.clientHeight / 2;
+        var ray = camera.getPickRay(windowPosition, pickRayScratch);
+
+        var center = scene.globe.pick(ray, scene, centerScratch);
+        var newTransform = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84, newTransformScratch);
+
+        camera.lookAtTransform(newTransform);
+        camera.rotateRight(x);
+        camera.rotateDown(y);
+
+        camera.lookAtTransform(oldTransform);
 
         viewModel.application.cesium.notifyRepaintRequired();
 
@@ -260,11 +283,10 @@ function orbit(viewModel, compassElement, cursorVector) {
         var angle = Math.atan2(-vector.y, vector.x);
         var distance = Cartesian2.magnitude(vector);
         var maxDistance = compassWidth / 2.0;
-        var distanceFraction = distance / maxDistance;
+        var distanceFraction = Math.min(distance / maxDistance, 1.0);
 
         viewModel.orbitCursorAngle = CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO);
         viewModel.orbitCursorOpacity = distanceFraction * 0.5 + 0.5;
-        viewModel.orbitLastTimestamp = getTimestamp();
 
         viewModel.application.cesium.notifyRepaintRequired();
     }
