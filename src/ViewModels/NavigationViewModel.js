@@ -56,7 +56,9 @@ var NavigationViewModel = function(application) {
     this.orbitMouseUpFunction = undefined;
 
     this.isRotating = false;
-    this.initialRotationAngle = undefined;
+    this.rotateInitialCursorAngle = undefined;
+    this.rotateFrame = undefined;
+    this.rotateIsLook = false;
     this.rotateMouseMoveFunction = undefined;
     this.rotateMouseUpFunction = undefined;
 
@@ -348,8 +350,30 @@ function rotate(viewModel, compassElement, cursorVector) {
     viewModel.rotateMouseUpFunction = undefined;
 
     viewModel.isRotating = true;
-    viewModel.initialRotationCursorAngle = Math.atan2(-cursorVector.y, cursorVector.x);
-    viewModel.initialRotationCameraAngle = viewModel.application.cesium.scene.camera.heading;
+    viewModel.rotateInitialCursorAngle = Math.atan2(-cursorVector.y, cursorVector.x);
+
+    var scene = viewModel.application.cesium.scene;
+    var camera = scene.camera;
+
+    var windowPosition = windowPositionScratch;
+    windowPosition.x = scene.canvas.clientWidth / 2;
+    windowPosition.y = scene.canvas.clientHeight / 2;
+    var ray = camera.getPickRay(windowPosition, pickRayScratch);
+
+    var viewCenter = scene.globe.pick(ray, scene, centerScratch);
+    if (!defined(viewCenter)) {
+        viewModel.rotateFrame = Transforms.eastNorthUpToFixedFrame(camera.positionWC, Ellipsoid.WGS84, newTransformScratch);
+        viewModel.rotateIsLook = true;
+    } else {
+        viewModel.rotateFrame = Transforms.eastNorthUpToFixedFrame(viewCenter, Ellipsoid.WGS84, newTransformScratch);
+        viewModel.rotateIsLook = false;
+    }
+
+    var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
+    camera.lookAtTransform(viewModel.rotateFrame);
+    viewModel.rotateInitialCameraAngle = Math.atan2(camera.position.y, camera.position.x);
+    viewModel.rotateInitialCameraDistance = Cartesian3.magnitude(new Cartesian3(camera.position.x, camera.position.y, 0.0));
+    camera.lookAtTransform(oldTransform);
 
     viewModel.rotateMouseMoveFunction = function(e) {
         var compassRectangle = compassElement.getBoundingClientRect();
@@ -358,14 +382,18 @@ function rotate(viewModel, compassElement, cursorVector) {
         var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
         var angle = Math.atan2(-vector.y, vector.x);
 
-        var angleDifference = angle - viewModel.initialRotationCursorAngle;
-        var newHeading = CesiumMath.zeroToTwoPi(viewModel.initialRotationCameraAngle + angleDifference);
+        var angleDifference = angle - viewModel.rotateInitialCursorAngle;
+        var newCameraAngle = CesiumMath.zeroToTwoPi(viewModel.rotateInitialCameraAngle - angleDifference);
 
         var camera = viewModel.application.cesium.scene.camera;
 
-        camera.setView({
-            heading : newHeading
-        });
+        var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
+        camera.lookAtTransform(viewModel.rotateFrame);
+        camera.position = new Cartesian3(viewModel.rotateInitialCameraDistance * Math.cos(newCameraAngle), viewModel.rotateInitialCameraDistance * Math.sin(newCameraAngle), camera.position.z);
+        camera.direction = Cartesian3.normalize(Cartesian3.negate(camera.position, new Cartesian3()), new Cartesian3());
+        camera.right = Cartesian3.normalize(Cartesian3.cross(camera.direction, Cartesian3.UNIT_Z, new Cartesian3()), new Cartesian3());
+        camera.up = Cartesian3.normalize(Cartesian3.cross(camera.right, camera.direction, new Cartesian3()), new Cartesian3());
+        camera.lookAtTransform(oldTransform);
 
         viewModel.application.cesium.notifyRepaintRequired();
     };
