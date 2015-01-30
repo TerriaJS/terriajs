@@ -268,8 +268,8 @@ function orbit(viewModel, compassElement, cursorVector) {
         var newTransform = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84, newTransformScratch);
 
         camera.lookAtTransform(newTransform);
-        camera.rotateRight(x);
-        camera.rotateDown(y);
+        camera.rotateLeft(x);
+        camera.rotateUp(y);
 
         camera.lookAtTransform(oldTransform);
 
