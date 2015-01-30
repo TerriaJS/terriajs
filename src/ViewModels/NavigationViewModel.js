@@ -248,7 +248,7 @@ function orbit(viewModel, compassElement, cursorVector) {
     viewModel.orbitTickFunction = function(e) {
         var timestamp = getTimestamp();
         var deltaT = timestamp - viewModel.orbitLastTimestamp;
-        var rate = (viewModel.orbitCursorOpacity - 0.5) * 5 / 1000; // five radian per second
+        var rate = (viewModel.orbitCursorOpacity - 0.5) * 2.5 / 1000;
         var distance = deltaT * rate;
 
         var angle = viewModel.orbitCursorAngle + CesiumMath.PI_OVER_TWO;
