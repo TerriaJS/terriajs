@@ -50,6 +50,8 @@ var NavigationViewModel = function(application) {
     this.orbitCursorAngle = 0;
     this.orbitCursorOpacity = 0.0;
     this.orbitLastTimestamp = 0;
+    this.orbitFrame = undefined;
+    this.orbitIsLook = false;
     this.orbitMouseMoveFunction = undefined;
     this.orbitMouseUpFunction = undefined;
 
@@ -244,6 +246,23 @@ function orbit(viewModel, compassElement, cursorVector) {
     viewModel.isOrbiting = true;
     viewModel.orbitLastTimestamp = getTimestamp();
 
+    var scene = viewModel.application.cesium.scene;
+    var camera = scene.camera;
+
+    var windowPosition = windowPositionScratch;
+    windowPosition.x = scene.canvas.clientWidth / 2;
+    windowPosition.y = scene.canvas.clientHeight / 2;
+    var ray = camera.getPickRay(windowPosition, pickRayScratch);
+
+    var center = scene.globe.pick(ray, scene, centerScratch);
+    if (!defined(center)) {
+        viewModel.orbitFrame = Transforms.eastNorthUpToFixedFrame(camera.positionWC, Ellipsoid.WGS84, newTransformScratch);
+        viewModel.orbitIsLook = true;
+    } else {
+        viewModel.orbitFrame = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84, newTransformScratch);
+        viewModel.orbitIsLook = false;
+    }
+
     viewModel.orbitTickFunction = function(e) {
         var timestamp = getTimestamp();
         var deltaT = timestamp - viewModel.orbitLastTimestamp;
@@ -259,17 +278,15 @@ function orbit(viewModel, compassElement, cursorVector) {
 
         var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
 
-        var windowPosition = windowPositionScratch;
-        windowPosition.x = scene.canvas.clientWidth / 2;
-        windowPosition.y = scene.canvas.clientHeight / 2;
-        var ray = camera.getPickRay(windowPosition, pickRayScratch);
+        camera.lookAtTransform(viewModel.orbitFrame);
 
-        var center = scene.globe.pick(ray, scene, centerScratch);
-        var newTransform = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84, newTransformScratch);
-
-        camera.lookAtTransform(newTransform);
-        camera.rotateLeft(x);
-        camera.rotateUp(y);
+        if (viewModel.orbitIsLook) {
+            camera.look(Cartesian3.UNIT_Z, -x);
+            camera.look(camera.right, -y);
+        } else {
+            camera.rotateLeft(x);
+            camera.rotateUp(y);
+        }
 
         camera.lookAtTransform(oldTransform);
 
