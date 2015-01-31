@@ -389,10 +389,8 @@ function rotate(viewModel, compassElement, cursorVector) {
 
         var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
         camera.lookAtTransform(viewModel.rotateFrame);
-        camera.position = new Cartesian3(viewModel.rotateInitialCameraDistance * Math.cos(newCameraAngle), viewModel.rotateInitialCameraDistance * Math.sin(newCameraAngle), camera.position.z);
-        camera.direction = Cartesian3.normalize(Cartesian3.negate(camera.position, new Cartesian3()), new Cartesian3());
-        camera.right = Cartesian3.normalize(Cartesian3.cross(camera.direction, Cartesian3.UNIT_Z, new Cartesian3()), new Cartesian3());
-        camera.up = Cartesian3.normalize(Cartesian3.cross(camera.right, camera.direction, new Cartesian3()), new Cartesian3());
+        var currentCameraAngle = Math.atan2(camera.position.y, camera.position.x);
+        camera.rotateRight(newCameraAngle - currentCameraAngle);
         camera.lookAtTransform(oldTransform);
 
         viewModel.application.cesium.notifyRepaintRequired();
