@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,ga*/
+var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
@@ -231,6 +232,35 @@ var newTransformScratch = new Matrix4();
 var centerScratch = new Cartesian3();
 var windowPositionScratch = new Cartesian2();
 var pickRayScratch = new Ray();
+
+NavigationViewModel.prototype.handleDoubleClick = function(viewModel, e) {
+    var scene = this.application.cesium.scene;
+    var camera = scene.camera;
+
+    var windowPosition = windowPositionScratch;
+    windowPosition.x = scene.canvas.clientWidth / 2;
+    windowPosition.y = scene.canvas.clientHeight / 2;
+    var ray = camera.getPickRay(windowPosition, pickRayScratch);
+
+    var center = scene.globe.pick(ray, scene, centerScratch);
+    if (!defined(center)) {
+        // Globe is barely visible, so reset to home view.
+        this.resetView();
+        return;
+    }
+
+    var rotateFrame = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84);
+
+    var lookVector = Cartesian3.subtract(center, camera.position, new Cartesian3());
+
+    var flight = CameraFlightPath.createTween(scene, {
+        destination: Matrix4.multiplyByPoint(rotateFrame, new Cartesian3(0.0, 0.0, Cartesian3.magnitude(lookVector)), new Cartesian3()),
+        direction: Matrix4.multiplyByPointAsVector(rotateFrame, new Cartesian3(0.0, 0.0, -1.0), new Cartesian3()),
+        up: Matrix4.multiplyByPointAsVector(rotateFrame, new Cartesian3(0.0, 1.0, 0.0), new Cartesian3()),
+        duration: 1.5
+    });
+    scene.tweens.add(flight);
+};
 
 function orbit(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
