@@ -41,11 +41,8 @@ var NavigationViewModel = function(application) {
     this._tiltInProgress = false;
     this._nextTilt = undefined;
 
-    this.showTilt = defined(this.application.cesium);
-    this.currentTilt = 0;
-
     this.showCompass = defined(this.application.cesium);
-    this.heading = this.application.cesium.scene.camera.heading;
+    this.heading = this.showCompass ? this.application.cesium.scene.camera.heading : 0.0;
 
     this.isOrbiting = false;
     this.orbitCursorAngle = 0;
@@ -65,7 +62,7 @@ var NavigationViewModel = function(application) {
 
     this._unsubcribeFromPostRender = undefined;
 
-    knockout.track(this, ['showTilt', 'currentTilt', 'heading', 'isOrbiting', 'orbitCursorAngle', 'isRotating']);
+    knockout.track(this, ['showCompass', 'heading', 'isOrbiting', 'orbitCursorAngle', 'isRotating']);
 
     var that = this;
 
@@ -76,7 +73,6 @@ var NavigationViewModel = function(application) {
                 that._unsubcribeFromPostRender = undefined;
             }
 
-            that.showTilt = true;
             that.showCompass = true;
 
             that._unsubcribeFromPostRender = that.application.cesium.scene.postRender.addEventListener(function() {
@@ -87,7 +83,6 @@ var NavigationViewModel = function(application) {
                 that._unsubcribeFromPostRender();
                 that._unsubcribeFromPostRender = undefined;
             }
-            that.showTilt = false;
             that.showCompass = false;
         }
     }
