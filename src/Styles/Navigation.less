@@ -88,11 +88,16 @@
 }
 
 .compass-gyro {
+    pointer-events: none;
     position: absolute;
     top: 0;
     width: @compass-diameter;
     height: @compass-diameter;
     fill: #CCC;
+}
+
+.compass-gyro-active {
+    fill: @highlight-color;
 }
 
 .compass-gyro-background {
@@ -104,6 +109,10 @@
     border-radius: 33px;
     background-color: @floating-background-color;
     border: 1px solid #999;
+}
+
+.compass-gyro-background:hover + .compass-gyro {
+    fill: @highlight-color;
 }
 
 .compass-rotation-marker {

@@ -6,7 +6,7 @@ TIP: You can also free orbit by holding the CTRL key and dragging the map." data
     <div class="compass-rotation-marker" data-bind="visible: isOrbiting, style: { transform: 'rotate(-' + orbitCursorAngle + 'rad)', opacity: orbitCursorOpacity }, cesiumSvgPath: { path: svgCompassRotationMarker, width: 145, height: 145 }"></div>
     <div class="compass-outer-ring" title="Click and drag to rotate the camera" data-bind="style: { transform: 'rotate(-' + heading + 'rad)' }, cesiumSvgPath: { path: svgCompassOuterRing, width: 145, height: 145 }"></div>
     <div class="compass-gyro-background"></div>
-    <div class="compass-gyro" data-bind="cesiumSvgPath: { path: svgCompassGyro, width: 145, height: 145 }"></div>
+    <div class="compass-gyro" data-bind="cesiumSvgPath: { path: svgCompassGyro, width: 145, height: 145 }, css: { 'compass-gyro-active': isOrbiting }"></div>
 </div>
 <div class="navigation-controls">
     <div class="navigation-control" data-bind="click: zoomIn" title="Zoom In">
