@@ -2,18 +2,19 @@
 
 .add-data-panel {
     .modal;
-    width: 600px;
+    width: 500px;
     height: @add-data-panel-height;
+    font-size: 0.9em;
 }
 
 .add-data-header {
     line-height: 40px;
     border-bottom: @panel-element-border;
+    background-color: rgba(0,0,0,0.2);
 }
 
 .add-data-header h1 {
     color: @panel-emphasized-text-color;
-    font-size: 16px;
     padding-left: 15px;
     margin: 0;
 }
@@ -23,18 +24,21 @@
     right: 15px;
     cursor: pointer;
     font-size: 18pt;
-    font-weight: bold;
     color: @panel-emphasized-text-color;
 }
 
 .add-data-content {
     font-weight: lighter;
-    padding: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
     overflow: auto;
     height: @add-data-panel-height - 40px - 30px;
+    line-height: 1.2em;
 }
 
 .add-data-content p {
+    padding-right: 15px;
     margin-top: 16px;
     margin-bottom: 16px;
 }
