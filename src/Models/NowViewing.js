@@ -171,6 +171,8 @@ NowViewing.prototype.raise = function(item, index) {
 
     this.items.splice(index, 1);
     this.items.splice(index - 1, 0, item);
+
+    this.application.currentViewer.notifyRepaintRequired();
 };
 
 /**
@@ -215,6 +217,8 @@ NowViewing.prototype.lower = function(item, index) {
 
     this.items.splice(index, 1);
     this.items.splice(index + 1, 0, item);
+
+    this.application.currentViewer.notifyRepaintRequired();
 };
 
 /**
@@ -256,6 +260,10 @@ NowViewing.prototype.sortByNowViewingIndices = function() {
             this.raise(item, existingIndex);
             --existingIndex;
         }
+    }
+
+    if (defined(this.application.currentViewer)) {
+        this.application.currentViewer.notifyRepaintRequired();
     }
 };
 

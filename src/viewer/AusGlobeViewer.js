@@ -43,7 +43,6 @@ var SingleTileImageryProvider = require('../../third_party/cesium/Source/Scene/S
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 var Viewer = require('../../third_party/cesium/Source/Widgets/Viewer/Viewer');
-var viewerEntityMixin = require('../../third_party/cesium/Source/Widgets/Viewer/viewerEntityMixin');
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -53,6 +52,9 @@ var Timeline = require('../../third_party/cesium/Source/Widgets/Timeline/Timelin
 var ClockViewModel = require('../../third_party/cesium/Source/Widgets/ClockViewModel');
 
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+
+var FrameRateMonitor = require('../../third_party/cesium/Source/Scene/FrameRateMonitor');
+var runLater = require('../Core/runLater');
 
 var corsProxy = require('../Core/corsProxy');
 var Cesium = require('../Models/Cesium');
@@ -76,9 +78,9 @@ var AusGlobeViewer = function(application) {
     var uri = new URI(url);
     var params = uri.search(true);
 
-    this.webGlSupported = (application.userProperties.map === '2d' || params.map === '2d') ? false : true;
+    var useCesium = (application.userProperties.map === '2d' || params.map === '2d') ? false : true;
     
-    if (this.webGlSupported && !supportsWebgl()) {
+    if (useCesium && !supportsWebgl()) {
         PopupMessageViewModel.open('ui', {
             title : 'WebGL not supported',
             message : '\
@@ -89,7 +91,7 @@ including the latest versions of <a href="http://www.google.com/chrome" target="
 <a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>. \
 Your web browser does not appear to support WebGL, so you will see a limited, 2D-only experience.'
         });
-        this.webGlSupported = false;
+        useCesium = false;
     }
 
     if (document.body.clientWidth < 520 || document.body.clientHeight < 400) {
@@ -104,6 +106,8 @@ For a better experience we\'d suggest you visit the application from a larger sc
 If you\'re on a desktop or laptop, consider increasing the size of your window.'
         });
     }
+
+    application.viewerMode = useCesium ? ViewerMode.CesiumTerrain : ViewerMode.Leaflet;
     
     //TODO: perf test to set environment
 
@@ -113,9 +117,9 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
 
     this.application = application;
 
-    ga('send', 'event', 'startup', 'initialViewer', this.webGlSupported ? 'cesium' : 'leaflet');
+    ga('send', 'event', 'startup', 'initialViewer', useCesium ? 'cesium' : 'leaflet');
 
-    this.selectViewer(this.webGlSupported);
+    this.selectViewer(useCesium);
 
     knockout.getObservable(this.application, 'viewerMode').subscribe(function() {
         changeViewer(this);
@@ -141,26 +145,44 @@ function changeViewer(viewer) {
     var newMode = application.viewerMode;
 
     if (newMode === ViewerMode.Leaflet) {
-        ga('send', 'event', 'mapSettings', 'switchViewer', '2D');
-        viewer.selectViewer(false);
-    } else if (newMode === ViewerMode.CesiumTerrain) {
-        ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
-
-        if (defined(application.leaflet)) {
-            viewer.selectViewer(true);
-        } else {
-            application.cesium.scene.globe.terrainProvider = new CesiumTerrainProvider({
-                url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+        if (!application.leaflet) {
+            ga('send', 'event', 'mapSettings', 'switchViewer', '2D');
+            viewer.selectViewer(false);
+        }
+    } else {
+        if (!supportsWebgl()) {
+            PopupMessageViewModel.open('ui', {
+                title : 'WebGL not supported',
+                message : '\
+Your web browser cannot display the map in 3D because it does not support WebGL.  Please upgrade to the \
+latest version of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, \
+<a href="https://www.apple.com/au/osx/how-to-upgrade/" target="_blank">Apple Safari</a>, or \
+<a href="http://www.microsoft.com/ie" target="_blank">Microsoft Internet Explorer</a>.'
             });
-        }
-    } else if (newMode === ViewerMode.CesiumEllipsoid) {
-        ga('send', 'event', 'mapSettings', 'switchViewer', 'Smooth 3D');
 
-        if (defined(application.leaflet)) {
-            viewer.selectViewer(true);
-        }
+            application.viewerMode = ViewerMode.Leaflet;
+        } else {
+            if (newMode === ViewerMode.CesiumTerrain) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', '3D');
 
-        application.cesium.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
+                if (defined(application.leaflet)) {
+                    viewer.selectViewer(true);
+                } else {
+                    application.cesium.scene.globe.terrainProvider = new CesiumTerrainProvider({
+                        url : '//cesiumjs.org/stk-terrain/tilesets/world/tiles'
+                    });
+                }
+            } else if (newMode === ViewerMode.CesiumEllipsoid) {
+                ga('send', 'event', 'mapSettings', 'switchViewer', 'Smooth 3D');
+
+                if (defined(application.leaflet)) {
+                    viewer.selectViewer(true);
+                }
+
+                application.cesium.scene.globe.terrainProvider = new EllipsoidTerrainProvider();
+            }
+        }
     }
 }
 
@@ -177,6 +199,10 @@ function changeBaseMap(viewer, newBaseMap) {
     }
 
     viewer._previousBaseMap = newBaseMap;
+
+    if (defined(viewer.application.currentViewer)) {
+        viewer.application.currentViewer.notifyRepaintRequired();
+    }
 }
 
 // -------------------------------------------
@@ -235,7 +261,7 @@ var DrawExtentHelper = function (scene, handler) {
     this._scene = scene;
     this._ellipsoid = scene.globe.ellipsoid;
     this._finishHandler = handler;
-    this._mouseHandler = new ScreenSpaceEventHandler(scene.canvas);
+    this._mouseHandler = new ScreenSpaceEventHandler(scene.canvas, false);
     this.active = false;
 };
 
@@ -392,8 +418,7 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         fullscreenButton : false,
         terrainProvider : terrainProvider,
         imageryProvider : new SingleTileImageryProvider({ url: 'images/nicta.png' }),
-        timeControlsInitiallyVisible : false,
-        targetFrameRate : 40
+        timeControlsInitiallyVisible : false
     };
 
     // Workaround for Firefox bug with WebGL and printing:
@@ -404,7 +429,6 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
 
      //create CesiumViewer
     var viewer = new Viewer(container, options);
-    viewer.extend(viewerEntityMixin);
 
     viewer.scene.imageryLayers.removeAll();
 
@@ -450,14 +474,6 @@ us via email at nationalmap@lists.nicta.com.au.'
 
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('CESIUM', undefined, 'http://cesiumjs.org/'));
     scene.frameState.creditDisplay.addDefaultCredit(new Credit('BING', undefined, 'http://www.bing.com/'));
-
-
-    //Placeholder for now - commenting out since the warning doesn't mean much when we stop the render loop
-//    var monitor = new FrameRateMonitor.fromScene(scene);
-//    viewer._unsubscribeLowFrameRate = monitor.lowFrameRate.addEventListener(function() {
-//        console.log('Unusually slow startup detected!!  Messagebox for user options - webgl fixes, 2d mode.');
-//    });
-
 
     var inputHandler = viewer.screenSpaceEventHandler;
 
@@ -506,10 +522,17 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
             //shut down existing cesium
         if (defined(this.viewer)) {
+            this.application.cesium.destroy();
+
             //get camera and timeline settings
-            rect = getCameraRect(this.scene);
-            bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
-                [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+            try {
+                rect = getCameraRect(this.scene);
+                bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
+                    [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+            } catch (e) {
+                console.log('Using default screen extent', e.message);
+                bnds = rectangleToLatLngBounds(this.application.initialBoundingBox);
+            }
 
             this._enableSelectExtent(false);
 
@@ -518,6 +541,10 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK );
             inputHandler.removeInputAction( ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT );
 
+            if (defined(this.monitor)) {
+                this.monitor.destroy();
+                this.monitor = undefined;
+            }
             this.viewer.destroy();
             this.viewer = undefined;
         }
@@ -542,7 +569,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.destroy = function() {};
 
         map.infoBox = new InfoBox(document.body);
-        viewerEntityMixin(map);
 
         if (!defined(this.leafletVisualizer)) {
             this.leafletVisualizer = new LeafletVisualizer();
@@ -617,6 +643,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     }
     else {
         if (defined(this.map)) {
+            this.application.leaflet.destroy();
+
             //get camera and timeline settings
             rect = getCameraRect(undefined, this.map);
 
@@ -653,34 +681,41 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.viewer.dataSources.dataSourceAdded.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
         this.viewer.dataSources.dataSourceRemoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
 
-        // override the default render loop
-        this.scene.base_render = this.scene.render;
-        this.scene.render = function(date) {
-
-            if (that.frameChecker.skipFrame(that.scene, date)) {
-                return;
-            }
-            that.scene.base_render(date);
-
-            // Capture the scene image right after the render.
-            // With preserveDrawingBuffer: false on the WebGL canvas (the default), we can't rely
-            // on the canvas still having its image once we return from requestAnimationFrame.
-            if (that.captureCanvasFlag === true) {
-                that.captureCanvasFlag = false;
-                var dataUrl = that.scene.canvas.toDataURL("image/jpeg");
-                that.captureCanvasCallback(dataUrl);
-            }
-        };
-
-        this.captureCanvas = function() {
-            that.captureCanvasFlag = true;
-        };
-
         this.updateCameraFromRect(rect, 0);
 
         this._enableSelectExtent(true);
 
         Clock.clone(previousClock, this.viewer.clock);
+
+        //Simple monitor to start up and switch to 2D if seem to be stuck.
+        if (!defined(this.checkedStartupPerformance)) {
+            this.checkedStartupPerformance = true;
+            var uri = new URI(window.location);
+            var params = uri.search(true);
+            var frameRate = (defined(params.fps)) ? params.fps : 5;
+
+            this.monitor = new FrameRateMonitor({ 
+                scene: this.scene, 
+                minimumFrameRateDuringWarmup: frameRate,
+                minimumFrameRateAfterWarmup: 0,
+                samplingWindow: 2
+            });
+            this.monitor.lowFrameRate.addEventListener( function() {
+                if (!that.application.cesium.stoppedRendering) {
+                    PopupMessageViewModel.open('ui', {
+                        title : 'Unusually Slow Performance Detected',
+                        message : '\
+        It appears that your system is capable of running National Map in 3D mode, but is having significant performance issues. \
+        We are automatically switching to 2D mode to help resolve this issue.  If you want to switch back to 3D mode you can select \
+        that option from the Maps button at the top of the screen.'
+                    });
+                    runLater(function() { 
+                        that.selectViewer(false); 
+                    });
+                }
+            });
+        }
+
     }
 
     this.application.afterViewerChanged.raiseEvent();

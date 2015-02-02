@@ -67,6 +67,7 @@ var CatalogItem = function(application) {
      *  * `wfs` - A Web Feature Service (WFS) base URL.  If {@link CatalogItem#dataUrl} is not
      *            specified, the base URL will be this data item's URL.
      *  * `wfs-complete` - A complete, ready-to-use link to download features from a WFS server.
+     *  * `none` - There is no data link.
      * @type {String}
      */
     this.dataUrlType = undefined;
@@ -114,7 +115,7 @@ var CatalogItem = function(application) {
      * This property is observable.
      * @type {Boolean}
      */
-    this.isLegendVisible = false;
+    this.isLegendVisible = true;
 
     /**
      * Gets or sets the clock parameters for this data item.  If this property is undefined, this data item
@@ -737,6 +738,8 @@ function isEnabledChanged(catalogItem) {
         }
         ga('send', 'event', 'dataSource', 'removed', catalogItem.name, duration);
     }
+
+    catalogItem.application.currentViewer.notifyRepaintRequired();
 }
 
 function isShownChanged(catalogItem) {
@@ -769,6 +772,8 @@ function isShownChanged(catalogItem) {
         }
         ga('send', 'event', 'dataSource', 'hidden', catalogItem.name, duration);
     }
+
+    catalogItem.application.currentViewer.notifyRepaintRequired();
 }
 
 module.exports = CatalogItem;

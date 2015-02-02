@@ -241,6 +241,8 @@ function updateOpacity(imageryLayerItem) {
         if (defined(imageryLayerItem._imageryLayer.setOpacity)) {
             imageryLayerItem._imageryLayer.setOpacity(imageryLayerItem.opacity);
         }
+
+        imageryLayerItem.application.currentViewer.notifyRepaintRequired();
     }
 }
 

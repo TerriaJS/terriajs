@@ -1,3 +1,14 @@
+.settings-panel-background {
+    .modal-background;
+    background-color: rgba(0,0,0,0);
+
+    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -ms-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -o-transition: opacity @explorer-panel-close-animation-length ease-out;
+    transition: opacity @explorer-panel-close-animation-length ease-out;
+}
+
 .settings-panel {
     .panel;
     background-color: @panel-background-color;
@@ -5,25 +16,31 @@
     right: 100px;
     width: 260px;
     position: absolute;
-
-    -webkit-transition: right @explorer-panel-close-animation-length ease-out;
-    -moz-transition: right @explorer-panel-close-animation-length ease-out;
-    -ms-transition: right @explorer-panel-close-animation-length ease-out;
-    -o-transition: right @explorer-panel-close-animation-length ease-out;
-    transition: right @explorer-panel-close-animation-length ease-out;
+    box-shadow: @panel-box-shadow;
 }
 
-.settings-panel-hidden {
-    right: -300px;
+.settings-panel-background-hidden {
+    opacity: 0;
+    visibility: hidden;
 
-    -webkit-transition: right @explorer-panel-close-animation-length ease-out;
-    -moz-transition: right @explorer-panel-close-animation-length ease-out;
-    -ms-transition: right @explorer-panel-close-animation-length ease-out;
-    -o-transition: right @explorer-panel-close-animation-length ease-out;
-    transition: right @explorer-panel-close-animation-length ease-out;
+    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -moz-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -ms-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -o-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
 }
 
 .settings-panel-callout {
+    .transparent-to-input;
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-bottom: 10px solid @panel-section-background-color;
+    border-left: 0.8em solid transparent;
+    border-right: 0.8em solid transparent;
+    border-top: 0.8em solid transparent;
+    top: -20px;
+    left: 122px;
 }
 
 .settings-panel-body {
@@ -78,6 +95,16 @@
 
 .settings-panel-base-map-button:hover {
     border: 1px solid @panel-emphasized-text-color;
+}
+
+.settings-panel-close-button {
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    cursor: pointer;
+    font-size: 18pt;
+    font-weight: bold;
+    color: @panel-emphasized-text-color;
 }
 
 @media print {

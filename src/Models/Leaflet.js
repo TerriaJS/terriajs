@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,html2canvas*/
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -12,6 +13,10 @@ var Leaflet = function(application, map) {
      * @type {Map}
      */
     this.map = map;
+};
+
+Leaflet.prototype.destroy = function() {
+    return destroyObject(this);
 };
 
 /**
@@ -67,6 +72,13 @@ Leaflet.prototype.captureScreenshot = function() {
     }
 
     return deferred.promise;
+};
+
+/**
+ * Notifies the viewer that a repaint is required.
+ */
+Leaflet.prototype.notifyRepaintRequired = function() {
+    // Leaflet doesn't need to do anything with this notification.
 };
 
 module.exports = Leaflet;

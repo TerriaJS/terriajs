@@ -11,7 +11,7 @@
             "name": "Victorian Government",
             "type": "ckan",
             "url": "http://www.data.vic.gov.au/data",
-            "filterQuery": "res_format:wms",
+            "filterQuery": ["fq=res_format%3awms"],
             "filterByWmsGetCapabilities": true,
             "minimumMaxScaleDenominator": 1e10,
             "blacklist": {

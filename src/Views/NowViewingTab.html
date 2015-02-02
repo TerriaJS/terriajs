@@ -5,7 +5,7 @@
 
     <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
         <div class="now-viewing-item" data-bind="attr: { nowViewingIndex: $index }, event : { dragenter: $root.dragEnter.bind($root), dragover: $root.dragEnter.bind($root) }">
-            <div class="now-viewing-item-top-row" data-bind="attr: { draggable: supportsReordering, nowViewingIndex: $index }, event : { dragstart: $root.dragStart.bind($root), dragend: $root.dragEnd.bind($root) }">
+            <div class="now-viewing-item-top-row" data-bind="attr: { draggable: supportsReordering, nowViewingIndex: $index }, event : { dragstart: $root.dragStart.bind($root), dragend: $root.dragEnd.bind($root), selectstart: $root.selectStart.bind($root) }">
                 <div class="now-viewing-item-drag-handle-holder">
                     <img class="now-viewing-item-drag-handle" data-bind="visible: supportsReordering" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." title="Drag to reorder data sources." />
                 </div>
@@ -20,7 +20,7 @@
             </div>
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
                 <div class="now-viewing-action-menu">
-                    <div class="now-viewing-action clickable" data-bind="click: zoomTo" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                    <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
                     <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
                     <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
                 </div>
@@ -31,7 +31,9 @@
                 </div>
 
                 <!-- ko if: legendIsImage -->
-                <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
+                <a data-bind="attr: { href: legendUrl }" target="_blank">
+                    <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
+                </a>
                 <!-- /ko -->
                 <!-- ko if: hasLegend && !legendIsImage -->
                 <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>

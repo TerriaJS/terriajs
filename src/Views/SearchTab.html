@@ -5,7 +5,7 @@
                 <div class="data-catalog-icon-holder">
                     <div class="data-catalog-icon clickable" data-bind="click: toggleEnabled, cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
                 </div>
-                <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomTo"></div>
+                <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock"></div>
                 <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
                 <div class="data-catalog-item-info">
                     <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
@@ -41,7 +41,8 @@
 
 <div class="search-tab">
     <form class="search-tab-form" data-bind="submit: activateFirstResult">
-        <input class="search-tab-input" placeholder="Search address, landmark, or data set" type="search" data-bind="value: searchText, valueUpdate: 'input', hasFocus: searchBoxHasFocus" />
+        <input class="search-tab-input" type="text" data-bind="value: searchText, valueUpdate: 'input', hasFocus: searchBoxHasFocus" />
+        <div class="search-tab-input-clear" data-bind="visible: searchText.length > 0, click: clearSearchText">&times;</div>
     </form>
     <div class="search-tab-results-area" data-bind="visible: searchText, foreach: searchProviders">
         <div class="search-tab-provider">

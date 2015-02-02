@@ -7,8 +7,12 @@ var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
+var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -24,6 +28,53 @@ var Cesium = function(application, viewer) {
      * @type {Scene}
      */
     this.scene = viewer.scene;
+
+
+    /**
+     * Gets or sets whether the viewer has stopped rendering since startup or last set to false.
+     * @type {Scene}
+     */
+    this.stoppedRendering = false;
+
+
+    this._lastClockTime = new JulianDate(0, 0.0);
+    this._lastCameraViewMatrix = new Matrix4();
+    this._lastCameraMoveTime = 0;
+
+    this._removePostRenderListener = this.scene.postRender.addEventListener(postRender.bind(undefined, this));
+    this._removeInfoBoxCloseListener = undefined;
+    this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
+
+    // Force a repaint when the mouse moves or the window changes size.
+    this.viewer.canvas.addEventListener('mousemove', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.addEventListener('mousedown', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.addEventListener('mouseup', this._boundNotifyRepaintRequired, false);
+    window.addEventListener('resize', this._boundNotifyRepaintRequired, false);
+
+    // Force a repaint when the feature info box is closed.  Cesium can't close its info box
+    // when the clock is not ticking, for reasons that are not clear.
+    if (defined(this.viewer.infoBox)) {
+        this._removeInfoBoxCloseListener = this.viewer.infoBox.viewModel.closeClicked.addEventListener(this._boundNotifyRepaintRequired);
+    }
+};
+
+Cesium.prototype.destroy = function() {
+    if (defined(this._removePostRenderListener)) {
+        this._removePostRenderListener();
+        this._removePostRenderListener = undefined;
+    }
+
+    if (defined(this._removeInfoBoxCloseListener)) {
+        this._removeInfoBoxCloseListener();
+    }
+
+    this.viewer.canvas.removeEventListener('mousemove', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.removeEventListener('mousedown', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.removeEventListener('mouseup', this._boundNotifyRepaintRequired, false);
+
+    window.removeEventListener('resize', this._boundNotifyRepaintRequired, false);
+
+    return destroyObject(this);
 };
 
 var cartesian3Scratch = new Cartesian3();
@@ -68,6 +119,8 @@ Cesium.prototype.zoomTo = function(extent, flightDurationSeconds) {
         duration : defaultValue(flightDurationSeconds, 3.0)
     });
     this.scene.tweens.add(flight);
+
+    this.notifyRepaintRequired();
 };
 
 /**
@@ -86,7 +139,48 @@ Cesium.prototype.captureScreenshot = function() {
         }
     }, this);
 
+    this.notifyRepaintRequired();
+
     return deferred.promise;
 };
+
+/**
+ * Notifies the viewer that a repaint is required.
+ */
+Cesium.prototype.notifyRepaintRequired = function() {
+    if (!this.viewer.useDefaultRenderLoop) {
+        console.log('starting rendering @ ' + getTimestamp());
+    }
+    this._lastCameraMoveTime = getTimestamp();
+    this.viewer.useDefaultRenderLoop = true;
+};
+
+function postRender(cesium, date) {
+    // We can safely stop rendering when:
+    //  - the camera position hasn't changed in over a second,
+    //  - there are no tiles waiting to load, and
+    //  - the clock is not animating
+
+    var now = getTimestamp();
+
+    var scene = cesium.scene;
+
+    if (!Matrix4.equals(cesium._lastCameraViewMatrix, scene.camera.viewMatrix)) {
+        cesium._lastCameraMoveTime = now;
+    }
+
+    var cameraMovedInLastSecond = now - cesium._lastCameraMoveTime < 1000;
+
+    var surface = scene.globe._surface;
+    var tilesWaiting = !surface._tileProvider.ready || surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0;
+
+    if (!cameraMovedInLastSecond && !tilesWaiting && !cesium.viewer.clock.shouldAnimate) {
+        console.log('stopping rendering @ ' + getTimestamp());
+        cesium.viewer.useDefaultRenderLoop = false;
+        cesium.stoppedRendering = true;
+    }
+
+    Matrix4.clone(scene.camera.viewMatrix, cesium._lastCameraViewMatrix);
+}
 
 module.exports = Cesium;

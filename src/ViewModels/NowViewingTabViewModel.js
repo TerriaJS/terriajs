@@ -21,6 +21,7 @@ var NowViewingTabViewModel = function(options) {
 
     this.name = 'Now Viewing';
     this.nowViewing = options.nowViewing;
+    this.badgeText = this.nowViewing.items.length === 0 ? undefined : this.nowViewing.items.length;
 
     this.svgCheckboxChecked = defaultValue(options.svgCheckboxChecked, svgCheckboxChecked);
     this.svgCheckboxUnchecked = defaultValue(options.svgCheckboxUnchecked, svgCheckboxUnchecked);
@@ -31,6 +32,8 @@ var NowViewingTabViewModel = function(options) {
     this._draggedItem = undefined;
     this._itemDropped = false;
     this._dragPlaceholder = undefined;
+
+    this._lastNumberOfItems = -1;
 
     var that = this;
     knockout.getObservable(this, 'isActive').subscribe(function(newValue) {
@@ -48,6 +51,16 @@ var NowViewingTabViewModel = function(options) {
             }
         }
     });
+
+    knockout.getObservable(this.nowViewing, 'items').subscribe(function() {
+        this.badgeText = this.nowViewing.items.length === 0 ? undefined : this.nowViewing.items.length;
+
+        if (this.nowViewing.items.length > this._lastNumberOfItems) {
+            this.popBadge();
+        }
+
+        this._lastNumberOfItems = this.nowViewing.items.length;
+    }, this);
 };
 
 inherit(ExplorerTabViewModel, NowViewingTabViewModel);
@@ -115,6 +128,10 @@ NowViewingTabViewModel.prototype.dragEnd = function(viewModel, e) {
             this.nowViewing.lower(viewModel);
             ++draggedItemIndex;
         }
+
+        // Reordering will trigger a badge pop because we remove/re-add items.
+        // Cancel the pop.
+        this.unpopBadge();
     }
 
     if (defined(this._draggedItem)) {
@@ -133,8 +150,6 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
     if (!defined(this._draggedItem)) {
         return;
     }
-
-    console.log('dragEnter or dragOver');
 
     e.originalEvent.dataTransfer.dropEffect = 'move';
 
@@ -159,18 +174,24 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
 
     var insertBefore = true;
     if (placeholderIndex === targetIndex - 1) {
-        insertBefore = false;
+        var placeholderRect = this._dragPlaceholder.getBoundingClientRect();
+        var placeholderHeight = placeholderRect.bottom - placeholderRect.top;
+
+        var targetRect = e.currentTarget.getBoundingClientRect();
+        var currentY = e.originalEvent.clientY;
+
+        if (currentY > targetRect.bottom - placeholderHeight) {
+            insertBefore = false;
+        }
     }
 
-    if (this._dragPlaceholder.parentElement) {
-        this._dragPlaceholder.parentElement.removeChild(this._dragPlaceholder);
-    }
-
+    var doInsert = false;
     var nodeToInsertBefore;
-    if (insertBefore) {
+    if (insertBefore && placeholderIndex !== targetIndex - 1) {
         nodeToInsertBefore = e.currentTarget;
         this._dragPlaceholder.setAttribute('nowViewingIndex', nodeToInsertBefore.getAttribute('nowViewingIndex'));
-    } else {
+        doInsert = true;
+    } else if (!insertBefore && placeholderIndex !== targetIndex + 1) {
         nodeToInsertBefore = siblings[targetIndex + 1];
 
         // IE doesn't like to insert before undefined, but null is fine.
@@ -180,11 +201,28 @@ NowViewingTabViewModel.prototype.dragEnter = function(viewModel, e) {
         } else {
             this._dragPlaceholder.setAttribute('nowViewingIndex', nodeToInsertBefore.getAttribute('nowViewingIndex'));
         }
+        doInsert = true;
     }
 
-    e.currentTarget.parentElement.insertBefore(this._dragPlaceholder, nodeToInsertBefore);
+    if (doInsert) {
+        if (this._dragPlaceholder.parentElement) {
+            this._dragPlaceholder.parentElement.removeChild(this._dragPlaceholder);
+        }
+
+        e.currentTarget.parentElement.insertBefore(this._dragPlaceholder, nodeToInsertBefore);
+    }
 
     e.originalEvent.preventDefault();
+};
+
+NowViewingTabViewModel.prototype.selectStart = function(viewModel, e) {
+    // This function works around problems in IE9 where block divs are not draggable even when draggable="true".
+    if (!viewModel.supportsReordering || !e || !e.currentTarget || !e.currentTarget.dragDrop) {
+        return;
+    }
+
+    e.currentTarget.dragDrop();
+    return false;
 };
 
 module.exports = NowViewingTabViewModel;

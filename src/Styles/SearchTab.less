@@ -25,6 +25,19 @@
     padding-right: 15px;
 }
 
+.search-tab-input-clear {
+    .clickable;
+    position: absolute;
+    top: 10px;
+    right: 13px;
+    bottom: 10px;
+    width: 20px;
+    background-color: #CCC;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 20px;
+}
+
 .search-tab-input::-webkit-input-placeholder {
     color: @search-tab-input-text-color;
     font-style: italic;
@@ -45,6 +58,10 @@
 .search-tab-input:-ms-input-placeholder {
     color: @search-tab-input-text-color;
     font-style: italic;
+}
+
+.search-tab-input::-ms-clear {
+    display: none;
 }
 
 .search-tab-results-area {

@@ -32,12 +32,14 @@ SettingsPanelViewModel.prototype.show = function(container) {
 };
 
 SettingsPanelViewModel.prototype.close = function() {
-    if (defined(this._domNodes)) {
-        for (var i = 0; i < this._domNodes.length; ++i) {
-            var node = this._domNodes[i];
-            node.parentElement.removeChild(node);
-        }
+    this.isVisible = false;
+};
+
+SettingsPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e) {
+    if (e.target.className === 'settings-panel-background') {
+        this.close();
     }
+    return true;
 };
 
 SettingsPanelViewModel.prototype.select2D = function() {
