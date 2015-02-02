@@ -1,7 +1,7 @@
 .navigation-controls {
     .floating-vertical;
-    right: 25px;
-    top: 200px;
+    right: 35px;
+    top: 195px;
     width: 35px;
     border: 1px solid rgba(255,255,255,0.1);
 }
@@ -50,13 +50,17 @@
     fill: @floating-text-color;
 }
 
+@compass-diameter: 95px;
+@compass-ring-width: @compass-diameter * 20 / 145;
+@compass-gyro-diameter: @compass-diameter * 50 / 145;
+
 .compass {
     .opaque-to-input;
     position: absolute;
     right: 10px;
-    top: 60px;
-    width: 145px;
-    height: 145px;
+    top: 75px;
+    width: @compass-diameter;
+    height: @compass-diameter;
     
     filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
     -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
@@ -68,36 +72,36 @@
 .compass-outer-ring {
     position: absolute;
     top: 0;
-    width: 145px;
-    height: 145px;
+    width: @compass-diameter;
+    height: @compass-diameter;
     fill: #999;
 }
 
 .compass-outer-ring-background {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 65px;
-    height: 65px;
-    border-radius: 65px;
-    border: 20px solid @floating-background-color;
+    top: 14px;
+    left: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+    border: 12px solid @floating-background-color;
 }
 
 .compass-gyro {
     position: absolute;
     top: 0;
-    width: 145px;
-    height: 145px;
+    width: @compass-diameter;
+    height: @compass-diameter;
     fill: #CCC;
 }
 
 .compass-gyro-background {
     position: absolute;
-    top: 47px;
-    left: 47px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50px;
+    top: 30px;
+    left: 30px;
+    width: 33px;
+    height: 33px;
+    border-radius: 33px;
     background-color: @floating-background-color;
     border: 1px solid #999;
 }
@@ -105,8 +109,8 @@
 .compass-rotation-marker {
     position: absolute;
     top: 0;
-    width: 145px;
-    height: 145px;
+    width: @compass-diameter;
+    height: @compass-diameter;
     fill: @highlight-color;
 }
 
