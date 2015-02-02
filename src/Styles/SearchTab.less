@@ -76,6 +76,7 @@
     display: table;
     width: 100%;
     line-height: 40px;
+    background-color: rgba(0,0,0, 0.2);
     border-bottom: @panel-element-border;
     border-top: @panel-element-border;
     cursor: pointer;
@@ -136,8 +137,8 @@
     font-weight: lighter;
     font-style: italic;
     padding-left: 16px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .search-tab-provider-searching {
@@ -148,4 +149,9 @@
     padding-left: 16px;
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+// Safari search bar partial fix
+input[type=search] {
+-webkit-appearance: none;
 }
