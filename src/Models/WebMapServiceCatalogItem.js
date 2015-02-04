@@ -14,6 +14,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 
 var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
@@ -283,6 +284,8 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
     });
 
     scene.imageryLayers.add(this._imageryLayer);
+
+    this._metadata = requestMetadata(this);
 };
 
 WebMapServiceCatalogItem.prototype._disableInCesium = function() {
@@ -310,6 +313,8 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
     options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
 
     this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
+
+    this._metadata = requestMetadata(this);
 };
 
 WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
@@ -347,6 +352,19 @@ function proxyUrl(application, url) {
     return url;
 }
 
+function getRectangleFromMetadata(layer) {
+    var egbb = layer.EX_GeographicBoundingBox; // required in WMS 1.3.0
+    if (defined(egbb)) {
+        return Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
+    } else {
+        var llbb = layer.LatLonBoundingBox; // required in WMS 1.0.0 through 1.1.1
+        if (defined(llbb)) {
+            return Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
+        }
+    }
+    return undefined;
+}
+
 function requestMetadata(wmsItem) {
     var result = new Metadata();
 
@@ -367,6 +385,7 @@ function requestMetadata(wmsItem) {
         }
         if (layer) {
             populateMetadataGroup(result.dataSourceMetadata, layer);
+            wmsItem.rectangle = getRectangleFromMetadata(layer);
         } else {
             result.dataSourceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
         }
