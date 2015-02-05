@@ -1,3 +1,13 @@
+<div class="compass" title="Drag outer ring: rotate view.
+Drag inner gyroscope: free orbit.
+Double-click: reset view.
+TIP: You can also free orbit by holding the CTRL key and dragging the map." data-bind="visible: showCompass, event: { mousedown: handleMouseDown, dblclick: handleDoubleClick }">
+    <div class="compass-outer-ring-background"></div>
+    <div class="compass-rotation-marker" data-bind="visible: isOrbiting, style: { transform: 'rotate(-' + orbitCursorAngle + 'rad)', '-webkit-transform': 'rotate(-' + orbitCursorAngle + 'rad)', opacity: orbitCursorOpacity }, cesiumSvgPath: { path: svgCompassRotationMarker, width: 145, height: 145 }"></div>
+    <div class="compass-outer-ring" title="Click and drag to rotate the camera" data-bind="style: { transform: 'rotate(-' + heading + 'rad)', '-webkit-transform': 'rotate(-' + heading + 'rad)' }, cesiumSvgPath: { path: svgCompassOuterRing, width: 145, height: 145 }"></div>
+    <div class="compass-gyro-background"></div>
+    <div class="compass-gyro" data-bind="cesiumSvgPath: { path: svgCompassGyro, width: 145, height: 145 }, css: { 'compass-gyro-active': isOrbiting }"></div>
+</div>
 <div class="navigation-controls">
     <div class="navigation-control" data-bind="click: zoomIn" title="Zoom In">
         <div class="navigation-control-icon-zoom-in" data-bind="cesiumSvgPath: { path: svgZoomIn, width: 22, height: 22 }"></div>
@@ -5,10 +15,7 @@
     <div class="navigation-control" data-bind="click: resetView" title="Reset View">
         <div class="navigation-control-icon-reset" data-bind="cesiumSvgPath: { path: svgReset, width: 15, height: 15 }"></div>
     </div>
-    <div class="navigation-control" data-bind="click: zoomOut, css: { 'navigation-control-last': !showTilt }" title="Zoom Out">
+    <div class="navigation-control-last" data-bind="click: zoomOut" title="Zoom Out">
         <div class="navigation-control-icon-zoom-out" data-bind="cesiumSvgPath: { path: svgZoomOut, width: 22, height: 22 }"></div>
-    </div>
-    <div class="navigation-control-last" data-bind="click: tilt, visible: showTilt" title="Change Tilt">
-        <div class="navigation-control-icon-tilt" data-bind="cesiumSvgPath: { path: svgTilt, width: 32, height: 32 }"></div>
     </div>
 </div>

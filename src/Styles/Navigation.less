@@ -1,7 +1,7 @@
 .navigation-controls {
     .floating-vertical;
-    right: 25px;
-    top: 155px;
+    right: 35px;
+    top: 195px;
     width: 35px;
     border: 1px solid rgba(255,255,255,0.1);
 }
@@ -50,15 +50,94 @@
     fill: @floating-text-color;
 }
 
+@compass-diameter: 95px;
+@compass-ring-width: @compass-diameter * 20 / 145;
+@compass-gyro-diameter: @compass-diameter * 50 / 145;
+
+.compass {
+    .opaque-to-input;
+    position: absolute;
+    right: 10px;
+    top: 75px;
+    width: @compass-diameter;
+    height: @compass-diameter;
+    
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+    -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.5));
+}
+
+.compass-outer-ring {
+    position: absolute;
+    top: 0;
+    width: @compass-diameter;
+    height: @compass-diameter;
+    fill: #999;
+}
+
+.compass-outer-ring-background {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+    border: 12px solid @floating-background-color;
+}
+
+.compass-gyro {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: @compass-diameter;
+    height: @compass-diameter;
+    fill: #CCC;
+}
+
+.compass-gyro-active {
+    fill: @highlight-color;
+}
+
+.compass-gyro-background {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 33px;
+    height: 33px;
+    border-radius: 33px;
+    background-color: @floating-background-color;
+    border: 1px solid #999;
+}
+
+.compass-gyro-background:hover + .compass-gyro {
+    fill: @highlight-color;
+}
+
+.compass-rotation-marker {
+    position: absolute;
+    top: 0;
+    width: @compass-diameter;
+    height: @compass-diameter;
+    fill: @highlight-color;
+}
+
 // Don't display the nav controls on small screens like mobile phones.
 @media screen and (max-width: 400px) {
     .navigation-controls {
+        display: none;
+    }
+    .compass {
         display: none;
     }
 }
 
 @media print {
     .navigation-controls {
+        display: none;
+    }
+    .compass {
         display: none;
     }
 }

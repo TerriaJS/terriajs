@@ -525,9 +525,14 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.application.cesium.destroy();
 
             //get camera and timeline settings
-            rect = getCameraRect(this.scene);
-            bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
-                [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+            try {
+                rect = getCameraRect(this.scene);
+                bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
+                    [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+            } catch (e) {
+                console.log('Using default screen extent', e.message);
+                bnds = rectangleToLatLngBounds(this.application.initialBoundingBox);
+            }
 
             this._enableSelectExtent(false);
 
@@ -685,9 +690,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //Simple monitor to start up and switch to 2D if seem to be stuck.
         if (!defined(this.checkedStartupPerformance)) {
             this.checkedStartupPerformance = true;
+            var uri = new URI(window.location);
+            var params = uri.search(true);
+            var frameRate = (defined(params.fps)) ? params.fps : 5;
+
             this.monitor = new FrameRateMonitor({ 
                 scene: this.scene, 
-                minimumFrameRateDuringWarmup: 1,
+                minimumFrameRateDuringWarmup: frameRate,
                 minimumFrameRateAfterWarmup: 0,
                 samplingWindow: 2
             });
