@@ -150,7 +150,7 @@ if (start) {
 
         var australianTopoOverlay = new ArcGisMapServerCatalogItem(application);
         australianTopoOverlay.name = 'Australian Topography';
-        australianTopoOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer';
+        australianTopoOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/National_Map_Basemap_WM/MapServer';
         australianTopoOverlay.opacity = 1.0;
 
         var australianTopo = new CompositeCatalogItem(application, [naturalEarthII, australianTopoOverlay]);
@@ -182,21 +182,6 @@ if (start) {
 
         var australianHydro = new CompositeCatalogItem(application, [naturalEarthII, australianHydroOverlay]);
         australianHydro.name = 'Australian Hydrography';
-
-        var newAustralianTopo = new WebMapServiceCatalogItem(application);
-        newAustralianTopo.name = 'New Australian Topography';
-        newAustralianTopo.url = 'http://www.ga.gov.au/gis/services/topography/National_Map_Basemap_WM/MapServer/WMSServer';
-        newAustralianTopo.layers = '0';
-        newAustralianTopo.parameters = {
-            transparent: false,
-            format: 'image/jpeg'
-        };
-        newAustralianTopo.opacity = 1.0;
-
-        var projection = new WebMercatorProjection();
-        var sw = projection.unproject(new Cartesian3(5966109.194271946, -8424846.444078568, 0.0));
-        var ne = projection.unproject(new Cartesian3(2.345087990225756E7, 2154274.714163751, 0.0));
-        newAustralianTopo.rectangle = new Rectangle(sw.x, sw.y, ne.x, ne.y);
 
         var settingsPanel = new SettingsPanelViewModel({
             application: application,
@@ -236,11 +221,6 @@ if (start) {
         settingsPanel.baseMaps.push(new BaseMapViewModel({
             image: 'images/natural-earth.png',
             catalogItem: naturalEarthII,
-        }));
-
-        settingsPanel.baseMaps.push(new BaseMapViewModel({
-            image: 'images/natural-earth.png',
-            catalogItem: newAustralianTopo,
         }));
 
         settingsPanel.show(ui);
