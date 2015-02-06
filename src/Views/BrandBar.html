@@ -1,13 +1,6 @@
 <div class="brand-bar">
-    <div class="brand-bar-main">
-        <div class="brand-bar-element">
-            <img data-bind="attr: { src: leftLogo }" height="52" />
-        </div>
-        <div class="brand-bar-element">
-            <div class="brand-bar-name" data-bind="html: name"></div>
-        </div>
-        <div class="brand-bar-element">
-            <img src="images/nicta.png" height="52" />
+    <div class="brand-bar-main" data-bind="foreach: elements">
+        <div class="brand-bar-element" data-bind="html: $data">
         </div>
     </div>
 </div>
