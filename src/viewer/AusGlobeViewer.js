@@ -359,6 +359,12 @@ DrawExtentHelper.prototype.handleRegionStart = function (movement) {
         this._mouseHandler.setInputAction(function (movement) {
             that.handleRegionInter(movement);
         }, ScreenSpaceEventType.MOUSE_MOVE, KeyboardEventModifier.SHIFT);
+        this._mouseHandler.setInputAction(function (movement) {
+            that.handleRegionStop(movement);
+        }, ScreenSpaceEventType.LEFT_UP);
+        this._mouseHandler.setInputAction(function (movement) {
+            that.handleRegionInter(movement);
+        }, ScreenSpaceEventType.MOUSE_MOVE);
     }
 };
 
