@@ -12,6 +12,7 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
@@ -49,12 +50,32 @@ var Cesium = function(application, viewer) {
     this.viewer.canvas.addEventListener('mousemove', this._boundNotifyRepaintRequired, false);
     this.viewer.canvas.addEventListener('mousedown', this._boundNotifyRepaintRequired, false);
     this.viewer.canvas.addEventListener('mouseup', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.addEventListener('touchstart', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.addEventListener('touchend', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.addEventListener('touchmove', this._boundNotifyRepaintRequired, false);
+
+    if (defined(window.PointerEvent)) {
+        this.viewer.canvas.addEventListener('pointerdown', this._boundNotifyRepaintRequired, false);
+        this.viewer.canvas.addEventListener('pointerup', this._boundNotifyRepaintRequired, false);
+        this.viewer.canvas.addEventListener('pointermove', this._boundNotifyRepaintRequired, false);
+    }
+
     window.addEventListener('resize', this._boundNotifyRepaintRequired, false);
 
     // Force a repaint when the feature info box is closed.  Cesium can't close its info box
     // when the clock is not ticking, for reasons that are not clear.
     if (defined(this.viewer.infoBox)) {
         this._removeInfoBoxCloseListener = this.viewer.infoBox.viewModel.closeClicked.addEventListener(this._boundNotifyRepaintRequired);
+    }
+
+    if (defined(this.viewer._clockViewModel)) {
+        var clock = this.viewer._clockViewModel;
+        this._shouldAnimateSubscription = knockout.getObservable(clock, 'shouldAnimate').subscribe(this._boundNotifyRepaintRequired);
+        this._currentTimeSubscription = knockout.getObservable(clock, 'currentTime').subscribe(this._boundNotifyRepaintRequired);
+    }
+
+    if (defined(this.viewer.timeline)) {
+        this.viewer.timeline.addEventListener('settime', this._boundNotifyRepaintRequired, false);
     }
 };
 
@@ -68,9 +89,32 @@ Cesium.prototype.destroy = function() {
         this._removeInfoBoxCloseListener();
     }
 
+    if (defined(this._shouldAnimateSubscription)) {
+        this._shouldAnimateSubscription.dispose();
+        this._shouldAnimateSubscription = undefined;
+    }
+
+    if (defined(this._currentTimeSubscription)) {
+        this._currentTimeSubscription.dispose();
+        this._currentTimeSubscription = undefined;
+    }
+
+    if (defined(this.viewer.timeline)) {
+        this.viewer.timeline.removeEventListener('settime', this._boundNotifyRepaintRequired, false);
+    }
+
     this.viewer.canvas.removeEventListener('mousemove', this._boundNotifyRepaintRequired, false);
     this.viewer.canvas.removeEventListener('mousedown', this._boundNotifyRepaintRequired, false);
     this.viewer.canvas.removeEventListener('mouseup', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.removeEventListener('touchstart', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.removeEventListener('touchend', this._boundNotifyRepaintRequired, false);
+    this.viewer.canvas.removeEventListener('touchmove', this._boundNotifyRepaintRequired, false);
+
+    if (defined(window.PointerEvent)) {
+        this.viewer.canvas.removeEventListener('pointerdown', this._boundNotifyRepaintRequired, false);
+        this.viewer.canvas.removeEventListener('pointerup', this._boundNotifyRepaintRequired, false);
+        this.viewer.canvas.removeEventListener('pointermove', this._boundNotifyRepaintRequired, false);
+    }
 
     window.removeEventListener('resize', this._boundNotifyRepaintRequired, false);
 
