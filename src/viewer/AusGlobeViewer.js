@@ -262,6 +262,8 @@ var DrawExtentHelper = function (scene, handler) {
     this._ellipsoid = scene.globe.ellipsoid;
     this._finishHandler = handler;
     this._mouseHandler = new ScreenSpaceEventHandler(scene.canvas, false);
+    this._stopHandler = undefined;
+    this._interHandler = undefined;
     this.active = false;
 };
 
@@ -314,6 +316,11 @@ DrawExtentHelper.prototype.setToDegrees = function (w, s, e, n) {
 };
 
 DrawExtentHelper.prototype.handleRegionStop = function (movement) {
+    this._mouseHandler.removeInputAction(ScreenSpaceEventType.LEFT_UP, KeyboardEventModifier.SHIFT);
+    this._mouseHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE, KeyboardEventModifier.SHIFT);
+    this._mouseHandler.removeInputAction(ScreenSpaceEventType.LEFT_UP);
+    this._mouseHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
+
     this.enableInput();
     var ext;
     if (movement) {
@@ -353,15 +360,21 @@ DrawExtentHelper.prototype.handleRegionStart = function (movement) {
         this._scene.primitives.add(this._extentPrimitive);
         var that = this;
         this._click1 = this._ellipsoid.cartesianToCartographic(cartesian);
+
         this._mouseHandler.setInputAction(function (movement) {
             that.handleRegionStop(movement);
         }, ScreenSpaceEventType.LEFT_UP, KeyboardEventModifier.SHIFT);
         this._mouseHandler.setInputAction(function (movement) {
             that.handleRegionInter(movement);
         }, ScreenSpaceEventType.MOUSE_MOVE, KeyboardEventModifier.SHIFT);
+        this._mouseHandler.setInputAction(function (movement) {
+            that.handleRegionStop(movement);
+        }, ScreenSpaceEventType.LEFT_UP);
+        this._mouseHandler.setInputAction(function (movement) {
+            that.handleRegionInter(movement);
+        }, ScreenSpaceEventType.MOUSE_MOVE);
     }
 };
-
 
 DrawExtentHelper.prototype.start = function () {
 
