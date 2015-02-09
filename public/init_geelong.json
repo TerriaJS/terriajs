@@ -6,10 +6,10 @@
         "programs.communications.gov.au"
     ],
     "camera": {
-        "west": 105,
-        "south": -45,
-        "east": 155,
-        "north": -5
+        "west": 144.3,
+        "south": -38.3,
+        "east": 144.5,
+        "north": -38.0
     },
     "services": [],
     "catalog": [
