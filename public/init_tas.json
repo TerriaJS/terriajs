@@ -33,7 +33,8 @@
                             ],
                             "type": "wms",
                             "url": "http://services.thelist.tas.gov.au/arcgis/services/Basemaps/Topographic/ImageServer/WMSServer",
-                            "layers": "0"
+                            "layers": "0",
+                            "opacity": "1.0"
                         },
                         {
                             "name": "Topographic Grayscale",
@@ -47,7 +48,8 @@
                             ],
                             "type": "wms",
                             "url": "http://services.thelist.tas.gov.au/arcgis/services/Basemaps/TopographicGrayScale/ImageServer/WMSServer",
-                            "layers": "0"
+                            "layers": "0",
+                            "opacity": "1.0"
                         },
                         {
                             "name": "Orthophoto",
@@ -61,7 +63,8 @@
                             ],
                             "type": "wms",
                             "url": "http://services.thelist.tas.gov.au/arcgis/services/Basemaps/Orthophoto/ImageServer/WMSServer",
-                            "layers": "0"
+                            "layers": "0",
+                            "opacity": "1.0"
                         },
                         {
                             "name": "Tasmania Map 500k Resolution",
@@ -75,7 +78,8 @@
                             ],
                             "type": "wms",
                             "url": "http://services.thelist.tas.gov.au/arcgis/services/Basemaps/Tasmap500K/ImageServer/WMSServer",
-                            "layers": "0"
+                            "layers": "0",
+                            "opacity": "1.0"
                         },
                         {
                             "name": "Tasmania Map 250k Resolution",
@@ -89,7 +93,8 @@
                             ],
                             "type": "wms",
                             "url": "http://services.thelist.tas.gov.au/arcgis/services/Basemaps/Tasmap250K/ImageServer/WMSServer",
-                            "layers": "0"
+                            "layers": "0",
+                            "opacity": "1.0"
                         },
                         {
                             "name": "Tasmania Map 100k Resolution",
@@ -103,7 +108,8 @@
                             ],
                             "type": "wms",
                             "url": "http://services.thelist.tas.gov.au/arcgis/services/Basemaps/Tasmap100K/ImageServer/WMSServer",
-                            "layers": "0"
+                            "layers": "0",
+                            "opacity": "1.0"
                         },
                         {
                             "name": "Tasmania Map 25k Resolution",
@@ -117,7 +123,8 @@
                             ],
                             "type": "wms",
                             "url": "http://services.thelist.tas.gov.au/arcgis/services/Basemaps/Tasmap25K/ImageServer/WMSServer",
-                            "layers": "0"
+                            "layers": "0",
+                            "opacity": "1.0"
                         }
                     ]
                 },
