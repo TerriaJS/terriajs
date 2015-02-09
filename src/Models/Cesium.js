@@ -47,18 +47,34 @@ var Cesium = function(application, viewer) {
     this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
 
     // Force a repaint when the mouse moves or the window changes size.
-    this.viewer.canvas.addEventListener('mousemove', this._boundNotifyRepaintRequired, false);
-    this.viewer.canvas.addEventListener('mousedown', this._boundNotifyRepaintRequired, false);
-    this.viewer.canvas.addEventListener('mouseup', this._boundNotifyRepaintRequired, false);
-    this.viewer.canvas.addEventListener('touchstart', this._boundNotifyRepaintRequired, false);
-    this.viewer.canvas.addEventListener('touchend', this._boundNotifyRepaintRequired, false);
-    this.viewer.canvas.addEventListener('touchmove', this._boundNotifyRepaintRequired, false);
+    var canvas = this.viewer.canvas;
+    canvas.addEventListener('mousemove', this._boundNotifyRepaintRequired, false);
+    canvas.addEventListener('mousedown', this._boundNotifyRepaintRequired, false);
+    canvas.addEventListener('mouseup', this._boundNotifyRepaintRequired, false);
+    canvas.addEventListener('touchstart', this._boundNotifyRepaintRequired, false);
+    canvas.addEventListener('touchend', this._boundNotifyRepaintRequired, false);
+    canvas.addEventListener('touchmove', this._boundNotifyRepaintRequired, false);
 
     if (defined(window.PointerEvent)) {
-        this.viewer.canvas.addEventListener('pointerdown', this._boundNotifyRepaintRequired, false);
-        this.viewer.canvas.addEventListener('pointerup', this._boundNotifyRepaintRequired, false);
-        this.viewer.canvas.addEventListener('pointermove', this._boundNotifyRepaintRequired, false);
+        canvas.addEventListener('pointerdown', this._boundNotifyRepaintRequired, false);
+        canvas.addEventListener('pointerup', this._boundNotifyRepaintRequired, false);
+        canvas.addEventListener('pointermove', this._boundNotifyRepaintRequired, false);
     }
+
+    // Detect available wheel event
+    this._wheelEvent = undefined;
+    if ('onwheel' in canvas) {
+        // spec event type
+        this._wheelEvent = 'wheel';
+    } else if (defined(document.onmousewheel)) {
+        // legacy event type
+        this._wheelEvent = 'mousewheel';
+    } else {
+        // older Firefox
+        this._wheelEvent = 'DOMMouseScroll';
+    }
+
+    canvas.addEventListener(this._wheelEvent, this._boundNotifyRepaintRequired, false);
 
     window.addEventListener('resize', this._boundNotifyRepaintRequired, false);
 
@@ -115,6 +131,8 @@ Cesium.prototype.destroy = function() {
         this.viewer.canvas.removeEventListener('pointerup', this._boundNotifyRepaintRequired, false);
         this.viewer.canvas.removeEventListener('pointermove', this._boundNotifyRepaintRequired, false);
     }
+
+    this.viewer.canvas.removeEventListener(this._wheelEvent, this._boundNotifyRepaintRequired, false);
 
     window.removeEventListener('resize', this._boundNotifyRepaintRequired, false);
 
