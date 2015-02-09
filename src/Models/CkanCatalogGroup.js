@@ -391,6 +391,10 @@ function populateGroupFromResults(ckanGroup, json) {
             var params = uri.search(true);
             var layerName = params.LAYERS || params.layers || params.typeName;
 
+            if (!defined(layerName)) {
+                continue;
+            }
+
             // Remove the query portion of the WMS URL.
             uri.search('');
             var url = uri.toString();
@@ -420,12 +424,15 @@ function populateGroupFromResults(ckanGroup, json) {
 
             //if no groups then use organization
             var groups = item.groups;
-            if (!defined(groups) || groups.length === 0) {
+            if (!defined(groups) || groups.length === 0 || dataGovCkan) {
                 groups = [item.organization];
             }
             for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                 var group = groups[groupIndex];
                 var groupName = group.display_name || group.title;
+                if (groupName.indexOf(',') !== -1) {
+                    groupName = groupName.substring(0, groupName.indexOf(','));
+                }
 
                 if (ckanGroup.blacklist && ckanGroup.blacklist[groupName]) {
                     continue;
