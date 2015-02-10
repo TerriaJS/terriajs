@@ -242,6 +242,7 @@ Application.prototype.addInitSource = function(initSource) {
 };
 
 var initSourceNameRegex = /\b(\w+)\b/i;
+var reservedProperties = ['tools'];
 
 function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources) {
     for (var property in hashProperties) {
@@ -274,9 +275,11 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
                 knockout.track(userProperties, [property]);
             } else {
                 var name = initSourceNameRegex.exec(property);
-                var initSourceFile = 'init_' + name[0] + '.json';
-                persistentInitSources.push(initSourceFile);
-                temporaryInitSources.push(initSourceFile);
+                if (reservedProperties.indexOf(name[0]) === -1) {
+                    var initSourceFile = 'init_' + name[0] + '.json';
+                    persistentInitSources.push(initSourceFile);
+                    temporaryInitSources.push(initSourceFile);
+                }
             }
         }
     }

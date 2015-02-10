@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require*/
+/*global require,URI*/
 
 var start = true;
 
@@ -75,6 +75,7 @@ if (start) {
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
     var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
+    var ToolsPanelViewModel = require('./ViewModels/ToolsPanelViewModel');
 
     var Application = require('./Models/Application');
     var ArcGisMapServerCatalogItem = require('./Models/ArcGisMapServerCatalogItem');
@@ -126,6 +127,9 @@ if (start) {
         defaultBaseMap.opacity = 1.0;
 
         application.baseMap = defaultBaseMap;
+
+        var uri = new URI(window.location);
+        var hash = uri.fragment();
 
         // Create the user interface.
         var ui = document.getElementById('ui');
@@ -259,6 +263,17 @@ if (start) {
             tooltip: 'Help using National Map.',
             href: 'http://nicta.github.io/nationalmap/public/faq.html'
         }));
+        if (hash === 'tools') {
+            menuBar.items.push(new MenuBarItemViewModel({
+                label: 'Tools',
+                tooltip: 'Advance National Map Tools.',
+                callback: function() {
+                    ToolsPanelViewModel.open(ui, {
+                        application: application
+                    });
+                }
+            }));
+        }
         menuBar.show(ui);
 
         var locationBar = new LocationBarViewModel(application, document.getElementById('cesiumContainer'));
