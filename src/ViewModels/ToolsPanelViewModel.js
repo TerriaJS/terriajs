@@ -26,11 +26,12 @@ var ToolsPanelViewModel = function(options) {
 
     this._domNodes = undefined;
 
-    this.url = '';
     this.cacheLevels = 3;
     this.catalogFilter = 'opened';
+    this.ckanUrl = 'http://localhost';
+    this.ckanApiKey = '';
 
-    knockout.track(this, ['url', 'dataType']);
+    knockout.track(this, ['catalogFilter', 'cacheLevels', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -59,7 +60,7 @@ ToolsPanelViewModel.prototype.cacheTiles = function() {
     var requests = [];
     getAllRequests(['wms'], this.catalogFilter, requests, this.application.catalog.group);
     console.log('Requesting tiles from ' + requests.length + ' data sources.');
-    requestTiles(requests, this.cacheLevels);
+    requestTiles(this.application, requests, this.cacheLevels);
 };
 
 ToolsPanelViewModel.prototype.exportFile = function() {
@@ -105,7 +106,7 @@ function getAllRequests(types, mode, requests, group) {
     }
 }
 
-function requestTiles(requests, maxLevel) {
+function requestTiles(app, requests, maxLevel) {
     var urls = [];
     var names = [];
     var name;
@@ -134,11 +135,11 @@ function requestTiles(requests, maxLevel) {
          }
 
         var tilingScheme;
-        var leafletViewer = false; //that._viewer.isCesium();
-        if (leafletViewer) {
+        var leaflet = app.leaflet;
+        if (defined(leaflet)) {
             request.provider = request.item._imageryLayer;
             tilingScheme = new WebMercatorTilingScheme();
-            that._viewer.map.addLayer(request.provider);
+            leaflet.map.addLayer(request.provider);
         }
         else {
             request.provider = request.item._imageryLayer.imageryProvider;
@@ -155,7 +156,7 @@ function requestTiles(requests, maxLevel) {
 
             for (var y = nw.y; y <= se.y; ++y) {
                 for (var x = nw.x; x <= se.x; ++x) {
-                    if (leafletViewer) {
+                    if (defined(leaflet)) {
                         var coords = new L.Point(x, y);
                         coords.z = level;
                         var url = request.provider.getTileUrl(coords);
@@ -170,8 +171,8 @@ function requestTiles(requests, maxLevel) {
             }
         }
         if (enabledHere) {
-            if (leafletViewer) {
-               that._viewer.map.removeLayer(request.provider);
+            if (defined(leaflet)) {
+               leaflet.map.removeLayer(request.provider);
             }
             request.item._disable();
         }
@@ -411,6 +412,10 @@ function populateCkan(requests, server, apiKey) {
                 }
             });
         }
+
+        console.log(ckanRequests);
+
+        return;
 
         var currentIndex = 0;
         console.log('Starting ckan tasks:', ckanRequests.length);
