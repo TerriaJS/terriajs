@@ -2,6 +2,7 @@
     "proxyDomains" : [
         "nicta.com.au",
         "gov.au",
+        "csiro.au",
         "arcgis.com"
     ],
     "initializationUrls" : [
