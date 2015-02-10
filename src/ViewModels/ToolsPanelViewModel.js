@@ -28,12 +28,13 @@ var ToolsPanelViewModel = function(options) {
 
     this._domNodes = undefined;
 
+    this.cacheFilter = 'opened';
     this.cacheLevels = 3;
-    this.catalogFilter = 'opened';
+    this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
-    this.ckanApiKey = '';
+    this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['catalogFilter', 'cacheLevels', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'cacheLevels', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -58,7 +59,7 @@ ToolsPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e) 
 
 ToolsPanelViewModel.prototype.cacheTiles = function() {
     var requests = [];
-    getAllRequests(['wms'], this.catalogFilter, requests, this.application.catalog.group);
+    getAllRequests(['wms'], this.cacheFilter, requests, this.application.catalog.group);
     console.log('Requesting tiles from ' + requests.length + ' data sources.');
     requestTiles(this.application, requests, this.cacheLevels);
 };
@@ -84,7 +85,7 @@ ToolsPanelViewModel.prototype.exportCkan = function() {
     var apiKey = 'xxxxxxxxx';
 
     var requests = [];
-    getAllRequests(['wms', 'esri-mapService'], this.catalogFilter, requests, this.application.catalog.group);
+    getAllRequests(['wms', 'esri-mapService'], this.ckanFilter, requests, this.application.catalog.group);
     console.log('Exporting metadata from ' + requests.length + ' data sources.');
     populateCkan(requests, ckanUrl, apiKey);
 };
