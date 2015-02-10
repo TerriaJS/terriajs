@@ -10,6 +10,7 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -17,7 +18,16 @@ var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var ModelError = require('./ModelError');
+var ViewerMode = require('./ViewerMode');
+
 var Cesium = function(application, viewer) {
+    /**
+     * Gets or sets the application.
+     * @type {Application}
+     */
+    this.application = application;
+
     /**
      * Gets or sets the Cesium {@link Viewer} instance.
      * @type {Viewer}
@@ -93,6 +103,21 @@ var Cesium = function(application, viewer) {
     if (defined(this.viewer.timeline)) {
         this.viewer.timeline.addEventListener('settime', this._boundNotifyRepaintRequired, false);
     }
+
+    // If the render loop crashes, inform the user and then switch to 2D.
+    this.scene.renderError.addEventListener(function(scene, error) {
+        this.application.error.raiseEvent(new ModelError({
+            sender: this,
+            title: 'Error rendering in 3D',
+            message: '\
+<p>An error occurred while rendering in 3D.  This probably indicates a bug in National Map or an incompatibility with your system \
+or web browser.  We\'ll now switch you to 2D so that you can continue your work.  We would appreciate it if you report this \
+errror by sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> with the \
+technical details below.  Thank you!</p><pre style="overflow:auto;margin-top:10px;padding:10px;border:1px solid gray;">' + formatError(error) + '</pre>'
+        }));
+
+        this.application.viewerMode = ViewerMode.Leaflet;
+    }, this);
 };
 
 Cesium.prototype.destroy = function() {

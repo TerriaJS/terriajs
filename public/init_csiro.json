@@ -1,0 +1,24 @@
+{
+    "camera": {
+        "west": 105,
+        "south": -45,
+        "east": 155,
+        "north": -5
+    },
+    "services": [],
+    "catalog": [
+        {
+            "name": "CSIRO Web Services",
+            "type": "group",
+            "items": [
+                {
+                    "name": "Soil and Landscape Grid",
+                    "description": "[Home Page](http://www.clw.csiro.au/aclep/soilandlandscapegrid/GetData-GIS.html)  [Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[CSIRO](http://www.sa.gov.au/)",
+                    "url": "http://www.asris.csiro.au/ArcGis/services/TERN/BDW_ACLEP_AU_NAT_C/MapServer/WMSServer",
+                    "type": "wms-getCapabilities"
+                }
+            ]
+        }
+    ]
+}
