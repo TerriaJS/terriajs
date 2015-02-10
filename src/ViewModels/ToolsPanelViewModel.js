@@ -87,7 +87,7 @@ ToolsPanelViewModel.prototype.exportCkan = function() {
     var requests = [];
     getAllRequests(['wms', 'esri-mapService'], this.ckanFilter, requests, this.application.catalog.group);
     console.log('Exporting metadata from ' + requests.length + ' data sources.');
-    populateCkan(requests, ckanUrl, apiKey);
+    populateCkan(requests, this.ckanUrl, this.ckanApiKey);
 };
 
 
@@ -102,10 +102,10 @@ function getAllRequests(types, mode, requests, group) {
     for (var i = 0; i < group.items.length; ++i) {
         var item = group.items[i];
         if (item instanceof CatalogGroup) {
-            if (item.isOpen) {
+            if (item.isOpen || mode === 'all') {
                 getAllRequests(types, mode, requests, item);
             }
-        } else if ((types.indexOf(item.type) !== -1) && (mode === 'opened' || item.isEnabled)) {
+        } else if ((types.indexOf(item.type) !== -1) && (mode !== 'enabled' || item.isEnabled)) {
             requests.push({
                 item : item,
                 group : group.name
@@ -427,10 +427,6 @@ function populateCkan(requests, server, apiKey) {
                 }
             });
         }
-
-        console.log(ckanRequests);
-
-        return;
 
         var currentIndex = 0;
         console.log('Starting ckan tasks:', ckanRequests.length);
