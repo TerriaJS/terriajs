@@ -51,11 +51,8 @@ if (start) {
     var copyright = require('./CopyrightModule'); // jshint ignore:line
 
     var BingMapsStyle = require('../third_party/cesium/Source/Scene/BingMapsStyle');
-    var Cartesian3 = require('../third_party/cesium/Source/Core/Cartesian3');
     var defined = require('../third_party/cesium/Source/Core/defined');
     var knockout = require('../third_party/cesium/Source/ThirdParty/knockout');
-    var Rectangle = require('../third_party/cesium/Source/Core/Rectangle');
-    var WebMercatorProjection = require('../third_party/cesium/Source/Core/WebMercatorProjection');
 
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
     var registerKnockoutBindings = require('./Core/registerKnockoutBindings');
