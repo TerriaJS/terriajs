@@ -5,6 +5,7 @@ var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var EllipsoidGeodesic = require('../../third_party/cesium/Source/Core/EllipsoidGeodesic');
+var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
 var loadView = require('../Core/loadView');
@@ -15,7 +16,8 @@ var DistanceLegendViewModel = function(application) {
     }
 
     this.application = application;
-    this.removeSubscription = undefined;
+    this._removeSubscription = undefined;
+    this._lastLegendUpdate = undefined;
 
     this.distanceLabel = undefined;
     this.barWidth = undefined;
@@ -23,9 +25,9 @@ var DistanceLegendViewModel = function(application) {
     knockout.track(this, ['distanceLabel', 'barWidth']);
 
     this.application.beforeViewerChanged.addEventListener(function() {
-        if (defined(this.removeSubscription)) {
-            this.removeSubscription();
-            this.removeSubscription = undefined;
+        if (defined(this._removeSubscription)) {
+            this._removeSubscription();
+            this._removeSubscription = undefined;
         }
     }, this);
 
@@ -34,7 +36,7 @@ var DistanceLegendViewModel = function(application) {
     function addUpdateSubscription() {
         if (defined(that.application.cesium)) {
             var scene = that.application.cesium.scene;
-            that.removeSubscription = scene.postRender.addEventListener(function() {
+            that._removeSubscription = scene.postRender.addEventListener(function() {
                 updateDistanceLegendCesium(this, scene);
             }, that);
         } else if (defined(that.application.leaflet)) {
@@ -44,7 +46,7 @@ var DistanceLegendViewModel = function(application) {
                 updateDistanceLegendLeaflet(that, map);
             };
 
-            that.removeSubscription = function() {
+            that._removeSubscription = function() {
                 map.off('zoomend', potentialChangeCallback);
                 map.off('moveend', potentialChangeCallback);
             };
@@ -80,6 +82,13 @@ var distances = [
     10000000, 20000000, 30000000, 50000000];
 
 function updateDistanceLegendCesium(viewModel, scene) {
+    var now = getTimestamp();
+    if (now < viewModel._lastLegendUpdate + 250) {
+        return;
+    }
+
+    viewModel._lastLegendUpdate = now;
+
     // Find the distance between two pixels at the bottom center of the screen.
     var width = scene.canvas.clientWidth;
     var height = scene.canvas.clientHeight;

@@ -222,6 +222,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 // The "format" field of CKAN resources must match this regular expression to be considered a WMS resource.
 var wmsFormatRegex = /^wms$/i;
 var esriRestFormatRegex = /^esri rest$/i;
+var jsonFormatRegex = /^JSON$/i;
 
 function filterResultsByGetCapabilities(ckanGroup, json) {
     var wmsServers = {};
@@ -359,12 +360,22 @@ function populateGroupFromResults(ckanGroup, json) {
             }
         }
 
+        var dataGovCkan = (ckanGroup.url === 'http://www.data.gov.au');  //data.gov.au hack
+
         // Currently, we support WMS and Esri REST layers.
         var resources = item.resources;
         for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
             var resource = resources[resourceIndex];
-            if (resource.__filtered || (!resource.format.match(wmsFormatRegex) && !resource.format.match(esriRestFormatRegex))) {
-                continue;
+                //TODO: make the resource types a parameter in the init file
+            if (dataGovCkan) {
+                if (resource.__filtered || (!resource.format.match(jsonFormatRegex))) {
+                    continue;
+                }
+            }
+            else {
+                if (resource.__filtered || (!resource.format.match(wmsFormatRegex) && !resource.format.match(esriRestFormatRegex))) {
+                    continue;
+                }
             }
 
             var wmsUrl = resource.wms_url;
@@ -375,14 +386,19 @@ function populateGroupFromResults(ckanGroup, json) {
                 }
             }
 
-            // Extract the layer name from the WMS URL.
+            // Extract the layer name from the URL.
             var uri = new URI(wmsUrl);
             var params = uri.search(true);
-            var layerName = params.LAYERS || params.layers;
+            var layerName = params.LAYERS || params.layers || params.typeName;
+
+            if (!defined(layerName)) {
+                continue;
+            }
 
             // Remove the query portion of the WMS URL.
             uri.search('');
             var url = uri.toString();
+            url = url.replace('wfs', 'wms');  //data.gov.au hack
 
             var newItem;
             if (resource.format.match(esriRestFormatRegex)) {
@@ -406,18 +422,26 @@ function populateGroupFromResults(ckanGroup, json) {
                 newItem.dataCustodian = item.organization.description || item.organization.title;
             }
 
+            //if no groups then use organization
             var groups = item.groups;
+            if (!defined(groups) || groups.length === 0 || dataGovCkan) {
+                groups = [item.organization];
+            }
             for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
                 var group = groups[groupIndex];
+                var groupName = group.display_name || group.title;
+                if (groupName.indexOf(',') !== -1) {
+                    groupName = groupName.substring(0, groupName.indexOf(','));
+                }
 
-                if (ckanGroup.blacklist && ckanGroup.blacklist[group.display_name]) {
+                if (ckanGroup.blacklist && ckanGroup.blacklist[groupName]) {
                     continue;
                 }
 
-                var existingGroup = ckanGroup.findFirstItemByName(group.display_name);
+                var existingGroup = ckanGroup.findFirstItemByName(groupName);
                 if (!defined(existingGroup)) {
                     existingGroup = new CatalogGroup(ckanGroup.application);
-                    existingGroup.name = group.display_name;
+                    existingGroup.name = groupName;
                     ckanGroup.add(existingGroup);
                 }
 

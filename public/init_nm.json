@@ -1185,8 +1185,8 @@
                                 "-11.05104999964455"
                             ],
                             "type": "wms",
-                            "url": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer",
-                            "layers": "7",
+                            "url": "http://www.ga.gov.au/gis/services/hazards/NEXIS_National_Exposure_Information_System_Population_Density_Exposure/MapServer/WMSServer",
+                            "layers": "0,1,2,3,4",
                             "getFeatureInfoAsGeoJson": false
                         },
                         {
@@ -2456,6 +2456,17 @@
             ]
         },
         {
+            "name": "Data.gov.au",
+            "type": "ckan",
+            "url": "http://www.data.gov.au",
+            "filterQuery": ["fq=res_format%3awms"],
+            "filterByWmsGetCapabilities": false,
+            "minimumMaxScaleDenominator": 1e10,
+            "blacklist": {
+                "Rainforests (EVC_2005)": true
+            }
+        },
+        {
             "name": "Data Providers",
             "type": "group",
             "items": [
@@ -2478,19 +2489,6 @@
                     "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
                     "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
                     "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
-                    "type": "wms-getCapabilities"
-                },
-                {
-                    "name": "data.gov.au",
-                    "dataCustodian": "[data.gov.au](http://www.data.gov.au/)",
-                    "url": "http://data.gov.au/geoserver/ows",
-                    "type": "wms-getCapabilities"
-                },
-                {
-                    "name": "National Exposure Information System 2012",
-                    "description": "[Licence](http://www.ga.gov.au/copyright)",
-                    "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                    "url": "http://www.ga.gov.au/gis/services/hazards/NEXIS_2012_WMS/MapServer/WMSServer",
                     "type": "wms-getCapabilities"
                 }
             ]
