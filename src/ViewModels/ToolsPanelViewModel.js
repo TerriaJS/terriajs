@@ -7,10 +7,12 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var corsProxy = require('../Core/corsProxy');
 
 var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
 var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
@@ -55,8 +57,6 @@ ToolsPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e) 
 };
 
 ToolsPanelViewModel.prototype.cacheTiles = function() {
-    var that = this;
-
     var requests = [];
     getAllRequests(['wms'], this.catalogFilter, requests, this.application.catalog.group);
     console.log('Requesting tiles from ' + requests.length + ' data sources.');
@@ -64,10 +64,17 @@ ToolsPanelViewModel.prototype.cacheTiles = function() {
 };
 
 ToolsPanelViewModel.prototype.exportFile = function() {
-    var that = this;
+    //Create the initialization file text
+    var catalog = this.application.catalog.serializeToJson({serializeForSharing:false});
+    var camera = getDegreesRect(this.application.initialBoundingBox);
+    var initJsonObject = { corsDomains: corsProxy.corsDomains, camera: camera, services: [], catalog: catalog};
+    var initFile = JSON.stringify(initJsonObject, null, 4);
 
-    console.log('Export to File');
-
+    //Download it to the browser
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(initFile));
+    pom.setAttribute('download', 'data_menu.json');
+    pom.click();
 };
 
 ToolsPanelViewModel.prototype.exportCkan = function() {
@@ -82,12 +89,12 @@ ToolsPanelViewModel.prototype.exportCkan = function() {
     populateCkan(requests, ckanUrl, apiKey);
 };
 
+
 ToolsPanelViewModel.open = function(container, options) {
     var viewModel = new ToolsPanelViewModel(options);
     viewModel.show(container);
     return viewModel;
 };
-
 
 
 function getAllRequests(types, mode, requests, group) {
@@ -265,6 +272,13 @@ function getCkanRect(rect) {
         CesiumMath.toDegrees(rect.south).toFixed(4) + ',' +
         CesiumMath.toDegrees(rect.east).toFixed(4) + ',' +
         CesiumMath.toDegrees(rect.north).toFixed(4);
+}
+
+function getDegreesRect(rect) {
+    return { west: CesiumMath.toDegrees(rect.west), 
+        south: CesiumMath.toDegrees(rect.south), 
+        east: CesiumMath.toDegrees(rect.east), 
+        north: CesiumMath.toDegrees(rect.north)};
 }
 
 function cleanUrl(url) {
