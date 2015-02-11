@@ -186,7 +186,7 @@ Application.prototype.updateApplicationUrl = function(newUrl) {
     var hashProperties = queryToObject(hash);
 
     var initSources = this.initSources.slice();
-    interpretHash(hashProperties, this.userProperties, this.initSources, initSources, this.reservedProperties);
+    interpretHash(hashProperties, this.userProperties, this.initSources, initSources);
 
     return loadInitSources(this, initSources);
 };
@@ -243,7 +243,7 @@ Application.prototype.addInitSource = function(initSource) {
 
 var initSourceNameRegex = /\b(\w+)\b/i;
 
-function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources, reservedProperties) {
+function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources) {
     for (var property in hashProperties) {
         if (hashProperties.hasOwnProperty(property)) {
             var propertyValue = hashProperties[property];
@@ -274,11 +274,9 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
                 knockout.track(userProperties, [property]);
             } else {
                 var name = initSourceNameRegex.exec(property);
-                if (reservedProperties.indexOf(name[0]) === -1) {
-                    var initSourceFile = 'init_' + name[0] + '.json';
-                    persistentInitSources.push(initSourceFile);
-                    temporaryInitSources.push(initSourceFile);
-                }
+                var initSourceFile = 'init_' + name[0] + '.json';
+                persistentInitSources.push(initSourceFile);
+                temporaryInitSources.push(initSourceFile);
             }
         }
     }
