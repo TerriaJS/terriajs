@@ -1,8 +1,7 @@
 'use strict';
 
-/*global require,ga*/
+/*global require,L,URI*/
 var loadView = require('../Core/loadView');
-var ModelError = require('../Models/ModelError');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
@@ -14,7 +13,6 @@ var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
-var TileMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/TileMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var CatalogGroup = require('../Models/CatalogGroup');
 
@@ -79,11 +77,6 @@ ToolsPanelViewModel.prototype.exportFile = function() {
 };
 
 ToolsPanelViewModel.prototype.exportCkan = function() {
-    var that = this;
-
-    var ckanUrl = 'http://localhost';
-    var apiKey = 'xxxxxxxxx';
-
     var requests = [];
     getAllRequests(['wms', 'esri-mapService'], this.ckanFilter, requests, this.application.catalog.group);
     console.log('Exporting metadata from ' + requests.length + ' data sources.');
@@ -448,7 +441,7 @@ function populateCkan(requests, server, apiKey) {
         };
         sendNext();
     });
-};
+}
 
 
 module.exports = ToolsPanelViewModel;

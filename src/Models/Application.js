@@ -186,7 +186,7 @@ Application.prototype.updateApplicationUrl = function(newUrl) {
     var hashProperties = queryToObject(hash);
 
     var initSources = this.initSources.slice();
-    interpretHash(hashProperties, this.userProperties, this.initSources, initSources);
+    interpretHash(hashProperties, this.userProperties, this.initSources, initSources, this.reservedProperties);
 
     return loadInitSources(this, initSources);
 };
@@ -242,9 +242,8 @@ Application.prototype.addInitSource = function(initSource) {
 };
 
 var initSourceNameRegex = /\b(\w+)\b/i;
-var reservedProperties = ['tools'];
 
-function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources) {
+function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources, reservedProperties) {
     for (var property in hashProperties) {
         if (hashProperties.hasOwnProperty(property)) {
             var propertyValue = hashProperties[property];

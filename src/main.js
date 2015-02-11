@@ -90,6 +90,7 @@ if (start) {
 
     var application = new Application();
     application.catalog.isLoading = true;
+    application.reservedProperties = ['tools'];
 
     application.error.addEventListener(function(e) {
         PopupMessageViewModel.open('ui', {
@@ -107,7 +108,9 @@ if (start) {
     }).always(function() {
         // Watch the hash portion of the URL.  If it changes, try to interpret as an init source.
         window.addEventListener("hashchange", function() {
-            application.updateApplicationUrl(window.location);
+            if (!addToolsPanel(window.location)) {
+                application.updateApplicationUrl(window.location);
+            }
         }, false);
 
         application.catalog.isLoading = false;
@@ -127,9 +130,6 @@ if (start) {
         defaultBaseMap.opacity = 1.0;
 
         application.baseMap = defaultBaseMap;
-
-        var uri = new URI(window.location);
-        var hash = uri.fragment();
 
         // Create the user interface.
         var ui = document.getElementById('ui');
@@ -263,17 +263,26 @@ if (start) {
             tooltip: 'Help using National Map.',
             href: 'http://nicta.github.io/nationalmap/public/faq.html'
         }));
-        if (hash === 'tools') {
-            menuBar.items.push(new MenuBarItemViewModel({
-                label: 'Tools',
-                tooltip: 'Advance National Map Tools.',
-                callback: function() {
-                    ToolsPanelViewModel.open(ui, {
-                        application: application
-                    });
-                }
-            }));
+
+        function addToolsPanel(url) {
+            var uri = new URI(url);
+            var hash = uri.fragment();
+            if (hash === 'tools') {
+                menuBar.items.push(new MenuBarItemViewModel({
+                    label: 'Tools',
+                    tooltip: 'Advance National Map Tools.',
+                    callback: function() {
+                        ToolsPanelViewModel.open(ui, {
+                            application: application
+                        });
+                    }
+                }));
+                return true;
+            }
+            return false;
         }
+        addToolsPanel();
+
         menuBar.show(ui);
 
         var locationBar = new LocationBarViewModel(application, document.getElementById('cesiumContainer'));
