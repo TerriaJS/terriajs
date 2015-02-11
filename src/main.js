@@ -150,7 +150,7 @@ if (start) {
 
         var australianTopoOverlay = new ArcGisMapServerCatalogItem(application);
         australianTopoOverlay.name = 'Australian Topography';
-        australianTopoOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/Australian_Topography_2014_WM/MapServer';
+        australianTopoOverlay.url = 'http://www.ga.gov.au/gis/rest/services/topography/National_Map_Basemap_WM/MapServer';
         australianTopoOverlay.opacity = 1.0;
 
         var australianTopo = new CompositeCatalogItem(application, [naturalEarthII, australianTopoOverlay]);

@@ -34,10 +34,20 @@ var ImageryLayerCatalogItem = function(application) {
      * Gets or sets the opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is
      * fully opaque.  This property is observable.
      * @type {Number}
+     * @default 0.6
      */
     this.opacity = 0.6;
 
-    knockout.track(this, ['opacity']);
+    /**
+     * Gets or sets a value indicating whether a 404 response code when requesting a tile should be
+     * treated as an error.  If false, 404s are assumed to just be missing tiles and need not be
+     * reported to the user.
+     * @type {Boolean}
+     * @default false
+     */
+    this.treat404AsError = false;
+
+    knockout.track(this, ['opacity', 'treat404AsError']);
 
     knockout.getObservable(this, 'opacity').subscribe(function(newValue) {
         updateOpacity(this);
@@ -178,13 +188,17 @@ ImageryLayerCatalogItem.prototype._showInCesium = function() {
                 }
             }
 
+            if (!that.treat404AsError && defined(tileProviderError.error) && tileProviderError.error.statusCode === 404) {
+                return;
+            }
+
             // Retry 3 times.
             if (tileProviderError.timesRetried < 3) {
                 tileProviderError.retry = true;
                 return;
             }
 
-            // After two failures, advise the user that something is wrong and disable the catalog item.
+            // After three failures, advise the user that something is wrong and disable the catalog item.
             that.application.error.raiseEvent(new ModelError({
                 sender: that,
                 title: 'Error accessing catalogue item',
