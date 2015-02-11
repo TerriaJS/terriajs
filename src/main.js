@@ -1,6 +1,6 @@
 "use strict";
 
-/*global require,URI*/
+/*global require*/
 
 var start = true;
 
