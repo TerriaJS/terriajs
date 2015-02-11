@@ -1,0 +1,63 @@
+<div class="modal-background" data-bind="click: closeIfClickOnBackground">
+    <div class="tools-panel">
+        <div class="tools-header">
+            <div class="tools-close-button" data-bind="click: close">&times;</div>
+            <h1>Advanced Tools</h1>
+        </div>
+        <div class="tools-content">
+            <form class="tools-form" data-bind="submit: cacheTiles">
+                <h2>Tile Caching</h2>
+                <label class="tools-content-type">
+                    Select the dataset layers to cache:
+                    <select class="tools-content-type-select" data-bind="value: cacheFilter">
+                        <option value="opened">Opened</option>
+                        <option value="seleteced">Selected</option>
+                        <option value="all">All</option>
+                    </select>
+                </label>
+
+                Enter the number of tile levels to cache
+                <div class="tools-url-input-outer-holder">
+                    <div class="tools-url-input-inner-holder">
+                        <input class="tools-url-input" type="text" data-bind="value: cacheLevels" />
+                    </div>
+                    <input class="tools-url-add-button" type="submit" value="Cache Tiles" />
+                </div>
+            </form>
+
+            <form class="tools-form" data-bind="submit: exportFile">
+                <h2>Download Data Menu to File</h2>
+                <div class="tools-url-input-outer-holder">
+                    <input class="tools-url-add-button" type="submit" value="Download to File" />
+                </div>
+            </form>
+
+            <form class="tools-form" data-bind="submit: exportCkan">
+                <h2>Export Data Menu to CKAN</h2>
+                <label class="tools-content-type">
+                    Select the dataset layers to export:
+                    <select class="tools-content-type-select" data-bind="value: ckanFilter">
+                        <option value="opened">Opened</option>
+                        <option value="seleteced">Selected</option>
+                        <option value="all">All</option>
+                    </select>
+                </label>
+
+                Enter the url of a ckan server
+                <div class="tools-url-input-outer-holder">
+                    <div class="tools-url-input-inner-holder">
+                        <input class="tools-url-input" type="text" data-bind="value: ckanUrl" />
+                    </div>
+                </div>
+
+                Enter the api key to the ckan server
+                <div class="tools-url-input-outer-holder">
+                    <div class="tools-url-input-inner-holder">
+                        <input class="tools-url-input" type="text" data-bind="value: ckanApiKey" />
+                    </div>
+                    <input class="tools-url-add-button" type="submit" value="Export to CKAN" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

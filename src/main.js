@@ -75,6 +75,7 @@ if (start) {
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
     var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
+    var ToolsPanelViewModel = require('./ViewModels/ToolsPanelViewModel');
 
     var Application = require('./Models/Application');
     var ArcGisMapServerCatalogItem = require('./Models/ArcGisMapServerCatalogItem');
@@ -106,7 +107,9 @@ if (start) {
     }).always(function() {
         // Watch the hash portion of the URL.  If it changes, try to interpret as an init source.
         window.addEventListener("hashchange", function() {
-            application.updateApplicationUrl(window.location);
+            application.updateApplicationUrl(window.location).otherwise(function(e) {
+                raiseErrorToUser(application, e);
+            });
         }, false);
 
         application.catalog.isLoading = false;
@@ -226,6 +229,29 @@ if (start) {
         settingsPanel.show(ui);
 
         var menuBar = new MenuBarViewModel();
+
+        // Create a "Tools" menu item, but only show it if "tools=1" (or similar) is present in the URL.
+        var showToolsMenuItem = knockout.computed(function() {
+            var toolsProperty = application.getUserProperty('tools');
+            return defined(toolsProperty) && toolsProperty !== 'false' && toolsProperty !== 'no' && toolsProperty !== '0';
+        });
+
+        var toolsMenuItem = new MenuBarItemViewModel({
+            visible: showToolsMenuItem(),
+            label: 'Tools',
+            tooltip: 'Advance National Map Tools.',
+            callback: function() {
+                ToolsPanelViewModel.open(ui, {
+                    application: application
+                });
+            }
+        });
+        menuBar.items.push(toolsMenuItem);
+
+        showToolsMenuItem.subscribe(function(newValue) {
+            toolsMenuItem.visible = newValue;
+        });
+
         menuBar.items.push(new MenuBarItemViewModel({
             label: 'Add data',
             tooltip: 'Add your own data to the map.',
@@ -259,6 +285,7 @@ if (start) {
             tooltip: 'Help using National Map.',
             href: 'http://nicta.github.io/nationalmap/public/faq.html'
         }));
+
         menuBar.show(ui);
 
         var locationBar = new LocationBarViewModel(application, document.getElementById('cesiumContainer'));
