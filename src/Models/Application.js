@@ -225,7 +225,7 @@ Application.prototype.addInitSource = function(initSource) {
                 position: initSource.camera.position,
                 direction: initSource.camera.direction,
                 up: initSource.camera.up
-            }
+            };
         } else {
             this.initialCamera = undefined;
         }
