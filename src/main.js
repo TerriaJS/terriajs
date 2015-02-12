@@ -51,11 +51,8 @@ if (start) {
     var copyright = require('./CopyrightModule'); // jshint ignore:line
 
     var BingMapsStyle = require('../third_party/cesium/Source/Scene/BingMapsStyle');
-    var Color = require('../third_party/cesium/Source/Core/Color');
     var defined = require('../third_party/cesium/Source/Core/defined');
     var knockout = require('../third_party/cesium/Source/ThirdParty/knockout');
-    var Rectangle = require('../third_party/cesium/Source/Core/Rectangle');
-    var sampleTerrain = require('../third_party/cesium/Source/Core/sampleTerrain');
 
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
     var registerKnockoutBindings = require('./Core/registerKnockoutBindings');
@@ -238,32 +235,6 @@ if (start) {
             var toolsProperty = application.getUserProperty('tools');
             return defined(toolsProperty) && toolsProperty !== 'false' && toolsProperty !== 'no' && toolsProperty !== '0';
         });
-
-        var entity;
-
-        menuBar.items.push(new MenuBarItemViewModel({
-            label: 'Show visible extent',
-            callback: function() {
-                var extent = application.cesium.getCurrentExtent();
-                sampleTerrain(application.cesium.scene.globe.terrainProvider, 11, [Rectangle.center(extent)]).then(function(positions) {
-                    application.cesium.viewer.entities.remove(entity);
-                    entity = application.cesium.viewer.entities.add({
-                        rectangle: {
-                            coordinates: extent,
-                            extrudedHeight: positions[0].height,
-                            fill: false,
-                            outline: true,
-                            outlineColor: Color.RED
-                        },
-                        position: extent.center,
-                        point: {
-                            color: Color.RED,
-                            pixelSize: 3
-                        }
-                    });
-                });
-            }
-        }));
 
         var toolsMenuItem = new MenuBarItemViewModel({
             visible: showToolsMenuItem(),
