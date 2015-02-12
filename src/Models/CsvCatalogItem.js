@@ -103,6 +103,30 @@ defineProperties(CsvCatalogItem.prototype, {
             result.serviceErrorMessage = 'This service does not have any details available.';
             return result;
         }
+    },
+
+    /**
+     * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
+     * Data sources that cannot be reordered are typically displayed above reorderable data sources.
+     * @memberOf CsvCatalogItem.prototype
+     * @type {Boolean}
+     */
+    supportsReordering : {
+        get : function() {
+            return this._regionMapped;
+        }
+    },
+
+    /**
+     * Gets the Cesium or Leaflet imagery layer object associated with this data source.
+     * This property is undefined if the data source is not enabled.
+     * @memberOf CsvCatalogItem.prototype
+     * @type {Object}
+     */
+    imageryLayer : {
+        get : function() {
+            return this._imageryLayer;
+        }
     }
 });
 
@@ -121,11 +145,11 @@ CsvCatalogItem.prototype._load = function() {
 
     if (defined(this.data)) {
         return when(that.data, function(data) {
-            if (data instanceof Blob) {
+            if (typeof Blob !== 'undefined' && data instanceof Blob) {
                 return readText(data).then(function(text) {
                     return loadTable(that, text);
                 });
-            } else if (data instanceof String) {
+            } else if (typeof data === 'string') {
                 return loadTable(that, data);
             } else {
                 throw new ModelError({
@@ -332,6 +356,7 @@ function loadTable(csvItem, text) {
 
     if (!csvItem._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
+        csvItem.data = text;
         return when(addRegionMap(csvItem), function() {
             if (csvItem._regionMapped !== true) {
                 throw new ModelError({
