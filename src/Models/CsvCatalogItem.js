@@ -212,7 +212,7 @@ CsvCatalogItem.prototype._showInCesium = function() {
             
             return when(imagePromise, function(image) {
                 if (defined(image)) {
-                    image = recolorImageWithCanvas(image, that.colorFunc);
+                    image = recolorImageWithCanvas(that, image, that.colorFunc);
                 }
                 return image;
             });
@@ -406,20 +406,23 @@ function recolorImage(image, colorFunc) {
 }
 
 //Recolor an image using 2d canvas
-function recolorImageWithCanvas(img, colorFunc) {
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+function recolorImageWithCanvas(csvCatalogItem, img, colorFunc) {
+    var context = csvCatalogItem._canvas2dContext;
+
+    if (!defined(context) || context.canvas.width !== img.width || context.canvas.height !== img.height) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        context = csvCatalogItem._canvas2dContext = canvas.getContext("2d");
+    }
 
     // Copy the image contents to the canvas
-    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     context.drawImage(img, 0, 0);
-    var image = context.getImageData(0, 0, canvas.width, canvas.height);
+    var image = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
     
-    image = recolorImage(image, colorFunc);
-    
-    context.putImageData(image, 0, 0);
-    return context.getImageData(0, 0, canvas.width, canvas.height);
+    return recolorImage(image, colorFunc);
 }
 
 
