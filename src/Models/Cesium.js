@@ -5,6 +5,7 @@ var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlig
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
@@ -221,10 +222,18 @@ Cesium.prototype.getCurrentExtent = function() {
     var northeastCartographic = ellipsoid.cartesianToCartographic(northeast, northeastCartographicScratch);
     var northwestCartographic = ellipsoid.cartesianToCartographic(northwest, northwestCartographicScratch);
 
+    // Account for date-line wrapping
+    if (southeastCartographic.longitude < southwestCartographic.longitude) {
+        southeastCartographic.longitude += CesiumMath.TWO_PI;
+    }
+    if (northeastCartographic.longitude < northwestCartographic.longitude) {
+        northeastCartographic.longitude += CesiumMath.TWO_PI;
+    }
+
     var rect = new Rectangle(
-        Math.min(southwestCartographic.longitude, northwestCartographic.longitude),
+        CesiumMath.convertLongitudeRange(Math.min(southwestCartographic.longitude, northwestCartographic.longitude)),
         Math.min(southwestCartographic.latitude, southeastCartographic.latitude),
-        Math.max(northeastCartographic.longitude, southeastCartographic.longitude),
+        CesiumMath.convertLongitudeRange(Math.max(northeastCartographic.longitude, southeastCartographic.longitude)),
         Math.max(northeastCartographic.latitude, northwestCartographic.latitude));
     rect.center = center;
     return rect;
