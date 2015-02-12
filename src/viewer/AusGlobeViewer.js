@@ -535,17 +535,15 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
             //shut down existing cesium
         if (defined(this.viewer)) {
-            this.application.cesium.destroy();
-
             //get camera and timeline settings
             try {
-                rect = getCameraRect(this.scene);
-                bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
-                    [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+                bnds = rectangleToLatLngBounds(this.application.cesium.getCurrentExtent());
             } catch (e) {
                 console.log('Using default screen extent', e.message);
                 bnds = rectangleToLatLngBounds(this.application.initialBoundingBox);
             }
+
+            this.application.cesium.destroy();
 
             this._enableSelectExtent(false);
 
@@ -656,10 +654,8 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
     }
     else {
         if (defined(this.map)) {
+            rect = this.application.leaflet.getCurrentExtent();
             this.application.leaflet.destroy();
-
-            //get camera and timeline settings
-            rect = getCameraRect(undefined, this.map);
 
             if (that.leafletEventHelper) {
                 that.leafletEventHelper.removeAll();
@@ -882,33 +878,6 @@ var cartesian3Scratch = new Cartesian3();
 // -------------------------------------------
 // Camera management
 // -------------------------------------------
-
-//Camera extent approx for 2D viewer
-function getCameraFocus(scene) {
-    //Hack to get current camera focus
-    var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
-    var pickRay = scene.camera.getPickRay(pos);
-    var focus = scene.globe.pick(pickRay, scene);
-    return focus;
-}
-//Approximate camera extent approx for 2D viewer
-function getCameraRect(scene, map) {
-    if (scene !== undefined) {
-        var focus = getCameraFocus(scene);
-        var focus_cart = Ellipsoid.WGS84.cartesianToCartographic(focus);
-        var lat = CesiumMath.toDegrees(focus_cart.latitude);
-        var lon = CesiumMath.toDegrees(focus_cart.longitude);
-
-        var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position, cartesian3Scratch));
-        var offset = dist * 2.5e-6;
-
-        return Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
-    }
-    else if (map !== undefined) {
-        var bnds = map.getBounds();
-        return Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
-    }
-}
 
 function flyToPosition(scene, position, durationMilliseconds) {
     var camera = scene.camera;
