@@ -1,9 +1,6 @@
 {
     "corsDomains" : [
-        "data.gov.au",
-        "ga.gov.au",
-        "corsproxy.com",
-        "programs.communications.gov.au"
+        "corsproxy.com"
     ],
     "camera": {
         "west": 105,
@@ -2482,7 +2479,13 @@
                     "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                     "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
                     "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
-                    "type": "wms-getCapabilities"
+                    "type": "wms-getCapabilities",
+                    "blacklist": {
+                        "Groundwater Cartography 2.1": true,
+                        "Groundwater Cartography 2.1": true,
+                        "Surface Cartography": true,
+                        "Surface Network 2.1": true
+                    }
                 },
                 {
                     "name": "Boundaries (Australia Bureau of Statistics)",

@@ -126,7 +126,7 @@ function requestTiles(app, requests, maxLevel) {
     var i;
     for (i = 0; i < requests.length; ++i) {
         var request = requests[i];
-        var extent = request.item.rectangle;
+        var extent = request.item.rectangle || app.initialBoundingBox;
         name = request.item.name;
 
         var enabledHere = false;
