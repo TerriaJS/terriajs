@@ -8,8 +8,6 @@
 /*global require,L,URI,$,Document,html2canvas,console,ga*/
 
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
-var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
@@ -60,7 +58,6 @@ var corsProxy = require('../Core/corsProxy');
 var Cesium = require('../Models/Cesium');
 var Leaflet = require('../Models/Leaflet');
 var PopupMessageViewModel = require('../ViewModels/PopupMessageViewModel');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var LeafletVisualizer = require('../Map/LeafletVisualizer');
 var ViewerMode = require('../Models/ViewerMode');
 
@@ -871,8 +868,6 @@ AusGlobeViewer.prototype.updateTimeline = function(start, finish, cur, run) {
     return {start: clock.startTime, stop: clock.stopTime, cur: clock.currentTime};
  };
 
-
-var cartesian3Scratch = new Cartesian3();
 
 // -------------------------------------------
 // Camera management
