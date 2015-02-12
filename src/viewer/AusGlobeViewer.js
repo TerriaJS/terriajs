@@ -129,7 +129,23 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     }, this);
 
     knockout.getObservable(this.application, 'initialBoundingBox').subscribe(function() {
-        that.application.currentViewer.zoomTo(that.application.initialBoundingBox, 2.0);
+        if (!defined(that.application.initialCamera) || !defined(that.application.cesium)) {
+            that.application.currentViewer.zoomTo(that.application.initialBoundingBox, 2.0);
+        }
+    });
+
+    knockout.getObservable(this.application, 'initialCamera').subscribe(function() {
+        if (defined(that.application.initialCamera) && defined(that.application.cesium)) {
+            var cesiumCamera = that.application.cesium.scene.camera;
+            cesiumCamera.flyTo({
+                duration: 2.0,
+                destination: that.application.initialCamera.position,
+                orientation: {
+                    direction: that.application.initialCamera.direction,
+                    up: that.application.initialCamera.up
+                }
+            });
+        }
     });
 };
 
@@ -665,9 +681,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.map.remove();
             this.map = undefined;
         }
-        else {
-            rect = this.application.initialBoundingBox;
-         }
 
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
@@ -720,7 +733,23 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             });
         }
 
-        this.application.cesium.zoomTo(rect, 0.0);
+        if (defined(rect)) {
+            this.application.cesium.zoomTo(rect, 0.0);
+        } else {
+            if (defined(this.application.initialCamera)) {
+                var cesiumCamera = this.application.cesium.scene.camera;
+                cesiumCamera.flyTo({
+                    duration: 0.0,
+                    destination: this.application.initialCamera.position,
+                    orientation: {
+                        direction: this.application.initialCamera.direction,
+                        up: this.application.initialCamera.up
+                    }
+                });
+            } else {
+                this.application.cesium.zoomTo(this.application.initialBoundingBox, 0.0);
+            }
+        }
     }
 
     this.application.afterViewerChanged.raiseEvent();

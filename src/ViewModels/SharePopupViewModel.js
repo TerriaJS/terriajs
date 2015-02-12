@@ -58,13 +58,22 @@ var SharePopupViewModel = function(options) {
     }
 
     // Add an init source with the camera position.
+    var camera = {
+        west: CesiumMath.toDegrees(camera.west),
+        south: CesiumMath.toDegrees(camera.south),
+        east: CesiumMath.toDegrees(camera.east),
+        north: CesiumMath.toDegrees(camera.north),
+    };
+
+    if (defined(this.application.cesium)) {
+        var cesiumCamera = this.application.cesium.scene.camera;
+        camera.position = cesiumCamera.positionWC;
+        camera.direction = cesiumCamera.directionWC;
+        camera.up = cesiumCamera.upWC;
+    }
+
     initSources.push({
-        camera: {
-            west: CesiumMath.toDegrees(camera.west),
-            south: CesiumMath.toDegrees(camera.south),
-            east: CesiumMath.toDegrees(camera.east),
-            north: CesiumMath.toDegrees(camera.north)
-        }
+        camera: camera
     });
 
     var uri = new URI(window.location);
