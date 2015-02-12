@@ -167,9 +167,13 @@ Cesium.prototype.destroy = function() {
 var cartesian3Scratch = new Cartesian3();
 var enuToFixedScratch = new Matrix4();
 var southwestScratch = new Cartesian3();
+var southeastScratch = new Cartesian3();
 var northeastScratch = new Cartesian3();
+var northwestScratch = new Cartesian3();
 var southwestCartographicScratch = new Cartographic();
+var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
+var northwestCartographicScratch = new Cartographic();
 
 /**
  * Gets the current extent of the camera.  This may be approximate if the viewer does not have a strictly rectangular view.
@@ -202,16 +206,28 @@ Cesium.prototype.getCurrentExtent = function() {
     var yDistance = cameraHeight * Math.tan(fovy);
 
     var southwestEnu = new Cartesian3(-xDistance, -yDistance, 0.0);
+    var southeastEnu = new Cartesian3(xDistance, -yDistance, 0.0);
     var northeastEnu = new Cartesian3(xDistance, yDistance, 0.0);
+    var northwestEnu = new Cartesian3(-xDistance, yDistance, 0.0);
 
     var enuToFixed = Transforms.eastNorthUpToFixedFrame(center, ellipsoid, enuToFixedScratch);
     var southwest = Matrix4.multiplyByPoint(enuToFixed, southwestEnu, southwestScratch);
+    var southeast = Matrix4.multiplyByPoint(enuToFixed, southeastEnu, southeastScratch);
     var northeast = Matrix4.multiplyByPoint(enuToFixed, northeastEnu, northeastScratch);
+    var northwest = Matrix4.multiplyByPoint(enuToFixed, northwestEnu, northwestScratch);
 
     var southwestCartographic = ellipsoid.cartesianToCartographic(southwest, southwestCartographicScratch);
+    var southeastCartographic = ellipsoid.cartesianToCartographic(southeast, southeastCartographicScratch);
     var northeastCartographic = ellipsoid.cartesianToCartographic(northeast, northeastCartographicScratch);
+    var northwestCartographic = ellipsoid.cartesianToCartographic(northwest, northwestCartographicScratch);
 
-    return new Rectangle(southwestCartographic.longitude, southwestCartographic.latitude, northeastCartographic.longitude, northeastCartographic.latitude);
+    var rect = new Rectangle(
+        Math.min(southwestCartographic.longitude, northwestCartographic.longitude),
+        Math.min(southwestCartographic.latitude, southeastCartographic.latitude),
+        Math.max(northeastCartographic.longitude, southeastCartographic.longitude),
+        Math.max(northeastCartographic.latitude, northwestCartographic.latitude));
+    rect.center = center;
+    return rect;
 };
 
 /**
