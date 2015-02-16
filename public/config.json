@@ -6,7 +6,7 @@
         "arcgis.com"
     ],
     "initializationUrls" : [
-    	"init_nm.json"
+        "init_nm.json"
     ]
 }
 
