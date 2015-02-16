@@ -44,14 +44,14 @@ var TableDataSource = function () {
     this.colorByValue = true;
 
     var rainbowGradient = [
-        {offset: 0.0, color: 'rgba(64,64,256,1.00)'},
-        {offset: 0.25, color: 'rgba(64,256,256,1.0)'},
-        {offset: 0.25, color: 'rgba(64,256,256,1.0)'},
-        {offset: 0.5, color: 'rgba(64,256,64,1.0)'},
-        {offset: 0.5, color: 'rgba(64,256,64,1.0)'},
-        {offset: 0.75, color: 'rgba(256,256,64,1.0)'},
-        {offset: 0.75, color: 'rgba(256,256,64,1.0)'},
-        {offset: 1.0, color: 'rgba(256,64,64,1.0)'}
+        {offset: 0.0, color: 'rgba(0,0,200,1.00)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
     this.setColorGradient(rainbowGradient);
 };
