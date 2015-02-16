@@ -51,7 +51,15 @@ var WebMapServiceCatalogGroup = function(application) {
      */
     this.parameters = undefined;
 
-    knockout.track(this, ['url', 'dataCustodian', 'parameters']);
+    /**
+     * Gets or sets a hash of names of blacklisted data layers.  A layer that appears in this hash
+     * will not be shown to the user.  In this hash, the keys should be the Title of the layers to blacklist,
+     * and the values should be "true".  This property is observable.
+     * @type {Object}
+     */
+    this.blacklist = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist']);
 };
 
 inherit(CatalogGroup, WebMapServiceCatalogGroup);
@@ -126,7 +134,7 @@ WebMapServiceCatalogGroup.defaultSerializers.isLoading = function(wmsGroup, json
 freezeObject(WebMapServiceCatalogGroup.defaultSerializers);
 
 WebMapServiceCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
-    return [this.url];
+    return [this.url, this.blacklist];
 };
 
 WebMapServiceCatalogGroup.prototype._load = function() {
@@ -243,6 +251,11 @@ function addLayersRecursively(wmsGroup, layers, items, parent, supportsJsonGetFe
 
         // Record this layer's parent, so we can walk up the layer hierarchy looking for inherited properties.
         layer.parent = parent;
+
+        if (wmsGroup.blacklist && wmsGroup.blacklist[layer.Title]) {
+            console.log('Provider Feedback: Filtering out ' + layer.Title + ' (' + layer.Name + ') because it is blacklisted.');
+            continue;
+        }
 
         if (defined(layer.Layer)) {
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used

@@ -42,7 +42,15 @@ var WebFeatureServiceCatalogGroup = function(application) {
      */
     this.dataCustodian = undefined;
 
-    knockout.track(this, ['url', 'dataCustodian']);
+    /**
+     * Gets or sets a hash of names of blacklisted data layers.  A layer that appears in this hash
+     * will not be shown to the user.  In this hash, the keys should be the Title of the layers to blacklist,
+     * and the values should be "true".  This property is observable.
+     * @type {Object}
+     */
+    this.blacklist = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian', 'blacklist']);
 };
 
 inherit(CatalogGroup, WebFeatureServiceCatalogGroup);
@@ -115,7 +123,7 @@ WebFeatureServiceCatalogGroup.defaultSerializers.isLoading = function(wfsGroup, 
 freezeObject(WebFeatureServiceCatalogGroup.defaultSerializers);
 
 WebFeatureServiceCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
-    return [this.url];
+    return [this.url, this.blacklist];
 };
 
 WebFeatureServiceCatalogGroup.prototype._load = function() {
@@ -226,6 +234,12 @@ function addFeatureTypes(wfsGroup, featureTypes, items, parent, supportsJsonGetF
 
     for (var i = 0; i < featureTypes.length; ++i) {
         var featureType = featureTypes[i];
+        
+        if (wfsGroup.blacklist && wfsGroup.blacklist[featureType.Title]) {
+            console.log('Provider Feedback: Filtering out ' + featureType.Title + ' (' + featureType.Name + ') because it is blacklisted.');
+            continue;
+        }
+
         items.push(createWfsDataSource(wfsGroup, featureType, supportsJsonGetFeature, dataCustodian));
     }
 }
