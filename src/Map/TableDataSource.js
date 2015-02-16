@@ -34,7 +34,7 @@ var TableDataSource = function () {
     this.dataset = new Dataset();
     this.show = true;
 
-    this.color = Color.RED;
+    this.color = Color.BLUE;
 
     this.leadTimeMin = 0;
     this.trailTimeMin = 60;
@@ -44,14 +44,14 @@ var TableDataSource = function () {
     this.colorByValue = true;
 
     var rainbowGradient = [
-        {offset: 0.0, color: 'rgba(0,0,200,1.00)'},
-        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
-        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
-        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
-        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
-        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
-        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
-        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
+        {offset: 0.0, color: 'rgba(64,64,200,1.00)'},
+        {offset: 0.25, color: 'rgba(64,200,200,1.0)'},
+        {offset: 0.25, color: 'rgba(64,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(64,200,64,1.0)'},
+        {offset: 0.5, color: 'rgba(64,200,64,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,64,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,64,1.0)'},
+        {offset: 1.0, color: 'rgba(200,64,64,1.0)'}
     ];
     this.setColorGradient(rainbowGradient);
 };
@@ -212,7 +212,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
             color: { "rgba" : [255, 0, 0, 255] },
             outlineColor: { "rgba" : [0, 0, 0, 255] },
             outlineWidth: 1,
-            pixelSize: 5,
+            pixelSize: 8,
             show: [
                 {
                     boolean: false
@@ -234,7 +234,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         rec.point.color.rgba = [64, 64, 255, 256];
     }
 
-    rec.point.scale = this._mapValue2Scale(point.val);
+    rec.point.pixelSize *= this._mapValue2Scale(point.val);
     for (var p = 0; p < 3; p++) {
         rec.position.cartographicDegrees[p] = point.pos[p];
     }
