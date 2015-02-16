@@ -225,7 +225,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         }
     };
     
-    rec.billboard.color.rgba = this._mapValue2Color(point.val);
+    rec.billboard.color.rgba = [64, 64, 255, 256]; //this._mapValue2Color(point.val);
     rec.billboard.scale = this._mapValue2Scale(point.val);
     for (var p = 0; p < 3; p++) {
         rec.position.cartographicDegrees[p] = point.pos[p];

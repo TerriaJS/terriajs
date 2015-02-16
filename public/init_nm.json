@@ -144,7 +144,7 @@
                                 "-9.2159219997013"
                             ],
                             "type": "csv",
-                            "url": "./datasets/Mobile_Black_Spot_Database_Fixed.csv"
+                            "url": "http://www.data.gov.au/dataset/7be6e3ee-043a-4c47-a6eb-a97702419ccd/resource/c6b211ad-3aa2-4f53-8427-01b52a6433a7/download/mobileblackspotdatabase.csv"
                         }
                     ]
                 },
