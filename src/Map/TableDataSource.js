@@ -34,14 +34,14 @@ var TableDataSource = function () {
     this.dataset = new Dataset();
     this.show = true;
 
-    this.color = Color.BLUE;
-
+    //TODO: create style object to encapsulate these properties
+    this.color = [64, 64, 255, 256];
+    this.scale = 1.0;
+    this.imageUrl = "./images/circle32.png";
+    this.scaleValue = false;
+    this.colorByValue = true;
     this.leadTimeMin = 0;
     this.trailTimeMin = 60;
-    this.scale = 1.0;
-    this.scaleValue = false;
-    this.imageUrl = "./images/circle32.png";
-    this.colorByValue = true;
 
     var rainbowGradient = [
         {offset: 0.0, color: 'rgba(64,64,200,1.00)'},
@@ -231,7 +231,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
     if (this.colorByValue) {
         rec.point.color.rgba = this._mapValue2Color(point.val);
     } else {
-        rec.point.color.rgba = [64, 64, 255, 256];
+        rec.point.color.rgba = this.color;
     }
 
     rec.point.pixelSize *= this._mapValue2Scale(point.val);
