@@ -103,6 +103,30 @@ defineProperties(CsvCatalogItem.prototype, {
             result.serviceErrorMessage = 'This service does not have any details available.';
             return result;
         }
+    },
+
+    /**
+     * Gets a value indicating whether this data source, when enabled, can be reordered with respect to other data sources.
+     * Data sources that cannot be reordered are typically displayed above reorderable data sources.
+     * @memberOf CsvCatalogItem.prototype
+     * @type {Boolean}
+     */
+    supportsReordering : {
+        get : function() {
+            return this._regionMapped;
+        }
+    },
+
+    /**
+     * Gets the Cesium or Leaflet imagery layer object associated with this data source.
+     * This property is undefined if the data source is not enabled.
+     * @memberOf CsvCatalogItem.prototype
+     * @type {Object}
+     */
+    imageryLayer : {
+        get : function() {
+            return this._imageryLayer;
+        }
     }
 });
 
@@ -121,11 +145,11 @@ CsvCatalogItem.prototype._load = function() {
 
     if (defined(this.data)) {
         return when(that.data, function(data) {
-            if (data instanceof Blob) {
+            if (typeof Blob !== 'undefined' && data instanceof Blob) {
                 return readText(data).then(function(text) {
                     return loadTable(that, text);
                 });
-            } else if (data instanceof String) {
+            } else if (typeof data === 'string') {
                 return loadTable(that, data);
             } else {
                 throw new ModelError({
@@ -188,7 +212,7 @@ CsvCatalogItem.prototype._showInCesium = function() {
             
             return when(imagePromise, function(image) {
                 if (defined(image)) {
-                    image = recolorImageWithCanvas(image, that.colorFunc);
+                    image = recolorImageWithCanvas(that, image, that.colorFunc);
                 }
                 return image;
             });
@@ -332,6 +356,7 @@ function loadTable(csvItem, text) {
 
     if (!csvItem._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
+        csvItem.data = text;
         return when(addRegionMap(csvItem), function() {
             if (csvItem._regionMapped !== true) {
                 throw new ModelError({
@@ -381,20 +406,23 @@ function recolorImage(image, colorFunc) {
 }
 
 //Recolor an image using 2d canvas
-function recolorImageWithCanvas(img, colorFunc) {
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+function recolorImageWithCanvas(csvCatalogItem, img, colorFunc) {
+    var context = csvCatalogItem._canvas2dContext;
+
+    if (!defined(context) || context.canvas.width !== img.width || context.canvas.height !== img.height) {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        context = csvCatalogItem._canvas2dContext = canvas.getContext("2d");
+    }
 
     // Copy the image contents to the canvas
-    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     context.drawImage(img, 0, 0);
-    var image = context.getImageData(0, 0, canvas.width, canvas.height);
+    var image = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
     
-    image = recolorImage(image, colorFunc);
-    
-    context.putImageData(image, 0, 0);
-    return context.getImageData(0, 0, canvas.width, canvas.height);
+    return recolorImage(image, colorFunc);
 }
 
 
