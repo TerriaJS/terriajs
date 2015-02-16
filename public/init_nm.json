@@ -30,7 +30,7 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Map",
+                            "layers": "public:MyBroadband_Map",
                             "parameters": {
                                 "tiled": true
                             },
@@ -48,7 +48,7 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Availability",
+                            "layers": "public:MyBroadband_Availability",
                             "parameters": {
                                 "tiled": true
                             },
@@ -66,7 +66,7 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Availability_no_outline",
+                            "layers": "public:MyBroadband_Availability_no_outline",
                             "parameters": {
                                 "tiled": true
                             },
@@ -84,7 +84,7 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_Quality",
+                            "layers": "public:MyBroadband_Quality",
                             "parameters": {
                                 "tiled": true
                             },
@@ -102,7 +102,7 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_ADSL_Quality",
+                            "layers": "public:MyBroadband_ADSL_Quality",
                             "parameters": {
                                 "tiled": true
                             },
@@ -120,7 +120,7 @@
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
-                            "layers": "MyBroadband_ADSL_Quality_no_outline",
+                            "layers": "public:MyBroadband_ADSL_Quality_no_outline",
                             "parameters": {
                                 "tiled": true
                             },
