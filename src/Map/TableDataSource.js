@@ -41,6 +41,7 @@ var TableDataSource = function () {
     this.scale = 1.0;
     this.scaleValue = false;
     this.imageUrl = "./images/circle32.png";
+    this.colorByValue = true;
 
     var rainbowGradient = [
         {offset: 0.0, color: 'rgba(64,64,256,1.00)'},
@@ -227,7 +228,12 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
         }
     };
     
-    rec.point.color.rgba = [64, 64, 255, 256]; //this._mapValue2Color(point.val);
+    if (this.colorByValue) {
+        rec.point.color.rgba = this._mapValue2Color(point.val);
+    } else {
+        rec.point.color.rgba = [64, 64, 255, 256];
+    }
+
     rec.point.scale = this._mapValue2Scale(point.val);
     for (var p = 0; p < 3; p++) {
         rec.position.cartographicDegrees[p] = point.pos[p];
