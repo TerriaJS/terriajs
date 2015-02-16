@@ -8,8 +8,6 @@
 /*global require,L,URI,$,Document,html2canvas,console,ga*/
 
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
-var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
@@ -60,7 +58,6 @@ var corsProxy = require('../Core/corsProxy');
 var Cesium = require('../Models/Cesium');
 var Leaflet = require('../Models/Leaflet');
 var PopupMessageViewModel = require('../ViewModels/PopupMessageViewModel');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 var LeafletVisualizer = require('../Map/LeafletVisualizer');
 var ViewerMode = require('../Models/ViewerMode');
 
@@ -132,7 +129,23 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     }, this);
 
     knockout.getObservable(this.application, 'initialBoundingBox').subscribe(function() {
-        that.updateCameraFromRect(that.application.initialBoundingBox, 2000);
+        if (!defined(that.application.initialCamera) || !defined(that.application.cesium)) {
+            that.application.currentViewer.zoomTo(that.application.initialBoundingBox, 2.0);
+        }
+    });
+
+    knockout.getObservable(this.application, 'initialCamera').subscribe(function() {
+        if (defined(that.application.initialCamera) && defined(that.application.cesium)) {
+            var cesiumCamera = that.application.cesium.scene.camera;
+            cesiumCamera.flyTo({
+                duration: 2.0,
+                destination: that.application.initialCamera.position,
+                orientation: {
+                    direction: that.application.initialCamera.direction,
+                    up: that.application.initialCamera.up
+                }
+            });
+        }
     });
 };
 
@@ -400,7 +413,7 @@ AusGlobeViewer.prototype._enableSelectExtent = function(bActive) {
         var that = this;
         this.regionSelect = new DrawExtentHelper(this.scene, function (ext) {
             if (ext) {
-                that.updateCameraFromRect(ext, 2000);
+                that.application.currentViewer.zoomTo(ext, 2.0);
             }
         });
         this.regionSelect.start();
@@ -525,7 +538,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
     this.application.beforeViewerChanged.raiseEvent();
 
-    var bnds, rect;
+    var rect;
 
     var that = this;
 
@@ -535,17 +548,15 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
             //shut down existing cesium
         if (defined(this.viewer)) {
-            this.application.cesium.destroy();
-
             //get camera and timeline settings
             try {
-                rect = getCameraRect(this.scene);
-                bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
-                    [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
+                rect = this.application.cesium.getCurrentExtent();
             } catch (e) {
                 console.log('Using default screen extent', e.message);
-                bnds = rectangleToLatLngBounds(this.application.initialBoundingBox);
+                rect = this.application.initialBoundingBox;
             }
+
+            this.application.cesium.destroy();
 
             this._enableSelectExtent(false);
 
@@ -562,7 +573,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.viewer = undefined;
         }
         else {
-            bnds = rectangleToLatLngBounds(this.application.initialBoundingBox);
+            rect = this.application.initialBoundingBox;
         }
 
        //create leaflet viewer
@@ -625,8 +636,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             console.log(e.boxZoomBounds);
         });
 
-        map.fitBounds(bnds);
-
         //redisplay data
         this.map = map;
 
@@ -653,13 +662,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         map.on('click', function(e) {
             selectFeatureLeaflet(that, e.latlng);
         });
+
+        this.application.leaflet.zoomTo(rect, 0.0);
     }
     else {
         if (defined(this.map)) {
+            rect = this.application.leaflet.getCurrentExtent();
             this.application.leaflet.destroy();
-
-            //get camera and timeline settings
-            rect = getCameraRect(undefined, this.map);
 
             if (that.leafletEventHelper) {
                 that.leafletEventHelper.removeAll();
@@ -672,9 +681,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.map.remove();
             this.map = undefined;
         }
-        else {
-            rect = this.application.initialBoundingBox;
-         }
 
         //create Cesium viewer
         this.viewer = this._createCesiumViewer('cesiumContainer');
@@ -693,8 +699,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         this.viewer.dataSources.dataSourceAdded.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
         this.viewer.dataSources.dataSourceRemoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
-
-        this.updateCameraFromRect(rect, 0);
 
         this._enableSelectExtent(true);
 
@@ -729,6 +733,23 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             });
         }
 
+        if (defined(rect)) {
+            this.application.cesium.zoomTo(rect, 0.0);
+        } else {
+            if (defined(this.application.initialCamera)) {
+                var cesiumCamera = this.application.cesium.scene.camera;
+                cesiumCamera.flyTo({
+                    duration: 0.0,
+                    destination: this.application.initialCamera.position,
+                    orientation: {
+                        direction: this.application.initialCamera.direction,
+                        up: this.application.initialCamera.up
+                    }
+                });
+            } else {
+                this.application.cesium.zoomTo(this.application.initialBoundingBox, 0.0);
+            }
+        }
     }
 
     this.application.afterViewerChanged.raiseEvent();
@@ -877,38 +898,9 @@ AusGlobeViewer.prototype.updateTimeline = function(start, finish, cur, run) {
  };
 
 
-var cartesian3Scratch = new Cartesian3();
-
 // -------------------------------------------
 // Camera management
 // -------------------------------------------
-
-//Camera extent approx for 2D viewer
-function getCameraFocus(scene) {
-    //Hack to get current camera focus
-    var pos = Cartesian2.fromArray([$(document).width()/2,$(document).height()/2]);
-    var pickRay = scene.camera.getPickRay(pos);
-    var focus = scene.globe.pick(pickRay, scene);
-    return focus;
-}
-//Approximate camera extent approx for 2D viewer
-function getCameraRect(scene, map) {
-    if (scene !== undefined) {
-        var focus = getCameraFocus(scene);
-        var focus_cart = Ellipsoid.WGS84.cartesianToCartographic(focus);
-        var lat = CesiumMath.toDegrees(focus_cart.latitude);
-        var lon = CesiumMath.toDegrees(focus_cart.longitude);
-
-        var dist = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position, cartesian3Scratch));
-        var offset = dist * 2.5e-6;
-
-        return Rectangle.fromDegrees(lon-offset, lat-offset, lon+offset, lat+offset);
-    }
-    else if (map !== undefined) {
-        var bnds = map.getBounds();
-        return Rectangle.fromDegrees(bnds.getWest(), bnds.getSouth(), bnds.getEast(), bnds.getNorth());
-    }
-}
 
 function flyToPosition(scene, position, durationMilliseconds) {
     var camera = scene.camera;
@@ -986,40 +978,6 @@ function zoomCamera(scene, distFactor, pos) {
 
 function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); }
 function zoomOut(scene, pos) { zoomCamera(scene, -2.0, pos); }
-
-// Move camera to Rectangle
-AusGlobeViewer.prototype.updateCameraFromRect = function(rect_in, flightTimeMilliseconds) {
-    if (rect_in === undefined) {
-        return;
-    }
-
-    var scene = this.scene;
-    var map = this.map;
-    
-    //check that we're not too close
-    var epsilon = CesiumMath.EPSILON3;
-    var rect = rect_in.clone();
-    if ((rect.east - rect.west) < epsilon) {
-        rect.east += epsilon;
-        rect.west -= epsilon;
-    }
-    if ((rect.north - rect.south) < epsilon) {
-        rect.north += epsilon;
-        rect.south -= epsilon;
-    }
-    if (scene !== undefined && !scene.isDestroyed()) {
-        var flight = CameraFlightPath.createTweenRectangle(scene, {
-            destination : rect,
-            duration: flightTimeMilliseconds / 1000.0
-        });
-        scene.tweens.add(flight);
-    }
-    else if (map !== undefined) {
-        var bnds = [[CesiumMath.toDegrees(rect.south), CesiumMath.toDegrees(rect.west)],
-            [CesiumMath.toDegrees(rect.north), CesiumMath.toDegrees(rect.east)]];
-        map.fitBounds(bnds);
-    }
-};
 
 function getWmsFeatureInfo(baseUrl, useProxy, layers, extent, width, height, i, j, useWebMercator, wmsFeatureInfoFilter) {
     var url = baseUrl;

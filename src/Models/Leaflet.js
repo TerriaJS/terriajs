@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,html2canvas*/
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
@@ -32,9 +33,19 @@ Leaflet.prototype.getCurrentExtent = function() {
  * Zooms to a specified extent.
  *
  * @param {Rectangle} extent The extent to which to zoom.
- */
-Leaflet.prototype.zoomTo = function(extent) {
-    this.map.fitBounds(rectangleToLatLngBounds(extent));
+  * @param {Number} [flightDurationSeconds=3.0] The length of the flight animation in seconds.  Leaflet ignores the actual value,
+  *                                             but will use an animated transition when this value is greater than 0.
+*/
+Leaflet.prototype.zoomTo = function(extent, flightDurationSeconds) {
+    // Account for a bounding box crossing the date line.
+    if (extent.east < extent.west) {
+        extent = Rectangle.clone(extent);
+        extent.east += CesiumMath.TWO_PI;
+    }
+
+    this.map.fitBounds(rectangleToLatLngBounds(extent), {
+        animate: flightDurationSeconds > 0.0
+    });
 };
 
 /**

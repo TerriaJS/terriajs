@@ -19,7 +19,7 @@ var SharePopupViewModel = function(options) {
     knockout.track(this, ['imageUrl', 'url', 'embedCode', 'itemsSkippedBecauseTheyHaveLocalData']);
 
     // Build the share URL.
-    var camera = this.application.currentViewer.getCurrentExtent();
+    var cameraExtent = this.application.currentViewer.getCurrentExtent();
 
     var request = {
         version: '0.0.03',
@@ -58,13 +58,22 @@ var SharePopupViewModel = function(options) {
     }
 
     // Add an init source with the camera position.
+    var camera = {
+        west: CesiumMath.toDegrees(cameraExtent.west),
+        south: CesiumMath.toDegrees(cameraExtent.south),
+        east: CesiumMath.toDegrees(cameraExtent.east),
+        north: CesiumMath.toDegrees(cameraExtent.north),
+    };
+
+    if (defined(this.application.cesium)) {
+        var cesiumCamera = this.application.cesium.scene.camera;
+        camera.position = cesiumCamera.positionWC;
+        camera.direction = cesiumCamera.directionWC;
+        camera.up = cesiumCamera.upWC;
+    }
+
     initSources.push({
-        camera: {
-            west: CesiumMath.toDegrees(camera.west),
-            south: CesiumMath.toDegrees(camera.south),
-            east: CesiumMath.toDegrees(camera.east),
-            north: CesiumMath.toDegrees(camera.north)
-        }
+        camera: camera
     });
 
     var uri = new URI(window.location);

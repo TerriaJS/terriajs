@@ -4,18 +4,19 @@
 var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
+var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var ModelError = require('./ModelError');
@@ -165,6 +166,15 @@ Cesium.prototype.destroy = function() {
 };
 
 var cartesian3Scratch = new Cartesian3();
+var enuToFixedScratch = new Matrix4();
+var southwestScratch = new Cartesian3();
+var southeastScratch = new Cartesian3();
+var northeastScratch = new Cartesian3();
+var northwestScratch = new Cartesian3();
+var southwestCartographicScratch = new Cartographic();
+var southeastCartographicScratch = new Cartographic();
+var northeastCartographicScratch = new Cartographic();
+var northwestCartographicScratch = new Cartographic();
 
 /**
  * Gets the current extent of the camera.  This may be approximate if the viewer does not have a strictly rectangular view.
@@ -172,22 +182,61 @@ var cartesian3Scratch = new Cartesian3();
  */
 Cesium.prototype.getCurrentExtent = function() {
     var scene = this.scene;
+    var camera = scene.camera;
 
     var width = scene.canvas.clientWidth;
     var height = scene.canvas.clientHeight;
 
     var centerOfScreen = new Cartesian2(width / 2.0, height / 2.0);
     var pickRay = scene.camera.getPickRay(centerOfScreen);
-    var focus = scene.globe.pick(pickRay, scene);
+    var center = scene.globe.pick(pickRay, scene);
 
-    var focusCartographic = Ellipsoid.WGS84.cartesianToCartographic(focus);
+    if (!defined(center)) {
+        // TODO: binary search to find the horizon point and use that as the center.
+        return this.application.initialBoundingBox;
+    }
 
-    var distance = Cartesian3.magnitude(Cartesian3.subtract(focus, scene.camera.position, cartesian3Scratch));
-    var offset = CesiumMath.toRadians(distance * 2.5e-6);
+    var ellipsoid = this.scene.globe.ellipsoid;
 
-    var longitude = focusCartographic.longitude;
-    var latitude = focusCartographic.latitude;
-    return new Rectangle(longitude - offset, latitude - offset, longitude + offset, latitude + offset);
+    var fovy = scene.camera.frustum.fovy * 0.5;
+    var fovx = Math.atan(Math.tan(fovy) * scene.camera.frustum.aspectRatio);
+
+    var cameraOffset = Cartesian3.subtract(camera.positionWC, center, cartesian3Scratch);
+    var cameraHeight = Cartesian3.magnitude(cameraOffset);
+    var xDistance = cameraHeight * Math.tan(fovx);
+    var yDistance = cameraHeight * Math.tan(fovy);
+
+    var southwestEnu = new Cartesian3(-xDistance, -yDistance, 0.0);
+    var southeastEnu = new Cartesian3(xDistance, -yDistance, 0.0);
+    var northeastEnu = new Cartesian3(xDistance, yDistance, 0.0);
+    var northwestEnu = new Cartesian3(-xDistance, yDistance, 0.0);
+
+    var enuToFixed = Transforms.eastNorthUpToFixedFrame(center, ellipsoid, enuToFixedScratch);
+    var southwest = Matrix4.multiplyByPoint(enuToFixed, southwestEnu, southwestScratch);
+    var southeast = Matrix4.multiplyByPoint(enuToFixed, southeastEnu, southeastScratch);
+    var northeast = Matrix4.multiplyByPoint(enuToFixed, northeastEnu, northeastScratch);
+    var northwest = Matrix4.multiplyByPoint(enuToFixed, northwestEnu, northwestScratch);
+
+    var southwestCartographic = ellipsoid.cartesianToCartographic(southwest, southwestCartographicScratch);
+    var southeastCartographic = ellipsoid.cartesianToCartographic(southeast, southeastCartographicScratch);
+    var northeastCartographic = ellipsoid.cartesianToCartographic(northeast, northeastCartographicScratch);
+    var northwestCartographic = ellipsoid.cartesianToCartographic(northwest, northwestCartographicScratch);
+
+    // Account for date-line wrapping
+    if (southeastCartographic.longitude < southwestCartographic.longitude) {
+        southeastCartographic.longitude += CesiumMath.TWO_PI;
+    }
+    if (northeastCartographic.longitude < northwestCartographic.longitude) {
+        northeastCartographic.longitude += CesiumMath.TWO_PI;
+    }
+
+    var rect = new Rectangle(
+        CesiumMath.convertLongitudeRange(Math.min(southwestCartographic.longitude, northwestCartographic.longitude)),
+        Math.min(southwestCartographic.latitude, southeastCartographic.latitude),
+        CesiumMath.convertLongitudeRange(Math.max(northeastCartographic.longitude, southeastCartographic.longitude)),
+        Math.max(northeastCartographic.latitude, northwestCartographic.latitude));
+    rect.center = center;
+    return rect;
 };
 
 /**
