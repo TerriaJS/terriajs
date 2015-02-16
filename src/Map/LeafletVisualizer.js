@@ -592,11 +592,7 @@ LeafletGeomVisualizer.prototype.isDestroyed = function() {
 LeafletGeomVisualizer.prototype.destroy = function() {
     var entities = this._entitiesToVisualize.values;
     for (var i = entities.length - 1; i > -1; i--) {
-        entities[i]._geomPoint = undefined;
-        entities[i]._geomBillboard = undefined;
-        entities[i]._geomLabel = undefined;
-        entities[i]._geomPolyline = undefined;
-        entities[i]._geomPolygon = undefined;
+        cleanEntity(entities[i], this._featureGroup);
     }
     this._entityCollection.collectionChanged.removeEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
     this._map.removeLayer(this._featureGroup);
