@@ -1,6 +1,7 @@
 {
     "corsDomains" : [
-        "corsproxy.com"
+        "corsproxy.com",
+        "programs.communications.gov.au"
     ],
     "camera": {
         "west": 105,
@@ -23,10 +24,10 @@
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
@@ -34,17 +35,18 @@
                             "parameters": {
                                 "tiled": true
                             },
-                            "dataUrlType": "none"
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
                         },
                         {
                             "name": "Broadband Availability",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
@@ -52,17 +54,18 @@
                             "parameters": {
                                 "tiled": true
                             },
-                            "dataUrlType": "none"
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
                         },
                         {
                             "name": "Broadband Availabilty no Borders",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
@@ -70,17 +73,18 @@
                             "parameters": {
                                 "tiled": true
                             },
-                            "dataUrlType": "none"
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
                         },
                         {
                             "name": "Broadband Quality",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
@@ -88,17 +92,18 @@
                             "parameters": {
                                 "tiled": true
                             },
-                            "dataUrlType": "none"
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
                         },
                         {
                             "name": "Broadband ADSL Quality",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
@@ -106,17 +111,18 @@
                             "parameters": {
                                 "tiled": true
                             },
-                            "dataUrlType": "none"
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
                         },
                         {
                             "name": "Broadband ADSL Quality no Borders",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
-                                "112.93529999999998",
-                                "-38.208809999082796",
-                                "152.06206",
-                                "-11.05104999964455"
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
                             ],
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
@@ -124,7 +130,8 @@
                             "parameters": {
                                 "tiled": true
                             },
-                            "dataUrlType": "none"
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
                         }
                     ]
                 },

@@ -20,6 +20,7 @@ var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
+var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
  * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
@@ -86,7 +87,18 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.getFeatureInfoAsXml = true;
 
-    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'tilingScheme']);
+    /**
+     * Gets or sets a value indicating whether this dataset should be clipped to the {@link WebMapServiceCatalogItem#rectangle}.
+     * If true, no part of the dataset will be displayed outside the rectangle.  This property is false by default because it requires
+     * that the rectangle be highly accurate.  Also, many WMS servers report an extent that does not take into account that the representation
+     * of features sometimes require a larger spatial extent than the features themselves.  For example, if a point feature on the edge of
+     * the extent is drawn as a circle with a radius of 5 pixels, half of that circle will be cut off.
+     * @type {Boolean}
+     * @default false
+     */
+    this.clipToRectangle = false;
+
+    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'tilingScheme', 'clipToRectangle']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.dataUrl;
@@ -296,12 +308,8 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
         show : false,
-        alpha : this.opacity
-        // Ideally we'd specify "rectangle : this.rectangle" here.
-        // But lots of WMS data sources get the extent wrong, and even the ones that get it right
-        // specify the extent of the geometry itself, not the representation of the geometry.  So that means,
-        // for example, that if we clip the layer at the given extent, then a point centered on the edge of the
-        // extent will only be half visible.
+        alpha : this.opacity,
+        rectangle : this.clipToRectangle ? this.rectangle : undefined
     });
 
     scene.imageryLayers.add(this._imageryLayer);
@@ -324,9 +332,8 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
 
     var options = {
         layers : this.layers,
-        opacity : this.opacity
-        // Ideally we'd specify "bounds : rectangleToLatLngBounds(this.rectangle)" here.
-        // See comment in _enableInCesium for an explanation of why we don't.
+        opacity : this.opacity,
+        bounds : rectangleToLatLngBounds(this.rectangle)
     };
 
     options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
