@@ -369,6 +369,8 @@ a region mapping column.'
             }
             else {
                 csvItem.legendUrl = csvItem._tableDataSource.getLegendGraphic();
+                csvItem.application.currentViewer.notifyRepaintRequired();
+
             }
         });
     }
@@ -376,6 +378,7 @@ a region mapping column.'
         csvItem.clock = csvItem._tableDataSource.clock;
         csvItem.rectangle = csvItem._tableDataSource.dataset.getExtent();
         csvItem.legendUrl = csvItem._tableDataSource.getLegendGraphic();
+        csvItem.application.currentViewer.notifyRepaintRequired();
     }
 }
 

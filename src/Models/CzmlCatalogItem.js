@@ -172,6 +172,7 @@ function proxyUrl(application, url) {
 
 function doneLoading(czmlItem) {
     czmlItem.clock = czmlItem._czmlDataSource.clock;
+    czmlItem.application.currentViewer.notifyRepaintRequired();
 }
 
 function errorLoading(czmlItem) {
