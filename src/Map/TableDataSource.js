@@ -350,6 +350,10 @@ TableDataSource.prototype.setTrailTimeByPercent = function (pct) {
 
 
 TableDataSource.prototype.getLegendGraphic = function () {
+    if (!this.colorByValue) {
+        return undefined;
+    }
+
     var canvas = document.createElement("canvas");
     if (!defined(canvas)) {
         return;

@@ -145,7 +145,8 @@
                             ],
                             "type": "csv",
                             "url": "http://www.data.gov.au/dataset/7be6e3ee-043a-4c47-a6eb-a97702419ccd/resource/c6b211ad-3aa2-4f53-8427-01b52a6433a7/download/mobileblackspotdatabase.csv",
-                            "colorByValue": false
+                            "colorByValue": false,
+                            "legendUrl": ""
                         }
                     ]
                 },
