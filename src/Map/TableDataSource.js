@@ -41,6 +41,7 @@ var TableDataSource = function () {
     this.scale = 1.0;
     this.scaleValue = false;
     this.imageUrl = "./images/circle32.png";
+    this.colorByValue = true;
 
     var rainbowGradient = [
         {offset: 0.0, color: 'rgba(0,0,200,1.00)'},
@@ -205,28 +206,35 @@ TableDataSource.prototype.describe = function(properties) {
 TableDataSource.prototype.czmlRecFromPoint = function (point) {
 
     var rec = {
-        "name": "Site Data",
-        "description": "empty",
-        "billboard" : {
-            "horizontalOrigin" : "CENTER",
-            "verticalOrigin" : "BOTTOM",
-            "image" : this.imageUrl,
-            "scale" : this.scale,
-            "color" : { "rgba" : [255, 0, 0, 255] },
-            "show" : [{
-                    "boolean" : false
-                }, {
-                "interval" : "2011-02-04T16:00:00Z/2011-04-04T18:00:00Z",
-                "boolean" : true
-            }]
+        name: "Site Data",
+        description: "empty",
+        point: {
+            color: { "rgba" : [255, 0, 0, 255] },
+            outlineColor: { "rgba" : [0, 0, 0, 255] },
+            outlineWidth: 1,
+            pixelSize: 5,
+            show: [
+                {
+                    boolean: false
+                },
+                {
+                    interval: "2011-02-04T16:00:00Z/2011-04-04T18:00:00Z",
+                    boolean: true
+                }
+            ],
         },
-        "position" : {
-            "cartographicDegrees" : [0, 0, 0]
+        position: {
+            cartographicDegrees: [0, 0, 0]
         }
     };
     
-    rec.billboard.color.rgba = this._mapValue2Color(point.val);
-    rec.billboard.scale = this._mapValue2Scale(point.val);
+    if (this.colorByValue) {
+        rec.point.color.rgba = this._mapValue2Color(point.val);
+    } else {
+        rec.point.color.rgba = [64, 64, 255, 256];
+    }
+
+    rec.point.scale = this._mapValue2Scale(point.val);
     for (var p = 0; p < 3; p++) {
         rec.position.cartographicDegrees[p] = point.pos[p];
     }
@@ -234,12 +242,12 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
     if (this.dataset.hasTimeData()) {
         var start = JulianDate.addMinutes(point.time, -this.leadTimeMin, startScratch);
         var finish = JulianDate.addMinutes(point.time, this.trailTimeMin, endScratch);
-        rec.billboard.show[1].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
-        rec.availability = rec.billboard.show[1].interval;
+        rec.point.show[1].interval = JulianDate.toIso8601(start) + '/' + JulianDate.toIso8601(finish);
+        rec.availability = rec.point.show[1].interval;
     }
     else {
-        rec.billboard.show[0].boolean = true;
-        rec.billboard.show[1].interval = undefined;
+        rec.point.show[0].boolean = true;
+        rec.point.show[1].interval = undefined;
     }
     return rec;
 };

@@ -523,6 +523,7 @@ CatalogItem.prototype._enable = function() {
     var application = this.application;
 
     if (defined(application.cesium)) {
+        application.cesium.stoppedRendering = true;
         this._enableInCesium();
     }
 

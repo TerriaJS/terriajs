@@ -5,6 +5,7 @@
  * Copyright(c) 2012-2013 National ICT Australia Limited (NICTA).  All rights reserved.
  */
 
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var VarType = require('./VarType');
@@ -173,16 +174,18 @@ Variable.prototype.processEnumVar = function () {
     }
     //create new enum list for the variable
     var enumList = [];
+    var enumHash = {};
     for (var i = 0; i < this.vals.length; i++) {
         if (this.vals[i] === this.noData) {
             this.vals[i] = 'undefined';
         }
-        var n = enumList.indexOf(this.vals[i]);
-        if (n === -1) {
+        var n = enumHash[this.vals[i]];
+        if (!defined(n)) {
             n = enumList.length;
             enumList.push(this.vals[i]);
+            enumHash[this.vals[i]] = n;
         }
-        this.vals[i] = parseFloat(n);
+        this.vals[i] = n;
     }
     this.enumList = enumList;
     this._calculateVarMinMax();

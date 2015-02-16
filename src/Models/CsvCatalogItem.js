@@ -55,14 +55,21 @@ var CsvCatalogItem = function(application, url) {
      */
     this.data = undefined;
 
-
     /**
      * Gets or sets the URL from which the {@link CsvCatalogItem#data} was obtained.
      * @type {String}
      */
     this.dataSourceUrl = undefined;
 
-    knockout.track(this, ['url', 'data', 'dataSourceUrl']);
+    /**
+     * Gets or sets a value indicating whether data points in the CSV are color-coded based on the
+     * value column.
+     * @type {Boolean}
+     * @default true
+     */
+    this.colorByValue = true;
+
+    knockout.track(this, ['url', 'data', 'dataSourceUrl', 'colorByValue']);
 };
 
 inherit(CatalogItem, CsvCatalogItem);
@@ -131,7 +138,7 @@ defineProperties(CsvCatalogItem.prototype, {
 });
 
 CsvCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
-    return [this.url, this.data];
+    return [this.url, this.data, this.colorByValue];
 };
 
 CsvCatalogItem.prototype._load = function() {
@@ -140,6 +147,7 @@ CsvCatalogItem.prototype._load = function() {
     }
 
     this._tableDataSource = new TableDataSource();
+    this._tableDataSource.colorByValue = this.colorByValue;
 
     var that = this;
 
@@ -369,6 +377,8 @@ a region mapping column.'
             }
             else {
                 csvItem.legendUrl = csvItem._tableDataSource.getLegendGraphic();
+                csvItem.application.currentViewer.notifyRepaintRequired();
+
             }
         });
     }
@@ -376,6 +386,7 @@ a region mapping column.'
         csvItem.clock = csvItem._tableDataSource.clock;
         csvItem.rectangle = csvItem._tableDataSource.dataset.getExtent();
         csvItem.legendUrl = csvItem._tableDataSource.getLegendGraphic();
+        csvItem.application.currentViewer.notifyRepaintRequired();
     }
 }
 

@@ -4,6 +4,8 @@
 /*global require,L*/
 var AssociativeArray = require('../../third_party/cesium/Source/Core/AssociativeArray');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
+var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
 var Color = require('../../third_party/cesium/Source/Core/Color');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
@@ -90,9 +92,9 @@ LeafletGeomVisualizer.prototype._onCollectionChanged = function(entityCollection
 
 
 function cleanEntity(entity, group) {
-    if (defined(entity._geomPoint)) {
-        group.removeLayer(entity._geomPoint);
-        entity._geomPoint = undefined;
+    if (defined(entity._pointDetails)) {
+        group.removeLayer(entity._pointDetails.layer);
+        entity._pointDetails = undefined;
     }
     if (defined(entity._geomBillboard)) {
         group.removeLayer(entity._geomBillboard);
@@ -149,54 +151,115 @@ LeafletGeomVisualizer.prototype.update = function(time) {
     return true;
 };
 
+var cartographicScratch = new Cartographic();
+
+function positionToLatLng(position) {
+    var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position, cartographicScratch);
+    return L.latLng(CesiumMath.toDegrees(cartographic.latitude), CesiumMath.toDegrees(cartographic.longitude));
+}
+
 LeafletGeomVisualizer.prototype._updatePoint = function(entity, time) {
-    var pointGraphics = entity._point;
     var featureGroup = this._featureGroup;
-    var geomLayer = entity._geomPoint;
-    var position, point, description;
+    var pointGraphics = entity._point;
+
     var show = entity.isAvailable(time) && Property.getValueOrDefault(pointGraphics._show, time, true);
-    if (show) {
-        position = Property.getValueOrUndefined(entity._position, time);
-        description = Property.getValueOrUndefined(entity._description, time);
-        show = defined(position);
-    }
     if (!show) {
         cleanEntity(entity, featureGroup);
         return;
     }
 
-    var cart = Ellipsoid.WGS84.cartesianToCartographic(position);
-    var latlng = L.latLng( CesiumMath.toDegrees(cart.latitude), CesiumMath.toDegrees(cart.longitude) );
+    var details = entity._pointDetails;
+    if (!defined(details)) {
+        details = entity._pointDetails = {
+            layer: undefined,
+            lastDescription: '',
+            lastPosition: new Cartesian3(),
+            lastPixelSize: 1,
+            lastColor: new Color(),
+            lastOutlineColor: new Color(),
+            lastOutlineWidth: 1
+        };
+    }
+
+    var position = Property.getValueOrUndefined(entity._position, time);
+    if (!defined(position)) {
+        cleanEntity(entity, featureGroup);
+        return;
+    }
+
+    var description = Property.getValueOrUndefined(entity._description, time);
     var pixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
     var color = Property.getValueOrDefault(pointGraphics._color, time, defaultColor);
     var outlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor);
     var outlineWidth = Property.getValueOrDefault(pointGraphics._outlineWidth, time, defaultOutlineWidth);
 
-    var pointOptions = {
-        radius: pixelSize / 2.0,
-        fillColor: color.toCssColorString(),
-        fillOpacity: color.alpha,
-        color: outlineColor.toCssColorString(),
-        weight: outlineWidth,
-        opacity: outlineColor.alpha
-    };
+    var layer = details.layer;
 
-    if (!defined(geomLayer)) {
-        point = L.circleMarker(latlng, pointOptions);
-        point.bindPopup(description, {maxHeight: popupHeight});
-        featureGroup.addLayer(point);
-        entity._geomPoint = point;
-    } else {
-        point = geomLayer;
-        if (!point._latlng.equals(latlng)) {
-            point.setLatLng(latlng);
-        }
-        for (var prop in pointOptions) {
-            if (pointOptions[prop] !== point.options[prop]) {
-                point.setStyle(pointOptions);
-                break;
-            }
-        }
+    if (!defined(layer)){
+        var pointOptions = {
+            radius: pixelSize / 2.0,
+            fillColor: color.toCssColorString(),
+            fillOpacity: color.alpha,
+            color: outlineColor.toCssColorString(),
+            weight: outlineWidth,
+            opacity: outlineColor.alpha
+        };
+
+        layer = details.layer = L.circleMarker(positionToLatLng(position), pointOptions);
+        layer.bindPopup(description, {maxHeight: popupHeight});
+        featureGroup.addLayer(layer);
+
+        details.lastDescription = description;
+        Cartesian3.clone(position, details.lastPosition);
+        details.lastPixelSize = pixelSize;
+        Color.clone(color, details.lastColor);
+        Color.clone(outlineColor, details.lastOutlineColor);
+        details.lastOutlineWidth = outlineWidth;
+
+        return;
+    }
+
+    if (description !== details.lastDescription) {
+        layer.unbindPopup();
+        layer.bindPopup(description, {maxHeight: popupHeight});
+        details.lastDescription = description;
+    }
+
+    if (!Cartesian3.equals(position, details.lastPosition)) {
+        layer.setLatLng(positionToLatLng(position));
+        Cartesian3.clone(position, details.lastPosition);
+    }
+
+    if (pixelSize !== details.lastPixelSize) {
+        layer.setRadius(pixelSize / 2.0);
+        details.lastPixelSize = pixelSize;
+    }
+
+    var options = layer.options;
+    var applyStyle = false;
+
+    if (!Color.equals(color, details.lastColor)) {
+        options.fillColor = color.toCssColorString();
+        options.fillOpacity = color.alpha;
+        Color.clone(color, details.lastColor);
+        applyStyle = true;
+    }
+
+    if (!Color.equals(outlineColor, details.lastOutlineColor)) {
+        options.color = outlineColor.toCssColorString();
+        options.opacity = outlineColor.alpha;
+        Color.clone(outlineColor, details.lastOutlineColor);
+        applyStyle = true;
+    }
+
+    if (outlineWidth !== details.lastOutlineWidth) {
+        options.weight = outlineWidth;
+        details.lastOutlineWidth = outlineWidth;
+        applyStyle = true;
+    }
+
+    if (applyStyle) {
+        layer.setStyle(options);
     }
 };
 
