@@ -134,7 +134,7 @@
                             "clipToRectangle": true
                         },
                         {
-                            "name": "Reported Poor or No Mobile Coverage",
+                            "name": "Reported Poor Mobile Coverage",
                             "description": "Since December 2013, the Department of Communications received information about mobile coverage black spots from individuals, organisations, community groups, local, state and territory governments and Federal Members of Parliament. The database will be used by applicants to design their proposal for funding under the Mobile Black Spot Programme.<br/>[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
