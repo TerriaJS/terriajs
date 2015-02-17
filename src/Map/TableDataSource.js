@@ -13,7 +13,6 @@ And writes a czml file for it to display
 
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
-var Color = require('../../third_party/cesium/Source/Core/Color');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
@@ -44,14 +43,14 @@ var TableDataSource = function () {
     this.trailTimeMin = 60;
 
     var rainbowGradient = [
-        {offset: 0.0, color: 'rgba(64,64,200,1.00)'},
-        {offset: 0.25, color: 'rgba(64,200,200,1.0)'},
-        {offset: 0.25, color: 'rgba(64,200,200,1.0)'},
-        {offset: 0.5, color: 'rgba(64,200,64,1.0)'},
-        {offset: 0.5, color: 'rgba(64,200,64,1.0)'},
-        {offset: 0.75, color: 'rgba(200,200,64,1.0)'},
-        {offset: 0.75, color: 'rgba(200,200,64,1.0)'},
-        {offset: 1.0, color: 'rgba(200,64,64,1.0)'}
+        {offset: 0.0, color: 'rgba(32,0,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
     ];
     this.setColorGradient(rainbowGradient);
 };
@@ -317,7 +316,7 @@ TableDataSource.prototype._mapValue2Color = function (pntVal) {
         color[0] = colors.data[colorIndex];
         color[1] = colors.data[colorIndex + 1];
         color[2] = colors.data[colorIndex + 2];
-        color[3] = colors.data[colorIndex + 3] * this.color.alpha;
+        color[3] = colors.data[colorIndex + 3] * (this.color[3] / 256.0);
     }
     return color;
 };
