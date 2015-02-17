@@ -316,7 +316,7 @@ TableDataSource.prototype._mapValue2Color = function (pntVal) {
         color[0] = colors.data[colorIndex];
         color[1] = colors.data[colorIndex + 1];
         color[2] = colors.data[colorIndex + 2];
-        color[3] = colors.data[colorIndex + 3] * (this.color[3] / 256.0);
+        color[3] = colors.data[colorIndex + 3] * (this.color[3] / 255.0);
     }
     return color;
 };
