@@ -13,7 +13,6 @@ And writes a czml file for it to display
 
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
-var Color = require('../../third_party/cesium/Source/Core/Color');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
@@ -34,17 +33,17 @@ var TableDataSource = function () {
     this.dataset = new Dataset();
     this.show = true;
 
-    this.color = Color.RED;
-
+    //TODO: create style object to encapsulate these properties
+    this.color = [64, 64, 255, 256];
+    this.scale = 1.0;
+    this.imageUrl = "./images/circle32.png";
+    this.scaleValue = false;
+    this.colorByValue = true;
     this.leadTimeMin = 0;
     this.trailTimeMin = 60;
-    this.scale = 1.0;
-    this.scaleValue = false;
-    this.imageUrl = "./images/circle32.png";
-    this.colorByValue = true;
 
     var rainbowGradient = [
-        {offset: 0.0, color: 'rgba(0,0,200,1.00)'},
+        {offset: 0.0, color: 'rgba(32,0,200,1.0)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
         {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
         {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
@@ -212,7 +211,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
             color: { "rgba" : [255, 0, 0, 255] },
             outlineColor: { "rgba" : [0, 0, 0, 255] },
             outlineWidth: 1,
-            pixelSize: 5,
+            pixelSize: 8,
             show: [
                 {
                     boolean: false
@@ -231,10 +230,10 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
     if (this.colorByValue) {
         rec.point.color.rgba = this._mapValue2Color(point.val);
     } else {
-        rec.point.color.rgba = [64, 64, 255, 256];
+        rec.point.color.rgba = this.color;
     }
 
-    rec.point.scale = this._mapValue2Scale(point.val);
+    rec.point.pixelSize *= this._mapValue2Scale(point.val);
     for (var p = 0; p < 3; p++) {
         rec.position.cartographicDegrees[p] = point.pos[p];
     }
@@ -317,7 +316,7 @@ TableDataSource.prototype._mapValue2Color = function (pntVal) {
         color[0] = colors.data[colorIndex];
         color[1] = colors.data[colorIndex + 1];
         color[2] = colors.data[colorIndex + 2];
-        color[3] = colors.data[colorIndex + 3] * this.color.alpha;
+        color[3] = colors.data[colorIndex + 3] * (this.color[3] / 255.0);
     }
     return color;
 };
