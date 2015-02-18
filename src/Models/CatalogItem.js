@@ -353,6 +353,8 @@ CatalogItem.prototype.load = function() {
     }).then(function() {
         that._loadingPromise = undefined;
         that.isLoading = false;
+
+        that.application.currentViewer.notifyRepaintRequired();
     }).otherwise(function(e) {
         that._lastLoadInfluencingValues = undefined;
         that._loadingPromise = undefined;
@@ -704,6 +706,7 @@ function isEnabledChanged(catalogItem) {
             var loadPromise = when(catalogItem.load(), function() {
                 if (catalogItem.isEnabled) {
                     catalogItem._enable();
+                    catalogItem.application.currentViewer.notifyRepaintRequired();
                 }
             });
 
@@ -753,6 +756,7 @@ function isShownChanged(catalogItem) {
         when(catalogItem._loadForEnablePromise, function() {
             if (catalogItem.isEnabled && catalogItem.isShown) {
                 catalogItem._show();
+                catalogItem.application.currentViewer.notifyRepaintRequired();
             }
         });
 

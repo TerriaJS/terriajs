@@ -14,8 +14,10 @@ var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var TaskProcessor = require('../../third_party/cesium/Source/Core/TaskProcessor');
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -105,6 +107,38 @@ var Cesium = function(application, viewer) {
         this.viewer.timeline.addEventListener('settime', this._boundNotifyRepaintRequired, false);
     }
 
+    // Hacky way to force a repaint when an async load request completes
+    var that = this;
+    this._originalLoadWithXhr = loadWithXhr.load;
+    loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText) {
+        deferred.promise.always(that._boundNotifyRepaintRequired);
+        that._originalLoadWithXhr(url, responseType, method, data, headers, deferred, overrideMimeType, preferText);
+    };
+
+    // Hacky way to force a repaint when a web worker sends something back.
+    this._originalScheduleTask = TaskProcessor.prototype.scheduleTask;
+    TaskProcessor.prototype.scheduleTask = function(parameters, transferableObjects) {
+        var result = that._originalScheduleTask.call(this, parameters, transferableObjects);
+
+        if (!defined(this._originalWorkerMessageSinkRepaint)) {
+            this._originalWorkerMessageSinkRepaint = this._worker.onmessage;
+
+            var taskProcessor = this;
+            this._worker.onmessage = function(event) {
+                taskProcessor._originalWorkerMessageSinkRepaint(event);
+
+                if (that.isDestroyed()) {
+                    taskProcessor._worker.onmessage = taskProcessor._originalWorkerMessageSinkRepaint;
+                    taskProcessor._originalWorkerMessageSinkRepaint = undefined;
+                } else {
+                    that.notifyRepaintRequired();
+                }
+            };
+        }
+
+        return result;
+    };
+
     // If the render loop crashes, inform the user and then switch to 2D.
     this.scene.renderError.addEventListener(function(scene, error) {
         this.application.error.raiseEvent(new ModelError({
@@ -162,7 +196,14 @@ Cesium.prototype.destroy = function() {
 
     window.removeEventListener('resize', this._boundNotifyRepaintRequired, false);
 
+    loadWithXhr.load = this._originalLoadWithXhr;
+    TaskProcessor.prototype.scheduleTask = this._originalScheduleTask;
+
     return destroyObject(this);
+};
+
+Cesium.prototype.isDestroyed = function() {
+    return false;
 };
 
 var cartesian3Scratch = new Cartesian3();
