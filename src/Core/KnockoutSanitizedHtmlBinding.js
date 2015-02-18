@@ -22,16 +22,25 @@ var KnockoutSanitizedHtmlBinding = {
 function sanitize(html) {
     // Escape HTML
     var div = document.createElement('div');
-    
+
     if (defined(div.textContent)) {
         div.textContent = html;
     } else {
         div.innerText = html;
     }
 
-    // Replace Markdown style links (such as: [Link Text](http://link.url.com) ) with actual links.
+    // Replace Markdown style links (such as: [Link Text](http://link.url.com) ) with actual links,
+    // Markdown  style image references (![Alt text](http://path.com/foo.png) ) with img tags,
+    // and <br/>'s with actual <br/>'s.
     var escaped = div.innerHTML;
-    var fixedLinks = escaped.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, function(match, name, href) {
+
+    // Replace inline Markdown image references
+    var fixedImages = escaped.replace(/!\[([^\]]+)\]\(([^\)]+)\)/g, function(match, alt, link) {
+        return '<img src="' + link + '" alt="' + alt +  '"/>';
+    });
+
+    // Replace inline Markdown links
+    var fixedLinks = fixedImages.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, function(match, name, href) {
         return '<a href="' + href + '" target="_blank">' + name + '</a>';
     });
 
