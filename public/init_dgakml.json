@@ -1,0 +1,18 @@
+{
+    "catalog": [
+        {
+            "name": "Data.gov.au KML",
+            "type": "ckan",
+            "url": "http://www.data.gov.au",
+            "filterQuery": ["fq=res_format%3aKML"],
+            "includeKml": true,
+            "includeWms": false,
+            "includeEsriMapServer": false,
+            "filterByWmsGetCapabilities": false,
+            "minimumMaxScaleDenominator": 1e10,
+            "blacklist": {
+                "Rainforests (EVC_2005)": true
+            }
+        }
+    ]
+}

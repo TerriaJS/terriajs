@@ -12,12 +12,13 @@ var loadText = require('../../third_party/cesium/Source/Core/loadText');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var ArcGisMapServerCatalogItem = require('./ArcGisMapServerCatalogItem');
 var corsProxy = require('../Core/corsProxy');
 var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
 var inherit = require('../Core/inherit');
+var KmlCatalogItem = require('./KmlCatalogItem');
 var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
-var ArcGisMapServerCatalogItem = require('./ArcGisMapServerCatalogItem');
 
 /**
  * A {@link CatalogGroup} representing a collection of layers from a [CKAN](http://ckan.org) server.
@@ -88,6 +89,10 @@ var CkanCatalogGroup = function(application) {
      * @type {Object}
      */
     this.wmsParameters = undefined;
+
+    this.includeWms = true;
+    this.includeKml = false;
+    this.includeEsriMapServer = false;
 
     knockout.track(this, ['url', 'dataCustodian', 'filterQuery', 'blacklist', 'wmsParameters']);
 };
@@ -223,6 +228,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
 var wmsFormatRegex = /^wms$/i;
 var esriRestFormatRegex = /^esri rest$/i;
 var jsonFormatRegex = /^JSON$/i;
+var kmlFormatRegex = /^KML$/i;
 
 function filterResultsByGetCapabilities(ckanGroup, json) {
     var wmsServers = {};
@@ -367,54 +373,90 @@ function populateGroupFromResults(ckanGroup, json) {
         for (var resourceIndex = 0; resourceIndex < resources.length; ++resourceIndex) {
             var resource = resources[resourceIndex];
                 //TODO: make the resource types a parameter in the init file
+            if (resource.__filtered) {
+                continue;
+            }
+
+            var isWms;
             if (dataGovCkan) {
-                if (resource.__filtered || (!resource.format.match(jsonFormatRegex))) {
+                if (resource.format.match(jsonFormatRegex)) {
+                    isWms = true;
+                } else if (resource.format.match(kmlFormatRegex)) {
+                    isWms = false;
+                } else {
                     continue;
                 }
             }
             else {
-                if (resource.__filtered || (!resource.format.match(wmsFormatRegex) && !resource.format.match(esriRestFormatRegex))) {
+                if (resource.format.match(wmsFormatRegex)) {
+                    isWms = true;
+                } else if (resource.format.match(esriRestFormatRegex) || resource.format.match(kmlFormatRegex)) {
+                    isWms = false;
+                } else {
                     continue;
                 }
             }
 
-            var wmsUrl = resource.wms_url;
-            if (!defined(wmsUrl)) {
-                wmsUrl = resource.url;
-                if (!defined(wmsUrl)) {
+            var baseUrl = resource.wms_url;
+            if (!defined(baseUrl)) {
+                baseUrl = resource.url;
+                if (!defined(baseUrl)) {
                     continue;
                 }
             }
 
             // Extract the layer name from the URL.
-            var uri = new URI(wmsUrl);
+            var uri = new URI(baseUrl);
             var params = uri.search(true);
             var layerName = params.LAYERS || params.layers || params.typeName;
 
-            if (!defined(layerName)) {
+            if (isWms && !defined(layerName)) {
                 continue;
             }
 
             // Remove the query portion of the WMS URL.
-            uri.search('');
-            var url = uri.toString();
-            url = url.replace('wfs', 'wms');  //data.gov.au hack
+            var url = baseUrl;
+            if (isWms) {
+                uri.search('');
+                url = uri.toString();
+
+                if (dataGovCkan) {
+                    url = url.replace('wfs', 'wms');  //data.gov.au hack
+                }
+            }
 
             var newItem;
-            if (resource.format.match(esriRestFormatRegex)) {
-                newItem = new ArcGisMapServerCatalogItem(ckanGroup.application);
-            } else {
+            if (isWms) {
+                if (!ckanGroup.includeWms) {
+                    continue;
+                }
                 newItem = new WebMapServiceCatalogItem(ckanGroup.application);
+            } else if (resource.format.match(esriRestFormatRegex)) {
+                if (!ckanGroup.includeEsriMapServer) {
+                    continue;
+                }
+                newItem = new ArcGisMapServerCatalogItem(ckanGroup.application);
+            } else if (resource.format.match(kmlFormatRegex)) {
+                if (!ckanGroup.includeKml) {
+                    continue;
+                }
+                newItem = new KmlCatalogItem(ckanGroup.application);
+            } else {
+                continue;
             }
+
             newItem.name = item.title;
             newItem.description = textDescription;
             newItem.url = url;
-            newItem.layers = layerName;
             newItem.rectangle = rectangle;
             newItem.dataUrl = dataUrl;
             newItem.dataUrlType = dataUrlType;
-              //This should be deprecated and done on a server by server basis when feasible
-            newItem.parameters = ckanGroup.wmsParameters;
+
+            if (isWms) {
+                newItem.layers = layerName;
+                //This should be deprecated and done on a server by server basis when feasible
+                newItem.parameters = ckanGroup.wmsParameters;
+            }
 
             if (defined(ckanGroup.dataCustodian)) {
                 newItem.dataCustodian = ckanGroup.dataCustodian;
