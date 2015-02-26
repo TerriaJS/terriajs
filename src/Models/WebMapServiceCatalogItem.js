@@ -2,6 +2,8 @@
 
 /*global require,L,URI,$*/
 
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -15,6 +17,7 @@ var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
 var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
@@ -350,6 +353,38 @@ WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
     }
 
     this._imageryLayer = undefined;
+};
+
+WebMapServiceCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
+    var projection = new WebMercatorProjection();
+    var sw = projection.project(Rectangle.southwest(mapExtent));
+    var ne = projection.project(Rectangle.northeast(mapExtent));
+
+    var tilingScheme = new WebMercatorTilingScheme({
+        rectangleSouthwestInMeters: sw,
+        rectangleNortheastInMeters: ne
+    });
+
+    // Compute the longitude and latitude of the pick location.
+    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
+    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
+
+    var ll = projection.unproject(new Cartesian2(x, y));
+
+    // Use a Cesium imagery provider to pick features.
+    var imageryProvider = new WebMapServiceImageryProvider({
+        url : cleanAndProxyUrl(this.application, this.url),
+        layers : this.layers,
+        getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
+        getFeatureInfoAsXml : this.getFeatureInfoAsXml,
+        parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
+        tilingScheme : tilingScheme,
+        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType,
+        tileWidth : mapWidth,
+        tileHeight : mapHeight
+    });
+
+    return imageryProvider.pickFeatures(0, 0, 0, ll.longitude, ll.latitude);
 };
 
 WebMapServiceCatalogItem.defaultParameters = {
