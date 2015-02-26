@@ -14,9 +14,9 @@ var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/Geogr
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
 var Metadata = require('./Metadata');
