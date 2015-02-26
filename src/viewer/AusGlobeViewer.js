@@ -106,6 +106,7 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     this.scene = undefined;
     this.viewer = undefined;
     this.map = undefined;
+    this._popupSinceLastClick = false;
 
     this.application = application;
 
@@ -638,24 +639,16 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.application.cesium = undefined;
         this.application.currentViewer = this.application.leaflet;
 
-        this.captureCanvas = function() {
-            var that = this;
-            if (that.startup) {
-                that.startup = false;
-            }
-            that.map.attributionControl.removeFrom(that.map);
-            html2canvas( document.getElementById('cesiumContainer'), {
-	            useCORS: true,
-                onrendered: function(canvas) {
-                    var dataUrl = canvas.toDataURL("image/jpeg");
-                    that.captureCanvasCallback(dataUrl);
-                    that.map.attributionControl.addTo(that.map);
-                }
-            });
-        };
-
         map.on('click', function(e) {
             selectFeatureLeaflet(that, e.latlng);
+        });
+
+        map.on('preclick', function(e) {
+            preClickLeaflet(that);
+        });
+
+        map.on('popupopen', function(e) {
+            popupOpenLeaflet(that);
         });
 
         this.application.leaflet.zoomTo(rect, 0.0);
@@ -974,6 +967,14 @@ function zoomCamera(scene, distFactor, pos) {
 function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); }
 function zoomOut(scene, pos) { zoomCamera(scene, -2.0, pos); }
 
+function preClickLeaflet(viewer) {
+    viewer._popupSinceLastClick = false;
+}
+
+function popupOpenLeaflet(viewer) {
+    viewer._popupSinceLastClick = true;
+}
+
 function selectFeatureLeaflet(viewer, latlng) {
     var dataSources = viewer.application.nowViewing.items;
 
@@ -1004,7 +1005,11 @@ function selectFeatureLeaflet(viewer, latlng) {
     updatePopup('', 'Loading WMS feature information...');
 
     // Wait for .5 seconds to show to let double click through
-    setTimeout(function() { popup.openOn(viewer.map); }, 500);
+    setTimeout(function() {
+        if (!viewer._popupSinceLastClick) {
+            popup.openOn(viewer.map);
+        }
+    }, 500);
 
     return when.all(promises, function(results) {
         var foundFeature = false;
