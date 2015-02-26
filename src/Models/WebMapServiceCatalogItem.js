@@ -87,6 +87,8 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.getFeatureInfoAsXml = true;
 
+    this.getFeatureInfoXmlContentType = 'text/xml';
+
     /**
      * Gets or sets a value indicating whether this dataset should be clipped to the {@link WebMapServiceCatalogItem#rectangle}.
      * If true, no part of the dataset will be displayed outside the rectangle.  This property is false by default because it requires
@@ -303,7 +305,8 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
         parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme()
+        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
+        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
