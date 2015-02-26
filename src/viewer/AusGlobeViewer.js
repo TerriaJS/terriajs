@@ -5,7 +5,7 @@
 
 "use strict";
 
-/*global require,L,URI,$,html2canvas,console,ga*/
+/*global require,L,URI,$,console,ga*/
 
 var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
 var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
@@ -213,54 +213,6 @@ function changeBaseMap(viewer, newBaseMap) {
         viewer.application.currentViewer.notifyRepaintRequired();
     }
 }
-
-// -------------------------------------------
-// PERF: skip frames where reasonable
-// -------------------------------------------
-var FrameChecker = function () {
-    this._lastDate = new JulianDate(0, 0.0);
-    this._lastCam = new Matrix4();
-    this._maxFPS = 40.0;
-    this._skipCnt = 0;
-    this._skipWaitNorm = 3.0; //start skip after launch
-    this._skipWaitLim = 10.0; //start skip at launch
-};
-
-// call to force draw - usually after long downloads/processes
-FrameChecker.prototype.forceFrameUpdate = function() {
-    this._skipCnt = 0;
-};
-
-// see if we can skip the draw on this frame
-FrameChecker.prototype.skipFrame = function(scene, date) {
-    //check if anything actually changed
-    if (this._lastDate) {
-        var bDateSame = this._lastDate.equals(date);
-        var bCamSame = this._lastCam.equalsEpsilon(scene.camera.viewMatrix, CesiumMath.EPSILON5);
-        if (bDateSame && bCamSame) {
-            this._skipCnt++;
-        }
-        else {
-            this._skipCnt = 0;
-        }
-    }
-
-    // If terrain/imagery is loading, force another render immediately so that the loading
-    // happens as quickly as possible.
-    var surface = scene.globe._surface;
-    if (surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0) {
-        this._skipCnt = 0;
-    }
-
-    if (this._skipCnt > (this._maxFPS * this._skipWaitLim)) {
-        this._skipWaitLim = this._skipWaitNorm; //go to normal skip wait
-        return true;
-    }
-
-    this._lastDate = date.clone(this._lastDate);
-    this._lastCam = scene.camera.viewMatrix.clone(this._lastCam);
-    return false;
-};
 
 // -------------------------------------------
 // DrawExtentHelper from the cesium sample code
@@ -677,16 +629,6 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         this.application.cesium = new Cesium(this.application, this.viewer);
         this.application.leaflet = undefined;
         this.application.currentViewer = this.application.cesium;
-
-        this.frameChecker = new FrameChecker();
-
-        // Make sure we re-render when data sources or imagery layers are added or removed.
-        this.scene.imageryLayers.layerAdded.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
-        this.scene.imageryLayers.layerRemoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
-        this.scene.imageryLayers.layerMoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
-
-        this.viewer.dataSources.dataSourceAdded.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
-        this.viewer.dataSources.dataSourceRemoved.addEventListener(this.frameChecker.forceFrameUpdate, this.frameChecker);
 
         this._enableSelectExtent(true);
 
