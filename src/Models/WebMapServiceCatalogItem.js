@@ -309,7 +309,7 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
     this._imageryLayer = new ImageryLayer(imageryProvider, {
         show : false,
         alpha : this.opacity,
-        rectangle : this.clipToRectangle && this.rectangle ? this.rectangle : undefined
+        rectangle : this.clipToRectangle ? this.rectangle : undefined
     });
 
     scene.imageryLayers.add(this._imageryLayer);
