@@ -162,6 +162,8 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
         var json = $.xml2json(xml);
 
         var supportsJsonGetFeatureInfo = false;
+        var supportsXmlGetFeatureInfo = false;
+        var xmlContentType = 'text/xml';
 
         if (defined(json.Capability.Request) &&
             defined(json.Capability.Request.GetFeatureInfo) &&
@@ -172,6 +174,17 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
                 supportsJsonGetFeatureInfo = true;
             } else if (defined(format.indexOf) && format.indexOf('application/json') >= 0) {
                 supportsJsonGetFeatureInfo = true;
+            }
+
+            if (format === 'text/xml' || format === 'application/vnd.ogc.gml') {
+                supportsXmlGetFeatureInfo = true;
+                xmlContentType = format;
+            } else if (defined(format.indexOf) && format.indexOf('text/xml') >= 0) {
+                supportsXmlGetFeatureInfo = true;
+                xmlContentType = 'text/xml';
+            } else if (defined(format.indexOf) && format.indexOf('application/vnd.ogc.gml') >= 0) {
+                supportsXmlGetFeatureInfo = true;
+                xmlContentType = 'application/vnd.ogc.gml';
             }
         }
 
@@ -207,7 +220,7 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
             dataCustodian = text;
         }
 
-        addLayersRecursively(that, json.Capability.Layer, that.items, undefined, supportsJsonGetFeatureInfo, dataCustodian);
+        addLayersRecursively(that, json.Capability.Layer, that.items, undefined, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian);
     }).otherwise(function(e) {
         throw new ModelError({
             sender: that,
@@ -241,7 +254,7 @@ function cleanAndProxyUrl(application, url) {
     return cleanedUrl;
 }
 
-function addLayersRecursively(wmsGroup, layers, items, parent, supportsJsonGetFeatureInfo, dataCustodian) {
+function addLayersRecursively(wmsGroup, layers, items, parent, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian) {
     if (!(layers instanceof Array)) {
         layers = [layers];
     }
@@ -261,17 +274,17 @@ function addLayersRecursively(wmsGroup, layers, items, parent, supportsJsonGetFe
             // WMS 1.1.1 spec section 7.1.4.5.2 says any layer with a Name property can be used
             // in the 'layers' parameter of a GetMap request.  This is true in 1.0.0 and 1.3.0 as well.
             if (defined(layer.Name) && layer.Name.length > 0) {
-                items.push(createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCustodian));
+                items.push(createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian));
             }
-            addLayersRecursively(wmsGroup, layer.Layer, items, layer, supportsJsonGetFeatureInfo, dataCustodian);
+            addLayersRecursively(wmsGroup, layer.Layer, items, layer, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian);
         }
         else {
-            items.push(createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCustodian));
+            items.push(createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian));
         }
     }
 }
 
-function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCustodian) {
+function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian) {
     var result = new WebMapServiceCatalogItem(wmsGroup.application);
 
     result.name = layer.Title;
@@ -302,7 +315,8 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, dataCu
     var queryable = defaultValue(getInheritableProperty(layer, 'queryable'), false);
 
     result.getFeatureInfoAsGeoJson = queryable && supportsJsonGetFeatureInfo;
-    result.getFeatureInfoAsXml = queryable;
+    result.getFeatureInfoAsXml = queryable && supportsXmlGetFeatureInfo;
+    result.getFeatureInfoXmlContentType = xmlContentType;
 
     var egbb = getInheritableProperty(layer, 'EX_GeographicBoundingBox'); // required in WMS 1.3.0
     if (defined(egbb)) {

@@ -2,28 +2,31 @@
 
 /*global require,L,$*/
 
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
-var corsProxy = require('../Core/corsProxy');
-
-var TableDataSource = require('../Map/TableDataSource');
-var VarType = require('../Map/VarType');
-
-var Metadata = require('./Metadata');
-var ModelError = require('./ModelError');
-var CatalogItem = require('./CatalogItem');
-var inherit = require('../Core/inherit');
-var readText = require('../Core/readText');
-
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
+var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
+var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
+
+var CatalogItem = require('./CatalogItem');
+var corsProxy = require('../Core/corsProxy');
+var inherit = require('../Core/inherit');
+var Metadata = require('./Metadata');
+var ModelError = require('./ModelError');
+var readText = require('../Core/readText');
+var TableDataSource = require('../Map/TableDataSource');
+var VarType = require('../Map/VarType');
 
 /**
  * A {@link CatalogItem} representing CSV data.
@@ -345,6 +348,51 @@ CsvCatalogItem.prototype._rebuild = function() {
         this._hideInLeaflet();
         this._showInLeaflet();
     }
+};
+
+CsvCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
+    if (!this._regionMapped) {
+        return undefined;
+    }
+
+    var projection = new WebMercatorProjection();
+    var sw = projection.project(Rectangle.southwest(mapExtent));
+    var ne = projection.project(Rectangle.northeast(mapExtent));
+
+    var tilingScheme = new WebMercatorTilingScheme({
+        rectangleSouthwestInMeters: sw,
+        rectangleNortheastInMeters: ne
+    });
+
+    // Compute the longitude and latitude of the pick location.
+    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
+    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
+
+    var ll = projection.unproject(new Cartesian2(x, y));
+
+    // Use a Cesium imagery provider to pick features.
+    var imageryProvider = new WebMapServiceImageryProvider({
+        url : proxyUrl(this.application, this.url),
+        layers : this.layers,
+        tilingScheme : tilingScheme,
+        tileWidth : mapWidth,
+        tileHeight : mapHeight
+    });
+
+    var pickFeaturesPromise = imageryProvider.pickFeatures(0, 0, 0, ll.longitude, ll.latitude);
+    if (!defined(pickFeaturesPromise)) {
+        return pickFeaturesPromise;
+    }
+
+    var that = this;
+    return pickFeaturesPromise.then(function(results) {
+        if (defined(results)) {
+            var id = results[0].data.properties[that.regionProp];
+            var properties = that.rowProperties(parseInt(id,10));
+            results[0].description = that._tableDataSource.describe(properties);
+        }
+        return results;
+    });
 };
 
 function proxyUrl(application, url) {
