@@ -28,11 +28,15 @@ function gmlToGeoJson(xml) {
 
         getGmlPropertiesRecursively(featureMember, properties);
 
-        result.push({
+        var feature = {
             type: 'Feature',
             geometry: getGmlGeometry(featureMember),
             properties: properties
-        });
+        };
+
+        if (defined(feature.geometry)) {
+            result.push(feature);
+        }
     }
 
     return {
@@ -103,6 +107,17 @@ function createGeoJsonGeometryFeatureFromGmlGeometry(geometry) {
                 coordinates: gml2coord(posNodes[0].textContent)[0]
             };
         }
+    } else if (type === 'MultiCurve') {
+        var curveMembers = geometry.getElementsByTagNameNS(gmlNamespace, 'posList');
+        var curves = [];
+        for (var i = 0; i < curveMembers.length; ++i) {
+            curves.push(gml2coord(curveMembers[i].textContent));
+        }
+
+        return {
+            type: 'MultiLineString',
+            coordinates: curves
+        };
     }
 }
 
