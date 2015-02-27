@@ -2,6 +2,7 @@
 
 /*global require*/
 var defined = require('../../third_party/cesium/Source/Core/defined');
+var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 
 var gmlNamespace = 'http://www.opengis.net/gml';
 
@@ -97,33 +98,95 @@ function getGmlGeometry(gmlNode) {
     return result;
 }
 
-function createGeoJsonGeometryFeatureFromGmlGeometry(geometry) {
-    var type = geometry.localName;
-    if (type === 'Point') {
-        var posNodes = geometry.getElementsByTagNameNS(gmlNamespace, 'pos');
-        if (posNodes.length >= 1) {
-            return {
-                type: 'Point',
-                coordinates: gml2coord(posNodes[0].textContent)[0]
-            };
-        }
-    } else if (type === 'MultiCurve') {
-        var curveMembers = geometry.getElementsByTagNameNS(gmlNamespace, 'posList');
-        var curves = [];
-        for (var i = 0; i < curveMembers.length; ++i) {
-            curves.push(gml2coord(curveMembers[i].textContent));
+function createPointFromGmlGeometry(geometry) {
+    var posNodes = geometry.getElementsByTagNameNS(gmlNamespace, 'pos');
+    if (posNodes < 1) {
+        throw new RuntimeError('GML point element is missing a pos element.');
+    }
+
+    return {
+        type: 'Point',
+        coordinates: gml2coord(posNodes[0].textContent)[0]
+    };
+}
+
+function createMultiLineStringFromGmlGeometry(geometry) {
+    var curveMembers = geometry.getElementsByTagNameNS(gmlNamespace, 'posList');
+    var curves = [];
+    for (var i = 0; i < curveMembers.length; ++i) {
+        curves.push(gml2coord(curveMembers[i].textContent));
+    }
+
+    return {
+        type: 'MultiLineString',
+        coordinates: curves
+    };
+}
+
+function createMultiPolygonFromGmlGeomtry(geometry) {
+    var coordinates = [];
+
+    var polygons = geometry.getElementsByTagNameNS(gmlNamespace, 'Polygon');
+    for (var i = 0; i < polygons.length; ++i) {
+        var polygon = polygons[i];
+        var exteriorNodes = polygon.getElementsByTagNameNS(gmlNamespace, 'exterior');
+        if (exteriorNodes.length < 1) {
+            throw new RuntimeError('GML polygon is missing its exterior ring.');
         }
 
-        return {
-            type: 'MultiLineString',
-            coordinates: curves
-        };
+        var polygonCoordinates = [];
+
+        var exterior = exteriorNodes[0];
+        var posListNodes = exterior.getElementsByTagNameNS(gmlNamespace, 'posList');
+        if (posListNodes.length < 1) {
+            throw new RuntimeError('GML polygon\'s exterior ring is missing a posList.');
+        }
+
+        polygonCoordinates.push(gml2coord(posListNodes[0].textContent));
+
+        var interiors = polygon.getElementsByTagNameNS(gmlNamespace, 'interior');
+        for (var j = 0; j < interiors.length; ++j) {
+            var interior = interiors[j];
+            var interiorPosListNodes = interior.getElementsByTagNameNS(gmlNamespace, 'posList');
+            if (interiorPosListNodes.length < 1) {
+                continue;
+            }
+
+            polygonCoordinates.push(gml2coord(interiorPosListNodes[0].textContent));
+        }
+
+        coordinates.push(polygonCoordinates);
     }
+
+    return {
+        type: 'MultiPolygon',
+        coordinates: coordinates
+    };
+}
+
+var featureCreators = {
+    Point: createPointFromGmlGeometry,
+    MultiCurve: createMultiLineStringFromGmlGeometry,
+    MultiSurface: createMultiPolygonFromGmlGeomtry
+};
+
+function createGeoJsonGeometryFeatureFromGmlGeometry(geometry) {
+    var type = geometry.localName;
+    var creator = featureCreators[type];
+    if (!defined(creator)) {
+        throw new RuntimeError('GML contains unsupported feature type: ' + type);
+    }
+
+    return creator(geometry);
+}
+
+function isNotEmpty(s) {
+    return s.length !== 0;
 }
 
 //Utility function to change esri gml positions to geojson positions
 function gml2coord(posList) {
-    var pnts = posList.split(/[ ,]+/);
+    var pnts = posList.split(/[ ,]+/).filter(isNotEmpty);
     var coords = [];
     for (var i = 0; i < pnts.length; i+=2) {
         coords.push([parseFloat(pnts[i+1]), parseFloat(pnts[i])]);
