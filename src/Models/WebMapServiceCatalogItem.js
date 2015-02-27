@@ -309,7 +309,7 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
     this._imageryLayer = new ImageryLayer(imageryProvider, {
         show : false,
         alpha : this.opacity,
-        rectangle : this.clipToRectangle ? this.rectangle : undefined
+        rectangle : this.clipToRectangle && this.rectangle ? this.rectangle : undefined
     });
 
     scene.imageryLayers.add(this._imageryLayer);
@@ -333,7 +333,7 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
     var options = {
         layers : this.layers,
         opacity : this.opacity,
-        bounds : rectangleToLatLngBounds(this.rectangle)
+        bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
     };
 
     options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
