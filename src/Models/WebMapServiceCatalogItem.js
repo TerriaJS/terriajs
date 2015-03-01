@@ -333,7 +333,7 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
     var options = {
         layers : this.layers,
         opacity : this.opacity,
-        bounds : rectangleToLatLngBounds(this.rectangle)
+        bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
     };
 
     options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
