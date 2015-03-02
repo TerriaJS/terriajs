@@ -11,6 +11,8 @@ Change Log
 * Dataset descriptions may now include embedded images using Markdown syntax.
 * Ensure the 3D globe repaints when finished loading datasets from some sources, such GeoJSON, CZML, and WFS.
 * Add support for displaying feature information from WFS and WMS servers that support GML but not GeoJSON.
+* Fix a bug preventing vector polygons from GeoJSON, CZML, etc. from appearing in the 2D view.
+* Fix a bug that prevented time-varying polylines from updating in the 2D view after they were initially displayed.
 
 ### 2015-02-17
 
