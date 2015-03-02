@@ -278,7 +278,7 @@ function loadGeoJson(geoJsonItem) {
 
     var dataSource = geoJsonItem._geoJsonDataSource;
     return dataSource.load(geoJsonItem._readyData).then(function() {
-        var entities = dataSource.entities.entities;
+        var entities = dataSource.entities.values;
 
         for (var i = 0; i < entities.length; ++i) {
             var entity = entities[i];
