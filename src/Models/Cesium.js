@@ -342,7 +342,7 @@ function postRender(cesium, date) {
 
     var scene = cesium.scene;
 
-    if (!Matrix4.equals(cesium._lastCameraViewMatrix, scene.camera.viewMatrix)) {
+    if (!Matrix4.equalsEpsilon(cesium._lastCameraViewMatrix, scene.camera.viewMatrix, 1e-5)) {
         cesium._lastCameraMoveTime = now;
     }
 
