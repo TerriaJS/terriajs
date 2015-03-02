@@ -7,7 +7,7 @@ var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
 var gmlNamespace = 'http://www.opengis.net/gml';
 
 /**
- * Converts a GML v3.1.1 document to GeoJSON.
+ * Converts a GML v3.1.1 simple features document to GeoJSON.
  * @param  {Document|String} xml The GML document.
  * @return {Object} The GeoJSON object.
  */
