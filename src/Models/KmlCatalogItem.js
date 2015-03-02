@@ -144,7 +144,7 @@ If you believe it is a bug in National Map, please report it by emailing \
             }
         });
     } else {
-        return dataSource.loadUrl(proxyUrl(that, that.url)).then(function() {
+        return dataSource.load(proxyUrl(that, that.url)).then(function() {
             doneLoading(that);
         }).otherwise(function() {
             errorLoading(that);
