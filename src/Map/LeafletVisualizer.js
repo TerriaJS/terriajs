@@ -504,7 +504,7 @@ LeafletGeomVisualizer.prototype._updatePolyline = function(entity, time) {
         entity._geomPolyline = polyline;
     } else {
         polyline = geomLayer;
-        var curLatLngs = polyline.getLatLngs;
+        var curLatLngs = polyline.getLatLngs();
         for (var i = 0; i < curLatLngs.length; i++) {
             if (!curLatLngs[i].equals(latlngs[i])) {
                 polyline.setLatLngs(latlngs);
