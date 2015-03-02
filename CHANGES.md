@@ -3,16 +3,14 @@ Change Log
 
 ### 2015-03-03
 
-#### New features, major improvements, and Catalogue changes:
-
-* Dataset descriptions may now include embedded images using Markdown syntax.
-* Ensure the 3D globe repaints when finished loading datasets from some sources, such GeoJSON, CZML, and WFS.
-* Added a prototype of loading KML files from data.gov.au, accessible at http://nationalmap.nicta.com.au/#dgakml.
-* Add support for displaying feature information from WFS and WMS servers that support GML but not GeoJSON.
+* Add a prototype of loading KML files from data.gov.au, accessible at http://nationalmap.nicta.com.au/#dgakml.
 * Improve the accuracy of picking features from WMS layers in the 3D view.
 * Support picking of vector features (from GeoJSON, KML, CZML, etc.) in the 2D view even when a raster dataset (WMS, etc.) is also visible.
 * Fix a bug that prevented most of the base maps from working in the 2D view.
 * Fix a bug that sometimes caused high CPU usage in the 3D view.
+* Dataset descriptions may now include embedded images using Markdown syntax.
+* Ensure the 3D globe repaints when finished loading datasets from some sources, such GeoJSON, CZML, and WFS.
+* Add support for displaying feature information from WFS and WMS servers that support GML but not GeoJSON.
 
 ### 2015-02-17
 
