@@ -64,7 +64,7 @@ if (cluster.isMaster) {
     // Count the machine's CPUs
     var cpuCount = require('os').cpus().length;
     
-    cpuCount = 1;  //testing
+//    cpuCount = 1;  //testing
 
     console.log('Cores Used:', cpuCount);
 
