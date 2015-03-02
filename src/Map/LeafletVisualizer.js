@@ -6,13 +6,15 @@ var AssociativeArray = require('../../third_party/cesium/Source/Core/Associative
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var Color = require('../../third_party/cesium/Source/Core/Color');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var Property = require('../../third_party/cesium/Source/DataSources/Property');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var isArray = require('../../third_party/cesium/Source/Core/isArray');
+var PolygonHierarchy = require('../../third_party/cesium/Source/Core/PolygonHierarchy');
+var Property = require('../../third_party/cesium/Source/DataSources/Property');
 var writeTextToCanvas = require('../../third_party/cesium/Source/Core/writeTextToCanvas');
  
 
@@ -502,7 +504,7 @@ LeafletGeomVisualizer.prototype._updatePolyline = function(entity, time) {
         entity._geomPolyline = polyline;
     } else {
         polyline = geomLayer;
-        var curLatLngs = polyline.getLatLngs;
+        var curLatLngs = polyline.getLatLngs();
         for (var i = 0; i < curLatLngs.length; i++) {
             if (!curLatLngs[i].equals(latlngs[i])) {
                 polyline.setLatLngs(latlngs);
@@ -526,6 +528,9 @@ LeafletGeomVisualizer.prototype._updatePolygon = function(entity, time) {
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polygonGraphics._show, time, true);
     if (show) {
         var hierarchy = Property.getValueOrUndefined(polygonGraphics._hierarchy, time);
+        if (isArray(hierarchy)) {
+            hierarchy = new PolygonHierarchy(hierarchy);
+        }
         positions = hierarchy ? hierarchy.positions : undefined;
         description = Property.getValueOrUndefined(entity._description, time);
         show = defined(positions);
