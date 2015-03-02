@@ -634,20 +634,15 @@ function createRegionLookupFunc(csvItem) {
     var codes = dataset.getDataValues(csvItem.regionVar);
     var vals = dataset.getDataValues(dataset.getCurrentVariable());
     var ids = regionDescriptor.idMap;
-    var lookup = new Array(ids.length);
-    // get value for each id
+    var colors = new Array(ids.length);
+    // set color for each code
     for (var i = 0; i < codes.length; i++) {
         var id = ids.indexOf(codes[i]);
-        lookup[id] = vals[i];
-    }
-    // set color for each code
-    var colors = [];
-    for (var idx = dataset.getMinVal(); idx <= dataset.getMaxVal(); idx++) {
-        colors[idx] = dataSource._mapValue2Color(idx);
+        colors[id] = dataSource._mapValue2Color(vals[i]);
     }
     //   color lookup function used by the region mapper
     csvItem.colorFunc = function(id) {
-        return colors[lookup[id]];
+        return colors[id];
     };
     // used to get current variable data
     csvItem.valFunc = function(code) {
@@ -745,10 +740,11 @@ function addRegionMap(csvItem) {
         style.table.time = dataset.getVarID(VarType.TIME);
         style.table.data = dataVar;
         style.table.colorMap = [
-            {offset: 0.0, color: 'rgba(200,0,0,1.00)'},
-            {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
-            {offset: 0.5, color: 'rgba(200,200,200,1.0)'},
-            {offset: 1.0, color: 'rgba(0,0,200,1.0)'}
+            {offset: 0.0, color: 'rgba(239,210,193,1.00)'},
+            {offset: 0.25, color: 'rgba(221,139,116,1.0)'},
+            {offset: 0.5, color: 'rgba(255,127,46,1.0)'},
+            {offset: 0.75, color: 'rgba(255,65,43,1.0)'},
+            {offset: 1.0, color: 'rgba(111,0,54,1.0)'}
         ];
         csvItem.style = style;
     }
