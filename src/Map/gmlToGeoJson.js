@@ -48,16 +48,14 @@ function gmlToGeoJson(xml) {
 }
 
 var gmlSimpleFeatureNames = [
-    'LineString',
     'Curve',
-    'LineStringSegment',
-    'Polygon',
-    'Surface',
-    'PolygonPatch',
+    'LineString',
     'Point',
+    'Polygon',
     'MultiCurve',
     'MultPoint',
-    'MultiSurface'
+    'MultiSurface',
+    'Surface'
 ];
 
 function getGmlPropertiesRecursively(gmlNode, properties) {
@@ -96,6 +94,23 @@ function getGmlGeometry(gmlNode) {
     }
 
     return result;
+}
+
+function createLineStringFromGmlGeometry(geometry) {
+    var coordinates = [];
+
+    var posNodes = geometry.getElementsByTagNameNS(gmlNamespace, 'posList');
+    for (var i = 0; i < posNodes.length; ++i) {
+        var positions = gml2coord(posNodes[i].textContent);
+        for (var j = 0; j < positions.length; ++j) {
+            coordinates.push(positions[j]);
+        }
+    }
+
+    return {
+        type: 'LineString',
+        coordinates: coordinates
+    };
 }
 
 function createPointFromGmlGeometry(geometry) {
@@ -164,10 +179,64 @@ function createMultiPolygonFromGmlGeomtry(geometry) {
     };
 }
 
+function createPolygonFromGmlGeometry(geometry) {
+    var polygonCoordinates = [];
+
+    var exteriorNodes = geometry.getElementsByTagNameNS(gmlNamespace, 'exterior');
+    if (exteriorNodes.length < 1) {
+        throw new RuntimeError('GML polygon is missing its exterior ring.');
+    }
+
+    var exterior = exteriorNodes[0];
+    var posListNodes = exterior.getElementsByTagNameNS(gmlNamespace, 'posList');
+    if (posListNodes.length < 1) {
+        throw new RuntimeError('GML polygon\'s exterior ring is missing a posList.');
+    }
+
+    polygonCoordinates.push(gml2coord(posListNodes[0].textContent));
+
+    var interiors = geometry.getElementsByTagNameNS(gmlNamespace, 'interior');
+    for (var j = 0; j < interiors.length; ++j) {
+        var interior = interiors[j];
+        var interiorPosListNodes = interior.getElementsByTagNameNS(gmlNamespace, 'posList');
+        if (interiorPosListNodes.length < 1) {
+            continue;
+        }
+
+        polygonCoordinates.push(gml2coord(interiorPosListNodes[0].textContent));
+    }
+
+    return {
+        type: 'Polygon',
+        coordinates: polygonCoordinates
+    };
+}
+
+function createMultiPointFromGmlGeometry(geometry) {
+    var posNodes = geometry.getElementsByTagNameNS(gmlNamespace, 'pos');
+
+    var coordinates = [];
+
+    for (var i = 0; i < posNodes.length; ++i) {
+        coordinates.push(gml2coord(posNodes[i].textContent)[0]);
+    }
+
+    return {
+        type: 'MultiPoint',
+        coordinates: coordinates
+    };
+}
+
 var featureCreators = {
+    Curve: createLineStringFromGmlGeometry,
+    LineString: createLineStringFromGmlGeometry,
     Point: createPointFromGmlGeometry,
+    Polygon: createPolygonFromGmlGeometry,
     MultiCurve: createMultiLineStringFromGmlGeometry,
-    MultiSurface: createMultiPolygonFromGmlGeomtry
+    MultPoint: createMultiPointFromGmlGeometry,
+    MultiSurface: createMultiPolygonFromGmlGeomtry,
+    Surface: createPolygonFromGmlGeometry
+
 };
 
 function createGeoJsonGeometryFeatureFromGmlGeometry(geometry) {
