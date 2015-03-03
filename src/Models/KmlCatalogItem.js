@@ -117,7 +117,7 @@ KmlCatalogItem.prototype._load = function() {
                 });
             } else if (data instanceof Blob) {
                 if (that.dataSourceUrl && that.dataSourceUrl.match(kmzRegex)) {
-                    return dataSource.loadKmz(data, proxyUrl(that, that.dataSourceUrl)).then(function() {
+                    return dataSource.load(data, proxyUrl(that, that.dataSourceUrl)).then(function() {
                         doneLoading(that);
                     }).otherwise(function() {
                         errorLoading(that);
