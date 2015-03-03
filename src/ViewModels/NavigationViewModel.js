@@ -17,7 +17,6 @@ var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 
 var loadView = require('../Core/loadView');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 var svgZoomIn = require('../SvgPaths/svgZoomIn');
 var svgZoomOut = require('../SvgPaths/svgZoomOut');
