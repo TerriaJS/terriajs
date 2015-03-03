@@ -127,13 +127,6 @@
                     "type": "group",
                     "items": [
                         {
-                            "name": "Base Map",
-                            "type": "esri-mapServer",
-                            "url": "http://tiles.arcgis.com/tiles/yeXpdyjk3azbqItW/arcgis/rest/services/Launceston_Basemap/MapServer",
-                            "legendUrl": "http://tiles.arcgis.com/tiles/yeXpdyjk3azbqItW/arcgis/rest/services/Launceston_Basemap/MapServer/legend",
-                            "rectangle": [140, -44, 150, -40]
-                        },
-                        {
                             "name": "Topography",
                             "type": "esri-mapServer",
                             "url": "http://services.thelist.tas.gov.au/arcgis/rest/services/Basemaps/Topographic/ImageServer",

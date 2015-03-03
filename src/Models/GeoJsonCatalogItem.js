@@ -300,7 +300,7 @@ function loadGeoJson(geoJsonItem) {
                 entity.point = new PointGraphics({
                     color: pointColor,
                     pixelSize: pointSize
-                })
+                });
                 entity.billboard = undefined;
             }
 
