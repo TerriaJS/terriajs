@@ -1,0 +1,73 @@
+{
+    "corsDomains" : [
+        "corsproxy.com",
+        "programs.communications.gov.au"
+    ],
+    "camera": {
+        "west": 105,
+        "south": -45,
+        "east": 155,
+        "north": -5
+    },
+    "services": [],
+    "catalog": [
+        {
+            "name": "GA",
+            "type": "group",
+            "items": [
+                {
+                    "name": "Culture and Infrastructure",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Culture_and_Infrastructure/MapServer/WMSServer",
+                    "type": "wms-getCapabilities"
+                },
+                {
+                    "name": "Elevation Relief and Physiography",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Elevation_Relief_and_Physiography/MapServer/WMSServer",
+                    "type": "wms-getCapabilities",
+                    "blacklist": {
+                        "Contours 1:1 Million Scale": true
+                    }
+                },
+                {
+                    "name": "Hydrography and Marine",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer/WMSServer",
+                    "type": "wms-getCapabilities"
+                },
+                {
+                    "name": "Labelling and Boundaries",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Labelling_and_Boundaries/MapServer/WMSServer",
+                    "type": "wms-getCapabilities"
+                },
+                {
+                    "name": "Reserves",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Reserves/MapServer/WMSServer",
+                    "type": "wms-getCapabilities"
+                },
+                {
+                    "name": "Transport",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Transport/MapServer/WMSServer",
+                    "type": "wms-getCapabilities"
+                },
+                {
+                    "name": "Vegetation",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Vegetation/MapServer/WMSServer",
+                    "type": "wms-getCapabilities"
+                }
+            ]
+        }
+    ]
+}
