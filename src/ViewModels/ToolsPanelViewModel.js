@@ -98,7 +98,9 @@ function getAllRequests(types, mode, requests, group) {
             if (item.isOpen || mode === 'all') {
                 getAllRequests(types, mode, requests, item);
             }
-        } else if ((types.indexOf(item.type) !== -1) && (mode !== 'enabled' || item.isEnabled)) {
+        } else if ((types.indexOf(item.type) !== -1) && (mode === 'all' || mode === 'opened' ||
+            (mode === 'selected' && item.isEnabled) ||
+            (mode === 'unselected' && !item.isEnabled))) {
             requests.push({
                 item : item,
                 group : group.name
@@ -188,6 +190,7 @@ function requestTiles(app, requests, maxLevel) {
     var nextRequestIndex = 0;
     var inFlight = 0;
     var urlsRequested = 0;
+    var failedLayers = [];
 
     function doneUrl() {
         --inFlight;
@@ -221,6 +224,7 @@ function requestTiles(app, requests, maxLevel) {
             if (inFlight === 0) {
                 console.log('Finished ' + nextRequestIndex + ' URLs.  DONE!');
                 console.log('Actual number of URLs requested: ' + urlsRequested);
+                console.log('Failed layers: ' + failedLayers);
             }
             return;
         }
@@ -231,6 +235,7 @@ function requestTiles(app, requests, maxLevel) {
         loadWithXhr({
             url : next.url
         }).then(doneUrl).otherwise(function() {
+            failedLayers.push(next.name);
             console.log('Returned an error while working on layer: ' + next.name);
             doneUrl();
         });
