@@ -14,6 +14,7 @@
         {
             "name": "GA",
             "type": "group",
+            "isOpen": true,
             "items": [
                 {
                     "name": "Culture and Infrastructure",
