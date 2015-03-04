@@ -27,10 +27,7 @@
                     "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
                     "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
                     "url": "http://www.ga.gov.au/gis/services/topography/Dynamic_National_Map_Elevation_Relief_and_Physiography/MapServer/WMSServer",
-                    "type": "wms-getCapabilities",
-                    "blacklist": {
-                        "Contours 1:1 Million Scale": true
-                    }
+                    "type": "wms-getCapabilities"
                 },
                 {
                     "name": "Hydrography and Marine",
