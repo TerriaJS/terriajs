@@ -17,7 +17,6 @@ var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 
 var loadView = require('../Core/loadView');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 var svgZoomIn = require('../SvgPaths/svgZoomIn');
 var svgZoomOut = require('../SvgPaths/svgZoomOut');
@@ -144,33 +143,7 @@ NavigationViewModel.prototype.resetView = function() {
     ga('send', 'event', 'navigation', 'click', 'reset');
 
     var bbox = this.application.initialBoundingBox;
-
-    if (defined(this.application.leaflet)) {
-        this.application.leaflet.map.fitBounds(rectangleToLatLngBounds(bbox));
-    }
-
-    if (defined(this.application.cesium)) {
-        var scene = this.application.cesium.scene;
-
-        var destination = scene.camera.getRectangleCameraCoordinates(bbox);
-
-        var direction = Cartesian3.normalize(destination, new Cartesian3());
-        Cartesian3.negate(direction, direction);
-        var right = Cartesian3.cross(direction, Cartesian3.UNIT_Z, new Cartesian3());
-        var up = Cartesian3.cross(right, direction, new Cartesian3());
-
-        scene.camera.flyTo({
-            destination : destination,
-            orientation : {
-                direction: direction,
-                up : up,
-            },
-            duration : 1.5,
-            endTransform : Matrix4.IDENTITY
-        });
-    }
-
-    this.application.currentViewer.notifyRepaintRequired();
+    this.application.currentViewer.zoomTo(bbox, 1.5);
 };
 
 var tilts = [0, 40, 80];
