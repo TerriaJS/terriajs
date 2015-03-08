@@ -505,11 +505,14 @@ LeafletGeomVisualizer.prototype._updatePolyline = function(entity, time) {
     } else {
         polyline = geomLayer;
         var curLatLngs = polyline.getLatLngs();
-        for (var i = 0; i < curLatLngs.length; i++) {
+        var bPosChange = (latlngs.length !== curLatLngs.length);
+        for (var i = 0; i < curLatLngs.length && !bPosChange; i++) {
             if (!curLatLngs[i].equals(latlngs[i])) {
-                polyline.setLatLngs(latlngs);
-                break;
+                bPosChange = true;
             }
+        }
+        if (bPosChange) {
+            polyline.setLatLngs(latlngs);
         }
         for (var prop in polylineOptions) {
             if (polylineOptions[prop] !== polyline.options[prop]) {
@@ -567,11 +570,14 @@ LeafletGeomVisualizer.prototype._updatePolygon = function(entity, time) {
     } else {
         polygon = geomLayer;
         var curLatLngs = polygon.getLatLngs;
-        for (var i = 0; i < curLatLngs.length; i++) {
+        var bPosChange = (latlngs.length !== curLatLngs.length);
+        for (var i = 0; i < curLatLngs.length && !bPosChange; i++) {
             if (!curLatLngs[i].equals(latlngs[i])) {
-                polygon.setLatLngs(latlngs);
-                break;
+                bPosChange = true;
             }
+        }
+        if (bPosChange) {
+            polygon.setLatLngs(latlngs);
         }
         for (var prop in polygonOptions) {
             if (polygonOptions[prop] !== polygon.options[prop]) {

@@ -27,6 +27,7 @@ var registerCatalogMembers = function() {
     createCatalogMemberFromType.register('gpx', GpxCatalogItem);
     createCatalogMemberFromType.register('group', CatalogGroup);
     createCatalogMemberFromType.register('kml', KmlCatalogItem);
+    createCatalogMemberFromType.register('kmz', KmlCatalogItem);
     createCatalogMemberFromType.register('ogr', OgrCatalogItem);
     createCatalogMemberFromType.register('wfs', WebFeatureServiceCatalogItem);
     createCatalogMemberFromType.register('wfs-getCapabilities', WebFeatureServiceCatalogGroup);
