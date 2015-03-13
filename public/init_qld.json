@@ -1,0 +1,90 @@
+{
+    "catalog": [
+        {
+            "name": "Queensland Government",
+            "type": "group",
+            "items": [
+                {
+                    "name": "Resources",
+                    "type": "esri-mapServer-group",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/rest/services/MINES/Resources/MapServer"
+                },
+                {
+                    "name": "Administrative Areas",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/AdministrativeAreas/MapServer/WMSServer"
+                },
+                {
+                    "name": "Boreholes",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/Boreholes/MapServer/WMSServer"
+                },
+                {
+                    "name": "Detailed Geology",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/GeologyDetailed/MapServer/WMSServer"
+                },
+                {
+                    "name": "Regional Geology",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/GeologyRegional/MapServer/WMSServer"
+                },
+                {
+                    "name": "State Geology",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/GeologyState/MapServer/WMSServer"
+                },
+                {
+                    "name": "Geophysics",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/Geophysics/MapServer/WMSServer"
+                },
+                {
+                    "name": "Current Mines Permits",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/MinesPermitsCurrent/MapServer/WMSServer"
+                },
+                {
+                    "name": "Historic Mines Permits",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/MinesPermitsHistoric/MapServer/WMSServer"
+                },
+                {
+                    "name": "Structural Framework",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/StructuralFramework/MapServer/WMSServer"
+                },
+                {
+                    "name": "Floodlines",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/MINES/StructuralFramework/MapServer/WMSServer"
+                },
+                {
+                    "name": "Administrative Boundaries",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/QLD/AdminBoundaries/MapServer/WMSServer"
+                },
+                {
+                    "name": "Agricultural Land Audit",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/QLD/AgriculturalLandAudit/MapServer/WMSServer"
+                },
+                {
+                    "name": "Current Land Use",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/QLD/CurrentLandUse/MapServer/WMSServer"
+                },
+                {
+                    "name": "QTopo",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/QLD/QTopo_WebM/MapServer/WMSServer"
+                },
+                {
+                    "name": "Weather and Extreme Event Risk",
+                    "type": "wms-getCapabilities",
+                    "url": "https://geospatial.information.qld.gov.au/ArcGIS/services/QLD/WeatherAndExtremeEventRisk/MapServer/WMSServer"
+                }
+            ]
+        }
+    ]
+}
