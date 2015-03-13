@@ -2,13 +2,16 @@
 
 /*global require,URI*/
 
+var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
 var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
@@ -244,6 +247,19 @@ function createDataSource(mapServiceGroup, layer, dataCustodian) {
 
     if (layerHasDescription) {
         result.description += layer.description;
+    }
+
+    var extent = layer.extent;
+    if (defined(extent) && extent.spatialReference && extent.spatialReference.wkid) {
+        var wkid = extent.spatialReference.wkid;
+        if (wkid === 4326 || wkid === 4283) {
+            result.rectangle = Rectangle.fromDegrees(extent.xmin, extent.ymin, extent.xmax, extent.ymax);
+        } else if (wkid === 3857 || wkid === 900913 || wkid === 102100) {
+            var projection = new WebMercatorProjection();
+            var sw = projection.unproject(new Cartesian3(extent.xmin, extent.ymin, 0.0));
+            var ne = projection.unproject(new Cartesian3(extent.xmax, extent.ymax, 0.0));
+            result.rectangle = new Rectangle(sw.longitude, sw.latitude, ne.longitude, ne.latitude);
+        }
     }
 
     return result;
