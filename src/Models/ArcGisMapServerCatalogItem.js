@@ -32,7 +32,14 @@ var ArcGisMapServerCatalogItem = function(application) {
      */
     this.url = '';
 
-    knockout.track(this, ['url', '_legendUrl']);
+    /**
+     * Gets or sets the comma-separated list of layer IDs to show.  If this property is undefined,
+     * all layers are shown.
+     * @type {String}
+     */
+    this.layers = undefined;
+
+    knockout.track(this, ['url', 'layers', '_legendUrl']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.legendUrl;
@@ -85,7 +92,8 @@ ArcGisMapServerCatalogItem.prototype._enableInCesium = function() {
     var scene = this.application.cesium.scene;
 
     var imageryProvider = new ArcGisMapServerImageryProvider({
-        url : cleanAndProxyUrl(this.application, this.url)
+        url : cleanAndProxyUrl(this.application, this.url),
+        layers : this.layers
     });
 
     this._imageryLayer = new ImageryLayer(imageryProvider, {
@@ -118,12 +126,17 @@ ArcGisMapServerCatalogItem.prototype._enableInLeaflet = function() {
     }
 
     var options = {
-        opacity : this.opacity
+        opacity : this.opacity,
+        layers: this.layers ? this.layers.split(',') : undefined
         // Ideally we'd specify "bounds : rectangleToLatLngBounds(this.rectangle)" here.
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
-    this._imageryLayer = new L.esri.tiledMapLayer(cleanAndProxyUrl(this.application, this.url), options);
+    if (options.layers) {
+        this._imageryLayer = new L.esri.dynamicMapLayer(cleanAndProxyUrl(this.application, this.url), options);
+    } else {
+        this._imageryLayer = new L.esri.tiledMapLayer(cleanAndProxyUrl(this.application, this.url), options);
+    }    
 };
 
 ArcGisMapServerCatalogItem.prototype._disableInLeaflet = function() {

@@ -8,6 +8,7 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
@@ -127,12 +128,16 @@ ArcGisMapServerCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
 };
 
 ArcGisMapServerCatalogGroup.prototype._load = function() {
-    var url = cleanAndProxyUrl(this.application, this.url) + '/layers?f=json';
+    var serviceUrl = cleanAndProxyUrl(this.application, this.url) + '?f=json';
+    var layersUrl = cleanAndProxyUrl(this.application, this.url) + '/layers?f=json';
 
     var that = this;
-    return loadJson(url).then(function(json) {
+    return when.all([loadJson(serviceUrl), loadJson(layersUrl)]).then(function(result) {
+        var serviceJson = result[0];
+        var layersJson = result[1];
+
         // Is this really a MapServer REST response?
-        if (!json || !json.layers) {
+        if (!serviceJson || !serviceJson.layers || !layersJson || !layersJson.layers) {
             throw new ModelError({
                 title: 'Invalid ArcGIS Map Service',
                 message: '\
@@ -145,11 +150,11 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
         }
 
         var dataCustodian = that.dataCustodian;
-        if (!defined(dataCustodian) && defined(json.documentInfo) && defined(json.documentInfo.Author)) {
-            dataCustodian = json.documentInfo.Author;
+        if (!defined(dataCustodian) && defined(serviceJson.documentInfo) && defined(serviceJson.documentInfo.Author)) {
+            dataCustodian = serviceJson.documentInfo.Author;
         }
 
-        addLayersRecursively(that, -1, json.layers, that.items, dataCustodian);
+        addLayersRecursively(that, -1, layersJson.layers, that.items, dataCustodian);
     }).otherwise(function(e) {
         throw new ModelError({
             sender: that,
@@ -220,7 +225,9 @@ function createDataSource(mapServiceGroup, layer, dataCustodian) {
     result.description = defined(layer.description) && layer.description.length > 0 ? layer.description : mapServiceGroup.description;
     result.dataCustodian = dataCustodian;
     result.url = mapServiceGroup.url;
-    result.layers = layer.id;
+    result.dataUrl = mapServiceGroup.url;
+    result.dataUrlType = 'direct';
+    result.layers = layer.id.toString();
 
     result.description = '';
 
