@@ -1,0 +1,125 @@
+{
+    "camera": {
+        "west": 105,
+        "south": -45,
+        "east": 155,
+        "north": -5
+    },
+    "services": [],
+    "catalog": [
+        {
+            "name": "NEII",
+            "type": "group",
+            "isOpen": true,
+            "items": [
+                {
+                    "name": "eReefs",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                    "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                    "url": "http://ereeftds.bom.gov.au/ereefs/tds/wms/ereefs/mwq_gridAgg_P1D",
+                    "type": "wms-getCapabilities",
+                    "parameters": {
+                        "TIME": "2015-01-01T03:55:08.000Z"
+                     }
+                },
+                {
+                    "name": "Geofabric",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)",
+                    "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                    "url": "http://geofabric.bom.gov.au/simplefeatures/ows",
+                    "type": "wms-getCapabilities"
+                },
+                {
+                  "name": "Solar Irradiance",
+                  "type": "group",
+                  "items": [
+                    {
+                      "name": "GHI minimum January",
+                      "layers": "GHI minimum January",
+                      "description": "[Licence](http://www.ga.gov.au/copyright)",
+                      "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                      "url": "http://www.ga.gov.au/gisimg/services/energy/Solar_Energy_GHI_Minimum/MapServer/WMSServer",
+                      "type": "wms",
+                      "rectangle": [
+                        "100.0",
+                        "-44.0",
+                        "159.0",
+                        "-4.0"
+                      ]
+                    },
+                    {
+                      "name": "GHI minimum July",
+                      "layers": "GHI minimum July",
+                      "description": "[Licence](http://www.ga.gov.au/copyright)",
+                      "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                      "url": "http://www.ga.gov.au/gisimg/services/energy/Solar_Energy_GHI_Minimum/MapServer/WMSServer",
+                      "type": "wms",
+                      "rectangle": [
+                        "100.0",
+                        "-44.0",
+                        "159.0",
+                        "-4.0"
+                      ]
+                    },
+                    {
+                      "name": "GHI mean January",
+                      "layers": "GHI mean January",
+                      "description": "[Licence](http://www.ga.gov.au/copyright)",
+                      "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                      "url": "http://www.ga.gov.au/gisimg/services/energy/Solar_Energy_GHI_Mean/MapServer/WMSServer",
+                      "type": "wms",
+                      "rectangle": [
+                        "100.0",
+                        "-44.0",
+                        "159.0",
+                        "-4.0"
+                      ]
+                    },
+                    {
+                      "name": "GHI mean July",
+                      "layers": "GHI mean July",
+                      "description": "[Licence](http://www.ga.gov.au/copyright)",
+                      "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                      "url": "http://www.ga.gov.au/gisimg/services/energy/Solar_Energy_GHI_Mean/MapServer/WMSServer",
+                      "type": "wms",
+                      "rectangle": [
+                        "100.0",
+                        "-44.0",
+                        "159.0",
+                        "-4.0"
+                      ]
+                    },
+                    {
+                      "name": "DNI mean January",
+                      "layers": "DNI mean January",
+                      "description": "[Licence](http://www.ga.gov.au/copyright)",
+                      "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                      "url": "http://www.ga.gov.au/gisimg/services/energy/Solar_Energy_DNI_Mean/MapServer/WMSServer",
+                      "type": "wms",
+                      "rectangle": [
+                        "100.0",
+                        "-44.0",
+                        "159.0",
+                        "-4.0"
+                      ]
+                    },
+                    {
+                      "name": "DNI mean July",
+                      "layers": "DNI mean July",
+                      "description": "[Licence](http://www.ga.gov.au/copyright)",
+                      "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
+                      "url": "http://www.ga.gov.au/gisimg/services/energy/Solar_Energy_DNI_Mean/MapServer/WMSServer",
+                      "type": "wms",
+                      "rectangle": [
+                        "100.0",
+                        "-44.0",
+                        "159.0",
+                        "-4.0"
+                      ]
+                    }
+                  ]
+                }
+            ]
+        }
+    ]
+}
