@@ -142,8 +142,7 @@ NavigationViewModel.prototype.zoomOut = function() {
 NavigationViewModel.prototype.resetView = function() {
     ga('send', 'event', 'navigation', 'click', 'reset');
 
-    var bbox = this.application.initialBoundingBox;
-    this.application.currentViewer.zoomTo(bbox, 1.5);
+    this.application.currentViewer.zoomTo(this.application.homeView, 1.5);
 };
 
 var tilts = [0, 40, 80];

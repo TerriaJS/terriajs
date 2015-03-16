@@ -65,7 +65,7 @@ ToolsPanelViewModel.prototype.cacheTiles = function() {
 ToolsPanelViewModel.prototype.exportFile = function() {
     //Create the initialization file text
     var catalog = this.application.catalog.serializeToJson({serializeForSharing:false});
-    var camera = getDegreesRect(this.application.initialBoundingBox);
+    var camera = getDegreesRect(this.application.homeView.rectangle);
     var initJsonObject = { corsDomains: corsProxy.corsDomains, camera: camera, services: [], catalog: catalog};
     var initFile = JSON.stringify(initJsonObject, null, 4);
 
@@ -126,7 +126,7 @@ function requestTiles(app, requests, maxLevel) {
     var i;
     for (i = 0; i < requests.length; ++i) {
         var request = requests[i];
-        var extent = request.item.rectangle || app.initialBoundingBox;
+        var extent = request.item.rectangle || app.homeView.rectangle;
         name = request.item.name;
 
         var enabledHere = false;

@@ -13,6 +13,7 @@ var queryToObject = require('../../third_party/cesium/Source/Core/queryToObject'
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var CameraView = require('./CameraView');
 var Catalog = require('./Catalog');
 var corsProxy = require('../Core/corsProxy');
 var NowViewing = require('./NowViewing');
@@ -66,22 +67,28 @@ var Application = function() {
 
     /**
      * Gets or sets the clock that controls how time-varying data items are displayed.
-     * @type {Clock}
+     * @type {Clock}s
      */
     this.clock = new Clock();
 
-    /**
-     * Gets or sets the initial bounding box of the camera's view.
-     * @type {Rectangle}
-     */
-    this.initialBoundingBox = Rectangle.MAX_VALUE;
+    // See the intialView property below.
+    this._initialView = undefined;
 
     /**
-     * Gets or sets the initial parameters of the Camera's view.  This object has three properties,
-     * position, direction, and up.  All three are Cartesian3s expressed in the Earth-centered Fixed frame.
-     * @type {Object}
+     * Gets or sets the camera's home view.  The home view is the one that the application
+     * returns to when the user clicks the "Reset View" button in the Navigation widget.  It is also used
+     * as the {@link Application#initialView} if one is not specified.
+     * @type {[type]}
      */
-    this.initialCamera = undefined;
+    this.homeView = new CameraView(Rectangle.MAX_VALUE);
+
+    /**
+     * Gets or sets a value indicating whether the application should automatically zoom to the new view when
+     * the {@link Application#initialView} (or {@link Application#homeView} if no initial view is specified).
+     * @type {Boolean}
+     * @default true
+     */
+    this.zoomWhenInitialViewChanges = true;
 
     /**
      * Gets or sets the {@link corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
@@ -145,10 +152,34 @@ var Application = function() {
      */
     this.nowViewing = new NowViewing(this);
 
-    knockout.track(this, ['viewerMode', 'baseMap', 'initialBoundingBox', 'initialCamera']);
+    knockout.track(this, ['viewerMode', 'baseMap', '_initialView', 'homeView']);
 
     // IE versions prior to 10 don't support CORS, so always use the proxy.
     corsProxy.alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
+
+    /**
+     * Gets or sets the camera's initial view.  This is the view that the application has at startup.  If this property
+     * is not explicitly specified, the {@link Application#homeView} is used.
+     * @type {CameraView}
+     */
+    knockout.defineProperty(this, 'initialView', {
+        get: function() {
+            if (this._initialView) {
+                return this._initialView;
+            } else {
+                return this.homeView;
+            }
+        },
+        set: function(value) {
+            this._initialView = value;
+        }
+    });
+
+    knockout.getObservable(this, 'initialView').subscribe(function() {
+        if (this.zoomWhenInitialViewChanges && defined(this.currentViewer)) {
+            this.currentViewer.zoomTo(this.initialView, 2.0);
+        }
+    }, this);
 };
 
 /**
@@ -218,19 +249,21 @@ Application.prototype.addInitSource = function(initSource) {
         corsProxy.corsDomains.push.apply(corsProxy.corsDomains, initSource.corsDomains);
     }
 
-    // The last init source to specify a camera position wins.
-    if (defined(initSource.camera)) {
-        if (defined(initSource.camera.position)) {
-            this.initialCamera = {
-                position: initSource.camera.position,
-                direction: initSource.camera.direction,
-                up: initSource.camera.up
-            };
-        } else {
-            this.initialCamera = undefined;
-        }
+    // The last init source to specify an initial/home camera view wins.
+    if (defined(initSource.homeCamera)) {
+        this.homeView = new CameraView(
+            Rectangle.fromDegrees(initSource.homeCamera.west, initSource.homeCamera.south, initSource.homeCamera.east, initSource.homeCamera.north),
+            initSource.homeCamera.position,
+            initSource.homeCamera.direction,
+            initSource.homeCamera.up);
+    }
 
-        this.initialBoundingBox = Rectangle.fromDegrees(initSource.camera.west, initSource.camera.south, initSource.camera.east, initSource.camera.north);
+    if (defined(initSource.initialCamera)) {
+        this.initialView = new CameraView(
+            Rectangle.fromDegrees(initSource.initialCamera.west, initSource.initialCamera.south, initSource.initialCamera.east, initSource.initialCamera.north),
+            initSource.initialCamera.position,
+            initSource.initialCamera.direction,
+            initSource.initialCamera.up);
     }
 
     // Populate the list of services.
@@ -259,6 +292,7 @@ Application.prototype.addInitSource = function(initSource) {
 };
 
 var initSourceNameRegex = /\b(\w+)\b/i;
+var latestStartVersion = '0.0.04';
 
 function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources) {
     for (var property in hashProperties) {
@@ -271,6 +305,10 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
             }
             else if (property === 'start') {
                 var startData = JSON.parse(propertyValue);
+
+                if (defined(startData.version) && startData.version !== latestStartVersion) {
+                    adjustForBackwardCompatibility(startData);
+                }
 
                 // Include any initSources specified in the URL.
                 if (defined(startData.initSources)) {
@@ -328,6 +366,19 @@ function loadInitSource(source) {
         });
     } else {
         return source;
+    }
+}
+
+function adjustForBackwardCompatibility(startData) {
+    if (startData.version === '0.0.03') {
+        // In this version, there was just a single 'camera' property instead of a 'homeCamera' and 'initialCamera'.
+        // Treat the one property as the initialCamera.
+        for (var i = 0; i < startData.initSources.length; ++i) {
+            if (defined(startData.initSources[i].camera)) {
+                startData.initSources[i].initialCamera = startData.initSources[i].camera;
+                startData.initSources[i].camera = undefined;
+            }
+        }
     }
 }
 

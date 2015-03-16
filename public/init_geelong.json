@@ -5,7 +5,7 @@
         "corsproxy.com",
         "programs.communications.gov.au"
     ],
-    "camera": {
+    "homeCamera": {
         "west": 144.3,
         "south": -38.3,
         "east": 144.5,
