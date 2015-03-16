@@ -6,22 +6,22 @@
         </div>
         <div class="tools-content">
             <form class="tools-form" data-bind="submit: cacheTiles">
-                <h2>Tile Caching</h2>
+                <h2>Dataset Testing</h2>
                 <label class="tools-content-type">
-                    Select the dataset layers to cache:
+                    Select the datasets to test:
                     <select class="tools-content-type-select" data-bind="value: cacheFilter">
-                        <option value="opened">Opened</option>
-                        <option value="seleteced">Selected</option>
+                        <option value="opened">All Opened</option>
+                        <option value="enabled">All Enabled</option>
                         <option value="all">All</option>
                     </select>
                 </label>
 
-                Enter the number of tile levels to cache
+                Enter the number of tile levels to request
                 <div class="tools-url-input-outer-holder">
                     <div class="tools-url-input-inner-holder">
                         <input class="tools-url-input" type="text" data-bind="value: cacheLevels" />
                     </div>
-                    <input class="tools-url-add-button" type="submit" value="Cache Tiles" />
+                    <input class="tools-url-add-button" type="submit" value="Request Tiles" />
                 </div>
             </form>
 
