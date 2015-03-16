@@ -207,7 +207,7 @@ function requestTiles(app, requests, maxLevel) {
 
     var popup = PopupMessageViewModel.open('ui', {
         title: 'Dataset Testing',
-        message: '<div>Caching ' + urls.length + ' URLs</div>'
+        message: '<div>Requesting ' + urls.length + ' URLs</div>'
     });
 
     var maxRequests = 1;
