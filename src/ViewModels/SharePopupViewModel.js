@@ -22,7 +22,7 @@ var SharePopupViewModel = function(options) {
     var cameraExtent = this.application.currentViewer.getCurrentExtent();
 
     var request = {
-        version: '0.0.03',
+        version: '0.0.04',
         initSources: this.application.initSources.slice()
     };
 
@@ -58,7 +58,7 @@ var SharePopupViewModel = function(options) {
     }
 
     // Add an init source with the camera position.
-    var camera = {
+    var initialCamera = {
         west: CesiumMath.toDegrees(cameraExtent.west),
         south: CesiumMath.toDegrees(cameraExtent.south),
         east: CesiumMath.toDegrees(cameraExtent.east),
@@ -67,13 +67,24 @@ var SharePopupViewModel = function(options) {
 
     if (defined(this.application.cesium)) {
         var cesiumCamera = this.application.cesium.scene.camera;
-        camera.position = cesiumCamera.positionWC;
-        camera.direction = cesiumCamera.directionWC;
-        camera.up = cesiumCamera.upWC;
+        initialCamera.position = cesiumCamera.positionWC;
+        initialCamera.direction = cesiumCamera.directionWC;
+        initialCamera.up = cesiumCamera.upWC;
     }
 
+    var homeCamera = {
+        west: CesiumMath.toDegrees(this.application.homeView.rectangle.west),
+        south: CesiumMath.toDegrees(this.application.homeView.rectangle.south),
+        east: CesiumMath.toDegrees(this.application.homeView.rectangle.east),
+        north: CesiumMath.toDegrees(this.application.homeView.rectangle.north),
+        position: this.application.homeView.position,
+        direction: this.application.homeView.direction,
+        up: this.application.homeView.up
+    };
+
     initSources.push({
-        camera: camera
+        initialCamera: initialCamera,
+        homeCamera: homeCamera
     });
 
     var uri = new URI(window.location);

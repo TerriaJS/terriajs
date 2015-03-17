@@ -2,7 +2,9 @@
 
 /*global require,html2canvas*/
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -30,13 +32,24 @@ Leaflet.prototype.getCurrentExtent = function() {
 };
 
 /**
- * Zooms to a specified extent.
+ * Zooms to a specified camera view or extent.
  *
- * @param {Rectangle} extent The extent to which to zoom.
-  * @param {Number} [flightDurationSeconds=3.0] The length of the flight animation in seconds.  Leaflet ignores the actual value,
-  *                                             but will use an animated transition when this value is greater than 0.
+ * @param {CameraView|Rectangle} viewOrExtent The view or extent to which to zoom.
+ * @param {Number} [flightDurationSeconds=3.0] The length of the flight animation in seconds.  Leaflet ignores the actual value,
+ *                                             but will use an animated transition when this value is greater than 0.
 */
-Leaflet.prototype.zoomTo = function(extent, flightDurationSeconds) {
+Leaflet.prototype.zoomTo = function(viewOrExtent, flightDurationSeconds) {
+    if (!defined(viewOrExtent)) {
+        throw new DeveloperError('viewOrExtent is required.');
+    }
+
+    var extent;
+    if (viewOrExtent instanceof Rectangle) {
+        extent = viewOrExtent;
+    } else {
+        extent = viewOrExtent.rectangle;
+    }
+
     // Account for a bounding box crossing the date line.
     if (extent.east < extent.west) {
         extent = Rectangle.clone(extent);
