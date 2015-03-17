@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,L,URI,$*/
+/*global require,URI,$*/
 
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
@@ -19,6 +19,7 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
+var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
@@ -336,15 +337,32 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
+    // var options = {
+    //     layers : this.layers,
+    //     opacity : this.opacity,
+    //     bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
+    // };
+
+    // options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
+
+    // this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
+
     var options = {
-        layers : this.layers,
-        opacity : this.opacity,
+        opacity: this.opacity,
         bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
     };
 
-    options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
+    var imageryProvider = new WebMapServiceImageryProvider({
+        url : cleanAndProxyUrl(this.application, this.url),
+        layers : this.layers,
+        getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
+        getFeatureInfoAsXml : this.getFeatureInfoAsXml,
+        parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
+        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
+        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
+    });
 
-    this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
+    this._imageryLayer = new CesiumTileLayer(imageryProvider, options);
 };
 
 WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
