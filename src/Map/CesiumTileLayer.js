@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require,L*/
-var DeveloperError = require('../../third_party/cesium/Source/Scene/DeveloperError');
+var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryProvider = require('../../third_party/cesium/Source/Scene/ImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
