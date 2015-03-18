@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,L,URI*/
+/*global require,URI*/
 
 var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
@@ -15,6 +15,7 @@ var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMer
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 
@@ -97,12 +98,7 @@ ArcGisMapServerCatalogItem.prototype._enableInCesium = function() {
 
     var scene = this.application.cesium.scene;
 
-    var imageryProvider = new ArcGisMapServerImageryProvider({
-        url : cleanAndProxyUrl(this.application, this.url),
-        layers : this.layers
-    });
-
-    this._imageryLayer = new ImageryLayer(imageryProvider, {
+    this._imageryLayer = new ImageryLayer(createImageryProvider(this), {
         show: false,
         alpha : this.opacity
         // Ideally we'd specify "rectangle : this.rectangle" here.
@@ -138,11 +134,7 @@ ArcGisMapServerCatalogItem.prototype._enableInLeaflet = function() {
         // See comment in _enableInCesium for an explanation of why we don't.
     };
 
-    if (options.layers) {
-        this._imageryLayer = new L.esri.dynamicMapLayer(cleanAndProxyUrl(this.application, this.url), options);
-    } else {
-        this._imageryLayer = new L.esri.tiledMapLayer(cleanAndProxyUrl(this.application, this.url), options);
-    }    
+    this._imageryLayer = new CesiumTileLayer(createImageryProvider(this), options);
 };
 
 ArcGisMapServerCatalogItem.prototype._disableInLeaflet = function() {
@@ -193,6 +185,14 @@ ArcGisMapServerCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent,
 
     return deferred.promise;
 };
+
+function createImageryProvider(item) {
+    return new ArcGisMapServerImageryProvider({
+        url : cleanAndProxyUrl(item.application, item.url),
+        layers : item.layers,
+        tilingScheme : new WebMercatorTilingScheme()
+    });
+}
 
 function cleanAndProxyUrl(application, url) {
     return proxyUrl(application, cleanUrl(url));

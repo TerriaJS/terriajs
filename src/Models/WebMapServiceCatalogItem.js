@@ -303,17 +303,7 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
 
     var scene = this.application.cesium.scene;
 
-    var imageryProvider = new WebMapServiceImageryProvider({
-        url : cleanAndProxyUrl(this.application, this.url),
-        layers : this.layers,
-        getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
-        getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
-        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
-    });
-
-    this._imageryLayer = new ImageryLayer(imageryProvider, {
+    this._imageryLayer = new ImageryLayer(createImageryProvider(this), {
         show : false,
         alpha : this.opacity,
         rectangle : this.clipToRectangle ? this.rectangle : undefined
@@ -337,32 +327,12 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
         throw new DeveloperError('This data source is already enabled.');
     }
 
-    // var options = {
-    //     layers : this.layers,
-    //     opacity : this.opacity,
-    //     bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
-    // };
-
-    // options = combine(combine(this.parameters, WebMapServiceCatalogItem.defaultParameters), options);
-
-    // this._imageryLayer = new L.tileLayer.wms(cleanAndProxyUrl(this.application, this.url), options);
-
     var options = {
         opacity: this.opacity,
         bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
     };
 
-    var imageryProvider = new WebMapServiceImageryProvider({
-        url : cleanAndProxyUrl(this.application, this.url),
-        layers : this.layers,
-        getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
-        getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
-        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
-    });
-
-    this._imageryLayer = new CesiumTileLayer(imageryProvider, options);
+    this._imageryLayer = new CesiumTileLayer(createImageryProvider(this), options);
 };
 
 WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
@@ -412,6 +382,18 @@ WebMapServiceCatalogItem.defaultParameters = {
     styles: '',
     tiled: true
 };
+
+function createImageryProvider(wmsItem) {
+    return new WebMapServiceImageryProvider({
+        url : cleanAndProxyUrl(wmsItem.application, wmsItem.url),
+        layers : wmsItem.layers,
+        getFeatureInfoAsGeoJson : wmsItem.getFeatureInfoAsGeoJson,
+        getFeatureInfoAsXml : wmsItem.getFeatureInfoAsXml,
+        parameters : combine(wmsItem.parameters, WebMapServiceCatalogItem.defaultParameters),
+        tilingScheme : defined(wmsItem.tilingScheme) ? wmsItem.tilingScheme : new WebMercatorTilingScheme(),
+        getFeatureInfoXmlContentType : wmsItem.getFeatureInfoXmlContentType
+    });
+}
 
 function cleanAndProxyUrl(application, url) {
     return proxyUrl(application, cleanUrl(url));
