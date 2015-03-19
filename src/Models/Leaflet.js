@@ -10,16 +10,36 @@ var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var GlobeOrMap = require('./GlobeOrMap');
 var inherit = require('../Core/inherit');
+var LeafletScene = require('../Map/LeafletScene');
+var PickedFeatures = require('../Map/PickedFeatures');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
+var runLater = require('../Core/runLater');
 
 var Leaflet = function(application, map) {
     GlobeOrMap.call(this);
+
+    this.application = application;
 
     /**
      * Gets or sets the Leaflet {@link Map} instance.
      * @type {Map}
      */
     this.map = map;
+
+    this.scene = new LeafletScene(map);
+
+    this._pickedFeatures = undefined;
+
+    this.scene.featureClicked.addEventListener(featurePicked.bind(undefined, this));
+
+    var that = this;
+    map.on('preclick', function() {
+        prePickFeatures(that);
+    });
+
+    map.on('click', function(e) {
+        pickFeatures(that, e.latlng);
+    });
 };
 
 inherit(GlobeOrMap, Leaflet);
@@ -110,5 +130,53 @@ Leaflet.prototype.captureScreenshot = function() {
 Leaflet.prototype.notifyRepaintRequired = function() {
     // Leaflet doesn't need to do anything with this notification.
 };
+
+function featurePicked(leaflet, entity) {
+    leaflet._pickedFeatures.features.push(entity);
+}
+
+function prePickFeatures(leaflet) {
+    leaflet._pickedFeatures = new PickedFeatures();
+}
+
+function pickFeatures(leaflet, latlng) {
+    // We can't count on pickFeatures (triggered by click on the map) being called after before
+    // featurePicked (triggered by click on an individual feature).  So don't resolve the pick
+    // promise until we're sure all the click handlers have run, by waiting on a runLater.
+    var promises = [];
+    promises.push(runLater(function() {}));
+
+    var dataSources = leaflet.application.nowViewing.items;
+
+    var pickedXY = leaflet.map.latLngToContainerPoint(latlng, leaflet.map.getZoom());
+    var bounds = leaflet.map.getBounds();
+    var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
+
+    for (var i = 0; i < dataSources.length ; ++i) {
+        var dataSource = dataSources[i];
+        if (defined(dataSource.pickFeaturesInLeaflet)) {
+            promises.push(dataSource.pickFeaturesInLeaflet(extent, leaflet.map.getSize().x, leaflet.map.getSize().y, pickedXY.x, pickedXY.y));
+        }
+    }
+
+    leaflet._pickedFeatures.allFeaturesAvailablePromise = when.all(promises, function(results) {
+        leaflet._pickedFeatures.isLoading = false;
+        
+        for (var resultIndex = 0; resultIndex < results.length; ++resultIndex) {
+            var result = results[resultIndex];
+
+            if (defined(result) && result.length > 0) {
+                for (var featureIndex = 0; featureIndex < result.length; ++featureIndex) {
+                    var feature = result[featureIndex];
+                    leaflet._pickedFeatures.features.push(leaflet._createEntityFromImageryLayerFeature(feature));
+                }
+            }
+        }
+    }).otherwise(function() {
+        leaflet._pickedFeatures.isLoading = false;
+        leaflet._pickedFeatures.error = 'An unknown error occurred while picking features.';
+    });
+    leaflet.application.featuresPicked.raiseEvent(leaflet._pickedFeatures);
+}
 
 module.exports = Leaflet;

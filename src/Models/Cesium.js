@@ -406,6 +406,8 @@ function pickObject(cesium, e) {
     var pickRay = cesium.scene.camera.getPickRay(e.position);
     var promise = cesium.scene.imageryLayers.pickImageryLayerFeatures(pickRay, cesium.scene);
     result.allFeaturesAvailablePromise = when(promise, function(features) {
+        result.isLoading = false;
+
         if (!defined(features)) {
             return;
         }
@@ -414,6 +416,9 @@ function pickObject(cesium, e) {
             var feature = features[i];
             result.features.push(cesium._createEntityFromImageryLayerFeature(feature));
         }
+    }).otherwise(function(e) {
+        result.isLoading = false;
+        result.error = 'An unknown error occurred while picking features.';
     });
 
     cesium.application.featuresPicked.raiseEvent(result);
