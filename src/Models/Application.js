@@ -67,7 +67,7 @@ var Application = function() {
 
     /**
      * Gets or sets the clock that controls how time-varying data items are displayed.
-     * @type {Clock}s
+     * @type {Clock}
      */
     this.clock = new Clock();
 
@@ -78,7 +78,7 @@ var Application = function() {
      * Gets or sets the camera's home view.  The home view is the one that the application
      * returns to when the user clicks the "Reset View" button in the Navigation widget.  It is also used
      * as the {@link Application#initialView} if one is not specified.
-     * @type {[type]}
+     * @type {CameraView}
      */
     this.homeView = new CameraView(Rectangle.MAX_VALUE);
 
