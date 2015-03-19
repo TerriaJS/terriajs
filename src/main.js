@@ -56,6 +56,7 @@ if (start) {
 
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
     var registerKnockoutBindings = require('./Core/registerKnockoutBindings');
+    var InfoBox = require('../third_party/cesium/Source/Widgets/InfoBox/InfoBox');
 
     var AddDataPanelViewModel = require('./ViewModels/AddDataPanelViewModel');
     var BaseMapViewModel = require('./ViewModels/BaseMapViewModel');
@@ -347,6 +348,21 @@ if (start) {
             }
 
             application.currentViewer.notifyRepaintRequired();
+        });
+
+        var infoBox = new InfoBox('ui');
+
+        application.featuresPicked.addEventListener(function(features) {
+            features.allFeaturesAvailablePromise.then(function() {
+                if (features.features.length === 0) {
+                    return;
+                }
+
+                var feature = features.features[0];
+                infoBox.viewModel.titleText = feature.name;
+                infoBox.viewModel.descriptionRawHtml = feature.description.getValue();
+                infoBox.viewModel.showInfo = true;
+            });
         });
 
         document.getElementById('loadingIndicator').style.display = 'none';

@@ -135,6 +135,13 @@ var Application = function() {
     this.initSources = [];
 
     /**
+     * Gets or sets the event that is raised when the user picks features on the map by clicking on them.  Event handlers will
+     * receive an instance of {@see PickedFeatures}.
+     * @type {CesiumEvent}
+     */
+    this.featuresPicked = new CesiumEvent();
+
+    /**
      * Gets or sets the catalog of geospatial data.
      * @type {Catalog}
      */

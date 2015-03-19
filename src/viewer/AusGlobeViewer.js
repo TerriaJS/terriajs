@@ -371,7 +371,9 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         terrainProvider : terrainProvider,
         imageryProvider : new SingleTileImageryProvider({ url: 'images/nicta.png' }),
         timeControlsInitiallyVisible : false,
-        scene3DOnly: true
+        scene3DOnly: true,
+        selectionIndicator: false,
+        infoBox: false
     };
 
     // Workaround for Firefox bug with WebGL and printing:
@@ -408,16 +410,16 @@ us via email at nationalmap@lists.nicta.com.au.'
     });
 
 
-    var lastHeight = 0;
-    viewer.scene.preRender.addEventListener(function(scene, time) {
-        var container = viewer._container;
-        var height = container.clientHeight;
+    // var lastHeight = 0;
+    // viewer.scene.preRender.addEventListener(function(scene, time) {
+    //     var container = viewer._container;
+    //     var height = container.clientHeight;
 
-        if (height !== lastHeight) {
-            viewer.infoBox.viewModel.maxHeight = Math.max(height - 300, 100);
-            lastHeight = height;
-        }
-    });
+    //     if (height !== lastHeight) {
+    //         viewer.infoBox.viewModel.maxHeight = Math.max(height - 300, 100);
+    //         lastHeight = height;
+    //     }
+    // });
 
 
     var scene = viewer.scene;

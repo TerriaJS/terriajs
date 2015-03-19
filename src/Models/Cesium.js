@@ -9,6 +9,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
@@ -16,14 +17,20 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
 var TaskProcessor = require('../../third_party/cesium/Source/Core/TaskProcessor');
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var GlobeOrMap = require('./GlobeOrMap');
+var inherit = require('../Core/inherit');
 var ModelError = require('./ModelError');
+var PickedFeatures = require('../Map/PickedFeatures');
 var ViewerMode = require('./ViewerMode');
 
 var Cesium = function(application, viewer) {
+    GlobeOrMap.call(this);
+
     /**
      * Gets or sets the application.
      * @type {Application}
@@ -56,6 +63,9 @@ var Cesium = function(application, viewer) {
     this._removePostRenderListener = this.scene.postRender.addEventListener(postRender.bind(undefined, this));
     this._removeInfoBoxCloseListener = undefined;
     this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
+
+    // Handle left click by picking objects from the map.
+    viewer.screenSpaceEventHandler.setInputAction(pickObject.bind(undefined, this), ScreenSpaceEventType.LEFT_CLICK);
 
     // Force a repaint when the mouse moves or the window changes size.
     var canvas = this.viewer.canvas;
@@ -152,6 +162,8 @@ technical details below.  Thank you!</p><pre style="overflow:auto;margin-top:10p
         this.application.viewerMode = ViewerMode.Leaflet;
     }, this);
 };
+
+inherit(GlobeOrMap, Cesium);
 
 Cesium.prototype.destroy = function() {
     if (defined(this._removePostRenderListener)) {
@@ -373,6 +385,38 @@ function postRender(cesium, date) {
     }
 
     Matrix4.clone(scene.camera.viewMatrix, cesium._lastCameraViewMatrix);
+}
+
+function pickObject(cesium, e) {
+    var result = new PickedFeatures();
+
+    // Pick vector features.
+    var picked = cesium.scene.drillPick(e.position);
+    for (var i = 0; i < picked.length; ++i) {
+        var id = picked[i].id;
+        if (!defined(id) && defined(picked[i].primitive)) {
+            id = picked[i].primitive.id;
+        }
+        if (id instanceof Entity) {
+            result.features.push(id);
+        }
+    }
+
+    // Pick raster features
+    var pickRay = cesium.scene.camera.getPickRay(e.position);
+    var promise = cesium.scene.imageryLayers.pickImageryLayerFeatures(pickRay, cesium.scene);
+    result.allFeaturesAvailablePromise = when(promise, function(features) {
+        if (!defined(features)) {
+            return;
+        }
+
+        for (var i = 0; i < features.length; ++i) {
+            var feature = features[i];
+            result.features.push(cesium._createEntityFromImageryLayerFeature(feature));
+        }
+    });
+
+    cesium.application.featuresPicked.raiseEvent(result);
 }
 
 module.exports = Cesium;

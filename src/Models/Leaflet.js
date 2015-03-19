@@ -8,15 +8,21 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var GlobeOrMap = require('./GlobeOrMap');
+var inherit = require('../Core/inherit');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 var Leaflet = function(application, map) {
+    GlobeOrMap.call(this);
+
     /**
      * Gets or sets the Leaflet {@link Map} instance.
      * @type {Map}
      */
     this.map = map;
 };
+
+inherit(GlobeOrMap, Leaflet);
 
 Leaflet.prototype.destroy = function() {
     return destroyObject(this);
