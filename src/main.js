@@ -56,7 +56,6 @@ if (start) {
 
     var AusGlobeViewer = require('./viewer/AusGlobeViewer');
     var registerKnockoutBindings = require('./Core/registerKnockoutBindings');
-    var InfoBox = require('../third_party/cesium/Source/Widgets/InfoBox/InfoBox');
 
     var AddDataPanelViewModel = require('./ViewModels/AddDataPanelViewModel');
     var BaseMapViewModel = require('./ViewModels/BaseMapViewModel');
@@ -67,6 +66,7 @@ if (start) {
     var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
     var DragDropViewModel = require('./ViewModels/DragDropViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
+    var FeatureInfoPanelViewModel = require('./ViewModels/FeatureInfoPanelViewModel');
     var GazetteerSearchProviderViewModel = require('./ViewModels/GazetteerSearchProviderViewModel');
     var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
     var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
@@ -350,20 +350,10 @@ if (start) {
             application.currentViewer.notifyRepaintRequired();
         });
 
-        var infoBox = new InfoBox('ui');
-
-        application.featuresPicked.addEventListener(function(features) {
-            features.allFeaturesAvailablePromise.then(function() {
-                if (features.features.length === 0) {
-                    return;
-                }
-
-                var feature = features.features[0];
-                infoBox.viewModel.titleText = feature.name;
-                infoBox.viewModel.descriptionRawHtml = feature.description.getValue();
-                infoBox.viewModel.showInfo = true;
-            });
+        var featureInfo = new FeatureInfoPanelViewModel({
+            application: application
         });
+        featureInfo.show(ui);
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });

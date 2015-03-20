@@ -64,7 +64,10 @@ GlobeOrMap.prototype.notifyRepaintRequired = function() {
  * @protected
  */
 GlobeOrMap.prototype._createEntityFromImageryLayerFeature = function(feature) {
-    var entity = new Entity(feature.name);
+    var entity = new Entity({
+        id: feature.name,
+    });
+    entity.name = feature.name;
     entity.description = {
         getValue : function() {
             return feature.description;

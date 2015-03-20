@@ -1,0 +1,45 @@
+.feature-info-panel {
+    .panel;
+    background-color: @panel-background-color;
+    top: 60px;
+    right: 100px;
+    max-width: 600px;
+    position: absolute;
+    box-shadow: @panel-box-shadow;
+}
+
+.feature-info-panel-body {
+}
+
+.feature-info-panel-section {
+}
+
+.feature-info-panel-section-header {
+    padding: 5px;
+    background-color: @panel-section-background-color;
+    color: @panel-emphasized-text-color;
+}
+
+.feature-info-panel-section-content {
+    font-weight: lighter;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.feature-info-panel-close-button {
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    cursor: pointer;
+    font-size: 18pt;
+    font-weight: bold;
+    color: @panel-emphasized-text-color;
+}
+
+@media print {
+    .feature-info-panel {
+        display: none;
+    }
+}
