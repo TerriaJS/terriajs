@@ -1,7 +1,7 @@
 <div class="modal-background" data-bind="click: closeIfClickOnBackground">
     <div class="add-data-panel">
-        <div class="add-data-header">
-            <div class="add-data-close-button" data-bind="click: close">&times;</div>
+        <div class="modal-header">
+            <div class="modal-close-button" data-bind="click: close">&times;</div>
             <h1>Add data</h1>
         </div>
         <div class="add-data-content">
@@ -29,18 +29,19 @@
                 </label>
 
                 <h2>Step 2</h2>
-                <div class="add-data-select-file-button" data-bind="click: selectFileToUpload">Browse to select a local data file to upload</div>
+                <p class=add-data-browse-link data-bind="click: selectFileToUpload">Browse to select a local data file to upload</p>
                 <input type="file" style="display: none;" id="add-data-panel-upload-file" data-bind="event: { change: addUploadedFile }" />
 
-                <div class="add-data-or">-or-</div>
+                <p><strong>- OR -</strong></p>
 
                 Enter the URL of the data file or web service:
-                <div class="add-data-url-input-outer-holder">
-                    <div class="add-data-url-input-inner-holder">
+                <div class="add-data-url-input-holder">
+                    <div class="input-group">
                         <input class="add-data-url-input" type="text" placeholder="e.g. http://data.gov.au/geoserver/wms" data-bind="value: url" />
+                        <span class="input-group-btn">
+                          <button class="add-data-url-button" type="submit">Add</button>
+                        </span>
                     </div>
-                    <input class="add-data-url-add-button" type="submit" value="Add" />
-                </div>
 
                 <div class="add-data-tip">
                     <strong>TIP:</strong> you can also drag data files directly onto the map.
