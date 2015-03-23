@@ -24,7 +24,9 @@ sub vcl_recv {
 
 sub vcl_fetch
 {
-  if (req.url ~ "^/proxy/_"){
+  if (req.url ~ "^/proxy/_0d"){
+    set beresp.ttl = 0d;
+  } else if (req.url ~ "^/proxy/_1d") {
     set beresp.ttl = 1d;
   } else {
     set beresp.ttl = 14d;
