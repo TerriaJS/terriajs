@@ -13,7 +13,7 @@
     .panel;
     background-color: @panel-background-color;
     top: 60px;
-    right: 100px;
+    right: 95px;
     width: 260px;
     position: absolute;
     box-shadow: @panel-box-shadow;
@@ -50,17 +50,27 @@
 }
 
 .settings-panel-section-header {
-    padding: 5px;
+    font-size: 0.9em;
+    padding: 8px;
     background-color: @panel-section-background-color;
     color: @panel-emphasized-text-color;
+    border-bottom: @panel-element-border;
 }
 
 .settings-panel-section-content {
     font-weight: lighter;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+}
+
+#map-views {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#base-maps {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .settings-panel-map-view-button {
@@ -99,11 +109,10 @@
 
 .settings-panel-close-button {
     position: absolute;
-    right: 6px;
-    top: 1px;
+    right: 10px;
+    top: 6px;
     cursor: pointer;
-    font-size: 18pt;
-    font-weight: bold;
+    font-size: 12pt;
     color: @panel-emphasized-text-color;
 }
 

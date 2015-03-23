@@ -2,15 +2,25 @@
     .floating-vertical;
     right: 35px;
     top: 195px;
-    width: 35px;
+    width: 30px;
     border: 1px solid rgba(255,255,255,0.1);
+    font-weight: 300;
+    // avoids selection of text with rapid zooming
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .navigation-control {
     .clickable;
-    padding-top: 10px;
-    padding-bottom: 10px;
     border-bottom: @floating-element-border;
+}
+
+.naviagation-control:active {
+  color: #FFF;
 }
 
 .navigation-control-last {
@@ -20,35 +30,29 @@
 
 .navigation-control-icon-zoom-in {
     position: relative;
-    left: 8px;
-    width: 22px;
-    height: 22px;
-    fill: @floating-text-color;
+    text-align: center;
+    font-size: 20px;
+    color: @floating-text-color;
+    padding-bottom: 4px;
 }
 
 .navigation-control-icon-zoom-out {
     position: relative;
-    left: 8px;
-    width: 22px;
-    height: 22px;
-    fill: @floating-text-color;
+    text-align: center;
+    font-size: 20px;
+    color: @floating-text-color;
 }
 
 .navigation-control-icon-reset {
     position: relative;
     left: 10px;
-    width: 15px;
-    height: 15px;
-    fill: @floating-text-color;
+    width: 10px;
+    height: 10px;
+    fill: fade(@floating-text-color, 80%);
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
-.navigation-control-icon-tilt {
-    position: relative;
-    left: 7px;
-    width: 24px;
-    height: 24px;
-    fill: @floating-text-color;
-}
 
 @compass-diameter: 95px;
 @compass-ring-width: @compass-diameter * 20 / 145;
@@ -57,7 +61,7 @@
 .compass {
     .opaque-to-input;
     position: absolute;
-    right: 10px;
+    right: 5px;
     top: 75px;
     width: @compass-diameter;
     height: @compass-diameter;
@@ -68,7 +72,7 @@
     top: 0;
     width: @compass-diameter;
     height: @compass-diameter;
-    fill: #999;
+    fill: rgba(255,255,255,0.5);
 }
 
 .compass-outer-ring-background {
@@ -102,7 +106,7 @@
     height: 33px;
     border-radius: 33px;
     background-color: @floating-background-color;
-    border: 1px solid #999;
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
 .compass-gyro-background:hover + .compass-gyro {

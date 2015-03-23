@@ -18,8 +18,6 @@ var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 
 var loadView = require('../Core/loadView');
 
-var svgZoomIn = require('../SvgPaths/svgZoomIn');
-var svgZoomOut = require('../SvgPaths/svgZoomOut');
 var svgReset = require('../SvgPaths/svgReset');
 var svgTilt = require('../SvgPaths/svgTilt');
 var svgCompassOuterRing = require('../SvgPaths/svgCompassOuterRing');
@@ -29,8 +27,6 @@ var svgCompassRotationMarker = require('../SvgPaths/svgCompassRotationMarker');
 var NavigationViewModel = function(application) {
     this.application = application;
 
-    this.svgZoomIn = svgZoomIn;
-    this.svgZoomOut = svgZoomOut;
     this.svgReset = svgReset;
     this.svgTilt = svgTilt;
     this.svgCompassOuterRing = svgCompassOuterRing;

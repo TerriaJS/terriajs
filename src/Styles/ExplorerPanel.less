@@ -58,13 +58,20 @@
 
 .explorer-panel-tab {
     line-height: 39px;
-    font-size: 0.95em;
+    font-size: 15px;
     font-weight: normal;
     color: @explorer-panel-inactive-tab-text-color;
     display: table-cell;
     cursor: pointer;
     padding-left: 8px;
     padding-right: 8px;
+    -webkit-transition: color 0.15s ease;
+    -moz-transition: color 0.15s ease;
+    -o-transition: color 0.15s ease;
+}
+
+.explorer-panel-tab:hover {
+  color: @explorer-panel-active-tab-text-color;
 }
 
 .explorer-panel-tab-content {
