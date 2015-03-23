@@ -280,7 +280,7 @@ NowViewing.prototype.updateLeafletLayerOrder = function() {
 
     for (var i = items.length - 1; i >= 0; --i) {
         var currentItem = items[i];
-        if (defined(currentItem.imageryLayer)) {
+        if (defined(currentItem.imageryLayer) && defined(currentItem.imageryLayer.setZIndex)) {
             if (currentItem.supportsReordering) {
                 currentItem.imageryLayer.setZIndex(reorderableZIndex++);
             } else {
