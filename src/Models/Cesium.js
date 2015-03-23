@@ -1,7 +1,6 @@
 'use strict';
 
 /*global require*/
-var CameraFlightPath = require('../../third_party/cesium/Source/Scene/CameraFlightPath');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
 var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
@@ -42,7 +41,6 @@ var Cesium = function(application, viewer) {
      * @type {Scene}
      */
     this.scene = viewer.scene;
-
 
     /**
      * Gets or sets whether the viewer has stopped rendering since startup or last set to false.
@@ -234,7 +232,7 @@ Cesium.prototype.getCurrentExtent = function() {
 
     if (!defined(center)) {
         // TODO: binary search to find the horizon point and use that as the center.
-        return this.application.initialBoundingBox;
+        return this.application.homeView.rectangle;
     }
 
     var ellipsoid = this.scene.globe.ellipsoid;
@@ -281,21 +279,38 @@ Cesium.prototype.getCurrentExtent = function() {
 };
 
 /**
- * Zooms to a specified extent with a smooth flight animation.
+ * Zooms to a specified camera view or extent with a smooth flight animation.
  *
- * @param {Rectangle} extent The extent to which to zoom.
+ * @param {CameraView|Rectangle} viewOrExtent The view or extent to which to zoom.
  * @param {Number} [flightDurationSeconds=3.0] The length of the flight animation in seconds.
  */
-Cesium.prototype.zoomTo = function(extent, flightDurationSeconds) {
-    if (!defined(extent)) {
-        throw new DeveloperError('extent is required.');
+Cesium.prototype.zoomTo = function(viewOrExtent, flightDurationSeconds) {
+    if (!defined(viewOrExtent)) {
+        throw new DeveloperError('viewOrExtent is required.');
     }
 
-    var flight = CameraFlightPath.createTweenRectangle(this.scene, {
-        destination : extent,
-        duration : defaultValue(flightDurationSeconds, 3.0)
-    });
-    this.scene.tweens.add(flight);
+    flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
+
+    if (viewOrExtent instanceof Rectangle) {
+        this.scene.camera.flyTo({
+            duration: flightDurationSeconds,
+            destination: viewOrExtent
+        });
+    } else if (defined(viewOrExtent.position)) {
+        this.scene.camera.flyTo({
+            duration: flightDurationSeconds,
+            destination: viewOrExtent.position,
+            orientation: {
+                direction: viewOrExtent.direction,
+                up: viewOrExtent.up
+            }
+        });
+    } else {
+        this.scene.camera.flyTo({
+            duration: flightDurationSeconds,
+            destination: viewOrExtent.rectangle
+        });
+    }
 
     this.notifyRepaintRequired();
 };

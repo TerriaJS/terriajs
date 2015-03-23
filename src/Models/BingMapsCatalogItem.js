@@ -1,8 +1,7 @@
 'use strict';
 
-/*global require,L*/
+/*global require*/
 
-var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
 var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
 var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -11,6 +10,7 @@ var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperErro
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
+var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 
@@ -75,13 +75,7 @@ BingMapsCatalogItem.prototype._enableInCesium = function() {
 
     var scene = this.application.cesium.scene;
 
-    var imageryProvider = new BingMapsImageryProvider({
-        url: '//dev.virtualearth.net',
-        mapStyle: this.mapStyle,
-        key: this.key
-    });
-
-    this._imageryLayer = new ImageryLayer(imageryProvider, {
+    this._imageryLayer = new ImageryLayer(createImageryProvider(this), {
         show: false,
         alpha : this.opacity
     });
@@ -110,12 +104,7 @@ BingMapsCatalogItem.prototype._enableInLeaflet = function() {
         opacity : this.opacity
     };
 
-    var key = this.key;
-    if (!defined(key)) {
-        key = BingMapsApi.getKey();
-    }
-
-    this._imageryLayer = new L.BingLayer(key, options);
+    this._imageryLayer = new CesiumTileLayer(createImageryProvider(this), options);
 };
 
 BingMapsCatalogItem.prototype._disableInLeaflet = function() {
@@ -125,5 +114,13 @@ BingMapsCatalogItem.prototype._disableInLeaflet = function() {
 
     this._imageryLayer = undefined;
 };
+
+function createImageryProvider(item) {
+    return new BingMapsImageryProvider({
+        url: '//dev.virtualearth.net',
+        mapStyle: item.mapStyle,
+        key: item.key
+    });
+}
 
 module.exports = BingMapsCatalogItem;

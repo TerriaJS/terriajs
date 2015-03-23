@@ -1,9 +1,10 @@
 {
     "corsDomains" : [
         "corsproxy.com",
-        "programs.communications.gov.au"
+        "programs.communications.gov.au",
+        "www.asris.csiro.au"
     ],
-    "camera": {
+    "homeCamera": {
         "west": 105,
         "south": -45,
         "east": 155,
@@ -58,7 +59,7 @@
                             "clipToRectangle": true
                         },
                         {
-                            "name": "Broadband Availabilty no Borders",
+                            "name": "Broadband Availability no Borders",
                             "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
                             "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
                             "rectangle": [
@@ -127,6 +128,44 @@
                             "type": "wms",
                             "url": "https://programs.communications.gov.au/geoserver/ows",
                             "layers": "public:MyBroadband_ADSL_Quality_no_outline",
+                            "parameters": {
+                                "tiled": true
+                            },
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
+                        },
+                        {
+                            "name": "Broadband ADSL Availability",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
+                            "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
+                            "rectangle": [
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
+                            ],
+                            "type": "wms",
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "public:MyBroadband_ADSL_Availability",
+                            "parameters": {
+                                "tiled": true
+                            },
+                            "dataUrlType": "none",
+                            "clipToRectangle": true
+                        },
+                        {
+                            "name": "Broadband ADSL Availability no Borders",
+                            "description": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)<br/>[More Info](https://www.mybroadband.communications.gov.au)",
+                            "dataCustodian": "[Department of Communications](http://www.communications.gov.au/)",
+                            "rectangle": [
+                                "96.799393",
+                                "-43.598214999057824",
+                                "153.63925700000001",
+                                "-9.2159219997013"
+                            ],
+                            "type": "wms",
+                            "url": "https://programs.communications.gov.au/geoserver/ows",
+                            "layers": "public:MyBroadband_ADSL_Availability_no_outline",
                             "parameters": {
                                 "tiled": true
                             },
