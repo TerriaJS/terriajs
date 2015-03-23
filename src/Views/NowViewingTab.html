@@ -10,12 +10,12 @@
                     <img class="now-viewing-item-drag-handle" data-bind="visible: supportsReordering" draggable="false" src="images/Reorder.svg" width="12" height="24" alt="Drag to reorder data sources." title="Drag to reorder data sources." />
                 </div>
                 <div class="now-viewing-item-icon-holder">
-                    <div class="now-viewing-item-icon clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
                 </div>
                 <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
 
                 <div class="now-viewing-item-arrow-holder">
-                    <div class="now-viewing-item-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                    <div class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
                 </div>
             </div>
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
