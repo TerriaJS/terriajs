@@ -145,7 +145,7 @@ var Cesium = function(application, viewer) {
             message: '\
 <p>An error occurred while rendering in 3D.  This probably indicates a bug in National Map or an incompatibility with your system \
 or web browser.  We\'ll now switch you to 2D so that you can continue your work.  We would appreciate it if you report this \
-errror by sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> with the \
+error by sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> with the \
 technical details below.  Thank you!</p><pre style="overflow:auto;margin-top:10px;padding:10px;border:1px solid gray;">' + formatError(error) + '</pre>'
         }));
 
