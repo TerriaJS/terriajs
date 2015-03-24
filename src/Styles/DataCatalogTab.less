@@ -4,21 +4,20 @@
     line-height: 40px;
     background-color: rgba(0,0,0, 0.2);
     border-bottom: @panel-element-border;
-    border-top: @panel-element-border;
     cursor: pointer;
 }
 
 .data-catalog-top-group-label {
     display: table-cell;
     padding-left: 16px;
-    font-size: 0.95em;
+    font-size: 15px;
     color: @panel-emphasized-text-color;
 }
 
 .data-catalog-top-group-icon {
     position: relative;
-    width: 15px;
-    height: 15px;
+    width: 12px;
+    height: 12px;
     fill: @panel-emphasized-text-color;
     margin-right: 16px;
 }
@@ -41,14 +40,14 @@
 .data-catalog-item-label {
     display: table-cell;
     font-family: @default-font;
-    font-size: 0.95em;
+    font-size: 14px;
     color: @panel-text-color;
     font-weight: lighter;
 }
 
 .data-catalog-group-label {
     display: table-cell;
-    font-size: 0.95em;
+    font-size: 15px;
     color: @panel-text-color;
 }
 
@@ -95,9 +94,24 @@
 
 .data-catalog-icon {
     position: relative;
-    width: 15px;
-    height: 15px;
+    width: 12px;
+    height: 12px;
     fill: @panel-text-color;
+}
+
+.data-catalog-arrow {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  fill: @panel-text-color;
+}
+
+.data-catalog-item-checkbox {
+  position: relative;
+  top: 2px;
+  width: 15px;
+  height: 15px;
+  fill: @panel-text-color;
 }
 
 .data-catalog-icon-holder {
@@ -118,6 +132,14 @@
     height: 18px;
     fill: @panel-text-color;
     margin-right: 16px;
+    opacity: 0.5;
+    -webkit-transition: opacity 0.2s ease;
+    -moz-transition: opacity 0.2s ease;
+    -o-transition: opacity 0.2s ease;
+}
+
+.data-catalog-info-icon:hover {
+  opacity: 1;
 }
 
 .data-catalog-enabled-item {

@@ -1,0 +1,71 @@
+{
+    "corsDomains" : [
+        "corsproxy.com",
+        "programs.communications.gov.au"
+    ],
+    "camera": {
+        "west": 105,
+        "south": -45,
+        "east": 155,
+        "north": -5
+    },
+    "services": [],
+    "catalog": [
+        {
+            "name": "GA",
+            "type": "group",
+            "isOpen": true,
+            "items": [
+                {
+                    "name": "Culture and Infrastructure",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Culture_and_Infrastructure/MapServer",
+                    "type": "esri-mapServer-group"
+                },
+                {
+                    "name": "Elevation Relief and Physiography",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Elevation_Relief_and_Physiography/MapServer",
+                    "type": "esri-mapServer-group"
+                },
+                {
+                    "name": "Hydrography and Marine",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer",
+                    "type": "esri-mapServer-group"
+                },
+                {
+                    "name": "Labelling and Boundaries",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Labelling_and_Boundaries/MapServer",
+                    "type": "esri-mapServer-group"
+                },
+                {
+                    "name": "Reserves",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Reserves/MapServer",
+                    "type": "esri-mapServer-group"
+                },
+                {
+                    "name": "Transport",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Transport/MapServer",
+                    "type": "esri-mapServer-group"
+                },
+                {
+                    "name": "Vegetation",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
+                    "url": "http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Vegetation/MapServer",
+                    "type": "esri-mapServer-group"
+                }
+            ]
+        }
+    ]
+}

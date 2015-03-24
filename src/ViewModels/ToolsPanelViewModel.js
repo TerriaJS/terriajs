@@ -1,23 +1,23 @@
 'use strict';
 
 /*global require,L,URI*/
+var CatalogGroup = require('../Models/CatalogGroup');
+var corsProxy = require('../Core/corsProxy');
 var loadView = require('../Core/loadView');
+var pollToPromise = require('../Core/pollToPromise');
 var PopupMessageViewModel = require('./PopupMessageViewModel');
+
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
-var corsProxy = require('../Core/corsProxy');
-
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var CatalogGroup = require('../Models/CatalogGroup');
-
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var ToolsPanelViewModel = function(options) {
     if (!defined(options) || !defined(options.application)) {
@@ -30,11 +30,12 @@ var ToolsPanelViewModel = function(options) {
 
     this.cacheFilter = 'opened';
     this.cacheLevels = 3;
+    this.useCache = false;
     this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
     this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['cacheFilter', 'cacheLevels', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -59,9 +60,14 @@ ToolsPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e) 
 
 ToolsPanelViewModel.prototype.cacheTiles = function() {
     var requests = [];
-    getAllRequests(['wms'], this.cacheFilter, requests, this.application.catalog.group);
-    console.log('Requesting tiles from ' + requests.length + ' data sources.');
-    requestTiles(this.application, requests, this.cacheLevels);
+    var promises = [];
+    getAllRequests(['wms', 'esri-mapServer'], this.cacheFilter, requests, this.application.catalog.group, promises);
+
+    var that = this;
+    when.all(promises, function() {
+        console.log('Requesting tiles from ' + requests.length + ' data sources.');
+        requestTiles(that, requests, that.cacheLevels);
+    });
 };
 
 ToolsPanelViewModel.prototype.exportFile = function() {
@@ -80,9 +86,14 @@ ToolsPanelViewModel.prototype.exportFile = function() {
 
 ToolsPanelViewModel.prototype.exportCkan = function() {
     var requests = [];
-    getAllRequests(['wms', 'esri-mapService'], this.ckanFilter, requests, this.application.catalog.group);
-    console.log('Exporting metadata from ' + requests.length + ' data sources.');
-    populateCkan(requests, this.ckanUrl, this.ckanApiKey);
+    var promises = [];
+    getAllRequests(['wms', 'esri-mapServer'], this.ckanFilter, requests, this.application.catalog.group, promises);
+
+    var that = this;
+    when.all(promises, function() {
+        console.log('Exporting metadata from ' + requests.length + ' data sources.');
+        populateCkan(requests, that.ckanUrl, that.ckanApiKey);
+    });
 };
 
 
@@ -93,23 +104,42 @@ ToolsPanelViewModel.open = function(container, options) {
 };
 
 
-function getAllRequests(types, mode, requests, group) {
+function getAllRequests(types, mode, requests, group, promises) {
     for (var i = 0; i < group.items.length; ++i) {
         var item = group.items[i];
         if (item instanceof CatalogGroup) {
             if (item.isOpen || mode === 'all' || mode === 'enabled') {
-                getAllRequests(types, mode, requests, item);
+                getAllRequests(types, mode, requests, item, promises);
             }
         } else if ((types.indexOf(item.type) !== -1) && (mode !== 'enabled' || item.isEnabled)) {
+            var enabledHere = !item.isEnabled;
+            if (enabledHere) {
+                item._enable();
+            }
+
+            var imageryProvider = item._imageryLayer.imageryProvider;
+
             requests.push({
                 item : item,
-                group : group.name
+                group : group.name,
+                enabledHere : enabledHere,
+                provider : imageryProvider
             });
+
+            promises.push(whenImageryProviderIsReady(imageryProvider));
         }
     }
 }
 
-function requestTiles(app, requests, maxLevel) {
+function whenImageryProviderIsReady(imageryProvider) {
+    return pollToPromise(function() {
+        return imageryProvider.ready;
+    }, { timeout: 60000, pollInterval: 100 });
+}
+
+function requestTiles(toolsPanel, requests, maxLevel) {
+    var app = toolsPanel.application;
+
     var urls = [];
     var names = [];
     var stats = [];
@@ -132,14 +162,8 @@ function requestTiles(app, requests, maxLevel) {
     var i;
     for (i = 0; i < requests.length; ++i) {
         var request = requests[i];
-        var extent = request.item.rectangle || app.homeView.rectangle;
+        var extent = request.provider.rectangle || app.homeView.rectangle;
         name = request.item.name;
-
-        var enabledHere = false;
-         if (!request.item.isEnabled) {
-            request.item._enable();
-            enabledHere = true;
-         }
 
         var tilingScheme;
         var leaflet = app.leaflet;
@@ -147,9 +171,7 @@ function requestTiles(app, requests, maxLevel) {
             request.provider = request.item._imageryLayer;
             tilingScheme = new WebMercatorTilingScheme();
             leaflet.map.addLayer(request.provider);
-        }
-        else {
-            request.provider = request.item._imageryLayer.imageryProvider;
+        } else {
             tilingScheme = request.provider.tilingScheme;
         }
 
@@ -194,7 +216,7 @@ function requestTiles(app, requests, maxLevel) {
                 }
             }
         }
-        if (enabledHere) {
+        if (request.enabledHere) {
             if (defined(leaflet)) {
                leaflet.map.removeLayer(request.provider);
             }
@@ -272,19 +294,39 @@ function requestTiles(app, requests, maxLevel) {
 
     function doNext() {
         var next = getNextUrl();
+        if (!defined(last) && defined(next)) {
+            popup.message += '<h1>' + next.name + '</h1>';
+        }
         if (defined(last) && (!defined(next) || next.name !== last.name)) {
-            popup.message += '<h1>' + last.name + '</h1>';
-            popup.message += '<div style="' + (last.stat.error.number > 0 ? 'color:red' : '') + '">Failed tile requests: ' + last.stat.error.number + ' / ' + (last.stat.success.number + last.stat.error.number) + '</div>';
+            if (last.stat.error.number === 0) {
+                popup.message += '<div>All ' + last.stat.success.number + ' tile requests completed without error.';
+            } else {
+                popup.message += '<div style="color:red">' + last.stat.error.number + ' tile requests failed (out of ' + (last.stat.success.number + last.stat.error.number) + ')</div>';
+            }
             popup.message += '<div>Minimum time: ' + Math.round(last.stat.success.min) + 'ms</div>';
-            popup.message += '<div style="' + (last.stat.success.max > maxMaximum ? 'color:red' : '') + '">Maximum time: ' + Math.round(last.stat.success.max) + 'ms</div>';
+
+            if (last.stat.success.max > maxMaximum) {
+                popup.message += '<div style="color:red">Maximum time: ' + Math.round(last.stat.success.max) + 'ms (should be <' + maxMaximum + ')</div>';
+            } else {
+                popup.message += '<div>Maximum time: ' + Math.round(last.stat.success.max) + 'ms</div>';
+            }
 
             var average = Math.round(last.stat.success.sum / last.stat.success.number);
-            popup.message += '<div style="' + (average > maxAverage ? 'color:red' : '') + '">Average time: ' + average + 'ms</div>';
+
+            if (average > maxAverage) {
+                popup.message += '<div style="color:red">Average time: ' + average + 'ms (should be <' + maxAverage + ')</div>';
+            } else {
+                popup.message += '<div>Average time: ' + average + 'ms</div>';
+            }
 
             failedRequests += last.stat.error.number;
 
             if (average > maxAverage || last.stat.success.max > maxMaximum) {
                 ++slowDatasets;
+            }
+
+            if (next) {
+                popup.message += '<h1>' + next.name + '</h1>';
             }
         }
 
@@ -306,13 +348,20 @@ function requestTiles(app, requests, maxLevel) {
 
         ++next.stat.number;
 
+        var url = next.url;
+
+        if (!toolsPanel.useCache) {
+            url = url.replace('/proxy/h', '/proxy/_0d/h');
+        }
+
         var start = getTimestamp();
         loadWithXhr({
-            url : next.url
+            url : url
         }).then(function() {
             doneUrl(next.stat, start, false);
-        }).otherwise(function() {
-            popup.message += 'Returned an error while working on layer: ' + next.name + '</div>';
+        }).otherwise(function(e) {
+            popup.message += '<div>Tile request resulted in an error' + (e.statusCode ? (' (code ' + e.statusCode + '):') : ':') + '</div>';
+            popup.message += '<div>' + next.url + '</div>';
             doneUrl(next.stat, start, true);
         });
     }

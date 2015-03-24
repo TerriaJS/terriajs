@@ -16,6 +16,13 @@
                     </select>
                 </label>
 
+                <div>
+                    <label class="tools-content-type">
+                        <input type="checkbox" data-bind="checked: useCache" />
+                        Use proxy cache
+                    </label>
+                </div>
+
                 Enter the number of tile levels to request
                 <div class="tools-url-input-outer-holder">
                     <div class="tools-url-input-inner-holder">
@@ -37,8 +44,8 @@
                 <label class="tools-content-type">
                     Select the dataset layers to export:
                     <select class="tools-content-type-select" data-bind="value: ckanFilter">
-                        <option value="opened">Opened</option>
-                        <option value="seleteced">Selected</option>
+                        <option value="opened">All Opened</option>
+                        <option value="enabled">All Enabled</option>
                         <option value="all">All</option>
                     </select>
                 </label>
