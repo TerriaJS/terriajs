@@ -30,11 +30,12 @@ var ToolsPanelViewModel = function(options) {
 
     this.cacheFilter = 'opened';
     this.cacheLevels = 3;
+    this.useCache = false;
     this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
     this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['cacheFilter', 'cacheLevels', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -65,7 +66,7 @@ ToolsPanelViewModel.prototype.cacheTiles = function() {
     var that = this;
     when.all(promises, function() {
         console.log('Requesting tiles from ' + requests.length + ' data sources.');
-        requestTiles(that.application, requests, that.cacheLevels);
+        requestTiles(that, requests, that.cacheLevels);
     });
 };
 
@@ -136,7 +137,9 @@ function whenImageryProviderIsReady(imageryProvider) {
     }, { timeout: 60000, pollInterval: 100 });
 }
 
-function requestTiles(app, requests, maxLevel) {
+function requestTiles(toolsPanel, requests, maxLevel) {
+    var app = toolsPanel.application;
+
     var urls = [];
     var names = [];
     var stats = [];
@@ -345,9 +348,15 @@ function requestTiles(app, requests, maxLevel) {
 
         ++next.stat.number;
 
+        var url = next.url;
+
+        if (!toolsPanel.useCache) {
+            url = url.replace('/proxy/h', '/proxy/_0d/h');
+        }
+
         var start = getTimestamp();
         loadWithXhr({
-            url : next.url
+            url : url
         }).then(function() {
             doneUrl(next.stat, start, false);
         }).otherwise(function(e) {
