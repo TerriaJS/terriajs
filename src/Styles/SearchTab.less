@@ -7,7 +7,7 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: @search-tab-input-background-color;
+    background-color: @input-background-color;
 }
 
 .search-tab-input {
@@ -16,13 +16,13 @@
     top: 0;
     left: 0;
     height: 40px;
-    width: @explorer-panel-width;
-    font-size: 0.95em;
-    background-color: @search-tab-input-background-color;
-    color: @search-tab-input-text-color;
+    width: 300px;
+    font-size: 15px;
+    background-color: @input-background-color;
+    color: @input-text-color;
     line-height: 38px;
-    padding-left: 10px;
-    padding-right: 15px;
+    padding-left: 17px;
+    padding-right: 33px;
 }
 
 .search-tab-input-clear {
@@ -32,32 +32,8 @@
     right: 13px;
     bottom: 10px;
     width: 20px;
-    background-color: #CCC;
-    border-radius: 10px;
     text-align: center;
     line-height: 20px;
-}
-
-.search-tab-input::-webkit-input-placeholder {
-    color: @search-tab-input-text-color;
-    font-style: italic;
-}
-
-.search-tab-input:-moz-placeholder {
-    color: @search-tab-input-text-color;
-    opacity: 1;
-    font-style: italic;
-}
-
-.search-tab-input::-moz-placeholder {
-    color: @search-tab-input-text-color;
-    opacity: 1;
-    font-style: italic;
-}
-
-.search-tab-input:-ms-input-placeholder {
-    color: @search-tab-input-text-color;
-    font-style: italic;
 }
 
 .search-tab-input::-ms-clear {
@@ -78,14 +54,13 @@
     line-height: 40px;
     background-color: rgba(0,0,0, 0.2);
     border-bottom: @panel-element-border;
-    border-top: @panel-element-border;
     cursor: pointer;
 }
 
 .search-tab-provider-label {
     display: table-cell;
     padding-left: 16px;
-    font-size: 0.95em;
+    font-size: 15px;
     color: @panel-emphasized-text-color;
 }
 
@@ -126,13 +101,13 @@
 
 .search-tab-provider-result-label {
     display: table-cell;
-    font-size: 0.95em;
+    font-size: 15px;
     color: @panel-text-color;
     font-weight: lighter;
 }
 
 .search-tab-provider-message {
-    font-size: 0.95em;
+    font-size: 15px;
     color: @panel-text-color;
     font-weight: lighter;
     font-style: italic;
@@ -142,7 +117,7 @@
 }
 
 .search-tab-provider-searching {
-    font-size: 0.95em;
+    font-size: 15px;
     color: @panel-text-color;
     font-weight: lighter;
     font-style: italic;

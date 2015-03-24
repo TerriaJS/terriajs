@@ -8,7 +8,6 @@
         "www.abc.net.au"
     ],
     "initializationUrls" : [
-        "init_ga.json",
         "init_nm.json"
     ]
 }

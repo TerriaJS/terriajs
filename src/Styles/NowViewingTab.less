@@ -10,7 +10,7 @@
 
 .now-viewing-item-label {
     display: table-cell;
-    font-size: 0.95em;
+    font-size: 14px;
     color: @panel-emphasized-text-color;
 }
 
@@ -35,7 +35,8 @@
 
 .now-viewing-item-drag-handle {
     position: relative;
-    top: 5px;
+    top: 6px;
+    opacity: 0.4;
 }
 
 .now-viewing-item-details {
@@ -82,8 +83,8 @@
     padding-left: 16px;
     padding-top: 16px;
     padding-bottom: 10px;
+    font-size: 14px;
     color: @panel-emphasized-text-color;
-    font-weight: lighter;
     border-top: @panel-element-border;
 }
 
@@ -92,13 +93,22 @@
     width: 20px;
 }
 
-.now-viewing-item-arrow {
+.now-viewing-arrow {
     position: relative;
-    width: 15px;
-    height: 15px;
+    width: 12px;
+    height: 12px;
     fill: @panel-emphasized-text-color;
     margin-right: 16px;
 }
+
+.now-viewing-item-checkbox {
+  position: relative;
+  top: 2px;
+  width: 15px;
+  height: 15px;
+  fill: @panel-text-color;
+}
+
 
 .now-viewing-legend-text {
     display: block;
@@ -137,7 +147,7 @@
 .now-viewing-action {
     display: inline-block;
     padding: 5px;
-    font-size: 0.9em;
+    font-size: 14px;
     font-style: italic;
 }
 
