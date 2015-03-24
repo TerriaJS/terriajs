@@ -482,7 +482,7 @@ function findLayer(startLayer, name) {
 }
 
 function populateMetadataGroup(metadataGroup, sourceMetadata) {
-    if (typeof sourceMetadata === 'string' || sourceMetadata instanceof Array) {
+    if (typeof sourceMetadata === 'string' || sourceMetadata instanceof String || sourceMetadata instanceof Array) {
         return;
     }
 
