@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 2015-03-16
+
+* Fix a bug that caused the view to be tilted slightly away from North after clicking the Reset button.
+
 ### 2015-03-03
 
 * Add a prototype of loading KML files from data.gov.au, accessible at http://nationalmap.nicta.com.au/#dgakml.

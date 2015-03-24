@@ -4,7 +4,7 @@
     .modal;
     width: 500px;
     height: @add-data-panel-height;
-    font-size: 0.9em;
+    font-size: 14px;
 }
 
 .add-data-header {
@@ -13,120 +13,64 @@
     background-color: rgba(0,0,0,0.2);
 }
 
-.add-data-header h1 {
-    color: @panel-emphasized-text-color;
-    padding-left: 15px;
-    margin: 0;
-}
-
-.add-data-close-button {
-    position: absolute;
-    right: 15px;
-    cursor: pointer;
-    font-size: 18pt;
-    color: @panel-emphasized-text-color;
-}
-
 .add-data-content {
-    font-weight: lighter;
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-bottom: 15px;
+    margin: 15px;
     overflow: auto;
     height: @add-data-panel-height - 40px - 30px;
     line-height: 1.2em;
+    font-weight: 300;
 }
 
 .add-data-content p {
     padding-right: 15px;
-    margin-top: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .add-data-content h2 {
     font-weight: bold;
     padding-top: 10px;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
 }
 
-.add-data-select-file-button {
+.add-data-browse-link {
     font-weight: bold;
     cursor: pointer;
     color: @highlight-color;
 }
 
-.add-data-select-file-button:hover {
+.add-data-browse-link:hover {
     text-decoration: underline;
 }
 
-.add-data-url-input-outer-holder {
+.add-data-url-input-holder {
     position: relative;
     width: 100%;
-    height: 40px;
-    background-color: @panel-form-input-background-color;
+    height: 30px;
     margin-top: 5px;
 }
 
-@add-data-url-input-padding: 16px;
-@add-data-url-input-border: 0px;
+.add-data-url-input {
+  width: 394px;
+  padding-left: 10px;
+  padding-right: 2px;
+}
 
-.add-data-url-input-inner-holder {
+.add-data-url-button {
     position: absolute;
-    height: 40px;
-    background-color: @panel-form-input-background-color;
-    left: @add-data-url-input-padding * 2 + @add-data-url-input-border + @add-data-url-input-border;
-    right: 40px;
+    background-color: @panel-form-button-background-color;
+    border: 0;
+    height: 44px;
+    width: 60px;
+    font-size: 14px;
+    color: @panel-form-button-text-color;
+    right: 0;
     top: 0;
     bottom: 0;
 }
 
-.add-data-url-input {
-    padding-left: @add-data-url-input-padding;
-    padding-right: @add-data-url-input-padding;
-    border: @add-data-url-input-border;
-    width: 100%;
-    height: 38px;
-    background-color: @panel-form-input-background-color;
-    color: @panel-form-input-text-color;
-    line-height: 38px;
-    margin-left: -(@add-data-url-input-padding * 2 + @add-data-url-input-border + @add-data-url-input-border);
-}
+.input-group-btn {}
 
-.add-data-url-input::-webkit-input-placeholder {
-    color: @panel-form-input-text-color;
-    font-style: italic;
-}
-
-.add-data-url-input:-moz-placeholder {
-    color: @panel-form-input-text-color;
-    opacity: 1;
-    font-style: italic;
-}
-
-.add-data-url-input::-moz-placeholder {
-    color: @panel-form-input-text-color;
-    opacity: 1;
-    font-style: italic;
-}
-
-.add-data-url-input:-ms-input-placeholder {
-    color: @panel-form-input-text-color;
-    font-style: italic;
-}
-
-p.add-data-content-new-section {
-    margin-top: 32px;
-}
-
-.add-data-weblink-second-line {
-    height: 40px;
-    line-height: 40px;
-    width: 100%;
-    text-align: right;
-}
-
-.add-data-content-type {
-}
+.add-data-content-type {}
 
 .add-data-content-type-select {
     display: block;
@@ -135,30 +79,10 @@ p.add-data-content-new-section {
     height: 40px;
     border: 0;
     margin-top: 5px;
-}
-
-.add-data-url-add-button {
-    position: absolute;
-    background-color: @panel-form-button-background-color;
-    border: 0;
-    height: 40px;
-    width: 40px;
-    color: @panel-form-button-text-color;
-    right: 0;
-    top: 0;
-    bottom: 0;
-}
-
-.add-data-or {
-    padding-left: 100px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .add-data-tip {
-    padding-top: 20px;
-}
-
-.add-data-tip strong {
-    font-weight: bold;
+    margin-top: 25px;
+    font-style: italic;
 }

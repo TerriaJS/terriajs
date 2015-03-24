@@ -64,8 +64,6 @@ var AusGlobeViewer = function(application) {
     this._distanceLegendBarWidth = undefined;
     this._distanceLegendLabel = undefined;
 
-    var that = this;
-    
     var url = window.location;
     var uri = new URI(url);
     var params = uri.search(true);
@@ -123,26 +121,6 @@ If you\'re on a desktop or laptop, consider increasing the size of your window.'
     knockout.getObservable(this.application, 'baseMap').subscribe(function() {
         changeBaseMap(this, this.application.baseMap);
     }, this);
-
-    knockout.getObservable(this.application, 'initialBoundingBox').subscribe(function() {
-        if (!defined(that.application.initialCamera) || !defined(that.application.cesium)) {
-            that.application.currentViewer.zoomTo(that.application.initialBoundingBox, 2.0);
-        }
-    });
-
-    knockout.getObservable(this.application, 'initialCamera').subscribe(function() {
-        if (defined(that.application.initialCamera) && defined(that.application.cesium)) {
-            var cesiumCamera = that.application.cesium.scene.camera;
-            cesiumCamera.flyTo({
-                duration: 2.0,
-                destination: that.application.initialCamera.position,
-                orientation: {
-                    direction: that.application.initialCamera.direction,
-                    up: that.application.initialCamera.up
-                }
-            });
-        }
-    });
 };
 
 AusGlobeViewer.create = function(application) {
@@ -392,7 +370,8 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         fullscreenButton : false,
         terrainProvider : terrainProvider,
         imageryProvider : new SingleTileImageryProvider({ url: 'images/nicta.png' }),
-        timeControlsInitiallyVisible : false
+        timeControlsInitiallyVisible : false,
+        scene3DOnly: true
     };
 
     // Workaround for Firefox bug with WebGL and printing:
@@ -501,7 +480,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
                 rect = this.application.cesium.getCurrentExtent();
             } catch (e) {
                 console.log('Using default screen extent', e.message);
-                rect = this.application.initialBoundingBox;
+                rect = this.application.initialView.rectangle;
             }
 
             this.application.cesium.destroy();
@@ -521,7 +500,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
             this.viewer = undefined;
         }
         else {
-            rect = this.application.initialBoundingBox;
+            rect = this.application.initialView.rectangle;
         }
 
        //create leaflet viewer
@@ -666,19 +645,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         if (defined(rect)) {
             this.application.cesium.zoomTo(rect, 0.0);
         } else {
-            if (defined(this.application.initialCamera)) {
-                var cesiumCamera = this.application.cesium.scene.camera;
-                cesiumCamera.flyTo({
-                    duration: 0.0,
-                    destination: this.application.initialCamera.position,
-                    orientation: {
-                        direction: this.application.initialCamera.direction,
-                        up: this.application.initialCamera.up
-                    }
-                });
-            } else {
-                this.application.cesium.zoomTo(this.application.initialBoundingBox, 0.0);
-            }
+            this.application.cesium.zoomTo(this.application.initialView, 0.0);
         }
     }
 

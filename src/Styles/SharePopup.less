@@ -12,27 +12,15 @@
     background-color: rgba(0,0,0,0.2);
 }
 
-.share-popup-header h1 {
-    font-size: 16px;
-    padding-left: 15px;
-    margin: 0;
-}
-
-.share-popup-close-button {
-    position: absolute;
-    right: 15px;
-    cursor: pointer;
-    font-size: 18pt;
-    font-weight: bold;
-    color: @panel-emphasized-text-color;
-}
-
 .share-popup-content {
-    font-weight: lighter;
     padding: 15px;
     overflow: auto;
     height: @share-popup-height - 40px - 30px;
-    color: @panel-text-color;
+    font-weight: 300;
+}
+
+.share-popup-image {
+  background-color: rgba(0,0,0,0.15);
 }
 
 .share-popup-right {
@@ -52,4 +40,6 @@
 
 .share-popup-label input {
     width: 550px;
+    height: 30px;
+    margin-top: 10px;
 }

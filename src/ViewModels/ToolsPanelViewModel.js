@@ -1,21 +1,23 @@
 'use strict';
 
 /*global require,L,URI*/
+var CatalogGroup = require('../Models/CatalogGroup');
+var corsProxy = require('../Core/corsProxy');
 var loadView = require('../Core/loadView');
+var pollToPromise = require('../Core/pollToPromise');
+var PopupMessageViewModel = require('./PopupMessageViewModel');
+
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
-var corsProxy = require('../Core/corsProxy');
-
 var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var CatalogGroup = require('../Models/CatalogGroup');
-
+var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var ToolsPanelViewModel = function(options) {
     if (!defined(options) || !defined(options.application)) {
@@ -28,11 +30,12 @@ var ToolsPanelViewModel = function(options) {
 
     this.cacheFilter = 'opened';
     this.cacheLevels = 3;
+    this.useCache = false;
     this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
     this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['cacheFilter', 'cacheLevels', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -57,15 +60,20 @@ ToolsPanelViewModel.prototype.closeIfClickOnBackground = function(viewModel, e) 
 
 ToolsPanelViewModel.prototype.cacheTiles = function() {
     var requests = [];
-    getAllRequests(['wms'], this.cacheFilter, requests, this.application.catalog.group);
-    console.log('Requesting tiles from ' + requests.length + ' data sources.');
-    requestTiles(this.application, requests, this.cacheLevels);
+    var promises = [];
+    getAllRequests(['wms', 'esri-mapServer'], this.cacheFilter, requests, this.application.catalog.group, promises);
+
+    var that = this;
+    when.all(promises, function() {
+        console.log('Requesting tiles from ' + requests.length + ' data sources.');
+        requestTiles(that, requests, that.cacheLevels);
+    });
 };
 
 ToolsPanelViewModel.prototype.exportFile = function() {
     //Create the initialization file text
     var catalog = this.application.catalog.serializeToJson({serializeForSharing:false});
-    var camera = getDegreesRect(this.application.initialBoundingBox);
+    var camera = getDegreesRect(this.application.homeView.rectangle);
     var initJsonObject = { corsDomains: corsProxy.corsDomains, camera: camera, services: [], catalog: catalog};
     var initFile = JSON.stringify(initJsonObject, null, 4);
 
@@ -78,9 +86,14 @@ ToolsPanelViewModel.prototype.exportFile = function() {
 
 ToolsPanelViewModel.prototype.exportCkan = function() {
     var requests = [];
-    getAllRequests(['wms', 'esri-mapService'], this.ckanFilter, requests, this.application.catalog.group);
-    console.log('Exporting metadata from ' + requests.length + ' data sources.');
-    populateCkan(requests, this.ckanUrl, this.ckanApiKey);
+    var promises = [];
+    getAllRequests(['wms', 'esri-mapServer'], this.ckanFilter, requests, this.application.catalog.group, promises);
+
+    var that = this;
+    when.all(promises, function() {
+        console.log('Exporting metadata from ' + requests.length + ' data sources.');
+        populateCkan(requests, that.ckanUrl, that.ckanApiKey);
+    });
 };
 
 
@@ -91,30 +104,53 @@ ToolsPanelViewModel.open = function(container, options) {
 };
 
 
-function getAllRequests(types, mode, requests, group) {
+function getAllRequests(types, mode, requests, group, promises) {
     for (var i = 0; i < group.items.length; ++i) {
         var item = group.items[i];
         if (item instanceof CatalogGroup) {
-            if (item.isOpen || mode === 'all') {
-                getAllRequests(types, mode, requests, item);
+            if (item.isOpen || mode === 'all' || mode === 'enabled') {
+                getAllRequests(types, mode, requests, item, promises);
             }
         } else if ((types.indexOf(item.type) !== -1) && (mode !== 'enabled' || item.isEnabled)) {
+            var enabledHere = !item.isEnabled;
+            if (enabledHere) {
+                item._enable();
+            }
+
+            var imageryProvider = item._imageryLayer.imageryProvider;
+
             requests.push({
                 item : item,
-                group : group.name
+                group : group.name,
+                enabledHere : enabledHere,
+                provider : imageryProvider
             });
+
+            promises.push(whenImageryProviderIsReady(imageryProvider));
         }
     }
 }
 
-function requestTiles(app, requests, maxLevel) {
+function whenImageryProviderIsReady(imageryProvider) {
+    return pollToPromise(function() {
+        return imageryProvider.ready;
+    }, { timeout: 60000, pollInterval: 100 });
+}
+
+function requestTiles(toolsPanel, requests, maxLevel) {
+    var app = toolsPanel.application;
+
     var urls = [];
     var names = [];
+    var stats = [];
+    var uniqueStats = [];
     var name;
+    var stat;
 
     loadImage.createImage = function(url, crossOrigin, deferred) {
         urls.push(url);
         names.push(name);
+        stats.push(stat);
         if (defined(deferred)) {
             deferred.resolve();
         }
@@ -126,14 +162,8 @@ function requestTiles(app, requests, maxLevel) {
     var i;
     for (i = 0; i < requests.length; ++i) {
         var request = requests[i];
-        var extent = request.item.rectangle || app.initialBoundingBox;
+        var extent = request.provider.rectangle || app.homeView.rectangle;
         name = request.item.name;
-
-        var enabledHere = false;
-         if (!request.item.isEnabled) {
-            request.item._enable();
-            enabledHere = true;
-         }
 
         var tilingScheme;
         var leaflet = app.leaflet;
@@ -141,11 +171,26 @@ function requestTiles(app, requests, maxLevel) {
             request.provider = request.item._imageryLayer;
             tilingScheme = new WebMercatorTilingScheme();
             leaflet.map.addLayer(request.provider);
-        }
-        else {
-            request.provider = request.item._imageryLayer.imageryProvider;
+        } else {
             tilingScheme = request.provider.tilingScheme;
         }
+
+        stat = {
+            name: name,
+            success: {
+                min: 999999,
+                max: 0,
+                sum: 0,
+                number: 0
+            },
+            error: {
+                min: 999999,
+                max: 0,
+                sum: 0,
+                number: 0
+            }
+        };
+        uniqueStats.push(stat);
 
         for (var level = 0; level <= maxLevel; ++level) {
             var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
@@ -171,7 +216,7 @@ function requestTiles(app, requests, maxLevel) {
                 }
             }
         }
-        if (enabledHere) {
+        if (request.enabledHere) {
             if (defined(leaflet)) {
                leaflet.map.removeLayer(request.provider);
             }
@@ -182,45 +227,118 @@ function requestTiles(app, requests, maxLevel) {
     loadImage.createImage = loadImage.defaultCreateImage;
     throttleRequestByServer.maximumRequestsPerServer = oldMax;
 
-    console.log('Caching ' + urls.length + ' URLs');
+    var popup = PopupMessageViewModel.open('ui', {
+        title: 'Dataset Testing',
+        message: '<div>Requesting ' + urls.length + ' URLs</div>'
+    });
 
-    var maxRequests = 2;
+    var maxRequests = 1;
     var nextRequestIndex = 0;
     var inFlight = 0;
     var urlsRequested = 0;
 
-    function doneUrl() {
+    function doneUrl(stat, startTime, error) {
+        var ellapsed = getTimestamp() - startTime;
+
+        var resultStat;
+        if (error) {
+            resultStat = stat.error;
+        } else {
+            resultStat = stat.success;
+        }
+
+        ++resultStat.number;
+        resultStat.sum += ellapsed;
+
+        if (ellapsed > resultStat.max) {
+            resultStat.max = ellapsed;
+        }
+        if (ellapsed < resultStat.min) {
+            resultStat.min = ellapsed;
+        }
+
         --inFlight;
         doNext();
     }
 
     function getNextUrl() {
         var url;
+        var stat;
 
         if (nextRequestIndex >= urls.length) {
             return undefined;
         }
 
         if ((nextRequestIndex % 10) === 0) {
-            console.log('Finished ' + nextRequestIndex + ' URLs.');
+            //popup.message += '<div>Finished ' + nextRequestIndex + ' URLs.</div>';
         }
 
         url = urls[nextRequestIndex];
         name = names[nextRequestIndex]; //track for error reporting
+        stat = stats[nextRequestIndex];
         ++nextRequestIndex;
 
         return {
             url: url,
-            name: name
+            name: name,
+            stat: stat
         };
     }
 
+    var last;
+    var failedRequests = 0;
+    var slowDatasets = 0;
+
+    var maxAverage = 400;
+    var maxMaximum = 800;
+
     function doNext() {
         var next = getNextUrl();
+        if (!defined(last) && defined(next)) {
+            popup.message += '<h1>' + next.name + '</h1>';
+        }
+        if (defined(last) && (!defined(next) || next.name !== last.name)) {
+            if (last.stat.error.number === 0) {
+                popup.message += '<div>All ' + last.stat.success.number + ' tile requests completed without error.';
+            } else {
+                popup.message += '<div style="color:red">' + last.stat.error.number + ' tile requests failed (out of ' + (last.stat.success.number + last.stat.error.number) + ')</div>';
+            }
+            popup.message += '<div>Minimum time: ' + Math.round(last.stat.success.min) + 'ms</div>';
+
+            if (last.stat.success.max > maxMaximum) {
+                popup.message += '<div style="color:red">Maximum time: ' + Math.round(last.stat.success.max) + 'ms (should be <' + maxMaximum + ')</div>';
+            } else {
+                popup.message += '<div>Maximum time: ' + Math.round(last.stat.success.max) + 'ms</div>';
+            }
+
+            var average = Math.round(last.stat.success.sum / last.stat.success.number);
+
+            if (average > maxAverage) {
+                popup.message += '<div style="color:red">Average time: ' + average + 'ms (should be <' + maxAverage + ')</div>';
+            } else {
+                popup.message += '<div>Average time: ' + average + 'ms</div>';
+            }
+
+            failedRequests += last.stat.error.number;
+
+            if (average > maxAverage || last.stat.success.max > maxMaximum) {
+                ++slowDatasets;
+            }
+
+            if (next) {
+                popup.message += '<h1>' + next.name + '</h1>';
+            }
+        }
+
+        last = next;
+
         if (!defined(next)) {
             if (inFlight === 0) {
-                console.log('Finished ' + nextRequestIndex + ' URLs.  DONE!');
-                console.log('Actual number of URLs requested: ' + urlsRequested);
+                popup.message += '<h1>Summary</h1>';
+                popup.message += '<div>Finished ' + nextRequestIndex + ' URLs.  DONE!</div>';
+                popup.message += '<div>Actual number of URLs requested: ' + urlsRequested + '</div>';
+                popup.message += '<div style="' + (failedRequests > 0 ? 'color:red' : '') + '">Failed tile requests: ' + failedRequests + '</div>';
+                popup.message += '<div style="' + (slowDatasets > 0 ? 'color:red' : '') + '">Slow datasets: ' + slowDatasets + '</div>';
             }
             return;
         }
@@ -228,11 +346,23 @@ function requestTiles(app, requests, maxLevel) {
         ++urlsRequested;
         ++inFlight;
 
+        ++next.stat.number;
+
+        var url = next.url;
+
+        if (!toolsPanel.useCache) {
+            url = url.replace('/proxy/h', '/proxy/_0d/h');
+        }
+
+        var start = getTimestamp();
         loadWithXhr({
-            url : next.url
-        }).then(doneUrl).otherwise(function() {
-            console.log('Returned an error while working on layer: ' + next.name);
-            doneUrl();
+            url : url
+        }).then(function() {
+            doneUrl(next.stat, start, false);
+        }).otherwise(function(e) {
+            popup.message += '<div>Tile request resulted in an error' + (e.statusCode ? (' (code ' + e.statusCode + '):') : ':') + '</div>';
+            popup.message += '<div>' + next.url + '</div>';
+            doneUrl(next.stat, start, true);
         });
     }
 
