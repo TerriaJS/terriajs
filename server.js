@@ -4,16 +4,27 @@
 var url = require('url');
 var configSettings = require('./public/config.json');
 
+var protocolRegex = /^\w+:\//;
+
 function getRemoteUrlFromParam(req) {
     var remoteUrl = req.params[0];
     if (remoteUrl.indexOf('_') === 0) {
         remoteUrl = remoteUrl.substring(remoteUrl.indexOf('/')+1);
     }
     if (remoteUrl) {
-        // add http:// to the URL if no protocol is present
-        if (!/^https?:\/\//.test(remoteUrl)) {
+        var match = protocolRegex.exec(remoteUrl);
+        if (!match || match.length < 1) {
             remoteUrl = 'http://' + remoteUrl;
+        } else {
+            var matchedPart = match[0];
+
+            // If the protocol portion of the URL only has a single slash after it, the extra slash was probably stripped off by someone
+            // along the way (NGINX will do this).  Add it back.
+            if (remoteUrl[matchedPart.length] !== '/') {
+                remoteUrl = matchedPart + '/' + remoteUrl.substring(matchedPart.length);
+            }
         }
+
         remoteUrl = url.parse(remoteUrl);
         // copy query string
         remoteUrl.search = url.parse(req.url).search;
@@ -278,7 +289,7 @@ if (cluster.isMaster) {
                 } else {
                     res.status(500).send('Unable to convert data');
                 }
-            })
+            });
         });
     });
 
