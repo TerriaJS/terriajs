@@ -181,7 +181,8 @@ function requestTiles(toolsPanel, requests, maxLevel) {
                 min: 999999,
                 max: 0,
                 sum: 0,
-                number: 0
+                number: 0,
+                slow: 0
             },
             error: {
                 min: 999999,
@@ -245,6 +246,9 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             resultStat = stat.error;
         } else {
             resultStat = stat.success;
+            if (ellapsed > maxAverage) {
+                resultStat.slow ++;
+            }
         }
 
         ++resultStat.number;
@@ -303,6 +307,9 @@ function requestTiles(toolsPanel, requests, maxLevel) {
                 popup.message += last.stat.success.number + ' tiles <span style="color:green">✓</span>';
             } else {
                 popup.message += last.stat.success.number + last.stat.error.number + ' tiles (<span style="color:red">' + last.stat.error.number + ' failed</span>)';
+            }
+            if (last.stat.success.slow > 0) {
+                popup.message += ' (' + last.stat.success.slow + ' slow) ';
             }
             var average = Math.round(last.stat.success.sum / last.stat.success.number);
             popup.message += ' <span ' + (average > maxAverage ? 'style="colour: red"' : '') + '>' + 
