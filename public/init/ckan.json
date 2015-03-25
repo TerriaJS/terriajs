@@ -32,7 +32,7 @@
                     "name": "Topography (Geoscience Australia)",
                     "description": "[Licence](http://www.ga.gov.au/copyright)",
                     "dataCustodian": "[Geoscience Australia](http://www.ga.gov.au/)",
-                    "url": "http://geoserver-nm.nicta.com.au/geotopo_250k/ows",
+                    "url": "http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows",
                     "type": "wms-getCapabilities"
                 },
                 {
@@ -46,7 +46,7 @@
                     "name": "Boundaries (Australia Bureau of Statistics)",
                     "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
                     "dataCustodian": "[Australian Bureau of Statistics](http://www.abs.gov.au/)",
-                    "url": "http://geoserver-nm.nicta.com.au/admin_bnds_abs/ows",
+                    "url": "http://geoserver.nationalmap.nicta.com.au/admin_bnds_abs/ows",
                     "type": "wms-getCapabilities"
                 },
                 {
