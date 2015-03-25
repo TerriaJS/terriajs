@@ -86,6 +86,8 @@ var GeoJsonCatalogItem = function(application, url) {
 
 inherit(CatalogItem, GeoJsonCatalogItem);
 
+GeoJsonCatalogItem.proj4BaseUrl = 'proj4def/';
+
 defineProperties(GeoJsonCatalogItem.prototype, {
     /**
      * Gets the type of data member represented by this instance.
@@ -346,7 +348,7 @@ function checkProjection(code) {
         return true;
     }
 
-    var url = '/proj4def/' + code;
+    var url = GeoJsonCatalogItem.proj4BaseUrl + code;
     return when(loadText(url), function (proj4Text) {
             proj4_epsg[code] = proj4Text;
             console.log('Added new string for', code, '=', proj4Text);
