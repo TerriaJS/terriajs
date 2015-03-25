@@ -73,6 +73,7 @@ if (start) {
     var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
     var NavigationViewModel = require('./ViewModels/NavigationViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
+    var OnePanelOpenInTopRight = require('./ViewModels/OnePanelOpenInTopRight');
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
     var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
@@ -354,6 +355,11 @@ if (start) {
             application: application
         });
         featureInfo.show(ui);
+
+        // Make sure only one panel is open in the top right at any time.
+        var onePanelOpenInTopRight = new OnePanelOpenInTopRight();
+        onePanelOpenInTopRight.addPanel(settingsPanel);
+        onePanelOpenInTopRight.addPanel(featureInfo);
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });

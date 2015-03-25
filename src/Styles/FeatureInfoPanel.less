@@ -1,11 +1,29 @@
 .feature-info-panel {
     .panel;
+    opacity: 1;
+    visibility: visible;
     background-color: @panel-background-color;
     top: 60px;
     right: 100px;
     max-width: 600px;
     position: absolute;
     box-shadow: @panel-box-shadow;
+
+    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -ms-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -o-transition: opacity @explorer-panel-close-animation-length ease-out;
+    transition: opacity @explorer-panel-close-animation-length ease-out;
+}
+
+.feature-info-panel-hidden {
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -moz-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -ms-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -o-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
 }
 
 .feature-info-panel-body {

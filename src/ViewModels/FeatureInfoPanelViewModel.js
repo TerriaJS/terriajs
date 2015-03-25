@@ -39,8 +39,9 @@ FeatureInfoPanelViewModel.prototype.close = function() {
 
 FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
     this.name = 'Loading...';
-    this.description = 'Loading feature information';
+    this.html = 'Loading feature information...';
     this.features = features;
+    this.isVisible = true;
 
     var that = this;
     when(features.allFeaturesAvailablePromise, function() {
@@ -50,7 +51,8 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
 
         if (features.features.length === 0) {
             that.name = 'None';
-            that.description = 'No features found.';
+            that.html = 'No features found.';
+            that.isVisible = true;
             return;
         }
 
@@ -60,7 +62,8 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
         that.isVisible = true;
     }, function() {
         that.name = 'Error';
-        that.description = features.error;
+        that.html = features.error;
+        that.isVisible = true;
     });
 
 };
