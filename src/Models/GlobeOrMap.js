@@ -1,7 +1,6 @@
 'use strict';
 
 /*global require*/
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
@@ -72,11 +71,10 @@ GlobeOrMap.prototype.computePositionOnScreen = function(position, result) {
 /**
  * Creates an {@see Entity} from a {@see ImageryLayerFeatureInfo}.
  * @param {ImageryLayerFeatureInfo} feature The feature for which to create an entity.
- * @param {Cartographic} defaultPosition The default position to use if the imagery layer feature does not specify one.
  * @return {Entity} The created entity.
  * @protected
  */
-GlobeOrMap.prototype._createEntityFromImageryLayerFeature = function(feature, defaultPosition) {
+GlobeOrMap.prototype._createEntityFromImageryLayerFeature = function(feature) {
     var entity = new Entity({
         id: feature.name,
     });
@@ -87,7 +85,7 @@ GlobeOrMap.prototype._createEntityFromImageryLayerFeature = function(feature, de
         }
     };
 
-    entity.position = Ellipsoid.WGS84.cartographicToCartesian(defaultValue(feature.position, defaultPosition));
+    entity.position = Ellipsoid.WGS84.cartographicToCartesian(feature.position);
     entity.properties = feature.properties;
 
     return entity;

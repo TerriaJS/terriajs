@@ -382,7 +382,6 @@ function postRender(cesium, date) {
 
     if (!Matrix4.equalsEpsilon(cesium._lastCameraViewMatrix, scene.camera.viewMatrix, 1e-5)) {
         cesium._lastCameraMoveTime = now;
-        cesium.application.mapViewChanged.raiseEvent();
     }
 
     var cameraMovedInLastSecond = now - cesium._lastCameraMoveTime < 1000;
@@ -417,8 +416,6 @@ function pickObject(cesium, e) {
     // Pick raster features
     var pickRay = cesium.scene.camera.getPickRay(e.position);
     var promise = cesium.scene.imageryLayers.pickImageryLayerFeatures(pickRay, cesium.scene);
-    var surfacePosition = cesium.scene.globe.pick(pickRay, cesium.scene);
-    var surfacePositionCartographic = cesium.scene.globe.ellipsoid.cartesianToCartographic(surfacePosition);
 
     result.allFeaturesAvailablePromise = when(promise, function(features) {
         result.isLoading = false;
@@ -429,7 +426,7 @@ function pickObject(cesium, e) {
 
         for (var i = 0; i < features.length; ++i) {
             var feature = features[i];
-            result.features.push(cesium._createEntityFromImageryLayerFeature(feature, surfacePositionCartographic));
+            result.features.push(cesium._createEntityFromImageryLayerFeature(feature));
         }
     }).otherwise(function(e) {
         result.isLoading = false;

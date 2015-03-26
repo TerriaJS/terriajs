@@ -43,13 +43,6 @@ var Leaflet = function(application, map) {
     map.on('click', function(e) {
         pickFeatures(that, e.latlng);
     });
-
-    function raiseMapViewChanged() {
-        that.application.mapViewChanged.raiseEvent();
-    }
-
-    map.on('zoomend', raiseMapViewChanged);
-    map.on('move', raiseMapViewChanged);
 };
 
 inherit(GlobeOrMap, Leaflet);
@@ -179,6 +172,7 @@ function pickFeatures(leaflet, latlng) {
 
     var dataSources = leaflet.application.nowViewing.items;
 
+    var pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
     var pickedXY = leaflet.map.latLngToContainerPoint(latlng, leaflet.map.getZoom());
     var bounds = leaflet.map.getBounds();
     var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
@@ -199,6 +193,12 @@ function pickFeatures(leaflet, latlng) {
             if (defined(result) && result.length > 0) {
                 for (var featureIndex = 0; featureIndex < result.length; ++featureIndex) {
                     var feature = result[featureIndex];
+
+                    // For features without a position, use the picked location.
+                    if (!defined(feature.position)) {
+                        feature.position = pickedLocation;
+                    }
+
                     leaflet._pickedFeatures.features.push(leaflet._createEntityFromImageryLayerFeature(feature, Cartographic.fromDegrees(latlng.lng, latlng.lat)));
                 }
             }

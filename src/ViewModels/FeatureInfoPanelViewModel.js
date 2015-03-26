@@ -35,10 +35,17 @@ var FeatureInfoPanelViewModel = function(options) {
     this.application.featuresPicked.addEventListener(this.showFeatures, this);
 
     this._domNodes = loadView(require('fs').readFileSync(__dirname + '/../Views/FeatureInfoPanel.html', 'utf8'), container, this);
+
+    knockout.getObservable(this, 'isVisible').subscribe(function() {
+        if (!this.isVisible) {
+            this.selectionIndicator.isVisible = false;
+        }
+    }, this);
 };
 
 FeatureInfoPanelViewModel.prototype.close = function() {
     this.isVisible = false;
+    this.selectionIndicator.isVisible = false;
 };
 
 FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
