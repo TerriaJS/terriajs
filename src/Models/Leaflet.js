@@ -1,10 +1,13 @@
 'use strict';
 
-/*global require,html2canvas*/
+/*global require,html2canvas,L*/
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -40,6 +43,13 @@ var Leaflet = function(application, map) {
     map.on('click', function(e) {
         pickFeatures(that, e.latlng);
     });
+
+    function raiseMapViewChanged() {
+        that.application.mapViewChanged.raiseEvent();
+    }
+
+    map.on('zoomend', raiseMapViewChanged);
+    map.on('move', raiseMapViewChanged);
 };
 
 inherit(GlobeOrMap, Leaflet);
@@ -131,6 +141,27 @@ Leaflet.prototype.notifyRepaintRequired = function() {
     // Leaflet doesn't need to do anything with this notification.
 };
 
+var cartographicScratch = new Cartographic();
+
+/**
+ * Computes the screen position of a given world position.
+ * @param  {Cartesian3} position The world position in Earth-centered Fixed coordinates.
+ * @param  {Cartesian2} [result] The instance to which to copy the result.
+ * @return {Cartesian2} The screen position, or undefined if the position is not on the screen.
+ */
+Leaflet.prototype.computePositionOnScreen = function(position, result) {
+    var cartographic = Ellipsoid.WGS84.cartesianToCartographic(position, cartographicScratch);
+    var point = this.map.latLngToContainerPoint(L.latLng(CesiumMath.toDegrees(cartographic.latitude), CesiumMath.toDegrees(cartographic.longitude)));
+
+    if (defined(result)) {
+        result.x = point.x;
+        result.y = point.y;
+    } else {
+        result = new Cartesian2(point.x, point.y);
+    }
+    return result;
+};
+
 function featurePicked(leaflet, entity) {
     leaflet._pickedFeatures.features.push(entity);
 }
@@ -168,7 +199,7 @@ function pickFeatures(leaflet, latlng) {
             if (defined(result) && result.length > 0) {
                 for (var featureIndex = 0; featureIndex < result.length; ++featureIndex) {
                     var feature = result[featureIndex];
-                    leaflet._pickedFeatures.features.push(leaflet._createEntityFromImageryLayerFeature(feature));
+                    leaflet._pickedFeatures.features.push(leaflet._createEntityFromImageryLayerFeature(feature, Cartographic.fromDegrees(latlng.lng, latlng.lat)));
                 }
             }
         }

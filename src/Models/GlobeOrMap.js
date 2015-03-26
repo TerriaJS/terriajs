@@ -1,7 +1,9 @@
 'use strict';
 
 /*global require*/
+var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 
 /**
@@ -58,12 +60,23 @@ GlobeOrMap.prototype.notifyRepaintRequired = function() {
 };
 
 /**
+ * Computes the screen position of a given world position.
+ * @param  {Cartesian3} position The world position in Earth-centered Fixed coordinates.
+ * @param  {Cartesian2} [result] The instance to which to copy the result.
+ * @return {Cartesian2} The screen position, or undefined if the position is not on the screen.
+ */
+GlobeOrMap.prototype.computePositionOnScreen = function(position, result) {
+    throw new DeveloperError('computePositionOnScreen must be implemented in the derived class.');
+};
+
+/**
  * Creates an {@see Entity} from a {@see ImageryLayerFeatureInfo}.
  * @param {ImageryLayerFeatureInfo} feature The feature for which to create an entity.
- * @return {[type]} [description]
+ * @param {Cartographic} defaultPosition The default position to use if the imagery layer feature does not specify one.
+ * @return {Entity} The created entity.
  * @protected
  */
-GlobeOrMap.prototype._createEntityFromImageryLayerFeature = function(feature) {
+GlobeOrMap.prototype._createEntityFromImageryLayerFeature = function(feature, defaultPosition) {
     var entity = new Entity({
         id: feature.name,
     });
@@ -74,7 +87,7 @@ GlobeOrMap.prototype._createEntityFromImageryLayerFeature = function(feature) {
         }
     };
 
-    entity.position = feature.position;
+    entity.position = Ellipsoid.WGS84.cartographicToCartesian(defaultValue(feature.position, defaultPosition));
     entity.properties = feature.properties;
 
     return entity;

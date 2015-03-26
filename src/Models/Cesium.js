@@ -17,6 +17,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var SceneTransforms = require('../../third_party/cesium/Source/Scene/SceneTransforms');
 var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
 var TaskProcessor = require('../../third_party/cesium/Source/Core/TaskProcessor');
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
@@ -359,6 +360,16 @@ Cesium.prototype.notifyRepaintRequired = function() {
     this.viewer.useDefaultRenderLoop = true;
 };
 
+/**
+ * Computes the screen position of a given world position.
+ * @param  {Cartesian3} position The world position in Earth-centered Fixed coordinates.
+ * @param  {Cartesian2} [result] The instance to which to copy the result.
+ * @return {Cartesian2} The screen position, or undefined if the position is not on the screen.
+ */
+Cesium.prototype.computePositionOnScreen = function(position, result) {
+    return SceneTransforms.wgs84ToWindowCoordinates(this.scene, position, result);
+};
+
 function postRender(cesium, date) {
     // We can safely stop rendering when:
     //  - the camera position hasn't changed in over a second,
@@ -371,6 +382,7 @@ function postRender(cesium, date) {
 
     if (!Matrix4.equalsEpsilon(cesium._lastCameraViewMatrix, scene.camera.viewMatrix, 1e-5)) {
         cesium._lastCameraMoveTime = now;
+        cesium.application.mapViewChanged.raiseEvent();
     }
 
     var cameraMovedInLastSecond = now - cesium._lastCameraMoveTime < 1000;
@@ -405,6 +417,9 @@ function pickObject(cesium, e) {
     // Pick raster features
     var pickRay = cesium.scene.camera.getPickRay(e.position);
     var promise = cesium.scene.imageryLayers.pickImageryLayerFeatures(pickRay, cesium.scene);
+    var surfacePosition = cesium.scene.globe.pick(pickRay, cesium.scene);
+    var surfacePositionCartographic = cesium.scene.globe.ellipsoid.cartesianToCartographic(surfacePosition);
+
     result.allFeaturesAvailablePromise = when(promise, function(features) {
         result.isLoading = false;
 
@@ -414,7 +429,7 @@ function pickObject(cesium, e) {
 
         for (var i = 0; i < features.length; ++i) {
             var feature = features[i];
-            result.features.push(cesium._createEntityFromImageryLayerFeature(feature));
+            result.features.push(cesium._createEntityFromImageryLayerFeature(feature, surfacePositionCartographic));
         }
     }).otherwise(function(e) {
         result.isLoading = false;

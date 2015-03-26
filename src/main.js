@@ -352,9 +352,10 @@ if (start) {
         });
 
         var featureInfo = new FeatureInfoPanelViewModel({
-            application: application
+            application: application,
+            container: ui,
+            viewerElement: 'cesiumContainer'
         });
-        featureInfo.show(ui);
 
         // Make sure only one panel is open in the top right at any time.
         var onePanelOpenInTopRight = new OnePanelOpenInTopRight();

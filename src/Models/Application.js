@@ -60,6 +60,13 @@ var Application = function() {
     this.afterViewerChanged = new CesiumEvent();
 
     /**
+     * Gets or sets the event that is raised when the view of the map changes by panning, zooming, tilting etc.  This event may
+     * be raised very rapidly during smooth camera motion, so it is important that handlers of this event are very fast.
+     * @type {CesiumEvent}
+     */
+    this.mapViewChanged = new CesiumEvent();
+
+    /**
      * Gets or sets the collection of Cesium-style data sources that are currently active on the map.
      * @type {DataSourceCollection}
      */
