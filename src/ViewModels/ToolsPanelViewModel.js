@@ -170,7 +170,9 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             extent = request.provider.rectangle;
         } else if (request.item.rectangle) {
             extent = request.item.rectangle;
-        } else {
+        }
+
+        if (!defined(extent)) {
             extent = app.homeView.rectangle;
         }
 
