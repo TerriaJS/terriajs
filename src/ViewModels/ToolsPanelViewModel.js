@@ -181,7 +181,8 @@ function requestTiles(toolsPanel, requests, maxLevel) {
                 min: 999999,
                 max: 0,
                 sum: 0,
-                number: 0
+                number: 0,
+                slow: 0
             },
             error: {
                 min: 999999,
@@ -245,6 +246,9 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             resultStat = stat.error;
         } else {
             resultStat = stat.success;
+            if (ellapsed > maxAverage) {
+                resultStat.slow ++;
+            }
         }
 
         ++resultStat.number;
@@ -298,26 +302,21 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             popup.message += '<h1>' + next.name + '</h1>';
         }
         if (defined(last) && (!defined(next) || next.name !== last.name)) {
+            popup.message += '<div>';
             if (last.stat.error.number === 0) {
-                popup.message += '<div>All ' + last.stat.success.number + ' tile requests completed without error.';
+                popup.message += last.stat.success.number + ' tiles <span style="color:green">✓</span>';
             } else {
-                popup.message += '<div style="color:red">' + last.stat.error.number + ' tile requests failed (out of ' + (last.stat.success.number + last.stat.error.number) + ')</div>';
+                popup.message += last.stat.success.number + last.stat.error.number + ' tiles (<span style="color:red">' + last.stat.error.number + ' failed</span>)';
             }
-            popup.message += '<div>Minimum time: ' + Math.round(last.stat.success.min) + 'ms</div>';
-
-            if (last.stat.success.max > maxMaximum) {
-                popup.message += '<div style="color:red">Maximum time: ' + Math.round(last.stat.success.max) + 'ms (should be <' + maxMaximum + ')</div>';
-            } else {
-                popup.message += '<div>Maximum time: ' + Math.round(last.stat.success.max) + 'ms</div>';
+            if (last.stat.success.slow > 0) {
+                popup.message += ' (' + last.stat.success.slow + ' slow) ';
             }
-
             var average = Math.round(last.stat.success.sum / last.stat.success.number);
-
-            if (average > maxAverage) {
-                popup.message += '<div style="color:red">Average time: ' + average + 'ms (should be <' + maxAverage + ')</div>';
-            } else {
-                popup.message += '<div>Average time: ' + average + 'ms</div>';
-            }
+            popup.message += ' <span ' + (average > maxAverage ? 'style="colour: red"' : '') + '>' + 
+              'Average: ' + average + 'ms</span>&nbsp;';
+            popup.message += '(<span ' + (last.stat.success.max > maxMaximum ? 'style="color: red"' : '') + '>' + 
+              'Max: ' + Math.round(last.stat.success.max) + 'ms</span>)';
+            popup.message += '</div>';
 
             failedRequests += last.stat.error.number;
 
@@ -338,7 +337,9 @@ function requestTiles(toolsPanel, requests, maxLevel) {
                 popup.message += '<div>Finished ' + nextRequestIndex + ' URLs.  DONE!</div>';
                 popup.message += '<div>Actual number of URLs requested: ' + urlsRequested + '</div>';
                 popup.message += '<div style="' + (failedRequests > 0 ? 'color:red' : '') + '">Failed tile requests: ' + failedRequests + '</div>';
-                popup.message += '<div style="' + (slowDatasets > 0 ? 'color:red' : '') + '">Slow datasets: ' + slowDatasets + '</div>';
+                popup.message += '<div style="' + (slowDatasets > 0 ? 'color:red' : '') + '">Slow datasets: ' + slowDatasets + 
+                ' <i>(>' + maxAverage + 'ms average, or >' + maxMaximum + 'ms maximum)</i></div>';
+                
             }
             return;
         }

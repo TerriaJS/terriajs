@@ -205,7 +205,7 @@ Application.prototype.start = function(options) {
 
         if (defined(initializationUrls)) {
             for (var i = 0; i < initializationUrls.length; i++) {
-                that.initSources.push(initializationUrls[i]);
+                that.initSources.push(generateInitializationUrl(initializationUrls[i]));
             }
         }
 
@@ -291,7 +291,6 @@ Application.prototype.addInitSource = function(initSource) {
     }
 };
 
-var initSourceNameRegex = /\b(\w+)\b/i;
 var latestStartVersion = '0.0.04';
 
 function interpretHash(hashProperties, userProperties, persistentInitSources, temporaryInitSources) {
@@ -328,13 +327,19 @@ function interpretHash(hashProperties, userProperties, persistentInitSources, te
                 userProperties[property] = propertyValue;
                 knockout.track(userProperties, [property]);
             } else {
-                var name = initSourceNameRegex.exec(property);
-                var initSourceFile = 'init_' + name[0] + '.json';
+                var initSourceFile = generateInitializationUrl(property);
                 persistentInitSources.push(initSourceFile);
                 temporaryInitSources.push(initSourceFile);
             }
         }
     }
+}
+
+function generateInitializationUrl(url) {
+    if (url.toLowerCase().substring(url.length-5) !== '.json') {
+        return 'init/' + url + '.json';
+    }
+    return url;
 }
 
 function loadInitSources(application, initSources) {
