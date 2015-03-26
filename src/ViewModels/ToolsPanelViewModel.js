@@ -162,7 +162,18 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var i;
     for (i = 0; i < requests.length; ++i) {
         var request = requests[i];
-        var extent = request.provider.rectangle || app.homeView.rectangle;
+
+        var extent;
+        if (request.provider.rectangle && request.item.rectangle) {
+            extent = Rectangle.intersection(request.provider.rectangle, request.item.rectangle);
+        } else if (request.provider.rectangle) {
+            extent = request.provider.rectangle;
+        } else if (request.item.rectangle) {
+            extent = request.item.rectangle;
+        } else {
+            extent = app.homeView.rectangle;
+        }
+
         name = request.item.name;
 
         var tilingScheme;
