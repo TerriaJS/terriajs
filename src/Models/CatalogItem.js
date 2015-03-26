@@ -444,7 +444,7 @@ var scratchRectangle = new Rectangle();
 
         if (rect.east - rect.west > 3.14) {
             rect = Rectangle.clone(that.application.homeView.rectangle, scratchRectangle);
-            console.log('Extent is wider than world so using initialView.');
+            console.log('Extent is wider than world so using homeView.');
         }
 
         ga('send', 'event', 'dataSource', 'zoomTo', that.name);
