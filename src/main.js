@@ -144,7 +144,7 @@ if (start) {
         // Create the various base layer options.
         var naturalEarthII = new WebMapServiceCatalogItem(application);
         naturalEarthII.name = 'Natural Earth II';
-        naturalEarthII.url = 'http://geoserver-nm.nicta.com.au/imagery/natural-earth-ii/wms';
+        naturalEarthII.url = 'http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms';
         naturalEarthII.layers = 'natural-earth-ii:NE2_HR_LC_SR_W_DR';
         naturalEarthII.parameters = {
             tiled: true
@@ -161,7 +161,7 @@ if (start) {
 
         var blackMarble = new WebMapServiceCatalogItem(application);
         blackMarble.name = 'NASA Black Marble';
-        blackMarble.url = 'http://geoserver-nm.nicta.com.au/imagery/nasa-black-marble/wms';
+        blackMarble.url = 'http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms';
         blackMarble.layers = 'nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo';
         blackMarble.parameters = {
             tiled: true

@@ -15,7 +15,7 @@
                     "name": "Public Data",
                     "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
                     "dataCustodian": "[South Australian Government](http://www.sa.gov.au/)",
-                    "url": "http://geoserver-nm.nicta.com.au/sa_gov_au/ows",
+                    "url": "http://geoserver.nationalmap.nicta.com.au/sa_gov_au/ows",
                     "type": "wms-getCapabilities"
                 }
             ]
