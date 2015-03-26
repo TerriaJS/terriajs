@@ -443,7 +443,7 @@ var scratchRectangle = new Rectangle();
         var rect = Rectangle.clone(that.rectangle, scratchRectangle);
 
         if (rect.east - rect.west > 3.14) {
-            rect = Rectangle.clone(that.application.initialView.rectangle, scratchRectangle);
+            rect = Rectangle.clone(that.application.homeView.rectangle, scratchRectangle);
             console.log('Extent is wider than world so using initialView.');
         }
 
