@@ -7,8 +7,11 @@ var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var EasingFunction = require('../../third_party/cesium/Source/Core/EasingFunction');
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
+var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var TweenCollection = require('../../third_party/cesium/Source/Scene/TweenCollection');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var GlobeOrMap = require('./GlobeOrMap');
@@ -31,7 +34,20 @@ var Leaflet = function(application, map) {
 
     this.scene = new LeafletScene(map);
 
+    this._tweens = new TweenCollection();
+    this._tweensAreRunning = false;
+
     this._pickedFeatures = undefined;
+    this._selectionIndicator = L.marker([0,0], {
+        icon: L.divIcon({
+            className: '',
+            html: '<img src="images/NM-LocationTarget.svg" width="50" height="50" alt="" />',
+            iconSize: L.point(50, 50)
+        })
+    });
+    this._selectionIndicator.addTo(this.map);
+    this._selectionIndicatorDomElement = this._selectionIndicator._icon.children[0];
+
 
     this.scene.featureClicked.addEventListener(featurePicked.bind(undefined, this));
 
@@ -43,11 +59,20 @@ var Leaflet = function(application, map) {
     map.on('click', function(e) {
         pickFeatures(that, e.latlng);
     });
+
+    this._selectedFeatureSubscription = knockout.getObservable(this.application, 'selectedFeature').subscribe(function() {
+        selectFeature(this);
+    }, this);
 };
 
 inherit(GlobeOrMap, Leaflet);
 
 Leaflet.prototype.destroy = function() {
+    if (defined(this._selectedFeatureSubscription)) {
+        this._selectedFeatureSubscription.dispose();
+        this._selectedFeatureSubscription = undefined;
+    }
+
     return destroyObject(this);
 };
 
@@ -207,7 +232,83 @@ function pickFeatures(leaflet, latlng) {
         leaflet._pickedFeatures.isLoading = false;
         leaflet._pickedFeatures.error = 'An unknown error occurred while picking features.';
     });
-    leaflet.application.featuresPicked.raiseEvent(leaflet._pickedFeatures);
+
+    leaflet.application.pickedFeatures = leaflet._pickedFeatures;
+}
+
+function selectFeature(leaflet) {
+    var feature = leaflet.application.selectedFeature;
+    if (defined(feature) && defined(feature.position)) {
+        var cartographic = Ellipsoid.WGS84.cartesianToCartographic(feature.position.getValue(leaflet.application.clock.currentTime), cartographicScratch);
+        leaflet._selectionIndicator.setLatLng([CesiumMath.toDegrees(cartographic.latitude), CesiumMath.toDegrees(cartographic.longitude)]);
+        animateSelectionIndicatorAppear(leaflet);
+    } else {
+        animateSelectionIndicatorDepart(leaflet);
+    }
+}
+
+function startTweens(leaflet) {
+    if (leaflet._tweensAreRunning) {
+        return;
+    }
+
+    if (leaflet._tweens.length === 0) {
+        return;
+    }
+
+    leaflet._tweens.update();
+
+    if (leaflet._tweens.length !== 0) {
+        requestAnimationFrame(startTweens.bind(undefined, leaflet));
+    }
+}
+
+function animateSelectionIndicatorAppear(leaflet) {
+    var style = leaflet._selectionIndicatorDomElement.style;
+
+    leaflet._tweens.add({
+        startObject: {
+            scale: 2.0,
+            opacity: 0.0,
+            rotate: -180
+        },
+        stopObject: {
+            scale: 1.0,
+            opacity: 1.0,
+            rotate: 0
+        },
+        duration: 0.8,
+        easingFunction: EasingFunction.EXPONENTIAL_OUT,
+        update: function(value) {
+            style.opacity = value.opacity;
+            style.transform = 'scale(' + (value.scale) + ') rotate(' + value.rotate + 'deg)';
+        }
+    });
+
+    startTweens(leaflet);
+}
+
+function animateSelectionIndicatorDepart(leaflet) {
+    var style = leaflet._selectionIndicatorDomElement.style;
+
+    leaflet._tweens.add({
+        startObject: {
+            scale: 1.0,
+            opacity: 1.0
+        },
+        stopObject: {
+            scale: 1.5,
+            opacity: 0.0
+        },
+        duration: 0.8,
+        easingFunction: EasingFunction.EXPONENTIAL_OUT,
+        update: function(value) {
+            style.opacity = value.opacity;
+            style.transform = 'scale(' + value.scale + ')';
+        }
+    });
+
+    startTweens(leaflet);
 }
 
 module.exports = Leaflet;

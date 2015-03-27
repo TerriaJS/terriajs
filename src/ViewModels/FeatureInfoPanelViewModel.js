@@ -29,16 +29,18 @@ var FeatureInfoPanelViewModel = function(options) {
 
     this._domNodes = loadView(require('fs').readFileSync(__dirname + '/../Views/FeatureInfoPanel.html', 'utf8'), container, this);
 
+    knockout.getObservable(this, 'isVisible').subscribe(function() {
+        if (!this.isVisible && this.unselectFeaturesOnClose) {
+            this.application.selectedFeature = undefined;
+        }
+    }, this);
+
     knockout.getObservable(this.application, 'pickedFeatures').subscribe(function() {
         this.showFeatures(this.application.pickedFeatures);
     }, this);
 };
 
 FeatureInfoPanelViewModel.prototype.close = function() {
-    if (this.unselectFeaturesOnClose) {
-        this.application.selectedFeature = undefined;
-    }
-
     this.isVisible = false;
 };
 
