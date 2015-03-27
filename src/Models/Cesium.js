@@ -62,8 +62,6 @@ var Cesium = function(application, viewer) {
     this._lastCameraViewMatrix = new Matrix4();
     this._lastCameraMoveTime = 0;
 
-    this._selectedFeature = undefined;
-
     this._selectionIndicator = new CesiumSelectionIndicator(this);
 
     this._removePostRenderListener = this.scene.postRender.addEventListener(postRender.bind(undefined, this));
