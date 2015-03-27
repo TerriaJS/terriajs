@@ -59,6 +59,12 @@ var WebMapServiceCatalogGroup = function(application) {
      */
     this.blacklist = undefined;
 
+    /**
+     * Specifies whether to use each WMS layer's "title" (default), "name", or "abstract" as the primary title.
+     * @type {String}
+     */
+    this.titlefield = 'title';
+
     knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist']);
 };
 
@@ -287,7 +293,13 @@ function addLayersRecursively(wmsGroup, layers, items, parent, supportsJsonGetFe
 function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian) {
     var result = new WebMapServiceCatalogItem(wmsGroup.application);
 
-    result.name = layer.Title;
+    if (wmsGroup.titlefield === 'name') {
+        result.name = layer.Name;
+    } else if (wmsGroup.titlefield === 'abstract') {
+        result.name = layer.Abstract;
+    } else {
+        result.name = layer.Title;
+    }
     result.description = defined(layer.Abstract) && layer.Abstract.length > 0 ? layer.Abstract : wmsGroup.description;
     result.dataCustodian = dataCustodian;
     result.url = wmsGroup.url;
