@@ -21,6 +21,12 @@ var PickedFeatures = function() {
     this.isLoading = true;
 
     /**
+     * Gets or sets the ground position that was picked, if any.
+     * @type {Cartesian3}
+     */
+    this.pickPosition = undefined;
+
+    /**
      * Gets or sets the array of picked features.  The array is observable and may be updated up until the point that
      * {@see PickedFeatures#allFeaturesAvailablePromise} resolves.
      * @type {Entity[]}

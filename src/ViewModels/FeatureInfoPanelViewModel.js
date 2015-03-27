@@ -5,6 +5,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
+var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -24,8 +25,9 @@ var FeatureInfoPanelViewModel = function(options) {
     this.name = '';
     this.html = '';
     this.unselectFeaturesOnClose = true;
+    this.createFakeSelectedFeatureDuringPicking = true;
 
-    knockout.track(this, ['isVisible', 'name', 'html', 'unselectFeaturesOnClose']);
+    knockout.track(this, ['isVisible', 'name', 'html', 'unselectFeaturesOnClose', 'createFakeSelectedFeatureDuringPicking']);
 
     this._domNodes = loadView(require('fs').readFileSync(__dirname + '/../Views/FeatureInfoPanel.html', 'utf8'), container, this);
 
@@ -57,6 +59,12 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
     this.html = 'Loading feature information...';
     this.isVisible = true;
 
+    if (this.createFakeSelectedFeatureDuringPicking) {
+        var fakeFeature = new Entity('Pick Location');
+        fakeFeature.position = features.pickPosition;
+        this.application.selectedFeature = fakeFeature;
+    }
+
     var that = this;
     when(features.allFeaturesAvailablePromise, function() {
         if (features !== that.features) {
@@ -64,7 +72,6 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
         }
 
         if (features.features.length === 0) {
-            that.application.selectedFeature = undefined;
             that.name = 'None';
             that.html = 'No features found.';
             that.isVisible = true;

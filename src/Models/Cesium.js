@@ -423,7 +423,11 @@ function postRender(cesium, date) {
 }
 
 function pickObject(cesium, e) {
+    var pickRay = cesium.scene.camera.getPickRay(e.position);
+    var pickPosition = cesium.scene.globe.pick(pickRay, cesium.scene);
+
     var result = new PickedFeatures();
+    result.pickPosition = pickPosition;
 
     // Pick vector features.
     var picked = cesium.scene.drillPick(e.position);
@@ -438,7 +442,6 @@ function pickObject(cesium, e) {
     }
 
     // Pick raster features
-    var pickRay = cesium.scene.camera.getPickRay(e.position);
     var promise = cesium.scene.imageryLayers.pickImageryLayerFeatures(pickRay, cesium.scene);
 
     result.allFeaturesAvailablePromise = when(promise, function(features) {

@@ -198,6 +198,9 @@ function pickFeatures(leaflet, latlng) {
     var dataSources = leaflet.application.nowViewing.items;
 
     var pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
+    var pickPosition = Ellipsoid.WGS84.cartographicToCartesian(pickedLocation);
+    leaflet._pickedFeatures.pickPosition = pickPosition;
+
     var pickedXY = leaflet.map.latLngToContainerPoint(latlng, leaflet.map.getZoom());
     var bounds = leaflet.map.getBounds();
     var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
