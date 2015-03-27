@@ -1,9 +1,19 @@
 Change Log
 ==========
 
-### 2015-03-16
+### 2015-03-26
 
-* Fix a bug that caused the view to be tilted slightly away from North after clicking the Reset button.
+* Greatly enhanced support for ArcGIS servers.  ArcGIS map servers can now be queried for their list of layers to populate the Data Catalogue, and they can provide metadata information when clicking a feature on the map.
+* Added features to the Tools panel (accessible by visiting http://nationalmap.nicta.com.au/#tools=1) to test datasets.
+* Added the "Broadband ADSL Availability" and "Broadband ADSL Availability no Borders" datasets to the catalogue under Communications.  Also fixed a typo in the name of "Broadband Availability no Borders".
+* Improved styling of feature information popup in 2D viewer.
+* Fixed a bug that prevented KMZ files from loading.
+* Pressing Reset View now zooms back to see all of Australia even when the application is launched with a share link with another view.
+* Fixed a bug that caused the view to be tilted slightly away from North after clicking the Reset View button.
+* Made the 2D and 3D viewers use the exact same tile URLs, to improve caching.
+* Many styling improvements / refinements.
+* Fixed a bug that could cause very high memory usage when accessing a WMS server with very long strings in its metadata.
+* Made National Map work even when it is not hosted at the root of the web server.
 
 ### 2015-03-03
 
