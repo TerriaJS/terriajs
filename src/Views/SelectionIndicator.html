@@ -1,3 +1,5 @@
-<div class="selection-indicator" data-bind="style: { left: screenPositionX, top: screenPositionY }, css: { 'selection-indicator-visible': isVisible && isCesium }">
+<!-- ko if: isVisible -->
+<div class="selection-indicator" data-bind="style: { left: screenPositionX, top: screenPositionY }, css: { 'selection-indicator-visible': isVisibleDelayed && isCesium }">
     <img src="images/NM-LocationTarget.svg" width="50" height="50" alt="" />
 </div>
+<!-- /ko -->

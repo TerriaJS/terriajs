@@ -9,7 +9,6 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var loadView = require('../Core/loadView');
-var SelectionIndicatorViewModel = require('./SelectionIndicatorViewModel');
 
 var FeatureInfoPanelViewModel = function(options) {
     if (!defined(options) || !defined(options.application)) {
@@ -17,43 +16,44 @@ var FeatureInfoPanelViewModel = function(options) {
     }
 
     var container = getElement(defaultValue(options.container, document.body));
-    var viewerElement = getElement(options.viewerElement);
 
     this.application = options.application;
-
-    this.selectionIndicator = new SelectionIndicatorViewModel(this.application, viewerElement);
+    this.features = undefined;
 
     this.isVisible = false;
-    this.features = undefined;
     this.name = '';
     this.html = '';
+    this.unselectFeaturesOnClose = true;
 
-    knockout.track(this, ['isVisible', 'feature', 'name', 'html']);
-
-    this._domNodes = undefined;
-
-    this.application.featuresPicked.addEventListener(this.showFeatures, this);
+    knockout.track(this, ['isVisible', 'name', 'html', 'unselectFeaturesOnClose']);
 
     this._domNodes = loadView(require('fs').readFileSync(__dirname + '/../Views/FeatureInfoPanel.html', 'utf8'), container, this);
 
-    knockout.getObservable(this, 'isVisible').subscribe(function() {
-        if (!this.isVisible) {
-            this.selectionIndicator.isVisible = false;
-        }
+    knockout.getObservable(this.application, 'pickedFeatures').subscribe(function() {
+        this.showFeatures(this.application.pickedFeatures);
     }, this);
 };
 
 FeatureInfoPanelViewModel.prototype.close = function() {
+    if (this.unselectFeaturesOnClose) {
+        this.application.selectedFeature = undefined;
+    }
+
     this.isVisible = false;
-    this.selectionIndicator.isVisible = false;
 };
 
 FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
+    if (!defined(features)) {
+        this.isVisible = false;
+        return;
+    }
+
+    this.features = features;
+    this.application.selectedFeature = undefined;
+
     this.name = 'Loading...';
     this.html = 'Loading feature information...';
-    this.features = features;
     this.isVisible = true;
-    this.selectionIndicator.isVisible = false;
 
     var that = this;
     when(features.allFeaturesAvailablePromise, function() {
@@ -62,25 +62,20 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
         }
 
         if (features.features.length === 0) {
+            that.application.selectedFeature = undefined;
             that.name = 'None';
             that.html = 'No features found.';
             that.isVisible = true;
-            that.selectionIndicator.isVisible = false;
             return;
         }
 
         var feature = features.features[0];
+        that.application.selectedFeature = feature;
         that.name = feature.name ? feature.name : feature.id;
         that.html = feature.description.getValue(that.application.clock.currentTime);
-        if (feature.position) {
-            that.selectionIndicator.position = feature.position.getValue(that.application.clock.currentTime);
-        } else {
-            that.selectionIndicator.position = undefined;
-        }
-        that.selectionIndicator.isVisible = true;
-        that.selectionIndicator.update();
         that.isVisible = true;
     }, function() {
+        that.application.selectedFeature = undefined;
         that.name = 'Error';
         that.html = features.error;
         that.isVisible = true;

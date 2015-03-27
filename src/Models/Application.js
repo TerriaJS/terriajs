@@ -135,11 +135,10 @@ var Application = function() {
     this.initSources = [];
 
     /**
-     * Gets or sets the event that is raised when the user picks features on the map by clicking on them.  Event handlers will
-     * receive an instance of {@see PickedFeatures}.
-     * @type {CesiumEvent}
+     * Gets or sets the features that are currently picked.
+     * @type {PickedFeatures}
      */
-    this.featuresPicked = new CesiumEvent();
+    this.pickedFeatures = undefined;
 
     /**
      * Gets or sets the catalog of geospatial data.
@@ -159,7 +158,14 @@ var Application = function() {
      */
     this.nowViewing = new NowViewing(this);
 
-    knockout.track(this, ['viewerMode', 'baseMap', '_initialView', 'homeView']);
+    /**
+     * Gets or sets the currently-selected feature, or undefined if there is no selected feature.  The selected
+     * feature is highlighted by drawing a targetting cursor around it.
+     * @type {Entity}
+     */
+    this.selectedFeature = undefined;
+
+    knockout.track(this, ['viewerMode', 'baseMap', '_initialView', 'homeView', 'pickedFeatures', 'selectedFeature']);
 
     // IE versions prior to 10 don't support CORS, so always use the proxy.
     corsProxy.alwaysUseProxy = (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 10);
