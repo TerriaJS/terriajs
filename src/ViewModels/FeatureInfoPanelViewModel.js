@@ -63,6 +63,8 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
         var fakeFeature = new Entity('Pick Location');
         fakeFeature.position = features.pickPosition;
         this.application.selectedFeature = fakeFeature;
+    } else {
+        this.application.selectedFeature = undefined;
     }
 
     var that = this;

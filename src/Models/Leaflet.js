@@ -207,7 +207,7 @@ function pickFeatures(leaflet, latlng) {
 
     for (var i = 0; i < dataSources.length ; ++i) {
         var dataSource = dataSources[i];
-        if (defined(dataSource.pickFeaturesInLeaflet)) {
+        if (dataSource.isEnabled && dataSource.isShown && defined(dataSource.pickFeaturesInLeaflet)) {
             promises.push(dataSource.pickFeaturesInLeaflet(extent, leaflet.map.getSize().x, leaflet.map.getSize().y, pickedXY.x, pickedXY.y));
         }
     }
