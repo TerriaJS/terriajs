@@ -29,6 +29,7 @@ var FeatureInfoPanelViewModel = function(options) {
 
     knockout.track(this, ['isVisible', 'name', 'html', 'unselectFeaturesOnClose', 'createFakeSelectedFeatureDuringPicking']);
 
+    this._clockSubscription = undefined;
     this._domNodes = loadView(require('fs').readFileSync(__dirname + '/../Views/FeatureInfoPanel.html', 'utf8'), container, this);
 
     knockout.getObservable(this, 'isVisible').subscribe(function() {
@@ -57,6 +58,7 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
 
     this.name = 'Loading...';
     this.html = 'Loading feature information...';
+    configureHtmlUpdater(this, undefined);
     this.isVisible = true;
 
     if (this.createFakeSelectedFeatureDuringPicking) {
@@ -76,23 +78,42 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
         if (features.features.length === 0) {
             that.name = 'None';
             that.html = 'No features found.';
+            configureHtmlUpdater(that, undefined);
             that.isVisible = true;
             that.application.selectedFeature = undefined;
             return;
         }
 
         var feature = features.features[0];
+        if (!defined(feature.position)) {
+            feature.position = features.pickPosition;
+        }
+
         that.application.selectedFeature = feature;
         that.name = feature.name ? feature.name : feature.id;
         that.html = feature.description.getValue(that.application.clock.currentTime);
+        configureHtmlUpdater(that, feature.description);
         that.isVisible = true;
     }, function() {
         that.application.selectedFeature = undefined;
         that.name = 'Error';
         that.html = features.error;
+        configureHtmlUpdater(that, undefined);
         that.isVisible = true;
     });
-
 };
+
+function configureHtmlUpdater(viewModel, featureDescription) {
+    if (defined(viewModel._clockSubscription)) {
+        viewModel._clockSubscription();
+        viewModel._clockSubscription = undefined;
+    }
+
+    if (defined(featureDescription) && !featureDescription.isConstant) {
+        viewModel._clockSubscription = viewModel.application.clock.onTick.addEventListener(function(clock) {
+            viewModel.html = featureDescription.getValue(clock.currentTime);
+        });
+    }
+}
 
 module.exports = FeatureInfoPanelViewModel;
