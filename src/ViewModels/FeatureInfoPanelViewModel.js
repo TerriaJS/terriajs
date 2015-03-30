@@ -27,13 +27,19 @@ var FeatureInfoPanelViewModel = function(options) {
     this.unselectFeaturesOnClose = true;
     this.createFakeSelectedFeatureDuringPicking = true;
 
-    knockout.track(this, ['isVisible', 'name', 'html', 'unselectFeaturesOnClose', 'createFakeSelectedFeatureDuringPicking']);
+    this.horizontalPadding = defaultValue(options.horizontalPadding, 495);
+    this.verticalPadding = defaultValue(options.verticalPadding, 240);
+    this.maxWidth = 0;
+    this.maxHeight = 0;
+
+    knockout.track(this, ['isVisible', 'name', 'html', 'unselectFeaturesOnClose', 'createFakeSelectedFeatureDuringPicking', 'maxWidth', 'maxHeight']);
 
     this._clockSubscription = undefined;
     this._domNodes = loadView(require('fs').readFileSync(__dirname + '/../Views/FeatureInfoPanel.html', 'utf8'), container, this);
 
     knockout.getObservable(this, 'isVisible').subscribe(function() {
         if (!this.isVisible && this.unselectFeaturesOnClose) {
+
             this.application.selectedFeature = undefined;
         }
     }, this);
@@ -41,6 +47,19 @@ var FeatureInfoPanelViewModel = function(options) {
     knockout.getObservable(this.application, 'pickedFeatures').subscribe(function() {
         this.showFeatures(this.application.pickedFeatures);
     }, this);
+
+    var that = this;
+
+    function updateMaxDimensions() {
+        that.maxWidth = container.clientWidth - that.horizontalPadding;
+        that.maxHeight = container.clientHeight - that.verticalPadding;
+    }
+
+    updateMaxDimensions();
+
+    window.addEventListener('resize', function() {
+        updateMaxDimensions();
+    }, false);
 };
 
 FeatureInfoPanelViewModel.prototype.close = function() {
@@ -91,7 +110,11 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
 
         that.application.selectedFeature = feature;
         that.name = feature.name ? feature.name : feature.id;
-        that.html = feature.description.getValue(that.application.clock.currentTime);
+        if (defined(feature.description)) {
+            that.html = feature.description.getValue(that.application.clock.currentTime);
+        } else {
+            that.html = '';
+        }
         configureHtmlUpdater(that, feature.description);
         that.isVisible = true;
     }, function() {

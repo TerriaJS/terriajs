@@ -408,19 +408,6 @@ us via email at nationalmap@lists.nicta.com.au.'
         }
     });
 
-
-    // var lastHeight = 0;
-    // viewer.scene.preRender.addEventListener(function(scene, time) {
-    //     var container = viewer._container;
-    //     var height = container.clientHeight;
-
-    //     if (height !== lastHeight) {
-    //         viewer.infoBox.viewModel.maxHeight = Math.max(height - 300, 100);
-    //         lastHeight = height;
-    //     }
-    // });
-
-
     var scene = viewer.scene;
     var globe = scene.globe;
 

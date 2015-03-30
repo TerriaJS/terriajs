@@ -5,7 +5,7 @@
     background-color: @panel-background-color;
     top: 60px;
     right: 95px;
-    max-width: 600px;
+    max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
     position: absolute;
     box-shadow: @panel-box-shadow;
 
@@ -40,10 +40,16 @@
     border-bottom: @panel-element-border;
 }
 
+.feature-info-panel-section-label {
+    padding-right: 20px;
+}
+
 .feature-info-panel-section-content {
     color: @panel-text-color;
     font-weight: lighter;
-    padding: 10px;
+    padding: 15px;
+    overflow: auto;
+    max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
 }
 
 .feature-info-panel-close-button {
