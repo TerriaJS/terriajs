@@ -30,12 +30,13 @@ var ToolsPanelViewModel = function(options) {
 
     this.cacheFilter = 'opened';
     this.cacheLevels = 3;
-    this.useCache = false;
+    this.useProxyCache = false;
+    this.useWmsTileCache = true;
     this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
     this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useProxyCache', 'useWmsTileCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -369,8 +370,12 @@ function requestTiles(toolsPanel, requests, maxLevel) {
 
         var url = next.url;
 
-        if (!toolsPanel.useCache) {
+        if (!toolsPanel.usProxyCache) {
             url = url.replace('/proxy/h', '/proxy/_0d/h');
+        }
+
+        if (!toolsPanel.useWmsTileCache) {
+            url = url.replace('tiled=true&', '');
         }
 
         var start = getTimestamp();
