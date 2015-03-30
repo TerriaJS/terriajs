@@ -74,8 +74,7 @@ var CesiumSelectionIndicator = function(cesium) {
     var el = document.createElement('div');
     el.className = 'selection-indicator';
     el.setAttribute('data-bind', '\
-style: { "top" : _screenPositionY, "left" : _screenPositionX, transform: transform, opacity: opacity },\
-css: { "selection-indicator-visible" : isVisible }');
+style: { "top" : _screenPositionY, "left" : _screenPositionX, transform: transform, opacity: opacity }');
     this._container.appendChild(el);
     this._selectionIndicatorElement = el;
 
