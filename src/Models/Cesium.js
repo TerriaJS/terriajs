@@ -466,14 +466,10 @@ function pickObject(cesium, e) {
 function selectFeature(cesium) {
     var feature = cesium.application.selectedFeature;
     if (defined(feature) && defined(feature.position)) {
-        cesium._selectionIndicator.showSelection = true;
         cesium._selectionIndicator.position = feature.position.getValue(cesium.application.clock.currentTime);
         cesium._selectionIndicator.animateAppear();
     } else {
-        if (cesium._selectionIndicator.showSelection) {
-            cesium._selectionIndicator.animateDepart();
-        }
-        cesium._selectionIndicator.showSelection = false;
+        cesium._selectionIndicator.animateDepart();
     }
     cesium._selectionIndicator.update();
 }

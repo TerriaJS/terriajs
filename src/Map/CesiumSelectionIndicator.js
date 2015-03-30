@@ -24,8 +24,6 @@ var CesiumSelectionIndicator = function(cesium) {
     this._screenPositionY = offScreen;
     this._tweens = cesium.scene.tweens;
     this._container = cesium.viewer.container;
-    this._scale = 1;
-    this._rotate = 0;
 
     /**
      * Gets or sets the world position of the object for which to display the selection indicator.
@@ -37,9 +35,13 @@ var CesiumSelectionIndicator = function(cesium) {
      * Gets or sets the visibility of the selection indicator.
      * @type {Boolean}
      */
-    this.showSelection = false;
+    this.showSelection = true;
 
-    knockout.track(this, ['position', '_screenPositionX', '_screenPositionY', '_scale', 'rotate', 'showSelection']);
+    this.transform = '';
+
+    this.opacity = 1.0;
+
+    knockout.track(this, ['position', '_screenPositionX', '_screenPositionY', '_scale', 'rotate', 'showSelection', 'transform', 'opacity']);
 
     /**
      * Gets the visibility of the position indicator.  This can be false even if an
@@ -50,12 +52,6 @@ var CesiumSelectionIndicator = function(cesium) {
     knockout.defineProperty(this, 'isVisible', {
         get : function() {
             return this.showSelection && defined(this.position);
-        }
-    });
-
-    knockout.defineProperty(this, '_transform', {
-        get : function() {
-            return 'scale(' + (this._scale) + ') rotate(' + this._rotate + 'deg)';
         }
     });
 
@@ -78,7 +74,7 @@ var CesiumSelectionIndicator = function(cesium) {
     var el = document.createElement('div');
     el.className = 'selection-indicator';
     el.setAttribute('data-bind', '\
-style: { "top" : _screenPositionY, "left" : _screenPositionX, transform: _transform },\
+style: { "top" : _screenPositionY, "left" : _screenPositionX, transform: transform, opacity: opacity },\
 css: { "selection-indicator-visible" : isVisible }');
     this._container.appendChild(el);
     this._selectionIndicatorElement = el;
@@ -127,21 +123,41 @@ CesiumSelectionIndicator.prototype.update = function() {
  * Animate the indicator to draw attention to the selection.
  */
 CesiumSelectionIndicator.prototype.animateAppear = function() {
-    this._tweens.addProperty({
-        object : this,
-        property : '_scale',
-        startValue : 2,
-        stopValue : 1,
-        duration : 0.8,
-        easingFunction : EasingFunction.EXPONENTIAL_OUT
-    });
-    this._tweens.addProperty({
-        object : this,
-        property : '_rotate',
-        startValue : -180,
-        stopValue : 0,
-        duration : 0.8,
-        easingFunction : EasingFunction.EXPONENTIAL_OUT
+    if (defined(this._selectionIndicatorTween)) {
+        if (this._selectionIndicatorIsAppearing) {
+            // Already appearing; don't restart the animation.
+            return;
+        }
+        this._selectionIndicatorTween.cancelTween();
+        this._selectionIndicatorTween = undefined;
+    }
+
+    this._selectionIndicatorIsAppearing = true;
+
+    var that = this;
+    this._selectionIndicatorTween = this._tweens.add({
+        startObject: {
+            scale: 2.0,
+            opacity: 0.0,
+            rotate: -180
+        },
+        stopObject: {
+            scale: 1.0,
+            opacity: 1.0,
+            rotate: 0
+        },
+        duration: 0.8,
+        easingFunction: EasingFunction.EXPONENTIAL_OUT,
+        update: function(value) {
+            that.opacity = value.opacity;
+            that.transform = 'scale(' + value.scale + ') rotate(' + value.rotate + 'deg)';
+        },
+        complete: function() {
+            that._selectionIndicatorTween = undefined;
+        },
+        cancel: function() {
+            that._selectionIndicatorTween = undefined;
+        }
     });
 };
 
@@ -149,13 +165,39 @@ CesiumSelectionIndicator.prototype.animateAppear = function() {
  * Animate the indicator to release the selection.
  */
 CesiumSelectionIndicator.prototype.animateDepart = function() {
-    this._tweens.addProperty({
-        object : this,
-        property : '_scale',
-        startValue : this._scale,
-        stopValue : 1.5,
-        duration : 0.8,
-        easingFunction : EasingFunction.EXPONENTIAL_OUT
+    if (defined(this._selectionIndicatorTween)) {
+        if (!this._selectionIndicatorIsAppearing) {
+            // Already disappearing, dont' restart the animation.
+            return;
+        }
+        this._selectionIndicatorTween.cancelTween();
+        this._selectionIndicatorTween = undefined;
+    }
+
+    this._selectionIndicatorIsAppearing = false;
+
+    var that = this;
+    this._selectionIndicatorTween = this._tweens.add({
+        startObject: {
+            scale: 1.0,
+            opacity: 1.0
+        },
+        stopObject: {
+            scale: 1.5,
+            opacity: 0.0
+        },
+        duration: 0.8,
+        easingFunction: EasingFunction.EXPONENTIAL_OUT,
+        update: function(value) {
+            that.opacity = value.opacity;
+            that.transform = 'scale(' + value.scale + ') rotate(0deg)';
+        },
+        complete: function() {
+            that._selectionIndicatorTween = undefined;
+        },
+        cancel: function() {
+            that._selectionIndicatorTween = undefined;
+        }
     });
 };
 

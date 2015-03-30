@@ -77,6 +77,7 @@ FeatureInfoPanelViewModel.prototype.showFeatures = function(features) {
             that.name = 'None';
             that.html = 'No features found.';
             that.isVisible = true;
+            that.application.selectedFeature = undefined;
             return;
         }
 

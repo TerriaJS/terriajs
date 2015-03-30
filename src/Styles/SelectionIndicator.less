@@ -1,23 +1,11 @@
 .selection-indicator {
     .transparent-to-input;
-    visibility: hidden;
     position: absolute;
     width: 50px;
     height: 50px;
     fill: white;
     z-index: 2000;
-
-    opacity: 0;
-
-    -webkit-transition: visibility 0s 0.2s, opacity 0.2s ease-in;
-    -moz-transition: visibility 0s 0.2s, opacity 0.2s ease-in;
-    transition: visibility 0s 0.2s, opacity 0.2s ease-in;
 }
 
 .selection-indicator-visible {
-    visibility: visible;
-    opacity: 1;
-    -webkit-transition: opacity 0.2s ease-out;
-    -moz-transition: opacity 0.2s ease-out;
-    transition: opacity 0.2s ease-out;
 }

@@ -36,6 +36,8 @@ var Leaflet = function(application, map) {
 
     this._tweens = new TweenCollection();
     this._tweensAreRunning = false;
+    this._selectionIndicatorTween = undefined;
+    this._selectionIndicatorIsAppearing = undefined;
 
     this._pickedFeatures = undefined;
     this._selectionIndicator = L.marker([0,0], {
@@ -267,9 +269,19 @@ function startTweens(leaflet) {
 }
 
 function animateSelectionIndicatorAppear(leaflet) {
+    if (defined(leaflet._selectionIndicatorTween)) {
+        if (leaflet._selectionIndicatorIsAppearing) {
+            // Already appearing; don't restart the animation.
+            return;
+        }
+        leaflet._selectionIndicatorTween.cancelTween();
+        leaflet._selectionIndicatorTween = undefined;
+    }
+
     var style = leaflet._selectionIndicatorDomElement.style;
 
-    leaflet._tweens.add({
+    leaflet._selectionIndicatorIsAppearing = true;
+    leaflet._selectionIndicatorTween = leaflet._tweens.add({
         startObject: {
             scale: 2.0,
             opacity: 0.0,
@@ -285,6 +297,12 @@ function animateSelectionIndicatorAppear(leaflet) {
         update: function(value) {
             style.opacity = value.opacity;
             style.transform = 'scale(' + (value.scale) + ') rotate(' + value.rotate + 'deg)';
+        },
+        complete: function() {
+            leaflet._selectionIndicatorTween = undefined;
+        },
+        cancel: function() {
+            leaflet._selectionIndicatorTween = undefined;
         }
     });
 
@@ -292,9 +310,19 @@ function animateSelectionIndicatorAppear(leaflet) {
 }
 
 function animateSelectionIndicatorDepart(leaflet) {
+    if (defined(leaflet._selectionIndicatorTween)) {
+        if (!leaflet._selectionIndicatorIsAppearing) {
+            // Already disappearing, dont' restart the animation.
+            return;
+        }
+        leaflet._selectionIndicatorTween.cancelTween();
+        leaflet._selectionIndicatorTween = undefined;
+    }
+
     var style = leaflet._selectionIndicatorDomElement.style;
 
-    leaflet._tweens.add({
+    leaflet._selectionIndicatorIsAppearing = false;
+    leaflet._selectionIndicatorTween = leaflet._tweens.add({
         startObject: {
             scale: 1.0,
             opacity: 1.0
@@ -307,7 +335,13 @@ function animateSelectionIndicatorDepart(leaflet) {
         easingFunction: EasingFunction.EXPONENTIAL_OUT,
         update: function(value) {
             style.opacity = value.opacity;
-            style.transform = 'scale(' + value.scale + ')';
+            style.transform = 'scale(' + value.scale + ') rotate(0deg)';
+        },
+        complete: function() {
+            leaflet._selectionIndicatorTween = undefined;
+        },
+        cancel: function() {
+            leaflet._selectionIndicatorTween = undefined;
         }
     });
 
