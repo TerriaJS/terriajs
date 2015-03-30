@@ -357,6 +357,11 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             return;
         }
 
+        if (document.getElementById('popup-window') === null) {
+            console.log('Provider tile requests terminated');
+            return;
+        }
+
         ++urlsRequested;
         ++inFlight;
 
