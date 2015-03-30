@@ -57,6 +57,11 @@ var CatalogGroup = function(application) {
      */
     this.items = [];
 
+    /**
+     * Gets or sets flag to prevent items in group being sorted. Subgroups will still sort unless their own preserveOrder flag is set.
+     */
+    this.preserveOrder = false; 
+
     knockout.track(this, ['isOpen', 'isLoading', 'items']);
 
     var that = this;
@@ -112,7 +117,7 @@ defineProperties(CatalogGroup.prototype, {
      */
     sortItemsOnLoad : {
         get : function() {
-            return true;
+            return true; // Even if preserveOrder is set, the process of sorting should take place.
         }
     },
 
@@ -371,9 +376,12 @@ CatalogGroup.prototype.findFirstItemByName = function(name) {
  */
 CatalogGroup.prototype.sortItems = function(sortRecursively) {
     naturalSort.insensitive = true;
-    this.items.sort(function(a, b) {
-        return naturalSort(a.name, b.name);
-    });
+    // Allow a group to be non-sorted, while still containing sorted groups.
+    if (!this.preserveOrder) {
+        this.items.sort(function(a, b) {
+            return naturalSort(a.name, b.name);
+        });
+    }
 
     if (defaultValue(sortRecursively, false)) {
         for (var i = 0; i < this.items.length; ++i) {
