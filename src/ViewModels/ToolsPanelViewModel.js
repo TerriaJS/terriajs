@@ -251,6 +251,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var nextRequestIndex = 0;
     var inFlight = 0;
     var urlsRequested = 0;
+    var showProgress = true;
 
     function doneUrl(stat, startTime, error) {
         var ellapsed = getTimestamp() - startTime;
@@ -287,8 +288,10 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             return undefined;
         }
 
-        if ((nextRequestIndex % 10) === 0) {
-            //popup.message += '<div>Finished ' + nextRequestIndex + ' URLs.</div>';
+        if (showProgress && (nextRequestIndex % 10) === 0) {
+            if (popup.message.substring(popup.message.length-8) === '.</span>') {
+                popup.message = popup.message.replace('.</span>', '..</span>');
+            }
         }
 
         url = urls[nextRequestIndex];
@@ -313,9 +316,13 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     function doNext() {
         var next = getNextUrl();
         if (!defined(last) && defined(next)) {
-            popup.message += '<h1>' + next.name + '</h1>';
+            popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
         }
         if (defined(last) && (!defined(next) || next.name !== last.name)) {
+            var idx = popup.message.indexOf('<span>.');
+            if (idx !== -1) {
+                popup.message = popup.message.substring(0, idx);
+            }
             popup.message += '<div>';
             if (last.stat.error.number === 0) {
                 popup.message += last.stat.success.number + ' tiles <span style="color:green">✓</span>';
@@ -339,7 +346,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             }
 
             if (next) {
-                popup.message += '<h1>' + next.name + '</h1>';
+                popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
             }
         }
 
