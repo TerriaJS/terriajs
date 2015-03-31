@@ -309,6 +309,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var last;
     var failedRequests = 0;
     var slowDatasets = 0;
+    var totalDatasets = 0;
 
     var maxAverage = 400;
     var maxMaximum = 800;
@@ -344,6 +345,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             if (average > maxAverage || last.stat.success.max > maxMaximum) {
                 ++slowDatasets;
             }
+            totalDatasets++;
 
             if (next) {
                 popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
@@ -355,18 +357,20 @@ function requestTiles(toolsPanel, requests, maxLevel) {
         if (!defined(next)) {
             if (inFlight === 0) {
                 popup.message += '<h1>Summary</h1>';
-                popup.message += '<div>Finished ' + nextRequestIndex + ' URLs.  DONE!</div>';
+                popup.message += '<div>Finished ' + nextRequestIndex + ' URLs for ' + totalDatasets + ' datasets.</div>';
                 popup.message += '<div>Actual number of URLs requested: ' + urlsRequested + '</div>';
                 popup.message += '<div style="' + (failedRequests > 0 ? 'color:red' : '') + '">Failed tile requests: ' + failedRequests + '</div>';
                 popup.message += '<div style="' + (slowDatasets > 0 ? 'color:red' : '') + '">Slow datasets: ' + slowDatasets + 
                 ' <i>(>' + maxAverage + 'ms average, or >' + maxMaximum + 'ms maximum)</i></div>';
-                
             }
-            return;
         }
 
-        if (document.getElementById('popup-window') === null) {
-            console.log('Provider tile requests terminated');
+        var elPopup = document.getElementById('popup-window-message');
+        if (elPopup !== null) {
+            elPopup.scrollTop = elPopup.scrollHeight - elPopup.offsetHeight;
+        } 
+
+        if (elPopup === null || !defined(next)) {
             return;
         }
 
@@ -378,7 +382,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
         var url = next.url;
 
         if (!toolsPanel.usProxyCache) {
-            url = url.replace('/proxy/h', '/proxy/_0d/h');
+            url = url.replace('proxy/h', 'proxy/_0d/h');
         }
 
         if (!toolsPanel.useWmsTileCache) {

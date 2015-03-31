@@ -1,10 +1,10 @@
-<div class="modal-background" id="popup-window" data-bind="click: closeIfClickOnBackground">
+<div class="modal-background" data-bind="click: closeIfClickOnBackground">
     <div class="popup-message">
         <div class="modal-header">
             <div class="modal-close-button" data-bind="click: close">&times;</div>
             <h1 data-bind="text: title"></h1>
         </div>
-        <div class="popup-message-content">
+        <div class="popup-message-content"  id="popup-window-message" >
             <div class="popup-message-label" data-bind="html: message"></div>
         </div>
     </div>
