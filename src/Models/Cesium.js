@@ -44,10 +44,15 @@ var Cesium = function(application, viewer) {
 
     /**
      * Gets or sets whether the viewer has stopped rendering since startup or last set to false.
-     * @type {Scene}
+     * @type {Boolean}
      */
     this.stoppedRendering = false;
 
+    /**
+     * Gets or sets whether to output info to the console when starting and stopping rendering loop.
+     * @type {Boolean}
+     */
+    this.verboseRendering = false;
 
     this._lastClockTime = new JulianDate(0, 0.0);
     this._lastCameraViewMatrix = new Matrix4();
@@ -340,7 +345,7 @@ Cesium.prototype.captureScreenshot = function() {
  * Notifies the viewer that a repaint is required.
  */
 Cesium.prototype.notifyRepaintRequired = function() {
-    if (!this.viewer.useDefaultRenderLoop) {
+    if (this.verboseRendering && !this.viewer.useDefaultRenderLoop) {
         console.log('starting rendering @ ' + getTimestamp());
     }
     this._lastCameraMoveTime = getTimestamp();
@@ -367,7 +372,9 @@ function postRender(cesium, date) {
     var tilesWaiting = !surface._tileProvider.ready || surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0;
 
     if (!cameraMovedInLastSecond && !tilesWaiting && !cesium.viewer.clock.shouldAnimate) {
-        console.log('stopping rendering @ ' + getTimestamp());
+        if (cesium.verboseRendering) {
+            console.log('stopping rendering @ ' + getTimestamp());
+        }
         cesium.viewer.useDefaultRenderLoop = false;
         cesium.stoppedRendering = true;
     }
