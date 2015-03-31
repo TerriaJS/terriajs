@@ -16,13 +16,6 @@
                     </select>
                 </label>
 
-                <div>
-                    <label class="tools-content-type">
-                        <input type="checkbox" data-bind="checked: useCache" />
-                        Use proxy cache
-                    </label>
-                </div>
-
                 Enter the number of tile levels to request
                 <div class="tools-url-input-outer-holder">
                     <div class="tools-url-input-inner-holder">
@@ -30,6 +23,17 @@
                     </div>
                     <input class="tools-url-add-button" type="submit" value="Request Tiles" />
                 </div>
+                <div>
+                    <label class="tools-content-type">
+                        <input type="checkbox" data-bind="checked: useWmsTileCache" />
+                        Use WMS tile cache
+                    </label>
+                    <label class="tools-content-type">
+                        <input type="checkbox" data-bind="checked: useProxyCache" />
+                        Use proxy cache
+                    </label>
+                </div>
+
             </form>
 
             <form class="tools-form" data-bind="submit: exportFile">
