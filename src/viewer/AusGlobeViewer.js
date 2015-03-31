@@ -38,7 +38,6 @@ var SingleTileImageryProvider = require('../../third_party/cesium/Source/Scene/S
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var Tween = require('../../third_party/cesium/Source/ThirdParty/Tween');
 var Viewer = require('../../third_party/cesium/Source/Widgets/Viewer/Viewer');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var Animation = require('../../third_party/cesium/Source/Widgets/Animation/Animation');
 var AnimationViewModel = require('../../third_party/cesium/Source/Widgets/Animation/AnimationViewModel');
@@ -371,7 +370,9 @@ AusGlobeViewer.prototype._createCesiumViewer = function(container) {
         terrainProvider : terrainProvider,
         imageryProvider : new SingleTileImageryProvider({ url: 'images/nicta.png' }),
         timeControlsInitiallyVisible : false,
-        scene3DOnly: true
+        scene3DOnly: true,
+        selectionIndicator: false,
+        infoBox: false
     };
 
     // Workaround for Firefox bug with WebGL and printing:
@@ -406,19 +407,6 @@ us via email at nationalmap@lists.nicta.com.au.'
             }
         }
     });
-
-
-    var lastHeight = 0;
-    viewer.scene.preRender.addEventListener(function(scene, time) {
-        var container = viewer._container;
-        var height = container.clientHeight;
-
-        if (height !== lastHeight) {
-            viewer.infoBox.viewModel.maxHeight = Math.max(height - 300, 100);
-            lastHeight = height;
-        }
-    });
-
 
     var scene = viewer.scene;
     var globe = scene.globe;
@@ -521,11 +509,13 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
 
         map.infoBox = new InfoBox(document.body);
 
+        var leaflet = new Leaflet(this.application, map);
+
         if (!defined(this.leafletVisualizer)) {
             this.leafletVisualizer = new LeafletVisualizer();
         }
         this.dataSourceDisplay = new DataSourceDisplay({
-            scene : map,
+            scene : leaflet.scene,
             dataSourceCollection : map.dataSources,
             visualizersCallback: this.leafletVisualizer.visualizersCallback
         });
@@ -566,21 +556,9 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         //redisplay data
         this.map = map;
 
-        this.application.leaflet = new Leaflet(this.application, map);
+        this.application.leaflet = leaflet;
         this.application.cesium = undefined;
         this.application.currentViewer = this.application.leaflet;
-
-        map.on('click', function(e) {
-            selectFeatureLeaflet(that, e.latlng);
-        });
-
-        map.on('preclick', function(e) {
-            preClickLeaflet(that);
-        });
-
-        map.on('popupopen', function(e) {
-            popupOpenLeaflet(that);
-        });
 
         this.application.leaflet.zoomTo(rect, 0.0);
     }
@@ -875,71 +853,5 @@ function zoomCamera(scene, distFactor, pos) {
 
 function zoomIn(scene, pos) { zoomCamera(scene, 2.0/3.0, pos); }
 function zoomOut(scene, pos) { zoomCamera(scene, -2.0, pos); }
-
-function preClickLeaflet(viewer) {
-    viewer._popupSinceLastClick = false;
-}
-
-function popupOpenLeaflet(viewer) {
-    viewer._popupSinceLastClick = true;
-}
-
-function selectFeatureLeaflet(viewer, latlng) {
-    var dataSources = viewer.application.nowViewing.items;
-
-    var pickedXY = viewer.map.latLngToContainerPoint(latlng, viewer.map.getZoom());
-    var bounds = viewer.map.getBounds();
-    var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
-
-    var promises = [];
-    for (var i = 0; i < dataSources.length ; ++i) {
-        var dataSource = dataSources[i];
-        if (defined(dataSource.pickFeaturesInLeaflet)) {
-            promises.push(dataSource.pickFeaturesInLeaflet(extent, viewer.map.getSize().x, viewer.map.getSize().y, pickedXY.x, pickedXY.y));
-        }
-    }
-
-    if (promises.length === 0) {
-        return;
-    }
-
-    // create popup but don't show it
-    var popup = L.popup({maxHeight: 520 }).setLatLng(latlng);
-
-    function updatePopup(title, text) {
-        popup.setContent('<h3><center>'+title+'</center></h3>'+text);
-    }
-
-    // Show placeholder text to the infobox so the user knows something is happening.
-    updatePopup('', 'Loading WMS feature information...');
-
-    // Wait for .5 seconds to show to let double click through
-    setTimeout(function() {
-        if (!viewer._popupSinceLastClick) {
-            popup.openOn(viewer.map);
-        }
-    }, 500);
-
-    return when.all(promises, function(results) {
-        var foundFeature = false;
-        var featureName = 'None';
-        var featureDescription = 'No features found.';
-
-        for (var resultIndex = 0; !foundFeature && resultIndex < results.length; ++resultIndex) {
-            var result = results[resultIndex];
-
-            if (defined(result) && result.length > 0) {
-                for (var featureIndex = 0; !foundFeature && featureIndex < result.length; ++featureIndex) {
-                    var feature = result[featureIndex];
-                    foundFeature = true;
-                    featureName = feature.name;
-                    featureDescription = feature.description;
-                }
-            }
-        }
-
-        updatePopup(featureName, featureDescription);
-    });
-}
 
 module.exports = AusGlobeViewer;

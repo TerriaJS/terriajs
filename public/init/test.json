@@ -134,6 +134,11 @@
                             "name": "2011 Census AUST (SA4)",
                             "type": "csv",
                             "url": "test/2011Census_AUST_SA4.csv"
+                        },
+                        {
+                            "name": "Large feature info box (CZML)",
+                            "type": "czml",
+                            "url": "test/bigInfobox.czml"
                         }
                     ]
                 },
