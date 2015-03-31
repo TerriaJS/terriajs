@@ -645,6 +645,22 @@ function onClockTick(catalogItem, clock) {
     catalogItem._nextLayer = undefined;
     catalogItem._nextTimeIndex = -1;
     catalogItem._currentTimeIndex = index;
+
+    // Prefetch the (predicted) next layer.
+    var nextIndex = clock.multiplier >= 0.0 ? index + 1 : index - 1;
+    if (nextIndex < 0 || nextIndex >= dates.length) {
+        return;
+    }
+
+    var nextImageryProvider = createImageryProvider(catalogItem, catalogItem.times[nextIndex]);
+    catalogItem._nextLayer = new ImageryLayer(nextImageryProvider, {
+        alpha : 0.0,
+        rectangle : catalogItem.clipToRectangle ? catalogItem.rectangle : undefined
+    });
+
+    catalogItem.application.cesium.scene.imageryLayers.add(catalogItem._nextLayer);
+
+    catalogItem._nextTimeIndex = nextIndex;
 }
 
 function disposeLayer(catalogItem, layer) {
