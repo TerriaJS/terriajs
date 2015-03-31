@@ -440,16 +440,16 @@ var scratchRectangle = new Rectangle();
             return;
         }
 
-        if (that.rectangle.east - that.rectangle.west > 3.14) {
-            console.log('Extent is wider than half the world.  Ignoring zoomto');
-            return;
+        var rect = Rectangle.clone(that.rectangle, scratchRectangle);
+
+        if (rect.east - rect.west > 3.14) {
+            rect = Rectangle.clone(that.application.homeView.rectangle, scratchRectangle);
+            console.log('Extent is wider than world so using homeView.');
         }
 
         ga('send', 'event', 'dataSource', 'zoomTo', that.name);
 
         var epsilon = CesiumMath.EPSILON3;
-
-        var rect = Rectangle.clone(that.rectangle, scratchRectangle);
 
         if (rect.east - rect.west < epsilon) {
             rect.east += epsilon;

@@ -6,6 +6,7 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
+var Uri = require('../../third_party/cesium/Source/ThirdParty/Uri');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var CatalogItem = require('./CatalogItem');
@@ -52,6 +53,8 @@ var OgrCatalogItem = function(application, url) {
 
     knockout.track(this, ['url', 'data', 'dataSourceUrl']);
 };
+
+OgrCatalogItem.conversionServiceBaseUrl = 'convert';
 
 inherit(CatalogItem, OgrCatalogItem);
 
@@ -168,17 +171,14 @@ function loadOgrData(ogrItem, file, url) {
         }
         formData.append('input_file', file);
     } else if (defined(url)) {
-        // fix up url to server if relative
-        if (url.indexOf('http') !== 0) {
-            url = 'http://'+document.location.host+'/'+url;
-        }
+        url = new Uri(url).resolve(new Uri(document.location.href)).toString();
         formData.append('input_url', url);
     }
 
     console.log('Attempting to convert file via the NM ogr2ogr web service');
 
     return loadWithXhr({
-        url : '/convert',
+        url : OgrCatalogItem.conversionServiceBaseUrl,
         method : 'POST',
         data : formData
     }).then(function(response) {

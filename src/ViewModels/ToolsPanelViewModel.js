@@ -30,12 +30,13 @@ var ToolsPanelViewModel = function(options) {
 
     this.cacheFilter = 'opened';
     this.cacheLevels = 3;
-    this.useCache = false;
+    this.useProxyCache = false;
+    this.useWmsTileCache = true;
     this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
     this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useProxyCache', 'useWmsTileCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -112,8 +113,11 @@ function getAllRequests(types, mode, requests, group, promises) {
                 getAllRequests(types, mode, requests, item, promises);
             }
         } else if ((types.indexOf(item.type) !== -1) && (mode !== 'enabled' || item.isEnabled)) {
-            var enabledHere = !item.isEnabled;
+           var enabledHere = !item.isEnabled;
             if (enabledHere) {
+                if (defined(item._imageryLayer)) {
+                    continue;
+                }
                 item._enable();
             }
 
@@ -162,7 +166,20 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var i;
     for (i = 0; i < requests.length; ++i) {
         var request = requests[i];
-        var extent = request.provider.rectangle || app.homeView.rectangle;
+
+        var extent;
+        if (request.provider.rectangle && request.item.rectangle) {
+            extent = Rectangle.intersection(request.provider.rectangle, request.item.rectangle);
+        } else if (request.provider.rectangle) {
+            extent = request.provider.rectangle;
+        } else if (request.item.rectangle) {
+            extent = request.item.rectangle;
+        }
+
+        if (!defined(extent)) {
+            extent = app.homeView.rectangle;
+        }
+
         name = request.item.name;
 
         var tilingScheme;
@@ -181,7 +198,8 @@ function requestTiles(toolsPanel, requests, maxLevel) {
                 min: 999999,
                 max: 0,
                 sum: 0,
-                number: 0
+                number: 0,
+                slow: 0
             },
             error: {
                 min: 999999,
@@ -236,6 +254,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var nextRequestIndex = 0;
     var inFlight = 0;
     var urlsRequested = 0;
+    var showProgress = true;
 
     function doneUrl(stat, startTime, error) {
         var ellapsed = getTimestamp() - startTime;
@@ -245,6 +264,9 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             resultStat = stat.error;
         } else {
             resultStat = stat.success;
+            if (ellapsed > maxAverage) {
+                resultStat.slow ++;
+            }
         }
 
         ++resultStat.number;
@@ -269,8 +291,10 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             return undefined;
         }
 
-        if ((nextRequestIndex % 10) === 0) {
-            //popup.message += '<div>Finished ' + nextRequestIndex + ' URLs.</div>';
+        if (showProgress && (nextRequestIndex % 10) === 0) {
+            if (popup.message.substring(popup.message.length-8) === '.</span>') {
+                popup.message = popup.message.replace('.</span>', '..</span>');
+            }
         }
 
         url = urls[nextRequestIndex];
@@ -288,6 +312,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var last;
     var failedRequests = 0;
     var slowDatasets = 0;
+    var totalDatasets = 0;
 
     var maxAverage = 400;
     var maxMaximum = 800;
@@ -295,38 +320,38 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     function doNext() {
         var next = getNextUrl();
         if (!defined(last) && defined(next)) {
-            popup.message += '<h1>' + next.name + '</h1>';
+            popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
         }
         if (defined(last) && (!defined(next) || next.name !== last.name)) {
+            var idx = popup.message.indexOf('<span>.');
+            if (idx !== -1) {
+                popup.message = popup.message.substring(0, idx);
+            }
+            popup.message += '<div>';
             if (last.stat.error.number === 0) {
-                popup.message += '<div>All ' + last.stat.success.number + ' tile requests completed without error.';
+                popup.message += last.stat.success.number + ' tiles <span style="color:green">✓</span>';
             } else {
-                popup.message += '<div style="color:red">' + last.stat.error.number + ' tile requests failed (out of ' + (last.stat.success.number + last.stat.error.number) + ')</div>';
+                popup.message += last.stat.success.number + last.stat.error.number + ' tiles (<span style="color:red">' + last.stat.error.number + ' failed</span>)';
             }
-            popup.message += '<div>Minimum time: ' + Math.round(last.stat.success.min) + 'ms</div>';
-
-            if (last.stat.success.max > maxMaximum) {
-                popup.message += '<div style="color:red">Maximum time: ' + Math.round(last.stat.success.max) + 'ms (should be <' + maxMaximum + ')</div>';
-            } else {
-                popup.message += '<div>Maximum time: ' + Math.round(last.stat.success.max) + 'ms</div>';
+            if (last.stat.success.slow > 0) {
+                popup.message += ' (' + last.stat.success.slow + ' slow) ';
             }
-
             var average = Math.round(last.stat.success.sum / last.stat.success.number);
-
-            if (average > maxAverage) {
-                popup.message += '<div style="color:red">Average time: ' + average + 'ms (should be <' + maxAverage + ')</div>';
-            } else {
-                popup.message += '<div>Average time: ' + average + 'ms</div>';
-            }
+            popup.message += ' <span ' + (average > maxAverage ? 'style="colour: red"' : '') + '>' + 
+              'Average: ' + average + 'ms</span>&nbsp;';
+            popup.message += '(<span ' + (last.stat.success.max > maxMaximum ? 'style="color: red"' : '') + '>' + 
+              'Max: ' + Math.round(last.stat.success.max) + 'ms</span>)';
+            popup.message += '</div>';
 
             failedRequests += last.stat.error.number;
 
             if (average > maxAverage || last.stat.success.max > maxMaximum) {
                 ++slowDatasets;
             }
+            totalDatasets++;
 
             if (next) {
-                popup.message += '<h1>' + next.name + '</h1>';
+                popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
             }
         }
 
@@ -335,11 +360,20 @@ function requestTiles(toolsPanel, requests, maxLevel) {
         if (!defined(next)) {
             if (inFlight === 0) {
                 popup.message += '<h1>Summary</h1>';
-                popup.message += '<div>Finished ' + nextRequestIndex + ' URLs.  DONE!</div>';
+                popup.message += '<div>Finished ' + nextRequestIndex + ' URLs for ' + totalDatasets + ' datasets.</div>';
                 popup.message += '<div>Actual number of URLs requested: ' + urlsRequested + '</div>';
                 popup.message += '<div style="' + (failedRequests > 0 ? 'color:red' : '') + '">Failed tile requests: ' + failedRequests + '</div>';
-                popup.message += '<div style="' + (slowDatasets > 0 ? 'color:red' : '') + '">Slow datasets: ' + slowDatasets + '</div>';
+                popup.message += '<div style="' + (slowDatasets > 0 ? 'color:red' : '') + '">Slow datasets: ' + slowDatasets + 
+                ' <i>(>' + maxAverage + 'ms average, or >' + maxMaximum + 'ms maximum)</i></div>';
             }
+        }
+
+        var elPopup = document.getElementById('popup-window-content');
+        if (elPopup !== null) {
+            elPopup.scrollTop = elPopup.scrollHeight - elPopup.offsetHeight;
+        } 
+
+        if (elPopup === null || !defined(next)) {
             return;
         }
 
@@ -350,8 +384,12 @@ function requestTiles(toolsPanel, requests, maxLevel) {
 
         var url = next.url;
 
-        if (!toolsPanel.useCache) {
-            url = url.replace('/proxy/h', '/proxy/_0d/h');
+        if (!toolsPanel.usProxyCache) {
+            url = url.replace('proxy/h', 'proxy/_0d/h');
+        }
+
+        if (!toolsPanel.useWmsTileCache) {
+            url = url.replace('tiled=true&', '');
         }
 
         var start = getTimestamp();

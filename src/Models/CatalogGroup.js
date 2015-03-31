@@ -57,6 +57,12 @@ var CatalogGroup = function(application) {
      */
     this.items = [];
 
+    /**
+     * Gets or sets flag to prevent items in group being sorted. Subgroups will still sort unless their own preserveOrder flag is set.  The value
+     * of this property only has an effect during {@CatalogGroup#load} and {@CatalogItem#updateFromJson}.
+     */
+    this.preserveOrder = false; 
+
     knockout.track(this, ['isOpen', 'isLoading', 'items']);
 
     var that = this;
@@ -101,18 +107,6 @@ defineProperties(CatalogGroup.prototype, {
     typeName : {
         get : function() {
             return 'Group';
-        }
-    },
-
-    /**
-     * Gets a value indicating whether the items in this group (and their sub-items, if any) should be sorted when
-     * {@link CatalogGroup#load} is complete.
-     * @memberOf CatalogGroup.prototype
-     * @type {Boolean}
-     */
-    sortItemsOnLoad : {
-        get : function() {
-            return true;
         }
     },
 
@@ -198,9 +192,7 @@ CatalogGroup.defaultUpdaters.items = function(catalogGroup, json, propertyName, 
         }
 
         return when.all(promises, function() {
-            if (defaultValue(json.sortItemsOnLoad, true)) {
-                catalogGroup.sortItems();
-            }
+            catalogGroup.sortItems();
         });
     });
 };
@@ -283,9 +275,7 @@ CatalogGroup.prototype.load = function() {
 
         return that._load();
     }).then(function() {
-        if (defaultValue(that.sortItemsOnLoad, true)) {
-            that.sortItems(true);
-        }
+        that.sortItems(true);
         that._loadingPromise = undefined;
         that.isLoading = false;
     }).otherwise(function(e) {
@@ -371,9 +361,12 @@ CatalogGroup.prototype.findFirstItemByName = function(name) {
  */
 CatalogGroup.prototype.sortItems = function(sortRecursively) {
     naturalSort.insensitive = true;
-    this.items.sort(function(a, b) {
-        return naturalSort(a.name, b.name);
-    });
+    // Allow a group to be non-sorted, while still containing sorted groups.
+    if (!this.preserveOrder) {
+        this.items.sort(function(a, b) {
+            return naturalSort(a.name, b.name);
+        });
+    }
 
     if (defaultValue(sortRecursively, false)) {
         for (var i = 0; i < this.items.length; ++i) {
