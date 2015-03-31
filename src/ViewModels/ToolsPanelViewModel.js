@@ -296,10 +296,10 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
             return undefined;
         }
 
-        if (showProgress && (nextRequestIndex % 10) === 0) {
-            if (popup.message.substring(popup.message.length-8) === '.</span>') {
-                popup.message = popup.message.replace('.</span>', '..</span>');
-            }
+        if (showProgress && nextRequestIndex > 0) {
+            popup.message = popup.message.replace(/<div class="tools-loading-message">.*$/gi, 
+                '<div class="tools-loading-message">Loading: <div class="tools-loading-message-bar" style="width: ' + 
+                Math.round(nextRequestIndex / urls.length * 100) + '%"></div>');
         }
 
         url = urls[nextRequestIndex];
@@ -324,11 +324,8 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
 
     function doNext() {
         var next = getNextUrl();
-        if (!defined(last) && defined(next)) {
-            popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
-        }
         if (defined(last) && (!defined(next) || next.name !== last.name)) {
-            var idx = popup.message.indexOf('<span>.');
+            var idx = popup.message.indexOf('<div class="tools-loading-message">');
             if (idx !== -1) {
                 popup.message = popup.message.substring(0, idx);
             }
@@ -354,10 +351,10 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
                 ++slowDatasets;
             }
             totalDatasets++;
+        }
 
-            if (next) {
-                popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
-            }
+        if (defined(next) && (!defined(last) || last.name !== next.name) ) {
+            popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<div class="tools-loading-message">Loading:</div' : '');
         }
 
         last = next;
@@ -403,8 +400,7 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
         }).then(function() {
             doneUrl(next.stat, start, false);
         }).otherwise(function(e) {
-            popup.message += '<div>Tile request resulted in an error' + (e.statusCode ? (' (code ' + e.statusCode + '):') : ':') + '</div>';
-            popup.message += '<div>' + next.url + '</div>';
+            popup.message += '<div><a href="' + next.url + '">Tile request</a> returned error' + (e.statusCode ? (' (code ' + e.statusCode + ')') : '') + '</div>';
             doneUrl(next.stat, start, true);
         });
     }
