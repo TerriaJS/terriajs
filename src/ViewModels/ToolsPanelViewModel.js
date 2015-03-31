@@ -29,14 +29,15 @@ var ToolsPanelViewModel = function(options) {
     this._domNodes = undefined;
 
     this.cacheFilter = 'opened';
-    this.cacheLevels = 3;
+    this.minZoomLevel = 5;
+    this.maxZoomLevel = 5;
     this.useProxyCache = false;
     this.useWmsTileCache = true;
     this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
     this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useProxyCache', 'useWmsTileCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'minZoomLevel', 'maxZoomLevel', 'useProxyCache', 'useWmsTileCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -66,8 +67,8 @@ ToolsPanelViewModel.prototype.cacheTiles = function() {
 
     var that = this;
     when.all(promises, function() {
-        console.log('Requesting tiles from ' + requests.length + ' data sources.');
-        requestTiles(that, requests, that.cacheLevels);
+        console.log('Requesting tiles in zoom range ' + that.minZoomLevel + '-' + that.maxZoomLevel + ' from ' + requests.length + ' data sources.');
+        requestTiles(that, requests, that.minZoomLevel, that.maxZoomLevel);
     });
 };
 
@@ -141,7 +142,7 @@ function whenImageryProviderIsReady(imageryProvider) {
     }, { timeout: 60000, pollInterval: 100 });
 }
 
-function requestTiles(toolsPanel, requests, maxLevel) {
+function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
     var app = toolsPanel.application;
 
     var urls = [];
@@ -150,6 +151,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var uniqueStats = [];
     var name;
     var stat;
+    var maxTilesPerLevel = 50; // no point requesting a bazillion tile requests per zoom level
 
     loadImage.createImage = function(url, crossOrigin, deferred) {
         urls.push(url);
@@ -210,25 +212,28 @@ function requestTiles(toolsPanel, requests, maxLevel) {
         };
         uniqueStats.push(stat);
 
-        for (var level = 0; level <= maxLevel; ++level) {
+        for (var level = minLevel; level <= maxLevel; ++level) {
             var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
             var se = tilingScheme.positionToTileXY(Rectangle.southeast(extent), level);
             if (!defined(nw) || !defined(se)) {
                 // Extent is probably junk.
                 continue;
             }
+            var tilesThisLevel = 0;
 
             for (var y = nw.y; y <= se.y; ++y) {
                 for (var x = nw.x; x <= se.x; ++x) {
-                    if (defined(leaflet)) {
-                        var coords = new L.Point(x, y);
-                        coords.z = level;
-                        var url = request.provider.getTileUrl(coords);
-                        loadImage.createImage(url);
-                    }
-                    else {
-                        if (!defined(request.provider.requestImage(x, y, level))) {
-                            console.log('too many requests in flight');
+                    if (tilesThisLevel++ < maxTilesPerLevel) {
+                        if (defined(leaflet)) {
+                            var coords = new L.Point(x, y);
+                            coords.z = level;
+                            var url = request.provider.getTileUrl(coords);
+                            loadImage.createImage(url);
+                        }
+                        else {
+                            if (!defined(request.provider.requestImage(x, y, level))) {
+                                console.log('too many requests in flight');
+                            }
                         }
                     }
                 }
@@ -247,7 +252,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
 
     var popup = PopupMessageViewModel.open('ui', {
         title: 'Dataset Testing',
-        message: '<div>Requesting ' + urls.length + ' URLs</div>'
+        message: '<div>Requesting ' + urls.length + ' URLs from ' + requests.length + ' data sources, at zooms ' + minLevel + ' to ' + maxLevel + '</div>'
     });
 
     var maxRequests = 1;
