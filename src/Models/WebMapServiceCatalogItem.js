@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require,URI,$*/
-
+var binarySearch = require('../../third_party/cesium/Source/Core/binarySearch');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
@@ -9,7 +9,6 @@ var combine = require('../../third_party/cesium/Source/Core/combine');
 var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
@@ -48,6 +47,10 @@ var WebMapServiceCatalogItem = function(application) {
     this._rectangle = undefined;
     this._rectangleFromMetadata = undefined;
     this._clock = undefined;
+    this._clockTickSubscription = undefined;
+    this._nextLayer = undefined;
+    this._currentTimeIndex = -1;
+    this._nextTimeIndex = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -121,7 +124,7 @@ var WebMapServiceCatalogItem = function(application) {
     this.times = [];
 
     knockout.track(this, [
-        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url',
+        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', '_clock', 'url',
         'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'getFeatureInfoXmlContentType',
         'tilingScheme', 'clipToRectangle', 'times']);
 
@@ -221,7 +224,28 @@ var WebMapServiceCatalogItem = function(application) {
                 this._clock.multiplier = timePerSecond;
             }
             return this._clock;
+        },
+        set : function(value) {
+            this._clock = value;
         }
+    });
+
+    // Subscribe to isShown changing and add/remove the clock tick subscription as necessary.
+    knockout.getObservable(this, 'isShown').subscribe(function() {
+        updateClockSubscription(this);
+    }, this);
+
+    knockout.getObservable(this, 'clock').subscribe(function() {
+        updateClockSubscription(this);
+    }, this);
+
+    var that = this;
+    this._getJulianDates = knockout.pureComputed(function() {
+        var result = [];
+        for (var i = 0; i < that.times.length; ++i) {
+            result.push(JulianDate.fromIso8601(that.times[i]));
+        }
+        return result;
     });
 };
 
@@ -340,7 +364,7 @@ WebMapServiceCatalogItem.prototype._load = function() {
 
 WebMapServiceCatalogItem.prototype._enableInCesium = function() {
     if (defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is already enabled.');
+        return;
     }
 
     var scene = this.application.cesium.scene;
@@ -356,7 +380,7 @@ WebMapServiceCatalogItem.prototype._enableInCesium = function() {
 
 WebMapServiceCatalogItem.prototype._disableInCesium = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
+        return;
     }
 
     var scene = this.application.cesium.scene;
@@ -366,7 +390,7 @@ WebMapServiceCatalogItem.prototype._disableInCesium = function() {
 
 WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
     if (defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is already enabled.');
+        return;
     }
 
     var options = {
@@ -379,7 +403,7 @@ WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
 
 WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
     if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
+        return;
     }
 
     this._imageryLayer = undefined;
@@ -425,13 +449,18 @@ WebMapServiceCatalogItem.defaultParameters = {
     tiled: true
 };
 
-function createImageryProvider(wmsItem) {
+function createImageryProvider(wmsItem, time) {
+    var parameters = wmsItem.parameters;
+    if (defined(time)) {
+        parameters = combine({ time: time }, parameters);
+    }
+
     return new WebMapServiceImageryProvider({
         url : cleanAndProxyUrl(wmsItem.application, wmsItem.url),
         layers : wmsItem.layers,
         getFeatureInfoAsGeoJson : wmsItem.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : wmsItem.getFeatureInfoAsXml,
-        parameters : combine(wmsItem.parameters, WebMapServiceCatalogItem.defaultParameters),
+        parameters : combine(parameters, WebMapServiceCatalogItem.defaultParameters),
         tilingScheme : defined(wmsItem.tilingScheme) ? wmsItem.tilingScheme : new WebMercatorTilingScheme(),
         getFeatureInfoXmlContentType : wmsItem.getFeatureInfoXmlContentType
     });
@@ -555,6 +584,90 @@ function populateMetadataGroup(metadataGroup, sourceMetadata) {
                 metadataGroup.items.push(dest);
             }
         }
+    }
+}
+
+function updateClockSubscription(catalogItem) {
+    if (catalogItem.isShown && defined(catalogItem.clock)) {
+        // Subscribe
+        if (!defined(catalogItem._clockTickSubscription)) {
+            catalogItem._clockTickSubscription = catalogItem.application.clock.onTick.addEventListener(onClockTick.bind(undefined, catalogItem));
+        }
+    } else {
+        // Unsubscribe
+        if (defined(catalogItem._clockTickSubscription)) {
+            catalogItem._clockTickSubscription();
+            catalogItem._clockTickSubscription = undefined;
+        }
+    }
+}
+
+function onClockTick(catalogItem, clock) {
+    var dates = catalogItem._getJulianDates();
+
+    var index = catalogItem._currentTimeIndex;
+
+    if (index >= 0 && index < dates.length &&
+        JulianDate.greaterThanOrEquals(clock.currentTime, dates[index]) && (index === dates.length - 1 || JulianDate.lessThan(clock.currentTime, dates[index + 1]))) {
+        // No layer update necesary.
+        return;
+    }
+
+    // Find the last date before or at the currentTime.
+    index = binarySearch(dates, clock.currentTime, JulianDate.compare);
+    if (index < 0) {
+        index = ~index - 1;
+        if (index >= dates.length) {
+            index = dates.length - 1;
+        }
+    }
+
+    // Is the layer we've already built the right one to use?
+    if (index !== catalogItem._nextTimeIndex) {
+        // Throw away the "next" layer, since it's not applicable.
+        disposeLayer(catalogItem, catalogItem._nextLayer);
+        catalogItem._nextLayer = undefined;
+
+        // Create the new layer
+        var imageryProvider = createImageryProvider(catalogItem, catalogItem.times[index]);
+        catalogItem._nextLayer = new ImageryLayer(imageryProvider, {
+            alpha : 0.0,
+            rectangle : catalogItem.clipToRectangle ? catalogItem.rectangle : undefined
+        });
+
+        catalogItem.application.cesium.scene.imageryLayers.add(catalogItem._nextLayer);
+    }
+
+    setOpacity(catalogItem, catalogItem._nextLayer, catalogItem.opacity);
+    disposeLayer(catalogItem, catalogItem._imageryLayer);
+
+    catalogItem._imageryLayer = catalogItem._nextLayer;
+    catalogItem._nextLayer = undefined;
+    catalogItem._nextTimeIndex = -1;
+    catalogItem._currentTimeIndex = index;
+}
+
+function disposeLayer(catalogItem, layer) {
+    if (!defined(layer)) {
+        return;
+    }
+
+    if (defined(catalogItem.application.cesium)) {
+        catalogItem.application.cesium.scene.imageryLayers.remove(layer);
+    }
+
+    if (defined(catalogItem.application.leaflet)) {
+        catalogItem.application.leaflet.map.removeLayer(layer);
+    }
+}
+
+function setOpacity(catalogItem, layer, opacity) {
+    if (defined(catalogItem.application.cesium)) {
+        layer.alpha = opacity;
+    }
+
+    if (defined(catalogItem.application.leaflet)) {
+        layer.setOpacity(opacity);
     }
 }
 
