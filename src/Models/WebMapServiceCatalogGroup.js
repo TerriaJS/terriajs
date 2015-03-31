@@ -60,12 +60,13 @@ var WebMapServiceCatalogGroup = function(application) {
     this.blacklist = undefined;
 
     /**
-     * Specifies whether to use each WMS layer's "title" (default), "name", or "abstract" as the primary title.
+     * Gets or sets the field name to use as the primary title in the catalog view: each WMS layer's 
+     * "title" (default), "name", or "abstract".
      * @type {String}
      */
-    this.titlefield = 'title';
+    this.titleField = 'title';
 
-    knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist']);
+    knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist', 'titleField']);
 };
 
 inherit(CatalogGroup, WebMapServiceCatalogGroup);
@@ -140,7 +141,7 @@ WebMapServiceCatalogGroup.defaultSerializers.isLoading = function(wmsGroup, json
 freezeObject(WebMapServiceCatalogGroup.defaultSerializers);
 
 WebMapServiceCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
-    return [this.url, this.blacklist];
+    return [this.url, this.blacklist, this.titleField];
 };
 
 WebMapServiceCatalogGroup.prototype._load = function() {
@@ -293,9 +294,9 @@ function addLayersRecursively(wmsGroup, layers, items, parent, supportsJsonGetFe
 function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, supportsXmlGetFeatureInfo, xmlContentType, dataCustodian) {
     var result = new WebMapServiceCatalogItem(wmsGroup.application);
 
-    if (wmsGroup.titlefield === 'name') {
+    if (wmsGroup.titleField === 'name') {
         result.name = layer.Name;
-    } else if (wmsGroup.titlefield === 'abstract') {
+    } else if (wmsGroup.titleField === 'abstract') {
         result.name = layer.Abstract;
     } else {
         result.name = layer.Title;
