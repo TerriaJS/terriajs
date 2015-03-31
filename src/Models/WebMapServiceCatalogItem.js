@@ -678,6 +678,10 @@ function disposeLayer(catalogItem, layer) {
 }
 
 function setOpacity(catalogItem, layer, opacity) {
+    if (!defined(layer)) {
+        return;
+    }
+
     if (defined(catalogItem.application.cesium)) {
         layer.alpha = opacity;
     }
