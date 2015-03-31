@@ -1,0 +1,68 @@
+.feature-info-panel {
+    .panel;
+    opacity: 1;
+    visibility: visible;
+    background-color: @panel-background-color;
+    top: 60px;
+    right: 95px;
+    max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+    position: absolute;
+    box-shadow: @panel-box-shadow;
+
+    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -ms-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -o-transition: opacity @explorer-panel-close-animation-length ease-out;
+    transition: opacity @explorer-panel-close-animation-length ease-out;
+}
+
+.feature-info-panel-hidden {
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -moz-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -ms-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    -o-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+}
+
+.feature-info-panel-body {
+}
+
+.feature-info-panel-section {
+}
+
+.feature-info-panel-section-header {
+    font-size: 0.9em;
+    padding: 8px;
+    background-color: @panel-section-background-color;
+    color: @panel-emphasized-text-color;
+    border-bottom: @panel-element-border;
+}
+
+.feature-info-panel-section-label {
+    padding-right: 20px;
+}
+
+.feature-info-panel-section-content {
+    color: @panel-text-color;
+    font-weight: lighter;
+    padding: 15px;
+    overflow: auto;
+    max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+}
+
+.feature-info-panel-close-button {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    cursor: pointer;
+    font-size: 12pt;
+    color: @panel-emphasized-text-color;
+}
+
+@media print {
+    .feature-info-panel {
+        display: none;
+    }
+}

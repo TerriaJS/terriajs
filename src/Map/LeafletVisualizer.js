@@ -24,7 +24,6 @@ var defaultOutlineWidth = 1.0;
 var defaultPixelSize = 5.0;
 
 var defaultWidth = 5.0;
-var popupHeight = 520;
 
 //NOT IMPLEMENTED
 // Path primitive - no need identified
@@ -37,21 +36,21 @@ var popupHeight = 520;
  * @alias LeafletGeomVisualizer
  * @constructor
  *
- * @param {Scene} map The map the primitives will be rendered in.
+ * @param {LeafletScene} leafletScene The Leaflet scene that the the primitives will be rendered in.
  * @param {EntityCollection} entityCollection The entityCollection to visualize.
  */
-var LeafletGeomVisualizer = function(map, entityCollection) {
-    if (!defined(map)) {
-        throw new DeveloperError('map is required.');
+var LeafletGeomVisualizer = function(leafletScene, entityCollection) {
+    if (!defined(leafletScene)) {
+        throw new DeveloperError('leafletScene is required.');
     }
     if (!defined(entityCollection)) {
         throw new DeveloperError('entityCollection is required.');
     }
 
-    var featureGroup = L.featureGroup().addTo(map);
+    var featureGroup = L.featureGroup().addTo(leafletScene.map);
     entityCollection.collectionChanged.addEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
 
-    this._map = map;
+    this._leafletScene = leafletScene;
     this._featureGroup = featureGroup;
     this._entityCollection = entityCollection;
     this._entitiesToVisualize = new AssociativeArray();
@@ -174,7 +173,6 @@ LeafletGeomVisualizer.prototype._updatePoint = function(entity, time) {
     if (!defined(details)) {
         details = entity._pointDetails = {
             layer: undefined,
-            lastDescription: '',
             lastPosition: new Cartesian3(),
             lastPixelSize: 1,
             lastColor: new Color(),
@@ -189,7 +187,6 @@ LeafletGeomVisualizer.prototype._updatePoint = function(entity, time) {
         return;
     }
 
-    var description = Property.getValueOrUndefined(entity._description, time);
     var pixelSize = Property.getValueOrDefault(pointGraphics._pixelSize, time, defaultPixelSize);
     var color = Property.getValueOrDefault(pointGraphics._color, time, defaultColor);
     var outlineColor = Property.getValueOrDefault(pointGraphics._outlineColor, time, defaultOutlineColor);
@@ -208,10 +205,9 @@ LeafletGeomVisualizer.prototype._updatePoint = function(entity, time) {
         };
 
         layer = details.layer = L.circleMarker(positionToLatLng(position), pointOptions);
-        layer.bindPopup(description, {maxHeight: popupHeight});
+        layer.on('click', featureClicked.bind(undefined, this, entity));
         featureGroup.addLayer(layer);
 
-        details.lastDescription = description;
         Cartesian3.clone(position, details.lastPosition);
         details.lastPixelSize = pixelSize;
         Color.clone(color, details.lastColor);
@@ -219,12 +215,6 @@ LeafletGeomVisualizer.prototype._updatePoint = function(entity, time) {
         details.lastOutlineWidth = outlineWidth;
 
         return;
-    }
-
-    if (description !== details.lastDescription) {
-        layer.unbindPopup();
-        layer.bindPopup(description, {maxHeight: popupHeight});
-        details.lastDescription = description;
     }
 
     if (!Cartesian3.equals(position, details.lastPosition)) {
@@ -297,11 +287,10 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
     var markerGraphics = entity._billboard;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomBillboard;
-    var position, marker, description;
+    var position, marker;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(markerGraphics._show, time, true);
     if (show) {
         position = Property.getValueOrUndefined(entity._position, time);
-        description = Property.getValueOrUndefined(entity._description, time);
         show = defined(position);
     }
     if (!show) {
@@ -347,7 +336,7 @@ LeafletGeomVisualizer.prototype._updateBillboard = function(entity, time) {
     if (!defined(geomLayer)) {
         var markerOptions = {icon: L.icon({iconUrl: tmpImage})};
         marker = L.marker(latlng, markerOptions);
-        marker.bindPopup(description, {maxHeight: popupHeight});
+        marker.on('click', featureClicked.bind(undefined, this, entity));
         featureGroup.addLayer(marker);
         entity._geomBillboard = marker;
         redrawIcon = true;
@@ -471,11 +460,10 @@ LeafletGeomVisualizer.prototype._updatePolyline = function(entity, time) {
     var polylineGraphics = entity._polyline;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomPolyline;
-    var positions, polyline, description;
+    var positions, polyline;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polylineGraphics._show, time, true);
     if (show) {
         positions = Property.getValueOrUndefined(polylineGraphics._positions, time);
-        description = Property.getValueOrUndefined(entity._description, time);
         show = defined(positions);
     }
     if (!show) {
@@ -499,7 +487,7 @@ LeafletGeomVisualizer.prototype._updatePolyline = function(entity, time) {
 
     if (!defined(geomLayer)) {
         polyline = L.polyline(latlngs, polylineOptions);
-        polyline.bindPopup(description, {maxHeight: popupHeight});
+        polyline.on('click', featureClicked.bind(undefined, this, entity));
         featureGroup.addLayer(polyline);
         entity._geomPolyline = polyline;
     } else {
@@ -527,7 +515,7 @@ LeafletGeomVisualizer.prototype._updatePolygon = function(entity, time) {
     var polygonGraphics = entity._polygon;
     var featureGroup = this._featureGroup;
     var geomLayer = entity._geomPolygon;
-    var positions, polygon, description;
+    var positions, polygon;
     var show = entity.isAvailable(time) && Property.getValueOrDefault(polygonGraphics._show, time, true);
     if (show) {
         var hierarchy = Property.getValueOrUndefined(polygonGraphics._hierarchy, time);
@@ -535,7 +523,6 @@ LeafletGeomVisualizer.prototype._updatePolygon = function(entity, time) {
             hierarchy = new PolygonHierarchy(hierarchy);
         }
         positions = hierarchy ? hierarchy.positions : undefined;
-        description = Property.getValueOrUndefined(entity._description, time);
         show = defined(positions);
     }
     if (!show) {
@@ -564,7 +551,7 @@ LeafletGeomVisualizer.prototype._updatePolygon = function(entity, time) {
 
     if (!defined(geomLayer)) {
         polygon = L.polygon(latlngs, polygonOptions);
-        polygon.bindPopup(description, {maxHeight: popupHeight});
+        polygon.on('click', featureClicked.bind(undefined, this, entity));
         featureGroup.addLayer(polygon);
         entity._geomPolygon = polygon;
     } else {
@@ -606,7 +593,7 @@ LeafletGeomVisualizer.prototype.destroy = function() {
         cleanEntity(entities[i], this._featureGroup);
     }
     this._entityCollection.collectionChanged.removeEventListener(LeafletGeomVisualizer.prototype._onCollectionChanged, this);
-    this._map.removeLayer(this._featureGroup);
+    this._leafletScene.map.removeLayer(this._featureGroup);
     return destroyObject(this);
 };
 
@@ -615,9 +602,13 @@ LeafletGeomVisualizer.prototype.destroy = function() {
 var LeafletVisualizer = function() {
 };
 
-LeafletVisualizer.prototype.visualizersCallback = function(map, dataSource) {
+LeafletVisualizer.prototype.visualizersCallback = function(leafletScene, dataSource) {
     var entities = dataSource.entities;
-    return [new LeafletGeomVisualizer(map, entities)];
+    return [new LeafletGeomVisualizer(leafletScene, entities)];
 };
+
+function featureClicked(visualizer, entity) {
+    visualizer._leafletScene.featureClicked.raiseEvent(entity);
+}
 
 module.exports = LeafletVisualizer;

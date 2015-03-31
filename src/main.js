@@ -66,12 +66,14 @@ if (start) {
     var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
     var DragDropViewModel = require('./ViewModels/DragDropViewModel');
     var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
+    var FeatureInfoPanelViewModel = require('./ViewModels/FeatureInfoPanelViewModel');
     var GazetteerSearchProviderViewModel = require('./ViewModels/GazetteerSearchProviderViewModel');
     var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
     var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
     var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
     var NavigationViewModel = require('./ViewModels/NavigationViewModel');
     var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
+    var OnePanelOpenInTopRight = require('./ViewModels/OnePanelOpenInTopRight');
     var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
     var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
     var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
@@ -348,6 +350,17 @@ if (start) {
 
             application.currentViewer.notifyRepaintRequired();
         });
+
+        var featureInfo = new FeatureInfoPanelViewModel({
+            application: application,
+            container: ui,
+            viewerElement: 'cesiumContainer'
+        });
+
+        // Make sure only one panel is open in the top right at any time.
+        var onePanelOpenInTopRight = new OnePanelOpenInTopRight();
+        onePanelOpenInTopRight.addPanel(settingsPanel);
+        onePanelOpenInTopRight.addPanel(featureInfo);
 
         document.getElementById('loadingIndicator').style.display = 'none';
     });

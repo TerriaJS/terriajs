@@ -9,6 +9,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
@@ -16,14 +17,22 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var SceneTransforms = require('../../third_party/cesium/Source/Scene/SceneTransforms');
+var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
 var TaskProcessor = require('../../third_party/cesium/Source/Core/TaskProcessor');
 var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
+var CesiumSelectionIndicator = require('../Map/CesiumSelectionIndicator');
+var GlobeOrMap = require('./GlobeOrMap');
+var inherit = require('../Core/inherit');
 var ModelError = require('./ModelError');
+var PickedFeatures = require('../Map/PickedFeatures');
 var ViewerMode = require('./ViewerMode');
 
 var Cesium = function(application, viewer) {
+    GlobeOrMap.call(this);
+
     /**
      * Gets or sets the application.
      * @type {Application}
@@ -58,9 +67,14 @@ var Cesium = function(application, viewer) {
     this._lastCameraViewMatrix = new Matrix4();
     this._lastCameraMoveTime = 0;
 
+    this._selectionIndicator = new CesiumSelectionIndicator(this);
+
     this._removePostRenderListener = this.scene.postRender.addEventListener(postRender.bind(undefined, this));
     this._removeInfoBoxCloseListener = undefined;
     this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
+
+    // Handle left click by picking objects from the map.
+    viewer.screenSpaceEventHandler.setInputAction(pickObject.bind(undefined, this), ScreenSpaceEventType.LEFT_CLICK);
 
     // Force a repaint when the mouse moves or the window changes size.
     var canvas = this.viewer.canvas;
@@ -110,6 +124,10 @@ var Cesium = function(application, viewer) {
         this.viewer.timeline.addEventListener('settime', this._boundNotifyRepaintRequired, false);
     }
 
+    this._selectedFeatureSubscription = knockout.getObservable(this.application, 'selectedFeature').subscribe(function() {
+        selectFeature(this);
+    }, this);
+
     // Hacky way to force a repaint when an async load request completes
     var that = this;
     this._originalLoadWithXhr = loadWithXhr.load;
@@ -158,7 +176,14 @@ technical details below.  Thank you!</p><pre style="overflow:auto;margin-top:10p
     }, this);
 };
 
+inherit(GlobeOrMap, Cesium);
+
 Cesium.prototype.destroy = function() {
+    if (defined(this._selectionIndicator)) {
+        this._selectionIndicator.destroy();
+        this._selectionIndicator = undefined;
+    }
+
     if (defined(this._removePostRenderListener)) {
         this._removePostRenderListener();
         this._removePostRenderListener = undefined;
@@ -180,6 +205,11 @@ Cesium.prototype.destroy = function() {
 
     if (defined(this.viewer.timeline)) {
         this.viewer.timeline.removeEventListener('settime', this._boundNotifyRepaintRequired, false);
+    }
+
+    if (defined(this._selectedFeatureSubscription)) {
+        this._selectedFeatureSubscription.dispose();
+        this._selectedFeatureSubscription = undefined;
     }
 
     this.viewer.canvas.removeEventListener('mousemove', this._boundNotifyRepaintRequired, false);
@@ -352,11 +382,22 @@ Cesium.prototype.notifyRepaintRequired = function() {
     this.viewer.useDefaultRenderLoop = true;
 };
 
+/**
+ * Computes the screen position of a given world position.
+ * @param  {Cartesian3} position The world position in Earth-centered Fixed coordinates.
+ * @param  {Cartesian2} [result] The instance to which to copy the result.
+ * @return {Cartesian2} The screen position, or undefined if the position is not on the screen.
+ */
+Cesium.prototype.computePositionOnScreen = function(position, result) {
+    return SceneTransforms.wgs84ToWindowCoordinates(this.scene, position, result);
+};
+
 function postRender(cesium, date) {
     // We can safely stop rendering when:
     //  - the camera position hasn't changed in over a second,
     //  - there are no tiles waiting to load, and
     //  - the clock is not animating
+    //  - there are no tweens in progress
 
     var now = getTimestamp();
 
@@ -371,7 +412,7 @@ function postRender(cesium, date) {
     var surface = scene.globe._surface;
     var tilesWaiting = !surface._tileProvider.ready || surface._tileLoadQueue.length > 0 || surface._debug.tilesWaitingForChildren > 0;
 
-    if (!cameraMovedInLastSecond && !tilesWaiting && !cesium.viewer.clock.shouldAnimate) {
+    if (!cameraMovedInLastSecond && !tilesWaiting && !cesium.viewer.clock.shouldAnimate && cesium.scene.tweens.length === 0) {
         if (cesium.verboseRendering) {
             console.log('stopping rendering @ ' + getTimestamp());
         }
@@ -380,6 +421,64 @@ function postRender(cesium, date) {
     }
 
     Matrix4.clone(scene.camera.viewMatrix, cesium._lastCameraViewMatrix);
+
+    var feature = cesium.application.selectedFeature;
+    if (defined(feature) && defined(feature.position)) {
+        cesium._selectionIndicator.position = feature.position.getValue(cesium.application.clock.currentTime);
+    }
+    cesium._selectionIndicator.update();
+}
+
+function pickObject(cesium, e) {
+    var pickRay = cesium.scene.camera.getPickRay(e.position);
+    var pickPosition = cesium.scene.globe.pick(pickRay, cesium.scene);
+
+    var result = new PickedFeatures();
+    result.pickPosition = pickPosition;
+
+    // Pick vector features.
+    var picked = cesium.scene.drillPick(e.position);
+    for (var i = 0; i < picked.length; ++i) {
+        var id = picked[i].id;
+        if (!defined(id) && defined(picked[i].primitive)) {
+            id = picked[i].primitive.id;
+        }
+        if (id instanceof Entity) {
+            result.features.push(id);
+        }
+    }
+
+    // Pick raster features
+    var promise = cesium.scene.imageryLayers.pickImageryLayerFeatures(pickRay, cesium.scene);
+
+    result.allFeaturesAvailablePromise = when(promise, function(features) {
+        result.isLoading = false;
+
+        if (!defined(features)) {
+            return;
+        }
+
+        for (var i = 0; i < features.length; ++i) {
+            var feature = features[i];
+            result.features.push(cesium._createEntityFromImageryLayerFeature(feature));
+        }
+    }).otherwise(function(e) {
+        result.isLoading = false;
+        result.error = 'An unknown error occurred while picking features.';
+    });
+
+    cesium.application.pickedFeatures = result;
+}
+
+function selectFeature(cesium) {
+    var feature = cesium.application.selectedFeature;
+    if (defined(feature) && defined(feature.position)) {
+        cesium._selectionIndicator.position = feature.position.getValue(cesium.application.clock.currentTime);
+        cesium._selectionIndicator.animateAppear();
+    } else {
+        cesium._selectionIndicator.animateDepart();
+    }
+    cesium._selectionIndicator.update();
 }
 
 module.exports = Cesium;
