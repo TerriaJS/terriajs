@@ -6,12 +6,14 @@ var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
+var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
@@ -45,6 +47,7 @@ var WebMapServiceCatalogItem = function(application) {
     this._legendUrl = undefined;
     this._rectangle = undefined;
     this._rectangleFromMetadata = undefined;
+    this._clock = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -91,6 +94,11 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.getFeatureInfoAsXml = true;
 
+    /**
+     * Gets or sets the content type to request when invoking GetFeatureInfo.
+     * @type {String}
+     * @default 'text/xml'
+     */
     this.getFeatureInfoXmlContentType = 'text/xml';
 
     /**
@@ -104,7 +112,18 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.clipToRectangle = false;
 
-    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'tilingScheme', 'clipToRectangle']);
+    /**
+     * Gets or sets the collection of imagery times in increasing order, each specified as a string in ISO8601 format
+     * (e.g. '2015-03-31T13:43:10Z').  If this WMS layer is not time-dynamic, this property should be undefined or an empty array.
+     * @type {Array}
+     * @default []
+     */
+    this.times = [];
+
+    knockout.track(this, [
+        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url',
+        'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'getFeatureInfoXmlContentType',
+        'tilingScheme', 'clipToRectangle', 'times']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.dataUrl;
@@ -179,6 +198,29 @@ var WebMapServiceCatalogItem = function(application) {
         },
         set : function(value) {
             this._rectangle = value;
+        }
+    });
+
+    delete this.__knockoutObservables.clock;
+    knockout.defineProperty(this, 'clock', {
+        get : function() {
+            if (!defined(this._clock) && defined(this.times) && this.times.length > 0) {
+                var startTime = JulianDate.fromIso8601(this.times[0]);
+                var stopTime = JulianDate.fromIso8601(this.times[this.times.length - 1]);
+
+                // Average about 10 seconds per time.
+                var totalDuration = JulianDate.secondsDifference(stopTime, startTime);
+                var numTimes = this.times.length;
+                var averageDuration = totalDuration / numTimes;
+                var timePerSecond = averageDuration / 10;
+
+                this._clock = new DataSourceClock();
+                this._clock.startTime = startTime;
+                this._clock.stopTime = stopTime;
+                this._clock.currentTime = startTime;
+                this._clock.multiplier = timePerSecond;
+            }
+            return this._clock;
         }
     });
 };
