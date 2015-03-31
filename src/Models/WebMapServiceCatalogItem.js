@@ -211,11 +211,11 @@ var WebMapServiceCatalogItem = function(application) {
                 var startTime = JulianDate.fromIso8601(this.times[0]);
                 var stopTime = JulianDate.fromIso8601(this.times[this.times.length - 1]);
 
-                // Average about 10 seconds per time.
+                // Average about 5 seconds per time.
                 var totalDuration = JulianDate.secondsDifference(stopTime, startTime);
                 var numTimes = this.times.length;
                 var averageDuration = totalDuration / numTimes;
-                var timePerSecond = averageDuration / 10;
+                var timePerSecond = averageDuration / 5;
 
                 this._clock = new DataSourceClock();
                 this._clock.startTime = startTime;
@@ -623,19 +623,14 @@ function onClockTick(catalogItem, clock) {
     }
 
     // Is the layer we've already built the right one to use?
-    if (index !== catalogItem._nextTimeIndex) {
+    if (index !== catalogItem._nextTimeIndex || !layerMatchesViewer(catalogItem, catalogItem._nextLayer)) {
         // Throw away the "next" layer, since it's not applicable.
         disposeLayer(catalogItem, catalogItem._nextLayer);
         catalogItem._nextLayer = undefined;
 
         // Create the new layer
         var imageryProvider = createImageryProvider(catalogItem, catalogItem.times[index]);
-        catalogItem._nextLayer = new ImageryLayer(imageryProvider, {
-            alpha : 0.0,
-            rectangle : catalogItem.clipToRectangle ? catalogItem.rectangle : undefined
-        });
-
-        catalogItem.application.cesium.scene.imageryLayers.add(catalogItem._nextLayer);
+        catalogItem._nextLayer = createLayer(catalogItem, imageryProvider, 0.0);
     }
 
     setOpacity(catalogItem, catalogItem._nextLayer, catalogItem.opacity);
@@ -653,14 +648,31 @@ function onClockTick(catalogItem, clock) {
     }
 
     var nextImageryProvider = createImageryProvider(catalogItem, catalogItem.times[nextIndex]);
-    catalogItem._nextLayer = new ImageryLayer(nextImageryProvider, {
-        alpha : 0.0,
-        rectangle : catalogItem.clipToRectangle ? catalogItem.rectangle : undefined
-    });
-
-    catalogItem.application.cesium.scene.imageryLayers.add(catalogItem._nextLayer);
-
+    catalogItem._nextLayer = createLayer(catalogItem, nextImageryProvider, 0.0);
     catalogItem._nextTimeIndex = nextIndex;
+}
+
+function createLayer(catalogItem, imageryProvider, opacity) {
+    var layer;
+
+    if (defined(catalogItem.application.cesium)) {
+        layer = new ImageryLayer(imageryProvider, {
+            alpha : opacity,
+            rectangle : catalogItem.clipToRectangle ? catalogItem.rectangle : undefined
+        });
+
+        catalogItem.application.cesium.scene.imageryLayers.add(layer);
+    } else if (defined(catalogItem.application.leaflet)) {
+        var options = {
+            opacity: opacity,
+            bounds : catalogItem.clipToRectangle && catalogItem.rectangle ? rectangleToLatLngBounds(catalogItem.rectangle) : undefined
+        };
+
+        layer = new CesiumTileLayer(imageryProvider, options);
+        layer.addTo(catalogItem.application.leaflet.map);
+    }
+
+    return layer;
 }
 
 function disposeLayer(catalogItem, layer) {
@@ -688,6 +700,16 @@ function setOpacity(catalogItem, layer, opacity) {
 
     if (defined(catalogItem.application.leaflet)) {
         layer.setOpacity(opacity);
+    }
+}
+
+function layerMatchesViewer(catalogItem, layer) {
+    if (defined(catalogItem.application.cesium) && !(layer instanceof ImageryLayer)) {
+        return false;
+    } else if (defined(catalogItem.application.leaflet) && layer instanceof ImageryLayer) {
+        return false;
+    } else {
+        return true;
     }
 }
 
