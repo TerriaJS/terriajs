@@ -368,7 +368,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             }
         }
 
-        var elPopup = document.getElementById('popup-window-message');
+        var elPopup = document.getElementById('popup-window-content');
         if (elPopup !== null) {
             elPopup.scrollTop = elPopup.scrollHeight - elPopup.offsetHeight;
         } 
