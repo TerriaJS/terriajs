@@ -87,48 +87,6 @@ defineProperties(ArcGisMapServerCatalogItem.prototype, {
     }
 });
 
-
-ArcGisMapServerCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
-    var projection = new WebMercatorProjection();
-    var sw = projection.project(Rectangle.southwest(mapExtent));
-    var ne = projection.project(Rectangle.northeast(mapExtent));
-
-    var tilingScheme = new WebMercatorTilingScheme({
-        rectangleSouthwestInMeters: sw,
-        rectangleNortheastInMeters: ne
-    });
-
-    // Compute the longitude and latitude of the pick location.
-    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
-    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
-
-    var ll = projection.unproject(new Cartesian2(x, y));
-
-    // Use a Cesium imagery provider to pick features.
-    var imageryProvider = new ArcGisMapServerImageryProvider({
-        url : cleanAndProxyUrl(this.application, this.url),
-        layers : this.layers,
-        tilingScheme : tilingScheme,
-        tileWidth : mapWidth,
-        tileHeight : mapHeight,
-        usePreCachedTilesIfAvailable : false
-    });
-
-    var deferred = when.defer();
-
-    function pollForReady() {
-        if (imageryProvider.ready) {
-            deferred.resolve(imageryProvider.pickFeatures(0, 0, 0, ll.longitude, ll.latitude));
-        } else {
-            setTimeout(pollForReady, 100);
-        }
-    }
-
-    pollForReady();
-
-    return deferred.promise;
-};
-
 ArcGisMapServerCatalogItem.prototype._createImageryProvider = function() {
     return new ArcGisMapServerImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url),

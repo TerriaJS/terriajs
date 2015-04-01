@@ -21,6 +21,7 @@ var CatalogItem = require('./CatalogItem');
 var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var inherit = require('../Core/inherit');
 var ModelError = require('./ModelError');
+var pollToPromise = require('../Core/pollToPromise');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
@@ -390,7 +391,11 @@ ImageryLayerCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, ma
         return undefined;
     }
 
-    return imageryProvider.pickFeatures(tileCoordinates.x, tileCoordinates.y, level, ll.longitude, ll.latitude);
+    return pollToPromise(function() {
+        return imageryProvider.ready;
+    }).then(function() {
+        return imageryProvider.pickFeatures(tileCoordinates.x, tileCoordinates.y, level, ll.longitude, ll.latitude);
+    });
 };
 
 function updateOpacity(imageryLayerItem) {
