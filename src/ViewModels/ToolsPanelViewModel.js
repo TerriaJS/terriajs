@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,L,URI*/
+/*global require,URI*/
 var CatalogGroup = require('../Models/CatalogGroup');
 var corsProxy = require('../Core/corsProxy');
 var loadView = require('../Core/loadView');
@@ -227,7 +227,6 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
                 // Extent is probably junk.
                 continue;
             }
-            var tilesThisLevel = 0;
             var potentialTiles = [];
             for (var y = nw.y; y <= se.y; ++y) {
                 for (var x = nw.x; x <= se.x; ++x) {
