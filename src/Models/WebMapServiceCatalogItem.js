@@ -348,12 +348,15 @@ WebMapServiceCatalogItem.prototype._createImageryProvider = function(time) {
         parameters = combine({ time: time }, parameters);
     }
 
+    parameters = combine(parameters, WebMapServiceCatalogItem.defaultParameters);
+
     return new WebMapServiceImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url),
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : combine(parameters, WebMapServiceCatalogItem.defaultParameters),
+        parameters : parameters,
+        getFeatureInfoParameters : parameters,
         tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
         getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
     });

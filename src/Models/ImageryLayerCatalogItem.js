@@ -336,6 +336,10 @@ ImageryLayerCatalogItem.prototype._enable = function() {
 
     if (defined(nextTimeIdentifier)) {
         var nextImageryProvider = this._createImageryProvider(nextTimeIdentifier);
+
+        // Do not allow picking from the preloading layer.
+        nextImageryProvider._enablePickFeatures = false;
+
         this._nextLayer = enableLayer(this, nextImageryProvider, 0.0);
     }
 };
@@ -502,6 +506,7 @@ function onClockTick(catalogItem, clock) {
         disableLayer(catalogItem, catalogItem._imageryLayer);
 
         catalogItem._imageryLayer = catalogItem._nextLayer;
+        catalogItem._imageryLayer._enablePickFeatures = true;
         catalogItem._nextLayer = undefined;
         catalogItem._nextIntervalIndex = -1;
         catalogItem._currentIntervalIndex = index;
@@ -514,6 +519,7 @@ function onClockTick(catalogItem, clock) {
     }
 
     var nextImageryProvider = catalogItem._createImageryProvider(catalogItem.intervals.get(nextIndex).data);
+    nextImageryProvider._enablePickFeatures = false;
     catalogItem._nextLayer = enableLayer(catalogItem, nextImageryProvider, 0.0);
     show(catalogItem, catalogItem._nextLayer);
     catalogItem._nextIntervalIndex = nextIndex;

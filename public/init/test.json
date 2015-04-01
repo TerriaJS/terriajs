@@ -171,7 +171,6 @@
                               "BELOWMINCOLOR":"transparent",
                               "COLORSCALERANGE":"0,1",
                               "FORMAT":"image/png",
-                              "LAYERS":"Chl_MIM_median",
                               "LOGSCALE":"false",
                               "NUMCOLORBANDS":"16",
                               "PALETTE":"mwq_chl",
