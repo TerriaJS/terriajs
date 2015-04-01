@@ -7,15 +7,12 @@ var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
-var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 
@@ -138,7 +135,7 @@ ArcGisMapServerCatalogItem.prototype._createImageryProvider = function() {
         layers : this.layers,
         tilingScheme : new WebMercatorTilingScheme()
     });
-}
+};
 
 function cleanAndProxyUrl(application, url) {
     return proxyUrl(application, cleanUrl(url));
