@@ -166,6 +166,7 @@
                             "layers": "Chl_MIM_mean",
                             "type": "wms",
                             "url": "http://ereeftds.bom.gov.au/ereefs/tds/wms/ereefs/mwq_gridAgg_P1M",
+                            "getFeatureInfoAsGeoJson": false,
                             "parameters": {
                               "ABOVEMAXCOLOR":"0xAF324B",
                               "BELOWMINCOLOR":"transparent",

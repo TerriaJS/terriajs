@@ -532,6 +532,7 @@ function onClockTick(catalogItem, clock) {
 
             // Create the new "next" layer
             var imageryProvider = catalogItem._createImageryProvider(catalogItem.intervals.get(index).data);
+            imageryProvider._enablePickFeatures = false;
             catalogItem._nextLayer = enableLayer(catalogItem, imageryProvider, 0.0);
             show(catalogItem, catalogItem._nextLayer);
         }
@@ -543,7 +544,7 @@ function onClockTick(catalogItem, clock) {
         disableLayer(catalogItem, catalogItem._imageryLayer);
 
         catalogItem._imageryLayer = catalogItem._nextLayer;
-        catalogItem._imageryLayer._enablePickFeatures = true;
+        catalogItem._imageryLayer.imageryProvider._enablePickFeatures = true;
         catalogItem._nextLayer = undefined;
         catalogItem._nextIntervalIndex = -1;
         catalogItem._currentIntervalIndex = index;
