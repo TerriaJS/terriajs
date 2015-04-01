@@ -66,8 +66,8 @@ var WebMapServiceCatalogItem = function(application) {
      * If this property is undefiend, the default tiling scheme of the provider is used.
      * @type {Object}
      */
-
     this.tilingScheme = undefined;
+
     /**
      * Gets or sets a value indicating whether we should request information about individual features on click
      * as GeoJSON.  If getFeatureInfoAsXml is true as well, feature information will be requested first as GeoJSON,
@@ -208,6 +208,17 @@ defineProperties(WebMapServiceCatalogItem.prototype, {
     typeName : {
         get : function() {
             return 'Web Map Service (WMS)';
+        }
+    },
+
+    /**
+     * Gets a value indicating whether this {@link ImageryLayerCatalogItem} supports the {@link ImageryLayerCatalogItem#intervals}
+     * property for configuring time-dynamic imagery.
+     * @type {Boolean}
+     */
+    supportsIntervals : {
+        get : function() {
+            return true;
         }
     },
 

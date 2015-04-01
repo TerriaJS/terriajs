@@ -113,6 +113,17 @@ inherit(CatalogItem, ImageryLayerCatalogItem);
 
 defineProperties(ImageryLayerCatalogItem.prototype, {
     /**
+     * Gets a value indicating whether this {@link ImageryLayerCatalogItem} supports the {@link ImageryLayerCatalogItem#intervals}
+     * property for configuring time-dynamic imagery.
+     * @type {Boolean}
+     */
+    supportsIntervals : {
+        get : function() {
+            return false;
+        }
+    },
+
+    /**
      * Gets the Cesium or Leaflet imagery layer object associated with this data source.
      * This property is undefined if the data source is not enabled.
      * @memberOf ImageryLayerCatalogItem.prototype
@@ -193,6 +204,14 @@ ImageryLayerCatalogItem.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
 ImageryLayerCatalogItem.defaultUpdaters.intervals = function(catalogItem, json, propertyName) {
     if (!defined(json.intervals)) {
         return;
+    }
+
+    if (!catalogItem.supportsIntervals) {
+        throw new ModelError({
+            sender: catalogItem,
+            title: 'Intervals not supported',
+            message: 'Sorry, ' + catalogItem.typeName + ' (' + catalogItem.type + ') catalog items cannot currently be made time-varying by specifying the "intervals" property.'
+        });
     }
 
     var result = new TimeIntervalCollection();

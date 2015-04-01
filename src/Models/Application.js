@@ -364,7 +364,7 @@ function loadInitSources(application, initSources) {
             if (!defined(initSource)) {
                 continue;
             }
-            application.addInitSource(initSource);
+            promises.push(application.addInitSource(initSource));
         }
 
         return when.all(promises);
