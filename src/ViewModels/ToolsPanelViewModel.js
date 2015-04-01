@@ -122,17 +122,15 @@ function getAllRequests(types, mode, requests, group, promises) {
                 getAllRequests(types, mode, requests, item, promises);
             }
         } else if ((types.indexOf(item.type) !== -1) && (mode !== 'enabled' || item.isEnabled)) {
-           var enabledHere = !item.isEnabled;
-            if (enabledHere) {
-                if (defined(item._imageryLayer)) {
-                    continue;
-                }
-                item._enable();
-            }
 
-            var imageryProvider = item._imageryLayer.imageryProvider;
 
             if (!alreadyInRequests(item)) {
+                var enabledHere = false;
+                if (!item.isEnabled) {
+                    enabledHere = true;
+                    item._enable();
+                }
+                var imageryProvider = item._imageryLayer.imageryProvider;
                 requests.push({
                     item : item,
                     group : group.name,
