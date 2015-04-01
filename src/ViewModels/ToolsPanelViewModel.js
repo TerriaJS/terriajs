@@ -354,7 +354,7 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
                 popup.message += ' (' + last.stat.success.slow + ' slow) ';
             }
             var average = Math.round(last.stat.success.sum / last.stat.success.number);
-            popup.message += ' <span ' + (average > maxAverage ? 'style="colour: red"' : '') + '>' + 
+            popup.message += ' <span ' + (average > maxAverage ? 'style="color: red"' : '') + '>' + 
               'Average: ' + average + 'ms</span>&nbsp;';
             popup.message += '(<span ' + (last.stat.success.max > maxMaximum ? 'style="color: red"' : '') + '>' + 
               'Max: ' + Math.round(last.stat.success.max) + 'ms</span>)';
