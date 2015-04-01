@@ -107,6 +107,14 @@ ToolsPanelViewModel.open = function(container, options) {
 
 
 function getAllRequests(types, mode, requests, group, promises) {
+    function alreadyInRequests(item) {
+        for (var i=0; i < requests.length; i++) {
+            if (requests[i].item === item) {
+                return true;
+            }
+        }
+        return false;
+    }
     for (var i = 0; i < group.items.length; ++i) {
         var item = group.items[i];
         if (item instanceof CatalogGroup) {
@@ -124,14 +132,16 @@ function getAllRequests(types, mode, requests, group, promises) {
 
             var imageryProvider = item._imageryLayer.imageryProvider;
 
-            requests.push({
-                item : item,
-                group : group.name,
-                enabledHere : enabledHere,
-                provider : imageryProvider
-            });
+            if (!alreadyInRequests(item)) {
+                requests.push({
+                    item : item,
+                    group : group.name,
+                    enabledHere : enabledHere,
+                    provider : imageryProvider
+                });
 
-            promises.push(whenImageryProviderIsReady(imageryProvider));
+                promises.push(whenImageryProviderIsReady(imageryProvider));
+            }
         }
     }
 }
