@@ -503,6 +503,7 @@ function onClockTick(catalogItem, clock) {
         // At this point we can assume that _nextLayer is applicable to this time.
         // Make it visible
         setOpacity(catalogItem, catalogItem._nextLayer, catalogItem.opacity);
+        fixNextLayerOrder(catalogItem);
         disableLayer(catalogItem, catalogItem._imageryLayer);
 
         catalogItem._imageryLayer = catalogItem._nextLayer;
@@ -567,6 +568,32 @@ function hide(catalogItem, layer) {
 
     if (defined(catalogItem.application.leaflet)) {
         catalogItem.application.leaflet.map.removeLayer(layer);
+    }
+}
+
+function fixNextLayerOrder(catalogItem) {
+    if (!defined(catalogItem._imageryLayer) || !defined(catalogItem._nextLayer)) {
+        return;
+    }
+
+    if (defined(catalogItem.application.cesium)) {
+        var imageryLayers = catalogItem.application.cesium.scene.imageryLayers;
+
+        var currentIndex = imageryLayers.indexOf(catalogItem._imageryLayer);
+        var nextIndex = imageryLayers.indexOf(catalogItem._nextLayer);
+        if (currentIndex < 0 || nextIndex < 0) {
+            return;
+        }
+
+        while (nextIndex < currentIndex - 1) {
+            imageryLayers.raise(catalogItem._nextLayer);
+            ++nextIndex;
+        }
+
+        while (nextIndex > currentIndex + 1) {
+            imageryLayers.lower(catalogItem._nextLayer);
+            --nextIndex;
+        }
     }
 }
 
