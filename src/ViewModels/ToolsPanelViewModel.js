@@ -159,7 +159,7 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
     var uniqueStats = [];
     var name;
     var stat;
-    var maxTilesPerLevel = 50; // no point requesting a bazillion tile requests per zoom level
+    var maxTilesPerLevel = -1; // only request this number of tiles per zoom level, randomly selected. -1 = no limit.
 
     loadImage.createImage = function(url, crossOrigin, deferred) {
         urls.push(url);
@@ -235,17 +235,23 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
                 }
             }
             // randomly select up to maxTilesPerLevel of those tiles
-            if (maxTilesPerLevel > -1) {
-                for (var t = 0; t < maxTilesPerLevel && potentialTiles.length > 1; t++) {
-                    var tnum = Math.floor(Math.random() * potentialTiles.length);
-                    var tile = potentialTiles[tnum];
-                    if (defined(leaflet)) {
-                        loadImage.createImage(request.provider.getTileUrl(tile));
-                    } else if (!defined(request.provider.requestImage(tile.x, tile.y, tile.z))) {
-                        console.log('too many requests in flight');
-                    }
-                    potentialTiles.splice(tnum,1);
+            var t=1;
+            while (potentialTiles.length > 0 && (maxTilesPerLevel === -1 || t++ <= maxTilesPerLevel)) {
+                var tnum;
+                if (maxTilesPerLevel < 0) {
+                    // if there's no tile limit, revert to fetching all tiles in order, for predictability.
+                    tnum = 0;
+                } else {
+                    tnum = Math.floor(Math.random() * potentialTiles.length);
                 }
+                var tile = potentialTiles[tnum];
+                if (defined(leaflet)) {
+                    loadImage.createImage(request.provider.getTileUrl(tile));
+                } else if (!defined(request.provider.requestImage(tile.x, tile.y, tile.z))) {
+                    console.log('too many requests in flight');
+                }
+                potentialTiles.splice(tnum,1);
+                
             }
         }
         if (request.enabledHere) {
