@@ -228,22 +228,23 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
                 continue;
             }
             var tilesThisLevel = 0;
-
+            var potentialTiles = [];
             for (var y = nw.y; y <= se.y; ++y) {
                 for (var x = nw.x; x <= se.x; ++x) {
-                    if (tilesThisLevel++ < maxTilesPerLevel) {
-                        if (defined(leaflet)) {
-                            var coords = new L.Point(x, y);
-                            coords.z = level;
-                            var url = request.provider.getTileUrl(coords);
-                            loadImage.createImage(url);
-                        }
-                        else {
-                            if (!defined(request.provider.requestImage(x, y, level))) {
-                                console.log('too many requests in flight');
-                            }
-                        }
+                    potentialTiles.push({"x": x, "y": y, "z": level});
+                }
+            }
+            // randomly select up to maxTilesPerLevel of those tiles
+            if (maxTilesPerLevel > -1) {
+                for (var t = 0; t < maxTilesPerLevel && potentialTiles.length > 1; t++) {
+                    var tnum = Math.floor(Math.random() * potentialTiles.length);
+                    var tile = potentialTiles[tnum];
+                    if (defined(leaflet)) {
+                        loadImage.createImage(request.provider.getTileUrl(tile));
+                    } else if (!defined(request.provider.requestImage(tile.x, tile.y, tile.z))) {
+                        console.log('too many requests in flight');
                     }
+                    potentialTiles.splice(tnum,1);
                 }
             }
         }
