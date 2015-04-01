@@ -68,7 +68,7 @@ ToolsPanelViewModel.prototype.cacheTiles = function() {
     var that = this;
     when.all(promises, function() {
         console.log('Requesting tiles in zoom range ' + that.minZoomLevel + '-' + that.maxZoomLevel + ' from ' + requests.length + ' data sources.');
-        requestTiles(that, requests, that.minZoomLevel, that.maxZoomLevel);
+        requestTiles(that, requests, Number(that.minZoomLevel), Number(that.maxZoomLevel));
     });
 };
 
