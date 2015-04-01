@@ -1,7 +1,8 @@
 'use strict';
 
 /*global require*/
-
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -14,6 +15,7 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var TimeInterval = require('../../third_party/cesium/Source/Core/TimeInterval');
 var TimeIntervalCollection = require('../../third_party/cesium/Source/Core/TimeIntervalCollection');
+var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
 var CatalogItem = require('./CatalogItem');
 var CesiumTileLayer = require('../Map/CesiumTileLayer');
@@ -360,6 +362,35 @@ ImageryLayerCatalogItem.prototype._show = function() {
 ImageryLayerCatalogItem.prototype._hide = function() {
     hide(this, this._imageryLayer);
     hide(this, this._nextLayer);
+};
+
+ImageryLayerCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
+    if (!defined(this.application.leaflet) || !defined(this._imageryLayer) || !defined(this._imageryLayer.imageryProvider)) {
+        return undefined;
+    }
+
+    var map = this.application.leaflet.map;
+    var imageryProvider = this._imageryLayer.imageryProvider;
+
+    var projection = new WebMercatorProjection();
+    var sw = projection.project(Rectangle.southwest(mapExtent));
+    var ne = projection.project(Rectangle.northeast(mapExtent));
+
+    // Compute the longitude and latitude of the pick location.
+    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
+    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
+
+    var ll = projection.unproject(new Cartesian2(x, y));
+
+    // Map the lon/lat to a tile in the current zoom level and query that tile for features.
+    var level = map.getZoom();
+    var tilingScheme = imageryProvider.tilingScheme;
+    var tileCoordinates = tilingScheme.positionToTileXY(ll, level);
+    if (!defined(tileCoordinates)) {
+        return undefined;
+    }
+
+    return imageryProvider.pickFeatures(tileCoordinates.x, tileCoordinates.y, level, ll.longitude, ll.latitude);
 };
 
 function updateOpacity(imageryLayerItem) {
