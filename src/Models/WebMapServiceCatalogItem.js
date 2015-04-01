@@ -1,18 +1,14 @@
 'use strict';
 
 /*global require,URI,$*/
-var binarySearch = require('../../third_party/cesium/Source/Core/binarySearch');
 var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
 var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
-var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
-var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
@@ -20,12 +16,10 @@ var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scen
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
-var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
  * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
@@ -46,11 +40,6 @@ var WebMapServiceCatalogItem = function(application) {
     this._legendUrl = undefined;
     this._rectangle = undefined;
     this._rectangleFromMetadata = undefined;
-    this._clock = undefined;
-    this._clockTickSubscription = undefined;
-    this._nextLayer = undefined;
-    this._currentTimeIndex = -1;
-    this._nextTimeIndex = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -115,18 +104,10 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.clipToRectangle = false;
 
-    /**
-     * Gets or sets the collection of imagery times in increasing order, each specified as a string in ISO8601 format
-     * (e.g. '2015-03-31T13:43:10Z').  If this WMS layer is not time-dynamic, this property should be undefined or an empty array.
-     * @type {Array}
-     * @default []
-     */
-    this.times = [];
-
     knockout.track(this, [
-        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', '_clock', 'url',
+        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url',
         'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'getFeatureInfoXmlContentType',
-        'tilingScheme', 'clipToRectangle', 'times']);
+        'tilingScheme', 'clipToRectangle']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.dataUrl;
@@ -202,50 +183,6 @@ var WebMapServiceCatalogItem = function(application) {
         set : function(value) {
             this._rectangle = value;
         }
-    });
-
-    delete this.__knockoutObservables.clock;
-    knockout.defineProperty(this, 'clock', {
-        get : function() {
-            if (!defined(this._clock) && defined(this.times) && this.times.length > 0) {
-                var startTime = JulianDate.fromIso8601(this.times[0]);
-                var stopTime = JulianDate.fromIso8601(this.times[this.times.length - 1]);
-
-                // Average about 5 seconds per time.
-                var totalDuration = JulianDate.secondsDifference(stopTime, startTime);
-                var numTimes = this.times.length;
-                var averageDuration = totalDuration / numTimes;
-                var timePerSecond = averageDuration / 5;
-
-                this._clock = new DataSourceClock();
-                this._clock.startTime = startTime;
-                this._clock.stopTime = stopTime;
-                this._clock.currentTime = startTime;
-                this._clock.multiplier = timePerSecond;
-            }
-            return this._clock;
-        },
-        set : function(value) {
-            this._clock = value;
-        }
-    });
-
-    // Subscribe to isShown changing and add/remove the clock tick subscription as necessary.
-    knockout.getObservable(this, 'isShown').subscribe(function() {
-        updateClockSubscription(this);
-    }, this);
-
-    knockout.getObservable(this, 'clock').subscribe(function() {
-        updateClockSubscription(this);
-    }, this);
-
-    var that = this;
-    this._getJulianDates = knockout.pureComputed(function() {
-        var result = [];
-        for (var i = 0; i < that.times.length; ++i) {
-            result.push(JulianDate.fromIso8601(that.times[i]));
-        }
-        return result;
     });
 };
 
@@ -362,53 +299,6 @@ WebMapServiceCatalogItem.prototype._load = function() {
     return this._metadata.promise;
 };
 
-WebMapServiceCatalogItem.prototype._enableInCesium = function() {
-    if (defined(this._imageryLayer)) {
-        return;
-    }
-
-    var scene = this.application.cesium.scene;
-
-    this._imageryLayer = new ImageryLayer(createImageryProvider(this), {
-        show : false,
-        alpha : this.opacity,
-        rectangle : this.clipToRectangle ? this.rectangle : undefined
-    });
-
-    scene.imageryLayers.add(this._imageryLayer);
-};
-
-WebMapServiceCatalogItem.prototype._disableInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        return;
-    }
-
-    var scene = this.application.cesium.scene;
-    scene.imageryLayers.remove(this._imageryLayer);
-    this._imageryLayer = undefined;
-};
-
-WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
-    if (defined(this._imageryLayer)) {
-        return;
-    }
-
-    var options = {
-        opacity: this.opacity,
-        bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
-    };
-
-    this._imageryLayer = new CesiumTileLayer(createImageryProvider(this), options);
-};
-
-WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        return;
-    }
-
-    this._imageryLayer = undefined;
-};
-
 WebMapServiceCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
     var projection = new WebMercatorProjection();
     var sw = projection.project(Rectangle.southwest(mapExtent));
@@ -441,6 +331,23 @@ WebMapServiceCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, m
     return imageryProvider.pickFeatures(0, 0, 0, ll.longitude, ll.latitude);
 };
 
+WebMapServiceCatalogItem.prototype._createImageryProvider = function(time) {
+    var parameters = this.parameters;
+    if (defined(time)) {
+        parameters = combine({ time: time }, parameters);
+    }
+
+    return new WebMapServiceImageryProvider({
+        url : cleanAndProxyUrl(this.application, this.url),
+        layers : this.layers,
+        getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
+        getFeatureInfoAsXml : this.getFeatureInfoAsXml,
+        parameters : combine(parameters, WebMapServiceCatalogItem.defaultParameters),
+        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
+        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
+    });
+};
+
 WebMapServiceCatalogItem.defaultParameters = {
     transparent: true,
     format: 'image/png',
@@ -448,23 +355,6 @@ WebMapServiceCatalogItem.defaultParameters = {
     styles: '',
     tiled: true
 };
-
-function createImageryProvider(wmsItem, time) {
-    var parameters = wmsItem.parameters;
-    if (defined(time)) {
-        parameters = combine({ time: time }, parameters);
-    }
-
-    return new WebMapServiceImageryProvider({
-        url : cleanAndProxyUrl(wmsItem.application, wmsItem.url),
-        layers : wmsItem.layers,
-        getFeatureInfoAsGeoJson : wmsItem.getFeatureInfoAsGeoJson,
-        getFeatureInfoAsXml : wmsItem.getFeatureInfoAsXml,
-        parameters : combine(parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : defined(wmsItem.tilingScheme) ? wmsItem.tilingScheme : new WebMercatorTilingScheme(),
-        getFeatureInfoXmlContentType : wmsItem.getFeatureInfoXmlContentType
-    });
-}
 
 function cleanAndProxyUrl(application, url) {
     return proxyUrl(application, cleanUrl(url));
@@ -584,132 +474,6 @@ function populateMetadataGroup(metadataGroup, sourceMetadata) {
                 metadataGroup.items.push(dest);
             }
         }
-    }
-}
-
-function updateClockSubscription(catalogItem) {
-    if (catalogItem.isShown && defined(catalogItem.clock)) {
-        // Subscribe
-        if (!defined(catalogItem._clockTickSubscription)) {
-            catalogItem._clockTickSubscription = catalogItem.application.clock.onTick.addEventListener(onClockTick.bind(undefined, catalogItem));
-        }
-    } else {
-        // Unsubscribe
-        if (defined(catalogItem._clockTickSubscription)) {
-            catalogItem._clockTickSubscription();
-            catalogItem._clockTickSubscription = undefined;
-        }
-    }
-}
-
-function onClockTick(catalogItem, clock) {
-    var dates = catalogItem._getJulianDates();
-
-    var index = catalogItem._currentTimeIndex;
-
-    if (index >= 0 && index < dates.length &&
-        JulianDate.greaterThanOrEquals(clock.currentTime, dates[index]) && (index === dates.length - 1 || JulianDate.lessThan(clock.currentTime, dates[index + 1]))) {
-        // No layer update necesary.
-        return;
-    }
-
-    // Find the last date before or at the currentTime.
-    index = binarySearch(dates, clock.currentTime, JulianDate.compare);
-    if (index < 0) {
-        index = ~index - 1;
-        if (index >= dates.length) {
-            index = dates.length - 1;
-        }
-    }
-
-    // Is the layer we've already built the right one to use?
-    if (index !== catalogItem._nextTimeIndex || !layerMatchesViewer(catalogItem, catalogItem._nextLayer)) {
-        // Throw away the "next" layer, since it's not applicable.
-        disposeLayer(catalogItem, catalogItem._nextLayer);
-        catalogItem._nextLayer = undefined;
-
-        // Create the new layer
-        var imageryProvider = createImageryProvider(catalogItem, catalogItem.times[index]);
-        catalogItem._nextLayer = createLayer(catalogItem, imageryProvider, 0.0);
-    }
-
-    setOpacity(catalogItem, catalogItem._nextLayer, catalogItem.opacity);
-    disposeLayer(catalogItem, catalogItem._imageryLayer);
-
-    catalogItem._imageryLayer = catalogItem._nextLayer;
-    catalogItem._nextLayer = undefined;
-    catalogItem._nextTimeIndex = -1;
-    catalogItem._currentTimeIndex = index;
-
-    // Prefetch the (predicted) next layer.
-    var nextIndex = clock.multiplier >= 0.0 ? index + 1 : index - 1;
-    if (nextIndex < 0 || nextIndex >= dates.length) {
-        return;
-    }
-
-    var nextImageryProvider = createImageryProvider(catalogItem, catalogItem.times[nextIndex]);
-    catalogItem._nextLayer = createLayer(catalogItem, nextImageryProvider, 0.0);
-    catalogItem._nextTimeIndex = nextIndex;
-}
-
-function createLayer(catalogItem, imageryProvider, opacity) {
-    var layer;
-
-    if (defined(catalogItem.application.cesium)) {
-        layer = new ImageryLayer(imageryProvider, {
-            alpha : opacity,
-            rectangle : catalogItem.clipToRectangle ? catalogItem.rectangle : undefined
-        });
-
-        catalogItem.application.cesium.scene.imageryLayers.add(layer);
-    } else if (defined(catalogItem.application.leaflet)) {
-        var options = {
-            opacity: opacity,
-            bounds : catalogItem.clipToRectangle && catalogItem.rectangle ? rectangleToLatLngBounds(catalogItem.rectangle) : undefined
-        };
-
-        layer = new CesiumTileLayer(imageryProvider, options);
-        layer.addTo(catalogItem.application.leaflet.map);
-    }
-
-    return layer;
-}
-
-function disposeLayer(catalogItem, layer) {
-    if (!defined(layer)) {
-        return;
-    }
-
-    if (defined(catalogItem.application.cesium)) {
-        catalogItem.application.cesium.scene.imageryLayers.remove(layer);
-    }
-
-    if (defined(catalogItem.application.leaflet)) {
-        catalogItem.application.leaflet.map.removeLayer(layer);
-    }
-}
-
-function setOpacity(catalogItem, layer, opacity) {
-    if (!defined(layer)) {
-        return;
-    }
-
-    if (defined(catalogItem.application.cesium)) {
-        layer.alpha = opacity;
-    }
-
-    if (defined(catalogItem.application.leaflet)) {
-        layer.setOpacity(opacity);
-    }
-}
-
-function layerMatchesViewer(catalogItem, layer) {
-    if (defined(catalogItem.application.cesium) && !(layer instanceof ImageryLayer)) {
-        return false;
-    } else if (defined(catalogItem.application.leaflet) && layer instanceof ImageryLayer) {
-        return false;
-    } else {
-        return true;
     }
 }
 

@@ -4,13 +4,9 @@
 
 var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
 var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
-var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 
-var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 
@@ -68,59 +64,12 @@ defineProperties(BingMapsCatalogItem.prototype, {
     }
 });
 
-BingMapsCatalogItem.prototype._enableInCesium = function() {
-    if (defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is already enabled.');
-    }
-
-    var scene = this.application.cesium.scene;
-
-    this._imageryLayer = new ImageryLayer(createImageryProvider(this), {
-        show: false,
-        alpha : this.opacity
-    });
-
-    scene.imageryLayers.add(this._imageryLayer);
-};
-
-BingMapsCatalogItem.prototype._disableInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    var scene = this.application.cesium.scene;
-
-    scene.imageryLayers.remove(this._imageryLayer);
-    this._imageryLayer = undefined;
-};
-
-BingMapsCatalogItem.prototype._enableInLeaflet = function() {
-    if (defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is already enabled.');
-    }
-
-    var options = {
-        type: this.mapStyle,
-        opacity : this.opacity
-    };
-
-    this._imageryLayer = new CesiumTileLayer(createImageryProvider(this), options);
-};
-
-BingMapsCatalogItem.prototype._disableInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._imageryLayer = undefined;
-};
-
-function createImageryProvider(item) {
+BingMapsCatalogItem.prototype._createImageryProvider = function() {
     return new BingMapsImageryProvider({
         url: '//dev.virtualearth.net',
-        mapStyle: item.mapStyle,
-        key: item.key
+        mapStyle: this.mapStyle,
+        key: this.key
     });
-}
+};
 
 module.exports = BingMapsCatalogItem;
