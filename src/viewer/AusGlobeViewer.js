@@ -32,6 +32,7 @@ var Matrix3 = require('../../third_party/cesium/Source/Core/Matrix3');
 var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var RectanglePrimitive = require('../../third_party/cesium/Source/Scene/RectanglePrimitive');
+var cesiumRequestAnimationFrame = require('../../third_party/cesium/Source/Core/requestAnimationFrame');
 var ScreenSpaceEventHandler = require('../../third_party/cesium/Source/Core/ScreenSpaceEventHandler');
 var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
 var SingleTileImageryProvider = require('../../third_party/cesium/Source/Scene/SingleTileImageryProvider');
@@ -531,12 +532,7 @@ AusGlobeViewer.prototype.selectViewer = function(bCesium) {
         var ticker = function() {
             if (that.map === map) {
                 map.clock.tick();
-
-                if (typeof requestAnimationFrame !== 'undefined') {
-                    requestAnimationFrame(ticker);
-                } else {
-                    setTimeout(ticker, 15);
-                }
+                cesiumRequestAnimationFrame(ticker);
             } else {
                 console.log('done');
             }

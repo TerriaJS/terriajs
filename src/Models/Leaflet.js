@@ -11,6 +11,7 @@ var EasingFunction = require('../../third_party/cesium/Source/Core/EasingFunctio
 var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var cesiumRequestAnimationFrame = require('../../third_party/cesium/Source/Core/requestAnimationFrame');
 var TweenCollection = require('../../third_party/cesium/Source/Scene/TweenCollection');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
@@ -264,7 +265,7 @@ function startTweens(leaflet) {
     leaflet._tweens.update();
 
     if (leaflet._tweens.length !== 0) {
-        requestAnimationFrame(startTweens.bind(undefined, leaflet));
+        cesiumRequestAnimationFrame(startTweens.bind(undefined, leaflet));
     }
 }
 
