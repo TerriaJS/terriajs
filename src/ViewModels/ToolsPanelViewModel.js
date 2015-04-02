@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,L,URI*/
+/*global require,URI*/
 var CatalogGroup = require('../Models/CatalogGroup');
 var corsProxy = require('../Core/corsProxy');
 var loadView = require('../Core/loadView');
@@ -29,14 +29,15 @@ var ToolsPanelViewModel = function(options) {
     this._domNodes = undefined;
 
     this.cacheFilter = 'opened';
-    this.cacheLevels = 3;
+    this.minZoomLevel = 5;
+    this.maxZoomLevel = 5;
     this.useProxyCache = false;
     this.useWmsTileCache = true;
     this.ckanFilter = 'opened';
     this.ckanUrl = 'http://localhost';
     this.ckanApiKey = 'xxxxxxxxxxxxxxx';
 
-    knockout.track(this, ['cacheFilter', 'cacheLevels', 'useProxyCache', 'useWmsTileCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
+    knockout.track(this, ['cacheFilter', 'minZoomLevel', 'maxZoomLevel', 'useProxyCache', 'useWmsTileCache', 'ckanFilter', 'ckanUrl', 'ckanApiKey']);
 };
 
 ToolsPanelViewModel.prototype.show = function(container) {
@@ -66,8 +67,8 @@ ToolsPanelViewModel.prototype.cacheTiles = function() {
 
     var that = this;
     when.all(promises, function() {
-        console.log('Requesting tiles from ' + requests.length + ' data sources.');
-        requestTiles(that, requests, that.cacheLevels);
+        console.log('Requesting tiles in zoom range ' + that.minZoomLevel + '-' + that.maxZoomLevel + ' from ' + requests.length + ' data sources.');
+        requestTiles(that, requests, Number(that.minZoomLevel), Number(that.maxZoomLevel));
     });
 };
 
@@ -106,6 +107,14 @@ ToolsPanelViewModel.open = function(container, options) {
 
 
 function getAllRequests(types, mode, requests, group, promises) {
+    function alreadyInRequests(item) {
+        for (var i=0; i < requests.length; i++) {
+            if (requests[i].item === item) {
+                return true;
+            }
+        }
+        return false;
+    }
     for (var i = 0; i < group.items.length; ++i) {
         var item = group.items[i];
         if (item instanceof CatalogGroup) {
@@ -113,24 +122,24 @@ function getAllRequests(types, mode, requests, group, promises) {
                 getAllRequests(types, mode, requests, item, promises);
             }
         } else if ((types.indexOf(item.type) !== -1) && (mode !== 'enabled' || item.isEnabled)) {
-           var enabledHere = !item.isEnabled;
-            if (enabledHere) {
-                if (defined(item._imageryLayer)) {
-                    continue;
+
+
+            if (!alreadyInRequests(item)) {
+                var enabledHere = false;
+                if (!item.isEnabled) {
+                    enabledHere = true;
+                    item._enable();
                 }
-                item._enable();
+                var imageryProvider = item._imageryLayer.imageryProvider;
+                requests.push({
+                    item : item,
+                    group : group.name,
+                    enabledHere : enabledHere,
+                    provider : imageryProvider
+                });
+
+                promises.push(whenImageryProviderIsReady(imageryProvider));
             }
-
-            var imageryProvider = item._imageryLayer.imageryProvider;
-
-            requests.push({
-                item : item,
-                group : group.name,
-                enabledHere : enabledHere,
-                provider : imageryProvider
-            });
-
-            promises.push(whenImageryProviderIsReady(imageryProvider));
         }
     }
 }
@@ -141,7 +150,7 @@ function whenImageryProviderIsReady(imageryProvider) {
     }, { timeout: 60000, pollInterval: 100 });
 }
 
-function requestTiles(toolsPanel, requests, maxLevel) {
+function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
     var app = toolsPanel.application;
 
     var urls = [];
@@ -150,6 +159,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
     var uniqueStats = [];
     var name;
     var stat;
+    var maxTilesPerLevel = -1; // only request this number of tiles per zoom level, randomly selected. -1 = no limit.
 
     loadImage.createImage = function(url, crossOrigin, deferred) {
         urls.push(url);
@@ -210,28 +220,37 @@ function requestTiles(toolsPanel, requests, maxLevel) {
         };
         uniqueStats.push(stat);
 
-        for (var level = 0; level <= maxLevel; ++level) {
+        for (var level = minLevel; level <= maxLevel; ++level) {
             var nw = tilingScheme.positionToTileXY(Rectangle.northwest(extent), level);
             var se = tilingScheme.positionToTileXY(Rectangle.southeast(extent), level);
             if (!defined(nw) || !defined(se)) {
                 // Extent is probably junk.
                 continue;
             }
-
+            var potentialTiles = [];
             for (var y = nw.y; y <= se.y; ++y) {
                 for (var x = nw.x; x <= se.x; ++x) {
-                    if (defined(leaflet)) {
-                        var coords = new L.Point(x, y);
-                        coords.z = level;
-                        var url = request.provider.getTileUrl(coords);
-                        loadImage.createImage(url);
-                    }
-                    else {
-                        if (!defined(request.provider.requestImage(x, y, level))) {
-                            console.log('too many requests in flight');
-                        }
-                    }
+                    potentialTiles.push({"x": x, "y": y, "z": level});
                 }
+            }
+            // randomly select up to maxTilesPerLevel of those tiles
+            var t=1;
+            while (potentialTiles.length > 0 && (maxTilesPerLevel === -1 || t++ <= maxTilesPerLevel)) {
+                var tnum;
+                if (maxTilesPerLevel < 0) {
+                    // if there's no tile limit, revert to fetching all tiles in order, for predictability.
+                    tnum = 0;
+                } else {
+                    tnum = Math.floor(Math.random() * potentialTiles.length);
+                }
+                var tile = potentialTiles[tnum];
+                if (defined(leaflet)) {
+                    loadImage.createImage(request.provider.getTileUrl(tile));
+                } else if (!defined(request.provider.requestImage(tile.x, tile.y, tile.z))) {
+                    console.log('too many requests in flight');
+                }
+                potentialTiles.splice(tnum,1);
+                
             }
         }
         if (request.enabledHere) {
@@ -247,7 +266,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
 
     var popup = PopupMessageViewModel.open('ui', {
         title: 'Dataset Testing',
-        message: '<div>Requesting ' + urls.length + ' URLs</div>'
+        message: '<div>Requesting ' + urls.length + ' URLs from ' + requests.length + ' data sources, at zooms ' + minLevel + ' to ' + maxLevel + '</div>'
     });
 
     var maxRequests = 1;
@@ -291,10 +310,10 @@ function requestTiles(toolsPanel, requests, maxLevel) {
             return undefined;
         }
 
-        if (showProgress && (nextRequestIndex % 10) === 0) {
-            if (popup.message.substring(popup.message.length-8) === '.</span>') {
-                popup.message = popup.message.replace('.</span>', '..</span>');
-            }
+        if (showProgress && nextRequestIndex > 0) {
+            popup.message = popup.message.replace(/<div class="tools-loading-message">.*$/gi, 
+                '<div class="tools-loading-message">Loading: <div class="tools-loading-message-bar" style="width: ' + 
+                Math.round(nextRequestIndex / urls.length * 100) + '%"></div>');
         }
 
         url = urls[nextRequestIndex];
@@ -319,11 +338,8 @@ function requestTiles(toolsPanel, requests, maxLevel) {
 
     function doNext() {
         var next = getNextUrl();
-        if (!defined(last) && defined(next)) {
-            popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
-        }
         if (defined(last) && (!defined(next) || next.name !== last.name)) {
-            var idx = popup.message.indexOf('<span>.');
+            var idx = popup.message.indexOf('<div class="tools-loading-message">');
             if (idx !== -1) {
                 popup.message = popup.message.substring(0, idx);
             }
@@ -337,7 +353,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
                 popup.message += ' (' + last.stat.success.slow + ' slow) ';
             }
             var average = Math.round(last.stat.success.sum / last.stat.success.number);
-            popup.message += ' <span ' + (average > maxAverage ? 'style="colour: red"' : '') + '>' + 
+            popup.message += ' <span ' + (average > maxAverage ? 'style="color: red"' : '') + '>' + 
               'Average: ' + average + 'ms</span>&nbsp;';
             popup.message += '(<span ' + (last.stat.success.max > maxMaximum ? 'style="color: red"' : '') + '>' + 
               'Max: ' + Math.round(last.stat.success.max) + 'ms</span>)';
@@ -349,10 +365,10 @@ function requestTiles(toolsPanel, requests, maxLevel) {
                 ++slowDatasets;
             }
             totalDatasets++;
+        }
 
-            if (next) {
-                popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<span>.</span>' : '');
-            }
+        if (defined(next) && (!defined(last) || last.name !== next.name) ) {
+            popup.message += '<h1>' + next.name + '</h1>' + (showProgress ? '<div class="tools-loading-message">Loading:</div' : '');
         }
 
         last = next;
@@ -398,8 +414,7 @@ function requestTiles(toolsPanel, requests, maxLevel) {
         }).then(function() {
             doneUrl(next.stat, start, false);
         }).otherwise(function(e) {
-            popup.message += '<div>Tile request resulted in an error' + (e.statusCode ? (' (code ' + e.statusCode + '):') : ':') + '</div>';
-            popup.message += '<div>' + next.url + '</div>';
+            popup.message += '<div><a href="' + next.url + '">Tile request</a> returned error' + (e.statusCode ? (' (code ' + e.statusCode + ')') : '') + '</div>';
             doneUrl(next.stat, start, true);
         });
     }
