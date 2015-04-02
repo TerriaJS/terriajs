@@ -34,33 +34,12 @@
     transition: left @explorer-panel-close-animation-length ease-out;
 }
 
-
-.cesium-infoBox {
-    top: 104px;
-    right: 150px;
-    border-radius: 0px;
-    border: 1px solid gray;
-    background-color: rgba(0, 0, 0, 0.65);
-    font-family: @default-font;
-    font-size: 14px;
-    font-weight: 300;
-    color: white;
-    box-shadow: 0 0 0 0;
-    z-index: 999;
+.cesium-infoBox-defaultTable tr:nth-child(odd) {
+    background-color: rgba(84, 84, 84, 0.8);
 }
 
-.cesium-infoBox-body {
-    max-height: 462px;
-    font-family: @default-font;
-    font-size: 14px;
-    font-weight: 300;
-}
-
-.cesium-infoBox-title {
-    background-color: black;
-    font-size: 15px;
-    font-weight: 600;
-    color: white;
+.cesium-infoBox-defaultTable tr:nth-child(even) {
+    background-color: rgba(84, 84, 84, 0.25);
 }
 
 .cesium-timeline-main {
