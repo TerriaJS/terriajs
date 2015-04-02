@@ -756,6 +756,7 @@ function isShownChanged(catalogItem) {
         when(catalogItem._loadForEnablePromise, function() {
             if (catalogItem.isEnabled && catalogItem.isShown) {
                 catalogItem._show();
+                catalogItem.useClock();
                 catalogItem.application.currentViewer.notifyRepaintRequired();
             }
         });

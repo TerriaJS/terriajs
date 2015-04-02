@@ -1,30 +1,22 @@
 'use strict';
 
 /*global require,URI,$*/
-
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
-var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
-var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
  * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
@@ -71,8 +63,8 @@ var WebMapServiceCatalogItem = function(application) {
      * If this property is undefiend, the default tiling scheme of the provider is used.
      * @type {Object}
      */
-
     this.tilingScheme = undefined;
+
     /**
      * Gets or sets a value indicating whether we should request information about individual features on click
      * as GeoJSON.  If getFeatureInfoAsXml is true as well, feature information will be requested first as GeoJSON,
@@ -91,6 +83,11 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.getFeatureInfoAsXml = true;
 
+    /**
+     * Gets or sets the content type to request when invoking GetFeatureInfo.
+     * @type {String}
+     * @default 'text/xml'
+     */
     this.getFeatureInfoXmlContentType = 'text/xml';
 
     /**
@@ -104,7 +101,10 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.clipToRectangle = false;
 
-    knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url', 'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'tilingScheme', 'clipToRectangle']);
+    knockout.track(this, [
+        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url',
+        'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'getFeatureInfoXmlContentType',
+        'tilingScheme', 'clipToRectangle']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.dataUrl;
@@ -209,6 +209,17 @@ defineProperties(WebMapServiceCatalogItem.prototype, {
     },
 
     /**
+     * Gets a value indicating whether this {@link ImageryLayerCatalogItem} supports the {@link ImageryLayerCatalogItem#intervals}
+     * property for configuring time-dynamic imagery.
+     * @type {Boolean}
+     */
+    supportsIntervals : {
+        get : function() {
+            return true;
+        }
+    },
+
+    /**
      * Gets the metadata associated with this data source and the server that provided it, if applicable.
      * @memberOf WebMapServiceCatalogItem.prototype
      * @type {Metadata}
@@ -296,83 +307,24 @@ WebMapServiceCatalogItem.prototype._load = function() {
     return this._metadata.promise;
 };
 
-WebMapServiceCatalogItem.prototype._enableInCesium = function() {
-    if (defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is already enabled.');
+WebMapServiceCatalogItem.prototype._createImageryProvider = function(time) {
+    var parameters = this.parameters;
+    if (defined(time)) {
+        parameters = combine({ time: time }, parameters);
     }
 
-    var scene = this.application.cesium.scene;
+    parameters = combine(parameters, WebMapServiceCatalogItem.defaultParameters);
 
-    this._imageryLayer = new ImageryLayer(createImageryProvider(this), {
-        show : false,
-        alpha : this.opacity,
-        rectangle : this.clipToRectangle ? this.rectangle : undefined
-    });
-
-    scene.imageryLayers.add(this._imageryLayer);
-};
-
-WebMapServiceCatalogItem.prototype._disableInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    var scene = this.application.cesium.scene;
-    scene.imageryLayers.remove(this._imageryLayer);
-    this._imageryLayer = undefined;
-};
-
-WebMapServiceCatalogItem.prototype._enableInLeaflet = function() {
-    if (defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is already enabled.');
-    }
-
-    var options = {
-        opacity: this.opacity,
-        bounds : this.clipToRectangle && this.rectangle ? rectangleToLatLngBounds(this.rectangle) : undefined
-    };
-
-    this._imageryLayer = new CesiumTileLayer(createImageryProvider(this), options);
-};
-
-WebMapServiceCatalogItem.prototype._disableInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._imageryLayer = undefined;
-};
-
-WebMapServiceCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
-    var projection = new WebMercatorProjection();
-    var sw = projection.project(Rectangle.southwest(mapExtent));
-    var ne = projection.project(Rectangle.northeast(mapExtent));
-
-    var tilingScheme = new WebMercatorTilingScheme({
-        rectangleSouthwestInMeters: sw,
-        rectangleNortheastInMeters: ne
-    });
-
-    // Compute the longitude and latitude of the pick location.
-    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
-    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
-
-    var ll = projection.unproject(new Cartesian2(x, y));
-
-    // Use a Cesium imagery provider to pick features.
-    var imageryProvider = new WebMapServiceImageryProvider({
+    return new WebMapServiceImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url),
         layers : this.layers,
         getFeatureInfoAsGeoJson : this.getFeatureInfoAsGeoJson,
         getFeatureInfoAsXml : this.getFeatureInfoAsXml,
-        parameters : combine(this.parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : tilingScheme,
-        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType,
-        tileWidth : mapWidth,
-        tileHeight : mapHeight
+        parameters : parameters,
+        getFeatureInfoParameters : parameters,
+        tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
+        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
     });
-
-    return imageryProvider.pickFeatures(0, 0, 0, ll.longitude, ll.latitude);
 };
 
 WebMapServiceCatalogItem.defaultParameters = {
@@ -382,18 +334,6 @@ WebMapServiceCatalogItem.defaultParameters = {
     styles: '',
     tiled: true
 };
-
-function createImageryProvider(wmsItem) {
-    return new WebMapServiceImageryProvider({
-        url : cleanAndProxyUrl(wmsItem.application, wmsItem.url),
-        layers : wmsItem.layers,
-        getFeatureInfoAsGeoJson : wmsItem.getFeatureInfoAsGeoJson,
-        getFeatureInfoAsXml : wmsItem.getFeatureInfoAsXml,
-        parameters : combine(wmsItem.parameters, WebMapServiceCatalogItem.defaultParameters),
-        tilingScheme : defined(wmsItem.tilingScheme) ? wmsItem.tilingScheme : new WebMercatorTilingScheme(),
-        getFeatureInfoXmlContentType : wmsItem.getFeatureInfoXmlContentType
-    });
-}
 
 function cleanAndProxyUrl(application, url) {
     return proxyUrl(application, cleanUrl(url));
