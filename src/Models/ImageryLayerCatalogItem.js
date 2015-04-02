@@ -1,18 +1,28 @@
 'use strict';
 
 /*global require*/
-
+var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
+var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
+var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
+var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var TimeInterval = require('../../third_party/cesium/Source/Core/TimeInterval');
+var TimeIntervalCollection = require('../../third_party/cesium/Source/Core/TimeIntervalCollection');
+var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
 var CatalogItem = require('./CatalogItem');
+var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var inherit = require('../Core/inherit');
 var ModelError = require('./ModelError');
+var pollToPromise = require('../Core/pollToPromise');
+var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
  * A {@link CatalogItem} that is added to the map as a rasterized imagery layer.
@@ -28,7 +38,11 @@ var ImageryLayerCatalogItem = function(application) {
     CatalogItem.call(this, application);
 
     this._imageryLayer = undefined;
-    this._errorEventUnsubscribe = undefined;
+    this._clock = undefined;
+    this._clockTickUnsubscribe = undefined;
+    this._currentIntervalIndex = -1;
+    this._nextIntervalIndex = undefined;
+    this._nextLayer = undefined;
 
     /**
      * Gets or sets the opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is
@@ -47,16 +61,71 @@ var ImageryLayerCatalogItem = function(application) {
      */
     this.treat404AsError = false;
 
-    knockout.track(this, ['opacity', 'treat404AsError']);
+    /**
+     * Gets or sets the {@link TimeIntervalCollection} defining the intervals of distinct imagery.  If this catalog item
+     * is not time-dynamic, property is undefined.  This property is observable.
+     * @type {ImageryLayerInterval[]}
+     * @default undefined
+     */
+    this.intervals = undefined;
+
+    knockout.track(this, ['_clock', 'opacity', 'treat404AsError', 'intervals']);
+
+    delete this.__knockoutObservables.clock;
+    knockout.defineProperty(this, 'clock', {
+        get : function() {
+            var clock = this._clock;
+            if (!clock && this.intervals && this.intervals.length > 0) {
+                var startTime = this.intervals.start;
+                var stopTime = this.intervals.stop;
+
+                // Average about 5 seconds per interval.
+                var totalDuration = JulianDate.secondsDifference(stopTime, startTime);
+                var numIntervals = this.intervals.length;
+                var averageDuration = totalDuration / numIntervals;
+                var timePerSecond = averageDuration / 5;
+
+                this._clock = new DataSourceClock();
+                this._clock.startTime = startTime;
+                this._clock.stopTime = stopTime;
+                this._clock.currentTime = startTime;
+                this._clock.multiplier = timePerSecond;
+            }
+            return this._clock;
+        },
+        set : function(value) {
+            this._clock = value;
+        }
+    });
 
     knockout.getObservable(this, 'opacity').subscribe(function(newValue) {
         updateOpacity(this);
+    }, this);
+
+    // Subscribe to isShown changing and add/remove the clock tick subscription as necessary.
+    knockout.getObservable(this, 'isShown').subscribe(function() {
+        updateClockSubscription(this);
+    }, this);
+
+    knockout.getObservable(this, 'clock').subscribe(function() {
+        updateClockSubscription(this);
     }, this);
 };
 
 inherit(CatalogItem, ImageryLayerCatalogItem);
 
 defineProperties(ImageryLayerCatalogItem.prototype, {
+    /**
+     * Gets a value indicating whether this {@link ImageryLayerCatalogItem} supports the {@link ImageryLayerCatalogItem#intervals}
+     * property for configuring time-dynamic imagery.
+     * @type {Boolean}
+     */
+    supportsIntervals : {
+        get : function() {
+            return false;
+        }
+    },
+
     /**
      * Gets the Cesium or Leaflet imagery layer object associated with this data source.
      * This property is undefined if the data source is not enabled.
@@ -134,9 +203,50 @@ defineProperties(ImageryLayerCatalogItem.prototype, {
 });
 
 ImageryLayerCatalogItem.defaultUpdaters = clone(CatalogItem.defaultUpdaters);
+
+ImageryLayerCatalogItem.defaultUpdaters.intervals = function(catalogItem, json, propertyName) {
+    if (!defined(json.intervals)) {
+        return;
+    }
+
+    if (!catalogItem.supportsIntervals) {
+        throw new ModelError({
+            sender: catalogItem,
+            title: 'Intervals not supported',
+            message: 'Sorry, ' + catalogItem.typeName + ' (' + catalogItem.type + ') catalog items cannot currently be made time-varying by specifying the "intervals" property.'
+        });
+    }
+
+    var result = new TimeIntervalCollection();
+
+    for (var i = 0; i < json.intervals.length; ++i) {
+        var interval = json.intervals[i];
+        result.addInterval(TimeInterval.fromIso8601({
+            iso8601: interval.interval,
+            data: interval.data
+        }));
+    }
+
+    catalogItem.intervals = result;
+};
+
 freezeObject(ImageryLayerCatalogItem.defaultUpdaters);
 
 ImageryLayerCatalogItem.defaultSerializers = clone(CatalogItem.defaultSerializers);
+
+ImageryLayerCatalogItem.defaultSerializers.intervals = function(catalogItem, json, propertyName) {
+    if (defined(catalogItem.intervals)) {
+        var result = [];
+        for (var i = 0; i < catalogItem.intervals.length; ++i) {
+            var interval = catalogItem.intervals[i];
+            result.push({
+                interval: TimeInterval.toIso8601(interval),
+                data: interval.data
+            });
+        }
+    }
+};
+
 freezeObject(ImageryLayerCatalogItem.defaultSerializers);
 
 /**
@@ -167,83 +277,125 @@ ImageryLayerCatalogItem.prototype.lowerToBottom = function() {
     }
 };
 
-ImageryLayerCatalogItem.prototype._showInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
+/**
+ * When implemented in a derived class, creates the {@link ImageryProvider} for this catalog item.
+ * @abstract
+ * @protected
+ * @param {ImageryLayerTime} [time] The time for which to create an imagery provider.  In layers that are not time-dynamic,
+ *                                  this parameter is ignored.
+ * @return {ImageryProvider} The created imagery provider.
+ */
+ImageryLayerCatalogItem.prototype._createImageryProvider = function(time) {
+    throw new DeveloperError('_createImageryProvider must be implemented in the derived class.');
+};
+
+ImageryLayerCatalogItem.prototype._enable = function() {
+    if (defined(this._imageryLayer)) {
+        return;
     }
 
+    var isTimeDynamic = false;
+    var currentTimeIdentifier;
+    var nextTimeIdentifier;
+
+    if (defined(this.intervals)) {
+        isTimeDynamic = true;
+
+        var clock = this.application.clock;
+        var index = this.intervals.indexOf(clock.currentTime);
+
+        var nextIndex;
+        if (index < 0) {
+            this._currentIntervalIndex = -1;
+            currentTimeIdentifier = undefined;
+
+            nextIndex = ~index;
+            if (clock.multiplier < 0.0) {
+                --nextIndex;
+            }
+        } else {
+            this._currentIntervalIndex = index;
+            currentTimeIdentifier = this.intervals.get(index).data;
+            
+            if (clock.multiplier < 0.0) {
+                nextIndex = index - 1;
+            } else {
+                nextIndex = index + 1;
+            }
+        }
+
+        if (nextIndex >= 0 && nextIndex < this.intervals.length) {
+            this._nextIntervalIndex = nextIndex;
+            nextTimeIdentifier = this.intervals.get(nextIndex).data;
+        } else {
+            this._nextIntervalIndex = -1;
+        }
+    }
+
+    if (!isTimeDynamic || defined(currentTimeIdentifier)) {
+        var currentImageryProvider = this._createImageryProvider(currentTimeIdentifier);
+        this._imageryLayer = enableLayer(this, currentImageryProvider, this.opacity);
+    }
+
+    if (defined(nextTimeIdentifier)) {
+        var nextImageryProvider = this._createImageryProvider(nextTimeIdentifier);
+
+        // Do not allow picking from the preloading layer.
+        nextImageryProvider._enablePickFeatures = false;
+
+        this._nextLayer = enableLayer(this, nextImageryProvider, 0.0);
+    }
+};
+
+ImageryLayerCatalogItem.prototype._disable = function() {
+    disableLayer(this, this._imageryLayer);
+    this._imageryLayer = undefined;
+
+    disableLayer(this, this._nextLayer);
+    this._nextLayer = undefined;
+};
+
+ImageryLayerCatalogItem.prototype._show = function() {
+    show(this, this._imageryLayer);
+    show(this, this._nextLayer);
+};
+
+ImageryLayerCatalogItem.prototype._hide = function() {
+    hide(this, this._imageryLayer);
+    hide(this, this._nextLayer);
+};
+
+ImageryLayerCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
+    if (!defined(this.application.leaflet) || !defined(this._imageryLayer) || !defined(this._imageryLayer.imageryProvider)) {
+        return undefined;
+    }
+
+    var map = this.application.leaflet.map;
     var imageryProvider = this._imageryLayer.imageryProvider;
-    var errorEvent = imageryProvider.errorEvent;
 
-    if (defined(errorEvent)) {
-        var that = this;
-        this._errorEventUnsubscribe = errorEvent.addEventListener(function(tileProviderError) {
-            // We're only concerned about failures for tiles that actually overlap this item's extent.
-            if (defined(that.extent)) {
-                var tilingScheme = imageryProvider.tilingScheme;
-                var tileExtent = tilingScheme.tileXYToRectangle(tileProviderError.x, tileProviderError.y, tileProviderError.level);
-                var intersection = Rectangle.intersectWith(tileExtent, that.extent);
-                if (Rectangle.isEmpty(intersection)) {
-                    return;
-                }
-            }
+    var projection = new WebMercatorProjection();
+    var sw = projection.project(Rectangle.southwest(mapExtent));
+    var ne = projection.project(Rectangle.northeast(mapExtent));
 
-            if (!that.treat404AsError && defined(tileProviderError.error) && tileProviderError.error.statusCode === 404) {
-                return;
-            }
+    // Compute the longitude and latitude of the pick location.
+    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
+    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
 
-            // Retry 3 times.
-            if (tileProviderError.timesRetried < 3) {
-                tileProviderError.retry = true;
-                return;
-            }
+    var ll = projection.unproject(new Cartesian2(x, y));
 
-            // After three failures, advise the user that something is wrong and disable the catalog item.
-            that.application.error.raiseEvent(new ModelError({
-                sender: that,
-                title: 'Error accessing catalogue item',
-                message: '\
-An error occurred while attempting to download tiles for catalogue item ' + that.name + '.  This may indicate that there is a \
-problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item \
-is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.'
-            }));
-
-            that.isShown = false;
-        });
+    // Map the lon/lat to a tile in the current zoom level and query that tile for features.
+    var level = map.getZoom();
+    var tilingScheme = imageryProvider.tilingScheme;
+    var tileCoordinates = tilingScheme.positionToTileXY(ll, level);
+    if (!defined(tileCoordinates)) {
+        return undefined;
     }
 
-    this._imageryLayer.show = true;
-};
-
-ImageryLayerCatalogItem.prototype._hideInCesium = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    this._imageryLayer.show = false;
-
-    if (defined(this._errorEventUnsubscribe)) {
-        this._errorEventUnsubscribe();
-    }
-};
-
-ImageryLayerCatalogItem.prototype._showInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    var map = this.application.leaflet.map;
-    map.addLayer(this._imageryLayer);
-    this.application.nowViewing.updateLeafletLayerOrder();
-};
-
-ImageryLayerCatalogItem.prototype._hideInLeaflet = function() {
-    if (!defined(this._imageryLayer)) {
-        throw new DeveloperError('This data source is not enabled.');
-    }
-
-    var map = this.application.leaflet.map;
-    map.removeLayer(this._imageryLayer);
+    return pollToPromise(function() {
+        return imageryProvider.ready;
+    }).then(function() {
+        return imageryProvider.pickFeatures(tileCoordinates.x, tileCoordinates.y, level, ll.longitude, ll.latitude);
+    });
 };
 
 function updateOpacity(imageryLayerItem) {
@@ -257,6 +409,228 @@ function updateOpacity(imageryLayerItem) {
         }
 
         imageryLayerItem.application.currentViewer.notifyRepaintRequired();
+    }
+}
+
+function enableLayer(catalogItem, imageryProvider, opacity) {
+    var result;
+
+    if (defined(catalogItem.application.cesium)) {
+        var scene = catalogItem.application.cesium.scene;
+
+        var errorEvent = imageryProvider.errorEvent;
+
+        if (defined(errorEvent)) {
+            errorEvent.addEventListener(function(tileProviderError) {
+                // We're only concerned about failures for tiles that actually overlap this item's extent.
+                if (defined(catalogItem.extent)) {
+                    var tilingScheme = imageryProvider.tilingScheme;
+                    var tileExtent = tilingScheme.tileXYToRectangle(tileProviderError.x, tileProviderError.y, tileProviderError.level);
+                    var intersection = Rectangle.intersectWith(tileExtent, catalogItem.extent);
+                    if (Rectangle.isEmpty(intersection)) {
+                        return;
+                    }
+                }
+
+                if (!catalogItem.treat404AsError && defined(tileProviderError.error) && tileProviderError.error.statusCode === 404) {
+                    return;
+                }
+
+                // Retry 3 times.
+                if (tileProviderError.timesRetried < 3) {
+                    tileProviderError.retry = true;
+                    return;
+                }
+
+                // After three failures, advise the user that something is wrong and disable the catalog item.
+                catalogItem.application.error.raiseEvent(new ModelError({
+                    sender: catalogItem,
+                    title: 'Error accessing catalogue item',
+                    message: '\
+    An error occurred while attempting to download tiles for catalogue item ' + catalogItem.name + '.  This may indicate that there is a \
+    problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item \
+    is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.'
+                }));
+
+                catalogItem.isShown = false;
+            });
+        }
+
+        result = new ImageryLayer(imageryProvider, {
+            show : false,
+            alpha : opacity,
+            rectangle : catalogItem.clipToRectangle ? catalogItem.rectangle : undefined
+        });
+
+        scene.imageryLayers.add(result);
+    } else if (defined(catalogItem.application.leaflet)) {
+        var options = {
+            opacity: opacity,
+            bounds : catalogItem.clipToRectangle && catalogItem.rectangle ? rectangleToLatLngBounds(catalogItem.rectangle) : undefined
+        };
+
+        result = new CesiumTileLayer(imageryProvider, options);
+    }
+
+    return result;
+}
+
+function disableLayer(catalogItem, layer) {
+    if (!defined(layer)) {
+        return;
+    }
+
+    if (defined(catalogItem.application.cesium)) {
+        var scene = catalogItem.application.cesium.scene;
+        scene.imageryLayers.remove(layer);
+    } else if (defined(catalogItem.application.leaflet)) {
+        var map = catalogItem.application.leaflet.map;
+        map.removeLayer(layer);
+    }
+}
+
+function updateClockSubscription(catalogItem) {
+    if (catalogItem.isShown && defined(catalogItem.clock)) {
+        // Subscribe
+        if (!defined(catalogItem._clockTickSubscription)) {
+            catalogItem._clockTickSubscription = catalogItem.application.clock.onTick.addEventListener(onClockTick.bind(undefined, catalogItem));
+        }
+    } else {
+        // Unsubscribe
+        if (defined(catalogItem._clockTickSubscription)) {
+            catalogItem._clockTickSubscription();
+            catalogItem._clockTickSubscription = undefined;
+        }
+    }
+}
+
+function onClockTick(catalogItem, clock) {
+    var intervals = catalogItem.intervals;
+    if (!defined(intervals) || !catalogItem.isEnabled || !catalogItem.isShown) {
+        return;
+    }
+
+    var index = catalogItem._currentIntervalIndex;
+
+    if (index < 0 || index >= intervals.length || !TimeInterval.contains(intervals.get(index), clock.currentTime)) {
+        // Find the interval containing the current time.
+        index = intervals.indexOf(clock.currentTime);
+        if (index < 0) {
+            // No interval contains this time, so do not show imagery at this time.
+            disableLayer(catalogItem, catalogItem._imageryLayer);
+            catalogItem._imageryLayer = undefined;
+            catalogItem._currentIntervalIndex = -1;
+            return;
+        }
+
+        // If the "next" layer is not applicable to this time, throw it away and create a new one.
+        if (index !== catalogItem._nextIntervalIndex) {
+            // Throw away the "next" layer, since it's not applicable.
+            disableLayer(catalogItem, catalogItem._nextLayer);
+            catalogItem._nextLayer = undefined;
+            catalogItem._nextIntervalIndex = -1;
+
+            // Create the new "next" layer
+            var imageryProvider = catalogItem._createImageryProvider(catalogItem.intervals.get(index).data);
+            imageryProvider._enablePickFeatures = false;
+            catalogItem._nextLayer = enableLayer(catalogItem, imageryProvider, 0.0);
+            show(catalogItem, catalogItem._nextLayer);
+        }
+
+        // At this point we can assume that _nextLayer is applicable to this time.
+        // Make it visible
+        setOpacity(catalogItem, catalogItem._nextLayer, catalogItem.opacity);
+        fixNextLayerOrder(catalogItem);
+        disableLayer(catalogItem, catalogItem._imageryLayer);
+
+        catalogItem._imageryLayer = catalogItem._nextLayer;
+        catalogItem._imageryLayer.imageryProvider._enablePickFeatures = true;
+        catalogItem._nextLayer = undefined;
+        catalogItem._nextIntervalIndex = -1;
+        catalogItem._currentIntervalIndex = index;
+    }
+
+    // Prefetch the (predicted) next layer.
+    var nextIndex = clock.multiplier >= 0.0 ? index + 1 : index - 1;
+    if (nextIndex < 0 || nextIndex >= intervals.length || nextIndex === catalogItem._nextIntervalIndex) {
+        return;
+    }
+
+    var nextImageryProvider = catalogItem._createImageryProvider(catalogItem.intervals.get(nextIndex).data);
+    nextImageryProvider._enablePickFeatures = false;
+    catalogItem._nextLayer = enableLayer(catalogItem, nextImageryProvider, 0.0);
+    show(catalogItem, catalogItem._nextLayer);
+    catalogItem._nextIntervalIndex = nextIndex;
+}
+
+function setOpacity(catalogItem, layer, opacity) {
+    if (!defined(layer)) {
+        return;
+    }
+
+    if (defined(catalogItem.application.cesium)) {
+        layer.alpha = opacity;
+    }
+
+    if (defined(catalogItem.application.leaflet)) {
+        layer.setOpacity(opacity);
+    }
+}
+
+function show(catalogItem, layer) {
+    if (!defined(layer)) {
+        return;
+    }
+
+    if (defined(catalogItem.application.cesium)) {
+        layer.show = true;
+    }
+
+    if (defined(catalogItem.application.leaflet)) {
+        if (!catalogItem.application.leaflet.map.hasLayer(layer)) {
+            layer.addTo(catalogItem.application.leaflet.map);
+        }
+        catalogItem.application.nowViewing.updateLeafletLayerOrder();
+    }
+}
+
+function hide(catalogItem, layer) {
+    if (!defined(layer)) {
+        return;
+    }
+
+    if (defined(catalogItem.application.cesium)) {
+        layer.show = false;
+    }
+
+    if (defined(catalogItem.application.leaflet)) {
+        catalogItem.application.leaflet.map.removeLayer(layer);
+    }
+}
+
+function fixNextLayerOrder(catalogItem) {
+    if (!defined(catalogItem._imageryLayer) || !defined(catalogItem._nextLayer)) {
+        return;
+    }
+
+    if (defined(catalogItem.application.cesium)) {
+        var imageryLayers = catalogItem.application.cesium.scene.imageryLayers;
+
+        var currentIndex = imageryLayers.indexOf(catalogItem._imageryLayer);
+        var nextIndex = imageryLayers.indexOf(catalogItem._nextLayer);
+        if (currentIndex < 0 || nextIndex < 0) {
+            return;
+        }
+
+        while (nextIndex < currentIndex - 1) {
+            imageryLayers.raise(catalogItem._nextLayer);
+            ++nextIndex;
+        }
+
+        while (nextIndex > currentIndex + 1) {
+            imageryLayers.lower(catalogItem._nextLayer);
+            --nextIndex;
+        }
     }
 }
 

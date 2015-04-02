@@ -17,7 +17,7 @@ var inherit = require('../Core/inherit');
 var gmlToGeoJson = require('../Map/gmlToGeoJson');
 
 /**
- * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
+ * A {@link CatalogItem} representing a layer from a Web Feature Service (WFS) server.
  *
  * @alias WebFeatureServiceCatalogItem
  * @constructor

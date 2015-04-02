@@ -16,10 +16,12 @@
                     </select>
                 </label>
 
-                Enter the number of tile levels to request
+                Measure speed of tiles in zoom range:
                 <div class="tools-url-input-outer-holder">
                     <div class="tools-url-input-inner-holder">
-                        <input class="tools-url-input" type="text" data-bind="value: cacheLevels" />
+                        <input class="tools-number-input" type="number" data-bind="value: minZoomLevel" />
+                        &nbsp;to&nbsp;
+                        <input class="tools-number-input" type="number" data-bind="value: maxZoomLevel" />
                     </div>
                     <input class="tools-url-add-button" type="submit" value="Request Tiles" />
                 </div>

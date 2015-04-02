@@ -4,6 +4,13 @@ Change Log
 ### 2015-04-15
 
 * Upgraded to Cesium 1.8.  See the [changelog](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.8/CHANGES.md) for details.
+* Added support for time-dynamic WMS layers by specifying the `intervals` property.
+* Improved the consistency and functionality of the feature information popup.
+* Improved the selection indicator when selecting features by clicking them on the map.
+* Made numerous improvements to the server performance check tool, accessed by appending `#tools=1` to the URL and clicking the Tools button.
+* Added `preserveOrder` property to catalogue groups.  When set, the group's items will not be sorted by name.
+* Added `titleField` property to WMS catalogue items to specify whether the WMS layer's title (default), name, or abstract is displayed in the catalogue.
+
 
 ### 2015-03-26
 
