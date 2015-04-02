@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 2015-04-15
+
+* Upgraded to Cesium 1.8.  See the [changelog](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.8/CHANGES.md) for details.
+
 ### 2015-03-26
 
 * Greatly enhanced support for ArcGIS servers.  ArcGIS map servers can now be queried for their list of layers to populate the Data Catalogue, and they can provide metadata information when clicking a feature on the map.
