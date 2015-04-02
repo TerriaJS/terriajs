@@ -156,7 +156,7 @@ TableDataSource.prototype.loadText = function (text) {
     this.setLeadTimeByPercent(0.0);
     this.setTrailTimeByPercent(1.0);
     if (this.dataset.hasLocationData()) {
-        this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
+        this.czmlDataSource.load(this.getDataPointList());
     }
 };
 
@@ -169,7 +169,7 @@ TableDataSource.prototype.loadText = function (text) {
 TableDataSource.prototype.setCurrentVariable = function (varName) {
     this.dataset.setCurrentVariable({ variable: varName});
     if (this.dataset.hasLocationData()) {
-        this.czmlDataSource.load(this.getDataPointList(), 'TableDataSource');
+        this.czmlDataSource.load(this.getDataPointList());
     }
 };
 
