@@ -101,10 +101,19 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.clipToRectangle = false;
 
+    /**
+     * Gets or sets a value indicating whether a time dimension, if it exists in GetCapabilities, should be used to populate
+     * the {@link ImageryLayerCatalogItem#intervals}.  If the {@link ImageryLayerCatalogItem#intervals} property is set explicitly
+     * on this catalog item, the value of this property is ignored.
+     * @type {Boolean}
+     * @default true
+     */
+    this.populateIntervalsFromTimeDimension = true;
+
     knockout.track(this, [
         '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url',
         'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'getFeatureInfoXmlContentType',
-        'tilingScheme', 'clipToRectangle']);
+        'tilingScheme', 'clipToRectangle', 'populateIntervalsFromTimeDimension']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     delete this.__knockoutObservables.dataUrl;
@@ -179,6 +188,20 @@ var WebMapServiceCatalogItem = function(application) {
         },
         set : function(value) {
             this._rectangle = value;
+        }
+    });
+
+    // intervals come from metadata if populateIntervalsFromTimeDimension and not explicitly specified.
+    delete this.__knockoutObservables.intervals;
+    knockout.defineProperty(this, 'intervals', {
+        get : function() {
+            if (defined(this._intervals)) {
+                return this._intervals;
+            }
+            return this._intervalsFromMetadata;
+        },
+        set : function(value) {
+            this._intervals = value;
         }
     });
 };
