@@ -61,8 +61,8 @@ var gmlSimpleFeatureNames = [
 function getGmlPropertiesRecursively(gmlNode, properties) {
     var isSingleValue = true;
 
-    for (var i = 0; i < gmlNode.children.length; ++i) {
-        var child = gmlNode.children[i];
+    for (var i = 0; i < gmlNode.childNodes.length; ++i) {
+        var child = gmlNode.childNodes[i];
 
         if (child.nodeType === Node.ELEMENT_NODE) {
             isSingleValue = false;
@@ -83,8 +83,8 @@ function getGmlPropertiesRecursively(gmlNode, properties) {
 function getGmlGeometry(gmlNode) {
     var result;
 
-    for (var i = 0; !defined(result) && i < gmlNode.children.length; ++i) {
-        var child = gmlNode.children[i];
+    for (var i = 0; !defined(result) && i < gmlNode.childNodes.length; ++i) {
+        var child = gmlNode.childNodes[i];
 
         if (gmlSimpleFeatureNames.indexOf(child.localName) >= 0) {
             return createGeoJsonGeometryFeatureFromGmlGeometry(child);
