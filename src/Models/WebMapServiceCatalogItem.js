@@ -376,7 +376,7 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function getRectangleFromMetadata(layer) {
+WebMapServiceCatalogItem.getRectangleFromLayer = function(layer) {
     var egbb = layer.EX_GeographicBoundingBox; // required in WMS 1.3.0
     if (defined(egbb)) {
         return Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
@@ -387,9 +387,9 @@ function getRectangleFromMetadata(layer) {
         }
     }
     return undefined;
-}
+};
 
-function getIntervalsFromMetadata(layer) {
+WebMapServiceCatalogItem.getIntervalsFromLayer = function(layer) {
     var dimensions = layer.Dimension;
 
     if (!defined(dimensions)) {
@@ -410,12 +410,31 @@ function getIntervalsFromMetadata(layer) {
         }
 
         // WMS 1.3.0 GetCapabilities has the times embedded right in the Dimension element.
-        // WMS 1.1.0 puts the time in an Extent sub-element.
-        if (dimension.Extent) {
-            dimension = dimension.Extent;
+        // WMS 1.1.0 puts the time in an Extent element.
+        var extent;
+        if (dimension instanceof String || typeof dimension === 'string') {
+            extent = dimension;
+        } else {
+            // Find the corresponding extent.
+            var extentList = layer.Extent;
+            if (!defined(extentList)) {
+                return undefined;
+            }
+
+            for (var extentIndex = 0; extentIndex < extentList.length; ++extentIndex) {
+                var candidate = extentList[extentIndex];
+                if (candidate.name === 'time') {
+                    extent = candidate;
+                    break;
+                }
+            }
         }
 
-        var times = dimension.split(',');
+        if (!defined(extent)) {
+            return undefined;
+        }
+
+        var times = extent.split(',');
 
         for (var j = 0; j < times.length; ++j) {
             var start = JulianDate.fromIso8601(times[j]);
@@ -440,7 +459,7 @@ function getIntervalsFromMetadata(layer) {
     }
 
     return result;
-}
+};
 
 function requestMetadata(wmsItem) {
     var result = new Metadata();
@@ -462,10 +481,10 @@ function requestMetadata(wmsItem) {
         }
         if (layer) {
             populateMetadataGroup(result.dataSourceMetadata, layer);
-            wmsItem._rectangleFromMetadata = getRectangleFromMetadata(layer);
+            wmsItem._rectangleFromMetadata = WebMapServiceCatalogItem.getRectangleFromLayer(layer);
 
             if (wmsItem.populateIntervalsFromTimeDimension) {
-                wmsItem._intervalsFromMetadata = getIntervalsFromMetadata(layer);
+                wmsItem._intervalsFromMetadata = WebMapServiceCatalogItem.getIntervalsFromLayer(layer);
             }
         } else {
             result.dataSourceErrorMessage = 'Layer information not found in GetCapabilities operation response.';

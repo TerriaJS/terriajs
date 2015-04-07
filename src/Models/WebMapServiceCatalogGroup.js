@@ -10,7 +10,6 @@ var defineProperties = require('../../third_party/cesium/Source/Core/definePrope
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 
 var ModelError = require('./ModelError');
@@ -331,15 +330,8 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, suppor
     result.getFeatureInfoAsXml = queryable && supportsXmlGetFeatureInfo;
     result.getFeatureInfoXmlContentType = xmlContentType;
 
-    var egbb = getInheritableProperty(layer, 'EX_GeographicBoundingBox'); // required in WMS 1.3.0
-    if (defined(egbb)) {
-        result.rectangle = Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
-    } else {
-        var llbb = getInheritableProperty(layer, 'LatLonBoundingBox'); // required in WMS 1.0.0 through 1.1.1
-        if (defined(llbb)) {
-            result.rectangle = Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
-        }
-    }
+    result.rectangle = WebMapServiceCatalogItem.getRectangleFromLayer(layer);
+    result.intervals = WebMapServiceCatalogItem.getIntervalsFromLayer(layer);
 
     var crs;
     if (defined(layer.CRS)) {
