@@ -1,0 +1,127 @@
+todo {
+  color: red;
+  font-weight: bold;
+  font-style: italic;
+}
+
+body,td,th {
+	font-size: 12px;
+	font-family: "Open Sans", sans-serif;
+	color: #414141;
+}
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+.header {
+	background-color: #4C4C4C;
+	height: 100px;
+	width: 100%;
+	padding-top: 40px;
+	padding-left: 40px;
+	position: fixed;
+	top: 0px;
+	color: #E5E5E5;
+	background-image: url(img/globe_img.png);
+	background-position: 100% 0%;
+	background-repeat: no-repeat;
+}
+.nav {
+	background-color: #302412;
+	height: 30px;
+	width: 100%;
+	top: 140px;
+	padding-left: 50px;
+	padding-top: 12px;
+	position: fixed;
+	color: #FFFFFF;
+}
+.tableofcontents {
+  position: fixed;
+  top: 182px;
+  padding-top: 30px;
+  width: 300px;
+  bottom: 0px;
+  padding-left: 30px;
+  padding-right: 30px;
+  /* padding-top: 10px; */
+  background-color: #F0F0F0;
+}
+.scrollarea {
+  position: fixed;
+  top: 182px;
+  left: 360px;
+  bottom: 0px;
+  right: 0px;
+  overflow: auto;
+}
+.information {
+  margin-right: 15%;
+  margin-left: 30px;
+  margin-top: 10px;
+}
+.footer {
+	background-color: #4c4c4c;
+	padding-top: 10px;
+	padding-right: 40px;
+	padding-left: 40px;
+	padding-bottom: 10px;
+	/* height: 100px; */
+	color: #D6D6D6;
+  float: bottom;
+}
+a:link {
+	color: #1EB3FF;
+	text-decoration: none;
+}
+a {
+	font-weight: bold;
+}
+a:visited {
+	text-decoration: none;
+	color: #1EB3FF;
+}
+a:hover {
+	text-decoration: none;
+	color: #1EB3FF;
+}
+a:active {
+	text-decoration: none;
+	color: #1EB3FF;
+}
+
+h1 {
+	font-size: 24px;
+	color: #868686;
+}
+h2 {
+	font-size: 14px;
+	font-weight: bold;
+}
+h1 {
+	font-style: normal;
+	font-weight: lighter;
+	color: #B27B53;
+}
+h3 {
+  font-style: normal
+  font-weight: lighter;
+  color: #dark-grey;
+  margin-left: 20px;
+  font-size: 12px;
+}
+p.faq {
+  margin-left: 40px;
+}
+td {
+  vertical-align: baseline;
+  padding-right: 20px;
+}
+expl { /* Used in <h2> for explaining TOC items */
+  font-style: italic;
+  font-weight: normal;
+  font-size: smaller;
+}
+    

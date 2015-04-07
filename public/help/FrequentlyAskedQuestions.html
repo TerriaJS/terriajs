@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+  <head>
+    <title>NICTA National Map: Help</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=latin,cyrillic-ext' rel='stylesheet' type='text/css'>
+    <link href='NMStyle.css' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    
+    <script>
+      function toggleShowNext(para) {
+        var next = para.nextSibling;
+        while (next.tagName != "P" && next.tagName != "DIV") {
+           console.log("Tag = " + next.tagName);
+           next = next.nextSibling;
+        }
+        console.log("Tag = " + next.tagName + " display = " + next.style.display);
+        next.style.display = (next.style.display == "none") ? "" : "none";
+      }
+    </script>
+    
+    <style>
+      h3 {
+        color: blue;
+      }
+    </style>
+    
+  </head>
+  
+  <body>
+  
+    <header class="header">
+      <img src="img/Gov_NICTA_NM_logos.png" width="486" height="46" alt="NICTA National Map"/><br>
+    </header>
+    
+    <section class="nav">
+      <a href="About.html">About National Map </a> | <strong>Help and FAQs</strong> | <a href="http://nationalmap.gov.au/">Launch the National Map</a>
+    </section>
+    
+    
+    <section class="tableofcontents">
+      <iframe src="TableOfContents.html" style="border: none;" width="300" height="800" >
+        <p>Your browser does not support the iframe HTML tag. Please use a later version of your browser.</p>     
+      </iframe>
+    </section>
+    
+    <section class="scrollarea">
+    
+      <section class="information">
+  
+        <h1>Frequently Asked Questions</h1>
+        
+        <h2 style="cursor: default;" onclick="toggleShowNext(this)" >FAQs about National Map Operation</h2>
+        <div>
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Where is the National Map User Manual?</h3>
+          <div style="display: none;" >
+            <p class="faq" >There isn't one! All
+            user interface features of the National Map are either obvious from the interface or are described in this Help.</p>
+            <p class="faq" >The National Map has been carefully designed to be as easy to use as possible. Our user experience
+            design team run regular usability testing sessions, the results of which are then assessed for inclusion in releases.</p>
+          </div>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >What browsers work with National Map?</h3>
+        
+            <p class="faq" style="display: none;" >
+              It is best to use a browser with WebGL support such as the latest versions of Google Chrome, Mozilla Firefox and Internet Explorer 11.
+              It will also work in some older browsers (for example IE9 and IE10) but the map rendering will be limited.
+              It may not support 3D rendering of maps, so the <b>3D Terrain</b> option may show the same result as <b>3D Smooth</b>.
+            </p>
+        
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >What types are spatial data are displayed by National Map?</h3>
+          <div style="display: none;" >
+            <p class="faq" >There are three types of spatial data which are read from the data sources and displayed by the National Map over its base maps:</p>
+            <table style="margin-left: 40px; cell-padding: 15px;" ><tbody>
+              <tr>
+                <td><strong>Point</strong></td><td>Click on any point to see more information about that particular point feature.</td>
+              </tr>
+              <tr>
+                <td><strong>Line</strong></td><td>Click on any line to see more information about that particular line feature.</td>
+              </tr>
+              <tr>
+                <td><strong>Region</strong></td><td>Click within any region to see more information about that region.</td>
+              </tr>
+            </tbody></table>
+          </div>
+                
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Why do "3D Terrain" and "3D Smooth" Perspective Views look the same on my computer?</h3>
+          <div style="display: none;" >
+            <p class="faq" >Some older computers do not have graphics cards which fully support WebGL and some older browsers do not make use of
+            this support even if it is present. National Map requires this support in order to support 3D Terrain Perspective View.</p>
+            
+            <p class="faq" >Try upgrading your browser to the latest version. If that still does not work, you may need to consider working
+            on a computer that has more recent graphics support.</p>
+          </div>
+                
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Why does the terrain in my perspective view have two different hues?</h3>
+          <div style="display: none;" >
+            <p class="faq" >National Map automatically changes the content of the map according to the scale at which you're viewing.
+            If you zoom in it shows more detail. At some points in the zoom range, the map display switches from high altitude photography
+            to lower altitude photography. These sets of the photography are not colour matched to each other, so may have quite different hues.
+            The actual photography scales used, the date of that photography and its lighting conditions will vary across Australia.</p>
+            
+            <p class="faq" >When you are using Perspective View the part of the terrain nearest to the "camera position" is naturally shown at
+            a larger scale than the more more distant parts. Depending on your zoom level, this can result in the foreground being displayed with
+            a different set of photography from the distant parts of your Perspective View.</p>
+          </div>
+  
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Why won't National Map work on my mobile phone? It works on my friend's phone.</h3>
+        
+            <p class="faq" style="display: none;" >
+              The current version of National Map is not designed for small screen or touch screen devices.
+              However, some devices may operate satisfactorily, especially if they support a mouse connection and WebGL graphics.
+            </p>
+        
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >I need more help to use National Map. Who can I ask?</h3>
+        
+            <p class="faq" style="display: none;" >Send your question to the National Map support email address, which is
+            <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.
+            </p>
+        
+        </div>
+        
+        <h2 style="cursor: default;" onclick="toggleShowNext(this)" >FAQs about the National Map system and data</h2>
+        <div>
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Where does the spatial data come from?</h3>
+          <div style="display: none;" >
+            <p class="faq" >
+              The spatial data displayed by the National Map are all directly referenced from <a href="http://data.gov.au" >data.gov.au</a> or from a
+              server provided by the relevant department or agency.
+              The National Map does not store any of the data it serves. For example, if you access
+              data relating to broadband availability and quality, you are accessing that data directly from the Department of
+              Communications. When you access data relating to surface geology, it is accessed directly from Geoscience Australia.
+              If you access data relating to water, it is typically coming directly from the Bureau of Meteorology.
+              The National Map itself does not store any data - it provides a map-based view of data that is stored by a growing
+              number of government bodies.
+            </p>
+            
+            <p class="faq" >
+              You can see details of the department or agency that provides the spatial data by clicking on the <strong>Info</strong> link
+              for the data set on the <strong>Now Viewing</strong> tab.
+            </p> 
+          </div>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >The data I was using are now gone. Where did they go?</h3>
+          <div style="display: none;" >
+            <p class="faq" >
+              The spatial data displayed by National Map are referenced directly from the supplying department or agency by the National Map server. 
+              If that supplying department or agency updates or removes any data, that change will be reflected immediately by the National Map.
+            </p>
+        
+            <p class="faq" >If you have any questions about the spatial data, you will need to contact the supplying department or agency.</p>
+          </div>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Where do the base maps come from?</h3>
+            
+            <p class="faq" style="display: none;" >
+              The base maps displayed by the National Map come from a number of difference sources including Microsoft's Bing, Geoscience Australia and NASA. They are downloaded from the source
+              as they are required, so they are as up to date as that service provides.
+            </p>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Who developed National Map?</h3>
+          
+            <p class="faq" style="display: none;" >The National Map was developed by NICTA funded by the Commonwealth Department of Communications and working closely with Geoscience Australia. See the <a href="About.html">About</a> page from more information.</p>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Who owns the spatial data on National Map? Can I use it and distribute it?</h3>
+          <div style="display: none;" >
+            <p class="faq" >
+              Before distributing any data from National Map it is important to understand the licence restriction for the data.
+              All Data Sets displayed by the National Map are the property of the department or agency which has provided them. Therefore the
+              restrictions for each Data Set may be quite different. 
+            </p>
+            
+            <p class="faq" >
+              The licence which governs the usage and distribution restrictions for each Data Set is shown in the <strong>Info</strong> metadata
+              for the Data Set. Display the Data Set in National Map and then select the <strong>Now Viewing</strong> tab. Click on the Data Set's
+              <strong>Info</strong> button to see the licence for the Data set.  
+            </p>
+            
+          </div>          
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >How reliable is the spatial data on the National Map?</h3>
+          
+            <p class="faq" style="display: none;" >
+              The reliability will vary between data sets. To understand the reliability of a particular data set,
+              click on the <strong>Info</strong> link for the data set in question on the <strong>Now Showing</strong> tab for the data. The metadata
+              which is shown in this display may offer sufficient information or you may need to contact the data
+              provider which is listed in that metadata.
+            </p>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >There is some spatial data in New Zealand. Where did it come from?</h3>
+          
+            <p class="faq" style="display: none;" >
+              There is a small number of data sets which have a small amount of data relating to New Zealand.
+              This results because the supplying agency is a cooperative agency with New Zealand.
+            </p>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Why can I see the whole world on National Map?</h3>
+          <div style="display: none;" >
+            <p class="faq" >
+              Most of the National Map base maps are provided by services for the whole world. There is no value in
+              suppressing the display of the rest of the world, so you can view it if you wish.
+              (Take a look at Mt Everest or the Grand Canyon in perspective view - they're cool!)
+            </p>
+            <p class="faq" >Obviously, the National Map's spatial data does not cover the rest of the world!</p>
+          </div>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >Will more Data Sets be added to National Map?</h3>
+          <div style="display: none;" >
+            <p class="faq" >
+              That depends on the supplying departments or agencies, who must make the data available. You will need to
+              contact individual data providers to understand their data release schedules.
+            </p>
+            <p class="faq" >
+              If you are a data provider, see the <a href="HowTo.html">How To</a> page for information on adding Data Sets to the National Map.
+            </p>
+          </div>
+        </div>
+        
+        <h2 style="cursor: default;" onclick="toggleShowNext(this)" >FAQs about reporting issues</h2>
+        <div>
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >I think I've found a bug. How do I report it?</h3>
+          
+            <p class="faq" style="display: none;" >Email us on <a href="mailto:nationalmap@lists.nicta.com.au" >nationalmap@lists.nicta.com.au</a>
+            to report the problem. Be sure to include a step by step description of how to reproduce the problem.</p>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >I'd love a new feature. Can I suggest it?</h3>
+          
+            <p class="faq" style="display: none;" >Absolutely. Just email your suggestion to
+            <a href="mailto:nationalmap@lists.nicta.com.au" >nationalmap@lists.nicta.com.au</a>.
+            Please do not expect an immediate response. There are many conflicting priorities for the development of National Map, so it will not
+            be possible to react to all requests promptly.</p>
+          
+          <h3 style="cursor: default;" onclick="toggleShowNext(this)" >I think there's an error in some data. How can I find out
+          if it's correct or report the problem?</h3>
+          <div style="display: none;" >        
+            <p class="faq" >The data displayed by the National Map are only referred to by the National Map and are not part of the
+            National Map. You will need to refer to the department or agency which provides the Data Set which contains the issue.</p>
+          
+            <p class="faq" >Click on the <strong>Info</strong> label on the <strong>Now Viewing</strong> tab to find out which department
+            or agency provides the data.</p>
+          </div>
+        </div>
+  
+      </section>
+      
+      <section class="footer">
+        <p>&copy; National ICT Australia Limited (NICTA) 2014. All Rights Reserved.</p>
+        <p><a href="http://www.nicta.com.au/terms__and__conditions">Terms and Conditions</a> | <a href="http://www.nicta.com.au/privacy">Privacy</a></p>
+      </section>
+
+    </section>
+      
+  </body>
+</html>
+

@@ -1,0 +1,205 @@
+<!doctype html>
+<html>
+  <head>
+    <title>NICTA National Map: Help</title>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=latin,cyrillic-ext' rel='stylesheet' type='text/css'>
+    <link href='NMStyle.css' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    
+    <script>      
+      function toggleShowNext(para) {
+        console.log("Tag = " + para.tagName);
+        var next = para.nextSibling.nextSibling;
+        console.log("Tag = " + next.tagName + " display = " + next.style.display);
+        next.style.display = (next.style.display == "none") ? "" : "none";
+      }
+
+      function showNext(para, val) {
+        console.log("Tag = " + para.tagName + " val = " + val);
+        var next = para.nextSibling.nextSibling;
+        console.log("Tag = " + next.tagName + " display = " + next.style.display);
+        next.style.display = val;
+      }
+
+      function SetDisplay() {             
+        var idName = window.location.hash;
+        idName = idName.slice(1);
+        console.log("IdName = " + idName);
+        if (idName != "") {
+          var H2List = document.getElementsByTagName("H2");
+          var i;
+          for (i = 0; i < H2List.length; i++) {
+            if (H2List[i].id != "")
+              showNext(H2List[i], "none");
+          } 
+          showNext(document.getElementById(idName), "");
+        }
+      }
+    </script>
+    
+    <style>
+      ul {
+        margin-left: 40px;
+      }
+      h2 {
+        color: blue;
+      }
+    </style>
+    
+  </head>
+  
+  <body onhashchange="SetDisplay()" onload="SetDisplay()">
+  
+    <header class="header">
+      <img src="img/Gov_NICTA_NM_logos.png" width="486" height="46" alt="NICTA National Map"/><br>
+    </header>
+    
+    <section class="nav">
+      <a href="About.html">About National Map </a> | <strong>Help and FAQs</strong> | <a href="http://nationalmap.gov.au/">Launch the National Map</a>
+    </section>
+    
+    
+    <section class="tableofcontents">
+      <iframe src="TableOfContents.html" style="border: none;" width="300" height="800" >
+        <p>Your browser does not support the iframe HTML tag. Please use a later version of your browser.</p>     
+      </iframe>
+    </section>
+    
+    <section class="scrollarea">
+    
+      <section class="information">
+        <h1>How to...</h1>
+  
+        <h2 id="GetStartedWithTheNationalMap" style="cursor: default;" onclick="toggleShowNext(this)" >Get started with the National Map</h2>
+        <div>
+          <p class="faq" >To launch the National Map and display some basic data follow these steps.</p>
+          <ul>
+            <li>Display the National Map by using the URL <a href="http://nationalmap.gov.au" target="_blank" >http://nationalmap.gov.au</a>.</li>
+            <li>Select the <strong>Data Catalogue</strong> tab to view the available data providers.</li>
+            <li>
+              Select a data set you want to display by clicking in its check box. The spatial data will be immediately displayed in the map view, but
+              it may not be immediately obvious if the spatial data selected does not cover a large part of Australia. (You can adjust this in a subsequent step.)
+              You may need to click on the various data provider
+              names and data set group names to view the list and data set you require. You can click on a data set's information marker (the "i" in a circle
+              to the right of the data set name) to see the available metadata related to the data set. This may help you choose the correct data set. 
+            </li>
+            <li>Select additional data sets if you wish.</li>
+            <li>
+              Click on the name of a selected Data Set to cause the Map View to zoom to a view which just encloses all of the features
+              in the Data Set. If the Data Set contains isolated features at each side of the country, this may not change the view very much
+              and you will need to zoom manually.  
+            </li>
+            <li>Zoom manually by moving your mouse pointer over the map and using your mouse wheel to zoom in or out further.</li>
+            <li>Click and drag the map to further show the region in which you are interested.</li>
+            <li>Click on a feature (that is, directly on a point or line, or within a region) to show data about the individual feature.</li>     
+          </ul>
+          <p class="faq" >You can perform these steps in any order as required to tune your display of spatial data.</p>
+        </div>
+              
+        <h2 id="FindOutAboutADisplayedFeature" style="cursor: default;" onclick="toggleShowNext(this)" >Find out about a displayed feature</h2>
+        <div style="display: none;" >
+          <p class="faq" >Click on the feature which is displayed on the map. You can click on Points, on Lines or within
+          Regions to see a display of the information available from the spatial data provider for that particular feature.</p>
+          
+          <p class="faq" >For Points and Lines, you need to click quite accurately to identify the feature. For Regions,
+          clicking on the boundary will give ambiguous results. Click within the region.</p>
+          
+          <p class="faq" >You cannot find out further information about the features which are part of the base maps.</p>
+        </div>
+        
+        <h2 id="DisplayMyOwnSpatialData" style="cursor: default;" onclick="toggleShowNext(this)" >Display my own spatial data</h2>
+        <div style="display: none;" >
+          <p class="faq" >If you have a data file which contains latitude and longitude information, or contains a column with a region ID
+          which Naitonal Map can identify as a State, Postcode or ABS statistical region, you can display its
+          contents over the National Map map view in addition to the National Map data.</p>
+          
+          <p class="faq" >There are three ways:</p>
+          
+          <ul>
+             <li>Drag your data file onto the National Map map view. The format of the data file will be auto-detected.</li>
+             <li>
+               Click on the <strong>Add Data</strong> button.  A dialog will appear where you can select
+               your spatial data file's format and then browse to the file.
+             </li>
+             <li>
+               When your spatial data file can be accessed on the internet using a URL, click on the <strong>Add Data</strong> button.  A dialog
+               will appear where you can select your spatial data file's format and enter the URL which points to the file to display.
+             </li>
+          </ul>
+          
+          <p class="faq" >Supported formats include GeoJSON, KML, KMZ, CSV (with latitude and longitude columns or a column with an identifiable region ID) and
+          various other formats. CSV files with latitude and longitude columns will display one point feature for each line of the file.
+          CSV files with a region ID column will colour the found regions.</p>
+          
+          <p class="faq" >As for National Map data sets, you can click on the regions or points to see the data available for that location.
+          If the file is a CSV file, the data from all columns will be shown in the feature information dialogue when you click.</p>
+          
+          <p class="faq" >You can also use all of the features of the <a href="NowViewingTab.html" >Now Viewing Tab</a> on the data you have loaded as well.</p>
+        </div>
+        
+        <h2 id="ShareMyNationalMapViewWithOthers" style="cursor: default;" onclick="toggleShowNext(this)" >Share my National Map view with others</h2>
+        <div style="display: none;" >
+          <p class="faq" >There are three ways:</p>
+          
+          <ul>
+             <li>
+               Make a screen dump and email it as an image. (See your OS instructions on how to copy a screen dump 
+               to the clipboard.) This will share all information, even if loaded from a local file or URL.
+             </li>
+             <li>
+               Click the Share button, copy the given URL (shown in the first text box) to the clipboard and paste
+               it into an email which you send to the recipient. They can click on it in the email or paste it into their
+               browser to see the same view as you. You can use a URL shortening service (such as bit.ly) if you want to 
+               simplify the URL that you send.
+             </li>
+             <li>
+               Click the Share button, copy the HTML fragment (shown in the second text box) and paste it into an HTML
+               file, which you then make available to the recipients. When the recipients display your web page, they will
+               see the National Map view within that web page.
+             </li>
+          </ul>   
+             
+          <p class="faq" >Note that only the first method will also show the data you have displayed from a local file.</p>
+          
+          <p class="faq" >The second two methods will show the data you are displaying from an included URL, provided that
+          URL is also accessible to your recipient.</p>
+        </div>
+        
+        <h2 id="ContributeDataSetsToNationalMap" style="cursor: default;" onclick="toggleShowNext(this)" >Contribute Data Sets to National Map</h2>
+        <div style="display: none;" >
+          <p class="faq" >The National Map encourages data providers to publish their spatial data using this platform. There
+          are two routes you can take to publishing.</p>
+          
+          <ul>
+            <li>
+              <p>Any spatial data which is added to <a href="http://data.gov.au" target="_blank" >data.gov.au</a>
+              using a protocol or format supported by the National Map (such as WMS) will automatically appear in the <strong>data.gov.au</strong>
+              section of the <b>Data Catalogue</b> tab
+              for the National Map. See <a href="http://data.gov.au/dataset?res_format=wms" target="_blank" >WMS Data Sets</a> for
+              a list of spatial data sets already on <a href="http://data.gov.au" target="_blank" >data.gov.au</a>.
+              See the <a href="https://toolkit.data.gov.au/index.php?title=How_to_use_data.gov.au" target="_blank" >data.gov.au Toolkit</a>
+              for a detailed reference on using <a href="http://data.gov.au" target="_blank" >data.gov.au</a> and using it to publish
+              your own data sets.</p>
+            </li>
+            
+            <li>
+              <p>If you require your data set to appear under a separate category of the National Map Data Catalogue, you will
+              need to contact the support for National Map by emailing to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>
+              for more information.  
+              You will need to provide an internet accessible service in a standard protocol to access your data set on the internet
+              and appropriate references must be added to the National Map configuration.</p>
+            </li>
+          </ul> 
+        </div>
+     
+      </section>
+      
+      <section class="footer">
+        <p>&copy; National ICT Australia Limited (NICTA) 2014. All Rights Reserved.</p>
+        <p><a href="http://www.nicta.com.au/terms__and__conditions">Terms and Conditions</a> | <a href="http://www.nicta.com.au/privacy">Privacy</a></p>
+      </section>
+  
+    </section>
+  </body>
+</html>
+
