@@ -20,6 +20,7 @@ var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
+var overrideProperty = require('../Core/overrideProperty');
 
 /**
  * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
@@ -120,8 +121,7 @@ var WebMapServiceCatalogItem = function(application) {
         'tilingScheme', 'clipToRectangle', 'populateIntervalsFromTimeDimension']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
-    delete this.__knockoutObservables.dataUrl;
-    knockout.defineProperty(this, 'dataUrl', {
+    overrideProperty(this, 'dataUrl', {
         get : function() {
             var url = this._dataUrl;
             if (!defined(url)) {
@@ -139,8 +139,7 @@ var WebMapServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.dataUrlType;
-    knockout.defineProperty(this, 'dataUrlType', {
+    overrideProperty(this, 'dataUrlType', {
         get : function() {
             if (defined(this._dataUrlType)) {
                 return this._dataUrlType;
@@ -153,8 +152,7 @@ var WebMapServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.metadataUrl;
-    knockout.defineProperty(this, 'metadataUrl', {
+    overrideProperty(this, 'metadataUrl', {
         get : function() {
             if (defined(this._metadataUrl)) {
                 return this._metadataUrl;
@@ -167,8 +165,7 @@ var WebMapServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.legendUrl;
-    knockout.defineProperty(this, 'legendUrl', {
+    overrideProperty(this, 'legendUrl', {
         get : function() {
             if (defined(this._legendUrl)) {
                 return this._legendUrl;
@@ -182,8 +179,7 @@ var WebMapServiceCatalogItem = function(application) {
     });
 
     // rectangle comes from metadata if not explicitly specified.
-    delete this.__knockoutObservables.rectangle;
-    knockout.defineProperty(this, 'rectangle', {
+    overrideProperty(this, 'rectangle', {
         get : function() {
             if (defined(this._rectangle)) {
                 return this._rectangle;
@@ -196,9 +192,7 @@ var WebMapServiceCatalogItem = function(application) {
     });
 
     // intervals come from metadata if populateIntervalsFromTimeDimension and not explicitly specified.
-    var overridden = knockout.getObservable(this, 'intervals');
-    delete this.__knockoutObservables.intervals;
-    knockout.defineProperty(this, 'intervals', {
+    overrideProperty(this, 'intervals', {
         get : function() {
             if (defined(this._intervals)) {
                 return this._intervals;
@@ -209,7 +203,6 @@ var WebMapServiceCatalogItem = function(application) {
             this._intervals = value;
         }
     });
-    overridden.notifySubscribers();
 };
 
 inherit(ImageryLayerCatalogItem, WebMapServiceCatalogItem);

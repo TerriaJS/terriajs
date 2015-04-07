@@ -10,6 +10,7 @@ var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebM
 
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
+var overrideProperty = require('../Core/overrideProperty');
 
 /**
  * A {@link ImageryLayerCatalogItem} representing a layer from an Esri ArcGIS MapServer.
@@ -41,8 +42,7 @@ var ArcGisMapServerCatalogItem = function(application) {
     knockout.track(this, ['url', 'layers', '_legendUrl']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
-    delete this.__knockoutObservables.legendUrl;
-    knockout.defineProperty(this, 'legendUrl', {
+    overrideProperty(this, 'legendUrl', {
         get : function() {
             if (defined(this._legendUrl)) {
                 return this._legendUrl;
