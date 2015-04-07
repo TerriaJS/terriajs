@@ -400,7 +400,7 @@ function requestTiles(toolsPanel, requests, minLevel, maxLevel) {
 
         var url = next.url;
 
-        if (!toolsPanel.usProxyCache) {
+        if (!toolsPanel.useProxyCache) {
             url = url.replace('proxy/h', 'proxy/_0d/h');
         }
 
