@@ -26,11 +26,11 @@ var appJSName = 'ausglobe.js';
 var specJSName = 'ausglobe-specs.js';
 var appEntryJSName = './src/main.js';
 var workerGlob = [
-    './third_party/cesium/Source/Workers/*.js',
-    '!./third_party/cesium/Source/Workers/*.profile.js',
-    '!./third_party/cesium/Source/Workers/cesiumWorkerBootstrapper.js',
-    '!./third_party/cesium/Source/Workers/transferTypedArrayTest.js',
-    '!./third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
+    './third_party/TerriaJS/third_party/cesium/Source/Workers/*.js',
+    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/*.profile.js',
+    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/cesiumWorkerBootstrapper.js',
+    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/transferTypedArrayTest.js',
+    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
 ];
 var specGlob = './spec/**/*.js';
 
@@ -101,7 +101,7 @@ gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumW
 
 gulp.task('build-cesium', function(cb) {
     return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
-        cwd : 'third_party/cesium'
+        cwd : 'third_party/TerriaJS/third_party/cesium'
     }, function(err, stdout, stderr) {
         if (stderr) {
             console.log('Error while building Cesium: ');
@@ -113,17 +113,17 @@ gulp.task('build-cesium', function(cb) {
 
 gulp.task('copy-cesium-assets', function() {
     return gulp.src([
-            'third_party/cesium/Source/Workers/transferTypedArrayTest.js',
-            'third_party/cesium/Source/ThirdParty/Workers/**',
-            'third_party/cesium/Source/Assets/**',
-            'third_party/cesium/Source/Widgets/**/*.css',
-            'third_party/cesium/Source/Widgets/Images/**'
-        ], { base: 'third_party/cesium/Source' })
+            'third_party/TerriaJS/third_party/cesium/Source/Workers/transferTypedArrayTest.js',
+            'third_party/TerriaJS/third_party/cesium/Source/ThirdParty/Workers/**',
+            'third_party/TerriaJS/third_party/cesium/Source/Assets/**',
+            'third_party/TerriaJS/third_party/cesium/Source/Widgets/**/*.css',
+            'third_party/TerriaJS/third_party/cesium/Source/Widgets/Images/**'
+        ], { base: 'third_party/TerriaJS/third_party/cesium/Source' })
         .pipe(gulp.dest('public/build/Cesium/'));
 });
 
 gulp.task('copy-cesiumWorkerBootstrapper', function() {
-    return gulp.src('src/cesiumWorkerBootstrapper.js')
+    return gulp.src('third_party/TerriaJS/src/cesiumWorkerBootstrapper.js')
         .pipe(gulp.dest('public/build/Cesium/Workers'));
 });
 

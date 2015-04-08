@@ -4,8 +4,8 @@
 
 var start = true;
 
-var PopupMessageViewModel = require('./ViewModels/PopupMessageViewModel');
-var FeatureDetection = require('../third_party/cesium/Source/Core/FeatureDetection');
+var PopupMessageViewModel = require('../third_party/TerriaJS/src/ViewModels/PopupMessageViewModel');
+var FeatureDetection = require('../third_party/TerriaJS/third_party/cesium/Source/Core/FeatureDetection');
 
 // If we're not in a normal browser environment (Web Worker maybe?), do nothing.
 if (typeof window === 'undefined') {
@@ -50,42 +50,42 @@ if (start) {
 
     var copyright = require('./CopyrightModule'); // jshint ignore:line
 
-    var BingMapsStyle = require('../third_party/cesium/Source/Scene/BingMapsStyle');
-    var defined = require('../third_party/cesium/Source/Core/defined');
-    var knockout = require('../third_party/cesium/Source/ThirdParty/knockout');
+    var BingMapsStyle = require('../third_party/TerriaJS/third_party/cesium/Source/Scene/BingMapsStyle');
+    var defined = require('../third_party/TerriaJS/third_party/cesium/Source/Core/defined');
+    var knockout = require('../third_party/TerriaJS/third_party/cesium/Source/ThirdParty/knockout');
 
-    var AusGlobeViewer = require('./viewer/AusGlobeViewer');
-    var registerKnockoutBindings = require('./Core/registerKnockoutBindings');
+    var AusGlobeViewer = require('../third_party/TerriaJS/src/viewer/AusGlobeViewer');
+    var registerKnockoutBindings = require('../third_party/TerriaJS/src/Core/registerKnockoutBindings');
 
-    var AddDataPanelViewModel = require('./ViewModels/AddDataPanelViewModel');
-    var BaseMapViewModel = require('./ViewModels/BaseMapViewModel');
-    var BingMapsSearchProviderViewModel = require('./ViewModels/BingMapsSearchProviderViewModel');
-    var CatalogItemNameSearchProviderViewModel = require('./ViewModels/CatalogItemNameSearchProviderViewModel');
-    var BrandBarViewModel = require('./ViewModels/BrandBarViewModel');
-    var DataCatalogTabViewModel = require('./ViewModels/DataCatalogTabViewModel');
-    var DistanceLegendViewModel = require('./ViewModels/DistanceLegendViewModel');
-    var DragDropViewModel = require('./ViewModels/DragDropViewModel');
-    var ExplorerPanelViewModel = require('./ViewModels/ExplorerPanelViewModel');
-    var FeatureInfoPanelViewModel = require('./ViewModels/FeatureInfoPanelViewModel');
-    var GazetteerSearchProviderViewModel = require('./ViewModels/GazetteerSearchProviderViewModel');
-    var LocationBarViewModel = require('./ViewModels/LocationBarViewModel');
-    var MenuBarViewModel = require('./ViewModels/MenuBarViewModel');
-    var MenuBarItemViewModel = require('./ViewModels/MenuBarItemViewModel');
-    var NavigationViewModel = require('./ViewModels/NavigationViewModel');
-    var NowViewingTabViewModel = require('./ViewModels/NowViewingTabViewModel');
-    var OnePanelOpenInTopRight = require('./ViewModels/OnePanelOpenInTopRight');
-    var SearchTabViewModel = require('./ViewModels/SearchTabViewModel');
-    var SettingsPanelViewModel = require('./ViewModels/SettingsPanelViewModel');
-    var SharePopupViewModel = require('./ViewModels/SharePopupViewModel');
-    var ToolsPanelViewModel = require('./ViewModels/ToolsPanelViewModel');
+    var AddDataPanelViewModel = require('../third_party/TerriaJS/src/ViewModels/AddDataPanelViewModel');
+    var BaseMapViewModel = require('../third_party/TerriaJS/src/ViewModels/BaseMapViewModel');
+    var BingMapsSearchProviderViewModel = require('../third_party/TerriaJS/src/ViewModels/BingMapsSearchProviderViewModel');
+    var CatalogItemNameSearchProviderViewModel = require('../third_party/TerriaJS/src/ViewModels/CatalogItemNameSearchProviderViewModel');
+    var BrandBarViewModel = require('../third_party/TerriaJS/src/ViewModels/BrandBarViewModel');
+    var DataCatalogTabViewModel = require('../third_party/TerriaJS/src/ViewModels/DataCatalogTabViewModel');
+    var DistanceLegendViewModel = require('../third_party/TerriaJS/src/ViewModels/DistanceLegendViewModel');
+    var DragDropViewModel = require('../third_party/TerriaJS/src/ViewModels/DragDropViewModel');
+    var ExplorerPanelViewModel = require('../third_party/TerriaJS/src/ViewModels/ExplorerPanelViewModel');
+    var FeatureInfoPanelViewModel = require('../third_party/TerriaJS/src/ViewModels/FeatureInfoPanelViewModel');
+    var GazetteerSearchProviderViewModel = require('../third_party/TerriaJS/src/ViewModels/GazetteerSearchProviderViewModel');
+    var LocationBarViewModel = require('../third_party/TerriaJS/src/ViewModels/LocationBarViewModel');
+    var MenuBarViewModel = require('../third_party/TerriaJS/src/ViewModels/MenuBarViewModel');
+    var MenuBarItemViewModel = require('../third_party/TerriaJS/src/ViewModels/MenuBarItemViewModel');
+    var NavigationViewModel = require('../third_party/TerriaJS/src/ViewModels/NavigationViewModel');
+    var NowViewingTabViewModel = require('../third_party/TerriaJS/src/ViewModels/NowViewingTabViewModel');
+    var OnePanelOpenInTopRight = require('../third_party/TerriaJS/src/ViewModels/OnePanelOpenInTopRight');
+    var SearchTabViewModel = require('../third_party/TerriaJS/src/ViewModels/SearchTabViewModel');
+    var SettingsPanelViewModel = require('../third_party/TerriaJS/src/ViewModels/SettingsPanelViewModel');
+    var SharePopupViewModel = require('../third_party/TerriaJS/src/ViewModels/SharePopupViewModel');
+    var ToolsPanelViewModel = require('../third_party/TerriaJS/src/ViewModels/ToolsPanelViewModel');
 
-    var Application = require('./Models/Application');
-    var ArcGisMapServerCatalogItem = require('./Models/ArcGisMapServerCatalogItem');
-    var BingMapsCatalogItem = require('./Models/BingMapsCatalogItem');
-    var CompositeCatalogItem = require('./Models/CompositeCatalogItem');
-    var WebMapServiceCatalogItem = require('./Models/WebMapServiceCatalogItem');
-    var registerCatalogMembers = require('./Models/registerCatalogMembers');
-    var raiseErrorToUser = require('./Models/raiseErrorToUser');
+    var Application = require('../third_party/TerriaJS/src/Models/Application');
+    var ArcGisMapServerCatalogItem = require('../third_party/TerriaJS/src/Models/ArcGisMapServerCatalogItem');
+    var BingMapsCatalogItem = require('../third_party/TerriaJS/src/Models/BingMapsCatalogItem');
+    var CompositeCatalogItem = require('../third_party/TerriaJS/src/Models/CompositeCatalogItem');
+    var WebMapServiceCatalogItem = require('../third_party/TerriaJS/src/Models/WebMapServiceCatalogItem');
+    var registerCatalogMembers = require('../third_party/TerriaJS/src/Models/registerCatalogMembers');
+    var raiseErrorToUser = require('../third_party/TerriaJS/src/Models/raiseErrorToUser');
 
     registerKnockoutBindings();
     registerCatalogMembers();
