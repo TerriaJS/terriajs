@@ -134,9 +134,7 @@ function bundle(name, bundler, minify, catchErrors) {
 
     // Combine main.js and its dependencies into a single file.
     // The poorly-named "debug: true" causes Browserify to generate a source map.
-    var result = bundler.bundle({
-            debug: true
-        });
+    var result = bundler.bundle();
 
     if (catchErrors) {
         // Display errors to the user, and don't let them propagate.
@@ -170,11 +168,19 @@ function bundle(name, bundler, minify, catchErrors) {
 }
 
 function build(name, files, minify) {
-    return bundle(name, browserify(files).transform('brfs').transform('deamdify'), minify, false);
+    return bundle(name, browserify({
+        entries: files,
+        debug: true
+    }), minify, false);
 }
 
 function watch(name, files, minify) {
-    var bundler = watchify(files).transform('brfs').transform('deamdify');
+    var bundler = watchify(browserify({
+        entries: files,
+        debug: true,
+        cache: {},
+        packageCache: {}
+    }));
 
     function rebundle() {
         var start = new Date();

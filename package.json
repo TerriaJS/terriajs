@@ -2,9 +2,9 @@
   "name": "ausglobe",
   "version": "0.0.2",
   "description": "Geodata visualization service based on Cesium Webgl globe and Leaflet maps.",
-  "repository" : { 
-    "type" : "git",
-    "url" : "http://github.com/NICTA/nationalmap"
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/NICTA/nationalmap"
   },
   "dependencies": {
     "compression": "1.0.8",
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "brfs": "^1.2.0",
-    "browserify": "^4.2.3",
+    "browserify": "^9.0.7",
     "deamdify": "^0.1.1",
     "exorcist": "^0.1.6",
     "glob": "^4.0.4",
@@ -41,10 +41,11 @@
     "vinyl-buffer": "0.0.0",
     "vinyl-source-stream": "^0.1.1",
     "vinyl-transform": "0.0.1",
-    "watchify": "git://github.com/cconger/watchify#35407c030db9c6c9099e7fc2a5c21ac5eb7db5f8"
+    "watchify": "^3.1.0"
   },
   "scripts": {
-    "start": "node_modules/.bin/supervisor server"
+    "start": "node_modules/.bin/supervisor server",
+    "postinstall": "ln -s -n -f ../third_party/TerriaJS/src/ ./node_modules/TerriaJS && ln -s -n -f ../third_party/TerriaJS/third_party/cesium/Source/ ./node_modules/Cesium"
   },
   "browser": {
     "knockout": "./third_party/cesium/Source/ThirdParty/knockout.js"
