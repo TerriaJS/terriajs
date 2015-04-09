@@ -2,7 +2,7 @@
 
 /*global require,URI*/
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
+var defined = require('Cesium/Core/defined');
 
 var corsProxy = {
     baseProxyUrl: 'proxy/',

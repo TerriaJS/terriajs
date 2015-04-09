@@ -2,7 +2,7 @@
 
 /*global require*/
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
+var defined = require('Cesium/Core/defined');
 
 var KnockoutSanitizedHtmlBinding = {
     register : function(knockout) {

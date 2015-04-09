@@ -5,8 +5,8 @@ var inherit = require('../Core/inherit');
 var SearchProviderViewModel = require('./SearchProviderViewModel');
 var SearchResultViewModel = require('./SearchResultViewModel');
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
 
 var CatalogItemNameSearchProviderViewModel = function(options) {
     SearchProviderViewModel.call(this);

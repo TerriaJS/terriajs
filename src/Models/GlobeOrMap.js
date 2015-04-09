@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require*/
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
-var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var Ellipsoid = require('Cesium/Core/Ellipsoid');
+var Entity = require('Cesium/DataSources/Entity');
 
 /**
  * The base class for map/globe viewers.

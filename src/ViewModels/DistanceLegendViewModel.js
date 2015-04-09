@@ -1,12 +1,12 @@
 'use strict';
 
 /*global require,L*/
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var EllipsoidGeodesic = require('../../third_party/cesium/Source/Core/EllipsoidGeodesic');
-var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var defined = require('Cesium/Core/defined');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var EllipsoidGeodesic = require('Cesium/Core/EllipsoidGeodesic');
+var getTimestamp = require('Cesium/Core/getTimestamp');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var loadView = require('../Core/loadView');
 

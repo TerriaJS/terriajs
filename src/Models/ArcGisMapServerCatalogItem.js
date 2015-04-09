@@ -2,11 +2,11 @@
 
 /*global require,URI*/
 
-var ArcGisMapServerImageryProvider = require('../../third_party/cesium/Source/Scene/ArcGisMapServerImageryProvider');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
+var ArcGisMapServerImageryProvider = require('Cesium/Scene/ArcGisMapServerImageryProvider');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var knockout = require('Cesium/ThirdParty/knockout');
+var WebMercatorTilingScheme = require('Cesium/Core/WebMercatorTilingScheme');
 
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');

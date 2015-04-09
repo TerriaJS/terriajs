@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require,L*/
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var ImageryProvider = require('../../third_party/cesium/Source/Scene/ImageryProvider');
-var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var ImageryProvider = require('Cesium/Scene/ImageryProvider');
+var WebMercatorTilingScheme = require('Cesium/Core/WebMercatorTilingScheme');
 
 var CesiumTileLayer = L.TileLayer.extend({
     initialize: function(imageryProvider, options) {

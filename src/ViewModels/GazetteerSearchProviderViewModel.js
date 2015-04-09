@@ -6,12 +6,12 @@ var inherit = require('../Core/inherit');
 var SearchProviderViewModel = require('./SearchProviderViewModel');
 var SearchResultViewModel = require('./SearchResultViewModel');
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var CesiumMath = require('Cesium/Core/Math');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var Ellipsoid = require('Cesium/Core/Ellipsoid');
+var loadJson = require('Cesium/Core/loadJson');
+var Rectangle = require('Cesium/Core/Rectangle');
 
 var GazetteerSearchProviderViewModel = function(options) {
     SearchProviderViewModel.call(this);

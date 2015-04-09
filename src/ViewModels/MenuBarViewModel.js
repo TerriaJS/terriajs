@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require*/
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var loadView = require('../Core/loadView');
 

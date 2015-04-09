@@ -5,13 +5,13 @@ var inherit = require('../Core/inherit');
 var SearchProviderViewModel = require('./SearchProviderViewModel');
 var SearchResultViewModel = require('./SearchResultViewModel');
 
-var BingMapsApi = require('../../third_party/cesium/Source/Core/BingMapsApi');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
-var jsonp = require('../../third_party/cesium/Source/Core/jsonp');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var BingMapsApi = require('Cesium/Core/BingMapsApi');
+var CesiumMath = require('Cesium/Core/Math');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var Ellipsoid = require('Cesium/Core/Ellipsoid');
+var jsonp = require('Cesium/Core/jsonp');
+var Rectangle = require('Cesium/Core/Rectangle');
 
 var BingMapsSearchProviderViewModel = function(options) {
     SearchProviderViewModel.call(this);

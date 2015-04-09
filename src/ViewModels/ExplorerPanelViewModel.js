@@ -3,7 +3,7 @@
 /*global require*/
 var fs = require('fs');
 
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var svgMenu = require('../SvgPaths/svgMenu.js');
 var svgCollapse = require('../SvgPaths/svgCollapse');

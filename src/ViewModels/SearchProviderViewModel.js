@@ -1,8 +1,8 @@
 'use strict';
 
 /*global require*/
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var SearchProviderViewModel = function() {
     this.name = 'Unknown';

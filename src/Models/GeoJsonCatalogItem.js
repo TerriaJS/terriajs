@@ -2,21 +2,21 @@
 
 /*global require,proj4,proj4_epsg*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var Color = require('../../third_party/cesium/Source/Core/Color');
-var ColorMaterialProperty = require('../../third_party/cesium/Source/DataSources/ColorMaterialProperty');
-var ConstantProperty = require('../../third_party/cesium/Source/DataSources/ConstantProperty');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var GeoJsonDataSource = require('../../third_party/cesium/Source/DataSources/GeoJsonDataSource');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var CesiumMath = require('Cesium/Core/Math');
+var Color = require('Cesium/Core/Color');
+var ColorMaterialProperty = require('Cesium/DataSources/ColorMaterialProperty');
+var ConstantProperty = require('Cesium/DataSources/ConstantProperty');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var GeoJsonDataSource = require('Cesium/DataSources/GeoJsonDataSource');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadJson = require('Cesium/Core/loadJson');
+var loadText = require('Cesium/Core/loadText');
+var Rectangle = require('Cesium/Core/Rectangle');
+var when = require('Cesium/ThirdParty/when');
 
-var PointGraphics = require('../../third_party/cesium/Source/DataSources/PointGraphics');
+var PointGraphics = require('Cesium/DataSources/PointGraphics');
 
 var Metadata = require('./Metadata');
 var ModelError = require('./ModelError');

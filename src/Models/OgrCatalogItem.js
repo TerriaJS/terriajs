@@ -2,12 +2,12 @@
 
 /*global require*/
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
-var Uri = require('../../third_party/cesium/Source/ThirdParty/Uri');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadWithXhr = require('Cesium/Core/loadWithXhr');
+var Uri = require('Cesium/ThirdParty/Uri');
+var when = require('Cesium/ThirdParty/when');
 
 var CatalogItem = require('./CatalogItem');
 var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');

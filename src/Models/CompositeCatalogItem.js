@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require*/
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defined = require('Cesium/Core/defined');
+var knockout = require('Cesium/ThirdParty/knockout');
+var when = require('Cesium/ThirdParty/when');
 
 var CatalogItem = require('./CatalogItem');
 

@@ -2,10 +2,10 @@
 
 /*global require*/
 
-var BingMapsImageryProvider = require('../../third_party/cesium/Source/Scene/BingMapsImageryProvider');
-var BingMapsStyle = require('../../third_party/cesium/Source/Scene/BingMapsStyle');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var BingMapsImageryProvider = require('Cesium/Scene/BingMapsImageryProvider');
+var BingMapsStyle = require('Cesium/Scene/BingMapsStyle');
+var defineProperties = require('Cesium/Core/defineProperties');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');

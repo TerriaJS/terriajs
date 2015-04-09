@@ -2,15 +2,15 @@
 
 /*global require,URI,$*/
 
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var clone = require('Cesium/Core/clone');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var freezeObject = require('Cesium/Core/freezeObject');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadJson = require('Cesium/Core/loadJson');
+var loadText = require('Cesium/Core/loadText');
+var Rectangle = require('Cesium/Core/Rectangle');
+var when = require('Cesium/ThirdParty/when');
 
 var ArcGisMapServerCatalogItem = require('./ArcGisMapServerCatalogItem');
 var corsProxy = require('../Core/corsProxy');

@@ -2,13 +2,13 @@
 
 /*global require*/
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var freezeObject = require('Cesium/Core/freezeObject');
+var knockout = require('Cesium/ThirdParty/knockout');
+var when = require('Cesium/ThirdParty/when');
 
 /**
  * A member of a {@link CatalogGroup}.  A member may be a {@link CatalogItem} or a

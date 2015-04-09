@@ -2,7 +2,7 @@
 
 /*global require*/
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defaultValue = require('Cesium/Core/defaultValue');
 
 /**
  * Represents an error that occurred in a model, especially an asynchronous one that cannot be raised

@@ -2,22 +2,22 @@
 
 /*global require,L,$*/
 
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var combine = require('../../third_party/cesium/Source/Core/combine');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var CesiumMath = require('Cesium/Core/Math');
+var combine = require('Cesium/Core/combine');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var ImageryLayer = require('Cesium/Scene/ImageryLayer');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadText = require('Cesium/Core/loadText');
+var Rectangle = require('Cesium/Core/Rectangle');
+var WebMapServiceImageryProvider = require('Cesium/Scene/WebMapServiceImageryProvider');
 var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
-var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
-var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var WebMercatorProjection = require('Cesium/Core/WebMercatorProjection');
+var WebMercatorTilingScheme = require('Cesium/Core/WebMercatorTilingScheme');
+var when = require('Cesium/ThirdParty/when');
 
 var CatalogItem = require('./CatalogItem');
 var corsProxy = require('../Core/corsProxy');

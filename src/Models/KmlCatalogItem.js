@@ -2,12 +2,12 @@
 
 /*global require,Document*/
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var KmlDataSource = require('../../third_party/cesium/Source/DataSources/KmlDataSource');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var KmlDataSource = require('Cesium/DataSources/KmlDataSource');
+var knockout = require('Cesium/ThirdParty/knockout');
+var when = require('Cesium/ThirdParty/when');
 
 var Metadata = require('./Metadata');
 var ModelError = require('./ModelError');

@@ -1,21 +1,21 @@
 'use strict';
 
 /*global require*/
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
-var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var TimeInterval = require('../../third_party/cesium/Source/Core/TimeInterval');
-var TimeIntervalCollection = require('../../third_party/cesium/Source/Core/TimeIntervalCollection');
-var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var CesiumMath = require('Cesium/Core/Math');
+var clone = require('Cesium/Core/clone');
+var DataSourceClock = require('Cesium/DataSources/DataSourceClock');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var freezeObject = require('Cesium/Core/freezeObject');
+var ImageryLayer = require('Cesium/Scene/ImageryLayer');
+var JulianDate = require('Cesium/Core/JulianDate');
+var knockout = require('Cesium/ThirdParty/knockout');
+var Rectangle = require('Cesium/Core/Rectangle');
+var TimeInterval = require('Cesium/Core/TimeInterval');
+var TimeIntervalCollection = require('Cesium/Core/TimeIntervalCollection');
+var WebMercatorProjection = require('Cesium/Core/WebMercatorProjection');
 
 var CatalogItem = require('./CatalogItem');
 var CesiumTileLayer = require('../Map/CesiumTileLayer');

@@ -1,11 +1,11 @@
 'use strict';
 
 /*global require,ga*/
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var getElement = require('Cesium/Widgets/getElement');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var addUserCatalogMember = require('../Models/addUserCatalogMember');
 var createCatalogItemFromFileOrUrl = require('../Models/createCatalogItemFromFileOrUrl');

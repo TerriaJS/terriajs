@@ -2,10 +2,10 @@
 
 /*global require,toGeoJSON*/
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var knockout = require('Cesium/ThirdParty/knockout');
+var when = require('Cesium/ThirdParty/when');
 
 var Metadata = require('./Metadata');
 var ModelError = require('./ModelError');
@@ -14,7 +14,7 @@ var inherit = require('../Core/inherit');
 
 var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');
 var readText = require('../Core/readText');
-var loadText = require('../../third_party/cesium/Source/Core/loadText');
+var loadText = require('Cesium/Core/loadText');
 
 
 /**

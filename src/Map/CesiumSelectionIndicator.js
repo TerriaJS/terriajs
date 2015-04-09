@@ -1,13 +1,13 @@
 'use strict';
 
 /*global require*/
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var EasingFunction = require('../../third_party/cesium/Source/Core/EasingFunction');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var SceneTransforms = require('../../third_party/cesium/Source/Scene/SceneTransforms');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var EasingFunction = require('Cesium/Core/EasingFunction');
+var knockout = require('Cesium/ThirdParty/knockout');
+var SceneTransforms = require('Cesium/Scene/SceneTransforms');
 
 var screenSpacePos = new Cartesian2();
 var offScreen = '-1000px';

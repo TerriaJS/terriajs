@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require*/
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
 
 /**
  * Holds a camera view parameters, expressed as a rectangular extent and/or as a camera position, direction,

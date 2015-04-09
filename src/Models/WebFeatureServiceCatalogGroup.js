@@ -2,13 +2,13 @@
 
 /*global require,URI,$*/
 
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var clone = require('Cesium/Core/clone');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var freezeObject = require('Cesium/Core/freezeObject');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadXML = require('Cesium/Core/loadXML');
+var Rectangle = require('Cesium/Core/Rectangle');
 
 var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');

@@ -1,17 +1,17 @@
 "use strict";
 
 /*global require, URI*/
-var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
-var Clock = require('../../third_party/cesium/Source/Core/Clock');
-var DataSourceCollection = require('../../third_party/cesium/Source/DataSources/DataSourceCollection');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var FeatureDetection = require('../../third_party/cesium/Source/Core/FeatureDetection');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var queryToObject = require('../../third_party/cesium/Source/Core/queryToObject');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var CesiumEvent = require('Cesium/Core/Event');
+var Clock = require('Cesium/Core/Clock');
+var DataSourceCollection = require('Cesium/DataSources/DataSourceCollection');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var FeatureDetection = require('Cesium/Core/FeatureDetection');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadJson = require('Cesium/Core/loadJson');
+var queryToObject = require('Cesium/Core/queryToObject');
+var Rectangle = require('Cesium/Core/Rectangle');
+var when = require('Cesium/ThirdParty/when');
 
 var CameraView = require('./CameraView');
 var Catalog = require('./Catalog');

@@ -1,6 +1,6 @@
 'use strict';
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
+var defined = require('Cesium/Core/defined');
 
 function arraysAreEqual(left, right) {
     if (left === right) {

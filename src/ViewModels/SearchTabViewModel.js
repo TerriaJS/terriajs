@@ -1,8 +1,8 @@
 'use strict';
 
 /*global require,ga*/
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var defined = require('Cesium/Core/defined');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var CatalogItemInfoViewModel = require('./CatalogItemInfoViewModel');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');
