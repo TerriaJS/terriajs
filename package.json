@@ -45,7 +45,7 @@
   },
   "scripts": {
     "start": "node_modules/.bin/supervisor server",
-    "postinstall": "ln -s -n -f ../third_party/TerriaJS/src/ ./node_modules/TerriaJS && ln -s -n -f ../third_party/TerriaJS/third_party/cesium/Source/ ./node_modules/Cesium"
+    "postinstall": "git submodule init && ln -s -n -f ../third_party/TerriaJS/src/ ./node_modules/TerriaJS && cd third_party/TerriaJS && git submodule init && cd ../.. && ln -s -n -f ../third_party/TerriaJS/third_party/cesium/Source/ ./node_modules/Cesium"
   },
   "browser": {
     "knockout": "./third_party/cesium/Source/ThirdParty/knockout.js"
