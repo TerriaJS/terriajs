@@ -1,10 +1,10 @@
 {
-  "name": "ausglobe",
-  "version": "0.0.2",
-  "description": "Geodata visualization service based on Cesium Webgl globe and Leaflet maps.",
+  "name": "TerriaJS",
+  "version": "0.1.0",
+  "description": "Geospatial data visualization platform.",
   "repository" : { 
     "type" : "git",
-    "url" : "http://github.com/NICTA/nationalmap"
+    "url" : "http://github.com/NICTA/TerriaJS"
   },
   "dependencies": {
     "compression": "1.0.8",
