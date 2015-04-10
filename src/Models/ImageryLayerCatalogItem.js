@@ -423,11 +423,11 @@ function enableLayer(catalogItem, imageryProvider, opacity) {
         if (defined(errorEvent)) {
             errorEvent.addEventListener(function(tileProviderError) {
                 // We're only concerned about failures for tiles that actually overlap this item's extent.
-                if (defined(catalogItem.extent)) {
+                if (defined(catalogItem.rectangle)) {
                     var tilingScheme = imageryProvider.tilingScheme;
                     var tileExtent = tilingScheme.tileXYToRectangle(tileProviderError.x, tileProviderError.y, tileProviderError.level);
-                    var intersection = Rectangle.intersectWith(tileExtent, catalogItem.extent);
-                    if (Rectangle.isEmpty(intersection)) {
+                    var intersection = Rectangle.intersection(tileExtent, catalogItem.rectangle);
+                    if (!defined(intersection)) {
                         return;
                     }
                 }
