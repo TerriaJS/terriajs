@@ -7,9 +7,12 @@ var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var TimeInterval = require('../../third_party/cesium/Source/Core/TimeInterval');
+var TimeIntervalCollection = require('../../third_party/cesium/Source/Core/TimeIntervalCollection');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 
@@ -17,6 +20,7 @@ var Metadata = require('./Metadata');
 var MetadataItem = require('./MetadataItem');
 var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
+var overrideProperty = require('../Core/overrideProperty');
 
 /**
  * A {@link ImageryLayerCatalogItem} representing a layer from a Web Map Service (WMS) server.
@@ -37,6 +41,7 @@ var WebMapServiceCatalogItem = function(application) {
     this._legendUrl = undefined;
     this._rectangle = undefined;
     this._rectangleFromMetadata = undefined;
+    this._intervalsFromMetadata = undefined;
 
     /**
      * Gets or sets the URL of the WMS server.  This property is observable.
@@ -101,14 +106,22 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.clipToRectangle = false;
 
+    /**
+     * Gets or sets a value indicating whether a time dimension, if it exists in GetCapabilities, should be used to populate
+     * the {@link ImageryLayerCatalogItem#intervals}.  If the {@link ImageryLayerCatalogItem#intervals} property is set explicitly
+     * on this catalog item, the value of this property is ignored.
+     * @type {Boolean}
+     * @default true
+     */
+    this.populateIntervalsFromTimeDimension = true;
+
     knockout.track(this, [
-        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', 'url',
+        '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', '_intervalsFromMetadata', 'url',
         'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'getFeatureInfoXmlContentType',
-        'tilingScheme', 'clipToRectangle']);
+        'tilingScheme', 'clipToRectangle', 'populateIntervalsFromTimeDimension']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
-    delete this.__knockoutObservables.dataUrl;
-    knockout.defineProperty(this, 'dataUrl', {
+    overrideProperty(this, 'dataUrl', {
         get : function() {
             var url = this._dataUrl;
             if (!defined(url)) {
@@ -126,8 +139,7 @@ var WebMapServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.dataUrlType;
-    knockout.defineProperty(this, 'dataUrlType', {
+    overrideProperty(this, 'dataUrlType', {
         get : function() {
             if (defined(this._dataUrlType)) {
                 return this._dataUrlType;
@@ -140,8 +152,7 @@ var WebMapServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.metadataUrl;
-    knockout.defineProperty(this, 'metadataUrl', {
+    overrideProperty(this, 'metadataUrl', {
         get : function() {
             if (defined(this._metadataUrl)) {
                 return this._metadataUrl;
@@ -154,8 +165,7 @@ var WebMapServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.legendUrl;
-    knockout.defineProperty(this, 'legendUrl', {
+    overrideProperty(this, 'legendUrl', {
         get : function() {
             if (defined(this._legendUrl)) {
                 return this._legendUrl;
@@ -169,8 +179,7 @@ var WebMapServiceCatalogItem = function(application) {
     });
 
     // rectangle comes from metadata if not explicitly specified.
-    delete this.__knockoutObservables.rectangle;
-    knockout.defineProperty(this, 'rectangle', {
+    overrideProperty(this, 'rectangle', {
         get : function() {
             if (defined(this._rectangle)) {
                 return this._rectangle;
@@ -179,6 +188,19 @@ var WebMapServiceCatalogItem = function(application) {
         },
         set : function(value) {
             this._rectangle = value;
+        }
+    });
+
+    // intervals come from metadata if populateIntervalsFromTimeDimension and not explicitly specified.
+    overrideProperty(this, 'intervals', {
+        get : function() {
+            if (defined(this._intervals)) {
+                return this._intervals;
+            }
+            return this._intervalsFromMetadata;
+        },
+        set : function(value) {
+            this._intervals = value;
         }
     });
 };
@@ -354,7 +376,7 @@ function proxyUrl(application, url) {
     return url;
 }
 
-function getRectangleFromMetadata(layer) {
+WebMapServiceCatalogItem.getRectangleFromLayer = function(layer) {
     var egbb = layer.EX_GeographicBoundingBox; // required in WMS 1.3.0
     if (defined(egbb)) {
         return Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
@@ -365,7 +387,79 @@ function getRectangleFromMetadata(layer) {
         }
     }
     return undefined;
-}
+};
+
+WebMapServiceCatalogItem.getIntervalsFromLayer = function(layer) {
+    var dimensions = layer.Dimension;
+
+    if (!defined(dimensions)) {
+        return undefined;
+    }
+
+    if (!(dimensions instanceof Array)) {
+        dimensions = [dimensions];
+    }
+
+    var result = new TimeIntervalCollection();
+
+    for (var i = 0; i < dimensions.length; ++i) {
+        var dimension = dimensions[i];
+
+        if (dimension.name !== 'time') {
+            continue;
+        }
+
+        // WMS 1.3.0 GetCapabilities has the times embedded right in the Dimension element.
+        // WMS 1.1.0 puts the time in an Extent element.
+        var extent;
+        if (dimension instanceof String || typeof dimension === 'string') {
+            extent = dimension;
+        } else {
+            // Find the corresponding extent.
+            var extentList = layer.Extent;
+            if (!defined(extentList)) {
+                return undefined;
+            }
+
+            for (var extentIndex = 0; extentIndex < extentList.length; ++extentIndex) {
+                var candidate = extentList[extentIndex];
+                if (candidate.name === 'time') {
+                    extent = candidate;
+                    break;
+                }
+            }
+        }
+
+        if (!defined(extent)) {
+            return undefined;
+        }
+
+        var times = extent.split(',');
+
+        for (var j = 0; j < times.length; ++j) {
+            var start = JulianDate.fromIso8601(times[j]);
+            var stop;
+            if (j < times.length - 1) {
+                stop = JulianDate.fromIso8601(times[j + 1]);
+            } else if (result.length > 0) {
+                var previousInterval = result.get(result.length - 1);
+                var duration = JulianDate.secondsDifference(previousInterval.stop, previousInterval.start);
+                stop = JulianDate.addSeconds(start, duration, new JulianDate());
+            } else {
+                // There's exactly one time, so treat this layer as if it is not time-varying.
+                return undefined;
+            }
+
+            result.addInterval(new TimeInterval({
+                start: start,
+                stop: stop,
+                data: times[j]
+            }));
+        }
+    }
+
+    return result;
+};
 
 function requestMetadata(wmsItem) {
     var result = new Metadata();
@@ -387,7 +481,11 @@ function requestMetadata(wmsItem) {
         }
         if (layer) {
             populateMetadataGroup(result.dataSourceMetadata, layer);
-            wmsItem._rectangleFromMetadata = getRectangleFromMetadata(layer);
+            wmsItem._rectangleFromMetadata = WebMapServiceCatalogItem.getRectangleFromLayer(layer);
+
+            if (wmsItem.populateIntervalsFromTimeDimension) {
+                wmsItem._intervalsFromMetadata = WebMapServiceCatalogItem.getIntervalsFromLayer(layer);
+            }
         } else {
             result.dataSourceErrorMessage = 'Layer information not found in GetCapabilities operation response.';
         }

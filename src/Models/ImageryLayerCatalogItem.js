@@ -21,6 +21,7 @@ var CatalogItem = require('./CatalogItem');
 var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var inherit = require('../Core/inherit');
 var ModelError = require('./ModelError');
+var overrideProperty = require('../Core/overrideProperty');
 var pollToPromise = require('../Core/pollToPromise');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
@@ -71,8 +72,7 @@ var ImageryLayerCatalogItem = function(application) {
 
     knockout.track(this, ['_clock', 'opacity', 'treat404AsError', 'intervals']);
 
-    delete this.__knockoutObservables.clock;
-    knockout.defineProperty(this, 'clock', {
+    overrideProperty(this, 'clock', {
         get : function() {
             var clock = this._clock;
             if (!clock && this.intervals && this.intervals.length > 0) {
