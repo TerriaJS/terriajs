@@ -84,6 +84,7 @@ SearchTabViewModel.prototype.showInfo = function(item) {
 
 SearchTabViewModel.prototype.clearSearchText = function() {
     this.searchText = '';
+    this.searchBoxHasFocus(true);
 };
 
 module.exports = SearchTabViewModel;
