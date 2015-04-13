@@ -5,6 +5,7 @@
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
@@ -204,22 +205,16 @@ CkanCatalogGroup.prototype._load = function() {
         } else {
             populateGroupFromResults(that, allResults);
         }
-    }).otherwise(function() {
+    }).otherwise(function(e) {
         throw new ModelError({
             sender: that,
-            title: 'Group is not available',
+            title: that.name,
             message: '\
-An error occurred while invoking package_search on the CKAN server.  \
-<p>If you entered the link manually, please verify that the link is correct.</p>\
-<p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>.  If this is your \
-server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, \
-please contact the administrator of the server and ask them to enable CORS.  Or, contact the National \
-Map team by emailing <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> \
-and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by \
-National Map itself.</p>\
-<p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a \
-problem with your internet connection.  Try opening the group again, and if the problem persists, please report it by \
-sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a>.</p>'
+Couldn\'t retrieve packages from this CKAN server.<br/><br/>\
+If you entered the URL manually, please double-check it.<br/><br/>\
+If it\'s your server, make sure <a href="http://enable-cors.org/" target="_blank">CORS</a> is enabled.<br/><br/>\
+Otherwise, if reloading doesn\'t fix it, please report the problem by sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> with the technical details below.  Thank you!<br/><br/>\
+<pre>' + formatError(e) + '</pre>'
         });
     });
 };
