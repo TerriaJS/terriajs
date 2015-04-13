@@ -12,6 +12,7 @@ Change Log
 * Added `titleField` property to WMS catalogue items to specify whether the WMS layer's title (default), name, or abstract is displayed in the catalogue.
 * Clicking the clear (x) button on the search panel now returns focus to the search box.
 * The Maps panel no longer prevents attempts to interact with the map.
+* Very long labels in the Data Catalogue and Now Viewing tabs are now handled more gracefully.
 
 ### 2015-03-26
 
