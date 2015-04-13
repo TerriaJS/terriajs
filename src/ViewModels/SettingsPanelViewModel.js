@@ -88,20 +88,20 @@ function updateDocumentSubscription(viewModel) {
                 viewModel.close();
             }
         };
-        document.addEventListener('mousedown', viewModel._closeOnInteraction, false);
-        document.addEventListener('touchstart', viewModel._closeOnInteraction, false);
-        document.addEventListener(getWheelEventName(), viewModel._closeOnInteraction, false);
+        document.addEventListener('mousedown', viewModel._closeOnInteraction, true);
+        document.addEventListener('touchstart', viewModel._closeOnInteraction, true);
+        document.addEventListener(getWheelEventName(), viewModel._closeOnInteraction, true);
 
         if (defined(window.PointerEvent)) {
-            document.addEventListener('pointerdown', viewModel._closeOnInteraction, false);
+            document.addEventListener('pointerdown', viewModel._closeOnInteraction, true);
         }
     } else if (!viewModel.isVisible && defined(viewModel._closeOnInteraction)) {
-        document.removeEventListener('mousedown', viewModel._closeOnInteraction, false);
-        document.removeEventListener('touchstart', viewModel._closeOnInteraction, false);
-        document.removeEventListener(getWheelEventName(), viewModel._closeOnInteraction, false);
+        document.removeEventListener('mousedown', viewModel._closeOnInteraction, true);
+        document.removeEventListener('touchstart', viewModel._closeOnInteraction, true);
+        document.removeEventListener(getWheelEventName(), viewModel._closeOnInteraction, true);
 
         if (defined(window.PointerEvent)) {
-            document.removeEventListener('pointerdown', viewModel._closeOnInteraction, false);
+            document.removeEventListener('pointerdown', viewModel._closeOnInteraction, true);
         }
 
         viewModel._closeOnInteraction = undefined;
