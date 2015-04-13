@@ -65,7 +65,14 @@ var WebMapServiceCatalogGroup = function(application) {
      */
     this.titleField = 'title';
 
-    knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist', 'titleField']);
+    /**
+     * Gets or sets a hash of properties that will be set on each child item.
+     * For example, { 'treat404AsError': false }
+     */
+
+    this.itemProperties = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist', 'titleField', 'itemProperties']);
 };
 
 inherit(CatalogGroup, WebMapServiceCatalogGroup);
@@ -321,6 +328,13 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, suppor
 
     if (layerHasAbstract) {
         result.description += layer.Abstract;
+    }
+
+    if (typeof(wmsGroup.itemProperties) === "object") {
+        Object.keys(wmsGroup.itemProperties).forEach(function(k) {
+            result[k] = wmsGroup.itemProperties[k];
+        });
+        
     }
 
 
