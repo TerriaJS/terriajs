@@ -11,6 +11,7 @@ Change Log
 * Added `preserveOrder` property to catalogue groups.  When set, the group's items will not be sorted by name.
 * Added `titleField` property to WMS catalogue items to specify whether the WMS layer's title (default), name, or abstract is displayed in the catalogue.
 * Clicking the clear (x) button on the search panel now returns focus to the search box.
+* The Maps panel no longer prevents attempts to interact with the map.
 
 ### 2015-03-26
 
