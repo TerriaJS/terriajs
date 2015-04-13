@@ -13,6 +13,7 @@ Change Log
 * Clicking the clear (x) button on the search panel now returns focus to the search box.
 * The Maps panel no longer prevents attempts to interact with the map.
 * Very long labels in the Data Catalogue and Now Viewing tabs are now handled more gracefully.
+* The input box on the Search tab no longer scrolls along with the search results.
 
 ### 2015-03-26
 
