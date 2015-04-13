@@ -5,6 +5,7 @@
     background-color: rgba(0,0,0, 0.2);
     border-bottom: @panel-element-border;
     cursor: pointer;
+    table-layout: fixed;
 }
 
 .data-catalog-top-group-label {
@@ -12,6 +13,8 @@
     padding-left: 16px;
     font-size: 15px;
     color: @panel-emphasized-text-color;
+    word-wrap: break-word;
+    max-width: 252px;
 }
 
 .data-catalog-top-group-icon {
@@ -35,6 +38,7 @@
 .data-catalog-member-top-row {
     display: table;
     width: 100%;
+    table-layout: fixed;
 }
 
 .data-catalog-item-label {
@@ -43,12 +47,16 @@
     font-size: 14px;
     color: @panel-text-color;
     font-weight: lighter;
+    word-wrap: break-word;
+    max-width: 75px;
 }
 
 .data-catalog-group-label {
     display: table-cell;
     font-size: 15px;
     color: @panel-text-color;
+    word-wrap: break-word;
+    max-width: 252px;
 }
 
 .data-catalog-group-contents {
@@ -122,7 +130,7 @@
 .data-catalog-item-info {
     display: table-cell;
     text-align: right;
-    width: 20px;
+    width: 25px;
     vertical-align: middle;
 }
 
