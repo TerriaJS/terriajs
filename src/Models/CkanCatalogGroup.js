@@ -5,6 +5,7 @@
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
@@ -212,8 +213,8 @@ CkanCatalogGroup.prototype._load = function() {
 Couldn\'t retrieve packages from this CKAN server.<br/><br/>\
 If you entered the URL manually, please double-check it.<br/><br/>\
 If it\'s your server, make sure <a href="http://enable-cors.org/" target="_blank">CORS</a> is enabled.<br/><br/>\
-Otherwise, if reloading doesn\'t fix it, please report the problem to the <a href="mailto:nationalmap@lists.nicta.com.au">National Map team</a>.<br/><br/>\
-<code>Exception: ' + e.message + '</code>'
+Otherwise, if reloading doesn\'t fix it, please report the problem by sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> with the technical details below.  Thank you!<br/><br/>\
+<pre>' + formatError(e) + '</pre>'
         });
     });
 };
