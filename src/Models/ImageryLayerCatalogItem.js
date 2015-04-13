@@ -63,6 +63,15 @@ var ImageryLayerCatalogItem = function(application) {
     this.treat404AsError = false;
 
     /**
+     * Gets or sets a value indicating whether non-specific (no HTTP status code) tile errors should be ignored. This is a
+     * last resort, for dealing with odd cases such as data sources that return non-images (eg XML) with a 200 status code.
+     * No error messages will be shown to the user.
+     * @type {Boolean}
+     * @default false
+     */
+    this.ignoreUnknownTileErrors = false;
+
+    /**
      * Gets or sets the {@link TimeIntervalCollection} defining the intervals of distinct imagery.  If this catalog item
      * is not time-dynamic, property is undefined.  This property is observable.
      * @type {ImageryLayerInterval[]}
@@ -70,7 +79,7 @@ var ImageryLayerCatalogItem = function(application) {
      */
     this.intervals = undefined;
 
-    knockout.track(this, ['_clock', 'opacity', 'treat404AsError', 'intervals']);
+    knockout.track(this, ['_clock', 'opacity', 'treat404AsError', 'ignoreUnknownTileErrors', 'intervals']);
 
     overrideProperty(this, 'clock', {
         get : function() {
@@ -432,9 +441,15 @@ function enableLayer(catalogItem, imageryProvider, opacity) {
                     }
                 }
 
-                if (!catalogItem.treat404AsError && defined(tileProviderError.error) && tileProviderError.error.statusCode === 404) {
+                if (defined(tileProviderError.error) && tileProviderError.error.statusCode === 404) {
+                    if(!catalogItem.treat404AsError) {
+                        return;
+                    }
+                    // ignoreUnknownTileErrors is only for genuinely unknown (no status code) issues
+                } else if (catalogItem.ignoreUnknownTileErrors && (!defined(tileProviderError.error) || !defined(tileProviderError.error.statusCode))) {
                     return;
                 }
+
 
                 // Retry 3 times.
                 if (tileProviderError.timesRetried < 3) {
