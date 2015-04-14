@@ -457,17 +457,20 @@ function enableLayer(catalogItem, imageryProvider, opacity) {
                     return;
                 }
 
-                // After three failures, advise the user that something is wrong and disable the catalog item.
-                catalogItem.application.error.raiseEvent(new ModelError({
-                    sender: catalogItem,
-                    title: 'Error accessing catalogue item',
-                    message: '\
-    An error occurred while attempting to download tiles for catalogue item ' + catalogItem.name + '.  This may indicate that there is a \
-    problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item \
-    is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.'
-                }));
+                // After three failures, advise the user that something is wrong and hide the catalog item.
+                // (if the item isn't already hidden, that is)
+                if (catalogItem.isShown) {
+                    catalogItem.application.error.raiseEvent(new ModelError({
+                        sender: catalogItem,
+                        title: 'Error accessing catalogue item',
+                        message: '\
+An error occurred while attempting to download tiles for catalogue item ' + catalogItem.name + '.  This may indicate that there is a \
+problem with your internet connection, that the catalogue item is temporarily unavailable, or that the catalogue item \
+is invalid.  The catalogue item has been hidden from the map.  You may re-show it in the Now Viewing panel to try again.'
+                    }));
 
-                catalogItem.isShown = false;
+                    catalogItem.isShown = false;
+                }
             });
         }
 
