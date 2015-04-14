@@ -69,7 +69,6 @@ var WebMapServiceCatalogGroup = function(application) {
      * Gets or sets a hash of properties that will be set on each child item.
      * For example, { 'treat404AsError': false }
      */
-
     this.itemProperties = undefined;
 
     knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist', 'titleField', 'itemProperties']);
@@ -330,11 +329,10 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, suppor
         result.description += layer.Abstract;
     }
 
-    if (typeof(wmsGroup.itemProperties) === "object") {
+    if (typeof(wmsGroup.itemProperties) === 'object') {
         Object.keys(wmsGroup.itemProperties).forEach(function(k) {
             result[k] = wmsGroup.itemProperties[k];
         });
-        
     }
 
 
