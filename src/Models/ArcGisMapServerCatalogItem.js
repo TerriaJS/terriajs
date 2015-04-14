@@ -39,7 +39,15 @@ var ArcGisMapServerCatalogItem = function(application) {
      */
     this.layers = undefined;
 
-    knockout.track(this, ['url', 'layers', '_legendUrl']);
+    /**
+     * Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing
+     * a scale larger than 1:1000 (i.e. when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property,
+     * will be used and will simply get blurier as the user zooms in closer.
+     * @type {Number}
+     */
+    this.minScaleDenominator = undefined;
+
+    knockout.track(this, ['url', 'layers', 'minScaleDenominator', '_legendUrl']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     overrideProperty(this, 'legendUrl', {
@@ -83,6 +91,12 @@ defineProperties(ArcGisMapServerCatalogItem.prototype, {
 });
 
 ArcGisMapServerCatalogItem.prototype._createImageryProvider = function() {
+    var maxLevel;
+
+    if (defined(this.minScaleDenominator)) {
+
+    }
+
     return new ArcGisMapServerImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url),
         layers : this.layers,
