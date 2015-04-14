@@ -10,7 +10,10 @@ Change Log
 * Made numerous improvements to the server performance check tool, accessed by appending `#tools=1` to the URL and clicking the Tools button.
 * Added `preserveOrder` property to catalogue groups.  When set, the group's items will not be sorted by name.
 * Added `titleField` property to WMS catalogue items to specify whether the WMS layer's title (default), name, or abstract is displayed in the catalogue.
-
+* Clicking the clear (x) button on the search panel now returns focus to the search box.
+* The Maps panel no longer prevents attempts to interact with the map.
+* Very long labels in the Data Catalogue and Now Viewing tabs are now handled more gracefully.
+* The input box on the Search tab no longer scrolls along with the search results.
 
 ### 2015-03-26
 

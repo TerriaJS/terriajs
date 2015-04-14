@@ -23,6 +23,12 @@ var SettingsPanelViewModel = function(options) {
     this.mouseOverBaseMap = undefined;
 
     knockout.track(this, ['isVisible', 'baseMaps', 'mouseOverBaseMap']);
+
+    knockout.getObservable(this, 'isVisible').subscribe(function(e) {
+        updateDocumentSubscription(this);
+    }, this);
+
+    updateDocumentSubscription(this);
 };
 
 SettingsPanelViewModel.prototype.show = function(container) {
@@ -65,5 +71,54 @@ SettingsPanelViewModel.prototype.selectBaseMap = function(baseMap) {
 SettingsPanelViewModel.prototype.resetHightedBaseMap = function() {
     this.mouseOverBaseMap = undefined;
 };
+
+function updateDocumentSubscription(viewModel) {
+    if (viewModel.isVisible && !defined(viewModel._closeOnInteraction)) {
+        viewModel._closeOnInteraction = function(e) {
+            var isClickOutside = true;
+            if (defined(e) && defined(viewModel._domNodes)) {
+                var element = e.target;
+                while (isClickOutside && element) {
+                    isClickOutside = viewModel._domNodes.indexOf(element) < 0 && (!defined(element.className) || element.className.indexOf('menu-bar-item') < 0);
+                    element = element.parentNode;
+                }
+            }
+
+            if (isClickOutside) {
+                viewModel.close();
+            }
+        };
+        document.addEventListener('mousedown', viewModel._closeOnInteraction, true);
+        document.addEventListener('touchstart', viewModel._closeOnInteraction, true);
+        document.addEventListener(getWheelEventName(), viewModel._closeOnInteraction, true);
+
+        if (defined(window.PointerEvent)) {
+            document.addEventListener('pointerdown', viewModel._closeOnInteraction, true);
+        }
+    } else if (!viewModel.isVisible && defined(viewModel._closeOnInteraction)) {
+        document.removeEventListener('mousedown', viewModel._closeOnInteraction, true);
+        document.removeEventListener('touchstart', viewModel._closeOnInteraction, true);
+        document.removeEventListener(getWheelEventName(), viewModel._closeOnInteraction, true);
+
+        if (defined(window.PointerEvent)) {
+            document.removeEventListener('pointerdown', viewModel._closeOnInteraction, true);
+        }
+
+        viewModel._closeOnInteraction = undefined;
+    }
+}
+
+function getWheelEventName() {
+    if ('onwheel' in document) {
+        // spec event type
+        return 'wheel';
+    } else if (defined(document.onmousewheel)) {
+        // legacy event type
+        return 'mousewheel';
+    } else {
+        // older Firefox
+        return 'DOMMouseScroll';
+    }
+}
 
 module.exports = SettingsPanelViewModel;

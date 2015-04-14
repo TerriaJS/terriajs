@@ -6,12 +6,15 @@
     border-bottom: @panel-element-border;
     border-top: @panel-element-border;
     cursor: pointer;
+    table-layout: fixed;
 }
 
 .now-viewing-item-label {
     display: table-cell;
     font-size: 14px;
     color: @panel-emphasized-text-color;
+    word-wrap: break-word;
+    max-width: 265px;
 }
 
 .now-viewing-item-icon-holder {

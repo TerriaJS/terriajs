@@ -1,14 +1,3 @@
-.settings-panel-background {
-    .modal-background;
-    background-color: rgba(0,0,0,0);
-
-    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
-    -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
-    -ms-transition: opacity @explorer-panel-close-animation-length ease-out;
-    -o-transition: opacity @explorer-panel-close-animation-length ease-out;
-    transition: opacity @explorer-panel-close-animation-length ease-out;
-}
-
 .settings-panel {
     .panel;
     background-color: @panel-background-color;
@@ -17,9 +6,15 @@
     width: 260px;
     position: absolute;
     box-shadow: @panel-box-shadow;
+
+    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -ms-transition: opacity @explorer-panel-close-animation-length ease-out;
+    -o-transition: opacity @explorer-panel-close-animation-length ease-out;
+    transition: opacity @explorer-panel-close-animation-length ease-out;
 }
 
-.settings-panel-background-hidden {
+.settings-panel-hidden {
     opacity: 0;
     visibility: hidden;
 
