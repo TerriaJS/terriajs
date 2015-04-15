@@ -19,6 +19,7 @@ var VarType = require('./VarType');
 * @constructor
 */
 var Variable = function () {
+    this.name = '';
     this.vals = [];
     this.varType = undefined;
     this.noData = 1e-34;
@@ -69,16 +70,12 @@ Variable.prototype._calculateTimeMinMax = function () {
 * Convert input time variable to Cesium Time variable
 *
 */
-Variable.prototype.processTimeVar = function () {
-    if (this.varType !== VarType.TIME) {
+Variable.prototype.processTimeVariable = function () {
+    if (this.varType !== VarType.TIME || this.vals.length === 0 || typeof this.vals[0] !== 'string') {
         return;
     }
     
-    function _isNumber(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
-
-    function _swapDateFormat(v) {
+    function swapDateFormat(v) {
         var part = v.split(/[/-]/);
         if (part.length === 3) {
             v = part[1] + '/' + part[0] + '/' + part[2];
@@ -86,80 +83,37 @@ Variable.prototype.processTimeVar = function () {
         return v;
     }
 
-    //time parsing functions
-    function timeString(v) { //  9/2/94 0:56
-        return JulianDate.fromDate(new Date(v));
-    }
-    function timeExcel(v) {   // 40544.4533
-        var date = JulianDate.fromDate(new Date('January 1, 1970 0:00:00'));
-        date = JulianDate.addDays(date, Math.floor(v) - 25569.0, date); //account for offset to 1900
-        date = JulianDate.addSeconds(date, (v - Math.floor(v)) * 60 * 60 * 24, date);
-        return date;
-    }
-    function timeUtc(v) {   //12321231414434
-        return JulianDate.fromDate(Date.setTime(v));
-    }
-    function timeSosus(v) {   //19912410952050
-        var dateString = v.toString();
-        var year = parseInt(dateString.substring(0, 4), 10);
-        var dayofyear = parseInt(dateString.substring(4, 7), 10);
-        if (dateString.length !== 14 || year < 1950 || year > 2050 || dayofyear > 366) {
-            return new JulianDate(0.0, 0.0);
-        }
-        var d = new Date();
-        d.setUTCFullYear(year);
-        d.setUTCHours(dateString.substring(7, 9), dateString.substring(9, 11), dateString.substring(11, 13));
-        var date = JulianDate.addDays(JulianDate.fromDate(d), dayofyear, new JulianDate());
-        return date;
-    }
     //create new Cessium time variable to attach to the variable
     var timeVar = new Variable();
     var vals = this.vals;
-    //select time parsing function
+
+    //simple check to try to guess date format
+    var max = 0;
+    vals.map( function (v) {
+        max = Math.max(max, parseInt(v));
+    });
+
     var parseFunc;
-    if (parseInt(vals[0], 10) > 500000) {
-        if (timeSosus(vals[0]).dayNumber !== 0) {
-            parseFunc = timeSosus;
-        }
-        else {
-            parseFunc = timeUtc;
-        }
+    if (max > 31) {  //iso format  yyyy-mm-dd
+        parseFunc = function(v) { return JulianDate.fromIso8601(v); };
     }
-    else if (_isNumber(vals[0])) {
-        parseFunc = timeExcel;
+    else if (max > 12) { //intl javascript format dd-mm-yyyy
+        parseFunc = function(v) { return JulianDate.fromDate(new Date(swapDateFormat(v))); };
     }
-    else {
-        parseFunc = timeString;
+    else {  //us javascript date format mm-dd-yyyy
+        parseFunc = function(v) { return JulianDate.fromDate(new Date(v)); };
     }
-    //parse the time values
-    var bSuccess = false;
+
+    //parse the time values trying iso and javascript date parsing
     try {
         for (var i = 0; i < vals.length; i++) {
-            timeVar.vals[i] = parseFunc(vals[i]);
+            timeVar.vals[i] = parseFunc(vals[i].toString());
         }
-        bSuccess = true;
-    }
-    catch (err) {
-        if (parseFunc === timeString) {
-            console.log('Trying swap of day and month in date strings');
-            timeVar.vals = [];
-            try {
-                for (var i = 0; i < vals.length; i++) {
-                    timeVar.vals[i] = parseFunc(_swapDateFormat(vals[i]));
-                }
-                bSuccess = true;
-            }
-            catch (err) {
-            }
-        }
-    }
-    if (bSuccess) {
         timeVar._calculateTimeMinMax();
         this.timeVar = timeVar;
     }
-    else {
-        this.varType = VarType.SCALAR;
-        console.log('Unable to parse time variable');
+    catch (err) {
+        console.log('Unable to parse date', err);
     }
 };
 
@@ -168,7 +122,7 @@ Variable.prototype.processTimeVar = function () {
 * Convert input enum variable to values and enumList
 *
 */
-Variable.prototype.processEnumVar = function () {
+Variable.prototype.processEnumVariable = function () {
     if (this.varType !== VarType.ENUM) {
         return;
     }
@@ -198,7 +152,7 @@ Variable.prototype.processEnumVar = function () {
 * @param {String} name Make an initial guess at the variable type based on its name
 *
 */
-Variable.prototype.guessVarType = function (name) {
+Variable.prototype.guessVariableType = function (name) {
     //functions to try to figure out position and time variables.
     function matchColumn(name, hints) {
         name = name.toLowerCase();
