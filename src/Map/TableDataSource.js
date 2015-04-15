@@ -11,12 +11,12 @@ And writes a czml file for it to display
 
 //TODO: DOCUMENT using model in GeoJsonDataSource
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var CzmlDataSource = require('../../third_party/cesium/Source/DataSources/CzmlDataSource');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
-var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
-var loadText = require('../../third_party/cesium/Source/Core/loadText');
+var defined = require('Cesium/Core/defined');
+var CzmlDataSource = require('Cesium/DataSources/CzmlDataSource');
+var defineProperties = require('Cesium/Core/defineProperties');
+var destroyObject = require('Cesium/Core/destroyObject');
+var JulianDate = require('Cesium/Core/JulianDate');
+var loadText = require('Cesium/Core/loadText');
 
 /**
 * @class TableDataSource is a cesium based datasource for table based geodata

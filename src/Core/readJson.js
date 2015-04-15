@@ -3,7 +3,7 @@
 /*global require*/
 var readText = require('./readText');
 
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var when = require('Cesium/ThirdParty/when');
 
 function readJson(file) {
     return when(readText(file), function(result) {

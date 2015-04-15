@@ -2,8 +2,8 @@
 
 /*global require*/
 
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var defineProperties = require('Cesium/Core/defineProperties');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var MetadataItem = function(name, value) {
     /**

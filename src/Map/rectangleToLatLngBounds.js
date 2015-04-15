@@ -2,7 +2,7 @@
 
 /*global require,L*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
+var CesiumMath = require('Cesium/Core/Math');
 
 /**
  * Converts a Cesium Rectangle into a Leaflet LatLngBounds.

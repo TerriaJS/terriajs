@@ -1,8 +1,8 @@
 'use strict';
 
 /*global require*/
-var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var getElement = require('Cesium/Widgets/getElement');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var createFragmentFromTemplate = require('./createFragmentFromTemplate');
 

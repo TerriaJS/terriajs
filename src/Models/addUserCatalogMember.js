@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require*/
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var when = require('Cesium/ThirdParty/when');
 
 var ModelError = require('./ModelError');
 

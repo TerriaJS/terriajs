@@ -1,27 +1,27 @@
 'use strict';
 
 /*global require*/
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
-var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
-var formatError = require('../../third_party/cesium/Source/Core/formatError');
-var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
-var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
-var Matrix4 = require('../../third_party/cesium/Source/Core/Matrix4');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var SceneTransforms = require('../../third_party/cesium/Source/Scene/SceneTransforms');
-var ScreenSpaceEventType = require('../../third_party/cesium/Source/Core/ScreenSpaceEventType');
-var TaskProcessor = require('../../third_party/cesium/Source/Core/TaskProcessor');
-var Transforms = require('../../third_party/cesium/Source/Core/Transforms');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var Cartesian3 = require('Cesium/Core/Cartesian3');
+var Cartographic = require('Cesium/Core/Cartographic');
+var CesiumMath = require('Cesium/Core/Math');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var destroyObject = require('Cesium/Core/destroyObject');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var Entity = require('Cesium/DataSources/Entity');
+var formatError = require('Cesium/Core/formatError');
+var getTimestamp = require('Cesium/Core/getTimestamp');
+var JulianDate = require('Cesium/Core/JulianDate');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadWithXhr = require('Cesium/Core/loadWithXhr');
+var Matrix4 = require('Cesium/Core/Matrix4');
+var Rectangle = require('Cesium/Core/Rectangle');
+var SceneTransforms = require('Cesium/Scene/SceneTransforms');
+var ScreenSpaceEventType = require('Cesium/Core/ScreenSpaceEventType');
+var TaskProcessor = require('Cesium/Core/TaskProcessor');
+var Transforms = require('Cesium/Core/Transforms');
+var when = require('Cesium/ThirdParty/when');
 
 var CesiumSelectionIndicator = require('../Map/CesiumSelectionIndicator');
 var GlobeOrMap = require('./GlobeOrMap');
@@ -169,7 +169,7 @@ var Cesium = function(application, viewer) {
 <p>An error occurred while rendering in 3D.  This probably indicates a bug in National Map or an incompatibility with your system \
 or web browser.  We\'ll now switch you to 2D so that you can continue your work.  We would appreciate it if you report this \
 error by sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@lists.nicta.com.au</a> with the \
-technical details below.  Thank you!</p><pre style="overflow:auto;margin-top:10px;padding:10px;border:1px solid gray;">' + formatError(error) + '</pre>'
+technical details below.  Thank you!</p><pre>' + formatError(error) + '</pre>'
         }));
 
         this.application.viewerMode = ViewerMode.Leaflet;

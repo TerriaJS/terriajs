@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require,ga*/
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var defaultValue = require('Cesium/Core/defaultValue');
 
 var CatalogItemInfoViewModel = require('./CatalogItemInfoViewModel');
 var ExplorerTabViewModel = require('./ExplorerTabViewModel');

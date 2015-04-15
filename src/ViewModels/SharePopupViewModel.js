@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require,URI*/
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var CesiumMath = require('Cesium/Core/Math');
+var defined = require('Cesium/Core/defined');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 var loadView = require('../Core/loadView');
 

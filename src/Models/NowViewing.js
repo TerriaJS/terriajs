@@ -2,11 +2,11 @@
 
 /*global require*/
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var EventHelper = require('../../third_party/cesium/Source/Core/EventHelper');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var EventHelper = require('Cesium/Core/EventHelper');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 /**
  * The model for the "Now Viewing" pane.

@@ -2,16 +2,15 @@
 
 /*global require,URI,$*/
 
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var combine = require('../../third_party/cesium/Source/Core/combine');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
+var clone = require('Cesium/Core/clone');
+var combine = require('Cesium/Core/combine');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var freezeObject = require('Cesium/Core/freezeObject');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadXML = require('Cesium/Core/loadXML');
+var GeographicTilingScheme = require('Cesium/Core/GeographicTilingScheme');
 
 var ModelError = require('./ModelError');
 var CatalogGroup = require('./CatalogGroup');
@@ -66,7 +65,13 @@ var WebMapServiceCatalogGroup = function(application) {
      */
     this.titleField = 'title';
 
-    knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist', 'titleField']);
+    /**
+     * Gets or sets a hash of properties that will be set on each child item.
+     * For example, { 'treat404AsError': false }
+     */
+    this.itemProperties = undefined;
+
+    knockout.track(this, ['url', 'dataCustodian', 'parameters', 'blacklist', 'titleField', 'itemProperties']);
 };
 
 inherit(CatalogGroup, WebMapServiceCatalogGroup);
@@ -324,6 +329,12 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, suppor
         result.description += layer.Abstract;
     }
 
+    if (typeof(wmsGroup.itemProperties) === 'object') {
+        Object.keys(wmsGroup.itemProperties).forEach(function(k) {
+            result[k] = wmsGroup.itemProperties[k];
+        });
+    }
+
 
     var queryable = defaultValue(getInheritableProperty(layer, 'queryable'), false);
 
@@ -331,15 +342,8 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, suppor
     result.getFeatureInfoAsXml = queryable && supportsXmlGetFeatureInfo;
     result.getFeatureInfoXmlContentType = xmlContentType;
 
-    var egbb = getInheritableProperty(layer, 'EX_GeographicBoundingBox'); // required in WMS 1.3.0
-    if (defined(egbb)) {
-        result.rectangle = Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
-    } else {
-        var llbb = getInheritableProperty(layer, 'LatLonBoundingBox'); // required in WMS 1.0.0 through 1.1.1
-        if (defined(llbb)) {
-            result.rectangle = Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
-        }
-    }
+    result.rectangle = WebMapServiceCatalogItem.getRectangleFromLayer(layer);
+    result.intervals = WebMapServiceCatalogItem.getIntervalsFromLayer(layer);
 
     var crs;
     if (defined(layer.CRS)) {

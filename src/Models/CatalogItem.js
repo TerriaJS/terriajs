@@ -2,15 +2,15 @@
 
 /*global require,ga,$*/
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var CesiumMath = require('Cesium/Core/Math');
+var clone = require('Cesium/Core/clone');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var freezeObject = require('Cesium/Core/freezeObject');
+var knockout = require('Cesium/ThirdParty/knockout');
+var Rectangle = require('Cesium/Core/Rectangle');
+var when = require('Cesium/ThirdParty/when');
 
 var arraysAreEqual = require('../Core/arraysAreEqual');
 var Metadata = require('./Metadata');

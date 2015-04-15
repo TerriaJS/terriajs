@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require*/
-var defined = require('../../third_party/cesium/Source/Core/defined');
+var defined = require('Cesium/Core/defined');
 
 var loadView = require('../Core/loadView');
 

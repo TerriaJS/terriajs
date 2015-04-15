@@ -7,17 +7,17 @@ var loadView = require('../Core/loadView');
 var pollToPromise = require('../Core/pollToPromise');
 var PopupMessageViewModel = require('./PopupMessageViewModel');
 
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadImage = require('../../third_party/cesium/Source/Core/loadImage');
-var loadWithXhr = require('../../third_party/cesium/Source/Core/loadWithXhr');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var throttleRequestByServer = require('../../third_party/cesium/Source/Core/throttleRequestByServer');
-var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var CesiumMath = require('Cesium/Core/Math');
+var defined = require('Cesium/Core/defined');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var getTimestamp = require('Cesium/Core/getTimestamp');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadImage = require('Cesium/Core/loadImage');
+var loadWithXhr = require('Cesium/Core/loadWithXhr');
+var Rectangle = require('Cesium/Core/Rectangle');
+var throttleRequestByServer = require('Cesium/Core/throttleRequestByServer');
+var WebMercatorTilingScheme = require('Cesium/Core/WebMercatorTilingScheme');
+var when = require('Cesium/ThirdParty/when');
 
 var ToolsPanelViewModel = function(options) {
     if (!defined(options) || !defined(options.application)) {

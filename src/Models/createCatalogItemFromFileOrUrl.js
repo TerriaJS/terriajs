@@ -1,8 +1,8 @@
 'use strict';
 
 /*global require,confirm*/
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defaultValue = require('Cesium/Core/defaultValue');
+var when = require('Cesium/ThirdParty/when');
 
 var createCatalogItemFromUrl = require('./createCatalogItemFromUrl');
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');

@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require*/
-var CesiumEvent = require('../../third_party/cesium/Source/Core/Event');
+var CesiumEvent = require('Cesium/Core/Event');
 
 var LeafletScene = function(map) {
     /**

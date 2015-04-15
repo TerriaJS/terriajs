@@ -1,8 +1,8 @@
 'use strict';
 
 /*global require*/
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
+var defined = require('Cesium/Core/defined');
+var RuntimeError = require('Cesium/Core/RuntimeError');
 
 var gmlNamespace = 'http://www.opengis.net/gml';
 

@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require*/
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
+var defined = require('Cesium/Core/defined');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var Rectangle = require('Cesium/Core/Rectangle');
 
 /**
  * Computes the union of two rectangles.

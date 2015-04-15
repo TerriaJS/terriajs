@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require*/
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 /**
  * Holds the vector and raster features that the user picked by clicking the mouse on the map.

@@ -1,8 +1,8 @@
 'use strict';
 
 /*global require*/
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var SvgPathBindingHandler = require('../../third_party/cesium/Source/Widgets/SvgPathBindingHandler');
+var knockout = require('Cesium/ThirdParty/knockout');
+var SvgPathBindingHandler = require('Cesium/Widgets/SvgPathBindingHandler');
 
 var KnockoutSanitizedHtmlBinding = require('./KnockoutSanitizedHtmlBinding');
 

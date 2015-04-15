@@ -1,19 +1,19 @@
 'use strict';
 
 /*global require,html2canvas,L*/
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var EasingFunction = require('../../third_party/cesium/Source/Core/EasingFunction');
-var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
-var cesiumRequestAnimationFrame = require('../../third_party/cesium/Source/Core/requestAnimationFrame');
-var TweenCollection = require('../../third_party/cesium/Source/Scene/TweenCollection');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var Cartographic = require('Cesium/Core/Cartographic');
+var CesiumMath = require('Cesium/Core/Math');
+var defined = require('Cesium/Core/defined');
+var destroyObject = require('Cesium/Core/destroyObject');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var EasingFunction = require('Cesium/Core/EasingFunction');
+var Ellipsoid = require('Cesium/Core/Ellipsoid');
+var knockout = require('Cesium/ThirdParty/knockout');
+var Rectangle = require('Cesium/Core/Rectangle');
+var cesiumRequestAnimationFrame = require('Cesium/Core/requestAnimationFrame');
+var TweenCollection = require('Cesium/Scene/TweenCollection');
+var when = require('Cesium/ThirdParty/when');
 
 var GlobeOrMap = require('./GlobeOrMap');
 var inherit = require('../Core/inherit');
@@ -46,7 +46,9 @@ var Leaflet = function(application, map) {
             className: '',
             html: '<img src="images/NM-LocationTarget.svg" width="50" height="50" alt="" />',
             iconSize: L.point(50, 50)
-        })
+        }),
+        clickable: false,
+        keyboard: false
     });
     this._selectionIndicator.addTo(this.map);
     this._selectionIndicatorDomElement = this._selectionIndicator._icon.children[0];

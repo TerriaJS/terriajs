@@ -1,52 +1,55 @@
 {
-  "name": "ausglobe",
-  "version": "0.0.2",
-  "description": "Geodata visualization service based on Cesium Webgl globe and Leaflet maps.",
-  "repository" : { 
-    "type" : "git",
-    "url" : "http://github.com/NICTA/nationalmap"
-  },
-  "dependencies": {
-    "compression": "1.0.8",
-    "connect": "^3.0.0",
-    "cors": "~2.5.0",
-    "express": "^4.4.3",
-    "formidable": "~1.0.15",
-    "javascript-natural-sort": "^0.7.1",
-    "ogr2ogr": "~0.4.1",
-    "proj4": "~2.2.1",
-    "proj4js-defs": "0.0.1",
-    "request": "*",
-    "supervisor": "^0.4.1",
-    "yargs": "1.2.6"
-  },
-  "devDependencies": {
-    "brfs": "^1.2.0",
-    "browserify": "^4.2.3",
-    "deamdify": "^0.1.1",
-    "exorcist": "^0.1.6",
-    "glob": "^4.0.4",
-    "glob-all": "^2.4.1",
-    "gulp": "^3.8.0",
-    "gulp-concat": "~2.2.0",
-    "gulp-jasmine": "~0.2.0",
-    "gulp-jsdoc": "^0.1.4",
-    "gulp-jshint": "~1.6.1",
-    "gulp-less": "^1.3.6",
-    "gulp-sourcemaps": "1.1.0",
-    "gulp-uglify": "0.3.1",
-    "gulp-util": "^3.0.0",
-    "gulp-watch": "~0.6.5",
-    "less": "^2.1.1",
-    "vinyl-buffer": "0.0.0",
-    "vinyl-source-stream": "^0.1.1",
-    "vinyl-transform": "0.0.1",
-    "watchify": "git://github.com/cconger/watchify#35407c030db9c6c9099e7fc2a5c21ac5eb7db5f8"
-  },
-  "scripts": {
-    "start": "node_modules/.bin/supervisor server"
-  },
-  "browser": {
-    "knockout": "./third_party/cesium/Source/ThirdParty/knockout.js"
-  }
+    "name": "TerriaJS",
+    "version": "0.1.0",
+    "description": "Geospatial data visualization platform.",
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/NICTA/TerriaJS"
+    },
+    "files": [
+        "./src"
+    ],
+    "dependencies": {
+        "compression": "1.0.8",
+        "connect": "^3.0.0",
+        "cors": "~2.5.0",
+        "express": "^4.4.3",
+        "formidable": "~1.0.15",
+        "javascript-natural-sort": "^0.7.1",
+        "ogr2ogr": "~0.4.1",
+        "proj4": "~2.2.1",
+        "proj4js-defs": "0.0.1",
+        "request": "*",
+        "supervisor": "^0.4.1",
+        "yargs": "1.2.6"
+    },
+    "devDependencies": {
+        "brfs": "^1.2.0",
+        "browserify": "^4.2.3",
+        "deamdify": "^0.1.1",
+        "exorcist": "^0.1.6",
+        "glob": "^4.0.4",
+        "glob-all": "^2.4.1",
+        "gulp": "^3.8.0",
+        "gulp-concat": "~2.2.0",
+        "gulp-jasmine": "~0.2.0",
+        "gulp-jsdoc": "^0.1.4",
+        "gulp-jshint": "~1.6.1",
+        "gulp-less": "^1.3.6",
+        "gulp-sourcemaps": "1.1.0",
+        "gulp-uglify": "0.3.1",
+        "gulp-util": "^3.0.0",
+        "gulp-watch": "~0.6.5",
+        "less": "^2.1.1",
+        "vinyl-buffer": "0.0.0",
+        "vinyl-source-stream": "^0.1.1",
+        "vinyl-transform": "0.0.1",
+        "watchify": "git://github.com/cconger/watchify#35407c030db9c6c9099e7fc2a5c21ac5eb7db5f8"
+    },
+    "scripts": {
+        "start": "node_modules/.bin/supervisor server"
+    },
+    "browser": {
+        "knockout": "./third_party/cesium/Source/ThirdParty/knockout.js"
+    }
 }

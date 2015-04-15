@@ -2,20 +2,20 @@
 "use strict";
 
 /*global require,L*/
-var AssociativeArray = require('../../third_party/cesium/Source/Core/AssociativeArray');
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var Cartesian3 = require('../../third_party/cesium/Source/Core/Cartesian3');
-var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var Color = require('../../third_party/cesium/Source/Core/Color');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
-var isArray = require('../../third_party/cesium/Source/Core/isArray');
-var PolygonHierarchy = require('../../third_party/cesium/Source/Core/PolygonHierarchy');
-var Property = require('../../third_party/cesium/Source/DataSources/Property');
-var writeTextToCanvas = require('../../third_party/cesium/Source/Core/writeTextToCanvas');
+var AssociativeArray = require('Cesium/Core/AssociativeArray');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var Cartesian3 = require('Cesium/Core/Cartesian3');
+var Cartographic = require('Cesium/Core/Cartographic');
+var CesiumMath = require('Cesium/Core/Math');
+var Color = require('Cesium/Core/Color');
+var defined = require('Cesium/Core/defined');
+var destroyObject = require('Cesium/Core/destroyObject');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var Ellipsoid = require('Cesium/Core/Ellipsoid');
+var isArray = require('Cesium/Core/isArray');
+var PolygonHierarchy = require('Cesium/Core/PolygonHierarchy');
+var Property = require('Cesium/DataSources/Property');
+var writeTextToCanvas = require('Cesium/Core/writeTextToCanvas');
  
 
 var defaultColor = Color.WHITE;

@@ -1,13 +1,13 @@
 'use strict';
 
 /*global require*/
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var getElement = require('../../third_party/cesium/Source/Widgets/getElement');
-var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var getElement = require('Cesium/Widgets/getElement');
+var Entity = require('Cesium/DataSources/Entity');
+var knockout = require('Cesium/ThirdParty/knockout');
+var when = require('Cesium/ThirdParty/when');
 
 var loadView = require('../Core/loadView');
 

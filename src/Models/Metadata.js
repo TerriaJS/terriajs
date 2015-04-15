@@ -3,7 +3,7 @@
 /*global require*/
 
 var MetadataItem = require('./MetadataItem');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var knockout = require('Cesium/ThirdParty/knockout');
 
 /**
  * Represents the metadata associated with a data source.

@@ -8,10 +8,10 @@ var ModelError = require('../Models/ModelError');
 var WebFeatureServiceCatalogGroup = require('../Models/WebFeatureServiceCatalogGroup');
 var WebMapServiceCatalogGroup = require('../Models/WebMapServiceCatalogGroup');
 
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defined = require('Cesium/Core/defined');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var knockout = require('Cesium/ThirdParty/knockout');
+var when = require('Cesium/ThirdParty/when');
 
 var AddDataPanelViewModel = function(options) {
     if (!defined(options) || !defined(options.application)) {

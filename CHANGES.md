@@ -4,13 +4,19 @@ Change Log
 ### 2015-04-15
 
 * Upgraded to Cesium 1.8.  See the [changelog](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.8/CHANGES.md) for details.
-* Added support for time-dynamic WMS layers by specifying the `intervals` property.
+* Added support for time-dynamic WMS layers by specifying the `intervals` property.  If not specified explicitly, times are also automatically deduced from `GetCapabilities`.
 * Improved the consistency and functionality of the feature information popup.
 * Improved the selection indicator when selecting features by clicking them on the map.
 * Made numerous improvements to the server performance check tool, accessed by appending `#tools=1` to the URL and clicking the Tools button.
 * Added `preserveOrder` property to catalogue groups.  When set, the group's items will not be sorted by name.
 * Added `titleField` property to WMS catalogue items to specify whether the WMS layer's title (default), name, or abstract is displayed in the catalogue.
-
+* Clicking the clear (x) button on the search panel now returns focus to the search box.
+* The Maps panel no longer prevents attempts to interact with the map.
+* Very long labels in the Data Catalogue and Now Viewing tabs are now handled more gracefully.
+* The input box on the Search tab no longer scrolls along with the search results.
+* Added `ignoreUnknownTileErrors` property to `WebMapServiceCatalogItem` to facilitate working with badly-behaved WMS servers.
+* Added `itemProperties` property to `WebMapServiceCatalogGroup` to specify additional properties to apply to the catalog items created by querying `GetCapabilities`.
+* Fixed a bug that prevented WFS datasets from working in Internet Explorer 10 and Safari.
 
 ### 2015-03-26
 

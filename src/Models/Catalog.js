@@ -2,13 +2,13 @@
 
 /*global require*/
 
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var RuntimeError = require('../../third_party/cesium/Source/Core/RuntimeError');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defaultValue = require('Cesium/Core/defaultValue');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var knockout = require('Cesium/ThirdParty/knockout');
+var RuntimeError = require('Cesium/Core/RuntimeError');
+var when = require('Cesium/ThirdParty/when');
 
 var createCatalogMemberFromType = require('./createCatalogMemberFromType');
 var CatalogGroup = require('./CatalogGroup');

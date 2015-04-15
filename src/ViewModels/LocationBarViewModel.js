@@ -1,15 +1,15 @@
 'use strict';
 
 /*global require*/
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var CesiumTerrainProvider = require('../../third_party/cesium/Source/Core/CesiumTerrainProvider');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var Intersections2D = require('../../third_party/cesium/Source/Core/Intersections2D');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var Cartesian2 = require('Cesium/Core/Cartesian2');
+var Cartographic = require('Cesium/Core/Cartographic');
+var CesiumMath = require('Cesium/Core/Math');
+var CesiumTerrainProvider = require('Cesium/Core/CesiumTerrainProvider');
+var defined = require('Cesium/Core/defined');
+var DeveloperError = require('Cesium/Core/DeveloperError');
+var Intersections2D = require('Cesium/Core/Intersections2D');
+var knockout = require('Cesium/ThirdParty/knockout');
+var when = require('Cesium/ThirdParty/when');
 
 var loadView = require('../Core/loadView');
 

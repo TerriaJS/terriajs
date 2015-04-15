@@ -2,19 +2,20 @@
 
 /*global require,URI*/
 
-var clone = require('../../third_party/cesium/Source/Core/clone');
-var defined = require('../../third_party/cesium/Source/Core/defined');
-var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
-var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
-var loadJson = require('../../third_party/cesium/Source/Core/loadJson');
-var loadXML = require('../../third_party/cesium/Source/Core/loadXML');
-var objectToQuery = require('../../third_party/cesium/Source/Core/objectToQuery');
+var clone = require('Cesium/Core/clone');
+var defined = require('Cesium/Core/defined');
+var defineProperties = require('Cesium/Core/defineProperties');
+var freezeObject = require('Cesium/Core/freezeObject');
+var knockout = require('Cesium/ThirdParty/knockout');
+var loadJson = require('Cesium/Core/loadJson');
+var loadXML = require('Cesium/Core/loadXML');
+var objectToQuery = require('Cesium/Core/objectToQuery');
 
 var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');
 var CatalogItem = require('./CatalogItem');
 var inherit = require('../Core/inherit');
 var gmlToGeoJson = require('../Map/gmlToGeoJson');
+var overrideProperty = require('../Core/overrideProperty');
 
 /**
  * A {@link CatalogItem} representing a layer from a Web Feature Service (WFS) server.
@@ -66,8 +67,7 @@ var WebFeatureServiceCatalogItem = function(application) {
     knockout.track(this, ['_dataUrl', '_dataUrlType', '_metadataUrl', 'url', 'typeNames', 'requestGeoJson', 'requestGml']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
-    delete this.__knockoutObservables.dataUrl;
-    knockout.defineProperty(this, 'dataUrl', {
+    overrideProperty(this, 'dataUrl', {
         get : function() {
             var url = this._dataUrl;
             if (!defined(url)) {
@@ -85,8 +85,7 @@ var WebFeatureServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.dataUrlType;
-    knockout.defineProperty(this, 'dataUrlType', {
+    overrideProperty(this, 'dataUrlType', {
         get : function() {
             if (defined(this._dataUrlType)) {
                 return this._dataUrlType;
@@ -99,8 +98,7 @@ var WebFeatureServiceCatalogItem = function(application) {
         }
     });
 
-    delete this.__knockoutObservables.metadataUrl;
-    knockout.defineProperty(this, 'metadataUrl', {
+    overrideProperty(this, 'metadataUrl', {
         get : function() {
             if (defined(this._metadataUrl)) {
                 return this._metadataUrl;

@@ -1,9 +1,9 @@
 'use strict';
 
 /*global require*/
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
-var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
-var when = require('../../third_party/cesium/Source/ThirdParty/when');
+var defaultValue = require('Cesium/Core/defaultValue');
+var getTimestamp = require('Cesium/Core/getTimestamp');
+var when = require('Cesium/ThirdParty/when');
 
 var pollToPromise = function(f, options) {
     options = defaultValue(options, defaultValue.EMPTY_OBJECT);
