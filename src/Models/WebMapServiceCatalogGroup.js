@@ -150,7 +150,7 @@ WebMapServiceCatalogGroup.prototype._getValuesThatInfluenceLoad = function() {
 };
 
 WebMapServiceCatalogGroup.prototype._load = function() {
-    var url = cleanAndProxyUrl(this.application, this.url) + '?service=WMS&request=GetCapabilities&version=1.1.1&tiled=true';
+    var url = cleanAndProxyUrl(this.application, this.url) + '?service=WMS&request=GetCapabilities&version=1.3.0&tiled=true';
 
     var that = this;
     return loadXML(url).then(function(xml) {
@@ -311,6 +311,7 @@ function createWmsDataSource(wmsGroup, layer, supportsJsonGetFeatureInfo, suppor
     result.url = wmsGroup.url;
     result.layers = layer.Name;
     result.parameters = wmsGroup.parameters;
+    result.minScaleDenominator = layer.MinScaleDenominator;
 
     result.description = '';
 

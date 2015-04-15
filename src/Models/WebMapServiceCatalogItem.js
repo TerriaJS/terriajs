@@ -5,6 +5,7 @@ var clone = require('../../third_party/cesium/Source/Core/clone');
 var combine = require('../../third_party/cesium/Source/Core/combine');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var GeographicTilingScheme = require('../../third_party/cesium/Source/Core/GeographicTilingScheme');
 var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
@@ -115,10 +116,18 @@ var WebMapServiceCatalogItem = function(application) {
      */
     this.populateIntervalsFromTimeDimension = true;
 
+    /**
+     * Gets or sets the denominator of the largest scale (smallest denominator) for which tiles should be requested.  For example, if this value is 1000, then tiles representing
+     * a scale larger than 1:1000 (i.e. numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of the largest-available scale, as specified by this property,
+     * will be used and will simply get blurier as the user zooms in closer.
+     * @type {Number}
+     */
+    this.minScaleDenominator = undefined;
+
     knockout.track(this, [
         '_dataUrl', '_dataUrlType', '_metadataUrl', '_legendUrl', '_rectangle', '_rectangleFromMetadata', '_intervalsFromMetadata', 'url',
         'layers', 'parameters', 'getFeatureInfoAsGeoJson', 'getFeatureInfoAsXml', 'getFeatureInfoXmlContentType',
-        'tilingScheme', 'clipToRectangle', 'populateIntervalsFromTimeDimension']);
+        'tilingScheme', 'clipToRectangle', 'populateIntervalsFromTimeDimension', 'minScaleDenominator']);
 
     // dataUrl, metadataUrl, and legendUrl are derived from url if not explicitly specified.
     overrideProperty(this, 'dataUrl', {
@@ -337,6 +346,22 @@ WebMapServiceCatalogItem.prototype._createImageryProvider = function(time) {
 
     parameters = combine(parameters, WebMapServiceCatalogItem.defaultParameters);
 
+    var maximumLevel;
+
+    if (defined(this.minScaleDenominator)) {
+        var metersPerPixel = 0.00028; // from WMS 1.3.0 spec section 7.2.4.6.9
+        var tileWidth = 256;
+
+        var circumferenceAtEquator = 2 * Math.PI * Ellipsoid.WGS84.maximumRadius;
+        var distancePerPixelAtLevel0 = circumferenceAtEquator / tileWidth;
+        var level0ScaleDenominator = distancePerPixelAtLevel0 / metersPerPixel;
+
+        // 1e-6 epsilon from WMS 1.3.0 spec, section 7.2.4.6.9.
+        var ratio = level0ScaleDenominator / (this.minScaleDenominator - 1e-6);
+        var levelAtMinScaleDenominator = Math.log(ratio) / Math.log(2);
+        maximumLevel = levelAtMinScaleDenominator | 0;
+    }
+
     return new WebMapServiceImageryProvider({
         url : cleanAndProxyUrl(this.application, this.url),
         layers : this.layers,
@@ -345,7 +370,8 @@ WebMapServiceCatalogItem.prototype._createImageryProvider = function(time) {
         parameters : parameters,
         getFeatureInfoParameters : parameters,
         tilingScheme : defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
-        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType
+        getFeatureInfoXmlContentType : this.getFeatureInfoXmlContentType,
+        maximumLevel: maximumLevel
     });
 };
 

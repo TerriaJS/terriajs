@@ -92,29 +92,30 @@ defineProperties(ArcGisMapServerCatalogItem.prototype, {
 });
 
 ArcGisMapServerCatalogItem.prototype._createImageryProvider = function() {
-    var maxLevel;
+    var maximumLevel;
 
     if (defined(this.maximumScale)) {
-        var dpi = 96;
+        var dpi = 96; // Esri default DPI, unless we specify otherwise.
         var centimetersPerInch = 2.54;
         var centimetersPerMeter = 100;
         var dotsPerMeter = dpi * centimetersPerMeter / centimetersPerInch;
+        var tileWidth = 256;
 
         var circumferenceAtEquator = 2 * Math.PI * Ellipsoid.WGS84.maximumRadius;
-        var distancePerPixelAtLevel0 = circumferenceAtEquator / 256;
+        var distancePerPixelAtLevel0 = circumferenceAtEquator / tileWidth;
         var level0ScaleDenominator = distancePerPixelAtLevel0 * dotsPerMeter;
 
         // 1e-6 epsilon from WMS 1.3.0 spec, section 7.2.4.6.9.
         var ratio = level0ScaleDenominator / (this.maximumScale - 1e-6);
         var levelAtMinScaleDenominator = Math.log(ratio) / Math.log(2);
-        maxLevel = levelAtMinScaleDenominator | 0;
+        maximumLevel = levelAtMinScaleDenominator | 0;
     }
 
     return new ArcGisMapServerImageryProvider({
         url: cleanAndProxyUrl(this.application, this.url),
         layers: this.layers,
         tilingScheme: new WebMercatorTilingScheme(),
-        maximumLevel: maxLevel
+        maximumLevel: maximumLevel
     });
 };
 
