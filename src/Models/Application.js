@@ -20,6 +20,7 @@ var NowViewing = require('./NowViewing');
 var Services = require('./Services');
 var ViewerMode = require('./ViewerMode');
 var ModelError = require('./ModelError');
+var NoViewer = require('./NoViewer');
 
 /**
  * The overall model for National Map.
@@ -115,7 +116,7 @@ var Application = function() {
      * whichever is currently in use.
      * @type {Cesium|Leaflet}
      */
-    this.currentViewer = undefined;
+    this.currentViewer = new NoViewer();
 
     /**
      * Gets or sets the collection of user properties.  User properties
