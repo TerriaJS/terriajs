@@ -170,11 +170,11 @@ function bundle(name, bundler, minify, catchErrors) {
 }
 
 function build(name, files, minify) {
-    return bundle(name, browserify(files).transform('brfs').transform('deamdify'), minify, false);
+    return bundle(name, browserify(files).transform('brfs'), minify, false);
 }
 
 function watch(name, files, minify) {
-    var bundler = watchify(files).transform('brfs').transform('deamdify');
+    var bundler = watchify(files).transform('brfs');
 
     function rebundle() {
         var start = new Date();
