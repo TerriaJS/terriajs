@@ -200,18 +200,6 @@ sending an email to <a href="mailto:nationalmap@lists.nicta.com.au">nationalmap@
             }
         }
 
-        if (defined(json.Capability.VendorSpecificCapabilities) &&
-            defined(json.Capability.VendorSpecificCapabilities.TileSet)) {
-
-            var tileSet = json.Capability.VendorSpecificCapabilities.TileSet;
-            for (var i = 0; i < tileSet.length; i++) {
-                if (tileSet[i].SRS ===  "EPSG:3857") {
-                    that.parameters = combine(that.parameters, {'tiled': true});
-                    break;
-                }
-            }
-        }
-
         var dataCustodian = that.dataCustodian;
         if (!defined(dataCustodian) && defined(json.Service.ContactInformation)) {
             var contactInfo = json.Service.ContactInformation;
