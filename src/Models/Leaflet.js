@@ -46,7 +46,9 @@ var Leaflet = function(application, map) {
             className: '',
             html: '<img src="images/NM-LocationTarget.svg" width="50" height="50" alt="" />',
             iconSize: L.point(50, 50)
-        })
+        }),
+        clickable: false,
+        keyboard: false
     });
     this._selectionIndicator.addTo(this.map);
     this._selectionIndicatorDomElement = this._selectionIndicator._icon.children[0];
