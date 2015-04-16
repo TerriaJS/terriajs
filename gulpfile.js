@@ -7,30 +7,28 @@ var glob = require('glob-all');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var browserify = require('browserify');
-var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
 var less = require('gulp-less');
 var uglify = require('gulp-uglify');
-var jasmine = require('gulp-jasmine');
-var exec = require('child_process').exec;
 var sourcemaps = require('gulp-sourcemaps');
 var exorcist = require('exorcist');
 var buffer = require('vinyl-buffer');
 var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
+var NpmImportPlugin = require("less-plugin-npm-import");
 
 
 var appJSName = 'ausglobe.js';
 var specJSName = 'ausglobe-specs.js';
 var appEntryJSName = './src/main.js';
 var workerGlob = [
-    './third_party/TerriaJS/third_party/cesium/Source/Workers/*.js',
-    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/*.profile.js',
-    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/cesiumWorkerBootstrapper.js',
-    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/transferTypedArrayTest.js',
-    '!./third_party/TerriaJS/third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
+    './node_modules/terriajs/Cesium/Source/Workers/*.js',
+    '!./node_modules/terriajs/Cesium/Source/Workers/*.profile.js',
+    '!./node_modules/terriajs/Cesium/Source/Workers/cesiumWorkerBootstrapper.js',
+    '!./node_modules/terriajs/Cesium/Source/Workers/transferTypedArrayTest.js',
+    '!./node_modules/terriajs/Cesium/Source/Workers/createTaskProcessorWorker.js'
 ];
 var specGlob = './spec/**/*.js';
 
@@ -41,39 +39,41 @@ if (!fs.existsSync('public/build')) {
     fs.mkdirSync('public/build');
 }
 
-gulp.task('build-app', ['prepare-cesium'], function() {
+gulp.task('build-app', ['prepare-terriajs'], function() {
     return build(appJSName, appEntryJSName, false);
 });
 
-gulp.task('build-specs', ['prepare-cesium'], function() {
+gulp.task('build-specs', ['prepare-terriajs'], function() {
     return build(specJSName, glob.sync(specGlob), false);
 });
 
 gulp.task('build-css', function() {
     return gulp.src('./src/main.less')
         .pipe(less({
-
+            plugins: [
+                new NpmImportPlugin()
+            ]
         }))
         .pipe(gulp.dest('./public/build'));
 });
 
 gulp.task('build', ['build-css', 'build-app', 'build-specs']);
 
-gulp.task('release-app', ['prepare-cesium'], function() {
+gulp.task('release-app', ['prepare-terriajs'], function() {
     return build(appJSName, appEntryJSName, true);
 });
 
-gulp.task('release-specs', ['prepare-cesium'], function() {
+gulp.task('release-specs', ['prepare-terriajs'], function() {
     return build(specJSName, glob.sync(specGlob), true);
 });
 
 gulp.task('release', ['build-css', 'release-app', 'release-specs']);
 
-gulp.task('watch-app', ['prepare-cesium'], function() {
+gulp.task('watch-app', ['prepare-terriajs'], function() {
     return watch(appJSName, appEntryJSName, false);
 });
 
-gulp.task('watch-specs', ['prepare-cesium'], function() {
+gulp.task('watch-specs', ['prepare-terriajs'], function() {
     return watch(specJSName, glob.sync(specGlob), false);
 });
 
@@ -97,34 +97,11 @@ gulp.task('docs', function(){
         }));
 });
 
-gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper']);
-
-gulp.task('build-cesium', function(cb) {
-    return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
-        cwd : 'third_party/TerriaJS/third_party/cesium'
-    }, function(err, stdout, stderr) {
-        if (stderr) {
-            console.log('Error while building Cesium: ');
-            console.log(stderr);
-        }
-        cb(err);
-    });
-});
-
-gulp.task('copy-cesium-assets', function() {
+gulp.task('prepare-terriajs', function() {
     return gulp.src([
-            'third_party/TerriaJS/third_party/cesium/Source/Workers/transferTypedArrayTest.js',
-            'third_party/TerriaJS/third_party/cesium/Source/ThirdParty/Workers/**',
-            'third_party/TerriaJS/third_party/cesium/Source/Assets/**',
-            'third_party/TerriaJS/third_party/cesium/Source/Widgets/**/*.css',
-            'third_party/TerriaJS/third_party/cesium/Source/Widgets/Images/**'
-        ], { base: 'third_party/TerriaJS/third_party/cesium/Source' })
-        .pipe(gulp.dest('public/build/Cesium/'));
-});
-
-gulp.task('copy-cesiumWorkerBootstrapper', function() {
-    return gulp.src('third_party/TerriaJS/src/cesiumWorkerBootstrapper.js')
-        .pipe(gulp.dest('public/build/Cesium/Workers'));
+            'node_modules/terriajs/build/**'
+        ], { base: 'node_modules/terriajs/build' })
+    .pipe(gulp.dest('public/build/'));
 });
 
 gulp.task('default', ['lint', 'build']);

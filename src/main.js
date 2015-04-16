@@ -4,8 +4,8 @@
 
 var start = true;
 
-var PopupMessageViewModel = require('TerriaJS/ViewModels/PopupMessageViewModel');
-var FeatureDetection = require('Cesium/Core/FeatureDetection');
+var PopupMessageViewModel = require('terriajs/ViewModels/PopupMessageViewModel');
+var FeatureDetection = require('terriajs/Cesium/Source/Core/FeatureDetection');
 
 // If we're not in a normal browser environment (Web Worker maybe?), do nothing.
 if (typeof window === 'undefined') {
@@ -50,42 +50,42 @@ if (start) {
 
     var copyright = require('./CopyrightModule'); // jshint ignore:line
 
-    var BingMapsStyle = require('Cesium/Scene/BingMapsStyle');
-    var defined = require('Cesium/Core/defined');
-    var knockout = require('Cesium/ThirdParty/knockout');
+    var BingMapsStyle = require('terriajs/Cesium/Source/Scene/BingMapsStyle');
+    var defined = require('terriajs/Cesium/Source/Core/defined');
+    var knockout = require('terriajs/Cesium/Source/ThirdParty/knockout');
 
-    var AusGlobeViewer = require('TerriaJS/viewer/AusGlobeViewer');
-    var registerKnockoutBindings = require('TerriaJS/Core/registerKnockoutBindings');
+    var AusGlobeViewer = require('terriajs/viewer/AusGlobeViewer');
+    var registerKnockoutBindings = require('terriajs/Core/registerKnockoutBindings');
 
-    var AddDataPanelViewModel = require('TerriaJS/ViewModels/AddDataPanelViewModel');
-    var BaseMapViewModel = require('TerriaJS/ViewModels/BaseMapViewModel');
-    var BingMapsSearchProviderViewModel = require('TerriaJS/ViewModels/BingMapsSearchProviderViewModel');
-    var CatalogItemNameSearchProviderViewModel = require('TerriaJS/ViewModels/CatalogItemNameSearchProviderViewModel');
-    var BrandBarViewModel = require('TerriaJS/ViewModels/BrandBarViewModel');
-    var DataCatalogTabViewModel = require('TerriaJS/ViewModels/DataCatalogTabViewModel');
-    var DistanceLegendViewModel = require('TerriaJS/ViewModels/DistanceLegendViewModel');
-    var DragDropViewModel = require('TerriaJS/ViewModels/DragDropViewModel');
-    var ExplorerPanelViewModel = require('TerriaJS/ViewModels/ExplorerPanelViewModel');
-    var FeatureInfoPanelViewModel = require('TerriaJS/ViewModels/FeatureInfoPanelViewModel');
-    var GazetteerSearchProviderViewModel = require('TerriaJS/ViewModels/GazetteerSearchProviderViewModel');
-    var LocationBarViewModel = require('TerriaJS/ViewModels/LocationBarViewModel');
-    var MenuBarViewModel = require('TerriaJS/ViewModels/MenuBarViewModel');
-    var MenuBarItemViewModel = require('TerriaJS/ViewModels/MenuBarItemViewModel');
-    var NavigationViewModel = require('TerriaJS/ViewModels/NavigationViewModel');
-    var NowViewingTabViewModel = require('TerriaJS/ViewModels/NowViewingTabViewModel');
-    var OnePanelOpenInTopRight = require('TerriaJS/ViewModels/OnePanelOpenInTopRight');
-    var SearchTabViewModel = require('TerriaJS/ViewModels/SearchTabViewModel');
-    var SettingsPanelViewModel = require('TerriaJS/ViewModels/SettingsPanelViewModel');
-    var SharePopupViewModel = require('TerriaJS/ViewModels/SharePopupViewModel');
-    var ToolsPanelViewModel = require('TerriaJS/ViewModels/ToolsPanelViewModel');
+    var AddDataPanelViewModel = require('terriajs/ViewModels/AddDataPanelViewModel');
+    var BaseMapViewModel = require('terriajs/ViewModels/BaseMapViewModel');
+    var BingMapsSearchProviderViewModel = require('terriajs/ViewModels/BingMapsSearchProviderViewModel');
+    var CatalogItemNameSearchProviderViewModel = require('terriajs/ViewModels/CatalogItemNameSearchProviderViewModel');
+    var BrandBarViewModel = require('terriajs/ViewModels/BrandBarViewModel');
+    var DataCatalogTabViewModel = require('terriajs/ViewModels/DataCatalogTabViewModel');
+    var DistanceLegendViewModel = require('terriajs/ViewModels/DistanceLegendViewModel');
+    var DragDropViewModel = require('terriajs/ViewModels/DragDropViewModel');
+    var ExplorerPanelViewModel = require('terriajs/ViewModels/ExplorerPanelViewModel');
+    var FeatureInfoPanelViewModel = require('terriajs/ViewModels/FeatureInfoPanelViewModel');
+    var GazetteerSearchProviderViewModel = require('terriajs/ViewModels/GazetteerSearchProviderViewModel');
+    var LocationBarViewModel = require('terriajs/ViewModels/LocationBarViewModel');
+    var MenuBarViewModel = require('terriajs/ViewModels/MenuBarViewModel');
+    var MenuBarItemViewModel = require('terriajs/ViewModels/MenuBarItemViewModel');
+    var NavigationViewModel = require('terriajs/ViewModels/NavigationViewModel');
+    var NowViewingTabViewModel = require('terriajs/ViewModels/NowViewingTabViewModel');
+    var OnePanelOpenInTopRight = require('terriajs/ViewModels/OnePanelOpenInTopRight');
+    var SearchTabViewModel = require('terriajs/ViewModels/SearchTabViewModel');
+    var SettingsPanelViewModel = require('terriajs/ViewModels/SettingsPanelViewModel');
+    var SharePopupViewModel = require('terriajs/ViewModels/SharePopupViewModel');
+    var ToolsPanelViewModel = require('terriajs/ViewModels/ToolsPanelViewModel');
 
-    var Application = require('TerriaJS/Models/Application');
-    var ArcGisMapServerCatalogItem = require('TerriaJS/Models/ArcGisMapServerCatalogItem');
-    var BingMapsCatalogItem = require('TerriaJS/Models/BingMapsCatalogItem');
-    var CompositeCatalogItem = require('TerriaJS/Models/CompositeCatalogItem');
-    var WebMapServiceCatalogItem = require('TerriaJS/Models/WebMapServiceCatalogItem');
-    var registerCatalogMembers = require('TerriaJS/Models/registerCatalogMembers');
-    var raiseErrorToUser = require('TerriaJS/Models/raiseErrorToUser');
+    var Application = require('terriajs/Models/Application');
+    var ArcGisMapServerCatalogItem = require('terriajs/Models/ArcGisMapServerCatalogItem');
+    var BingMapsCatalogItem = require('terriajs/Models/BingMapsCatalogItem');
+    var CompositeCatalogItem = require('terriajs/Models/CompositeCatalogItem');
+    var WebMapServiceCatalogItem = require('terriajs/Models/WebMapServiceCatalogItem');
+    var registerCatalogMembers = require('terriajs/Models/registerCatalogMembers');
+    var raiseErrorToUser = require('terriajs/Models/raiseErrorToUser');
 
     registerKnockoutBindings();
     registerCatalogMembers();
