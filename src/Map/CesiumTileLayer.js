@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,L*/
+var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryProvider = require('../../third_party/cesium/Source/Scene/ImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
@@ -60,6 +61,10 @@ var CesiumTileLayer = L.TileLayer.extend({
                 this._zSubtract = 1;
             } else if (tilingScheme.getNumberOfXTilesAtLevel(0) !== 1 || tilingScheme.getNumberOfYTilesAtLevel(0) !== 1) {
                 throw new DeveloperError('Only ImageryProviders with 1x1 or 2x2 tiles at level 0 can be used with Leaflet.');
+            }
+
+            if (defined(this.imageryProvider.maximumLevel)) {
+                this.options.maxNativeZoom = this.imageryProvider.maximumLevel;
             }
         }
 

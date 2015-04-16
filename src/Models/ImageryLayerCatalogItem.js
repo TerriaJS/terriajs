@@ -393,7 +393,7 @@ ImageryLayerCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, ma
     var ll = projection.unproject(new Cartesian2(x, y));
 
     // Map the lon/lat to a tile in the current zoom level and query that tile for features.
-    var level = map.getZoom();
+    var level = Math.min(map.getZoom(), imageryProvider.maximumLevel);
     var tilingScheme = imageryProvider.tilingScheme;
     var tileCoordinates = tilingScheme.positionToTileXY(ll, level);
     if (!defined(tileCoordinates)) {
