@@ -38,18 +38,49 @@
             <h1 data-bind="text: catalogItem.name"></h1>
         </div>
         <div class="catalog-item-info-content">
+            <!-- ko if: catalogItem.disclaimer -->
             <div class="catalog-item-info-section">
-                <!-- ko if: catalogItem.description -->
-                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.description"></div>
-                <!-- /ko -->
-                <!-- ko if: !catalogItem.description -->
-                <div class="catalog-item-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>
-                <!-- /ko -->
+                <h2>Disclaimer</h2>
+                <div class="catalog-item-info-description">
+                    <strong style="font-weight: bold; color: #C13C2D;" data-bind="sanitizedHtml: catalogItem.disclaimer"></strong>
+                </div>
             </div>
+            <!-- /ko -->
+
+            <!-- ko if: catalogItem.disclaimer -->
+            <div class="catalog-item-info-section">
+                <h2>Licensing, Terms &amp; Conditions</h2>
+                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.license">
+                </div>
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: catalogItem.disclaimer -->
+            <div class="catalog-item-info-section">
+                <h2>Description</h2>
+                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.description"></div>
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: !catalogItem.description -->
+            <div class="catalog-item-info-section">
+                <div class="catalog-item-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: catalogItem.updates -->
+            <div class="catalog-item-info-section">
+                <h2>Data Updates</h2>
+                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.updates">
+                </div>
+            </div>
+            <!-- /ko -->
+
             <div class="catalog-item-info-section">
                 <h2>Data Custodian</h2>
                 <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.dataCustodian"></div>
             </div>
+
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
                 <input class="catalog-item-info-baseUrl" readonly type="text" data-bind="value: catalogItem.url" size="80" onclick="this.select();" />

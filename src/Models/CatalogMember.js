@@ -48,7 +48,7 @@ var CatalogMember = function(application) {
      */
     this.isUserSupplied = true;
 
-    knockout.track(this, ['name', 'description', 'isUserSupplied']);
+    knockout.track(this, ['name', 'description', 'disclaimer', 'license', 'updates', 'isUserSupplied']);
 };
 
 defineProperties(CatalogMember.prototype, {
