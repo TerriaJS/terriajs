@@ -1,6 +1,6 @@
 {
-    "name": "TerriaJS",
-    "version": "0.1.0",
+    "name": "terriajs",
+    "version": "0.0.1",
     "description": "Geospatial data visualization platform.",
     "repository": {
         "type": "git",
