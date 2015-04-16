@@ -2,29 +2,23 @@
 
 /*global require,L,$*/
 
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
-var combine = require('../../third_party/cesium/Source/Core/combine');
 var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
 var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
-var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
-var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var CatalogItem = require('./CatalogItem');
 var corsProxy = require('../Core/corsProxy');
+var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 var Metadata = require('./Metadata');
 var ModelError = require('./ModelError');
@@ -250,14 +244,31 @@ An error occurred while retrieving CSV data from the provided link.'
     }
 };
 
-CsvCatalogItem.prototype._enableInCesium = function() {
+CsvCatalogItem.prototype._enable = function() {
+    if (this._regionMapped) {
+        this._imageryLayer = ImageryLayerCatalogItem.enableLayer(this, this._createImageryProvider(), this.opacity);
+
+        if (defined(this.application.leaflet)) {
+            var that = this;
+            this._imageryLayer.setFilter(function () {
+                new L.CanvasFilter(this, {
+                    channelFilter: function (image) {
+                        return recolorImage(image, that.colorFunc);
+                    }
+                }).render();
+            });
+        }
+    }
 };
 
-CsvCatalogItem.prototype._disableInCesium = function() {
+CsvCatalogItem.prototype._disable = function() {
+    if (this._regionMapped) {
+        ImageryLayerCatalogItem.disableLayer(this, this._imageryLayer);
+        this._imageryLayer = undefined;
+    }
 };
 
-CsvCatalogItem.prototype._showInCesium = function() {
-
+CsvCatalogItem.prototype._show = function() {
     if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
         if (dataSources.contains(this._tableDataSource)) {
@@ -267,56 +278,11 @@ CsvCatalogItem.prototype._showInCesium = function() {
         dataSources.add(this._tableDataSource);
     }
     else {
-        var scene = this.application.cesium.scene;
-
-        var imageryProvider = new WebMapServiceImageryProvider({
-            url : proxyUrl(this.application, this.regionServer),
-            layers : this.regionLayers,
-            parameters : WebMapServiceCatalogItem.defaultParameters
-        });
-
-        imageryProvider.base_requestImage = imageryProvider.requestImage;
-        var that = this;
-        imageryProvider.requestImage = function(x, y, level) {
-            var imagePromise = imageryProvider.base_requestImage(x, y, level);
-            if (!defined(imagePromise)) {
-                return imagePromise;
-            }
-            
-            return when(imagePromise, function(image) {
-                if (defined(image)) {
-                    image = recolorImageWithCanvas(that, image, that.colorFunc);
-                }
-                return image;
-            });
-        };
-            //remap image layer featurePicking Func
-        imageryProvider.base_pickFeatures = imageryProvider.pickFeatures;
-        imageryProvider.pickFeatures = function(x, y, level, longitude, latitude) {
-            var featurePromise = imageryProvider.base_pickFeatures(x, y, level, longitude, latitude);
-            if (!defined(featurePromise)) {
-                return featurePromise;
-            }
-            
-            return when(featurePromise, function(results) {
-                if (defined(results)) {
-                    var id = results[0].data.properties[that.regionProp];
-                    var properties = that.rowProperties(id);
-                    results[0].description = that._tableDataSource.describe(properties);
-                }
-                return results;
-            });
-        };
-
-        this._imageryLayer = new ImageryLayer(imageryProvider, {alpha : this.opacity} );
-
-        scene.imageryLayers.add(this._imageryLayer);
-
+        ImageryLayerCatalogItem.showLayer(this, this._imageryLayer);
     }
 };
 
-CsvCatalogItem.prototype._hideInCesium = function() {
-
+CsvCatalogItem.prototype._hide = function() {
     if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
         if (!dataSources.contains(this._tableDataSource)) {
@@ -326,113 +292,61 @@ CsvCatalogItem.prototype._hideInCesium = function() {
         dataSources.remove(this._tableDataSource, false);
     }
     else {
-        if (!defined(this._imageryLayer)) {
-            throw new DeveloperError('This data source is not enabled.');
-        }
-        
-        var scene = this.application.cesium.scene;
-        scene.imageryLayers.remove(this._imageryLayer);
-        this._imageryLayer = undefined;
+        ImageryLayerCatalogItem.hideLayer(this, this._imageryLayer);
     }
 };
 
-CsvCatalogItem.prototype._enableInLeaflet = function() {
-};
-
-CsvCatalogItem.prototype._disableInLeaflet = function() {
-};
-
-CsvCatalogItem.prototype._showInLeaflet = function() {
-
-    if (!this._regionMapped) {
-        this._showInCesium();
-    }
-    else {
-        if (defined(this._imageryLayer)) {
-            throw new DeveloperError('This data source is already enabled.');
-        }
-        
-        var map = this.application.leaflet.map;
-        
-        var options = {
-            layers : this.regionLayers,
-            opacity : this.opacity
-        };
-        options = combine(defaultValue(WebMapServiceCatalogItem.defaultParameters), options);
-
-        this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.application, this.regionServer), options);
-
-        var that = this;
-        this._imageryLayer.setFilter(function () {
-            new L.CanvasFilter(this, {
-                channelFilter: function (image) {
-                    return recolorImage(image, that.colorFunc);
-                }
-           }).render();
-        });
-
-        map.addLayer(this._imageryLayer);
-    }
-};
-
-CsvCatalogItem.prototype._hideInLeaflet = function() {
-    if (!this._regionMapped) {
-        this._hideInCesium();
-    }
-    else {
-        if (!defined(this._imageryLayer)) {
-            throw new DeveloperError('This data source is not enabled.');
-        }
-
-        var map = this.application.leaflet.map;
-        map.removeLayer(this._imageryLayer);
-        this._imageryLayer = undefined;
-    }
-};
-
-CsvCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
-    if (!this._regionMapped) {
-        return undefined;
-    }
-
-    var projection = new WebMercatorProjection();
-    var sw = projection.project(Rectangle.southwest(mapExtent));
-    var ne = projection.project(Rectangle.northeast(mapExtent));
-
-    var tilingScheme = new WebMercatorTilingScheme({
-        rectangleSouthwestInMeters: sw,
-        rectangleNortheastInMeters: ne
-    });
-
-    // Compute the longitude and latitude of the pick location.
-    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
-    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
-
-    var ll = projection.unproject(new Cartesian2(x, y));
-
-    // Use a Cesium imagery provider to pick features.
+CsvCatalogItem.prototype._createImageryProvider = function(time) {
     var imageryProvider = new WebMapServiceImageryProvider({
-        url : proxyUrl(this.application, this.regionServer),
-        layers : this.regionLayers,
-        tilingScheme : tilingScheme,
-        tileWidth : mapWidth,
-        tileHeight : mapHeight
+        url: proxyUrl(this.application, this.regionServer),
+        layers: this.regionLayers,
+        parameters: WebMapServiceCatalogItem.defaultParameters,
+        getFeatureInfoParameters: WebMapServiceCatalogItem.defaultParameters,
+        tilingScheme: new WebMercatorTilingScheme()
     });
-
-    var pickFeaturesPromise = imageryProvider.pickFeatures(0, 0, 0, ll.longitude, ll.latitude);
-    if (!defined(pickFeaturesPromise)) {
-        return pickFeaturesPromise;
-    }
 
     var that = this;
-    return pickFeaturesPromise.then(function(results) {
-        if (defined(results)) {
-            var id = results[0].data.properties[that.regionProp];
-            var properties = that.rowProperties(id);
-            results[0].description = that._tableDataSource.describe(properties);
+
+    // Override requestImage to recolor the images.
+    imageryProvider.base_requestImage = imageryProvider.requestImage;
+    imageryProvider.requestImage = function(x, y, level) {
+        var imagePromise = this.base_requestImage(x, y, level);
+        if (!defined(imagePromise)) {
+            return imagePromise;
         }
-        return results;
-    });
+        
+        return when(imagePromise, function(image) {
+            if (defined(image)) {
+                image = recolorImageWithCanvas(that, image, that.colorFunc);
+            }
+            return image;
+        });
+    };
+    
+    // Override pickFeatures to add more metadata.
+    imageryProvider.base_pickFeatures = imageryProvider.pickFeatures;
+    imageryProvider.pickFeatures = function(x, y, level, longitude, latitude) {
+        var featurePromise = this.base_pickFeatures(x, y, level, longitude, latitude);
+        if (!defined(featurePromise)) {
+            return featurePromise;
+        }
+        
+        return when(featurePromise, function(results) {
+            if (!defined(results)) {
+                return;
+            }
+
+            for (var i = 0; i < results.length; ++i) {
+                var id = results[i].data.properties[that.regionProp];
+                var properties = that.rowProperties(id);
+                results[i].description = that._tableDataSource.describe(properties);
+            }
+
+            return results;
+        });
+    };
+
+    return imageryProvider;
 };
 
 function proxyUrl(application, url) {
