@@ -11,25 +11,90 @@ var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var VarType = require('./VarType');
 
 /**
-* @class Variable contains a single variable from a table dataset
-* @name Variable
+* @class DataVariable contains a single variable (or column) from a table dataset
+* @name DataVariable
 *
-* @alias Variable
+* @alias DataVariable
 * @internalConstructor
 * @constructor
 */
-var Variable = function () {
-    this.name = '';
-    this.vals = [];
+var DataVariable = function (name, values) {
+    this.name = name;
+    this.vals = values || [];
     this.varType = undefined;
     this.noData = 1e-34;
     this.minVal = undefined;
     this.maxVal = undefined;
     this.timeVar = undefined;
     this.enumList = undefined;
+
+    if (this.vals.length > 0) {
+        this.update();
+    }
 };
 
-Variable.prototype._calculateVarMinMax = function () {
+/**
+* Update the variable metadata based on the current set of values
+*
+*/
+DataVariable.prototype.update = function () {
+
+        //guess var type if not set
+    if (!defined(this.varType)) {
+        this._guessVariableType();
+    }
+        //process time thiss
+    if (this.varType === VarType.TIME) {
+        this._processTimeVariable();
+        //if failed then default type to scalar
+        if (!defined(this.timeVar)) {
+            this.varType = VarType.SCALAR;
+        }
+    }
+        //calculate var min/max
+    if (this.varType !== VarType.TIME) {
+        this._calculateVarMinMax();
+    }
+        //if min/max failed then handle as enumerated thiss
+    if (this.varType === VarType.SCALAR && this.minVal > this.maxVal) {
+        this.varType = VarType.ENUM;
+        this._processEnumVariable();            //calculate enum variables
+    }
+};
+
+
+// Based on variable name, try to determine best default for varType
+DataVariable.prototype._guessVariableType = function () {
+    //functions to try to figure out position and time variables.
+    function matchColumn(name, hints) {
+        name = name.toLowerCase();
+        for (var h in hints) {
+            if (hints.hasOwnProperty(h)) {
+                var hint = hints[h].toLowerCase();
+                if (name.indexOf(hint) === 0 || name.indexOf(' ' + hint) !== -1 || name.indexOf('_' + hint) !== -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    var hintSet = [
+        { hints: ['lon'], type: VarType.LON },
+        { hints: ['lat'], type: VarType.LAT },
+        { hints: ['depth', 'height', 'elevation'], type: VarType.ALT },
+        { hints: ['time', 'date'], type: VarType.TIME }];
+
+    for (var vt in hintSet) {
+        if (matchColumn(this.name, hintSet[vt].hints)) {
+            this.varType = hintSet[vt].type;
+            return;
+        }
+    }
+    this.varType = VarType.SCALAR;
+};
+
+DataVariable.prototype._calculateVarMinMax = function () {
     var vals = this.vals;
     var minVal = Number.MAX_VALUE;
     var maxVal = -Number.MAX_VALUE;
@@ -50,7 +115,7 @@ Variable.prototype._calculateVarMinMax = function () {
     this.maxVal = maxVal;
 };
 
-Variable.prototype._calculateTimeMinMax = function () {
+DataVariable.prototype._calculateTimeMinMax = function () {
     var vals = this.vals;
     var minVal = vals[0];
     var maxVal = vals[0];
@@ -66,11 +131,8 @@ Variable.prototype._calculateTimeMinMax = function () {
     this.maxVal = maxVal;
 };
 
-/**
-* Convert input time variable to Cesium Time variable
-*
-*/
-Variable.prototype.processTimeVariable = function () {
+// Convert input time variable to Cesium Time variable
+DataVariable.prototype._processTimeVariable = function () {
     if (this.varType !== VarType.TIME || this.vals.length === 0 || typeof this.vals[0] !== 'string') {
         return;
     }
@@ -84,7 +146,7 @@ Variable.prototype.processTimeVariable = function () {
     }
 
     //create new Cessium time variable to attach to the variable
-    var timeVar = new Variable();
+    var timeVar = new DataVariable();
     var vals = this.vals;
 
     //simple check to try to guess date format
@@ -118,11 +180,8 @@ Variable.prototype.processTimeVariable = function () {
 };
 
 
-/**
-* Convert input enum variable to values and enumList
-*
-*/
-Variable.prototype.processEnumVariable = function () {
+//Convert input enum variable to values and enumList
+DataVariable.prototype._processEnumVariable = function () {
     if (this.varType !== VarType.ENUM) {
         return;
     }
@@ -147,50 +206,14 @@ Variable.prototype.processEnumVariable = function () {
 
 
 /**
-* Based on variable name, guess what the VarType should be
-*
-* @param {String} name Make an initial guess at the variable type based on its name
-*
-*/
-Variable.prototype.guessVariableType = function (name) {
-    //functions to try to figure out position and time variables.
-    function matchColumn(name, hints) {
-        name = name.toLowerCase();
-        for (var h in hints) {
-            if (hints.hasOwnProperty(h)) {
-                var hint = hints[h].toLowerCase();
-                if (name.indexOf(hint) === 0 || name.indexOf(' ' + hint) !== -1 || name.indexOf('_' + hint) !== -1) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    var hintSet = [
-        { hints: ['lon'], type: VarType.LON },
-        { hints: ['lat'], type: VarType.LAT },
-        { hints: ['depth', 'height', 'elevation'], type: VarType.ALT },
-        { hints: ['time', 'date'], type: VarType.TIME }];
-
-    for (var vt in hintSet) {
-        if (matchColumn(name, hintSet[vt].hints)) {
-            this.varType = hintSet[vt].type;
-            return;
-        }
-    }
-    this.varType = VarType.SCALAR;
-};
-
-/**
 * Destroy the object and release resources
 *
 */
-Variable.prototype.destroy = function () {
+DataVariable.prototype.destroy = function () {
     return destroyObject(this);
 };
 
-module.exports = Variable;
+module.exports = DataVariable;
 
 
 

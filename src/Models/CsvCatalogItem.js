@@ -527,8 +527,8 @@ function createRegionMappingClock(csvItem) {
     var newClock;
     var dataSource = csvItem._tableDataSource;
     if (defined(dataSource) && defined(dataSource.dataset) && dataSource.dataset.hasTimeData()) {
-        var startTime = dataSource.dataset.getMinTime();
-        var stopTime = dataSource.dataset.getMaxTime();
+        var startTime = dataSource.dataset.getTimeMinValue();
+        var stopTime = dataSource.dataset.getTimeMaxValue();
         var totalDuration = JulianDate.secondsDifference(stopTime, startTime);
 
         newClock = new DataSourceClock();
@@ -545,10 +545,9 @@ function createRegionMappingClock(csvItem) {
 function loadTable(csvItem, text) {
 
     csvItem._tableDataSource.loadText(text);
+
     if (defined(csvItem.tableStyle)) {
-        csvItem._tableDataSource.maxDisplayValue = csvItem._maxDisplayValue;
-        csvItem._tableDataSource.minDisplayValue = csvItem._minDisplayValue;
-        csvItem._tableDataSource.setTableStyle(csvItem.tableStyle);
+        csvItem._tableDataSource.setDisplayStyle(csvItem.tableStyle);
     }
 
 
@@ -625,7 +624,7 @@ function recolorImageWithCanvas(csvCatalogItem, img, colorFunc) {
 }
 
 
-var regionServer = 'http://geoserver-nm.nicta.com.au/region_map/ows';
+var regionServer = 'http://geoserver.nationalmap.nicta.com.au/region_map/ows';
 var regionWmsMap = {
     'STE': {
         "name":"region_map:FID_STE_2011_AUST",
@@ -730,9 +729,9 @@ function loadRegionIDs(regionDescriptor) {
     });
 }
 
-function determineRegionVar(vars, aliases) {
-    for (var i = 0; i < vars.length; i++) {
-        var varName = vars[i].toLowerCase();
+function determineRegionVar(varNames, aliases) {
+    for (var i = 0; i < varNames.length; i++) {
+        var varName = varNames[i].toLowerCase();
         for (var j = 0; j < aliases.length; j++) {
             if (varName.substring(0,aliases[j].length) === aliases[j]) {
                 return i;
@@ -745,16 +744,16 @@ function determineRegionVar(vars, aliases) {
 
 //TODO: determine enum or value code here rather than separate region records
 function determineRegionType(dataset) {
-    var vars = dataset.getVarList();
+    var varNames = dataset.getVariableNames();
 
     var regionType, regionVariable, region;
     //try to figure out the region variable
     for (region in regionWmsMap) {
         if (regionWmsMap.hasOwnProperty(region)) {
-            var idx = determineRegionVar(vars, regionWmsMap[region].aliases);
+            var idx = determineRegionVar(varNames, regionWmsMap[region].aliases);
             if (idx !== -1) {
                 regionType = region;
-                regionVariable = vars[idx];
+                regionVariable = varNames[idx];
                 break;
             }
         }
@@ -763,7 +762,7 @@ function determineRegionType(dataset) {
     //if no match, try to derive regionType from region_id to use native abs census files
     if (!defined(regionType)) {
         var absRegion = 'region_id';
-        if (vars.indexOf(absRegion) === -1) {
+        if (varNames.indexOf(absRegion) === -1) {
             return;
         }
         var code = dataset.getDataValue(absRegion, 0);
@@ -773,7 +772,7 @@ function determineRegionType(dataset) {
                 return;
             }
             regionType = region;
-            var vals = dataset.getDataValues(absRegion);
+            var vals = dataset.getVariableValues(absRegion);
             var new_vals = [];
             for (var i = 0; i < vals.length; i++) {
                 var id = dataset.getDataValue(absRegion, vals[i]).replace( /^\D+/g, '');
@@ -810,16 +809,16 @@ function createRegionLookupFunc(csvItem) {
     var regionDescriptor = regionWmsMap[csvItem.regionType];
  
     var numericCodes = false;
-    var codes = dataset.getEnumValues(csvItem.regionVariable);
+    var codes = dataset.getVariableEnums(csvItem.regionVariable);
     var ids = regionDescriptor.idMap;
     if (!defined(codes)) {
         numericCodes = true;
-        codes = dataset.getDataValues(csvItem.regionVariable);
+        codes = dataset.getVariableValues(csvItem.regionVariable);
         for (var n = 0; n < ids.length; n++) {
             ids[n] = parseInt(ids[n],10);
         }
     }
-    var vals = dataset.getDataValues(dataset.getDataVariable());
+    var vals = dataset.getVariableValues(dataset.getDataVariable());
     var colors = new Array(ids.length);
     for (var c = 0; c < colors.length; c++) {
         colors[c] = [0, 0, 0, 0];
@@ -943,9 +942,9 @@ function addRegionMap(csvItem) {
         //change current var if necessary
     if (!defined(tableStyle.dataVariable)) {
         var dataVar = dataset.getDataVariable();
-        var vars = dataset.getVarList();
-        if (vars.indexOf(dataVar) === -1 || dataVar === tableStyle.regionVariable) {
-            tableStyle.dataVariable = (vars.indexOf(tableStyle.regionVariable) === 0) ? vars[1] : vars[0];
+        var varNames = dataset.getVariableNames();
+        if (varNames.indexOf(dataVar) === -1 || dataVar === tableStyle.regionVariable) {
+            tableStyle.dataVariable = (varNames.indexOf(tableStyle.regionVariable) === 0) ? varNames[1] : varNames[0];
         }
         tableStyle.dataVariable = dataVar;
         dataSource.setDataVariable(dataVar);

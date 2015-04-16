@@ -1,7 +1,7 @@
 /*global require*/
 "use strict";
 
-var Dataset = require('./Dataset');
+var DataTable = require('./DataTable');
 
 /*
 TableDataSource object for displaying geo-located datasets
@@ -28,26 +28,26 @@ var TableDataSource = function () {
 
     //Create a czmlDataSource to piggyback on
     this.czmlDataSource = new CzmlDataSource();
-    this.dataset = new Dataset();
-    this.show = true;
+    this.dataset = new DataTable();
+    this.loadingData = false;
+
     this._colorByValue = true;  //set to false by having only 1 entry in colorMap
 
-    this.setTableStyle( {
-        scale: 1.0,
-        scaleByValue: false,
-        imageUrl: '',
-        displayTime: 60,  //minutes
-        minDisplayValue: undefined,
-        maxDisplayValue: undefined,
-        filterOuterValues: false,
-        colorMap: [
-            {offset: 0.0, color: 'rgba(32,0,200,1.0)'},
-            {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
-            {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
-            {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
-            {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
-        ]
-    });
+    this.scale = 1.0;
+    this.scaleByValue = false;
+    this.imageUrl = '';
+    this.displayTime = 60;  //minutes
+    this.minDisplayValue = undefined;
+    this.maxDisplayValue = undefined;
+    this.clampDisplayValue = true;
+
+    this.setColorGradient([
+        {offset: 0.0, color: 'rgba(32,0,200,1.0)'},
+        {offset: 0.25, color: 'rgba(0,200,200,1.0)'},
+        {offset: 0.5, color: 'rgba(0,200,0,1.0)'},
+        {offset: 0.75, color: 'rgba(200,200,0,1.0)'},
+        {offset: 1.0, color: 'rgba(200,0,0,1.0)'}
+    ]);
 };
 
 defineProperties(TableDataSource.prototype, {
@@ -127,21 +127,62 @@ defineProperties(TableDataSource.prototype, {
 
 
 
-TableDataSource.prototype.setTableStyle = function (tableStyle) {
-    if (!defined(tableStyle)) {
+/**
+ * Set the table display style parameters
+ *
+ * @param {Object} style An object containing the style parameters for the datasource.
+ * @param {Float} [style.scaleByValue] The scale of the displayed point. 
+ * @param {Boolean} [style.imageUrl] Whether to scale the point based on normalized value. 
+ * @param {String} [style.displayTime] A string representing an image to display for the point. 
+ * @param {Float} [style.minDisplayValue] Set the minimum value for the colormap. 
+ * @param {Float} [style.maxDisplayValue] Set the maximum value for the colormap. 
+ * @param {Float} [style.clampDisplayValue] Display values that fall outside the display range as min and max colors. 
+ * @param {Array} [style.colorMap] A colormap applied to color the data points.
+ * @param {String}[style.dataVariable] Which data variable to display.
+ *
+ */
+TableDataSource.prototype.setDisplayStyle = function (style) {
+    if (!defined(style)) {
         return;
     }
 
-    this.scale = tableStyle.scale || this.scale;
-    this.scaleByValue = tableStyle.scaleByValue || this.scaleByValue;
-    this.imageUrl = tableStyle.imageUrl || this.imageUrl;
-    this.displayTime = tableStyle.displayTime || this.displayTime;
-    this.minDisplayValue = tableStyle.minDisplayValue;
-    this.maxDisplayValue = tableStyle.maxDisplayValue;
-    this.filterOuterValues = tableStyle.filterOuterValues || this.filterOuterValues;
+    this.scale = style.scale || this.scale;
+    this.scaleByValue = style.scaleByValue || this.scaleByValue;
+    this.imageUrl = style.imageUrl || this.imageUrl;
+    this.displayTime = style.displayTime || this.displayTime;
+    this.minDisplayValue = style.minDisplayValue;
+    this.maxDisplayValue = style.maxDisplayValue;
+    this.clampDisplayValue = style.clampDisplayValue || this.clampDisplayValue;
 
-    this.setColorGradient(tableStyle.colorMap);
-    this.setDataVariable(tableStyle.dataVariable);
+    if (defined(style.colorMap)) {
+        this.setColorGradient(style.colorMap);
+    }
+    if (defined(style.dataVariable)) {
+        this.setDataVariable(style.dataVariable);
+    }
+};
+
+
+
+/**
+ * Set the table display style parameters (see setDisplayStyle for more style format)
+ *
+ * @returns {Object} An object containing the style parameters for the datasource.
+ *
+ */
+TableDataSource.prototype.getDisplayStyle = function () {
+
+    return {
+        scale: this.scale,
+        scaleByValue: this.scaleByValue,
+        imageUrl: this.imageUrl,
+        displayTime: this.displayTime,
+        minDisplayValue: this.minDisplayValue,
+        maxDisplayValue: this.maxDisplayValue,
+        clampDisplayValue: this.clampDisplayValue,
+        colorMap: this.colorMap,
+        dataVariable: this.dataVariable
+    };
 };
 
 /**
@@ -155,29 +196,33 @@ TableDataSource.prototype.loadUrl = function (url) {
     if (!defined(url)) {
         return;
     }
+    this.loadingData = true;
     var that = this;
     return loadText(url).then(function(text) {
-        return that.loadText(text);
+        that.loadText(text);
+        that.loadingData = false;
     });
 };
 
 /**
- * Asynchronously loads the Table from text, replacing any existing data.
+ * Loads the Table from text, replacing any existing data.
  *
  * @param {Object} text The text to be processed.
  *
- * @returns {Promise} a promise that will resolve when the CZML is processed.
  */
 TableDataSource.prototype.loadText = function (text) {
     this.dataset.loadText(text);
-    this.setDisplayTimeByPercent(1.0);
+    if (this.dataset && this.dataset.hasTimeData() && defined(this.dataset.getTimeMaxValue())) {
+        var percentDisplay = 1.0;
+        this.displayTime = JulianDate.secondsDifference(this.dataset.getTimeMaxValue(), this.dataset.getTimeMinValue()) * percentDisplay / (60.0 * 100.0);
+    }
     this.setDataVariable(this.dataVariable);
 };
 
 /**
-* Load a variable
+* Sets the current data variable
 *
-* @memberof TableDataSource
+* @param {String} varName The name of the variable to make the data variable
 *
 */
 TableDataSource.prototype.setDataVariable = function (varName) {
@@ -213,13 +258,7 @@ TableDataSource.prototype.describe = function(properties) {
 };
 
 
-/**
-* Replaceable visualizer function
-*
-* @memberof TableDataSource
-*
-*/
-TableDataSource.prototype.czmlRecFromPoint = function (point) {
+TableDataSource.prototype._czmlRecFromPoint = function (point) {
 
     var rec = {
         "name": "Site Data",
@@ -286,7 +325,7 @@ TableDataSource.prototype.czmlRecFromPoint = function (point) {
 /**
 * Get a list of display records for the current point list in czml format.
 *
-* @memberof TableDataSource
+* @return {Object} An object in czml format representing the data.
 *
 */
 TableDataSource.prototype.getCzmlDataPointList = function () {
@@ -302,8 +341,8 @@ TableDataSource.prototype.getCzmlDataPointList = function () {
     }];
     
     for (var i = 0; i < pointList.length; i++) {
-        //set position, scale, color, and display time
-        var rec = this.czmlRecFromPoint(pointList[i]);
+            //set position, scale, color, and display time
+        var rec = this._czmlRecFromPoint(pointList[i]);
         rec.description = this.describe(this.dataset.getDataRow(pointList[i].row));
         dispRecords.push(rec);
     }
@@ -314,7 +353,9 @@ TableDataSource.prototype.getCzmlDataPointList = function () {
 /**
 * Get a list of display records for the current point list.
 *
-* @memberof TableDataSource
+* @param {JulianTime} time The time value to filter the data against
+*
+* @returns {Array} An array of point objects based on the selected variables
 *
 */
 TableDataSource.prototype.getDataPointList = function (time) {
@@ -348,10 +389,10 @@ TableDataSource.prototype._getNormalizedPoint = function (pntVal) {
     if (this.dataset === undefined || this.dataset.isNoData(pntVal)) {
         return undefined;
     }
-    var minVal = this.minDisplayValue || this.dataset.getMinDataValue();
-    var maxVal = this.maxDisplayValue || this.dataset.getMaxDataValue();
+    var minVal = this.minDisplayValue || this.dataset.getDataMinValue();
+    var maxVal = this.maxDisplayValue || this.dataset.getDataMaxValue();
     var normPoint = (maxVal === minVal) ? 0 : (pntVal - minVal) / (maxVal - minVal);
-    if (!this.filterOuterValues) {
+    if (this.clampDisplayValue) {
         normPoint = Math.max(0.0, Math.min(1.0, normPoint));
     }
     return normPoint;
@@ -385,50 +426,11 @@ TableDataSource.prototype._mapValue2Color = function (pntVal) {
     return color;
 };
 
-/**
-* Set the point display time by percent
-*
-* @memberof TableDataSource
-*
-*/
-TableDataSource.prototype.setDisplayTimeByMinutes = function (minutes) {
-    if (!defined(minutes) || (typeof minutes !== 'number')) {
-        return;
-    }
-    this.displayTime = minutes;
-};
-
-
-/**
-* Set the point display time by percent
-*
-* @memberof TableDataSource
-*
-*/
-TableDataSource.prototype.setDisplayTimeByPercent = function (pct) {
-    if (!defined(pct) || (typeof pct !== 'number')) {
-        return;
-    }
-    if (this.dataset && this.dataset.hasTimeData() && defined(this.dataset.getMaxTime())) {
-        this.displayTime = JulianDate.secondsDifference(this.dataset.getMaxTime(), this.dataset.getMinTime()) * pct / (60.0 * 100.0);
-    }
-};
-
-
-/**
-* Set the image used to represent the data points
-*
-* @memberof TableDataSource
-*
-*/
-TableDataSource.prototype.setImageUrl = function (imageUrl) {
-    this.imageUrl = imageUrl;
-};
 
 /**
 * Get a data url that holds the image for the legend
 *
-* @memberof TableDataSource
+* @returns {String} A data url that is a png of the legend for the datasource
 *
 */
 TableDataSource.prototype.getLegendGraphic = function () {
@@ -448,7 +450,7 @@ TableDataSource.prototype.getLegendGraphic = function () {
     var ctx = canvas.getContext('2d');
 
         // Create Linear Gradient
-    var grad = this.colorGradient;
+    var grad = this.colorMap;
     var linGrad = ctx.createLinearGradient(0,0,0,gradH);
     for (var i = 0; i < grad.length; i++) {
         linGrad.addColorStop(grad[i].offset, grad[i].color);
@@ -464,8 +466,8 @@ TableDataSource.prototype.getLegendGraphic = function () {
     
         //text
     var val;
-    var minText = (val = this.minDisplayValue || this.dataset.getMinDataValue()) === undefined ? 'und.' : val.toString();
-    var maxText = (val = this.maxDisplayValue || this.dataset.getMaxDataValue()) === undefined ? 'und.' : val.toString();
+    var minText = (val = this.minDisplayValue || this.dataset.getDataMinValue()) === undefined ? 'und.' : val.toString();
+    var maxText = (val = this.maxDisplayValue || this.dataset.getDataMaxValue()) === undefined ? 'und.' : val.toString();
     var varText = this.dataset.getDataVariable();
     
     ctx.setTransform(1,0,0,1,0,0);
@@ -482,15 +484,16 @@ TableDataSource.prototype.getLegendGraphic = function () {
 /**
 * Set the gradient used to color the data points
 *
-* @memberof TableDataSource
+* @param {Array} colorMap A colormap with an array of entries as defined for html5 
+*   canvas linear gradients e.g., { offset: xx, color: 'rgba(32,0,200,1.0)'}
 *
 */
-TableDataSource.prototype.setColorGradient = function (colorGradient) {
-    if (colorGradient === undefined) {
+TableDataSource.prototype.setColorGradient = function (colorMap) {
+    if (colorMap === undefined) {
         return;
     }
     
-    this.colorGradient = colorGradient;
+    this.colorMap = colorMap;
 
     var canvas = document.createElement("canvas");
     if (!defined(canvas)) {
@@ -501,7 +504,7 @@ TableDataSource.prototype.setColorGradient = function (colorGradient) {
     var ctx = canvas.getContext('2d');
     
     // Create Linear Gradient
-    var grad = this.colorGradient;
+    var grad = this.colorMap;
     var linGrad = ctx.createLinearGradient(0,0,0,h);
     if (grad.length === 1) {
         this._colorByValue = false;
@@ -521,8 +524,6 @@ TableDataSource.prototype.setColorGradient = function (colorGradient) {
 
 /**
 * Destroy the object and release resources
-*
-* @memberof TableDataSource
 *
 */
 TableDataSource.prototype.destroy = function () {
