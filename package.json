@@ -1,6 +1,6 @@
 {
     "name": "terriajs",
-    "version": "0.0.3",
+    "version": "0.0.9",
     "description": "Geospatial data visualization platform.",
     "license": "Apache-2.0",
     "repository": {
@@ -45,9 +45,13 @@
         "watchify": "git://github.com/cconger/watchify#35407c030db9c6c9099e7fc2a5c21ac5eb7db5f8"
     },
     "scripts": {
+        "prepublish": "gulp prepare-cesium",
         "start": "node_modules/.bin/supervisor server"
     },
     "browser": {
         "knockout": "./third_party/cesium/Source/ThirdParty/knockout.js"
+    },
+    "browserify": {
+        "transform": ["brfs", "deamdify"]
     }
 }

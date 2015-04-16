@@ -101,7 +101,7 @@ gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumW
 
 gulp.task('build-cesium', function(cb) {
     return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
-        cwd : 'third_party/cesium'
+        cwd : 'Cesium'
     }, function(err, stdout, stderr) {
         if (stderr) {
             console.log('Error while building Cesium: ');
@@ -113,18 +113,18 @@ gulp.task('build-cesium', function(cb) {
 
 gulp.task('copy-cesium-assets', function() {
     return gulp.src([
-            'third_party/cesium/Source/Workers/transferTypedArrayTest.js',
-            'third_party/cesium/Source/ThirdParty/Workers/**',
-            'third_party/cesium/Source/Assets/**',
-            'third_party/cesium/Source/Widgets/**/*.css',
-            'third_party/cesium/Source/Widgets/Images/**'
-        ], { base: 'third_party/cesium/Source' })
-        .pipe(gulp.dest('public/build/Cesium/'));
+            'Cesium/Source/Workers/transferTypedArrayTest.js',
+            'Cesium/Source/ThirdParty/Workers/**',
+            'Cesium/Source/Assets/**',
+            'Cesium/Source/Widgets/**/*.css',
+            'Cesium/Source/Widgets/Images/**'
+        ], { base: 'Cesium/Source' })
+        .pipe(gulp.dest('build/Cesium/'));
 });
 
 gulp.task('copy-cesiumWorkerBootstrapper', function() {
-    return gulp.src('src/cesiumWorkerBootstrapper.js')
-        .pipe(gulp.dest('public/build/Cesium/Workers'));
+    return gulp.src('cesiumWorkerBootstrapper.js')
+        .pipe(gulp.dest('build/Cesium/Workers'));
 });
 
 gulp.task('default', ['lint', 'build']);

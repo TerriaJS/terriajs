@@ -1,3 +1,6 @@
-node_modules/
-third_party/cesium/Tools
-third_party/cesium/ThirdParty
+Cesium/Tools/
+Cesium/ThirdParty/
+Cesium/Apps/
+Cesium/Documentation/
+Cesium/launches/
+Cesium/Specs/
