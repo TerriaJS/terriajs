@@ -9,6 +9,7 @@ var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var destroyObject = require('../../third_party/cesium/Source/Core/destroyObject');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
+var Ellipsoid = require('../../third_party/cesium/Source/Core/Ellipsoid');
 var Entity = require('../../third_party/cesium/Source/DataSources/Entity');
 var formatError = require('../../third_party/cesium/Source/Core/formatError');
 var getTimestamp = require('../../third_party/cesium/Source/Core/getTimestamp');
@@ -432,6 +433,7 @@ function postRender(cesium, date) {
 function pickObject(cesium, e) {
     var pickRay = cesium.scene.camera.getPickRay(e.position);
     var pickPosition = cesium.scene.globe.pick(pickRay, cesium.scene);
+    var pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(pickPosition);
 
     var result = new PickedFeatures();
     result.pickPosition = pickPosition;
@@ -460,6 +462,13 @@ function pickObject(cesium, e) {
 
         for (var i = 0; i < features.length; ++i) {
             var feature = features[i];
+
+            // If the picked feature does not have a height, use the height of the picked location.
+            // This at least avoids major parallax effects on the selection indicator.
+            if (!defined(feature.position.height) || feature.position.height === 0.0) {
+                feature.position.height = pickPositionCartographic.height;
+            }
+
             result.features.push(cesium._createEntityFromImageryLayerFeature(feature));
         }
     }).otherwise(function(e) {
