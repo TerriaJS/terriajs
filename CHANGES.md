@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 2015-05-15
+
+* Elminated distracting "jumping" of the selection indicator when picking point features while zoomed in very close to the surface.
+* Fixed a bug that caused features to be picked from all layers in an Esri MapServer, instead of just the visible ones.
+* Added support for the WMS MinScaleDenominator property and the Esri MapServer maxScale property, preventing layers from disappearing when zoomed in to close to the surface.
+
 ### 2015-04-15
 
 * Upgraded to Cesium 1.8.  See the [changelog](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.8/CHANGES.md) for details.
