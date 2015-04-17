@@ -39,7 +39,6 @@ var CsvCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
     this._tableDataSource = undefined;
-    this._clock = undefined;
     this._clockTickUnsubscribe = undefined;
 
     this._regionMapped = false;
@@ -72,21 +71,11 @@ var CsvCatalogItem = function(application, url) {
      */
     this.opacity = 0.6;
 
-    knockout.track(this, ['url', 'data', 'tableStyle', 'opacity', '_clock']);
+    knockout.track(this, ['url', 'data', 'tableStyle', 'opacity']);
 
     knockout.getObservable(this, 'opacity').subscribe(function(newValue) {
         updateOpacity(this);
     }, this);
-
-    delete this.__knockoutObservables.clock;
-    knockout.defineProperty(this, 'clock', {
-        get : function() {
-            return this._clock;
-        },
-        set : function(value) {
-            this._clock = value;
-        }
-    });
 
     // Subscribe to isShown changing and add/remove the clock tick subscription as necessary.
     knockout.getObservable(this, 'isShown').subscribe(function() {
@@ -332,7 +321,7 @@ CsvCatalogItem.prototype._createImageryProvider = function(time) {
         }
         
         return when(featurePromise, function(results) {
-            if (!defined(results)) {
+            if (!defined(results) || results.length === 0) {
                 return;
             }
 
@@ -375,13 +364,10 @@ function updateOpacity(csvItem) {
 
 CsvCatalogItem.prototype._redisplay = function() {
     if (defined(this._imageryLayer)) {
-        if (defined(this.application.cesium)) {
-            this._hideInCesium();
-            this._showInCesium();
-        } else {
-            this._hideInLeaflet();
-            this._showInLeaflet();
-        }
+        this._hide();
+        this._disable();
+        this._enable();
+        this._show();
     }
 };
 
