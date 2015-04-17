@@ -8,6 +8,9 @@ Change Log
 * Added the ability to specify CSV styling in the init file (example in `public/init/test.json`).
 * Improved the appearance of the legends generating with region mapping.
 * Added the ability to region-map countries (example in `public/test/countries.csv`).
+* Elminated distracting "jumping" of the selection indicator when picking point features while zoomed in very close to the surface.
+* Fixed a bug that caused features to be picked from all layers in an Esri MapServer, instead of just the visible ones.
+* Added support for the WMS MinScaleDenominator property and the Esri MapServer maxScale property, preventing layers from disappearing when zoomed in to close to the surface.
 
 ### 2015-04-15
 

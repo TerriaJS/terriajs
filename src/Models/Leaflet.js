@@ -228,7 +228,7 @@ function pickFeatures(leaflet, latlng) {
                         feature.position = pickedLocation;
                     }
 
-                    leaflet._pickedFeatures.features.push(leaflet._createEntityFromImageryLayerFeature(feature, Cartographic.fromDegrees(latlng.lng, latlng.lat)));
+                    leaflet._pickedFeatures.features.push(leaflet._createEntityFromImageryLayerFeature(feature));
                 }
             }
         }
