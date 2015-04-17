@@ -7,12 +7,9 @@ var glob = require('glob-all');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var browserify = require('browserify');
-var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
-var less = require('gulp-less');
 var uglify = require('gulp-uglify');
-var jasmine = require('gulp-jasmine');
 var exec = require('child_process').exec;
 var sourcemaps = require('gulp-sourcemaps');
 var exorcist = require('exorcist');
@@ -30,15 +27,8 @@ var workerGlob = [
     '!./third_party/cesium/Source/Workers/transferTypedArrayTest.js',
     '!./third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
 ];
-var sourceGlob = [
-    '**/*.js',
-    '!Cesium/**/*.js',
-    '!node_modules/**/*.js',
-    '!public/**/*.js',
-    '!build/**/*.js',
-    '!gulpfile.js'
-];
-var specGlob = './spec/**/*.js';
+var sourceGlob = './lib/**/*.js';
+var testGlob = './test/**/*.js';
 
 
 // Create the build directory, because browserify flips out if the directory that might
@@ -48,25 +38,25 @@ if (!fs.existsSync('public/build')) {
 }
 
 gulp.task('build-specs', ['prepare-cesium'], function() {
-    return build(specJSName, glob.sync(specGlob), false);
+    return build(specJSName, glob.sync(testGlob), false);
 });
 
 gulp.task('build', ['build-specs']);
 
 gulp.task('release-specs', ['prepare-cesium'], function() {
-    return build(specJSName, glob.sync(specGlob), true);
+    return build(specJSName, glob.sync(testGlob), true);
 });
 
 gulp.task('release', ['release-specs']);
 
 gulp.task('watch-specs', ['prepare-cesium'], function() {
-    return watch(specJSName, glob.sync(specGlob), false);
+    return watch(specJSName, glob.sync(testGlob), false);
 });
 
 gulp.task('watch', ['watch-specs']);
 
 gulp.task('lint', function(){
-    var sources = glob.sync(sourceGlob);
+    var sources = glob.sync([sourceGlob, testGlob]);
     return gulp.src(sources)
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
@@ -74,7 +64,7 @@ gulp.task('lint', function(){
 });
 
 gulp.task('docs', function(){
-    return gulp.src(glob.sync(sourceGlob))
+    return gulp.src([sourceGlob])
         .pipe(jsdoc('./public/doc', undefined, {
             plugins : ['plugins/markdown']
         }));
@@ -102,12 +92,12 @@ gulp.task('copy-cesium-assets', function() {
             'Cesium/Source/Widgets/**/*.css',
             'Cesium/Source/Widgets/Images/**'
         ], { base: 'Cesium/Source' })
-        .pipe(gulp.dest('build/Cesium/'));
+        .pipe(gulp.dest('public/build/Cesium/'));
 });
 
 gulp.task('copy-cesiumWorkerBootstrapper', function() {
     return gulp.src('cesiumWorkerBootstrapper.js')
-        .pipe(gulp.dest('build/Cesium/Workers'));
+        .pipe(gulp.dest('public/build/Cesium/Workers'));
 });
 
 gulp.task('default', ['lint', 'build']);
@@ -116,10 +106,7 @@ function bundle(name, bundler, minify, catchErrors) {
     requireWebWorkers(bundler);
 
     // Combine main.js and its dependencies into a single file.
-    // The poorly-named "debug: true" causes Browserify to generate a source map.
-    var result = bundler.bundle({
-            debug: true
-        });
+    var result = bundler.bundle();
 
     if (catchErrors) {
         // Display errors to the user, and don't let them propagate.
@@ -153,11 +140,20 @@ function bundle(name, bundler, minify, catchErrors) {
 }
 
 function build(name, files, minify) {
-    return bundle(name, browserify(files).transform('brfs').transform('deamdify'), minify, false);
+    // The poorly-named "debug: true" causes Browserify to generate a source map.
+    return bundle(name, browserify({
+        entries: files,
+        debug: true
+    }).transform('brfs'), minify, false);
 }
 
 function watch(name, files, minify) {
-    var bundler = watchify(files).transform('brfs').transform('deamdify');
+    var bundler = watchify(browserify({
+        entries: files,
+        debug: true,
+        cache: {},
+        packageCache: {}
+    })).transform('brfs');
 
     function rebundle() {
         var start = new Date();
