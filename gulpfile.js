@@ -144,7 +144,7 @@ function build(name, files, minify) {
     return bundle(name, browserify({
         entries: files,
         debug: true
-    }).transform('brfs'), minify, false);
+    }), minify, false);
 }
 
 function watch(name, files, minify) {
@@ -153,7 +153,7 @@ function watch(name, files, minify) {
         debug: true,
         cache: {},
         packageCache: {}
-    })).transform('brfs');
+    }));
 
     function rebundle() {
         var start = new Date();
