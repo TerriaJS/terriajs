@@ -22,15 +22,21 @@ var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 
 
-var appJSName = 'ausglobe.js';
-var specJSName = 'ausglobe-specs.js';
-var appEntryJSName = './src/main.js';
+var specJSName = 'TerriaJS-specs.js';
 var workerGlob = [
     './third_party/cesium/Source/Workers/*.js',
     '!./third_party/cesium/Source/Workers/*.profile.js',
     '!./third_party/cesium/Source/Workers/cesiumWorkerBootstrapper.js',
     '!./third_party/cesium/Source/Workers/transferTypedArrayTest.js',
     '!./third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
+];
+var sourceGlob = [
+    '**/*.js',
+    '!Cesium/**/*.js',
+    '!node_modules/**/*.js',
+    '!public/**/*.js',
+    '!build/**/*.js',
+    '!gulpfile.js'
 ];
 var specGlob = './spec/**/*.js';
 
@@ -41,57 +47,34 @@ if (!fs.existsSync('public/build')) {
     fs.mkdirSync('public/build');
 }
 
-gulp.task('build-app', ['prepare-cesium'], function() {
-    return build(appJSName, appEntryJSName, false);
-});
-
 gulp.task('build-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(specGlob), false);
 });
 
-gulp.task('build-css', function() {
-    return gulp.src('./src/main.less')
-        .pipe(less({
-
-        }))
-        .pipe(gulp.dest('./public/build'));
-});
-
-gulp.task('build', ['build-css', 'build-app', 'build-specs']);
-
-gulp.task('release-app', ['prepare-cesium'], function() {
-    return build(appJSName, appEntryJSName, true);
-});
+gulp.task('build', ['build-specs']);
 
 gulp.task('release-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(specGlob), true);
 });
 
-gulp.task('release', ['build-css', 'release-app', 'release-specs']);
-
-gulp.task('watch-app', ['prepare-cesium'], function() {
-    return watch(appJSName, appEntryJSName, false);
-});
+gulp.task('release', ['release-specs']);
 
 gulp.task('watch-specs', ['prepare-cesium'], function() {
     return watch(specJSName, glob.sync(specGlob), false);
 });
 
-gulp.task('watch-css', ['build-css'], function() {
-    return gulp.watch(['./src/main.less', './src/Styles/*.less'], ['build-css']);
-});
-
-gulp.task('watch', ['watch-app', 'watch-specs', 'watch-css']);
+gulp.task('watch', ['watch-specs']);
 
 gulp.task('lint', function(){
-    return gulp.src(['src/**/*.js', 'spec/**/*.js'])
+    var sources = glob.sync(sourceGlob);
+    return gulp.src(sources)
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('docs', function(){
-    return gulp.src('src/**/*.js')
+    return gulp.src(glob.sync(sourceGlob))
         .pipe(jsdoc('./public/doc', undefined, {
             plugins : ['plugins/markdown']
         }));
