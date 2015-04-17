@@ -65,6 +65,10 @@ var CesiumTileLayer = L.TileLayer.extend({
             } else if (tilingScheme.getNumberOfXTilesAtLevel(0) !== 1 || tilingScheme.getNumberOfYTilesAtLevel(0) !== 1) {
                 throw new DeveloperError('Only ImageryProviders with 1x1 or 2x2 tiles at level 0 can be used with Leaflet.');
             }
+
+            if (defined(this.imageryProvider.maximumLevel)) {
+                this.options.maxNativeZoom = this.imageryProvider.maximumLevel;
+            }
         }
 
         L.TileLayer.prototype._update.apply(this, arguments);
