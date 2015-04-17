@@ -2,31 +2,28 @@
 
 /*global require,L,$*/
 
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
-var combine = require('../../third_party/cesium/Source/Core/combine');
-var defaultValue = require('../../third_party/cesium/Source/Core/defaultValue');
+var clone = require('../../third_party/cesium/Source/Core/clone');
+var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var defineProperties = require('../../third_party/cesium/Source/Core/defineProperties');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
-var ImageryLayer = require('../../third_party/cesium/Source/Scene/ImageryLayer');
+var freezeObject = require('../../third_party/cesium/Source/Core/freezeObject');
 var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
+var JulianDate = require('../../third_party/cesium/Source/Core/JulianDate');
 var loadText = require('../../third_party/cesium/Source/Core/loadText');
-var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var WebMapServiceImageryProvider = require('../../third_party/cesium/Source/Scene/WebMapServiceImageryProvider');
 var WebMapServiceCatalogItem = require('./WebMapServiceCatalogItem');
-var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
 var when = require('../../third_party/cesium/Source/ThirdParty/when');
 
 var CatalogItem = require('./CatalogItem');
 var corsProxy = require('../Core/corsProxy');
+var ImageryLayerCatalogItem = require('./ImageryLayerCatalogItem');
 var inherit = require('../Core/inherit');
 var Metadata = require('./Metadata');
 var ModelError = require('./ModelError');
 var readText = require('../Core/readText');
 var TableDataSource = require('../Map/TableDataSource');
-var VarType = require('../Map/VarType');
 
 /**
  * A {@link CatalogItem} representing CSV data.
@@ -42,6 +39,8 @@ var CsvCatalogItem = function(application, url) {
     CatalogItem.call(this, application);
 
     this._tableDataSource = undefined;
+    this._clockTickUnsubscribe = undefined;
+
     this._regionMapped = false;
 
     /**
@@ -59,20 +58,33 @@ var CsvCatalogItem = function(application, url) {
     this.data = undefined;
 
     /**
-     * Gets or sets the URL from which the {@link CsvCatalogItem#data} was obtained.
-     * @type {String}
+     * Gets or sets the tableStyle object
+     * @type {Object}
      */
-    this.dataSourceUrl = undefined;
+    this.tableStyle = undefined;
 
-    /**
-     * Gets or sets a value indicating whether data points in the CSV are color-coded based on the
-     * value column.
-     * @type {Boolean}
-     * @default true
+   /**
+     * Gets or sets the opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is
+     * fully opaque.  This property is observable.
+     * @type {Number}
+     * @default 0.6
      */
-    this.colorByValue = true;
+    this.opacity = 0.6;
 
-    knockout.track(this, ['url', 'data', 'dataSourceUrl', 'colorByValue']);
+    knockout.track(this, ['url', 'data', 'tableStyle', 'opacity']);
+
+    knockout.getObservable(this, 'opacity').subscribe(function(newValue) {
+        updateOpacity(this);
+    }, this);
+
+    // Subscribe to isShown changing and add/remove the clock tick subscription as necessary.
+    knockout.getObservable(this, 'isShown').subscribe(function() {
+        updateClockSubscription(this);
+    }, this);
+
+    knockout.getObservable(this, 'clock').subscribe(function() {
+        updateClockSubscription(this);
+    }, this);
 };
 
 inherit(CatalogItem, CsvCatalogItem);
@@ -128,6 +140,17 @@ defineProperties(CsvCatalogItem.prototype, {
     },
 
     /**
+     * Gets a value indicating whether the opacity of this data source can be changed.
+     * @memberOf ImageryLayerCatalogItem.prototype
+     * @type {Boolean}
+     */
+    supportsOpacity : {
+        get : function() {
+            return this._regionMapped;
+        }
+    },
+
+    /**
      * Gets the Cesium or Leaflet imagery layer object associated with this data source.
      * This property is undefined if the data source is not enabled.
      * @memberOf CsvCatalogItem.prototype
@@ -137,11 +160,34 @@ defineProperties(CsvCatalogItem.prototype, {
         get : function() {
             return this._imageryLayer;
         }
+    },
+    
+    /**
+     * Gets the set of names of the properties to be serialized for this object when {@link CatalogMember#serializeToJson} is called
+     * and the `serializeForSharing` flag is set in the options.
+     * @memberOf ImageryLayerCatalogItem.prototype
+     * @type {String[]}
+     */
+    propertiesForSharing : {
+        get : function() {
+            return CsvCatalogItem.defaultPropertiesForSharing;
+        }
     }
 });
 
+/**
+ * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogItem}-derived object with the
+ * `serializeForSharing` flag set in the options.
+ * @type {String[]}
+ */
+CsvCatalogItem.defaultPropertiesForSharing = clone(CatalogItem.defaultPropertiesForSharing);
+CsvCatalogItem.defaultPropertiesForSharing.push('opacity');
+CsvCatalogItem.defaultPropertiesForSharing.push('tableStyle');
+freezeObject(CsvCatalogItem.defaultPropertiesForSharing);
+
+
 CsvCatalogItem.prototype._getValuesThatInfluenceLoad = function() {
-    return [this.url, this.data, this.colorByValue];
+    return [this.url, this.data];
 };
 
 CsvCatalogItem.prototype._load = function() {
@@ -150,7 +196,6 @@ CsvCatalogItem.prototype._load = function() {
     }
 
     this._tableDataSource = new TableDataSource();
-    this._tableDataSource.colorByValue = this.colorByValue;
 
     var that = this;
 
@@ -188,14 +233,31 @@ An error occurred while retrieving CSV data from the provided link.'
     }
 };
 
-CsvCatalogItem.prototype._enableInCesium = function() {
+CsvCatalogItem.prototype._enable = function() {
+    if (this._regionMapped) {
+        this._imageryLayer = ImageryLayerCatalogItem.enableLayer(this, this._createImageryProvider(), this.opacity);
+
+        if (defined(this.application.leaflet)) {
+            var that = this;
+            this._imageryLayer.setFilter(function () {
+                new L.CanvasFilter(this, {
+                    channelFilter: function (image) {
+                        return recolorImage(image, that.colorFunc);
+                    }
+                }).render();
+            });
+        }
+    }
 };
 
-CsvCatalogItem.prototype._disableInCesium = function() {
+CsvCatalogItem.prototype._disable = function() {
+    if (this._regionMapped) {
+        ImageryLayerCatalogItem.disableLayer(this, this._imageryLayer);
+        this._imageryLayer = undefined;
+    }
 };
 
-CsvCatalogItem.prototype._showInCesium = function() {
-
+CsvCatalogItem.prototype._show = function() {
     if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
         if (dataSources.contains(this._tableDataSource)) {
@@ -205,56 +267,11 @@ CsvCatalogItem.prototype._showInCesium = function() {
         dataSources.add(this._tableDataSource);
     }
     else {
-        var scene = this.application.cesium.scene;
-
-        var imageryProvider = new WebMapServiceImageryProvider({
-            url : proxyUrl(this.application, this.url),
-            layers : this.layers,
-            parameters : WebMapServiceCatalogItem.defaultParameters
-        });
-
-        imageryProvider.base_requestImage = imageryProvider.requestImage;
-        var that = this;
-        imageryProvider.requestImage = function(x, y, level) {
-            var imagePromise = imageryProvider.base_requestImage(x, y, level);
-            if (!defined(imagePromise)) {
-                return imagePromise;
-            }
-            
-            return when(imagePromise, function(image) {
-                if (defined(image)) {
-                    image = recolorImageWithCanvas(that, image, that.colorFunc);
-                }
-                return image;
-            });
-        };
-            //remap image layer featurePicking Func
-        imageryProvider.base_pickFeatures = imageryProvider.pickFeatures;
-        imageryProvider.pickFeatures = function(x, y, level, longitude, latitude) {
-            var featurePromise = imageryProvider.base_pickFeatures(x, y, level, longitude, latitude);
-            if (!defined(featurePromise)) {
-                return featurePromise;
-            }
-            
-            return when(featurePromise, function(results) {
-                if (defined(results)) {
-                    var id = results[0].data.properties[that.regionProp];
-                    var properties = that.rowProperties(parseInt(id,10));
-                    results[0].description = that._tableDataSource.describe(properties);
-                }
-                return results;
-            });
-        };
-
-        this._imageryLayer = new ImageryLayer(imageryProvider, {alpha : 0.6} );
-
-        scene.imageryLayers.add(this._imageryLayer);
-
+        ImageryLayerCatalogItem.showLayer(this, this._imageryLayer);
     }
 };
 
-CsvCatalogItem.prototype._hideInCesium = function() {
-
+CsvCatalogItem.prototype._hide = function() {
     if (!this._regionMapped) {
         var dataSources = this.application.dataSources;
         if (!dataSources.contains(this._tableDataSource)) {
@@ -264,135 +281,61 @@ CsvCatalogItem.prototype._hideInCesium = function() {
         dataSources.remove(this._tableDataSource, false);
     }
     else {
-        if (!defined(this._imageryLayer)) {
-            throw new DeveloperError('This data source is not enabled.');
-        }
-        
-        var scene = this.application.cesium.scene;
-        scene.imageryLayers.remove(this._imageryLayer);
-        this._imageryLayer = undefined;
+        ImageryLayerCatalogItem.hideLayer(this, this._imageryLayer);
     }
 };
 
-CsvCatalogItem.prototype._enableInLeaflet = function() {
-};
-
-CsvCatalogItem.prototype._disableInLeaflet = function() {
-};
-
-CsvCatalogItem.prototype._showInLeaflet = function() {
-
-    if (!this._regionMapped) {
-        this._showInCesium();
-    }
-    else {
-        if (defined(this._imageryLayer)) {
-            throw new DeveloperError('This data source is already enabled.');
-        }
-        
-        var map = this.application.leaflet.map;
-        
-        var options = {
-            layers : this.layers,
-            opacity : 0.6
-        };
-        options = combine(defaultValue(WebMapServiceCatalogItem.defaultParameters), options);
-
-        this._imageryLayer = new L.tileLayer.wms(proxyUrl(this.application, this.url), options);
-
-        var that = this;
-        this._imageryLayer.setFilter(function () {
-            new L.CanvasFilter(this, {
-                channelFilter: function (image) {
-                    return recolorImage(image, that.colorFunc);
-                }
-           }).render();
-        });
-        this.wmsFeatureInfoFilter = function(result) {
-                if (defined(result)) {
-                    var properties = result.features[0].properties;
-                    var id = properties[that.regionProp];
-                    properties = combine(properties, that.rowProperties(parseInt(id,10)));
-                    properties.FID = undefined;
-                    properties[that.regionProp] = undefined;
-                    result.features[0].properties = properties;
-                }
-                return result;
-            };
-
-        map.addLayer(this._imageryLayer);
-    }
-};
-
-CsvCatalogItem.prototype._hideInLeaflet = function() {
-    if (!this._regionMapped) {
-        this._hideInCesium();
-    }
-    else {
-        if (!defined(this._imageryLayer)) {
-            throw new DeveloperError('This data source is not enabled.');
-        }
-
-        var map = this.application.leaflet.map;
-        map.removeLayer(this._imageryLayer);
-        this._imageryLayer = undefined;
-    }
-};
-
-CsvCatalogItem.prototype._rebuild = function() {
-    if (defined(this.application.cesium)) {
-        this._hideInCesium();
-        this._showInCesium();
-    }
-    else {
-        this._hideInLeaflet();
-        this._showInLeaflet();
-    }
-};
-
-CsvCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
-    if (!this._regionMapped) {
-        return undefined;
-    }
-
-    var projection = new WebMercatorProjection();
-    var sw = projection.project(Rectangle.southwest(mapExtent));
-    var ne = projection.project(Rectangle.northeast(mapExtent));
-
-    var tilingScheme = new WebMercatorTilingScheme({
-        rectangleSouthwestInMeters: sw,
-        rectangleNortheastInMeters: ne
-    });
-
-    // Compute the longitude and latitude of the pick location.
-    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
-    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
-
-    var ll = projection.unproject(new Cartesian2(x, y));
-
-    // Use a Cesium imagery provider to pick features.
+CsvCatalogItem.prototype._createImageryProvider = function(time) {
     var imageryProvider = new WebMapServiceImageryProvider({
-        url : proxyUrl(this.application, this.url),
-        layers : this.layers,
-        tilingScheme : tilingScheme,
-        tileWidth : mapWidth,
-        tileHeight : mapHeight
+        url: proxyUrl(this.application, this.regionServer),
+        layers: this.regionLayers,
+        parameters: WebMapServiceCatalogItem.defaultParameters,
+        getFeatureInfoParameters: WebMapServiceCatalogItem.defaultParameters,
+        tilingScheme: new WebMercatorTilingScheme()
     });
-
-    var pickFeaturesPromise = imageryProvider.pickFeatures(0, 0, 0, ll.longitude, ll.latitude);
-    if (!defined(pickFeaturesPromise)) {
-        return pickFeaturesPromise;
-    }
 
     var that = this;
-    return pickFeaturesPromise.then(function(results) {
-        if (defined(results)) {
-            var id = results[0].data.properties[that.regionProp];
-            var properties = that.rowProperties(parseInt(id,10));
-            results[0].description = that._tableDataSource.describe(properties);
+
+    // Override requestImage to recolor the images.
+    imageryProvider.base_requestImage = imageryProvider.requestImage;
+    imageryProvider.requestImage = function(x, y, level) {
+        var imagePromise = this.base_requestImage(x, y, level);
+        if (!defined(imagePromise)) {
+            return imagePromise;
         }
-        return results;
-    });
+        
+        return when(imagePromise, function(image) {
+            if (defined(image)) {
+                image = recolorImageWithCanvas(that, image, that.colorFunc);
+            }
+            return image;
+        });
+    };
+    
+    // Override pickFeatures to add more metadata.
+    imageryProvider.base_pickFeatures = imageryProvider.pickFeatures;
+    imageryProvider.pickFeatures = function(x, y, level, longitude, latitude) {
+        var featurePromise = this.base_pickFeatures(x, y, level, longitude, latitude);
+        if (!defined(featurePromise)) {
+            return featurePromise;
+        }
+        
+        return when(featurePromise, function(results) {
+            if (!defined(results) || results.length === 0) {
+                return;
+            }
+
+            for (var i = 0; i < results.length; ++i) {
+                var id = results[i].data.properties[that.regionProp];
+                var properties = that.rowProperties(id);
+                results[i].description = that._tableDataSource.describe(properties);
+            }
+
+            return results;
+        });
+    };
+
+    return imageryProvider;
 };
 
 function proxyUrl(application, url) {
@@ -405,14 +348,111 @@ function proxyUrl(application, url) {
 
 
 
+function updateOpacity(csvItem) {
+    if (defined(csvItem._imageryLayer)) {
+        if (defined(csvItem._imageryLayer.alpha)) {
+            csvItem._imageryLayer.alpha = csvItem.opacity;
+        }
+
+        if (defined(csvItem._imageryLayer.setOpacity)) {
+            csvItem._imageryLayer.setOpacity(csvItem.opacity);
+        }
+
+        csvItem.application.currentViewer.notifyRepaintRequired();
+    }
+}
+
+CsvCatalogItem.prototype._redisplay = function() {
+    if (defined(this._imageryLayer)) {
+        this._hide();
+        this._disable();
+        this._enable();
+        this._show();
+    }
+};
+
+CsvCatalogItem.prototype.dynamicUpdate = function(text) {
+    this.data = text;
+    var that = this;
+
+    return when(this.load()).then(function () {
+        that._redisplay();
+    });
+};
+
+function updateClockSubscription(csvItem) {
+    if (csvItem.isShown && defined(csvItem.clock) && csvItem._regionMapped) {
+        // Subscribe
+        if (!defined(csvItem._clockTickSubscription)) {
+            csvItem._clockTickSubscription = csvItem.application.clock.onTick.addEventListener(onClockTick.bind(undefined, csvItem));
+        }
+    } else {
+        // Unsubscribe
+        if (defined(csvItem._clockTickSubscription)) {
+            csvItem._clockTickSubscription();
+            csvItem._clockTickSubscription = undefined;
+        }
+    }
+}
+
+function onClockTick(csvItem, clock) {
+    var hasTimeData = csvItem._tableDataSource.dataset.hasTimeData();
+    if (!hasTimeData || !csvItem.isEnabled || !csvItem.isShown) {
+        return;
+    }
+    //check if time has changed
+    if (defined(csvItem.lastTime) && JulianDate.equals(clock.currentTime, csvItem.lastTime)) {
+        return;    
+    }
+    csvItem.lastTime = clock.currentTime;
+
+    //check if record data has changed
+    var recs = csvItem._tableDataSource.getDataPointList(clock.currentTime);
+    var recText = JSON.stringify(recs);
+    if (defined(csvItem.lastRecText) && recText === csvItem.lastRecText) {
+        return;
+    }
+    csvItem.lastRecText = recText;
+
+    //redisplay if we have new data
+    csvItem.recs = recs;
+    createRegionLookupFunc(csvItem);
+    csvItem._redisplay();
+}
+
+function createRegionMappingClock(csvItem) {
+    if (defined(csvItem.clock)) {
+        return;
+    }
+    var newClock;
+    var dataSource = csvItem._tableDataSource;
+    if (defined(dataSource) && defined(dataSource.dataset) && dataSource.dataset.hasTimeData()) {
+        var startTime = dataSource.dataset.getTimeMinValue();
+        var stopTime = dataSource.dataset.getTimeMaxValue();
+        var totalDuration = JulianDate.secondsDifference(stopTime, startTime);
+
+        newClock = new DataSourceClock();
+        newClock.startTime = startTime;
+        newClock.stopTime = stopTime;
+        newClock.currentTime = startTime;
+        newClock.multiplier = totalDuration / 60;
+    }
+    return newClock;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 function loadTable(csvItem, text) {
+
     csvItem._tableDataSource.loadText(text);
+
+    if (defined(csvItem.tableStyle)) {
+        csvItem._tableDataSource.setDisplayStyle(csvItem.tableStyle);
+    }
+
 
     if (!csvItem._tableDataSource.dataset.hasLocationData()) {
         console.log('No locaton date found in csv file - trying to match based on region');
-        csvItem.data = text;
         return when(addRegionMap(csvItem), function() {
             if (csvItem._regionMapped !== true) {
                 throw new ModelError({
@@ -424,9 +464,9 @@ a region mapping column.'
                 });
             }
             else {
+                csvItem.clock = createRegionMappingClock(csvItem);
                 csvItem.legendUrl = csvItem._tableDataSource.getLegendGraphic();
                 csvItem.application.currentViewer.notifyRepaintRequired();
-
             }
         });
     }
@@ -445,20 +485,19 @@ a region mapping column.'
 function recolorImage(image, colorFunc) {
     var length = image.data.length;  //pixel count * 4
     for (var i = 0; i < length; i += 4) {
-        if (image.data[i+3] < 255) {
+        if (image.data[i+3] < 255 || image.data[i] !== 0) {
+            image.data[i+3] = 0;
             continue;
         }
-        if (image.data[i] === 0) {
-            var idx = image.data[i+1] * 0x100 + image.data[i+2];
-            var clr = colorFunc(idx);
-            if (defined(clr)) {
-                for (var j = 0; j < 4; j++) {
-                    image.data[i+j] = clr[j];
-                }
+        var idx = image.data[i+1] * 0x100 + image.data[i+2];
+        var clr = colorFunc(idx);
+        if (defined(clr)) {
+            for (var j = 0; j < 4; j++) {
+                image.data[i+j] = clr[j];
             }
-            else {
-                image.data[i+3] = 0;
-            }
+        }
+        else {
+            image.data[i+3] = 0;
         }
     }
     return image;
@@ -490,57 +529,79 @@ var regionWmsMap = {
     'STE': {
         "name":"region_map:FID_STE_2011_AUST",
         "regionProp": "STE_CODE11",
-        "aliases": ['state', 'ste']
-    },
-    'CED': {
-        "name":"region_map:FID_CED_2011_AUST",
-        "regionProp": "CED_CODE",
-        "aliases": ['ced']
-    },
-    'SED': {
-        "name":"region_map:FID_SED_2011_AUST",
-        "regionProp": "SED_CODE",
-        "aliases": ['sed']
-    },
-    'POA': {
-        "name":"region_map:FID_POA_2011_AUST",
-        "regionProp": "POA_CODE",
-        "aliases": ['poa', 'postcode']
-    },
-    'LGA': {
-        "name":"region_map:FID_LGA_2011_AUST",
-        "regionProp": "LGA_CODE11",
-        "aliases": ['lga']
-    },
-    'SCC': {
-        "name":"region_map:FID_SCC_2011_AUST",
-        "regionProp": "SCC_CODE",
-        "aliases": ['scc', 'suburb']
+        "aliases": ['state', 'ste'],
+        "digits": 1
     },
     'SA4': {
         "name":"region_map:FID_SA4_2011_AUST",
         "regionProp": "SA4_CODE11",
-        "aliases": ['sa4']
+        "aliases": ['sa4'],
+        "digits": 3
     },
     'SA3': {
         "name":"region_map:FID_SA3_2011_AUST",
         "regionProp": "SA3_CODE11",
-        "aliases": ['sa3']
+        "aliases": ['sa3'],
+        "digits": 5
     },
     'SA2': {
         "name":"region_map:FID_SA2_2011_AUST",
         "regionProp": "SA2_MAIN11",
-        "aliases": ['sa2']
+        "aliases": ['sa2'],
+        "digits": 9
     },
 // COMMENTING OUT SA1: it works, but server performance is just too slow to be widely usable
 //    'SA1': {
 //        "name":"region_map:FID_SA1_2011_AUST",
 //        "regionProp": "SA1_7DIG11",
-//        "aliases": ['sa1']
-//    }
+//        "aliases": ['sa1'],
+//        "digits": 11
+//    },
+    'POA': {
+        "name":"region_map:FID_POA_2011_AUST",
+        "regionProp": "POA_CODE",
+        "aliases": ['poa', 'postcode'],
+        "digits": 4
+    },
+    'CED': {
+        "name":"region_map:FID_CED_2011_AUST",
+        "regionProp": "CED_CODE",
+        "aliases": ['ced'],
+        "digits": 3
+    },
+    'SED': {
+        "name":"region_map:FID_SED_2011_AUST",
+        "regionProp": "SED_CODE",
+        "aliases": ['sed'],
+        "digits": 5
+    },
+    'LGA': {
+        "name":"region_map:FID_LGA_2011_AUST",
+        "regionProp": "LGA_CODE11",
+        "aliases": ['lga'],
+        "digits": 5
+    },
+    'SSC': {
+        "name":"region_map:FID_SCC_2011_AUST",
+        "regionProp": "SSC_CODE",
+        "aliases": ['ssc', 'suburb'],
+        "digits": 5
+    },
+    'CNT2': {
+        "name":"region_map:FID_TM_WORLD_BORDERS",
+        "regionProp": "ISO2",
+        "aliases": ['iso2'],
+        "digits": 2
+    },
+    'CNT3': {
+        "name":"region_map:FID_TM_WORLD_BORDERS",
+        "regionProp": "ISO3",
+        "aliases": ['country', 'iso3'],
+        "digits": 3
+    }
 };
 
-//TODO: if we add enum capability and then can work with any unique field
+
 function loadRegionIDs(regionDescriptor) {
     if (defined(regionDescriptor.idMap)) {
         return;
@@ -560,7 +621,7 @@ function loadRegionIDs(regionDescriptor) {
         var idMap = [];
             //this turns ids into numbers since they are that way in table data
         for (var i = 0; i < obj.member.length; i++) {
-            idMap.push(parseInt(obj.member[i][regionDescriptor.regionProp],10));
+            idMap.push(obj.member[i][regionDescriptor.regionProp]);
         }
         regionDescriptor.idMap = idMap;
     }, function(err) {
@@ -568,9 +629,9 @@ function loadRegionIDs(regionDescriptor) {
     });
 }
 
-function determineRegionVar(vars, aliases) {
-    for (var i = 0; i < vars.length; i++) {
-        var varName = vars[i].toLowerCase();
+function determineRegionVar(varNames, aliases) {
+    for (var i = 0; i < varNames.length; i++) {
+        var varName = varNames[i].toLowerCase();
         for (var j = 0; j < aliases.length; j++) {
             if (varName.substring(0,aliases[j].length) === aliases[j]) {
                 return i;
@@ -580,47 +641,63 @@ function determineRegionVar(vars, aliases) {
     return -1;
 }
 
-function determineRegionType(dataset) {
-    var vars = dataset.getVarList();
 
-    var regionType;
-    var idx = -1;
+//TODO: determine enum or value code here rather than separate region records
+function determineRegionType(dataset) {
+    var varNames = dataset.getVariableNames();
+
+    var regionType, regionVariable, region;
     //try to figure out the region variable
-    for (regionType in regionWmsMap) {
-        if (regionWmsMap.hasOwnProperty(regionType)) {
-            idx = determineRegionVar(vars, regionWmsMap[regionType].aliases);
+    for (region in regionWmsMap) {
+        if (regionWmsMap.hasOwnProperty(region)) {
+            var idx = determineRegionVar(varNames, regionWmsMap[region].aliases);
             if (idx !== -1) {
+                regionType = region;
+                regionVariable = varNames[idx];
                 break;
             }
         }
     }
     
     //if no match, try to derive regionType from region_id to use native abs census files
-    if (idx === -1) {
+    if (!defined(regionType)) {
         var absRegion = 'region_id';
-        idx = vars.indexOf(absRegion);
-        if (idx === -1) {
+        if (varNames.indexOf(absRegion) === -1) {
             return;
         }
         var code = dataset.getDataValue(absRegion, 0);
-        regionType = code.replace(/[0-9]/g, '');
-        if (regionWmsMap[regionType] === undefined) {
-            return;
+        if (typeof code === 'string') {
+            region = code.replace(/[0-9]/g, '');
+            if (!defined(regionWmsMap[region])) {
+                return;
+            }
+            regionType = region;
+            var vals = dataset.getVariableValues(absRegion);
+            var new_vals = [];
+            for (var i = 0; i < vals.length; i++) {
+                var id = dataset.getDataValue(absRegion, vals[i]).replace( /^\D+/g, '');
+                new_vals.push(parseInt(id,10));
+            }
+            dataset.variables[absRegion].vals = new_vals;
+            dataset.variables[absRegion].enumList = undefined;
+        } else {
+            var digits = code.toString().length;
+            for (region in regionWmsMap) {
+                if (regionWmsMap.hasOwnProperty(region)) {
+                    if (digits === regionWmsMap[region].digits) {
+                        regionType = region;
+                        break;
+                    }
+                }
+            }
         }
-        var vals = dataset.getDataValues(absRegion);
-        var new_vals = [];
-        for (var i = 0; i < vals.length; i++) {
-            var id = dataset.getDataValue(absRegion, vals[i]).replace( /^\D+/g, '');
-            new_vals.push(parseInt(id,10));
+        if (defined(regionType)) {
+            regionVariable = regionType;
+            dataset.variables[regionType] = dataset.variables[absRegion];
+            delete dataset.variables[absRegion];
         }
-
-        dataset.variables[absRegion].vals = new_vals;
-        dataset.variables[regionType] = dataset.variables[absRegion];
-        delete dataset.variables[absRegion];
-        vars = dataset.getVarList();
-        idx = vars.indexOf(regionType);
     }
-    return { idx: idx, regionType: regionType};
+    return { regionType: regionType, regionVariable: regionVariable };
 }
 
 function createRegionLookupFunc(csvItem) {
@@ -631,47 +708,80 @@ function createRegionLookupFunc(csvItem) {
     var dataset = dataSource.dataset;
     var regionDescriptor = regionWmsMap[csvItem.regionType];
  
-    var codes = dataset.getDataValues(csvItem.regionVar);
-    var vals = dataset.getDataValues(dataset.getCurrentVariable());
+    var numericCodes = false;
+    var codes = dataset.getVariableEnums(csvItem.regionVariable);
     var ids = regionDescriptor.idMap;
-    var colors = new Array(ids.length);
-    // set color for each code
-    for (var i = 0; i < codes.length; i++) {
-        var id = ids.indexOf(codes[i]);
-        colors[id] = dataSource._mapValue2Color(vals[i]);
+    if (!defined(codes)) {
+        numericCodes = true;
+        codes = dataset.getVariableValues(csvItem.regionVariable);
+        for (var n = 0; n < ids.length; n++) {
+            ids[n] = parseInt(ids[n],10);
+        }
     }
+    var vals = dataset.getVariableValues(dataset.getDataVariable());
+    var colors = new Array(ids.length);
+    for (var c = 0; c < colors.length; c++) {
+        colors[c] = [0, 0, 0, 0];
+    }
+
+    // set color for each code
+    var row, index, codeMap = [];
+    if (!defined(csvItem.recs)) {
+        for (row = 0; row < codes.length; row++) {
+            index = ids.indexOf(codes[row]);
+            if (index >= 0 && colors[index][3] === 0) {
+                colors[index] = dataSource._mapValue2Color(vals[row]);
+            }
+        }
+    } else {
+        for (var i = 0; i < csvItem.recs.length; i++) {
+            row  = csvItem.recs[i];
+            codeMap[i] = codes[row];
+            index = ids.indexOf(codes[row]);
+            if (index >= 0 && colors[index][3] === 0) {
+                colors[index] = dataSource._mapValue2Color(vals[row]);
+            }
+        }
+    }
+
     //   color lookup function used by the region mapper
     csvItem.colorFunc = function(id) {
         return colors[id];
     };
+
+    function getRowIndex(code) {
+        if (codeMap.length > 0) {
+            return csvItem.recs[codeMap.indexOf(code)];
+        }
+        return codes.indexOf(numericCodes ? parseInt(code,10) : code);
+    }
+
     // used to get current variable data
     csvItem.valFunc = function(code) {
-        var rowIndex = codes.indexOf(code);
-        return vals[rowIndex];
+        return vals[getRowIndex(code)];
     };
     // used to get all region data properties
     csvItem.rowProperties = function(code) {
-        var rowIndex = codes.indexOf(code);
-        return dataset.getDataRow(rowIndex);
+        return dataset.getDataRow(getRowIndex(code));
     };
 }
 
-function setRegionVariable(csvItem, regionVar, regionType) {
+function setRegionVariable(csvItem, regionVariable, regionType) {
     if (!(csvItem._tableDataSource instanceof TableDataSource)) {
         return;
     }
 
-    csvItem.regionVar = regionVar;
+    csvItem.regionVariable = regionVariable;
     var regionDescriptor = regionWmsMap[regionType];
     if (csvItem.regionType !== regionType) {
         csvItem.regionType = regionType;
 
-        csvItem.url = regionServer;
-        csvItem.layers = regionDescriptor.name;
+        csvItem.regionServer = regionServer;
+        csvItem.regionLayers = regionDescriptor.name;
 
         csvItem.regionProp = regionDescriptor.regionProp;
     }
-    console.log('Region type:', csvItem.regionType, ', Region var:', csvItem.regionVar);
+    console.log('Region type:', csvItem.regionType, ', Region var:', csvItem.regionVariable);
         
     return when(loadRegionIDs(regionDescriptor), function() {
         createRegionLookupFunc(csvItem);
@@ -687,12 +797,12 @@ function setRegionDataVariable(csvItem, newVar) {
 
     var dataSource = csvItem._tableDataSource;
     var dataset = dataSource.dataset;
-    dataset.setCurrentVariable({ variable: newVar});
+    dataset.setDataVariable(newVar);
     createRegionLookupFunc(csvItem);
     
     console.log('Var set to:', newVar);
 
-    csvItem._rebuild();
+    csvItem._redisplay();
 }
 
 function setRegionColorMap(csvItem, dataColorMap) {
@@ -703,7 +813,7 @@ function setRegionColorMap(csvItem, dataColorMap) {
     csvItem._tableDataSource.setColorGradient(dataColorMap);
     createRegionLookupFunc(csvItem);
 
-    csvItem._rebuild();
+    csvItem._redisplay();
 }
 
 
@@ -711,50 +821,49 @@ function addRegionMap(csvItem) {
     if (!(csvItem._tableDataSource instanceof TableDataSource)) {
         return;
     }
-    //see if we can do region mapping
+
     var dataSource = csvItem._tableDataSource;
     var dataset = dataSource.dataset;
+    csvItem.colorFunc = function(id) { return [0,0,0,0]; };
+    if (dataset.getRowCount() === 0) {
+        return;
+    }
 
-    //if csvItem includes style/var info then use that
-    if (!defined(csvItem.style) || !defined(csvItem.style.table)) {
-        var regionObj = determineRegionType(dataset);
-        if (regionObj === undefined) {
+        //fill in missing tableStyle settings
+    var tableStyle = csvItem.tableStyle || {};
+    if (!defined(tableStyle.regionType) || !defined(tableStyle.regionVariable)) {
+        var result = determineRegionType(dataset);
+        if (!defined(result) || !defined(result.regionType)) {
             return;
         }
-        var idx = regionObj.idx;
-        var regionType = regionObj.regionType;
-
-            //change current var if necessary
-        var dataVar = dataset.getCurrentVariable();
-        var vars = dataset.getVarList();
-        if (dataVar === vars[idx]) {
-            dataVar = (idx === 0) ? vars[1] : vars[0];
+        tableStyle.regionVariable = result.regionVariable;
+        tableStyle.regionType = result.regionType;
+    }
+        //change current var if necessary
+    if (!defined(tableStyle.dataVariable)) {
+        var dataVar = dataset.getDataVariable();
+        var varNames = dataset.getVariableNames();
+        if (varNames.indexOf(dataVar) === -1 || dataVar === tableStyle.regionVariable) {
+            tableStyle.dataVariable = (varNames.indexOf(tableStyle.regionVariable) === 0) ? varNames[1] : varNames[0];
         }
-            //set default style if none set
-        var style = {line: {}, point: {}, polygon: {}, table: {}};
-        style.table.lat = undefined;
-        style.table.lon = undefined;
-        style.table.alt = undefined;
-        style.table.region = vars[idx];
-        style.table.regionType = regionType;
-        style.table.time = dataset.getVarID(VarType.TIME);
-        style.table.data = dataVar;
-        style.table.colorMap = [
+        tableStyle.dataVariable = dataVar;
+        dataSource.setDataVariable(dataVar);
+    }
+        //build an interesting color map if none present
+    if (!defined(tableStyle.colorMap)) {
+        tableStyle.colorMap = [
             {offset: 0.0, color: 'rgba(239,210,193,1.00)'},
             {offset: 0.25, color: 'rgba(221,139,116,1.0)'},
             {offset: 0.5, color: 'rgba(255,127,46,1.0)'},
             {offset: 0.75, color: 'rgba(255,65,43,1.0)'},
             {offset: 1.0, color: 'rgba(111,0,54,1.0)'}
         ];
-        csvItem.style = style;
+        dataSource.setColorGradient(tableStyle.colorMap);
     }
 
-    if (defined(csvItem.style.table.colorMap)) {
-        dataSource.setColorGradient(csvItem.style.table.colorMap);
-    }
-    dataSource.setCurrentVariable(csvItem.style.table.data);
+    csvItem.tableStyle = tableStyle;
 
-    //to make lint happy
+    //to keep lint happy
     if (false) {
         setRegionColorMap();
         setRegionDataVariable();
@@ -762,7 +871,7 @@ function addRegionMap(csvItem) {
     
     //TODO: figure out how sharing works or doesn't
     
-    return setRegionVariable(csvItem, csvItem.style.table.region, csvItem.style.table.regionType);
+    return setRegionVariable(csvItem, tableStyle.regionVariable, tableStyle.regionType);
 }
 
 

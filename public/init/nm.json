@@ -184,10 +184,14 @@
                             ],
                             "type": "csv",
                             "url": "http://www.data.gov.au/dataset/7be6e3ee-043a-4c47-a6eb-a97702419ccd/resource/c6b211ad-3aa2-4f53-8427-01b52a6433a7/download/mobileblackspotdatabase.csv",
-                            "colorByValue": false,
                             "legendUrl": "",
                             "dataUrl": "http://data.gov.au/dataset/community-reports-of-poor-or-no-mobile-coverage",
-                            "dataUrlType": "direct"
+                            "dataUrlType": "direct",
+                            "tableStyle": {
+                                "colorMap": [
+                                    { "offset": 0.0, "color": "rgba(64, 64, 255,1.00)" }
+                                ]
+                            }
                         }
                     ]
                 },
@@ -384,7 +388,6 @@
                                 "-10.687579999655679"
                             ],
                             "type": "wms",
-
                             "url": "http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows",
                             "layers": "Framework:mainlands"
 
@@ -400,7 +403,6 @@
                                 "-8.93332999971015"
                             ],
                             "type": "wms",
-
                             "url": "http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows",
                             "layers": "Framework:mapindexes"
 
@@ -416,7 +418,6 @@
                                 "-12.584149999598258"
                             ],
                             "type": "wms",
-
                             "url": "http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows",
                             "layers": "Framework:prohibitedareas"
 

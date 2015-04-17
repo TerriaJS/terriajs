@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+### 2015-05-15
+
+* Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
+* Added support for time-dynamic region mapping (example in `public/test/droughts.csv`).
+* Added the ability to specify CSV styling in the init file (example in `public/init/test.json`).
+* Improved the appearance of the legends generating with region mapping.
+* Added the ability to region-map countries (example in `public/test/countries.csv`).
+
 ### 2015-04-15
 
 * Upgraded to Cesium 1.8.  See the [changelog](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.8/CHANGES.md) for details.
