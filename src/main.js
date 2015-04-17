@@ -4,7 +4,7 @@
 
 var start = true;
 
-var PopupMessageViewModel = require('terriajs/ViewModels/PopupMessageViewModel');
+var PopupMessageViewModel = require('terriajs/lib/ViewModels/PopupMessageViewModel');
 var FeatureDetection = require('terriajs/Cesium/Source/Core/FeatureDetection');
 
 // If we're not in a normal browser environment (Web Worker maybe?), do nothing.
@@ -54,38 +54,38 @@ if (start) {
     var defined = require('terriajs/Cesium/Source/Core/defined');
     var knockout = require('terriajs/Cesium/Source/ThirdParty/knockout');
 
-    var AusGlobeViewer = require('terriajs/viewer/AusGlobeViewer');
-    var registerKnockoutBindings = require('terriajs/Core/registerKnockoutBindings');
+    var AusGlobeViewer = require('terriajs/lib/viewer/AusGlobeViewer');
+    var registerKnockoutBindings = require('terriajs/lib/Core/registerKnockoutBindings');
 
-    var AddDataPanelViewModel = require('terriajs/ViewModels/AddDataPanelViewModel');
-    var BaseMapViewModel = require('terriajs/ViewModels/BaseMapViewModel');
-    var BingMapsSearchProviderViewModel = require('terriajs/ViewModels/BingMapsSearchProviderViewModel');
-    var CatalogItemNameSearchProviderViewModel = require('terriajs/ViewModels/CatalogItemNameSearchProviderViewModel');
-    var BrandBarViewModel = require('terriajs/ViewModels/BrandBarViewModel');
-    var DataCatalogTabViewModel = require('terriajs/ViewModels/DataCatalogTabViewModel');
-    var DistanceLegendViewModel = require('terriajs/ViewModels/DistanceLegendViewModel');
-    var DragDropViewModel = require('terriajs/ViewModels/DragDropViewModel');
-    var ExplorerPanelViewModel = require('terriajs/ViewModels/ExplorerPanelViewModel');
-    var FeatureInfoPanelViewModel = require('terriajs/ViewModels/FeatureInfoPanelViewModel');
-    var GazetteerSearchProviderViewModel = require('terriajs/ViewModels/GazetteerSearchProviderViewModel');
-    var LocationBarViewModel = require('terriajs/ViewModels/LocationBarViewModel');
-    var MenuBarViewModel = require('terriajs/ViewModels/MenuBarViewModel');
-    var MenuBarItemViewModel = require('terriajs/ViewModels/MenuBarItemViewModel');
-    var NavigationViewModel = require('terriajs/ViewModels/NavigationViewModel');
-    var NowViewingTabViewModel = require('terriajs/ViewModels/NowViewingTabViewModel');
-    var OnePanelOpenInTopRight = require('terriajs/ViewModels/OnePanelOpenInTopRight');
-    var SearchTabViewModel = require('terriajs/ViewModels/SearchTabViewModel');
-    var SettingsPanelViewModel = require('terriajs/ViewModels/SettingsPanelViewModel');
-    var SharePopupViewModel = require('terriajs/ViewModels/SharePopupViewModel');
-    var ToolsPanelViewModel = require('terriajs/ViewModels/ToolsPanelViewModel');
+    var AddDataPanelViewModel = require('terriajs/lib/ViewModels/AddDataPanelViewModel');
+    var BaseMapViewModel = require('terriajs/lib/ViewModels/BaseMapViewModel');
+    var BingMapsSearchProviderViewModel = require('terriajs/lib/ViewModels/BingMapsSearchProviderViewModel');
+    var CatalogItemNameSearchProviderViewModel = require('terriajs/lib/ViewModels/CatalogItemNameSearchProviderViewModel');
+    var BrandBarViewModel = require('terriajs/lib/ViewModels/BrandBarViewModel');
+    var DataCatalogTabViewModel = require('terriajs/lib/ViewModels/DataCatalogTabViewModel');
+    var DistanceLegendViewModel = require('terriajs/lib/ViewModels/DistanceLegendViewModel');
+    var DragDropViewModel = require('terriajs/lib/ViewModels/DragDropViewModel');
+    var ExplorerPanelViewModel = require('terriajs/lib/ViewModels/ExplorerPanelViewModel');
+    var FeatureInfoPanelViewModel = require('terriajs/lib/ViewModels/FeatureInfoPanelViewModel');
+    var GazetteerSearchProviderViewModel = require('terriajs/lib/ViewModels/GazetteerSearchProviderViewModel');
+    var LocationBarViewModel = require('terriajs/lib/ViewModels/LocationBarViewModel');
+    var MenuBarViewModel = require('terriajs/lib/ViewModels/MenuBarViewModel');
+    var MenuBarItemViewModel = require('terriajs/lib/ViewModels/MenuBarItemViewModel');
+    var NavigationViewModel = require('terriajs/lib/ViewModels/NavigationViewModel');
+    var NowViewingTabViewModel = require('terriajs/lib/ViewModels/NowViewingTabViewModel');
+    var OnePanelOpenInTopRight = require('terriajs/lib/ViewModels/OnePanelOpenInTopRight');
+    var SearchTabViewModel = require('terriajs/lib/ViewModels/SearchTabViewModel');
+    var SettingsPanelViewModel = require('terriajs/lib/ViewModels/SettingsPanelViewModel');
+    var SharePopupViewModel = require('terriajs/lib/ViewModels/SharePopupViewModel');
+    var ToolsPanelViewModel = require('terriajs/lib/ViewModels/ToolsPanelViewModel');
 
-    var Application = require('terriajs/Models/Application');
-    var ArcGisMapServerCatalogItem = require('terriajs/Models/ArcGisMapServerCatalogItem');
-    var BingMapsCatalogItem = require('terriajs/Models/BingMapsCatalogItem');
-    var CompositeCatalogItem = require('terriajs/Models/CompositeCatalogItem');
-    var WebMapServiceCatalogItem = require('terriajs/Models/WebMapServiceCatalogItem');
-    var registerCatalogMembers = require('terriajs/Models/registerCatalogMembers');
-    var raiseErrorToUser = require('terriajs/Models/raiseErrorToUser');
+    var Application = require('terriajs/lib/Models/Application');
+    var ArcGisMapServerCatalogItem = require('terriajs/lib/Models/ArcGisMapServerCatalogItem');
+    var BingMapsCatalogItem = require('terriajs/lib/Models/BingMapsCatalogItem');
+    var CompositeCatalogItem = require('terriajs/lib/Models/CompositeCatalogItem');
+    var WebMapServiceCatalogItem = require('terriajs/lib/Models/WebMapServiceCatalogItem');
+    var registerCatalogMembers = require('terriajs/lib/Models/registerCatalogMembers');
+    var raiseErrorToUser = require('terriajs/lib/Models/raiseErrorToUser');
 
     registerKnockoutBindings();
     registerCatalogMembers();
