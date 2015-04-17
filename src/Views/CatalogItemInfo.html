@@ -47,15 +47,7 @@
             </div>
             <!-- /ko -->
 
-            <!-- ko if: catalogItem.disclaimer -->
-            <div class="catalog-item-info-section">
-                <h2>Licensing, Terms &amp; Conditions</h2>
-                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.license">
-                </div>
-            </div>
-            <!-- /ko -->
-
-            <!-- ko if: catalogItem.disclaimer -->
+            <!-- ko if: catalogItem.description -->
             <div class="catalog-item-info-section">
                 <h2>Description</h2>
                 <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.description"></div>
@@ -80,6 +72,15 @@
                 <h2>Data Custodian</h2>
                 <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.dataCustodian"></div>
             </div>
+
+
+            <!-- ko if: catalogItem.disclaimer -->
+            <div class="catalog-item-info-section">
+                <h2>Licensing, Terms &amp; Conditions</h2>
+                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.license">
+                </div>
+            </div>
+            <!-- /ko -->
 
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
