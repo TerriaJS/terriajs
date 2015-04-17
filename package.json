@@ -47,8 +47,5 @@
   },
   "scripts": {
     "start": "node_modules/.bin/supervisor server"
-  },
-  "browser": {
-    "knockout": "./third_party/cesium/Source/ThirdParty/knockout.js"
   }
 }
