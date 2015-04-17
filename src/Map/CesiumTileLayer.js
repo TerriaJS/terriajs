@@ -1,10 +1,13 @@
 'use strict';
 
 /*global require,L*/
+var Cartographic = require('../../third_party/cesium/Source/Core/Cartographic');
 var defined = require('../../third_party/cesium/Source/Core/defined');
 var DeveloperError = require('../../third_party/cesium/Source/Core/DeveloperError');
 var ImageryProvider = require('../../third_party/cesium/Source/Scene/ImageryProvider');
 var WebMercatorTilingScheme = require('../../third_party/cesium/Source/Core/WebMercatorTilingScheme');
+
+var pollToPromise = require('../Core/pollToPromise');
 
 var CesiumTileLayer = L.TileLayer.extend({
     initialize: function(imageryProvider, options) {
@@ -69,6 +72,25 @@ var CesiumTileLayer = L.TileLayer.extend({
         }
 
         L.TileLayer.prototype._update.apply(this, arguments);
+    },
+
+    pickFeatures: function(map, longitudeRadians, latitudeRadians) {
+        var ll = new Cartographic(longitudeRadians, latitudeRadians, 0.0);
+
+        var level = map.getZoom();
+
+        var that = this;
+        return pollToPromise(function() {
+            return that.imageryProvider.ready;
+        }).then(function() {
+            var tilingScheme = that.imageryProvider.tilingScheme;
+            var tileCoordinates = tilingScheme.positionToTileXY(ll, level);
+            if (!defined(tileCoordinates)) {
+                return undefined;
+            }
+
+            return that.imageryProvider.pickFeatures(tileCoordinates.x, tileCoordinates.y, level, longitudeRadians, latitudeRadians);
+        });
     }
 });
 

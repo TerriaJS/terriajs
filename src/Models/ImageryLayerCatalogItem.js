@@ -1,8 +1,6 @@
 'use strict';
 
 /*global require*/
-var Cartesian2 = require('../../third_party/cesium/Source/Core/Cartesian2');
-var CesiumMath = require('../../third_party/cesium/Source/Core/Math');
 var clone = require('../../third_party/cesium/Source/Core/clone');
 var DataSourceClock = require('../../third_party/cesium/Source/DataSources/DataSourceClock');
 var defined = require('../../third_party/cesium/Source/Core/defined');
@@ -15,14 +13,12 @@ var knockout = require('../../third_party/cesium/Source/ThirdParty/knockout');
 var Rectangle = require('../../third_party/cesium/Source/Core/Rectangle');
 var TimeInterval = require('../../third_party/cesium/Source/Core/TimeInterval');
 var TimeIntervalCollection = require('../../third_party/cesium/Source/Core/TimeIntervalCollection');
-var WebMercatorProjection = require('../../third_party/cesium/Source/Core/WebMercatorProjection');
 
 var CatalogItem = require('./CatalogItem');
 var CesiumTileLayer = require('../Map/CesiumTileLayer');
 var inherit = require('../Core/inherit');
 var ModelError = require('./ModelError');
 var overrideProperty = require('../Core/overrideProperty');
-var pollToPromise = require('../Core/pollToPromise');
 var rectangleToLatLngBounds = require('../Map/rectangleToLatLngBounds');
 
 /**
@@ -343,7 +339,7 @@ ImageryLayerCatalogItem.prototype._enable = function() {
 
     if (!isTimeDynamic || defined(currentTimeIdentifier)) {
         var currentImageryProvider = this._createImageryProvider(currentTimeIdentifier);
-        this._imageryLayer = enableLayer(this, currentImageryProvider, this.opacity);
+        this._imageryLayer = ImageryLayerCatalogItem.enableLayer(this, currentImageryProvider, this.opacity);
     }
 
     if (defined(nextTimeIdentifier)) {
@@ -352,59 +348,26 @@ ImageryLayerCatalogItem.prototype._enable = function() {
         // Do not allow picking from the preloading layer.
         nextImageryProvider._enablePickFeatures = false;
 
-        this._nextLayer = enableLayer(this, nextImageryProvider, 0.0);
+        this._nextLayer = ImageryLayerCatalogItem.enableLayer(this, nextImageryProvider, 0.0);
     }
 };
 
 ImageryLayerCatalogItem.prototype._disable = function() {
-    disableLayer(this, this._imageryLayer);
+    ImageryLayerCatalogItem.disableLayer(this, this._imageryLayer);
     this._imageryLayer = undefined;
 
-    disableLayer(this, this._nextLayer);
+    ImageryLayerCatalogItem.disableLayer(this, this._nextLayer);
     this._nextLayer = undefined;
 };
 
 ImageryLayerCatalogItem.prototype._show = function() {
-    show(this, this._imageryLayer);
-    show(this, this._nextLayer);
+    ImageryLayerCatalogItem.showLayer(this, this._imageryLayer);
+    ImageryLayerCatalogItem.showLayer(this, this._nextLayer);
 };
 
 ImageryLayerCatalogItem.prototype._hide = function() {
-    hide(this, this._imageryLayer);
-    hide(this, this._nextLayer);
-};
-
-ImageryLayerCatalogItem.prototype.pickFeaturesInLeaflet = function(mapExtent, mapWidth, mapHeight, pickX, pickY) {
-    if (!defined(this.application.leaflet) || !defined(this._imageryLayer) || !defined(this._imageryLayer.imageryProvider)) {
-        return undefined;
-    }
-
-    var map = this.application.leaflet.map;
-    var imageryProvider = this._imageryLayer.imageryProvider;
-
-    var projection = new WebMercatorProjection();
-    var sw = projection.project(Rectangle.southwest(mapExtent));
-    var ne = projection.project(Rectangle.northeast(mapExtent));
-
-    // Compute the longitude and latitude of the pick location.
-    var x = CesiumMath.lerp(sw.x, ne.x, pickX / (mapWidth - 1));
-    var y = CesiumMath.lerp(ne.y, sw.y, pickY / (mapHeight - 1));
-
-    var ll = projection.unproject(new Cartesian2(x, y));
-
-    // Map the lon/lat to a tile in the current zoom level and query that tile for features.
-    var level = Math.min(map.getZoom(), imageryProvider.maximumLevel);
-    var tilingScheme = imageryProvider.tilingScheme;
-    var tileCoordinates = tilingScheme.positionToTileXY(ll, level);
-    if (!defined(tileCoordinates)) {
-        return undefined;
-    }
-
-    return pollToPromise(function() {
-        return imageryProvider.ready;
-    }).then(function() {
-        return imageryProvider.pickFeatures(tileCoordinates.x, tileCoordinates.y, level, ll.longitude, ll.latitude);
-    });
+    ImageryLayerCatalogItem.hideLayer(this, this._imageryLayer);
+    ImageryLayerCatalogItem.hideLayer(this, this._nextLayer);
 };
 
 function updateOpacity(imageryLayerItem) {
@@ -421,7 +384,7 @@ function updateOpacity(imageryLayerItem) {
     }
 }
 
-function enableLayer(catalogItem, imageryProvider, opacity) {
+ImageryLayerCatalogItem.enableLayer = function(catalogItem, imageryProvider, opacity) {
     var result;
 
     if (defined(catalogItem.application.cesium)) {
@@ -491,9 +454,9 @@ is invalid.  The catalogue item has been hidden from the map.  You may re-show i
     }
 
     return result;
-}
+};
 
-function disableLayer(catalogItem, layer) {
+ImageryLayerCatalogItem.disableLayer = function(catalogItem, layer) {
     if (!defined(layer)) {
         return;
     }
@@ -505,7 +468,7 @@ function disableLayer(catalogItem, layer) {
         var map = catalogItem.application.leaflet.map;
         map.removeLayer(layer);
     }
-}
+};
 
 function updateClockSubscription(catalogItem) {
     if (catalogItem.isShown && defined(catalogItem.clock)) {
@@ -535,7 +498,7 @@ function onClockTick(catalogItem, clock) {
         index = intervals.indexOf(clock.currentTime);
         if (index < 0) {
             // No interval contains this time, so do not show imagery at this time.
-            disableLayer(catalogItem, catalogItem._imageryLayer);
+            ImageryLayerCatalogItem.disableLayer(catalogItem, catalogItem._imageryLayer);
             catalogItem._imageryLayer = undefined;
             catalogItem._currentIntervalIndex = -1;
             return;
@@ -544,22 +507,22 @@ function onClockTick(catalogItem, clock) {
         // If the "next" layer is not applicable to this time, throw it away and create a new one.
         if (index !== catalogItem._nextIntervalIndex) {
             // Throw away the "next" layer, since it's not applicable.
-            disableLayer(catalogItem, catalogItem._nextLayer);
+            ImageryLayerCatalogItem.disableLayer(catalogItem, catalogItem._nextLayer);
             catalogItem._nextLayer = undefined;
             catalogItem._nextIntervalIndex = -1;
 
             // Create the new "next" layer
             var imageryProvider = catalogItem._createImageryProvider(catalogItem.intervals.get(index).data);
             imageryProvider._enablePickFeatures = false;
-            catalogItem._nextLayer = enableLayer(catalogItem, imageryProvider, 0.0);
-            show(catalogItem, catalogItem._nextLayer);
+            catalogItem._nextLayer = ImageryLayerCatalogItem.enableLayer(catalogItem, imageryProvider, 0.0);
+            ImageryLayerCatalogItem.showLayer(catalogItem, catalogItem._nextLayer);
         }
 
         // At this point we can assume that _nextLayer is applicable to this time.
         // Make it visible
         setOpacity(catalogItem, catalogItem._nextLayer, catalogItem.opacity);
         fixNextLayerOrder(catalogItem);
-        disableLayer(catalogItem, catalogItem._imageryLayer);
+        ImageryLayerCatalogItem.disableLayer(catalogItem, catalogItem._imageryLayer);
 
         catalogItem._imageryLayer = catalogItem._nextLayer;
         catalogItem._imageryLayer.imageryProvider._enablePickFeatures = true;
@@ -576,8 +539,8 @@ function onClockTick(catalogItem, clock) {
 
     var nextImageryProvider = catalogItem._createImageryProvider(catalogItem.intervals.get(nextIndex).data);
     nextImageryProvider._enablePickFeatures = false;
-    catalogItem._nextLayer = enableLayer(catalogItem, nextImageryProvider, 0.0);
-    show(catalogItem, catalogItem._nextLayer);
+    catalogItem._nextLayer = ImageryLayerCatalogItem.enableLayer(catalogItem, nextImageryProvider, 0.0);
+    ImageryLayerCatalogItem.showLayer(catalogItem, catalogItem._nextLayer);
     catalogItem._nextIntervalIndex = nextIndex;
 }
 
@@ -595,7 +558,7 @@ function setOpacity(catalogItem, layer, opacity) {
     }
 }
 
-function show(catalogItem, layer) {
+ImageryLayerCatalogItem.showLayer = function(catalogItem, layer) {
     if (!defined(layer)) {
         return;
     }
@@ -610,9 +573,9 @@ function show(catalogItem, layer) {
         }
         catalogItem.application.nowViewing.updateLeafletLayerOrder();
     }
-}
+};
 
-function hide(catalogItem, layer) {
+ImageryLayerCatalogItem.hideLayer = function(catalogItem, layer) {
     if (!defined(layer)) {
         return;
     }
@@ -624,7 +587,7 @@ function hide(catalogItem, layer) {
     if (defined(catalogItem.application.leaflet)) {
         catalogItem.application.leaflet.map.removeLayer(layer);
     }
-}
+};
 
 function fixNextLayerOrder(catalogItem) {
     if (!defined(catalogItem._imageryLayer) || !defined(catalogItem._nextLayer)) {

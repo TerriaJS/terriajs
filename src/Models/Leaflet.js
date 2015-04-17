@@ -206,14 +206,10 @@ function pickFeatures(leaflet, latlng) {
     var pickPosition = Ellipsoid.WGS84.cartographicToCartesian(pickedLocation);
     leaflet._pickedFeatures.pickPosition = pickPosition;
 
-    var pickedXY = leaflet.map.latLngToContainerPoint(latlng, leaflet.map.getZoom());
-    var bounds = leaflet.map.getBounds();
-    var extent = new Rectangle(CesiumMath.toRadians(bounds.getWest()), CesiumMath.toRadians(bounds.getSouth()), CesiumMath.toRadians(bounds.getEast()), CesiumMath.toRadians(bounds.getNorth()));
-
     for (var i = 0; i < dataSources.length ; ++i) {
         var dataSource = dataSources[i];
-        if (dataSource.isEnabled && dataSource.isShown && defined(dataSource.pickFeaturesInLeaflet)) {
-            promises.push(dataSource.pickFeaturesInLeaflet(extent, leaflet.map.getSize().x, leaflet.map.getSize().y, pickedXY.x, pickedXY.y));
+        if (dataSource.isEnabled && dataSource.isShown && defined(dataSource._imageryLayer) && defined(dataSource._imageryLayer.pickFeatures)) {
+            promises.push(dataSource._imageryLayer.pickFeatures(leaflet.map, CesiumMath.toRadians(latlng.lng), CesiumMath.toRadians(latlng.lat)));
         }
     }
 
