@@ -1,3 +1,27 @@
+<script type="text/html" id="now-viewing-abs-item-template">
+    <tr>
+        <td class="now-viewing-abs-properties-name-cell" data-bind="css: 'now-viewing-abs-properties-level' + ($parents.length-1) + (hasChildren ? ' now-viewing-abs-properties-parent' : '')">
+            <!-- ko if: hasChildren && isOpen -->
+            <div class="now-viewing-abs-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowDown, width: 32, height: 32 }"></div>
+            <!-- /ko -->
+            <!-- ko if: hasChildren && !isOpen -->
+            <div class="now-viewing-abs-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowRight, width: 32, height: 32 }"></div>
+            <!-- /ko -->
+            <!-- ko if: !hasChildren -->
+            <div class="now-viewing-abs-properties-arrow"></div>
+            <!-- /ko -->
+            <!-- ko if: isCode -->
+             <div class="now-viewing-abs-icon clickable" data-bind="click: toggleActive, cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }"></div>
+            <!-- /ko -->
+            <div class="now-viewing-abs-properties-name" data-bind="text: name"></div>
+        </td>
+    </tr>
+    <!-- ko if: hasChildren && isOpen -->
+        <!-- ko template: { name: 'now-viewing-abs-item-template', foreach: items } -->
+        <!-- /ko -->
+    <!-- /ko -->
+</script>
+
 <div class="now-viewing">
     <div class="now-viewing-toolbar">
         <span class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Remove All</span>
@@ -30,6 +54,13 @@
                     <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
                 </div>
 
+                <!-- ko if: type === 'abs-itt'-->
+                <div class="now-viewing-abs-controls">
+                     <div class="now-viewing-abs-icon clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
+                    <div class="now-viewing-abs-percent" data-bind="text: 'Display as Percent of Region'"></div>
+                </div>
+                <!-- /ko -->
+
                 <!-- ko if: legendIsImage -->
                 <a data-bind="attr: { href: legendUrl }" target="_blank">
                     <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
@@ -39,7 +70,23 @@
                 <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
                 <!-- /ko -->
                 <!-- ko if: !hasLegend -->
-                <div class="now-viewing-legend-text">No legend available for this data item.</div>
+                    <!-- ko if: type !== 'abs-itt' -->
+                    <div class="now-viewing-legend-text">No legend available for this data item.</div>
+                    <!-- /ko -->
+                    <!-- ko if: type === 'abs-itt' -->
+                    <div class="now-viewing-legend-text">Select at least one code in each data area.</div>
+                    <!-- /ko -->
+                <!-- /ko -->
+                
+                <!-- ko if: type === 'abs-itt' -->
+                <div class="now-viewing-abs-section">
+                    <div class="now-viewing-abs-table">
+                        <!-- ko if: absDataset && absDataset.items -->
+                        <table data-bind="template: { name: 'now-viewing-abs-item-template', foreach: absDataset.items }">
+                        </table>
+                        <!-- /ko -->
+                    </div>
+                </div>
                 <!-- /ko -->
             </div>
         </div>
