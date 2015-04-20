@@ -99,8 +99,8 @@ gulp.task('docs', function(){
 
 gulp.task('prepare-terriajs', function() {
     return gulp.src([
-            'node_modules/terriajs/build/**'
-        ], { base: 'node_modules/terriajs/build' })
+            'node_modules/terriajs/public/build/**'
+        ], { base: 'node_modules/terriajs/public/build' })
     .pipe(gulp.dest('public/build/'));
 });
 

@@ -18,7 +18,7 @@
     "proj4js-defs": "0.0.1",
     "request": "*",
     "supervisor": "^0.6.0",
-    "terriajs": "0.0.17",
+    "terriajs": "0.0.18",
     "yargs": "3.7.2"
   },
   "devDependencies": {
