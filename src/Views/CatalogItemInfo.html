@@ -38,15 +38,6 @@
             <h1 data-bind="text: catalogItem.name"></h1>
         </div>
         <div class="catalog-item-info-content">
-            <!-- ko if: catalogItem.disclaimer -->
-            <div class="catalog-item-info-section">
-                <h2>Disclaimer</h2>
-                <div class="catalog-item-info-description">
-                    <strong style="font-weight: bold; color: #C13C2D;" data-bind="sanitizedHtml: catalogItem.disclaimer"></strong>
-                </div>
-            </div>
-            <!-- /ko -->
-
             <!-- ko if: catalogItem.description -->
             <div class="catalog-item-info-section">
                 <h2>Description</h2>
@@ -54,33 +45,24 @@
             </div>
             <!-- /ko -->
 
-            <!-- ko if: !catalogItem.description -->
+            <!-- ko if:
+            !catalogItem.description &&
+            (!catalogItem.info || !catalogItem.info.some(function(i){return (i.name === "Description" || i.name == "description")}))
+            -->
             <div class="catalog-item-info-section">
                 <div class="catalog-item-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>
             </div>
             <!-- /ko -->
 
-            <!-- ko if: catalogItem.updates -->
+
+        <!-- ko foreach: catalogItem.info -->
             <div class="catalog-item-info-section">
-                <h2>Data Updates</h2>
-                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.updates">
+                <h2 data-bind="text: name"></h2>
+                <div class="catalog-item-info-description">
+                    <div data-bind="sanitizedHtml: content"></div>
                 </div>
             </div>
-            <!-- /ko -->
-
-            <div class="catalog-item-info-section">
-                <h2>Data Custodian</h2>
-                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.dataCustodian"></div>
-            </div>
-
-
-            <!-- ko if: catalogItem.disclaimer -->
-            <div class="catalog-item-info-section">
-                <h2>Licensing, Terms &amp; Conditions</h2>
-                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.license">
-                </div>
-            </div>
-            <!-- /ko -->
+        <!-- /ko -->
 
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
