@@ -21,11 +21,11 @@ var watchify = require('watchify');
 
 var specJSName = 'TerriaJS-specs.js';
 var workerGlob = [
-    './third_party/cesium/Source/Workers/*.js',
-    '!./third_party/cesium/Source/Workers/*.profile.js',
-    '!./third_party/cesium/Source/Workers/cesiumWorkerBootstrapper.js',
-    '!./third_party/cesium/Source/Workers/transferTypedArrayTest.js',
-    '!./third_party/cesium/Source/Workers/createTaskProcessorWorker.js'
+    './Cesium/Source/Workers/*.js',
+    '!./Cesium/Source/Workers/*.profile.js',
+    '!./Cesium/Source/Workers/cesiumWorkerBootstrapper.js',
+    '!./Cesium/Source/Workers/transferTypedArrayTest.js',
+    '!./Cesium/Source/Workers/createTaskProcessorWorker.js'
 ];
 var sourceGlob = './lib/**/*.js';
 var testGlob = './test/**/*.js';
@@ -96,7 +96,7 @@ gulp.task('copy-cesium-assets', function() {
 });
 
 gulp.task('copy-cesiumWorkerBootstrapper', function() {
-    return gulp.src('cesiumWorkerBootstrapper.js')
+    return gulp.src('lib/cesiumWorkerBootstrapper.js')
         .pipe(gulp.dest('public/build/Cesium/Workers'));
 });
 
