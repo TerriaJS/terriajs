@@ -38,18 +38,29 @@
             <h1 data-bind="text: catalogItem.name"></h1>
         </div>
         <div class="catalog-item-info-content">
+            <!-- ko if: catalogItem.description -->
             <div class="catalog-item-info-section">
-                <!-- ko if: catalogItem.description -->
+                <h2>Description</h2>
                 <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.description"></div>
-                <!-- /ko -->
-                <!-- ko if: !catalogItem.description -->
-                <div class="catalog-item-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>
-                <!-- /ko -->
             </div>
+            <!-- /ko -->
+
+            <!-- ko if: !catalogItem.hasDescription -->
             <div class="catalog-item-info-section">
-                <h2>Data Custodian</h2>
-                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.dataCustodian"></div>
+                <div class="catalog-item-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>
             </div>
+            <!-- /ko -->
+
+
+        <!-- ko foreach: catalogItem.info -->
+            <div class="catalog-item-info-section">
+                <h2 data-bind="text: name"></h2>
+                <div class="catalog-item-info-description">
+                    <div data-bind="sanitizedHtml: content"></div>
+                </div>
+            </div>
+        <!-- /ko -->
+
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
                 <input class="catalog-item-info-baseUrl" readonly type="text" data-bind="value: catalogItem.url" size="80" onclick="this.select();" />
