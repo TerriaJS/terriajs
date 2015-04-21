@@ -8,7 +8,7 @@ TerriaJS
 npm install terriajs
 ```
 
-TerriaJS is a library for building rich, web-based geospatial data explorers.  It uses [Cesium](https://cesiumjs.org) for a full 3D experience (think Google Earth) in a web browser, without a plugin.  It also uses [Leaflet](http://leafletjs.com/) for a basic 2D experience on systems that can't run WebGL.
+TerriaJS is a library for building rich, web-based geospatial data explorers.  It uses [Cesium](https://cesiumjs.org) for a full 3D experience.  Think Google Earth, except it runs in a web browser, without a plugin.  It also uses [Leaflet](http://leafletjs.com/) for a basic 2D experience on systems that can't run Cesium.
 
 A live demo of an application built on TerriaJS can be found here:
 [Australia's National Map](http://nationalmap.gov.au)
