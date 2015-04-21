@@ -8,6 +8,7 @@
     "url": "http://github.com/NICTA/TerriaJS"
   },
   "dependencies": {
+    "URIjs": "^1.15.0",
     "html2canvas": "^0.5.0-alpha2",
     "javascript-natural-sort": "^0.7.1",
     "leaflet": "^0.7.3"
