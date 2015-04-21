@@ -59,21 +59,21 @@ gulp.task('build-css', function() {
 
 gulp.task('build', ['build-css', 'build-app', 'build-specs']);
 
-gulp.task('release-app', ['prepare-terriajs'], function() {
+gulp.task('release-app', ['prepare'], function() {
     return build(appJSName, appEntryJSName, true);
 });
 
-gulp.task('release-specs', ['prepare-terriajs'], function() {
+gulp.task('release-specs', ['prepare'], function() {
     return build(specJSName, glob.sync(specGlob), true);
 });
 
 gulp.task('release', ['build-css', 'release-app', 'release-specs']);
 
-gulp.task('watch-app', ['prepare-terriajs'], function() {
+gulp.task('watch-app', ['prepare'], function() {
     return watch(appJSName, appEntryJSName, false);
 });
 
-gulp.task('watch-specs', ['prepare-terriajs'], function() {
+gulp.task('watch-specs', ['prepare'], function() {
     return watch(specJSName, glob.sync(specGlob), false);
 });
 
@@ -96,6 +96,8 @@ gulp.task('docs', function(){
             plugins : ['plugins/markdown']
         }));
 });
+
+gulp.task('prepare', ['prepare-terriajs']);
 
 gulp.task('prepare-terriajs', function() {
     return gulp.src([

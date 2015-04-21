@@ -13,6 +13,7 @@
     "express": "^4.12.3",
     "formidable": "~1.0.17",
     "javascript-natural-sort": "^0.7.1",
+    "leaflet": "^0.7.3",
     "ogr2ogr": "~0.5.1",
     "proj4": "~2.3.6",
     "proj4js-defs": "0.0.1",
