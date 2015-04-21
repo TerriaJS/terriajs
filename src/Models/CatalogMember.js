@@ -40,6 +40,15 @@ var CatalogMember = function(application) {
     this.description = '';
 
     /**
+    * An array of section titles and contents for display in the layer info panel.
+    * In future this may replace 'description' above. Content will be rendered using sanitizeHtml.
+    * This property is observable.
+    * @type {{name:string, content:string}}
+    * @default []
+    */
+    this.info = [];
+
+    /**
      * Gets or sets a value indicating whether this member was supplied by the user rather than loaded from one of the
      * {@link Application#initSources}.  User-supplied members must be serialized completely when, for example,
      * serializing enabled members for sharing.  This property is observable.
