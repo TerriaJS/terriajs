@@ -40,10 +40,13 @@ var CatalogMember = function(application) {
     this.description = '';
 
     /**
-    * An array of section titles and contents for display in the layer info panel.
-    * In future this may replace 'description' above. Content will be rendered using sanitizeHtml.
+    * Gets or sets the array of section titles and contents for display in the layer info panel.
+    * In future this may replace 'description' above - this list should not contain
+    * sections named 'description' or 'Description' if the 'description' property
+    * is also set as both will be displayed.
+    * Content will be rendered using sanitizedHtml.
     * This property is observable.
-    * @type {{name:string, content:string}}
+    * @type [{name:string, content:string}]
     * @default []
     */
     this.info = [];
@@ -132,6 +135,23 @@ defineProperties(CatalogMember.prototype, {
     propertiesForSharing : {
         get : function() {
             return CatalogMember.defaultPropertiesForSharing;
+        }
+    },
+
+    /**
+    * Tests whether a description is available, either in the 'description' property
+    * or as a member of the 'info' array.
+    * @memberOf CatalogMember.prototype
+    * @type bool
+    */
+    hasDescription : {
+        get : function() {
+            return this.description ||
+                (this.info &&
+                 this.info.some(function(i){
+                    return (i.name === "Description" || i.name === "description");
+                    })
+                );
         }
     }
 });
