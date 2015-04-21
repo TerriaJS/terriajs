@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "0.0.18",
+  "version": "0.0.20",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
@@ -8,8 +8,12 @@
     "url": "http://github.com/NICTA/TerriaJS"
   },
   "dependencies": {
+    "URIjs": "^1.15.0",
+    "html2canvas": "^0.5.0-alpha2",
     "javascript-natural-sort": "^0.7.1",
-    "leaflet": "^0.7.3"
+    "leaflet": "^0.7.3",
+    "proj4": "^2.3.6",
+    "togeojson": "^0.11.1"
   },
   "devDependencies": {
     "brfs": "^1.4.0",

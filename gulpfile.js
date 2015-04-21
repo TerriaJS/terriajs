@@ -27,8 +27,8 @@ var workerGlob = [
     '!./Cesium/Source/Workers/transferTypedArrayTest.js',
     '!./Cesium/Source/Workers/createTaskProcessorWorker.js'
 ];
-var sourceGlob = './lib/**/*.js';
-var testGlob = './test/**/*.js';
+var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
+var testGlob = ['./test/**/*.js'];
 
 
 // Create the build directory, because browserify flips out if the directory that might
@@ -56,7 +56,7 @@ gulp.task('watch-specs', ['prepare-cesium'], function() {
 gulp.task('watch', ['watch-specs']);
 
 gulp.task('lint', function(){
-    var sources = glob.sync([sourceGlob, testGlob]);
+    var sources = glob.sync(sourceGlob.concat(testGlob));
     return gulp.src(sources)
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
@@ -64,7 +64,7 @@ gulp.task('lint', function(){
 });
 
 gulp.task('docs', function(){
-    return gulp.src([sourceGlob])
+    return gulp.src(sourceGlob)
         .pipe(jsdoc('./public/doc', undefined, {
             plugins : ['plugins/markdown']
         }));
