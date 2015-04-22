@@ -18,7 +18,6 @@ var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 
-
 var specJSName = 'TerriaJS-specs.js';
 var workerGlob = [
     './Cesium/Source/Workers/*.js',
@@ -53,7 +52,7 @@ gulp.task('watch-specs', ['prepare-cesium'], function() {
     return watch(specJSName, glob.sync(testGlob), false);
 });
 
-gulp.task('watch', ['watch-specs']);
+gulp.task('watch', ['watch-specs', 'watch-workers']);
 
 gulp.task('lint', function(){
     var sources = glob.sync(sourceGlob.concat(testGlob));
@@ -70,7 +69,7 @@ gulp.task('docs', function(){
         }));
 });
 
-gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper']);
+gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper', 'build-workers']);
 
 gulp.task('build-cesium', function(cb) {
     return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
@@ -102,9 +101,58 @@ gulp.task('copy-cesiumWorkerBootstrapper', function() {
 
 gulp.task('default', ['lint', 'build']);
 
-function bundle(name, bundler, minify, catchErrors) {
-    requireWebWorkers(bundler);
+gulp.task('build-workers', function() {
+    var b = browserify({
+        debug: true
+    });
 
+    var workers = glob.sync(workerGlob);
+    for (var i = 0; i < workers.length; ++i) {
+        var workerFilename = workers[i];
+
+        var lastSlashIndex = workerFilename.lastIndexOf('/');
+        if (lastSlashIndex < 0) {
+            continue;
+        }
+
+        var outName = workerFilename.substring(lastSlashIndex + 1);
+
+        var dotJSIndex = outName.lastIndexOf('.js');
+        var exposeName = 'Workers/' + outName.substring(0, dotJSIndex);
+
+        b.require(workerFilename, {
+            expose: exposeName
+        });
+    }
+
+    var stream = b.bundle()
+        .pipe(source('Cesium-WebWorkers.js'))
+        .pipe(buffer());
+
+    var minify = true;
+    if (minify) {
+        // Minify the combined source.
+        // sourcemaps.init/write maintains a working source map after minification.
+        // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
+        stream = stream
+            .pipe(sourcemaps.init({ loadMaps: true }))
+            .pipe(uglify({preserveComments: 'some', mangle: true}))
+            .pipe(sourcemaps.write());
+    }
+
+    stream = stream
+        // Extract the embedded source map to a separate file.
+        .pipe(createExorcistTransform('Cesium-WebWorkers.js'))
+        .pipe(gulp.dest('public/build/Cesium/Workers'));
+
+    return stream;
+});
+
+function createExorcistTransform(name) {
+    return transform(function () { return exorcist('public/build/Cesium/Workers/' + name + '.map'); });
+}
+
+function bundle(name, bundler, minify, catchErrors) {
     // Combine main.js and its dependencies into a single file.
     var result = bundler.bundle();
 
@@ -170,23 +218,4 @@ function watch(name, files, minify) {
     bundler.on('update', rebundle);
 
     return rebundle();
-}
-
-function requireWebWorkers(bundler) {
-    // Explicitly require the Cesium Web Workers, and expose them with the name the cesiumWorkerBootstrapper will use for them.
-    var workers = glob.sync(workerGlob);
-    for (var i = 0; i < workers.length; ++i) {
-        var workerFilename = workers[i];
-
-        var lastSlashIndex = workerFilename.lastIndexOf('/');
-        if (lastSlashIndex < 0) {
-            continue;
-        }
-
-        var exposeName = 'Workers/' + workerFilename.substring(lastSlashIndex + 1);
-        var dotJSIndex = exposeName.lastIndexOf('.js');
-        exposeName = exposeName.substring(0, dotJSIndex);
-
-        bundler.require(workerFilename, { expose : exposeName });
-    }
 }
