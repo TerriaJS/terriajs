@@ -2,7 +2,7 @@
 
 
 var url = require('url');
-var configSettings = require('./public/config.json');
+var configSettings = require('./wwwroot/config.json');
 
 var protocolRegex = /^\w+:\//;
 
@@ -152,7 +152,7 @@ if (cluster.isMaster) {
     app.use(compression());
     app.use(cors());
     app.disable('etag');
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, 'wwwroot')));
 
     var upstreamProxy = argv['upstream-proxy'];
     var bypassUpstreamProxyHosts = {};

@@ -48,7 +48,7 @@ if (start) {
 
     window.CESIUM_BASE_URL = 'build/Cesium/';
 
-    var copyright = require('./CopyrightModule'); // jshint ignore:line
+    var copyright = require('./lib/CopyrightModule'); // jshint ignore:line
 
     var BingMapsStyle = require('terriajs/Cesium/Source/Scene/BingMapsStyle');
     var defined = require('terriajs/Cesium/Source/Core/defined');
