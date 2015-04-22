@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "0.0.20",
+  "version": "0.0.22",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
@@ -13,7 +13,7 @@
     "javascript-natural-sort": "^0.7.1",
     "leaflet": "^0.7.3",
     "proj4": "^2.3.6",
-    "togeojson": "^0.11.1"
+    "togeojson": "^0.9.0"
   },
   "devDependencies": {
     "brfs": "^1.4.0",
