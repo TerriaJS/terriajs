@@ -1,0 +1,30 @@
+{
+    "homeCamera": {
+        "west": 112,
+        "south": -34,
+        "east": 128,
+        "north": -25
+    },
+    "services": [],
+    "catalog": [
+        {
+            "name": "Western Australia (Landgate)",
+            "type": "group",
+            "items": [
+                {
+                    "name": "Locate Public",
+                    "description": "[Licence](http://creativecommons.org/licenses/by/2.5/au/)",
+                    "dataCustodian": "[Landgate](http://slip.landgate.wa.gov.au/Pages/AboutUs.aspx)",
+                    "url": "https://mapsengine.google.com/09372590152434720789-00913315481290556980-4/wms/",
+                    "type": "wms-getCapabilities",
+                    "clipToRectangle": true,
+                    "itemProperties": {
+                        "ignoreUnknownTileErrors": true,
+                        "opacity": 0.8,
+                        "legendUrl": ""
+                    }
+                }
+            ]
+        }
+    ]
+}

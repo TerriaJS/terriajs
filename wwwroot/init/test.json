@@ -32,24 +32,17 @@
                             "name": "Auto Incidents (CSV)",
                             "type": "csv",
                             "url": "test/incidents.csv",
-                            "style": {
-                                "line": {},
-                                "point": {},
-                                "polygon": {},
-                                "table": {
-                                    "data": "incident_severity",
-                                    "imageUrl": "./images/pow32.png",
-                                    "colorMap": [
-                                        {
-                                            "offset": 0.0,
-                                            "color": "rgba(0,0,255,1.00)"
-                                        },
-                                        {
-                                        "offset": 1.0,
-                                        "color": "rgba(255,0,0,1.0)"
-                                        }
-                                    ]
-                                }
+                            "tableStyle": {
+                                "dataVariable": "incident_severity",
+                                "scale": 1.2,
+                                "scaleByValue": true,
+                                "imageUrl": "images/pow32.png",
+                                "minDisplayValue": 2,
+                                "maxDisplayValue": 5,
+                                "colorMap": [
+                                    { "offset": 0.0, "color": "rgba(100,0,0,1.00)" },
+                                    { "offset": 1.0, "color": "rgba(255,0,0,1.0)" }
+                                ]
                             }
                         },
                         {
@@ -97,22 +90,14 @@
                             "name": "SEIFA 2011 (POA)",
                             "type": "csv",
                             "url": "test/SEIFA_POA_2011.csv",
-                            "style": {
-                                "line": {},
-                                "point": {},
-                                "polygon": {},
-                                "table": {
-                                    "region": "POA_CODE",
-                                    "regionType": "POA",
-                                    "data": "Socio-economic_Disadvantage",
-                                    "colorMap": [{
-                                        "offset": 0.0,
-                                        "color": "rgba(0,0,0,1.00)"
-                                    }, {
-                                        "offset": 1.0,
-                                        "color": "rgba(0,200,0,1.0)"
-                                    }]
-                                }
+                            "tableStyle": {
+                                "dataVariable": "Socio-economic_Disadvantage",
+                                "regionVariable": "POA_CODE",
+                                "regionType": "POA",
+                                "colorMap": [
+                                    { "offset": 0.0, "color": "rgba(0,0,0,1.00)" },
+                                    { "offset": 1.0, "color": "rgba(0,200,0,1.0)" }
+                                ]
                             }
                         },
                         {
@@ -134,6 +119,23 @@
                             "name": "2011 Census AUST (SA4)",
                             "type": "csv",
                             "url": "test/2011Census_AUST_SA4.csv"
+                        },
+                        {
+                            "name": "Country Regions",
+                            "type": "csv",
+                            "url": "test/countries.csv",
+                            "tableStyle": {
+                                "dataVariable": "ITU-T Telephone Code"
+                            }
+                        },
+                        {
+                            "name": "Droughts by Country",
+                            "type": "csv",
+                            "url": "test/droughts.csv",
+                            "tableStyle": {
+                                "dataVariable": "Total affected",
+                                "displayTime" : 525600
+                            }
                         },
                         {
                             "name": "Large feature info box (CZML)",
