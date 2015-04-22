@@ -2,43 +2,30 @@
 
 /*global require*/
 
-var start = true;
-
 var PopupMessageViewModel = require('terriajs/lib/ViewModels/PopupMessageViewModel');
 var FeatureDetection = require('terriajs/Cesium/Source/Core/FeatureDetection');
 
-// If we're not in a normal browser environment (Web Worker maybe?), do nothing.
-if (typeof window === 'undefined') {
-    start = false;
-} else {
-    if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
-        PopupMessageViewModel.open('ui', {
-            title : 'Internet Explorer 8 or earlier detected',
-            message : '\
-    National Map requires Internet Explorer 9 or later.  For the best experience, we recommend \
-    <a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a> or the latest version of \
-    <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> or \
-    <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.'
-        });
-
-        start = false;
-    } else if (typeof Object.create === 'undefined') {
-        PopupMessageViewModel.open('ui', {
-            title : 'Very old browser detected',
-            message : '\
-    National Map requires a web browser with support for ECMAScript 5, a feature that has been available in all major browsers since 2009 but that does \
-    not appear to be supported by your current browser.  Please update your browser \
-    and try again.  For the best experience, we recommend \
-    <a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a> or the latest version of \
-    <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> or \
-    <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.'
-        });
-
-        start = false;
-    }
-}
-
-if (start) {
+if (FeatureDetection.isInternetExplorer() && FeatureDetection.internetExplorerVersion()[0] < 9) {
+    PopupMessageViewModel.open('ui', {
+        title : 'Internet Explorer 8 or earlier detected',
+        message : '\
+National Map requires Internet Explorer 9 or later.  For the best experience, we recommend \
+<a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a> or the latest version of \
+<a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> or \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.'
+    });
+} else if (typeof Object.create === 'undefined') {
+    PopupMessageViewModel.open('ui', {
+        title : 'Very old browser detected',
+        message : '\
+National Map requires a web browser with support for ECMAScript 5, a feature that has been available in all major browsers since 2009 but that does \
+not appear to be supported by your current browser.  Please update your browser \
+and try again.  For the best experience, we recommend \
+<a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a> or the latest version of \
+<a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> or \
+<a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>.'
+    });
+} else  {
     // IE9 doesn't have a console object until the debugging tools are opened.
     if (typeof window.console === 'undefined') {
         window.console = {

@@ -25,13 +25,6 @@ var appJSName = 'nationalmap.js';
 var appCssName = 'nationalmap.css';
 var specJSName = 'nationalmap-tests.js';
 var appEntryJSName = './index.js';
-var workerGlob = [
-    './node_modules/terriajs/Cesium/Source/Workers/*.js',
-    '!./node_modules/terriajs/Cesium/Source/Workers/*.profile.js',
-    '!./node_modules/terriajs/Cesium/Source/Workers/cesiumWorkerBootstrapper.js',
-    '!./node_modules/terriajs/Cesium/Source/Workers/transferTypedArrayTest.js',
-    '!./node_modules/terriajs/Cesium/Source/Workers/createTaskProcessorWorker.js'
-];
 var testGlob = './test/**/*.js';
 
 // Create the build directory, because browserify flips out if the directory that might
@@ -111,8 +104,6 @@ gulp.task('prepare-terriajs', function() {
 gulp.task('default', ['lint', 'build']);
 
 function bundle(name, bundler, minify, catchErrors) {
-    requireWebWorkers(bundler);
-
     // Combine main.js and its dependencies into a single file.
     // The poorly-named "debug: true" causes Browserify to generate a source map.
     var result = bundler.bundle();
@@ -178,23 +169,4 @@ function watch(name, files, minify) {
     bundler.on('update', rebundle);
 
     return rebundle();
-}
-
-function requireWebWorkers(bundler) {
-    // Explicitly require the Cesium Web Workers, and expose them with the name the cesiumWorkerBootstrapper will use for them.
-    var workers = glob.sync(workerGlob);
-    for (var i = 0; i < workers.length; ++i) {
-        var workerFilename = workers[i];
-
-        var lastSlashIndex = workerFilename.lastIndexOf('/');
-        if (lastSlashIndex < 0) {
-            continue;
-        }
-
-        var exposeName = 'Workers/' + workerFilename.substring(lastSlashIndex + 1);
-        var dotJSIndex = exposeName.lastIndexOf('.js');
-        exposeName = exposeName.substring(0, dotJSIndex);
-
-        bundler.require(workerFilename, { expose : exposeName });
-    }
 }
