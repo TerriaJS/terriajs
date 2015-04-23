@@ -2524,6 +2524,7 @@
             "filterQuery": ["fq=res_format%3awms"],
             "filterByWmsGetCapabilities": false,
             "minimumMaxScaleDenominator": 1e10,
+            "groupBy": "organization",
             "blacklist": {
                 "Rainforests (EVC_2005)": true
             }
