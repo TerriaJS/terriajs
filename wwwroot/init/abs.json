@@ -157,7 +157,8 @@
                     "type": "abs-itt",
                     "url": "http://stat.abs.gov.au/itt/query.jsp",
                     "dataSetID": "ABS_CENSUS2011_B35",
-                    "regionType": "SA4"
+                    "regionType": "SA4",
+                    "filter": ["MEASURE.OPD", "NEDD.TOT"]
                 },
                 {
                     "name": "Type of educational institution",
