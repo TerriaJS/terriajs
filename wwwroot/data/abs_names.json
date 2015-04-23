@@ -41,5 +41,9 @@
 	"UAI1P" : "Usual Address One Year Ago Indicator",
 	"UAI5PA" : "Usual Address Five Years Ago Indicator",
 	"FPD" : "Subject",
-	"MEASURE" : "Measure"
+	"MEASURE" : {
+	    "Persons" : "Sex",
+	    "85 years and over" : "Age",
+	    "*" : "Measure"
+	}
 }
