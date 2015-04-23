@@ -1,7 +1,7 @@
 {
-  "name": "ausglobe",
-  "version": "0.0.2",
-  "description": "Geodata visualization service based on Cesium Webgl globe and Leaflet maps.",
+  "name": "nationalmap",
+  "version": "0.0.3",
+  "description": "Geospatial visualization application for Australian government and open data.",
   "repository": {
     "type": "git",
     "url": "http://github.com/NICTA/nationalmap"
