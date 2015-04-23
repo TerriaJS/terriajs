@@ -52,14 +52,14 @@
             <!-- /ko -->
 
 
-        <!-- ko foreach: catalogItem.info -->
+            <!-- ko foreach: catalogItem.info -->
             <div class="catalog-item-info-section">
                 <h2 data-bind="text: name"></h2>
                 <div class="catalog-item-info-description">
                     <div data-bind="sanitizedHtml: content"></div>
                 </div>
             </div>
-        <!-- /ko -->
+            <!-- /ko -->
 
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
@@ -92,12 +92,12 @@
                     <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.dataSourceMetadata.items }">
                     </table>
                     <!-- /ko -->
-                    <!-- ko if: catalogItem.metadata.catalogItemErrorMessage -->
+                    <!-- ko if: catalogItem.metadata.dataSourceErrorMessage -->
                     <table>
                         <tr>
                             <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
                                 <div class="catalog-item-info-properties-arrow"></div>
-                                <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.catalogItemErrorMessage"></div>
+                                <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.dataSourceErrorMessage"></div>
                             </td>
                         </tr>
                     </table>
