@@ -14,6 +14,7 @@
     "catalog": [
         {
             "name": "National Data Sets",
+            "isOpen": true,
             "type": "group",
             "items": [
                 {
