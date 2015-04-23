@@ -22,7 +22,8 @@
             "includeWms": false,
             "includeEsriMapServer": false,
             "groupBy": "none",
-            "useResourceName": true
+            "useResourceName": true,
+            "isOpen": true
         }
     ]
 }
