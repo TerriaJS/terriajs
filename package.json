@@ -44,7 +44,8 @@
     "yargs": "^3.7.2"
   },
   "scripts": {
-    "prepublish": "gulp prepare-cesium"
+    "prepublish": "gulp prepare-cesium",
+    "postpublish": "git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}"
   },
   "browserify": {
     "transform": [
