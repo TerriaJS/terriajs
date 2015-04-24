@@ -19,21 +19,14 @@ var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 
 var specJSName = 'TerriaJS-specs.js';
-var workerGlob = [
-    './Cesium/Source/Workers/*.js',
-    '!./Cesium/Source/Workers/*.profile.js',
-    '!./Cesium/Source/Workers/cesiumWorkerBootstrapper.js',
-    '!./Cesium/Source/Workers/transferTypedArrayTest.js',
-    '!./Cesium/Source/Workers/createTaskProcessorWorker.js'
-];
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
 var testGlob = ['./test/**/*.js'];
 
 
 // Create the build directory, because browserify flips out if the directory that might
 // contain an existing source map doesn't exist.
-if (!fs.existsSync('public/build')) {
-    fs.mkdirSync('public/build');
+if (!fs.existsSync('wwwroot/build')) {
+    fs.mkdirSync('wwwroot/build');
 }
 
 gulp.task('build-specs', ['prepare-cesium'], function() {
@@ -64,93 +57,21 @@ gulp.task('lint', function(){
 
 gulp.task('docs', function(){
     return gulp.src(sourceGlob)
-        .pipe(jsdoc('./public/doc', undefined, {
+        .pipe(jsdoc('./wwwroot/doc', undefined, {
             plugins : ['plugins/markdown']
         }));
 });
 
-gulp.task('prepare-cesium', ['build-cesium', 'copy-cesium-assets', 'copy-cesiumWorkerBootstrapper', 'build-workers']);
-
-gulp.task('build-cesium', function(cb) {
-    return exec('"Tools/apache-ant-1.8.2/bin/ant" build', {
-        cwd : 'Cesium'
-    }, function(err, stdout, stderr) {
-        if (stderr) {
-            console.log('Error while building Cesium: ');
-            console.log(stderr);
-        }
-        cb(err);
-    });
-});
+gulp.task('prepare-cesium', ['copy-cesium-assets']);
 
 gulp.task('copy-cesium-assets', function() {
     return gulp.src([
-            'Cesium/Source/Workers/transferTypedArrayTest.js',
-            'Cesium/Source/ThirdParty/Workers/**',
-            'Cesium/Source/Assets/**',
-            'Cesium/Source/Widgets/**/*.css',
-            'Cesium/Source/Widgets/Images/**'
-        ], { base: 'Cesium/Source' })
-        .pipe(gulp.dest('public/build/Cesium/'));
-});
-
-gulp.task('copy-cesiumWorkerBootstrapper', function() {
-    return gulp.src('lib/cesiumWorkerBootstrapper.js')
-        .pipe(gulp.dest('public/build/Cesium/Workers'));
+            './node_modules/terriajs-cesium/wwwroot/**'
+        ], { base: './node_modules/terriajs-cesium/wwwroot' })
+        .pipe(gulp.dest('wwwroot/build/Cesium'));
 });
 
 gulp.task('default', ['lint', 'build']);
-
-gulp.task('build-workers', function() {
-    var b = browserify({
-        debug: true
-    });
-
-    var workers = glob.sync(workerGlob);
-    for (var i = 0; i < workers.length; ++i) {
-        var workerFilename = workers[i];
-
-        var lastSlashIndex = workerFilename.lastIndexOf('/');
-        if (lastSlashIndex < 0) {
-            continue;
-        }
-
-        var outName = workerFilename.substring(lastSlashIndex + 1);
-
-        var dotJSIndex = outName.lastIndexOf('.js');
-        var exposeName = 'Workers/' + outName.substring(0, dotJSIndex);
-
-        b.require(workerFilename, {
-            expose: exposeName
-        });
-    }
-
-    var stream = b.bundle()
-        .pipe(source('Cesium-WebWorkers.js'))
-        .pipe(buffer());
-
-    var minify = true;
-    if (minify) {
-        // Minify the combined source.
-        // sourcemaps.init/write maintains a working source map after minification.
-        // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
-        stream = stream
-            .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(uglify({preserveComments: 'some', mangle: true}))
-            .pipe(sourcemaps.write());
-    }
-
-    stream = stream
-        // Extract the embedded source map to a separate file.
-        .pipe(createExorcistTransform('Cesium-WebWorkers.js'))
-        .pipe(gulp.dest('public/build/Cesium/Workers'));
-
-    return stream;
-});
-
-function createExorcistTransform(name) {
-    return transform(function () { return exorcist('public/build/Cesium/Workers/' + name + '.map'); });
-}
 
 function bundle(name, bundler, minify, catchErrors) {
     // Combine main.js and its dependencies into a single file.
@@ -179,10 +100,10 @@ function bundle(name, bundler, minify, catchErrors) {
 
     result = result
         // Extract the embedded source map to a separate file.
-        .pipe(transform(function () { return exorcist('public/build/' + name + '.map'); }))
+        .pipe(transform(function () { return exorcist('wwwroot/build/' + name + '.map'); }))
 
         // Write the finished product.
-        .pipe(gulp.dest('public/build'));
+        .pipe(gulp.dest('wwwroot/build'));
 
     return result;
 }

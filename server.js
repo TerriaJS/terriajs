@@ -44,7 +44,7 @@ var app = express();
 app.use(compression());
 app.use(cors());
 app.disable('etag');
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'wwwroot')));
 
 console.log('Listening on port ' + argv.port);
 app.listen(argv.port, argv.public ? undefined : 'localhost');

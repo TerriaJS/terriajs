@@ -5,9 +5,9 @@
 var Application = require('../../lib/Models/Application');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
-var WebMercatorTilingScheme = require('../../Cesium/Source/Core/WebMercatorTilingScheme');
+var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 
-var Rectangle = require('../../Cesium/Source/Core/Rectangle');
+var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 var application;
 var wmsViewModel;
