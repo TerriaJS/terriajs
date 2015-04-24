@@ -1,11 +1,11 @@
 {
   "name": "terriajs",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "http://github.com/NICTA/TerriaJS"
+    "url": "http://github.com/TerriaJS/terriajs"
   },
   "dependencies": {
     "URIjs": "^1.15.0",
