@@ -96,8 +96,8 @@ gulp.task('prepare', ['prepare-terriajs']);
 
 gulp.task('prepare-terriajs', function() {
     return gulp.src([
-            'node_modules/terriajs/public/build/**'
-        ], { base: 'node_modules/terriajs/public/build' })
+            'node_modules/terriajs/wwwroot/build/**'
+        ], { base: 'node_modules/terriajs/wwwroot/build' })
     .pipe(gulp.dest('wwwroot/build/'));
 });
 

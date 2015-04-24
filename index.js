@@ -9,10 +9,9 @@ var checkBrowserCompatibility = require('terriajs/lib/ViewModels/checkBrowserCom
 checkBrowserCompatibility('ui');
 
 // Tell Cesium where to find its assets (images, CSS, Web Workers js files, etc.)
-window.CESIUM_BASE_URL = 'build/Cesium/';
+window.CESIUM_BASE_URL = 'build/Cesium/build/';
 
-var defined = require('terriajs/Cesium/Source/Core/defined');
-var knockout = require('terriajs/Cesium/Source/ThirdParty/knockout');
+var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 
 var AusGlobeViewer = require('terriajs/lib/viewer/AusGlobeViewer');
 var registerKnockoutBindings = require('terriajs/lib/Core/registerKnockoutBindings');
@@ -170,7 +169,7 @@ application.start({
     });
 
     // Create the explorer panel.
-    var explorer = ExplorerPanelViewModel.create({
+    ExplorerPanelViewModel.create({
         container: ui,
         application: application,
         mapElementToDisplace: 'cesiumContainer',
