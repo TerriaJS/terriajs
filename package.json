@@ -13,7 +13,7 @@
     "javascript-natural-sort": "^0.7.1",
     "leaflet": "^0.7.3",
     "proj4": "^2.3.6",
-    "terriajs-cesium": "0.0.5",
+    "terriajs-cesium": "^0.0.5",
     "togeojson": "^0.9.0"
   },
   "devDependencies": {
