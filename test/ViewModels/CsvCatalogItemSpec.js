@@ -6,7 +6,7 @@ var Application = require('../../lib/Models/Application');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 
-var Rectangle = require('../../Cesium/Source/Core/Rectangle');
+var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 var application;
 var csvItem;
