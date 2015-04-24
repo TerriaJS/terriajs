@@ -32,8 +32,8 @@ var testGlob = ['./test/**/*.js'];
 
 // Create the build directory, because browserify flips out if the directory that might
 // contain an existing source map doesn't exist.
-if (!fs.existsSync('public/build')) {
-    fs.mkdirSync('public/build');
+if (!fs.existsSync('wwwroot/build')) {
+    fs.mkdirSync('wwwroot/build');
 }
 
 gulp.task('build-specs', ['prepare-cesium'], function() {
@@ -64,7 +64,7 @@ gulp.task('lint', function(){
 
 gulp.task('docs', function(){
     return gulp.src(sourceGlob)
-        .pipe(jsdoc('./public/doc', undefined, {
+        .pipe(jsdoc('./wwwroot/doc', undefined, {
             plugins : ['plugins/markdown']
         }));
 });
@@ -91,12 +91,12 @@ gulp.task('copy-cesium-assets', function() {
             'Cesium/Source/Widgets/**/*.css',
             'Cesium/Source/Widgets/Images/**'
         ], { base: 'Cesium/Source' })
-        .pipe(gulp.dest('public/build/Cesium/'));
+        .pipe(gulp.dest('wwwroot/build/Cesium/'));
 });
 
 gulp.task('copy-cesiumWorkerBootstrapper', function() {
     return gulp.src('lib/cesiumWorkerBootstrapper.js')
-        .pipe(gulp.dest('public/build/Cesium/Workers'));
+        .pipe(gulp.dest('wwwroot/build/Cesium/Workers'));
 });
 
 gulp.task('default', ['lint', 'build']);
@@ -143,13 +143,13 @@ gulp.task('build-workers', function() {
     stream = stream
         // Extract the embedded source map to a separate file.
         .pipe(createExorcistTransform('Cesium-WebWorkers.js'))
-        .pipe(gulp.dest('public/build/Cesium/Workers'));
+        .pipe(gulp.dest('wwwroot/build/Cesium/Workers'));
 
     return stream;
 });
 
 function createExorcistTransform(name) {
-    return transform(function () { return exorcist('public/build/Cesium/Workers/' + name + '.map'); });
+    return transform(function () { return exorcist('wwwroot/build/Cesium/Workers/' + name + '.map'); });
 }
 
 function bundle(name, bundler, minify, catchErrors) {
@@ -179,10 +179,10 @@ function bundle(name, bundler, minify, catchErrors) {
 
     result = result
         // Extract the embedded source map to a separate file.
-        .pipe(transform(function () { return exorcist('public/build/' + name + '.map'); }))
+        .pipe(transform(function () { return exorcist('wwwroot/build/' + name + '.map'); }))
 
         // Write the finished product.
-        .pipe(gulp.dest('public/build'));
+        .pipe(gulp.dest('wwwroot/build'));
 
     return result;
 }
