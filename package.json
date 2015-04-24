@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
@@ -48,8 +48,7 @@
   },
   "browserify": {
     "transform": [
-      "brfs",
-      "deamdify"
+      "brfs"
     ]
   }
 }
