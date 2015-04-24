@@ -9,7 +9,7 @@ var checkBrowserCompatibility = require('terriajs/lib/ViewModels/checkBrowserCom
 checkBrowserCompatibility('ui');
 
 // Tell Cesium where to find its assets (images, CSS, Web Workers js files, etc.)
-window.CESIUM_BASE_URL = 'build/Cesium/build/';
+window.CESIUM_BASE_URL = 'build/TerriaJS/build/Cesium/build/';
 
 var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 
