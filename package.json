@@ -19,7 +19,7 @@
     "proj4js-defs": "^0.0.1",
     "request": "^2.55.0",
     "supervisor": "^0.6.0",
-    "terriajs": "^0.0.27",
+    "terriajs": "^0.0.28",
     "terriajs-cesium": "^0.0.5",
     "yargs": "^3.7.2"
   },
