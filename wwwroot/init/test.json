@@ -183,6 +183,10 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "Empty Group",
+                    "type": "group"
                 }
             ]
         },
@@ -206,6 +210,10 @@
                     "type": "wfs-getCapabilities"
                 }
             ]
+        },
+        {
+            "name": "Empty Group",
+            "type": "group"
         }
     ]
 }
