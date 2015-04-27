@@ -99,7 +99,7 @@ application.start({
     BrandBarViewModel.create(ui, {
         elements: [
             '<a target="_blank" href="http://www.gov.au/"><img src="images/gov-brand.png" height="52" /></a>',
-            '<div class="brand-bar-name"><a target="_blank" href="http://nicta.github.io/nationalmap/public/info.html">NATIONAL<br/><strong>MAP</strong> <small>beta</small></a></div>',
+            '<div class="brand-bar-name"><a target="_blank" href="help/About.html">NATIONAL<br/><strong>MAP</strong> <small>beta</small></a></div>',
             '<a target="_blank" href="http://www.nicta.com.au"><img src="images/nicta.png" height="52" /></a>'
         ]
     });
