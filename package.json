@@ -19,8 +19,8 @@
     "proj4js-defs": "^0.0.1",
     "request": "^2.55.0",
     "supervisor": "^0.6.0",
-    "terriajs": "^0.0.28",
-    "terriajs-cesium": "^0.0.5",
+    "terriajs": "git://github.com/TerriaJS/terriajs.git#tind",
+    "terriajs-cesium": "git://github.com/TerriaJS/cesium.git#cesiumUpgrade",
     "yargs": "^3.7.2"
   },
   "devDependencies": {
@@ -49,6 +49,7 @@
     "watchify": "^3.1.2"
   },
   "scripts": {
+    "prepublish": "cd node_modules/terriajs-cesium && npm install && cd ../terriajs && npm install",
     "start": "node_modules/.bin/supervisor server"
   }
 }
