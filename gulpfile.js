@@ -96,9 +96,9 @@ gulp.task('prepare', ['prepare-terriajs']);
 
 gulp.task('prepare-terriajs', function() {
     return gulp.src([
-            'node_modules/terriajs/public/build/**'
-        ], { base: 'node_modules/terriajs/public/build' })
-    .pipe(gulp.dest('wwwroot/build/'));
+            'node_modules/terriajs/wwwroot/**'
+        ], { base: 'node_modules/terriajs/wwwroot' })
+    .pipe(gulp.dest('wwwroot/build/TerriaJS'));
 });
 
 gulp.task('default', ['lint', 'build']);
