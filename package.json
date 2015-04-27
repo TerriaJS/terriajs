@@ -8,20 +8,20 @@
     "url": "http://github.com/TerriaJS/terriajs"
   },
   "dependencies": {
+    "brfs": "^1.4.0",
     "URIjs": "^1.15.0",
     "html2canvas": "^0.5.0-alpha2",
     "javascript-natural-sort": "^0.7.1",
     "leaflet": "^0.7.3",
+    "less": "^2.5.0",
     "proj4": "^2.3.6",
     "terriajs-cesium": "^0.0.5",
     "togeojson": "^0.9.0"
   },
   "devDependencies": {
-    "brfs": "^1.4.0",
     "browserify": "^9.0.8",
     "compression": "^1.4.3",
     "cors": "^2.5.3",
-    "deamdify": "^0.1.1",
     "exorcist": "^0.1.6",
     "express": "^4.12.3",
     "glob": "^5.0.5",
@@ -36,7 +36,6 @@
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.4",
     "gulp-watch": "^4.2.4",
-    "less": "^2.5.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
