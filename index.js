@@ -218,14 +218,14 @@ terria.start({
             }),
             new SearchTabViewModel({
                 searchProviders: [
+                    new CatalogItemNameSearchProviderViewModel({
+                        terria: terria
+                    }),
                     new BingMapsSearchProviderViewModel({
                         terria: terria,
                         key: configuration.bingMapsKey
                     }),
                     new GazetteerSearchProviderViewModel({
-                        terria: terria
-                    }),
-                    new CatalogItemNameSearchProviderViewModel({
                         terria: terria
                     })
                 ]
