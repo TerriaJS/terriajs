@@ -44,8 +44,9 @@
     "yargs": "^3.7.2"
   },
   "scripts": {
-    "prepublish": "cd node_modules/terriajs-cesium && npm install && cd ../.. && gulp prepare-cesium",
-    "postpublish": "git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}"
+    "prepublish": "if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi",
+    "postpublish": "git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}",
+    "postinstall": "if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi"
   },
   "browserify": {
     "transform": [
