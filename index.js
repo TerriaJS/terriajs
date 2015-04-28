@@ -1,20 +1,49 @@
+/**
+ * @license
+ * Copyright(c) 2012-2015 National ICT Australia Limited (NICTA).
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 'use strict';
 
 /*global require*/
-var copyright = require('./lib/CopyrightModule'); // jshint ignore:line
 
-// Check browser compatibility before doing anything else.
+var configuration = {
+    terriaBaseUrl: 'build/TerriaJS',
+    bingMapsKey: undefined,
+    proxyBaseUrl: 'proxy/',
+    conversionServiceBaseUrl: 'convert'
+};
+
+// Before requiring-in any other TerriaJS or Cesium code, tell TerriaJS where to find its static assets.
+var initializeTerria = require('terriajs/lib/initializeTerria');
+initializeTerria({
+    baseUrl: configuration.terriaBaseUrl
+});
+
+// Check browser compatibility early on.
 // A very old browser (e.g. Internet Explorer 8) will fail on requiring-in many of the modules below.
+// 'ui' is the name of the DOM element that should contain the error popup if the browser is not compatible
 var checkBrowserCompatibility = require('terriajs/lib/ViewModels/checkBrowserCompatibility');
 checkBrowserCompatibility('ui');
-
-// Tell Cesium where to find its assets (images, CSS, Web Workers js files, etc.)
-window.CESIUM_BASE_URL = 'build/TerriaJS/build/Cesium/build/';
 
 var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 
 var AusGlobeViewer = require('terriajs/lib/viewer/AusGlobeViewer');
 var registerKnockoutBindings = require('terriajs/lib/Core/registerKnockoutBindings');
+var corsProxy = require('terriajs/lib/Core/corsProxy');
 
 var AddDataPanelViewModel = require('terriajs/lib/ViewModels/AddDataPanelViewModel');
 var BingMapsSearchProviderViewModel = require('terriajs/lib/ViewModels/BingMapsSearchProviderViewModel');
@@ -41,9 +70,16 @@ var SettingsPanelViewModel = require('terriajs/lib/ViewModels/SettingsPanelViewM
 var SharePopupViewModel = require('terriajs/lib/ViewModels/SharePopupViewModel');
 var updateApplicationOnHashChange = require('terriajs/lib/ViewModels/updateApplicationOnHashChange');
 
-var Application = require('terriajs/lib/Models/Application');
+var Terria = require('terriajs/lib/Models/Terria');
+var OgrCatalogItem = require('terriajs/lib/Models/OgrCatalogItem');
 var registerCatalogMembers = require('terriajs/lib/Models/registerCatalogMembers');
 var raiseErrorToUser = require('terriajs/lib/Models/raiseErrorToUser');
+
+// Configure the base URL for the proxy service used to work around CORS restrictions.
+corsProxy.baseProxyUrl = configuration.proxyBaseUrl;
+
+// Tell the OGR catalog item where to find its conversion service.  If you're not using OgrCatalogItem you can remove this.
+OgrCatalogItem.conversionServiceBaseUrl = configuration.conversionServiceBaseUrl;
 
 // Register custom Knockout.js bindings.  If you're not using the TerriaJS user interface, you can remove this.
 registerKnockoutBindings();
@@ -54,43 +90,43 @@ registerKnockoutBindings();
 registerCatalogMembers();
 
 // Construct the TerriaJS application, arrange to show errors to the user, and start it up.
-var application = new Application();
+var terria = new Terria();
 
-application.error.addEventListener(function(e) {
+terria.error.addEventListener(function(e) {
     PopupMessageViewModel.open('ui', {
         title: e.title,
         message: e.message
     });
 });
 
-application.start({
+terria.start({
     // If you don't want the user to be able to control catalog loading via the URL, remove the applicationUrl property below
     // as well as the call to "updateApplicationOnHashChange" further down.
     applicationUrl: window.location,
     configUrl: 'config.json'
 }).otherwise(function(e) {
-    raiseErrorToUser(application, e);
+    raiseErrorToUser(terria, e);
 }).always(function() {
-    // Automatically update the application (load new catalogs, etc.) when the hash part of the URL changes.
-    updateApplicationOnHashChange(application, window);
+    // Automatically update Terria (load new catalogs, etc.) when the hash part of the URL changes.
+    updateApplicationOnHashChange(terria, window);
 
     // Create the map/globe.
-    AusGlobeViewer.create(application);
+    AusGlobeViewer.create(terria);
 
     // We'll put the entire user interface into a DOM element called 'ui'.
     var ui = document.getElementById('ui');
 
     // Create the various base map options.
-    var australiaBaseMaps = createAustraliaBaseMapOptions(application);
-    var globalBaseMaps = createGlobalBaseMapOptions(application);
+    var australiaBaseMaps = createAustraliaBaseMapOptions(terria);
+    var globalBaseMaps = createGlobalBaseMapOptions(terria, configuration.bingMapsKey);
 
     // Use the first global base map (Bing Maps Aerial with Labels) as the default one.
-    application.baseMap = globalBaseMaps[0].catalogItem;
+    terria.baseMap = globalBaseMaps[0].catalogItem;
 
     // Create the Settings / Map panel.
     var settingsPanel = SettingsPanelViewModel.create({
         container: ui,
-        application: application,
+        terria: terria,
         isVisible: false,
         baseMaps: australiaBaseMaps.concat(globalBaseMaps)
     });
@@ -107,17 +143,17 @@ application.start({
     // Create the menu bar.
     MenuBarViewModel.create({
         container: ui,
-        application: application,
+        terria: terria,
         items: [
             // Add a Tools menu that only appears when "tools=1" is present in the URL.
-            createToolsMenuItem(application, ui),
+            createToolsMenuItem(terria, ui),
             new MenuBarItemViewModel({
                 label: 'Add data',
                 tooltip: 'Add your own data to the map.',
                 callback: function() {
                     AddDataPanelViewModel.open({
                         container: ui,
-                        application: application
+                        terria: terria
                     });
                 }
             }),
@@ -132,7 +168,7 @@ application.start({
                 callback: function() {
                     SharePopupViewModel.open({
                         container: ui,
-                        application: application
+                        terria: terria
                     });
                 }
             }),
@@ -152,44 +188,45 @@ application.start({
     // Create the lat/lon/elev and distance widgets.
     LocationBarViewModel.create({
         container: ui,
-        application: application,
+        terria: terria,
         mapElement: document.getElementById('cesiumContainer')
     });
 
     DistanceLegendViewModel.create({
         container: ui,
-        application: application,
+        terria: terria,
         mapElement: document.getElementById('cesiumContainer')
     });
 
     // Create the navigation controls.
     NavigationViewModel.create({
         container: ui,
-        application: application
+        terria: terria
     });
 
     // Create the explorer panel.
     ExplorerPanelViewModel.create({
         container: ui,
-        application: application,
+        terria: terria,
         mapElementToDisplace: 'cesiumContainer',
         tabs: [
             new DataCatalogTabViewModel({
-                catalog: application.catalog
+                catalog: terria.catalog
             }),
             new NowViewingTabViewModel({
-                nowViewing: application.nowViewing
+                nowViewing: terria.nowViewing
             }),
             new SearchTabViewModel({
                 searchProviders: [
                     new BingMapsSearchProviderViewModel({
-                        application: application
+                        terria: terria,
+                        key: configuration.bingMapsKey
                     }),
                     new GazetteerSearchProviderViewModel({
-                        application: application
+                        terria: terria
                     }),
                     new CatalogItemNameSearchProviderViewModel({
-                        application: application
+                        terria: terria
                     })
                 ]
             })
@@ -199,13 +236,13 @@ application.start({
     // Create the feature information popup.
     var featureInfoPanel = FeatureInfoPanelViewModel.create({
         container: ui,
-        application: application
+        terria: terria
     });
 
     // Handle the user dragging/dropping files onto the application.
     DragDropViewModel.create({
         container: ui,
-        application: application,
+        terria: terria,
         dropTarget: document,
         allowDropInitFiles: true,
         allowDropDataFiles: true
