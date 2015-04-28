@@ -19,8 +19,8 @@
     "proj4js-defs": "^0.0.1",
     "request": "^2.55.0",
     "supervisor": "^0.6.0",
-    "terriajs": "git://github.com/TerriaJS/terriajs.git#tind",
-    "terriajs-cesium": "git://github.com/TerriaJS/cesium.git#cesiumUpgrade",
+    "terriajs": "^1.0.0",
+    "terriajs-cesium": "^1.8.0",
     "yargs": "^3.7.2"
   },
   "devDependencies": {
