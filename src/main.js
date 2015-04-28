@@ -311,13 +311,13 @@ if (start) {
 
         var searchTab = new SearchTabViewModel(application);
         
+        searchTab.searchProviders.push(new CatalogItemNameSearchProviderViewModel({
+            application: application
+        }));
         searchTab.searchProviders.push(new BingMapsSearchProviderViewModel({
             application: application
         }));
         searchTab.searchProviders.push(new GazetteerSearchProviderViewModel({
-            application: application
-        }));
-        searchTab.searchProviders.push(new CatalogItemNameSearchProviderViewModel({
             application: application
         }));
 
