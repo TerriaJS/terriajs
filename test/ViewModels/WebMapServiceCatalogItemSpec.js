@@ -13,7 +13,9 @@ var terria;
 var wmsViewModel;
 
 beforeEach(function() {
-    terria = new Terria();
+    terria = new Terria({
+        baseUrl: './'
+    });
     wmsViewModel = new WebMapServiceCatalogItem(terria);
 });
 

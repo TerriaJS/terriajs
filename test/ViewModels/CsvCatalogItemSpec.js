@@ -12,7 +12,9 @@ var terria;
 var csvItem;
 
 beforeEach(function() {
-    terria = new Terria();
+    terria = new Terria({
+        baseUrl: './'
+    });
     csvItem = new CsvCatalogItem(terria);
 });
 
