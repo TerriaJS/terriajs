@@ -9,7 +9,7 @@
   "dependencies": {
     "compression": "^1.4.3",
     "connect": "^3.3.5",
-    "cors": "^2.5.3",
+    "cors": "^2.6.0",
     "express": "^4.12.3",
     "formidable": "^1.0.17",
     "javascript-natural-sort": "^0.7.1",
@@ -19,9 +19,9 @@
     "proj4js-defs": "^0.0.1",
     "request": "^2.55.0",
     "supervisor": "^0.6.0",
-    "terriajs": "^1.0.3",
-    "terriajs-cesium": "^1.8.0",
-    "yargs": "^3.7.2"
+    "terriajs": "^1.0.4",
+    "terriajs-cesium": "^1.8.1",
+    "yargs": "^3.8.0"
   },
   "devDependencies": {
     "brfs": "^1.4.0",
@@ -46,7 +46,7 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
-    "watchify": "^3.1.2"
+    "watchify": "^3.2.0"
   },
   "scripts": {
     "start": "node_modules/.bin/supervisor server"
