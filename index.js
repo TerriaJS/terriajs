@@ -22,16 +22,11 @@
 
 var configuration = {
     terriaBaseUrl: 'build/TerriaJS',
-    bingMapsKey: undefined,
+    cesiumBaseUrl: undefined, // use default
+    bingMapsKey: undefined, // use Cesium key
     proxyBaseUrl: 'proxy/',
     conversionServiceBaseUrl: 'convert'
 };
-
-// Before requiring-in any other TerriaJS or Cesium code, tell TerriaJS where to find its static assets.
-var initializeTerria = require('terriajs/lib/initializeTerria');
-initializeTerria({
-    baseUrl: configuration.terriaBaseUrl
-});
 
 // Check browser compatibility early on.
 // A very old browser (e.g. Internet Explorer 8) will fail on requiring-in many of the modules below.
@@ -90,7 +85,10 @@ registerKnockoutBindings();
 registerCatalogMembers();
 
 // Construct the TerriaJS application, arrange to show errors to the user, and start it up.
-var terria = new Terria();
+var terria = new Terria({
+    baseUrl: configuration.terriaBaseUrl,
+    cesiumBaseUrl: configuration.cesiumBaseUrl
+});
 
 terria.error.addEventListener(function(e) {
     PopupMessageViewModel.open('ui', {
