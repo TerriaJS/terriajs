@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next
+
+* The catalog item info page now renders a much more complete set of Markdown and HTML elements.
+
 ### 1.0.0
 
 * Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
