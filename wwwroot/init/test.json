@@ -36,7 +36,7 @@
                                 "dataVariable": "incident_severity",
                                 "scale": 1.2,
                                 "scaleByValue": true,
-                                "imageUrl": "images/pow32.png",
+                                "imageUrl": "test/images/pow32.png",
                                 "minDisplayValue": 2,
                                 "maxDisplayValue": 5,
                                 "colorMap": [
