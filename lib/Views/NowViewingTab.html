@@ -10,7 +10,7 @@
             <!-- ko if: !hasChildren -->
             <div class="now-viewing-abs-properties-arrow"></div>
             <!-- /ko -->
-            <!-- ko if: isCode -->
+            <!-- ko if: isSelectable -->
              <div class="now-viewing-abs-icon clickable" data-bind="click: toggleActive, cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }"></div>
             <!-- /ko -->
             <div class="now-viewing-abs-properties-name" data-bind="text: name"></div>
@@ -83,6 +83,17 @@
                     <div class="now-viewing-abs-table">
                         <!-- ko if: absDataset && absDataset.items -->
                         <table data-bind="template: { name: 'now-viewing-abs-item-template', foreach: absDataset.items }">
+                        </table>
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: type === 'csv' -->
+                <div class="now-viewing-abs-section">
+                    <div class="now-viewing-abs-table">
+                        <!-- ko if: csvDataset -->
+                        <table data-bind="template: { name: 'now-viewing-abs-item-template', data: csvDataset }">
                         </table>
                         <!-- /ko -->
                     </div>
