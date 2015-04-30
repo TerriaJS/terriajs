@@ -6,6 +6,8 @@ A plugin to CKAN to use AusGlobe as a previewer for data.gov.au.
 The goal of this project is to be open source when it releases, so all work
  should be carried out with that in mind.
 
+Uses https://github.com/mapbox/geojson-extent
+
 ### Getting Started ###
 
 Check the [wiki](https://github.inside.nicta.com.au/kgrochow/ausglobe/wiki) for 
