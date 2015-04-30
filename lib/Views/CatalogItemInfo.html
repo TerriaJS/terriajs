@@ -41,7 +41,7 @@
             <!-- ko if: catalogItem.description -->
             <div class="catalog-item-info-section">
                 <h2>Description</h2>
-                <div class="catalog-item-info-description" data-bind="sanitizedHtml: catalogItem.description"></div>
+                <div class="catalog-item-info-description" data-bind="markdown: catalogItem.description"></div>
             </div>
             <!-- /ko -->
 
@@ -56,7 +56,7 @@
             <div class="catalog-item-info-section">
                 <h2 data-bind="text: name"></h2>
                 <div class="catalog-item-info-description">
-                    <div data-bind="sanitizedHtml: content"></div>
+                    <div data-bind="markdown: content"></div>
                 </div>
             </div>
             <!-- /ko -->
