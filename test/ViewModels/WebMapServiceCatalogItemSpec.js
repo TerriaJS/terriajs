@@ -2,19 +2,21 @@
 
 /*global require,describe,it,expect,beforeEach*/
 
-var Application = require('../../lib/Models/Application');
+var Terria = require('../../lib/Models/Terria');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
-var application;
+var terria;
 var wmsViewModel;
 
 beforeEach(function() {
-    application = new Application();
-    wmsViewModel = new WebMapServiceCatalogItem(application);
+    terria = new Terria({
+        baseUrl: './'
+    });
+    wmsViewModel = new WebMapServiceCatalogItem(terria);
 });
 
 describe('WebMapServiceDataItemViewModel', function() {
@@ -23,7 +25,7 @@ describe('WebMapServiceDataItemViewModel', function() {
         expect(wmsViewModel.typeName).toBe('Web Map Service (WMS)');
     });
 
-    it('throws if constructed without an application', function() {
+    it('throws if constructed without a Terria instance', function() {
         expect(function() {
             var viewModel = new WebMapServiceCatalogItem(); // jshint ignore:line
         }).toThrow();
@@ -152,7 +154,7 @@ describe('WebMapServiceDataItemViewModel', function() {
 
         var json = wmsViewModel.serializeToJson();
 
-        var reconstructed = new WebMapServiceCatalogItem(application);
+        var reconstructed = new WebMapServiceCatalogItem(terria);
         reconstructed.updateFromJson(json);
 
         expect(reconstructed).toEqual(wmsViewModel);

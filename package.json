@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "0.0.28",
+  "version": "1.0.5",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
@@ -16,7 +16,7 @@
     "less": "^2.5.0",
     "less-plugin-npm-import": "^2.0.0",
     "proj4": "^2.3.6",
-    "terriajs-cesium": "^0.0.5",
+    "terriajs-cesium": "^1.8.1",
     "togeojson": "^0.9.0"
   },
   "devDependencies": {
@@ -44,8 +44,9 @@
     "yargs": "^3.7.2"
   },
   "scripts": {
-    "prepublish": "gulp prepare-cesium",
-    "postpublish": "git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}"
+    "prepublish": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\"",
+    "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
+    "postinstall": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\""
   },
   "browserify": {
     "transform": [

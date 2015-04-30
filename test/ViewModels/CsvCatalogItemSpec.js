@@ -2,18 +2,20 @@
 
 /*global require,describe,it,expect,beforeEach*/
 
-var Application = require('../../lib/Models/Application');
+var Terria = require('../../lib/Models/Terria');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
-var application;
+var terria;
 var csvItem;
 
 beforeEach(function() {
-    application = new Application();
-    csvItem = new CsvCatalogItem(application);
+    terria = new Terria({
+        baseUrl: './'
+    });
+    csvItem = new CsvCatalogItem(terria);
 });
 
 describe('CsvCatalogItem', function() {
@@ -22,7 +24,7 @@ describe('CsvCatalogItem', function() {
         expect(csvItem.typeName).toBe('Comma-Separated Values (CSV)');
     });
 
-    it('throws if constructed without an application', function() {
+    it('throws if constructed without a Terria instance', function() {
         expect(function() {
             var viewModel = new CsvCatalogItem(); // jshint ignore:line
         }).toThrow();
@@ -85,7 +87,7 @@ describe('CsvCatalogItem', function() {
 
         var json = csvItem.serializeToJson();
 
-        var reconstructed = new CsvCatalogItem(application);
+        var reconstructed = new CsvCatalogItem(terria);
         reconstructed.updateFromJson(json);
 
         expect(reconstructed).toEqual(csvItem);
