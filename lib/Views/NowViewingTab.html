@@ -1,23 +1,23 @@
-<script type="text/html" id="now-viewing-abs-item-template">
+<script type="text/html" id="now-viewing-tree-item-template">
     <tr>
-        <td class="now-viewing-abs-properties-name-cell" data-bind="css: 'now-viewing-abs-properties-level' + ($parents.length-1) + (hasChildren ? ' now-viewing-abs-properties-parent' : '')">
+        <td class="now-viewing-tree-properties-name-cell" data-bind="css: 'now-viewing-tree-properties-level' + ($parents.length-1) + (hasChildren ? ' now-viewing-tree-properties-parent' : '')">
             <!-- ko if: hasChildren && isOpen -->
-            <div class="now-viewing-abs-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowDown, width: 32, height: 32 }"></div>
+            <div class="now-viewing-tree-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowDown, width: 32, height: 32 }"></div>
             <!-- /ko -->
             <!-- ko if: hasChildren && !isOpen -->
-            <div class="now-viewing-abs-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowRight, width: 32, height: 32 }"></div>
+            <div class="now-viewing-tree-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowRight, width: 32, height: 32 }"></div>
             <!-- /ko -->
             <!-- ko if: !hasChildren -->
-            <div class="now-viewing-abs-properties-arrow"></div>
+            <div class="now-viewing-tree-properties-arrow"></div>
             <!-- /ko -->
             <!-- ko if: isSelectable -->
-             <div class="now-viewing-abs-icon clickable" data-bind="click: toggleActive, cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }"></div>
+             <div class="now-viewing-tree-icon clickable" data-bind="click: toggleActive, cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }"></div>
             <!-- /ko -->
-            <div class="now-viewing-abs-properties-name" data-bind="text: name"></div>
+            <div class="now-viewing-tree-properties-name" data-bind="text: name"></div>
         </td>
     </tr>
     <!-- ko if: hasChildren && isOpen -->
-        <!-- ko template: { name: 'now-viewing-abs-item-template', foreach: items } -->
+        <!-- ko template: { name: 'now-viewing-tree-item-template', foreach: items } -->
         <!-- /ko -->
     <!-- /ko -->
 </script>
@@ -56,7 +56,7 @@
 
                 <!-- ko if: type === 'abs-itt'-->
                 <div class="now-viewing-abs-controls">
-                     <div class="now-viewing-abs-icon clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
+                     <div class="now-viewing-tree-icon clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
                     <div class="now-viewing-abs-percent" data-bind="text: 'Display as Percent of Region'"></div>
                 </div>
                 <!-- /ko -->
@@ -80,9 +80,9 @@
                 
                 <!-- ko if: type === 'abs-itt' -->
                 <div class="now-viewing-abs-section">
-                    <div class="now-viewing-abs-table">
+                    <div class="now-viewing-tree-table">
                         <!-- ko if: absDataset && absDataset.items -->
-                        <table data-bind="template: { name: 'now-viewing-abs-item-template', foreach: absDataset.items }">
+                        <table data-bind="template: { name: 'now-viewing-tree-item-template', foreach: absDataset.items }">
                         </table>
                         <!-- /ko -->
                     </div>
@@ -90,10 +90,10 @@
                 <!-- /ko -->
 
                 <!-- ko if: type === 'csv' -->
-                <div class="now-viewing-abs-section">
-                    <div class="now-viewing-abs-table">
+                <div class="now-viewing-csv-section">
+                    <div class="now-viewing-tree-table">
                         <!-- ko if: csvDataset -->
-                        <table data-bind="template: { name: 'now-viewing-abs-item-template', data: csvDataset }">
+                        <table data-bind="template: { name: 'now-viewing-tree-item-template', data: csvDataset }">
                         </table>
                         <!-- /ko -->
                     </div>
