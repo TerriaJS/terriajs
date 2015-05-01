@@ -1,0 +1,29 @@
+{
+    "corsDomains" : [
+        "corsproxy.com",
+        "programs.communications.gov.au",
+        "www.asris.csiro.au"
+    ],
+    "homeCamera": {
+        "west": 105,
+        "south": -45,
+        "east": 155,
+        "north": -5
+    },
+    "catalog": [
+        {
+            "name": "Telecommunications in New Developments",
+            "type": "ckan",
+            "url": "http://www.data.gov.au",
+            "filterQuery": ["fq=organization%3adepartment-of-communications+res_format%3aKML+tags%3atind"],
+            "filterByWmsGetCapabilities": false,
+            "minimumMaxScaleDenominator": 1e10,
+            "includeKml": true,
+            "includeWms": false,
+            "includeEsriMapServer": false,
+            "groupBy": "none",
+            "useResourceName": true,
+            "isOpen": true
+        }
+    ]
+}

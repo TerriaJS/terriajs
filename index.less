@@ -1,0 +1,81 @@
+@terriajs-path: "./TerriaJS";
+@cesium-path: "@{terriajs-path}/build/Cesium";
+
+@default-font: 'Roboto', sans-serif;
+@highlight-color: #68ADFE;
+@left-side-panels-width: 350px;
+
+// Panels
+@panel-background-color: #2F353C;
+@panel-text-color: #CCCCCC;
+@panel-emphasized-text-color: #FFFFFF;
+@panel-selected-text-color: @highlight-color;
+@panel-box-shadow: 2px 2px 5px rgba(0,0,0,0.26);
+@panel-element-border: 1px solid rgba(100,100,100, 0.6);
+@panel-section-background-color: #282D32;
+@panel-form-input-background-color: #838689;
+@panel-form-input-text-color: #FFFFFF;
+@panel-form-button-background-color: #A1A3A6;
+@panel-form-button-text-color: #FFFFFF;
+
+// Explorer panel
+@explorer-panel-width: @left-side-panels-width;
+@explorer-panel-header-background-color: #757f88;
+@explorer-panel-inactive-tab-text-color: @panel-text-color;
+@explorer-panel-active-tab-text-color: @panel-emphasized-text-color;
+@explorer-panel-active-tab-underline-color: @highlight-color;
+@explorer-panel-close-animation-length: 0.25s;
+@explorer-panel-tab-switch-animation-length: 0.25s;
+@explorer-panel-badge-background-color: @highlight-color;
+@explorer-panel-badge-text-color: @panel-emphasized-text-color;
+
+// Brand bar
+@brand-bar-background-color: @panel-section-background-color;
+@brand-bar-width: @left-side-panels-width;
+
+// Floating elements
+@floating-background-color: rgba(47,53,60,80%);
+@floating-text-color: #FFFFFF;
+@floating-element-border: 1px solid #555555;
+
+// Menu bar
+@menu-bar-text-color: @floating-text-color;
+@menu-bar-active-background-color: #757f88;
+@menu-bar-active-text-color: #ffffff;
+
+// Input
+@input-background-color: #A1A3A6;
+@input-text-color: #666666;
+
+// Modals
+@modal-bg-color: @panel-background-color;
+
+
+
+@import "npm://terriajs/lib/Styles/Reset.less";
+@import "npm://terriajs/lib/Styles/Core.less";
+@import "npm://terriajs/lib/Styles/Panels.less";
+@import "npm://terriajs/lib/Styles/Map.less";
+@import "npm://terriajs/lib/Styles/Floating.less";
+
+// Individual widgets
+@import "npm://terriajs/lib/Styles/AddDataPanel.less";
+@import "npm://terriajs/lib/Styles/BrandBar.less";
+@import "npm://terriajs/lib/Styles/CatalogItemInfo.less";
+@import "npm://terriajs/lib/Styles/DistanceLegend.less";
+@import "npm://terriajs/lib/Styles/DragDrop.less";
+@import "npm://terriajs/lib/Styles/ExplorerPanel.less";
+@import "npm://terriajs/lib/Styles/FeatureInfoPanel.less";
+@import "npm://terriajs/lib/Styles/LocationBar.less";
+@import "npm://terriajs/lib/Styles/MenuBar.less";
+@import "npm://terriajs/lib/Styles/Navigation.less";
+@import "npm://terriajs/lib/Styles/PopupMessage.less";
+@import "npm://terriajs/lib/Styles/SelectionIndicator.less";
+@import "npm://terriajs/lib/Styles/SettingsPanel.less";
+@import "npm://terriajs/lib/Styles/SharePopup.less";
+@import "npm://terriajs/lib/Styles/ToolsPanel.less";
+
+// Tabs on the Explorer Panel
+@import "npm://terriajs/lib/Styles/DataCatalogTab.less";
+@import "npm://terriajs/lib/Styles/NowViewingTab.less";
+@import "npm://terriajs/lib/Styles/SearchTab.less";
