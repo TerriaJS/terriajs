@@ -25,6 +25,6 @@ The entire process can be easily automated using [gulp](http://gulpjs.com/).  Se
 
 [index.js](https://github.com/NICTA/nationalmap/blob/master/index.js) requires-in various TerriaJS components and initializes the user interface.
 
-[index.less](https://github.com/NICTA/nationalmap/blob/mastert/index.less) customizes various aspects of the appearance and `@import`s the less files for the TerriaJS components that the application uses.
+[index.less](https://github.com/NICTA/nationalmap/blob/master/index.less) customizes various aspects of the appearance and `@import`s the less files for the TerriaJS components that the application uses.
 
 All assets in `node_modules/terriajs/wwwroot` should be copied to `[your app's web root directory]/build/TerriaJS`.
