@@ -1,11 +1,7 @@
 Change Log
 ==========
 
-### Next
-
-* The catalog item info page now renders a much more complete set of Markdown and HTML elements.
-
-### 1.0.0
+### 1.0.6
 
 * Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
 * Added support for time-dynamic region mapping (example in `public/test/droughts.csv`).
@@ -20,3 +16,4 @@ Change Log
 * All catalog items now have an `info` property that allows arbitrary sections to be shown for the item in the info popup.
 * `CkanCatalogGroup` now has a `groupBy` property to control whether catalog items are grouped by CKAN group ("group"), CKAN organization ("organization"), or not grouped at all ("none").
 * `CkanCatalogGroup` now has a `useResourceName` property to control whether the name of the catalog item is derived from the resource (true), or the dataset itself (false).
+* The catalog item info page now renders a much more complete set of Markdown and HTML elements.
