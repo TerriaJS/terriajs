@@ -1,8 +1,7 @@
-docs/
 node_modules/
 .idea/
-public/build
-public/doc
+wwwroot/build/
+wwwroot/doc/
 error.log
 output.log
 npm-debug.log
