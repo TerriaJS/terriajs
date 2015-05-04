@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.7
+
+* Added `validDropElements`, `validDropClasses`, `invalidDropElements`, and `invalidDropClasses` properties to `DragDropViewModel` for finer control over where dropping is allowed.
+
 ### 1.0.6
 
 * Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
