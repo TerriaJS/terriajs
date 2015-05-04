@@ -8,7 +8,6 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var browserify = require('browserify');
 var jshint = require('gulp-jshint');
-var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var exorcist = require('exorcist');
@@ -56,6 +55,7 @@ gulp.task('lint', function(){
 });
 
 gulp.task('docs', function(){
+    var jsdoc = require('gulp-jsdoc');
     return gulp.src(sourceGlob)
         .pipe(jsdoc('./wwwroot/doc', undefined, {
             plugins : ['plugins/markdown']
