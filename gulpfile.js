@@ -10,13 +10,13 @@ var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var jsdoc = require('gulp-jsdoc');
 var uglify = require('gulp-uglify');
-var exec = require('child_process').exec;
 var sourcemaps = require('gulp-sourcemaps');
 var exorcist = require('exorcist');
 var buffer = require('vinyl-buffer');
 var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
+var resolve = require('resolve');
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
@@ -65,9 +65,17 @@ gulp.task('docs', function(){
 gulp.task('prepare-cesium', ['copy-cesium-assets']);
 
 gulp.task('copy-cesium-assets', function() {
+    var cesium = resolve.sync('terriajs-cesium/wwwroot', {
+        basedir: __dirname,
+        extentions: ['.'],
+        isFile: function(file) {
+            try { return fs.statSync(file).isDirectory(); }
+            catch (e) { return false; }
+        }
+    });
     return gulp.src([
-            './node_modules/terriajs-cesium/wwwroot/**'
-        ], { base: './node_modules/terriajs-cesium/wwwroot' })
+            cesium + '/**'
+        ], { base: cesium })
         .pipe(gulp.dest('wwwroot/build/Cesium'));
 });
 
