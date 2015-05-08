@@ -61,6 +61,13 @@
             </div>
             <!-- /ko -->
 
+            <!-- ko if: catalogItem.dataCustodian -->
+            <div class="catalog-item-info-section">
+                <h2>Data Custodian</h2>
+                <div class="catalog-item-info-description" data-bind="markdown: catalogItem.dataCustodian"></div>
+            </div>
+            <!-- /ko -->
+
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
                 <input class="catalog-item-info-baseUrl" readonly type="text" data-bind="value: catalogItem.url" size="80" onclick="this.select();" />
