@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.7
+
+* `CatalogItemNameSearchProviderViewModel` now asynchronously loads groups so items in unloaded groups can be found, too.
+
 ### 1.0.6
 
 * Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
