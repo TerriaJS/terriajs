@@ -4,6 +4,7 @@ Change Log
 ### 1.0.7
 
 * `CatalogItemNameSearchProviderViewModel` now asynchronously loads groups so items in unloaded groups can be found, too.
+* Do not automatically fly to the first location when pressing Enter in the Search input box.
 
 ### 1.0.6
 
