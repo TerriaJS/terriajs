@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.7
+
+* Changed `ArcGisMapServerCatalogItem` to interpret a `maxScale` of 0 from an ArcGIS MapServer as "not specified".
+* Added an `itemProperties` property to `ArcGisMapServerCatalogGroup`, allowing properties of auto-discovered layers to be specified explicitly.
+
 ### 1.0.6
 
 * Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
