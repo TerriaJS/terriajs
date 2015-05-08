@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.7
+
+* Arbitrary parameters can now be specified in `config.json` by adding them to the `parameters` property.
+
 ### 1.0.6
 
 * Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
