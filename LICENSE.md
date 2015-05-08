@@ -6,14 +6,14 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 
 http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writingNa software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-Portions of the National Map use the following copyrighted material, the use of which is hereby acknowledged.
+Portions of the TerriaJS use the following copyrighted material, the use of which is hereby acknowledged.
 
 Third-Party Code
 ================
 
-National Map includes the following third-party code.
+TerriaJS includes the following third-party code.
 
 ###  Cesium
 
