@@ -5,6 +5,9 @@ Change Log
 
 * Changed `ArcGisMapServerCatalogItem` to interpret a `maxScale` of 0 from an ArcGIS MapServer as "not specified".
 * Added an `itemProperties` property to `ArcGisMapServerCatalogGroup`, allowing properties of auto-discovered layers to be specified explicitly.
+* Added `validDropElements`, `validDropClasses`, `invalidDropElements`, and `invalidDropClasses` properties to `DragDropViewModel` for finer control over where dropping is allowed.
+* Arbitrary parameters can now be specified in `config.json` by adding them to the `parameters` property.
+
 
 ### 1.0.6
 
