@@ -21,10 +21,10 @@ TerriaJS is composed of a number of CommonJS modules, making it easy to incorpor
 2. Build the CSS with [less](http://lesscss.org/).
 3. Copy the runtime resources to a directory accessible from your application's web server.
 
-The entire process can be easily automated using [gulp](http://gulpjs.com/).  See National Map's [gulpfile.js](https://github.com/NICTA/nationalmap/blob/terriafy/gulpfile.js) for an example.
+The entire process can be easily automated using [gulp](http://gulpjs.com/).  See National Map's [gulpfile.js](https://github.com/NICTA/nationalmap/blob/master/gulpfile.js) for an example.
 
-[index.js](https://github.com/NICTA/nationalmap/blob/terriafy/index.js) requires-in various TerriaJS components and initializes the user interface.
+[index.js](https://github.com/NICTA/nationalmap/blob/master/index.js) requires-in various TerriaJS components and initializes the user interface.
 
-[index.less](https://github.com/NICTA/nationalmap/blob/terriafy/index.less) customizes various aspects of the appearance and `@import`s the less files for the TerriaJS components that the application uses.
+[index.less](https://github.com/NICTA/nationalmap/blob/master/index.less) customizes various aspects of the appearance and `@import`s the less files for the TerriaJS components that the application uses.
 
 All assets in `node_modules/terriajs/wwwroot` should be copied to `[your app's web root directory]/build/TerriaJS`.
