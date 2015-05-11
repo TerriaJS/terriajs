@@ -3,6 +3,7 @@ Change Log
 
 ### 1.0.7
 
+* Added `validDropElements`, `validDropClasses`, `invalidDropElements`, and `invalidDropClasses` properties to `DragDropViewModel` for finer control over where dropping is allowed.
 * Arbitrary parameters can now be specified in `config.json` by adding them to the `parameters` property.
 
 ### 1.0.6
