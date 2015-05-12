@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+### 1.0.8
+
+* Potentially breaking changes:
+  * The `getFeatureInfoAsGeoJson` and `getFeatureInfoAsXml` properties have been removed.  Use `getFeatureInfoFormats` instead.
+* Added support for text/html responses from WMS GetFeatureInfo.
+* Make the `FeatureInfoPanelViewModel` use a white background when displaying a complete HTML document.
+* `KnockoutMarkdownBinding` no longer tries to interpret complete HTML documents (i.e. those that contain an <html> tag) as Markdown.
+
 ### 1.0.7
 
 * `CatalogItemNameSearchProviderViewModel` now asynchronously loads groups so items in unloaded groups can be found, too.
