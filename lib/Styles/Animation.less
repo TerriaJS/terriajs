@@ -1,7 +1,9 @@
 .animation-controls {
-    .floating-horizontal;
+    .opaque-to-input;
+    position: absolute;
+    background-color: @floating-background-color;
     left: @explorer-panel-width;
-    bottom: 200px;
+    bottom: 10px;
     height: 30px;
     border: 1px solid rgba(255,255,255,0.1);
     font-weight: 300;
@@ -16,40 +18,27 @@
     color: @menu-bar-text-color;
     padding-left: 10px;
     padding-right: 10px;
+    bottom: 10px;
     cursor: pointer;
     border-right: @panel-element-border;
-    margin-left: -4px;
 }
 
-.animation-control:active {
-  color: #FFF;
+.animation-control-active {
+    color: @panel-selected-text-color;
+    fill: @panel-selected-text-color;
 }
 
 .animation-control-last {
     border: none;
+    border-radius: 0px;
 }
 
-.animation-control-icon-faster-backward {
-    position: relative;
-    text-align: center;
-    font-size: 20px;
-    color: @floating-text-color;
-    padding-bottom: 4px;
-}
-
-.animation-control-icon-faster-forward {
-    position: relative;
-    text-align: center;
-    font-size: 20px;
-    color: @floating-text-color;
-}
-
-.animation-control-icon-direction {
+.animation-control-icon {
     position: relative;
     left: 5px;
     width: 10px;
     height: 5px;
     fill: fade(@floating-text-color, 80%);
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding-bottom: 10px;
+    font-size: 18px;
 }

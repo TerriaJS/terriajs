@@ -1,14 +1,17 @@
-<div class="animation-controls">
-    <div class="animation-control" data-bind="click: fasterBackward" title="Slower">
-        <div class="animation-control-icon-faster-backward">&lt;&lt;</div>
+<div class="animation-controls" data-bind="visible: showAnimation">
+     <div class="animation-control" data-bind="click: backward" title="Reverse">
+        <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': isMovingBackward }">&lt;</div>
     </div>
-    <div class="animation-control" data-bind="click: backward" title="Reverse">
-        <div class="animation-control-icon-direction" data-bind="cesiumSvgPath: { path: svgReset, width: 15, height: 15 }"></div>
+     <div class="animation-control" data-bind="click: pause" title="Pause">
+        <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': !isMovingBackward && !isMovingForward}">||</div>
     </div>
     <div class="animation-control" data-bind="click: forward" title="Forward">
-        <div class="animation-control-icon-direction" data-bind="cesiumSvgPath: { path: svgReset, width: 15, height: 15 }"></div>
+        <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': isMovingForward }">&gt;</div>
     </div>
-    <div class="animation-control animation-control-last" data-bind="click: fasterForward" title="Faster">
-        <div class="animation-control-icon-faster-forward">&gt;&gt;</div>
+   <div class="animation-control" data-bind="click: slower" title="Slower">
+        <div class="animation-control-icon">&lt;&lt;</div>
+    </div>
+    <div class="animation-control animation-control-last" data-bind="click: faster" title="Faster">
+        <div class="animation-control-icon">&gt;&gt;</div>
     </div>
 </div>
