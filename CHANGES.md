@@ -4,6 +4,9 @@ Change Log
 ### 1.0.8
 
 * `WebMapServiceCatalogGroup` now populates the catalog using the hierarchy of layers returned by the WMS server in GetCapabilities.  To keep the previous behavior, set the `flatten` property to true.
+* `ArcGisMapServerCatalogItem` now offers metadata, used to populate the Data Details and Service Details sections of the catalog item info panel.
+* `ArcGisMapServerCatalogGroup` now populates a "Service Description" and a "Data Description" info section for each catalog item from the MapServer's metadata.
+* The `metadataUrl` is now populated (and shown) from the regular MapServer URL.
 
 ### 1.0.7
 
