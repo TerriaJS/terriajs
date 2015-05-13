@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.8
+
+* `WebMapServiceCatalogGroup` now populates the catalog using the hierarchy of layers returned by the WMS server in GetCapabilities.  To keep the previous behavior, set the `flatten` property to true.
+
 ### 1.0.7
 
 * `CatalogItemNameSearchProviderViewModel` now asynchronously loads groups so items in unloaded groups can be found, too.
