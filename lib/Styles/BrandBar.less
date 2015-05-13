@@ -12,18 +12,28 @@
 
 .brand-bar-main {
     position: absolute;
-    width: @brand-bar-width;
+    width: @brand-bar-width - 20px;
     height: 68px;
     top: 0;
     left: 0;
     display: table;
     padding-left: 10px;
+    padding-right: 10px;
 }
 
 .brand-bar-element {
     display: table-cell;
     height: 68px;
     vertical-align: middle;
+    text-align: center;
+}
+
+.brand-bar-element-first {
+    text-align: left;
+}
+
+.brand-bar-element-last {
+    text-align: right;
 }
 
 .brand-bar-name {

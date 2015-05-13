@@ -15,7 +15,7 @@
         <!-- ko if: hasChildren -->
             <td></td>
         <!-- /ko -->
-        <!-- ko if: valueIsArray -->
+        <!-- ko if: valueIsArray && !hasChildren -->
             <td data-bind="foreach: value">
                 <span data-bind="if: $index() !== 0">; </span>
                 <span data-bind="text: $data"></span>
