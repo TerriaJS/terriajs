@@ -1,11 +1,14 @@
 <div class="animation-controls" data-bind="visible: showAnimation">
-     <div class="animation-control" data-bind="click: backward" title="Reverse">
+     <div class="animation-text" data-bind="click: backward" title="Current Time (tz info et al)">
+        <div class="animation-text-display" data-bind="text: currentTimeString"></div>
+    </div>
+     <div class="animation-control" data-bind="click: backward" title="Play Reverse">
         <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': isMovingBackward }">&lt;</div>
     </div>
      <div class="animation-control" data-bind="click: pause" title="Pause">
         <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': !isMovingBackward && !isMovingForward}">||</div>
     </div>
-    <div class="animation-control" data-bind="click: forward" title="Forward">
+    <div class="animation-control" data-bind="click: forward" title="Play Forward">
         <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': isMovingForward }">&gt;</div>
     </div>
    <div class="animation-control" data-bind="click: slower" title="Slower">

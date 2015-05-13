@@ -2,11 +2,28 @@
     .opaque-to-input;
     position: absolute;
     background-color: @floating-background-color;
-    left: @explorer-panel-width;
-    bottom: 10px;
-    height: 30px;
+    left: @explorer-panel-width + 5px;
+    bottom: 0px;
+    height: 45px;
+    width: 160px;
     border: 1px solid rgba(255,255,255,0.1);
     font-weight: 300;
+    visibility: hidden;
+}
+
+.animation-text {
+    font-family: @default-font;
+    font-size: 14px;
+    color: @menu-bar-text-color;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    height: 15px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.animation-text-display {
 }
 
 .animation-control {
@@ -14,9 +31,9 @@
     font-family: @default-font;
     font-size: 14px;
     font-weight: 300;
-    line-height: 30px;
+    line-height: 25px;
     color: @menu-bar-text-color;
-    padding-left: 10px;
+    padding-left: 5px;
     padding-right: 10px;
     bottom: 10px;
     cursor: pointer;
@@ -35,7 +52,7 @@
 
 .animation-control-icon {
     position: relative;
-    left: 5px;
+    left: 0px;
     width: 10px;
     height: 5px;
     fill: fade(@floating-text-color, 80%);
