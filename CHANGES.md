@@ -4,6 +4,9 @@ Change Log
 ### 1.0.8
 
 * The feature info popup for points loaded from CSV files now shows numeric columns with a missing value as blank instead of as 1e-34.
+* `ArcGisMapServerCatalogItem` now offers metadata, used to populate the Data Details and Service Details sections of the catalog item info panel.
+* `ArcGisMapServerCatalogGroup` now populates a "Service Description" and a "Data Description" info section for each catalog item from the MapServer's metadata.
+* The `metadataUrl` is now populated (and shown) from the regular MapServer URL.
 
 ### 1.0.7
 
