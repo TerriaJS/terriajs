@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.8
+
+* The feature info popup for points loaded from CSV files now shows numeric columns with a missing value as blank instead of as 1e-34.
+
 ### 1.0.7
 
 * `CatalogItemNameSearchProviderViewModel` now asynchronously loads groups so items in unloaded groups can be found, too.
