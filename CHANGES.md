@@ -13,6 +13,7 @@ Change Log
 * `ArcGisMapServerCatalogItem` now offers metadata, used to populate the Data Details and Service Details sections of the catalog item info panel.
 * `ArcGisMapServerCatalogGroup` now populates a "Service Description" and a "Data Description" info section for each catalog item from the MapServer's metadata.
 * The `metadataUrl` is now populated (and shown) from the regular MapServer URL.
+* Checkboxes in the Data Catalogue and Search tabs now have a larger clickable area.
 
 ### 1.0.7
 
