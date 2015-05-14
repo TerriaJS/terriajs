@@ -6,6 +6,7 @@ var Terria = require('../../lib/Models/Terria');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 
+var Color = require('terriajs-cesium/Source/Core/Color');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 var terria;
@@ -169,4 +170,25 @@ describe('CsvCatalogItem', function() {
         expect(csvItem instanceof CatalogItem).toBe(true);
     });
 
+    it('has a blank in the description table for a missing number', function(done) {
+        csvItem.url = 'test/missingNumberFormatting.csv';
+        return csvItem.load().then(function() {
+            var entities = csvItem._tableDataSource.entities.values;
+            expect(entities.length).toBe(2);
+            expect(entities[0].description.getValue()).toContain('<td>Vals</td><td>10</td>');
+            expect(entities[1].description.getValue()).toContain('<td>Vals</td><td></td>');
+            done();
+        });
+    });
+
+    it('renders a point with no value in transparent black', function(done) {
+        csvItem.url = 'test/missingNumberFormatting.csv';
+        return csvItem.load().then(function() {
+            var entities = csvItem._tableDataSource.entities.values;
+            expect(entities.length).toBe(2);
+            expect(entities[0].point.color.getValue()).not.toEqual(new Color(0.0, 0.0, 0.0, 0.0));
+            expect(entities[1].point.color.getValue()).toEqual(new Color(0.0, 0.0, 0.0, 0.0));
+            done();
+        });
+    });
 });
