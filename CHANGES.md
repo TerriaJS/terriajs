@@ -6,6 +6,8 @@ Change Log
 * `ArcGisMapServerCatalogItem` now offers metadata, used to populate the Data Details and Service Details sections of the catalog item info panel.
 * `ArcGisMapServerCatalogGroup` now populates a "Service Description" and a "Data Description" info section for each catalog item from the MapServer's metadata.
 * The `metadataUrl` is now populated (and shown) from the regular MapServer URL.
+* Added 'keepOnTop' flag support for imageryLayers in init file to allow a layer to serve as a mask.
+* Added 'keepOnTop' support to region mapping to allow arbitrary masks based on supported regions.
 
 ### 1.0.7
 
