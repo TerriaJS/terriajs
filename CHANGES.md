@@ -8,6 +8,7 @@ Change Log
 * Added support for text/html responses from WMS GetFeatureInfo.
 * Make the `FeatureInfoPanelViewModel` use a white background when displaying a complete HTML document.
 * `KnockoutMarkdownBinding` no longer tries to interpret complete HTML documents (i.e. those that contain an <html> tag) as Markdown.
+* The feature info popup for points loaded from CSV files now shows numeric columns with a missing value as blank instead of as 1e-34.
 * `ArcGisMapServerCatalogItem` now offers metadata, used to populate the Data Details and Service Details sections of the catalog item info panel.
 * `ArcGisMapServerCatalogGroup` now populates a "Service Description" and a "Data Description" info section for each catalog item from the MapServer's metadata.
 * The `metadataUrl` is now populated (and shown) from the regular MapServer URL.
