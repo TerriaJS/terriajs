@@ -15,7 +15,7 @@
         <!-- ko if: hasChildren -->
             <td></td>
         <!-- /ko -->
-        <!-- ko if: valueIsArray -->
+        <!-- ko if: valueIsArray && !hasChildren -->
             <td data-bind="foreach: value">
                 <span data-bind="if: $index() !== 0">; </span>
                 <span data-bind="text: $data"></span>
@@ -58,6 +58,13 @@
                 <div class="catalog-item-info-description">
                     <div data-bind="markdown: content"></div>
                 </div>
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: catalogItem.dataCustodian -->
+            <div class="catalog-item-info-section">
+                <h2>Data Custodian</h2>
+                <div class="catalog-item-info-description" data-bind="markdown: catalogItem.dataCustodian"></div>
             </div>
             <!-- /ko -->
 

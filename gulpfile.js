@@ -44,7 +44,7 @@ gulp.task('watch-specs', ['prepare-cesium'], function() {
     return watch(specJSName, glob.sync(testGlob), false);
 });
 
-gulp.task('watch', ['watch-specs', 'watch-workers']);
+gulp.task('watch', ['watch-specs']);
 
 gulp.task('lint', function(){
     var sources = glob.sync(sourceGlob.concat(testGlob));
