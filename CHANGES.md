@@ -3,6 +3,7 @@ Change Log
 
 ### 1.0.8
 
+* `WebMapServiceCatalogGroup` now populates the catalog using the hierarchy of layers returned by the WMS server in GetCapabilities.  To keep the previous behavior, set the `flatten` property to true.
 * Potentially breaking changes:
   * The `getFeatureInfoAsGeoJson` and `getFeatureInfoAsXml` properties have been removed.  Use `getFeatureInfoFormats` instead.
 * Added support for text/html responses from WMS GetFeatureInfo.
