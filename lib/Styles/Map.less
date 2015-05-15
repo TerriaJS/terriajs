@@ -17,14 +17,6 @@
     display: none;
 }
 
-.cesium-credit-text:first-child {
-    font-weight: bolder;
-}
-
-.cesium-credit-text:nth-child(2) {
-    font-weight: bolder;
-}
-
 .map-displaced {
     left: @explorer-panel-width;
 
@@ -79,6 +71,24 @@ button.cesium-infoBox-camera {
 
 .leaflet-popup-content {
     margin: 5px 15px;
+}
+.leaflet-control-attribution.leaflet-control {
+    background: none;
+    color: #ffffff;
+    font-size: 9px;
+    text-shadow: 0px 0px 1px #000000;
+    padding: 5px;
+    font-family: @default-font;
+}
+
+.leaflet-control-attribution.leaflet-control a {
+    color: #ffffff;
+    text-decoration:none;
+}
+
+.leaflet-control-attribution.leaflet-control a:hover {
+    color: #ffffff;
+    text-decoration:underline;
 }
 
 @media print {
