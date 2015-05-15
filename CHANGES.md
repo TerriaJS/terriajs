@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 1.0.11
+
+* Fixed a bug that prevented HTML feature information from showing up with a white background in Internet Explorer 9 and 10.
+* Fixed a bug that prevented WMS GetCapabilities properties, such as CRS, from being properly inherited from the root layer.
+* Tweaked credit / attribution styling.
+
 ### 1.0.10
 
 * Added support for a developer attribution on the map.
