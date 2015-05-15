@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.10
+
+* Added support for a developer attribution on the map.
+* Fixed a bug that could cause results from previous async catalog searches to appear in the search results.
+
 ### 1.0.9
 
 * Show Cesium `ImageryProvider` tile credits / attribution in Leaflet when using `CesiumTileLayer`.
