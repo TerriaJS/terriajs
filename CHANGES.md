@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.12
+
+* Allow Esri ArcGIS MapServers to be added via the "Add Data" panel.
+
 ### 1.0.11
 
 * Fixed a bug that prevented HTML feature information from showing up with a white background in Internet Explorer 9 and 10.
