@@ -5,6 +5,7 @@ Change Log
 
 * Allow Esri ArcGIS MapServers to be added via the "Add Data" panel.
 * Adds `baseMapName` and `viewerMode` fields to init files and share links. `baseMapName` is any base map name in the map settings panel and `viewerMode` can be set to `'2d'` or `'3d'`.
+* Added `tableStyle.legendTicks` property to `CsvCatalogItem`.  When specified, the generated legend will have the specified number of equally-spaced lines with labels in its legend.
 
 ### 1.0.11
 
