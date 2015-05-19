@@ -4,7 +4,7 @@ Change Log
 ### 1.0.12
 
 * Allow Esri ArcGIS MapServers to be added via the "Add Data" panel.
-* Adds baseMapName and initialViewerMode fields to init files and share links. baseMapName is any base map name in the map settings panel and initialViewerMode can be set to '2d' or '3d'.
+* Adds `baseMapName` and `viewerMode` fields to init files and share links. `baseMapName` is any base map name in the map settings panel and `viewerMode` can be set to `'2d'` or `'3d'`.
 
 ### 1.0.11
 
