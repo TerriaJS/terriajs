@@ -2,10 +2,10 @@
     .opaque-to-input;
     position: absolute;
     background-color: @floating-background-color;
-    left: @explorer-panel-width + 2px;
+    left: @explorer-panel-width + 3px;
     bottom: 0px;
-    height: 40px;
-    width: 163px;
+    height: 45px;
+    width: 160px;
     border: 1px solid rgba(255,255,255,0.1);
     font-weight: 300;
 }
@@ -17,7 +17,7 @@
     padding-left: 5px;
     padding-right: 5px;
     padding-bottom: 0px;
-    height: 15px;
+    height: 20px;
     cursor: pointer;
     text-align: center;
     border-bottom: @panel-element-border;
@@ -35,14 +35,13 @@
     line-height: 25px;
     color: @menu-bar-text-color;
     padding-left: 5px;
-    padding-right: 10px;
-    bottom: 10px;
+    padding-right: 5px;
     cursor: pointer;
 }
 
 .animation-control-active {
-    color: @panel-selected-text-color;
-    fill: @panel-selected-text-color;
+    color: @highlight-color;
+    fill: @highlight-color;
 }
 
 .animation-control-last {
@@ -53,11 +52,16 @@
 .animation-control-icon {
     position: relative;
     left: 0px;
-    width: 10px;
-    height: 5px;
+    width: 25px;
+    height: 20px;
     fill: fade(@floating-text-color, 80%);
-    padding-bottom: 10px;
-    font-size: 18px;
+}
+
+.animation-control-nofill {
+    opacity:0.80188898;
+    fill:none;
+    stroke:#ffffff;
+    stroke-width:0.83333331;
 }
 
 .animation-timeline {

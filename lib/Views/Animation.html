@@ -1,21 +1,18 @@
 <div class="animation-controls" data-bind="visible: showAnimation">
-     <div class="animation-text" data-bind="click: backward" title="Current Time (tz info et al)">
+     <div class="animation-text" title="Current Time (tz info et al)">
         <div class="animation-text-display" data-bind="text: currentTimeString"></div>
     </div>
-     <div class="animation-control" data-bind="click: backward" title="Play Reverse">
-        <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': isMovingBackward }">&lt;</div>
+    <div class="animation-control" data-bind="click: playSlower" title="Play slower">
+        <div class="animation-control-icon animation-control-nofill" data-bind="cesiumSvgPath: { path: svgSlower, width: 16, height: 16}"></div>
     </div>
-     <div class="animation-control" data-bind="click: pause" title="Pause">
-        <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': !isMovingBackward && !isMovingForward}">||</div>
+    <div class="animation-control" data-bind="click: togglePlay" title="Play">
+        <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: isPlaying ? $root.svgPause : $root.svgPlay, width: 18, height: 18}"></div>
     </div>
-    <div class="animation-control" data-bind="click: forward" title="Play Forward">
-        <div class="animation-control-icon" data-bind="css: { 'animation-control-active ': isMovingForward }">&gt;</div>
+    <div class="animation-control" data-bind="click: playFaster" title="Play faster">
+        <div class="animation-control-icon animation-control-nofill" data-bind="cesiumSvgPath: { path: svgFaster, width: 16, height: 16}"></div>
     </div>
-   <div class="animation-control" data-bind="click: slower" title="Slower">
-        <div class="animation-control-icon">&lt;&lt;</div>
-    </div>
-    <div class="animation-control animation-control-last" data-bind="click: faster" title="Faster">
-        <div class="animation-control-icon">&gt;&gt;</div>
+     <div class="animation-control animation-control-last" data-bind="click: toggleLoop" title="Loop when end reached">
+        <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: svgLoop, width: 16, height: 16}, css: { 'animation-control-active': isLooping }"></div>
     </div>
 </div>
 <div class="animation-timeline" data-bind="visible: showAnimation">
