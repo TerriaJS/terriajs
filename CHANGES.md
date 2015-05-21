@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.13
+
+* `ExplorerPanelViewModel` can now be created with `isOpen` initially set to false.
+
 ### 1.0.12
 
 * Allow Esri ArcGIS MapServers to be added via the "Add Data" panel.
