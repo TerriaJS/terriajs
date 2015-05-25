@@ -76,7 +76,7 @@ describe('FeatureInfoPanelViewModel', function() {
 
     function domContainsText(panel, s) {
         for (var i = 0; i < panel._domNodes.length; ++i) {
-            if (new String(panel._domNodes[i].innerHTML).indexOf(s) >= 0) {
+            if (panel._domNodes[i].innerHTML && panel._domNodes[i].innerHTML.indexOf(s) >= 0) {
                 return true;
             }
         }
