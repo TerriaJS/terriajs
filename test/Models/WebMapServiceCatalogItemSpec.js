@@ -10,19 +10,19 @@ var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTi
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 var terria;
-var wmsViewModel;
+var wmsItem;
 
 beforeEach(function() {
     terria = new Terria({
         baseUrl: './'
     });
-    wmsViewModel = new WebMapServiceCatalogItem(terria);
+    wmsItem = new WebMapServiceCatalogItem(terria);
 });
 
 describe('WebMapServiceCatalogItemViewModel', function() {
     it('has sensible type and typeName', function() {
-        expect(wmsViewModel.type).toBe('wms');
-        expect(wmsViewModel.typeName).toBe('Web Map Service (WMS)');
+        expect(wmsItem.type).toBe('wms');
+        expect(wmsItem.typeName).toBe('Web Map Service (WMS)');
     });
 
     it('throws if constructed without a Terria instance', function() {
@@ -32,51 +32,51 @@ describe('WebMapServiceCatalogItemViewModel', function() {
     });
 
     it('can be constructed', function() {
-        expect(wmsViewModel).toBeDefined();
+        expect(wmsItem).toBeDefined();
     });
 
     it('is derived from ImageryLayerDataItemViewModel', function() {
-        expect(wmsViewModel instanceof ImageryLayerCatalogItem).toBe(true);
+        expect(wmsItem instanceof ImageryLayerCatalogItem).toBe(true);
     });
 
     it('derives legendUrl from url if legendUrl is not explicitly provided', function() {
-        wmsViewModel.url = 'http://foo.com/bar';
-        expect(wmsViewModel.legendUrl.indexOf(wmsViewModel.url)).toBe(0);
+        wmsItem.url = 'http://foo.com/bar';
+        expect(wmsItem.legendUrl.indexOf(wmsItem.url)).toBe(0);
     });
 
     it('uses explicitly-provided legendUrl', function() {
-        wmsViewModel.legendUrl = 'http://foo.com/legend.png';
-        wmsViewModel.url = 'http://foo.com/somethingElse';
-        expect(wmsViewModel.legendUrl).toBe('http://foo.com/legend.png');
+        wmsItem.legendUrl = 'http://foo.com/legend.png';
+        wmsItem.url = 'http://foo.com/somethingElse';
+        expect(wmsItem.legendUrl).toBe('http://foo.com/legend.png');
     });
 
     it('derives metadataUrl from url if metadataUrl is not explicitly provided', function() {
-        wmsViewModel.url = 'http://foo.com/bar';
-        expect(wmsViewModel.metadataUrl.indexOf(wmsViewModel.url)).toBe(0);
+        wmsItem.url = 'http://foo.com/bar';
+        expect(wmsItem.metadataUrl.indexOf(wmsItem.url)).toBe(0);
     });
 
     it('uses explicitly-provided metadataUrl', function() {
-        wmsViewModel.metadataUrl = 'http://foo.com/metadata';
-        wmsViewModel.url = 'http://foo.com/somethingElse';
-        expect(wmsViewModel.metadataUrl).toBe('http://foo.com/metadata');
+        wmsItem.metadataUrl = 'http://foo.com/metadata';
+        wmsItem.url = 'http://foo.com/somethingElse';
+        expect(wmsItem.metadataUrl).toBe('http://foo.com/metadata');
     });
 
     it('derives dataUrl from url if dataUrl and assumes type is "wfs" if dataUrl is not explicitly provided', function() {
-        wmsViewModel.url = 'http://foo.com/bar';
-        expect(wmsViewModel.dataUrl.indexOf(wmsViewModel.url)).toBe(0);
-        expect(wmsViewModel.dataUrlType).toBe('wfs');
+        wmsItem.url = 'http://foo.com/bar';
+        expect(wmsItem.dataUrl.indexOf(wmsItem.url)).toBe(0);
+        expect(wmsItem.dataUrlType).toBe('wfs');
     });
 
     it('uses explicitly-provided dataUrl and dataUrlType', function() {
-        wmsViewModel.dataUrl = 'http://foo.com/data';
-        wmsViewModel.dataUrlType = 'wfs-complete';
-        wmsViewModel.url = 'http://foo.com/somethingElse';
-        expect(wmsViewModel.dataUrl).toBe('http://foo.com/data');
-        expect(wmsViewModel.dataUrlType).toBe('wfs-complete');
+        wmsItem.dataUrl = 'http://foo.com/data';
+        wmsItem.dataUrlType = 'wfs-complete';
+        wmsItem.url = 'http://foo.com/somethingElse';
+        expect(wmsItem.dataUrl).toBe('http://foo.com/data');
+        expect(wmsItem.dataUrlType).toBe('wfs-complete');
     });
 
     it('can update from json', function() {
-        wmsViewModel.updateFromJson({
+        wmsItem.updateFromJson({
             name: 'Name',
             description: 'Description',
             rectangle: [-10, 10, -20, 20],
@@ -95,64 +95,64 @@ describe('WebMapServiceCatalogItemViewModel', function() {
             getFeatureInfoFormats: []
         });
 
-        expect(wmsViewModel.name).toBe('Name');
-        expect(wmsViewModel.description).toBe('Description');
-        expect(wmsViewModel.rectangle).toEqual(Rectangle.fromDegrees(-10, 10, -20, 20));
-        expect(wmsViewModel.legendUrl).toBe('http://legend.com');
-        expect(wmsViewModel.dataUrlType).toBe('wfs');
-        expect(wmsViewModel.dataUrl.indexOf('http://my.wfs.com/wfs')).toBe(0);
-        expect(wmsViewModel.dataCustodian).toBe('Data Custodian');
-        expect(wmsViewModel.metadataUrl).toBe('http://my.metadata.com');
-        expect(wmsViewModel.url).toBe('http://my.wms.com');
-        expect(wmsViewModel.layers).toBe('mylayer');
-        expect(wmsViewModel.parameters).toEqual({
+        expect(wmsItem.name).toBe('Name');
+        expect(wmsItem.description).toBe('Description');
+        expect(wmsItem.rectangle).toEqual(Rectangle.fromDegrees(-10, 10, -20, 20));
+        expect(wmsItem.legendUrl).toBe('http://legend.com');
+        expect(wmsItem.dataUrlType).toBe('wfs');
+        expect(wmsItem.dataUrl.indexOf('http://my.wfs.com/wfs')).toBe(0);
+        expect(wmsItem.dataCustodian).toBe('Data Custodian');
+        expect(wmsItem.metadataUrl).toBe('http://my.metadata.com');
+        expect(wmsItem.url).toBe('http://my.wms.com');
+        expect(wmsItem.layers).toBe('mylayer');
+        expect(wmsItem.parameters).toEqual({
             custom: true,
             awesome: 'maybe'
         });
-        expect(wmsViewModel.tilingScheme instanceof WebMercatorTilingScheme).toBe(true);
-        expect(wmsViewModel.getFeatureInfoFormats).toEqual([]);
+        expect(wmsItem.tilingScheme instanceof WebMercatorTilingScheme).toBe(true);
+        expect(wmsItem.getFeatureInfoFormats).toEqual([]);
     });
 
     it('uses reasonable defaults for updateFromJson', function() {
-        wmsViewModel.updateFromJson({});
+        wmsItem.updateFromJson({});
 
-        expect(wmsViewModel.name).toBe('Unnamed Item');
-        expect(wmsViewModel.description).toBe('');
-        expect(wmsViewModel.rectangle).toEqual(Rectangle.MAX_VALUE);
-        expect(wmsViewModel.legendUrl.indexOf('?')).toBe(0);
-        expect(wmsViewModel.dataUrlType).toBe('wfs');
-        expect(wmsViewModel.dataUrl.indexOf('?')).toBe(0);
-        expect(wmsViewModel.dataCustodian).toBeUndefined();
-        expect(wmsViewModel.metadataUrl.indexOf('?')).toBe(0);
-        expect(wmsViewModel.url).toBe('');
-        expect(wmsViewModel.layers).toBe('');
-        expect(wmsViewModel.parameters).toBeUndefined();
-        expect(wmsViewModel.tilingScheme).toBeUndefined();
-        expect(wmsViewModel.getFeatureInfoFormats).toBeUndefined();
+        expect(wmsItem.name).toBe('Unnamed Item');
+        expect(wmsItem.description).toBe('');
+        expect(wmsItem.rectangle).toEqual(Rectangle.MAX_VALUE);
+        expect(wmsItem.legendUrl.indexOf('?')).toBe(0);
+        expect(wmsItem.dataUrlType).toBe('wfs');
+        expect(wmsItem.dataUrl.indexOf('?')).toBe(0);
+        expect(wmsItem.dataCustodian).toBeUndefined();
+        expect(wmsItem.metadataUrl.indexOf('?')).toBe(0);
+        expect(wmsItem.url).toBe('');
+        expect(wmsItem.layers).toBe('');
+        expect(wmsItem.parameters).toBeUndefined();
+        expect(wmsItem.tilingScheme).toBeUndefined();
+        expect(wmsItem.getFeatureInfoFormats).toBeUndefined();
     });
 
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
-        wmsViewModel.name = 'Name';
-        wmsViewModel.description = 'Description';
-        wmsViewModel.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
-        wmsViewModel.legendUrl = 'http://legend.com';
-        wmsViewModel.dataUrlType = 'wfs';
-        wmsViewModel.dataUrl = 'http://my.wfs.com/wfs';
-        wmsViewModel.dataCustodian = 'Data Custodian';
-        wmsViewModel.metadataUrl = 'http://my.metadata.com';
-        wmsViewModel.url = 'http://my.wms.com';
-        wmsViewModel.layers = 'mylayer';
-        wmsViewModel.parameters = {
+        wmsItem.name = 'Name';
+        wmsItem.description = 'Description';
+        wmsItem.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
+        wmsItem.legendUrl = 'http://legend.com';
+        wmsItem.dataUrlType = 'wfs';
+        wmsItem.dataUrl = 'http://my.wfs.com/wfs';
+        wmsItem.dataCustodian = 'Data Custodian';
+        wmsItem.metadataUrl = 'http://my.metadata.com';
+        wmsItem.url = 'http://my.wms.com';
+        wmsItem.layers = 'mylayer';
+        wmsItem.parameters = {
             custom: true,
             awesome: 'maybe'
         };
-        wmsViewModel.getFeatureInfoFormats = [];
+        wmsItem.getFeatureInfoFormats = [];
 
-        var json = wmsViewModel.serializeToJson();
+        var json = wmsItem.serializeToJson();
 
         var reconstructed = new WebMapServiceCatalogItem(terria);
         reconstructed.updateFromJson(json);
 
-        expect(reconstructed).toEqual(wmsViewModel);
+        expect(reconstructed).toEqual(wmsItem);
     });
 });
