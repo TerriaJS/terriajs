@@ -3,6 +3,7 @@ Change Log
 
 ### 1.0.13
 
+* `ExplorerPanelViewModel` can now be created with `isOpen` initially set to false.
 * TerriaJS now raises an error and hides the dataset when asked to show an `ImageryLayerCatalogItem` in Leaflet and that catalog item does not use the Web Mercator (EPSG:3857) projection.  Previously, the dataset would silently fail to display.
 
 ### 1.0.12
