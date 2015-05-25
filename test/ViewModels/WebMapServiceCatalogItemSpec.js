@@ -19,7 +19,7 @@ beforeEach(function() {
     wmsViewModel = new WebMapServiceCatalogItem(terria);
 });
 
-describe('WebMapServiceDataItemViewModel', function() {
+describe('WebMapServiceCatalogItemViewModel', function() {
     it('has sensible type and typeName', function() {
         expect(wmsViewModel.type).toBe('wms');
         expect(wmsViewModel.typeName).toBe('Web Map Service (WMS)');
@@ -92,8 +92,7 @@ describe('WebMapServiceDataItemViewModel', function() {
                 awesome: 'maybe'
             },
             tilingScheme: new WebMercatorTilingScheme(),
-            getFeatureInfoAsGeoJson: false,
-            getFeatureInfoAsXml: false
+            getFeatureInfoFormats: []
         });
 
         expect(wmsViewModel.name).toBe('Name');
@@ -111,8 +110,7 @@ describe('WebMapServiceDataItemViewModel', function() {
             awesome: 'maybe'
         });
         expect(wmsViewModel.tilingScheme instanceof WebMercatorTilingScheme).toBe(true);
-        expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(false);
-        expect(wmsViewModel.getFeatureInfoAsXml).toBe(false);
+        expect(wmsViewModel.getFeatureInfoFormats).toEqual([]);
     });
 
     it('uses reasonable defaults for updateFromJson', function() {
@@ -130,8 +128,7 @@ describe('WebMapServiceDataItemViewModel', function() {
         expect(wmsViewModel.layers).toBe('');
         expect(wmsViewModel.parameters).toBeUndefined();
         expect(wmsViewModel.tilingScheme).toBeUndefined();
-        expect(wmsViewModel.getFeatureInfoAsGeoJson).toBe(true);
-        expect(wmsViewModel.getFeatureInfoAsXml).toBe(true);
+        expect(wmsViewModel.getFeatureInfoFormats).toBeUndefined();
     });
 
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
@@ -149,8 +146,7 @@ describe('WebMapServiceDataItemViewModel', function() {
             custom: true,
             awesome: 'maybe'
         };
-        wmsViewModel.getFeatureInfoAsGeoJson = false;
-        wmsViewModel.getFeatureInfoAsXml = false;
+        wmsViewModel.getFeatureInfoFormats = [];
 
         var json = wmsViewModel.serializeToJson();
 
