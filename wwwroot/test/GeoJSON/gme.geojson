@@ -1,0 +1,6922 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.23531999999997,
+     -35.352484
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Queanbeyan",
+    "Shp_num_an": "Shop 47",
+    "Shp_centre": "Riverside Plaza",
+    "Street_add": "131 Monaro Street",
+    "Locality": "Queanbeyan",
+    "Postcode": "2620",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "67",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "1"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.152845,
+     -33.485573
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Lithgow",
+    "Shp_num_an": "Shop 49",
+    "Shp_centre": "Lithgow Valley Shopping Centre",
+    "Street_add": "Lithgow Street",
+    "Locality": "Lithgow",
+    "Postcode": "2790",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "45",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "10"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     148.162253,
+     -23.524792
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Emerald - EFT only",
+    "Shp_num_an": "",
+    "Shp_centre": "Widebay Capricorn House",
+    "Street_add": "50 Borilla Street",
+    "Locality": "Emerald",
+    "Postcode": "4720",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "266",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "100"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.68569099999996,
+     -34.831851
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Modbury",
+    "Shp_num_an": "Shop 216",
+    "Shp_centre": "Westfield Tea Tree Plaza",
+    "Street_add": "976 North East Road",
+    "Locality": "Modbury",
+    "Postcode": "5092",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "144",
+    "result": "100001",
+    "Audio": "YES",
+    "gx_id": "101"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.749247,
+     -34.598676
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Gawler",
+    "Shp_num_an": "Shop 4",
+    "Shp_centre": "",
+    "Street_add": "103-107 Murray Street",
+    "Locality": "Gawler",
+    "Postcode": "5118",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "142",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "102"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     139.494399,
+     -20.725590999999998
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Mt Isa",
+    "Shp_num_an": "Shop 7b",
+    "Shp_centre": "Isa Square",
+    "Street_add": "29 Simpson Street",
+    "Locality": "Mount Isa",
+    "Postcode": "4825",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "NO",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "120",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "103"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     140.601162,
+     -34.284181
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Berri",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "22 Vaughan Terrace",
+    "Locality": "Berri",
+    "Postcode": "5343",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "138",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "104"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     140.783421,
+     -37.831071
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Mt Gambier",
+    "Shp_num_an": "Shop  1 & 2",
+    "Shp_centre": "Savings & Loan Plaza",
+    "Street_add": "7-3 Compton Street",
+    "Locality": "Mt Gambier",
+    "Postcode": "5290",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "145",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "105"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     141.46569,
+     -31.958137
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Broken Hill",
+    "Shp_num_an": "Shop 9",
+    "Shp_centre": "Exchange Arcade",
+    "Street_add": "324 Argent Street",
+    "Locality": "Broken Hill",
+    "Postcode": "2880",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "134",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "106"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     141.60158205,
+     -38.34492219
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Portland",
+    "Shp_num_an": "Shop T2",
+    "Shp_centre": "",
+    "Street_add": "Fredericks Court",
+    "Locality": "Portland",
+    "Postcode": "3305",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "196",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "107"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     142.025785,
+     -37.74252
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Hamilton",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "184 Gray Street",
+    "Locality": "Hamilton",
+    "Postcode": "3300",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "185",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "108"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     142.162225,
+     -34.184836
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Mildura",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "129 Eighth Street",
+    "Locality": "Mildura",
+    "Postcode": "3500",
+    "Hrs_of_bus": "09:00-17:00  Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "190",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "109"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.005526,
+     -33.731878
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Castle Hill",
+    "Shp_num_an": "Shop 518",
+    "Shp_centre": "Castle Towers Shopping Centre",
+    "Street_add": "6-14 Castle Street",
+    "Locality": "Castle Hill",
+    "Postcode": "2154",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "20",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "11"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     142.197115,
+     -36.71312399999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Horsham",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "Cnr Darlot & McLachlan Streets",
+    "Locality": "Horsham",
+    "Postcode": "3400",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "187",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "110"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     142.485646,
+     -38.382203
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Warrnambool",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "109 Lava Street",
+    "Locality": "Warrnambool",
+    "Postcode": "3280",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "206",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "111"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     142.929806,
+     -37.28385
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Ararat",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "135 Barkly Street",
+    "Locality": "Ararat",
+    "Postcode": "3377",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "160",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "112"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     143.562081,
+     -35.345529
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Swan Hill",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "270 Campbell Street",
+    "Locality": "Swan Hill",
+    "Postcode": "3585",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "202",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "113"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     143.58852144,
+     -38.33825147
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Colac",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "55 Dennis Street",
+    "Locality": "Colac",
+    "Postcode": "3250",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "173",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "114"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     143.856336,
+     -37.560788
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Ballarat",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "11a Armstrong Street North",
+    "Locality": "Ballarat",
+    "Postcode": "3350",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "162",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "115"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.279353,
+     -36.761909
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Bendigo",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "56 Queen Street",
+    "Locality": "Bendigo",
+    "Postcode": "3550",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "163",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "116"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.278586,
+     -38.207802
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Waurn Ponds",
+    "Shp_num_an": "Shop 702",
+    "Shp_centre": "Waurn Ponds Shopping Centre",
+    "Street_add": "Cnr Pioneer Road & Princes Highway",
+    "Locality": "Waurn Ponds",
+    "Postcode": "3221",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "207",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "117"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.358645,
+     -38.065907
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Corio",
+    "Shp_num_an": "Shop 12",
+    "Shp_centre": "Corio Shopping Centre",
+    "Street_add": "Bacchus Marsh Road",
+    "Locality": "Corio",
+    "Postcode": "3214",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "175",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "118"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.993863,
+     -37.847036
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Prahran",
+    "Shp_num_an": "Shop M53, Mezzanine level",
+    "Shp_centre": "Pran Central",
+    "Street_add": "Cnr Chapel Street and Commercial Road",
+    "Locality": "Prahran",
+    "Postcode": "3181",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "197",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "119"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.01464599999997,
+     -34.06554
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Engadine",
+    "Shp_num_an": "Shop 14",
+    "Shp_centre": "Engadine Court",
+    "Street_add": "101 Caldarra Avenue",
+    "Locality": "Engadine",
+    "Postcode": "2233",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "29",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "12"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.000147,
+     -37.769003
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Northcote",
+    "Shp_num_an": "Shop 22/23",
+    "Shp_centre": "Northcote Central Shopping Ctr",
+    "Street_add": "17 Separation Street",
+    "Locality": "Northcote",
+    "Postcode": "3070",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "194",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "120"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.004204,
+     -37.884814
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Elsternwick",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "384 Glen Huntly Road",
+    "Locality": "Elsternwick",
+    "Postcode": "3185",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "179",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "121"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.025241,
+     -37.740269
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Preston - Northland",
+    "Shp_num_an": "Shop F07,",
+    "Shp_centre": "Northland Shopping Centre,",
+    "Street_add": "50 Murray Road",
+    "Locality": "Preston",
+    "Postcode": "3072",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "195",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "122"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.038547,
+     -37.918511
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Bentleigh",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "440 Centre Road",
+    "Locality": "Bentleigh",
+    "Postcode": "3204",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "164",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "123"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.040785,
+     -38.22310099999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Mornington",
+    "Shp_num_an": "Shop 105",
+    "Shp_centre": "Village Shopping Centre",
+    "Street_add": "Main Street",
+    "Locality": "Mornington",
+    "Postcode": "3931",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "192",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "124"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.054595,
+     -37.960986999999996
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Cheltenham - Southland",
+    "Shp_num_an": "Shop 3044, Level 3",
+    "Shp_centre": "Southland Shoppingtown",
+    "Street_add": "1239 Nepean Highway",
+    "Locality": "Cheltenham",
+    "Postcode": "3192",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursday, 09:00-12:30 Saturday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "201",
+    "result": "100001",
+    "Audio": "",
+    "gx_id": "125"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.057273,
+     -37.831345
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Camberwell",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "527 Riversdale Road",
+    "Locality": "Camberwell",
+    "Postcode": "3124",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays,",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "168",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "126"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.08131064,
+     -37.88635881
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Chadstone",
+    "Shp_num_an": "Shop B158, Lower Level",
+    "Shp_centre": "Chadstone Shopping Centre",
+    "Street_add": "1341 Dandenong Road",
+    "Locality": "Chadstone",
+    "Postcode": "3148",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "170",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "127"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.103282,
+     -37.703998
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Greensborough",
+    "Shp_num_an": "Shop 110-111, Level 1",
+    "Shp_centre": "Greensborough Plaza",
+    "Street_add": "25 Main Street",
+    "Locality": "Greensborough",
+    "Postcode": "3088",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "184",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "128"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.122547,
+     -37.818999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Box Hill",
+    "Shp_num_an": "Shop South 15",
+    "Shp_centre": "Centro Box Hill",
+    "Street_add": "Main Street",
+    "Locality": "Box Hill",
+    "Postcode": "3128",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "166",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "129"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.040138,
+     -33.917178
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Bankstown",
+    "Shp_num_an": "Shop 219b",
+    "Shp_centre": "Bankstown Centro",
+    "Street_add": "Cnr Lady Cutler Avenue & North Terrace",
+    "Locality": "Bankstown",
+    "Postcode": "2200",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "8",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "13"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.12370803999997,
+     -38.14062238
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Frankston",
+    "Shp_num_an": "Shop G001Q",
+    "Shp_centre": "Bayside Shopping Centre",
+    "Street_add": "Olsen Street",
+    "Locality": "Frankston",
+    "Postcode": "3199",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "181",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "130"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.125791,
+     -37.775535
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Doncaster",
+    "Shp_num_an": "Suite 1001",
+    "Shp_centre": "Doncaster Shoppingtown",
+    "Street_add": "Williamsons Road",
+    "Locality": "Doncaster",
+    "Postcode": "3108",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "177",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "131"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.184646,
+     -37.93664199999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Waverley Gardens",
+    "Shp_num_an": "Shop 58",
+    "Shp_centre": "Waverley Gardens Shopping Ctr",
+    "Street_add": "Police Road",
+    "Locality": "Mulgrave",
+    "Postcode": "3170",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "208",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "132"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.166304,
+     -37.87668099999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Glen Waverley",
+    "Shp_num_an": "Shop 5, Level 1",
+    "Shp_centre": "The Glen Shopping Centre",
+    "Street_add": "235 Springvale Road",
+    "Locality": "Glen Waverley",
+    "Postcode": "3150",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "183",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "133"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.16532097999996,
+     -37.83470177
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Forest Hill",
+    "Shp_num_an": "Shop T142",
+    "Shp_centre": "Forest Hill Chase Shopping Ctr",
+    "Street_add": "Canterbury Road",
+    "Locality": "Forest Hill",
+    "Postcode": "3131",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "180",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "134"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.21956,
+     -37.990225
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Dandenong",
+    "Shp_num_an": "Shop 115",
+    "Shp_centre": "Dandenong Palm Plaza",
+    "Street_add": "Mccrae Street",
+    "Locality": "Dandenong",
+    "Postcode": "3175",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays and 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "176",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "135"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.22952299999997,
+     -37.815148
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Ringwood",
+    "Shp_num_an": "Shop L108",
+    "Shp_centre": "Eastland Shopping Centre",
+    "Street_add": "171 Maroondah Highway",
+    "Locality": "Ringwood",
+    "Postcode": "3134",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "198",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "136"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.235211,
+     -37.868979
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Wantirna South - Knox City",
+    "Shp_num_an": "Shop 1091",
+    "Shp_centre": "Knox City Shopping Centre",
+    "Street_add": "Cnr Burwood Hwy & Stud Rd",
+    "Locality": "Wantirna South",
+    "Postcode": "3152",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "188",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "137"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.282415,
+     -38.10175199999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Cranbourne",
+    "Shp_num_an": "Shop 61,",
+    "Shp_centre": "Centro Cranbourne Shopping Centre,",
+    "Street_add": "High Street",
+    "Locality": "Cranbourne",
+    "Postcode": "3977",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "249",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "138"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.302884,
+     -38.023447
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Narre Warren - Fountain Gate",
+    "Shp_num_an": "1158",
+    "Shp_centre": "Westfield Fountain Gate Shopping Centre",
+    "Street_add": "352 Princes Highway",
+    "Locality": "Narre Warren",
+    "Postcode": "3805",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "242",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "139"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.068843,
+     -33.935046
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Roselands",
+    "Shp_num_an": "Shop 92, Lower Ground Floor",
+    "Shp_centre": "Centro Roselands",
+    "Street_add": "Roselands Drive",
+    "Locality": "Roselands",
+    "Postcode": "2196",
+    "Hrs_of_bus": "09:00-17:00  Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "70",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "14"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.328297,
+     -37.760394
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Chirnside Park",
+    "Shp_num_an": "Shop 713",
+    "Shp_centre": "Chirnside Park Shopping Centre",
+    "Street_add": "Maroondah Highway",
+    "Locality": "Chirnside Park",
+    "Postcode": "3116",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "171",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "140"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.400015,
+     -36.37982999999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Shepparton",
+    "Shp_num_an": "Shop 3",
+    "Shp_centre": "City Walk Arcade",
+    "Street_add": "306 Wyndham Street",
+    "Locality": "Shepparton",
+    "Postcode": "3630",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "200",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "141"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.47792,
+     -17.265034
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Atherton",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "30 Mabel Street",
+    "Locality": "Atherton",
+    "Postcode": "4883",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "91",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "142"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.69201716,
+     -16.83848737
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Smithfield",
+    "Shp_num_an": "Shop 77",
+    "Shp_centre": "Smithfield Shopping Centre",
+    "Street_add": "Cnr Kennedy & Captain Cook Highways",
+    "Locality": "Smithfield",
+    "Postcode": "4878",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "125",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "143"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.774177,
+     -16.926226
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Cairns",
+    "Shp_num_an": "Shop QL 15-19",
+    "Shp_centre": "Cairns Central",
+    "Street_add": "Cnr McLeod & Spence Streets",
+    "Locality": "Cairns",
+    "Postcode": "4870",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "97",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "144"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.907662,
+     -41.051096
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Burnie",
+    "Shp_num_an": "Shop 2",
+    "Shp_centre": "Columnar Shopping Centre",
+    "Street_add": "22 Wilmot Street",
+    "Locality": "Burnie",
+    "Postcode": "7320",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "151",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "145"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.928879,
+     -38.163253
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Warragul",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "42 Queen Street",
+    "Locality": "Warragul",
+    "Postcode": "3820",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "205",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "146"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.031315,
+     -17.524061
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Innisfail",
+    "Shp_num_an": "Shop 30",
+    "Shp_centre": "The Central Shopping Centre",
+    "Street_add": "20 Edith Street",
+    "Locality": "Innisfail",
+    "Postcode": "4860",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "112",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "147"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.044251,
+     -34.28791
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Griffith",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "352-354 Banna Avenue",
+    "Locality": "Griffith",
+    "Postcode": "2680",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "35",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "148"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.160517,
+     -18.647932
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Ingham",
+    "Shp_num_an": "Shop 9/10",
+    "Shp_centre": "Hinchinbrook Central",
+    "Street_add": "86-92 Herbert Street",
+    "Locality": "Ingham",
+    "Postcode": "4850",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "111",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "149"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.081161,
+     -33.791683
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Eastwood",
+    "Shp_num_an": "Shop 25",
+    "Shp_centre": "Eastwood Centre",
+    "Street_add": "160 Rowe Street",
+    "Locality": "Eastwood",
+    "Postcode": "2122",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "28",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "15"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.325502,
+     -36.356378
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Wangaratta",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "28-30 Murphy Street",
+    "Locality": "Wangaratta",
+    "Postcode": "3677",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "204",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "150"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.360468,
+     -41.181044
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Devonport",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "18 Rooke Street",
+    "Locality": "Devonport",
+    "Postcode": "7310",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "152",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "151"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.399519,
+     -38.23804499999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Morwell",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "246 Commercial Road",
+    "Locality": "Morwell",
+    "Postcode": "3840",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "193",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "152"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.536736,
+     -38.197385
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Traralgon",
+    "Shp_num_an": "Shop 1",
+    "Shp_centre": "",
+    "Street_add": "81 Hotham Street",
+    "Locality": "Traralgon",
+    "Postcode": "3844",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "203",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "153"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.764721,
+     -19.298838
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Aitkenvale",
+    "Shp_num_an": "6s",
+    "Shp_centre": "Sunvale Shopping Centre",
+    "Street_add": "61-63 Elizabeth Street",
+    "Locality": "Aitkenvale",
+    "Postcode": "4814",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "89",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "154"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.8176287,
+     -19.25945453
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Townsville",
+    "Shp_num_an": "Shop 1",
+    "Shp_centre": "Northtown On The Mall",
+    "Street_add": "Flinders Street",
+    "Locality": "Townsville",
+    "Postcode": "4810",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "130",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "155"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.888076,
+     -36.121221
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Wodonga",
+    "Shp_num_an": "Shop 4",
+    "Shp_centre": "",
+    "Street_add": "123-125 High Street",
+    "Locality": "Wodonga",
+    "Postcode": "3690",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "210",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "156"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     146.91907,
+     -36.081193
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Albury",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "489 Dean Street",
+    "Locality": "Albury",
+    "Postcode": "2640",
+    "Hrs_of_bus": "09:00-17:00  Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "5",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "157"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.065449,
+     -38.106913
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Sale",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "301 Raymond Street",
+    "Locality": "Sale",
+    "Postcode": "3850",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "199",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "158"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.139445,
+     -41.43824
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Launceston",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "90 St John Street",
+    "Locality": "Launceston",
+    "Postcode": "7250",
+    "Hrs_of_bus": "08:30-17:00  Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "157",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "159"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.098693,
+     -33.704617
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Hornsby",
+    "Shp_num_an": "Shop 3111, Level 3",
+    "Shp_centre": "Westfield Hornsby",
+    "Street_add": "Cnr Florence & Hunter Streets",
+    "Locality": "Hornsby",
+    "Postcode": "2077",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "37",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "16"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.27380499999998,
+     -42.832723
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Glenorchy",
+    "Shp_num_an": "Shop 52",
+    "Shp_centre": "Northgate Shopping Centre",
+    "Street_add": "387 Main Road",
+    "Locality": "Glenorchy",
+    "Postcode": "7010",
+    "Hrs_of_bus": "09:00-17:00 Monday to Fridays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "154",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "160"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.308703,
+     -42.975709
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Kingston",
+    "Shp_num_an": "Shop 52/53",
+    "Shp_centre": "Channel Court Shopping Centre",
+    "Street_add": "Channel Highway",
+    "Locality": "Kingston",
+    "Postcode": "7050",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "156",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "161"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.328923,
+     -42.882189
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Hobart",
+    "Shp_num_an": "Shop 7",
+    "Shp_centre": "Trafalgar Centre",
+    "Street_add": "110 Collins Street",
+    "Locality": "Hobart",
+    "Postcode": "7000",
+    "Hrs_of_bus": "08:30-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "155",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "162"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.369074,
+     -35.117087
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Wagga Wagga",
+    "Shp_num_an": "Shop 1",
+    "Shp_centre": "The Piazza",
+    "Street_add": "46-50 Baylis Street",
+    "Locality": "Wagga Wagga",
+    "Postcode": "2650",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "82",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "163"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.370203,
+     -42.866406999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Rosny Park",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "8 Bayfield Street",
+    "Locality": "Rosny Park",
+    "Postcode": "7018",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "153",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "164"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.40808799999996,
+     -19.572817
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Ayr",
+    "Shp_num_an": "Shop 11",
+    "Shp_centre": "East End Centre",
+    "Street_add": "Parker Street",
+    "Locality": "Ayr",
+    "Postcode": "4807",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "NO",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "92",
+    "result": "200000",
+    "Audio": "",
+    "gx_id": "165"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.62946999999997,
+     -37.826265
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Bairnsdale",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "23 Service Street",
+    "Locality": "Bairnsdale",
+    "Postcode": "3875",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "161",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "166"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     148.17595642,
+     -33.13431983
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Parkes",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "57 Currajong St",
+    "Locality": "Parkes",
+    "Postcode": "2870",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "63",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "167"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     148.23987486,
+     -20.00192125
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Bowen",
+    "Shp_num_an": "Shop 1",
+    "Shp_centre": "Centrepoint Plaza",
+    "Street_add": "16 Richmond Road",
+    "Locality": "Bowen",
+    "Postcode": "4805",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "94",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "168"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     148.29205119,
+     -34.31099923
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Young",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "130 Lovell Street",
+    "Locality": "Young",
+    "Postcode": "2594",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "87",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "169"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.100428,
+     -34.034014
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Miranda",
+    "Shp_num_an": "Shop 1006, Level 1",
+    "Shp_centre": "Westfield Miranda",
+    "Street_add": "600 The Kingsway",
+    "Locality": "Miranda",
+    "Postcode": "2228",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, 8:30-18:00 Thursdays, 08:30-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "51",
+    "result": "80",
+    "Audio": "",
+    "gx_id": "17"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     148.600657,
+     -32.25034
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Dubbo",
+    "Shp_num_an": "Shop 14a",
+    "Shp_centre": "Centro Dubbo",
+    "Street_add": "177 Macquarie Street",
+    "Locality": "Dubbo",
+    "Postcode": "2830",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "27",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "170"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     148.68871,
+     -33.834412
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Cowra",
+    "Shp_num_an": "Shop 16-17",
+    "Shp_centre": "Cowra Plaza",
+    "Street_add": "59 Kendall  Street",
+    "Locality": "Cowra",
+    "Postcode": "2794",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "26",
+    "result": "100110",
+    "Audio": "",
+    "gx_id": "171"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.06605699999997,
+     -35.237818
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "ACT",
+    "Fcilty_nam": "Belconnen",
+    "Shp_num_an": "Shop 167, Level 3",
+    "Shp_centre": "Westfield Belconnen",
+    "Street_add": "Benjamin Way",
+    "Locality": "Belconnen",
+    "Postcode": "2617",
+    "Hrs_of_bus": "09:00-17:00 Monday to Thursday, 9:00-18:00 Fridays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "2",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "1",
+    "result": "999",
+    "Audio": "YES",
+    "gx_id": "172"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.066728,
+     -35.416214
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "ACT",
+    "Fcilty_nam": "Greenway - Tuggeranong",
+    "Shp_num_an": "Shop 73, Ground Floor",
+    "Shp_centre": "Tuggeranong Hyperdome",
+    "Street_add": "Anketell Street",
+    "Locality": "Greenway",
+    "Postcode": "2900",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "3",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "173"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.086487,
+     -35.345735
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "ACT",
+    "Fcilty_nam": "Phillip - Woden",
+    "Shp_num_an": "Shop 66 Ground Level",
+    "Shp_centre": "Westfield Woden",
+    "Street_add": "Keltie Street",
+    "Locality": "Woden",
+    "Postcode": "2606",
+    "Hrs_of_bus": "09:00-17:00 Monday to Thursday, 9:00-19:00 Fridays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "4",
+    "result": "999",
+    "Audio": "YES",
+    "gx_id": "174"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.098612,
+     -33.28449199999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Orange",
+    "Shp_num_an": "Shops V6 & V7,",
+    "Shp_centre": "Orange City Centre,",
+    "Street_add": "190 Anson Street",
+    "Locality": "Orange",
+    "Postcode": "2800",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "61",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "175"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.124956,
+     -36.23603899999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Cooma",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "57 Vale Street",
+    "Locality": "Cooma",
+    "Postcode": "2630",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "25",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "176"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.13133,
+     -35.279986
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "ACT",
+    "Fcilty_nam": "Canberra City - Civic",
+    "Shp_num_an": "Shop 2",
+    "Shp_centre": "Savings House",
+    "Street_add": "8 Petrie Plaza",
+    "Locality": "Canberra City",
+    "Postcode": "2600",
+    "Hrs_of_bus": "08:30-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "2",
+    "result": "104000",
+    "Audio": "",
+    "gx_id": "177"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.134843,
+     -35.184555
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "ACT",
+    "Fcilty_nam": "Gungahlin",
+    "Shp_num_an": "Shop 33 (entry via Gungahlin Place West)",
+    "Shp_centre": "Gungahlin Market Place",
+    "Street_add": "33 Hibberson Street",
+    "Locality": "Gungahlin",
+    "Postcode": "2912",
+    "Hrs_of_bus": "09:00-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "257",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "178"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.180477,
+     -21.13838
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Mackay",
+    "Shp_num_an": "Shop 125, Ground Level",
+    "Shp_centre": "Caneland Central",
+    "Street_add": "Mangrove Road",
+    "Locality": "Mackay",
+    "Postcode": "4740",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "117",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "179"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.10463499999997,
+     -33.874246
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Burwood",
+    "Shp_num_an": "Shop 334-335, Level 2",
+    "Shp_centre": "Westfield Burwood",
+    "Street_add": "100 Burwood Road",
+    "Locality": "Burwood",
+    "Postcode": "2134",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "16",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "18"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.177443,
+     -35.709362
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Batemans Bay",
+    "Shp_num_an": "Shop 3-4",
+    "Shp_centre": "Fenning Arcade",
+    "Street_add": "Orient Street",
+    "Locality": "Batemans Bay",
+    "Postcode": "2536",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "9",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "180"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.252346,
+     -30.977253
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Gunnedah",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "183 Conadilly Street",
+    "Locality": "Gunnedah",
+    "Postcode": "2380",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "NO",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "36",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "181"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.309526,
+     -33.717119
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Katoomba",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "33-35 Waratah Street",
+    "Locality": "Katoomba",
+    "Postcode": "2780",
+    "Hrs_of_bus": "08:30-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "NO",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "40",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "182"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.41820299999998,
+     -34.476913
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Bowral",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "266 Bong Bong Street",
+    "Locality": "Bowral",
+    "Postcode": "2576",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "14",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "183"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.472546,
+     -35.356925
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Ulladulla",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "270 Green Street",
+    "Locality": "Ulladulla",
+    "Postcode": "2539",
+    "Hrs_of_bus": "08:30-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "80",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "184"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.510143,
+     -23.376918
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Rockhampton",
+    "Shp_num_an": "Shop 20A",
+    "Shp_centre": "City Centre Plaza",
+    "Street_add": "Cnr Bolsover and Fitzroy Street",
+    "Locality": "Rockhampton",
+    "Postcode": "4700",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "124",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "185"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.52395232999996,
+     -23.35196747
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Nth Rockhampton",
+    "Shp_num_an": "Shop 001LA",
+    "Shp_centre": "Stockland Rockhampton",
+    "Street_add": "Cnr Yaamba Road & Bruce Hwy",
+    "Locality": "North Rockhampton",
+    "Postcode": "4701",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "122",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "186"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.567137,
+     -33.699002
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Springwood",
+    "Shp_num_an": "Shop 5",
+    "Shp_centre": "Macquarie Centre",
+    "Street_add": "125 Macquarie Road",
+    "Locality": "Springwood",
+    "Postcode": "2777",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "74",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "187"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.599981,
+     -34.874156
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Nowra",
+    "Shp_num_an": "Shop 3,",
+    "Shp_centre": "",
+    "Street_add": "59 Junction Street (Access From Berry Street)",
+    "Locality": "Nowra",
+    "Postcode": "2541",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "60",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "188"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.693972,
+     -33.752039
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Penrith",
+    "Shp_num_an": "Shop 260, Level 2",
+    "Shp_centre": "Westfield Penrith",
+    "Street_add": "585 High Street",
+    "Locality": "Penrith",
+    "Postcode": "2750",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "65",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "189"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.104756,
+     -33.965065
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Hurstville",
+    "Shp_num_an": "Shop 218b, Level 1",
+    "Shp_centre": "Westfield Hurstville",
+    "Street_add": "Cnr Cross Street & Park Road",
+    "Locality": "Hurstville",
+    "Postcode": "2220",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "38",
+    "result": "999",
+    "Audio": "YES",
+    "gx_id": "19"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.69436455,
+     -34.05525719
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Camden",
+    "Shp_num_an": "Shop 24",
+    "Shp_centre": "Village Court",
+    "Street_add": "180-186 Argyle Street",
+    "Locality": "Camden",
+    "Postcode": "2570",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "17",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "190"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.755686,
+     -33.600902
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Richmond",
+    "Shp_num_an": "Shop 48",
+    "Shp_centre": "Richmond Marketplace",
+    "Street_add": "27 March Street",
+    "Locality": "Richmond",
+    "Postcode": "2753",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "69",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "191"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.811413,
+     -34.069712
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Campbelltown",
+    "Shp_num_an": "Shop U67",
+    "Shp_centre": "Campelltown Mall",
+    "Street_add": "271 Queen Street",
+    "Locality": "Campbelltown",
+    "Postcode": "2560",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "18",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "192"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.83885055,
+     -34.56228517
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Barrack Heights - Shellharbour",
+    "Shp_num_an": "Shop 109",
+    "Shp_centre": "Stockland Shellharbour",
+    "Street_add": "Lake Entrance Road",
+    "Locality": "Barrack Heights",
+    "Postcode": "2528",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "71",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "193"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.892826,
+     -32.254617
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Muswellbrook",
+    "Shp_num_an": "Shop 12-13",
+    "Shp_centre": "Muswellbrook Marketplace",
+    "Street_add": "22 Sowerby Street",
+    "Locality": "Muswellbrook",
+    "Postcode": "2333",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "54",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "194"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.893122,
+     -34.424834
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Wollongong",
+    "Shp_num_an": "Shop N106, Level 1",
+    "Shp_centre": "Wollongong Central",
+    "Street_add": "200 Crown Street",
+    "Locality": "Wollongong",
+    "Postcode": "2500",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "85",
+    "result": "100001",
+    "Audio": "",
+    "gx_id": "195"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.906374,
+     -33.77007
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Blacktown",
+    "Shp_num_an": "Shop 3008, Level 3",
+    "Shp_centre": "Westpoint Shopping Centre",
+    "Street_add": "Patrick Street",
+    "Locality": "Blacktown",
+    "Postcode": "2148",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "12",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "196"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.926709,
+     -31.091342
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Tamworth",
+    "Shp_num_an": "Shop 22",
+    "Shp_centre": "Tamworth Shoppingworld",
+    "Street_add": "Bridge Street",
+    "Locality": "Tamworth",
+    "Postcode": "2340",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "75",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "197"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.924383,
+     -33.919935
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Liverpool",
+    "Shp_num_an": "Shop 2090, Level 2",
+    "Shp_centre": "Westfield Liverpool",
+    "Street_add": "Cnr Elizabeth Drive & Macquarie Street",
+    "Locality": "Liverpool",
+    "Postcode": "2170",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "46",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "198"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.955512,
+     -33.868529
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Fairfield",
+    "Shp_num_an": "Suite 1, Level 2",
+    "Shp_centre": "Neeta City Shopping Centre",
+    "Street_add": "Cnr Smart & Nelson Streets",
+    "Locality": "Fairfield",
+    "Postcode": "2165",
+    "Hrs_of_bus": "09:00-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "31",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "199"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.583193,
+     -33.41619
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Bathurst",
+    "Shp_num_an": "Shop 25",
+    "Shp_centre": "Bathurst Chase",
+    "Street_add": "39 William Street",
+    "Locality": "Bathurst",
+    "Postcode": "2795",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "10",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "2"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.113963,
+     -29.771806
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Inverell",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "166 Byron Street",
+    "Locality": "Inverell",
+    "Postcode": "2360",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "39",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "20"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.003471,
+     -33.817487
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Parramatta",
+    "Shp_num_an": "Shop 1115, Level 1",
+    "Shp_centre": "Westfield Parramatta",
+    "Street_add": "159 Church Street",
+    "Locality": "Parramatta",
+    "Postcode": "2150",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "64",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "200"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     114.615766,
+     -28.766760999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Geraldton",
+    "Shp_num_an": "Shop 25",
+    "Shp_centre": "Centro Northgate",
+    "Street_add": "110 Chapman Road",
+    "Locality": "Geraldton",
+    "Postcode": "6530",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "217",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "201"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.63804064,
+     -33.32607645
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Bunbury",
+    "Shp_num_an": "Shop 32",
+    "Shp_centre": "Stirling Centre",
+    "Street_add": "22 Stephen Street",
+    "Locality": "Bunbury",
+    "Postcode": "6230",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "214",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "202"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.743412,
+     -32.291143
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Rockingham",
+    "Shp_num_an": "Shop G023",
+    "Shp_centre": "Rockingham City Shopping Centre",
+    "Street_add": "1 Council Avenue",
+    "Locality": "Rockingham",
+    "Postcode": "6168",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "224",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "203"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.74208,
+     -32.53680899999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Mandurah",
+    "Shp_num_an": "Shop 109",
+    "Shp_centre": "Mandurah Forum",
+    "Street_add": "330 Pinjarra Road",
+    "Locality": "Mandurah",
+    "Postcode": "6210",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "221",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "204"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.749319,
+     -32.051368
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Fremantle",
+    "Shp_num_an": "Shop 12",
+    "Shp_centre": "",
+    "Street_add": "39 Adelaide Street",
+    "Locality": "Fremantle",
+    "Postcode": "6160",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "216",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "205"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.73830499999998,
+     -31.814814000000002
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Hillarys",
+    "Shp_num_an": "Shop 44",
+    "Shp_centre": "Whitfords City Shopping Centre",
+    "Street_add": "Whitfords Ave",
+    "Locality": "Hillarys",
+    "Postcode": "6025",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "218",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "206"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.76984199999998,
+     -31.741759
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Joondalup",
+    "Shp_num_an": "Tenancy G3,",
+    "Shp_centre": "Sanori House,",
+    "Street_add": "126 Grand Boulevard",
+    "Locality": "Joondalup",
+    "Postcode": "6027",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "246",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "207"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.776288,
+     -31.877944999999997
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Karrinyup",
+    "Shp_num_an": "Shop 152",
+    "Shp_centre": "Karrinyup Shopping Centre",
+    "Street_add": "Karrinyup Road",
+    "Locality": "Karrinyup",
+    "Postcode": "6018",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 9:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "220",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "208"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.821919,
+     -31.94711
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Subiaco",
+    "Shp_num_an": "Shop 1",
+    "Shp_centre": "Subiaco Village",
+    "Street_add": "531 Hay Street",
+    "Locality": "Subiaco",
+    "Postcode": "6008",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "225",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "209"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.118735,
+     -33.776959999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "North Ryde",
+    "Shp_num_an": "Shop 46, Level 2",
+    "Shp_centre": "Macquarie Centre",
+    "Street_add": "Cnr Herring & Waterloo Road",
+    "Locality": "North Ryde",
+    "Postcode": "2133",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "58",
+    "result": "999",
+    "Audio": "YES",
+    "gx_id": "21"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.83263742,
+     -32.0366794
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Booragoon",
+    "Shp_num_an": "Shop 13-14",
+    "Shp_centre": "Gateway Business Centre",
+    "Street_add": "Marmion Street",
+    "Locality": "Booragoon",
+    "Postcode": "6154",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "213",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "210"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.857768,
+     -31.955185
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Perth - The Terrace",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "81 St Georges Terrace",
+    "Locality": "Perth",
+    "Postcode": "6000",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "226",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "211"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.902203,
+     -31.894904
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Morley",
+    "Shp_num_an": "Shop 2177",
+    "Shp_centre": "Centro Galleria",
+    "Street_add": "Cnr Walter & Collier Roads",
+    "Locality": "Morley",
+    "Postcode": "6062",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "223",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "212"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.93748523999999,
+     -32.01906404
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Cannington",
+    "Shp_num_an": "Shop 1044a",
+    "Shp_centre": "Westfield Carousel",
+    "Street_add": "1382 Albany Highway",
+    "Locality": "Cannington",
+    "Postcode": "6107",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "215",
+    "result": "999",
+    "Audio": "YES",
+    "gx_id": "213"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     116.00740799999998,
+     -31.890742999999997
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Midland",
+    "Shp_num_an": "Shop T053A",
+    "Shp_centre": "Midland Gate Shopping Centre",
+    "Street_add": "Cale Street",
+    "Locality": "Midland",
+    "Postcode": "6056",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "222",
+    "result": "50",
+    "Audio": "",
+    "gx_id": "214"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     116.01624999999999,
+     -32.151299
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Armadale",
+    "Shp_num_an": "Shop 67 T2",
+    "Shp_centre": "Armadale Shopping Centre",
+    "Street_add": "Jull Street",
+    "Locality": "Armadale",
+    "Postcode": "6112",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "212",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "215"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     117.88398599999998,
+     -35.025945
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Albany",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "15 Peels Place",
+    "Locality": "Albany",
+    "Postcode": "6330",
+    "Hrs_of_bus": "08:30 -16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "211",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "216"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     121.476815,
+     -30.745425
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Kalgoorlie",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "Cnr Porter & Egan Streets",
+    "Locality": "Kalgoorlie",
+    "Postcode": "6430",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "219",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "217"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     130.84250585,
+     -12.46373121
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NT",
+    "Fcilty_nam": "Darwin",
+    "Shp_num_an": "Shop 14 & 15",
+    "Shp_centre": "The Galleria",
+    "Street_add": "Smith Street Mall",
+    "Locality": "Darwin",
+    "Postcode": "800",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "137",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "218"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     130.882216,
+     -12.377027
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NT",
+    "Fcilty_nam": "Casuarina",
+    "Shp_num_an": "Shop 30, Ground Floor",
+    "Shp_centre": "Casuarina Square",
+    "Street_add": "247 Trower Road",
+    "Locality": "Casuarina",
+    "Postcode": "810",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Fridays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "136",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "219"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.149902,
+     -33.884404
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Leichhardt",
+    "Shp_num_an": "Shop 31,",
+    "Shp_centre": "Leichhardt Marketplace,",
+    "Street_add": "138 Flood Street",
+    "Locality": "Leichhardt",
+    "Postcode": "2040",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "247",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "22"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     130.98591,
+     -12.480801
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NT",
+    "Fcilty_nam": "Palmerston",
+    "Shp_num_an": "Shop T02,",
+    "Shp_centre": "Palmerston Shopping Centre,",
+    "Street_add": "10 Temple Terrace",
+    "Locality": "Palmerston",
+    "Postcode": "830",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "245",
+    "result": "200000",
+    "Audio": "",
+    "gx_id": "220"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     133.881616,
+     -23.698858
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NT",
+    "Fcilty_nam": "Alice Springs",
+    "Shp_num_an": "Shop 38",
+    "Shp_centre": "Yeperenye Shopping Centre",
+    "Street_add": "36-38 Hartley Street",
+    "Locality": "Alice Springs",
+    "Postcode": "870",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "135",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "221"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     135.858159,
+     -34.720184
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Port Lincoln",
+    "Shp_num_an": "Suite 6",
+    "Shp_centre": "Stamford House",
+    "Street_add": "80 Tasman Terrace",
+    "Locality": "Port Lincoln",
+    "Postcode": "5606",
+    "Hrs_of_bus": "09:00-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "147",
+    "result": "50",
+    "Audio": "",
+    "gx_id": "222"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.531341,
+     -33.026659
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Whyalla",
+    "Shp_num_an": "Shop 48",
+    "Shp_centre": "Westland Shopping Centre",
+    "Street_add": "Nicolson Avenue",
+    "Locality": "Whyalla Norrie",
+    "Postcode": "5608",
+    "Hrs_of_bus": "09:00-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "150",
+    "result": "200110",
+    "Audio": "",
+    "gx_id": "223"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     137.763512,
+     -32.493718
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Port Augusta",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "93 Commercial Road",
+    "Locality": "Port Augusta",
+    "Postcode": "5700",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "146",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "224"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.010496,
+     -33.17609999999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Port Pirie",
+    "Shp_num_an": "Shop 10 & 11",
+    "Shp_centre": "Flinders Arcade",
+    "Street_add": "82 Ellen Street",
+    "Locality": "Port Pirie",
+    "Postcode": "5540",
+    "Hrs_of_bus": "09:00-16.30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "148",
+    "result": "100001",
+    "Audio": "",
+    "gx_id": "225"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.49536199999997,
+     -35.142056999999994
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Noarlunga Centre - Colonnades",
+    "Shp_num_an": "Shop 75",
+    "Shp_centre": "Colonnades Shopping Centre",
+    "Street_add": "Beach Road",
+    "Locality": "Noarlunga Centre",
+    "Postcode": "5168",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays,09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "243",
+    "result": "200000",
+    "Audio": "",
+    "gx_id": "226"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.493552,
+     -34.877219999999994
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "West Lakes",
+    "Shp_num_an": "Shop 297-298, Ground Floor",
+    "Shp_centre": "Westfield West Lakes",
+    "Street_add": "111 West Lakes Boulevarde",
+    "Locality": "West Lakes",
+    "Postcode": "5021",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "149",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "227"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.54400499999997,
+     -35.013446
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Oaklands Park - Marion",
+    "Shp_num_an": "Shop 1036, Ground Floor",
+    "Shp_centre": "Westfield Shoppingtown",
+    "Street_add": "297 Diagonal Road",
+    "Locality": "Oaklands Park",
+    "Postcode": "5046",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "143",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "228"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.598551,
+     -34.92435699999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Adelaide - Currie Street",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "30 Currie Street",
+    "Locality": "Adelaide",
+    "Postcode": "5000",
+    "Hrs_of_bus": "08:30-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "140",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "229"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.16962312,
+     -32.56410816
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Singleton",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "6 William Street",
+    "Locality": "Singleton",
+    "Postcode": "2330",
+    "Hrs_of_bus": "8:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "72",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "23"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     138.668589,
+     -34.715725
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "SA",
+    "Fcilty_nam": "Elizabeth",
+    "Shp_num_an": "Shop 55 Oxenham Mall",
+    "Shp_centre": "Elizabeth Shopping Centre",
+    "Street_add": "50 Elizabeth Way",
+    "Locality": "Elizabeth",
+    "Postcode": "5112",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "141",
+    "result": "50",
+    "Audio": "",
+    "gx_id": "230"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.359328,
+     -38.150358
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Geelong",
+    "Shp_num_an": "Shop 60-61, Level 1",
+    "Shp_centre": "Market Square Shopping Centre",
+    "Street_add": "Moorabool Street",
+    "Locality": "Geelong",
+    "Postcode": "3220",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "182",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "231"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.563386,
+     -37.68592699999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Melton",
+    "Shp_num_an": "Shop T68",
+    "Shp_centre": "Woodgrove Shopping Centre",
+    "Street_add": "533 High Street",
+    "Locality": "Melton",
+    "Postcode": "3337",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "2",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "189",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "232"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.65867,
+     -37.90272099999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Werribee",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "72 Watton Street",
+    "Locality": "Werribee",
+    "Postcode": "3030",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "209",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "233"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.746341,
+     -36.124839
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Echuca",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "69 Heygarth Stree",
+    "Locality": "Echuca",
+    "Postcode": "3564",
+    "Hrs_of_bus": "8:30 -16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "178",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "234"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.848706,
+     -37.828011
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Altona Gate",
+    "Shp_num_an": "Shop U9, Level 2",
+    "Shp_centre": "Altona Gate Shopping Centre",
+    "Street_add": "124-134 Millers Road",
+    "Locality": "Altona North",
+    "Postcode": "3025",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "159",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "235"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.886593,
+     -37.770177
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Highpoint",
+    "Shp_num_an": "Shop 2011, Level 2",
+    "Shp_centre": "Highpoint City",
+    "Street_add": "200 Rosamond Road",
+    "Locality": "Maribyrnong",
+    "Postcode": "3032",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "186",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "236"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.888161,
+     -37.716657
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Airport West",
+    "Shp_num_an": "Shop 77",
+    "Shp_centre": "Westfield Shoppingtown",
+    "Street_add": "Louis Street",
+    "Locality": "Airport West",
+    "Postcode": "3042",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-18:00 Thursday, 09:00-12:30 Saturday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "158",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "237"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.907529,
+     -38.35498299999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Rosebud",
+    "Shp_num_an": "Shop 15",
+    "Shp_centre": "Rosebud Village Shopping Centre",
+    "Street_add": "967 Point Nepean Road",
+    "Locality": "Rosebud",
+    "Postcode": "3939",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "15",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "239",
+    "result": "100000",
+    "Audio": "YES",
+    "gx_id": "238"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.921564,
+     -37.679886
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Broadmeadows",
+    "Shp_num_an": "Shop 42",
+    "Shp_centre": "Broadmeadows Shopping Centre",
+    "Street_add": "Pascoe Vale Road",
+    "Locality": "Broadmeadows",
+    "Postcode": "3047",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "167",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "239"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.18308599999997,
+     -33.796794
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Chatswood",
+    "Shp_num_an": "Shop 527-528, Level 5",
+    "Shp_centre": "Westfield Chatswood",
+    "Street_add": "1 Anderson Street",
+    "Locality": "Chatswood",
+    "Postcode": "2067",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "23",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "24"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.921037,
+     -37.766646
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Moonee Ponds",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "122A Puckle Street",
+    "Locality": "Moonee Ponds",
+    "Postcode": "3039",
+    "Hrs_of_bus": "09:00-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "191",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "240"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.954746,
+     -37.818571
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Melbourne - City West",
+    "Shp_num_an": "Shop 11,",
+    "Shp_centre": "",
+    "Street_add": "600 Collins Street",
+    "Locality": "Melbourne",
+    "Postcode": "3000",
+    "Hrs_of_bus": "08:30-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "165",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "241"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.962588,
+     -37.814496
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Melbourne - Galleria",
+    "Shp_num_an": "Shop E17",
+    "Shp_centre": "The Galleria Shopping Plaza",
+    "Street_add": "385 Bourke Street",
+    "Locality": "Melbourne",
+    "Postcode": "3000",
+    "Hrs_of_bus": "08:30-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "169",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "242"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.96637,
+     -37.742098
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Coburg",
+    "Shp_num_an": "Shop 16",
+    "Shp_centre": "Walkers Arcade",
+    "Street_add": "471 Sydney Road",
+    "Locality": "Coburg",
+    "Postcode": "3058",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "172",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "243"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     144.969795,
+     -37.812421
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Melbourne - City East",
+    "Shp_num_an": "Shop 7,",
+    "Shp_centre": "Southern Cross 1,",
+    "Street_add": "121 Exhibition Street (Access via Bourke Street)",
+    "Locality": "Melbourne",
+    "Postcode": "3000",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "174",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "244"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.659139,
+     -33.036597
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Belmont NSW",
+    "Shp_num_an": "Shop 17-18",
+    "Shp_centre": "Belmont Central Shopping Centre",
+    "Street_add": "1 Singleton Street",
+    "Locality": "Belmont",
+    "Postcode": "2280",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "0",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "268",
+    "result": "10",
+    "Audio": "NO",
+    "gx_id": "245"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     115.933677,
+     -31.965845
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Belmont WA",
+    "Shp_num_an": "Shop 30",
+    "Shp_centre": "Belmont Forum Shopping Centre",
+    "Street_add": "227 Belmont Avenue",
+    "Locality": "Cloverdale",
+    "Postcode": "6105",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "0",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "269",
+    "result": "10",
+    "Audio": "NO",
+    "gx_id": "246"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.888213,
+     -34.485521999999996
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Warrawong - EFT only",
+    "Shp_num_an": "Suite 1, Gallery Level",
+    "Shp_centre": "Westfield Warrawong",
+    "Street_add": "Cnr King and Cowper Streets",
+    "Locality": "Warrawong",
+    "Postcode": "2502",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "0",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "270",
+    "result": "999",
+    "Audio": "NO",
+    "gx_id": "247"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.20541,
+     -33.873782
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Sydney - Town Hall",
+    "Shp_num_an": "Shop 30-31",
+    "Shp_centre": "Town Hall Arcade",
+    "Street_add": "464-480 Kent Street",
+    "Locality": "Sydney",
+    "Postcode": "2000",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "79",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "25"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.206677,
+     -33.83795799999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "North Sydney",
+    "Shp_num_an": "Shop P40-P41, Gound Floor",
+    "Shp_centre": "Northpoint",
+    "Street_add": "100 Miller Street",
+    "Locality": "North Sydney",
+    "Postcode": "2060",
+    "Hrs_of_bus": "09:00-17:00 Monday-Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "2",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "59",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "26"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.207224,
+     -33.865072
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Sydney - Wynyard",
+    "Shp_num_an": "Shop G23",
+    "Shp_centre": "Metcentre",
+    "Street_add": "273 George Street",
+    "Locality": "Sydney",
+    "Postcode": "2000",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "2",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "86",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "27"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.209007,
+     -33.869063999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Sydney - King Street",
+    "Shp_num_an": "Shop 5R 07-09",
+    "Shp_centre": "Glasshouse Shopping Centre",
+    "Street_add": "135 King Street",
+    "Locality": "Sydney",
+    "Postcode": "2000",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "49",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "28"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.226913,
+     -33.945879
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Pagewood",
+    "Shp_num_an": "Shop 131B, Ground Floor",
+    "Shp_centre": "Westfield Eastgardens",
+    "Street_add": "152 Bunnerong Road",
+    "Locality": "Eastgardens",
+    "Postcode": "2036",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "62",
+    "result": "101000",
+    "Audio": "",
+    "gx_id": "29"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.58612099999996,
+     -32.592757
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Mudgee",
+    "Shp_num_an": "Shop 6",
+    "Shp_centre": "The Mortimer Centre",
+    "Street_add": "90-96 Mortimer Street",
+    "Locality": "Mudgee",
+    "Postcode": "2850",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "53",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "3"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.240435,
+     -33.823701
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Spit Junction",
+    "Shp_num_an": "Shop 23",
+    "Shp_centre": "Bridgepoint Centre",
+    "Street_add": "Cnr Military & Brady Roads",
+    "Locality": "Spit Junction",
+    "Postcode": "2088",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "73",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "30"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.248356,
+     -33.891875
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Bondi Junction",
+    "Shp_num_an": "Shop 7-8",
+    "Shp_centre": "Tiffany Plaza,",
+    "Street_add": "422 Oxford Street (above Bondi Junction Interchange)",
+    "Locality": "Bondi Junction",
+    "Postcode": "2022",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "13",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "31"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.24887853,
+     -23.85534942
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "",
+    "Fcilty_nam": "Gladstone",
+    "Shp_num_an": "Shop 31",
+    "Shp_centre": "Gladstone Central Shopping Centre",
+    "Street_add": "45 Dawson Road",
+    "Locality": "Gladstone",
+    "Postcode": "4680",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "107",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "32"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.265961,
+     -33.768201
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Brookvale",
+    "Shp_num_an": "Shop 188, Level 1",
+    "Shp_centre": "Warringah Mall",
+    "Street_add": "Cnr Old Pittwater Rd & Condamine St",
+    "Locality": "Brookvale",
+    "Postcode": "2100",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "15",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "33"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.262977,
+     -27.183903
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Dalby",
+    "Shp_num_an": "Shop 23",
+    "Shp_centre": "Dalby Shoppingworld",
+    "Street_add": "Cunningham Street",
+    "Locality": "Dalby",
+    "Postcode": "4405",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "105",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "34"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.296208,
+     -33.696624
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Warriewood",
+    "Shp_num_an": "Shop 20",
+    "Shp_centre": "Centro Warriewood",
+    "Street_add": "Jacksons Road",
+    "Locality": "Warriewood",
+    "Postcode": "2102",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "84",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "35"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.31508499999998,
+     -33.492793
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Woy Woy",
+    "Shp_num_an": "Shop 32",
+    "Shp_centre": "Deepwater Plaza",
+    "Street_add": "Railway Street",
+    "Locality": "Woy Woy",
+    "Postcode": "2256",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "81",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "36"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.343674,
+     -33.424362
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Gosford",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "9 Watt Street",
+    "Locality": "Gosford",
+    "Postcode": "2250",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "32",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "37"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.35470299999997,
+     -32.832744
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Cessnock",
+    "Shp_num_an": "Shop G008",
+    "Shp_centre": "Cessnock Market Place",
+    "Street_add": "205 Wollombi Rd",
+    "Locality": "Cessnock",
+    "Postcode": "2325",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "2",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "21",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "38"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.393275,
+     -33.437331
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Erina",
+    "Shp_num_an": "Shop T334",
+    "Shp_centre": "Erina Fair",
+    "Street_add": "Terrigal Drive",
+    "Locality": "Erina",
+    "Postcode": "2250",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holiday",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "30",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "39"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.717725,
+     -34.755285
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Goulburn",
+    "Shp_num_an": "Shop 7",
+    "Shp_centre": "Central Arcade",
+    "Street_add": "158-162 Auburn Street",
+    "Locality": "Goulburn",
+    "Postcode": "2580",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "33",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "4"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.415573,
+     -33.306914
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Tuggerah",
+    "Shp_num_an": "Shop 1142,",
+    "Shp_centre": "Westfield Tuggerah,",
+    "Street_add": "Corner Of Wyong Road And Gavenlock Road",
+    "Locality": "Tuggerah",
+    "Postcode": "2259",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "250",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "40"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.496104,
+     -33.344202
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "The Entrance",
+    "Shp_num_an": "Shop 16",
+    "Shp_centre": "Lakeside Plaza",
+    "Street_add": "Cnr Denning St & Entrance Rd",
+    "Locality": "The Entrance",
+    "Postcode": "2261",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "77",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "41"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.498198,
+     -33.245474
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Lake Haven",
+    "Shp_num_an": "Shop 27",
+    "Shp_centre": "Lake Haven Shopping Centre",
+    "Street_add": "Lake Haven Drive",
+    "Locality": "Lake Haven",
+    "Postcode": "2263",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "43",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "42"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.554105,
+     -32.734323
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Maitland",
+    "Shp_num_an": "Shop 6",
+    "Shp_centre": "Pender Place Shopping Centre",
+    "Street_add": "44 Elgin Street",
+    "Locality": "Maitland",
+    "Postcode": "2320",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "48",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "43"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.594681,
+     -33.011657
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Toronto",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "2 - 6 Donnelly Avenue",
+    "Locality": "Toronto",
+    "Postcode": "2283",
+    "Hrs_of_bus": "08:30 - 17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "2",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "78",
+    "result": "999",
+    "Audio": "NO",
+    "gx_id": "44"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.664145,
+     -30.512740999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Armidale",
+    "Shp_num_an": "Shop 1A",
+    "Shp_centre": "K-Mart Plaza",
+    "Street_add": "201 - 203 Beardy Street",
+    "Locality": "Armidale",
+    "Postcode": "2350",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "6",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "45"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.666596,
+     -32.903739
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Wallsend",
+    "Shp_num_an": "Shop 15",
+    "Shp_centre": "Wallsend Plaza",
+    "Street_add": "24 Kokera Street",
+    "Locality": "Wallsend",
+    "Postcode": "2287",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "83",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "46"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.695144,
+     -32.963406
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Charlestown",
+    "Shp_num_an": "Shop 122",
+    "Shp_centre": "Charlestown Square",
+    "Street_add": "Cnr Smart and Pearson Streets",
+    "Locality": "Charlestown",
+    "Postcode": "2290",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "22",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "47"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.71115899999998,
+     -32.942052
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Kotara",
+    "Shp_num_an": "Shop 1012a, Level 1",
+    "Shp_centre": "Westfield Kotara",
+    "Street_add": "Cnr Park Ave & Northcott Drive",
+    "Locality": "Kotara",
+    "Postcode": "2289",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "42",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "48"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.74191703,
+     -32.7634128
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Raymond Terrace",
+    "Shp_num_an": "Shop 21",
+    "Shp_centre": "Centro Raymond Terrace",
+    "Street_add": "Cnr Sturgeon and Glenelg Streets",
+    "Locality": "Raymond Terrace",
+    "Postcode": "2324",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "68",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "49"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.782247,
+     -30.323996
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Narrabri",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "153-155 Maitland Street",
+    "Locality": "Narrabri",
+    "Postcode": "2390",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "56",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "5"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.779724,
+     -32.926775
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Newcastle",
+    "Shp_num_an": "",
+    "Shp_centre": "Hunter Street Mall",
+    "Street_add": "159 Hunter Street",
+    "Locality": "Newcastle",
+    "Postcode": "2300",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "57",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "50"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.836117,
+     -26.540599999999998
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Kingaroy",
+    "Shp_num_an": "Shop 26",
+    "Shp_centre": "Kingaroy Shopping World",
+    "Street_add": "Cnr Alford & Youngman Streets",
+    "Locality": "Kingaroy",
+    "Postcode": "4610",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "115",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "51"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.9323835,
+     -27.564541779999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Toowoomba - Clifford Gardens",
+    "Shp_num_an": "Shop 87",
+    "Shp_centre": "Clifford Gardens Shopping Ctr",
+    "Street_add": "Cnr James Street & Anzac Ave",
+    "Locality": "Toowoomba",
+    "Postcode": "4350",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "104",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "52"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.947533,
+     -27.560203
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Toowoomba",
+    "Shp_num_an": "Shop 56",
+    "Shp_centre": "Grand Central Shopping Centre",
+    "Street_add": "Cnr Clifford And Margaret Streets",
+    "Locality": "Toowoomba",
+    "Postcode": "4350",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "129",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "53"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.033735,
+     -28.223176
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Warwick",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "37 Albion Street",
+    "Locality": "Warwick",
+    "Postcode": "4370",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "131",
+    "result": "50",
+    "Audio": "",
+    "gx_id": "54"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.348176,
+     -24.871269
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Bundaberg",
+    "Shp_num_an": "Shop 45",
+    "Shp_centre": "Hinkler Central",
+    "Street_add": "16 Maryborough Street",
+    "Locality": "Bundaberg",
+    "Postcode": "4670",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "96",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "55"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.461071,
+     -31.913554999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Taree",
+    "Shp_num_an": "Shop 1",
+    "Shp_centre": "",
+    "Street_add": "184-188 Victoria Street",
+    "Locality": "Taree",
+    "Postcode": "2430",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "76",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "56"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.500338,
+     -32.176453
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Tuncurry",
+    "Shp_num_an": "Shop 8,",
+    "Shp_centre": "Bridgepoint Building,",
+    "Street_add": "7-9 Manning Street",
+    "Locality": "Tuncurry",
+    "Postcode": "2428",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "258",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "57"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.662584,
+     -26.190296
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Gympie",
+    "Shp_num_an": "Shop 13",
+    "Shp_centre": "Cullinanes Centre",
+    "Street_add": "104 Mary Street",
+    "Locality": "Gympie",
+    "Postcode": "4570",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "108",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "58"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.699538,
+     -25.539147
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Maryborough",
+    "Shp_num_an": "Shop 3",
+    "Shp_centre": "Station Square Shopping Centre",
+    "Street_add": "142 Lennox Street",
+    "Locality": "Maryborough",
+    "Postcode": "4650",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "118",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "59"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.839888,
+     -36.674033
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Bega",
+    "Shp_num_an": "Shop 6",
+    "Shp_centre": "",
+    "Street_add": "248 Carp Street",
+    "Locality": "Bega",
+    "Postcode": "2550",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "11",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "6"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.76117099999996,
+     -27.60897
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Ipswich",
+    "Shp_num_an": "Shop BD7",
+    "Shp_centre": "Ipswich Riverlink Shopping Centre",
+    "Street_add": "Cnr Pine Street and The Terrace",
+    "Locality": "Ipswich",
+    "Postcode": "4305",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "113",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "60"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.83770443,
+     -25.288639889999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Pialba - Hervey Bay",
+    "Shp_num_an": "Shop 44",
+    "Shp_centre": "Pialba Place Shopping Centre",
+    "Street_add": "30 Main Street",
+    "Locality": "Pialba",
+    "Postcode": "4655",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "109",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "61"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.839815,
+     -31.080317
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Kempsey",
+    "Shp_num_an": "Shop 3B",
+    "Shp_centre": "Kempsey Mall",
+    "Street_add": "15-27 Belgrave Street",
+    "Locality": "Kempsey",
+    "Postcode": "2440",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "41",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "62"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.896955,
+     -31.427359
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Port Macquarie",
+    "Shp_num_an": "Shop 3",
+    "Shp_centre": "Settlement City Shopping Centre",
+    "Street_add": "Cnr Park & Bay Streets",
+    "Locality": "Port Macquarie",
+    "Postcode": "2444",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "66",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "63"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.921115,
+     -30.707182
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Macksville",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "9 Cooper Street",
+    "Locality": "Macksville",
+    "Postcode": "2447",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "47",
+    "result": "100001",
+    "Audio": "",
+    "gx_id": "64"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.93268999999998,
+     -29.689934999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Grafton",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "4-8 King Street",
+    "Locality": "Grafton",
+    "Postcode": "2460",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "34",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "65"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.938644,
+     -27.549524
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Mount Ommaney",
+    "Shp_num_an": "Shop 78",
+    "Shp_centre": "Mount Ommaney Centre",
+    "Street_add": "171 Dandenong Rd",
+    "Locality": "Mount Ommaney",
+    "Postcode": "4074",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "2",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "229",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "66"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.94826,
+     -27.102883999999996
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Morayfield",
+    "Shp_num_an": "Shop 85",
+    "Shp_centre": "Morayfield Shopping Centre",
+    "Street_add": "165-171 Morayfield Road",
+    "Locality": "Morayfield",
+    "Postcode": "4506",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "119",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "67"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.959571,
+     -26.628406
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Nambour",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "Cnr Maud and Currie Streets",
+    "Locality": "Nambour",
+    "Postcode": "4560",
+    "Hrs_of_bus": "08:30-16:30  Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "121",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "68"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.971976,
+     -27.497760999999997
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Indooroopilly",
+    "Shp_num_an": "Shop 1028",
+    "Shp_centre": "Indooroopilly Shopping Centre",
+    "Street_add": "322 Moggill Road",
+    "Locality": "Indooroopilly",
+    "Postcode": "4068",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "110",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "69"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.840086,
+     -29.460718
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Moree",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "11 Auburn Street",
+    "Locality": "Moree",
+    "Postcode": "2400",
+    "Hrs_of_bus": "08:30 -16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "52",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "7"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.978069,
+     -27.407566
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Mitchelton - Brookside",
+    "Shp_num_an": "Shop 114A",
+    "Shp_centre": "Brookside Shopping Centre",
+    "Street_add": "159 Osborne Road",
+    "Locality": "Mitchelton",
+    "Postcode": "4053",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "95",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "70"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     152.990178,
+     -27.307401
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Strathpine",
+    "Shp_num_an": "Shop 145",
+    "Shp_centre": "Westfield Strathpine",
+    "Street_add": "295 Gympie Road",
+    "Locality": "Strathpine",
+    "Postcode": "4500",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "127",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "71"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.024822,
+     -27.470496
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Brisbane - Queen Street",
+    "Shp_num_an": "Shop 225, Level 2,",
+    "Shp_centre": "Myer Centre, Queen Street Mall",
+    "Street_add": "91 Queen Street",
+    "Locality": "Brisbane",
+    "Postcode": "4000",
+    "Hrs_of_bus": "08:30-17:00  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "132",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "72"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.03099899999998,
+     -27.385905
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Chermside",
+    "Shp_num_an": "Shop 87",
+    "Shp_centre": "Westfield Chermside",
+    "Street_add": "Cnr Gympie & Hamilton Road",
+    "Locality": "Chermside",
+    "Postcode": "4032",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "101",
+    "result": "10",
+    "Audio": "YES",
+    "gx_id": "73"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.050544,
+     -28.863504
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Casino",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "46 Hickey Street",
+    "Locality": "Casino",
+    "Postcode": "2470",
+    "Hrs_of_bus": "08:30 -16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "19",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "74"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.05996397,
+     -27.408429199999997
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Toombul",
+    "Shp_num_an": "Shop 80",
+    "Shp_centre": "Centro Toombul",
+    "Street_add": "1015 Sandgate Road",
+    "Locality": "Toombul",
+    "Postcode": "4012",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "128",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "75"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.081084,
+     -27.560035
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Upper Mount Gravatt - Garden City",
+    "Shp_num_an": "Shop 1023",
+    "Shp_centre": "Garden City Shopping Centre",
+    "Street_add": "Cnr Kessels & Logan Road",
+    "Locality": "Upper Mount Gravatt",
+    "Postcode": "4122",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "106",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "76"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.087773,
+     -27.226718
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Kippa-ring",
+    "Shp_num_an": "Shop A3",
+    "Shp_centre": "Peninsula Fair Shopping City",
+    "Street_add": "272 Anzac Avenue",
+    "Locality": "Kippa-Ring",
+    "Postcode": "4021",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "116",
+    "result": "10",
+    "Audio": "YES",
+    "gx_id": "77"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.090664,
+     -26.654233
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Maroochydore",
+    "Shp_num_an": "Shop 323, level 1,",
+    "Shp_centre": "Sunshine Plaza,",
+    "Street_add": "Horton Parade",
+    "Locality": "Maroochydore",
+    "Postcode": "4558",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "254",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "78"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.10093699999996,
+     -27.498755
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Carindale",
+    "Shp_num_an": "Shop 1027,Ground Floor",
+    "Shp_centre": "Westfield Carindale",
+    "Street_add": "1151 Creek Road",
+    "Locality": "Carindale",
+    "Postcode": "4152",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-19:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "100",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "79"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     149.909232,
+     -36.887751
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Merimbula",
+    "Shp_num_an": "Shop 2",
+    "Shp_centre": "",
+    "Street_add": "11 Merimbula Drive",
+    "Locality": "Merimbula",
+    "Postcode": "2548",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "NO",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "50",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "8"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.113548,
+     -27.642923
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Woodridge",
+    "Shp_num_an": "Shop 3, Ground Floor",
+    "Shp_centre": "Logan Central Plaza",
+    "Street_add": "38 Wembley Road",
+    "Locality": "Woodridge",
+    "Postcode": "4114",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "133",
+    "result": "101000",
+    "Audio": "",
+    "gx_id": "80"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.125954,
+     -26.803062
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Caloundra",
+    "Shp_num_an": "Shop 19",
+    "Shp_centre": "Stockland Caloundra",
+    "Street_add": "47 Bowman Road",
+    "Locality": "Caloundra",
+    "Postcode": "4551",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "98",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "81"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.130653,
+     -26.700943999999996
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Buddina - Kawana Waters",
+    "Shp_num_an": "Shop 416",
+    "Shp_centre": "Kawana Waters Shoppingworld",
+    "Street_add": "119 Point Cartwright Drive",
+    "Locality": "Buddina",
+    "Postcode": "4575",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "114",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "82"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.133021,
+     -30.285734999999995
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Coffs Harbour",
+    "Shp_num_an": "Shop 83",
+    "Shp_centre": "Park Beach Plaza",
+    "Street_add": "253 Park Beach Road",
+    "Locality": "Coffs Harbour",
+    "Postcode": "2450",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "24",
+    "result": "50",
+    "Audio": "",
+    "gx_id": "83"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.172331,
+     -27.44671
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Wynnum",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "89 Tingal Road (Cnr Clara Street)",
+    "Locality": "Wynnum",
+    "Postcode": "4178",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "255",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "84"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.190099,
+     -27.521537
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Capalaba",
+    "Shp_num_an": "Shop 95",
+    "Shp_centre": "Capalaba Park Shopping Centre",
+    "Street_add": "Cnr Mt Cotton & Redland Bay Road",
+    "Locality": "Capalaba",
+    "Postcode": "4157",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "99",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "85"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.206616,
+     -27.716316
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Beenleigh",
+    "Shp_num_an": "Shop 6A",
+    "Shp_centre": "Beenleigh Marketplace",
+    "Street_add": "George Street",
+    "Locality": "Beenleigh",
+    "Postcode": "4207",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "93",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "86"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.268443,
+     -27.526063
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Cleveland",
+    "Shp_num_an": "Shop 76",
+    "Shp_centre": "Stockland Cleveland North Mall",
+    "Street_add": "90 Middle Street",
+    "Locality": "Cleveland",
+    "Postcode": "4163",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "103",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "87"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.285535,
+     -28.809506
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Lismore",
+    "Shp_num_an": "Shop 78,",
+    "Shp_centre": "Lismore Shopping Square,",
+    "Street_add": "Cnr Brewster St & Uralba St",
+    "Locality": "Lismore",
+    "Postcode": "2480",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "44",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "88"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.380844,
+     -27.977129
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Ashmore",
+    "Shp_num_an": "Shop 7",
+    "Shp_centre": "Ashmore City Shopping Centre",
+    "Street_add": "Cnr Nerang & Currumburra Rds",
+    "Locality": "Ashmore",
+    "Postcode": "4214",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "90",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "89"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     150.126247,
+     -36.22330099999999
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Narooma",
+    "Shp_num_an": "Shop 35",
+    "Shp_centre": "Narooma Plaza",
+    "Street_add": "185 Princes Highway",
+    "Locality": "Narooma",
+    "Postcode": "2546",
+    "Hrs_of_bus": "09:00-16:30  Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "55",
+    "result": "200002",
+    "Audio": "",
+    "gx_id": "9"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.41704,
+     -27.969399
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Southport",
+    "Shp_num_an": "Shop 1047",
+    "Shp_centre": "Australia Fair Shopping Centre",
+    "Street_add": "42 Marine Parade",
+    "Locality": "Southport",
+    "Postcode": "4215",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "126",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "90"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.42838799999998,
+     -28.035252
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Broadbeach - Pacific Fair",
+    "Shp_num_an": "Shop 301a",
+    "Shp_centre": "Pacific Fair Shopping Centre",
+    "Street_add": "Hooker Boulevarde",
+    "Locality": "Broadbeach",
+    "Postcode": "4218",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 9:00-18:00 Thursdays, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "123",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "91"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.46904199999997,
+     -28.13551
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "Qld",
+    "Fcilty_nam": "Elanora",
+    "Shp_num_an": "Shop 26,",
+    "Shp_centre": "The Pines Shopping Centre,",
+    "Street_add": "313 K P Mcgrath Drive",
+    "Locality": "Elanora",
+    "Postcode": "4221",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "248",
+    "result": "200000",
+    "Audio": "",
+    "gx_id": "92"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.544038,
+     -28.199979999999996
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Tweed Heads",
+    "Shp_num_an": "Shop 23",
+    "Shp_centre": "Tweed City Shopping Centre",
+    "Street_add": "54 Minjungbal Drive",
+    "Locality": "Tweed Heads South",
+    "Postcode": "2486",
+    "Hrs_of_bus": "09:00-17:00 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "88",
+    "result": "100000",
+    "Audio": "",
+    "gx_id": "93"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     153.557166,
+     -28.867655
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Ballina",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "117-121 Tamar Street",
+    "Locality": "Ballina",
+    "Postcode": "2478",
+    "Hrs_of_bus": "08:30-16:30 Monday to Friday, 09:00-12:30 Saturdays, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "7",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "94"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     151.058952,
+     -34.031886
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "NSW",
+    "Fcilty_nam": "Sutherland - Limited Services - EFT only (Centrelink)",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "36 Eton Street",
+    "Locality": "Sutherland",
+    "Postcode": "2232",
+    "Hrs_of_bus": "08:00-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "259",
+    "result": "0",
+    "Audio": "",
+    "gx_id": "95"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.186676,
+     -38.307719
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "VIC",
+    "Fcilty_nam": "Hastings - Limited Services - EFT Only (Centrelink)",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "125 High Street",
+    "Locality": "Hastings",
+    "Postcode": "3915",
+    "Hrs_of_bus": "08:15-16:45 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "260",
+    "result": "10",
+    "Audio": "",
+    "gx_id": "96"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     145.740351,
+     -16.94132
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "QLD",
+    "Fcilty_nam": "Earlville - Limited Services - EFT Only (Centrelink)",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "480 Mulgrave Road",
+    "Locality": "Earlville",
+    "Postcode": "4870",
+    "Hrs_of_bus": "08:30-17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "261",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "97"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     122.239912,
+     -17.954772999999996
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "WA",
+    "Fcilty_nam": "Broome - Limited Services - EFT Only (Centrelink)",
+    "Shp_num_an": "Centrelink Building",
+    "Shp_centre": "",
+    "Street_add": "14 Napier Terrace",
+    "Locality": "Broome",
+    "Postcode": "6725",
+    "Hrs_of_bus": "07:45-16:45 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "262",
+    "result": "30",
+    "Audio": "",
+    "gx_id": "98"
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     147.14148063,
+     -41.43081154
+    ]
+   },
+   "properties": {
+    "Fcilty_typ": "MO",
+    "State": "TAS",
+    "Fcilty_nam": "Launceston - Limited Services - EFT Only (Centrelink)",
+    "Shp_num_an": "",
+    "Shp_centre": "",
+    "Street_add": "8 Boland Street",
+    "Locality": "Launceston",
+    "Postcode": "7250",
+    "Hrs_of_bus": "08:30 - 17:00 Monday to Friday, excluding Public Holidays",
+    "Wheelchair": "YES",
+    "Display_wd": "1.5",
+    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+    "uuid": "263",
+    "result": "999",
+    "Audio": "",
+    "gx_id": "99"
+   }
+  }
+ ],
+ "allowedQueriesPerSecond": 150.0
+}
