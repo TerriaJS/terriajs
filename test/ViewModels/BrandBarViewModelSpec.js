@@ -2,7 +2,6 @@
 
 /*global require,describe,it,expect,beforeEach,afterEach*/
 var BrandBarViewModel = require('../../lib/ViewModels/BrandBarViewModel');
-var runLater = require('../../lib/Core/runLater');
 var Terria = require('../../lib/Models/Terria');
 
 describe('BrandBarViewModel', function() {
