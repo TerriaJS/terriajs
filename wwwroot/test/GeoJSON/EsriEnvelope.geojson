@@ -1,0 +1,35 @@
+{
+    "SomeName": {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [
+                        149.23531999999997,
+                        -35.352484
+                    ]
+                },
+                "properties": {
+                    "Fcilty_typ": "MO",
+                    "State": "NSW",
+                    "Fcilty_nam": "Queanbeyan",
+                    "Shp_num_an": "Shop 47",
+                    "Shp_centre": "Riverside Plaza",
+                    "Street_add": "131 Monaro Street",
+                    "Locality": "Queanbeyan",
+                    "Postcode": "2620",
+                    "Hrs_of_bus": "09:00-17:00 Monday to Friday, excluding Public Holidays",
+                    "Wheelchair": "YES",
+                    "Display_wd": "1.5",
+                    "Fcilty_typ_2": "http://www.medicareaustralia.gov.au/public/claims/offices.jsp",
+                    "uuid": "67",
+                    "result": "999",
+                    "Audio": "",
+                    "gx_id": "1"
+                }
+            }
+        ]
+    }
+}
