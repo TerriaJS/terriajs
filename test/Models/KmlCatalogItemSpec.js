@@ -1,0 +1,69 @@
+'use strict';
+
+/*global require,describe,it,expect,beforeEach*/
+var KmlCatalogItem = require('../../lib/Models/KmlCatalogItem');
+var Terria = require('../../lib/Models/Terria');
+
+var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
+var loadXML = require('terriajs-cesium/Source/Core/loadXML');
+
+describe('KmlCatalogItem', function() {
+    var terria;
+    var kml;
+
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        kml = new KmlCatalogItem(terria);
+    });
+
+    it('can load a KML file by URL', function(done) {
+        kml.url = 'test/KML/vic_police.kml';
+        kml.load().then(function() {
+            expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
+            done();
+        });
+    });
+
+    it('can load a KML file by provided XML data', function(done) {
+        loadXML('test/KML/vic_police.kml').then(function(xml) {
+            kml.data = xml;
+            kml.dataSourceUrl = 'anything.kml';
+            kml.load().then(function() {
+                expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+    });
+
+    it('can load a KML file by provided Blob', function(done) {
+        loadBlob('test/KML/vic_police.kml').then(function(blob) {
+            kml.data = blob;
+            kml.dataSourceUrl = 'anything.kml';
+            kml.load().then(function() {
+                expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+    });
+
+    it('can load a KMZ file by URL', function(done) {
+        kml.url = 'test/KML/vic_police.kmz';
+        kml.load().then(function() {
+            expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
+            done();
+        });
+    });
+
+    it('can load a KMZ file by provided Blob', function(done) {
+        loadBlob('test/KML/vic_police.kmz').then(function(blob) {
+            kml.data = blob;
+            kml.dataSourceUrl = 'anything.kmz';
+            kml.load().then(function() {
+                expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+    });
+});
