@@ -10,6 +10,7 @@ Change Log
 * Improved error handling in `CzmlCatalogItem`, `GeoJsonCatalogItem`, and `KmlCatalogItem`.
 * Made the `clipToRectangle` property available on all `ImageryProvider`-based catalog items, not just `WebMapServiceCatalogItem`.
 * Added `CatalogMember.isPromoted` property.  Promoted catalog groups and items are displayed above non-promoted groups and items.
+* Add support for ArcGIS MapServer "Raster Layers" in addition to "Feature Layers".
 
 ### 1.0.12
 
