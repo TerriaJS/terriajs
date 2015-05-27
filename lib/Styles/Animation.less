@@ -34,6 +34,7 @@
     font-weight: 300;
     line-height: 25px;
     color: @menu-bar-text-color;
+    fill: @menu-bar-text-color;
     padding-left: 5px;
     padding-right: 5px;
     cursor: pointer;
@@ -42,6 +43,7 @@
 .animation-control-active {
     color: @highlight-color;
     fill: @highlight-color;
+    stroke: @highlight-color;
 }
 
 .animation-control-last {
@@ -54,7 +56,6 @@
     left: 0px;
     width: 25px;
     height: 20px;
-    fill: fade(@floating-text-color, 80%);
 }
 
 .animation-control-nofill {
@@ -62,6 +63,10 @@
     fill:none;
     stroke:#ffffff;
     stroke-width:0.83333331;
+}
+
+.animation-control-highlight {
+    stroke: @highlight-color;
 }
 
 .animation-timeline {
