@@ -11,6 +11,11 @@
     <script type="text/javascript" src="./third_party/jasmine-2.3.0/jasmine-html.js"></script>
     <script type="text/javascript" src="./third_party/jasmine-2.3.0/boot.js"></script>
 
+    <script type="text/javascript">
+        // Stub out Google Analytics
+        window.ga = function() {};
+    </script>
+
     <script type="text/javascript" src="./build/TerriaJS-specs.js"></script>
 </head>
 
