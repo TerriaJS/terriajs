@@ -4,6 +4,7 @@ Change Log
 ### 1.0.14
 
 * Fixed share URL generation when the application is not running at the root directory of its web server.
+* Fixed a bug that caused Internet Explorer 8 users to see a blank page instead of a message saying their browser is incompatible.
 
 ### 1.0.13
 
