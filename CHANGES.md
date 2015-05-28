@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.14
+
+* Fixed share URL generation when the application is not running at the root directory of its web server.
+
 ### 1.0.13
 
 * Breaking changes:
