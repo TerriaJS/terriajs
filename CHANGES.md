@@ -1,6 +1,26 @@
 Change Log
 ==========
 
+### 1.0.15
+
+* Fix imagery attribution on the 2D map.
+
+### 1.0.14
+
+* Fixed share URL generation when the application is not running at the root directory of its web server.
+* Fixed a bug that caused Internet Explorer 8 users to see a blank page instead of a message saying their browser is incompatible.
+
+### 1.0.13
+
+* Breaking changes:
+  * Added a required `@brand-bar-height` property.
+* `ExplorerPanelViewModel` can now be created with `isOpen` initially set to false.
+* TerriaJS now raises an error and hides the dataset when asked to show an `ImageryLayerCatalogItem` in Leaflet and that catalog item does not use the Web Mercator (EPSG:3857) projection.  Previously, the dataset would silently fail to display.
+* Improved error handling in `CzmlCatalogItem`, `GeoJsonCatalogItem`, and `KmlCatalogItem`.
+* Made the `clipToRectangle` property available on all `ImageryProvider`-based catalog items, not just `WebMapServiceCatalogItem`.
+* Added `CatalogMember.isPromoted` property.  Promoted catalog groups and items are displayed above non-promoted groups and items.
+* Add support for ArcGIS MapServer "Raster Layers" in addition to "Feature Layers".
+
 ### 1.0.12
 
 * Allow Esri ArcGIS MapServers to be added via the "Add Data" panel.
