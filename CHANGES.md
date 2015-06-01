@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 1.0.16
+
+* Deprecated:
+  * `ArcGisMapServerCatalogGroup` has been deprecated.  Please use `ArcGisCatalogGroup` instead.
+* Added the ability to turn a complete ArcGIS Server, or individual folders within it, into a catalog group using `ArcGisCatalogGroup`.
+
 ### 1.0.15
 
 * Fix imagery attribution on the 2D map.
