@@ -3,8 +3,8 @@ Change Log
 
 ### 1.0.16
 
-* Replaced cesium animation controller with terriajs animation controller.
-* Replaced cesium viewer wdiget with the cesiumWidget when running cesium.
+* Replaced Cesium animation controller with TerriaJS animation controller.
+* Replaced Cesium Viewer widget with the CesiumWidget when running Cesium.
 
 ### 1.0.15
 
