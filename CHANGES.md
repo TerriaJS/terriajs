@@ -1,6 +1,53 @@
 Change Log
 ==========
 
+### 1.0.16
+
+* Deprecated:
+  * `ArcGisMapServerCatalogGroup` has been deprecated.  Please use `ArcGisCatalogGroup` instead.
+* Added the ability to turn a complete ArcGIS Server, or individual folders within it, into a catalog group using `ArcGisCatalogGroup`.
+
+### 1.0.15
+
+* Fix imagery attribution on the 2D map.
+
+### 1.0.14
+
+* Fixed share URL generation when the application is not running at the root directory of its web server.
+* Fixed a bug that caused Internet Explorer 8 users to see a blank page instead of a message saying their browser is incompatible.
+
+### 1.0.13
+
+* Breaking changes:
+  * Added a required `@brand-bar-height` property.
+* `ExplorerPanelViewModel` can now be created with `isOpen` initially set to false.
+* TerriaJS now raises an error and hides the dataset when asked to show an `ImageryLayerCatalogItem` in Leaflet and that catalog item does not use the Web Mercator (EPSG:3857) projection.  Previously, the dataset would silently fail to display.
+* Improved error handling in `CzmlCatalogItem`, `GeoJsonCatalogItem`, and `KmlCatalogItem`.
+* Made the `clipToRectangle` property available on all `ImageryProvider`-based catalog items, not just `WebMapServiceCatalogItem`.
+* Added `CatalogMember.isPromoted` property.  Promoted catalog groups and items are displayed above non-promoted groups and items.
+* Add support for ArcGIS MapServer "Raster Layers" in addition to "Feature Layers".
+
+### 1.0.12
+
+* Allow Esri ArcGIS MapServers to be added via the "Add Data" panel.
+* Adds `baseMapName` and `viewerMode` fields to init files and share links. `baseMapName` is any base map name in the map settings panel and `viewerMode` can be set to `'2d'` or `'3d'`.
+* Added `tableStyle.legendTicks` property to `CsvCatalogItem`.  When specified, the generated legend will have the specified number of equally-spaced lines with labels in its legend.
+
+### 1.0.11
+
+* Fixed a bug that prevented HTML feature information from showing up with a white background in Internet Explorer 9 and 10.
+* Fixed a bug that prevented WMS GetCapabilities properties, such as CRS, from being properly inherited from the root layer.
+* Tweaked credit / attribution styling.
+
+### 1.0.10
+
+* Added support for a developer attribution on the map.
+* Fixed a bug that could cause results from previous async catalog searches to appear in the search results.
+
+### 1.0.9
+
+* Show Cesium `ImageryProvider` tile credits / attribution in Leaflet when using `CesiumTileLayer`.
+
 ### 1.0.8
 
 * `WebMapServiceCatalogGroup` now populates the catalog using the hierarchy of layers returned by the WMS server in GetCapabilities.  To keep the previous behavior, set the `flatten` property to true.

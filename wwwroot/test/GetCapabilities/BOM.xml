@@ -1,0 +1,2998 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities version="1.3.0" updateSequence="206" xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wms http://geofabric.bom.gov.au:80/simplefeatures/schemas/wms/1.3.0/capabilities_1_3_0.xsd">
+  <Service>
+    <Name>WMS</Name>
+    <Title>Geofabric 2.1.1 - Web Map Service</Title>
+    <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+    <KeywordList>
+      <Keyword>WFS</Keyword>
+      <Keyword>WMS</Keyword>
+      <Keyword>GEOSERVER</Keyword>
+    </KeywordList>
+    <OnlineResource xlink:type="simple" xlink:href="http://geofabric.bom.gov.au/documentation/"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson>Matthew Brooks</ContactPerson>
+        <ContactOrganization>Bureau Of Meterology</ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition>Geofabric Project Coordinator</ContactPosition>
+      <ContactAddress>
+        <AddressType>Work</AddressType>
+        <Address/>
+        <City>Canberra</City>
+        <StateOrProvince>ACT</StateOrProvince>
+        <PostCode/>
+        <Country>Australia</Country>
+      </ContactAddress>
+      <ContactVoiceTelephone/>
+      <ContactFacsimileTelephone/>
+      <ContactElectronicMailAddress>ahgf@bom.gov.au</ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>NONE</Fees>
+    <AccessConstraints>NONE</AccessConstraints>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?SERVICE=WMS&amp;"/>
+            </Get>
+            <Post>
+              <OnlineResource xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?SERVICE=WMS&amp;"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <Format>application/atom+xml</Format>
+        <Format>application/pdf</Format>
+        <Format>application/vnd.google-earth.kml+xml</Format>
+        <Format>application/vnd.google-earth.kml+xml;mode=networklink</Format>
+        <Format>application/vnd.google-earth.kmz</Format>
+        <Format>image/geotiff</Format>
+        <Format>image/geotiff8</Format>
+        <Format>image/gif</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/svg+xml</Format>
+        <Format>image/tiff</Format>
+        <Format>image/tiff8</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>text/plain</Format>
+        <Format>application/vnd.ogc.gml</Format>
+        <Format>application/vnd.ogc.gml/3.1.1</Format>
+        <Format>text/html</Format>
+        <Format>application/json</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?SERVICE=WMS&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+    </Request>
+    <Exception>
+      <Format>XML</Format>
+      <Format>INIMAGE</Format>
+      <Format>BLANK</Format>
+    </Exception>
+    <Layer>
+      <Title>Geofabric 2.1.1 - Web Map Service</Title>
+      <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+      <!--Limited list of EPSG projections:-->
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4283</CRS>
+      <CRS>EPSG:4326</CRS>
+      <CRS>CRS:84</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>112.88333000000013</westBoundLongitude>
+        <eastBoundLongitude>154.1000000000001</eastBoundLongitude>
+        <southBoundLatitude>-43.99999999905724</southBoundLatitude>
+        <northBoundLatitude>-8.93332899971008</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:84" minx="112.88333000000013" miny="-43.99999999905724" maxx="154.1000000000001" maxy="-8.93332899971008"/>
+      <Layer queryable="1">
+        <Name>ahgf_gwc:Aquifer_Contours_2.1</Name>
+        <Title>Aquifer Contours 2.1</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>130.9294316820001</westBoundLongitude>
+          <eastBoundLongitude>151.640955901</eastBoundLongitude>
+          <southBoundLatitude>-41.24101109706462</southBoundLatitude>
+          <northBoundLatitude>-12.157000677611002</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-41.24101109799995" miny="130.9294316820001" maxx="-12.157000677999957" maxy="151.640955901"/>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFAquiferContour</Name>
+          <Title>AHGFAquiferContour</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFAquiferContour</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>130.9294316820001</westBoundLongitude>
+            <eastBoundLongitude>151.640955901</eastBoundLongitude>
+            <southBoundLatitude>-41.24101109706462</southBoundLatitude>
+            <northBoundLatitude>-12.157000677611002</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="130.9294316820001" miny="-41.24101109706462" maxx="151.640955901" maxy="-12.157000677611002"/>
+          <BoundingBox CRS="EPSG:4283" minx="-41.241011097999944" miny="130.9294316820001" maxx="-12.157000677999957" maxy="151.640955901"/>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContour"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContour&amp;style=ahgfaquifercontour"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFAquiferContourBottom</Name>
+          <Title>AHGFAquiferContourBottom</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFAquiferContourBottom</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>140.96832934600002</westBoundLongitude>
+            <eastBoundLongitude>149.96101540700002</eastBoundLongitude>
+            <southBoundLatitude>-39.08532118507642</southBoundLatitude>
+            <northBoundLatitude>-36.98746808509298</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="140.96832934600002" miny="-39.08532118507642" maxx="149.96101540700002" maxy="-36.98746808509298"/>
+          <BoundingBox CRS="EPSG:4283" minx="-39.08532118599993" miny="140.96832934600002" maxx="-36.98746808599997" maxy="149.96101540700002"/>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContourBottom"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContourBottom&amp;style=ahgfaquifercontour"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFAquiferContourTop</Name>
+          <Title>AHGFAquiferContourTop</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFAquiferContourTop</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>130.9294316820001</westBoundLongitude>
+            <eastBoundLongitude>151.52314135200012</eastBoundLongitude>
+            <southBoundLatitude>-39.08578653507643</southBoundLatitude>
+            <northBoundLatitude>-12.243238349608427</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="130.9294316820001" miny="-39.08578653507643" maxx="151.52314135200012" maxy="-12.243238349608427"/>
+          <BoundingBox CRS="EPSG:4283" minx="-39.085786535999944" miny="130.9294316820001" maxx="-12.24323834999997" maxy="151.52314135200012"/>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContourTop"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContourTop&amp;style=ahgfaquifercontour"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFAquiferContourBedrock</Name>
+          <Title>AHGFAquiferContourBedrock</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFAquiferContourBedrock</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>133.20299441400005</westBoundLongitude>
+            <eastBoundLongitude>151.640955901</eastBoundLongitude>
+            <southBoundLatitude>-41.24101109706462</southBoundLatitude>
+            <northBoundLatitude>-12.157000677611002</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="133.20299441400005" miny="-41.24101109706462" maxx="151.640955901" maxy="-12.157000677611002"/>
+          <BoundingBox CRS="EPSG:4283" minx="-41.241011097999944" miny="133.20299441400005" maxx="-12.157000677999957" maxy="151.640955901"/>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContourBedrock"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfaquifercontour</Name>
+            <Title>ahgfaquifercontour</Title>
+            <Abstract/>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferContourBedrock&amp;style=ahgfaquifercontour"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_hunter_river:Geofabric_2.1_Hunter_River_Region</Name>
+        <Title>Geofabric 2.1 - Hunter River Region</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>144.88939183200014</westBoundLongitude>
+          <eastBoundLongitude>152.1179456040001</eastBoundLongitude>
+          <southBoundLatitude>-34.98939645811325</southBoundLatitude>
+          <northBoundLatitude>-28.789563515203028</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-34.98939645899998" miny="144.88939183200014" maxx="-28.78956351599995" maxy="152.1179456040001"/>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFNode_Hunter</Name>
+          <Title>AHGFNode_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFNode_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.75375000000008</westBoundLongitude>
+            <eastBoundLongitude>151.8112500000001</eastBoundLongitude>
+            <southBoundLatitude>-33.01374999913751</southBoundLatitude>
+            <northBoundLatitude>-31.756249999155113</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.75375000000008" miny="-33.01374999913751" maxx="151.8112500000001" maxy="-31.756249999155113"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.01374999999996" miny="149.75375000000008" maxx="-31.756249999999966" maxy="151.8112500000001"/>
+          <Style>
+            <Name>ahgfnode</Name>
+            <Title>ahgfnode</Title>
+            <Abstract>ahgfnode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNode_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnode</Name>
+            <Title>ahgfnode</Title>
+            <Abstract>ahgfnode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNode_Hunter&amp;style=ahgfnode"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFDam_Hunter</Name>
+          <Title>AHGFDam_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFDam_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.7419000000001</westBoundLongitude>
+            <eastBoundLongitude>151.80222000000003</eastBoundLongitude>
+            <southBoundLatitude>-32.88313999913927</southBoundLatitude>
+            <northBoundLatitude>-31.976359999151896</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.7419000000001" miny="-32.88313999913927" maxx="151.80222000000003" maxy="-31.976359999151896"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.88313999999997" miny="149.7419000000001" maxx="-31.976359999999943" maxy="151.80222000000003"/>
+          <Style>
+            <Name>ahgfdam_mapping</Name>
+            <Title>ahgfdam_mapping</Title>
+            <Abstract>ahgfdam_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFDam_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfdam_datastructure</Name>
+            <Title>ahgfdam_datastructure</Title>
+            <Abstract>ahgfdam_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFDam_Hunter&amp;style=ahgfdam_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfdam_mapping</Name>
+            <Title>ahgfdam_mapping</Title>
+            <Abstract>ahgfdam_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFDam_Hunter&amp;style=ahgfdam_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFMappedNode_Hunter</Name>
+          <Title>AHGFMappedNode_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFMappedNode_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.6724525000001</westBoundLongitude>
+            <eastBoundLongitude>151.9174495000001</eastBoundLongitude>
+            <southBoundLatitude>-33.1366474991359</southBoundLatitude>
+            <northBoundLatitude>-31.597488499157432</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.6724525000001" miny="-33.1366474991359" maxx="151.9174495000001" maxy="-31.597488499157432"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.13664749999998" miny="149.67245250000008" maxx="-31.59748849999994" maxy="151.9174495000001"/>
+          <Style>
+            <Name>ahgfmappednode</Name>
+            <Title>ahgfmappednode</Title>
+            <Abstract>ahgfmappednode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedNode_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfmappednode</Name>
+            <Title>ahgfmappednode</Title>
+            <Abstract>ahgfmappednode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedNode_Hunter&amp;style=ahgfmappednode"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>250000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFNetworkNode_Hunter</Name>
+          <Title>AHGFNetworkNode_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric).  For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFNetworkNode_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.6712500000001</westBoundLongitude>
+            <eastBoundLongitude>151.9162500000001</eastBoundLongitude>
+            <southBoundLatitude>-33.136249999135885</southBoundLatitude>
+            <northBoundLatitude>-31.596249999157443</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.6712500000001" miny="-33.136249999135885" maxx="151.9162500000001" maxy="-31.596249999157443"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.13624999999996" miny="149.6712500000001" maxx="-31.59624999999994" maxy="151.9162500000001"/>
+          <Style>
+            <Name>ahgfnetworknode</Name>
+            <Title>ahgfnetworknode</Title>
+            <Abstract>ahgfnetworknode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkNode_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnetworknode</Name>
+            <Title>ahgfnetworknode</Title>
+            <Abstract>ahgfnetworknode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkNode_Hunter&amp;style=ahgfnetworknode"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>500000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFHydroPoint_Hunter</Name>
+          <Title>AHGFHydroPoint_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFHydroPoint_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>150.48304000000007</westBoundLongitude>
+            <eastBoundLongitude>151.79228000000012</eastBoundLongitude>
+            <southBoundLatitude>-32.99312999913777</southBoundLatitude>
+            <northBoundLatitude>-32.001499999151555</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="150.48304000000007" miny="-32.99312999913777" maxx="151.79228000000012" maxy="-32.001499999151555"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.99312999999995" miny="150.48304000000007" maxx="-32.001499999999965" maxy="151.79228000000012"/>
+          <Style>
+            <Name>ahgfhydropoint_mapping</Name>
+            <Title>ahgfhydropoint_mapping</Title>
+            <Abstract>ahgfhydropoint_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroPoint_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydropoint_mapping</Name>
+            <Title>ahgfhydropoint_mapping</Title>
+            <Abstract>ahgfhydropoint_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroPoint_Hunter&amp;style=ahgfhydropoint_mapping"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydropoint_datastructure</Name>
+            <Title>ahgfhydropoint_datastructure</Title>
+            <Abstract>ahgfhydropoint_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroPoint_Hunter&amp;style=ahgfhydropoint_datastructure"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFStructure_Hunter</Name>
+          <Title>AHGFStructure_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFStructure_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.68772200000012</westBoundLongitude>
+            <eastBoundLongitude>151.78706300000007</eastBoundLongitude>
+            <southBoundLatitude>-32.99471999913778</southBoundLatitude>
+            <northBoundLatitude>-31.734759999155393</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.68772200000012" miny="-32.99471999913778" maxx="151.78706300000007" maxy="-31.734759999155393"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.99471999999997" miny="149.68772200000012" maxx="-31.734759999999937" maxy="151.7870630000001"/>
+          <Style>
+            <Name>ahgfstructure_mapping</Name>
+            <Title>ahgfstructure_datastructure</Title>
+            <Abstract>ahgfstructure_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFStructure_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfstructure_datastructure</Name>
+            <Title>ahgfstructure_datastructure</Title>
+            <Abstract>ahgfstructure_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFStructure_Hunter&amp;style=ahgfstructure_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfstructure_mapping</Name>
+            <Title>ahgfstructure_datastructure</Title>
+            <Abstract>ahgfstructure_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFStructure_Hunter&amp;style=ahgfstructure_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFLink_Hunter</Name>
+          <Title>AHGFLink_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFLink_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.75375000000008</westBoundLongitude>
+            <eastBoundLongitude>151.81125000000014</eastBoundLongitude>
+            <southBoundLatitude>-33.01374999913751</southBoundLatitude>
+            <northBoundLatitude>-31.756249999155077</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.75375000000008" miny="-33.01374999913751" maxx="151.81125000000014" maxy="-31.756249999155077"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.01374999999996" miny="149.75375000000008" maxx="-31.75624999999993" maxy="151.81125000000011"/>
+          <Style>
+            <Name>ahgflink</Name>
+            <Title>ahgflink</Title>
+            <Abstract>ahgflink</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFLink_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgflink</Name>
+            <Title>ahgflink</Title>
+            <Abstract>ahgflink</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFLink_Hunter&amp;style=ahgflink"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFCanalLine_Hunter</Name>
+          <Title>AHGFCanalLine_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFCanalLine_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>150.70137000000008</westBoundLongitude>
+            <eastBoundLongitude>151.87919000000008</eastBoundLongitude>
+            <southBoundLatitude>-32.95480999913829</southBoundLatitude>
+            <northBoundLatitude>-32.108159999150004</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="150.70137000000008" miny="-32.95480999913829" maxx="151.87919000000008" maxy="-32.108159999150004"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.95480999999995" miny="150.7013700000001" maxx="-32.108159999999955" maxy="151.87919000000008"/>
+          <Style>
+            <Name>ahgfcanalline</Name>
+            <Title>ahgfcanalline</Title>
+            <Abstract>ahgfcanalline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCanalLine_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfcanalline</Name>
+            <Title>ahgfcanalline</Title>
+            <Abstract>ahgfcanalline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCanalLine_Hunter&amp;style=ahgfcanalline"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFTerrainBreakLine_Hunter</Name>
+          <Title>AHGFTerrainBreakLine_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFTerrainBreakLine_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>150.24237000000005</westBoundLongitude>
+            <eastBoundLongitude>151.37709450000014</eastBoundLongitude>
+            <southBoundLatitude>-32.978168499138</southBoundLatitude>
+            <northBoundLatitude>-32.03453999915104</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="150.24237000000005" miny="-32.978168499138" maxx="151.37709450000014" maxy="-32.03453999915104"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.97816849999998" miny="150.24237000000005" maxx="-32.034539999999936" maxy="151.3770945000001"/>
+          <Style>
+            <Name>ahgfterrainbreakline_mapping</Name>
+            <Title>ahgfterrainbreakline_datastructure</Title>
+            <Abstract>ahgfterrainbreakline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFTerrainBreakLine_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfterrainbreakline_mapping</Name>
+            <Title>ahgfterrainbreakline_datastructure</Title>
+            <Abstract>ahgfterrainbreakline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFTerrainBreakLine_Hunter&amp;style=ahgfterrainbreakline_mapping"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfterrainbreakline_datastructure</Name>
+            <Title>ahgfterrainbreakline_datastructure</Title>
+            <Abstract>ahgfterrainbreakline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFTerrainBreakLine_Hunter&amp;style=ahgfterrainbreakline_datastructure"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFHydroLine_Hunter</Name>
+          <Title>AHGFHydroLine_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFHydroLine_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.74445000000003</westBoundLongitude>
+            <eastBoundLongitude>151.8324700000001</eastBoundLongitude>
+            <southBoundLatitude>-33.02429999913739</southBoundLatitude>
+            <northBoundLatitude>-31.65988999915653</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.74445000000003" miny="-33.02429999913739" maxx="151.8324700000001" maxy="-31.65988999915653"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.02429999999998" miny="149.74445000000003" maxx="-31.65988999999996" maxy="151.8324700000001"/>
+          <Style>
+            <Name>ahgfhydroline_mapping</Name>
+            <Title>ahgfhydroline_mapping</Title>
+            <Abstract>ahgfhydroline_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroLine_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroline_datastructure</Name>
+            <Title>ahgfhydroline_datastructure</Title>
+            <Abstract>ahgfhydroline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroLine_Hunter&amp;style=ahgfhydroline_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroline_mapping</Name>
+            <Title>ahgfhydroline_mapping</Title>
+            <Abstract>ahgfhydroline_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroLine_Hunter&amp;style=ahgfhydroline_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFWaterPipeline_Hunter</Name>
+          <Title>AHGFWaterPipeline_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFWaterPipeline_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>150.94556000000009</westBoundLongitude>
+            <eastBoundLongitude>151.7446800000001</eastBoundLongitude>
+            <southBoundLatitude>-32.86994999913943</southBoundLatitude>
+            <northBoundLatitude>-32.241309999148136</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="150.94556000000009" miny="-32.86994999913943" maxx="151.7446800000001" maxy="-32.241309999148136"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.86994999999996" miny="150.9455600000001" maxx="-32.24130999999998" maxy="151.7446800000001"/>
+          <Style>
+            <Name>ahgfwaterpipeline</Name>
+            <Title>ahgfwaterpipeline</Title>
+            <Abstract>ahgfwaterpipeline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterPipeline_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterpipeline</Name>
+            <Title>ahgfwaterpipeline</Title>
+            <Abstract>ahgfwaterpipeline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterPipeline_Hunter&amp;style=ahgfwaterpipeline"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFNetworkStreamMajor_Hunter</Name>
+          <Title>AHGFNetworkStreamMajor_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFNetworkStreamMajor_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.7437500000001</westBoundLongitude>
+            <eastBoundLongitude>151.82125000000002</eastBoundLongitude>
+            <southBoundLatitude>-33.10124999913632</southBoundLatitude>
+            <northBoundLatitude>-31.65874999915652</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.7437500000001" miny="-33.10124999913632" maxx="151.82125000000002" maxy="-31.65874999915652"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.101249999999936" miny="149.7437500000001" maxx="-31.658749999999937" maxy="151.82125000000002"/>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStreamMajor_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStreamMajor_Hunter&amp;style=ahgfnetworkstream"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFNetworkStream_Hunter</Name>
+          <Title>AHGFNetworkStream_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFNetworkStream_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.6712500000001</westBoundLongitude>
+            <eastBoundLongitude>151.91625000000002</eastBoundLongitude>
+            <southBoundLatitude>-33.136249999135885</southBoundLatitude>
+            <northBoundLatitude>-31.596249999157486</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.6712500000001" miny="-33.136249999135885" maxx="151.91625000000002" maxy="-31.596249999157486"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.13624999999996" miny="149.6712500000001" maxx="-31.596249999999976" maxy="151.91625000000002"/>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStream_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStream_Hunter&amp;style=ahgfnetworkstream"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFMappedStream_Hunter</Name>
+          <Title>AHGFMappedStream_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFMappedStream_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.6717725000001</westBoundLongitude>
+            <eastBoundLongitude>151.91744950000012</eastBoundLongitude>
+            <southBoundLatitude>-33.1366474991359</southBoundLatitude>
+            <northBoundLatitude>-31.597488499157432</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.6717725000001" miny="-33.1366474991359" maxx="151.91744950000012" maxy="-31.597488499157432"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.13664749999998" miny="149.6717725000001" maxx="-31.597488499999947" maxy="151.91744950000012"/>
+          <Style>
+            <Name>ahgfmappedstream_mapping</Name>
+            <Title>ahgfmappedstream_mapping</Title>
+            <Abstract>ahgfmappedstream_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedStream_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfmappedstream_datastructure</Name>
+            <Title>ahgfmappedstream_datastructure</Title>
+            <Abstract>ahgfmappedstream_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedStream_Hunter&amp;style=ahgfmappedstream_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfmappedstream_mapping</Name>
+            <Title>ahgfmappedstream_mapping</Title>
+            <Abstract>ahgfmappedstream_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedStream_Hunter&amp;style=ahgfmappedstream_mapping"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFEstuary_Hunter</Name>
+          <Title>AHGFEstuary_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFEstuary_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>151.63595044300007</westBoundLongitude>
+            <eastBoundLongitude>151.81849434300008</eastBoundLongitude>
+            <southBoundLatitude>-32.92633871613868</southBoundLatitude>
+            <northBoundLatitude>-32.703052673141705</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="151.63595044300007" miny="-32.92633871613868" maxx="151.81849434300008" maxy="-32.703052673141705"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.926338716999965" miny="151.63595044300007" maxx="-32.70305267399996" maxy="151.81849434300008"/>
+          <Style>
+            <Name>ahgfestuary_mapping</Name>
+            <Title>ahgfestuary_mapping</Title>
+            <Abstract>ahgfestuary_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFEstuary_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfestuary_datastructure</Name>
+            <Title>ahgfestuary_datastructure</Title>
+            <Abstract>ahgfestuary_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFEstuary_Hunter&amp;style=ahgfestuary_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfestuary_mapping</Name>
+            <Title>ahgfestuary_mapping</Title>
+            <Abstract>ahgfestuary_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFEstuary_Hunter&amp;style=ahgfestuary_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>5000000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFHydroArea_Hunter</Name>
+          <Title>AHGFHydroArea_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFHydroArea_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.87970100000007</westBoundLongitude>
+            <eastBoundLongitude>151.799291</eastBoundLongitude>
+            <southBoundLatitude>-32.92522999913868</southBoundLatitude>
+            <northBoundLatitude>-32.239519999148165</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.87970100000007" miny="-32.92522999913868" maxx="151.799291" maxy="-32.239519999148165"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.92522999999994" miny="149.87970100000007" maxx="-32.23951999999997" maxy="151.799291"/>
+          <Style>
+            <Name>ahgfhydroarea_mapping</Name>
+            <Title>ahgfhydroarea</Title>
+            <Abstract>ahgfhydroarea</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroArea_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroarea_datastructure</Name>
+            <Title>ahgfhydroarea_datastructure</Title>
+            <Abstract>ahgfhydroarea_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroArea_Hunter&amp;style=ahgfhydroarea_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroarea_mapping</Name>
+            <Title>ahgfhydroarea</Title>
+            <Abstract>ahgfhydroarea</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroArea_Hunter&amp;style=ahgfhydroarea_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1000000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFCatchment_Hunter</Name>
+          <Title>AHGFCatchment_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFCatchment_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.66750000000002</westBoundLongitude>
+            <eastBoundLongitude>151.91750000000002</eastBoundLongitude>
+            <southBoundLatitude>-33.139999999135796</southBoundLatitude>
+            <northBoundLatitude>-31.594999999157466</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.66750000000002" miny="-33.139999999135796" maxx="151.91750000000002" maxy="-31.594999999157466"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.13999999999993" miny="149.66750000000002" maxx="-31.594999999999942" maxy="151.91750000000005"/>
+          <Style>
+            <Name>ahgfcatchment</Name>
+            <Title>ahgfcatchment</Title>
+            <Abstract>ahgfcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCatchment_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfcatchment</Name>
+            <Title>ahgfcatchment</Title>
+            <Abstract>ahgfcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCatchment_Hunter&amp;style=ahgfcatchment"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>500000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFAquiferBoundary_Hunter</Name>
+          <Title>AHGFAquiferBoundary_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFAquiferBoundary_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>144.88939183200014</westBoundLongitude>
+            <eastBoundLongitude>152.1179456040001</eastBoundLongitude>
+            <southBoundLatitude>-34.98939645811325</southBoundLatitude>
+            <northBoundLatitude>-28.789563515203028</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="144.88939183200014" miny="-34.98939645811325" maxx="152.1179456040001" maxy="-28.789563515203028"/>
+          <BoundingBox CRS="EPSG:4283" minx="-34.98939645899998" miny="144.88939183200011" maxx="-28.789563515999955" maxy="152.1179456040001"/>
+          <Style>
+            <Name>ahgfaquiferboundary</Name>
+            <Title>ahgfaquiferboundary</Title>
+            <Abstract>ahgfaquiferboundary</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferBoundary_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfaquiferboundary</Name>
+            <Title>ahgfaquiferboundary</Title>
+            <Abstract>ahgfaquiferboundary</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferBoundary_Hunter&amp;style=ahgfaquiferboundary"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFContractedCatchment_Hunter</Name>
+          <Title>AHGFContractedCatchment_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFContractedCatchment_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.66750000000002</westBoundLongitude>
+            <eastBoundLongitude>151.91750000000008</eastBoundLongitude>
+            <southBoundLatitude>-33.139999999135796</southBoundLatitude>
+            <northBoundLatitude>-31.594999999157498</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.66750000000002" miny="-33.139999999135796" maxx="151.91750000000008" maxy="-31.594999999157498"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.13999999999993" miny="149.66750000000002" maxx="-31.594999999999978" maxy="151.91750000000008"/>
+          <Style>
+            <Name>ahgfcontractedcatchment</Name>
+            <Title>ahgfcontractedcatchment</Title>
+            <Abstract>ahgfcontractedcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFContractedCatchment_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfcontractedcatchment</Name>
+            <Title>ahgfcontractedcatchment</Title>
+            <Abstract>ahgfcontractedcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFContractedCatchment_Hunter&amp;style=ahgfcontractedcatchment"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFSurficialHydrogeologicUnit_Hunter</Name>
+          <Title>AHGFSurficialHydrogeologicUnit_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFSurficialHydrogeologicUnit_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.5155900000001</westBoundLongitude>
+            <eastBoundLongitude>152.18649000000013</eastBoundLongitude>
+            <southBoundLatitude>-33.999739457124875</southBoundLatitude>
+            <northBoundLatitude>-31.379259999160702</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.5155900000001" miny="-33.999739457124875" maxx="152.18649000000013" maxy="-31.379259999160702"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.999739457999965" miny="149.5155900000001" maxx="-31.379259999999956" maxy="152.1864900000001"/>
+          <Style>
+            <Name>ahgfsurficialhydrogeologicalunit</Name>
+            <Title>ahgfsurficialhydrogeologicalunit</Title>
+            <Abstract>ahgfsurficialhydrogeologicalunit</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSurficialHydrogeologicUnit_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfsurficialhydrogeologicalunit</Name>
+            <Title>ahgfsurficialhydrogeologicalunit</Title>
+            <Abstract>ahgfsurficialhydrogeologicalunit</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSurficialHydrogeologicUnit_Hunter&amp;style=ahgfsurficialhydrogeologicalunit"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFWaterbody_Hunter</Name>
+          <Title>AHGFWaterbody_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterbody_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.74445000000003</westBoundLongitude>
+            <eastBoundLongitude>151.85548100000005</eastBoundLongitude>
+            <southBoundLatitude>-32.99679999913772</southBoundLatitude>
+            <northBoundLatitude>-31.78546999915468</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.74445000000003" miny="-32.99679999913772" maxx="151.85548100000005" maxy="-31.78546999915468"/>
+          <BoundingBox CRS="EPSG:4283" minx="-32.99679999999995" miny="149.74445000000003" maxx="-31.785469999999954" maxy="151.85548100000005"/>
+          <Style>
+            <Name>ahgfwaterbody_mapping</Name>
+            <Title>ahgfwaterbody_mapping</Title>
+            <Abstract>ahgfwaterbody_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_datastructure</Name>
+            <Title>ahgfwaterbody_datastructure</Title>
+            <Abstract>ahgfwaterbody_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody_Hunter&amp;style=ahgfwaterbody_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_mapping</Name>
+            <Title>ahgfwaterbody_mapping</Title>
+            <Abstract>ahgfwaterbody_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody_Hunter&amp;style=ahgfwaterbody_mapping"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:IGWWaterTableSalinity_Hunter</Name>
+          <Title>IGWWaterTableSalinity_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>IGWWaterTableSalinity_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>137.99466000000007</westBoundLongitude>
+            <eastBoundLongitude>153.63857000000007</eastBoundLongitude>
+            <southBoundLatitude>-33.95342929112543</southBoundLatitude>
+            <northBoundLatitude>-12.338719999605518</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="137.99466000000007" miny="-33.95342929112543" maxx="153.63857000000007" maxy="-12.338719999605518"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.95342929199995" miny="137.99466000000007" maxx="-12.338719999999924" maxy="153.63857000000007"/>
+          <Style>
+            <Name>igwwatertablesalinity</Name>
+            <Title>IGW Water Table Salinity</Title>
+            <Abstract>Colouring based on water table salinity field</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableSalinity_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwwatertablesalinity</Name>
+            <Title>IGW Water Table Salinity</Title>
+            <Abstract>Colouring based on water table salinity field</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableSalinity_Hunter&amp;style=igwwatertablesalinity"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFWaterTableAquifer_Hunter</Name>
+          <Title>AHGFWaterTableAquifer_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterTableAquifer_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>146.70448587200005</westBoundLongitude>
+            <eastBoundLongitude>153.21314999900008</eastBoundLongitude>
+            <southBoundLatitude>-36.81745460709449</southBoundLatitude>
+            <northBoundLatitude>-28.5530948632072</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="146.70448587200005" miny="-36.81745460709449" maxx="153.21314999900008" maxy="-28.5530948632072"/>
+          <BoundingBox CRS="EPSG:4283" minx="-36.817454607999935" miny="146.70448587200008" maxx="-28.55309486399993" maxy="153.21314999900008"/>
+          <Style>
+            <Name>ahgfwatertableaquifer</Name>
+            <Title>ahgfwatertableaquifer</Title>
+            <Abstract>ahgfwatertableaquifer</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterTableAquifer_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwatertableaquifer</Name>
+            <Title>ahgfwatertableaquifer</Title>
+            <Abstract>ahgfwatertableaquifer</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterTableAquifer_Hunter&amp;style=ahgfwatertableaquifer"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:IGWWaterTableHydraulicConductivity_Hunter</Name>
+          <Title>IGWWaterTableHydraulicConductivity_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>IGWWaterTableHydraulicConductivity_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.5016319130001</westBoundLongitude>
+            <eastBoundLongitude>151.42217800100008</eastBoundLongitude>
+            <southBoundLatitude>-33.37700860313274</southBoundLatitude>
+            <northBoundLatitude>-31.411984354160204</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.5016319130001" miny="-33.37700860313274" maxx="151.42217800100008" maxy="-31.411984354160204"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.37700860399997" miny="149.5016319130001" maxx="-31.41198435499995" maxy="151.42217800100008"/>
+          <Style>
+            <Name>igwwatertablehydraulicconductivity</Name>
+            <Title>igwwatertablehydraulicconductivity</Title>
+            <Abstract>igwwatertablehydraulicconductivity</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableHydraulicConductivity_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwwatertablehydraulicconductivity</Name>
+            <Title>igwwatertablehydraulicconductivity</Title>
+            <Abstract>igwwatertablehydraulicconductivity</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableHydraulicConductivity_Hunter&amp;style=igwwatertablehydraulicconductivity"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:IGWWaterTableYield_Hunter</Name>
+          <Title>IGWWaterTableYield_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>IGWWaterTableYield_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>147.2816804350001</westBoundLongitude>
+            <eastBoundLongitude>152.11728415300007</eastBoundLongitude>
+            <southBoundLatitude>-33.95342929112543</southBoundLatitude>
+            <northBoundLatitude>-30.224943587178725</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="147.2816804350001" miny="-33.95342929112543" maxx="152.11728415300007" maxy="-30.224943587178725"/>
+          <BoundingBox CRS="EPSG:4283" minx="-33.95342929199995" miny="147.2816804350001" maxx="-30.22494358799994" maxy="152.11728415300007"/>
+          <Style>
+            <Name>igwwatertableyield</Name>
+            <Title>igwwatertableyield</Title>
+            <Abstract>igwwatertableyield</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableYield_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwwatertableyield</Name>
+            <Title>igwwatertableyield</Title>
+            <Abstract>igwwatertableyield</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableYield_Hunter&amp;style=igwwatertableyield"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AWRADrainageDivision_Hunter</Name>
+          <Title>AWRADrainageDivision_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AWRADrainageDivision_Hunter</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>149.37500000000009</westBoundLongitude>
+            <eastBoundLongitude>153.6375000000001</eastBoundLongitude>
+            <southBoundLatitude>-37.527499999088256</southBoundLatitude>
+            <northBoundLatitude>-28.152499999214477</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="149.37500000000009" miny="-37.527499999088256" maxx="153.6375000000001" maxy="-28.152499999214477"/>
+          <BoundingBox CRS="EPSG:4283" minx="-37.527499999999975" miny="149.3750000000001" maxx="-28.152499999999975" maxy="153.6375000000001"/>
+          <Style>
+            <Name>awradrainagedivision</Name>
+            <Title>awradrainagedivision</Title>
+            <Abstract>awradrainagedivision</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AWRADrainageDivision_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>awradrainagedivision</Name>
+            <Title>awradrainagedivision</Title>
+            <Abstract>awradrainagedivision</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AWRADrainageDivision_Hunter&amp;style=awradrainagedivision"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hunter_river:AHGFSea_Hunter</Name>
+          <Title>AHGFSea_Hunter</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFSea_Hunter</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>143.51028000000008</westBoundLongitude>
+            <eastBoundLongitude>153.30000000000007</eastBoundLongitude>
+            <southBoundLatitude>-43.99999999905724</southBoundLatitude>
+            <northBoundLatitude>-29.999999999182396</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="143.51028000000008" miny="-43.99999999905724" maxx="153.30000000000007" maxy="-29.999999999182396"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.99999999999994" miny="143.51028000000008" maxx="-29.999999999999943" maxy="153.30000000000007"/>
+          <Style>
+            <Name>ahgfsea_mapping</Name>
+            <Title>ahgfsea_mapping</Title>
+            <Abstract>ahgfsea_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSea_Hunter"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfsea_mapping</Name>
+            <Title>ahgfsea_mapping</Title>
+            <Abstract>ahgfsea_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSea_Hunter&amp;style=ahgfsea_mapping"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfsea_datastructure</Name>
+            <Title>ahgfsea_mapping</Title>
+            <Abstract>ahgfsea_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSea_Hunter&amp;style=ahgfsea_datastructure"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_gwc:Groundwater_Cartography_2.1</Name>
+        <Title>Groundwater Cartography 2.1</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.92137000000001</westBoundLongitude>
+          <eastBoundLongitude>153.63857000000004</eastBoundLongitude>
+          <southBoundLatitude>-43.65854999905766</southBoundLatitude>
+          <northBoundLatitude>-9.219939999701113</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-43.658549999999934" miny="112.92137000000001" maxx="-9.21993999999994" maxy="153.63857000000004"/>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFWaterTableAquifer</Name>
+          <Title>AHGFWaterTableAquifer</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterTableAquifer</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.92137000000001</westBoundLongitude>
+            <eastBoundLongitude>153.63857000000004</eastBoundLongitude>
+            <southBoundLatitude>-43.65854999905766</southBoundLatitude>
+            <northBoundLatitude>-9.219939999701113</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.92137000000001" miny="-43.65854999905766" maxx="153.63857000000004" maxy="-9.219939999701113"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.658549999999934" miny="112.92137000000002" maxx="-9.219939999999939" maxy="153.63857000000004"/>
+          <Style>
+            <Name>ahgfwatertableaquifer</Name>
+            <Title>ahgfwatertableaquifer</Title>
+            <Abstract>ahgfwatertableaquifer</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterTableAquifer"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwatertableaquifer</Name>
+            <Title>ahgfwatertableaquifer</Title>
+            <Abstract>ahgfwatertableaquifer</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterTableAquifer&amp;style=ahgfwatertableaquifer"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFSurficialHydrogeologicUnit</Name>
+          <Title>AHGFSurficialHydrogeologicUnit</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFSurficialHydrogeologicUnit</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.92137000000001</westBoundLongitude>
+            <eastBoundLongitude>153.63857000000004</eastBoundLongitude>
+            <southBoundLatitude>-43.65854999905766</southBoundLatitude>
+            <northBoundLatitude>-9.219939999701113</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.92137000000001" miny="-43.65854999905766" maxx="153.63857000000004" maxy="-9.219939999701113"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.658549999999934" miny="112.92137000000002" maxx="-9.219939999999939" maxy="153.63857000000004"/>
+          <Style>
+            <Name>ahgfsurficialhydrogeologicalunit</Name>
+            <Title>ahgfsurficialhydrogeologicalunit</Title>
+            <Abstract>ahgfsurficialhydrogeologicalunit</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSurficialHydrogeologicUnit"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfsurficialhydrogeologicalunit</Name>
+            <Title>ahgfsurficialhydrogeologicalunit</Title>
+            <Abstract>ahgfsurficialhydrogeologicalunit</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSurficialHydrogeologicUnit&amp;style=ahgfsurficialhydrogeologicalunit"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFAquiferBoundary</Name>
+          <Title>AHGFAquiferBoundary</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFAquiferBoundary</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.92137000000001</westBoundLongitude>
+            <eastBoundLongitude>152.49040280900007</eastBoundLongitude>
+            <southBoundLatitude>-39.135739999076094</southBoundLatitude>
+            <northBoundLatitude>-12.243238350608436</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.92137000000001" miny="-39.135739999076094" maxx="152.49040280900007" maxy="-12.243238350608436"/>
+          <BoundingBox CRS="EPSG:4283" minx="-39.13573999999994" miny="112.92137000000002" maxx="-12.243238350999981" maxy="152.49040280900007"/>
+          <Style>
+            <Name>ahgfaquiferboundary</Name>
+            <Title>ahgfaquiferboundary</Title>
+            <Abstract>ahgfaquiferboundary</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferBoundary"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfaquiferboundary</Name>
+            <Title>ahgfaquiferboundary</Title>
+            <Abstract>ahgfaquiferboundary</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferBoundary&amp;style=ahgfaquiferboundary"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFAquiferOutcrop</Name>
+          <Title>AHGFAquiferOutcrop</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFAquiferOutcrop</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.8055180570001</westBoundLongitude>
+            <eastBoundLongitude>152.49040280900002</eastBoundLongitude>
+            <southBoundLatitude>-38.755833332078694</southBoundLatitude>
+            <northBoundLatitude>-13.441636424572783</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.8055180570001" miny="-38.755833332078694" maxx="152.49040280900002" maxy="-13.441636424572783"/>
+          <BoundingBox CRS="EPSG:4283" minx="-38.75583333299994" miny="113.80551805700009" maxx="-13.441636424999926" maxy="152.49040280900002"/>
+          <Style>
+            <Name>ahgfaquiferoutcrop</Name>
+            <Title>ahgfaquiferoutcrop</Title>
+            <Abstract>ahgfaquiferoutcrop</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferOutcrop"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfaquiferoutcrop</Name>
+            <Title>ahgfaquiferoutcrop</Title>
+            <Abstract>ahgfaquiferoutcrop</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFAquiferOutcrop&amp;style=ahgfaquiferoutcrop"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:IGWAquiferSalinity</Name>
+          <Title>IGWAquiferSalinity</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>IGWAquiferSalinity</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.92137000000001</westBoundLongitude>
+            <eastBoundLongitude>148.91107675700005</eastBoundLongitude>
+            <southBoundLatitude>-38.97436811707721</southBoundLatitude>
+            <northBoundLatitude>-20.97124299936873</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.92137000000001" miny="-38.97436811707721" maxx="148.91107675700005" maxy="-20.97124299936873"/>
+          <BoundingBox CRS="EPSG:4283" minx="-38.97436811799997" miny="112.92137000000002" maxx="-20.97124299999996" maxy="148.91107675700005"/>
+          <Style>
+            <Name>igwaquifersalinity</Name>
+            <Title>igwaquifersalinity</Title>
+            <Abstract>igwaquifersalinity</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWAquiferSalinity"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwaquifersalinity</Name>
+            <Title>igwaquifersalinity</Title>
+            <Abstract>igwaquifersalinity</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWAquiferSalinity&amp;style=igwaquifersalinity"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:IGWAquiferYield</Name>
+          <Title>IGWAquiferYield</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>IGWAquiferYield</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>138.73545507400001</westBoundLongitude>
+            <eastBoundLongitude>148.9098995590001</eastBoundLongitude>
+            <southBoundLatitude>-38.97436810607722</southBoundLatitude>
+            <northBoundLatitude>-31.999839353151554</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="138.73545507400001" miny="-38.97436810607722" maxx="148.9098995590001" maxy="-31.999839353151554"/>
+          <BoundingBox CRS="EPSG:4283" minx="-38.974368106999975" miny="138.73545507400001" maxx="-31.999839353999942" maxy="148.9098995590001"/>
+          <Style>
+            <Name>igwaquiferyield</Name>
+            <Title>igwaquiferyield</Title>
+            <Abstract>igwaquiferyield</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWAquiferYield"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwaquiferyield</Name>
+            <Title>igwaquiferyield</Title>
+            <Abstract>igwaquiferyield</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWAquiferYield&amp;style=igwaquiferyield"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_hrc:Hydrology_Reporting_Catchments_2.1</Name>
+        <Title>Hydrology Reporting Catchments 2.1</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.92249999999999</westBoundLongitude>
+          <eastBoundLongitude>153.63750000000013</eastBoundLongitude>
+          <southBoundLatitude>-43.64250000005773</southBoundLatitude>
+          <northBoundLatitude>-9.229999999700784</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-43.64250000099997" miny="112.92249999999999" maxx="-9.229999999999926" maxy="153.63750000000013"/>
+        <Layer queryable="1">
+          <Name>ahgf_hrc:AHGFContractedCatchment</Name>
+          <Title>AHGFContractedCatchment</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFContractedCatchment</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.9225</westBoundLongitude>
+            <eastBoundLongitude>153.63750000000002</eastBoundLongitude>
+            <southBoundLatitude>-43.73999999905757</southBoundLatitude>
+            <northBoundLatitude>-9.197499999701808</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.9225" miny="-43.73999999905757" maxx="153.63750000000002" maxy="-9.197499999701808"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.73999999999995" miny="112.92250000000001" maxx="-9.197499999999932" maxy="153.63750000000005"/>
+          <Style>
+            <Name>ahgfcontractedcatchment</Name>
+            <Title>ahgfcontractedcatchment</Title>
+            <Abstract>ahgfcontractedcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFContractedCatchment"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfcontractedcatchment</Name>
+            <Title>ahgfcontractedcatchment</Title>
+            <Abstract>ahgfcontractedcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFContractedCatchment&amp;style=ahgfcontractedcatchment"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hrc:AHGFLink</Name>
+          <Title>AHGFLink</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFLink</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.64375000000005</westBoundLongitude>
+            <eastBoundLongitude>153.5887500000001</eastBoundLongitude>
+            <southBoundLatitude>-43.55374999905787</southBoundLatitude>
+            <northBoundLatitude>-10.901249999649112</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.64375000000005" miny="-43.55374999905787" maxx="153.5887500000001" maxy="-10.901249999649112"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.55374999999998" miny="113.64375000000007" maxx="-10.901249999999978" maxy="153.5887500000001"/>
+          <Style>
+            <Name>ahgflink</Name>
+            <Title>ahgflink</Title>
+            <Abstract>ahgflink</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFLink"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgflink</Name>
+            <Title>ahgflink</Title>
+            <Abstract>ahgflink</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFLink&amp;style=ahgflink"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hrc:AHGFNode</Name>
+          <Title>AHGFNode</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFNode</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.4887500000001</westBoundLongitude>
+            <eastBoundLongitude>153.62875000000008</eastBoundLongitude>
+            <southBoundLatitude>-43.60874999905773</southBoundLatitude>
+            <northBoundLatitude>-9.238749999700568</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.4887500000001" miny="-43.60874999905773" maxx="153.62875000000008" maxy="-9.238749999700568"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.60874999999993" miny="113.4887500000001" maxx="-9.238749999999982" maxy="153.62875000000008"/>
+          <Style>
+            <Name>ahgfnode</Name>
+            <Title>ahgfnode</Title>
+            <Abstract>ahgfnode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNode"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnode</Name>
+            <Title>ahgfnode</Title>
+            <Abstract>ahgfnode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNode&amp;style=ahgfnode"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_hrr:Hydrology_Reporting_Regions_2.1</Name>
+        <Title>Hydrology Reporting Regions 2.1</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.88333000000014</westBoundLongitude>
+          <eastBoundLongitude>154.1000000000001</eastBoundLongitude>
+          <southBoundLatitude>-43.99999999905724</southBoundLatitude>
+          <northBoundLatitude>-8.93332899971008</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-43.99999999999995" miny="112.88333000000014" maxx="-8.933328999999926" maxy="154.1000000000001"/>
+        <Layer queryable="1">
+          <Name>ahgf_hrr:AWRADrainageDivision</Name>
+          <Title>AWRADrainageDivision</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AWRADrainageDivision</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.9225</westBoundLongitude>
+            <eastBoundLongitude>153.6375000000001</eastBoundLongitude>
+            <southBoundLatitude>-43.64249999905773</southBoundLatitude>
+            <northBoundLatitude>-9.229999999700784</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.9225" miny="-43.64249999905773" maxx="153.6375000000001" maxy="-9.229999999700784"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.642499999999984" miny="112.92250000000001" maxx="-9.229999999999926" maxy="153.6375000000001"/>
+          <Style>
+            <Name>awradrainagedivision</Name>
+            <Title>awradrainagedivision</Title>
+            <Abstract>awradrainagedivision</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AWRADrainageDivision"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>awradrainagedivision</Name>
+            <Title>awradrainagedivision</Title>
+            <Abstract>awradrainagedivision</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AWRADrainageDivision&amp;style=awradrainagedivision"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_hrr:RiverRegion</Name>
+          <Title>RiverRegion</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>RiverRegion</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.9225</westBoundLongitude>
+            <eastBoundLongitude>153.63750000000013</eastBoundLongitude>
+            <southBoundLatitude>-43.64250000005773</southBoundLatitude>
+            <northBoundLatitude>-9.229999999700832</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.9225" miny="-43.64250000005773" maxx="153.63750000000013" maxy="-9.229999999700832"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.64250000099997" miny="112.92250000000001" maxx="-9.229999999999974" maxy="153.63750000000013"/>
+          <Style>
+            <Name>RiverRegion</Name>
+            <Title>RiverRegion</Title>
+            <Abstract>RiverRegion</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=RiverRegion"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>RiverRegion</Name>
+            <Title>RiverRegion</Title>
+            <Abstract>RiverRegion</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=RiverRegion&amp;style=RiverRegion"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_shcarto:Surface_Cartography</Name>
+        <Title>Surface Cartography</Title>
+        <Abstract>Layer-Group type layer: ahgf_shcarto:Surface_Cartography</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.51535</westBoundLongitude>
+          <eastBoundLongitude>154.1000000000001</eastBoundLongitude>
+          <southBoundLatitude>-47.23339999937974</southBoundLatitude>
+          <northBoundLatitude>-5.704099999379632</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-47.233400000319975" miny="112.51535" maxx="-5.704099999566507" maxy="154.1000000000001"/>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFHydroPoint</Name>
+          <Title>AHGFHydroPoint</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFHydroPoint</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.98219000000005</westBoundLongitude>
+            <eastBoundLongitude>153.63525000000004</eastBoundLongitude>
+            <southBoundLatitude>-43.630079999057735</southBoundLatitude>
+            <northBoundLatitude>-9.140889999703603</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.98219000000005" miny="-43.630079999057735" maxx="153.63525000000004" maxy="-9.140889999703603"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.630079999999964" miny="112.98219000000006" maxx="-9.140889999999956" maxy="153.63525000000004"/>
+          <Style>
+            <Name>ahgfhydropoint_mapping</Name>
+            <Title>ahgfhydropoint_mapping</Title>
+            <Abstract>ahgfhydropoint_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroPoint"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydropoint_mapping</Name>
+            <Title>ahgfhydropoint_mapping</Title>
+            <Abstract>ahgfhydropoint_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroPoint&amp;style=ahgfhydropoint_mapping"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydropoint_datastructure</Name>
+            <Title>ahgfhydropoint_datastructure</Title>
+            <Abstract>ahgfhydropoint_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroPoint&amp;style=ahgfhydropoint_datastructure"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFStructure</Name>
+          <Title>AHGFStructure</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFStructure</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.76872500000002</westBoundLongitude>
+            <eastBoundLongitude>153.5956600000001</eastBoundLongitude>
+            <southBoundLatitude>-43.58274499905778</southBoundLatitude>
+            <northBoundLatitude>-10.64324999965701</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.76872500000002" miny="-43.58274499905778" maxx="153.5956600000001" maxy="-10.64324999965701"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.58274499999993" miny="113.76872500000002" maxx="-10.643249999999966" maxy="153.59566000000007"/>
+          <Style>
+            <Name>ahgfstructure_mapping</Name>
+            <Title>ahgfstructure_datastructure</Title>
+            <Abstract>ahgfstructure_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFStructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfstructure_datastructure</Name>
+            <Title>ahgfstructure_datastructure</Title>
+            <Abstract>ahgfstructure_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFStructure&amp;style=ahgfstructure_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfstructure_mapping</Name>
+            <Title>ahgfstructure_datastructure</Title>
+            <Abstract>ahgfstructure_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFStructure&amp;style=ahgfstructure_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFMappedNode</Name>
+          <Title>AHGFMappedNode</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFMappedNode</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.37534500000005</westBoundLongitude>
+            <eastBoundLongitude>153.6320740000001</eastBoundLongitude>
+            <southBoundLatitude>-43.629381999057735</southBoundLatitude>
+            <northBoundLatitude>-9.242297499700424</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.37534500000005" miny="-43.629381999057735" maxx="153.6320740000001" maxy="-9.242297499700424"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.629381999999964" miny="113.37534500000004" maxx="-9.24229749999995" maxy="153.6320740000001"/>
+          <Style>
+            <Name>ahgfmappednode</Name>
+            <Title>ahgfmappednode</Title>
+            <Abstract>ahgfmappednode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedNode"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfmappednode</Name>
+            <Title>ahgfmappednode</Title>
+            <Abstract>ahgfmappednode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedNode&amp;style=ahgfmappednode"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>250000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFDam</Name>
+          <Title>AHGFDam</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFDam</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.9318700000001</westBoundLongitude>
+            <eastBoundLongitude>153.00634000000005</eastBoundLongitude>
+            <southBoundLatitude>-42.75848999905948</southBoundLatitude>
+            <northBoundLatitude>-9.951769999678337</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.9318700000001" miny="-42.75848999905948" maxx="153.00634000000005" maxy="-9.951769999678337"/>
+          <BoundingBox CRS="EPSG:4283" minx="-42.75848999999994" miny="112.93187000000012" maxx="-9.951769999999954" maxy="153.00634000000002"/>
+          <Style>
+            <Name>ahgfdam_mapping</Name>
+            <Title>ahgfdam_mapping</Title>
+            <Abstract>ahgfdam_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFDam"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfdam_datastructure</Name>
+            <Title>ahgfdam_datastructure</Title>
+            <Abstract>ahgfdam_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFDam&amp;style=ahgfdam_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfdam_mapping</Name>
+            <Title>ahgfdam_mapping</Title>
+            <Abstract>ahgfdam_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFDam&amp;style=ahgfdam_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFCanalLine</Name>
+          <Title>AHGFCanalLine</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFCanalLine</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.35392000000002</westBoundLongitude>
+            <eastBoundLongitude>153.59005000000008</eastBoundLongitude>
+            <southBoundLatitude>-42.851209999059286</southBoundLatitude>
+            <northBoundLatitude>-12.524599999599994</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.35392000000002" miny="-42.851209999059286" maxx="153.59005000000008" maxy="-12.524599999599994"/>
+          <BoundingBox CRS="EPSG:4283" minx="-42.85120999999998" miny="113.35392000000002" maxx="-12.524599999999962" maxy="153.59005000000008"/>
+          <Style>
+            <Name>ahgfcanalline</Name>
+            <Title>ahgfcanalline</Title>
+            <Abstract>ahgfcanalline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCanalLine"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfcanalline</Name>
+            <Title>ahgfcanalline</Title>
+            <Abstract>ahgfcanalline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCanalLine&amp;style=ahgfcanalline"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFWaterPipeline</Name>
+          <Title>AHGFWaterPipeline</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterPipeline</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.80691</westBoundLongitude>
+            <eastBoundLongitude>152.89131000000003</eastBoundLongitude>
+            <southBoundLatitude>-43.00307999905891</southBoundLatitude>
+            <northBoundLatitude>-10.903989999649017</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.80691" miny="-43.00307999905891" maxx="152.89131000000003" maxy="-10.903989999649017"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.003079999999954" miny="113.80691000000002" maxx="-10.903989999999968" maxy="152.89131000000003"/>
+          <Style>
+            <Name>ahgfwaterpipeline</Name>
+            <Title>ahgfwaterpipeline</Title>
+            <Abstract>ahgfwaterpipeline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterPipeline"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterpipeline</Name>
+            <Title>ahgfwaterpipeline</Title>
+            <Abstract>ahgfwaterpipeline</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterPipeline&amp;style=ahgfwaterpipeline"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFTerrainBreakLine</Name>
+          <Title>AHGFTerrainBreakLine</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFTerrainBreakLine</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.82628000000012</westBoundLongitude>
+            <eastBoundLongitude>153.42616600000005</eastBoundLongitude>
+            <southBoundLatitude>-42.317679999060694</southBoundLatitude>
+            <northBoundLatitude>-11.680956499625328</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.82628000000012" miny="-42.317679999060694" maxx="153.42616600000005" maxy="-11.680956499625328"/>
+          <BoundingBox CRS="EPSG:4283" minx="-42.31767999999994" miny="113.82628000000011" maxx="-11.680956499999928" maxy="153.42616600000005"/>
+          <Style>
+            <Name>ahgfterrainbreakline_mapping</Name>
+            <Title>ahgfterrainbreakline_datastructure</Title>
+            <Abstract>ahgfterrainbreakline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFTerrainBreakLine"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfterrainbreakline_mapping</Name>
+            <Title>ahgfterrainbreakline_datastructure</Title>
+            <Abstract>ahgfterrainbreakline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFTerrainBreakLine&amp;style=ahgfterrainbreakline_mapping"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfterrainbreakline_datastructure</Name>
+            <Title>ahgfterrainbreakline_datastructure</Title>
+            <Abstract>ahgfterrainbreakline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFTerrainBreakLine&amp;style=ahgfterrainbreakline_datastructure"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFNetworkStreamsMajor</Name>
+          <Title>AHGFNetworkStreamsMajor</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFNetworkStreamsMajor</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.56375000000004</westBoundLongitude>
+            <eastBoundLongitude>153.58875000000006</eastBoundLongitude>
+            <southBoundLatitude>-43.55374999905787</southBoundLatitude>
+            <northBoundLatitude>-9.408749999695255</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.56375000000004" miny="-43.55374999905787" maxx="153.58875000000006" maxy="-9.408749999695255"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.55374999999998" miny="113.56375000000003" maxx="-9.408749999999982" maxy="153.58875000000006"/>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStreamsMajor"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStreamsMajor&amp;style=ahgfnetworkstream"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFHydroLine</Name>
+          <Title>AHGFHydroLine</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFHydroLine</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.92137000000001</westBoundLongitude>
+            <eastBoundLongitude>153.63857000000007</eastBoundLongitude>
+            <southBoundLatitude>-43.99999999905724</southBoundLatitude>
+            <northBoundLatitude>-8.933329999710095</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.92137000000001" miny="-43.99999999905724" maxx="153.63857000000007" maxy="-8.933329999710095"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.99999999999994" miny="112.92137000000002" maxx="-8.933329999999943" maxy="153.63857000000007"/>
+          <Style>
+            <Name>ahgfhydroline_mapping</Name>
+            <Title>ahgfhydroline_mapping</Title>
+            <Abstract>ahgfhydroline_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroLine"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroline_datastructure</Name>
+            <Title>ahgfhydroline_datastructure</Title>
+            <Abstract>ahgfhydroline_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroLine&amp;style=ahgfhydroline_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroline_mapping</Name>
+            <Title>ahgfhydroline_mapping</Title>
+            <Abstract>ahgfhydroline_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroLine&amp;style=ahgfhydroline_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFMappedStream</Name>
+          <Title>AHGFMappedStream</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFMappedStream</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.37534500000005</westBoundLongitude>
+            <eastBoundLongitude>153.63207400000002</eastBoundLongitude>
+            <southBoundLatitude>-43.629381999057735</southBoundLatitude>
+            <northBoundLatitude>-9.242297499700408</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.37534500000005" miny="-43.629381999057735" maxx="153.63207400000002" maxy="-9.242297499700408"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.629381999999964" miny="113.37534500000004" maxx="-9.242297499999934" maxy="153.63207400000002"/>
+          <Style>
+            <Name>ahgfmappedstream_mapping</Name>
+            <Title>ahgfmappedstream_mapping</Title>
+            <Abstract>ahgfmappedstream_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedStream"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfmappedstream_datastructure</Name>
+            <Title>ahgfmappedstream_datastructure</Title>
+            <Abstract>ahgfmappedstream_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedStream&amp;style=ahgfmappedstream_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfmappedstream_mapping</Name>
+            <Title>ahgfmappedstream_mapping</Title>
+            <Abstract>ahgfmappedstream_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFMappedStream&amp;style=ahgfmappedstream_mapping"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFWaterbody</Name>
+          <Title>AHGFWaterbody</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterbody</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.99395000000004</westBoundLongitude>
+            <eastBoundLongitude>153.6130200000001</eastBoundLongitude>
+            <southBoundLatitude>-43.6060489990578</southBoundLatitude>
+            <northBoundLatitude>-8.933328999710083</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.99395000000004" miny="-43.6060489990578" maxx="153.6130200000001" maxy="-8.933328999710083"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.606048999999985" miny="112.99395000000004" maxx="-8.93332899999993" maxy="153.6130200000001"/>
+          <Style>
+            <Name>ahgfwaterbody_mapping</Name>
+            <Title>ahgfwaterbody_mapping</Title>
+            <Abstract>ahgfwaterbody_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_datastructure</Name>
+            <Title>ahgfwaterbody_datastructure</Title>
+            <Abstract>ahgfwaterbody_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody&amp;style=ahgfwaterbody_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_mapping</Name>
+            <Title>ahgfwaterbody_mapping</Title>
+            <Abstract>ahgfwaterbody_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody&amp;style=ahgfwaterbody_mapping"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFHydroArea</Name>
+          <Title>AHGFHydroArea</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFHydroArea</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.00706000000002</westBoundLongitude>
+            <eastBoundLongitude>153.60520000000002</eastBoundLongitude>
+            <southBoundLatitude>-43.58998899905777</southBoundLatitude>
+            <northBoundLatitude>-8.93332899971008</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.00706000000002" miny="-43.58998899905777" maxx="153.60520000000002" maxy="-8.93332899971008"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.589988999999946" miny="113.00706000000002" maxx="-8.933328999999928" maxy="153.60520000000005"/>
+          <Style>
+            <Name>ahgfhydroarea_mapping</Name>
+            <Title>ahgfhydroarea</Title>
+            <Abstract>ahgfhydroarea</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroArea"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroarea_datastructure</Name>
+            <Title>ahgfhydroarea_datastructure</Title>
+            <Abstract>ahgfhydroarea_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroArea&amp;style=ahgfhydroarea_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfhydroarea_mapping</Name>
+            <Title>ahgfhydroarea</Title>
+            <Abstract>ahgfhydroarea</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFHydroArea&amp;style=ahgfhydroarea_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1000000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFEstuary</Name>
+          <Title>AHGFEstuary</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFEstuary</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.6089684320001</westBoundLongitude>
+            <eastBoundLongitude>153.62495056300006</eastBoundLongitude>
+            <southBoundLatitude>-43.59020860705779</southBoundLatitude>
+            <northBoundLatitude>-10.835983610651068</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.6089684320001" miny="-43.59020860705779" maxx="153.62495056300006" maxy="-10.835983610651068"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.590208607999955" miny="113.6089684320001" maxx="-10.835983610999937" maxy="153.62495056300006"/>
+          <Style>
+            <Name>ahgfestuary_mapping</Name>
+            <Title>ahgfestuary_mapping</Title>
+            <Abstract>ahgfestuary_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFEstuary"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfestuary_datastructure</Name>
+            <Title>ahgfestuary_datastructure</Title>
+            <Abstract>ahgfestuary_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFEstuary&amp;style=ahgfestuary_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfestuary_mapping</Name>
+            <Title>ahgfestuary_mapping</Title>
+            <Abstract>ahgfestuary_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFEstuary&amp;style=ahgfestuary_mapping"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>5000000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFSea</Name>
+          <Title>AHGFSea</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFSea</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.88333000000013</westBoundLongitude>
+            <eastBoundLongitude>154.1000000000001</eastBoundLongitude>
+            <southBoundLatitude>-43.99999999905724</southBoundLatitude>
+            <northBoundLatitude>-8.933329999710095</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.88333000000013" miny="-43.99999999905724" maxx="154.1000000000001" maxy="-8.933329999710095"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.99999999999994" miny="112.88333000000011" maxx="-8.933329999999941" maxy="154.1000000000001"/>
+          <Style>
+            <Name>ahgfsea_mapping</Name>
+            <Title>ahgfsea_mapping</Title>
+            <Abstract>ahgfsea_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSea"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfsea_mapping</Name>
+            <Title>ahgfsea_mapping</Title>
+            <Abstract>ahgfsea_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSea&amp;style=ahgfsea_mapping"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfsea_datastructure</Name>
+            <Title>ahgfsea_mapping</Title>
+            <Abstract>ahgfsea_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFSea&amp;style=ahgfsea_datastructure"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcarto:AHGFWaterbodyWaterStorage</Name>
+          <Title>AHGFWaterbodyWaterStorage</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterbodyWaterStorage</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>115.12252000000001</westBoundLongitude>
+            <eastBoundLongitude>153.31294000000014</eastBoundLongitude>
+            <southBoundLatitude>-43.03956999905885</southBoundLatitude>
+            <northBoundLatitude>-12.821729999591128</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="115.12252000000001" miny="-43.03956999905885" maxx="153.31294000000014" maxy="-12.821729999591128"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.03956999999997" miny="115.12252000000001" maxx="-12.821729999999945" maxy="153.3129400000001"/>
+          <Style>
+            <Name>ahgfwaterbody_datastructure</Name>
+            <Title>ahgfwaterbody_datastructure</Title>
+            <Abstract>ahgfwaterbody_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbodyWaterStorage"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_datastructure</Name>
+            <Title>ahgfwaterbody_datastructure</Title>
+            <Abstract>ahgfwaterbody_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbodyWaterStorage&amp;style=ahgfwaterbody_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_mapping</Name>
+            <Title>ahgfwaterbody_mapping</Title>
+            <Abstract>ahgfwaterbody_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbodyWaterStorage&amp;style=ahgfwaterbody_mapping"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_shcatch:Surface_Catchments_2.1</Name>
+        <Title>Surface Catchments 2.1</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.92249999999999</westBoundLongitude>
+          <eastBoundLongitude>153.63750000000013</eastBoundLongitude>
+          <southBoundLatitude>-43.64250000005773</southBoundLatitude>
+          <northBoundLatitude>-9.229999999700784</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-43.64250000099997" miny="112.92249999999999" maxx="-9.229999999999926" maxy="153.63750000000013"/>
+        <Layer queryable="1">
+          <Name>ahgf_shcatch:NCBLevel1DrainageDivision</Name>
+          <Title>NCBLevel1DrainageDivision</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>NCBLevel1DrainageDivision</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.9225</westBoundLongitude>
+            <eastBoundLongitude>153.63750000000002</eastBoundLongitude>
+            <southBoundLatitude>-43.73999999905757</southBoundLatitude>
+            <northBoundLatitude>-9.197499999701801</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.9225" miny="-43.73999999905757" maxx="153.63750000000002" maxy="-9.197499999701801"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.73999999999995" miny="112.92250000000001" maxx="-9.197499999999925" maxy="153.63750000000005"/>
+          <Style>
+            <Name>ncblevel1drainagedivision</Name>
+            <Title>ncblevel1drainagedivision</Title>
+            <Abstract>ncblevel1drainagedivision</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=NCBLevel1DrainageDivision"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ncblevel1drainagedivision</Name>
+            <Title>ncblevel1drainagedivision</Title>
+            <Abstract>ncblevel1drainagedivision</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=NCBLevel1DrainageDivision&amp;style=ncblevel1drainagedivision"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcatch:NCBLevel2DrainageBasinGroup</Name>
+          <Title>NCBLevel2DrainageBasinGroup</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>NCBLevel2DrainageBasinGroup</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.9225</westBoundLongitude>
+            <eastBoundLongitude>153.63750000000013</eastBoundLongitude>
+            <southBoundLatitude>-43.73999999905757</southBoundLatitude>
+            <northBoundLatitude>-9.197499999701803</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.9225" miny="-43.73999999905757" maxx="153.63750000000013" maxy="-9.197499999701803"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.73999999999995" miny="112.92250000000001" maxx="-9.197499999999927" maxy="153.63750000000013"/>
+          <Style>
+            <Name>ncblevel2drainagebasingroup</Name>
+            <Title>ncblevel2drainagebasingroup</Title>
+            <Abstract>ncblevel2drainagebasingroup</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=NCBLevel2DrainageBasinGroup"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ncblevel2drainagebasingroup</Name>
+            <Title>ncblevel2drainagebasingroup</Title>
+            <Abstract>ncblevel2drainagebasingroup</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=NCBLevel2DrainageBasinGroup&amp;style=ncblevel2drainagebasingroup"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>1.0E7</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shcatch:AHGFCatchment</Name>
+          <Title>AHGFCatchment</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFCatchment</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.9225</westBoundLongitude>
+            <eastBoundLongitude>153.6375000000001</eastBoundLongitude>
+            <southBoundLatitude>-43.73999999905757</southBoundLatitude>
+            <northBoundLatitude>-9.197499999701808</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.9225" miny="-43.73999999905757" maxx="153.6375000000001" maxy="-9.197499999701808"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.73999999999995" miny="112.92250000000001" maxx="-9.197499999999932" maxy="153.6375000000001"/>
+          <Style>
+            <Name>ahgfcatchment</Name>
+            <Title>ahgfcatchment</Title>
+            <Abstract>ahgfcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCatchment"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfcatchment</Name>
+            <Title>ahgfcatchment</Title>
+            <Abstract>ahgfcatchment</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFCatchment&amp;style=ahgfcatchment"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>500000.0</MaxScaleDenominator>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_shn:Surface_Network_2.1</Name>
+        <Title>Surface Network 2.1</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.92137000000001</westBoundLongitude>
+          <eastBoundLongitude>153.63857000000007</eastBoundLongitude>
+          <southBoundLatitude>-43.65854999905766</southBoundLatitude>
+          <northBoundLatitude>-1.0069927760227891E-4</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-43.658549999999934" miny="112.92137000000001" maxx="-1.006992776056E-4" maxy="153.63857000000007"/>
+        <Layer queryable="1">
+          <Name>ahgf_shn:AHGFNetworkNode</Name>
+          <Title>AHGFNetworkNode</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>features</Keyword>
+            <Keyword>AHGFNetworkNode</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.33375</westBoundLongitude>
+            <eastBoundLongitude>153.62875000000008</eastBoundLongitude>
+            <southBoundLatitude>-43.628749999057746</southBoundLatitude>
+            <northBoundLatitude>-9.23624999970059</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.33375" miny="-43.628749999057746" maxx="153.62875000000008" maxy="-9.23624999970059"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.62874999999997" miny="113.33375000000001" maxx="-9.236249999999927" maxy="153.62875000000008"/>
+          <Style>
+            <Name>ahgfnetworknode</Name>
+            <Title>ahgfnetworknode</Title>
+            <Abstract>ahgfnetworknode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkNode"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnetworknode</Name>
+            <Title>ahgfnetworknode</Title>
+            <Abstract>ahgfnetworknode</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkNode&amp;style=ahgfnetworknode"/>
+            </LegendURL>
+          </Style>
+          <MaxScaleDenominator>500000.0</MaxScaleDenominator>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shn:AHGFNetworkStream</Name>
+          <Title>AHGFNetworkStream</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFNetworkStream</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>113.33375</westBoundLongitude>
+            <eastBoundLongitude>153.62875000000003</eastBoundLongitude>
+            <southBoundLatitude>-43.628749999057746</southBoundLatitude>
+            <northBoundLatitude>-9.236249999700636</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="113.33375" miny="-43.628749999057746" maxx="153.62875000000003" maxy="-9.236249999700636"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.62874999999997" miny="113.33375000000001" maxx="-9.236249999999973" maxy="153.62875000000003"/>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStream"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfnetworkstream</Name>
+            <Title>ahgfnetworkstream</Title>
+            <Abstract>ahgfnetworkstream</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFNetworkStream&amp;style=ahgfnetworkstream"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_shn:AHGFWaterbody</Name>
+          <Title>AHGFWaterbody</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterbody</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.99395000000004</westBoundLongitude>
+            <eastBoundLongitude>153.6130200000001</eastBoundLongitude>
+            <southBoundLatitude>-43.6060489990578</southBoundLatitude>
+            <northBoundLatitude>-8.933328999710083</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.99395000000004" miny="-43.6060489990578" maxx="153.6130200000001" maxy="-8.933328999710083"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.606048999999985" miny="112.99395000000004" maxx="-8.93332899999993" maxy="153.6130200000001"/>
+          <Style>
+            <Name>ahgfwaterbody_mapping</Name>
+            <Title>ahgfwaterbody_mapping</Title>
+            <Abstract>ahgfwaterbody_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_datastructure</Name>
+            <Title>ahgfwaterbody_datastructure</Title>
+            <Abstract>ahgfwaterbody_datastructure</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody&amp;style=ahgfwaterbody_datastructure"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwaterbody_mapping</Name>
+            <Title>ahgfwaterbody_mapping</Title>
+            <Abstract>ahgfwaterbody_mapping</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterbody&amp;style=ahgfwaterbody_mapping"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+      <Layer queryable="1">
+        <Name>ahgf_gwc:Watertable_Aquifer_2.1</Name>
+        <Title>Watertable Aquifer 2.1</Title>
+        <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+        <CRS>EPSG:4283</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>112.92137000000001</westBoundLongitude>
+          <eastBoundLongitude>153.63857000000007</eastBoundLongitude>
+          <southBoundLatitude>-43.65854999905766</southBoundLatitude>
+          <northBoundLatitude>-9.219939999701113</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:4283" minx="-43.658549999999934" miny="112.92137000000001" maxx="-9.21993999999994" maxy="153.63857000000007"/>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:IGWWaterTableYield</Name>
+          <Title>IGWWaterTableYield</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>IGWWaterTableYield</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>129.00048000000004</westBoundLongitude>
+            <eastBoundLongitude>153.63857000000007</eastBoundLongitude>
+            <southBoundLatitude>-39.135739999076094</southBoundLatitude>
+            <northBoundLatitude>-10.965879999647115</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="129.00048000000004" miny="-39.135739999076094" maxx="153.63857000000007" maxy="-10.965879999647115"/>
+          <BoundingBox CRS="EPSG:4283" minx="-39.13573999999994" miny="129.00048000000004" maxx="-10.96587999999996" maxy="153.63857000000007"/>
+          <Style>
+            <Name>igwwatertableyield</Name>
+            <Title>igwwatertableyield</Title>
+            <Abstract>igwwatertableyield</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableYield"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwwatertableyield</Name>
+            <Title>igwwatertableyield</Title>
+            <Abstract>igwwatertableyield</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableYield&amp;style=igwwatertableyield"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:IGWWaterTableSalinity</Name>
+          <Title>IGWWaterTableSalinity</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>IGWWaterTableSalinity</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.92137000000001</westBoundLongitude>
+            <eastBoundLongitude>153.63857000000007</eastBoundLongitude>
+            <southBoundLatitude>-43.643049999057716</southBoundLatitude>
+            <northBoundLatitude>-10.687579999655645</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.92137000000001" miny="-43.643049999057716" maxx="153.63857000000007" maxy="-10.687579999655645"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.64304999999996" miny="112.92137000000002" maxx="-10.687579999999963" maxy="153.63857000000007"/>
+          <Style>
+            <Name>igwwatertablesalinity</Name>
+            <Title>IGW Water Table Salinity</Title>
+            <Abstract>Colouring based on water table salinity field</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableSalinity"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwwatertablesalinity</Name>
+            <Title>IGW Water Table Salinity</Title>
+            <Abstract>Colouring based on water table salinity field</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableSalinity&amp;style=igwwatertablesalinity"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:IGWWaterTableHydraulicConductivity</Name>
+          <Title>IGWWaterTableHydraulicConductivity</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>IGWWaterTableHydraulicConductivity</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>140.96334594200005</westBoundLongitude>
+            <eastBoundLongitude>152.49056374800008</eastBoundLongitude>
+            <southBoundLatitude>-37.68073353908695</southBoundLatitude>
+            <northBoundLatitude>-24.586309583285477</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="140.96334594200005" miny="-37.68073353908695" maxx="152.49056374800008" maxy="-24.586309583285477"/>
+          <BoundingBox CRS="EPSG:4283" minx="-37.68073353999995" miny="140.96334594200005" maxx="-24.58630958399998" maxy="152.49056374800008"/>
+          <Style>
+            <Name>igwwatertablehydraulicconductivity</Name>
+            <Title>igwwatertablehydraulicconductivity</Title>
+            <Abstract>igwwatertablehydraulicconductivity</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableHydraulicConductivity"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>igwwatertablehydraulicconductivity</Name>
+            <Title>igwwatertablehydraulicconductivity</Title>
+            <Abstract>igwwatertablehydraulicconductivity</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=IGWWaterTableHydraulicConductivity&amp;style=igwwatertablehydraulicconductivity"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+        <Layer queryable="1">
+          <Name>ahgf_gwc:AHGFWaterTableAquifer</Name>
+          <Title>AHGFWaterTableAquifer</Title>
+          <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
+For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
+          <KeywordList>
+            <Keyword>AHGFWaterTableAquifer</Keyword>
+            <Keyword>features</Keyword>
+          </KeywordList>
+          <CRS>EPSG:4283</CRS>
+          <CRS>CRS:84</CRS>
+          <EX_GeographicBoundingBox>
+            <westBoundLongitude>112.92137000000001</westBoundLongitude>
+            <eastBoundLongitude>153.63857000000004</eastBoundLongitude>
+            <southBoundLatitude>-43.65854999905766</southBoundLatitude>
+            <northBoundLatitude>-9.219939999701113</northBoundLatitude>
+          </EX_GeographicBoundingBox>
+          <BoundingBox CRS="CRS:84" minx="112.92137000000001" miny="-43.65854999905766" maxx="153.63857000000004" maxy="-9.219939999701113"/>
+          <BoundingBox CRS="EPSG:4283" minx="-43.658549999999934" miny="112.92137000000002" maxx="-9.219939999999939" maxy="153.63857000000004"/>
+          <Style>
+            <Name>ahgfwatertableaquifer</Name>
+            <Title>ahgfwatertableaquifer</Title>
+            <Abstract>ahgfwatertableaquifer</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterTableAquifer"/>
+            </LegendURL>
+          </Style>
+          <Style>
+            <Name>ahgfwatertableaquifer</Name>
+            <Title>ahgfwatertableaquifer</Title>
+            <Abstract>ahgfwatertableaquifer</Abstract>
+            <LegendURL width="20" height="20">
+              <Format>image/png</Format>
+              <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://geofabric.bom.gov.au:80/simplefeatures/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=AHGFWaterTableAquifer&amp;style=ahgfwatertableaquifer"/>
+            </LegendURL>
+          </Style>
+        </Layer>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>
