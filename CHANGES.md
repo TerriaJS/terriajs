@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.16
+
+* Replaced cesium animation controller with terriajs animation controller.
+* Replaced cesium viewer wdiget with the cesiumWidget when running cesium.
+
 ### 1.0.15
 
 * Fix imagery attribution on the 2D map.
