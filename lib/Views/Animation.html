@@ -9,10 +9,10 @@
         <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: isPlaying ? $root.svgPause : $root.svgPlay, width: 18, height: 18}"></div>
     </div>
     <div class="animation-control" data-bind="event: {click: playSlower, mousedown: function() {slowerActive = true;} , mouseup: function() {slowerActive = false;}}" title="Play slower">
-        <div class="animation-control-icon animation-control-nofill" data-bind="cesiumSvgPath: { path: svgSlower, width: 16, height: 16}, css: { 'animation-control-highlight': slowerActive }"></div>
+        <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: svgSlower, width: 48, height: 48}, css: { 'animation-control-highlight': slowerActive }"></div>
     </div>
-    <div class="animation-control animation-control-nofill" data-bind="event: {click: playFaster, mousedown: function() {fasterActive = true;} , mouseup: function() {fasterActive = false;}}" title="Play faster">
-        <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: svgFaster, width: 16, height: 16}, css: { 'animation-control-highlight': fasterActive }"></div>
+    <div class="animation-control" data-bind="event: {click: playFaster, mousedown: function() {fasterActive = true;} , mouseup: function() {fasterActive = false;}}" title="Play faster">
+        <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: svgFaster, width: 48, height: 48}, css: { 'animation-control-highlight': fasterActive }"></div>
     </div>
     <div class="animation-control animation-control-last" data-bind="click: toggleLoop" title="Loop at the end">
         <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: svgLoop, width: 16, height: 16}, css: { 'animation-control-active': isLooping }"></div>
