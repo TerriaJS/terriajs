@@ -36,14 +36,6 @@
     background-color: rgba(84, 84, 84, 0.25);
 }
 
-.cesium-timeline-main {
-    z-index: 1000;
-}
-
-.cesium-viewer-animationContainer {
-    z-index: 1000;
-}
-
 button.cesium-infoBox-camera {
     display: none;
 }
@@ -73,7 +65,8 @@ button.cesium-infoBox-camera {
 .leaflet-popup-content {
     margin: 5px 15px;
 }
-.leaflet-control-attribution.leaflet-control {
+
+.leaflet-container  .leaflet-control-attribution {
     background: none;
     color: #ffffff;
     font-size: 9px;
@@ -83,12 +76,12 @@ button.cesium-infoBox-camera {
     line-height: 9px;
 }
 
-.leaflet-control-attribution.leaflet-control a {
+.leaflet-control-attribution a {
     color: #ffffff;
     text-decoration:none;
 }
 
-.leaflet-control-attribution.leaflet-control a:hover {
+.leaflet-control-attribution a:hover {
     color: #ffffff;
     text-decoration:underline;
 }
@@ -98,12 +91,6 @@ button.cesium-infoBox-camera {
         left: 0;
     }
     .cesium-infoBox {
-        display: none;
-    }
-    .cesium-timeline-main {
-        display: none;
-    }
-    .cesium-viewer-animationContainer {
         display: none;
     }
 }
