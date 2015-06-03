@@ -5,6 +5,8 @@ Change Log
 
 * Deprecated:
   * `ArcGisMapServerCatalogGroup` has been deprecated.  Please use `ArcGisCatalogGroup` instead.
+* Replaced Cesium animation controller with TerriaJS animation controller.
+* Replaced Cesium Viewer widget with the CesiumWidget when running Cesium.
 * Added the ability to turn a complete ArcGIS Server, or individual folders within it, into a catalog group using `ArcGisCatalogGroup`.
 
 ### 1.0.15
