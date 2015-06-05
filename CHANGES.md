@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.18
+
+* Added `CkanCatalogGroup.allowEntireWmsServers` property.  When set and the group discovers a WMS resource without a layer parameter, it adds a catalog item for the entire server instead of ignoring the resource.
+
 ### 1.0.17
 
 * Upgraded to TerriajS Cesium 1.10.2.
