@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.18
+
+* Added `OpenStreetMapCatalogItem` for connecting to tile servers using the OpenStreetMap tiling scheme.
+
 ### 1.0.17
 
 * Upgraded to TerriajS Cesium 1.10.2.
