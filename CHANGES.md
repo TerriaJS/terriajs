@@ -1,6 +1,19 @@
 Change Log
 ==========
 
+### 1.0.18
+
+* Added featureInfoFields to csvCatalogItem.tableStyle (see NationalMap test.json for example).  Allows setting which fields and what name is shown in the featureInfo popup.
+* Added `CkanCatalogGroup.allowEntireWmsServers` property.  When set and the group discovers a WMS resource without a layer parameter, it adds a catalog item for the entire server instead of ignoring the resource.
+
+### 1.0.17
+
+* Upgraded to TerriajS Cesium 1.10.2.
+* Added `ImageryLayerCatalogItem.isRequiredForRendering`.  This is set to false by default and to true for base maps.  Slow datasets with `isRequiredForRendering=false` are less likely to prevent other datasets from appearing in the 3D view.
+* The "Dataset Testing" functionality (on the hidden Tools menu accessible by adding `#tools=1` to the URL) now gives up tile requests and considers them failed after two seconds.  It also outputs some JSON that can be used as the `blacklist` property to blacklist all of the datasets that timed out.
+* Added a feature to count the total number of datasets from the hidden Tools menu.
+* Fixed a bug that caused the 2D / 3D buttons the Maps menu to get out of sync with the actual state of the map after switching automatically to 2D due to a performance problem.
+
 ### 1.0.16
 
 * Deprecated:
