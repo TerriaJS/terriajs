@@ -6,6 +6,11 @@
                     <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
                 </div>
             <!-- /ko -->
+            <!-- ko if: !hasChildren -->
+                <div class="data-catalog-icon-holder clickable" data-bind="click: toggleOpen">
+                    <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
+                </div>
+            <!-- /ko -->
             <!-- ko if: isSelectable -->
                 <div class="data-catalog-icon-holder clickable" data-bind="click: toggleActive">
                     <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isActive }"></div>
