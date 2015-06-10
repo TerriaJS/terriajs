@@ -7,8 +7,8 @@
                 </div>
             <!-- /ko -->
             <!-- ko if: !hasChildren -->
-                <div class="data-catalog-icon-holder clickable" data-bind="click: toggleOpen">
-                    <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
+                <div class="data-catalog-icon-holder clickable">
+                    <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { width: 32, height: 32 }"></div>
                 </div>
             <!-- /ko -->
             <!-- ko if: isSelectable -->
@@ -19,7 +19,7 @@
             <div class="data-catalog-item-label" data-bind="text: name, css: { 'data-catalog-enabled-item': isSelectable && isActive }"></div>
         </div>
 
-        <!-- ko if: isOpen -->
+        <!-- ko if: hasChildren && isOpen -->
             <div class="data-catalog-group-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: items }"></div>
         <!-- /ko -->
     </div>
@@ -89,12 +89,9 @@
 
                 <!-- ko if: type === 'csv' -->
                 <div class="now-viewing-csv-section">
-                    <div class="now-viewing-tree-table">
-                        <!-- ko if: csvDataset -->
-                        <table data-bind="template: { name: 'now-viewing-tree-item-template', data: csvDataset }">
-                        </table>
-                        <!-- /ko -->
-                    </div>
+                    <!-- ko if: csvDataset -->
+                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: csvDataset }"></div>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
             </div>
