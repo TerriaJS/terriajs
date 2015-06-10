@@ -3,7 +3,7 @@ Change Log
 
 ### 1.0.18
 
-* Added featureInfoFields to csvCatalogItem.tableStyle (see NationalMap test.json for example).  Allows setting which fields and what name is shown in the featureInfo popup.
+* Added `featureInfoFields` property to `CsvCatalogItem.tableStyle`.  It allows setting which fields to show in the Feature Info popup, and the name to use for each.
 * Added `CkanCatalogGroup.allowEntireWmsServers` property.  When set and the group discovers a WMS resource without a layer parameter, it adds a catalog item for the entire server instead of ignoring the resource.
 
 ### 1.0.17
