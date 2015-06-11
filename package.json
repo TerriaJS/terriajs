@@ -10,6 +10,7 @@
   "dependencies": {
     "URIjs": "^1.15.0",
     "brfs": "^1.4.0",
+    "hjson": "^1.6",
     "html2canvas": "^0.5.0-alpha2",
     "javascript-natural-sort": "^0.7.1",
     "leaflet": "^0.7.3",
