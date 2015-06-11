@@ -9,6 +9,8 @@ Change Log
 * Added `WebMapTileServiceCatalogGroup` and `WebMapTileServiceCatalogItem` for accessing WMTS servers.
 * Handle the case of an `ArcGisMapServerCatalogItem` with an advertised extent that is outside the valid range.
 * We now pass ArcGIS MapServer metadata, when it's available, through to Cesium's `ArcGisMapServerImageryProvider` so that it doesn't need to re-request the metadata.
+* Changed the style of the Menu Bar to have visually-separate menu items.
+* Added support for SVG menu item icons to `MenuBarViewModel`.
 
 ### 1.0.17
 
