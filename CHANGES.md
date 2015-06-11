@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.19
+
+* Added `NowViewingAttentionGrabberViewModel`.  It calls attention the Now Viewing tab the first time a catalog item is enabled.
+
 ### 1.0.18
 
 * Added `featureInfoFields` property to `CsvCatalogItem.tableStyle`.  It allows setting which fields to show in the Feature Info popup, and the name to use for each.
