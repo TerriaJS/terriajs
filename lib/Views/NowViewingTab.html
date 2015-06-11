@@ -1,25 +1,28 @@
 <script type="text/html" id="now-viewing-tree-item-template">
-    <tr>
-        <td class="now-viewing-tree-properties-name-cell" data-bind="css: 'now-viewing-tree-properties-level' + ($parents.length-1) + (hasChildren ? ' now-viewing-tree-properties-parent' : '')">
-            <!-- ko if: hasChildren && isOpen -->
-            <div class="now-viewing-tree-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowDown, width: 32, height: 32 }"></div>
-            <!-- /ko -->
-            <!-- ko if: hasChildren && !isOpen -->
-            <div class="now-viewing-tree-properties-arrow" data-bind="click: toggleOpen, cesiumSvgPath: { path: $root.svgArrowRight, width: 32, height: 32 }"></div>
+    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+        <div class="data-catalog-member-top-row">
+            <!-- ko if: hasChildren -->
+                <div class="data-catalog-icon-holder clickable" data-bind="click: toggleOpen">
+                    <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
+                </div>
             <!-- /ko -->
             <!-- ko if: !hasChildren -->
-            <div class="now-viewing-tree-properties-arrow"></div>
+                <div class="data-catalog-icon-holder">
+                    <div class="data-catalog-arrow"></div>
+                </div>
             <!-- /ko -->
             <!-- ko if: isSelectable -->
-             <div class="now-viewing-tree-icon clickable" data-bind="click: toggleActive, cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }"></div>
+                <div class="data-catalog-icon-holder clickable" data-bind="click: toggleActive">
+                    <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isActive }"></div>
+                </div>
             <!-- /ko -->
-            <div class="now-viewing-tree-properties-name" data-bind="text: name"></div>
-        </td>
-    </tr>
-    <!-- ko if: hasChildren && isOpen -->
-        <!-- ko template: { name: 'now-viewing-tree-item-template', foreach: items } -->
+            <div class="data-catalog-item-label" data-bind="text: name, css: { 'data-catalog-enabled-item': isSelectable && isActive }"></div>
+        </div>
+
+        <!-- ko if: hasChildren && isOpen -->
+            <div class="data-catalog-group-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: items }"></div>
         <!-- /ko -->
-    <!-- /ko -->
+    </div>
 </script>
 
 <div class="now-viewing">
@@ -56,7 +59,7 @@
 
                 <!-- ko if: type === 'abs-itt'-->
                 <div class="now-viewing-abs-controls">
-                     <div class="now-viewing-tree-icon clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
+                     <div class="now-viewing-abs-checkbox clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
                     <div class="now-viewing-abs-percent" data-bind="text: 'Display as percent of region population'"></div>
                 </div>
                 <!-- /ko -->
@@ -66,9 +69,7 @@
                     <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
                 </a>
                 <!-- /ko -->
-                <!-- ko if: hasLegend && !legendIsImage -->
-                <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
-                <!-- /ko -->
+
                 <!-- ko if: !hasLegend -->
                     <!-- ko if: type !== 'abs-itt' -->
                     <div class="now-viewing-legend-text">No legend available for this data item.</div>
@@ -77,26 +78,20 @@
                     <div class="now-viewing-legend-text">Select at least one code in each data area.</div>
                     <!-- /ko -->
                 <!-- /ko -->
-                
+
                 <!-- ko if: type === 'abs-itt' -->
-                <div class="now-viewing-abs-section">
-                    <div class="now-viewing-tree-table">
-                        <!-- ko if: absDataset && absDataset.items -->
-                        <table data-bind="template: { name: 'now-viewing-tree-item-template', foreach: absDataset.items }">
-                        </table>
-                        <!-- /ko -->
-                    </div>
+                <div class="now-viewing-section">
+                    <!-- ko if: absDataset && absDataset.items && absDataset.items.length > 0 -->
+                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: absDataset.items }"></div>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
 
                 <!-- ko if: type === 'csv' -->
-                <div class="now-viewing-csv-section">
-                    <div class="now-viewing-tree-table">
-                        <!-- ko if: csvDataset -->
-                        <table data-bind="template: { name: 'now-viewing-tree-item-template', data: csvDataset }">
-                        </table>
-                        <!-- /ko -->
-                    </div>
+                <div class="now-viewing-section">
+                    <!-- ko if: csvDataset -->
+                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: csvDataset }"></div>
+                    <!-- /ko -->
                 </div>
                 <!-- /ko -->
             </div>
