@@ -11,6 +11,7 @@ Change Log
 * We now pass ArcGIS MapServer metadata, when it's available, through to Cesium's `ArcGisMapServerImageryProvider` so that it doesn't need to re-request the metadata.
 * Changed the style of the Menu Bar to have visually-separate menu items.
 * Added support for SVG menu item icons to `MenuBarViewModel`.
+* Improved popup message box sizing.
 
 ### 1.0.17
 
