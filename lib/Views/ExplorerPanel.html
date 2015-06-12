@@ -6,7 +6,12 @@
                          css: { 'explorer-panel-tab-active': isActive },
                          click: activate">
             <div class="explorer-panel-tab-content">
-              <div data-bind="text: name"></div>
+              <!-- ko if: typeof svgPath !== 'undefined' -->
+                <div class="explorer-panel-tab-icon-holder">
+                  <div class="explorer-panel-tab-icon" data-bind="cesiumSvgPath: { path: svgPath, width: svgPathWidth, height: svgPathHeight, 'fill-rule': svgPathFillRule }"></div>
+                </div>
+              <!-- /ko -->
+              <div class="explorer-panel-tab-label" data-bind="text: name"></div>
               <div class="explorer-panel-tab-badge" data-bind="text: badgeText, visible: typeof badgeText !== 'undefined', css: { 'explorer-panel-tab-badge-pop': badgeIsPopped }, event: { transitionend: unpopBadge }"></div>
             </div>
           </div>
