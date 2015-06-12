@@ -4,6 +4,7 @@ Change Log
 ### 1.0.19
 
 * Added `NowViewingAttentionGrabberViewModel`.  It calls attention the Now Viewing tab the first time a catalog item is enabled.
+* Added `isHidden` property to catalog items and groups.  Hidden items and groups do not show up in the catalog or in search results.
 
 ### 1.0.18
 
@@ -16,7 +17,6 @@ Change Log
 * Changed the style of the Menu Bar to have visually-separate menu items.
 * Added support for SVG menu item icons to `MenuBarViewModel`.
 * Improved popup message box sizing.
-* Added `isHidden` property to catalog items and groups.  Hidden items and groups do not show up in the catalog or in search results.
 
 ### 1.0.17
 
