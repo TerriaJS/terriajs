@@ -1,8 +1,19 @@
+.now-viewing-attention-grabber-container {
+    visibility: hidden;
+    position: absolute;
+    top: @brand-bar-height + 25px;
+    left: 50px;
+    width: 400px;
+}
+
+.now-viewing-attention-grabber-container-visible {
+    visibility: visible;
+}
+
 .now-viewing-attention-grabber {
     .opaque-to-input;
     position: absolute;
-    top: @brand-bar-height + 45px;
-    left: 50px;
+    top: 20px;
     background-color: white;
     border-radius: 3px;
 }
@@ -33,6 +44,6 @@
     border-right: 0.8em solid transparent;
     border-top: 0.8em solid transparent;
     position: absolute;
-    top: @brand-bar-height + 25px;
-    left: 150px;
+    top: 0;
+    left: 100px;
 }
