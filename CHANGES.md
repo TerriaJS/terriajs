@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.20
+
+* Added the ability to specify SVG icons on Explorer Panel tabs.
+* Added an icon to the Search tab.
+
 ### 1.0.19
 
 * Added `NowViewingAttentionGrabberViewModel`.  It calls attention the Now Viewing tab the first time a catalog item is enabled.
