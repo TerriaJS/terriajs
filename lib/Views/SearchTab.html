@@ -1,5 +1,5 @@
 <script type="text/html" id="search-catalog-item-template">
-    <!-- ko if: typeof items === 'undefined' -->
+    <!-- ko if: !isHidden && typeof items === 'undefined' -->
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
                 <div class="data-catalog-icon-holder clickable" data-bind="click: toggleEnabled">
@@ -14,7 +14,7 @@
         </div>
     <!-- /ko -->
 
-    <!-- ko if: typeof items !== 'undefined' -->
+    <!-- ko if: !isHidden && typeof items !== 'undefined' -->
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
                 <div class="data-catalog-icon-holder clickable" data-bind="click: $parent.toggleOpen.bind($parent)">
@@ -63,7 +63,7 @@
                         </div>
                     </div>
                 <!-- /ko -->
-                <!-- ko if: typeof catalogItem !== 'undefined' -->
+                <!-- ko if: typeof catalogItem !== 'undefined' && !catalogItem.isHidden -->
                     <div class="search-tab-provider-result" data-bind="template: { name: 'search-catalog-item-template', data: catalogItem }, attr: { title: tooltip }">
                     </div>
                 <!-- /ko -->
