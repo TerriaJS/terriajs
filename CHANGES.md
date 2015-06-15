@@ -5,6 +5,8 @@ Change Log
 
 * Added the ability to specify SVG icons on Explorer Panel tabs.
 * Added an icon to the Search tab.
+* Added support for accessing Australian Bureau of Statistics data via the ABS-ITT API, using `AbsIttCatalogGroup` and `AbsIttCatalogItem`.
+* The Now Viewing panel now contains controls for selecting which column to show in CSV datasets.
 
 ### 1.0.19
 
