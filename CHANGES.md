@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.21
+
+* Added an `itemProperties` property to `AbsIttCatalogGroup`.
+* Added a `nowViewingMessage` property to `CatalogItem`.  This message is shown by the `NowViewingAttentionGrabberViewModel` when the item is enabled.  Each unique message is shown only once.
+
 ### 1.0.20
 
 * Added the ability to specify SVG icons on Explorer Panel tabs.
