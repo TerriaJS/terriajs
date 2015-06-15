@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.22
+
+* Fixed a bug that prevented features from being pickable from ABS datasets on the 2D map.
+
 ### 1.0.21
 
 * Added an `itemProperties` property to `AbsIttCatalogGroup`.
