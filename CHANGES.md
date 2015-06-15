@@ -4,6 +4,7 @@ Change Log
 ### 1.0.22
 
 * Fixed a bug that prevented features from being pickable from ABS datasets on the 2D map.
+* Fixed a bug that caused the Explorer Panel tabs to be missing or misaligned in Firefox.
 
 ### 1.0.21
 
