@@ -1,10 +1,14 @@
 Change Log
 ==========
 
-### 1.0.22
+### 1.0.23
 
 * Fixed a bug that prevented features from being pickable from ABS datasets on the 2D map.
 * Fixed a bug that caused the Explorer Panel tabs to be missing or misaligned in Firefox.
+
+### 1.0.22
+
+* Changed to use JPEG instead of PNG format for the Natural Earth II basemap.  This makes the tile download substantially smaller.
 
 ### 1.0.21
 
