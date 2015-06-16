@@ -3,13 +3,17 @@
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
                 <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled">
+                    <!-- ko if: isMappable -->
                     <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
+                    <!-- /ko -->
                 </div>
                 <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock"></div>
                 <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
+                <!-- ko if: showInfo -->
                 <div class="data-catalog-item-info">
                     <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
                 </div>
+                <!-- /ko -->
             </div>
         </div>
     <!-- /ko -->
