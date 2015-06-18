@@ -1,6 +1,32 @@
 Change Log
 ==========
 
+### 1.0.23
+
+* Fixed a bug that prevented features from being pickable from ABS datasets on the 2D map.
+* Fixed a bug that caused the Explorer Panel tabs to be missing or misaligned in Firefox.
+
+### 1.0.22
+
+* Changed to use JPEG instead of PNG format for the Natural Earth II basemap.  This makes the tile download substantially smaller.
+
+### 1.0.21
+
+* Added an `itemProperties` property to `AbsIttCatalogGroup`.
+* Added a `nowViewingMessage` property to `CatalogItem`.  This message is shown by the `NowViewingAttentionGrabberViewModel` when the item is enabled.  Each unique message is shown only once.
+
+### 1.0.20
+
+* Added the ability to specify SVG icons on Explorer Panel tabs.
+* Added an icon to the Search tab.
+* Added support for accessing Australian Bureau of Statistics data via the ABS-ITT API, using `AbsIttCatalogGroup` and `AbsIttCatalogItem`.
+* The Now Viewing panel now contains controls for selecting which column to show in CSV datasets.
+
+### 1.0.19
+
+* Added `NowViewingAttentionGrabberViewModel`.  It calls attention the Now Viewing tab the first time a catalog item is enabled.
+* Added `isHidden` property to catalog items and groups.  Hidden items and groups do not show up in the catalog or in search results.
+
 ### 1.0.18
 
 * Added `featureInfoFields` property to `CsvCatalogItem.tableStyle`.  It allows setting which fields to show in the Feature Info popup, and the name to use for each.
@@ -11,6 +37,7 @@ Change Log
 * We now pass ArcGIS MapServer metadata, when it's available, through to Cesium's `ArcGisMapServerImageryProvider` so that it doesn't need to re-request the metadata.
 * Changed the style of the Menu Bar to have visually-separate menu items.
 * Added support for SVG menu item icons to `MenuBarViewModel`.
+* Improved popup message box sizing.
 
 ### 1.0.17
 
