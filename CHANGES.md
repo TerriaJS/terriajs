@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.24
+
+* `WebMapServiceCatalogItem` now determines its rectangle from the GetCapabilities metadata even when configured to use multiple WMS layers.
+
 ### 1.0.23
 
 * Fixed a bug that prevented features from being pickable from ABS datasets on the 2D map.
