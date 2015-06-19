@@ -4,6 +4,8 @@ Change Log
 ### 1.0.24
 
 * `WebMapServiceCatalogItem` now determines its rectangle from the GetCapabilities metadata even when configured to use multiple WMS layers.
+* `AbsIttCatalogItem` styles can now be set using the `tableStyle` property, much like `CsvCatalogItem`.
+* Improved `AbsIttCatalogItem`'s tolerance of errors from the server.
 
 ### 1.0.23
 
