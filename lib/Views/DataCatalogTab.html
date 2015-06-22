@@ -9,6 +9,11 @@
                 </div>
                 <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock"></div>
                 <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
+                <!-- ko foreach: rightSideControls -->
+                    <div class="data-catalog-item-control">
+                        <div class="clickable" data-bind="click: activate, cesiumSvgPath: { path: $data.svgIcon, width: $data.svgWidth, height: $data.svgHeight }, css: $data.cssClass"></div>
+                    </div>
+                <!-- /ko -->
                 <!-- ko if: showInfo -->
                 <div class="data-catalog-item-info">
                     <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>

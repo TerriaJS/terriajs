@@ -127,14 +127,18 @@
     width: 20px;
 }
 
-.data-catalog-item-info {
+.data-catalog-right-side-control {
     display: table-cell;
     text-align: right;
     width: 25px;
     vertical-align: middle;
 }
 
-.data-catalog-info-icon {
+.data-catalog-item-info {
+    .data-catalog-right-side-control
+}
+
+.data-catalog-control-icon {
     position: relative;
     width: 18px;
     height: 18px;
@@ -144,6 +148,10 @@
     -webkit-transition: opacity 0.2s ease;
     -moz-transition: opacity 0.2s ease;
     -o-transition: opacity 0.2s ease;
+}
+
+.data-catalog-info-icon {
+    .data-catalog-control-icon
 }
 
 .data-catalog-info-icon:hover {
