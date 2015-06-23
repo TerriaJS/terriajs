@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.28
+
+* Fixed a bug that prevented links to non-image (e.g. ArcGIS Map Server) legends from appearing on the Now Viewing panel.
+
 ### 1.0.27
 
 * Use terriajs-cesium 1.10.7, fixing a module load problem in really old browers like IE8.
