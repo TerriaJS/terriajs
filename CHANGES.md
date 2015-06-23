@@ -1,10 +1,19 @@
 Change Log
 ==========
 
+### 1.0.28
+
+* Fixed a bug that prevented links to non-image (e.g. ArcGIS Map Server) legends from appearing on the Now Viewing panel.
+
+### 1.0.27
+
+* Use terriajs-cesium 1.10.7, fixing a module load problem in really old browers like IE8.
+
 ### 1.0.25
 
 * Fixed incorrect date formatting in the timeline and animation controls on Internet Explorer 9.
 * Add support for CSV files with longitude and latitude columns but no numeric value column.  Such datasets are visualized as points with a default color and do not have a legend.
+* The Feature Information popup is now automatically closed when the user changes the `AbsIttCatalogItem` filter.
 
 ### 1.0.24
 
