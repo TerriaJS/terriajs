@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.25
+
+* Fixed incorrect date formatting in the timeline and animation controls on Internet Explorer 9.
+* Add support for CSV files with longitude and latitude columns but no numeric value column.  Such datasets are visualized as points with a default color and do not have a legend.
+
 ### 1.0.24
 
 * Deprecated:
@@ -10,6 +15,8 @@ Change Log
 * Added the ability to specify the terrain URL or the `TerrainProvider` to use in the 3D view when constructing `TerriaViewer`.
 * `AbsIttCatalogItem` styles can now be set using the `tableStyle` property, much like `CsvCatalogItem`.
 * Improved `AbsIttCatalogItem`'s tolerance of errors from the server.
+* `NavigationViewModel` can now be constructed with a list of `controls` to include, instead of the standard `ZoomInNavigationControl`, `ResetViewNavigationControl`, and `ZoomOutNavigationControl`.
+* Fixed a bug that caused the brand bar to slide away with the explorer panel on Internet Explorer 9.
 
 ### 1.0.23
 
