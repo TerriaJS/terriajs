@@ -51,7 +51,7 @@
                     <!-- ko foreach: rightSideControls -->
                     <div class="now-viewing-action clickable" data-bind="click: activate, text: $data.text, attr: { title: $data.name }"></div>
                     <!-- /ko -->
-                    <!-- ko if: showInfo -->
+                    <!-- ko if: showsInfo -->
                     <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
                     <!-- /ko -->
                     <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
