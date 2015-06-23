@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.26
+
+* Use terriajs-cesium 1.10.6, fixing a module load problem in really old browers like IE8.
+
 ### 1.0.25
 
 * Fixed incorrect date formatting in the timeline and animation controls on Internet Explorer 9.
