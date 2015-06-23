@@ -1,9 +1,9 @@
 Change Log
 ==========
 
-### 1.0.26
+### 1.0.27
 
-* Use terriajs-cesium 1.10.6, fixing a module load problem in really old browers like IE8.
+* Use terriajs-cesium 1.10.7, fixing a module load problem in really old browers like IE8.
 
 ### 1.0.25
 
