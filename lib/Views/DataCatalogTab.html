@@ -2,19 +2,17 @@
     <!-- ko if: !isHidden && typeof items === 'undefined' -->
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
-                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled">
-                    <!-- ko if: isMappable -->
+                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled, style: { visibility: isMappable ? '' : 'hidden' }">
                     <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
-                    <!-- /ko -->
                 </div>
                 <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock"></div>
                 <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
                 <!-- ko foreach: rightSideControls -->
-                    <div class="data-catalog-item-control">
+                    <div class="data-catalog-right-side-control">
                         <div class="clickable" data-bind="click: activate, cesiumSvgPath: { path: $data.svgIcon, width: $data.svgWidth, height: $data.svgHeight }, css: $data.cssClass"></div>
                     </div>
                 <!-- /ko -->
-                <!-- ko if: showInfo -->
+                <!-- ko if: showsInfo -->
                 <div class="data-catalog-item-info">
                     <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
                 </div>
