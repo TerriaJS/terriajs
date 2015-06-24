@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.29
+
+* Add support for loading init files via the proxy when necessary.
+
 ### 1.0.28
 
 * Fixed a bug that prevented links to non-image (e.g. ArcGIS Map Server) legends from appearing on the Now Viewing panel.
