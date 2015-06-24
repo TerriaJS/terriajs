@@ -75,6 +75,10 @@
                 </a>
                 <!-- /ko -->
 
+                <!-- ko if: hasLegend && !legendIsImage -->
+                <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
+                <!-- /ko -->
+
                 <!-- ko if: !hasLegend -->
                     <!-- ko if: type !== 'abs-itt' -->
                     <div class="now-viewing-legend-text">No legend available for this data item.</div>
