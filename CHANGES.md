@@ -4,6 +4,7 @@ Change Log
 ### 1.0.29
 
 * Add support for loading init files via the proxy when necessary.
+* Switched to using the updated URL for STK World Terrain, `//assets.agi.com/stk-terrain/v1/tilesets/world/tiles`.
 
 ### 1.0.28
 
