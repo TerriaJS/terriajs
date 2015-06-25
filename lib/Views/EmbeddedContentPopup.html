@@ -1,0 +1,11 @@
+<div class="modal-background" data-bind="click: closeIfClickOnBackground">
+    <div class="embeded-content-popup">
+        <div class="modal-header">
+            <div class="modal-close-button" data-bind="click: close">&times;</div>
+            <h1 data-bind="text: title"></h1>
+        </div>
+        <div class="embeded-content">
+            <iframe data-bind="attr: { src : url }" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen onmousewheel=""></iframe>
+        </div>
+    </div>
+</div>
