@@ -93,42 +93,56 @@
                 </div>
             </div>
             <div class="catalog-item-info-section">
-                <h2>Data Details</h2>
-                <div class="catalog-item-info-table">
-                    <!-- ko if: catalogItem.metadata.dataSourceMetadata.hasChildren -->
-                    <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.dataSourceMetadata.items }">
-                    </table>
-                    <!-- /ko -->
-                    <!-- ko if: catalogItem.metadata.dataSourceErrorMessage -->
-                    <table>
-                        <tr>
-                            <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
-                                <div class="catalog-item-info-properties-arrow"></div>
-                                <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.dataSourceErrorMessage"></div>
-                            </td>
-                        </tr>
-                    </table>
-                    <!-- /ko -->
+                <div class="catalog-item-info-details-heading" data-bind="click: toggleShowDataDetails">
+                    <div class="catalog-item-info-details-label">Data Details</div>
+                    <div class="catalog-item-info-details-expand-button-holder">
+                        <div class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showDataDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                    </div>
                 </div>
+                <!-- ko if: showDataDetails -->
+                    <div class="catalog-item-info-table">
+                        <!-- ko if: catalogItem.metadata.dataSourceMetadata.hasChildren -->
+                        <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.dataSourceMetadata.items }">
+                        </table>
+                        <!-- /ko -->
+                        <!-- ko if: catalogItem.metadata.dataSourceErrorMessage -->
+                        <table>
+                            <tr>
+                                <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
+                                    <div class="catalog-item-info-properties-arrow"></div>
+                                    <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.dataSourceErrorMessage"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- /ko -->
+                    </div>
+                <!-- /ko -->
             </div>
             <div class="catalog-item-info-section">
-                <h2>Service Details</h2>
-                <div class="catalog-item-info-table">
-                    <!-- ko if: catalogItem.metadata.serviceMetadata.hasChildren -->
-                    <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.serviceMetadata.items }">
-                    </table>
-                    <!-- /ko -->
-                    <!-- ko if: catalogItem.metadata.serviceErrorMessage -->
-                    <table>
-                        <tr>
-                            <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
-                                <div class="catalog-item-info-properties-arrow"></div>
-                                <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.serviceErrorMessage"></div>
-                            </td>
-                        </tr>
-                    </table>
-                    <!-- /ko -->
+                <div class="catalog-item-info-details-heading" data-bind="click: toggleShowServiceDetails">
+                    <div class="catalog-item-info-details-label">Service Details</div>
+                    <div class="catalog-item-info-details-expand-button-holder">
+                        <div class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showServiceDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                    </div>
                 </div>
+                <!-- ko if: showServiceDetails -->
+                    <div class="catalog-item-info-table">
+                        <!-- ko if: catalogItem.metadata.serviceMetadata.hasChildren -->
+                        <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.serviceMetadata.items }">
+                        </table>
+                        <!-- /ko -->
+                        <!-- ko if: catalogItem.metadata.serviceErrorMessage -->
+                        <table>
+                            <tr>
+                                <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
+                                    <div class="catalog-item-info-properties-arrow"></div>
+                                    <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.serviceErrorMessage"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- /ko -->
+                    </div>
+                <!-- /ko -->
             </div>
         </div>
     </div>
