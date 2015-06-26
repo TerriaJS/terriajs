@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 1.0.30
+
+* `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem` now augment directly-specified metadata with metadata queried from the server.
+* "Data Details" and "Service Details" on the catalog item info panel are now collapsed by default.  This improves the performance of the panel and hides some overly technical details.
+* `ArcGisMapServerCatalogItem.layers` can now specify layer names in addition to layer IDs.  Layer names are matched in a case-insensitive manner and only if a direct ID match is not found.
+
 ### 1.0.29
 
 * Add support for loading init files via the proxy when necessary.
