@@ -32,7 +32,7 @@
 </script>
 
 <div class="modal-background" data-bind="click: closeIfClickOnBackground">
-    <div class="catalog-item-info" data-bind="css : { loadingIndicator : catalogItem.metadata.isLoading }">
+    <div class="catalog-item-info">
         <div class="modal-header">
             <div class="modal-close-button" data-bind="click: close">&times;</div>
             <h1 data-bind="text: catalogItem.name"></h1>
@@ -131,5 +131,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="catalog-item-info-loading" data-bind="visible: catalogItem.metadata.isLoading">
+        <img data-bind="attr: { src: catalogItem.terria.baseUrl + 'images/ajax-loader.gif' }" />
     </div>
 </div>
