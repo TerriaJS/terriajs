@@ -1,14 +1,43 @@
 Change Log
 ==========
 
+### 1.0.30
+
+* `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem` now augment directly-specified metadata with metadata queried from the server.
+* "Data Details" and "Service Details" on the catalog item info panel are now collapsed by default.  This improves the performance of the panel and hides some overly technical details.
+* `ArcGisMapServerCatalogItem.layers` can now specify layer names in addition to layer IDs.  Layer names are matched in a case-insensitive manner and only if a direct ID match is not found.
+* `itemProperties` are now applied through the normal JSON loading mechanism, so properties that are represented differently in code and in JSON will now work as well.
+
+### 1.0.29
+
+* Add support for loading init files via the proxy when necessary.
+* Switched to using the updated URL for STK World Terrain, `//assets.agi.com/stk-terrain/v1/tilesets/world/tiles`.
+
+### 1.0.28
+
+* Fixed a bug that prevented links to non-image (e.g. ArcGIS Map Server) legends from appearing on the Now Viewing panel.
+
+### 1.0.27
+
+* Use terriajs-cesium 1.10.7, fixing a module load problem in really old browers like IE8.
+
+### 1.0.25
+
+* Fixed incorrect date formatting in the timeline and animation controls on Internet Explorer 9.
+* Add support for CSV files with longitude and latitude columns but no numeric value column.  Such datasets are visualized as points with a default color and do not have a legend.
+* The Feature Information popup is now automatically closed when the user changes the `AbsIttCatalogItem` filter.
+
 ### 1.0.24
 
 * Deprecated:
   * Renamed `AusGlobeViewer` to `TerriaViewer`.  `AusGlobeViewer` will continue to work until 2.0 but using it will print a deprecation warning to the browser console.
+  * `BrandBarViewModel.create` now takes a single `options` parameter.  The container element, which used to be specified as the first parameter, should now be specified as the `container` property of the `options` parameter.  The old function signature will continue to work until 2.0 but using it will print a deprecation warning to the browser console.
 * `WebMapServiceCatalogItem` now determines its rectangle from the GetCapabilities metadata even when configured to use multiple WMS layers.
 * Added the ability to specify the terrain URL or the `TerrainProvider` to use in the 3D view when constructing `TerriaViewer`.
 * `AbsIttCatalogItem` styles can now be set using the `tableStyle` property, much like `CsvCatalogItem`.
 * Improved `AbsIttCatalogItem`'s tolerance of errors from the server.
+* `NavigationViewModel` can now be constructed with a list of `controls` to include, instead of the standard `ZoomInNavigationControl`, `ResetViewNavigationControl`, and `ZoomOutNavigationControl`.
+* Fixed a bug that caused the brand bar to slide away with the explorer panel on Internet Explorer 9.
 
 ### 1.0.23
 
