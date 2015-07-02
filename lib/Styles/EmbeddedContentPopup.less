@@ -1,0 +1,20 @@
+@emebeded-content-popup-height: 70vh;
+
+.emebeded-content-popup {
+    .modal;
+    width: 70vw;
+    height: @emebeded-content-popup-height;
+}
+
+.emebeded-content-popup-header {
+    line-height: 40px;
+    border-bottom: @panel-element-border;
+    background-color: rgba(0,0,0,0.2);
+}
+
+.emebeded-content-popup-content {
+    padding: 15px;
+    overflow: auto;
+    height: calc(~'@{embedded-content-popup-height} - 40px - 30px');
+    font-weight: 300;
+}
