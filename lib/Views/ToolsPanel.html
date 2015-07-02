@@ -34,6 +34,12 @@
                         <input type="checkbox" data-bind="checked: useProxyCache" />
                         Use proxy cache
                     </label>
+                    <!-- ko if: useProxyCache -->
+                    <label class="tools-content-type">
+                        <input type="checkbox" data-bind="checked: purgeProxyCache" />
+                        Purge proxy cache
+                    </label>
+                    <!-- /ko -->
                 </div>
 
             </form>
