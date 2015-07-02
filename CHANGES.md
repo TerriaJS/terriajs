@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.31
+
+* Added support for optionally generating shorter URLs when sharing by using the Google URL shortening service.
+
 ### 1.0.30
 
 * `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem` now augment directly-specified metadata with metadata queried from the server.
