@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.32
+
+* Fixed CKAN resource format matching for KML, CSV, and Esri REST.
+
 ### 1.0.31
 
 * Added support for optionally generating shorter URLs when sharing by using the Google URL shortening service.
