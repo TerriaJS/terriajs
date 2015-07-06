@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.33
+
+* Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
+
 ### 1.0.32
 
 * Fixed CKAN resource format matching for KML, CSV, and Esri REST.
