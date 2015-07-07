@@ -4,6 +4,7 @@ Change Log
 ### 1.0.33
 
 * Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
+* Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
 
 ### 1.0.32
 
