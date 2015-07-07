@@ -4,6 +4,7 @@ Change Log
 ### 1.0.33
 
 * Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
+* Added a popup message when zooming in to the "No Data" scales of an `ArcGisMapServerCatalogItem`.
 
 ### 1.0.32
 
