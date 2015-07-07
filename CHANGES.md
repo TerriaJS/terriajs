@@ -1,6 +1,20 @@
 Change Log
 ==========
 
+### 1.0.33
+
+* Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
+* Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
+* Added `ImageryLayerCatalogItem.treat403AsError` property.
+
+### 1.0.32
+
+* Fixed CKAN resource format matching for KML, CSV, and Esri REST.
+
+### 1.0.31
+
+* Added support for optionally generating shorter URLs when sharing by using the Google URL shortening service.
+
 ### 1.0.30
 
 * `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem` now augment directly-specified metadata with metadata queried from the server.
