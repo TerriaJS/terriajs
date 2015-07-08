@@ -1,3 +1,6 @@
+.feature-info-panel-holder {
+}
+
 .feature-info-panel {
     .panel;
     opacity: 1;
@@ -72,6 +75,34 @@
 
 @media print {
     .feature-info-panel {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 520px), screen and (max-height: 400px) {
+    .feature-info-panel-holder {
+        .modal-background;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: table;
+        width: 100%;
+        height: 100%;
+    }
+    .feature-info-panel-holder-inner {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .feature-info-panel {
+        display: inline-block;
+        position: relative;
+        top: auto;
+        right: auto;
+    }
+    .feature-info-panel-hidden {
         display: none;
     }
 }
