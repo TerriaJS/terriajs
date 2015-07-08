@@ -5,6 +5,10 @@ Change Log
 
 * Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
 * Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
+* Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
+* Added `ImageryLayerCatalogItem.treat403AsError` property.
+* Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
+* Added `createBingBaseMapOptions` function.
 
 ### 1.0.32
 
