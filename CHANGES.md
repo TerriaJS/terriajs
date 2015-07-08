@@ -7,6 +7,7 @@ Change Log
 * Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
 * Added `ImageryLayerCatalogItem.treat403AsError` property.
 * Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
+* Added `createBingBaseMapOptions` function.
 
 ### 1.0.32
 
