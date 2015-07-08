@@ -1,16 +1,7 @@
 .feature-info-panel-holder {
-}
-
-.feature-info-panel {
-    .panel;
+    .opaque-to-input;
     opacity: 1;
     visibility: visible;
-    background-color: @panel-background-color;
-    top: 60px;
-    right: 95px;
-    max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
-    position: absolute;
-    box-shadow: @panel-box-shadow;
 
     -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
     -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
@@ -19,9 +10,11 @@
     transition: opacity @explorer-panel-close-animation-length ease-out;
 }
 
-.feature-info-panel-hidden {
+.feature-info-panel-holder-hidden {
+    .transparent-to-input;
     opacity: 0;
     visibility: hidden;
+
     -webkit-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
     -moz-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
     -ms-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
@@ -29,7 +22,18 @@
     transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
 }
 
+.feature-info-panel {
+    .panel;
+    background-color: @panel-background-color;
+    top: 60px;
+    right: 95px;
+    max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+    position: absolute;
+    box-shadow: @panel-box-shadow;
+}
+
 .feature-info-panel-body {
+    .opaque-to-input;
 }
 
 .feature-info-panel-section {
