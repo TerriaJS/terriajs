@@ -64,17 +64,19 @@
                 </div>
                 <!-- /ko -->
 
-                <!-- ko if: legendIsImage -->
-                <a data-bind="attr: { href: legendUrl }" target="_blank">
-                    <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
-                </a>
+                <!-- ko foreach: legendUrls || [] -->
+                    <!-- ko if: $root.urlIsImage($data) -->
+                    <a data-bind="attr: { href: $data }" target="_blank">
+                        <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
+                    </a>
+                    <!-- /ko -->
+
+                    <!-- ko if: !$root.urlIsImage($data) -->
+                    <a class="now-viewing-legend-text" data-bind="attr: { href: $data }" target="_blank">Open legend in a separate tab</a>
+                    <!-- /ko -->
                 <!-- /ko -->
 
-                <!-- ko if: hasLegend && !legendIsImage -->
-                <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
-                <!-- /ko -->
-
-                <!-- ko if: !hasLegend -->
+                <!-- ko if: !legendUrls || legendUrls.length === 0 -->
                     <!-- ko if: type !== 'abs-itt' -->
                     <div class="now-viewing-legend-text">No legend available for this data item.</div>
                     <!-- /ko -->
