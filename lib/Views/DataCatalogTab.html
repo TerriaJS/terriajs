@@ -5,7 +5,7 @@
                 <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled, style: { visibility: isMappable ? '' : 'hidden' }">
                     <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
                 </div>
-                <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock"></div>
+                <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></div>
                 <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
                 <!-- ko foreach: rightSideControls -->
                     <div class="data-catalog-right-side-control">
