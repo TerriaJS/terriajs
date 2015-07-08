@@ -9,6 +9,7 @@ Change Log
 * Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
 * Added `createBingBaseMapOptions` function.
 * Added an option to `KnockoutMarkdownBinding` to optionally skip HTML sanitization and therefore to allow unsafe HTML.
+* Upgraded to Cesium 1.11.
 
 ### 1.0.32
 
