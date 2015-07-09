@@ -7,9 +7,11 @@
                 </div>
                 <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></div>
                 <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
+                <!-- ko if: showsInfo -->
                 <div class="data-catalog-item-info">
                     <div class="data-catalog-info-icon clickable" data-bind="click: $root.showInfo.bind($root), cesiumSvgPath: { path: $root.svgInfo, width: 18, height: 18, 'fill-rule': 'evenodd' }"></div>
                 </div>
+                <!-- /ko -->
             </div>
         </div>
     <!-- /ko -->
