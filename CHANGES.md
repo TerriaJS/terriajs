@@ -15,6 +15,7 @@ Change Log
 * Added `createBingBaseMapOptions` function.
 * Added an option to `KnockoutMarkdownBinding` to optionally skip HTML sanitization and therefore to allow unsafe HTML.
 * Upgraded to Cesium 1.11.
+* `CatalogItem.zoomTo` can now zoom to much smaller bounding box rectangles.
 
 ### 1.0.32
 
