@@ -8,6 +8,7 @@ Change Log
 ### 1.0.33
 
 * Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
+* Added a popup message when zooming in to the "No Data" scales of an `ArcGisMapServerCatalogItem`.
 * Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
 * Added `ImageryLayerCatalogItem.treat403AsError` property.
 * Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
