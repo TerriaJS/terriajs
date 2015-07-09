@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.34
+
+* Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
+
 ### 1.0.33
 
 * Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
