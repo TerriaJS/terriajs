@@ -1,3 +1,8 @@
+@info-background-color: @panel-background-color;
+@info-text-color: @panel-text-color;
+@info-header-background-color: @panel-section-background-color;
+@info-header-text-color: @panel-emphasized-text-color;
+
 .feature-info-panel {
     .panel;
     opacity: 1;
@@ -35,8 +40,8 @@
 .feature-info-panel-section-header {
     font-size: 0.9em;
     padding: 8px;
-    background-color: @panel-section-background-color;
-    color: @panel-emphasized-text-color;
+    background-color: @info-header-background-color;
+    color: @info-header-text-color;
     border-bottom: @panel-element-border;
 }
 
@@ -45,7 +50,7 @@
 }
 
 .feature-info-panel-section-content {
-    color: @panel-text-color;
+    color: @info-text-color;
     font-weight: lighter;
     padding: 15px;
     overflow: auto;
@@ -67,7 +72,7 @@
     top: 6px;
     cursor: pointer;
     font-size: 12pt;
-    color: @panel-emphasized-text-color;
+    color: @info-header-text-color;
 }
 
 @media print {
