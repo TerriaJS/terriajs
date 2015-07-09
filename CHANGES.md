@@ -4,6 +4,7 @@ Change Log
 ### 1.0.34
 
 * Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
+* Significantly improved the experience on devices with small screens, such as phones.
 
 ### 1.0.33
 
