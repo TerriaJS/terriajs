@@ -17,13 +17,13 @@
     <!-- ko if: !isHidden && typeof items !== 'undefined' -->
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
-                <div class="data-catalog-icon-holder clickable" data-bind="click: $parent.toggleOpen.bind($parent)">
+                <div class="data-catalog-icon-holder clickable" data-bind="click: $parent.type === 'search_result' ? $parent.toggleOpen.bind($parent) : toggleOpen">
                     <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: $parent.isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': $parent.isOpen }"></div>
                 </div>
-                <div class="data-catalog-group-label clickable" data-bind="click: $parent.toggleOpen.bind($parent), text: name, css: { 'data-catalog-opened-group': $parent.isOpen }"></div>
+                <div class="data-catalog-group-label clickable" data-bind="click: $parent.type === 'search_result' ? $parent.toggleOpen.bind($parent) : toggleOpen, text: name, css: { 'data-catalog-opened-group': $parent.isOpen }"></div>
             </div>
 
-            <!-- ko if: $parent.isOpen && (isLoading || items.length === 0) -->
+            <!-- ko if: ($parent.type === 'search_result' ? $parent.isOpen : isOpen) && (isLoading || items.length === 0) -->
                 <div class="data-catalog-group-contents">
                     <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 1)">
                         <div class="data-catalog-member-top-row">
@@ -34,8 +34,8 @@
                 </div>
             <!-- /ko -->
 
-            <!-- ko if: $parent.isOpen -->
-                <div class="data-catalog-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
+            <!-- ko if: $parent.type === 'search_result' ? $parent.isOpen : isOpen -->
+                <div class="data-catalog-group-contents" data-bind="template: { name: 'search-catalog-item-template', foreach: items }"></div>
             <!-- /ko -->
         </div>
     <!-- /ko -->
