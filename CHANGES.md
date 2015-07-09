@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+### 1.0.33
+
+* Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
+* Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
+* Added `ImageryLayerCatalogItem.treat403AsError` property.
+* Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
+* Added `createBingBaseMapOptions` function.
+* Added an option to `KnockoutMarkdownBinding` to optionally skip HTML sanitization and therefore to allow unsafe HTML.
+* Upgraded to Cesium 1.11.
+
 ### 1.0.32
 
 * Fixed CKAN resource format matching for KML, CSV, and Esri REST.
