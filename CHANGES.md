@@ -5,6 +5,10 @@ Change Log
 
 * Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
 * Added `PopupMessageConfirmationViewModel`. It prevents the Popup from being closed unless the confirm button is pressed. Can also optionally have a deny button with a custom action.
+* Added support for discovering GeoJSON datasets from CKAN.
+* Added support for zipped GeoJSON files.
+* Made `KmlCatalogItem` use the proxy when required.
+* Made `FeatureInfoPanelViewModel` use the white panel background in more cases.
 
 ### 1.0.33
 
