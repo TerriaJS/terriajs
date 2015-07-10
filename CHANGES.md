@@ -4,6 +4,7 @@ Change Log
 ### 1.0.34
 
 * Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
+* Added `PopupMessageConfirmationViewModel`. It prevents the Popup from being closed unless the confirm button is pressed. Can also optionally have a deny button with a custom action.
 
 ### 1.0.33
 
@@ -15,6 +16,7 @@ Change Log
 * Added `createBingBaseMapOptions` function.
 * Added an option to `KnockoutMarkdownBinding` to optionally skip HTML sanitization and therefore to allow unsafe HTML.
 * Upgraded to Cesium 1.11.
+* `CatalogItem.zoomTo` can now zoom to much smaller bounding box rectangles.
 
 ### 1.0.32
 
