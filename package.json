@@ -20,7 +20,8 @@
     "resolve": "^1.1.6",
     "sanitize-caja": "^0.1.3",
     "terriajs-cesium": "1.11.0",
-    "togeojson": "^0.9.0"
+    "togeojson": "^0.9.0",
+    "hammerjs": "^2.0.4"
   },
   "devDependencies": {
     "browserify": "^9.0.8",

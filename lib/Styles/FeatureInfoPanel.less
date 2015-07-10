@@ -3,16 +3,11 @@
 @info-header-background-color: @panel-section-background-color;
 @info-header-text-color: @panel-emphasized-text-color;
 
-.feature-info-panel {
+.feature-info-panel-holder {
     .panel;
+    .opaque-to-input;
     opacity: 1;
     visibility: visible;
-    background-color: @panel-background-color;
-    top: 60px;
-    right: 95px;
-    max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
-    position: absolute;
-    box-shadow: @panel-box-shadow;
 
     -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
     -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
@@ -21,9 +16,11 @@
     transition: opacity @explorer-panel-close-animation-length ease-out;
 }
 
-.feature-info-panel-hidden {
+.feature-info-panel-holder-hidden {
+    .transparent-to-input;
     opacity: 0;
     visibility: hidden;
+
     -webkit-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
     -moz-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
     -ms-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
@@ -31,7 +28,18 @@
     transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
 }
 
+.feature-info-panel {
+    .panel;
+    background-color: @panel-background-color;
+    top: 60px;
+    right: 95px;
+    max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+    position: absolute;
+    box-shadow: @panel-box-shadow;
+}
+
 .feature-info-panel-body {
+    .opaque-to-input;
 }
 
 .feature-info-panel-section {
@@ -77,6 +85,34 @@
 
 @media print {
     .feature-info-panel {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 700px), screen and (max-height: 420px) {
+    .feature-info-panel-holder {
+        .modal-background;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: table;
+        width: 100%;
+        height: 100%;
+    }
+    .feature-info-panel-holder-inner {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .feature-info-panel {
+        display: inline-block;
+        position: relative;
+        top: auto;
+        right: auto;
+    }
+    .feature-info-panel-hidden {
         display: none;
     }
 }

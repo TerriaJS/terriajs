@@ -9,6 +9,7 @@ Change Log
 * Added support for zipped GeoJSON files.
 * Made `KmlCatalogItem` use the proxy when required.
 * Made `FeatureInfoPanelViewModel` use the white panel background in more cases.
+* Significantly improved the experience on devices with small screens, such as phones.
 
 ### 1.0.33
 
