@@ -10,6 +10,7 @@ Change Log
 * Made `KmlCatalogItem` use the proxy when required.
 * Made `FeatureInfoPanelViewModel` use the white panel background in more cases.
 * Significantly improved the experience on devices with small screens, such as phones.
+* Fixed a bug that caused only the portion of a CKAN group name before the first comma to be used.
 
 ### 1.0.33
 
