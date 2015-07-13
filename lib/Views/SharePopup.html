@@ -2,7 +2,7 @@
     <div class="share-popup">
         <div class="modal-header">
             <div class="modal-close-button" data-bind="click: close">&times;</div>
-            <h1>Share</h1>
+            <h1 data-bind="text: title"></h1>
         </div>
         <div class="share-popup-content">
             <div class="share-popup-image">
@@ -22,8 +22,8 @@
                     <input readonly type="text" data-bind="value: url" size="100" onclick="this.select();" />
                 </div>
                 <div>
-                    <label class="share-popup-checkbox">
-                        <input type="checkbox" data-bind="checked: shortenUrl" />Shorten the share url using a web service
+                    <label class="share-popup-checkbox" data-bind="visible: enableShortenUrl">
+                        <input type="checkbox" data-bind="checked: shortenUrl" />Shorten the share URL using a web service
                     </label>
                 </div>
                 <div class="share-popup-label">

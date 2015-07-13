@@ -38,7 +38,7 @@
             <h1 data-bind="text: catalogItem.name"></h1>
         </div>
         <div class="catalog-item-info-content">
-            <!-- ko if: catalogItem.description -->
+            <!-- ko if: catalogItem.description && catalogItem.description.length > 0 -->
             <div class="catalog-item-info-section">
                 <h2>Description</h2>
                 <div class="catalog-item-info-description" data-bind="markdown: catalogItem.description"></div>
@@ -52,17 +52,19 @@
             <!-- /ko -->
 
 
-            <!-- ko foreach: catalogItem.info -->
-            <div class="catalog-item-info-section">
-                <h2 data-bind="text: name"></h2>
-                <div class="catalog-item-info-description">
-                    <div data-bind="markdown: content"></div>
-                </div>
-            </div>
+            <!-- ko foreach: sortedInfo -->
+                <!-- ko if: content && content.length > 0 -->
+                    <div class="catalog-item-info-section">
+                        <h2 data-bind="text: name"></h2>
+                        <div class="catalog-item-info-description">
+                            <div data-bind="markdown: content"></div>
+                        </div>
+                    </div>
+                <!-- /ko -->
             <!-- /ko -->
 
             <!-- ko if: catalogItem.dataCustodian -->
-            <div class="catalog-item-info-section">
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0">
                 <h2>Data Custodian</h2>
                 <div class="catalog-item-info-description" data-bind="markdown: catalogItem.dataCustodian"></div>
             </div>
