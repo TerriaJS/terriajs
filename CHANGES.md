@@ -4,6 +4,7 @@ Change Log
 ### 1.0.35
 
 * Polygons from GeoJSON datasets are now filled.
+* Left-aligned feature info table column and added some space between columns.
 
 ### 1.0.34
 

@@ -63,6 +63,7 @@
     padding: 15px;
     overflow: auto;
     max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+    text-align: left;
 }
 
 .feature-info-panel-section-content-white-background {
@@ -81,6 +82,10 @@
     cursor: pointer;
     font-size: 12pt;
     color: @info-header-text-color;
+}
+
+.cesium-infoBox-defaultTable td {
+    padding-left: 10px;
 }
 
 @media print {
