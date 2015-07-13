@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.35
+
+* Polygons from GeoJSON datasets are now filled.
+
 ### 1.0.34
 
 * Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
