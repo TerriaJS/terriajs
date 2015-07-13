@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.35
+
+* Added `EarthGravityModel1996`.
+* Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
+
 ### 1.0.34
 
 * Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
