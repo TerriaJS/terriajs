@@ -1,14 +1,36 @@
 Change Log
 ==========
 
+### 1.0.35
+
+* Polygons from GeoJSON datasets are now filled.
+* Left-aligned feature info table column and added some space between columns.
+* Added `EarthGravityModel1996`.
+* Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
+
+### 1.0.34
+
+* Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
+* Added `PopupMessageConfirmationViewModel`. It prevents the Popup from being closed unless the confirm button is pressed. Can also optionally have a deny button with a custom action.
+* Added support for discovering GeoJSON datasets from CKAN.
+* Added support for zipped GeoJSON files.
+* Made `KmlCatalogItem` use the proxy when required.
+* Made `FeatureInfoPanelViewModel` use the white panel background in more cases.
+* Significantly improved the experience on devices with small screens, such as phones.
+* Fixed a bug that caused only the portion of a CKAN group name before the first comma to be used.
+
 ### 1.0.33
 
 * Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
 * Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
+* Added a popup message when zooming in to the "No Data" scales of an `ArcGisMapServerCatalogItem`.
 * Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
 * Added `ImageryLayerCatalogItem.treat403AsError` property.
 * Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
 * Added `createBingBaseMapOptions` function.
+* Added an option to `KnockoutMarkdownBinding` to optionally skip HTML sanitization and therefore to allow unsafe HTML.
+* Upgraded to Cesium 1.11.
+* `CatalogItem.zoomTo` can now zoom to much smaller bounding box rectangles.
 
 ### 1.0.32
 
