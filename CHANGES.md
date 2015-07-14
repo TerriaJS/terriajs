@@ -7,6 +7,7 @@ Change Log
 * Left-aligned feature info table column and added some space between columns.
 * Added `EarthGravityModel1996`.
 * Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
+* Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
 
 ### 1.0.34
 
@@ -22,7 +23,6 @@ Change Log
 ### 1.0.33
 
 * Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
-* Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
 * Added a popup message when zooming in to the "No Data" scales of an `ArcGisMapServerCatalogItem`.
 * Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
 * Added `ImageryLayerCatalogItem.treat403AsError` property.
