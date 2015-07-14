@@ -5,6 +5,8 @@ Change Log
 
 * Polygons from GeoJSON datasets are now filled.
 * Left-aligned feature info table column and added some space between columns.
+* Added `EarthGravityModel1996`.
+* Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
 
 ### 1.0.34
 
