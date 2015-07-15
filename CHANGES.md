@@ -3,6 +3,7 @@ Change Log
 
 ### 1.0.35
 
+* Added initial support for loading TopoJSON files.
 * Polygons from GeoJSON datasets are now filled.
 * Left-aligned feature info table column and added some space between columns.
 * Added `EarthGravityModel1996`.
