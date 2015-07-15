@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+### 1.0.35
+
+* Polygons from GeoJSON datasets are now filled.
+* Left-aligned feature info table column and added some space between columns.
+* Added `EarthGravityModel1996`.
+* Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
+* Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
+* Fixed a bug that caused the 3D view to use significant CPU time even when idle.
+
 ### 1.0.34
 
 * Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
