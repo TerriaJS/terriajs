@@ -342,7 +342,7 @@ getJasmineRequireObj().Spec = function(j$) {
 
     this.onStart(this);
 
-    if (!this.isExecutable() || enabled === false) {
+    if (!this.isExecutable() || this.markedPending || enabled === false) {
       complete(enabled);
       return;
     }
@@ -419,7 +419,7 @@ getJasmineRequireObj().Spec = function(j$) {
   };
 
   Spec.prototype.isExecutable = function() {
-    return !this.disabled && !this.markedPending;
+    return !this.disabled;
   };
 
   Spec.prototype.getFullName = function() {
@@ -2208,6 +2208,7 @@ getJasmineRequireObj().TreeProcessor = function() {
 
       queueRunnerFactory({
         queueableFns: childFns,
+        userContext: tree.sharedUserContext(),
         onException: function() {
           tree.onException.apply(tree, arguments);
         },
@@ -2310,30 +2311,29 @@ getJasmineRequireObj().TreeProcessor = function() {
     }
 
     function orderChildSegments(children) {
-      var result = [];
+      var specifiedOrder = [],
+          unspecifiedOrder = [];
 
       for (var i = 0; i < children.length; i++) {
         var child = children[i],
             segments = stats[child.id].segments;
 
         for (var j = 0; j < segments.length; j++) {
-          result.push(segments[j]);
+          var seg = segments[j];
+
+          if (seg.min === defaultMin) {
+            unspecifiedOrder.push(seg);
+          } else {
+            specifiedOrder.push(seg);
+          }
         }
       }
 
-      result.sort(function(a, b) {
-        if (a.min === null) {
-          return b.min === null ? 0 : 1;
-        }
-
-        if (b.min === null) {
-          return -1;
-        }
-
+      specifiedOrder.sort(function(a, b) {
         return a.min - b.min;
       });
 
-      return result;
+      return specifiedOrder.concat(unspecifiedOrder);
     }
 
     function executeNode(node, segmentNumber) {
@@ -3294,5 +3294,5 @@ getJasmineRequireObj().interface = function(jasmine, env) {
 };
 
 getJasmineRequireObj().version = function() {
-  return '2.3.0';
+  return '2.3.4';
 };

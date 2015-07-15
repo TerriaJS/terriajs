@@ -9,6 +9,8 @@ Change Log
 * Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
 * Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
 * Fixed a bug that caused the 3D view to use significant CPU time even when idle.
+* Added CartoDB's Positron and Dark Matter base maps to `createGlobalBaseMapOptions`.
+* Added support for subdomains to `OpenStreetMapCatalogItem`.
 
 ### 1.0.34
 
