@@ -224,4 +224,15 @@ describe('GeoJsonCatalogItem', function() {
             });
         });
     });
+
+    describe('TopoJSON', function() {
+        it('works by converting Topologies to GeoJSON', function(done) {
+            geojson.url = 'test/GeoJSON/polygon.topojson';
+            geojson.load().then(function() {
+                // TODO(yuri): Better comparison? Can we see if the geojson contains any features?
+                expect(geojson.rectangle.width).not.toBeCloseTo(0, 1);
+                done();
+            });
+        });
+    });
 });
