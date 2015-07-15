@@ -66,7 +66,7 @@ describe('CsvCatalogItem', function() {
 
         expect(csvItem.name).toBe('Unnamed Item');
         expect(csvItem.description).toBe('');
-        expect(csvItem.rectangle).toEqual(Rectangle.MAX_VALUE);
+        expect(csvItem.rectangle).toBeUndefined();
         expect(csvItem.type).toBe('csv');
         expect(csvItem.url).toBeUndefined();
         expect(csvItem.data).toBeUndefined();
@@ -175,8 +175,8 @@ describe('CsvCatalogItem', function() {
         return csvItem.load().then(function() {
             var entities = csvItem._tableDataSource.entities.values;
             expect(entities.length).toBe(2);
-            expect(entities[0].description.getValue()).toContain('<td>Vals</td><td>10</td>');
-            expect(entities[1].description.getValue()).toContain('<td>Vals</td><td></td>');
+            expect(entities[0].description.getValue()).toContain('<td>Vals</td><td align="right">10</td>');
+            expect(entities[1].description.getValue()).toContain('<td>Vals</td><td align="right"></td>');
             done();
         });
     });
