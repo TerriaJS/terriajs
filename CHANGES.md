@@ -5,6 +5,7 @@ Change Log
 
 * Fixed a bug that caused the `Terria#clock` to keep ticking (and therefore using CPU / battery) once started even after selecting a non-time-dynamic dataset.
 * Fixed a bug that caused the popup message to appear twice when a dataset failed to load.
+* Added ability to filter catalog search results by type: `is:wms`, `is:esri-mapserver`, `is:geojson` and so on.
 
 ### 1.0.35
 
