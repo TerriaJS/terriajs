@@ -3,6 +3,7 @@ Change Log
 
 ### 1.0.36
 
+* Calculate extent of TopoJSON files so that the viewer correctly pans+zooms when a TopoJSON file is loaded.
 * Fixed a bug that caused the `Terria#clock` to keep ticking (and therefore using CPU / battery) once started even after selecting a non-time-dynamic dataset.
 * Fixed a bug that caused the popup message to appear twice when a dataset failed to load.
 
