@@ -48,9 +48,6 @@
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
                 <div class="now-viewing-action-menu">
                     <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
-                    <!-- ko foreach: $root._getItemControls($data) -->
-                    <div class="now-viewing-action clickable" data-bind="click: activate, text: $data.text, attr: { title: $data.name }"></div>
-                    <!-- /ko -->
                     <!-- ko if: showsInfo -->
                     <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
                     <!-- /ko -->
