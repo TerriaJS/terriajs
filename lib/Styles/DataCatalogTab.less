@@ -129,11 +129,20 @@
     width: 20px;
 }
 
-.data-catalog-right-side-control {
+.data-catalog-control {
     display: table-cell;
-    text-align: right;
     width: 25px;
     vertical-align: middle;
+}
+
+.data-catalog-right-side-control {
+    .data-catalog-control
+    text-align: right;
+}
+
+.data-catalog-left-side-control {
+    .data-catalog-control
+    text-align: left;
 }
 
 .data-catalog-item-info {
