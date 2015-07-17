@@ -94,3 +94,10 @@ button.cesium-infoBox-camera {
         display: none;
     }
 }
+
+// Don't displace the map on small screens like mobile phones.
+@media screen and (max-width: 520px), screen and (max-height: 420px) {
+    .map-displaced {
+        left: 0;
+    }
+}

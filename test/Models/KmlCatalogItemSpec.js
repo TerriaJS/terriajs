@@ -76,6 +76,8 @@ describe('KmlCatalogItem', function() {
             kml.load().then(function() {
                 expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
                 done();
+            }).otherwise(function(e) {
+                console.log(e);
             });
         });
     });
