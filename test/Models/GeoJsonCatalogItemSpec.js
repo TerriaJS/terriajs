@@ -224,4 +224,14 @@ describe('GeoJsonCatalogItem', function() {
             });
         });
     });
+
+    describe('TopoJSON', function() {
+        it('computes extent of TopoJSON before rendering', function(done) {
+            geojson.url = 'test/GeoJSON/polygon.topojson';
+            geojson.load().then(function() {
+                expect(geojson.rectangle.width).not.toBeCloseTo(0, 1);
+                done();
+            });
+        });
+    });
 });

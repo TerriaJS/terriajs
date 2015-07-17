@@ -72,7 +72,14 @@
 
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
+                <p class="catalog-item-info-description" data-bind="if: catalogItem.type === 'wms'">
+                    This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank">WMS service</a> generating map images on request. It can be used in GIS software with this URL:
+                </p>
                 <input class="catalog-item-info-baseUrl" readonly type="text" data-bind="value: catalogItem.url" size="80" onclick="this.select();" />
+                <p class="catalog-item-info-description" data-bind="if: catalogItem.type === 'wms'">
+                    Layer name:
+                    <span class="catalog-item-info-tech-attributes" data-bind="text: catalogItem.layers"></span>
+                </p>
             </div>
             <div class="catalog-item-info-section" data-bind="if: catalogItem.metadataUrl">
                 <h2>Metadata URL</h2>
