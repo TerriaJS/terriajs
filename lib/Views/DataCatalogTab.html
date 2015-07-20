@@ -2,9 +2,11 @@
     <!-- ko if: !isHidden && typeof items === 'undefined' -->
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
-                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled, style: { visibility: isMappable ? '' : 'hidden' }">
+                <!-- ko if: isMappable -->
+                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled">
                     <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
                 </div>
+                <!-- /ko -->
                 <!-- ko foreach: $root.getLeftSideItemControls($data) -->
                 <div class="data-catalog-left-side-control">
                     <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
