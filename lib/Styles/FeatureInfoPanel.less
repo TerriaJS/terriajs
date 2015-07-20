@@ -34,8 +34,10 @@
     top: 60px;
     right: 95px;
     max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+    max-height: 85%;
     position: absolute;
     box-shadow: @panel-box-shadow;
+    overflow: auto;
 }
 
 .feature-info-panel-body {
@@ -64,6 +66,26 @@
     overflow: auto;
     max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
     text-align: left;
+    line-height: 130%;
+}
+
+
+.feature-info-panel-section-content-kv-table {
+  width: 100%;
+}
+
+.feature-info-panel-section-content-kv-table-key {
+  text-align: left;
+}
+
+.feature-info-panel-section-content-kv-table-value {
+  text-align: right;
+}
+
+.feature-info-panel-section-content-group {
+  padding-left: 10px;
+  color: white;
+  line-height: 130%;
 }
 
 .feature-info-panel-section-content-white-background {
