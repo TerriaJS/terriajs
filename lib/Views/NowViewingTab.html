@@ -52,7 +52,7 @@
                     <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
                     <!-- /ko -->
                     <!-- ko foreach: $root.getItemControls($data) -->
-                    <div class="now-viewing-action clickable" data-bind="click: activate, attr: { text: text, title: name }"></div>
+                    <div class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name }"></div>
                     <!-- /ko -->
                     <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
                 </div>
