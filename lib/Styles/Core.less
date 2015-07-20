@@ -52,6 +52,11 @@ a:hover {
     text-decoration: underline;
 }
 
+@modal-background-color: @panel-background-color;
+@modal-text-color: @panel-emphasized-text-color;
+@modal-header-background-color: rgba(0,0,0,0.2);
+@modal-header-text-color: @panel-emphasized-text-color;
+
 .modal-background {
     .opaque-to-input;
     position: fixed;
@@ -66,7 +71,7 @@ a:hover {
 .modal {
     position: absolute;
     margin: auto;
-    background-color: @panel-background-color;
+    background-color: @modal-background-color;
     top: 0;
     left: 0;
     bottom: 0;
@@ -74,11 +79,11 @@ a:hover {
     max-height: 100%;
     max-width: 100%;
     font-family: @default-font;
-    color: @panel-emphasized-text-color;
+    color: @modal-text-color;
 }
 
 .modal-header {
-  background-color: rgba(0,0,0,0.2);
+  background-color: @modal-header-background-color;
   border-bottom: @panel-element-border;
   font-size: 15px;
   line-height: 40px;
@@ -87,7 +92,7 @@ a:hover {
 
 .modal-header h1 {
   font-size: 15px;
-  color: @panel-emphasized-text-color;
+  color: @modal-header-text-color;
   margin-left: 15px;
 }
 
@@ -104,7 +109,7 @@ a:hover {
     right: 15px;
     cursor: pointer;
     font-size: 18px;
-    color: @panel-emphasized-text-color;
+    color: @modal-header-text-color;
 }
 
 
@@ -140,15 +145,15 @@ input[type=text] {
 
 ::-moz-placeholder {  /* Firefox 19+ */
   color: fade(@input-text-color, 75%);
-  font-style: italic; 
+  font-style: italic;
 }
 
-:-ms-input-placeholder {  
+:-ms-input-placeholder {
   color: fade(@input-text-color, 75%);
   font-style: italic;
 }
 
-input:focus { 
+input:focus {
     outline-color: #FFFFFF;
 }
 

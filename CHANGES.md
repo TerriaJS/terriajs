@@ -1,6 +1,68 @@
 Change Log
 ==========
 
+### 1.0.36
+
+* Calculate extent of TopoJSON files so that the viewer correctly pans+zooms when a TopoJSON file is loaded.
+* Fixed a bug that caused the `Terria#clock` to keep ticking (and therefore using CPU / battery) once started even after selecting a non-time-dynamic dataset.
+* Fixed a bug that caused the popup message to appear twice when a dataset failed to load.
+* Added ability to filter catalog search results by type: `is:wms`, `is:esri-mapserver`, `is:geojson` and so on.
+* Added layer information to the Info popup for WMS datasets.
+
+### 1.0.35
+
+* Polygons from GeoJSON datasets are now filled.
+* Left-aligned feature info table column and added some space between columns.
+* Added `EarthGravityModel1996`.
+* Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
+* Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
+* Fixed a bug that caused the 3D view to use significant CPU time even when idle.
+* Added CartoDB's Positron and Dark Matter base maps to `createGlobalBaseMapOptions`.
+* Added support for subdomains to `OpenStreetMapCatalogItem`.
+
+### 1.0.34
+
+* Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
+* Added `PopupMessageConfirmationViewModel`. It prevents the Popup from being closed unless the confirm button is pressed. Can also optionally have a deny button with a custom action.
+* Added support for discovering GeoJSON datasets from CKAN.
+* Added support for zipped GeoJSON files.
+* Made `KmlCatalogItem` use the proxy when required.
+* Made `FeatureInfoPanelViewModel` use the white panel background in more cases.
+* Significantly improved the experience on devices with small screens, such as phones.
+* Fixed a bug that caused only the portion of a CKAN group name before the first comma to be used.
+
+### 1.0.33
+
+* Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
+* Added a popup message when zooming in to the "No Data" scales of an `ArcGisMapServerCatalogItem`.
+* Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
+* Added `ImageryLayerCatalogItem.treat403AsError` property.
+* Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
+* Added `createBingBaseMapOptions` function.
+* Added an option to `KnockoutMarkdownBinding` to optionally skip HTML sanitization and therefore to allow unsafe HTML.
+* Upgraded to Cesium 1.11.
+* `CatalogItem.zoomTo` can now zoom to much smaller bounding box rectangles.
+
+### 1.0.32
+
+* Fixed CKAN resource format matching for KML, CSV, and Esri REST.
+
+### 1.0.31
+
+* Added support for optionally generating shorter URLs when sharing by using the Google URL shortening service.
+
+### 1.0.30
+
+* `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem` now augment directly-specified metadata with metadata queried from the server.
+* "Data Details" and "Service Details" on the catalog item info panel are now collapsed by default.  This improves the performance of the panel and hides some overly technical details.
+* `ArcGisMapServerCatalogItem.layers` can now specify layer names in addition to layer IDs.  Layer names are matched in a case-insensitive manner and only if a direct ID match is not found.
+* `itemProperties` are now applied through the normal JSON loading mechanism, so properties that are represented differently in code and in JSON will now work as well.
+* Added support for `csv-geo-*` (e.g. csv-geo-au) to `CkanCatalogGroup`.
+* The format name used in CKAN can now be specified to `CkanCatalogGroup` using the `wmsResourceFormat`, `kmlResourceFormat`, `csvResourceFormat`, and `esriMapServerResourceFormat` properties.  These properties are all regular expressions.  When the format of a CKAN resource returned from `package_search` matches one of these regular expressions, it is treated as that type within TerriaJS.
+* `CkanCatalogGroup` now fills the `dataUrl` property of created items by pointing to the dataset's page on CKAN.
+* The catalog item information panel now displays `info` sections in a consistent order.  The order can be overridden by setting `CatalogItemInfoViewModel.infoSectionOrder`.
+* An empty `description` or `info` section is no longer shown on the catalog item information panel.  This can be used to remove sections that would otherwise be populated from dataset metadata.
+
 ### 1.0.29
 
 * Add support for loading init files via the proxy when necessary.
