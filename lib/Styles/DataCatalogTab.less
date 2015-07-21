@@ -129,14 +129,27 @@
     width: 20px;
 }
 
-.data-catalog-item-info {
+.data-catalog-control {
     display: table-cell;
-    text-align: right;
     width: 25px;
     vertical-align: middle;
 }
 
-.data-catalog-info-icon {
+.data-catalog-right-side-control {
+    .data-catalog-control;
+    text-align: right;
+}
+
+.data-catalog-left-side-control {
+    .data-catalog-control;
+    text-align: left;
+}
+
+.data-catalog-item-info {
+    .data-catalog-right-side-control
+}
+
+.data-catalog-control-icon {
     position: relative;
     width: 18px;
     height: 18px;
@@ -146,10 +159,14 @@
     -webkit-transition: opacity 0.2s ease;
     -moz-transition: opacity 0.2s ease;
     -o-transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
-.data-catalog-info-icon:hover {
-  opacity: 1;
+.data-catalog-info-icon {
+    .data-catalog-control-icon
 }
 
 .data-catalog-enabled-item {
