@@ -1,5 +1,5 @@
 {
-  "asi": true,
+  "asi": false,
   "bitwise": false,
   "camelcase": false,
   "curly": false,
@@ -40,7 +40,7 @@
   "scripturl": false,
   "smarttabs": false,
   "shadow": false,
-  "sub": false,
+  "sub": true,
   "supernew": false,
   "browser": true
 }
