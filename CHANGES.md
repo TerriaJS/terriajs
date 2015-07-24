@@ -4,6 +4,8 @@ Change Log
 ### 1.0.37
 
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
+* Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
+* Added support for WMTS layers that can only provide tiles in JPEG format.
 
 ### 1.0.36
 
