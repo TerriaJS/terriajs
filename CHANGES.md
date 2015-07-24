@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.37
+
+* Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
+
 ### 1.0.36
 
 * Calculate extent of TopoJSON files so that the viewer correctly pans+zooms when a TopoJSON file is loaded.
