@@ -4,6 +4,7 @@ Change Log
 ### 1.0.37
 
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
+* Added `CatalogMember.infoSectionOrder` property, to allow the order of info sections to be configured per catalog item when necessary.
 
 ### 1.0.36
 
