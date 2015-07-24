@@ -5,6 +5,7 @@
 @now-viewing-toolbar-text-color: @highlight-color;
 @now-viewing-action-text-color: @highlight-color;
 @now-viewing-section-text-color: @panel-form-input-text-color;
+@now-viewing-drag-handle-color: darken(@now-viewing-top-row-text-color, 60%);
 
 .now-viewing-item-top-row {
     display: table;
@@ -46,9 +47,8 @@
 }
 
 .now-viewing-item-drag-handle {
-    position: relative;
-    top: 6px;
-    opacity: 0.4;
+    .now-viewing-item-checkbox;
+    fill: @now-viewing-drag-handle-color;
 }
 
 .now-viewing-item-details {
