@@ -5,6 +5,9 @@ Change Log
 
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
 * Added `CatalogMember.infoSectionOrder` property, to allow the order of info sections to be configured per catalog item when necessary.
+* Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
+* Added support for WMTS layers that can only provide tiles in JPEG format.
+* Fixed testing and caching of ArcGis layers from tools and added More information option for imagery layers.
 
 ### 1.0.36
 
