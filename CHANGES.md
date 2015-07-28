@@ -4,7 +4,7 @@ Change Log
 ### 1.0.37
 
 * Breaking changes:
-  * TerriaJS no longer automatically logs events to Google Analytics.  Instead, with no changes to client applications, events will be logged to the console instead.  To use Google Analytics, create an instance of `GoogleAnalytics` and pass it as the `analytics` parameter to the `Terria` constructor.  The Google Analytics key may be given as a `GoogleAnalytics` constructor parameter, or specified as the `parameters.googleAnalyticsKey` property in `config.json`.
+  * TerriaJS no longer automatically logs events to Google Analytics.  With no changes to client applications, events will now be logged to the console instead.  To use Google Analytics, create an instance of `GoogleAnalytics` and pass it as the `analytics` parameter to the `Terria` constructor.  The Google Analytics key may be given as a `GoogleAnalytics` constructor parameter, or specified as the `parameters.googleAnalyticsKey` property in `config.json`.
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
 * Added `CatalogMember.infoSectionOrder` property, to allow the order of info sections to be configured per catalog item when necessary.
 * Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
