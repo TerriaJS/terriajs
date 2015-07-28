@@ -1,6 +1,6 @@
 # Contributors
 
-The following people have contributed to TerriaJS under the following agreements:
+The following people have contributed to TerriaJS:
 
 * [NICTA](http://www.nicta.com.au/)
    * [Bill Simpson-Young](https://github.com/bsimyo)
