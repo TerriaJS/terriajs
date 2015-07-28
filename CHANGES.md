@@ -1,10 +1,24 @@
 Change Log
 ==========
 
+### 1.0.37
+
+* Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
+* Added `CatalogMember.infoSectionOrder` property, to allow the order of info sections to be configured per catalog item when necessary.
+* Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
+* Added support for WMTS layers that can only provide tiles in JPEG format.
+* Fixed testing and caching of ArcGis layers from tools and added More information option for imagery layers.
+
 ### 1.0.36
 
+* Calculate extent of TopoJSON files so that the viewer correctly pans+zooms when a TopoJSON file is loaded.
 * Fixed a bug that caused the `Terria#clock` to keep ticking (and therefore using CPU / battery) once started even after selecting a non-time-dynamic dataset.
 * Fixed a bug that caused the popup message to appear twice when a dataset failed to load.
+* Added layer information to the Info popup for WMS datasets.
+* Added ability to filter catalog search results by:
+  * type: `is:wms`, `-is:esri-mapserver`. A result must match any 'is:' and no '-is:'.
+  * url: `url:vic.gov.au`, `-url:nicta.com.au`. A result must match any 'url:', and no '-url:'.
+* Added ability to control the number of catalog search results: `show:20`, `show:all`
 
 ### 1.0.35
 
