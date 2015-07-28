@@ -8,6 +8,7 @@ Change Log
 * Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
 * Added support for WMTS layers that can only provide tiles in JPEG format.
 * Fixed testing and caching of ArcGis layers from tools and added More information option for imagery layers.
+* Made polygons drastically faster in 2D.
 
 ### 1.0.36
 
