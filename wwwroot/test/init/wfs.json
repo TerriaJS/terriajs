@@ -13,7 +13,8 @@
           "groupByProperty": "STATE",
           "itemProperties": {
             "style": {
-              "fill": "#aaaa00"
+              "fill": "#aaaa00",
+              "stroke": "#aaaa00"
             }
           }
         },
