@@ -10,7 +10,8 @@ Change Log
 * Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
 * Added support for WMTS layers that can only provide tiles in JPEG format.
 * Fixed testing and caching of ArcGis layers from tools and added More information option for imagery layers.
-* Added google analytics tracking of launch and share urls and updated url shortening api
+* TerriaJS now shortens share URLs by default when a URL shortener is available.
+* Added Google Analytics reporting of the application URL.  This is useful for tracking use of share URLs.
 
 ### 1.0.36
 
