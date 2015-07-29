@@ -9,7 +9,8 @@
           "type": "wfs-features-group",
           "url": "http://geoserver.nationalmap.nicta.com.au/admin_bnds_abs/ows",
           "typeNames": "admin_bnds:COM20111216_ELB_region",
-          "nameProperty": "ELECT_DIV"
+          "nameProperty": "ELECT_DIV",
+          "groupByProperty": "STATE"
         },
         {
           "name": "Postal Areas (group from features)",
