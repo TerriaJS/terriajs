@@ -10,6 +10,8 @@ Change Log
 * Fixed testing and caching of ArcGis layers from tools and added More information option for imagery layers.
 * TerriaJS no longer requires Google Analytics.  If a global `ga` function exists, it is used just as before.  Otherwise, events are, by default, logged to the console.
 * The default event analytics behavior can be specified by passing an instance of `ConsoleAnalytics` or `GoogleAnalytics` to the `Terria` constructor.  The API key to use with `GoogleAnalytics` can be specified explicitly to its constructor, or it can be specified in the `parameter.googleAnalyticsKey` property in `config.json`.
+* TerriaJS now shortens share URLs by default when a URL shortener is available.
+* Added Google Analytics reporting of the application URL.  This is useful for tracking use of share URLs.
 
 ### 1.0.36
 
