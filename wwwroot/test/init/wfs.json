@@ -1,0 +1,24 @@
+{
+  "catalog": [
+    {
+      "name": "Web Feature Service",
+      "type": "group",
+      "items": [
+        {
+          "name": "Commonwealth Electoral Divisions (group from features)",
+          "type": "wfs-features-group",
+          "url": "http://geoserver.nationalmap.nicta.com.au/admin_bnds_abs/ows",
+          "typeNames": "admin_bnds:COM20111216_ELB_region",
+          "nameProperty": "ELECT_DIV"
+        },
+        {
+          "name": "Postal Areas (group from features)",
+          "type": "wfs-features-group",
+          "url": "http://geoserver.nationalmap.nicta.com.au/admin_bnds_abs/ows",
+          "typeNames": "admin_bnds:POA_2011_AUST",
+          "nameProperty": "POA_CODE"
+        }
+      ]
+    }
+  ]
+}
