@@ -21,14 +21,14 @@
                     To <strong>copy</strong> to clipboard, click the link below and press CTRL+C or &#8984;+C:
                     <input readonly type="text" data-bind="value: url" size="100" onclick="this.select();" />
                 </div>
+                <div class="share-popup-label">
+                    To <strong>embed</strong>, copy this code to embed this map into an HTML page:
+                    <input readonly type="text" data-bind="value: embedCode" size="100" onclick="this.select();" />
+                </div>
                 <div>
                     <label class="share-popup-checkbox" data-bind="visible: enableShortenUrl">
                         <input type="checkbox" data-bind="checked: shortenUrl" />Shorten the share URL using a web service
                     </label>
-                </div>
-                <div class="share-popup-label">
-                    To <strong>embed</strong>, copy this code to embed this map into an HTML page:
-                    <input readonly type="text" data-bind="value: embedCode" size="100" onclick="this.select();" />
                 </div>
             </div>
         </div>
