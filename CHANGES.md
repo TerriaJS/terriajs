@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.38
+
+* `AbsIttCatalogItem` now allows the region type to be set on demand rather than only at load time.
+* `CsvCatalogItem` can now have no display variable selected, in which case all points are the same color.
+
 ### 1.0.37
 
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
@@ -14,8 +19,6 @@ Change Log
 * TerriaJS now shortens share URLs by default when a URL shortener is available.
 * Added Google Analytics reporting of the application URL.  This is useful for tracking use of share URLs.
 * Added the ability to specify a specific dynamic layer of an ArcGIS Server using just a URL.
-* Support for no display variable selected with csv datasets internally and in Now viewing UI.  No display variable set by default
-* AbsIttCatalogItem allows region type to be set on demand rather than assigning it at load time.
 
 ### 1.0.36
 
