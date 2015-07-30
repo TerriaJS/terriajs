@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.38
+
+* Added `WfsFeaturesCatalogGroup`.  This group is populated with a catalog item for each feature queried from a WFS server.
+
 ### 1.0.37
 
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
