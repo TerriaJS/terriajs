@@ -12,6 +12,14 @@
           "nameProperty": "ELECT_DIV",
           "groupByProperty": "STATE",
           "itemProperties": {
+            "description": "Commonwealth Electoral Divisions\n\n© Commonwealth of Australia (Australian Electoral Commission)2015",
+            "info": [
+              {
+                "name": "Licence",
+                "content": "[Australian Electoral Commission Data download licence](http://www.aec.gov.au/Electorates/gis/GIS_Data_Download_Data_Licence.htm)"
+              }
+            ],
+            "dataCustodian": "[Australian Electoral Commission](http://www.aec.gov.au/)",
             "style": {
               "fill": "#aaaa00",
               "stroke": "#aaaa00"
