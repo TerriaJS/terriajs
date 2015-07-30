@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.38
+
+* `AbsIttCatalogItem` now allows the region type to be set on demand rather than only at load time.
+* `CsvCatalogItem` can now have no display variable selected, in which case all points are the same color.
+
 ### 1.0.37
 
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
