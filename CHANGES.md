@@ -13,6 +13,7 @@ Change Log
 * Made polygons drastically faster in 2D.
 * TerriaJS now shortens share URLs by default when a URL shortener is available.
 * Added Google Analytics reporting of the application URL.  This is useful for tracking use of share URLs.
+* Added the ability to specify a specific dynamic layer of an ArcGIS Server using just a URL.
 
 ### 1.0.36
 
