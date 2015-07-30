@@ -1,5 +1,8 @@
 Change Log
 ==========
+### 1.0.38
+Allow a single layer of an ArcGIS MapServer to be added through the "Add Data" interface.
+
 
 ### 1.0.37
 
