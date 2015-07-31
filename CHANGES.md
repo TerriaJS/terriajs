@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.39
+
+* Fixed a race condition in `AbsIttCatalogItem` that could cause the legend and map to show different state than the Now Viewing UI suggested.
+* Fixed a bug where an ABS concept with a comma in its name (e.g. "South Eastern Europe,nfd(c)" in Country of Birth) would cause values for concept that follow to be misappropriated to the wrong concepts.
+
 ### 1.0.38
 
 * `AbsIttCatalogItem` now allows the region type to be set on demand rather than only at load time.
