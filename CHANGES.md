@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.41
+
+* Improvements to `AbsIttCatalogItem` caching from the Tools menu.
+
 ### 1.0.40
 
 * `ArcGisMapServerCatalogItem` now shows "NoData" tiles by default even after showing the popup message saying that max zoom is exceeded.  This can be disabled by setting its `showTilesAfterMessage` property to false.
