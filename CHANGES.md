@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.40
+
+* `ArcGisMapServerCatalogItem` now shows "NoData" tiles by default even after showing the popup message saying that max zoom is exceeded.  This can be disabled by setting its `showTilesAfterMessage` property to false.
+
 ### 1.0.39
 
 * Fixed a race condition in `AbsIttCatalogItem` that could cause the legend and map to show different state than the Now Viewing UI suggested.
