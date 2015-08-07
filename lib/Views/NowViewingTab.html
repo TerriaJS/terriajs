@@ -37,7 +37,7 @@
                     <div class="now-viewing-item-drag-handle clickable" data-bind="visible: supportsReordering, cesiumSvgPath: { path: $root.svgReorder, width: 12, height: 10 }, css: { 'now-viewing-shown-item': isShown }" title="Drag to reorder data sources."></div>
                 </div>
                 <div class="now-viewing-item-icon-holder">
-                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
                 </div>
                 <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
 
