@@ -4,6 +4,7 @@ Change Log
 ### 1.0.41
 
 * Improvements to `AbsIttCatalogItem` caching from the Tools menu.
+* Added `forceProxy` flag to all catalog members to indicate that an individual item should use the proxy regardless of whether the domain is in the list of domains to proxy.
 
 ### 1.0.40
 
