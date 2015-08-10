@@ -1,3 +1,8 @@
+@popup-action-background-color: #596069;
+@popup-action-text-color: white;
+@popup-action-hover-background-color: @highlight-color;
+@popup-action-hover-text-color: white;
+
 .popup-message {
     .modal;
     width: 400px;
@@ -16,6 +21,7 @@
     right: 0;
     overflow: auto;
     padding: 15px;
+    line-height: 20px;
 }
 
 .popup-message-content h1 {
@@ -60,4 +66,22 @@
     background:#1D5B98;
     overflow:auto;
     padding: 1px;
+}
+.popup-message-actions {
+  margin-top: 20px;
+  .popup-message-action {
+    float: right;
+    margin-left: 20px;
+    padding: 10px 20px;
+    background: @popup-action-background-color;
+    min-width: 80px;
+    text-align: center;
+    border-radius: 2px;
+    color: @popup-action-text-color;
+    &:hover {
+      cursor: pointer;
+      background: @popup-action-hover-background-color;
+      color: @popup-action-hover-text-color;
+    }
+  }
 }

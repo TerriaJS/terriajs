@@ -34,10 +34,10 @@
         <div class="now-viewing-item" data-bind="attr: { nowViewingIndex: $index }, event : { dragenter: $root.dragEnter.bind($root), dragover: $root.dragEnter.bind($root) }">
             <div class="now-viewing-item-top-row" data-bind="attr: { draggable: supportsReordering, nowViewingIndex: $index }, event : { dragstart: $root.dragStart.bind($root), dragend: $root.dragEnd.bind($root), selectstart: $root.selectStart.bind($root) }">
                 <div class="now-viewing-item-drag-handle-holder">
-                    <img class="now-viewing-item-drag-handle" data-bind="visible: supportsReordering, attr: { src: $root.nowViewing.terria.baseUrl + 'images/Reorder.svg' }" draggable="false" width="12" height="24" alt="Drag to reorder data sources." title="Drag to reorder data sources." />
+                    <div class="now-viewing-item-drag-handle clickable" data-bind="visible: supportsReordering, cesiumSvgPath: { path: $root.svgReorder, width: 12, height: 10 }, css: { 'now-viewing-shown-item': isShown }" title="Drag to reorder data sources."></div>
                 </div>
                 <div class="now-viewing-item-icon-holder">
-                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
                 </div>
                 <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
 
@@ -48,7 +48,12 @@
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
                 <div class="now-viewing-action-menu">
                     <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                    <!-- ko if: showsInfo -->
                     <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
+                    <!-- /ko -->
+                    <!-- ko foreach: $root.getItemControls($data) -->
+                    <div class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name }"></div>
+                    <!-- /ko -->
                     <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
                 </div>
 
@@ -64,17 +69,19 @@
                 </div>
                 <!-- /ko -->
 
-                <!-- ko if: legendIsImage -->
-                <a data-bind="attr: { href: legendUrl }" target="_blank">
-                    <img class="now-viewing-legend-image" data-bind="attr: { src: legendUrl }" />
-                </a>
+                <!-- ko foreach: legendUrls || [] -->
+                    <!-- ko if: $root.urlIsImage($data) -->
+                    <a data-bind="attr: { href: $data }" target="_blank">
+                        <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
+                    </a>
+                    <!-- /ko -->
+
+                    <!-- ko if: !$root.urlIsImage($data) -->
+                    <a class="now-viewing-legend-text" data-bind="attr: { href: $data }" target="_blank">Open legend in a separate tab</a>
+                    <!-- /ko -->
                 <!-- /ko -->
 
-                <!-- ko if: hasLegend && !legendIsImage -->
-                <a class="now-viewing-legend-text" data-bind="attr: { href: legendUrl }" target="_blank">Open legend in a separate tab</a>
-                <!-- /ko -->
-
-                <!-- ko if: !hasLegend -->
+                <!-- ko if: !legendUrls || legendUrls.length === 0 -->
                     <!-- ko if: type !== 'abs-itt' -->
                     <div class="now-viewing-legend-text">No legend available for this data item.</div>
                     <!-- /ko -->
@@ -103,9 +110,7 @@
     </div>
 
     <div class="now-viewing-list" data-bind="visible: nowViewing.items.length === 0">
-        <div class="now-viewing-no-items">
-            Add data using the Data Catalogue tab.
-        </div>
+        <div class="now-viewing-no-items" data-bind="text: noDataText"></div>
     </div>
 </div>
 

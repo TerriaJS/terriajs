@@ -61,12 +61,6 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         expect(wmsItem.metadataUrl).toBe('http://foo.com/metadata');
     });
 
-    it('derives dataUrl from url if dataUrl and assumes type is "wfs" if dataUrl is not explicitly provided', function() {
-        wmsItem.url = 'http://foo.com/bar';
-        expect(wmsItem.dataUrl.indexOf(wmsItem.url)).toBe(0);
-        expect(wmsItem.dataUrlType).toBe('wfs');
-    });
-
     it('uses explicitly-provided dataUrl and dataUrlType', function() {
         wmsItem.dataUrl = 'http://foo.com/data';
         wmsItem.dataUrlType = 'wfs-complete';
@@ -118,15 +112,15 @@ describe('WebMapServiceCatalogItemViewModel', function() {
 
         expect(wmsItem.name).toBe('Unnamed Item');
         expect(wmsItem.description).toBe('');
-        expect(wmsItem.rectangle).toEqual(Rectangle.MAX_VALUE);
+        expect(wmsItem.rectangle).toBeUndefined();
         expect(wmsItem.legendUrl.indexOf('?')).toBe(0);
-        expect(wmsItem.dataUrlType).toBe('wfs');
-        expect(wmsItem.dataUrl.indexOf('?')).toBe(0);
+        expect(wmsItem.dataUrlType).toBeUndefined();
+        expect(wmsItem.dataUrl).toBeUndefined();
         expect(wmsItem.dataCustodian).toBeUndefined();
         expect(wmsItem.metadataUrl.indexOf('?')).toBe(0);
         expect(wmsItem.url).toBe('');
         expect(wmsItem.layers).toBe('');
-        expect(wmsItem.parameters).toBeUndefined();
+        expect(wmsItem.parameters).toEqual({});
         expect(wmsItem.tilingScheme).toBeUndefined();
         expect(wmsItem.getFeatureInfoFormats).toBeUndefined();
     });

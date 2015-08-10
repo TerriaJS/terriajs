@@ -1,8 +1,17 @@
+@now-viewing-top-row-background-color: rgba(0,0,0, 0.2);
+@now-viewing-top-row-text-color: @panel-emphasized-text-color;
+@now-viewing-text-color: @panel-emphasized-text-color;
+@now-viewing-toolbar-background-color: darken(@panel-background-color, 5%);
+@now-viewing-toolbar-text-color: @highlight-color;
+@now-viewing-action-text-color: @highlight-color;
+@now-viewing-section-text-color: @panel-form-input-text-color;
+@now-viewing-drag-handle-color: darken(@now-viewing-top-row-text-color, 60%);
+
 .now-viewing-item-top-row {
     display: table;
     width: 100%;
     line-height: 40px;
-    background-color: rgba(0,0,0, 0.2);
+    background-color: @now-viewing-top-row-background-color;
     border-bottom: @panel-element-border;
     border-top: @panel-element-border;
     cursor: pointer;
@@ -12,7 +21,7 @@
 .now-viewing-item-label {
     display: table-cell;
     font-size: 14px;
-    color: @panel-emphasized-text-color;
+    color: @now-viewing-top-row-text-color;
     word-wrap: break-word;
     max-width: 265px;
 }
@@ -26,7 +35,7 @@
     position: relative;
     width: 15px;
     height: 15px;
-    fill: @panel-emphasized-text-color;
+    fill: @now-viewing-top-row-text-color;
 }
 
 .now-viewing-item-drag-handle-holder {
@@ -34,12 +43,12 @@
     width: 20px;
     padding-left: 16px;
     line-height: 40px;
+    fill: @now-viewing-top-row-text-color;
 }
 
 .now-viewing-item-drag-handle {
-    position: relative;
-    top: 6px;
-    opacity: 0.4;
+    .now-viewing-item-checkbox;
+    fill: @now-viewing-drag-handle-color;
 }
 
 .now-viewing-item-details {
@@ -61,10 +70,10 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: darken(@panel-background-color, 5%);
+    background-color: @now-viewing-toolbar-background-color;
     font-style: italic;
     font-size: 0.95em;
-    color: @highlight-color;
+    color: @now-viewing-toolbar-text-color;
     line-height: 38px;
     padding-left: 16px;
     border-top: @panel-element-border;
@@ -87,7 +96,7 @@
     padding-top: 16px;
     padding-bottom: 10px;
     font-size: 14px;
-    color: @panel-emphasized-text-color;
+    color: @now-viewing-text-color;
     border-top: @panel-element-border;
 }
 
@@ -100,7 +109,7 @@
     position: relative;
     width: 12px;
     height: 12px;
-    fill: @panel-emphasized-text-color;
+    fill: @now-viewing-top-row-text-color;
     margin-right: 16px;
 }
 
@@ -109,7 +118,7 @@
   top: 2px;
   width: 15px;
   height: 15px;
-  fill: @panel-text-color;
+  fill: @now-viewing-top-row-text-color;
 }
 
 
@@ -119,7 +128,7 @@
     padding-bottom: 10px;
     padding-left: 20px;
     text-decoration: none;
-    color: @panel-emphasized-text-color;
+    color: @now-viewing-text-color;
 }
 
 .now-viewing-legend-image {
@@ -133,7 +142,7 @@
     padding-left: 15px;
     padding-top: 10px;
     padding-bottom: 10px;
-    color: @panel-emphasized-text-color;
+    color: @now-viewing-text-color;
 }
 
 .now-viewing-opacity-slider {
@@ -144,7 +153,7 @@
     margin-top: 5px;
     text-align: right;
     padding-right: 16px;
-    color: @highlight-color;
+    color: @now-viewing-action-text-color;
 }
 
 .now-viewing-action {
@@ -165,7 +174,7 @@
 
 .now-viewing-section {
     padding-bottom: 20px;
-    color: @panel-form-input-text-color;
+    color: @now-viewing-section-text-color;
 }
 
 .now-viewing-section-contents {
@@ -177,7 +186,7 @@
     padding-left: 15px;
     padding-top: 5px;
     padding-bottom: 5px;
-    color: @panel-form-input-text-color;
+    color: @now-viewing-section-text-color;
 }
 
 .now-viewing-abs-percent {
@@ -190,7 +199,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    fill: @panel-emphasized-text-color;
+    fill: @now-viewing-text-color;
 }
 
 .now-viewing-abs-tighten {
