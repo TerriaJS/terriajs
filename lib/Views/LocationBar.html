@@ -1,7 +1,18 @@
-<div class="location-bar" data-bind="visible: latitude && longitude">
+<div class="location-bar clickable" data-bind="visible: latitude && longitude, click: toggleProjection">
+    <!-- ko if: useProjection -->
+    <div class="location-bar-label">NORTH</div>
+    <!-- /ko -->
+    <!-- ko if: useProjection -->
     <div class="location-bar-label">LAT</div>
+    <!-- /ko -->
     <div class="location-bar-value" data-bind="text: latitude"></div>
+
+    <!-- ko if: useProjection -->
+    <div class="location-bar-label">EAST</div>
+    <!-- /ko -->
+    <!-- ko if: useProjection -->
     <div class="location-bar-label">LON</div>
+    <!-- /ko -->
     <div class="location-bar-value" data-bind="text: longitude"></div>
 
     <!-- ko if: elevation -->
