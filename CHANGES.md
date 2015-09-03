@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 1.0.42
+
+* Fix bug when generating share URLs containing CSV items.
+* Improve wording about downloading data from non-GeoJSON-supporting WFS servers.
+
 ### 1.0.41
 
 * Improvements to `AbsIttCatalogItem` caching from the Tools menu.
