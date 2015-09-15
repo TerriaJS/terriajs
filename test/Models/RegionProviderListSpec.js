@@ -85,7 +85,7 @@ describe('RegionProviderList', function() {
     dataset.loadText('postcode,value\n3068,1\n2000,2\n5,-1\nfour thousand,-4\n2000,3');
     dataset.setDataVariable('value');
 
-    r = rpl.chooseRegionProvider(dataset);
+    r = rpl.chooseRegionProvider(dataset.getVariableNames());
     expect(r).not.toBe(null);
     console.log(r);
     expect(r.regionVariable).toBe('postcode');
