@@ -112,11 +112,6 @@ describe('CsvCatalogItem', function() {
             done();
         });
     });
-/*
-    it('is correctly loading csv data from text', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-*/
 
     it('throws an error on non-csv file', function(done) {
         csvItem.url = 'test/GeoJSON/polygon.topojson';
@@ -129,21 +124,21 @@ describe('CsvCatalogItem', function() {
     });
 
 
-    it('identifies "lat" and "lon" fields"', function(done) {
+    it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
             expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
             done();
         });
     });
-    it('identifies "latitude" and "longitude" fields"', function(done) {
+    it('identifies "latitude" and "longitude" fields', function(done) {
         csvItem.updateFromJson( { data: 'latitude,longitude,value\n-37,145,10' });
         csvItem.load().then(function() {
             expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
             done();
         });
     });
-    it('does not mistakenly identify "latvian" and "lone_person" fields"', function(done) {
+    it('does not mistakenly identify "latvian" and "lone_person" fields', function(done) {
         csvItem.updateFromJson( { data: 'latvian,lone_person,lat,lon,value\n-37,145,-37,145,10' });
         csvItem.load().then(function() {
             expect(csvItem._tableDataSource.dataset.getVariableNamesByType(VarType.LON)).toEqual(['lon']);
@@ -157,7 +152,7 @@ describe('CsvCatalogItem', function() {
 
 
 
-    it('matches LGAs by code"', function(done) {
+    it('matches LGAs by code', function(done) {
         csvItem.updateFromJson( { data: 'lga_code,value\n31000,1' });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
@@ -171,7 +166,7 @@ describe('CsvCatalogItem', function() {
         });
 
     });
-    it('matches LGAs by names in various formats"', function(done) {
+    it('matches LGAs by names in various formats', function(done) {
         csvItem.updateFromJson( { data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3' });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
@@ -255,7 +250,6 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.tableStyle.dataVariable).not.toBeDefined();
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(5);
             expect(csvItem._regionMapped).toBe(true);
-
         }).yield(true).otherwise(except).then(function(x) {
             expect(x).toBe(true);
             done();
@@ -280,6 +274,25 @@ describe('CsvCatalogItem', function() {
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
             return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
+        }).then(function(r) {
+            expect(r[0].name).toEqual("3124");
+            expect(r[0].description).toContain("42.42");
+            expect(r[0].description).toContain("the universe");
+        }).yield(true).otherwise(except).then(function(x) {
+            expect(x).toBe(true);
+            done();
+        });
+    });
+    /*
+    Nope - I don't know how feature picking on lat-longs works.
+    it('supports feature picking on lat-long files', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum.csv';
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).not.toBe(true);
+            csvItem._enable();
+            var ip = csvItem._createImageryProvider();
+            expect(ip).toBeDefined();
+            return ip.pickFeatures(1850, 1252, 11, 2.5351151523100115, -0.6501965629172219);
         }).then(function(r) {
             expect(r[0].name).toEqual("3124");
             expect(r[0].description).toContain("42.42");
