@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.42
+
+* Added a `cacheDuration` property to call catalog items.  The new property is used to specify, using Varnish-like notation (e.g. '1d', '10000s') the default length of time to cache URLs related to the catalog item.
+
 ### 1.0.41
 
 * Improvements to `AbsIttCatalogItem` caching from the Tools menu.
