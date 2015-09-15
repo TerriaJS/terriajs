@@ -255,7 +255,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.tableStyle.dataVariable).not.toBeDefined();
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(5);
             expect(csvItem._regionMapped).toBe(true);
-            
+
         }).yield(true).otherwise(except).then(function(x) {
             expect(x).toBe(true);
             done();
