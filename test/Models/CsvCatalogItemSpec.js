@@ -13,7 +13,7 @@ var VarType = require('../../lib/Map/VarType');
 
 var terria;
 var csvItem;
-
+var greenTableStyle;
 beforeEach(function() {
     terria = new Terria({
         baseUrl: './',
@@ -21,6 +21,19 @@ beforeEach(function() {
 
     });
     csvItem = new CsvCatalogItem(terria);
+
+    greenTableStyle = {
+        "colorMap": [ 
+        {
+            "offset": 0,
+            "color": "rgba(0, 64, 0, 1.00)"
+        }, {
+            "offset": 1,
+            "color": "rgba(0, 255, 0, 1.00)"
+        } ]
+    };
+
+
 });
 
 function except(e, done) { 
@@ -110,6 +123,9 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._tableDataSource.dataset).toBeDefined();
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(2);
             done();
+        }).otherwise(function(e) {
+            expect(e.message).not.toBeDefined();
+            done();
         });
     });
 
@@ -182,17 +198,7 @@ describe('CsvCatalogItem', function() {
 
     });
 
-    var greenTableStyle = {
-        "colorMap": [ 
-        {
-            "offset": 0,
-            "color": "rgba(0, 64, 0, 1.00)"
-        }, {
-            "offset": 1,
-            "color": "rgba(0, 255, 0, 1.00)"
-        } ]
-    };
-    it('respects tableStyle color ramping for regions"', function(done) {
+    it('respects tableStyle color ramping for regions', function(done) {
         csvItem.updateFromJson( { 
             data: 'lga_name,value\nCity of Melbourne,0\nGreater Geelong,5\nSydney (S),10',
             tableStyle: greenTableStyle });
@@ -204,6 +210,23 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.colorFunc(180)[1]).toBeGreaterThan(64);
             expect(csvItem.colorFunc(180)[1]).toBeLessThan(255);
             expect(csvItem.colorFunc(197)).toEqual([0,64,0,255]);
+            return true;
+        }).otherwise(except).then(function(x){
+            expect(x).toBe(true);
+            done();
+        });
+
+    });
+    it('uses the requested region mapping column, not just the first one', function(done) {
+        greenTableStyle.regionType = 'poa';
+        greenTableStyle.regionVariable = 'postcode';
+        csvItem.updateFromJson( { 
+            url: 'test/csv/postcode_lga_val_enum.csv',
+            tableStyle: greenTableStyle });
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).toBe(true);
+            expect(csvItem.colorFunc).toBeDefined();
+            expect(csvItem._tableDataSource.regionVariable).toBe('postcode');
             return true;
         }).otherwise(except).then(function(x){
             expect(x).toBe(true);
@@ -266,8 +289,38 @@ describe('CsvCatalogItem', function() {
         done();
     });
 
+    it('chooses the leftmost data column when none specified', function(done) {
+        csvItem.url = 'test/csv/val_enum_postcode.csv';
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).toBe(true);
+            expect(csvItem.tableStyle.dataVariable).toBe('val1');
+        }).yield(true).otherwise(except).then(function(x) {
+            expect(x).toBe(true);
+            done();
+        });
+    });
+
+
     it('supports feature picking on region-mapped files', function(done) {
         csvItem.url = 'test/csv/postcode_val_enum.csv';
+        csvItem.load().then(function() {
+            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(6);
+            expect(csvItem._regionMapped).toBe(true);
+            var ip = csvItem._createImageryProvider();
+            expect(ip).toBeDefined();
+            return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
+        }).then(function(r) {
+            expect(r[0].name).toEqual("3124");
+            expect(r[0].description).toContain("42.42");
+            expect(r[0].description).toContain("the universe");
+        }).yield(true).otherwise(except).then(function(x) {
+            expect(x).toBe(true);
+            done();
+        });
+    });
+    it('supports region-mapped files with dates', function(done) {
+        csvItem.url = 'test/csv/postcode_date_value.csv';
+        //csvItem.tableStyle = { displayDuration: 5
         csvItem.load().then(function() {
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(6);
             expect(csvItem._regionMapped).toBe(true);
