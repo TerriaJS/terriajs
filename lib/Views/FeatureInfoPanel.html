@@ -51,7 +51,7 @@
                     </div>
                     <!-- ko if: enableJSONViewer -->
                         <!-- ko if: typeof html === 'object' -->
-                            <div class="feature-info-panel-section-content">
+                            <div class="feature-info-panel-section-content" data-bind="style: { 'max-height': maxHeight + 'px' }, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
                                 <!-- ko template: { name: 'tree', foreach: html } -->
                                 <!-- /ko -->
                             </div>
