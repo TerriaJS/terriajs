@@ -7,6 +7,7 @@ var CatalogItem = require('../../lib/Models/CatalogItem');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var DataTable = require('../../lib/Map/DataTable');
 var Color = require('terriajs-cesium/Source/Core/Color');
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var VarType = require('../../lib/Map/VarType');
 
@@ -322,15 +323,23 @@ describe('CsvCatalogItem', function() {
         csvItem.url = 'test/csv/postcode_date_value.csv';
         //csvItem.tableStyle = { displayDuration: 5
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(6);
+            var source = csvItem._tableDataSource;
+            expect(source.dataset.getRowCount()).toEqual(10);
             expect(csvItem._regionMapped).toBe(true);
+            expect(source.dataset.hasTimeData()).toBe(true);
+            var t = JulianDate.fromIso8601('2015-08-06');
+            expect(source.getDataPointList(t).length).toBe(0);
+            t = JulianDate.fromIso8601('2015-08-07');
+            expect(source.getDataPointList(t).length).toBe(4);
+            t = JulianDate.fromIso8601('2015-08-08');
+            expect(source.getDataPointList(t).length).toBe(2);
+            t = JulianDate.fromIso8601('2015-08-09');
+            expect(source.getDataPointList(t).length).toBe(4);
+            t = JulianDate.fromIso8601('2015-08-11');
+            expect(source.getDataPointList(t).length).toBe(0);
+            // not sure how to try different dates
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
-            return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("3124");
-            expect(r[0].description).toContain("42.42");
-            expect(r[0].description).toContain("the universe");
         }).yield(true).otherwise(except).then(function(x) {
             expect(x).toBe(true);
             done();
