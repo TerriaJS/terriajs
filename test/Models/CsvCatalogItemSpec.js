@@ -323,23 +323,98 @@ describe('CsvCatalogItem', function() {
         csvItem.url = 'test/csv/postcode_date_value.csv';
         //csvItem.tableStyle = { displayDuration: 5
         csvItem.load().then(function() {
+            var j = JulianDate.fromIso8601;
             var source = csvItem._tableDataSource;
             expect(source.dataset.getRowCount()).toEqual(10);
             expect(csvItem._regionMapped).toBe(true);
             expect(source.dataset.hasTimeData()).toBe(true);
-            var t = JulianDate.fromIso8601('2015-08-06');
-            expect(source.getDataPointList(t).length).toBe(0);
-            t = JulianDate.fromIso8601('2015-08-07');
-            expect(source.getDataPointList(t).length).toBe(4);
-            t = JulianDate.fromIso8601('2015-08-08');
-            expect(source.getDataPointList(t).length).toBe(2);
-            t = JulianDate.fromIso8601('2015-08-09');
-            expect(source.getDataPointList(t).length).toBe(4);
-            t = JulianDate.fromIso8601('2015-08-11');
-            expect(source.getDataPointList(t).length).toBe(0);
+            expect(source.getDataPointList(j('2015-08-06')).length).toBe(0);
+            expect(source.getDataPointList(j('2015-08-07')).length).toBe(4);
+            expect(source.getDataPointList(j('2015-08-08')).length).toBe(2);
+            expect(source.getDataPointList(j('2015-08-09')).length).toBe(4);
+            expect(source.getDataPointList(j('2015-08-11')).length).toBe(0);
             // not sure how to try different dates
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
+        }).yield(true).otherwise(except).then(function(x) {
+            expect(x).toBe(true);
+            done();
+        });
+    });
+    it('supports region-mapped files with dates and displayDuration', function(done) {
+        csvItem.url = 'test/csv/postcode_date_value.csv';
+        csvItem.tableStyle = { displayDuration: 60 * 6 }; // 6 hours
+        csvItem.load().then(function() {
+            var j = JulianDate.fromIso8601;
+            var source = csvItem._tableDataSource;
+            expect(source.dataset.getRowCount()).toEqual(10);
+            expect(csvItem._regionMapped).toBe(true);
+            expect(source.dataset.hasTimeData()).toBe(true);
+            expect(source.getDataPointList(j('2015-08-06')).length).toBe(0);
+            expect(source.getDataPointList(j('2015-08-07')).length).toBe(4);
+            expect(source.getDataPointList(j('2015-08-07T00:00')).length).toBe(4);
+            expect(source.getDataPointList(j('2015-08-07T05:30')).length).toBe(4);
+            expect(source.getDataPointList(j('2015-08-07T06:30')).length).toBe(0);
+            expect(source.getDataPointList(j('2015-08-11')).length).toBe(0);
+            // not sure how to try different dates
+            var ip = csvItem._createImageryProvider();
+            expect(ip).toBeDefined();
+        }).yield(true).otherwise(except).then(function(x) {
+            expect(x).toBe(true);
+            done();
+        });
+    });
+
+    it('supports lat-long files with dates', function(done) {
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem.load().then(function() {
+            var j = JulianDate.fromIso8601;
+            var source = csvItem._tableDataSource;
+            expect(source.dataset.getRowCount()).toEqual(13);
+            expect(csvItem._regionMapped).toBe(false);
+            expect(source.dataset.hasTimeData()).toBe(true);
+            expect(source.getDataPointList(j('2015-07-31')).length).toBe(0);
+            expect(source.getDataPointList(j('2015-08-01')).length).toBe(2);
+            expect(source.getDataPointList(j('2015-08-02')).length).toBe(3);
+            expect(source.getDataPointList(j('2015-08-06')).length).toBe(2);
+            expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
+        }).yield(true).otherwise(except).then(function(x) {
+            expect(x).toBe(true);
+            done();
+        });
+    });
+    it('supports lat-long files with dates and very long displayDuration', function(done) {
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem.tableStyle = { displayDuration: 60 * 24 * 7 }; // 7 days
+        csvItem.load().then(function() {
+            var j = JulianDate.fromIso8601;
+            var source = csvItem._tableDataSource;
+            expect(source.dataset.getRowCount()).toEqual(13);
+            expect(csvItem._regionMapped).toBe(false);
+            expect(source.dataset.hasTimeData()).toBe(true);
+            expect(source.getDataPointList(j('2015-07-31')).length).toBe(0);
+            expect(source.getDataPointList(j('2015-08-01')).length).toBe(2);
+            expect(source.getDataPointList(j('2015-08-02')).length).toBe(5);
+            expect(source.getDataPointList(j('2015-08-06')).length).toBe(13);
+            expect(source.getDataPointList(j('2015-08-07')).length).toBe(13);
+        }).yield(true).otherwise(except).then(function(x) {
+            expect(x).toBe(true);
+            done();
+        });
+    });
+    it('supports lat-long files with dates sorted randomly', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_moving_date_unsorted.csv';
+        csvItem.load().then(function() {
+            var j = JulianDate.fromIso8601;
+            var source = csvItem._tableDataSource;
+            expect(source.dataset.getRowCount()).toEqual(13);
+            expect(csvItem._regionMapped).toBe(false);
+            expect(source.dataset.hasTimeData()).toBe(true);
+            expect(source.getDataPointList(j('2015-07-31')).length).toBe(0);
+            expect(source.getDataPointList(j('2015-08-01')).length).toBe(2);
+            expect(source.getDataPointList(j('2015-08-02')).length).toBe(3);
+            expect(source.getDataPointList(j('2015-08-06')).length).toBe(2);
+            expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
         }).yield(true).otherwise(except).then(function(x) {
             expect(x).toBe(true);
             done();
