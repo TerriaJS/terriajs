@@ -166,6 +166,18 @@ describe('CsvCatalogItem', function() {
             done();
         });
     });
+    it('handles numeric fields containing (quoted) thousands commas', function(done) {
+        csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"' });
+        csvItem.load().then(function() {
+            expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
+            expect(csvItem._tableDataSource.dataset.getDataValue('value', 0)).toEqual(1000);
+            expect(csvItem._tableDataSource.dataset.getDataValue('value', 1)).toBeCloseTo(234567.89,2);
+            return true;
+        }).otherwise(except).then(function(x) { 
+            expect(x).toBe(true);
+            done();
+        });
+    });
 
 
 
