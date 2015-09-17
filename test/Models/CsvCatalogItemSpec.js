@@ -119,52 +119,37 @@ describe('CsvCatalogItem', function() {
 
     it('is correctly loading csv data from a file', function(done) {
         csvItem.url = 'test/csv/minimal.csv';
-        return csvItem.load().then(function() {
+        csvItem.load().then(function() {
             expect(csvItem._tableDataSource).toBeDefined();
             expect(csvItem._tableDataSource.dataset).toBeDefined();
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(2);
-            done();
-        }).otherwise(function(e) {
-            expect(e.message).not.toBeDefined();
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
 
     it('throws an error on non-csv file', function(done) {
         csvItem.url = 'test/GeoJSON/polygon.topojson';
-        return csvItem.load().yield(false)
-            .otherwise(function(){ return true; })
-            .then(function(x) {
-                expect(x).toBe(true);
-                done();
-            });
+        expect(true).toBe(true);
+        csvItem.load().then(fail).otherwise(done);
     });
-
 
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
             expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('identifies "latitude" and "longitude" fields', function(done) {
         csvItem.updateFromJson( { data: 'latitude,longitude,value\n-37,145,10' });
         csvItem.load().then(function() {
             expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('does not mistakenly identify "latvian" and "lone_person" fields', function(done) {
         csvItem.updateFromJson( { data: 'latvian,lone_person,lat,lon,value\n-37,145,-37,145,10' });
         csvItem.load().then(function() {
             expect(csvItem._tableDataSource.dataset.getVariableNamesByType(VarType.LON)).toEqual(['lon']);
             expect(csvItem._tableDataSource.dataset.getVariableNamesByType(VarType.LAT)).toEqual(['lat']);
-            return true;
-        }).otherwise(except).then(function(x) { 
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('handles numeric fields containing (quoted) thousands commas', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"' });
@@ -172,14 +157,8 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
             expect(csvItem._tableDataSource.dataset.getDataValue('value', 0)).toEqual(1000);
             expect(csvItem._tableDataSource.dataset.getDataValue('value', 1)).toBeCloseTo(234567.89,2);
-            return true;
-        }).otherwise(except).then(function(x) { 
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
-
-
 
     it('matches LGAs by code', function(done) {
         csvItem.updateFromJson( { data: 'lga_code,value\n31000,1' });
@@ -188,11 +167,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.colorFunc).toBeDefined();
             // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
             expect(csvItem.colorFunc(242)).not.toEqual([0,0,0,0]);
-            return true;
-        }).otherwise(except).then(function(x){
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
 
     });
     it('matches LGAs by names in various formats', function(done) {
@@ -203,11 +178,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.colorFunc(121)).not.toEqual([0,0,0,0]);
             expect(csvItem.colorFunc(180)).not.toEqual([0,0,0,0]);
             expect(csvItem.colorFunc(197)).not.toEqual([0,0,0,0]);
-            return true;
-        }).otherwise(except).then(function(x){
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
 
     });
 
@@ -223,11 +194,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.colorFunc(180)[1]).toBeGreaterThan(64);
             expect(csvItem.colorFunc(180)[1]).toBeLessThan(255);
             expect(csvItem.colorFunc(197)).toEqual([0,64,0,255]);
-            return true;
-        }).otherwise(except).then(function(x){
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
 
     });
     it('uses the requested region mapping column, not just the first one', function(done) {
@@ -240,11 +207,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem.colorFunc).toBeDefined();
             expect(csvItem._tableDataSource.regionVariable).toBe('postcode');
-            return true;
-        }).otherwise(except).then(function(x){
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
 
     });
 
@@ -254,30 +217,21 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem.tableStyle.dataVariable).toBe('enum');
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('handles enum fields for lat-longs', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
 
         csvItem.load().then(function() {
             expect(csvItem.tableStyle.dataVariable).toBe('enum');
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('handles lat-long CSVs with no data variable', function(done) {
         csvItem.url = 'test/csv/lat_lon_novals.csv';
         csvItem.load().then(function() {
             expect(csvItem.tableStyle.dataVariable).not.toBeDefined();
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(5);
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
 
     it('handles region-mapped CSVs with no data variable', function(done) {
@@ -286,10 +240,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.tableStyle.dataVariable).not.toBeDefined();
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(5);
             expect(csvItem._regionMapped).toBe(true);
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
 
     it('counts the final row of CSV files with no trailing linefeed', function(done) {
@@ -298,7 +249,6 @@ describe('CsvCatalogItem', function() {
         expect(dataset.getRowCount()).toEqual(2);
         dataset.loadText('postcode,value\n0800,1\n0885,2\n');
         expect(dataset.getRowCount()).toEqual(2);
-
         done();
     });
 
@@ -307,10 +257,7 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem.tableStyle.dataVariable).toBe('val1');
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
 
 
@@ -326,10 +273,7 @@ describe('CsvCatalogItem', function() {
             expect(r[0].name).toEqual("3124");
             expect(r[0].description).toContain("42.42");
             expect(r[0].description).toContain("the universe");
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('supports region-mapped files with dates', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
@@ -348,10 +292,7 @@ describe('CsvCatalogItem', function() {
             // not sure how to try different dates
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('supports region-mapped files with dates and displayDuration', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
@@ -371,10 +312,7 @@ describe('CsvCatalogItem', function() {
             // not sure how to try different dates
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
 
     it('supports lat-long files with dates', function(done) {
@@ -390,10 +328,7 @@ describe('CsvCatalogItem', function() {
             expect(source.getDataPointList(j('2015-08-02')).length).toBe(3);
             expect(source.getDataPointList(j('2015-08-06')).length).toBe(2);
             expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('supports lat-long files with dates and very long displayDuration', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
@@ -409,10 +344,7 @@ describe('CsvCatalogItem', function() {
             expect(source.getDataPointList(j('2015-08-02')).length).toBe(5);
             expect(source.getDataPointList(j('2015-08-06')).length).toBe(13);
             expect(source.getDataPointList(j('2015-08-07')).length).toBe(13);
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     it('supports lat-long files with dates sorted randomly', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_moving_date_unsorted.csv';
@@ -427,10 +359,7 @@ describe('CsvCatalogItem', function() {
             expect(source.getDataPointList(j('2015-08-02')).length).toBe(3);
             expect(source.getDataPointList(j('2015-08-06')).length).toBe(2);
             expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     /*
     Nope - I don't know how feature picking on lat-longs works.

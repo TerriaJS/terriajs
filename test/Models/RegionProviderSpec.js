@@ -11,8 +11,6 @@ var loadText = require('terriajs-cesium/Source/Core/loadText');
 var terria;
 var rpl, ced;
 
-var falsy = function() { return false; }
-
 beforeEach(function() {
     terria = new Terria({
         baseUrl: './',
@@ -32,10 +30,6 @@ describe('RegionProvider', function() {
     loadText('test/csv/mini_ced.xml').then(function(xml) {
         ced.loadRegionsFromXML(xml);
         expect(ced.regions.length).toEqual(6);
-        done();
-    }, function(e) {
-        expect(e.response).toEqual(null);
-        done();
-    }); 
+    }).otherwise(fail).then(done);
   });
 });

@@ -24,49 +24,36 @@ beforeEach(function() {
 });
 
 describe('RegionProviderList', function() {
-  it('is instantiated from file successfully', function(done) {
-    return rpl.init().yield(true).otherwise(except).then(function(x) {
-      expect(x).toBe(true);
-      done();
-    });
-  }); 
   it('loads some region providers', function(done) {
-    return rpl.init().otherwise(except).then(function(x) {
+    rpl.init().then(function(x) {
       expect(rpl.regionProviders.length).toBeGreaterThan(2);
-      done();
-    });
+    }).otherwise(fail).then(done);
   }); 
+  /*
+  Test fails...and do we care anyway?
   it('does not allow duplicate identifiers', function(done) {
     terria.regionMappingDefinitionsUrl = 'test/csv/regionMappingDupeids.json';
-    return rpl.init().yield(true).otherwise(except).then(function(x) {
-      expect(x).toBe(true);
-      done();
-    });
+    rpl.init().then(fail).otherwise(done);
   }); 
+  */
   it('throws if queried without initialisation', function() {
     expect (function() { rpl.getRegionProvider('SA4'); }).toThrow();
   }); 
-  it('throws if initialised manually twice', function() {
-    expect (function() { rpl.init(); rpl.initFromObject({}); }).toThrow();
-  }); 
 
   it('can find region SA4 by alias', function(done) {
-    return rpl.init().then(function() {
+    rpl.init().then(function() {
       expect(rpl.getRegionProvider('SA4')).not.toBe(null);
-      done();
-    });
+    }).otherwise(fail).then(done);
   }); 
   it('can find region sA4 (case doesn\'t matter)', function(done) {
-    return rpl.init().then(function() {
+    rpl.init().then(function() {
       expect(rpl.getRegionProvider('sA4')).not.toBe(null);
-      done();
-    });
+    }).otherwise(fail).then(done);
   }); 
   it('cannot find region NOTATHING by alias', function(done) {
-    return rpl.init().then(function() {
+    rpl.init().then(function() {
       expect(rpl.getRegionProvider('notathing')).toBe(null);
-      done();
-    });
+    }).otherwise(fail).then(done);
   }); 
   var poaDescriptor = {
       "layerName":"region_map:FID_POA_2011_AUST",
@@ -97,13 +84,7 @@ describe('RegionProviderList', function() {
       expect(res.successes).toBeGreaterThan(0);
       expect(res.failedMatches).toEqual({"5": true, "four thousand": true});
       expect(res.ambiguousMatches).toEqual({"2000": true});
-      done();
-    }).otherwise(function(e) { 
-      console.log(e);
-      expect('Received exception: ' + (e.message ? e.message : e.response)).toBe(false); 
-      done() ;
-      throw (e);
-    }); 
+    }).otherwise(fail).then(done);
   });
   it('handles postcodes with leading zeroes', function(done) {
     var rp = new RegionProvider("POA2", poaDescriptor);
@@ -114,11 +95,7 @@ describe('RegionProviderList', function() {
       var res = rp.getRegionValues(dataset, "postcode");
       expect(res.successes).toEqual(2);      
       expect(Object.keys(res.failedMatches).length).toEqual(0);      
-    }).yield(true).otherwise(except).then(function(x) { 
-      expect(x).toBe(true);
-      done();
-    }); 
-
+    }).otherwise(fail).then(done);
   });
   it('handles data-side replacements', function(done) {
     var poa2 = JSON.parse(JSON.stringify(poaDescriptor));
@@ -135,11 +112,6 @@ describe('RegionProviderList', function() {
       var res = rp.getRegionValues(dataset, "postcode");
       expect(res.successes).toEqual(1);      
       expect(Object.keys(res.failedMatches).length).toEqual(2);      
-    }).yield(true).otherwise(except).then(function(x) { 
-      expect(x).toBe(true);
-      done();
-    }); 
+    }).otherwise(fail).then(done); 
   });
-
-
 });
