@@ -1,12 +1,11 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,it,expect,beforeEach,fail*/
 
 var Terria = require('../../lib/Models/Terria');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var DataTable = require('../../lib/Map/DataTable');
-var Color = require('terriajs-cesium/Source/Core/Color');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var VarType = require('../../lib/Map/VarType');
@@ -36,11 +35,6 @@ beforeEach(function() {
 
 
 });
-
-function except(e, done) { 
-  return e.message || e.response || JSON.stringify(e); 
-}
-
 
 describe('CsvCatalogItem', function() {
     it('has sensible type and typeName', function() {

@@ -1,18 +1,13 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,it,expect,beforeEach,fail*/
 
 var Terria = require('../../lib/Models/Terria');
 var RegionProviderList = require('../../lib/Models/RegionProviderList');
 var RegionProvider = require('../../lib/Models/RegionProvider');
 var DataTable = require('../../lib/Map/DataTable.js');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
 var terria;
 var rpl;
-
-function except(e) { 
-  return e.message || e.response || JSON.stringify(e); 
-}
 
 beforeEach(function() {
     terria = new Terria({

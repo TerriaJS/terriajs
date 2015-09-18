@@ -1,9 +1,8 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,it,expect,beforeEach,fail*/
 
 var Terria = require('../../lib/Models/Terria');
-var CatalogItem = require('../../lib/Models/CatalogItem');
 var RegionProviderList = require('../../lib/Models/RegionProviderList');
 var RegionProvider = require('../../lib/Models/RegionProvider');
 var loadText = require('terriajs-cesium/Source/Core/loadText');
