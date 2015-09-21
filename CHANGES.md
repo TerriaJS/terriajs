@@ -2,6 +2,9 @@ Change Log
 ==========
 
 * Make it possible catalog item initialMessage to require confirmation, and to be shown every time.
+### 1.0.44
+
+* Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
 
 ### 1.0.43
 
