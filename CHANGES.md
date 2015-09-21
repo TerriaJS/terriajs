@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.44
+
+* Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
+
 ### 1.0.43
 
 * Fixed a bug that prevent the opened/closed state of groups from being preserved when sharing.
