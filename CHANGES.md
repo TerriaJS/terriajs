@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+### 1.0.43
+
+* Fixed a bug that prevent the opened/closed state of groups from being preserved when sharing.
+
+### 1.0.42
+
+* Added a `cacheDuration` property to all catalog items.  The new property is used to specify, using Varnish-like notation (e.g. '1d', '10000s') the default length of time to cache URLs related to the catalog item.
+* Fix bug when generating share URLs containing CSV items.
+* Improve wording about downloading data from non-GeoJSON-supporting WFS servers.
+
 ### 1.0.41
 
 * Improvements to `AbsIttCatalogItem` caching from the Tools menu.
