@@ -172,9 +172,21 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.colorFunc(121)).not.toEqual([0,0,0,0]);
             expect(csvItem.colorFunc(180)).not.toEqual([0,0,0,0]);
             expect(csvItem.colorFunc(197)).not.toEqual([0,0,0,0]);
-        }).otherwise(fail).then(done);
+        }).otherwise(fail).then(function() { done(); });
 
     });
+
+    it('matches SA4s', function(done) {
+        csvItem.updateFromJson( { data: 'sa4,value\n209,correct' });
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).toBe(true);
+            expect(csvItem.colorFunc).toBeDefined();
+            expect(csvItem.rowProperties(209).value).toBe('correct');
+        }).otherwise(fail).then(function() { done(); });
+
+    });
+
+
 
     it('respects tableStyle color ramping for regions', function(done) {
         csvItem.updateFromJson( { 
