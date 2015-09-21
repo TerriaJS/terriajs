@@ -281,6 +281,20 @@ describe('CsvCatalogItem', function() {
             expect(r[0].description).toContain("the universe");
         }).otherwise(fail).then(done);
     });
+    it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
+        csvItem.url = 'test/csv/lga_fuzzy_val.csv';
+        csvItem.load().then(function() {
+            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(6);
+            expect(csvItem._regionMapped).toBe(true);
+            var ip = csvItem._createImageryProvider();
+            expect(ip).toBeDefined();
+            return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
+        }).then(function(r) {
+            expect(r[0].name).toEqual("Boroondara (C)");
+            expect(r[0].description).toContain("42.42");
+            expect(r[0].description).toContain("the universe");
+        }).otherwise(fail).then(done);
+    });
     it('supports region-mapped files with dates', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
         //csvItem.tableStyle = { displayDuration: 5
