@@ -168,7 +168,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.colorFunc(121)).not.toEqual([0,0,0,0]);
             expect(csvItem.colorFunc(180)).not.toEqual([0,0,0,0]);
             expect(csvItem.colorFunc(197)).not.toEqual([0,0,0,0]);
-        }).otherwise(fail).then(function() { done(); });
+        }).otherwise(fail).then(done);
 
     });
 
@@ -178,7 +178,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem.colorFunc).toBeDefined();
             expect(csvItem.rowProperties(209).value).toBe('correct');
-        }).otherwise(fail).then(function() { done(); });
+        }).otherwise(fail).then(done);
 
     });
 
@@ -245,13 +245,12 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('counts the final row of CSV files with no trailing linefeed', function(done) {
+    it('counts the final row of CSV files with no trailing linefeed', function() {
         var dataset = new DataTable();
         dataset.loadText('postcode,value\n0800,1\n0885,2');
         expect(dataset.getRowCount()).toEqual(2);
         dataset.loadText('postcode,value\n0800,1\n0885,2\n');
         expect(dataset.getRowCount()).toEqual(2);
-        done();
     });
 
     it('chooses the leftmost data column when none specified', function(done) {
@@ -488,8 +487,7 @@ describe('CsvCatalogItem', function() {
             expect(entities.length).toBe(2);
             expect(entities[0].description.getValue()).toContain('<td>Vals</td><td align="right">10</td>');
             expect(entities[1].description.getValue()).toContain('<td>Vals</td><td align="right"></td>');
-            done();
-        });
+        }).otherwise(fail).then(done);
     });
     /*
     // Removed: not clear that this is correct behaviour, and it's failing.
