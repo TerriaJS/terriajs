@@ -1,0 +1,83 @@
+[
+  {
+    "name": "tables",
+    "version": "1.0",
+    "id": "document"
+  },
+  {
+    "point": {
+      "color": {
+        "rgba": [
+          255,
+          0,
+          0,
+          255
+        ]
+      },
+      "pixelSize": 20,
+      "outlineColor": {
+        "rgba": [
+          50,
+          50,
+          50,
+          255
+        ]
+      },
+      "outline": true
+    },
+    "name": "Some location",
+    "description": {
+      "properties": [
+        {
+          "value": "foo",
+          "key": "prop 1"
+        },
+        {
+          "value": "bar",
+          "key": "prop 2"
+        },
+        {
+          "value": [
+            [
+              "Col 1",
+              "Col 2",
+              "Some other col"
+            ],
+            [
+              "foo",
+              "bar",
+              "wibble"
+            ],
+            [
+              "1234",
+              "5678",
+              "098765"
+            ],
+            [
+              "some",
+              "data",
+              "here"
+            ]
+          ],
+          "pivot": true,
+          "key": "Table Heading 1"
+        },
+        {
+          "value": "value 1",
+          "key": "prop 3"
+        },
+        {
+          "value": "value 2",
+          "key": "prop 4"
+        }
+      ]
+    },
+    "position": {
+      "cartographicDegrees": [
+        149.0,
+        -35.0,
+        0.2
+      ]
+    }
+  }
+]
