@@ -120,12 +120,6 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('throws an error on non-csv file', function(done) {
-        csvItem.url = 'test/GeoJSON/polygon.topojson';
-        expect(true).toBe(true);
-        csvItem.load().then(fail).otherwise(done);
-    });
-
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
