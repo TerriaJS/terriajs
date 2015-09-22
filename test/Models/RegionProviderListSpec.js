@@ -3,8 +3,8 @@
 /*global require,describe,it,expect,beforeEach,fail*/
 
 var Terria = require('../../lib/Models/Terria');
-var RegionProviderList = require('../../lib/Models/RegionProviderList');
-var RegionProvider = require('../../lib/Models/RegionProvider');
+var RegionProviderList = require('../../lib/Map/RegionProviderList');
+var RegionProvider = require('../../lib/Map/RegionProvider');
 var DataTable = require('../../lib/Map/DataTable.js');
 var terria;
 var rplp;

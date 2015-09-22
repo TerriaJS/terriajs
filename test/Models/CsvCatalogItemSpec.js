@@ -9,6 +9,7 @@ var DataTable = require('../../lib/Map/DataTable');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var VarType = require('../../lib/Map/VarType');
+var Color = require('terriajs-cesium/Source/Core/Color');
 
 
 var terria;
@@ -153,6 +154,7 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem.colorFunc).toBeDefined();
+            expect(csvItem.rowProperties('31000').value).toBe(1);
             // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
             expect(csvItem.colorFunc(242)).not.toEqual([0,0,0,0]);
         }).otherwise(fail).then(done);
