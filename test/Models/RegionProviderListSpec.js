@@ -7,7 +7,7 @@ var RegionProviderList = require('../../lib/Models/RegionProviderList');
 var RegionProvider = require('../../lib/Models/RegionProvider');
 var DataTable = require('../../lib/Map/DataTable.js');
 var terria;
-var rpl;
+var rplp;
 
 beforeEach(function() {
     terria = new Terria({
@@ -15,38 +15,28 @@ beforeEach(function() {
         regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
     });
     terria.corsProxy.baseProxyUrl = ""; // there is no localhost:3002/proxy, so ...
-    rpl = new RegionProviderList(terria);
+    rplp = RegionProviderList.fromUrl('test/csv/regionMapping.json');
 });
 
 describe('RegionProviderList', function() {
   it('loads some region providers', function(done) {
-    rpl.init().then(function(x) {
+    rplp.then(function(rpl) {
       expect(rpl.regionProviders.length).toBeGreaterThan(2);
     }).otherwise(fail).then(done);
   }); 
-  /*
-  Test fails...and do we care anyway?
-  it('does not allow duplicate identifiers', function(done) {
-    terria.regionMappingDefinitionsUrl = 'test/csv/regionMappingDupeids.json';
-    rpl.init().then(fail).otherwise(done);
-  }); 
-  */
-  it('throws if queried without initialisation', function() {
-    expect (function() { rpl.getRegionProvider('SA4'); }).toThrow();
-  }); 
 
   it('can find region SA4 by alias', function(done) {
-    rpl.init().then(function() {
+    rplp.then(function(rpl) {
       expect(rpl.getRegionProvider('SA4')).not.toBe(null);
     }).otherwise(fail).then(done);
   }); 
   it('can find region sA4 (case doesn\'t matter)', function(done) {
-    rpl.init().then(function() {
+    rplp.then(function(rpl) {
       expect(rpl.getRegionProvider('sA4')).not.toBe(null);
     }).otherwise(fail).then(done);
   }); 
   it('cannot find region NOTATHING by alias', function(done) {
-    rpl.init().then(function() {
+    rplp.then(function(rpl) {
       expect(rpl.getRegionProvider('notathing')).toBe(null);
     }).otherwise(fail).then(done);
   }); 
@@ -61,7 +51,7 @@ describe('RegionProviderList', function() {
 
   it('matches postcodes as expected', function(done) {
     var rp, r;
-    rpl.initFromObject({ regionWmsMap: { POA: poaDescriptor }});
+    var rpl = new RegionProviderList().initFromObject({ regionWmsMap: { POA: poaDescriptor }});
 
     var dataset = new DataTable();
     dataset.loadText('postcode,value\n3068,1\n2000,2\n5,-1\nfour thousand,-4\n2000,3');
