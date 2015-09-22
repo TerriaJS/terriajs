@@ -381,6 +381,17 @@ describe('CsvCatalogItem', function() {
             expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
         }).otherwise(fail).then(done);
     });
+    it('handles LGA names with states for disambiguation', function(done) {
+        csvItem.url = 'test/csv/lga_state_disambig.csv';
+        csvItem.tableStyle = { dataVariable: 'thing' };
+
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).toBe(true);
+            expect(csvItem.tableStyle.dataVariable).toBe('thing');
+        }).otherwise(fail).then(done);
+    });
+
+
     /*
     Nope - I don't know how feature picking on lat-longs works.
     it('supports feature picking on lat-long files', function(done) {
