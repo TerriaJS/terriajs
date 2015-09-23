@@ -3,7 +3,7 @@
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
                 <!-- ko if: isMappable -->
-                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled">
+                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled.bind($root)">
                     <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isEnabled ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isEnabled }"></div>
                 </div>
                 <!-- /ko -->
@@ -31,10 +31,10 @@
     <!-- ko if: !isHidden && typeof items !== 'undefined' -->
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
-                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickOpen">
+                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickOpen.bind($root)">
                     <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
                 </div>
-                <div class="data-catalog-group-label clickable" data-bind="click: $root.clickOpen, text: name, css: { 'data-catalog-opened-group': isOpen }"></div>
+                <div class="data-catalog-group-label clickable" data-bind="click: $root.clickOpen.bind($root), text: name, css: { 'data-catalog-opened-group': isOpen }"></div>
             </div>
 
             <!-- ko if: isOpen && (isLoading || items.length === 0) -->
@@ -57,7 +57,7 @@
 
 <div class="data-catalog-top-group" data-bind="foreach: catalog.group.items">
     <!-- ko if: !isHidden -->
-        <div class="data-catalog-top-group-header" data-bind="click: $root.clickOpen">
+        <div class="data-catalog-top-group-header" data-bind="click: $root.clickOpen.bind($root)">
             <div class="data-catalog-top-group-label" data-bind="text: name"></div>
             <div class="data-catalog-icon-holder">
                 <div class="data-catalog-top-group-icon" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
