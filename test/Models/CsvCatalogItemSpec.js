@@ -153,10 +153,10 @@ describe('CsvCatalogItem', function() {
         csvItem.updateFromJson( { data: 'lga_code,value\n31000,1' });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.colorFunc).toBeDefined();
+            expect(csvItem._colorFunc).toBeDefined();
             expect(csvItem.rowProperties('31000').value).toBe(1);
             // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
-            expect(csvItem.colorFunc(242)).not.toEqual([0,0,0,0]);
+            expect(csvItem._colorFunc(242)).not.toEqual([0,0,0,0]);
         }).otherwise(fail).then(done);
 
     });
@@ -164,10 +164,10 @@ describe('CsvCatalogItem', function() {
         csvItem.updateFromJson( { data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3' });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.colorFunc).toBeDefined();
-            expect(csvItem.colorFunc(121)).not.toEqual([0,0,0,0]);
-            expect(csvItem.colorFunc(180)).not.toEqual([0,0,0,0]);
-            expect(csvItem.colorFunc(197)).not.toEqual([0,0,0,0]);
+            expect(csvItem._colorFunc).toBeDefined();
+            expect(csvItem._colorFunc(121)).not.toEqual([0,0,0,0]);
+            expect(csvItem._colorFunc(180)).not.toEqual([0,0,0,0]);
+            expect(csvItem._colorFunc(197)).not.toEqual([0,0,0,0]);
         }).otherwise(fail).then(done);
 
     });
@@ -176,7 +176,7 @@ describe('CsvCatalogItem', function() {
         csvItem.updateFromJson( { data: 'sa4,value\n209,correct' });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.colorFunc).toBeDefined();
+            expect(csvItem._colorFunc).toBeDefined();
             expect(csvItem.rowProperties(209).value).toBe('correct');
         }).otherwise(fail).then(done);
 
@@ -190,12 +190,12 @@ describe('CsvCatalogItem', function() {
             tableStyle: greenTableStyle });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.colorFunc).toBeDefined();
+            expect(csvItem._colorFunc).toBeDefined();
             // let's not require a linear mapping
-            expect(csvItem.colorFunc(121)).toEqual([0,255,0,255]);
-            expect(csvItem.colorFunc(180)[1]).toBeGreaterThan(64);
-            expect(csvItem.colorFunc(180)[1]).toBeLessThan(255);
-            expect(csvItem.colorFunc(197)).toEqual([0,64,0,255]);
+            expect(csvItem._colorFunc(121)).toEqual([0,255,0,255]);
+            expect(csvItem._colorFunc(180)[1]).toBeGreaterThan(64);
+            expect(csvItem._colorFunc(180)[1]).toBeLessThan(255);
+            expect(csvItem._colorFunc(197)).toEqual([0,64,0,255]);
         }).otherwise(fail).then(done);
 
     });
@@ -207,7 +207,7 @@ describe('CsvCatalogItem', function() {
             tableStyle: greenTableStyle });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.colorFunc).toBeDefined();
+            expect(csvItem._colorFunc).toBeDefined();
             expect(csvItem._tableDataSource.regionVariable).toBe('postcode');
         }).otherwise(fail).then(done);
 
@@ -418,6 +418,8 @@ describe('CsvCatalogItem', function() {
     - region with scalar
     - region with enum
     - region with no values
+
+    - color styling on lat-long csvs
     */
 
 
