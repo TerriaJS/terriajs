@@ -5,6 +5,7 @@ Change Log
 
 * Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
 * Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
+* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
 
 ### 1.0.43
 
