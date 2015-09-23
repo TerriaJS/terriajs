@@ -2,19 +2,12 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var Terria = require('../../lib/Models/Terria');
 var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
 var DataTable = require('../../lib/Map/DataTable.js');
-var terria;
 var rplp;
 
 beforeEach(function() {
-    terria = new Terria({
-        baseUrl: './',
-        regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
-    });
-    terria.corsProxy.baseProxyUrl = ""; // there is no localhost:3002/proxy, so ...
     rplp = RegionProviderList.fromUrl('test/csv/regionMapping.json');
 });
 
