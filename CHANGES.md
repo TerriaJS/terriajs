@@ -1,9 +1,52 @@
 Change Log
 ==========
 
+### 1.0.44
+
+* Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
+* Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
+
+### 1.0.43
+
+* Fixed a bug that prevent the opened/closed state of groups from being preserved when sharing.
+
+### 1.0.42
+
+* Added a `cacheDuration` property to all catalog items.  The new property is used to specify, using Varnish-like notation (e.g. '1d', '10000s') the default length of time to cache URLs related to the catalog item.
+* Fix bug when generating share URLs containing CSV items.
+* Improve wording about downloading data from non-GeoJSON-supporting WFS servers.
+
+### 1.0.41
+
+* Improvements to `AbsIttCatalogItem` caching from the Tools menu.
+
+### 1.0.40
+
+* `ArcGisMapServerCatalogItem` now shows "NoData" tiles by default even after showing the popup message saying that max zoom is exceeded.  This can be disabled by setting its `showTilesAfterMessage` property to false.
+
+### 1.0.39
+
+* Fixed a race condition in `AbsIttCatalogItem` that could cause the legend and map to show different state than the Now Viewing UI suggested.
+* Fixed a bug where an ABS concept with a comma in its name (e.g. "South Eastern Europe,nfd(c)" in Country of Birth) would cause values for concept that follow to be misappropriated to the wrong concepts.
+
+### 1.0.38
+
+* `AbsIttCatalogItem` now allows the region type to be set on demand rather than only at load time.
+* `CsvCatalogItem` can now have no display variable selected, in which case all points are the same color.
+
 ### 1.0.37
 
 * Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
+* Added `CatalogMember.infoSectionOrder` property, to allow the order of info sections to be configured per catalog item when necessary.
+* Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
+* Added support for WMTS layers that can only provide tiles in JPEG format.
+* Fixed testing and caching of ArcGis layers from tools and added More information option for imagery layers.
+* TerriaJS no longer requires Google Analytics.  If a global `ga` function exists, it is used just as before.  Otherwise, events are, by default, logged to the console.
+* The default event analytics behavior can be specified by passing an instance of `ConsoleAnalytics` or `GoogleAnalytics` to the `Terria` constructor.  The API key to use with `GoogleAnalytics` can be specified explicitly to its constructor, or it can be specified in the `parameter.googleAnalyticsKey` property in `config.json`.
+* Made polygons drastically faster in 2D.
+* TerriaJS now shortens share URLs by default when a URL shortener is available.
+* Added Google Analytics reporting of the application URL.  This is useful for tracking use of share URLs.
+* Added the ability to specify a specific dynamic layer of an ArcGIS Server using just a URL.
 
 ### 1.0.36
 
