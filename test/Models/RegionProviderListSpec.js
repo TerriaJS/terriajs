@@ -27,17 +27,17 @@ describe('RegionProviderList', function() {
 
   it('can find region SA4 by alias', function(done) {
     rplp.then(function(rpl) {
-      expect(rpl.getRegionProvider('SA4')).not.toBe(null);
+      expect(rpl.getRegionProvider('SA4')).toBeDefined();
     }).otherwise(fail).then(done);
   }); 
   it('can find region sA4 (case doesn\'t matter)', function(done) {
     rplp.then(function(rpl) {
-      expect(rpl.getRegionProvider('sA4')).not.toBe(null);
+      expect(rpl.getRegionProvider('sA4')).toBeDefined();
     }).otherwise(fail).then(done);
   }); 
   it('cannot find region NOTATHING by alias', function(done) {
     rplp.then(function(rpl) {
-      expect(rpl.getRegionProvider('notathing')).toBe(null);
+      expect(rpl.getRegionProvider('notathing')).not.toBeDefined();
     }).otherwise(fail).then(done);
   }); 
   var poaDescriptor = {
