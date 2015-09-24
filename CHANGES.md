@@ -5,6 +5,7 @@ Change Log
 
 * Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
 * Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
+* Render JSON object data as tables in the feature info popup.
 
 ### 1.0.43
 

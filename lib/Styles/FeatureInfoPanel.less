@@ -34,8 +34,10 @@
     top: 60px;
     right: 95px;
     max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+    max-height: 85%;
     position: absolute;
     box-shadow: @panel-box-shadow;
+    overflow: hidden;
 }
 
 .feature-info-panel-body {
@@ -64,6 +66,52 @@
     overflow: auto;
     max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
     text-align: left;
+    line-height: 130%;
+}
+
+.feature-info-panel-section-content-key {
+  font-weight: bold;
+}
+
+.feature-info-panel-section-content-kv-table {
+  width: 100%;
+}
+
+.feature-info-panel-section-content-kv-table-key {
+  text-align: left;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.feature-info-panel-section-content-kv-table-value {
+  text-align: right;
+  max-width: 300px;
+  vertical-align: middle;
+}
+
+.feature-info-panel-section-content-group {
+  color: white;
+  line-height: 130%;
+  padding: 1px 0 1px 10px;
+}
+
+.feature-info-panel-section-content-group-pivot {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.feature-info-panel-section-pivot-table {
+  margin: 5px auto 0;
+  text-align: right;
+  tr:first-child td {
+    max-width: 125px;
+    padding: 0 0px 5px 20px;
+    font-weight: bold;
+    vertical-align: bottom;
+  }
+  tr:nth-child(2n) {
+    background: #444;
+  }
 }
 
 .feature-info-panel-section-content-white-background {

@@ -1,3 +1,45 @@
+
+<script type="text/html" id="tree">
+    <div class="feature-info-panel-section-content-group" data-bind="css: { 'feature-info-panel-section-content-group-pivot': $data.pivot }">
+        <!-- ko if: $root.isArray($data) && !$data.pivot -->
+            <!-- ko template: { name: 'tree', foreach: $data } -->
+            <!-- /ko -->
+            <br />
+        <!-- /ko -->
+
+        <!-- ko if: !$root.isArray($data) -->
+            <!-- ko if: typeof $data.value === 'object' -->
+                <div class="feature-info-panel-section-content-key" data-bind="text: key"></div>
+                <!-- ko ifnot: $data.pivot -->
+                    <!-- ko template: { name: 'tree', foreach: value } -->
+                    <!-- /ko -->
+                <!-- /ko -->
+            <!-- /ko -->
+
+            <!-- ko if: typeof $data.value === 'string' && typeof $data.key === 'string' -->
+                <table class="feature-info-panel-section-content-kv-table">
+                    <tbody>
+                        <tr>
+                            <td class="feature-info-panel-section-content-kv-table-key" data-bind="text: key"></td>
+                            <td class="feature-info-panel-section-content-kv-table-value" data-bind="html: value"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            <!-- /ko -->
+        <!-- /ko -->
+
+        <!-- ko if: $data.pivot -->
+            <table class="feature-info-panel-section-pivot-table">
+                <tbody data-bind="foreach: value">
+                    <tr data-bind="foreach: $data">
+                        <td data-bind="text: $data"></td>
+                    </tr>
+                </tbody>
+            </table>
+        <!-- /ko -->
+    </div>
+</script>
+
 <div class="feature-info-panel-holder" data-bind="css: { 'feature-info-panel-holder-hidden': !isVisible }, click: closeIfClickOnBackground">
     <div class="feature-info-panel-holder-inner">
         <div class="feature-info-panel" data-bind="style: { 'max-width': maxWidth + 'px' }">
@@ -7,7 +49,21 @@
                         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
                         <div class="feature-info-panel-close-button" data-bind="click: close">&times;</div>
                     </div>
-                    <div class="feature-info-panel-section-content" data-bind="markdown: html, style: { 'max-height': maxHeight + 'px' }, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+                    <!-- ko if: enableJSONViewer -->
+                        <!-- ko if: typeof html === 'object' -->
+                            <div class="feature-info-panel-section-content" data-bind="style: { 'max-height': maxHeight + 'px' }, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
+                                <!-- ko template: { name: 'tree', foreach: html } -->
+                                <!-- /ko -->
+                            </div>
+                        <!-- /ko -->
+                        <!-- ko if: typeof html === 'string' -->
+                            <div class="feature-info-panel-section-content" data-bind="markdown: html, style: { 'max-height': maxHeight + 'px' }, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+                        <!-- /ko -->
+                    <!-- /ko -->
+
+                    <!-- ko ifnot: enableJSONViewer -->
+                        <div class="feature-info-panel-section-content" data-bind="markdown: html, style: { 'max-height': maxHeight + 'px' }, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+                    <!-- /ko -->
                 </div>
             </div>
         </div>
