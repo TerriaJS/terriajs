@@ -29,6 +29,7 @@
     "cors": "^2.5.3",
     "exorcist": "^0.1.6",
     "express": "^4.12.3",
+    "foreach-combination": "^1.0.0",
     "glob": "^5.0.5",
     "glob-all": "^3.0.1",
     "gulp": "^3.8.11",
