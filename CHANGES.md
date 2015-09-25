@@ -6,6 +6,7 @@ Change Log
 * Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
 * Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
 * Added `WfsFeaturesCatalogGroup`.  This group is populated with a catalog item for each feature queried from a WFS server.
+* When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
 
 ### 1.0.43
 
