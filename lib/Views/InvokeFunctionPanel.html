@@ -5,10 +5,15 @@
             <h1 data-bind="text: catalogFunction.name"></h1>
         </div>
         <div class="invoke-function-panel-content">
-            <div class="invoke-function-panel-description" data-bind="markdown: catalogFunction.description"></div>
-            <div class="invoke-function-parameters" data-bind="foreach: catalogFunction.parameters">
-                <div class="invoke-function-parameter" data-bind="embeddedComponent: $root._getComponentForParameter($data)"></div>
-            </div>
+            <form data-bind="submit: invokeFunction">
+                <div class="invoke-function-panel-description" data-bind="markdown: catalogFunction.description"></div>
+                <div class="invoke-function-parameters" data-bind="foreach: catalogFunction.parameters">
+                    <div class="invoke-function-parameter" data-bind="embeddedComponent: $root._getComponentForParameter($data)"></div>
+                </div>
+                <div class="invoke-function-panel-go-button">
+                    <button type="submit">Go!</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

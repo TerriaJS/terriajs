@@ -1,13 +1,24 @@
-<div data-bind="text: parameter.name"></div>
+<div class="parameter-editor-heading" data-bind="text: parameter.name"></div>
 <div data-bind="foreach: catalogItemsWithMatchingRegion">
-    <div data-bind="text: name"></div>
-    <div data-bind="foreach: csvDataset.items">
-        <div class="data-catalog-icon-holder clickable" data-bind="click: $root.toggleActive.bind($root)">
-          <svg xmlns="http://www.w3.org/2000/svg" class="data-catalog-item-checkbox" data-bind="attr: { class: $root.isActive($data) ? 'data-catalog-item-checkbox checked' : 'data-catalog-item-checkbox unchecked'}" viewBox="0 0 32 32" preserveAspectRatio="xMinYMin">
-            <rect y="6" x="6" height="20" width="20"></rect>
-            <path d="M30,3.1C29,2.1 27.3,2.4 26.5,3.5L16,16 12.5,11.6c-1,-1 -2.4,-1.2 -3.5,-0.4 -1,1 -1,2.4 -0.4,3.5l5.5,6.9c0.5,0.6 1.2,1 2,1 0.8,0 1.5,-0.3 2,-1L30,6.5c0.6,-1 1,-2 0,-3.4z"></path>
-          </svg:svg>
+    <div class="parameter-editor-tree-item">
+        <div class="parameter-editor-tree-item-element clickable" data-bind="click: $root.toggleOpenCatalogItem.bind($root)">
+            <div class="parameter-editor-tree-arrow" data-bind="cesiumSvgPath: { path: $root.catalogItemIsOpen($data) ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'parameter-editor-tree-opened-item': $root.catalogItemIsOpen($data) }"></div>
         </div>
-        <span data-bind="text: name"></span>
+        <div class="parameter-editor-tree-item-element clickable" data-bind="text: name, click: $root.toggleOpenCatalogItem.bind($root)"></div>
     </div>
+    <!-- ko if: $root.catalogItemIsOpen($data) -->
+    <div data-bind="foreach: csvDataset.items">
+        <!-- ko if: $root.variableIsScalar($parent, $data) -->
+        <div class="parameter-editor-tree-item parameter-editor-tree-indent">
+            <div class="parameter-editor-tree-item-element parameter-editor-tree-icon-holder clickable" data-bind="click: $root.toggleActive.bind($root, $parent)">
+              <svg xmlns="http://www.w3.org/2000/svg" class="data-catalog-item-checkbox" data-bind="attr: { class: $root.isActive($parent, $data) ? 'data-catalog-item-checkbox checked' : 'data-catalog-item-checkbox unchecked'}" viewBox="0 0 32 32" preserveAspectRatio="xMinYMin">
+                <rect y="6" x="6" height="20" width="20"></rect>
+                <path d="M30,3.1C29,2.1 27.3,2.4 26.5,3.5L16,16 12.5,11.6c-1,-1 -2.4,-1.2 -3.5,-0.4 -1,1 -1,2.4 -0.4,3.5l5.5,6.9c0.5,0.6 1.2,1 2,1 0.8,0 1.5,-0.3 2,-1L30,6.5c0.6,-1 1,-2 0,-3.4z"></path>
+              </svg>
+            </div>
+            <div class="parameter-editor-tree-item-element" data-bind="text: name"></div>
+        </div>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
 </div>
