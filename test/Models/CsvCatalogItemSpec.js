@@ -383,6 +383,10 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem.tableStyle.dataVariable).toBe('thing');
+            expect(csvItem.tableStyle.disambigVariable).toBe('State');
+            // issue to do here: need to collect the FID variable, so we can
+            // verify against that
+
         }).otherwise(fail).then(done);
     });
 
