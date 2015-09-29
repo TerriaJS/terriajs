@@ -92,7 +92,8 @@
                 [ "( \\([A-Z]+\\)$)", "" ],
                 [ "-", " " ]
             ],
-            "disambigColumns": [ { "region": "STE_NAME", "regionProp": "STE_NAME11" } ]
+            "disambigProp": "STE_NAME11",
+            "disambigRegionId": "STE_NAME"
         },
         "POA": {
             "layerName":"region_map:FID_POA_2011_AUST",
