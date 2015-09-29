@@ -85,7 +85,7 @@
                 <h2>Metadata URL</h2>
                 <a class="catalog-item-info-description" data-bind="attr: { href: catalogItem.metadataUrl }, text: catalogItem.metadataUrl" target="_blank"></a>
             </div>
-            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wfs' || catalogItem.dataUrlType === 'wfs-complete'">
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wfs' || catalogItem.dataUrlType === 'wfs-complete'|| catalogItem.dataUrlType === 'twfs'">
                 <h2>Data URL</h2>
                 <div class="catalog-item-info-description">
                     Use the link below to download the data.  See the
