@@ -1,9 +1,9 @@
-LGA_NAME,State,Thing
-Baw Baw,Vic,3
-Campbelltown,NSW,50
-Campbelltown,SA,76
-Wellington,Vic,5
-Wellington,NSW,48
-City of Melbourne, VIC, 15
-Moreland Council,Victoria,12
-Greater Geelong (C),Vic,22
+LGA_NAME,State,StateCapital
+Baw Baw,Vic,Melbourne
+Campbelltown,NSW,Sydney
+Campbelltown,SA,Adelaide
+Wellington,Vic,Melbourne
+Wellington,NSW,Sydney
+City of Melbourne, VIC,Melbourne
+Moreland Council,Victoria,Melbourne
+Greater Geelong (C),Vic,Melbourne

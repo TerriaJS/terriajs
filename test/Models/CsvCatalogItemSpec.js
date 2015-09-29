@@ -9,8 +9,6 @@ var DataTable = require('../../lib/Map/DataTable');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var VarType = require('../../lib/Map/VarType');
-var Color = require('terriajs-cesium/Source/Core/Color');
-
 
 var terria;
 var csvItem;
@@ -279,7 +277,7 @@ describe('CsvCatalogItem', function() {
     it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
         csvItem.url = 'test/csv/lga_fuzzy_val.csv';
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(6);
+            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(3);
             expect(csvItem._regionMapped).toBe(true);
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
@@ -378,14 +376,36 @@ describe('CsvCatalogItem', function() {
     });
     it('handles LGA names with states for disambiguation', function(done) {
         csvItem.url = 'test/csv/lga_state_disambig.csv';
-        csvItem.tableStyle = { dataVariable: 'thing' };
+        csvItem.tableStyle = { dataVariable: 'StateCapital' };
 
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.tableStyle.dataVariable).toBe('thing');
+            var lgaName = csvItem._tableDataSource.dataset.variables['LGA_NAME'];
+            expect(Object.keys(lgaName.regionCodes).length).toEqual(8); // number of matched regions
+            expect(csvItem.tableStyle.dataVariable).toBe('StateCapital');
             expect(csvItem.tableStyle.disambigVariable).toBe('State');
-            // issue to do here: need to collect the FID variable, so we can
-            // verify against that
+            // the following test is much more rigorous.
+
+        }).otherwise(fail).then(done);
+    });
+    it('supports feature picking on disambiguated LGA names like Wellington, VIC', function(done) {
+        csvItem.url = 'test/csv/lga_state_disambig.csv';
+        var ip;
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).toBe(true);
+            ip = csvItem._createImageryProvider();
+            expect(ip).toBeDefined();
+            return ip.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
+        }).then(function(r) {
+            expect(r[0].name).toEqual("Wellington (S)");
+            expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
+            expect(r[0].description).toContain("Melbourne");
+        }).then(function() {
+            return ip.pickFeatures(233,152,8,2.600997237149669,-0.5686381345023742);
+        }).then(function(r) {
+            expect(r[0].name).toEqual("Wellington (A)");
+            expect(r[0].description).toContain("Wellington");
+            expect(r[0].description).toContain("Sydney");
 
         }).otherwise(fail).then(done);
     });
@@ -412,80 +432,6 @@ describe('CsvCatalogItem', function() {
     });
     */
 
-
-
-    /* 
-    to test: 
-    - lat lon with enum
-    - lat lon with scalar
-    - lat lon with no values
-    - region with scalar
-    - region with enum
-    - region with no values
-
-    - color styling on lat-long csvs
-    */
-
-
-
-
-    /*
-    it('returns an error on non-csv text', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is using style data from viewModel', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('correctly changes the region mapping data variable', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('correctly changes the region mapping region variable', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('correctly changes the region mapping region variable', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('correctly changes the region mapping color table', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is shown in cesium', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is returns an error if already shown in cesium', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is properly hidden in cesium', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is returns an error if not being shown in cesium', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is shown in leaflet', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is returns an error if already shown in leaflet', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is properly hidden in leaflet', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-
-    it('is returns an error if not being shown in leaflet', function() {
-        expect(csvItem instanceof CatalogItem).toBe(true);
-    });
-*/
     it('has a blank in the description table for a missing number', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
