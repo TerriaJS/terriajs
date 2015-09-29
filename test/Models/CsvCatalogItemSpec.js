@@ -154,7 +154,7 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem.rowProperties('31000').value).toBe(1);
+            expect(csvItem.rowPropertiesByCode('31000').value).toBe(1);
             // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
             expect(csvItem._colorFunc(242)).not.toEqual([0,0,0,0]);
         }).otherwise(fail).then(done);
@@ -177,7 +177,7 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem.rowProperties(209).value).toBe('correct');
+            expect(csvItem.rowPropertiesByCode(209).value).toBe('correct');
         }).otherwise(fail).then(done);
 
     });
