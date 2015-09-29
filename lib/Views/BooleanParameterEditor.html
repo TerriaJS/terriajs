@@ -1,0 +1,8 @@
+<div>
+    <div class="parameter-editor-table-left">
+        <input type="checkbox" data-bind="checked: value, attr { title: parameter.description, id: 'parameter-editor-' + encodeURIComponent(parameter.name) }" />
+    </div>
+    <div class="parameter-editor-table-right">
+        <label class="parameter-editor-boolean-checkbox" data-bind="text: parameter.name, attr: { for: 'parameter-editor-' + encodeURIComponent(parameter.name) }"></label>
+    </div>
+</div>

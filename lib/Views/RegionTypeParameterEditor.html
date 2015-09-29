@@ -1,2 +1,6 @@
-<div class="parameter-editor-heading" data-bind="text: parameter.name"></div>
-<select data-bind="options: regions, value: value"></select>
+<div>
+    <label class="parameter-editor-table-left" data-bind="text: parameter.name, attr: { for: 'parameter-editor-' + encodeURIComponent(parameter.name) }"></label>
+    <div class="parameter-editor-table-right">
+        <select data-bind="options: regions, value: value, attr: { id: 'parameter-editor-' + encodeURIComponent(parameter.name) }"></select>
+    </div>
+</div>
