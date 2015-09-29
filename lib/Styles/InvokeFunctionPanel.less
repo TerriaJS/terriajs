@@ -1,3 +1,5 @@
+@parameter-editor-table-right-width: 500px;
+
 .invoke-function-panel {
     .modal;
     width: 800px;
@@ -48,7 +50,7 @@
 
 .parameter-editor-table-right {
     display: inline-block;
-    width: 500px;
+    width: @parameter-editor-table-right-width;
     padding-left: 10px;
     vertical-align: top;
 }
@@ -83,4 +85,30 @@
 
 .parameter-editor-table-right select {
     margin-top: 0;
+}
+
+.parameter-editor-map-holder {
+    position: relative;
+    width: 3 * @parameter-editor-table-right-width / 4;
+    height: @parameter-editor-table-right-width / 2;
+}
+
+.parameter-editor-map, .parameter-editor-map-ui {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.parameter-editor-map-ui {
+    pointer-events: none;
+}
+
+.parameter-editor-text-input {
+    padding-bottom: 10px;
+}
+
+.parameter-editor-text-input input {
+    height: 20px;
 }
