@@ -409,6 +409,13 @@ describe('CsvCatalogItem', function() {
 
         }).otherwise(fail).then(done);
     });
+    it('is less than 2000 charecters when serialised to JSON then URLEncoded', function(done) {
+        csvItem.url = 'test/csv/postcode_enum.csv';
+        csvItem.load().then(function() {
+            var url = encodeURIComponent(JSON.stringify(csvItem.serializeToJson()));
+            expect(url.length).toBeLessThan(2000);
+        }).otherwise(fail).then(done);
+    });
 
 
     /*
