@@ -260,6 +260,5 @@ describe('GeoJsonCatalogItem', function() {
                 done();
             });
         });
-
     });
 });
