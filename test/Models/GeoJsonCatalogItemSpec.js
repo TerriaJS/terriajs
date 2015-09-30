@@ -234,4 +234,32 @@ describe('GeoJsonCatalogItem', function() {
             });
         });
     });
+
+    describe('Adding and removing attribution', function() {
+        var currentViewer;
+        beforeEach(function(){
+            currentViewer = geojson.terria.currentViewer;
+            geojson.url = 'test/GeoJSON/polygon.topojson';
+        });
+
+        it('can add attribution', function(done) {
+            geojson.isEnabled = true;
+            spyOn(currentViewer, 'addAttribution');
+            geojson.load().then(function() {
+                expect(currentViewer.addAttribution).toHaveBeenCalled();
+                done();
+            });
+        });
+
+        it('can add attribution', function(done) {
+            geojson.isEnabled = true;
+            spyOn(currentViewer, 'removeAttribution');
+            geojson.load().then(function() {
+                geojson.isEnabled = false;
+                expect(currentViewer.removeAttribution).toHaveBeenCalled();
+                done();
+            });
+        });
+
+    });
 });

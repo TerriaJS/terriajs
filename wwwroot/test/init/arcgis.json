@@ -7,7 +7,18 @@
         {
           "name": "Gravity Anomaly (single dynamic layer)",
           "type": "esri-mapServer",
-          "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6"
+          "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
+          "attribution" : "Plain text"
+        },
+        {
+          "name": "Gravity Anomaly two (single dynamic layer)",
+          "type": "esri-mapServer",
+          "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
+          "attribution" :
+            {
+              "text" : "test attribution which is a link",
+              "link" : "http://www.ga.gov.au"
+            }
         }
       ]
     }

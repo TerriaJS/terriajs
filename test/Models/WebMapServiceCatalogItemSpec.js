@@ -3,20 +3,25 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var Terria = require('../../lib/Models/Terria');
+
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var Credit = require('terriajs-cesium/Source/Core/Credit');
 
 var terria;
 var wmsItem;
+var currentViewer;
+
 
 beforeEach(function() {
     terria = new Terria({
         baseUrl: './'
     });
     wmsItem = new WebMapServiceCatalogItem(terria);
+    currentViewer = wmsItem.terria.currentViewer;
 });
 
 describe('WebMapServiceCatalogItemViewModel', function() {
@@ -146,7 +151,27 @@ describe('WebMapServiceCatalogItemViewModel', function() {
 
         var reconstructed = new WebMapServiceCatalogItem(terria);
         reconstructed.updateFromJson(json);
-
         expect(reconstructed).toEqual(wmsItem);
     });
+
+
+    it('can get handle plain text in textAttribution', function() {
+        wmsItem.updateFromJson({
+            attribution: "Plain text"
+        });
+        expect(wmsItem.attribution).toEqual(new Credit("Plain text", undefined, undefined));
+    });
+    it('can get handle object in textAttribution', function() {
+        var test = {
+                        text : "test",
+                        link : "link"
+                    };
+        wmsItem.updateFromJson({
+            attribution: test
+        });
+        expect(wmsItem.attribution.text).toEqual("test");
+        expect(wmsItem.attribution.link).toEqual("link");
+    });
 });
+
+
