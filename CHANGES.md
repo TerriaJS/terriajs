@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+### 1.0.44
+
+* Major refactor of CsvCatalogItem, splitting region-mapping functionality out into RegionProvider and RegionProviderList. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
+  * Regions can be matched using regular expressions, enabling matching of messy fields like local government names ("Baw Baw", "Baw Baw Shire", "Baw Baw (S)", "Shire of Baw Baw" etc). 
+  * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
+  * Drag-and-dropped datasets with a time column behave much better: rather than a fixed time being allocated to each row, each row occupies all the time up until the next row is shown.
+  * Enumerated fields are colour coded in lat-long files, consist with region-mapped files.
+
 ### 1.0.43
 
 * Fixed a bug that prevent the opened/closed state of groups from being preserved when sharing.
