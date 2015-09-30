@@ -3,7 +3,6 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var Terria = require('../../lib/Models/Terria');
-
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
@@ -13,15 +12,12 @@ var Credit = require('terriajs-cesium/Source/Core/Credit');
 
 var terria;
 var wmsItem;
-var currentViewer;
-
 
 beforeEach(function() {
     terria = new Terria({
         baseUrl: './'
     });
     wmsItem = new WebMapServiceCatalogItem(terria);
-    currentViewer = wmsItem.terria.currentViewer;
 });
 
 describe('WebMapServiceCatalogItemViewModel', function() {
@@ -154,7 +150,6 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         expect(reconstructed).toEqual(wmsItem);
     });
 
-
     it('can get handle plain text in textAttribution', function() {
         wmsItem.updateFromJson({
             attribution: "Plain text"
@@ -173,5 +168,3 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         expect(wmsItem.attribution.link).toEqual("link");
     });
 });
-
-
