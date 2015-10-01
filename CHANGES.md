@@ -8,6 +8,10 @@ Change Log
   * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
   * Drag-and-dropped datasets with a time column behave much better: rather than a fixed time being allocated to each row, each row occupies all the time up until the next row is shown.
   * Enumerated fields are colour coded in lat-long files, consist with region-mapped files.
+  * Feedback is now provided after region mapping, showing which regions failed to match, and which matched more than once.
+  * Bug: Fields with names starting with 'lon', 'lat' etc were too aggressively matched.
+  * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
+  * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
 
 ### 1.0.43
 
