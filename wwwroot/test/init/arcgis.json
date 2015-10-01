@@ -9,7 +9,7 @@
           "type": "esri-mapServer",
           "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
           "attribution" : "Plain text <a href=\"test\">hello</a>",
-          "infoTemplate" : "The name of this station is _{Station Name}_ and its primary fuel source is <em>{Fuel Source - Primary}<em>!"
+          "infoTemplate" : "The value of this Red is {{Red}}. The value of this Blue is {{Blue}} <em>The value of this Green is {{Green}} </em>!"
         },
         {
           "name": "Gravity Anomaly two",
