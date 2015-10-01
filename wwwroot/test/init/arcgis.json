@@ -8,10 +8,11 @@
           "name": "Gravity Anomaly (single dynamic layer)",
           "type": "esri-mapServer",
           "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
-          "attribution" : "Plain text <a href=\"test\">hello</a>"
+          "attribution" : "Plain text <a href=\"test\">hello</a>",
+          "infoTemplate" : "The name of this station is _{Station Name}_ and its primary fuel source is <em>{Fuel Source - Primary}<em>!"
         },
         {
-          "name": "Gravity Anomaly two (single dynamic layer)",
+          "name": "Gravity Anomaly two",
           "type": "esri-mapServer",
           "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
           "attribution" :
