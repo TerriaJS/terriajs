@@ -14,6 +14,7 @@ The following people have contributed to TerriaJS:
    * [Steve Bennett](https://github.com/stevage)
    * [Renee Noble](https://github.com/reneenoble)
    * [Yuri Feldman](https://github.com/arrayjam)
+   * [Chloe Chen](https://github.com/chloeleichen)
 * [Geoscience Australia](http://www.ga.gov.au/)
    * [Darren Reid](https://github.com/Layoric)
 * [Propeller Aerobotics](http://www.propelleraero.com.au/)
