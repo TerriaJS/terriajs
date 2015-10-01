@@ -8,6 +8,7 @@ Change Log
 * When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
 * Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
 * Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
+* Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
 
 ### 1.0.43
 
