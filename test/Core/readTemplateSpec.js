@@ -25,5 +25,4 @@ describe("readTemplate", function() {
     output = readTemplate(mockData, mockTemplate);
     expect(output).toBe("hello name for , <em>Hello</em> world! < a href='www'>www </a>");
   });
-
 });

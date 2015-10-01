@@ -19,7 +19,8 @@
             {
               "text" : "test attribution which is a link",
               "link" : "http://www.ga.gov.au"
-            }
+            },
+          "infoTemplate" : "Red is {{Red}}. Blue is {{Blue}} <h1>Green is {{Green}} </h1>!"
         }
       ]
     }
