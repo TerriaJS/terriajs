@@ -226,6 +226,19 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.tableStyle.dataVariable).toBe('enum');
         }).otherwise(fail).then(done);
     });
+    it('colors enum fields in lat-long files the same (only) when the value is the same', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum.csv';
+
+        csvItem.load().then(function() {
+            function cval(i) { return csvItem._tableDataSource.entities.values[i]._point._color._value; }
+            expect(cval(0)).not.toEqual(cval(1));
+            expect(cval(0)).not.toEqual(cval(2));
+            expect(cval(0)).not.toEqual(cval(3));
+            expect(cval(0)).toEqual(cval(4));
+            expect(cval(1)).toEqual(cval(3));
+
+        }).otherwise(fail).then(done);
+    });
     it('handles lat-long CSVs with no data variable', function(done) {
         csvItem.url = 'test/csv/lat_lon_novals.csv';
         csvItem.load().then(function() {
@@ -409,6 +422,15 @@ describe('CsvCatalogItem', function() {
 
         }).otherwise(fail).then(done);
     });
+    it('has the right values in descriptions of lat-long datasets for feature picking', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum.csv';
+        csvItem.load().then(function() {
+            function desc(i) { return csvItem._tableDataSource.entities.values[i].description._value; }
+            expect(desc(0)).toContain('hello');
+            expect(desc(1)).toContain('boots');
+        }).otherwise(fail).then(done);
+    });
+    
     it('is less than 2000 charecters when serialised to JSON then URLEncoded', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
         csvItem.load().then(function() {
@@ -416,28 +438,6 @@ describe('CsvCatalogItem', function() {
             expect(url.length).toBeLessThan(2000);
         }).otherwise(fail).then(done);
     });
-
-
-    /*
-    Nope - I don't know how feature picking on lat-longs works.
-    it('supports feature picking on lat-long files', function(done) {
-        csvItem.url = 'test/csv/lat_lon_enum.csv';
-        csvItem.load().then(function() {
-            expect(csvItem._regionMapped).not.toBe(true);
-            csvItem._enable();
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(1850, 1252, 11, 2.5351151523100115, -0.6501965629172219);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("3124");
-            expect(r[0].description).toContain("42.42");
-            expect(r[0].description).toContain("the universe");
-        }).yield(true).otherwise(except).then(function(x) {
-            expect(x).toBe(true);
-            done();
-        });
-    });
-    */
 
     it('has a blank in the description table for a missing number', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';

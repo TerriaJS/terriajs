@@ -9,6 +9,15 @@ Change Log
 * When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
 * Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
 * Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
+* Major refactor of CsvCatalogItem, splitting region-mapping functionality out into RegionProvider and RegionProviderList. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
+  * Regions can be matched using regular expressions, enabling matching of messy fields like local government names ("Baw Baw", "Baw Baw Shire", "Baw Baw (S)", "Shire of Baw Baw" etc). 
+  * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
+  * Drag-and-dropped datasets with a time column behave much better: rather than a fixed time being allocated to each row, each row occupies all the time up until the next row is shown.
+  * Enumerated fields are colour coded in lat-long files, consist with region-mapped files.
+  * Feedback is now provided after region mapping, showing which regions failed to match, and which matched more than once.
+  * Bug: Fields with names starting with 'lon', 'lat' etc were too aggressively matched.
+  * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
+  * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
 
 ### 1.0.43
 
