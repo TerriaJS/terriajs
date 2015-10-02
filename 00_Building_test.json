@@ -1,0 +1,37 @@
+{
+  "catalog": [
+    {
+      "items": [
+        {
+          "items": [
+            {
+              "nowViewingMessage": "Look here for the *legend* and to *interactively filter* the data.",
+              "name": "Buildings",
+              "description": "Layer description goes here",
+              "dataCustodian": "oslandia",
+              "rectangle": [
+                "112.93529999999998",
+                "-38.208809999082796",
+                "152.06206",
+                "-11.05104999964455"
+              ],
+              "type": "twfs",
+              "url": "http://ks29236.kimsufi.com/cgi-bin/tinyows",
+              "typeNames": "tows:lyongeom"
+            }
+          ],
+          "isOpen": true,
+          "type": "group",
+          "name": "Cesium buildings demo (Selected Datasets)"
+        }
+      ],
+      "initialMessage": {
+        "key": "AbsDataProviderWarning",
+        "content": "This is an experimental section ",
+        "title": "Data Provider Information"
+      },
+      "type": "group",
+      "name": "Buildings demo"
+    }
+  ]
+}
