@@ -88,7 +88,7 @@ function bundle(name, bundler, minify, catchErrors) {
     if (catchErrors) {
         // Display errors to the user, and don't let them propagate.
         result = result.on('error', function(e) {
-            gutil.log('Browserify Error', e);
+            gutil.log('Browserify Error', e.message);
         });
     }
 
