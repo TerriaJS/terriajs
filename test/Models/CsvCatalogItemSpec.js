@@ -444,8 +444,8 @@ describe('CsvCatalogItem', function() {
         return csvItem.load().then(function() {
             var entities = csvItem._tableDataSource.entities.values;
             expect(entities.length).toBe(2);
-            expect(entities[0].description.getValue()).toContain('<td>Vals</td><td align="right">10</td>');
-            expect(entities[1].description.getValue()).toContain('<td>Vals</td><td align="right"></td>');
+            expect(entities[0].description.getValue()).toMatch('<td>Vals</td><td[^>]*>10</td>');
+            expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*></td>');
         }).otherwise(fail).then(done);
     });
     /*
