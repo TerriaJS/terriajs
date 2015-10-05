@@ -9,6 +9,7 @@ var DataTable = require('../../lib/Map/DataTable');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var VarType = require('../../lib/Map/VarType');
+var Color = require('../Core/Color');
 
 var terria;
 var csvItem;
@@ -448,9 +449,9 @@ describe('CsvCatalogItem', function() {
             expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*></td>');
         }).otherwise(fail).then(done);
     });
-    /*
+    
     // Removed: not clear that this is correct behaviour, and it's failing.
-    it('renders a point with no value in transparent black', function(done) {
+    xit('renders a point with no value in transparent black', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
             var entities = csvItem._tableDataSource.entities.values;
@@ -460,5 +461,5 @@ describe('CsvCatalogItem', function() {
             done();
         });
     });
-    */
+    
 });
