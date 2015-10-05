@@ -5,8 +5,7 @@ var FeatureInfoPanelViewModel = require('../../lib/ViewModels/FeatureInfoPanelVi
 var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var runLater = require('../../lib/Core/runLater');
 var Terria = require('../../lib/Models/Terria');
-// var when = require('terriajs-cesium/Source/ThirdParty/when');
-// var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 
 describe('FeatureInfoPanelViewModel', function() {
     var terria;
@@ -76,29 +75,25 @@ describe('FeatureInfoPanelViewModel', function() {
         expect(terria.selectedFeature.id).toBe('Pick Location');
     });
 
-    // it('infoTemplate', function(done) {
-    //     var feature = new Entity({
-    //             name: 'Bar',
-    //             properties: {
-    //                 name: 'Foo',
-    //                 value: 'bar'
-    //             },
-    //             imageryLayer:{
-    //                 infoTemplate: "{{name}} is {{value}}"
-    //             }
-    //         });
-    //     var pickedFeatures = new PickedFeatures();
-    //     pickedFeatures.features.push(feature);
-    //     pickedFeatures.allFeaturesAvailablePromise = runLater(function(){});
-    //     var promise = new Promise(
-    //         function(resolve, reject){
-    //          terria.pickedFeatures = pickedFeatures;
-    //          resolve(terria.selectedFeature);
-    //         });
-    //     promise.then(feature){
-    //         expect(feature).toBeDefined()
-    //     }
-    // });
+    it('should use infoTemplate', function(done) {
+        var feature = new Entity({
+                name: 'Bar',
+                properties: {
+                    name: 'Foo',
+                    value: 'bar'
+                },
+                imageryLayer:{
+                    infoTemplate: "{{name}} is {{value}}"
+                }
+            });
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+        terria.pickedFeatures = pickedFeatures;
+
+        expect(terria.selectedFeature).toBeDefined();
+        expect(terria.selectedFeature.name).toBe('Bar');
+    });
 
     function domContainsText(panel, s) {
         for (var i = 0; i < panel._domNodes.length; ++i) {
