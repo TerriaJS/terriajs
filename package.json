@@ -19,7 +19,7 @@
     "proj4": "^2.3.6",
     "resolve": "^1.1.6",
     "sanitize-caja": "^0.1.3",
-    "terriajs-cesium": "1.11.1",
+    "terriajs-cesium": "1.13.0",
     "togeojson": "^0.9.0",
     "hammerjs": "^2.0.4"
   },
