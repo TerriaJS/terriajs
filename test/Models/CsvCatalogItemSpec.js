@@ -9,7 +9,7 @@ var DataTable = require('../../lib/Map/DataTable');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var VarType = require('../../lib/Map/VarType');
-var Color = require('../Core/Color');
+var Color = require('terriajs-cesium/Source/Core/Color');
 
 var terria;
 var csvItem;
