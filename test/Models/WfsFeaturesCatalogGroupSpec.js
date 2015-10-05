@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach,fail*/
+/*global require,describe,it,expect,fail*/
 
 var Terria = require('../../lib/Models/Terria');
 var WfsFeaturesCatalogGroup = require('../../lib/Models/WfsFeaturesCatalogGroup');
