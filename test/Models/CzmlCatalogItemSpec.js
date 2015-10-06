@@ -24,6 +24,18 @@ describe('CzmlCatalogItem', function() {
             czml.url = 'test/CZML/verysimple.czml';
             czml.load().then(function() {
                 expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataUrl).toBe("test/CZML/verysimple.czml");
+                expect(czml.dataUrlType).toBe("direct");
+                done();
+            });
+        });
+
+        it('use provided dataUrl', function(done) {
+            czml.url = 'test/CZML/verysimple.czml';
+            czml.dataUrl ="test/test.html"
+            czml.load().then(function() {
+                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataUrl).toBe("test/test.html");
                 done();
             });
         });
