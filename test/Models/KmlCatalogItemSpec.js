@@ -32,7 +32,7 @@ describe('KmlCatalogItem', function() {
 
     it('use provided dataUrl', function(done) {
         kml.url = 'test/KML/vic_police.kml';
-        kml.dataUrl ="test/test.html"
+        kml.dataUrl ="test/test.html";
         kml.load().then(function() {
             expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
             expect(kml.dataUrl).toBe("test/test.html");

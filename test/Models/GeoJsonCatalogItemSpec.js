@@ -32,7 +32,7 @@ describe('GeoJsonCatalogItem', function() {
 
         it('use provided dataUrl', function(done) {
             geojson.url = 'test/GeoJSON/bike_racks.geojson';
-            geojson.dataUrl ="test/test.html"
+            geojson.dataUrl ="test/test.html";
             geojson.load().then(function() {
                 expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
                 expect(geojson.dataUrl).toBe("test/test.html");
