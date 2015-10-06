@@ -115,8 +115,8 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         expect(wmsItem.description).toBe('');
         expect(wmsItem.rectangle).toBeUndefined();
         expect(wmsItem.legendUrl.indexOf('?')).toBe(0);
-        expect(wmsItem.dataUrlType).toBeUndefined();
-        expect(wmsItem.dataUrl).toBeUndefined();
+        expect(wmsItem.dataUrlType).toBe('direct');
+        expect(wmsItem.dataUrl).toBe('');
         expect(wmsItem.dataCustodian).toBeUndefined();
         expect(wmsItem.metadataUrl.indexOf('?')).toBe(0);
         expect(wmsItem.url).toBe('');
