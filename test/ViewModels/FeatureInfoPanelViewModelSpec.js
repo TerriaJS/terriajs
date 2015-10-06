@@ -6,6 +6,8 @@ var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var runLater = require('../../lib/Core/runLater');
 var Terria = require('../../lib/Models/Terria');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var when = require('terriajs-cesium/Source/ThirdParty/when');
+
 
 describe('FeatureInfoPanelViewModel', function() {
     var terria;
@@ -82,17 +84,21 @@ describe('FeatureInfoPanelViewModel', function() {
                     name: 'Foo',
                     value: 'bar'
                 },
-                imageryLayer:{
-                    infoTemplate: "{{name}} is {{value}}"
-                }
+                infoTemplate : "<div>test test</div>"
             });
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.features.push(feature);
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-        terria.pickedFeatures = pickedFeatures;
+        var promise = runLater(function() {
+            terria.pickedFeatures = pickedFeatures;
+        });
 
-        expect(terria.selectedFeature).toBeDefined();
-        expect(terria.selectedFeature.name).toBe('Bar');
+        when(promise, function(){
+            expect(terria.selectedFeature).toBeDefined();
+            expect(terria.selectedFeature.name).toBe('Bar');
+            expect(terria.selectedFeature.properties.name).toBe('Foo');
+            expect(terria.selectedFeature.infoTemplate).toBe('<div>test test</div>');
+        }).otherwise(fail).then(done);
     });
 
     function domContainsText(panel, s) {
