@@ -13,6 +13,7 @@ Change Log
 * Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
 * Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
+* Move url property to base CatalogItem base class, so download link can be from base class to all data types
 
 ### 1.0.43
 
