@@ -24,18 +24,26 @@ describe('CzmlCatalogItem', function() {
             czml.url = 'test/CZML/verysimple.czml';
             czml.load().then(function() {
                 expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                expect(czml.dataUrl).toBe("test/CZML/verysimple.czml");
-                expect(czml.dataUrlType).toBe("direct");
                 done();
             });
         });
 
-        it('use provided dataUrl', function(done) {
+        it('have default dataUrl and dataUrlType', function() {
+            czml.updateFromJson({
+                url: 'test/CZML/verysimple.czml',
+            });
+            expect(czml.dataUrl).toBe('test/CZML/verysimple.czml');
+            expect(czml.dataUrlType).toBe('direct');
+        });
+
+        it('use provided dataUrl and dataUrlType', function(done) {
             czml.url = 'test/CZML/verysimple.czml';
             czml.dataUrl ="test/test.html";
+            czml.dataUrlType ="fake type";
             czml.load().then(function() {
                 expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
                 expect(czml.dataUrl).toBe("test/test.html");
+                expect(czml.dataUrlType).toBe("fake type");
                 done();
             });
         });
