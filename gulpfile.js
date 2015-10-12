@@ -28,19 +28,19 @@ if (!fs.existsSync('wwwroot/build')) {
     fs.mkdirSync('wwwroot/build');
 }
 
-gulp.task('build-specs', ['prepare-cesium'], function() {
+gulp.task('build-specs', ['prepare-cesium', 'prepare-cesium-buildings'], function() {
     return build(specJSName, glob.sync(testGlob), false);
 });
 
 gulp.task('build', ['build-specs']);
 
-gulp.task('release-specs', ['prepare-cesium'], function() {
+gulp.task('release-specs', ['prepare-cesium', 'prepare-cesium-buildings'], function() {
     return build(specJSName, glob.sync(testGlob), true);
 });
 
 gulp.task('release', ['release-specs']);
 
-gulp.task('watch-specs', ['prepare-cesium'], function() {
+gulp.task('watch-specs', ['prepare-cesium', 'prepare-cesium-buildings'], function() {
     return watch(specJSName, glob.sync(testGlob), false);
 });
 
@@ -78,6 +78,24 @@ gulp.task('copy-cesium-assets', function() {
         ], { base: cesium })
         .pipe(gulp.dest('wwwroot/build/Cesium'));
 });
+
+gulp.task('prepare-cesium-buildings', ['copy-cesium-buildings-assets']);
+
+gulp.task('copy-cesium-buildings-assets', function() {
+    var cesium_buildings = resolve.sync('terriajs-cesium-buildings/wwwroot/build', {
+        basedir: __dirname,
+        extentions: ['.'],
+        isFile: function(file) {
+            try { return fs.statSync(file).isDirectory(); }
+            catch (e) { return false; }
+        }
+    });
+    return gulp.src([
+            cesium_buildings + '/createWfsGeometry.js'
+        ], { base: cesium_buildings })
+        .pipe(gulp.dest('wwwroot/build'));
+});
+
 
 gulp.task('default', ['lint', 'build']);
 
