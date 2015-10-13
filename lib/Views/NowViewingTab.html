@@ -60,6 +60,13 @@
                     <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
                 </div>
 
+                <div class="now-viewing-section" data-bind="visible: isLoading">
+                    <div class="now-viewing-section-contents">
+                        <span>Loading...</span>
+                        <img data-bind="attr: { src: terria.baseUrl + 'images/ajax-loader.gif' }" width="16" height="16" />
+                    </div>
+                </div>
+
                 <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
                     OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
                     <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
