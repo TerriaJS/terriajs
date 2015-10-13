@@ -4,7 +4,6 @@
 
 var Terria = require('../../lib/Models/Terria');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
-var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var ArcGisMapServerCatalogItem = require('../../lib/Models/ArcGisMapServerCatalogItem');
 
 var terria;
