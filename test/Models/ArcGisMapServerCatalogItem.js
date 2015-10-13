@@ -106,7 +106,7 @@ describe('ArcGisMapServerCatalogItemViewModel', function() {
     });
 
     it('properly loads with numbers in url', function(done) {
-        var url = 'http://my.arcgis3.com';
+        var url = 'http://my.arcgis.com/33/MapServer';
         item.updateFromJson({url: url});
         item.load().then(function() {
             // this reg exp allows for optional / at end of url and after /layers
