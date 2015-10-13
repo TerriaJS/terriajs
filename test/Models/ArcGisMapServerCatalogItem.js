@@ -3,12 +3,9 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var Terria = require('../../lib/Models/Terria');
+var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var ArcGisMapServerCatalogItem = require('../../lib/Models/ArcGisMapServerCatalogItem');
-var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
-
-var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
-var Credit = require('terriajs-cesium/Source/Core/Credit');
 
 var terria;
 var item;
@@ -56,6 +53,25 @@ describe('ArcGisMapServerCatalogItemViewModel', function() {
         expect(item.maximumScale).toEqual(100);
         expect(item.maximumScaleBeforeMessage).toEqual(10);
         expect(item.showTilesAfterMessage).toBe(false);
+    });
+
+    it('can load JSON', function(done) {
+        item.updateFromJson({
+            url: 'http://my.arcgis.com'
+        });
+        // item.load() ultimately calls loadWithXhr.load(), which just needs to return some json, so fake it
+        spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
+            var json = '{"currentVersion": 1.1, "folders": ["Utilities"], "services": [{"name": "2014-Map", "type": "MapServer"}]}';
+            deferred.resolve(json);
+        });
+        item.load().then(function() {
+            expect(loadWithXhr.load).toHaveBeenCalled();
+            done();
+        });
+        // .otherwise(function() {
+        //     expect(loadWithXhr.load).toHaveBeenCalledWith('abc');
+        //     done();
+        // });
     });
 
 });
