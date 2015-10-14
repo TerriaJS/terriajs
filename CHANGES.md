@@ -5,9 +5,6 @@ Change Log
 
 * Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
 * Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
-* Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
-  * The default `CTRL + Left Click Drag` mouse behavior is now duplicated for `CTRL + Right Click Drag` for better compatibility with Firefox on Mac OS [#2913](https://github.com/AnalyticalGraphicsInc/cesium/pull/2913).
-  * Fixed an issue where non-feature nodes prevented KML documents from loading. [#2945](https://github.com/AnalyticalGraphicsInc/cesium/pull/2945)
 * When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
 * Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
 * Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
@@ -16,6 +13,9 @@ Change Log
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
 * Allow missing URLs on embedded data (eg. embedded czml data)
 * Fixed a bug loading URLs for ArcGIS services names that start with a number.
+* Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
+  * The default `CTRL + Left Click Drag` mouse behavior is now duplicated for `CTRL + Right Click Drag` for better compatibility with Firefox on Mac OS [#2913](https://github.com/AnalyticalGraphicsInc/cesium/pull/2913).
+  * Fixed an issue where non-feature nodes prevented KML documents from loading. [#2945](https://github.com/AnalyticalGraphicsInc/cesium/pull/2945)
 
 ### 1.0.43
 
