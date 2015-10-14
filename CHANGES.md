@@ -14,6 +14,7 @@ Change Log
 * Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
 * Remove an unnecessary instance of the Cesium InfoBox class when viewing in 2D
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
+* Allow missing URLs on embedded data (eg. embedded czml data)
 
 ### 1.0.43
 
