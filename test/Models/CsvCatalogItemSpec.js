@@ -449,7 +449,19 @@ describe('CsvCatalogItem', function() {
             expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*></td>');
         }).otherwise(fail).then(done);
     });
-    
+/*
+    it('scales lat-lon points as requested', function(done) {
+        csvItem.url = 'test/csv/lat_lon_val.csv';
+        csvItem.tableStyle = { scale: 5, scaleByValue: true }
+        return csvItem.load().then(function() {
+            var entities = csvItem._tableDataSource.entities.values;
+            expect(entities.length).toBe(2);
+            expect(entities[0].point.color.getValue()).not.toEqual(new Color(0.0, 0.0, 0.0, 0.0));
+            expect(entities[1].point.color.getValue()).toEqual(new Color(0.0, 0.0, 0.0, 0.0));
+            done();
+        });
+    });
+  */  
     // Removed: not clear that this is correct behaviour, and it's failing.
     xit('renders a point with no value in transparent black', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
