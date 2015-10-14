@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 1.0.45
+
+* Avoid mixed content warnings when using the CartoDB basemaps.
+
 ### 1.0.44
 
 * Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
