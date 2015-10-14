@@ -4,7 +4,7 @@ var readTemplate = require('../../lib/Core/readTemplate');
 var mockData, mockTemplate, output;
 
 describe("readTemplate", function() {
-  it("contains spec with an expectation", function() {
+  it("correctly parse text templates", function() {
     mockData = {
       name: "name lala",
       "some more item": "some more item lala",
@@ -15,7 +15,7 @@ describe("readTemplate", function() {
     expect(output).toBe("hello name lala for value lala, some more item lala and some more item lala");
   });
 
-  it("contains spec with an expectation", function() {
+  it("correctly parse html templates", function() {
     mockData = {
       name123: "&copy;name",
       VALUE: "",
