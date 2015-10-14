@@ -9,7 +9,7 @@
           "type": "esri-mapServer",
           "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
           "attribution" : "Plain text <a href=\"test\">hello</a>",
-          "infoTemplate" : "The value of this Red is {{Red}}. The value of this Blue is {{Blue}} <em>The value of this Green is {{Green}} </em>!"
+          "featureInfoTemplate" : "The value of this Red is {{Red}}. The value of this Blue is {{Blue}} <em>The value of this Green is {{Green}} </em>!"
         },
         {
           "name": "Gravity Anomaly two",
@@ -20,7 +20,7 @@
               "text" : "test attribution which is a link",
               "link" : "http://www.ga.gov.au"
             },
-          "infoTemplate" : "Red is {{Red}}. Blue is {{Blue}} <h1>Green is {{Green}} </h1>!"
+          "featureInfoTemplate" : "Red is {{Red}}. Blue is {{Blue}} <h1>Green is {{Green}} </h1>!"
         }
       ]
     }

@@ -77,14 +77,14 @@ describe('FeatureInfoPanelViewModel', function() {
         expect(terria.selectedFeature.id).toBe('Pick Location');
     });
 
-    it('should use infoTemplate', function(done) {
+    it('should use featureInfoTemplate', function(done) {
         var feature = new Entity({
                 name: 'Bar',
                 properties: {
                     name: 'Foo',
                     value: 'bar'
                 },
-                infoTemplate : "<div>test test</div>"
+                featureInfoTemplate : "<div>test test</div>"
             });
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.features.push(feature);
@@ -97,7 +97,7 @@ describe('FeatureInfoPanelViewModel', function() {
             expect(terria.selectedFeature).toBeDefined();
             expect(terria.selectedFeature.name).toBe('Bar');
             expect(terria.selectedFeature.properties.name).toBe('Foo');
-            expect(terria.selectedFeature.infoTemplate).toBe('<div>test test</div>');
+            expect(terria.selectedFeature.featureInfoTemplate).toBe('<div>test test</div>');
         }).otherwise(fail).then(done);
     });
 
