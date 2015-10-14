@@ -449,19 +449,30 @@ describe('CsvCatalogItem', function() {
             expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*></td>');
         }).otherwise(fail).then(done);
     });
-/*
-    it('scales lat-lon points as requested', function(done) {
+    it('scales lat-lon points to a size ratio of 300% if scaleByValue true and respects scale value', function(done) {
         csvItem.url = 'test/csv/lat_lon_val.csv';
         csvItem.tableStyle = { scale: 5, scaleByValue: true }
         return csvItem.load().then(function() {
-            var entities = csvItem._tableDataSource.entities.values;
-            expect(entities.length).toBe(2);
-            expect(entities[0].point.color.getValue()).not.toEqual(new Color(0.0, 0.0, 0.0, 0.0));
-            expect(entities[1].point.color.getValue()).toEqual(new Color(0.0, 0.0, 0.0, 0.0));
-            done();
-        });
+            var pixelSizes = csvItem._tableDataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+            csvItem._minPix = Math.min.apply(null, pixelSizes);
+            csvItem._maxPix = Math.max.apply(null, pixelSizes);
+            // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
+            expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
+        }).then(function(minMax) {
+            var csvItem2 = new CsvCatalogItem(terria);
+            csvItem2.tableStyle = { scale: 10, scaleByValue: true }
+            csvItem2.url = 'test/csv/lat_lon_val.csv';
+            return csvItem2.load().yield(csvItem2);
+        }).then(function(csvItem2) {
+            var pixelSizes = csvItem2._tableDataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+            var minPix = Math.min.apply(null, pixelSizes);
+            var maxPix = Math.max.apply(null, pixelSizes);
+            // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
+            expect(maxPix).toEqual(csvItem._maxPix * 2);
+            expect(minPix).toEqual(csvItem._minPix * 2);
+        })            
+        .otherwise(fail).then(done);
     });
-  */  
     // Removed: not clear that this is correct behaviour, and it's failing.
     xit('renders a point with no value in transparent black', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
