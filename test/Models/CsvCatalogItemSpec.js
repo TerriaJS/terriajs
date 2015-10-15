@@ -170,6 +170,14 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
 
     });
+    it('matches numeric state IDs with regexes', function(done) {
+        csvItem.updateFromJson( { data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90' });
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).toBe(true);
+            expect(csvItem._colorFunc).toBeDefined();
+            expect(csvItem._tableDataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
+        }).otherwise(fail).then(done);
+    });
 
     it('matches SA4s', function(done) {
         csvItem.updateFromJson( { data: 'sa4,value\n209,correct' });
