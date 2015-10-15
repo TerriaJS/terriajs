@@ -1,0 +1,33 @@
+{
+"homeCamera": {
+    "north": -36,
+    "east": 146,
+    "south": -38,
+    "west": 143
+  },
+    "catalog": [
+    {
+      "name": "CSV testing",
+      "type": "group",
+      "isOpen": true,
+      "items": [
+        {
+          "name": "val_enum_postcode thingo",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
+          "tableStyle": {
+            "colorMapString": "green-orange"
+          }
+        },
+        {
+          "name": "Victorian postcodes",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "tableStyle": {
+            "colorMapString": "green-hsl(120,100%,70%)-white-hsl(0,100%,70%)-red"
+          }
+        }
+      ]
+    }
+  ]
+}
