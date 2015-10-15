@@ -1,9 +1,9 @@
 Change Log
 ==========
 
-### 1.0.44
+### 1.0.45
 
-* Major refactor of CsvCatalogItem, splitting region-mapping functionality out into RegionProvider and RegionProviderList. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
+* Major refactor of `CsvCatalogItem`, splitting region-mapping functionality out into `RegionProvider` and `RegionProviderList`. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
   * Regions can be matched using regular expressions, enabling matching of messy fields like local government names ("Baw Baw", "Baw Baw Shire", "Baw Baw (S)", "Shire of Baw Baw" etc). 
   * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
   * Drag-and-dropped datasets with a time column behave much better: rather than a fixed time being allocated to each row, each row occupies all the time up until the next row is shown.
@@ -12,6 +12,9 @@ Change Log
   * Bug: Fields with names starting with 'lon', 'lat' etc were too aggressively matched.
   * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
   * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
+
+### 1.0.44
+
 * Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
 * Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
 * Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
