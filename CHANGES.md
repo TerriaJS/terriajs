@@ -18,6 +18,14 @@ Change Log
   * Bug: Fields with names starting with 'lon', 'lat' etc were too aggressively matched.
   * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
   * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
+* Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
+* Remove an unnecessary instance of the Cesium InfoBox class when viewing in 2D
+* Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
+* Allow missing URLs on embedded data (eg. embedded czml data)
+* Fixed a bug loading URLs for ArcGIS services names that start with a number.
+* Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
+  * The default `CTRL + Left Click Drag` mouse behavior is now duplicated for `CTRL + Right Click Drag` for better compatibility with Firefox on Mac OS [#2913](https://github.com/AnalyticalGraphicsInc/cesium/pull/2913).
+  * Fixed an issue where non-feature nodes prevented KML documents from loading. [#2945](https://github.com/AnalyticalGraphicsInc/cesium/pull/2945)
 
 ### 1.0.43
 
