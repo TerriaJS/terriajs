@@ -5,7 +5,8 @@ var NowViewing = require('../../lib/Models/NowViewing');
 var Terria = require('../../lib/Models/Terria');
 var Cesium = require('../../lib/Models/Cesium');
 var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
-
+var Leaflet = require('../../lib/Models/Leaflet');
+var L = require('leaflet');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 
 
@@ -76,3 +77,40 @@ if (window.WebGLRenderingContext) {
     });
 
 }
+
+describe('NowViewing with a minimal Leaflet viewer', function() {
+    var container;
+    var leaflet;
+    var terria;
+    var nowViewing;
+
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        container = document.createElement('div');
+        container.id = 'container';
+        document.body.appendChild(container);    
+        var map = L.map('container').setView([-28.5, 135], 5);
+
+        leaflet = new Leaflet(terria, map);
+        terria.currentViewer = leaflet;
+        terria.leaflet = leaflet;
+        nowViewing = terria.nowViewing;
+    });
+
+    afterEach(function() {
+        document.body.removeChild(container);
+    });
+
+    it('can raise an item', function() {
+        var item1 = new CatalogItem(terria);
+        var item2 = new CatalogItem(terria);
+        nowViewing.add(item1);
+        nowViewing.add(item2);
+        expect(nowViewing.items.indexOf(item1)).toEqual(1);
+        nowViewing.raise(item1);
+        expect(nowViewing.items.indexOf(item1)).toEqual(0);
+    });
+
+});
