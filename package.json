@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "1.0.43",
+  "version": "1.0.44",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "http://github.com/TerriaJS/terriajs"
   },
   "dependencies": {
-    "URIjs": "^1.15.0",
+    "urijs": "^1.16.0",
     "brfs": "^1.4.0",
     "html2canvas": "^0.5.0-alpha2",
     "javascript-natural-sort": "^0.7.1",
