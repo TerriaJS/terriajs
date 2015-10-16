@@ -1,7 +1,7 @@
 {
     "catalog": [
         {
-            "name": "Power",
+            "name": "Composite Tests",
             "type": "group",
             "items": [
                 {
