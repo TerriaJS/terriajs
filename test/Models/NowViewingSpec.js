@@ -3,11 +3,17 @@
 /*global require,describe,it,expect,beforeEach*/
 var NowViewing = require('../../lib/Models/NowViewing');
 var Terria = require('../../lib/Models/Terria');
+var Cesium = require('../../lib/Models/Cesium');
+var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
+
 var CatalogItem = require('../../lib/Models/CatalogItem');
 
-describe('NowViewing', function() {
+
+describe('NowViewing without a viewer', function() {
+
     var terria;
     var nowViewing;
+
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './'
@@ -23,3 +29,50 @@ describe('NowViewing', function() {
     });
 
 });
+
+// only run these tests if the browser supports WebGL
+// the browser may still not show WebGL properly - see TerriaViewer.js for a more precise test if needed
+
+if (window.WebGLRenderingContext) {
+
+    describe('NowViewing with a minimal Cesium viewer', function() {
+        var container;
+        var widget;
+        var cesium;
+        var terria;
+        var nowViewing;
+
+        beforeEach(function() {
+            container = document.createElement('div');
+            document.body.appendChild(container);
+            widget = new CesiumWidget(container, {});
+            terria = new Terria({
+                baseUrl: './'
+            });
+            cesium = new Cesium(terria, widget);
+            terria.currentViewer = cesium;
+            terria.cesium = cesium;
+            nowViewing = terria.nowViewing;
+        });
+
+        afterEach(function() {
+            if (widget && !widget.isDestroyed()) {
+                widget = widget.destroy();
+            }
+            document.body.removeChild(container);
+        });
+
+
+        it('can raise an item', function() {
+            var item1 = new CatalogItem(terria);
+            var item2 = new CatalogItem(terria);
+            nowViewing.add(item1);
+            nowViewing.add(item2);
+            expect(nowViewing.items.indexOf(item1)).toEqual(1);
+            nowViewing.raise(item1);
+            expect(nowViewing.items.indexOf(item1)).toEqual(0);
+        });
+
+    });
+
+}
