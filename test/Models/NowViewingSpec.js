@@ -74,6 +74,16 @@ if (window.WebGLRenderingContext) {
             expect(nowViewing.items.indexOf(item1)).toEqual(0);
         });
 
+        it('can lower an item', function() {
+            var item1 = new CatalogItem(terria);
+            var item2 = new CatalogItem(terria);
+            nowViewing.add(item1);
+            nowViewing.add(item2);
+            expect(nowViewing.items.indexOf(item1)).toEqual(1);
+            nowViewing.lower(item2);
+            expect(nowViewing.items.indexOf(item1)).toEqual(0);
+        });
+
     });
 
 }
@@ -110,6 +120,16 @@ describe('NowViewing with a minimal Leaflet viewer', function() {
         nowViewing.add(item2);
         expect(nowViewing.items.indexOf(item1)).toEqual(1);
         nowViewing.raise(item1);
+        expect(nowViewing.items.indexOf(item1)).toEqual(0);
+    });
+
+    it('can lower an item', function() {
+        var item1 = new CatalogItem(terria);
+        var item2 = new CatalogItem(terria);
+        nowViewing.add(item1);
+        nowViewing.add(item2);
+        expect(nowViewing.items.indexOf(item1)).toEqual(1);
+        nowViewing.lower(item2);
         expect(nowViewing.items.indexOf(item1)).toEqual(0);
     });
 
