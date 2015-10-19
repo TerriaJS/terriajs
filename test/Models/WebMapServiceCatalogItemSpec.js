@@ -5,7 +5,9 @@
 var Terria = require('../../lib/Models/Terria');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
+var CatalogItem = require('../../lib/Models/CatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
+var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var Credit = require('terriajs-cesium/Source/Core/Credit');
@@ -167,4 +169,19 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         expect(wmsItem.attribution.text).toEqual("test");
         expect(wmsItem.attribution.link).toEqual("link");
     });
+
+    it('can understand comma-separated datetimes', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/reef.xml',
+            layers: 'Chl_MIM_n_obs'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(13);
+            done();
+        });
+    
+    });
+
+
 });
