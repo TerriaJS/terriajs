@@ -14,6 +14,7 @@ Change Log
 * Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
 * Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
 * Major refactor of CsvCatalogItem, splitting region-mapping functionality out into RegionProvider and RegionProviderList. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
+* Major refactor of `CsvCatalogItem`, splitting region-mapping functionality out into `RegionProvider` and `RegionProviderList`. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
   * Regions can be matched using regular expressions, enabling matching of messy fields like local government names ("Baw Baw", "Baw Baw Shire", "Baw Baw (S)", "Shire of Baw Baw" etc). 
   * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
   * Drag-and-dropped datasets with a time column behave much better: rather than a fixed time being allocated to each row, each row occupies all the time up until the next row is shown.
@@ -22,6 +23,15 @@ Change Log
   * Bug: Fields with names starting with 'lon', 'lat' etc were too aggressively matched.
   * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
   * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
+* Avoid mixed content warnings when using the CartoDB basemaps.
+
+### 1.0.44
+
+* Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
+* Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
+* When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
+* Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
+* Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
 * Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
 * Remove an unnecessary instance of the Cesium InfoBox class when viewing in 2D
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
