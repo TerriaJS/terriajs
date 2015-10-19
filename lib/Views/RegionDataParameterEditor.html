@@ -27,7 +27,7 @@
     <!-- /ko -->
     <!-- ko if: catalogItemsWithMatchingRegion.length === 0 -->
     <div class="parameter-editor-table-right" data-bind="if: catalogItemsWithMatchingRegion.length === 0">
-        No data sets found with a matching region type, <span data-bind="text: requiredRegionType"></span>.
+        No data sets found with a matching region type, <span data-bind="text: regionProvider ? regionProvider.regionType : 'None'"></span>.
     </div>
     <!-- /ko -->
 </div>
