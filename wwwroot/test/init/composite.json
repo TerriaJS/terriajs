@@ -7,6 +7,12 @@
                 {
                     "name": "Composite of Stations and Lines",
                     "type": "composite",
+                    "info": [
+                        {
+                            "name":"This is a composite of the stations and lines.",
+                            "content":"[Licence](http://www.ga.gov.au/copyright)"
+                        }
+                    ],
                     "items": [
                         {
                             "name": "Power stations",
@@ -65,6 +71,12 @@
                 {
                     "name": "Composite of Substations only",
                     "type": "composite",
+                    "info": [
+                        {
+                            "name":"This is a composite containing a single item, the substations.",
+                            "content":"[Licence](http://www.ga.gov.au/copyright)"
+                        }
+                    ],
                     "items": [
                         {
                             "name":"Substations",
@@ -95,6 +107,12 @@
                 {
                     "name": "A composite of 3",
                     "type": "composite",
+                    "info": [
+                        {
+                            "name":"This is a composite of three things.",
+                            "content":"[Licence](http://www.ga.gov.au/copyright)"
+                        }
+                    ],
                     "items": [
                         {
                             "type":"kml",
@@ -110,8 +128,12 @@
                         {
                             "name":"Damwalls",
                             "layers":"damwalls",
-                            "info":[{"name":"Licensing, Terms & Conditions",
-                            "content":"[Licence](http://www.ga.gov.au/copyright)"}],
+                            "info": [
+                                {
+                                    "name":"Licensing, Terms & Conditions",
+                                    "content":"[Licence](http://www.ga.gov.au/copyright)"
+                                }
+                            ],
                             "dataCustodian":"[Geoscience Australia](http://www.ga.gov.au/)",
                             "url":"http://geoserver.nationalmap.nicta.com.au/geotopo_250k/ows",
                             "type":"wms",
