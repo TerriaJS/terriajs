@@ -1,5 +1,5 @@
 <div>
-    <label class="parameter-editor-table-left" data-bind="text: parameter.name, attr: { for: 'parameter-editor-' + encodeURIComponent(parameter.name) }"></label>
+    <label class="parameter-editor-table-left" data-bind="text: parameter.name, attr: { for: 'parameter-editor-' + encodeURIComponent(parameter.name), title: parameter.description }"></label>
     <!-- ko if: catalogItemsWithMatchingRegion.length > 0 -->
     <div class="parameter-editor-table-right" data-bind="foreach: catalogItemsWithMatchingRegion">
         <div class="parameter-editor-tree-item">

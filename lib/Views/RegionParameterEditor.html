@@ -1,8 +1,8 @@
 <div>
-    <label class="parameter-editor-table-left" data-bind="text: parameter.name, attr: { for: 'parameter-editor-' + encodeURIComponent(parameter.name) }"></label>
+    <label class="parameter-editor-table-left" data-bind="text: parameter.name, attr: { for: 'parameter-editor-' + encodeURIComponent(parameter.name), title: parameter.description }"></label>
     <div class="parameter-editor-table-right">
         <div class="parameter-editor-text-input">
-            <input type="text" size="45" readonly data-bind="value: displayValue, attr: { id: 'parameter-editor-' + encodeURIComponent(parameter.name) }" placeholder="Select a region by clicking the map below" />
+            <input type="text" size="45" readonly data-bind="value: displayValue, attr: { id: 'parameter-editor-' + encodeURIComponent(parameter.name), title: parameter.description }" placeholder="Select a region by clicking the map below" />
         </div>
         <div class="parameter-editor-map-holder">
             <div class="parameter-editor-map"></div>
