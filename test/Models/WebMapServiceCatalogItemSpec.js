@@ -199,7 +199,6 @@ describe('WebMapServiceCatalogItemViewModel', function() {
             layers: 'single_period'
         });
         wmsItem.load().then(function() {
-            console.log(wmsItem.intervals);
             expect(wmsItem.intervals.length).toEqual(11);
             done();
         });
