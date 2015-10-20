@@ -13,6 +13,7 @@ Change Log
   * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
   * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
 * Avoid mixed content warnings when using the CartoDB basemaps.
+* Allow Composite catalog items
 
 ### 1.0.44
 
