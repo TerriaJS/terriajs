@@ -171,10 +171,17 @@ describe('WebMapServiceCatalogItemViewModel', function() {
     });
 
     it('can understand comma-separated datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2014-01-01T00:00:00.000Z">
+        // 2002-01-01T00:00:00.000Z,2003-01-01T00:00:00.000Z,2004-01-01T00:00:00.000Z,
+        // 2005-01-01T00:00:00.000Z,2006-01-01T00:00:00.000Z,2007-01-01T00:00:00.000Z,
+        // 2008-01-01T00:00:00.000Z,2009-01-01T00:00:00.000Z,2010-01-01T00:00:00.000Z,
+        // 2011-01-01T00:00:00.000Z,2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z,
+        // 2014-01-01T00:00:00.000Z
+        // </Dimension>
         wmsItem.updateFromJson({
             url: 'http://example.com',
-            metadataUrl: 'test/WMS/reef.xml',
-            layers: 'Chl_MIM_n_obs'
+            metadataUrl: 'test/WMS/comma_sep_datetimes.xml',
+            layers: '13_intervals'
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(13);
@@ -183,5 +190,20 @@ describe('WebMapServiceCatalogItemViewModel', function() {
     
     });
 
+    it('can understand three-part period datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/period_datetimes.xml',
+            layers: 'single_period'
+        });
+        wmsItem.load().then(function() {
+            console.log(wmsItem.intervals);
+            expect(wmsItem.intervals.length).toEqual(11);
+            done();
+        });
+    
+    });
 
 });
