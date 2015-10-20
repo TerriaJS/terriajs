@@ -5,9 +5,7 @@
 var Terria = require('../../lib/Models/Terria');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
-var CatalogItem = require('../../lib/Models/CatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
-var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var Credit = require('terriajs-cesium/Source/Core/Credit');
@@ -187,6 +185,21 @@ describe('WebMapServiceCatalogItemViewModel', function() {
             expect(wmsItem.intervals.length).toEqual(13);
             done();
         });
+    });
+
+
+    it('can understand two-part period datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_period_datetimes.xml',
+            layers: 'single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(1);
+            done();
+        });
     
     });
 
@@ -202,7 +215,22 @@ describe('WebMapServiceCatalogItemViewModel', function() {
             expect(wmsItem.intervals.length).toEqual(11);
             done();
         });
-    
+    });
+
+    it('warns on bad periodicity in datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00/PBAD</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/bad_datetime.xml',
+            layers: 'single_period'
+        });
+        var remover = wmsItem.terria.error.addEventListener(function() {
+            expect(true).toBe(true);
+            remover();
+            done();
+        });
+        wmsItem.load();
     });
 
 });
