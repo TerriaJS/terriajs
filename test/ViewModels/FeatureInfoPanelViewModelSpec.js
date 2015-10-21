@@ -101,6 +101,30 @@ describe('FeatureInfoPanelViewModel', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('uses and completes featureInfoTemplate', function(done) {
+        var properties = {
+            name: 'Foo',
+            value: '<h1>bar</h1>'
+        };
+        properties.getValue = function() {
+            var x = {};
+            x[properties.name] = properties.value;
+            return x;
+        };
+        var feature = new Entity({
+                name: 'Bar',
+                properties: properties,
+                imageryLayer: {featureInfoTemplate : "<div>test test {{Foo}}</div>"}
+            });
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+        panel.showFeatures(pickedFeatures).then(function() {
+            expect(panel.html).toBe('<div>test test <h1>bar</h1></div>');
+        }).otherwise(fail).then(done);
+    });
+
     function domContainsText(panel, s) {
         for (var i = 0; i < panel._domNodes.length; ++i) {
             if (panel._domNodes[i].innerHTML && panel._domNodes[i].innerHTML.indexOf(s) >= 0) {
