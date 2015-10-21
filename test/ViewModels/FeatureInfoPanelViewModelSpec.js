@@ -5,6 +5,9 @@ var FeatureInfoPanelViewModel = require('../../lib/ViewModels/FeatureInfoPanelVi
 var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var runLater = require('../../lib/Core/runLater');
 var Terria = require('../../lib/Models/Terria');
+var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var when = require('terriajs-cesium/Source/ThirdParty/when');
+
 
 describe('FeatureInfoPanelViewModel', function() {
     var terria;
@@ -72,6 +75,54 @@ describe('FeatureInfoPanelViewModel', function() {
 
         expect(terria.selectedFeature).toBeDefined();
         expect(terria.selectedFeature.id).toBe('Pick Location');
+    });
+
+    it('should use featureInfoTemplate', function(done) {
+        var feature = new Entity({
+                name: 'Bar',
+                properties: {
+                    name: 'Foo',
+                    value: 'bar'
+                },
+                featureInfoTemplate : "<div>test test</div>"
+            });
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+        var promise = runLater(function() {
+            terria.pickedFeatures = pickedFeatures;
+        });
+
+        when(promise, function(){
+            expect(terria.selectedFeature).toBeDefined();
+            expect(terria.selectedFeature.name).toBe('Bar');
+            expect(terria.selectedFeature.properties.name).toBe('Foo');
+            expect(terria.selectedFeature.featureInfoTemplate).toBe('<div>test test</div>');
+        }).otherwise(done.fail).then(done);
+    });
+
+    it('uses and completes featureInfoTemplate', function(done) {
+        var properties = {
+            name: 'Foo',
+            value: '<h1>bar</h1>'
+        };
+        properties.getValue = function() {
+            var x = {};
+            x[properties.name] = properties.value;
+            return x;
+        };
+        var feature = new Entity({
+                name: 'Bar',
+                properties: properties,
+                imageryLayer: {featureInfoTemplate : "<div>test test {{Foo}}</div>"}
+            });
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+        panel.showFeatures(pickedFeatures).then(function() {
+            expect(panel.html).toBe('<div>test test <h1>bar</h1></div>');
+        }).otherwise(done.fail).then(done);
     });
 
     function domContainsText(panel, s) {
