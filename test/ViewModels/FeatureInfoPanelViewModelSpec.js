@@ -98,7 +98,7 @@ describe('FeatureInfoPanelViewModel', function() {
             expect(terria.selectedFeature.name).toBe('Bar');
             expect(terria.selectedFeature.properties.name).toBe('Foo');
             expect(terria.selectedFeature.featureInfoTemplate).toBe('<div>test test</div>');
-        }).otherwise(fail).then(done);
+        }).otherwise(done.fail).then(done);
     });
 
     it('uses and completes featureInfoTemplate', function(done) {
@@ -122,7 +122,7 @@ describe('FeatureInfoPanelViewModel', function() {
 
         panel.showFeatures(pickedFeatures).then(function() {
             expect(panel.html).toBe('<div>test test <h1>bar</h1></div>');
-        }).otherwise(fail).then(done);
+        }).otherwise(done.fail).then(done);
     });
 
     function domContainsText(panel, s) {
