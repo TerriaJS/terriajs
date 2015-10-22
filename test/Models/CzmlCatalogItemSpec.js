@@ -69,6 +69,28 @@ describe('CzmlCatalogItem', function() {
                 });
             });
         });
+
+    });
+
+    describe('embedding CZML', function() {
+        it('works with dataSourceUrl', function(done) {
+            czml.data = JSON.parse('[{"id": "document", "version": "1.0"}, {"position": {"cartographicDegrees": [133.0, -25.0, 0.0]}}]');
+            czml.dataSourceUrl = 'something.czml';
+            czml.load().then(function() {
+                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+
+        it('works without dataSourceUrl', function(done) {
+            czml.data = JSON.parse('[{"id": "document", "version": "1.0"}, {"position": {"cartographicDegrees": [133.0, -25.0, 0.0]}}]');
+            expect(czml.dataSourceUrl).toBeUndefined();
+            czml.load().then(function() {
+                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+
     });
 
     describe('loading a CZML file with a moving vehicle', function() {
@@ -133,6 +155,7 @@ describe('CzmlCatalogItem', function() {
                 });
             });
         });
+
     });
 
     describe('error handling', function(done) {
