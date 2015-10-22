@@ -2,6 +2,10 @@
     <div class="feature-info-panel-holder-inner">
         <div class="feature-info-panel" data-bind="style: { 'max-width': maxWidth + 'px' }">
             <div class="feature-info-panel-body">
+                <div class="feature-info-panel-header">
+                    <span class="feature-info-panel-section-label" data-bind="text: name"></span>
+                    <div class="feature-info-panel-close-button" data-bind="click: close">&times;</div>
+                </div>
                 <div class="feature-info-panel-section" data-bind="foreach: sections">
                     <div data-bind="embeddedComponent: $data">
                     </div>
