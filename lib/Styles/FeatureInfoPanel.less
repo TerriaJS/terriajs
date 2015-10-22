@@ -2,6 +2,7 @@
 @info-text-color: @panel-text-color;
 @info-header-background-color: @panel-section-background-color;
 @info-header-text-color: @panel-emphasized-text-color;
+@info-header-arrow-color: @info-header-text-color;
 
 .feature-info-panel-holder {
     .panel;
@@ -54,12 +55,22 @@
 .feature-info-panel-section {
 }
 
+.feature-info-panel-section-arrow {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    top: 3px;
+    fill: @info-header-arrow-color;
+}
+
 .feature-info-panel-section-header {
     font-size: 0.9em;
     padding: 8px;
     background-color: @info-header-background-color;
     color: @info-header-text-color;
     border-bottom: @panel-element-border;
+    cursor: pointer;
 }
 
 .feature-info-panel-section-label {
