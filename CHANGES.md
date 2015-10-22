@@ -15,6 +15,7 @@ Change Log
 * Remove an unnecessary instance of the Cesium InfoBox class when viewing in 2D
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
 * Fixed a bug loading URLs for ArcGIS services names that start with a number.
+* Added `featureInfoTemplate` property to `CatalogItem`.  It is used to provide a custom Markdown or HTML template to display when a feature in the catalog item is clicked.  The template is parameterized on the properties of the feature.
 
 ### 1.0.43
 
