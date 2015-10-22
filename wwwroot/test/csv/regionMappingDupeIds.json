@@ -1,0 +1,25 @@
+{
+    "comments": "Duplicate definitions are not allowed",
+    "regionWmsMap": {
+        "SA1": {
+          "description": "Statistical Area Level 1",
+          "layerName": "region_map:FID_SA1_2011_AUST",
+          "server": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+          "regionProp": "SA1_7DIG11",
+          "aliases": [
+            "sa1"
+          ]
+        },
+        "SA1": {
+            "layerName":"region_map:FID_SA4_2011_AUST",
+            "server": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA4_CODE11",
+            "aliases": ["sa4_code", "sa4_code", "sa4"],
+            "digits": 3,
+            "description": "Statistical Area Level 4",
+            "aliases": [
+              "sa1"
+            ]
+        }
+    }
+}
