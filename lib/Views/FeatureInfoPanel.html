@@ -6,6 +6,11 @@
                     <span class="feature-info-panel-section-label" data-bind="text: name"></span>
                     <div class="feature-info-panel-close-button" data-bind="click: close">&times;</div>
                 </div>
+                <div class="feature-info-panel-section" data-bind="if: message">
+                    <div class="feature-info-panel-section">
+                        <div class="feature-info-panel-section-content" data-bind="text: message"></div>
+                    </div>
+                </div>
                 <div class="feature-info-panel-section" data-bind="foreach: sections">
                     <div data-bind="embeddedComponent: $data">
                     </div>
