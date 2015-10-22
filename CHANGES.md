@@ -27,6 +27,7 @@ Change Log
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
 * Allow missing URLs on embedded data (eg. embedded czml data)
 * Fixed a bug loading URLs for ArcGIS services names that start with a number.
+* Added `featureInfoTemplate` property to `CatalogItem`.  It is used to provide a custom Markdown or HTML template to display when a feature in the catalog item is clicked.  The template is parameterized on the properties of the feature.
 * Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
   * The default `CTRL + Left Click Drag` mouse behavior is now duplicated for `CTRL + Right Click Drag` for better compatibility with Firefox on Mac OS [#2913](https://github.com/AnalyticalGraphicsInc/cesium/pull/2913).
   * Fixed an issue where non-feature nodes prevented KML documents from loading. [#2945](https://github.com/AnalyticalGraphicsInc/cesium/pull/2945)
