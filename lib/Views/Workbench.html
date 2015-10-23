@@ -1,0 +1,120 @@
+<script type="text/html" id="now-viewing-tree-item-template">
+    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+        <div class="data-catalog-member-top-row">
+            <!-- ko if: hasChildren -->
+                <div class="data-catalog-icon-holder clickable" data-bind="click: toggleOpen">
+                    <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
+                </div>
+            <!-- /ko -->
+            <!-- ko if: !hasChildren -->
+                <div class="data-catalog-icon-holder">
+                    <div class="data-catalog-arrow"></div>
+                </div>
+            <!-- /ko -->
+            <!-- ko if: isSelectable -->
+                <div class="data-catalog-icon-holder clickable" data-bind="click: toggleActive">
+				  <svg xmlns="http://www.w3.org/2000/svg" class="data-catalog-item-checkbox" data-bind="attr: { class: isActive ? 'data-catalog-item-checkbox checked' : 'data-catalog-item-checkbox unchecked'}" viewBox="0 0 32 32" preserveAspectRatio="xMinYMin">
+					<rect y="6" x="6" height="20" width="20"></rect>
+					<path d="M30,3.1C29,2.1 27.3,2.4 26.5,3.5L16,16 12.5,11.6c-1,-1 -2.4,-1.2 -3.5,-0.4 -1,1 -1,2.4 -0.4,3.5l5.5,6.9c0.5,0.6 1.2,1 2,1 0.8,0 1.5,-0.3 2,-1L30,6.5c0.6,-1 1,-2 0,-3.4z"></path>
+				  </svg:svg>
+                </div>
+            <!-- /ko -->
+            <div class="data-catalog-item-label now-viewing-abs-tighten" data-bind="text: name, css: { 'data-catalog-enabled-item': isSelectable && isActive }"></div>
+        </div>
+
+        <!-- ko if: hasChildren && isOpen -->
+            <div class="data-catalog-group-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: items }"></div>
+        <!-- /ko -->
+    </div>
+</script>
+
+<div class="now-viewing">
+    <div class="now-viewing-toolbar">
+        <span class="now-viewing-clear-all clickable" data-bind="click: addData">Add Data</span>
+        <span class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Remove All</span>
+    </div>
+
+    <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
+        <div class="now-viewing-item" data-bind="attr: { nowViewingIndex: $index }, event : { dragenter: $root.dragEnter.bind($root), dragover: $root.dragEnter.bind($root) }">
+            <div class="now-viewing-item-top-row" data-bind="attr: { draggable: supportsReordering, nowViewingIndex: $index }, event : { dragstart: $root.dragStart.bind($root), dragend: $root.dragEnd.bind($root), selectstart: $root.selectStart.bind($root) }">
+                <div class="now-viewing-item-drag-handle-holder">
+                    <div class="now-viewing-item-drag-handle clickable" data-bind="visible: supportsReordering, cesiumSvgPath: { path: $root.svgReorder, width: 12, height: 10 }, css: { 'now-viewing-shown-item': isShown }" title="Drag to reorder data sources."></div>
+                </div>
+                <div class="now-viewing-item-icon-holder">
+                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                </div>
+                <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
+
+                <div class="now-viewing-item-arrow-holder">
+                    <div class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                </div>
+            </div>
+            <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
+                <div class="now-viewing-action-menu">
+                    <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                    <!-- ko if: showsInfo -->
+                    <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
+                    <!-- /ko -->
+                    <!-- ko foreach: $root.getItemControls($data) -->
+                    <div class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name }"></div>
+                    <!-- /ko -->
+                    <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
+                </div>
+
+                <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
+                    OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
+                    <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
+                </div>
+
+                <!-- ko if: type === 'abs-itt'-->
+                <div class="now-viewing-abs-controls">
+                     <div class="now-viewing-abs-checkbox clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
+                    <div class="now-viewing-abs-percent" data-bind="text: 'Display as percent of region population'"></div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko foreach: legendUrls || [] -->
+                    <!-- ko if: $root.urlIsImage($data) -->
+                    <a data-bind="attr: { href: $data }" target="_blank">
+                        <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
+                    </a>
+                    <!-- /ko -->
+
+                    <!-- ko if: !$root.urlIsImage($data) -->
+                    <a class="now-viewing-legend-text" data-bind="attr: { href: $data }" target="_blank">Open legend in a separate tab</a>
+                    <!-- /ko -->
+                <!-- /ko -->
+
+                <!-- ko if: !legendUrls || legendUrls.length === 0 -->
+                    <!-- ko if: type !== 'abs-itt' -->
+                    <div class="now-viewing-legend-text">No legend available for this data item.</div>
+                    <!-- /ko -->
+                    <!-- ko if: type === 'abs-itt' -->
+                    <div class="now-viewing-legend-text">Select at least one code in each data area.</div>
+                    <!-- /ko -->
+                <!-- /ko -->
+
+                <!-- ko if: type === 'abs-itt' -->
+                <div class="now-viewing-section">
+                    <!-- ko if: absDataset && absDataset.items && absDataset.items.length > 0 -->
+                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: absDataset.items }"></div>
+                    <!-- /ko -->
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: type === 'csv' -->
+                <div class="now-viewing-section">
+                    <!-- ko if: csvDataset -->
+                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: csvDataset }"></div>
+                    <!-- /ko -->
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+
+    <div class="now-viewing-list" data-bind="visible: nowViewing.items.length === 0">
+        <div class="now-viewing-no-items" data-bind="text: noDataText"></div>
+    </div>
+</div>
+

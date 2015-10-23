@@ -1,6 +1,6 @@
 <div class="explorer-panel" data-bind="css: { 'explorer-panel-collapsed': !isOpen }, swipeLeft: close, swipeRight: open">
     <div class="explorer-panel-header">
-        <div class="explorer-panel-tab-area" data-bind="foreach: tabs">
+        <div class="explorer-panel-tab-area" data-bind="foreach: tabs, visible: tabs.length > 1 || showSingleTab">
           <div class="explorer-panel-tab"
               data-bind="visible: isVisible,
                          css: { 'explorer-panel-tab-active': isActive },
