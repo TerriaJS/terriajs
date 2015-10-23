@@ -120,12 +120,12 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem.name).toBe('Unnamed Item');
         expect(wmsItem.description).toBe('');
         expect(wmsItem.rectangle).toBeUndefined();
-        expect(wmsItem.legendUrl.indexOf('?')).toBe(0);
+        expect(wmsItem.legendUrl).toBeUndefined();
         expect(wmsItem.dataUrlType).toBeUndefined();
         expect(wmsItem.dataUrl).toBeUndefined();
         expect(wmsItem.dataCustodian).toBeUndefined();
-        expect(wmsItem.metadataUrl.indexOf('?')).toBe(0);
-        expect(wmsItem.url).toBe('');
+        expect(wmsItem.metadataUrl).toBeUndefined();
+        expect(wmsItem.url).toBeUndefined();
         expect(wmsItem.layers).toBe('');
         expect(wmsItem.parameters).toEqual({});
         expect(wmsItem.tilingScheme).toBeUndefined();

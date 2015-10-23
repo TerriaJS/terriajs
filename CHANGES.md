@@ -14,6 +14,8 @@ Change Log
   * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
 * Avoid mixed content warnings when using the CartoDB basemaps.
 * Allow Composite catalog items
+* Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
+* Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
 
 ### 1.0.44
 
@@ -25,7 +27,6 @@ Change Log
 * Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
 * Remove an unnecessary instance of the Cesium InfoBox class when viewing in 2D
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
-* Move url property to base CatalogItem base class, so download link can be from base class to all data types
 * Allow missing URLs on embedded data (eg. embedded czml data)
 * Fixed a bug loading URLs for ArcGIS services names that start with a number.
 * Added `featureInfoTemplate` property to `CatalogItem`.  It is used to provide a custom Markdown or HTML template to display when a feature in the catalog item is clicked.  The template is parameterized on the properties of the feature.
