@@ -17,7 +17,7 @@ beforeEach(function() {
 });
 
 
-describe('ArcGisMapServerCatalogItemViewModel', function() {
+describe('ArcGisMapServerCatalogItem', function() {
 
     beforeEach(function() {
         // item.load() ultimately calls loadWithXhr.load(), which just needs to return some json, so fake it
@@ -40,6 +40,20 @@ describe('ArcGisMapServerCatalogItemViewModel', function() {
 
     it('can be constructed', function() {
         expect(item).toBeDefined();
+    });
+
+    it('defaults to having no dataUrl', function() {
+        item.url = 'http://foo.bar';
+        expect(item.dataUrl).toBeUndefined();
+        expect(item.dataUrlType).toBeUndefined();
+    });
+
+    it('uses explicitly-provided dataUrl and dataUrlType', function() {
+        item.dataUrl = 'http://foo.com/data';
+        item.dataUrlType = 'wfs-complete';
+        item.url = 'http://foo.com/somethingElse';
+        expect(item.dataUrl).toBe('http://foo.com/data');
+        expect(item.dataUrlType).toBe('wfs-complete');
     });
 
     it('can update from json', function() {

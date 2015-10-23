@@ -20,7 +20,7 @@ beforeEach(function() {
     wmsItem = new WebMapServiceCatalogItem(terria);
 });
 
-describe('WebMapServiceCatalogItemViewModel', function() {
+describe('WebMapServiceCatalogItem', function() {
     it('has sensible type and typeName', function() {
         expect(wmsItem.type).toBe('wms');
         expect(wmsItem.typeName).toBe('Web Map Service (WMS)');
@@ -60,6 +60,12 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         wmsItem.metadataUrl = 'http://foo.com/metadata';
         wmsItem.url = 'http://foo.com/somethingElse';
         expect(wmsItem.metadataUrl).toBe('http://foo.com/metadata');
+    });
+
+    it('defaults to having no dataUrl', function() {
+        wmsItem.url = 'http://foo.bar';
+        expect(wmsItem.dataUrl).toBeUndefined();
+        expect(wmsItem.dataUrlType).toBeUndefined();
     });
 
     it('uses explicitly-provided dataUrl and dataUrlType', function() {
@@ -114,12 +120,12 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         expect(wmsItem.name).toBe('Unnamed Item');
         expect(wmsItem.description).toBe('');
         expect(wmsItem.rectangle).toBeUndefined();
-        expect(wmsItem.legendUrl.indexOf('?')).toBe(0);
+        expect(wmsItem.legendUrl).toBeUndefined();
         expect(wmsItem.dataUrlType).toBeUndefined();
         expect(wmsItem.dataUrl).toBeUndefined();
         expect(wmsItem.dataCustodian).toBeUndefined();
-        expect(wmsItem.metadataUrl.indexOf('?')).toBe(0);
-        expect(wmsItem.url).toBe('');
+        expect(wmsItem.metadataUrl).toBeUndefined();
+        expect(wmsItem.url).toBeUndefined();
         expect(wmsItem.layers).toBe('');
         expect(wmsItem.parameters).toEqual({});
         expect(wmsItem.tilingScheme).toBeUndefined();

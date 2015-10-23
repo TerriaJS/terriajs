@@ -28,6 +28,26 @@ describe('GeoJsonCatalogItem', function() {
             });
         });
 
+        it('have default dataUrl and dataUrlType', function() {
+            geojson.updateFromJson({
+                url: 'test/GeoJSON/bike_racks.geojson',
+            });
+            expect(geojson.dataUrl).toBe('test/GeoJSON/bike_racks.geojson');
+            expect(geojson.dataUrlType).toBe('direct');
+        });
+
+        it('use provided dataUrl', function(done) {
+            geojson.url = 'test/GeoJSON/bike_racks.geojson';
+            geojson.dataUrl ="test/test.html";
+            geojson.dataUrlType ="fake type";
+            geojson.load().then(function() {
+                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataUrl).toBe("test/test.html");
+                expect(geojson.dataUrlType).toBe("fake type");
+                done();
+            });
+        });
+
         it('works by string', function(done) {
             loadText('test/GeoJSON/bike_racks.geojson').then(function(s) {
                 geojson.data = s;
