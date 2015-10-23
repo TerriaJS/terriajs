@@ -14,6 +14,7 @@ Change Log
   * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
 * Avoid mixed content warnings when using the CartoDB basemaps.
 * Allow Composite catalog items
+* Handle WMS time interval specifications (time/time and time/time/periodicity)
 * Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
 
