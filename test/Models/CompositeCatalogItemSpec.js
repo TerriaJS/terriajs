@@ -1,6 +1,7 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,it,expect,beforeEach,fail*/
+var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var CompositeCatalogItem = require('../../lib/Models/CompositeCatalogItem');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
 var Terria = require('../../lib/Models/Terria');
@@ -14,6 +15,7 @@ describe('CompositeCatalogItem', function() {
         });
         composite = new CompositeCatalogItem(terria);
         createCatalogMemberFromType.register('composite', CompositeCatalogItem);
+        createCatalogMemberFromType.register('group', CatalogGroup);
     });
 
     it('updates from json, preserving order', function(done) {
@@ -35,8 +37,7 @@ describe('CompositeCatalogItem', function() {
             expect(composite.items.length).toBe(2);
             expect(composite.items[0].name).toBe('B');
             expect(composite.items[1].name).toBe('A');
-            done();
-        });
+        }).then(done).otherwise(fail);
     });
 
 });
