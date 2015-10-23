@@ -78,7 +78,7 @@ describe('FeatureInfoPanelViewModel', function() {
         var description = {};
         description.getValue = function() {
             return properties.value;
-        }
+        };
 
         return new Entity({
             name: options.name || 'Foo',
