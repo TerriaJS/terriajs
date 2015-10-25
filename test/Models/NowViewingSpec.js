@@ -1,13 +1,17 @@
 'use strict';
 
 /*global require,describe,it,expect,beforeEach*/
-var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
-var forEachCombination = require('foreach-combination');
 var NowViewing = require('../../lib/Models/NowViewing');
 var Terria = require('../../lib/Models/Terria');
-var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
+var Cesium = require('../../lib/Models/Cesium');
+var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
+var Leaflet = require('../../lib/Models/Leaflet');
+var L = require('leaflet');
+var CatalogItem = require('../../lib/Models/CatalogItem');
 
-describe('NowViewing', function() {
+
+describe('NowViewing without a viewer', function() {
+
     var terria;
     var nowViewing;
 
@@ -18,78 +22,115 @@ describe('NowViewing', function() {
         nowViewing = new NowViewing(terria);
     });
 
-    describe('add', function() {
-        it('keeps non-reorderable items above reorderable items', function() {
-            var reorderable = new WebMapServiceCatalogItem(terria);
-            var nonReorderable = new GeoJsonCatalogItem(terria);
-
-            nowViewing.add(nonReorderable);
-            nowViewing.add(reorderable);
-            expect(nowViewing.items.indexOf(nonReorderable)).toBe(0);
-            expect(nowViewing.items.indexOf(reorderable)).toBe(1);
-
-            nowViewing.removeAll();
-            expect(nowViewing.items.length).toBe(0);
-
-            nowViewing.add(reorderable);
-            nowViewing.add(nonReorderable);
-            expect(nowViewing.items.indexOf(nonReorderable)).toBe(0);
-            expect(nowViewing.items.indexOf(reorderable)).toBe(1);
-        });
-
-        it('keeps keepOnTop items above other items', function() {
-            var items = [
-                new WebMapServiceCatalogItem(terria),
-                new WebMapServiceCatalogItem(terria)
-            ];
-            items[0].keepOnTop = true;
-
-            forEachCombination(items, 2, function() {
-                nowViewing.removeAll();
-                for (var i = 0; i < arguments.length; ++i) {
-                    nowViewing.add(arguments[i]);
-                }
-                expect(nowViewing.items.slice()).toEqual(items);
-            });
-        });
-
-        it('adds at the specified index', function() {
-            nowViewing.add(new WebMapServiceCatalogItem(terria));
-            nowViewing.add(new WebMapServiceCatalogItem(terria));
-
-            var atPosition = new WebMapServiceCatalogItem(terria);
-            nowViewing.add(atPosition, 1);
-
-            expect(nowViewing.items.length).toBe(3);
-            expect(nowViewing.items[0]).not.toBe(atPosition);
-            expect(nowViewing.items[1]).toBe(atPosition);
-            expect(nowViewing.items[2]).not.toBe(atPosition);
-        });
-
-        it('will not add a non-reorderable out of place even when given an index', function() {
-            nowViewing.add(new WebMapServiceCatalogItem(terria));
-            nowViewing.add(new WebMapServiceCatalogItem(terria));
-
-            var atPosition = new GeoJsonCatalogItem(terria);
-            nowViewing.add(atPosition, 1);
-
-            expect(nowViewing.items.length).toBe(3);
-            expect(nowViewing.items[0]).toBe(atPosition);
-            expect(nowViewing.items[1]).not.toBe(atPosition);
-            expect(nowViewing.items[2]).not.toBe(atPosition);
-        });
-
-        it('will not add a reorderable out of place even when given an index', function() {
-            nowViewing.add(new GeoJsonCatalogItem(terria));
-            nowViewing.add(new GeoJsonCatalogItem(terria));
-
-            var atPosition = new WebMapServiceCatalogItem(terria);
-            nowViewing.add(atPosition, 1);
-
-            expect(nowViewing.items.length).toBe(3);
-            expect(nowViewing.items[0]).not.toBe(atPosition);
-            expect(nowViewing.items[1]).not.toBe(atPosition);
-            expect(nowViewing.items[2]).toBe(atPosition);
-        });
+    it('can add an item', function() {
+        var item = new CatalogItem(terria);
+        expect(nowViewing.items.length).toEqual(0);
+        nowViewing.add(item);
+        expect(nowViewing.items.length).toEqual(1);
     });
+
+});
+
+// only run these tests if the browser supports WebGL
+// the browser may still not show WebGL properly - see TerriaViewer.js for a more precise test if needed
+
+if (window.WebGLRenderingContext) {
+
+    describe('NowViewing with a minimal Cesium viewer', function() {
+        var container;
+        var widget;
+        var cesium;
+        var terria;
+        var nowViewing;
+
+        beforeEach(function() {
+            container = document.createElement('div');
+            document.body.appendChild(container);
+            widget = new CesiumWidget(container, {});
+            terria = new Terria({
+                baseUrl: './'
+            });
+            cesium = new Cesium(terria, widget);
+            terria.currentViewer = cesium;
+            terria.cesium = cesium;
+            nowViewing = terria.nowViewing;
+        });
+
+        afterEach(function() {
+            if (widget && !widget.isDestroyed()) {
+                widget = widget.destroy();
+            }
+            document.body.removeChild(container);
+        });
+
+
+        it('can raise an item', function() {
+            var item1 = new CatalogItem(terria);
+            var item2 = new CatalogItem(terria);
+            nowViewing.add(item1);
+            nowViewing.add(item2);
+            expect(nowViewing.items.indexOf(item1)).toEqual(1);
+            nowViewing.raise(item1);
+            expect(nowViewing.items.indexOf(item1)).toEqual(0);
+        });
+
+        it('can lower an item', function() {
+            var item1 = new CatalogItem(terria);
+            var item2 = new CatalogItem(terria);
+            nowViewing.add(item1);
+            nowViewing.add(item2);
+            expect(nowViewing.items.indexOf(item1)).toEqual(1);
+            nowViewing.lower(item2);
+            expect(nowViewing.items.indexOf(item1)).toEqual(0);
+        });
+
+    });
+
+}
+
+describe('NowViewing with a minimal Leaflet viewer', function() {
+    var container;
+    var leaflet;
+    var terria;
+    var nowViewing;
+
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        container = document.createElement('div');
+        container.id = 'container';
+        document.body.appendChild(container);
+        var map = L.map('container').setView([-28.5, 135], 5);
+
+        leaflet = new Leaflet(terria, map);
+        terria.currentViewer = leaflet;
+        terria.leaflet = leaflet;
+        nowViewing = terria.nowViewing;
+    });
+
+    afterEach(function() {
+        document.body.removeChild(container);
+    });
+
+    it('can raise an item', function() {
+        var item1 = new CatalogItem(terria);
+        var item2 = new CatalogItem(terria);
+        nowViewing.add(item1);
+        nowViewing.add(item2);
+        expect(nowViewing.items.indexOf(item1)).toEqual(1);
+        nowViewing.raise(item1);
+        expect(nowViewing.items.indexOf(item1)).toEqual(0);
+    });
+
+    it('can lower an item', function() {
+        var item1 = new CatalogItem(terria);
+        var item2 = new CatalogItem(terria);
+        nowViewing.add(item1);
+        nowViewing.add(item2);
+        expect(nowViewing.items.indexOf(item1)).toEqual(1);
+        nowViewing.lower(item2);
+        expect(nowViewing.items.indexOf(item1)).toEqual(0);
+    });
+
 });
