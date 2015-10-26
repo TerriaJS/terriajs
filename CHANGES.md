@@ -23,6 +23,7 @@ Change Log
   * Controls can be registered to appear on both the left and right side using `registerLeftSideControl` and `registerRightSideControl` respectively.
   * An example can be seen in the `CatalogMemberDownloadControl`
   * Currently top level members do not show controls.
+* Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
 
 ### 1.0.44
 
