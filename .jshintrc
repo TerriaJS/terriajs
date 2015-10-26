@@ -42,5 +42,6 @@
   "shadow": false,
   "sub": true,
   "supernew": false,
-  "browser": true
+  "browser": true,
+  "jasmine": true
 }

@@ -28,6 +28,24 @@ describe('KmlCatalogItem', function() {
         });
     });
 
+    it('use provided dataUrl', function(done) {
+        kml.url = 'test/KML/vic_police.kml';
+        kml.dataUrl ="test/test.html";
+        kml.load().then(function() {
+            expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
+            expect(kml.dataUrl).toBe("test/test.html");
+            done();
+        });
+    });
+
+    it('have default dataUrl and dataUrlType', function() {
+        kml.updateFromJson({
+            url: 'test/KML/vic_police.kml',
+        });
+        expect(kml.dataUrl).toBe('test/KML/vic_police.kml');
+        expect(kml.dataUrlType).toBe('direct');
+    });
+
     it('can load a KML file by provided XML data', function(done) {
         loadXML('test/KML/vic_police.kml').then(function(xml) {
             kml.data = xml;
