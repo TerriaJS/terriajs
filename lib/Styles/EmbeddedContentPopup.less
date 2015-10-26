@@ -1,0 +1,15 @@
+@embedded-content-popup-height: 70vh;
+
+.embedded-content-popup {
+    .modal;
+    width: 70vw;
+    height: @embedded-content-popup-height;
+}
+
+.embedded-content {
+    margin: 15px;
+    overflow: auto;
+    height: calc(~'@{embedded-content-popup-height} - 40px - 30px');
+    font-weight: 300;
+    background-color: black;
+}
