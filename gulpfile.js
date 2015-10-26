@@ -88,7 +88,7 @@ function bundle(name, bundler, minify, catchErrors) {
     if (catchErrors) {
         // Display errors to the user, and don't let them propagate.
         result = result.on('error', function(e) {
-            gutil.log('Browserify Error', e);
+            gutil.log('Browserify Error', e.message);
         });
     }
 
@@ -130,7 +130,7 @@ function watch(name, files, minify) {
         debug: true,
         cache: {},
         packageCache: {}
-    }));
+    }), { poll: 1000 } );
 
     function rebundle() {
         var start = new Date();

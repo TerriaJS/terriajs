@@ -1,6 +1,50 @@
 Change Log
 ==========
 
+### 1.0.45
+
+* Major refactor of `CsvCatalogItem`, splitting region-mapping functionality out into `RegionProvider` and `RegionProviderList`. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
+  * Regions can be matched using regular expressions, enabling matching of messy fields like local government names ("Baw Baw", "Baw Baw Shire", "Baw Baw (S)", "Shire of Baw Baw" etc). 
+  * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
+  * Drag-and-dropped datasets with a time column behave much better: rather than a fixed time being allocated to each row, each row occupies all the time up until the next row is shown.
+  * Enumerated fields are colour coded in lat-long files, consist with region-mapped files.
+  * Feedback is now provided after region mapping, showing which regions failed to match, and which matched more than once.
+  * Bug: Fields with names starting with 'lon', 'lat' etc were too aggressively matched.
+  * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
+  * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
+* Avoid mixed content warnings when using the CartoDB basemaps.
+* Allow Composite catalog items
+* Handle WMS time interval specifications (time/time and time/time/periodicity)
+* Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
+* Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
+
+### 1.0.44
+
+* Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
+* Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
+* When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
+* Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
+* Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
+* Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
+* Remove an unnecessary instance of the Cesium InfoBox class when viewing in 2D
+* Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
+* Allow missing URLs on embedded data (eg. embedded czml data)
+* Fixed a bug loading URLs for ArcGIS services names that start with a number.
+* Added `featureInfoTemplate` property to `CatalogItem`.  It is used to provide a custom Markdown or HTML template to display when a feature in the catalog item is clicked.  The template is parameterized on the properties of the feature.
+* Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
+  * The default `CTRL + Left Click Drag` mouse behavior is now duplicated for `CTRL + Right Click Drag` for better compatibility with Firefox on Mac OS [#2913](https://github.com/AnalyticalGraphicsInc/cesium/pull/2913).
+  * Fixed an issue where non-feature nodes prevented KML documents from loading. [#2945](https://github.com/AnalyticalGraphicsInc/cesium/pull/2945)
+
+### 1.0.43
+
+* Fixed a bug that prevent the opened/closed state of groups from being preserved when sharing.
+
+### 1.0.42
+
+* Added a `cacheDuration` property to all catalog items.  The new property is used to specify, using Varnish-like notation (e.g. '1d', '10000s') the default length of time to cache URLs related to the catalog item.
+* Fix bug when generating share URLs containing CSV items.
+* Improve wording about downloading data from non-GeoJSON-supporting WFS servers.
+
 ### 1.0.41
 
 * Improvements to `AbsIttCatalogItem` caching from the Tools menu.
