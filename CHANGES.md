@@ -17,6 +17,7 @@ Change Log
 * Handle WMS time interval specifications (time/time and time/time/periodicity)
 * Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
+* Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
 
 ### 1.0.44
 
