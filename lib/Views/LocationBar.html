@@ -1,9 +1,9 @@
 <div class="location-bar clickable" data-bind="visible: latitude && longitude, click: toggleProjection">
     <!-- ko if: !useProjection -->
     <div class="location-bar-label">LAT</div>
-    <div class="location-bar-value" data-bind="text: longitude"></div>
-    <div class="location-bar-label">LON</div>
     <div class="location-bar-value" data-bind="text: latitude"></div>
+    <div class="location-bar-label">LON</div>
+    <div class="location-bar-value" data-bind="text: longitude"></div>
     <!-- /ko -->
 
     <!-- ko if: useProjection -->

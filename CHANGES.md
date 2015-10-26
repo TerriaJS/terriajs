@@ -24,6 +24,7 @@ Change Log
   * An example can be seen in the `CatalogMemberDownloadControl`
   * Currently top level members do not show controls.
 * Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
+* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates.
 
 ### 1.0.44
 
