@@ -17,6 +17,7 @@ Change Log
 * Handle WMS time interval specifications (time/time and time/time/periodicity)
 * Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
+* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates.
 
 ### 1.0.44
 
