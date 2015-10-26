@@ -13,6 +13,16 @@ Change Log
   * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
   * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
 * Avoid mixed content warnings when using the CartoDB basemaps.
+* Allow Composite catalog items
+* Handle WMS time interval specifications (time/time and time/time/periodicity)
+* Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
+* Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
+* Added custom definable controls to `CatalogMember`s. 
+  * To define a control, subclass `CatalogMemberControl` and register the control in `ViewModels/registerCatalogMemberControl` with a unique control name, control class and required property name.
+  * If a `CatalogMember` has a property with the required property name either directly on the member or in its `customProperties` object, the control will appear in the catalog with the member and will fire the `activate` function when clicked.
+  * Controls can be registered to appear on both the left and right side using `registerLeftSideControl` and `registerRightSideControl` respectively.
+  * An example can be seen in the `CatalogMemberDownloadControl`
+  * Currently top level members do not show controls.
 
 ### 1.0.44
 
@@ -26,6 +36,7 @@ Change Log
 * Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
 * Allow missing URLs on embedded data (eg. embedded czml data)
 * Fixed a bug loading URLs for ArcGIS services names that start with a number.
+* Added `featureInfoTemplate` property to `CatalogItem`.  It is used to provide a custom Markdown or HTML template to display when a feature in the catalog item is clicked.  The template is parameterized on the properties of the feature.
 * Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
   * The default `CTRL + Left Click Drag` mouse behavior is now duplicated for `CTRL + Right Click Drag` for better compatibility with Firefox on Mac OS [#2913](https://github.com/AnalyticalGraphicsInc/cesium/pull/2913).
   * Fixed an issue where non-feature nodes prevented KML documents from loading. [#2945](https://github.com/AnalyticalGraphicsInc/cesium/pull/2945)
