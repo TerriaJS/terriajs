@@ -19,6 +19,7 @@ Change Log
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
 * The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
 * The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
+* Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
 
 ### 1.0.44
 
