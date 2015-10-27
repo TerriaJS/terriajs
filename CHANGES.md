@@ -28,6 +28,8 @@ Change Log
 * Handle WMS time interval specifications (time/time and time/time/periodicity)
 * Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
+* The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
+* The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
 
 ### 1.0.44
 
