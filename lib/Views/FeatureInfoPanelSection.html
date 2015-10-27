@@ -10,6 +10,10 @@
         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
     </div>
     <!-- ko if: feature == terria.selectedFeature -->
-    <div class="feature-info-panel-section-content" data-bind="markdown: info, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+    <div class="feature-info-panel-section-content" data-bind="style: { css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
+        <div data-bind="markdown: info"></div>
+        <div data-bind="embeddedComponent: chartViewModel">
+    </div>
+    </div>
     <!-- /ko -->
 </div>
