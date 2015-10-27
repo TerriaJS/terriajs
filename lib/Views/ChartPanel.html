@@ -1,0 +1,21 @@
+<div class="chart-panel-holder" data-bind="css: { 'chart-holder-hidden': !isVisible }">
+    <div class="chart-panel-holder-inner">
+        <div class="chart-panel" data-bind="style: { 'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px' }">
+            <div class="chart-panel-body">
+                <div class="chart-panel-header">
+                    <span class="chart-panel-section-label" data-bind="text: title"></span>
+                    <div class="chart-panel-close-button" data-bind="click: close">&times;</div>
+                </div>
+                <div class="chart-panel-section" data-bind="if: message">
+                    <div class="chart-panel-section">
+                        <div class="chart-panel-section-content" data-bind="text: message"></div>
+                    </div>
+                </div>
+                <div class="chart-panel-section">
+                    <div data-bind="embeddedComponent: chartViewModel">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
