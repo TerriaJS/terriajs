@@ -6,7 +6,6 @@ var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var runLater = require('../../lib/Core/runLater');
 var Terria = require('../../lib/Models/Terria');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 
 describe('FeatureInfoPanelViewModel', function() {
@@ -50,17 +49,6 @@ describe('FeatureInfoPanelViewModel', function() {
         expect(domContainsText(panel, 'alert("foo")')).toBe(false);
     });
 
-    it('uses a white background for complete HTML documents', function() {
-        panel.html = '<html><body>hi!</body></html>';
-        expect(panel.useWhiteBackground).toBe(true);
-
-        panel.html = '<div>hi!</div>';
-        expect(panel.useWhiteBackground).toBe(false);
-
-        panel.html = '<html attr="yes">\n<body>hi!</body>\n</html>';
-        expect(panel.useWhiteBackground).toBe(true);
-    });
-
     it('displays a message while asychronously obtaining feature information', function() {
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
@@ -77,53 +65,55 @@ describe('FeatureInfoPanelViewModel', function() {
         expect(terria.selectedFeature.id).toBe('Pick Location');
     });
 
-    it('should use featureInfoTemplate', function(done) {
-        var feature = new Entity({
-                name: 'Bar',
-                properties: {
-                    name: 'Foo',
-                    value: 'bar'
-                },
-                featureInfoTemplate : "<div>test test</div>"
-            });
-        var pickedFeatures = new PickedFeatures();
-        pickedFeatures.features.push(feature);
-        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-        var promise = runLater(function() {
-            terria.pickedFeatures = pickedFeatures;
+    function createTestFeature(options) {
+        var properties = {};
+        properties[options.name || 'Foo'] = options.value || 'bar';
+        var description = {};
+        description.getValue = function() {
+            return options.value || 'bar';
+        };
+
+        return new Entity({
+            name: options.name || 'Foo',
+            properties: properties,
+            description: description,
+            imageryLayer: options.imageryLayer || {}
         });
+    }
 
-        when(promise, function(){
-            expect(terria.selectedFeature).toBeDefined();
-            expect(terria.selectedFeature.name).toBe('Bar');
-            expect(terria.selectedFeature.properties.name).toBe('Foo');
-            expect(terria.selectedFeature.featureInfoTemplate).toBe('<div>test test</div>');
-        }).otherwise(done.fail).then(done);
-    });
-
-    it('uses and completes featureInfoTemplate', function(done) {
-        var properties = {
-            name: 'Foo',
-            value: '<h1>bar</h1>'
-        };
-        properties.getValue = function() {
-            var x = {};
-            x[properties.name] = properties.value;
-            return x;
-        };
-        var feature = new Entity({
-                name: 'Bar',
-                properties: properties,
-                imageryLayer: {featureInfoTemplate : "<div>test test {{Foo}}</div>"}
-            });
+    it('uses and completes featureInfoTemplate if present', function(done) {
+        var feature = createTestFeature({
+            value: '<h1>bar</h1>',
+            imageryLayer: {featureInfoTemplate : '<div>test test {{Foo}}</div>'}
+        });
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.features.push(feature);
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.html).toBe('<div>test test <h1>bar</h1></div>');
+            expect(panel.sections[0].info).toBe('<div>test test <h1>bar</h1></div>');
         }).otherwise(done.fail).then(done);
     });
+
+    it('removes all clock event listeners', function(done) {
+        var feature = createTestFeature({});
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+        panel.showFeatures(pickedFeatures).then(function() {
+            expect(terria.clock.onTick.numberOfListeners).toEqual(2);
+        }).otherwise(done.fail).then(function() {
+            // now, when no features are chosen, they should go away
+            pickedFeatures = new PickedFeatures();
+            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});            
+            panel.showFeatures(pickedFeatures).then(function() {
+                expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+            }).otherwise(done.fail).then(done);
+        });
+    });
+
 
     function domContainsText(panel, s) {
         for (var i = 0; i < panel._domNodes.length; ++i) {

@@ -1,0 +1,15 @@
+<div class="feature-info-panel-section">
+    <div class="feature-info-panel-section-header" data-bind="click: toggleOpen">
+        <!-- ko if: feature == terria.selectedFeature -->
+        <div class="feature-info-panel-section-arrow" data-bind="cesiumSvgPath: { path: svgArrowDown, width: 32, height: 32 }"></div>
+        <!-- /ko -->
+        <!-- ko if: feature != terria.selectedFeature -->
+        <div class="feature-info-panel-section-arrow" data-bind="cesiumSvgPath: { path: svgArrowRight, width: 32, height: 32 }"></div>
+        <!-- /ko -->
+        <span class="feature-info-panel-section-label" data-bind="text: catalogItemName"></span>
+        <span class="feature-info-panel-section-label" data-bind="text: name"></span>
+    </div>
+    <!-- ko if: feature == terria.selectedFeature -->
+    <div class="feature-info-panel-section-content" data-bind="markdown: info, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+    <!-- /ko -->
+</div>
