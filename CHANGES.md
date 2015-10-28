@@ -26,6 +26,9 @@ Change Log
 * The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
 * The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
 * Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
+* Added `forceProxy` flag to all catalog members to indicate that an individual item should use the proxy regardless of whether the domain is in the list of domains to proxy.
+* Allow a single layer of an ArcGIS MapServer to be added through the "Add Data" interface.
+* Added `WfsFeaturesCatalogGroup`.  This group is populated with a catalog item for each feature queried from a WFS server.
 
 ### 1.0.44
 
