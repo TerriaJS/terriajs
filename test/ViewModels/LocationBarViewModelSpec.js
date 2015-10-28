@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require*/
+var L = require('leaflet');
 var LocationBarViewModel = require('../../lib/ViewModels/LocationBarViewModel');
 var Terria = require('../../lib/Models/Terria');
 
