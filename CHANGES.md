@@ -27,6 +27,7 @@ Change Log
 * The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
 * Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
 * Added `forceProxy` flag to all catalog members to indicate that an individual item should use the proxy regardless of whether the domain is in the list of domains to proxy.
+* Allow a single layer of an ArcGIS MapServer to be added through the "Add Data" interface.
 
 ### 1.0.44
 
