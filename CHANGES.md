@@ -29,6 +29,7 @@ Change Log
 * Added `forceProxy` flag to all catalog members to indicate that an individual item should use the proxy regardless of whether the domain is in the list of domains to proxy.
 * Allow a single layer of an ArcGIS MapServer to be added through the "Add Data" interface.
 * Added `WfsFeaturesCatalogGroup`.  This group is populated with a catalog item for each feature queried from a WFS server.
+* The Feature Info panel now shows all selected features in an accordion control.  Previously it only showed the first one.
 
 ### 1.0.44
 
