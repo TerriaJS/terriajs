@@ -66,18 +66,11 @@ describe('FeatureInfoPanelViewModel', function() {
     });
 
     function createTestFeature(options) {
-        var properties = {
-            name: options.name || 'Foo',
-            value: options.value || 'bar'
-        };
-        properties.getValue = function() {
-            var x = {};
-            x[properties.name] = properties.value;
-            return x;
-        };
+        var properties = {};
+        properties[options.name || 'Foo'] = options.value || 'bar';
         var description = {};
         description.getValue = function() {
-            return properties.value;
+            return options.value || 'bar';
         };
 
         return new Entity({
