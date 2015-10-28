@@ -23,6 +23,9 @@ Change Log
   * Controls can be registered to appear on both the left and right side using `registerLeftSideControl` and `registerRightSideControl` respectively.
   * An example can be seen in the `CatalogMemberDownloadControl`
   * Currently top level members do not show controls.
+* The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
+* The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
+* Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
 
 ### 1.0.44
 
