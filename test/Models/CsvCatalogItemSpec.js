@@ -101,6 +101,8 @@ describe('CsvCatalogItem', function() {
             data: dataStr,
             dataSourceUrl: 'none',
             dataCustodian: 'Data Custodian',
+            dataUrl: 'http://my.csv.com/test.csv',
+            dataUrlType: 'direct'
         });
 
         var json = csvItem.serializeToJson();
