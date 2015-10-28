@@ -1,5 +1,10 @@
+
 Change Log
 ==========
+
+### 1.0.46
+
+* Fixed an incorrect require (`URIjs` instead of `urijs`).
 
 ### 1.0.45
 
