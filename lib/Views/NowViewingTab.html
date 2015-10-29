@@ -62,7 +62,7 @@
 
                 <div class="now-viewing-section" data-bind="visible: isLoading">
                     <div class="now-viewing-section-contents">
-                        <span>Loading...</span>
+                        <span data-bind="text: typeof loadingMessage !== 'undefined' ? loadingMessage : 'Loading...'"></span>
                         <img data-bind="attr: { src: terria.baseUrl + 'images/ajax-loader.gif' }" width="16" height="16" />
                     </div>
                 </div>
