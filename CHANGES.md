@@ -8,17 +8,6 @@ Change Log
 
 ### 1.0.45
 
-* Avoid mixed content warnings when using the CartoDB basemaps.
-
-### 1.0.44
-
-* Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
-* Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
-* Added `WfsFeaturesCatalogGroup`.  This group is populated with a catalog item for each feature queried from a WFS server.
-* When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
-* Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
-* Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
-* Major refactor of CsvCatalogItem, splitting region-mapping functionality out into RegionProvider and RegionProviderList. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
 * Major refactor of `CsvCatalogItem`, splitting region-mapping functionality out into `RegionProvider` and `RegionProviderList`. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
   * Regions can be matched using regular expressions, enabling matching of messy fields like local government names ("Baw Baw", "Baw Baw Shire", "Baw Baw (S)", "Shire of Baw Baw" etc). 
   * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
@@ -33,8 +22,6 @@ Change Log
 * Handle WMS time interval specifications (time/time and time/time/periodicity)
 * Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
-* The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
-* The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
 * Added custom definable controls to `CatalogMember`s. 
   * To define a control, subclass `CatalogMemberControl` and register the control in `ViewModels/registerCatalogMemberControl` with a unique control name, control class and required property name.
   * If a `CatalogMember` has a property with the required property name either directly on the member or in its `customProperties` object, the control will appear in the catalog with the member and will fire the `activate` function when clicked.
