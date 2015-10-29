@@ -2,6 +2,7 @@
 @info-text-color: @panel-text-color;
 @info-header-background-color: @panel-section-background-color;
 @info-header-text-color: @panel-emphasized-text-color;
+@info-header-arrow-color: @info-header-text-color;
 
 .feature-info-panel-holder {
     .panel;
@@ -38,11 +39,30 @@
     box-shadow: @panel-box-shadow;
 }
 
+.feature-info-panel-header {
+    font-size: 0.9em;
+    padding: 8px;
+    background-color: @info-header-background-color;
+    color: @info-header-text-color;
+    border-bottom: @panel-element-border;
+    font-weight: 700;
+}
+
 .feature-info-panel-body {
     .opaque-to-input;
 }
 
-.feature-info-panel-section {
+.feature-info-panel-sections {
+    overflow-y: auto;
+}
+
+.feature-info-panel-section-arrow {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    top: 3px;
+    fill: @info-header-arrow-color;
 }
 
 .feature-info-panel-section-header {
@@ -51,6 +71,8 @@
     background-color: @info-header-background-color;
     color: @info-header-text-color;
     border-bottom: @panel-element-border;
+    cursor: pointer;
+    text-align: left; /* overrides .feature-info-panel-holder-inner's text-align:center on small screens (below) */
 }
 
 .feature-info-panel-section-label {
@@ -62,7 +84,7 @@
     font-weight: lighter;
     padding: 15px;
     overflow: auto;
-    max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
+    // max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
     text-align: left;
 }
 

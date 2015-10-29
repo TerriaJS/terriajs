@@ -10,19 +10,14 @@
 				  </svg>
                 </div>
                 <!-- /ko -->
-                <!-- ko if: typeof invoke !== 'undefined' -->
-                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickAdd.bind($root)">
-                    <div class="data-catalog-item-plus" data-bind="cesiumSvgPath: { path: $root.svgPlus, width: 11, height: 12 }"></div>
-                </div>
-                <!-- /ko -->
-                <!-- ko foreach: $root.getLeftSideItemControls($data) -->
+                <!-- ko foreach: $root.getLeftSideMemberControls($data) -->
                 <div class="data-catalog-left-side-control">
                     <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
                 </div>
                 <!-- /ko -->
-                <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: typeof isEnabled !== 'undefined' && isEnabled, text: name, click: typeof zoomToAndUseClock !== 'undefined' && zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></div>
-                <div class="data-catalog-item-label" data-bind="visible: typeof isEnabled === 'undefined' || !isEnabled, text: name"></div>
-                <!-- ko foreach: $root.getRightSideItemControls($data) -->
+                <div class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></div>
+                <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
+                <!-- ko foreach: $root.getRightSideMemberControls($data) -->
                 <div class="data-catalog-right-side-control">
                     <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
                 </div>
@@ -42,7 +37,21 @@
                 <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickOpen.bind($root)">
                     <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
                 </div>
+                <!-- ko if: isOpen -->
+                <!-- ko foreach: $root.getLeftSideMemberControls($data) -->
+                <div class="data-catalog-left-side-control">
+                    <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
+                </div>
+                <!-- /ko -->
+                <!-- /ko -->
                 <div class="data-catalog-group-label clickable" data-bind="click: $root.clickOpen.bind($root), text: name, css: { 'data-catalog-opened-group': isOpen }"></div>
+                <!-- ko if: isOpen -->
+                <!-- ko foreach: $root.getRightSideMemberControls($data) -->
+                <div class="data-catalog-right-side-control">
+                    <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
+                </div>
+                <!-- /ko -->
+                <!-- /ko -->
             </div>
 
             <!-- ko if: isOpen && (isLoading || items.length === 0) -->

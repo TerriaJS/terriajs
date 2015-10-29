@@ -1,5 +1,10 @@
+
 Change Log
 ==========
+
+### 1.0.46
+
+* Fixed an incorrect require (`URIjs` instead of `urijs`).
 
 ### 1.0.45
 
@@ -30,6 +35,19 @@ Change Log
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
 * The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
 * The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
+* Added custom definable controls to `CatalogMember`s. 
+  * To define a control, subclass `CatalogMemberControl` and register the control in `ViewModels/registerCatalogMemberControl` with a unique control name, control class and required property name.
+  * If a `CatalogMember` has a property with the required property name either directly on the member or in its `customProperties` object, the control will appear in the catalog with the member and will fire the `activate` function when clicked.
+  * Controls can be registered to appear on both the left and right side using `registerLeftSideControl` and `registerRightSideControl` respectively.
+  * An example can be seen in the `CatalogMemberDownloadControl`
+  * Currently top level members do not show controls.
+* The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
+* The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
+* Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
+* Added `forceProxy` flag to all catalog members to indicate that an individual item should use the proxy regardless of whether the domain is in the list of domains to proxy.
+* Allow a single layer of an ArcGIS MapServer to be added through the "Add Data" interface.
+* Added `WfsFeaturesCatalogGroup`.  This group is populated with a catalog item for each feature queried from a WFS server.
+* The Feature Info panel now shows all selected features in an accordion control.  Previously it only showed the first one.
 
 ### 1.0.44
 
