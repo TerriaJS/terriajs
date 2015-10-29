@@ -5,7 +5,8 @@ Change Log
 ### 1.0.46
 
 * Fixed an incorrect require (`URIjs` instead of `urijs`).
-* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates.
+* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates. To enable this, set `useProjection` to `true`
+
 ### 1.0.45
 
 * Major refactor of `CsvCatalogItem`, splitting region-mapping functionality out into `RegionProvider` and `RegionProviderList`. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
