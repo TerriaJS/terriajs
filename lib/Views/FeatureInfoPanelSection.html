@@ -13,7 +13,10 @@
     <div class="feature-info-panel-section-content" data-bind="style: { css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
         <div data-bind="markdown: info"></div>
         <div data-bind="embeddedComponent: chartViewModel">
-    </div>
+        </div>
+        <!-- ko if: featureInfoPanelViewModel.chartPanelViewModel -->
+        <button class="expand-chart-button" data-bind="click: expandChart">Expand</button>
+        <!-- /ko -->
     </div>
     <!-- /ko -->
 </div>

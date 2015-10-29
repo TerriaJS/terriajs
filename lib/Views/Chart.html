@@ -6,5 +6,12 @@
         background: none !important;
     }
 </style>
-<div class="chart" data-bind="attr: {'id': containerId}">
+<div class="chart-holder">
+	<!-- ko if: isLoading -->
+	<div class="chart-loading">
+		Loading…
+	</div>
+	<!-- /ko -->
+	<div class="chart" data-bind="attr: {'id': containerId}">
+	</div>
 </div>
