@@ -23,7 +23,7 @@ describe('CzmlCatalogItem', function() {
         it('works by URL', function(done) {
             czml.url = 'test/CZML/verysimple.czml';
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -41,7 +41,7 @@ describe('CzmlCatalogItem', function() {
             czml.dataUrl ="test/test.html";
             czml.dataUrlType ="fake type";
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                 expect(czml.dataUrl).toBe("test/test.html");
                 expect(czml.dataUrlType).toBe("fake type");
                 done();
@@ -53,7 +53,7 @@ describe('CzmlCatalogItem', function() {
                 czml.data = s;
                 czml.dataSourceUrl = 'anything.czml';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -64,7 +64,7 @@ describe('CzmlCatalogItem', function() {
                 czml.data = blob;
                 czml.dataSourceUrl = 'anything.geojson';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -77,7 +77,7 @@ describe('CzmlCatalogItem', function() {
             czml.data = JSON.parse('[{"id": "document", "version": "1.0"}, {"position": {"cartographicDegrees": [133.0, -25.0, 0.0]}}]');
             czml.dataSourceUrl = 'something.czml';
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -86,7 +86,7 @@ describe('CzmlCatalogItem', function() {
             czml.data = JSON.parse('[{"id": "document", "version": "1.0"}, {"position": {"cartographicDegrees": [133.0, -25.0, 0.0]}}]');
             expect(czml.dataSourceUrl).toBeUndefined();
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -97,7 +97,7 @@ describe('CzmlCatalogItem', function() {
         it('works by URL', function(done) {
             czml.url = 'test/CZML/Vehicle.czml';
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -107,7 +107,7 @@ describe('CzmlCatalogItem', function() {
                 czml.data = s;
                 czml.dataSourceUrl = 'anything.czml';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -118,7 +118,7 @@ describe('CzmlCatalogItem', function() {
                 czml.data = blob;
                 czml.dataSourceUrl = 'anything.geojson';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -129,7 +129,7 @@ describe('CzmlCatalogItem', function() {
         it('works by URL', function(done) {
             czml.url = 'test/CZML/simple.czml';
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -139,7 +139,7 @@ describe('CzmlCatalogItem', function() {
                 czml.data = s;
                 czml.dataSourceUrl = 'anything.czml';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -150,7 +150,7 @@ describe('CzmlCatalogItem', function() {
                 czml.data = blob;
                 czml.dataSourceUrl = 'anything.geojson';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
