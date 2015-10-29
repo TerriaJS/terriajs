@@ -7,8 +7,10 @@
     <!-- /ko -->
 
     <!-- ko if: useProjection -->
+    <!-- ko if: showUtmZone -->
     <div class="location-bar-label">ZONE</div>
     <div class="location-bar-value" data-bind="text: utmZone"></div>
+    <!-- /ko -->
     <div class="location-bar-label">E</div>
     <div class="location-bar-value" data-bind="text: easting"></div>
     <div class="location-bar-label">N</div>

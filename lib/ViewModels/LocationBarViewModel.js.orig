@@ -29,20 +29,17 @@ var LocationBarViewModel = function(options) {
     this.mapElement = options.mapElement;
     this.geoidModel = defaultValue(options.geoidModel, new EarthGravityModel1996(this.terria.baseUrl + 'data/WW15MGH.DAC'));
     this.useProjection = defaultValue(options.useProjection, false);
-    this.showUtmZone = defaultValue(options.useProjection, true);
-    this.proj4Projection = defaultValue(options.proj4Projection, '+proj=utm +ellps=GRS80 +units=m +no_defs');
-    this.projectionUnits = defaultValue(options.projectionUnits, 'm');
 
     this.latitude = '43.199°S';
     this.longitude = '154.461°E';
     this.elevation = '28m';
     this.utmZone = '56';
-    this.north = '5216050.13';
-    this.east = '618699.50';
+    this.northing = '5216050.13';
+    this.easting = '618699.50';
     this.proj4longlat = '+proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees +no_defs';
+    this.proj4utm = '+proj=utm +ellps=GRS80 +units=m +no_defs';
 
-    knockout.track(this, ['latitude', 'longitude', 'elevation', 'useProjection', 'north',
-        'east', 'utmZone']);
+    knockout.track(this, ['latitude', 'longitude', 'elevation', 'useProjection', 'northing', 'easting', 'utmZone']);
 
     var that = this;
     this.mapElement.addEventListener('mousemove', function(event) {
@@ -57,8 +54,7 @@ var LocationBarViewModel = function(options) {
 };
 
 LocationBarViewModel.prototype.show = function(container) {
-    loadView(require('fs').readFileSync(__dirname + '/../Views/LocationBar.html', 'utf8'),
-        container, this);
+    loadView(require('fs').readFileSync(__dirname + '/../Views/LocationBar.html', 'utf8'), container, this);
 };
 
 LocationBarViewModel.prototype.toggleProjection = function() {
@@ -122,8 +118,8 @@ function updateCoordinatesFromCesium(viewModel, position) {
         viewModel.longitude = undefined;
         viewModel.elevation = undefined;
         viewModel.utmZone = undefined;
-        viewModel.east = undefined;
-        viewModel.north = undefined;
+        viewModel.easting = undefined;
+        viewModel.northing = undefined;
     }
 }
 
@@ -135,23 +131,38 @@ function updateCoordinatesFromLeaflet(viewModel, mouseMoveEvent) {
 }
 
 function cartographicToFields(viewModel, coordinates, errorBar) {
+<<<<<<< HEAD
+    var lat = CesiumMath.toDegrees(coordinates.latitude);
+    var lon = CesiumMath.toDegrees(coordinates.longitude);
+
+    var zone = 1 + Math.floor((lon+180)/6);
+    var thisproj4utm = viewModel.proj4utm + ' +zone=' + zone + (lat < 0 ? ' +south' : '');
+    var utmPoint = proj4((viewModel.proj4longlat), (thisproj4utm), [lon, lat]);
+=======
 
     var zone = 1 + Math.floor((coordinates.longitude+180)/6);
-
-    var projection = viewModel.proj4Projection + ' +zone=' + zone +
+    var thisproj4utm = viewModel.proj4utm + ' +zone=' + zone +
         (coordinates.latitude < 0 ? ' +south' : '');
-
-    var projPoint = proj4((viewModel.proj4longlat), (projection),
+    var utmPoint = proj4((viewModel.proj4longlat), (thisproj4utm),
         [coordinates.longitude, coordinates.latitude]);
-
-    viewModel.north = projPoint[1].toFixed(2) + viewModel.projectionUnits;
-    viewModel.east = projPoint[0].toFixed(2) + viewModel.projectionUnits;
+>>>>>>> projected-location
+    viewModel.northing = utmPoint[1].toFixed(2) + 'm';
+    viewModel.easting = utmPoint[0].toFixed(2) + 'm';
     viewModel.utmZone = zone;
 
+<<<<<<< HEAD
+    viewModel.latitude = Math.abs(lat).toFixed(3) + '°' + (lat < 0.0 ? 'S' : 'N');
+    viewModel.longitude = Math.abs(lon).toFixed(3) + '°' + (lon < 0.0 ? 'W' : 'E');
+
+    viewModel.elevation = Math.round(coordinates.height) + (defined(errorBar) ? '±' + Math.round(errorBar) : '') + 'm';
+    viewModel.latitude = Math.abs(CesiumMath.toDegrees(coordinates.latitude)).toFixed(3) + '°' + (coordinates.latitude < 0.0 ? 'S' : 'N');
+    viewModel.longitude = Math.abs(CesiumMath.toDegrees(coordinates.longitude)).toFixed(3) + '°' + (coordinates.longitude < 0.0 ? 'W' : 'E');
+=======
     viewModel.latitude = Math.abs(CesiumMath.toDegrees(coordinates.latitude)).toFixed(3) + '°' +
         (coordinates.latitude < 0.0 ? 'S' : 'N');
     viewModel.longitude = Math.abs(CesiumMath.toDegrees(coordinates.longitude)).toFixed(3) + '°' +
         (coordinates.longitude < 0.0 ? 'W' : 'E');
+>>>>>>> projected-location
 
     if (defined(coordinates.height)) {
         viewModel.elevation = Math.round(coordinates.height) + (defined(errorBar) ? '±' +

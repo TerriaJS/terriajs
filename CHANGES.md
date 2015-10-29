@@ -5,7 +5,7 @@ Change Log
 ### 1.0.46
 
 * Fixed an incorrect require (`URIjs` instead of `urijs`).
-
+* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates.
 ### 1.0.45
 
 * Major refactor of `CsvCatalogItem`, splitting region-mapping functionality out into `RegionProvider` and `RegionProviderList`. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
@@ -22,7 +22,6 @@ Change Log
 * Handle WMS time interval specifications (time/time and time/time/periodicity)
 * Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
-* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates.
 * Added custom definable controls to `CatalogMember`s. 
   * To define a control, subclass `CatalogMemberControl` and register the control in `ViewModels/registerCatalogMemberControl` with a unique control name, control class and required property name.
   * If a `CatalogMember` has a property with the required property name either directly on the member or in its `customProperties` object, the control will appear in the catalog with the member and will fire the `activate` function when clicked.
