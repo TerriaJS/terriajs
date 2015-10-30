@@ -34,7 +34,6 @@
     "gulp": "^3.8.11",
     "gulp-concat": "^2.5.2",
     "gulp-jasmine": "^2.0.1",
-    "gulp-jsdoc": "^0.1.4",
     "gulp-jshint": "^1.10.0",
     "gulp-less": "^3.0.2",
     "gulp-shell": "^0.5.1",
