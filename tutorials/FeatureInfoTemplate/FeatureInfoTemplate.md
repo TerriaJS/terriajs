@@ -1,5 +1,3 @@
-# Using the new Feature Info Template
-
 Add a `featureInfoTemplate` to the items in your catalog `json` file, like so:
 
     {
