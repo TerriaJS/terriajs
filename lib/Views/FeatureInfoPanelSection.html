@@ -16,7 +16,7 @@
             <div data-bind="embeddedComponent: $data">
             </div>
             <!-- ko if: $parent.featureInfoPanelViewModel.chartPanelViewModel -->
-            <button class="expand-chart-button" data-bind="click: $parent.expandChart.bind($parent)">Expand</button>
+            <button class="expand-chart-button" data-bind="click: $parent.expandChart.bind($parent, $data)">Expand</button>
             <!-- /ko -->
         </div>
     </div>
