@@ -18,6 +18,8 @@
             <!-- ko if: $parent.featureInfoPanelViewModel.chartPanelViewModel -->
             <button class="expand-chart-button" data-bind="click: $parent.expandChart.bind($parent, $data)">Expand</button>
             <!-- /ko -->
+            <a class="download-chart-data" data-bind="attr: { 'href': options.src }">Download</a>
+            <div class="download-chart-data-clear"></div>
         </div>
     </div>
     <!-- /ko -->
