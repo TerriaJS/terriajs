@@ -72,32 +72,15 @@
                     <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
                 </div>
 
+                <!-- ko foreach: $root.getSections($data) -->
+                <div class="now-viewing-section" data-bind="embeddedComponent: $data"></div>
+                <!-- /ko -->
+
                 <!-- ko if: type === 'abs-itt'-->
                 <div class="now-viewing-abs-controls">
                      <div class="now-viewing-abs-checkbox clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
                     <div class="now-viewing-abs-percent" data-bind="text: 'Display as percent of region population'"></div>
                 </div>
-                <!-- /ko -->
-
-                <!-- ko foreach: legendUrls || [] -->
-                    <!-- ko if: $root.urlIsImage($data) -->
-                    <a data-bind="attr: { href: $data }" target="_blank">
-                        <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
-                    </a>
-                    <!-- /ko -->
-
-                    <!-- ko if: !$root.urlIsImage($data) -->
-                    <a class="now-viewing-legend-text" data-bind="attr: { href: $data }" target="_blank">Open legend in a separate tab</a>
-                    <!-- /ko -->
-                <!-- /ko -->
-
-                <!-- ko if: !legendUrls || legendUrls.length === 0 -->
-                    <!-- ko if: type !== 'abs-itt' -->
-                    <div class="now-viewing-legend-text">No legend available for this data item.</div>
-                    <!-- /ko -->
-                    <!-- ko if: type === 'abs-itt' -->
-                    <div class="now-viewing-legend-text">Select at least one code in each data area.</div>
-                    <!-- /ko -->
                 <!-- /ko -->
 
                 <!-- ko if: type === 'abs-itt' -->
