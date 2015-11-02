@@ -8,6 +8,7 @@ var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogIte
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var Credit = require('terriajs-cesium/Source/Core/Credit');
 
 var terria;
 var wmsItem;
@@ -19,7 +20,7 @@ beforeEach(function() {
     wmsItem = new WebMapServiceCatalogItem(terria);
 });
 
-describe('WebMapServiceCatalogItemViewModel', function() {
+describe('WebMapServiceCatalogItem', function() {
     it('has sensible type and typeName', function() {
         expect(wmsItem.type).toBe('wms');
         expect(wmsItem.typeName).toBe('Web Map Service (WMS)');
@@ -59,6 +60,12 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         wmsItem.metadataUrl = 'http://foo.com/metadata';
         wmsItem.url = 'http://foo.com/somethingElse';
         expect(wmsItem.metadataUrl).toBe('http://foo.com/metadata');
+    });
+
+    it('defaults to having no dataUrl', function() {
+        wmsItem.url = 'http://foo.bar';
+        expect(wmsItem.dataUrl).toBeUndefined();
+        expect(wmsItem.dataUrlType).toBeUndefined();
     });
 
     it('uses explicitly-provided dataUrl and dataUrlType', function() {
@@ -113,12 +120,12 @@ describe('WebMapServiceCatalogItemViewModel', function() {
         expect(wmsItem.name).toBe('Unnamed Item');
         expect(wmsItem.description).toBe('');
         expect(wmsItem.rectangle).toBeUndefined();
-        expect(wmsItem.legendUrl.indexOf('?')).toBe(0);
+        expect(wmsItem.legendUrl).toBeUndefined();
         expect(wmsItem.dataUrlType).toBeUndefined();
         expect(wmsItem.dataUrl).toBeUndefined();
         expect(wmsItem.dataCustodian).toBeUndefined();
-        expect(wmsItem.metadataUrl.indexOf('?')).toBe(0);
-        expect(wmsItem.url).toBe('');
+        expect(wmsItem.metadataUrl).toBeUndefined();
+        expect(wmsItem.url).toBeUndefined();
         expect(wmsItem.layers).toBe('');
         expect(wmsItem.parameters).toEqual({});
         expect(wmsItem.tilingScheme).toBeUndefined();
@@ -146,7 +153,90 @@ describe('WebMapServiceCatalogItemViewModel', function() {
 
         var reconstructed = new WebMapServiceCatalogItem(terria);
         reconstructed.updateFromJson(json);
-
         expect(reconstructed).toEqual(wmsItem);
     });
+
+    it('can get handle plain text in textAttribution', function() {
+        wmsItem.updateFromJson({
+            attribution: "Plain text"
+        });
+        expect(wmsItem.attribution).toEqual(new Credit("Plain text", undefined, undefined));
+    });
+    it('can get handle object in textAttribution', function() {
+        var test = {
+                        text : "test",
+                        link : "link"
+                    };
+        wmsItem.updateFromJson({
+            attribution: test
+        });
+        expect(wmsItem.attribution.text).toEqual("test");
+        expect(wmsItem.attribution.link).toEqual("link");
+    });
+
+    it('can understand comma-separated datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2014-01-01T00:00:00.000Z">
+        // 2002-01-01T00:00:00.000Z,2003-01-01T00:00:00.000Z,2004-01-01T00:00:00.000Z,
+        // 2005-01-01T00:00:00.000Z,2006-01-01T00:00:00.000Z,2007-01-01T00:00:00.000Z,
+        // 2008-01-01T00:00:00.000Z,2009-01-01T00:00:00.000Z,2010-01-01T00:00:00.000Z,
+        // 2011-01-01T00:00:00.000Z,2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z,
+        // 2014-01-01T00:00:00.000Z
+        // </Dimension>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/comma_sep_datetimes.xml',
+            layers: '13_intervals'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(13);
+            done();
+        });
+    });
+
+
+    it('can understand two-part period datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_period_datetimes.xml',
+            layers: 'single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(1);
+            done();
+        });
+    
+    });
+
+    it('can understand three-part period datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/period_datetimes.xml',
+            layers: 'single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(11);
+            done();
+        });
+    });
+
+    it('warns on bad periodicity in datetimes', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00/PBAD</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/bad_datetime.xml',
+            layers: 'single_period'
+        });
+        var remover = wmsItem.terria.error.addEventListener(function() {
+            expect(true).toBe(true);
+            remover();
+            done();
+        });
+        wmsItem.load();
+    });
+
 });

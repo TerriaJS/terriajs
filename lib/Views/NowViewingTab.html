@@ -13,7 +13,10 @@
             <!-- /ko -->
             <!-- ko if: isSelectable -->
                 <div class="data-catalog-icon-holder clickable" data-bind="click: toggleActive">
-                    <div class="data-catalog-item-checkbox" data-bind="cesiumSvgPath: { path: isActive ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }, css: { 'data-catalog-enabled-item': isActive }"></div>
+				  <svg xmlns="http://www.w3.org/2000/svg" class="data-catalog-item-checkbox" data-bind="attr: { class: isActive ? 'data-catalog-item-checkbox checked' : 'data-catalog-item-checkbox unchecked'}" viewBox="0 0 32 32" preserveAspectRatio="xMinYMin">
+					<rect y="6" x="6" height="20" width="20"></rect>
+					<path d="M30,3.1C29,2.1 27.3,2.4 26.5,3.5L16,16 12.5,11.6c-1,-1 -2.4,-1.2 -3.5,-0.4 -1,1 -1,2.4 -0.4,3.5l5.5,6.9c0.5,0.6 1.2,1 2,1 0.8,0 1.5,-0.3 2,-1L30,6.5c0.6,-1 1,-2 0,-3.4z"></path>
+				  </svg:svg>
                 </div>
             <!-- /ko -->
             <div class="data-catalog-item-label now-viewing-abs-tighten" data-bind="text: name, css: { 'data-catalog-enabled-item': isSelectable && isActive }"></div>
