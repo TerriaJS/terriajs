@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 1.0.47
+
+* The `name` of a feature from a CSV file is now taken from a `name` or `title` column, if it exists.  Previously the name was always "Site Data".
+
 ### 1.0.46
 
 * Fixed an incorrect require (`URIjs` instead of `urijs`).
