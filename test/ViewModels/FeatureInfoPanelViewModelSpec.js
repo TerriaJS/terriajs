@@ -91,7 +91,7 @@ describe('FeatureInfoPanelViewModel', function() {
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.sections[0].info).toBe('<div>test test <h1>bar</h1></div>');
+            expect(panel.sections[0].infoHtml).toBe('<div>test test <h1>bar</h1></div>');
         }).otherwise(done.fail).then(done);
     });
 
