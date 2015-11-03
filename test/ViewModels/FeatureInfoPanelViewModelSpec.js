@@ -100,7 +100,7 @@ describe('FeatureInfoPanelViewModel', function() {
             value: '<h1>bar</h1>',
             imageryLayer: {featureInfoTemplate : '<div>{{{Foo}}} Hello {{name}}</div>'}
         });
-        feature.properties['name'] = 'Jay<br>'
+        feature.properties['name'] = 'Jay<br>';
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.features.push(feature);
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
