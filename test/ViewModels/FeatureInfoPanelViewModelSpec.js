@@ -83,15 +83,30 @@ describe('FeatureInfoPanelViewModel', function() {
 
     it('uses and completes featureInfoTemplate if present', function(done) {
         var feature = createTestFeature({
-            value: '<h1>bar</h1>',
-            imageryLayer: {featureInfoTemplate : '<div>test test {{Foo}}</div>'}
+            value: 'bar',
+            imageryLayer: {featureInfoTemplate : '<div>test {{Foo}}</div>'}
         });
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.features.push(feature);
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.sections[0].info).toBe('<div>test test <h1>bar</h1></div>');
+            expect(panel.sections[0].info).toBe('<div>test bar</div>');
+        }).otherwise(done.fail).then(done);
+    });
+
+    it('must use triple braces to embed html in template', function(done) {
+        var feature = createTestFeature({
+            value: '<h1>bar</h1>',
+            imageryLayer: {featureInfoTemplate : '<div>{{{Foo}}} Hello {{name}}</div>'}
+        });
+        feature.properties['name'] = 'Jay<br>'
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+        panel.showFeatures(pickedFeatures).then(function() {
+            expect(panel.sections[0].info).toBe('<div><h1>bar</h1> Hello Jay&lt;br&gt;</div>');
         }).otherwise(done.fail).then(done);
     });
 

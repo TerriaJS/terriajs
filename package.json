@@ -8,8 +8,9 @@
     "url": "http://github.com/TerriaJS/terriajs"
   },
   "dependencies": {
-    "urijs": "^1.16.0",
     "brfs": "^1.4.0",
+    "hammerjs": "^2.0.4",
+    "handlebars": "^4.0.4",
     "html2canvas": "^0.5.0-alpha2",
     "javascript-natural-sort": "^0.7.1",
     "leaflet": "^0.7.3",
@@ -21,7 +22,7 @@
     "sanitize-caja": "^0.1.3",
     "terriajs-cesium": "1.14.1",
     "togeojson": "^0.9.0",
-    "hammerjs": "^2.0.4"
+    "urijs": "^1.16.0"
   },
   "devDependencies": {
     "browserify": "^9.0.8",
