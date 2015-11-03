@@ -1,5 +1,5 @@
 <script type="text/html" id="now-viewing-tree-item-template">
-    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 1)">
         <div class="data-catalog-member-top-row">
             <!-- ko if: hasChildren -->
                 <div class="data-catalog-icon-holder clickable" data-bind="click: toggleOpen">
@@ -67,36 +67,8 @@
                     </div>
                 </div>
 
-                <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
-                    OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
-                    <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
-                </div>
-
                 <!-- ko foreach: $root.getSections($data) -->
                 <div class="now-viewing-section" data-bind="embeddedComponent: $data"></div>
-                <!-- /ko -->
-
-                <!-- ko if: type === 'abs-itt'-->
-                <div class="now-viewing-abs-controls">
-                     <div class="now-viewing-abs-checkbox clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
-                    <div class="now-viewing-abs-percent" data-bind="text: 'Display as percent of region population'"></div>
-                </div>
-                <!-- /ko -->
-
-                <!-- ko if: type === 'abs-itt' -->
-                <div class="now-viewing-section">
-                    <!-- ko if: absDataset && absDataset.items && absDataset.items.length > 0 -->
-                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: absDataset.items }"></div>
-                    <!-- /ko -->
-                </div>
-                <!-- /ko -->
-
-                <!-- ko if: type === 'csv' -->
-                <div class="now-viewing-section">
-                    <!-- ko if: csvDataset -->
-                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: csvDataset }"></div>
-                    <!-- /ko -->
-                </div>
                 <!-- /ko -->
             </div>
         </div>

@@ -11,10 +11,10 @@
 </div>
 
 <div data-bind="if: !catalogMember.legendUrls || catalogMember.legendUrls.length === 0">
-    <!-- ko if: type !== 'abs-itt' -->
+    <!-- ko if: catalogMember.type !== 'abs-itt' -->
     <div class="now-viewing-legend-text">No legend available for this data item.</div>
     <!-- /ko -->
-    <!-- ko if: type === 'abs-itt' -->
+    <!-- ko if: catalogMember.type === 'abs-itt' -->
     <div class="now-viewing-legend-text">Select at least one code in each data area.</div>
     <!-- /ko -->
 </div>
