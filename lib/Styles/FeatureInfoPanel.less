@@ -47,15 +47,12 @@
     table{
         width: 100%;
     }
-}
-
-.feature-info-panel-body.open{
-    .feature-info-panel-section-content-wrapper.closed{
+    &.closed{
         max-height: 0;
         max-width: 100%;
         overflow: hidden;
     }
-    .feature-info-panel-section-content-wrapper.open{
+    &.open{
         width: auto;
         max-height: 100%;
         max-width: 100%;
