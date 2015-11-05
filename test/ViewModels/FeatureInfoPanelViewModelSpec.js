@@ -81,17 +81,84 @@ describe('FeatureInfoPanelViewModel', function() {
         });
     }
 
-    it('uses and completes featureInfoTemplate if present', function(done) {
+    it('uses and completes a string-form featureInfoTemplate if present', function(done) {
         var feature = createTestFeature({
-            value: '<h1>bar</h1>',
-            imageryLayer: {featureInfoTemplate : '<div>test test {{Foo}}</div>'}
+            value: 'bar',
+            imageryLayer: {featureInfoTemplate : '<div>test {{Foo}}</div>'}
         });
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.features.push(feature);
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.sections[0].info).toBe('<div>test test <h1>bar</h1></div>');
+            expect(panel.sections[0].info).toBe('<div>test bar</div>');
+        }).otherwise(done.fail).then(done);
+    });
+
+    it('must use triple braces to embed html in template', function(done) {
+        var feature = createTestFeature({
+            value: '<h1>bar</h1>',
+            imageryLayer: {featureInfoTemplate : '<div>{{{Foo}}} Hello {{name}}</div>'}
+        });
+        feature.properties['name'] = 'Jay<br>';
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+        panel.showFeatures(pickedFeatures).then(function() {
+            expect(panel.sections[0].info).toBe('<div><h1>bar</h1> Hello Jay&lt;br&gt;</div>');
+        }).otherwise(done.fail).then(done);
+    });
+
+    it('can use a json featureInfoTemplate with partials', function(done) {
+        var feature = createTestFeature({
+            value: 'bar',
+            imageryLayer: {featureInfoTemplate : {template: '<div>test {{>foobar}}</div>', foobar: '<b>{{Foo}}</b>'}}
+        });
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+        panel.showFeatures(pickedFeatures).then(function() {
+            expect(panel.sections[0].info).toBe('<div>test <b>bar</b></div>');
+        }).otherwise(done.fail).then(done);
+    });
+
+    it('can render a recursive featureInfoTemplate', function(done) {
+        var feature = createTestFeature({
+            value: 'bar',
+            imageryLayer: {
+                featureInfoTemplate : {
+                    template: '<ul>{{>show_children}}</ul>',
+                    show_children: '{{#children}}<li>{{name}}<ul>{{>show_children}}</ul></li>{{/children}}'
+                }
+            }
+        });
+        feature.properties['children'] = [
+            {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]}, 
+            {name: 'Xavier', children: [{name: 'Yann', children: null}, {name: 'Yvette', children: null}]}
+        ];
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.features.push(feature);
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+        var recursedHtml = ''
+            + '<ul>'
+            +   '<li>Alice'
+            +       '<ul>'
+            +           '<li>' + 'Bailey' + '<ul></ul>' + '</li>'
+            +           '<li>' + 'Beatrix' + '<ul></ul>' + '</li>'
+            +       '</ul>'
+            +   '</li>'
+            +   '<li>Xavier'
+            +       '<ul>'
+            +           '<li>' + 'Yann' + '<ul></ul>' + '</li>'
+            +           '<li>' + 'Yvette' + '<ul></ul>' + '</li>'
+            +       '</ul>'
+            +   '</li>'
+            + '</ul>';
+        panel.showFeatures(pickedFeatures).then(function() {
+            expect(panel.sections[0].info).toBe(recursedHtml);
         }).otherwise(done.fail).then(done);
     });
 
