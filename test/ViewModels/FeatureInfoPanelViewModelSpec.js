@@ -135,7 +135,7 @@ describe('FeatureInfoPanelViewModel', function() {
             }
         });
         feature.properties['children'] = [
-            {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]}, 
+            {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]},
             {name: 'Xavier', children: [{name: 'Yann', children: null}, {name: 'Yvette', children: null}]}
         ];
         var pickedFeatures = new PickedFeatures();
@@ -158,7 +158,7 @@ describe('FeatureInfoPanelViewModel', function() {
             +   '</li>'
             + '</ul>';
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.sections[0].info).toBe(recursedHtml);
+            expect(panel.sections[0].infoHtml).toBe(recursedHtml);
         }).otherwise(done.fail).then(done);
     });
 
@@ -174,7 +174,7 @@ describe('FeatureInfoPanelViewModel', function() {
         }).otherwise(done.fail).then(function() {
             // now, when no features are chosen, they should go away
             pickedFeatures = new PickedFeatures();
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});            
+            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
             panel.showFeatures(pickedFeatures).then(function() {
                 expect(terria.clock.onTick.numberOfListeners).toEqual(0);
             }).otherwise(done.fail).then(done);
