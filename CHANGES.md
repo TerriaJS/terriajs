@@ -3,6 +3,9 @@ Change Log
 ==========
 
 * Make it possible to disable CSV region mapping warnings with the `showWarnings` init parameter.
+### 1.0.47
+
+* The `name` of a feature from a CSV file is now taken from a `name` or `title` column, if it exists.  Previously the name was always "Site Data".
 
 ### 1.0.46
 
