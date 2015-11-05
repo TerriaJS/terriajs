@@ -122,6 +122,14 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('sets dataSource to the underlying czml data source', function(done) {
+        csvItem.url = 'test/csv/minimal.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.dataSource).toBeDefined();
+            expect(csvItem.dataSource).toEqual(csvItem._tableDataSource.czmlDataSource);
+        }).otherwise(fail).then(done);
+    });
+
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {

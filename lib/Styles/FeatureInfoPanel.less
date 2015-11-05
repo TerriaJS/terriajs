@@ -31,12 +31,32 @@
 
 .feature-info-panel {
     .panel;
+    width: auto;
     background-color: @panel-background-color;
     top: 60px;
     right: 95px;
     max-width: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
     position: absolute;
     box-shadow: @panel-box-shadow;
+}
+
+.feature-info-panel-section-content-wrapper{
+    max-height: 0;
+    max-width: 0;
+    overflow: hidden;
+    table{
+        width: 100%;
+    }
+    &.closed{
+        max-height: 0;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    &.open{
+        width: auto;
+        max-height: 100%;
+        max-width: 100%;
+    }
 }
 
 .feature-info-panel-header {
@@ -51,6 +71,7 @@
 .feature-info-panel-body {
     .opaque-to-input;
 }
+//data-bind="style: { 'max-width': maxWidth + 'px' }
 
 .feature-info-panel-sections {
     overflow-y: auto;
@@ -82,8 +103,8 @@
 .feature-info-panel-section-content {
     color: @info-text-color;
     font-weight: lighter;
+    overflow: visible;
     padding: 15px;
-    overflow: auto;
     // max-height: 600px; // adjusted dynamically in FeatureInfoPanelViewModel.js
     text-align: left;
 }
