@@ -5,7 +5,13 @@ var FeatureInfoPanelViewModel = require('../../lib/ViewModels/FeatureInfoPanelVi
 var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var runLater = require('../../lib/Core/runLater');
 var Terria = require('../../lib/Models/Terria');
+var loadJson = require('terriajs-cesium/Source/Core/loadJson');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+
+var Catalog = require('../../lib/Models/Catalog');
+var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
+var CatalogGroup = require('../../lib/Models/CatalogGroup');
+var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 
 
 describe('FeatureInfoPanelViewModel', function() {
@@ -81,7 +87,7 @@ describe('FeatureInfoPanelViewModel', function() {
         });
     }
 
-    it('uses and completes a string-form featureInfoTemplate if present', function(done) {
+    it('uses and completes a string-form featureInfoTemplate if present on an imagery layer', function(done) {
         var feature = createTestFeature({
             value: 'bar',
             imageryLayer: {featureInfoTemplate : '<div>test {{Foo}}</div>'}
@@ -93,6 +99,31 @@ describe('FeatureInfoPanelViewModel', function() {
         panel.showFeatures(pickedFeatures).then(function() {
             expect(panel.sections[0].info).toBe('<div>test bar</div>');
         }).otherwise(done.fail).then(done);
+    });
+
+    it('uses and completes a string-form featureInfoTemplate if present on geojson', function(done) {
+        createCatalogMemberFromType.register('group', CatalogGroup);
+        createCatalogMemberFromType.register('geojson', GeoJsonCatalogItem);
+        loadJson('test/init/geojson-with-template.json').then(function(json) {
+            var terria = new Terria({
+                baseUrl: './'
+            });
+            var catalog = new Catalog(terria);
+            catalog.updateFromJson(json.catalog).then(function() {
+                var geoJson = catalog.group.items[0].items[0];
+                geoJson.load().then(function() {
+                    expect(geoJson.dataSource.entities.values.length).toBeGreaterThan(0);
+                    var feature = geoJson.dataSource.entities.values[0];
+                    var pickedFeatures = new PickedFeatures();
+                    pickedFeatures.features.push(feature);
+                    pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+                    panel.showFeatures(pickedFeatures).then(function() {
+                        expect(panel.sections[0].info).toBe('<div>test bar</div>');
+                    }).otherwise(done.fail).then(done);
+                }).otherwise(done.fail);
+            }).otherwise(done.fail);
+        }).otherwise(done.fail);
     });
 
     it('must use triple braces to embed html in template', function(done) {
