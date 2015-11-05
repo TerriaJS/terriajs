@@ -113,13 +113,14 @@ describe('FeatureInfoPanelViewModel', function() {
                 var geoJson = catalog.group.items[0].items[0];
                 geoJson.load().then(function() {
                     expect(geoJson.dataSource.entities.values.length).toBeGreaterThan(0);
+                    panel.terria.nowViewing.add(geoJson);
                     var feature = geoJson.dataSource.entities.values[0];
                     var pickedFeatures = new PickedFeatures();
                     pickedFeatures.features.push(feature);
                     pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
                     panel.showFeatures(pickedFeatures).then(function() {
-                        expect(panel.sections[0].info).toBe('<div>test bar</div>');
+                        expect(panel.sections[0].info).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
                     }).otherwise(done.fail).then(done);
                 }).otherwise(done.fail);
             }).otherwise(done.fail);
