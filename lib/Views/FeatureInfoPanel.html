@@ -12,8 +12,8 @@
                             <div class="feature-info-panel-section-content" data-bind="text: message"></div>
                         </div>
                     </div>
-                    <div class="feature-info-panel-section" data-bind="foreach: sections">
-                        <div data-bind="embeddedComponent: $data">
+                    <div class="feature-info-panel-section" data-bind="foreach: features">
+                        <feature-info-panel-section params='feature: $data'></feature-info-panel-section>
                         </div>
                     </div>
                 </div>
