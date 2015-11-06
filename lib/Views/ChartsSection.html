@@ -1,0 +1,13 @@
+<div class="now-viewing-section-contents" data-bind="foreach: charts">
+    <div class="data-catalog-member-top-row clickable" data-bind="click: toggleOpen">
+        <div class="data-catalog-icon-holder">
+            <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
+        </div>
+        <div class="data-catalog-item-label now-viewing-abs-tighten" data-bind="text: name"></div>
+    </div>
+
+    <!-- ko if: isOpen -->
+        <div class="now-viewing-chart-description" data-bind="text: description"></div>
+        <div data-bind="embeddedComponent: chart"></div>
+    <!-- /ko -->
+</div>
