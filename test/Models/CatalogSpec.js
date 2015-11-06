@@ -23,9 +23,6 @@ describe('Catalog', function() {
         createCatalogMemberFromType.register('group', CatalogGroup);
         createCatalogMemberFromType.register('geojson', GeoJsonCatalogItem);
         loadJson('test/init/geojson-with-template.json').then(function(json) {
-            var terria = new Terria({
-                baseUrl: './'
-            });
             var catalog = new Catalog(terria);
             catalog.updateFromJson(json.catalog).then(function() {
                 expect(catalog.group.constructor).toEqual(CatalogGroup);
