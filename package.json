@@ -23,7 +23,8 @@
     "terriajs-cesium": "1.15.1",
     "togeojson": "^0.9.0",
     "urijs": "^1.16.0",
-    "dygraphs": "^1.1.0"
+    "dygraphs": "^1.1.0",
+    "gulp-shell": "^0.5.1"
   },
   "devDependencies": {
     "browserify": "^9.0.8",
@@ -39,7 +40,6 @@
     "gulp-jasmine": "^2.0.1",
     "gulp-jshint": "^1.10.0",
     "gulp-less": "^3.0.2",
-    "gulp-shell": "^0.5.1",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.4",
