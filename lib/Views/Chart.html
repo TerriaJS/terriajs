@@ -1,3 +1,7 @@
+<script type="text/html" id="chart-with-containerId">
+    <div class="chart" data-bind="attr: {'id': containerId}"></div>
+</script>
+
 <style>
     .dygraph-axis-label {
         color: white;
@@ -12,6 +16,6 @@
 		Loading…
 	</div>
 	<!-- /ko -->
-	<div class="chart" data-bind="attr: {'id': containerId}">
+	<div data-bind="template: {name: 'chart-with-containerId', afterRender: renderChart.bind($data)}"></div>
 	</div>
 </div>
