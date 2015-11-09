@@ -44,7 +44,7 @@
                 </div>
                 <!-- /ko -->
                 <!-- /ko -->
-                <div class="data-catalog-group-label clickable" data-bind="click: $root.clickOpen.bind($root), text: name, css: { 'data-catalog-opened-group': isOpen }"></div>
+                <a href="" class="data-catalog-group-label clickable" data-bind="click: $root.clickOpen.bind($root), text: name, css: { 'data-catalog-opened-group': isOpen }"></a>
                 <!-- ko if: isOpen -->
                 <!-- ko foreach: $root.getRightSideMemberControls($data) -->
                 <div class="data-catalog-right-side-control">
@@ -75,7 +75,7 @@
 <div class="data-catalog-top-group" data-bind="foreach: catalog.group.items">
     <!-- ko if: !isHidden -->
         <div class="data-catalog-top-group-header" data-bind="click: $root.clickOpen.bind($root)">
-            <div class="data-catalog-top-group-label" data-bind="text: name"></div>
+            <a href="#" name="data-catalogue" class="data-catalog-top-group-label" data-bind="text: name"></a>
             <div class="data-catalog-icon-holder">
                 <div class="data-catalog-top-group-icon" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
             </div>
