@@ -24,7 +24,8 @@
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
           "tableStyle": {
-            "colorMapString": "green-hsl(120,100%,70%)-white-hsl(0,100%,70%)-red"
+            "colorMapString": "green-hsl(120,100%,70%)-white-hsl(0,100%,70%)-red",
+            "featureInfoFields": { "Value": true, "Mod10": true }
           }
         }
       ]
