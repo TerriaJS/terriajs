@@ -189,7 +189,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
     });
 
     it('can use a json featureInfoTemplate with partials', function(done) {
-        item.featureInfoTemplate = {template: '<div>test {{>foobar}}</div>', foobar: '<b>{{type}}</b>'};
+        item.featureInfoTemplate = {template: '<div>test {{>foobar}}</div>', partials: {foobar: '<b>{{type}}</b>'}};
         item.load().then(function() {
             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
             panel.terria.nowViewing.add(item);
@@ -204,11 +204,29 @@ describe('FeatureInfoPanelViewModel templating', function() {
         }).otherwise(done.fail);
     });
 
+    it('sets the name from featureInfoTemplate', function(done) {
+        item.featureInfoTemplate = {name: 'Type {{type}}'};
+        item.load().then(function() {
+            expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
+            panel.terria.nowViewing.add(item);
+            var feature = item.dataSource.entities.values[0];
+            var pickedFeatures = new PickedFeatures();
+            pickedFeatures.features.push(feature);
+            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+            panel.showFeatures(pickedFeatures).then(function() {
+                expect(panel.sections[0].name).toBe('Type Hoop_Big');
+            }).otherwise(done.fail).then(done);
+        }).otherwise(done.fail);
+    });
+
     it('can render a recursive featureInfoTemplate', function(done) {
 
         item.featureInfoTemplate = {
             template: '<ul>{{>show_children}}</ul>',
-            show_children: '{{#children}}<li>{{name}}<ul>{{>show_children}}</ul></li>{{/children}}'
+            partials: {
+                show_children: '{{#children}}<li>{{name}}<ul>{{>show_children}}</ul></li>{{/children}}'
+            }
         };
         item.load().then(function() {
             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
