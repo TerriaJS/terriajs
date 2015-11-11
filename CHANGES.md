@@ -14,6 +14,7 @@ Change Log
   * `ImageryLayerFeatureInfo` now has an `imageryLayer` property, indicating the layer that contains the feature.
   * Make KML invalid coordinate processing match Google Earth behavior. [#3124](https://github.com/AnalyticalGraphicsInc/cesium/pull/3124)
 * Show information for all WMS features when a location is clicked.
+* Allow color maps in CSV catalog items to be expressed as strings: colorMapString: "red-white-blue".
 
 ### 1.0.46
 
