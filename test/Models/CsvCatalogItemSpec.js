@@ -101,6 +101,8 @@ describe('CsvCatalogItem', function() {
             data: dataStr,
             dataSourceUrl: 'none',
             dataCustodian: 'Data Custodian',
+            dataUrl: 'http://my.csv.com/test.csv',
+            dataUrlType: 'direct'
         });
 
         var json = csvItem.serializeToJson();
@@ -117,6 +119,14 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._tableDataSource).toBeDefined();
             expect(csvItem._tableDataSource.dataset).toBeDefined();
             expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(2);
+        }).otherwise(fail).then(done);
+    });
+
+    it('sets dataSource to the underlying czml data source', function(done) {
+        csvItem.url = 'test/csv/minimal.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.dataSource).toBeDefined();
+            expect(csvItem.dataSource).toEqual(csvItem._tableDataSource.czmlDataSource);
         }).otherwise(fail).then(done);
     });
 
@@ -169,6 +179,14 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._colorFunc(197)).not.toEqual([0,0,0,0]);
         }).otherwise(fail).then(done);
 
+    });
+    it('matches numeric state IDs with regexes', function(done) {
+        csvItem.updateFromJson( { data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90' });
+        csvItem.load().then(function() {
+            expect(csvItem._regionMapped).toBe(true);
+            expect(csvItem._colorFunc).toBeDefined();
+            expect(csvItem._tableDataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
+        }).otherwise(fail).then(done);
     });
 
     it('matches SA4s', function(done) {

@@ -8,17 +8,34 @@
           "name": "Gravity Anomaly (single dynamic layer)",
           "type": "esri-mapServer",
           "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
-          "attribution" : "Plain text <a href=\"test\">hello</a>"
+          "attribution" : "Plain text <a href=\"test\">hello</a>",
+          "featureInfoTemplate" : "The value of this Red is {{Red}}. The value of this Blue is {{Blue}} <em>The value of this Green is {{Green}} </em>!"
         },
         {
-          "name": "Gravity Anomaly two (single dynamic layer)",
+          "name": "Gravity Anomaly two",
           "type": "esri-mapServer",
           "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
           "attribution" :
             {
               "text" : "test attribution which is a link",
               "link" : "http://www.ga.gov.au"
-            }
+            },
+          "featureInfoTemplate" : "Red is {{Red}}. Blue is {{Blue}} <h1>Green is {{Green}} </h1>!"
+        },
+        {
+          "name": "Gravity Anomaly with partials",
+          "type": "esri-mapServer",
+          "url": "http://www.ga.gov.au/gisimg/rest/services/earth_science/Geoscience_Australia_National_Geophysical_Grids/MapServer/6",
+          "attribution" :
+            {
+              "text" : "test attribution which is a link",
+              "link" : "http://www.ga.gov.au"
+            },
+          "featureInfoTemplate" : {
+            "template": "{{>header}}Red is {{Red}}. Blue is {{Blue}}. Green is {{Green}}.{{>footer}}",
+            "header": "<h1>Color Information</h1><br>",
+            "footer": "<br>Thank you for clicking here.</br>"
+          }
         }
       ]
     }
