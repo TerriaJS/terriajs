@@ -40,24 +40,24 @@
                     <div class="now-viewing-item-drag-handle clickable" data-bind="visible: supportsReordering, cesiumSvgPath: { path: $root.svgReorder, width: 12, height: 10 }, css: { 'now-viewing-shown-item': isShown }" title="Drag to reorder data sources."></div>
                 </div>
                 <div class="now-viewing-item-icon-holder">
-                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                    <button class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></button>
                 </div>
-                <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
+                <button class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></button>
 
                 <div class="now-viewing-item-arrow-holder">
-                    <div class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                    <button class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
                 </div>
             </div>
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
                 <div class="now-viewing-action-menu">
-                    <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                    <button class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</button>
                     <!-- ko if: showsInfo -->
-                    <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
+                    <button class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</button>
                     <!-- /ko -->
                     <!-- ko foreach: $root.getItemControls($data) -->
-                    <div class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name }"></div>
+                    <button class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name }"></button>
                     <!-- /ko -->
-                    <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
+                    <button class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</button>
                 </div>
 
                 <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">

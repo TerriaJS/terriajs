@@ -62,11 +62,11 @@
             <div class="search-tab-provider-message" data-bind="visible: isOpen && searchMessage, text: searchMessage"></div>
             <div class="search-tab-provider-results" data-bind="visible: isOpen, foreach: searchResults">
                 <!-- ko if: typeof catalogItem === 'undefined' -->
-                    <div class="search-tab-provider-result" data-bind="css: { 'search-tab-provider-result-clickable': typeof clickAction !== 'undefined', 'search-tab-provider-result-important': isImportant }, click: clickAction">
+                    <button class="search-tab-provider-result block" data-bind="css: { 'search-tab-provider-result-clickable': typeof clickAction !== 'undefined', 'search-tab-provider-result-important': isImportant }, click: clickAction">
                         <div class="search-tab-provider-result-top-row">
                             <div class="search-tab-provider-result-label" data-bind="text: name"></div>
                         </div>
-                    </div>
+                    </button>
                 <!-- /ko -->
                 <!-- ko if: typeof catalogItem !== 'undefined' && !catalogItem.isHidden -->
                     <div class="search-tab-provider-result" data-bind="template: { name: 'search-catalog-item-template', data: catalogItem }, attr: { title: tooltip }">
