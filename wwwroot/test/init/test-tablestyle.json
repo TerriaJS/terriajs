@@ -12,7 +12,7 @@
       "isOpen": true,
       "items": [
         {
-          "name": "val_enum_postcode thingo",
+          "name": "Green-orange postcodes",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
           "tableStyle": {
@@ -20,7 +20,17 @@
           }
         },
         {
-          "name": "Victorian postcodes",
+          "name": "More postcode testing",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
+          "tableStyle": {
+            "colorMapString": "green-hsla(0,50%,50%,0.2)"
+          },
+          "opacity": "1"
+
+        },
+        {
+          "name": "All Victorian postcodes",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
           "tableStyle": {
