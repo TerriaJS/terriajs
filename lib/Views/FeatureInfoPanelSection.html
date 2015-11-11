@@ -16,13 +16,6 @@
     <div class="feature-info-panel-section-content-wrapper" data-bind ="css:feature == terria.selectedFeature ?'open': 'closed'">
         <div class="feature-info-panel-section-content" data-bind="style: { css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
             <div data-bind="template: {name: 'infoHtml-template', afterRender: renderCustomTags.bind($data)}"></div>
-
-            <!-- ko if: true -->
-            <button class="expand-chart-button" data-bind="click: expandChart.bind($data)">Expand</button>
-            <!-- /ko -->
-            <a class="download-chart-data" data-bind="attr: { 'href': 'src' }">Download</a>
-            <div class="download-chart-data-clear"></div>
-
         </div>
     </div>
 </div>
