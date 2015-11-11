@@ -30,7 +30,7 @@
 
 <div class="now-viewing">
     <div class="now-viewing-toolbar">
-        <span class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Remove All</span>
+        <button class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing), hasFocus: panelHasFocus, attr: {  tabindex: isActive ? 0 : -1 }">Remove All</button>
     </div>
 
     <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
