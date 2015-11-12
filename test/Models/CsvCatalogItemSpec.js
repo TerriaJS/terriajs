@@ -469,7 +469,7 @@ describe('CsvCatalogItem', function() {
     });
     it('scales lat-lon points to a size ratio of 300% if scaleByValue true and respects scale value', function(done) {
         csvItem.url = 'test/csv/lat_lon_val.csv';
-        csvItem.tableStyle = { scale: 5, scaleByValue: true }
+        csvItem.tableStyle = { scale: 5, scaleByValue: true };
         return csvItem.load().then(function() {
             var pixelSizes = csvItem._tableDataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
             csvItem._minPix = Math.min.apply(null, pixelSizes);
@@ -478,7 +478,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
         }).then(function(minMax) {
             var csvItem2 = new CsvCatalogItem(terria);
-            csvItem2.tableStyle = { scale: 10, scaleByValue: true }
+            csvItem2.tableStyle = { scale: 10, scaleByValue: true };
             csvItem2.url = 'test/csv/lat_lon_val.csv';
             return csvItem2.load().yield(csvItem2);
         }).then(function(csvItem2) {
