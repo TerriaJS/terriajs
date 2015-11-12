@@ -91,7 +91,7 @@ describe('FeatureInfoPanelViewModel', function() {
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.sections[0].info).toBe('<div>test bar</div>');
+            expect(panel.sections[0].infoHtml).toBe('<div>test bar</div>');
         }).otherwise(done.fail).then(done);
     });
 
@@ -106,7 +106,7 @@ describe('FeatureInfoPanelViewModel', function() {
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.sections[0].info).toBe('<div><h1>bar</h1> Hello Jay&lt;br&gt;</div>');
+            expect(panel.sections[0].infoHtml).toBe('<div><h1>bar</h1> Hello Jay&lt;br&gt;</div>');
         }).otherwise(done.fail).then(done);
     });
 
@@ -120,7 +120,7 @@ describe('FeatureInfoPanelViewModel', function() {
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
         panel.showFeatures(pickedFeatures).then(function() {
-            expect(panel.sections[0].info).toBe('<div>test <b>bar</b></div>');
+            expect(panel.sections[0].infoHtml).toBe('<div>test <b>bar</b></div>');
         }).otherwise(done.fail).then(done);
     });
 
