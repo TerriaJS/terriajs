@@ -13,6 +13,7 @@ Change Log
 * Fixed a bug that caused an exception when running inside an `<iframe>` and the user's browser blocked 3rd-party cookies.
 * HTML and Markdown text in catalog item metadata, feature information, etc. is now formatted in a more typical way.  For example, text inside `<h1>` now looks like a heading.  Previously, most HTML styling was stripped out.
 * Supports FeatureInfoTemplates on all catalog item types (previously only available on ImageryLayers).
+* Apply markdown to properties shown in the Feature Info Panel.
 * Add `includeCzml` option to CkanCatalogGroup.
 * Updated to [Cesium](http://cesiumjs.org) 1.15.  Significant changes relevant to TerriaJS users include:
   * Added support for the [glTF 1.0](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md) draft specification.
