@@ -59,12 +59,4 @@ describe('FeatureInfoPanelSectionViewModel', function() {
         section.destroy();
     });
 
-    it('shows a chart', function() {
-        feature.description = {getValue: function() { return '<chart src="/test/time_series.csv"></chart>'}};
-        var section = new FeatureInfoPanelSectionViewModel(panel, feature);
-        expect(section.chartViewModels.length).toEqual(1);
-        section.destroy();
-    });
-
-
 });
