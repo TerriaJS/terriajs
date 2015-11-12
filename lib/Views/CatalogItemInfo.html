@@ -87,7 +87,7 @@
                 <p class="catalog-item-info-description" data-bind="if: catalogItem.type === 'wfs'">
                     Type names:
                     <span class="catalog-item-info-tech-attributes" data-bind="text: catalogItem.typeNames"></span>
-                </p>                
+                </p>
             </div>
             <div class="catalog-item-info-section" data-bind="if: catalogItem.metadataUrl">
                 <h2>Metadata URL</h2>
@@ -113,7 +113,7 @@
                 <div class="catalog-item-info-details-heading" data-bind="click: toggleShowDataDetails">
                     <button class="catalog-item-info-details-label">Data Details</button>
                     <div class="catalog-item-info-details-expand-button-holder">
-                        <button href="" class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showDataDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
+                        <button href="#" class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showDataDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
                     </div>
                 </div>
                 <!-- ko if: showDataDetails -->
