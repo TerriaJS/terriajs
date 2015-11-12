@@ -13,12 +13,12 @@ Change Log
 * Fixed a bug that caused an exception when running inside an `<iframe>` and the user's browser blocked 3rd-party cookies.
 * HTML and Markdown text in catalog item metadata, feature information, etc. is now formatted in a more typical way.  For example, text inside `<h1>` now looks like a heading.  Previously, most HTML styling was stripped out.
 * Supports FeatureInfoTemplates on all catalog item types (previously only available on ImageryLayers).
+* Apply markdown to properties shown in the Feature Info Panel.
 * Updated to [Cesium](http://cesiumjs.org) 1.15.  Significant changes relevant to TerriaJS users include:
   * Added support for the [glTF 1.0](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md) draft specification.
   * Added support for the glTF extensions [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/tree/master/extensions/Khronos/KHR_binary_glTF) and [KHR_materials_common](https://github.com/KhronosGroup/glTF/tree/KHR_materials_common/extensions/Khronos/KHR_materials_common).
   * `ImageryLayerFeatureInfo` now has an `imageryLayer` property, indicating the layer that contains the feature.
   * Make KML invalid coordinate processing match Google Earth behavior. [#3124](https://github.com/AnalyticalGraphicsInc/cesium/pull/3124)
-* Apply markdown to properties shown in the Feature Info Panel.
 
 ### 1.0.46
 
