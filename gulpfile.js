@@ -55,8 +55,8 @@ gulp.task('lint', function(){
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('docs', function() {
-    child_exec('node ./node_modules/jsdoc/jsdoc.js ./lib -c ./jsdoc.json');
+gulp.task('docs', function(done) {
+    child_exec('node ./node_modules/jsdoc/jsdoc.js ./lib -c ./jsdoc.json', undefined, done);
 });
 
 gulp.task('prepare-cesium', ['copy-cesium-assets']);
