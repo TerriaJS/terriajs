@@ -8,14 +8,15 @@ Change Log
 * The `name` of a feature from a CSV file is now taken from a `name` or `title` column, if it exists.  Previously the name was always "Site Data".
 * Fixed a bug that caused time-dynamic WMS layers with just one time to not be displayed.
 * Underscores are now replaced with spaces in the feature info panel for `GeoJsonCatalogItem`.
+* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates. To enable this, set `useProjection` to `true`
+* Show information for all WMS features when a location is clicked.
+* Fixed a bug that caused an exception when running inside an `<iframe>` and the user's browser blocked 3rd-party cookies.
+* HTML and Markdown in catalog item metadata, feature information, etc. is now formatted in a more typical way.  For example, text `<h1>` now looks like a heading.  Previously, most HTML styling was stripped out.
 * Updated to [Cesium](http://cesiumjs.org) 1.15.  Significant changes relevant to TerriaJS users include:
   * Added support for the [glTF 1.0](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md) draft specification.
   * Added support for the glTF extensions [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/tree/master/extensions/Khronos/KHR_binary_glTF) and [KHR_materials_common](https://github.com/KhronosGroup/glTF/tree/KHR_materials_common/extensions/Khronos/KHR_materials_common).
   * `ImageryLayerFeatureInfo` now has an `imageryLayer` property, indicating the layer that contains the feature.
   * Make KML invalid coordinate processing match Google Earth behavior. [#3124](https://github.com/AnalyticalGraphicsInc/cesium/pull/3124)
-* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates. To enable this, set `useProjection` to `true`
-* Show information for all WMS features when a location is clicked.
-* Fixed a bug that caused an exception when running inside an `<iframe>` and the user's browser blocked 3rd-party cookies.
 
 ### 1.0.46
 
