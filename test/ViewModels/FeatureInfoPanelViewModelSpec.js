@@ -138,6 +138,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
     });
 
     it('has a default template', function(done) {
+        var regex = new RegExp('<td>.{0,7}Hoop_Big.{0,7}</td>');
         item.featureInfoTemplate = undefined;
         item.load().then(function() {
             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
@@ -148,7 +149,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toContain('<td>Hoop_Big</td>');
+                expect(regex.test(panel.sections[0].info.replace(/\n/g, ''))).toBe(true);
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
 
