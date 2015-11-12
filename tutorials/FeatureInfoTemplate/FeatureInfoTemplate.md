@@ -15,7 +15,7 @@ Add a `featureInfoTemplate` to the items in your catalog `json` file, like so:
                   "text" : "Geoscience Australia",
                   "link" : "http://www.ga.gov.au"
                 },
-              "featureInfoTemplate" : "Pixel colour: Red={{Red}} Blue={{Blue}} Green={{Green}}."
+              "featureInfoTemplate" : "Pixel colour: <b>Red={{Red}} Blue={{Blue}} Green={{Green}}</b>."
             }
           ]
         }
@@ -32,4 +32,28 @@ instead of:
 
 <img src="no_template.png">
 
-CAVEAT: This currently only works on catalog items with an imagery layer, eg. ArcGIS and WMS.  It does not work with geojson.  We are working on it!
+You can provide a template to use for the name of the collapsible section (eg. to replace `RGB` in the example above), like so:
+
+              "featureInfoTemplate" : {
+                  "template": "<div>Pixel colour: {{>foobar}}</div>",
+                  "name": "Red {{Red}}"
+              }
+
+## More details
+
+The template is rendered using [Mustache](https://github.com/janl/mustache.js#usage), so you can use all of its features here.
+
+In particular, you can render properties that include html by using triple-braces, eg. `{{{property}}}`.
+
+You can make use of partial templates (and even recursive templates) by specifying your template and partials as a json object, eg.:
+
+              "featureInfoTemplate" : {
+                  "template": "<div>Pixel colour: {{>foobar}}</div>",
+                  "partials": {
+                      "foobar": "<b>Red={{Red}} Blue={{Blue}} Green={{Green}}</b>"
+                  }
+              }
+
+After Mustache has rendered the template, the result is displayed using [Markdown](https://help.github.com/articles/markdown-basics/), so you could also write:
+
+              "featureInfoTemplate" : "Pixel colour: *Red={{Red}} Blue={{Blue}} Green={{Green}}*."

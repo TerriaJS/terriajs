@@ -1,0 +1,17 @@
+{
+  "catalog": [
+    {
+      "name": "Sample group",
+      "type": "group",
+      "isOpen": false,
+      "items": [
+        {
+          "name": "Sample GeoJSON Data",
+          "type": "geojson",
+          "url": "test/GeoJSON/two_features.geojson",
+          "featureInfoTemplate" : "A {{type}} made of {{material}} with {{funding_ba}} funding."
+        }
+      ]
+    }
+  ]
+}
