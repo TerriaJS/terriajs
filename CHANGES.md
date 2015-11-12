@@ -16,6 +16,7 @@ Change Log
 * Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates. To enable this, set `useProjection` to `true`
 * Show information for all WMS features when a location is clicked.
 * Fixed a bug that caused an exception when running inside an `<iframe>` and the user's browser blocked 3rd-party cookies.
+* Supports FeatureInfoTemplates on all catalog item types (previously only available on ImageryLayers).
 
 ### 1.0.46
 
