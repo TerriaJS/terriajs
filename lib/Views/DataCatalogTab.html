@@ -71,7 +71,7 @@
         </div>
     <!-- /ko -->
 </script>
-<input type="button" value="" class="is-hidden" data-bind ="hasFocus: $root.isActive"/>
+<input type="button" value="" class="is-hidden" data-bind ="hasFocus: panelHasFocus, attr: {tabindex: isActive ? 0 : -1 }"/>
 <div class="data-catalog-top-group" data-bind="foreach: catalog.group.items">
     <!-- ko if: !isHidden -->
         <div class="data-catalog-top-group-header" data-bind="click: $root.clickOpen.bind($root)">
