@@ -15,7 +15,7 @@ Change Log
   * Make KML invalid coordinate processing match Google Earth behavior. [#3124](https://github.com/AnalyticalGraphicsInc/cesium/pull/3124)
 * Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates. To enable this, set `useProjection` to `true`
 * Show information for all WMS features when a location is clicked.
-* Update the default Australian topography basemap to GA's new layer (http://www.ga.gov.au/gisimg/rest/services/topography/National_Map_Colour_Basemap/MapServer)
+* Update the default Australian topography basemap to GA's new worldwide layer (http://www.ga.gov.au/gisimg/rest/services/topography/National_Map_Colour_Basemap/MapServer)
 
 ### 1.0.46
 
