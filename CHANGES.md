@@ -17,13 +17,12 @@ Change Log
 * Add `includeCzml` option to CkanCatalogGroup.
 * Fixed a bug that caused `WebMapServiceCatalogItem` to incorrectly populate the catalog item's metadata with data from GetCapabilities when another layer had a `Title` with the same value as the expected layer's `Name`.
 * Update the default Australian topography basemap to Geoscience Australia's new worldwide layer (http://www.ga.gov.au/gisimg/rest/services/topography/National_Map_Colour_Basemap/MapServer)
+* Allow color maps in CSV catalog items to be expressed as strings: colorMapString: "red-white-blue".
 * Updated to [Cesium](http://cesiumjs.org) 1.15.  Significant changes relevant to TerriaJS users include:
   * Added support for the [glTF 1.0](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md) draft specification.
   * Added support for the glTF extensions [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/tree/master/extensions/Khronos/KHR_binary_glTF) and [KHR_materials_common](https://github.com/KhronosGroup/glTF/tree/KHR_materials_common/extensions/Khronos/KHR_materials_common).
   * `ImageryLayerFeatureInfo` now has an `imageryLayer` property, indicating the layer that contains the feature.
   * Make KML invalid coordinate processing match Google Earth behavior. [#3124](https://github.com/AnalyticalGraphicsInc/cesium/pull/3124)
-* Show information for all WMS features when a location is clicked.
-* Allow color maps in CSV catalog items to be expressed as strings: colorMapString: "red-white-blue".
 
 ### 1.0.46
 
