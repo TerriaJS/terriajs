@@ -149,7 +149,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             panel.showFeatures(pickedFeatures).then(function() {
-                expect(regex.test(panel.sections[0].infoHtml.replace(/\n/g, ''))).toBe(true);
+                expect(regex.test(panel.sections[0].info.replace(/\n/g, ''))).toBe(true);
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
 
@@ -166,7 +166,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].infoHtml).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
+                expect(panel.sections[0].info).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
     });
@@ -183,7 +183,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].infoHtml).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
+                expect(panel.sections[0].info).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
     });
@@ -199,7 +199,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].infoHtml).toBe('<div>test <b>Hoop_Big</b></div>');
+                expect(panel.sections[0].info).toBe('<div>test <b>Hoop_Big</b></div>');
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
     });
@@ -256,7 +256,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
                     +       '</ul>'
                     +   '</li>'
                     + '</ul>';
-                expect(panel.sections[0].infoHtml).toBe(recursedHtml);
+                expect(panel.sections[0].info).toBe(recursedHtml);
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
     });
