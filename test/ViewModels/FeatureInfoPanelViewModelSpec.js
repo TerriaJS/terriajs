@@ -186,6 +186,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
                 expect(panel.sections[0].info).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
+
     });
 
     it('can use a json featureInfoTemplate with partials', function(done) {
