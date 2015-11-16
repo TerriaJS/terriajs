@@ -14,7 +14,7 @@
         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
     </div>
     <div class="feature-info-panel-section-content-wrapper" data-bind ="css:feature == terria.selectedFeature ?'open': 'closed'">
-        <div class="feature-info-panel-section-content" data-bind="style: { css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
+        <div class="feature-info-panel-section-content" data-bind="css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
             <div data-bind="template: {name: 'infoHtml-template', afterRender: renderCustomComponents.bind($data)}"></div>
         </div>
     </div>
