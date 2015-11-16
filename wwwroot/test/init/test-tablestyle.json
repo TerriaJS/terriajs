@@ -1,0 +1,44 @@
+{
+"homeCamera": {
+    "north": -36,
+    "east": 146,
+    "south": -38,
+    "west": 143
+  },
+    "catalog": [
+    {
+      "name": "CSV testing",
+      "type": "group",
+      "isOpen": true,
+      "items": [
+        {
+          "name": "Green-orange postcodes",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
+          "tableStyle": {
+            "colorMapString": "green-orange"
+          }
+        },
+        {
+          "name": "More postcode testing",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
+          "tableStyle": {
+            "colorMapString": "green-hsla(0,50%,50%,0.2)"
+          },
+          "opacity": "1"
+
+        },
+        {
+          "name": "All Victorian postcodes",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "tableStyle": {
+            "colorMapString": "green-hsl(120,100%,70%)-white-hsl(0,100%,70%)-red",
+            "featureInfoFields": { "Value": true, "Mod10": true }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -16,6 +16,7 @@ var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var resolve = require('resolve');
+var child_exec = require('child_process').exec;  // child_process is built in to node
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
@@ -54,12 +55,8 @@ gulp.task('lint', function(){
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('docs', function(){
-    var jsdoc = require('gulp-jsdoc');
-    return gulp.src(sourceGlob)
-        .pipe(jsdoc('./wwwroot/doc', undefined, {
-            plugins : ['plugins/markdown']
-        }));
+gulp.task('docs', function(done) {
+    child_exec('node ./node_modules/jsdoc/jsdoc.js ./lib -c ./jsdoc.json', undefined, done);
 });
 
 gulp.task('prepare-cesium', ['copy-cesium-assets']);

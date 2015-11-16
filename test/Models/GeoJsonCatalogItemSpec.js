@@ -23,7 +23,7 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/bike_racks.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -41,7 +41,7 @@ describe('GeoJsonCatalogItem', function() {
             geojson.dataUrl ="test/test.html";
             geojson.dataUrlType ="fake type";
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 expect(geojson.dataUrl).toBe("test/test.html");
                 expect(geojson.dataUrlType).toBe("fake type");
                 done();
@@ -53,7 +53,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -64,7 +64,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -75,7 +75,7 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/cemeteries.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -85,7 +85,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -96,7 +96,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -107,7 +107,7 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/gme.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -117,7 +117,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -128,7 +128,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -139,7 +139,7 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/EsriEnvelope.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -149,7 +149,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -160,7 +160,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
