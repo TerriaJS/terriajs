@@ -16,7 +16,6 @@ describe('FeatureInfoPanelSectionViewModel', function() {
         terria = new Terria({
             baseUrl: './'
         });
-
         var properties = {
             name: 'Foo',
             value: 'bar'
