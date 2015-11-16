@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 1.0.48
+
+* Added the ability to disable feature picking for `ArcGisMapServerCatalogItem`.
+* Disabled feature picking for the Australian Topography and Australian Hydrography base layers created by `createAustraliaBaseMapOptions`.
+
 ### 1.0.47
 
 * Make it possible to disable CSV region mapping warnings with the `showWarnings` init parameter.
