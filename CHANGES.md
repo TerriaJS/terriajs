@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 1.0.49
+
+* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
+
 ### 1.0.48
 
 * Added the ability to disable feature picking for `ArcGisMapServerCatalogItem`.
@@ -49,8 +53,6 @@ Change Log
 * Handle WMS time interval specifications (time/time and time/time/periodicity)
 * Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
 * Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
-* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
-* Added custom definable controls to `CatalogMember`s. 
 * Added custom definable controls to `CatalogMember`s.
   * To define a control, subclass `CatalogMemberControl` and register the control in `ViewModels/registerCatalogMemberControl` with a unique control name, control class and required property name.
   * If a `CatalogMember` has a property with the required property name either directly on the member or in its `customProperties` object, the control will appear in the catalog with the member and will fire the `activate` function when clicked.
