@@ -20,6 +20,30 @@
           }
         },
         {
+          "name": "Color brewer 7-class Set3",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "tableStyle": {
+            "colorMapString": "colorbrewer: 7-class Set3"
+          }
+        },
+        {
+          "name": "Color brewer PuBuGn",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "tableStyle": {
+            "colorMapString": "colorbrewer: PuBuGn"
+          }
+        },
+        {
+          "name": "Color brewer Spectral",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "tableStyle": {
+            "colorMapString": "colorbrewer: Spectral"
+          }
+        },
+        {
           "name": "More postcode testing",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
