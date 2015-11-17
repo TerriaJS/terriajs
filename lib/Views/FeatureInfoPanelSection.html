@@ -10,17 +10,6 @@
         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
     </div>
     <div class="feature-info-panel-section-content-wrapper" data-bind ="css:feature == terria.selectedFeature ?'open': 'closed'">
-        <div class="feature-info-panel-section-content" data-bind="style: { css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }">
-            <div data-bind="markdown: infoHtml"></div>
-            <div data-bind="foreach: chartViewModels">
-                <div data-bind="embeddedComponent: $data">
-                </div>
-                <!-- ko if: $parent.featureInfoPanelViewModel.chartPanelViewModel -->
-                <button class="expand-chart-button" data-bind="click: $parent.expandChart.bind($parent, $data)">Expand</button>
-                <!-- /ko -->
-                <a class="download-chart-data" data-bind="attr: { 'href': options.src }">Download</a>
-                <div class="download-chart-data-clear"></div>
-            </div>
-        </div>
+    <div class="feature-info-panel-section-content" data-bind="markdown: info, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
     </div>
 </div>
