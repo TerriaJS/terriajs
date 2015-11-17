@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 1.0.49
+
+* Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
+
 ### 1.0.48
 
 * Added the ability to disable feature picking for `ArcGisMapServerCatalogItem`.
