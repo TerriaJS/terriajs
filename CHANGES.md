@@ -5,6 +5,7 @@ Change Log
 ### 1.0.49
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
+* Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
 
 ### 1.0.48
 
