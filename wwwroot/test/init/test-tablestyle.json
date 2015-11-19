@@ -14,7 +14,8 @@
         {
           "name": "Green-orange postcodes",
           "type": "csv",
-          "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
           "tableStyle": {
             "colorMapString": "green-orange"
           }
@@ -23,16 +24,39 @@
           "name": "Color brewer 7-class Set3",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
           "tableStyle": {
             "colorMapString": "colorbrewer: 7-class Set3"
           }
         },
         {
-          "name": "Color brewer 6-class Pastel2",
+          "name": "Color brewer 10-class Set3",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
           "tableStyle": {
-            "colorMapString": "colorbrewer: 6-class Pastel2"
+            "colorMapString": "colorbrewer: 10-class Set3",
+            "colorBins": 10
+          }
+        },
+        {
+          "name": "Color brewer 9-class Set1 stretched to 10",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
+          "tableStyle": {
+            "colorMapString": "colorbrewer: 9-class Set1",
+            "colorBins": 10
+          }
+        },
+        {
+          "name": "Color brewer 10-class BrBG",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
+          "tableStyle": {
+            "colorMapString": "colorbrewer: 10-class BrBG",
+            "colorBins": 10
           }
         },
         {
@@ -41,7 +65,8 @@
           "url": "/build/TerriaJS/test/csv/3000s.csv",
           "tableStyle": {
             "colorMapString": "colorbrewer: Spectral"
-          }
+          },
+          "opacity": "1"
         },
         {
           "name": "More postcode testing",
@@ -57,6 +82,7 @@
           "name": "All Victorian postcodes",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
           "tableStyle": {
             "colorMapString": "green-hsl(120,100%,70%)-white-hsl(0,100%,70%)-red",
             "featureInfoFields": { "Value": true, "Mod10": true }
