@@ -203,16 +203,16 @@ describe('CsvCatalogItem', function() {
             // let's not require a linear mapping
             var c = csvItem._colorFunc(121);
             expect(c.red).toEqual(0);
-            expect(c.green).toEqual(255);
+            expect(c.green).toBeCloseTo(1);
             expect(c.blue).toEqual(0);
-            expect(c.alpha).toEqual(255);
-            expect(csvItem._colorFunc(180).green).toBeGreaterThan(64);
-            expect(csvItem._colorFunc(180).green).toBeLessThan(255);
+            expect(c.alpha).toBeCloseTo(1);
+            expect(csvItem._colorFunc(180).green).toBeGreaterThan(64/255);
+            expect(csvItem._colorFunc(180).green).toBeLessThan(1);
             c = csvItem._colorFunc(197);
             expect(c.red).toEqual(0);
-            expect(c.green).toEqual(64);
+            expect(c.green).toBeCloseTo(64/255);
             expect(c.blue).toEqual(0);
-            expect(c.alpha).toEqual(255);
+            expect(c.alpha).toBeCloseTo(1);
         }).otherwise(fail).then(done);
 
     });
