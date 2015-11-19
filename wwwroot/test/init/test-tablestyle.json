@@ -28,11 +28,11 @@
           }
         },
         {
-          "name": "Color brewer PuBuGn",
+          "name": "Color brewer 6-class Pastel2",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
           "tableStyle": {
-            "colorMapString": "colorbrewer: PuBuGn"
+            "colorMapString": "colorbrewer: 6-class Pastel2"
           }
         },
         {
