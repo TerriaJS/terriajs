@@ -3,7 +3,6 @@
 /*global require,describe,beforeEach,it,afterEach,expect*/
 var Terria = require('../../lib/Models/Terria');
 var UrthecastCatalogGroup = require('../../lib/Models/UrthecastCatalogGroup');
-var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var sinon = require('sinon');
 
 describe('UrthecastCatalogGroup', function() {
@@ -41,6 +40,8 @@ describe('UrthecastCatalogGroup', function() {
     });
 
     it('creates hierarchy of catalog items', function(done) {
+        terria.configParameters.urthecastApiKey = 111;
+        terria.configParameters.urthecastApiSecret = 111;
         group = new UrthecastCatalogGroup(terria);
 
         group.load().then(function() {
@@ -56,6 +57,18 @@ describe('UrthecastCatalogGroup', function() {
             var groupItems = group.items[0].items[0].items;
             expect(groupItems.length).toBe(5);
             expect(groupItems[0].name).toContain('True RGB');
+
+            done();
+        });
+    });
+
+    it('raises an error when no API key or secret is provided', function(done) {
+        terria.configParameters.urthecastApiKey = null;
+        terria.configParameters.urthecastApiSecret = null;
+
+        group = new UrthecastCatalogGroup(terria);
+        group.load().otherwise(function(modelError) {
+            expect(modelError.title).toBe('Please Provide an Urthecast API Key and Secret');
 
             done();
         });
