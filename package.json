@@ -55,6 +55,7 @@
   },
   "browserify": {
     "transform": [
+      "reactify",
       "brfs"
     ]
   }
