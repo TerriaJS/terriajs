@@ -29,8 +29,8 @@
 </script>
 
 <div class="now-viewing">
-    <div class="now-viewing-toolbar">
-        <span class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Remove All</span>
+    <div class="now-viewing-toolbar no-focus-outline" data-bind = "hasFocus: panelHasFocus, attr: {  tabindex: isActive ? 0 : -1 }">
+        <button class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing), attr: {  tabindex: isActive ? 0 : -1 }">Remove All</button>
     </div>
 
     <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
@@ -40,29 +40,29 @@
                     <div class="now-viewing-item-drag-handle clickable" data-bind="visible: supportsReordering, cesiumSvgPath: { path: $root.svgReorder, width: 12, height: 10 }, css: { 'now-viewing-shown-item': isShown }" title="Drag to reorder data sources."></div>
                 </div>
                 <div class="now-viewing-item-icon-holder">
-                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                    <button class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }, attr: {tabindex: $root.isActive ? 0 : -1 }"></button>
                 </div>
-                <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
+                <button class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }, attr: {  tabindex: $root.isActive ? 0 : -1 }"></button>
 
                 <div class="now-viewing-item-arrow-holder">
-                    <div class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                    <button class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, attr: {  tabindex: $root.isActive ? 0 : -1 }"></button>
                 </div>
             </div>
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
                 <div class="now-viewing-action-menu">
-                    <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                    <button class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock, attr: {tabindex: $root.isActive ? 0 : -1 }" title="Change the map view to show the full extent of this data item.">Zoom To</button>
                     <!-- ko if: showsInfo -->
-                    <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
+                    <button class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root), attr: {  tabindex: $root.isActive ? 0 : -1 }" title="Display information about this data item.">Info</button>
                     <!-- /ko -->
                     <!-- ko foreach: $root.getItemControls($data) -->
-                    <div class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name }"></div>
+                    <button class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name, tabindex: $root.isActive ? 0 : -1 }"></button>
                     <!-- /ko -->
-                    <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
+                    <button class="now-viewing-action clickable" data-bind="click: toggleEnabled, attr: {  tabindex: $root.isActive ? 0 : -1 }" title="Remove this data item from the Now Viewing panel and from the map.">Remove</button>
                 </div>
 
                 <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
                     OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
-                    <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
+                    <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input', attr: {tabindex: $root.isActive ? 0 : -1 }" />
                 </div>
 
                 <!-- ko if: type === 'abs-itt'-->
@@ -74,7 +74,7 @@
 
                 <!-- ko foreach: legendUrls || [] -->
                     <!-- ko if: $root.urlIsImage($data) -->
-                    <a data-bind="attr: { href: $data }" target="_blank">
+                    <a data-bind="attr: { href: $data, tabindex: $root.isActive ? 0 : -1 }" target="_blank">
                         <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
                     </a>
                     <!-- /ko -->
