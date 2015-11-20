@@ -30,6 +30,25 @@
           }
         },
         {
+          "name": "No color bins (linear scale)",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
+          "tableStyle": {
+            "colorBins": 0
+          }
+        },
+        {
+          "name": "50 color bins",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": "1",
+          "tableStyle": {
+            "colorBins": 50,
+            "colorMapString": "black-red"
+          }
+        },
+        {
           "name": "Color brewer 10-class Set3",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
