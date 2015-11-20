@@ -2,19 +2,37 @@
 Change Log
 ==========
 
+### 1.0.49
+
+* Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
+* Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
+
+### 1.0.48
+
+* Added the ability to disable feature picking for `ArcGisMapServerCatalogItem`.
+* Disabled feature picking for the Australian Topography and Australian Hydrography base layers created by `createAustraliaBaseMapOptions`.
+
 ### 1.0.47
 
 * Make it possible to disable CSV region mapping warnings with the `showWarnings` init parameter.
 * The `name` of a feature from a CSV file is now taken from a `name` or `title` column, if it exists.  Previously the name was always "Site Data".
 * Fixed a bug that caused time-dynamic WMS layers with just one time to not be displayed.
 * Underscores are now replaced with spaces in the feature info panel for `GeoJsonCatalogItem`.
+* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates. To enable this, set `useProjection` to `true`
+* Show information for all WMS features when a location is clicked.
+* Fixed a bug that caused an exception when running inside an `<iframe>` and the user's browser blocked 3rd-party cookies.
+* HTML and Markdown text in catalog item metadata, feature information, etc. is now formatted in a more typical way.  For example, text inside `<h1>` now looks like a heading.  Previously, most HTML styling was stripped out.
+* Supports FeatureInfoTemplates on all catalog item types (previously only available on ImageryLayers).
+* Apply markdown to properties shown in the Feature Info Panel.
+* Add `includeCzml` option to CkanCatalogGroup.
+* Fixed a bug that caused `WebMapServiceCatalogItem` to incorrectly populate the catalog item's metadata with data from GetCapabilities when another layer had a `Title` with the same value as the expected layer's `Name`.
+* Update the default Australian topography basemap to Geoscience Australia's new worldwide layer (http://www.ga.gov.au/gisimg/rest/services/topography/National_Map_Colour_Basemap/MapServer)
+* Allow color maps in CSV catalog items to be expressed as strings: colorMapString: "red-white-blue".
 * Updated to [Cesium](http://cesiumjs.org) 1.15.  Significant changes relevant to TerriaJS users include:
   * Added support for the [glTF 1.0](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md) draft specification.
   * Added support for the glTF extensions [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/tree/master/extensions/Khronos/KHR_binary_glTF) and [KHR_materials_common](https://github.com/KhronosGroup/glTF/tree/KHR_materials_common/extensions/Khronos/KHR_materials_common).
   * `ImageryLayerFeatureInfo` now has an `imageryLayer` property, indicating the layer that contains the feature.
   * Make KML invalid coordinate processing match Google Earth behavior. [#3124](https://github.com/AnalyticalGraphicsInc/cesium/pull/3124)
-* Show information for all WMS features when a location is clicked.
-* Allow color maps in CSV catalog items to be expressed as strings: colorMapString: "red-white-blue".
 
 ### 1.0.46
 
