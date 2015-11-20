@@ -6,6 +6,7 @@ Change Log
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
 * Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
+* `NowViewingTabViewModel` is now composed of a number of sections.  Each section is given the opportunity to determine whether it applies to each catalog item.  Custom sections may be added by adding them to NowViewingTabViewModel.sections`.
 
 ### 1.0.48
 
