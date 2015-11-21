@@ -37,13 +37,12 @@ UiWrapper.prototype.init = function(main, nav, aside) {
     var terria = this.terria;
         ReactDOM.render(<ModalWindow catalog={terria.catalog.group.items} />, main);
         ReactDOM.render(<SidePanel nowViewing={terria.nowViewing} />, nav);
-        ReactDOM.render(<FeatureInfoPanel terria={terria} isVisible={false} />, aside);
 
         //temp
         var canvas = document.querySelector('canvas');
 
         canvas.addEventListener('click', function(){
-          ReactDOM.render(<FeatureInfoPanel terria={terria} isVisible={true} />, aside);
+          ReactDOM.render(<FeatureInfoPanel terria={terria} />, aside);
           });
 
         this.nowViewingUpdate.addEventListener(function(){
