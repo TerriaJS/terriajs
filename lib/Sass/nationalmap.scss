@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
 $font : 'Roboto', sans-serif;
+$dark: #282D32;
 html{
   font-size: 90%;
 }
@@ -223,6 +224,18 @@ header{
   input{
     padding-left: 2rem;
   }
-
 }
 
+.feature-info-panel{
+  position: fixed;
+  top: 100px;
+  background:$dark;
+  width: 500px;
+  max-height: 500px;
+  right: 50px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.feature-info-panel__section{
+
+}

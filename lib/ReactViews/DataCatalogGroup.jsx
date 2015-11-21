@@ -1,3 +1,5 @@
+'use strict';
+
 var DataCatalogMember = require('./DataCatalogMember.jsx');
 var Loader = require('./Loader.jsx');
 var when = require('terriajs-cesium/Source/ThirdParty/when');

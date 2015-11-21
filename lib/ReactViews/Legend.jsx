@@ -23,7 +23,7 @@ var Legend = React.createClass({
     return (
           <li className="now-viewing__item">
             <ul className="clearfix list-reset">
-              <li className="col col-12"><button onClick={this.toggleDisplay} className="btn block"><h2 className="p">{nowViewingItem.name}</h2></button></li>
+              <li className="col col-12"><button onClick={this.toggleDisplay} className="btn block">{nowViewingItem.name}</button></li>
               <ul className="list-reset col col-12">
                 <li className="col col-1"><button title="Data show/hide" className="btn"><i className="fa fa-eye"></i></button></li>
                 <li className="col col-1"><button title="Zoom in data" className="btn"><i className="fa fa-square-o"></i></button></li>

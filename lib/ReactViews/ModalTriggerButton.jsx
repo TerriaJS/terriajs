@@ -1,3 +1,4 @@
+'use strict';
 var ModalTriggerButton = React.createClass({
   controlModal: function (e) {
     //open modal window

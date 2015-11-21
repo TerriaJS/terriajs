@@ -1,3 +1,5 @@
+'use strict';
+
 var DataCatalogItem = React.createClass({
 
   getInitialState: function() {

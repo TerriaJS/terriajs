@@ -1,3 +1,5 @@
+'use strict';
+
 var SearchBox = require('./SearchBox.jsx');
 var ModalTriggerButton = require('./ModalTriggerButton.jsx');
 var Legend = require('./Legend.jsx');
@@ -8,13 +10,12 @@ var btnRemove = "Remove All";
 var SidePanel = React.createClass({
 
   removeAll: function(){
-    this.props.terria.nowViewing.removeAll();
+    this.props.nowViewing.removeAll();
     nowViewingUpdate.raiseEvent();
   },
 
   render: function() {
-    var terria = this.props.terria;
-    var nowViewing = this.props.terria.nowViewing.items;
+    var nowViewing = this.props.nowViewing.items;
     var content = null;
     var remove =null;
 

@@ -1,10 +1,8 @@
+'use strict';
 var DataCatalogGroup = require('./DataCatalogGroup.jsx');
 var DataPreview = require('./DataPreview.jsx');
 var SearchBox = require('./SearchBox.jsx');
-
-
 var when = require('terriajs-cesium/Source/ThirdParty/when');
-
 
 var DataCatalog = React.createClass({
   getInitialState: function() {
@@ -35,8 +33,8 @@ var DataCatalog = React.createClass({
     previewUpdate.addEventListener(function(_previewed){
       that.setState({
         previewed: _previewed
-      })
-    })
+      });
+    });
   },
 
   render: function(){
@@ -47,9 +45,7 @@ var DataCatalog = React.createClass({
       <SearchBox />
       <ul className = 'list-reset'>
       {dataCatalog.map(function(group, i) {
-        return (
-          <DataCatalogGroup onClick={this.handleChildClick.bind(this, i)} group={group} items={group.items} isLoading={group.isLoading} key={i} />
-        )
+        return (<DataCatalogGroup onClick={this.handleChildClick.bind(this, i)} group={group} items={group.items} isLoading={group.isLoading} key={i} />);
       }, this)}
       </ul>
       </div>
