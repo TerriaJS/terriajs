@@ -15,11 +15,11 @@ var ModalWindow = React.createClass({
 
   componentWillMount: function(){
     var that = this;
-     emitter.subscribe('openModalWindow', function(activeTab) {
+    openModalWindow.addEventListener(function(){
       that.setState({
         isOpen: true
       });
-    });
+    })
   },
 
   render: function() {

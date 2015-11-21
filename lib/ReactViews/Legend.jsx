@@ -9,7 +9,7 @@ var Legend = React.createClass({
 
   removeFromMap: function(){
     this.props.nowViewingItem.isEnabled = false;
-    emitter.dispatch('nowViewing', null);
+    nowViewingUpdate.raiseEvent();
   },
 
   toggleDisplay: function(){

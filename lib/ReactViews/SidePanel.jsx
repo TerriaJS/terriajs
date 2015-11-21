@@ -9,8 +9,7 @@ var SidePanel = React.createClass({
 
   removeAll: function(){
     this.props.terria.nowViewing.removeAll();
-    console.log(this.props.terria.nowViewing.items);
-    emitter.dispatch('nowViewing', null);
+    nowViewingUpdate.raiseEvent();
   },
 
   render: function() {
@@ -18,6 +17,7 @@ var SidePanel = React.createClass({
     var nowViewing = this.props.terria.nowViewing.items;
     var content = null;
     var remove =null;
+
     if(nowViewing && nowViewing.length > 0){
       remove = (<li className="now-viewing__remove col col-6 right-align"><button onClick={this.removeAll} className='btn'> Remove All </button></li>
     );

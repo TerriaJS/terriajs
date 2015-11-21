@@ -1,7 +1,7 @@
 var ModalTriggerButton = React.createClass({
   controlModal: function (e) {
     //open modal window
-    emitter.dispatch('openModalWindow', null);
+    openModalWindow.raiseEvent();
   },
 
   render: function() {

@@ -30,6 +30,15 @@ var DataCatalog = React.createClass({
     }
   },
 
+  componentWillMount: function(){
+    var that = this;
+    previewUpdate.addEventListener(function(_previewed){
+      that.setState({
+        previewed: _previewed
+      })
+    })
+  },
+
   render: function(){
     var dataCatalog = this.props.catalog;
     return (
@@ -45,7 +54,7 @@ var DataCatalog = React.createClass({
       </ul>
       </div>
       <div className="search-preview preview col col-7 block">
-        <DataPreview />
+        <DataPreview previewed={this.state.previewed} />
       </div>
       </div>
       ) ;

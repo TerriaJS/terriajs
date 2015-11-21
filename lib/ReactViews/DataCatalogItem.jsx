@@ -11,6 +11,7 @@ var DataCatalogItem = React.createClass({
     this.setState({
       isPreviewed: true
     });
+    previewUpdate.raiseEvent(this.props.item);
   },
 
   addToMap: function(){
@@ -19,11 +20,7 @@ var DataCatalogItem = React.createClass({
     });
 
     this.props.item.isEnabled = !this.props.item.isEnabled;
-  },
-
-  componentDidUpdate: function(){
-    emitter.dispatch('preview', this.props.item);
-    emitter.dispatch('nowViewing', null);
+    nowViewingUpdate.raiseEvent();
   },
 
   render: function(){
