@@ -32,7 +32,7 @@ var FeatureInfoSection = React.createClass({
   },
 
   render: function() {
-    return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{this.state.isOpen? 'Collapse' : 'Show'}</button><section aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
+    return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{this.state.isOpen? 'Collapse - ' : 'Show + '}</button><section aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
   }
 });
 

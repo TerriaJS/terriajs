@@ -49,13 +49,21 @@ var FeatureInfoPanel = React.createClass({
   render: function() {
     var pickedFeatures = this.state.pickedFeatures;
     var clock = this.props.terria.clock;
-    var content = <Loader/>;
+    var content = null;
 
-    if(pickedFeatures && pickedFeatures.length > 0){
-      content = pickedFeatures.map(function(features, i) {
-          return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} id={i} />);
-        });
+    // if not loading and no result, shows no result
+    if(this.props.terria.pickedFeatures.isLoading === true){
+      content = <Loader/>;
+    } else{
+      if(pickedFeatures && pickedFeatures.length > 0){
+        content = pickedFeatures.map(function(features, i) {
+            return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} id={i} />);
+          });
+      } else{
+        content = <li> No results </li>
+      }
     }
+
     return(
       <div className="feature-info-panel" aria-hidden={!this.state.isVisible}>
       <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="fa fa-times"></i></button>
