@@ -1,14 +1,17 @@
 'use strict';
 
 /*global require*/
-var FeatureInfoSection = require('./FeatureInfoSection.jsx'),
-    Loader = require('./Loader.jsx'),
-    when = require('terriajs-cesium/Source/ThirdParty/when');
+var Loader = require('./Loader.jsx'),
+    FeatureInfoCatalogItem = require('./FeatureInfoCatalogItem.jsx'),
+    when = require('terriajs-cesium/Source/ThirdParty/when'),
+    defined = require('terriajs-cesium/Source/Core/defined');
+
 
 var FeatureInfoPanel = React.createClass({
   getInitialState: function() {
     return {
       pickedFeatures: undefined,
+      featureSections: undefined,
       isVisible: true
     };
   },
@@ -28,9 +31,10 @@ var FeatureInfoPanel = React.createClass({
   getFeatures: function(){
     var that = this;
     when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function(){
+      addSectionsForFeatures(that.props.terria);
       that.setState({
         // show top three results for now
-        pickedFeatures: that.props.terria.pickedFeatures.features.slice(0,3)
+        pickedFeatures: addSectionsForFeatures(that.props.terria)
       });
     });
   },
@@ -43,12 +47,13 @@ var FeatureInfoPanel = React.createClass({
   },
 
   render: function() {
-    var selectedFeature = this.state.pickedFeatures;
+    var pickedFeatures = this.state.pickedFeatures;
     var clock = this.props.terria.clock;
     var content = <Loader/>;
-    if(selectedFeature && selectedFeature.length > 0){
-      content = selectedFeature.map(function(feature, i) {
-          return (<FeatureInfoSection key={i} feature={feature} clock={clock} />);
+
+    if(pickedFeatures && pickedFeatures.length > 0){
+      content = pickedFeatures.map(function(features, i) {
+          return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} id={i} />);
         });
     }
     return(
@@ -62,50 +67,35 @@ var FeatureInfoPanel = React.createClass({
 
 //to add multiple catalog when several dataset turned on at the same time
 
-function addSectionsForFeatures(viewModel, features) {
+function addSectionsForFeatures(terria) {
     // Only show sections up to a limit for each catalog item.
-
-    var counts = []; // an array of {catalogItem: , count: } objects
-    features.forEach(function(feature) {
-        if (!defined(feature.position)) {
-            feature.position = features.pickPosition;
+    var features = terria.pickedFeatures.features;
+    var catalogItem = undefined;
+    var sections = [];
+    features.forEach(function(feature){
+      if (!defined(feature.position)) {
+        feature.position = terria.pickedFeatures.pickPosition;
+      }
+      catalogItem = calculateCatalogItem(terria.nowViewing, feature);
+      // if feature does not have a catalog item?
+      if(!defined(catalogItem)) {
+        sections.push({catalogItem: undefined, feature: feature});
+      }else {
+        var newItem = true, existingItemIndex;
+        for (var i = sections.length - 1; i >= 0; i--) {
+          if (catalogItem === sections[i].catalogItem) {
+              newItem = false;
+              existingItemIndex = i;
+          }
         }
-        var catalogItem = calculateCatalogItem(viewModel.terria.nowViewing, feature);
-        if (!defined(catalogItem)) {
-            viewModel.addSection(newSectionfromFeature(viewModel, feature));
-        } else {
-            var newItem = true;
-            var countOfCatalogItem = 0;
-            // only show features from each catalog item up to their maximumShownFeatureInfos
-            for (var i = counts.length - 1; i >= 0; i--) {
-                if (catalogItem === counts[i].catalogItem) {
-                    newItem = false;
-                    countOfCatalogItem = counts[i].count;
-                    counts[i].count = countOfCatalogItem + 1;
-                }
-            }
-            if (newItem) {
-                counts.push({catalogItem: catalogItem, count: 1});
-            }
-            if (countOfCatalogItem < catalogItem.maximumShownFeatureInfos) {
-                viewModel.addSection(newSectionfromFeature(viewModel, feature, catalogItem));
-            }
+        if(newItem === true){
+          sections.push({catalogItem: catalogItem, features: [feature]});
+        } else{
+          sections[existingItemIndex].features.push(feature);
         }
-    });
-    // if any counts were exceeded, add a message to the view model
-    for (var i = counts.length - 1; i >= 0; i--) {
-        var numberShown = counts[i].catalogItem.maximumShownFeatureInfos;
-        var hiddenNumber = counts[i].count - numberShown;
-        if (hiddenNumber === 1) {
-            // if only one more, there may be more hidden layers viewModel were not requested, so don't specify the exact total number
-            viewModel.message += '<p>More than ' + numberShown + ' ' + counts[i].catalogItem.name + ' features were found. ' +
-            'The first ' + numberShown + ' are shown below.</p>';
-        }
-        if (hiddenNumber > 1) {
-            viewModel.message += '<p>' + counts[i].count + ' ' + counts[i].catalogItem.name + ' features were found. ' +
-            'The first ' + numberShown + ' are shown below.</p>';
-        }
-    }
+      }
+  });
+  return sections;
 }
 
 function calculateCatalogItem(nowViewing, feature) {
