@@ -32,4 +32,24 @@ describe('TableDataSource', function() {
         }).then(done).otherwise(done.fail);
     });
 
+    it('does not set the clock when there is no date column', function(done) {
+        tableDataSource.loadUrl('/test/csv/lat_lon_val.csv').then(function() {
+            expect(tableDataSource.clock).toBeUndefined();
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('sets the clock when there is a date column', function(done) {
+        tableDataSource.loadUrl('/test/csv/lat_long_enum_moving_date.csv').then(function() {
+            expect(tableDataSource.clock).toBeDefined();
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('sets the dataVariable via setDisplayStyle', function(done) {
+        tableDataSource.loadUrl('/test/csv/lat_lon_enum_val.csv').then(function() {
+            expect(tableDataSource.dataVariable).toEqual('enum');
+            tableDataSource.setDisplayStyle({dataVariable: 'val'});
+            expect(tableDataSource.dataVariable).toEqual('val');
+        }).then(done).otherwise(done.fail);
+    });
+
 });
