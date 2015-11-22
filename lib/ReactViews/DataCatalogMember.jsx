@@ -23,7 +23,7 @@ var DataCatalogMember = React.createClass({
         content = <Loader/>
       }
     }
-    iconClass = 'fa fa-chevron-' + (this.state.isOpen ? 'down' : 'right');
+    var iconClass = 'fa fa-chevron-' + (this.state.isOpen ? 'down' : 'right');
     return (
       <li>
       <button onClick={this.handleClick} className="btn data-group"><i className={iconClass}></i>{member.name}</button>
