@@ -1,3 +1,4 @@
+'use strict';
 var SearchBox = React.createClass({
   getInitialState: function() {
     return {value: ''};

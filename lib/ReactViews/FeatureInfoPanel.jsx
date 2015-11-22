@@ -30,13 +30,15 @@ var FeatureInfoPanel = React.createClass({
 
   getFeatures: function(){
     var that = this;
-    when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function(){
+    if(defined(that.props.terria.pickedFeatures)){
+      when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function(){
       addSectionsForFeatures(that.props.terria);
       that.setState({
         // show top three results for now
         pickedFeatures: addSectionsForFeatures(that.props.terria)
+        });
       });
-    });
+    }
   },
 
   closeFeatureInfoPanel: function(){

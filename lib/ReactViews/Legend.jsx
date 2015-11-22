@@ -1,3 +1,5 @@
+'use strict';
+
 var ModalTriggerButton = require('./ModalTriggerButton.jsx');
 
 var Legend = React.createClass({

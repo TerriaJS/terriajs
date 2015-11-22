@@ -1,3 +1,4 @@
+'use strict';
 var DataCatalog = require('./DataCatalog.jsx');
 var WelcomeTab = require('./WelcomeTab.jsx');
 var MyDataTab = require('./MyDataTab.jsx');

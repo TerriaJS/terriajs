@@ -1,3 +1,4 @@
+'use strict';
 var Mustache = require('mustache');
 
 var defined = require('terriajs-cesium/Source/Core/defined');

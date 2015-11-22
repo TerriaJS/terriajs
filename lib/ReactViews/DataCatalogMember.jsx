@@ -1,3 +1,4 @@
+'use strict';
 var DataCatalogItem = require('./DataCatalogItem.jsx');
 var Loader = require('./Loader.jsx');
 var DataCatalogMember = React.createClass({
