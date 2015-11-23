@@ -15,6 +15,7 @@
     "leaflet": "^0.7.3",
     "less": "^2.5.0",
     "less-plugin-npm-import": "^2.0.0",
+    "linkify-it": "^1.2.0",
     "markdown-it": "^4.2.0",
     "mustache": "^2.2.0",
     "proj4": "^2.3.6",
