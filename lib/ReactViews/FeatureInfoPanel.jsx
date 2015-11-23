@@ -78,7 +78,6 @@ var FeatureInfoPanel = React.createClass({
 //to add multiple catalog when several dataset turned on at the same time
 
 function addSectionsForFeatures(terria) {
-    // Only show sections up to a limit for each catalog item.
     var features = terria.pickedFeatures.features;
     var catalogItem = undefined;
     var sections = [];
