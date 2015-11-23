@@ -168,6 +168,27 @@ select {
   padding-left: 5px;
 }
 
+button.block{
+  display: block;
+}
+
+.is-hidden{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.no-focus-outline{
+    &:focus{
+      outline: none;
+  }
+}
+
 .markdown {
   img { max-width: 100% }
   svg { max-height: 100% }

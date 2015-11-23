@@ -1,7 +1,7 @@
 <div class="modal-background" data-bind="click: closeIfClickOnBackground">
-    <div class="share-popup">
+    <div class="share-popup no-focus-outline" data-bind="hasFocus: true" tabindex="0" aria-hidden ='false'>
         <div class="modal-header">
-            <div class="modal-close-button" data-bind="click: close">&times;</div>
+            <button class="modal-close-button" data-bind="click: close">&times;</button>
             <h1 data-bind="text: title"></h1>
         </div>
         <div class="share-popup-content">
