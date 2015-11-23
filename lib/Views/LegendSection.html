@@ -1,6 +1,6 @@
 <div data-bind="foreach: catalogMember.legendUrls || []">
     <!-- ko if: $root.urlIsImage($data) -->
-    <a data-bind="attr: { href: $data }, tabindex: nowViewingTab.isActive ? 0 : -1 }" target="_blank">
+    <a data-bind="attr: { href: $data , tabindex: $root.nowViewingTab.isActive ? 0 : -1 }" target="_blank">
         <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
     </a>
     <!-- /ko -->
