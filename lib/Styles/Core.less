@@ -190,7 +190,8 @@ button.block{
 }
 
 .markdown {
-  img { max-width: 100% }
+  img { max-width: 100%;
+        height: auto; }
   svg { max-height: 100% }
 
   input,
@@ -222,6 +223,13 @@ button.block{
   h4 { font-size: 1rem }
   h5 { font-size: .875rem }
   h6 { font-size: .75rem }
+
+  td {
+    h1, h2, h3, h4, h5, h6{
+      //if any of these headings are displayed in a table cell, they shouldn't have top margin
+      margin-top: 0;
+    }
+  }
 
   p {
     margin-top: 0;
