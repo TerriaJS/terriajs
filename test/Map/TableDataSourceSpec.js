@@ -44,11 +44,33 @@ describe('TableDataSource', function() {
         }).then(done).otherwise(done.fail);
     });
 
+    it('does not change the number of entities when setDisplayStyle is called', function(done) {
+        tableDataSource.loadUrl('/test/csv/lat_lon_enum_val.csv').then(function() {
+            var featureCount = tableDataSource.entities.values.length;
+            tableDataSource.setDisplayStyle({dataVariable: 'val'});
+            expect(tableDataSource.entities.values.length).toEqual(featureCount);
+        }).then(done).otherwise(done.fail);
+    });
+
     it('sets the dataVariable via setDisplayStyle', function(done) {
         tableDataSource.loadUrl('/test/csv/lat_lon_enum_val.csv').then(function() {
             expect(tableDataSource.dataVariable).toEqual('enum');
             tableDataSource.setDisplayStyle({dataVariable: 'val'});
             expect(tableDataSource.dataVariable).toEqual('val');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('scales points', function(done) {
+        tableDataSource.loadUrl('/test/csv/lat_lon_enum_val.csv').then(function() {
+            tableDataSource.setDisplayStyle({
+                dataVariable: 'val',
+                scaleByValue: true,
+                scale: 5
+            });
+            var features = tableDataSource.entities.values;
+            expect(tableDataSource.dataset.variables.val.vals[0]).not.toEqual(tableDataSource.dataset.variables.val.vals[1]);
+            // expect the first two features to have different scales (line above ensures they have different values)
+            expect(features[0].point.pixelSize.getValue()).not.toEqual(features[1].point.pixelSize.getValue());
         }).then(done).otherwise(done.fail);
     });
 
