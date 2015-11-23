@@ -12,6 +12,11 @@
     -ms-transition: left @explorer-panel-close-animation-length ease-out;
     -o-transition: left @explorer-panel-close-animation-length ease-out;
     transition: left @explorer-panel-close-animation-length ease-out;
+    a{
+      &:hover{
+        text-decoration: none;
+      }
+    }
 }
 
 .explorer-panel-collapsed {
@@ -69,6 +74,13 @@
     -webkit-transition: color 0.15s ease, fill 0.15s ease;
     -moz-transition: color 0.15s ease, fill 0.15s ease;
     -o-transition: color 0.15s ease, fill 0.15s ease;
+    a{
+      color: @explorer-panel-inactive-tab-text-color;
+      fill: @explorer-panel-inactive-tab-text-color;
+      -webkit-transition: color 0.15s ease, fill 0.15s ease;
+      -moz-transition: color 0.15s ease, fill 0.15s ease;
+      -o-transition: color 0.15s ease, fill 0.15s ease;
+    }
 }
 
 .explorer-panel-tab-icon-holder {
@@ -93,6 +105,10 @@
 .explorer-panel-tab:hover {
   color: @explorer-panel-active-tab-text-color;
   fill: @explorer-panel-active-tab-text-color;
+  a{
+    color: @explorer-panel-active-tab-text-color;
+    fill: @explorer-panel-active-tab-text-color;
+  }
 }
 
 .explorer-panel-tab-content {
@@ -135,8 +151,9 @@
 
 .explorer-panel-tab-active {
     border-bottom: 1px solid @explorer-panel-active-tab-underline-color;
-    color: @explorer-panel-active-tab-text-color;
     fill: @explorer-panel-active-tab-text-color;
+    color: @explorer-panel-active-tab-text-color;
+    a{color: @explorer-panel-active-tab-text-color;}
 }
 
 .explorer-panel-body {

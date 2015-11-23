@@ -1,5 +1,5 @@
 <div class="modal-background">
-    <div class="popup-message" data-bind="style: { width: width + 'px', height: height + 'px', 'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px' }">
+    <div class="popup-message no-focus-outline" data-bind="style: { width: width + 'px', height: height + 'px', 'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px' }, hasFocus: true">
         <div class="modal-header">
             <h1 data-bind="text: title"></h1>
         </div>
@@ -7,9 +7,9 @@
             <div class="popup-message-label" data-bind="markdown: message"></div>
             <div class="popup-message-actions">
                 <!-- ko if: enableDeny -->
-                    <div class="popup-message-action popup-message-actions-deny" data-bind="click: denyAction, text: denyText"></div>
+                    <button class="popup-message-action popup-message-actions-deny" data-bind="click: denyAction, text: denyText"></button>
                 <!-- /ko -->
-                <div class="popup-message-action popup-message-actions-confirm" data-bind="click: confirmActionAndClose, text: confirmText"></div>
+                <button class="popup-message-action popup-message-actions-confirm" data-bind="click: confirmActionAndClose, text: confirmText"></button>
             </div>
         </div>
     </div>
