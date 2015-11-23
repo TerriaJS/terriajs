@@ -8,6 +8,7 @@ var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var DataTable = require('../../lib/Map/DataTable');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var TableStyle = require('../../lib/Map/TableStyle');
 var VarType = require('../../lib/Map/VarType');
 var Color = require('terriajs-cesium/Source/Core/Color');
 
@@ -469,7 +470,7 @@ describe('CsvCatalogItem', function() {
     });
     it('scales lat-lon points to a size ratio of 300% if scaleByValue true and respects scale value', function(done) {
         csvItem.url = 'test/csv/lat_lon_val.csv';
-        csvItem.tableStyle = { scale: 5, scaleByValue: true };
+        csvItem.tableStyle = new TableStyle({ scale: 5, scaleByValue: true });
         return csvItem.load().then(function() {
             var pixelSizes = csvItem._tableDataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
             csvItem._minPix = Math.min.apply(null, pixelSizes);
