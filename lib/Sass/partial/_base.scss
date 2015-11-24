@@ -1,13 +1,10 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto);
-
-$font : 'Roboto', sans-serif;
-$dark: #282D32;
 html{
   font-size: 90%;
 }
 
 body{
   font-family: $font;
+  background: $dark;
 }
 
 figure{
@@ -21,6 +18,8 @@ input[type=text]{
 input[type=range]{
   vertical-align: middle;
 }
+
+
 .p{
   font-size: 1rem;
   font-weight: 400;
@@ -118,7 +117,7 @@ div[aria-hidden='true']
   padding: 15px;
 }
 
-header{
+.workbench{
   height: 100vh;
   overflow: hidden;
   background: #282D32;
@@ -241,3 +240,16 @@ header{
 .feature-info-panel__section{
 
 }
+
+// Button
+//
+// Your standard button suitable for clicking.
+//
+// :hover   - Highlights when hovering.
+// .shiny   - Do not press this big, shiny, red button.
+//
+// Markup:
+// <button class="btn"> This is a button </button>
+//
+// Style guide: 1.0
+//

@@ -43,6 +43,7 @@
     "gulp-util": "^3.0.4",
     "gulp-watch": "^4.2.4",
     "jsdoc": "^3.3.3",
+    "kss": "^2.1.1",
     "react": "^0.14.3",
     "reactify": "^1.1.1",
     "vinyl-buffer": "^1.0.0",
