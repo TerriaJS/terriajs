@@ -15,7 +15,7 @@
         <!-- /ko -->
 
         <!-- ko if: !href -->
-        <div class="menu-bar-item" data-bind="click: execute, attr: { title: tooltip }, css: { 'menu-bar-item-enabled': observableToToggle }">
+        <a href="#" class="menu-bar-item" data-bind="click: execute, attr: { title: tooltip }, css: { 'menu-bar-item-enabled': observableToToggle }">
             <!-- ko if: image -->
             <img class="menu-bar-item-image" data-bind="attr: { src: image, width: imageWidth, height: imageHeight }" />
             <!-- /ko -->
@@ -25,7 +25,7 @@
             <!-- ko if: label -->
             <div class="menu-bar-item-label" data-bind="text: label"></div>
             <!-- /ko -->
-        </div>
+        </a>
         <!-- /ko -->
     <!-- /ko -->
 </div>

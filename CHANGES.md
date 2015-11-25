@@ -11,6 +11,8 @@ Change Log
 * Added `Terria.cesiumBaseUrl` property.
 * The user interface container DOM element may now be provided to `TerriaViewer` by specifying `uiContainer` in its options.  Previously it always used an element named `ui`.
 * Legend URLs are now accessed via the proxy, if applicable.
+* Fixed a bug that prevented feature scaling by value.
+* Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
 
 ### 1.0.48
 
