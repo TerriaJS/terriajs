@@ -1,6 +1,8 @@
 'use strict';
 
 var ModalTriggerButton = require('./ModalTriggerButton.jsx');
+var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
+var defined = require('terriajs-cesium/Source/Core/defined');
 
 var Legend = React.createClass({
   getInitialState: function() {
@@ -35,6 +37,16 @@ var Legend = React.createClass({
 
   render: function() {
     var nowViewingItem = this.props.nowViewingItem;
+
+    var legend = "No legend to show";
+    var legendUrl;
+
+    if(nowViewingItem.legendUrl && nowViewingItem.legendUrl.length !==0){
+      legendUrl = nowViewingItem.legendUrl.match(imageUrlRegex);
+      legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>
+    }
+
+    console.log(legendUrl);
     return (
           <li className="now-viewing__item">
             <ul className="clearfix list-reset">
@@ -50,7 +62,7 @@ var Legend = React.createClass({
                 <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
               </li>
               <li className="col col-12" aria-hidden={this.state.isOpen === true ? "false" : "true" }>
-                <a href="#"><img src="http://placehold.it/400x300?text=legends"/></a>
+                {legend}
               </li>
             </ul>
           </li>

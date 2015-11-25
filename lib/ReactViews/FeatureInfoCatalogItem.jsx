@@ -21,7 +21,6 @@ var FeatureInfoCatalogItem = React.createClass({
     var maximumShownFeatureInfos = features.catalogItem.maximumShownFeatureInfos;
     var featureInfoTemplate = features.catalogItem.featureInfoTemplate;
     var totalFeaturesCount = features.features.length;
-
     if(defined(features.catalogItem)){
       count = totalFeaturesCount > maximumShownFeatureInfos ? (<li className='p1'>{maximumShownFeatureInfos}{' of '}{totalFeaturesCount}{' results are shown '}</li>) : null;
 
