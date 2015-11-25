@@ -8,7 +8,7 @@ var htmlTagRegex = /(<html(.|\s)*>(.|\s)*<\/html>|<body(.|\s)*>(.|\s)*<\/body>|<
 var FeatureInfoSection = React.createClass({
   getInitialState: function() {
     return {
-      isOpen: this.props.id === 0 ? true : false
+      isOpen: false
     };
   },
 
@@ -33,7 +33,8 @@ var FeatureInfoSection = React.createClass({
   },
 
   render: function() {
-    return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{this.state.isOpen? 'Collapse - ' : 'Show + '}</button><section aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
+    var iconClass = 'p1 fa ' + (this.state.isOpen? 'fa-plus-square-o' : 'fa-minus-square-o');
+    return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{this.props.feature.properties.name}<i className={iconClass}></i></button><section aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
   }
 });
 

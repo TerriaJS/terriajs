@@ -28,12 +28,31 @@ input[type=range]{
   font-family: $font;
 }
 
+::-webkit-scrollbar
+{
+  width: 10px;  /* for vertical scrollbars */
+  height: 10px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+  background: rgba(#fff, 0.1);
+}
+
+::-webkit-scrollbar-thumb
+{
+  background: rgba(#fff, 0.3);
+}
+
+
+// to be removed
 .btn{
   font-weight: 400;
   opacity: 0.6;
   box-shadow: none;
   border: 0;
   padding: 0.5rem;
+  text-align: left;
   &:focus, &:hover{
     box-shadow: none;
     border: 0;

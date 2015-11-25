@@ -1,0 +1,34 @@
+.workbench{
+  box-sizing: border-box;
+  width: $work-bench-width;
+  @media(screen and max-width: $sm){
+    //temp
+    display: none;
+  }
+}
+
+.map{
+  left: $work-bench-width;
+  position: absolute;
+  top: 0;
+  right: 0;
+  @media(screen and max-width: $sm){
+    //temp
+    left: 0;
+  }
+}
+
+#cesiumContainer{
+  height: 100vh;
+  position: relative;
+  canvas{
+    height: 100vh;
+  }
+}
+
+.modal-wrapper{
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
