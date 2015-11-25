@@ -23,13 +23,15 @@ var DataCatalogItem = React.createClass({
 
     this.props.item.isEnabled = !this.props.item.isEnabled;
     nowViewingUpdate.raiseEvent();
+    //update preview as well
+    previewUpdate.raiseEvent(this.props.item);
   },
 
   render: function(){
     var item = this.props.item;
     var iconClass = "fa " + (this.props.item.isEnabled === true ? "fa-minus-circle red" : "fa-plus-circle blue");
     return (
-      <li className="clearfix"><button onClick={this.addToPreview} className="btn data-group__data-item col col-10">{item.name}</button><button onClick={this.addToMap} className="btn col col-2 "><i className={iconClass}> </i></button></li>
+      <li className="clearfix"><button onClick={this.addToPreview} className="btn data-group__data-item col col-11">{item.name}</button><button onClick={this.addToMap} className="btn col col-1 "><i className={iconClass}> </i></button></li>
       ) ;
   }
 });
