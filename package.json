@@ -24,7 +24,6 @@
     "terriajs-cesium": "1.15.2",
     "togeojson": "^0.9.0",
     "urijs": "^1.16.0",
-    "hammerjs": "^2.0.4",
     "urthecast": "^1.0.0"
   },
   "devDependencies": {
