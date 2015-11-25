@@ -6,6 +6,8 @@ Change Log
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
 * Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
+* Fixed a bug that prevented feature scaling by value.
+* Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
 
 ### 1.0.48
 

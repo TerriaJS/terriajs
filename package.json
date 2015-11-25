@@ -15,6 +15,7 @@
     "leaflet": "0.7.5",
     "less": "^2.5.0",
     "less-plugin-npm-import": "^2.0.0",
+    "linkify-it": "^1.2.0",
     "markdown-it": "^4.2.0",
     "mustache": "^2.2.0",
     "proj4": "^2.3.6",
@@ -25,7 +26,7 @@
     "togeojson": "^0.9.0",
     "urijs": "^1.16.0",
     "dygraphs": "^1.1.0",
-    "gulp-shell": "^0.5.1"
+    "urthecast": "^1.0.0"
   },
   "devDependencies": {
     "browserify": "^9.0.8",
@@ -50,7 +51,8 @@
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
     "watchify": "^3.1.1",
-    "yargs": "^3.7.2"
+    "yargs": "^3.7.2",
+    "sinon": "^1.17.2"
   },
   "scripts": {
     "prepublish": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\"",
