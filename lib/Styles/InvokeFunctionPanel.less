@@ -9,13 +9,35 @@
 .invoke-function-panel-content {
     position: absolute;
     top: 40px;
-    bottom: 0;
+    bottom: 40px;
     left: 0;
     right: 0;
     overflow: auto;
     padding: 15px;
 }
 
+.invoke-function-panel-footer {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    left: 0;
+    right: 0;
+    background-color: @modal-header-background-color;
+    border-top: @panel-element-border;
+    text-align: center;
+}
+
+.invoke-function-panel-footer button{
+    background-color: @panel-form-button-background-color;
+    border: 0;
+    height: 30px;
+    font-size: 14px;
+    color: @panel-form-button-text-color;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
 .invoke-function-panel-description {
     font-size: 10pt;
     font-weight: normal;
@@ -136,4 +158,9 @@
 .parameter-editor-autocomplete-option:hover {
     background-color: blue;
     color: white;
+}
+
+.parameter-editor-important-note {
+    padding: 5px;
+    border: 1px solid #555555;
 }

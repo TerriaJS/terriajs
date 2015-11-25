@@ -27,7 +27,10 @@
     <!-- /ko -->
     <!-- ko if: catalogItemsWithMatchingRegion.length === 0 -->
     <div class="parameter-editor-table-right" data-bind="if: catalogItemsWithMatchingRegion.length === 0">
-        No data sets found with a matching region type, <span data-bind="text: regionProvider ? regionProvider.regionType : 'None'"></span>.
+        <div class="parameter-editor-important-note">
+            No characteristics are available because you have not added any data to the map for this region type, <span data-bind="text: regionProvider ? regionProvider.regionType : 'None'"></span>.
+            You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines and dragging and dropping it onto the map.
+        </div>
     </div>
     <!-- /ko -->
 </div>
