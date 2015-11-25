@@ -6,7 +6,9 @@ Change Log
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
 * Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
-* Fixed a bug that prevented feature scaling by value
+* Fixed a bug that prevented feature scaling by value.
+* Fixed a bug that prevented the csv `displayDuration` from working.
+* Fixed a bug that ignored which column of the csv file to show as the legend initially.
 
 ### 1.0.48
 
