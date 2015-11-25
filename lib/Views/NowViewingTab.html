@@ -28,6 +28,14 @@
     </div>
 </script>
 
+<script type="text/html" id="now-viewing-data-item-template">
+    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+        <div class="data-catalog-member-top-row">
+            <div class="data-catalog-item-label now-viewing-abs-tighten" data-bind="text: name"></div>
+        </div>
+    </div>
+</script>
+
 <div class="now-viewing">
     <div class="now-viewing-toolbar">
         <span class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Remove All</span>
@@ -105,6 +113,14 @@
                 <div class="now-viewing-section">
                     <!-- ko if: csvDataset -->
                     <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: csvDataset }"></div>
+                    <!-- /ko -->
+                </div>
+                <!-- /ko -->
+
+                <!-- ko if: type === 'data' -->
+                <div class="now-viewing-section">
+                    <!-- ko if: dataTable -->
+                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-data-item-template', foreach: dataTable.variables }"></div>
                     <!-- /ko -->
                 </div>
                 <!-- /ko -->
