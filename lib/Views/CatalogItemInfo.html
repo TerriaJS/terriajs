@@ -32,16 +32,16 @@
 </script>
 
 <div class="modal-background" data-bind="click: closeIfClickOnBackground">
-    <div class="catalog-item-info">
+    <div class="catalog-item-info no-focus-outline" aria-hidden="true" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog" tabindex="0">
         <div class="modal-header">
-            <div class="modal-close-button" data-bind="click: close">&times;</div>
-            <h1 data-bind="text: catalogItem.name"></h1>
+            <button class="modal-close-button" data-bind="click: close">&times;</button>
+            <h1 id="modalTitle" data-bind="text: catalogItem.name"></h1>
         </div>
         <div class="catalog-item-info-content">
             <!-- ko if: catalogItem.description && catalogItem.description.length > 0 -->
             <div class="catalog-item-info-section">
                 <h2>Description</h2>
-                <div class="catalog-item-info-description" data-bind="markdown: catalogItem.description"></div>
+                <div id="modalDescription" class="catalog-item-info-description" data-bind="markdown: catalogItem.description"></div>
             </div>
             <!-- /ko -->
 
@@ -87,7 +87,7 @@
                 <p class="catalog-item-info-description" data-bind="if: catalogItem.type === 'wfs'">
                     Type names:
                     <span class="catalog-item-info-tech-attributes" data-bind="text: catalogItem.typeNames"></span>
-                </p>                
+                </p>
             </div>
             <div class="catalog-item-info-section" data-bind="if: catalogItem.metadataUrl">
                 <h2>Metadata URL</h2>
@@ -111,9 +111,9 @@
             </div>
             <div class="catalog-item-info-section">
                 <div class="catalog-item-info-details-heading" data-bind="click: toggleShowDataDetails">
-                    <div class="catalog-item-info-details-label">Data Details</div>
+                    <button class="catalog-item-info-details-label">Data Details</button>
                     <div class="catalog-item-info-details-expand-button-holder">
-                        <div class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showDataDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                        <button href="#" class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showDataDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
                     </div>
                 </div>
                 <!-- ko if: showDataDetails -->
@@ -137,9 +137,9 @@
             </div>
             <div class="catalog-item-info-section">
                 <div class="catalog-item-info-details-heading" data-bind="click: toggleShowServiceDetails">
-                    <div class="catalog-item-info-details-label">Service Details</div>
+                    <button class="catalog-item-info-details-label">Service Details</button>
                     <div class="catalog-item-info-details-expand-button-holder">
-                        <div class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showServiceDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                        <button class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showServiceDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
                     </div>
                 </div>
                 <!-- ko if: showServiceDetails -->
