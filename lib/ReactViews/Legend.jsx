@@ -45,8 +45,6 @@ var Legend = React.createClass({
       legendUrl = nowViewingItem.legendUrl.match(imageUrlRegex);
       legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>
     }
-
-    console.log(legendUrl);
     return (
           <li className="now-viewing__item">
             <ul className="clearfix list-reset">

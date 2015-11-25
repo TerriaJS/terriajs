@@ -104,37 +104,6 @@ div[aria-hidden='true']
   right: 0;
 }
 
-.modal-wrapper{
-  width: 100vw;
-  height: 100vh;
-
-}
-
-.modal-content{
-  background: #eee;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-overlay{
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
-
-.tab-panel{
-  background: #fff;
-  height: 500px;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
-}
-
-.panel-content{
-  padding: 15px;
-}
 
 .workbench{
   height: 100vh;
