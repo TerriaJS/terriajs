@@ -6,6 +6,11 @@ Change Log
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
 * Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
+* `NowViewingTabViewModel` is now composed of a number of sections.  Each section is given the opportunity to determine whether it applies to each catalog item.  Custom sections may be added by adding them to NowViewingTabViewModel.sections`.
+* `CsvCatalogItem` and `AbsIttCatalogItem` now expose a `concepts` property that can be used to adjust the display.
+* Added `Terria.cesiumBaseUrl` property.
+* The user interface container DOM element may now be provided to `TerriaViewer` by specifying `uiContainer` in its options.  Previously it always used an element named `ui`.
+* Legend URLs are now accessed via the proxy, if applicable.
 * Fixed a bug that prevented feature scaling by value.
 * Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
 
