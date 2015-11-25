@@ -35,7 +35,7 @@ var UiWrapper = function (terria) {
 
 UiWrapper.prototype.init = function(main, nav, aside) {
     var terria = this.terria;
-        ReactDOM.render(<ModalWindow catalog={terria.catalog.group.items} />, main);
+        ReactDOM.render(<ModalWindow terria={terria} />, main);
         ReactDOM.render(<SidePanel nowViewing={terria.nowViewing} />, nav);
 
         //temp
@@ -47,7 +47,9 @@ UiWrapper.prototype.init = function(main, nav, aside) {
 
         this.nowViewingUpdate.addEventListener(function(){
           ReactDOM.render(<SidePanel nowViewing={terria.nowViewing} />, nav);
+          ReactDOM.render(<ModalWindow terria={terria} />, main);
         });
+
 };
 
 module.exports = UiWrapper;

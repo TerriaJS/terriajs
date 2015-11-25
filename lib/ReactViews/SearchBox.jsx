@@ -1,10 +1,14 @@
 'use strict';
+var CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
 var SearchBox = React.createClass({
   getInitialState: function() {
     return {value: ''};
   },
   handleChange: function(event) {
     this.setState({value: event.target.value});
+    console.log(this.state.value);
+    var search = new CatalogItemNameSearchProviderViewModel(this.props);
+    console.log(search.search(event.target.value));
   },
 
   render: function() {

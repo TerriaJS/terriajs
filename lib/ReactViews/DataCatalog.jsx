@@ -38,11 +38,12 @@ var DataCatalog = React.createClass({
   },
 
   render: function(){
-    var dataCatalog = this.props.catalog;
+    var terria = this.props.terria;
+    var dataCatalog = terria.catalog.group.items;
     return (
       <div className="panel-content clearfix">
       <div className="search-data col col-5">
-      <SearchBox />
+      <SearchBox terria = {terria}/>
       <ul className = 'list-reset'>
       {dataCatalog.map(function(group, i) {
         return (<DataCatalogGroup onClick={this.handleChildClick.bind(this, i)} group={group} items={group.items} isLoading={group.isLoading} key={i} />);

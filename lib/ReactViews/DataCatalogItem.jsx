@@ -4,8 +4,7 @@ var DataCatalogItem = React.createClass({
 
   getInitialState: function() {
     return {
-      isPreviewed: false,
-      isActive: false
+      isPreviewed: false
     };
   },
 
@@ -17,9 +16,6 @@ var DataCatalogItem = React.createClass({
   },
 
   addToMap: function(){
-    this.setState({
-      isActive: true
-    });
 
     this.props.item.isEnabled = !this.props.item.isEnabled;
     nowViewingUpdate.raiseEvent();

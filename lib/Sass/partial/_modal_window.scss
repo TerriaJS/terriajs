@@ -28,8 +28,7 @@
   background: #fff;
   width: 100%;
   .panel-content{
-    height: 500px;
-    max-height: calc(100vh - 100px);
+    height: calc(100vh - 200px);
     overflow: hidden;
   }
   .search-data{
@@ -45,7 +44,7 @@
 
 .search-preview{
   padding-left: 0.5rem;
-  height: 100%;
+  max-height: 100%;
   overflow-y: auto;
 }
 

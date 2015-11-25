@@ -24,7 +24,9 @@ var Tabs = React.createClass({
   },
 
   render: function() {
-    var panels = [ <WelcomeTab />, <DataCatalog catalog={this.props.catalog} />, <CollectionsTab/>, <MyDataTab /> ];
+    console.log(this.props);
+    
+    var panels = [ <WelcomeTab />, <DataCatalog terria={this.props.terria} />, <CollectionsTab/>, <MyDataTab /> ];
     return (
       <div className="tabs clearfix">
       <ul className="tablist center list-reset mb0" role="tablist">
