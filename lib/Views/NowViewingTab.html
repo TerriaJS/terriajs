@@ -28,14 +28,6 @@
     </div>
 </script>
 
-<script type="text/html" id="now-viewing-data-item-template">
-    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
-        <div class="data-catalog-member-top-row">
-            <div class="data-catalog-item-label now-viewing-abs-tighten" data-bind="text: name"></div>
-        </div>
-    </div>
-</script>
-
 <div class="now-viewing">
     <div class="now-viewing-toolbar no-focus-outline" data-bind = "hasFocus: panelHasFocus, attr: {  tabindex: isActive ? 0 : -1 }">
         <button class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing), attr: {  tabindex: isActive ? 0 : -1 }">Remove All</button>
@@ -77,14 +69,6 @@
 
                 <!-- ko foreach: $root.getSections($data) -->
                 <div class="now-viewing-section" data-bind="embeddedComponent: $data"></div>
-                <!-- /ko -->
-
-                <!-- ko if: type === 'data' -->
-                <div class="now-viewing-section">
-                    <!-- ko if: dataTable -->
-                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-data-item-template', foreach: dataTable.variables }"></div>
-                    <!-- /ko -->
-                </div>
                 <!-- /ko -->
             </div>
         </div>
