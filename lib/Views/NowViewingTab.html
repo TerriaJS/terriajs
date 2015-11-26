@@ -50,7 +50,9 @@
             </div>
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
                 <div class="now-viewing-action-menu">
+                    <!-- ko if: isMappable -->
                     <button class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock, attr: {tabindex: $root.isActive ? 0 : -1 }" title="Change the map view to show the full extent of this data item.">Zoom To</button>
+                    <!-- /ko -->
                     <!-- ko if: showsInfo -->
                     <button class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root), attr: {  tabindex: $root.isActive ? 0 : -1 }" title="Display information about this data item.">Info</button>
                     <!-- /ko -->

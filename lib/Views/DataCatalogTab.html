@@ -2,7 +2,7 @@
     <!-- ko if: !isHidden && !isGroup -->
         <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
             <div class="data-catalog-member-top-row">
-                <!-- ko if: isMappable -->
+                <!-- ko if: isEnableable -->
                 <a href="#" class="data-catalog-icon-holder clickable" data-bind="click: $root.clickEnabled.bind($root)">
 				  <svg xmlns="http://www.w3.org/2000/svg"  class="data-catalog-item-checkbox" data-bind="attr: { class: $root.getCheckboxClass($data) }" viewBox="0 0 32 32" preserveAspectRatio="xMinYMin">
 					<rect y="6" x="6" height="20" width="20"></rect>
@@ -15,8 +15,8 @@
                     <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
                 </div>
                 <!-- /ko -->
-                <a href="#" class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></a>
-                <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
+                <a href="#" class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled && isMappable, text: name, click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></a>
+                <div class="data-catalog-item-label" data-bind="visible: !(isEnabled && isMappable), text: name"></div>
                 <!-- ko foreach: $root.getRightSideMemberControls($data) -->
                 <div class="data-catalog-right-side-control">
                     <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
