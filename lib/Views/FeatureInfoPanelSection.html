@@ -10,6 +10,9 @@
         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
     </div>
     <div class="feature-info-panel-section-content-wrapper" data-bind ="css:feature == terria.selectedFeature ?'open': 'closed'">
-    <div class="feature-info-panel-section-content" data-bind="markdown: info, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+        <div class="feature-info-panel-section-content" data-bind="markdown: info, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+        <div class="feature-info-panel-section-components" data-bind="foreach: $root.getComponents()">
+            <div class="feature-info-panel-section-component" data-bind="embeddedComponent: $data"></div>
+        </div>
     </div>
 </div>
