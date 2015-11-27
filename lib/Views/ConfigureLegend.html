@@ -1,0 +1,26 @@
+<div class="modal-background" data-bind="click: closeIfClickOnBackground">
+    <div class="popup-message no-focus-outline" data-bind="style: { width: width + 'px', height: height + 'px', 'max-width': maxWidth + 'px', 'max-height': maxHeight + 'px' }, hasFocus: true" tabindex="0" aria-hidden ='false'>
+        <div class="modal-header">
+            <button class="modal-close-button" data-bind="click: close">&times;</button>
+            <h1 data-bind="text: title"></h1>
+        </div>
+        <form data-bind="submit: save">
+            <div class="popup-message-content" id="popup-window-content">
+                <label class="configure-legend-field-label" for="configure-legend-number-of-data-classes">Number of data classes:</label>
+                <select id="configure-legend-number-of-data-classes" data-bind="value: catalogItem.tableStyle.colorBins">
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+                <button type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
