@@ -10,12 +10,13 @@ var btnRemove = "Remove All";
 var SidePanel = React.createClass({
 
   removeAll: function(){
-    this.props.nowViewing.removeAll();
+    this.props.terria.nowViewing.removeAll();
     nowViewingUpdate.raiseEvent();
   },
 
   render: function() {
-    var nowViewing = this.props.nowViewing.items;
+    var terria = this.props.terria;
+    var nowViewing = this.props.terria.nowViewing.items;
     var content = null;
     var remove =null;
 
@@ -25,7 +26,7 @@ var SidePanel = React.createClass({
       content = nowViewing.map(function(item, i) {return (<Legend nowViewingItem={item} key={i} />)});
     }
     return (<div>
-            <SearchBox />
+            <SearchBox terria={terria}/>
             <div className="now-viewing">
               <ul className="now-viewing__control list-reset clearfix">
                 <li className="now-viewing__add col col-6"><ModalTriggerButton btnText={btnAdd}/></li>

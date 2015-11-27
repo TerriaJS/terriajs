@@ -36,7 +36,7 @@ var UiWrapper = function (terria) {
 UiWrapper.prototype.init = function(main, nav, aside) {
     var terria = this.terria;
         ReactDOM.render(<ModalWindow terria={terria} />, main);
-        ReactDOM.render(<SidePanel nowViewing={terria.nowViewing} />, nav);
+        ReactDOM.render(<SidePanel terria={terria} />, nav);
 
         //temp
         var canvas = document.querySelector('canvas');
