@@ -6,6 +6,9 @@ Change Log
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
 * Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
+* Fixed a bug that prevented feature scaling by value.
+* Fixed a bug that prevented the csv `displayDuration` from working.
+* Fixed a bug that ignored which column of the csv file to show as the legend initially.
 * `NowViewingTabViewModel` is now composed of a number of sections.  Each section is given the opportunity to determine whether it applies to each catalog item.  Custom sections may be added by adding them to NowViewingTabViewModel.sections`.
 * `CsvCatalogItem` and `AbsIttCatalogItem` now expose a `concepts` property that can be used to adjust the display.
 * Added `Terria.cesiumBaseUrl` property.
