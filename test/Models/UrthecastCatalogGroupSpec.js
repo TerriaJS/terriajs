@@ -44,22 +44,21 @@ describe('UrthecastCatalogGroup', function() {
         terria.configParameters.urthecastApiSecret = 111;
         group = new UrthecastCatalogGroup(terria);
 
-        group.load().then(function() {
-            requests[0].respond(200, { "Content-Type": "application/json" }, JSON.stringify(sensorPlatformResponse));
+        group._load();
+        requests[0].respond(200, { "Content-Type": "application/json" }, JSON.stringify(sensorPlatformResponse));
 
-            // Sensor platforms group
-            expect(group.items.length).toBe(1);
+        // Sensor platforms group
+        expect(group.items.length).toBe(1);
 
-            // Sensor platforms
-            expect(group.items[0].items.length).toBe(2);
+        // Sensor platforms
+        expect(group.items[0].items.length).toBe(2);
 
-            // Map tile service renderers
-            var groupItems = group.items[0].items[0].items;
-            expect(groupItems.length).toBe(5);
-            expect(groupItems[0].name).toContain('True RGB');
+        // Map tile service renderers
+        var groupItems = group.items[0].items[0].items;
+        expect(groupItems.length).toBe(5);
+        expect(groupItems[0].name).toContain('True RGB');
 
-            done();
-        });
+        done();
     });
 
     it('raises an error when no API key or secret is provided', function(done) {

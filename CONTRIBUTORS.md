@@ -22,3 +22,5 @@ The following people have contributed to TerriaJS:
    * [Darren Reid](https://github.com/Layoric)
 * [Propeller Aerobotics](http://www.propelleraero.com.au/)
    * [Keat Tang](https://github.com/keattang)
+* [Urthecast](https://www.urthecast.com/)
+   * [Jason Lock](https://github.com/jasonjlock)
