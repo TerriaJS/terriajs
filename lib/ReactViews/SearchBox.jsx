@@ -13,7 +13,9 @@ var SearchBox = React.createClass({
     return {
       value: '',
       dataCatalogResults: [],
-      bingMapSearchResults: []
+      dataCatalogIsSearching: false,
+      bingMapSearchResults: [],
+      bingMapIsSearching : false
     };
   },
   handleChange: function(event) {
@@ -27,17 +29,25 @@ var SearchBox = React.createClass({
     //this is a promise
     when(dataCatalogSearch.search(event.target.value)).then(function(){
       that.setState({
-        dataCatalogResults: dataCatalogSearch.searchResults
+        dataCatalogResults: dataCatalogSearch.searchResults,
+        dataCatalogIsSearching: dataCatalogSearch.isSearching
       })
     });
 
     if(that.props.mapSearch !== false){
        when(bingMapSearch.search(event.target.value)).then(function(){
         that.setState({
-          bingMapSearchResults: bingMapSearch.searchResults
-        })
+          bingMapSearchResults: bingMapSearch.searchResults,
+          bingMapIsSearching : bingMapSearch.isSearching
+        });
       });
     }
+  },
+
+  clearSearch: function(){
+    this.setState({
+      value : ''
+    })
   },
 
   render: function() {
@@ -50,7 +60,11 @@ var SearchBox = React.createClass({
     var mapSearchContent = null;
     if((this.props.mapSearch !== false) && value.length > 0){
       if(bingMapSearchResults.length === 0){
-        mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li> <Loader /></ul>);
+        if(this.state.bingMapIsSearching === false){
+          mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li> No results found</ul>);
+        } else{
+          mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li> <Loader /></ul>);
+        }
       } else{
         mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li>{bingMapSearchResults.map(function(item, i) {
             return (<LocationItem item={item} key={i} />);
@@ -62,12 +76,23 @@ var SearchBox = React.createClass({
     var cataLogSearchContent = null;
     if(value.length > 0){
       if(dataCatalogResults.length === 0){
-        cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> <Loader /></ul>);
+        if(this.state.dataCatalogIsSearching === false){
+          cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> No Results found</ul>);
+        }
+        else{
+          cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> <Loader /></ul>);
+        }
       } else{
         cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Bing Map Search Results</button></li>{dataCatalogResults.map(function(item, i) {
             return (<DataCatalogItem item={item.catalogItem} key={i} />);
           })}</ul>);
       }
+    }
+
+    //button to clear search string
+    var clearSearchContent = null;
+    if(value.length > 0){
+      clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='fa fa-times'></i></button>);
     }
 
     return (
@@ -76,6 +101,7 @@ var SearchBox = React.createClass({
           <label htmlFor='search' className='hide'> Type keyword to search </label>
           <i className='fa fa-search'></i>
           <input id='search' type='text' name='search' value={value} onChange={this.handleChange} className='search__field field' placeholder='Search'/>
+          {clearSearchContent}
         </form>
         <ul className ='list-reset search-results'>
           {cataLogSearchContent}

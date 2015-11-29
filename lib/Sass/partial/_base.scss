@@ -21,7 +21,6 @@ input[type=range]{
 
 .btn.label{
   font-weight: 700;
-  color: #fff;
   opacity: 0.9;
   text-transform: uppercase;
 }
@@ -60,6 +59,7 @@ input[type=range]{
   border: 0;
   padding: 0.5rem;
   text-align: left;
+  cursor: pointer;
   &:focus, &:hover{
     box-shadow: none;
     border: 0;

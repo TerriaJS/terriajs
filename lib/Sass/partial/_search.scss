@@ -4,7 +4,7 @@
     left: 5px;
     top: 7px;
     font-size: 1.2rem;
-    color: #CBCBCB;
+    color: #444;
   }
   input{
     padding-left: 2rem;
@@ -16,8 +16,13 @@
 }
 
 .search-results{
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   .btn{
     padding: 0.5rem;
   }
+}
+
+.search-clear{
+  position: absolute;
+  right: 30px;
 }
