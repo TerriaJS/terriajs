@@ -14,3 +14,10 @@
 .searching ~ .hide-if-searching{
   display: none;
 }
+
+.search-results{
+  margin-top: 1rem;
+  .btn{
+    padding: 0.5rem;
+  }
+}
