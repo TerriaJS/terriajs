@@ -1,3 +1,4 @@
+
 'use strict';
 
 var React = window.React = require('react'),
@@ -46,7 +47,7 @@ UiWrapper.prototype.init = function(main, nav, aside) {
           });
 
         this.nowViewingUpdate.addEventListener(function(){
-          ReactDOM.render(<SidePanel nowViewing={terria.nowViewing} />, nav);
+          ReactDOM.render(<SidePanel terria={terria} />, nav);
           ReactDOM.render(<ModalWindow terria={terria} />, main);
         });
 

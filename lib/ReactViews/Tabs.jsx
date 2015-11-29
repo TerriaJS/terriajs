@@ -24,8 +24,6 @@ var Tabs = React.createClass({
   },
 
   render: function() {
-    console.log(this.props);
-    
     var panels = [ <WelcomeTab />, <DataCatalog terria={this.props.terria} />, <CollectionsTab/>, <MyDataTab /> ];
     return (
       <div className="tabs clearfix">

@@ -1,12 +1,11 @@
 .modal-wrapper{
   width: 100vw;
   height: 100vh;
-
 }
 
 .modal-content{
   background: #eee;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: auto;
 }
 
@@ -20,7 +19,7 @@
 }
 
 .modal-content{
-  width: 800px;
+  width: 1000px;
   max-width: 95%;
 }
 
@@ -28,7 +27,8 @@
   background: #fff;
   width: 100%;
   .panel-content{
-    height: calc(100vh - 200px);
+    height: 500px;
+    max-height: 100%;
     overflow: hidden;
   }
   .search-data{

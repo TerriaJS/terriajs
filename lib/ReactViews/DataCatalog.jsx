@@ -44,7 +44,7 @@ var DataCatalog = React.createClass({
       <div className="panel-content clearfix">
       <div className="search-data col col-5">
       <SearchBox terria = {terria}/>
-      <ul className = 'list-reset'>
+      <ul className = 'list-reset data-catalog hide-if-searching'>
       {dataCatalog.map(function(group, i) {
         return (<DataCatalogGroup onClick={this.handleChildClick.bind(this, i)} group={group} items={group.items} isLoading={group.isLoading} key={i} />);
       }, this)}
