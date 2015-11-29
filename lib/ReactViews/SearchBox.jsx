@@ -97,10 +97,10 @@ var SearchBox = React.createClass({
 
     return (
       <div className={searchingClass}>
-        <form className='search-data-form relative'>
+        <form className='search-data-form relative' autoComplete='off'>
           <label htmlFor='search' className='hide'> Type keyword to search </label>
           <i className='fa fa-search'></i>
-          <input id='search' type='text' name='search' value={value} onChange={this.handleChange} className='search__field field' placeholder='Search'/>
+          <input id='search' type='text' name='search' value={value} onChange={this.handleChange} className='search__field field' placeholder='Search' autoComplete='off'/>
           {clearSearchContent}
         </form>
         <ul className ='list-reset search-results'>
