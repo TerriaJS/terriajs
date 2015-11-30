@@ -83,7 +83,7 @@ var SearchBox = React.createClass({
           cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> <Loader /></ul>);
         }
       } else{
-        cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Bing Map Search Results</button></li>{dataCatalogResults.map(function(item, i) {
+        cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li>{dataCatalogResults.map(function(item, i) {
             return (<DataCatalogItem item={item.catalogItem} key={i} />);
           })}</ul>);
       }
