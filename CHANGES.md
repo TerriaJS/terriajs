@@ -16,6 +16,7 @@ Change Log
 * Legend URLs are now accessed via the proxy, if applicable.
 * Fixed a bug that prevented feature scaling by value.
 * Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
+* Fixed a bug that caused a `TypeError` on load when the share URL included enabled datasets with an order different from their order in the catalog.
 
 ### 1.0.48
 
