@@ -7,7 +7,8 @@ var React = window.React = require('react'),
     SidePanel = require('./SidePanel.jsx'),
     TerriaViewer = require('./TerriaViewer.js'),
     CesiumEvent = require('terriajs-cesium/Source/Core/Event'),
-    FeatureInfoPanel = require('./FeatureInfoPanel.jsx');
+    FeatureInfoPanel = require('./FeatureInfoPanel.jsx'),
+    SettingPanel = require('./SettingPanel.jsx');
 
 
 var UiWrapper = function (terria) {
@@ -34,21 +35,23 @@ var UiWrapper = function (terria) {
     window.terria = this.terria;
 }
 
-UiWrapper.prototype.init = function(main, nav, aside) {
+UiWrapper.prototype.init = function(main, nav, aside, mapNav, allBaseMaps) {
     var terria = this.terria;
         ReactDOM.render(<ModalWindow terria={terria} />, main);
         ReactDOM.render(<SidePanel terria={terria} />, nav);
+        ReactDOM.render(<SettingPanel terria= {terria} allBaseMaps = {allBaseMaps}/>, mapNav);
 
         //temp
         var canvas = document.querySelector('canvas');
 
         canvas.addEventListener('click', function(){
-          ReactDOM.render(<FeatureInfoPanel terria={terria} />, aside);
+            if(terria.nowViewing.hasItems){
+              ReactDOM.render(<FeatureInfoPanel terria={terria} />, aside);
+            }
           });
-
         this.nowViewingUpdate.addEventListener(function(){
           ReactDOM.render(<SidePanel terria={terria} />, nav);
-          ReactDOM.render(<ModalWindow terria={terria} />, main);
+          ReactDOM.render(<ModalWindow terria={terria}/>, main);
         });
 
 };

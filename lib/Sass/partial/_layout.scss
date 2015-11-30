@@ -1,9 +1,10 @@
 .workbench{
   box-sizing: border-box;
   width: $work-bench-width;
-  @media(screen and max-width: $sm){
+  display: none;
+  @media(screen and min-width: $sm){
     //temp
-    display: none;
+    display: block;
   }
 }
 
@@ -12,10 +13,13 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: calc(100% - 320px);
-  @media(screen and max-width: $sm){
+  left: 0;
+  // width: 100%;
+
+  @media(screen and min-width: $sm){
     //temp
-    left: 0;
+    // width: calc(100% - $work-bench-width);
+    left: $work-bench-width;
   }
 }
 

@@ -1,1 +1,18 @@
+#map-nav{
+    position: fixed;
+    top: 0;
+    right: 0;
+}
 
+.setting-panel-inner{
+      background: #fff;
+      width: $work-bench-width;
+      .basemap{
+        height: 150px;
+        font-size: 0.8rem;
+      }
+      .btn{
+        width: 100%;
+        display: block;
+      }
+    }
