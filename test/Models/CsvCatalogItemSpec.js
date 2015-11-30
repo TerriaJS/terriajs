@@ -23,7 +23,7 @@ beforeEach(function() {
     });
     csvItem = new CsvCatalogItem(terria);
 
-    greenTableStyle = {
+    greenTableStyle = new TableStyle ({
         "colorMap": [ 
         {
             "offset": 0,
@@ -32,7 +32,7 @@ beforeEach(function() {
             "offset": 1,
             "color": "rgba(0, 255, 0, 1.00)"
         } ]
-    };
+    });
 
 
 });
@@ -334,7 +334,7 @@ describe('CsvCatalogItem', function() {
     });
     it('supports region-mapped files with dates and displayDuration', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
-        csvItem.tableStyle = { displayDuration: 60 * 6 }; // 6 hours
+        csvItem.tableStyle = new TableStyle({ displayDuration: 60 * 6 }); // 6 hours
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
@@ -370,7 +370,7 @@ describe('CsvCatalogItem', function() {
     });
     it('supports lat-long files with dates and very long displayDuration', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
-        csvItem.tableStyle = { displayDuration: 60 * 24 * 7 }; // 7 days
+        csvItem.tableStyle = new TableStyle ({ displayDuration: 60 * 24 * 7 }); // 7 days
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
@@ -401,7 +401,7 @@ describe('CsvCatalogItem', function() {
     });
     it('handles LGA names with states for disambiguation', function(done) {
         csvItem.url = 'test/csv/lga_state_disambig.csv';
-        csvItem.tableStyle = { dataVariable: 'StateCapital' };
+        csvItem.tableStyle = new TableStyle({ dataVariable: 'StateCapital' });
 
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
@@ -471,7 +471,7 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
         }).then(function(minMax) {
             var csvItem2 = new CsvCatalogItem(terria);
-            csvItem2.tableStyle = { scale: 10, scaleByValue: true };
+            csvItem2.tableStyle = new TableStyle({ scale: 10, scaleByValue: true });
             csvItem2.url = 'test/csv/lat_lon_val.csv';
             return csvItem2.load().yield(csvItem2);
         }).then(function(csvItem2) {
