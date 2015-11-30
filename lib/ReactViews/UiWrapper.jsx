@@ -36,12 +36,12 @@ var UiWrapper = function (terria) {
     window.terria = this.terria;
 }
 
-UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps) {
+UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps, terriaViewer ) {
     var terria = this.terria;
         ReactDOM.render(<ModalWindow terria={terria} />, main);
         ReactDOM.render(<SidePanel terria={terria} />, nav);
         ReactDOM.render(<Chart terria={terria} />, chart);
-        ReactDOM.render(<SettingPanel terria= {terria} allBaseMaps = {allBaseMaps}/>, mapNav);
+        ReactDOM.render(<SettingPanel terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
 
         //temp
         var canvas = document.querySelector('canvas');
