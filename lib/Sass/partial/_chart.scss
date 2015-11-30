@@ -1,0 +1,21 @@
+.chart-panel-holder{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  background: $dark;
+  color: #fff;
+  &.is-open{
+    .chart-panel-section{
+        height: 200px;
+    }
+  }
+  .chart-panel-section{
+    height: 0;
+    @include transition(height 0.25s ease-in-out);
+  }
+}
+
+.chart-panel-section{
+  background: $dark-lighter;
+}

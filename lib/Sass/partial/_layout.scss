@@ -14,6 +14,7 @@
   top: 0;
   right: 0;
   left: 0;
+  height: 100vh;
   // width: 100%;
 
   @media(screen and min-width: $sm){
@@ -24,10 +25,10 @@
 }
 
 #cesiumContainer{
-  height: 100vh;
+  height: calc(100vh - 53px);
   position: relative;
   canvas{
-    height: 100vh;
+    height: calc(100vh - 53px);
   }
 }
 
@@ -35,5 +36,11 @@
   z-index: 1;
   top: 0;
   left: 0;
+}
+
+#map-nav{
+    position: fixed;
+    top: 20px;
+    right: $work-bench-width;
 }
 

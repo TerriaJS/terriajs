@@ -1,0 +1,20 @@
+.setting-panel-inner{
+      background: #fff;
+      width: $work-bench-width;
+      position: absolute;
+      margin-top: 20px;
+      .basemap{
+        height: 150px;
+        font-size: 0.8rem;
+      }
+      .btn{
+        width: 100%;
+        display: block;
+      }
+    }
+.btn-setting{
+  font-size: 1.5rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 50%;
+}
