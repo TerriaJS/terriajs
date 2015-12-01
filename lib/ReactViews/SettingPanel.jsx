@@ -27,7 +27,19 @@ var SettingPanel = React.createClass({
   },
 
   selectViewer: function(viewer, event){
-    this.props.terria.viewerMode = ViewerMode.Leaflet;
+    switch(viewer) {
+        case 0:
+            this.props.terria.viewerMode = ViewerMode.Leaflet;
+            break;
+        case 1:
+            this.props.terria.viewerMode = ViewerMode.CesiumEllipsoid;
+            break;
+        case 2:
+            this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
+            break;
+        default:
+            return false;
+    }
     this.props.terriaViewer.updateViewer();
   },
 

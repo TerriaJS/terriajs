@@ -2,8 +2,8 @@
 var Chart = React.createClass({
   getInitialState: function() {
     return {
-      isOpen: true,
-      isVisible: true
+      isOpen: false,
+      isVisible: false
     };
   },
 

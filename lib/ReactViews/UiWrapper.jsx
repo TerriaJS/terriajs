@@ -9,7 +9,7 @@ var React = window.React = require('react'),
     CesiumEvent = require('terriajs-cesium/Source/Core/Event'),
     FeatureInfoPanel = require('./FeatureInfoPanel.jsx'),
     Chart = require('./Chart.jsx'),
-    SettingPanel = require('./SettingPanel.jsx');
+    MapNavigation = require('./MapNavigation.jsx');
 
 
 var UiWrapper = function (terria) {
@@ -41,7 +41,7 @@ UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps
         ReactDOM.render(<ModalWindow terria={terria} />, main);
         ReactDOM.render(<SidePanel terria={terria} />, nav);
         ReactDOM.render(<Chart terria={terria} />, chart);
-        ReactDOM.render(<SettingPanel terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
+        ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
 
         //temp
         var canvas = document.querySelector('canvas');

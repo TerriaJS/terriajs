@@ -1,0 +1,23 @@
+// Button
+//
+// Your standard button suitable for clicking.
+//
+// :hover   - Highlights when hovering.
+// .shiny   - Do not press this big, shiny, red button.
+//
+// Markup:
+// <button class="btn"> This is a button </button>
+//
+// Style guide: 1.0
+//
+
+$btn-setting-size: 48px;
+
+.btn-setting{
+  font-size: 1.5rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 50%;
+  height: $btn-setting-size;
+  width: $btn-setting-size;
+}
