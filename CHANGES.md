@@ -16,6 +16,7 @@ Change Log
 * Legend URLs are now accessed via the proxy, if applicable.
 * Fixed a bug that prevented feature scaling by value.
 * Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
+* Changed Australian Topography base map server and updated the associated thumbnail.
 
 ### 1.0.48
 
