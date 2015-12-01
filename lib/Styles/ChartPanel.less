@@ -8,35 +8,36 @@
     .opaque-to-input;
     opacity: 1;
     visibility: visible;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    height: auto;
+    max-height: 1000px;
+    -webkit-transition: all @explorer-panel-close-animation-length ease-out;
+    -moz-transition: all @explorer-panel-close-animation-length ease-out;
+    -ms-transition: all @explorer-panel-close-animation-length ease-out;
+    -o-transition: all @explorer-panel-close-animation-length ease-out;
+    transition: all @explorer-panel-close-animation-length ease-out;
 
-    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out;
-    -moz-transition: opacity @explorer-panel-close-animation-length ease-out;
-    -ms-transition: opacity @explorer-panel-close-animation-length ease-out;
-    -o-transition: opacity @explorer-panel-close-animation-length ease-out;
-    transition: opacity @explorer-panel-close-animation-length ease-out;
+    .map-displaced ~ #ui &{
+      left: 350px;
+    }
 }
 
 .chart-panel-holder-hidden {
     .transparent-to-input;
-    opacity: 0;
-    visibility: hidden;
-
-    -webkit-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
-    -moz-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
-    -ms-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
-    -o-transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
-    transition: opacity @explorer-panel-close-animation-length ease-out, visibility 0s @explorer-panel-close-animation-length;
+    max-height: 0;
 }
 
 .chart-panel {
     .panel;
     border-top: solid 1px @panel-element-border;
     background-color: @panel-background-color;
-    bottom: 0;
-    right: 0;
-    position: absolute;
+
     box-shadow: @panel-box-shadow;
     overflow-y: auto;
+
 }
 
 .chart-panel-header {
