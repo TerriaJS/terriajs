@@ -54,13 +54,6 @@
     .opaque-to-input;
 }
 
-.chart-panel-loading {
-    height: 200px;
-    text-align: center;
-    margin-top: 80px;
-    color: @chart-text-color;
-}
-
 .chart-panel-section {
 }
 
@@ -102,6 +95,17 @@
     cursor: pointer;
     font-size: 12pt;
     color: @chart-header-text-color;
+}
+
+.chart-panel-loading{
+    position: absolute;
+    text-align: center;
+    color: @chart-text-color;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    line-height: 300px;
 }
 
 @media print {
