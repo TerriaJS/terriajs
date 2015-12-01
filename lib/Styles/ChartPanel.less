@@ -14,6 +14,7 @@
     position: absolute;
     height: auto;
     max-height: 1000px;
+
     -webkit-transition: all @explorer-panel-close-animation-length ease-out;
     -moz-transition: all @explorer-panel-close-animation-length ease-out;
     -ms-transition: all @explorer-panel-close-animation-length ease-out;
@@ -21,7 +22,7 @@
     transition: all @explorer-panel-close-animation-length ease-out;
 
     .map-displaced ~ #ui &{
-      left: 350px;
+      left: @explorer-panel-width;
     }
 }
 
