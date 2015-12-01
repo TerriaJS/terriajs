@@ -17,13 +17,13 @@ $btn-setting-size: 48px;
 .btn{
   font-weight: 400;
   box-shadow: none;
-  border: 0;
+  border-color: transparent;
   padding: $padding;
   text-align: left;
   cursor: pointer;
   &:focus, &:hover{
     box-shadow: none;
-    border: 0;
+    border-color: transparent;
   }
 }
 
@@ -36,10 +36,12 @@ $btn-setting-size: 48px;
   width: $btn-setting-size;
 }
 
-.btn-catalogue{
+.btn-catalogue,
+.btn-catalog-group{
   width: 100%;
   padding-right: 30px;
   position: relative;
+  border-bottom: 1px solid $grey-lighter;
   &:hover{
     background: #0074d9;
     color: #fff;
@@ -48,14 +50,40 @@ $btn-setting-size: 48px;
     position: absolute;
     right: 5px;
     top: 8px;
-
   }
 }
 
-.btn-tab{
-  padding: 1rem;
-  font-size: 1.1rem;
+.btn-catalogue{
+  font-weight: 600;
+}
+
+.btn-catalog-item{
+  font-style: italic;
+}
+
+
+%btn-tab{
+  font-family: $font-pop;
+  font-size: 1rem;
   text-transform: capitalize;
+  padding: $padding*2;
+  border-bottom: 2px solid transparent;
+  &:hover , &:focus{
+    color: $color-primary;
+    border-bottom: 2px solid $color-primary;
+  }
+}
+.btn.btn-tab{
+  border-right: 1px solid $grey-lighter;
+  @extend %btn-tab;
+}
+
+.btn.btn-close-modal{
+  border-left: 1px solid $grey-lighter;
+  text-transform: uppercase;
+  color: $color-primary;
+  font-size: $font-size-mini;
+  @extend %btn-tab;
 }
 
 .btn.label{
@@ -69,6 +97,7 @@ $btn-setting-size: 48px;
   width: 100%;
   line-height: 3rem;
   text-transform: uppercase;
+  font-size: $font-size-small;
   padding: 0 $padding;
   @extend .icon;
   @extend .icon-add;
@@ -76,5 +105,10 @@ $btn-setting-size: 48px;
     padding-right: $padding;
   }
   @include greybox();
+}
+
+.btn.search-clear{
+  position: absolute;
+  right: $padding;
 }
 

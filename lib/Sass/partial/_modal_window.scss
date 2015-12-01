@@ -4,9 +4,10 @@
 }
 
 .modal-content{
-  background: #eee;
+  background: #fff;
   max-height: 80vh;
   overflow-y: auto;
+  position: relative;
 }
 
 .modal-overlay{
@@ -22,24 +23,28 @@
   width: 1000px;
   max-width: 95%;
 }
+.tablist{
+  padding-right: 150px;
+}
+
+.btn-close-modal{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
 .tab-panel{
-  background: #fff;
   width: 100%;
   .panel-content{
     height: 500px;
     max-height: 100%;
     overflow: hidden;
   }
-  .search-data{
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 100%;
-  }
 }
 
 .panel-content{
-  padding: $padding;
+  padding: $padding*2;
+  border-top: 1px solid $grey-lighter;
 }
 
 .search-preview{

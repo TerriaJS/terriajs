@@ -1,9 +1,23 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
-$font : 'Roboto', sans-serif;
+@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic);
+
+
+$font-pop:'Montserrat', sans-serif;
+$font-base: 'Open Sans', sans-serif;
+$font : $font-base;
+
+$color-primary: #65AEF2;
+
+
 $dark: #282D32;
 $dark-lighter: #595B60;
 
-$font-size-small: 0.9rem;
+$grey-lighter: #ddd;
+
+$font-size-base: 1rem;
+$font-size-small: 0.95rem;
+$font-size-mini: 0.8rem;
 
 $work-bench-width : 350px;
 
@@ -13,7 +27,7 @@ $border-style: 2px solid $border-color;
 
 
 $padding-small: 10px;
-$padding: 15px;
+$padding: 10px;
 
 //screen sizes
 

@@ -1,13 +1,15 @@
+$now-viewing-margin: 5px;
 .now-viewing{
-  margin-top: 5px;
+  margin-top: $now-viewing-margin;
 
 }
 
 .now-viewing__item-control{
+  padding: $padding 0;
   .btn{
     text-transform: uppercase;
     padding: 0 $padding;
-    font-size: 0.8rem;
+    font-size: $font-size-mini;
   }
 
   .info{
@@ -16,14 +18,35 @@
   }
 }
 
-.now-viewing__item-title{
+.btn.now-viewing__item-title{
   width: 100%;
+  @include transition(height 0.25s ease-in-out);
+  .now-viewing__item.is-open & {
+  border-bottom: 1px solid $border-color;
+  }
 }
 
 .now-viewing__item{
   @include greybox();
+  margin: $now-viewing-margin 0;
 }
 
-.now-viewing__item-opacity, .now-viewing__item-legend{
+.now-viewing__item-inner{
+  max-height: 0;
+  overflow: hidden;
+  @include transition(height 0.25s ease-in-out);
+  .now-viewing__item.is-open &{
+    max-height: 1000px;
+  }
+}
+
+.now-viewing__item-opacity{
+  padding: 0 $padding $padding $padding;
+  border-bottom: 1px solid $border-color;
+  text-transform: uppercase;
+  font-size: $font-size-mini;
+}
+
+.now-viewing__item-legend{
   padding: $padding;
 }

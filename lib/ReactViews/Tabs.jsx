@@ -8,12 +8,12 @@ function getName(str1, str2){
   return str1.concat(str2)
 }
 
-var items = ['welcome', 'data-catalog', 'collections' , 'my-data' ];
+var items = ['data-catalog', 'collections' , 'my-data' ];
 
 var Tabs = React.createClass({
   getInitialState: function() {
     return {
-      activeTab: 1
+      activeTab: 0
     };
   },
 
@@ -24,12 +24,12 @@ var Tabs = React.createClass({
   },
 
   render: function() {
-    var panels = [ <WelcomeTab />, <DataCatalog terria={this.props.terria} />, <CollectionsTab/>, <MyDataTab /> ];
+    var panels = [<DataCatalog terria={this.props.terria} />, <CollectionsTab/>, <MyDataTab /> ];
     return (
       <div className="tabs clearfix">
-      <ul className="tablist center list-reset mb0" role="tablist">
+      <ul className="tablist list-reset flex" role="tablist">
       {items.map(function(item, i ){
-      return (<li onClick={this.clickTab.bind(this, i)} key={i} id={getName('tablist__', item)} className={getName('btn btn-tab tablist__', item)} role="tab" aria-controls={getName('panel__', item)} aria-selected={(this.state.activeTab == i) ? "true" : "false"} tabIndex="0">{item.replace(/-/g, ' ')}</li>)
+      return (<li key={i} className={getName('tablist__', item)} id={getName('tablist__', item)} role="tab" aria-controls={getName('panel__', item)} aria-selected={(this.state.activeTab == i) ? "true" : "false"} ><button onClick={this.clickTab.bind(this, i)} className='btn btn-tab'>{item.replace(/-/g, ' ')} </button></li>)
       }, this)}
       </ul>
 

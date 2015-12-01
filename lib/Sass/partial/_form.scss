@@ -2,23 +2,27 @@
   .icon{
     position: absolute;
     left: $padding;
-    top: 12px;
+    top: 10px;
     font-size: 1.2rem;
     color: #444;
     opacity: 0.5;
   }
-
-  .search-clear{
-    position: absolute;
-    right: 40px;
-  }
-
   @include placeholder{
       text-transform: uppercase;
+      font-size: $font-size-small;
     }
-
   input{
     padding-left: 3rem;
     height: 3rem;
+  }
+}
+
+.search-data{
+  padding-right: $padding;
+  input[type=text]{
+    border: 1px solid $grey-lighter;
+  }
+  li .btn{
+    text-align: left;
   }
 }

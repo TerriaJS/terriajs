@@ -46,20 +46,22 @@ var Legend = React.createClass({
       legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>
     }
     return (
-          <li className="now-viewing__item clearfix">
+          <li className={"now-viewing__item clearfix " + (this.state.isOpen === true ? "is-open" : "") }>
               <button onClick={this.toggleDisplay} className="btn block now-viewing__item-title">{nowViewingItem.name}</button>
-              <ul className="list-reset flex clearfix now-viewing__item-control">
-                <li className='zoom'><button onClick={this.zoom} title="Zoom in data" className="btn">Zoom To</button></li>
-                <li className='info'><ModalTriggerButton btnText="info" activeTab="2"/></li>
-                <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
-                 <li className='visibility'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn"><i className="icon icon-eye"></i></button></li>
-              </ul>
-              <div className="now-viewing__item-opacity">
-                <label htmlFor="opacity">Opacity: </label>
-                <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
-              </div>
-              <div className="now-viewing__item-legend" aria-hidden={this.state.isOpen === true ? "false" : "true" }>
-                {legend}
+              <div className ="now-viewing__item-inner">
+                <ul className="list-reset flex clearfix now-viewing__item-control">
+                  <li className='zoom'><button onClick={this.zoom} title="Zoom in data" className="btn">Zoom To</button></li>
+                  <li className='info'><ModalTriggerButton btnText="info" activeTab="2"/></li>
+                  <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
+                  <li className='visibility'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn"><i className="icon icon-eye"></i></button></li>
+                </ul>
+                <div className="now-viewing__item-opacity">
+                  <label htmlFor="opacity">Opacity: </label>
+                  <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
+                </div>
+                <div className="now-viewing__item-legend">
+                  {legend}
+                </div>
               </div>
           </li>
         );

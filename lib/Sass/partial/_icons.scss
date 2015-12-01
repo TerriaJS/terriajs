@@ -9,8 +9,8 @@
   font-style: normal;
 }
 
-.icon {
-    /* use !important to prevent issues with browser extensions that change fonts */
+.icon:before{
+  /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: none;
   font-style: normal;
@@ -56,6 +56,9 @@
   @extend .icon-search3;
 }
 
+.icon-chevron-down{
+  @extend .icon-arrow_drop_down;
+}
 
 
 
