@@ -35,4 +35,13 @@ describe('combineData', function() {
         expect(combined).toEqual(target);
     });
 
+    it('works with three sorted numerical arrays', function() {
+        var data1 = [[1, 5], [3, 7], [6, 10], [9, -3]];
+        var data2 = [[2, 12], [4, 8], [6, 5], [8, 7]];
+        var data3 = [[3, 18], [5, 19], [6, 16]];
+        var target = [[1, 5, null, null], [2, null, 12, null], [3, 7, null, 18], [4, null, 8, null], [5, null, null, 19], [6, 10, 5, 16], [8, null, 7, null], [9, -3, null, null]];
+        var combined = combineData([data1, data2, data3]);
+        expect(combined).toEqual(target);
+    });
+
 });
