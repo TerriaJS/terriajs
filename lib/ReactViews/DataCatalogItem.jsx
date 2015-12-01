@@ -26,9 +26,9 @@ var DataCatalogItem = React.createClass({
 
   render: function(){
     var item = this.props.item;
-    var iconClass = "fa " + (this.props.item.isEnabled === true ? "fa-minus-circle red" : "fa-plus-circle blue");
+    var iconClass = "icon " + (this.props.item.isEnabled === true ? "icon-minus red" : "icon-add blue");
     return (
-      <li className="clearfix data-catalog-item"><button onClick={this.addToPreview} className="btn data-item-title col col-11 relative">{item.name}</button><button onClick={this.addToMap} className="btn col col-1 relative"><i className={iconClass}> </i></button></li>
+      <li className="clearfix data-catalog-item"><button onClick={this.addToPreview} className="btn data-item-title col col-10 relative">{item.name}</button><button onClick={this.addToMap} className="btn col col-2 relative"><i className={iconClass}> </i></button></li>
       ) ;
   }
 });

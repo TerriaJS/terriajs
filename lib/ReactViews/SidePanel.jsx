@@ -21,7 +21,7 @@ var SidePanel = React.createClass({
     var remove =null;
 
     if(nowViewing && nowViewing.length > 0){
-      remove = (<li className="now-viewing__remove col col-6 right-align"><button onClick={this.removeAll} className='btn'> Remove All </button></li>
+      remove = (<li className="now-viewing__remove"><button onClick={this.removeAll} className='btn'> Remove All </button></li>
     );
       content = nowViewing.map(function(item, i) {return (<Legend nowViewingItem={item} key={i} />)});
     }
@@ -29,9 +29,10 @@ var SidePanel = React.createClass({
             <SearchBox terria={terria}/>
             <div className="now-viewing">
               <ul className="now-viewing__control list-reset clearfix">
-                <li className="now-viewing__add col col-6"><ModalTriggerButton btnText={btnAdd}/></li>
+                <li className="now-viewing__add"><ModalTriggerButton btnText={btnAdd}/></li>
                 {remove}
               </ul>
+              {(nowViewing && nowViewing.length > 0) ? (<label className='block label-now-viewing-group'> Data Sets </label>) : null}
               <ul className="now-viewing__content list-reset">
                 {content}
               </ul>

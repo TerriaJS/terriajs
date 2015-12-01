@@ -13,6 +13,20 @@
 
 $btn-setting-size: 48px;
 
+// to be removed
+.btn{
+  font-weight: 400;
+  box-shadow: none;
+  border: 0;
+  padding: $padding;
+  text-align: left;
+  cursor: pointer;
+  &:focus, &:hover{
+    box-shadow: none;
+    border: 0;
+  }
+}
+
 .btn-setting{
   font-size: 1.5rem;
   background: #fff;
@@ -21,3 +35,46 @@ $btn-setting-size: 48px;
   height: $btn-setting-size;
   width: $btn-setting-size;
 }
+
+.btn-catalogue{
+  width: 100%;
+  padding-right: 30px;
+  position: relative;
+  &:hover{
+    background: #0074d9;
+    color: #fff;
+  }
+  .icon{
+    position: absolute;
+    right: 5px;
+    top: 8px;
+
+  }
+}
+
+.btn-tab{
+  padding: 1rem;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+}
+
+.btn.label{
+  font-weight: 700;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.now-viewing__add .btn{
+  display: block;
+  width: 100%;
+  line-height: 3rem;
+  text-transform: uppercase;
+  padding: 0 $padding;
+  @extend .icon;
+  @extend .icon-add;
+  &:before{
+    padding-right: $padding;
+  }
+  @include greybox();
+}
+

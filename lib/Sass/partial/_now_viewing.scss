@@ -1,0 +1,29 @@
+.now-viewing{
+  margin-top: 5px;
+
+}
+
+.now-viewing__item-control{
+  .btn{
+    text-transform: uppercase;
+    padding: 0 $padding;
+    font-size: 0.8rem;
+  }
+
+  .info{
+    border-left: 1px solid $border-color;
+    border-right: 1px solid $border-color;
+  }
+}
+
+.now-viewing__item-title{
+  width: 100%;
+}
+
+.now-viewing__item{
+  @include greybox();
+}
+
+.now-viewing__item-opacity, .now-viewing__item-legend{
+  padding: $padding;
+}

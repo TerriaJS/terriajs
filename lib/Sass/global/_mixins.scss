@@ -4,3 +4,15 @@
     -webkit-transition: $transition;
     transition:         $transition;
 }
+
+@mixin placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder {@content}
+  ::-moz-placeholder {@content}
+  :-ms-input-placeholder {@content}
+}
+
+@mixin greybox(){
+  border: $border-style;
+  background: rgba(#fff, 0.1);
+}

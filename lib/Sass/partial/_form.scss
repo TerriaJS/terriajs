@@ -1,0 +1,24 @@
+.search-data-form{
+  .icon{
+    position: absolute;
+    left: $padding;
+    top: 15px;
+    font-size: 1.2rem;
+    color: #444;
+    opacity: 0.5;
+  }
+
+  .search-clear{
+    position: absolute;
+    right: 40px;
+  }
+
+  @include placeholder{
+      text-transform: uppercase;
+    }
+
+  input{
+    padding-left: 3rem;
+    height: 3rem;
+  }
+}

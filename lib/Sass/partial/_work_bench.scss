@@ -1,0 +1,22 @@
+.workbench{
+  height: 100vh;
+  overflow: hidden;
+  color: #fff;
+  padding: $padding-small;
+  overflow-y: auto;
+
+  //temp
+  background-image: url('./TerriaJS/images/panel-bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  h1{
+    margin: 0;
+  }
+  nav{
+    margin-top: 1rem;
+  }
+
+}
+
+

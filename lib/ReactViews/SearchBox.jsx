@@ -92,14 +92,14 @@ var SearchBox = React.createClass({
     //button to clear search string
     var clearSearchContent = null;
     if(value.length > 0){
-      clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='fa fa-times'></i></button>);
+      clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='icon icon-close'></i></button>);
     }
 
     return (
       <div className={searchingClass}>
         <form className='search-data-form relative' autoComplete='off'>
           <label htmlFor='search' className='hide'> Type keyword to search </label>
-          <i className='fa fa-search'></i>
+          <i className='icon icon-search'></i>
           <input id='search' type='text' name='search' value={value} onChange={this.handleChange} className='search__field field' placeholder='Search' autoComplete='off'/>
           {clearSearchContent}
         </form>

@@ -68,7 +68,7 @@ var FeatureInfoPanel = React.createClass({
 
     return(
       <div className="feature-info-panel" aria-hidden={!this.state.isVisible}>
-      <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="fa fa-times"></i></button>
+      <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
       <ul className="list-reset">{content}</ul>
       </div>
       );

@@ -46,23 +46,21 @@ var Legend = React.createClass({
       legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>
     }
     return (
-          <li className="now-viewing__item">
-            <ul className="clearfix list-reset">
-              <li className="col col-12"><button onClick={this.toggleDisplay} className="btn block">{nowViewingItem.name}</button></li>
-              <ul className="list-reset col col-12">
-                <li className="col col-1"><button onClick={this.toggleVisibility} title="Data show/hide" className="btn"><i className="fa fa-eye"></i></button></li>
-                <li className="col col-1"><button onClick={this.zoom} title="Zoom in data" className="btn"><i className="fa fa-camera"></i></button></li>
-                <li className="col col-1"><ModalTriggerButton btnText="info" activeTab="2"/></li>
-                <li className="col col-9 right-align"><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
+          <li className="now-viewing__item clearfix">
+              <button onClick={this.toggleDisplay} className="btn block now-viewing__item-title">{nowViewingItem.name}</button>
+              <ul className="list-reset flex clearfix now-viewing__item-control">
+                <li className='zoom'><button onClick={this.zoom} title="Zoom in data" className="btn">Zoom To</button></li>
+                <li className='info'><ModalTriggerButton btnText="info" activeTab="2"/></li>
+                <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
+                 <li className='visibility'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn"><i className="icon icon-eye"></i></button></li>
               </ul>
-              <li className="col col-12">
+              <div className="now-viewing__item-opacity">
                 <label htmlFor="opacity">Opacity: </label>
                 <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
-              </li>
-              <li className="col col-12" aria-hidden={this.state.isOpen === true ? "false" : "true" }>
+              </div>
+              <div className="now-viewing__item-legend" aria-hidden={this.state.isOpen === true ? "false" : "true" }>
                 {legend}
-              </li>
-            </ul>
+              </div>
           </li>
         );
   }

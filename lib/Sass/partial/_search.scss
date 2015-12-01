@@ -1,28 +1,9 @@
-.search-data-form{
-  .fa{
-    position: absolute;
-    left: 5px;
-    top: 7px;
-    font-size: 1.2rem;
-    color: #444;
-  }
-  input{
-    padding-left: 2rem;
-  }
-}
-
 .searching ~ .hide-if-searching{
   display: none;
 }
 
 .search-results{
   margin-top: 0.5rem;
-  .btn{
-    padding: 0.5rem;
-  }
 }
 
-.search-clear{
-  position: absolute;
-  right: 30px;
-}
+

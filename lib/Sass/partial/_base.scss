@@ -1,5 +1,5 @@
 html{
-  font-size: 90%;
+  font-size: 100%;
 }
 
 body{
@@ -19,11 +19,7 @@ input[type=range]{
   vertical-align: middle;
 }
 
-.btn.label{
-  font-weight: 700;
-  opacity: 0.9;
-  text-transform: uppercase;
-}
+
 
 
 .p{
@@ -51,21 +47,7 @@ input[type=range]{
 }
 
 
-// to be removed
-.btn{
-  font-weight: 400;
-  opacity: 0.6;
-  box-shadow: none;
-  border: 0;
-  padding: 0.5rem;
-  text-align: left;
-  cursor: pointer;
-  &:focus, &:hover{
-    box-shadow: none;
-    border: 0;
-    opacity: 1;
-  }
-}
+
 
 .list-reset{
   margin: 0;
@@ -97,63 +79,6 @@ div[aria-hidden='true']
   clear: both;
 }
 
-.map{
-  height: 100vh;
-  background-color: #bdc3c7;
-  canvas{
-    width: 100%;
-    height: 100%;
-  }
-}
-
-.map-nav{
-  bottom: 0;
-  right: 0;
-}
-
-
-.workbench{
-  height: 100vh;
-  overflow: hidden;
-  background: #282D32;
-  color: #fff;
-  padding: 10px;
-  overflow-y: auto;
-  h1{
-    margin: 0;
-  }
-  nav{
-    margin-top: 1rem;
-  }
-  .btn{
-    padding: 0;
-  }
-}
-
-.now-viewing{
-  margin-top: 5px;
-  background: #3C3F45;
-}
-
-.now-viewing__control{
-  padding: 10px;
-}
-
-.now-viewing__item{
-  background: $dark-lighter;
-  padding: 0 10px;
-  margin-bottom: 5px;
-  label{
-    opacity: 0.6;
-  }
-  .col-12{
-    border-bottom: 1px solid lighten(#3C3F45, 20%);
-    padding: 10px 0;
-  }
-  li.col-12:last-of-type{
-    border-bottom: 0;
-  }
-}
 
 .search-preview{
   h4{
@@ -168,7 +93,7 @@ div[aria-hidden='true']
 }
 
 .search-data{
-  padding-right: 15px;
+  padding-right: $padding;
   input[type=text]{
     border: 0;
     border-bottom: 1px solid rgba(0,0,0,.125);
@@ -179,33 +104,15 @@ div[aria-hidden='true']
   }
 }
 
-.btn-catalogue{
-  width: 100%;
-  padding-right: 30px;
-  position: relative;
-  &:hover{
-    background: #0074d9;
-    color: #fff;
-  }
-  .fa{
-    position: absolute;
-    right: 5px;
-    top: 8px;
 
-  }
-}
 
 .data-group{
-  .fa{
+  .icon{
     padding-right: 10px;
   }
 }
 
-.btn-tab{
-  padding: 1rem;
-  font-size: 1.1rem;
-  text-transform: capitalize;
-}
+
 
 
 .feature-info-panel{

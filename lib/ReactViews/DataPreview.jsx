@@ -27,8 +27,8 @@ var DataPreview = React.createClass({
       <div className="title clearfix">
       <h4 className="col col-6">{previewed.name}</h4>
       <ul className="list-reset flex col col-6 search-preview-action">
-      <li><button className="btn" title ="share this data"><i className="fa fa-share-alt"></i></button></li>
-      <li><button onClick={this.addToMap} className="btn btn-primary" title ="add to map"><i className="fa fa-plus-circle"></i> Add to map</button></li>
+      <li><button className="btn" title ="share this data"><i className="icon icon-share2"></i></button></li>
+      <li><button onClick={this.addToMap} className="btn btn-primary" title ="add to map"><i className="icon icon-plus"></i> Add to map</button></li>
       </ul>
       </div>
       <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
