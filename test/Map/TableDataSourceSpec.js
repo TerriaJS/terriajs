@@ -52,10 +52,10 @@ describe('TableDataSource', function() {
         }).then(done).otherwise(done.fail);
     });
 
-    it('sets the dataVariable via setDisplayStyle', function(done) {
+    it('sets the dataVariable via setDataVariable', function(done) {
         tableDataSource.loadUrl('/test/csv/lat_lon_enum_val.csv').then(function() {
             expect(tableDataSource.dataVariable).toEqual('enum');
-            tableDataSource.setDisplayStyle({dataVariable: 'val'});
+            tableDataSource.setDataVariable('val');
             expect(tableDataSource.dataVariable).toEqual('val');
         }).then(done).otherwise(done.fail);
     });
