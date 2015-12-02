@@ -14,6 +14,13 @@ var SettingPanel = React.createClass({
       isOpen: false
     };
   },
+
+  togglePanel: function(){
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  },
+
   selectBaseMap: function(baseMap, event){
     this.props.terria.baseMap = baseMap.catalogItem;
     this.props.terriaViewer.updateBaseMap();
