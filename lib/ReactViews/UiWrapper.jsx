@@ -27,12 +27,15 @@ var UiWrapper = function (terria) {
 
     this.openModalWindow = new CesiumEvent();
 
+    this.terriaViewerUpdate = new CesiumEvent();
+
     this.terria = terria;
 
     //temp
     window.nowViewingUpdate = this.nowViewingUpdate;
     window.previewUpdate = this.previewUpdate;
     window.openModalWindow = this.openModalWindow;
+    window.terriaViewerUpdate = this.terriaViewerUpdate;
     window.terria = this.terria;
 }
 
@@ -55,6 +58,10 @@ UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps
           ReactDOM.render(<SidePanel terria={terria} />, nav);
           ReactDOM.render(<ModalWindow terria={terria}/>, main);
         });
+
+        this.terriaViewerUpdate.addEventListener(function(){
+          ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
+        })
 
 };
 

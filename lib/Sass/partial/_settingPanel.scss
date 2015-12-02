@@ -1,33 +1,41 @@
 .setting-panel{
-  width: $work-bench-width;
+  width: $setting-panel;
   position: relative;
   z-index: 1;
 }
 
-
-
+.setting-panel-section{
+  padding: $padding;
+}
   .setting-panel-inner{
       @include transform (scale(0) translateZ(0));
       @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
       @include transform-origin(top center);
-
       background: #fff;
-      width: $work-bench-width;
+      width: $setting-panel;
       position: absolute;
       margin-top: -10px;
       z-index: -1;
-      padding-top: 10px;
+      background: $dark-lighter;
+      color: #fff;
+      border: $border-style;
+
       .basemap{
-        height: 150px;
-        font-size: 0.8rem;
-      }
-      .btn{
-        width: 100%;
-        display: block;
+        height: 130px;
+        font-size: 10px;
+        line-height: 1;
       }
   .setting-panel.is-open &{
     @include transform (scale(1) translateZ(0));
     }
   }
+.setting-panel__viewer-selector, .setting-panel__basemap-selector{
+  margin: 0 -$padding-mini;
+  li{
+    padding: $padding-mini;
+  }
+}
+
+
 
 

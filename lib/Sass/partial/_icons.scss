@@ -24,41 +24,46 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-arrow_drop_down:before {
-  content: "\e906";
-}
-.icon-search3:before {
+.icon-sort-desc:before {
   content: "\e90a";
 }
-.icon-eye:before {
-  content: "\e900";
-}
-.icon-help:before {
-  content: "\e905";
-}
-.icon-minus:before {
+.icon-caret-right:before {
   content: "\e901";
 }
-.icon-add:before {
+.icon-search:before {
   content: "\e902";
 }
-.icon-sphere:before {
+.icon-eye:before {
   content: "\e903";
 }
-.icon-share2:before {
+.icon-share:before {
   content: "\e904";
 }
-.icon-close:before {
+.icon-check_box:before {
+  content: "\e900";
+}
+.icon-minus:before {
+  content: "\e905";
+}
+.icon-add:before {
+  content: "\e906";
+}
+.icon-sphere:before {
   content: "\e907";
 }
-
-.icon-search{
-  @extend .icon-search3;
+.icon-arrow_drop_down:before {
+  content: "\e908";
+}
+.icon-close:before {
+  content: "\e909";
 }
 
 .icon-chevron-down{
-  @extend .icon-arrow_drop_down;
+  @extend .icon-sort-desc;
 }
 
+.icon-chevron-right{
+  @extend .icon-caret-right;
+}
 
 

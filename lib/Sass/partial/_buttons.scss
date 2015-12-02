@@ -41,13 +41,11 @@ $btn-setting-size: 35px;
   @include transition(all 0.5s ease-in-out);
   &:hover{
     box-shadow: 0 0px 10px 0 rgba(#000, 0.3), 0 0px 5px 0 rgba(#000, 0.6);
-    @include rotate(-30);
   }
 
   .is-open & {
     @include rotate(-180);
     &:hover{
-      @include rotate(30);
     }
   }
 }
@@ -131,5 +129,46 @@ $btn-setting-size: 35px;
 .btn-add-to-map{
   font-size: 20px;
   color: $color-primary;
+}
+
+.btn.btn-basemap{
+  padding: 0;
+  position: relative;
+  &:hover{
+    img{
+      @include transform (scale(1.05));
+      @include transition(0.1s all ease-in);
+      box-shadow: 0 1px 3px 0 rgba(#000, 0.5), 0 1px 1px 0 rgba(#000, 0.3);
+    }
+  }
+  &.is-active{
+    @extend .icon;
+    @extend .icon-check_box;
+  }
+  &:before{
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 20px;
+    background: $color-primary;
+    color: #fff;
+    z-index: 1;
+  }
+}
+
+.btn.btn-viewer{
+  padding: 0;
+  text-transform: uppercase;
+  font-size: $font-size-mini;
+  text-align: center;
+  width: 100%;
+  line-height: 4;
+  @include greybox();
+  &:hover{
+  }
+  &.is-active{
+    background: rgba(#fff, 0.8);
+    color: $dark;
+  }
 }
 

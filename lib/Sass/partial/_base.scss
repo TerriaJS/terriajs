@@ -19,6 +19,10 @@ input[type=range]{
   vertical-align: middle;
 }
 
+div{
+  box-sizing: border-box;
+}
+
 .p{
   font-size: 1rem;
   font-weight: 400;
