@@ -9,23 +9,24 @@ var btnRemove = "Remove All";
 
 var SidePanel = React.createClass({
 
-  removeAll: function(){
-    this.props.terria.nowViewing.removeAll();
-    nowViewingUpdate.raiseEvent();
-  },
+    removeAll: function() {
+        this.props.terria.nowViewing.removeAll();
+        nowViewingUpdate.raiseEvent();
+    },
 
-  render: function() {
-    var terria = this.props.terria;
-    var nowViewing = this.props.terria.nowViewing.items;
-    var content = null;
-    var remove =null;
+    render: function() {
+        var terria = this.props.terria;
+        var nowViewing = this.props.terria.nowViewing.items;
+        var content = null;
+        var remove = null;
 
-    if(nowViewing && nowViewing.length > 0){
-      remove = (<li className="now-viewing__remove"><button onClick={this.removeAll} className='btn'> Remove All </button></li>
-    );
-      content = nowViewing.map(function(item, i) {return (<Legend nowViewingItem={item} key={i} />)});
-    }
-    return (<div>
+        if (nowViewing && nowViewing.length > 0) {
+            remove = (<li className="now-viewing__remove"><button onClick={this.removeAll} className='btn'> Remove All </button></li>);
+            content = nowViewing.map(function(item, i) {
+                return (<Legend nowViewingItem={item} key={i} />)
+            });
+        }
+        return (<div>
             <SearchBox terria={terria}/>
             <div className="now-viewing">
               <ul className="now-viewing__control list-reset clearfix">
@@ -37,8 +38,7 @@ var SidePanel = React.createClass({
                 {content}
               </ul>
             </div>
-        </div>
-      );
-  }
+        </div>);
+    }
 });
 module.exports = SidePanel;

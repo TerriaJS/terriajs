@@ -8,71 +8,71 @@ var Loader = require('./Loader.jsx'),
 
 
 var FeatureInfoPanel = React.createClass({
-  getInitialState: function() {
-    return {
-      pickedFeatures: undefined,
-      featureSections: undefined,
-      isVisible: true
-    };
-  },
+    getInitialState: function() {
+        return {
+            pickedFeatures: undefined,
+            featureSections: undefined,
+            isVisible: true
+        };
+    },
 
-  componentWillMount: function(){
-    this.getFeatures();
-  },
+    componentWillMount: function() {
+        this.getFeatures();
+    },
 
-  componentWillReceiveProps: function(){
-    this.setState({
-      isVisible: true
-    });
-
-    this.getFeatures();
-  },
-
-  getFeatures: function(){
-    var that = this;
-    if(defined(that.props.terria.pickedFeatures)){
-      when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function(){
-      addSectionsForFeatures(that.props.terria);
-      that.setState({
-        // show top three results for now
-        pickedFeatures: addSectionsForFeatures(that.props.terria)
+    componentWillReceiveProps: function() {
+        this.setState({
+            isVisible: true
         });
-      });
-    }
-  },
 
-  closeFeatureInfoPanel: function(){
-    this.setState({
-      isVisible: false,
-      pickedFeatures: undefined
-    })
-  },
+        this.getFeatures();
+    },
 
-  render: function() {
-    var pickedFeatures = this.state.pickedFeatures;
-    var clock = this.props.terria.clock;
-    var content = null;
+    getFeatures: function() {
+        var that = this;
+        if (defined(that.props.terria.pickedFeatures)) {
+            when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function() {
+                addSectionsForFeatures(that.props.terria);
+                that.setState({
+                    // show top three results for now
+                    pickedFeatures: addSectionsForFeatures(that.props.terria)
+                });
+            });
+        }
+    },
 
-    // if not loading and no result, shows no result
-    if(this.props.terria.pickedFeatures && this.props.terria.pickedFeatures.isLoading === true){
-      content = <Loader/>;
-    } else{
-      if(pickedFeatures && pickedFeatures.length > 0){
-        content = pickedFeatures.map(function(features, i) {
-            return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} />);
-          });
-      } else{
-        content = <li> No results </li>
-      }
-    }
+    closeFeatureInfoPanel: function() {
+        this.setState({
+            isVisible: false,
+            pickedFeatures: undefined
+        })
+    },
 
-    return(
-      <div className="feature-info-panel" aria-hidden={!this.state.isVisible}>
+    render: function() {
+        var pickedFeatures = this.state.pickedFeatures;
+        var clock = this.props.terria.clock;
+        var content = null;
+
+        // if not loading and no result, shows no result
+        if (this.props.terria.pickedFeatures && this.props.terria.pickedFeatures.isLoading === true) {
+            content = <Loader/>;
+        } else {
+            if (pickedFeatures && pickedFeatures.length > 0) {
+                content = pickedFeatures.map(function(features, i) {
+                    return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} />);
+                });
+            } else {
+                content = <li> No results </li>
+            }
+        }
+
+        return (
+            <div className="feature-info-panel" aria-hidden={!this.state.isVisible}>
       <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
       <ul className="list-reset">{content}</ul>
       </div>
-      );
-  }
+        );
+    }
 });
 
 //to add multiple catalog when several dataset turned on at the same time
@@ -81,30 +81,37 @@ function addSectionsForFeatures(terria) {
     var features = terria.pickedFeatures.features;
     var catalogItem = undefined;
     var sections = [];
-    features.forEach(function(feature){
-      if (!defined(feature.position)) {
-        feature.position = terria.pickedFeatures.pickPosition;
-      }
-      catalogItem = calculateCatalogItem(terria.nowViewing, feature);
-      // if feature does not have a catalog item?
-      if(!defined(catalogItem)) {
-        sections.push({catalogItem: undefined, feature: feature});
-      }else {
-        var newItem = true, existingItemIndex;
-        for (var i = sections.length - 1; i >= 0; i--) {
-          if (catalogItem === sections[i].catalogItem) {
-              newItem = false;
-              existingItemIndex = i;
-          }
+    features.forEach(function(feature) {
+        if (!defined(feature.position)) {
+            feature.position = terria.pickedFeatures.pickPosition;
         }
-        if(newItem === true){
-          sections.push({catalogItem: catalogItem, features: [feature]});
-        } else{
-          sections[existingItemIndex].features.push(feature);
+        catalogItem = calculateCatalogItem(terria.nowViewing, feature);
+        // if feature does not have a catalog item?
+        if (!defined(catalogItem)) {
+            sections.push({
+                catalogItem: undefined,
+                feature: feature
+            });
+        } else {
+            var newItem = true,
+                existingItemIndex;
+            for (var i = sections.length - 1; i >= 0; i--) {
+                if (catalogItem === sections[i].catalogItem) {
+                    newItem = false;
+                    existingItemIndex = i;
+                }
+            }
+            if (newItem === true) {
+                sections.push({
+                    catalogItem: catalogItem,
+                    features: [feature]
+                });
+            } else {
+                sections[existingItemIndex].features.push(feature);
+            }
         }
-      }
-  });
-  return sections;
+    });
+    return sections;
 }
 
 function calculateCatalogItem(nowViewing, feature) {

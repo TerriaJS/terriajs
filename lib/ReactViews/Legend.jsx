@@ -5,48 +5,48 @@ var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
 var defined = require('terriajs-cesium/Source/Core/defined');
 
 var Legend = React.createClass({
-  getInitialState: function() {
-    return {
-      isOpen: true
-    };
-  },
+    getInitialState: function() {
+        return {
+            isOpen: true
+        };
+    },
 
-  removeFromMap: function(){
-    this.props.nowViewingItem.isEnabled = false;
-    nowViewingUpdate.raiseEvent();
-  },
+    removeFromMap: function() {
+        this.props.nowViewingItem.isEnabled = false;
+        nowViewingUpdate.raiseEvent();
+    },
 
-  toggleDisplay: function(){
-    this.setState({
-      isOpen: !this.state.isOpen
-    })
-  },
+    toggleDisplay: function() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    },
 
-  toggleVisibility: function(){
-    this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
-  },
+    toggleVisibility: function() {
+        this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
+    },
 
-  zoom: function(){
-    this.props.nowViewingItem.zoomToAndUseClock();
-  },
+    zoom: function() {
+        this.props.nowViewingItem.zoomToAndUseClock();
+    },
 
-  changeOpacity: function(event){
-    this.props.nowViewingItem.opacity = event.target.value;
-    nowViewingUpdate.raiseEvent();
-  },
+    changeOpacity: function(event) {
+        this.props.nowViewingItem.opacity = event.target.value;
+        nowViewingUpdate.raiseEvent();
+    },
 
-  render: function() {
-    var nowViewingItem = this.props.nowViewingItem;
+    render: function() {
+        var nowViewingItem = this.props.nowViewingItem;
 
-    var legend = "No legend to show";
-    var legendUrl;
+        var legend = "No legend to show";
+        var legendUrl;
 
-    if(nowViewingItem.legendUrl && nowViewingItem.legendUrl.length !==0){
-      legendUrl = nowViewingItem.legendUrl.match(imageUrlRegex);
-      legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>
-    }
-    return (
-          <li className={"now-viewing__item clearfix " + (this.state.isOpen === true ? "is-open" : "") }>
+        if (nowViewingItem.legendUrl && nowViewingItem.legendUrl.length !== 0) {
+            legendUrl = nowViewingItem.legendUrl.match(imageUrlRegex);
+            legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>
+        }
+        return (
+            <li className={"now-viewing__item clearfix " + (this.state.isOpen === true ? "is-open" : "") }>
               <button onClick={this.toggleDisplay} className="btn block now-viewing__item-title">{nowViewingItem.name}</button>
               <div className ="now-viewing__item-inner">
                 <ul className="list-reset flex clearfix now-viewing__item-control">
@@ -65,6 +65,6 @@ var Legend = React.createClass({
               </div>
           </li>
         );
-  }
+    }
 });
 module.exports = Legend;

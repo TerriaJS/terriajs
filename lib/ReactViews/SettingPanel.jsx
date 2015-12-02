@@ -2,57 +2,56 @@
 var ViewerMode = require('../Models/ViewerMode');
 
 var SettingPanel = React.createClass({
-  getDefaultProps: function() {
-    return {
-      viewerModes: ['3D Terrain', '3D Smooth', '2D'],
-      allBaseMaps: []
-    };
-  },
+    getDefaultProps: function() {
+        return {
+            viewerModes: ['3D Terrain', '3D Smooth', '2D'],
+            allBaseMaps: []
+        };
+    },
+    getInitialState: function() {
+        return {
+            isOpen: false
+        };
+    },
 
-  getInitialState: function() {
-    return {
-      isOpen: false
-    };
-  },
+    togglePanel: function() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+    },
 
-  togglePanel: function(){
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  },
+    selectBaseMap: function(baseMap, event) {
+        this.props.terria.baseMap = baseMap.catalogItem;
+        this.props.terriaViewer.updateBaseMap();
+        terriaViewerUpdate.raiseEvent();
+    },
 
-  selectBaseMap: function(baseMap, event){
-    this.props.terria.baseMap = baseMap.catalogItem;
-    this.props.terriaViewer.updateBaseMap();
-    terriaViewerUpdate.raiseEvent();
-  },
+    selectViewer: function(viewer, event) {
+        switch (viewer) {
+            case 0:
+                this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
+                break;
+            case 1:
+                this.props.terria.viewerMode = ViewerMode.CesiumEllipsoid;
+                break;
+            case 2:
+                this.props.terria.viewerMode = ViewerMode.Leaflet;
+                break;
+            default:
+                return false;
+        }
+        this.props.terriaViewer.updateViewer();
+        terriaViewerUpdate.raiseEvent();
+    },
 
-  selectViewer: function(viewer, event){
-    switch(viewer) {
-        case 0:
-            this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
-            break;
-        case 1:
-            this.props.terria.viewerMode = ViewerMode.CesiumEllipsoid;
-            break;
-        case 2:
-            this.props.terria.viewerMode = ViewerMode.Leaflet;
-            break;
-        default:
-            return false;
-    }
-    this.props.terriaViewer.updateViewer();
-    terriaViewerUpdate.raiseEvent();
-  },
+    render: function() {
+        var that = this;
+        var currentViewer = this.props.terria.viewerMode;
+        var currentBaseMap = this.props.terria.baseMap.name;
 
-  render: function(){
-    var that = this;
-    var currentViewer = this.props.terria.viewerMode;
-    var currentBaseMap = this.props.terria.baseMap.name;
-
-    //To do : aria-hidden={!this.state.isOpen}
-    return (
-      <div className ={'setting-panel ' + (this.state.isOpen? 'is-open': '')}>
+        //To do : aria-hidden={!this.state.isOpen}
+        return (
+            <div className ={'setting-panel ' + (this.state.isOpen? 'is-open': '')}>
       <button onClick={this.togglePanel} className='setting-panel__button btn btn-setting' title='change settings'><i className="icon icon-sphere"></i></button>
         <div className ='setting-panel-inner'>
         <div className='setting-panel-section setting-panel__viewer'>
@@ -73,8 +72,8 @@ var SettingPanel = React.createClass({
         </div>
        </div>
       </div>
-      )
-  }
+        )
+    }
 })
 
 module.exports = SettingPanel;

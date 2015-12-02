@@ -1,4 +1,3 @@
-
 'use strict';
 
 var React = window.React = require('react'),
@@ -12,7 +11,7 @@ var React = window.React = require('react'),
     MapNavigation = require('./MapNavigation.jsx');
 
 
-var UiWrapper = function (terria) {
+var UiWrapper = function(terria) {
     /**
      * Gets or sets an event that is raised when the nowViewing is updated.
      * @type {CesiumEvent}
@@ -39,25 +38,25 @@ var UiWrapper = function (terria) {
     window.terria = this.terria;
 }
 
-UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps, terriaViewer ) {
+UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps, terriaViewer) {
     var terria = this.terria;
-        ReactDOM.render(<ModalWindow terria={terria} />, main);
+    ReactDOM.render(<ModalWindow terria={terria} />, main);
+    ReactDOM.render(<SidePanel terria={terria} />, nav);
+    ReactDOM.render(<Chart terria={terria} />, chart);
+    ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
+
+    //temp
+    var canvas = document.querySelector('canvas');
+
+    canvas.addEventListener('click', function() {
+        if (terria.nowViewing.hasItems) {
+            ReactDOM.render(<FeatureInfoPanel terria={terria} />, aside);
+        }
+    });
+    this.nowViewingUpdate.addEventListener(function() {
         ReactDOM.render(<SidePanel terria={terria} />, nav);
-        ReactDOM.render(<Chart terria={terria} />, chart);
-        ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
-
-        //temp
-        var canvas = document.querySelector('canvas');
-
-        canvas.addEventListener('click', function(){
-            if(terria.nowViewing.hasItems){
-              ReactDOM.render(<FeatureInfoPanel terria={terria} />, aside);
-            }
-          });
-        this.nowViewingUpdate.addEventListener(function(){
-          ReactDOM.render(<SidePanel terria={terria} />, nav);
-          ReactDOM.render(<ModalWindow terria={terria}/>, main);
-        });
+        ReactDOM.render(<ModalWindow terria={terria}/>, main);
+    });
 
         this.terriaViewerUpdate.addEventListener(function(){
           ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);

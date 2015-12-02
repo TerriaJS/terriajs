@@ -5,43 +5,43 @@ var SearchBox = require('./SearchBox.jsx');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var DataCatalog = React.createClass({
-  getInitialState: function() {
-    return {
-      openId: '',
-      previewed: undefined
-    };
-  },
+    getInitialState: function() {
+        return {
+            openId: '',
+            previewed: undefined
+        };
+    },
 
-  handleChildClick: function (i, obj) {
-    var that = this;
-    obj.props.group.isOpen = !obj.state.isOpen;
-    obj.setState({
-      isOpen : !obj.state.isOpen
-    });
-
-    if(obj.state.isOpen === false){
-      when(obj.props.group.load()).then(function() {
-        that.setState({
-          openId : i
+    handleChildClick: function(i, obj) {
+        var that = this;
+        obj.props.group.isOpen = !obj.state.isOpen;
+        obj.setState({
+            isOpen: !obj.state.isOpen
         });
-      });
-    }
-  },
 
-  componentWillMount: function(){
-    var that = this;
-    previewUpdate.addEventListener(function(_previewed){
-      that.setState({
-        previewed: _previewed
-      });
-    });
-  },
+        if (obj.state.isOpen === false) {
+            when(obj.props.group.load()).then(function() {
+                that.setState({
+                    openId: i
+                });
+            });
+        }
+    },
 
-  render: function(){
-    var terria = this.props.terria;
-    var dataCatalog = terria.catalog.group.items;
-    return (
-      <div className="panel-content clearfix">
+    componentWillMount: function() {
+        var that = this;
+        previewUpdate.addEventListener(function(_previewed) {
+            that.setState({
+                previewed: _previewed
+            });
+        });
+    },
+
+    render: function() {
+        var terria = this.props.terria;
+        var dataCatalog = terria.catalog.group.items;
+        return (
+            <div className="panel-content clearfix">
       <div className="search-data col col-5">
       <SearchBox terria = {terria} mapSearch = {false}/>
       <ul className = 'list-reset data-catalog hide-if-searching'>
@@ -54,8 +54,8 @@ var DataCatalog = React.createClass({
         <DataPreview previewed={this.state.previewed} />
       </div>
       </div>
-      ) ;
-  }
+        );
+    }
 });
 
 module.exports = DataCatalog;

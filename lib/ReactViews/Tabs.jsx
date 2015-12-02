@@ -4,29 +4,29 @@ var WelcomeTab = require('./WelcomeTab.jsx');
 var MyDataTab = require('./MyDataTab.jsx');
 var CollectionsTab = require('./CollectionsTab.jsx');
 
-function getName(str1, str2){
-  return str1.concat(str2)
+function getName(str1, str2) {
+    return str1.concat(str2)
 }
 
-var items = ['data-catalog', 'collections' , 'my-data' ];
+var items = ['data-catalog', 'collections', 'my-data'];
 
 var Tabs = React.createClass({
-  getInitialState: function() {
-    return {
-      activeTab: 0
-    };
-  },
+    getInitialState: function() {
+        return {
+            activeTab: 0
+        };
+    },
 
-  clickTab: function(i){
-    this.setState({
-      activeTab: i
-    })
-  },
+    clickTab: function(i) {
+        this.setState({
+            activeTab: i
+        })
+    },
 
-  render: function() {
-    var panels = [<DataCatalog terria={this.props.terria} />, <CollectionsTab/>, <MyDataTab /> ];
-    return (
-      <div className="tabs clearfix">
+    render: function() {
+        var panels = [<DataCatalog terria={this.props.terria} />, <CollectionsTab/>, <MyDataTab />];
+        return (
+            <div className="tabs clearfix">
       <ul className="tablist list-reset flex" role="tablist">
       {items.map(function(item, i ){
       return (<li key={i} className={getName('tablist__', item)} id={getName('tablist__', item)} role="tab" aria-controls={getName('panel__', item)} aria-selected={(this.state.activeTab == i) ? "true" : "false"} ><button onClick={this.clickTab.bind(this, i)} className='btn btn-tab'>{item.replace(/-/g, ' ')} </button></li>)
@@ -42,6 +42,6 @@ var Tabs = React.createClass({
           )
         }, this)}
       </div>);
-  }
+    }
 });
 module.exports = Tabs;

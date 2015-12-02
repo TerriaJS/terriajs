@@ -1,20 +1,20 @@
 'use strict';
 var Chart = React.createClass({
-  getInitialState: function() {
-    return {
-      isOpen: false,
-      isVisible: false
-    };
-  },
+    getInitialState: function() {
+        return {
+            isOpen: false,
+            isVisible: false
+        };
+    },
 
-  toggleOpen: function(){
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  },
+    toggleOpen: function() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+    },
 
-  render: function() {
-    return (<div className={(this.state.isOpen === true ? 'is-open' : '') + ' chart-panel-holder'}>
+    render: function() {
+        return (<div className={(this.state.isOpen === true ? 'is-open' : '') + ' chart-panel-holder'}>
             <div className="chart-panel p1">
               <div className="chart-panel-header flex flex-justify flex-center">
                   <h4 className="chart-panel-section-label">Data Overtime</h4>

@@ -3,25 +3,25 @@
 var markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
 
 var DataPreview = React.createClass({
-  getDefaultProps: function() {
-    return {
-      previewed: {
-        name: 'Select a Dataset to see preview',
-        description: ''
-      }
-    };
-  },
+    getDefaultProps: function() {
+        return {
+            previewed: {
+                name: 'Select a Dataset to see preview',
+                description: ''
+            }
+        };
+    },
 
-  addToMap: function() {
-    this.props.previewed.isEnabled = true;
-    nowViewingUpdate.raiseEvent();
-  },
+    addToMap: function() {
+        this.props.previewed.isEnabled = true;
+        nowViewingUpdate.raiseEvent();
+    },
 
-  render: function() {
-    var previewed = this.props.previewed;
-    var url = "http://placehold.it/600x300?text=preview" + previewed.name.replace(/\s+/g, '-').toLowerCase();
+    render: function() {
+        var previewed = this.props.previewed;
+        var url = "http://placehold.it/600x300?text=preview" + previewed.name.replace(/\s+/g, '-').toLowerCase();
 
-    return (<figure>
+        return (<figure>
       <img src={url}/>
       <figcaption>
       <div className="title clearfix">
@@ -33,8 +33,7 @@ var DataPreview = React.createClass({
       </div>
       <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
       </figcaption>
-      </figure>
-      );
-  }
+      </figure>);
+    }
 });
 module.exports = DataPreview;
