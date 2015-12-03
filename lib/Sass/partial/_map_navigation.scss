@@ -1,10 +1,61 @@
+$ring-width: 10px;
+$compass-width: 90px;
+
 .compass{
-  pointer-events: auto;
+  cursor: default;
   position: fixed;
   right: $padding;
   top: 75px;
-  width: 95px;
-  height: 95px;
+  width: $compass-width;
+  height: $compass-width;
+  .compass-outer-ring{
+    background-image: url('./TerriaJS/images/compass-outer.svg');
+    height: $compass-width;
+    width: $compass-width;
+    border-radius: 50%;
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .compass-rotation-marker{
+    background-image: url('./TerriaJS/images/compass-rotation-marker.svg');
+    height: $compass-width - 4px;
+    width: $compass-width - 4px;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .compass-inner-ring{
+    height: $compass-width - $ring-width*4;
+    width: $compass-width - $ring-width*4;
+    border-radius: 50%;
+    display: block;
+    position: absolute;
+    top: $ring-width*2;
+    left: $ring-width*2;
+    background-image: url('./TerriaJS/images/compass-inner.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
+
+.zoom-control{
   background: #fff;
-  border-radius: 50%;
+  width: 30px;
+  position: absolute;
+  //temp
+  right: 30px;
+  top: 200px;
+  border-radius: 100px;
+  border: 2px solid #000;
+  text-align: center;
+  font-size: 18px;
+  .btn{
+    padding: 0;
+  }
 }
