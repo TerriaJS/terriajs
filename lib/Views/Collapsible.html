@@ -1,0 +1,18 @@
+<script type="text/html" id="collapsible-inject-template">
+    <div class="collapsible-inject"></div>
+</script>
+
+<div class="collapsible-holder">
+    <div class="collapsible-header" data-bind="click: toggleOpen">
+        <!-- ko if: isOpen -->
+        <div class="collapsible-arrow" data-bind="cesiumSvgPath: { path: svgArrowDown, width: 32, height: 32 }"></div>
+        <!-- /ko -->
+        <!-- ko if: !isOpen -->
+        <div class="collapsible-arrow" data-bind="cesiumSvgPath: { path: svgArrowRight, width: 32, height: 32 }"></div>
+        <!-- /ko -->
+        <span class="collapsible-name" data-bind="text: name"></span>
+    </div>
+    <div class="collapsible-content-wrapper" data-bind = "css: { 'collapsible-hidden': !isOpen }">
+        <div data-bind="template: {name: 'collapsible-inject-template', afterRender: renderCollapsible.bind($data)}"></div>
+    </div>
+</div>
