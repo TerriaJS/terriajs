@@ -27,10 +27,14 @@ describe('DataTable', function() {
         var dataTable = new DataTable();
         loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
             dataTable.loadText(text);
+            expect(dataTable.getDataVariables().slice()).toEqual([]);
             dataTable.setDataVariable('enum');
             expect(dataTable.selectedNames.slice()).toEqual(['enum']);
             dataTable.setDataVariable('val');
             expect(dataTable.selectedNames.slice()).toEqual(['val']);
+            // also test turning off the variable
+            dataTable.setDataVariable('val', false);
+            expect(dataTable.getDataVariables().slice()).toEqual([]);
         }).then(done).otherwise(done.fail);
     });
 
@@ -38,10 +42,16 @@ describe('DataTable', function() {
         var dataTable = new DataTable({allowMultiple: true});
         loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
             dataTable.loadText(text);
+            expect(dataTable.getDataVariables().slice()).toEqual([]);
             dataTable.setDataVariable('enum');
             expect(dataTable.getDataVariables().slice()).toEqual(['enum']);
             dataTable.setDataVariable('val');
             expect(dataTable.getDataVariables().slice()).toEqual(['enum', 'val']);
+            // also test turning off the variables
+            dataTable.setDataVariable('val');
+            expect(dataTable.getDataVariables().slice()).toEqual(['enum']);
+            dataTable.setDataVariable('enum');
+            expect(dataTable.getDataVariables().slice()).toEqual([]);
         }).then(done).otherwise(done.fail);
     });
 
