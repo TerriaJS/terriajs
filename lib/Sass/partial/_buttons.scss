@@ -189,3 +189,12 @@ $btn-setting-size: 35px;
   padding: 0px 3px;
 }
 
+.btn.btn-preview-add-to-map{
+  border: 1px solid $color-primary;
+  color: $color-primary;
+  &.is-enabled{
+    background: $color-primary;
+    color: #fff;
+  }
+}
+

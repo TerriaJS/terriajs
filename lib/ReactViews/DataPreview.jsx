@@ -12,8 +12,8 @@ var DataPreview = React.createClass({
         };
     },
 
-    addToMap: function() {
-        this.props.previewed.isEnabled = true;
+    toggleOnMap: function() {
+        this.props.previewed.isEnabled = !this.props.previewed.isEnabled;
         nowViewingUpdate.raiseEvent();
     },
 
@@ -22,18 +22,18 @@ var DataPreview = React.createClass({
         var url = "http://placehold.it/600x300?text=preview" + previewed.name.replace(/\s+/g, '-').toLowerCase();
 
         return (<figure>
-      <img src={url}/>
-      <figcaption>
-      <div className="title clearfix">
-      <h4 className="col col-6">{previewed.name}</h4>
-      <ul className="list-reset flex col col-6 search-preview-action">
-      <li><button className="btn" title ="share this data"><i className="icon icon-share2"></i></button></li>
-      <li><button onClick={this.addToMap} className="btn btn-primary" title ="add to map"><i className="icon icon-plus"></i> Add to map</button></li>
-      </ul>
-      </div>
-      <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
-      </figcaption>
-      </figure>);
+                <img src={url}/>
+                <figcaption>
+                <div className="title clearfix">
+                <h4 className="col col-6">{previewed.name}</h4>
+                <ul className="list-reset flex col col-6 search-preview-action">
+                <li><button className="btn" title ="share this data"><i className="icon icon-share"></i></button></li>
+                <li><button onClick={this.toggleOnMap} className={"btn btn-preview-add-to-map " + (previewed.isEnabled ? 'is-enabled' : '')} title ={previewed.isEnabled ? 'remove from map' : 'add to map'}><i className="icon icon-plus"></i>{previewed.isEnabled ? 'Remove from map' : 'Add to map'}</button></li>
+                </ul>
+                </div>
+                <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
+                </figcaption>
+                </figure>);
     }
 });
 module.exports = DataPreview;
