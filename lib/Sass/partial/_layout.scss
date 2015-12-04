@@ -2,9 +2,14 @@
   box-sizing: border-box;
   width: $work-bench-width;
   display: none;
+  @include transition(margin 0.5s linear);
   @media(screen and min-width: $sm){
     //temp
     display: block;
+    .is-full-screen &{
+      margin-left: -$work-bench-width;
+
+    }
   }
 }
 
@@ -15,6 +20,7 @@
   right: 0;
   left: 0;
   height: 100vh;
+  @include transition(left 0.5s linear);
   canvas{
     width: 100%;
     height: 100%;
@@ -25,6 +31,9 @@
     //temp
     // width: calc(100% - $work-bench-width);
     left: $work-bench-width;
+    .is-full-screen &{
+      left: 0;
+    }
   }
 }
 
@@ -47,4 +56,6 @@
     top: 20px;
     right: $padding;
 }
+
+
 

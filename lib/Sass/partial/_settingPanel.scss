@@ -1,5 +1,5 @@
 .setting-panel{
-  width: $setting-panel;
+  width: auto;
   position: relative;
   z-index: 1;
 }
@@ -19,7 +19,7 @@
       background: $dark-lighter;
       color: #fff;
       border: $border-style;
-
+      left: -($setting-panel/2 - 10px);
       .basemap{
         height: 130px;
         font-size: 10px;

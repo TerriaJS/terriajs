@@ -27,7 +27,7 @@ $btn-setting-size: 35px;
   }
 }
 
-.btn-setting{
+.btn-map{
   background: #fff;
   padding: 0 4px;
   border-radius: 50%;
@@ -42,8 +42,7 @@ $btn-setting-size: 35px;
   &:hover{
     box-shadow: 0 0px 10px 0 rgba(#000, 0.3), 0 0px 5px 0 rgba(#000, 0.6);
   }
-
-  .is-open & {
+  .map-nav-panel.is-open &, &.is-active {
     @include rotate(-180);
     &:hover{
     }
@@ -170,5 +169,18 @@ $btn-setting-size: 35px;
     background: rgba(#fff, 0.8);
     color: $dark;
   }
+}
+
+.btn.btn-full-screen{
+  background: $color-primary;
+  padding: 1px 2px;
+  .icon{
+    line-height: 40px;
+    color: #fff;
+  }
+}
+
+.btn .share-panel__button{
+  padding: 0px 3px;
 }
 

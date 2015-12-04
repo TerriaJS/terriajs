@@ -51,8 +51,8 @@ var SettingPanel = React.createClass({
 
         //To do : aria-hidden={!this.state.isOpen}
         return (
-            <div className ={'setting-panel ' + (this.state.isOpen? 'is-open': '')}>
-      <button onClick={this.togglePanel} className='setting-panel__button btn btn-setting' title='change settings'><i className="icon icon-sphere"></i></button>
+            <div className ={'map-nav-panel setting-panel ' + (this.state.isOpen? 'is-open': '')}>
+      <button onClick={this.togglePanel} className='setting-panel__button btn btn-map' title='change settings'><i className="icon icon-sphere"></i></button>
         <div className ='setting-panel-inner'>
         <div className='setting-panel-section setting-panel__viewer'>
         <label className='setting-panel__label'> Map View </label>
@@ -74,6 +74,6 @@ var SettingPanel = React.createClass({
       </div>
         )
     }
-})
+});
 
 module.exports = SettingPanel;

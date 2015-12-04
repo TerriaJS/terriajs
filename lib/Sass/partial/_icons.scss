@@ -24,29 +24,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-sort-desc:before {
-  content: "\e90a";
-}
-.icon-caret-right:before {
-  content: "\e901";
-}
-.icon-search:before {
-  content: "\e902";
-}
-.icon-eye:before {
-  content: "\e903";
-}
-.icon-share:before {
-  content: "\e904";
-}
-.icon-check_box:before {
-  content: "\e900";
+.icon-full-screen:before {
+  content: "\e90b";
 }
 .icon-minus:before {
   content: "\e905";
-}
-.icon-add:before {
-  content: "\e906";
 }
 .icon-sphere:before {
   content: "\e907";
@@ -57,6 +39,38 @@
 .icon-close:before {
   content: "\e909";
 }
+.icon-minus2:before {
+  content: "\e90c";
+}
+.icon-plus:before {
+  content: "\e90d";
+}
+.icon-sort-desc:before {
+  content: "\e90a";
+}
+.icon-caret-right:before {
+  content: "\e901";
+}
+.icon-search:before {
+  content: "\e902";
+}
+.icon-circle-plus:before {
+  content: "\e90e";
+}
+.icon-circle-plus:before {
+  content: "\e90e";
+}
+.icon-eye:before {
+  content: "\e903";
+}
+.icon-share:before {
+  content: "\e904";
+}
+.icon-check_box:before {
+  content: "\e900";
+}
+
+
 
 .icon-chevron-down{
   @extend .icon-sort-desc;
@@ -64,6 +78,22 @@
 
 .icon-chevron-right{
   @extend .icon-caret-right;
+}
+
+.icon-add {
+  @extend .icon-circle-plus;
+}
+
+.icon-remove{
+  @extend .icon-minus;
+}
+
+.icon-zoom-in{
+  @extend .icon-plus;
+}
+
+.icon-zoom-out{
+  @extend .icon-minus2;
 }
 
 
