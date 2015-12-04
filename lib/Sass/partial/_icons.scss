@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-refresh:before {
+  content: "\e906";
+}
 .icon-full-screen:before {
   content: "\e90b";
 }
@@ -54,8 +57,8 @@
 .icon-search:before {
   content: "\e902";
 }
-.icon-circle-plus:before {
-  content: "\e90e";
+.icon-eye:before {
+  content: "\e903";
 }
 .icon-circle-plus:before {
   content: "\e90e";
@@ -69,7 +72,6 @@
 .icon-check_box:before {
   content: "\e900";
 }
-
 
 
 .icon-chevron-down{

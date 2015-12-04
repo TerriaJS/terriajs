@@ -13,6 +13,7 @@ var FullScreenButton = React.createClass({
         });
 
         body.classList.toggle('is-full-screen', !this.state.isActive);
+        this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     render: function() {

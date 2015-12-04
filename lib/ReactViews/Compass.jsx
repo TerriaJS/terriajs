@@ -76,7 +76,7 @@ var Compass = React.createClass({
       })
     },
 
-    componentWillMount: function(){
+    componentDidMount: function(){
       this.props.terria.afterViewerChanged.addEventListener(viewerChange);
       viewerChange(this);
     },
