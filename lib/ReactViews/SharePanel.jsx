@@ -19,7 +19,6 @@ var SharePanel = React.createClass({
             <div className ={'map-nav-panel share-panel ' + (this.state.isOpen? 'is-open': '')}>
               <button onClick={this.togglePanel}  className='share-panel__button btn btn-map' title='share'><i className="icon icon-share"></i></button>
                 <div className ='share-panel-inner'>
-                share this thing
                </div>
               </div>
         )

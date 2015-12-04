@@ -133,6 +133,11 @@ $btn-setting-size: 35px;
 .btn.btn-basemap{
   padding: 0;
   position: relative;
+  display: block;
+  img{
+    width: 100%;
+    height: auto;
+  }
   &:hover{
     img{
       @include transform (scale(1.05));

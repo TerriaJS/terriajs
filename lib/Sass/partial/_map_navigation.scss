@@ -62,4 +62,7 @@ $compass-width: 90px;
 
 .map-navigation__menu{
   padding-right: $padding*3;
+  li{
+    padding: 0 $padding;
+  }
 }
