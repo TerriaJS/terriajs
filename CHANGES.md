@@ -16,6 +16,7 @@ Change Log
 * Legend URLs are now accessed via the proxy, if applicable.
 * Fixed a bug that prevented feature scaling by value.
 * Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
+* Improved the message that is shown to the user when their browser supports WebGL but it has a "major performance caveat".
 * Fixed a bug that could cause an exception in some browsers (Internet Explorer, Safari) when loading a GeoJSON with embedded styles.
 
 ### 1.0.48
