@@ -1,5 +1,5 @@
 .feature-info-panel-section{
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .feature-info-panel{
@@ -12,8 +12,20 @@
   overflow-y: auto;
   overflow-x: hidden;
   color: #fff;
-  padding: 0.5rem;
 }
 .feature-info-panel__section{
+  background: rgba(#fff, 0.1);
+  padding: 0 $padding;
+  border-bottom: 1px solid rgba($dark, 0.8);
+}
 
+.feature-info-panel__content{
+  background: $dark-lighter;
+  font-family: monospace;
+  table{
+    td{
+      border-collapse: collapse;
+      border: 1px solid $dark;
+    }
+  }
 }

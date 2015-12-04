@@ -35,8 +35,8 @@ var FeatureInfoSection = React.createClass({
     },
 
     render: function() {
-        var iconClass = 'p1 icon ' + (this.state.isOpen ? 'icon-plus' : 'icon-minus');
-        return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{this.props.feature.properties.name}<i className={iconClass}></i></button><section aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
+        var iconClass = 'icon ' + (this.state.isOpen ? 'icon-show-less' : 'icon-show-more');
+        return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{this.props.feature.properties.name}<i className={iconClass}></i></button><section className='feature-info-panel__content' aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
     }
 });
 
