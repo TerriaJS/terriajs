@@ -9,3 +9,19 @@
   font-size: 0.5rem;
   color: rgba(#fff, 0.8);
 }
+
+@keyframes mymove {
+    0%   {color: $color-primary;  transform: rotate(0deg); -webkit-transform: rotate(0deg);}
+    100% {color: #fff;  transform: rotate(180deg); -webkit-transform: rotate(180deg); }
+}
+
+.loader{
+  padding: $padding;
+  .icon{
+    animation: mymove 5s infinite;
+  }
+}
+.no-results{
+  padding: $padding;
+}
+

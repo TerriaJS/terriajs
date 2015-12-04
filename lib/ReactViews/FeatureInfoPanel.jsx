@@ -62,7 +62,7 @@ var FeatureInfoPanel = React.createClass({
                     return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} />);
                 });
             } else {
-                content = <li> No results </li>
+                content = <li className='no-results'> No results </li>
             }
         }
 
