@@ -8,6 +8,16 @@ Change Log
 * Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
 * Retrieves WFS or WCS URL associated with WMS data sources using DescribeLayer if no dataUrl is present.
 * Fixed a bug that prevented feature scaling by value
+* Fixed a bug that prevented feature scaling by value.
+* Fixed a bug that prevented the csv `displayDuration` from working.
+* Fixed a bug that ignored which column of the csv file to show as the legend initially.
+* `NowViewingTabViewModel` is now composed of a number of sections.  Each section is given the opportunity to determine whether it applies to each catalog item.  Custom sections may be added by adding them to NowViewingTabViewModel.sections`.
+* `CsvCatalogItem` and `AbsIttCatalogItem` now expose a `concepts` property that can be used to adjust the display.
+* Added `Terria.cesiumBaseUrl` property.
+* The user interface container DOM element may now be provided to `TerriaViewer` by specifying `uiContainer` in its options.  Previously it always used an element named `ui`.
+* Legend URLs are now accessed via the proxy, if applicable.
+* Fixed a bug that prevented feature scaling by value.
+* Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
 
 ### 1.0.48
 
