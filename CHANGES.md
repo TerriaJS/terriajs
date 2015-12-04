@@ -17,6 +17,7 @@ Change Log
 * Fixed a bug that prevented feature scaling by value.
 * Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
 * Fixed a bug that could cause an exception in some browsers (Internet Explorer, Safari) when loading a GeoJSON with embedded styles.
+* Added `CatalogItem.zoomOnEnable` property.  When true, the map automatically zooms to the item as soon as it is enabled.
 
 ### 1.0.48
 
