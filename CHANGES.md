@@ -18,6 +18,7 @@ Change Log
 * Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
 * Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
 * Fixed a bug that could cause an exception in some browsers (Internet Explorer, Safari) when loading a GeoJSON with embedded styles.
+* Added `CatalogItem.zoomOnEnable` property.  When true, the map automatically zooms to the item as soon as it is enabled.
 
 ### 1.0.48
 
