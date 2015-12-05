@@ -1,7 +1,14 @@
 'use strict';
+var React = require('react');
 var DataCatalogItem = require('./DataCatalogItem.jsx');
 var Loader = require('./Loader.jsx');
 var DataCatalogMember = React.createClass({
+    propTypes:{
+        onClick:  React.PropTypes.func,
+        member: React.PropTypes.object,
+        items: React.PropTypes.array
+    },
+
     getInitialState: function() {
         return {
             isOpen: false
@@ -21,10 +28,10 @@ var DataCatalogMember = React.createClass({
         if (this.state.isOpen === true) {
             if (items && items.length > 0) {
                 content = items.map(function(item, i) {
-                    return <DataCatalogItem item={item} key={i} />
+                    return (<DataCatalogItem item={item} key={i}/>);
                 });
             } else {
-                content = <Loader/>
+                content = <Loader/>;
             }
         }
         var iconClass = 'icon icon-chevron-' + (this.state.isOpen ? 'down' : 'right');

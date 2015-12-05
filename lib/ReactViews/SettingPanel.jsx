@@ -1,7 +1,15 @@
 'use strict';
+var React = require('react');
 var ViewerMode = require('../Models/ViewerMode');
 
 var SettingPanel = React.createClass({
+    propTypes: {
+        terria: React.PropTypes.object,
+        terriaViewer: React.PropTypes.object,
+        viewerModes: React.PropTypes.array,
+        allBaseMaps: React.PropTypes.array
+    },
+
     getDefaultProps: function() {
         return {
             viewerModes: ['3D Terrain', '3D Smooth', '2D'],
@@ -23,7 +31,7 @@ var SettingPanel = React.createClass({
     selectBaseMap: function(baseMap, event) {
         this.props.terria.baseMap = baseMap.catalogItem;
         this.props.terriaViewer.updateBaseMap();
-        terriaViewerUpdate.raiseEvent();
+        window.terriaViewerUpdate.raiseEvent();
     },
 
     selectViewer: function(viewer, event) {
@@ -41,7 +49,7 @@ var SettingPanel = React.createClass({
                 return false;
         }
         this.props.terriaViewer.updateViewer();
-        terriaViewerUpdate.raiseEvent();
+        window.terriaViewerUpdate.raiseEvent();
     },
 
     render: function() {
@@ -51,28 +59,28 @@ var SettingPanel = React.createClass({
 
         //To do : aria-hidden={!this.state.isOpen}
         return (
-            <div className ={'map-nav-panel setting-panel ' + (this.state.isOpen? 'is-open': '')}>
-      <button onClick={this.togglePanel} className='setting-panel__button btn btn-map' title='change settings'><i className="icon icon-sphere"></i></button>
-        <div className ='setting-panel-inner'>
-        <div className='setting-panel-section setting-panel__viewer'>
-        <label className='setting-panel__label'> Map View </label>
-        <ul className='setting-panel__viewer-selector list-reset clearfix'>
-          {this.props.viewerModes.map(function(viewerMode, i){
-              return ( <li key ={i} className='col col-4'><button onClick={that.selectViewer.bind(this,i)} className={'btn btn-viewer ' + (i === currentViewer ? 'is-active' : '')}>{viewerMode}</button></li>)
-          }, this)}
-        </ul>
-        </div>
-        <div className='setting-panel-section setting-panel__basemap'>
-        <label className='setting-panel__label'> Base Map </label>
-        <ul className='setting-panel__basemap-selector list-reset clearfix'>
-        {this.props.allBaseMaps.map(function(baseMap, i){
-              return ( <li key ={i} className='basemap col col-4'><button className={'btn btn-basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')} onClick={that.selectBaseMap.bind(this,baseMap)}><img alt={baseMap.catalogItem.name} src ={baseMap.image}/>{baseMap.catalogItem.name}</button></li>)
-          }, this)}
-        </ul>
+            <div className ={'map-nav-panel setting-panel ' + (this.state.isOpen ? 'is-open' : '')}>
+              <button onClick={this.togglePanel} className='setting-panel__button btn btn-map' title='change settings'><i className="icon icon-sphere"></i></button>
+                <div className ='setting-panel-inner'>
+                <div className='setting-panel-section setting-panel__viewer'>
+                <label className='setting-panel__label'> Map View </label>
+                <ul className='setting-panel__viewer-selector list-reset clearfix'>
+                  {this.props.viewerModes.map(function(viewerMode, i){
+                      return ( <li key ={i} className='col col-4'><button onClick={that.selectViewer.bind(this,i)} className={'btn btn-viewer ' + (i === currentViewer ? 'is-active' : '')}>{viewerMode}</button></li>);
+                  }, this)}
+                </ul>
+                </div>
+                <div className='setting-panel-section setting-panel__basemap'>
+                <label className='setting-panel__label'> Base Map </label>
+                <ul className='setting-panel__basemap-selector list-reset clearfix'>
+                {this.props.allBaseMaps.map(function(baseMap, i){
+                      return ( <li key ={i} className='basemap col col-4'><button className={'btn btn-basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')} onClick={that.selectBaseMap.bind(this,baseMap)}><img alt={baseMap.catalogItem.name} src ={baseMap.image}/>{baseMap.catalogItem.name}</button></li>);
+                  }, this)}
+                </ul>
         </div>
        </div>
       </div>
-        )
+        );
     }
 });
 

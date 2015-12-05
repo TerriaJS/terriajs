@@ -1,6 +1,10 @@
 'use strict';
-
+var React = require('react');
 var LocationItem = React.createClass({
+    propTypes: {
+      item: React.PropTypes.object
+    },
+
     render: function() {
         var item = this.props.item;
         return (

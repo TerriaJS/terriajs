@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require*/
+var React = require('react');
 var Loader = require('./Loader.jsx'),
     FeatureInfoCatalogItem = require('./FeatureInfoCatalogItem.jsx'),
     when = require('terriajs-cesium/Source/ThirdParty/when'),
@@ -8,6 +9,10 @@ var Loader = require('./Loader.jsx'),
 
 
 var FeatureInfoPanel = React.createClass({
+    propTypes: {
+        terria: React.PropTypes.object
+    },
+
     getInitialState: function() {
         return {
             pickedFeatures: undefined,
@@ -45,14 +50,13 @@ var FeatureInfoPanel = React.createClass({
         this.setState({
             isVisible: false,
             pickedFeatures: undefined
-        })
+        });
     },
 
     render: function() {
         var pickedFeatures = this.state.pickedFeatures;
         var clock = this.props.terria.clock;
         var content = null;
-
         // if not loading and no result, shows no result
         if (this.props.terria.pickedFeatures && this.props.terria.pickedFeatures.isLoading === true) {
             content = <Loader/>;
@@ -62,15 +66,15 @@ var FeatureInfoPanel = React.createClass({
                     return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} />);
                 });
             } else {
-                content = <li className='no-results'> No results </li>
+                content = <li className='no-results'> No results </li>;
             }
         }
 
         return (
             <div className="feature-info-panel" aria-hidden={!this.state.isVisible}>
-      <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
-      <ul className="list-reset">{content}</ul>
-      </div>
+              <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
+              <ul className="list-reset">{content}</ul>
+            </div>
         );
     }
 });
@@ -79,7 +83,7 @@ var FeatureInfoPanel = React.createClass({
 
 function addSectionsForFeatures(terria) {
     var features = terria.pickedFeatures.features;
-    var catalogItem = undefined;
+    var catalogItem;
     var sections = [];
     features.forEach(function(feature) {
         if (!defined(feature.position)) {

@@ -1,11 +1,15 @@
 'use strict';
 var Mustache = require('mustache');
-
+var React = require('react');
 var defined = require('terriajs-cesium/Source/Core/defined');
-var destroyObject = require('terriajs-cesium/Source/Core/destroyObject');
-var htmlTagRegex = /(<html(.|\s)*>(.|\s)*<\/html>|<body(.|\s)*>(.|\s)*<\/body>|<meta(.|\s)*>)/im;
 
 var FeatureInfoSection = React.createClass({
+    propTypes: {
+        template: React.PropTypes.object,
+        feature: React.PropTypes.object,
+        clock: React.PropTypes.object
+    },
+
     getInitialState: function() {
         return {
             isOpen: false

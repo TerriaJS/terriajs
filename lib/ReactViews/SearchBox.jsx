@@ -1,4 +1,5 @@
 'use strict';
+var React = require('react');
 var DataCatalogItem = require('./DataCatalogItem.jsx');
 var LocationItem = require('./LocationItem.jsx');
 var Loader = require('./Loader.jsx');
@@ -9,6 +10,10 @@ var BingMapsSearchProviderViewModel = require('../ViewModels/BingMapsSearchProvi
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var SearchBox = React.createClass({
+    propTypes: {
+        mapSearch: React.PropTypes.bool
+    },
+
     getInitialState: function() {
         return {
             value: '',
@@ -31,7 +36,7 @@ var SearchBox = React.createClass({
             that.setState({
                 dataCatalogResults: dataCatalogSearch.searchResults,
                 dataCatalogIsSearching: dataCatalogSearch.isSearching
-            })
+            });
         });
 
         if (that.props.mapSearch !== false) {
@@ -47,7 +52,7 @@ var SearchBox = React.createClass({
     clearSearch: function() {
         this.setState({
             value: ''
-        })
+        });
     },
 
     render: function() {

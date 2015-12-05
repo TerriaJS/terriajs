@@ -1,17 +1,20 @@
 'use strict';
-
+var React = require('react');
 var SearchBox = require('./SearchBox.jsx');
 var ModalTriggerButton = require('./ModalTriggerButton.jsx');
 var Legend = require('./Legend.jsx');
 
-var btnAdd = "Add Data";
-var btnRemove = "Remove All";
+var btnAdd = 'Add Data';
+var btnRemove = 'Remove All';
 
 var SidePanel = React.createClass({
+    propTypes: {
+        terria: React.PropTypes.object
+    },
 
     removeAll: function() {
         this.props.terria.nowViewing.removeAll();
-        nowViewingUpdate.raiseEvent();
+        window.nowViewingUpdate.raiseEvent();
     },
 
     render: function() {
@@ -21,9 +24,9 @@ var SidePanel = React.createClass({
         var remove = null;
 
         if (nowViewing && nowViewing.length > 0) {
-            remove = (<li className="now-viewing__remove"><button onClick={this.removeAll} className='btn'> Remove All </button></li>);
+            remove = (<li className="now-viewing__remove"><button onClick={this.removeAll} className='btn'>{btnRemove}</button></li>);
             content = nowViewing.map(function(item, i) {
-                return (<Legend nowViewingItem={item} key={i} />)
+                return (<Legend nowViewingItem={item} key={i} />);
             });
         }
         return (<div>

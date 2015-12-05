@@ -1,10 +1,16 @@
 'use strict';
-
+var React = require('react');
 var DataCatalogMember = require('./DataCatalogMember.jsx');
 var Loader = require('./Loader.jsx');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var DataCatalogGroup = React.createClass({
+    propTypes: {
+        onClick: React.PropTypes.func,
+        group: React.PropTypes.object,
+        items: React.PropTypes.array
+    },
+
     getInitialState: function() {
         return {
             isOpen: false,
@@ -42,7 +48,7 @@ var DataCatalogGroup = React.createClass({
             var that = this;
             if (members && members.length > 0) {
                 content = members.map(function(member, i) {
-                    return <DataCatalogMember  onClick={that.handleChildClick.bind(that, i)} member={member} items={member.items} key={i} />
+                    return (<DataCatalogMember  onClick={that.handleChildClick.bind(that, i)} member={member} items={member.items} key={i} />);
                 });
             } else {
                 content = <Loader/>;
@@ -51,7 +57,7 @@ var DataCatalogGroup = React.createClass({
         iconClass = 'icon icon-chevron-' + (this.state.isOpen ? 'down' : 'right');
         return (
             <li>
-        <button className ='btn btn-catalogue' onClick={this.handleClick} >{group.name}<i className={iconClass}></i></button>
+        <button className ="btn btn-catalogue" onClick={this.handleClick} >{group.name}<i className={iconClass}></i></button>
         <ul className="data-catalog-group list-reset">
         {content}
         </ul>

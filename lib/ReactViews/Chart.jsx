@@ -1,4 +1,5 @@
 'use strict';
+var React = require('react');
 var Chart = React.createClass({
     getInitialState: function() {
         return {
@@ -18,7 +19,7 @@ var Chart = React.createClass({
             <div className="chart-panel p1">
               <div className="chart-panel-header flex flex-justify flex-center">
                   <h4 className="chart-panel-section-label">Data Overtime</h4>
-                  <button onClick ={this.toggleOpen} className="chart-panel-close-button btn" title ="close">{this.state.isOpen? 'hide' : 'show'}</button>
+                  <button onClick ={this.toggleOpen} className="chart-panel-close-button btn" title ="close">{this.state.isOpen ? 'hide' : 'show'}</button>
               </div>
               <div className="chart-panel-section">
                   <div className="chart-panel-section-content">

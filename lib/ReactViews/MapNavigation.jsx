@@ -1,4 +1,5 @@
 'use strict';
+var React = require('react');
 var SettingPanel = require('./SettingPanel.jsx'),
     Compass = require('./Compass.jsx'),
     ZoomControl = require('./ZoomControl.jsx'),
@@ -6,6 +7,12 @@ var SettingPanel = require('./SettingPanel.jsx'),
     FullScreenButton = require('./FullScreenButton.jsx');
 
 var MapNavigation = React.createClass({
+    propTypes: {
+      terria: React.PropTypes.object,
+      allBaseMaps: React.PropTypes.array,
+      terriaViewer: React.PropTypes.object
+    },
+
     render: function() {
         console.log(this.props);
         return (<div className='map-navigation'>

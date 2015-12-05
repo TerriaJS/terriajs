@@ -1,4 +1,5 @@
 'use strict';
+var React = require('react');
 var CameraFlightPath = require('terriajs-cesium/Source/Scene/CameraFlightPath');
 var Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
 var Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
@@ -11,6 +12,10 @@ var Ray = require('terriajs-cesium/Source/Core/Ray');
 var Transforms = require('terriajs-cesium/Source/Core/Transforms');
 
 var Compass = React.createClass({
+    propTypes: {
+        terria : React.PropTypes.object
+    },
+
     getInitialState: function() {
         return {
             orbitCursorAngle: 0,
@@ -18,6 +23,12 @@ var Compass = React.createClass({
             orbitCursorOpacity: 0
         };
     },
+
+    componentDidMount: function(){
+      this.props.terria.afterViewerChanged.addEventListener(viewerChange);
+      viewerChange(this);
+    },
+
     handleMouseDown: function(e){
       var compassElement = e.currentTarget;
       var compassRectangle = e.currentTarget.getBoundingClientRect();
@@ -73,22 +84,19 @@ var Compass = React.createClass({
       this.setState({
         orbitCursorOpacity: 0,
         orbitCursorAngle: 0
-      })
+      });
     },
 
-    componentDidMount: function(){
-      this.props.terria.afterViewerChanged.addEventListener(viewerChange);
-      viewerChange(this);
-    },
+
 
     render: function() {
-      var rotationMarkerStyle ={
+      var rotationMarkerStyle = {
           transform : 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
           WebkitTransform : 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
           opacity: this.state.orbitCursorOpacity
         },
 
-        outerCircleStyle ={
+        outerCircleStyle = {
           transform : 'rotate(-' + this.props.terria.cesium.scene.camera.heading + 'rad)',
           WebkitTransform : 'rotate(-' + this.props.terria.cesium.scene.camera.heading + 'rad)',
           opacity: ''
@@ -100,7 +108,7 @@ var Compass = React.createClass({
               <div className='compass-inner-ring' title='Click and drag to rotate the camera'></div>
               <div className='compass-rotation-marker' style={rotationMarkerStyle}></div>
             </div>
-          )
+          );
     }
 });
 
@@ -123,6 +131,7 @@ function rotate(viewModel, compassElement, cursorVector) {
     viewModel.rotateInitialCursorAngle = Math.atan2(-cursorVector.y, cursorVector.x);
 
     var scene = viewModel.props.terria.cesium.scene;
+
     var camera = scene.camera;
 
     var windowPosition = windowPositionScratch;
@@ -155,9 +164,9 @@ function rotate(viewModel, compassElement, cursorVector) {
         var angleDifference = angle - viewModel.rotateInitialCursorAngle;
         var newCameraAngle = CesiumMath.zeroToTwoPi(viewModel.rotateInitialCameraAngle - angleDifference);
 
-        var camera = viewModel.props.terria.cesium.scene.camera;
+        camera = viewModel.props.terria.cesium.scene.camera;
 
-        var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
+        oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
         camera.lookAtTransform(viewModel.rotateFrame);
         var currentCameraAngle = Math.atan2(camera.position.y, camera.position.x);
         camera.rotateRight(newCameraAngle - currentCameraAngle);
@@ -222,8 +231,8 @@ function orbit(viewModel, compassElement, cursorVector) {
         var x = Math.cos(angle) * distance;
         var y = Math.sin(angle) * distance;
 
-        var scene = viewModel.props.terria.cesium.scene;
-        var camera = scene.camera;
+        scene = viewModel.props.terria.cesium.scene;
+        camera = scene.camera;
 
         var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
 
@@ -248,7 +257,7 @@ function orbit(viewModel, compassElement, cursorVector) {
         var angle = Math.atan2(-vector.y, vector.x);
         viewModel.setState({
           orbitCursorAngle : CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO)
-        })
+        });
 
         var distance = Cartesian2.magnitude(vector);
         var maxDistance = compassWidth / 2.0;
@@ -256,14 +265,14 @@ function orbit(viewModel, compassElement, cursorVector) {
         var easedOpacity = 0.5 * distanceFraction * distanceFraction + 0.5;
         viewModel.setState({
           orbitCursorOpacity : easedOpacity
-        })
+        });
 
         viewModel.props.terria.cesium.notifyRepaintRequired();
     }
 
     viewModel.orbitMouseMoveFunction = function(e) {
         var compassRectangle = compassElement.getBoundingClientRect();
-        var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
+        center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
         var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
         var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
         updateAngleAndOpacity(vector, compassRectangle.width);
@@ -302,7 +311,7 @@ function viewerChange(viewModel) {
         viewModel._unsubcribeFromPostRender =  viewModel.props.terria.cesium.scene.postRender.addEventListener(function() {
             viewModel.setState({
               heading: viewModel.props.terria.cesium.scene.camera.heading
-            })
+            });
         });
     } else {
         if (viewModel._unsubcribeFromPostRender) {

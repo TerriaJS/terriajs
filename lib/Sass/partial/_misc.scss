@@ -10,15 +10,33 @@
   color: rgba(#fff, 0.8);
 }
 
-@keyframes mymove {
-    0%   {color: $color-primary;  transform: rotate(0deg); -webkit-transform: rotate(0deg);}
-    100% {color: #fff;  transform: rotate(180deg); -webkit-transform: rotate(180deg); }
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+}
+
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
 }
 
 .loader{
   padding: $padding;
   .icon{
-    animation: mymove 5s infinite;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
   }
 }
 .no-results{

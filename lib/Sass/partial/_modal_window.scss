@@ -51,5 +51,31 @@
   padding-left: 0.5rem;
   max-height: 100%;
   overflow-y: auto;
+
+  h4{
+    margin-top: 0.5rem;
+  }
+
+}
+
+.search-preview-action{
+   -webkit-flex-direction: row;
+   flex-direction: row;
+   -webkit-justify-content: flex-end;
+   justify-content: flex-end;
+}
+
+.search-data{
+  padding-right: $padding;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  input[type=text]{
+    border: 1px solid $grey-lighter;
+  }
+  li .btn{
+    text-align: left;
+  }
 }
 

@@ -1,4 +1,5 @@
 'use strict';
+var React = require('react');
 var WelcomeTab = React.createClass({
     render: function() {
         return <div className="panel-content">WelcomeTab</div>;

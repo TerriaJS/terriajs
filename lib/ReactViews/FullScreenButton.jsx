@@ -1,5 +1,10 @@
 'use strict';
+var React = require('react');
 var FullScreenButton = React.createClass({
+    propTypes: {
+        terria: React.PropTypes.object
+    },
+
     getInitialState: function() {
         return {
             isActive: false

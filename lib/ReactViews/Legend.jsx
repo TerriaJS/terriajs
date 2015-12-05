@@ -1,10 +1,13 @@
 'use strict';
-
+var React = require('react');
 var ModalTriggerButton = require('./ModalTriggerButton.jsx');
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
-var defined = require('terriajs-cesium/Source/Core/defined');
 
 var Legend = React.createClass({
+    propTypes:{
+      nowViewingItem: React.PropTypes.object
+    },
+
     getInitialState: function() {
         return {
             isOpen: true
@@ -13,13 +16,13 @@ var Legend = React.createClass({
 
     removeFromMap: function() {
         this.props.nowViewingItem.isEnabled = false;
-        nowViewingUpdate.raiseEvent();
+        window.nowViewingUpdate.raiseEvent();
     },
 
     toggleDisplay: function() {
         this.setState({
             isOpen: !this.state.isOpen
-        })
+        });
     },
 
     toggleVisibility: function() {
@@ -32,21 +35,21 @@ var Legend = React.createClass({
 
     changeOpacity: function(event) {
         this.props.nowViewingItem.opacity = event.target.value;
-        nowViewingUpdate.raiseEvent();
+        window.nowViewingUpdate.raiseEvent();
     },
 
     render: function() {
         var nowViewingItem = this.props.nowViewingItem;
 
-        var legend = "No legend to show";
+        var legend = 'No legend to show';
         var legendUrl;
 
         if (nowViewingItem.legendUrl && nowViewingItem.legendUrl.length !== 0) {
             legendUrl = nowViewingItem.legendUrl.match(imageUrlRegex);
-            legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>
+            legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>;
         }
         return (
-            <li className={"now-viewing__item clearfix " + (this.state.isOpen === true ? "is-open" : "") }>
+            <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')}>
               <button onClick={this.toggleDisplay} className="btn block now-viewing__item-title">{nowViewingItem.name}</button>
               <div className ="now-viewing__item-inner">
                 <ul className="list-reset flex clearfix now-viewing__item-control">

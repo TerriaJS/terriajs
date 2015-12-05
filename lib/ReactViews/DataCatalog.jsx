@@ -1,15 +1,29 @@
 'use strict';
+var React = require('react');
 var DataCatalogGroup = require('./DataCatalogGroup.jsx');
 var DataPreview = require('./DataPreview.jsx');
 var SearchBox = require('./SearchBox.jsx');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var DataCatalog = React.createClass({
+    propTypes: {
+      terria:  React.PropTypes.object
+    },
+
     getInitialState: function() {
         return {
             openId: '',
             previewed: undefined
         };
+    },
+
+    componentWillMount: function() {
+      var that = this;
+      window.previewUpdate.addEventListener(function(_previewed) {
+          that.setState({
+              previewed: _previewed
+          });
+      });
     },
 
     handleChildClick: function(i, obj) {
@@ -26,15 +40,6 @@ var DataCatalog = React.createClass({
                 });
             });
         }
-    },
-
-    componentWillMount: function() {
-        var that = this;
-        previewUpdate.addEventListener(function(_previewed) {
-            that.setState({
-                previewed: _previewed
-            });
-        });
     },
 
     render: function() {

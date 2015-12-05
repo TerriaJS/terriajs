@@ -1,5 +1,5 @@
 'use strict';
-
+var React = require('react');
 var defined = require('terriajs-cesium/Source/Core/defined');
 var Ray = require('terriajs-cesium/Source/Core/Ray');
 var IntersectionTests = require('terriajs-cesium/Source/Core/IntersectionTests');
@@ -10,6 +10,10 @@ var Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
 
 
 var ZoomControl = React.createClass({
+
+    propTypes: {
+      terria: React.PropTypes.object
+    },
 
     flyToPosition: function(scene, position, durationMilliseconds){
     var camera = scene.camera;

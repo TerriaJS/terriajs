@@ -1,12 +1,17 @@
 'use strict';
+var React = require('react');
 var ModalTriggerButton = React.createClass({
+    propTypes: {
+      btnText: React.PropTypes.string
+    },
+
     controlModal: function(e) {
         //open modal window
-        openModalWindow.raiseEvent();
+        window.openModalWindow.raiseEvent();
     },
 
     render: function() {
-        return <button onClick={this.controlModal} className="btn">{this.props.btnText}</button>;
+        return (<button onClick={this.controlModal} className="btn">{this.props.btnText}</button>);
     }
 });
 module.exports = ModalTriggerButton;

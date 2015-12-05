@@ -1,10 +1,9 @@
 'use strict';
 
-var React = window.React = require('react'),
+var React = require('react'),
     ReactDOM = require('react-dom'),
     ModalWindow = require('./ModalWindow.jsx'),
     SidePanel = require('./SidePanel.jsx'),
-    TerriaViewer = require('./TerriaViewer.js'),
     CesiumEvent = require('terriajs-cesium/Source/Core/Event'),
     FeatureInfoPanel = require('./FeatureInfoPanel.jsx'),
     Chart = require('./Chart.jsx'),
@@ -28,6 +27,8 @@ var UiWrapper = function(terria) {
 
     this.terriaViewerUpdate = new CesiumEvent();
 
+    this.onFeatureSelect = new CesiumEvent();
+
     this.terria = terria;
 
     //temp
@@ -35,8 +36,8 @@ var UiWrapper = function(terria) {
     window.previewUpdate = this.previewUpdate;
     window.openModalWindow = this.openModalWindow;
     window.terriaViewerUpdate = this.terriaViewerUpdate;
-    window.terria = this.terria;
-}
+    window.onFeatureSelect = this.onFeatureSelect;
+};
 
 UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps, terriaViewer) {
     var terria = this.terria;
@@ -45,22 +46,21 @@ UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps
     ReactDOM.render(<Chart terria={terria} />, chart);
     ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
 
-    //temp
-    var canvas = document.querySelector('canvas');
 
-    canvas.addEventListener('click', function() {
+    this.onFeatureSelect.addEventListener(function() {
         if (terria.nowViewing.hasItems) {
             ReactDOM.render(<FeatureInfoPanel terria={terria} />, aside);
         }
     });
+
     this.nowViewingUpdate.addEventListener(function() {
         ReactDOM.render(<SidePanel terria={terria} />, nav);
         ReactDOM.render(<ModalWindow terria={terria}/>, main);
     });
 
-        this.terriaViewerUpdate.addEventListener(function(){
-          ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
-        })
+    this.terriaViewerUpdate.addEventListener(function() {
+        ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
+    });
 
 };
 
