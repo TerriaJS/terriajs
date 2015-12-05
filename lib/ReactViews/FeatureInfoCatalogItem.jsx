@@ -24,26 +24,29 @@ var FeatureInfoCatalogItem = React.createClass({
         var count = null;
         var maximumShownFeatureInfos = null;
         var featureInfoTemplate;
+        var totalFeaturesCount = 0;
 
-        console.log(this.props.features);
         var features = this.props.features;
         var clock = this.props.clock;
-        var totalFeaturesCount = features.features.length;
 
-        if (defined(features.catalogItem)) {
-            maximumShownFeatureInfos = features.catalogItem.maximumShownFeatureInfos;
-            featureInfoTemplate = features.catalogItem.featureInfoTemplate;
+        if (defined(features.features)){
+          totalFeaturesCount = features.features.length;
+            if (defined(features.catalogItem)) {
+                maximumShownFeatureInfos = features.catalogItem.maximumShownFeatureInfos;
+                featureInfoTemplate = features.catalogItem.featureInfoTemplate;
 
-            count = totalFeaturesCount > maximumShownFeatureInfos ? (<li className='p1'>{maximumShownFeatureInfos}{' of '}{totalFeaturesCount}{' results are shown '}</li>) : null;
+                count = totalFeaturesCount > maximumShownFeatureInfos ? (<li className='p1'>{maximumShownFeatureInfos}{' of '}{totalFeaturesCount}{' results are shown '}</li>) : null;
 
-            content = features.features.slice(0, maximumShownFeatureInfos).map(function(feature, i) {
-                return (<FeatureInfoSection key={i} feature={feature} clock={clock} template={featureInfoTemplate} />);
-            });
+                content = features.features.slice(0, maximumShownFeatureInfos).map(function(feature, i) {
+                    return (<FeatureInfoSection key={i} feature={feature} clock={clock} template={featureInfoTemplate} />);
+                });
 
-        } else {
-            content = <FeatureInfoSection feature={features} clock={clock} />;
+            }
+        }else if (features.feature){
+            content = (<FeatureInfoSection feature={features.feature} clock={clock}/>);
         }
-        return (<li><button className='btn' onClick={this.toggleCatalog}>{features.catalogItem ? features.catalogItem.name : 'no matching catalog items'}</button> <ul aria-hidden={!this.state.isOpen} className='list-reset feature-info-panel-section'>{count}{content}</ul></li>);
+
+        return (<li className ='feature-info__group'><button className='btn' onClick={this.toggleCatalog}>{features.catalogItem ? features.catalogItem.name : 'Data without catalog name'}</button><ul aria-hidden={!this.state.isOpen} className='list-reset feature-info-panel-section'>{count}{content}</ul></li>);
     }
 });
 module.exports = FeatureInfoCatalogItem;

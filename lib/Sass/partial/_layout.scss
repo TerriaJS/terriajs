@@ -38,10 +38,10 @@
 }
 
 #cesiumContainer{
-  height: calc(100vh - 53px);
+  height: 100%;
   position: relative;
-  canvas{
-    height: calc(100vh - 53px);
+  .cesium-widget, canvas{
+    height: 100%;
   }
 }
 

@@ -6,8 +6,8 @@
   position: fixed;
   top: 100px;
   background:$dark;
-  width: 500px;
-  max-height: 500px;
+  width: $feature-info-panel-width;
+  max-height: $feature-info-panel-width;
   right: 100px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -28,4 +28,8 @@
       border: 1px solid $dark;
     }
   }
+}
+
+.feature-info__group{
+  margin: $padding-mini 0;
 }

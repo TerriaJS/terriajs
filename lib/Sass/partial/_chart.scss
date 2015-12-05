@@ -5,17 +5,13 @@
   width: 100%;
   background: $dark;
   color: #fff;
+  max-height: 0;
+  @include transition(all 0.25s ease-in-out);
   &.is-open{
-    .chart-panel-section{
-        height: 200px;
-    }
-  }
-  .chart-panel-section{
-    height: 0;
-    @include transition(height 0.25s ease-in-out);
+    max-height: 1000px;
   }
 }
-
 .chart-panel-section{
   background: $dark-lighter;
+  height: 300px;
 }

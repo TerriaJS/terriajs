@@ -39,7 +39,6 @@ var FeatureInfoPanel = React.createClass({
             when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function() {
                 addSectionsForFeatures(that.props.terria);
                 that.setState({
-                    // show top three results for now
                     pickedFeatures: addSectionsForFeatures(that.props.terria)
                 });
             });

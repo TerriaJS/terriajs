@@ -26,6 +26,7 @@ var FeatureInfoSection = React.createClass({
         // If a template is defined, render it using feature.properties, which is non-time-varying.
         // If no template is provided, show feature.description, which may be time-varying.
         var data = feature.properties;
+
         if (defined(this.props.template)) {
             return Mustache.render(this.props.template, data);
         }
@@ -39,8 +40,12 @@ var FeatureInfoSection = React.createClass({
     },
 
     render: function() {
+        var title = 'data group';
+        if (defined(this.props.feature.properties)){
+            title = this.props.feature.properties.name;
+        }
         var iconClass = 'icon ' + (this.state.isOpen ? 'icon-show-less' : 'icon-show-more');
-        return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{this.props.feature.properties.name}<i className={iconClass}></i></button><section className='feature-info-panel__content' aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
+        return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{title}<i className={iconClass}></i></button><section className='feature-info-panel__content' aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
     }
 });
 
