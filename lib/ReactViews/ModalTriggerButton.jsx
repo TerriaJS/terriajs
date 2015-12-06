@@ -2,7 +2,8 @@
 var React = require('react');
 var ModalTriggerButton = React.createClass({
     propTypes: {
-      btnText: React.PropTypes.string
+      btnText: React.PropTypes.string,
+      classNames: React.PropTypes.string
     },
 
     controlModal: function(e) {
@@ -11,7 +12,7 @@ var ModalTriggerButton = React.createClass({
     },
 
     render: function() {
-        return (<button onClick={this.controlModal} className="btn">{this.props.btnText}</button>);
+        return (<button onClick={this.controlModal} className={'btn ' + this.props.classNames}>{this.props.btnText}</button>);
     }
 });
 module.exports = ModalTriggerButton;

@@ -5,9 +5,13 @@
 
 .modal-content{
   background: #fff;
+  color: #000;
   max-height: 80vh;
   overflow-y: auto;
   position: relative;
+  width: 1000px;
+  max-width: 95%;
+  min-height: 58px;
 }
 
 .modal-overlay{
@@ -19,10 +23,6 @@
   z-index: -1;
 }
 
-.modal-content{
-  width: 1000px;
-  max-width: 95%;
-}
 .tablist{
   padding-right: 150px;
 }
@@ -45,6 +45,8 @@
 .panel-content{
   padding: $padding*2;
   border-top: 1px solid $grey-lighter;
+  background: #fff;
+  color: #000;
 }
 
 .search-preview{

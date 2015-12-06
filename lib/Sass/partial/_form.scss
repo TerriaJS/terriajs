@@ -1,4 +1,21 @@
+// Forms
+//
+//.panel-content - Search form in modal window
+//
+// Markup:
+// <div class={{modifier_class}}>
+// <form class="search-data-form relative" autocomplete="off">
+// <label for="search" class="hide"> Type keyword to search </label>
+// <i class="icon icon-search"></i>
+// <input id="search" type="text" name="search" value="" class="search__field field" placeholder="Search" autocomplete="off">
+// </form>
+// </div>
+//
+// Style guide: 3.0
+//
+
 .search-data-form{
+  font-family: $font-pop;
   .icon{
     position: absolute;
     left: $padding;
@@ -14,6 +31,9 @@
   input{
     padding-left: 3rem;
     height: 3rem;
+  }
+  .panel-content &{
+    font-family: $font;
   }
 }
 

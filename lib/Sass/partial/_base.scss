@@ -5,6 +5,11 @@ html{
 body{
   font-family: $font;
   background: $dark;
+  color: #fff;
+}
+
+a{
+  color: $color-primary;
 }
 
 figure{
@@ -23,13 +28,7 @@ div{
   box-sizing: border-box;
 }
 
-.p{
-  font-size: 1rem;
-  font-weight: 400;
-  margin: 0;
-  padding: 0;
-  font-family: $font;
-}
+
 
 ::-webkit-scrollbar
 {

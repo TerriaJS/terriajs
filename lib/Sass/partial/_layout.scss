@@ -55,6 +55,19 @@
     position: fixed;
     top: 20px;
     right: $padding;
+
+    .compass{
+      position: absolute;
+      right: $padding;
+      top: 75px;
+    }
+
+    .zoom-control{
+      position: absolute;
+      //temp
+      right: 30px;
+      top: 200px;
+    }
 }
 
 

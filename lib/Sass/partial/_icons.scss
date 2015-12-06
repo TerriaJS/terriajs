@@ -9,6 +9,29 @@
   font-style: normal;
 }
 
+// Icons
+//
+// .icon-refresh - icon refresh and icon zoom reset
+// .icon-full-screen - icon full screen mode
+// .icon-minus - icon remove from map
+// .icon-sphere - icon map setting
+// .icon-arrow_drop_down - icon show more
+// .icon-close - icon close
+// .icon-minus2 - icon zoom out
+// .icon-plus - icon zoom in
+// .icon-sort-desc - icon show less
+// .icon-caret-right - icon show more
+// .icon-search - icon search
+// .icon-loader - icon loading
+// .icon-circle-plus - icon add to map
+// .icon-share - icon share
+// .icon-check_box - icon current basemap
+//
+// Markup:
+// <i class='icon {{modifier_class}}'> </i>
+//
+// Style guide: 4.0
+//
 .icon:before{
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
@@ -23,6 +46,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+
 
 .icon-refresh:before {
   content: "\e906";

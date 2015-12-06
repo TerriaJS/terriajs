@@ -34,7 +34,7 @@ var Tabs = React.createClass({
             <div className="tabs clearfix">
       <ul className="tablist list-reset flex" role="tablist">
       {items.map(function(item, i ){
-      return (<li key={i} className={getName('tablist__', item)} id={getName('tablist__', item)} role="tab" aria-controls={getName('panel__', item)} aria-selected={(this.state.activeTab === i) ? 'true' : 'false'} ><button onClick={this.clickTab.bind(this, i)} className='btn btn-tab'>{item.replace(/-/g, ' ')} </button></li>);
+      return (<li key={i} className={getName('tablist__', item)} id={getName('tablist__', item)} role="tab" aria-controls={getName('panel__', item)} aria-selected={(this.state.activeTab === i) ? 'true' : 'false'} ><button onClick={this.clickTab.bind(this, i)} className='btn btn-tab'>{item.replace(/-/g, ' ')}</button></li>);
       }, this)}
       </ul>
 

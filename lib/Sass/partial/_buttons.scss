@@ -1,19 +1,58 @@
-// Button
-//
-// Your standard button suitable for clicking.
-//
-// :hover   - Highlights when hovering.
-// .shiny   - Do not press this big, shiny, red button.
-//
-// Markup:
-// <button class="btn"> This is a button </button>
-//
-// Style guide: 1.0
-//
-
 $btn-setting-size: 35px;
 
-// to be removed
+// Buttons
+//
+// Style guide: 5.0
+
+// Default button
+//
+// Markup:
+//<button class='btn'> Button </button>
+//
+// Style guide: 5.1
+
+// Data Catalog buttons
+//
+// Data Catalog in modal window
+//
+// Style guide: 5.2.0
+//
+
+
+// Data Catalog
+//
+// Markup:
+//<div class='panel-content'>
+//<button class="btn btn-catalogue"><span>National Data Sets</span><i class="icon icon-chevron-down"></i></button>
+//<button class="btn btn-catalogue"><span>National Data Sets</span><i class="icon icon-chevron-right"></i></button>
+//</div>
+//
+// Style guide: 5.2.1
+//
+
+
+// Data Catalog group
+//
+// Markup:
+//<div class='panel-content'>
+//<button class="btn btn-catalog-group"><span>Communications</span><i class="icon icon-chevron-down"></i></button>
+//<button class="btn btn-catalog-group"><span>Communications</span><i class="icon icon-chevron-right"></i></button>
+//</div>
+//
+// Style guide: 5.2.2
+//
+
+// Data Catalog item
+//
+// Markup:
+//<div class='panel-content'>
+//<button title="add to map" class="btn relative btn-add-to-map"><i class="icon icon-add"></i></button><button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
+//<button title="add to map" class="btn relative btn-add-to-map"><i class="icon icon-minus"></i></button><button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
+//</div>
+//
+// Style guide: 5.2.3
+//
+
 .btn{
   font-weight: 400;
   box-shadow: none;
@@ -27,8 +66,58 @@ $btn-setting-size: 35px;
   }
 }
 
+.btn-catalogue,
+.btn-catalog-group{
+  width: 100%;
+  padding-right: 30px;
+  position: relative;
+  .icon{
+    position: absolute;
+    right: 5px;
+    top: 8px;
+  }
+  .panel-content &{
+    border-bottom: 1px solid $grey-lighter;
+    &:hover{
+      background: #0074d9;
+      color: #fff;
+      border-bottom: 1px solid $grey-lighter;
+    }
+  }
+}
+
+.btn-catalogue{
+  font-weight: 600;
+}
+
+.btn-catalog-item{
+  .panel-content &{
+    font-style: italic;
+  }
+}
+
+.btn-add-to-map{
+  font-size: 20px;
+  color: $color-primary;
+}
+
+// Map buttons
+//
+// Buttons on the map
+//
+// Markup:
+//<div class='flex'>
+// <button class="setting-panel__button btn btn-map" title="change settings"><i class="icon icon-sphere"></i></button>
+// <button class="share-panel__button btn btn-map" title="share this map"><i class="icon icon-share"></i></button>
+// <button class="btn btn-map btn-full-screen" title="full screen mode"><i class="icon icon-full-screen"></i></button>
+//</div>
+//
+// Style guide: 5.3
+//
+
 .btn-map{
   background: #fff;
+  color: #000;
   padding: 0 4px;
   border-radius: 50%;
   height: $btn-setting-size;
@@ -49,31 +138,33 @@ $btn-setting-size: 35px;
   }
 }
 
-.btn-catalogue,
-.btn-catalog-group{
-  width: 100%;
-  padding-right: 30px;
-  position: relative;
-  border-bottom: 1px solid $grey-lighter;
-  &:hover{
-    background: #0074d9;
+.btn.btn-full-screen{
+  background: $color-primary;
+  padding: 1px 2px;
+  .icon{
+    line-height: 40px;
     color: #fff;
   }
-  .icon{
-    position: absolute;
-    right: 5px;
-    top: 8px;
-  }
 }
 
-.btn-catalogue{
-  font-weight: 600;
+.btn.share-panel__button{
+  padding: 0px 3px;
 }
 
-.btn-catalog-item{
-  font-style: italic;
-}
-
+// Modal window tab buttons
+//
+// Tab buttons in modal window
+//
+// .btn-tab - button to switch to differetn tab
+// .btn-close-modal - button to close modal
+//
+// Markup:
+// <div class='modal-content'>
+// <button class="btn {{modifier_class}}"><span>Button</span></button>
+// </div>
+//
+// Style guide: 5.4
+//
 
 %btn-tab{
   font-family: $font-pop;
@@ -105,13 +196,26 @@ $btn-setting-size: 35px;
   text-transform: uppercase;
 }
 
-.now-viewing__add .btn{
+// Work bench buttons
+//
+// Tab buttons in modal window
+//
+// Markup:
+// <button class="btn now-viewing__add">Add Data</button>
+// <button class="btn now-viewing__remove">Remove all</button>
+//
+// Style guide: 5.5
+//
+
+
+.btn.now-viewing__add {
   display: block;
   width: 100%;
   line-height: 3rem;
   text-transform: uppercase;
   font-size: $font-size-small;
   padding: 0 $padding;
+  font-family: $font-pop;
   @extend .icon;
   @extend .icon-add;
   &:before{
@@ -120,15 +224,67 @@ $btn-setting-size: 35px;
   @include greybox();
 }
 
+.btn.now-viewing__remove {
+  font-family: $font-pop;
+}
+
+
+// Clear search text button
+//
+// button to clear search text
+//
+// Markup:
+// <button class="btn search-clear"><i class="icon icon-close"></i></button>
+//
+// Style guide: 5.6
+//
+
 .btn.search-clear{
   position: absolute;
   right: $padding;
 }
 
-.btn-add-to-map{
-  font-size: 20px;
+// Add to map button
+//
+// Add to map button in modal window preview panel
+//
+// Markup:
+// <button class="btn btn-preview-add-to-map" title="add to map"><i class="icon icon-plus"></i><span>Add to map</span></button>
+// <button class="btn btn-preview-remove-from-map is-enabled" title="remove from map"><i class="icon icon-plus"></i><span>Remove from map</span></button>
+//
+// Style guide: 5.7
+
+.btn.btn-preview-add-to-map{
+  border: 1px solid $color-primary;
   color: $color-primary;
+  background: #fff;
+  &:hover{
+    background: $color-primary;
+    color: #fff;
+  }
 }
+
+.btn-preview-remove-from-map{
+  background: $color-primary;
+  color: #fff;
+  &:hover{
+    border: 1px solid $color-primary;
+    color: $color-primary;
+    background: #fff;
+  }
+}
+
+
+// Basemap selector button
+//
+// Select a basemap
+//
+//.is-active - current basemap
+//
+// Markup:
+//<button class="btn btn-basemap {{modifier_class}}"><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"><span>Australian Hydrography</span></button>
+//
+// Style guide: 5.8
 
 .btn.btn-basemap{
   padding: 0;
@@ -160,6 +316,24 @@ $btn-setting-size: 35px;
   }
 }
 
+.kss-modifier__example{
+  .btn.btn-basemap{
+    width: 100px;
+  }
+}
+
+// Viewer selector button
+//
+// Select a viewer
+//
+// .is-active - current viewer
+//
+// Markup:
+// <button class="btn btn-viewer {{modifier_class}}">3D Smooth</button>
+//
+// Style guide: 5.9
+
+
 .btn.btn-viewer{
   padding: 0;
   text-transform: uppercase;
@@ -176,25 +350,12 @@ $btn-setting-size: 35px;
   }
 }
 
-.btn.btn-full-screen{
-  background: $color-primary;
-  padding: 1px 2px;
-  .icon{
-    line-height: 40px;
-    color: #fff;
+.kss-modifier__example{
+  .btn.btn-viewer{
+    width: 100px;
   }
 }
 
-.btn.share-panel__button{
-  padding: 0px 3px;
-}
 
-.btn.btn-preview-add-to-map{
-  border: 1px solid $color-primary;
-  color: $color-primary;
-  &.is-enabled{
-    background: $color-primary;
-    color: #fff;
-  }
-}
+
 
