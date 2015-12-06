@@ -57,16 +57,20 @@ var FeatureInfoPanel = React.createClass({
         var clock = this.props.terria.clock;
         var content = null;
         // if not loading and no result, shows no result
-        if (this.props.terria.pickedFeatures && this.props.terria.pickedFeatures.isLoading === true) {
-            content = <Loader/>;
-        } else {
-            if (pickedFeatures && pickedFeatures.length > 0) {
-                content = pickedFeatures.map(function(features, i) {
-                    return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} />);
-                });
+        if (defined(this.props.terria.pickedFeatures)){
+            if (this.props.terria.pickedFeatures.isLoading === true){
+                content = <Loader/>;
             } else {
-                content = <li className='no-results'> No results </li>;
+                if (pickedFeatures && pickedFeatures.length > 0) {
+                    content = pickedFeatures.map(function(features, i) {
+                        return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} />);
+                    });
+                } else {
+                    content = <li className='no-results'> No results </li>;
+                }
             }
+        } else {
+            content = <li className='no-results'> No results </li>;
         }
 
         return (
