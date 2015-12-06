@@ -318,7 +318,7 @@ $btn-setting-size: 35px;
 
 .kss-modifier__example{
   .btn.btn-basemap{
-    width: 100px;
+    max-width: 100px;
   }
 }
 
@@ -352,7 +352,7 @@ $btn-setting-size: 35px;
 
 .kss-modifier__example{
   .btn.btn-viewer{
-    width: 100px;
+    max-width: 100px;
   }
 }
 

@@ -46,7 +46,7 @@ var FeatureInfoCatalogItem = React.createClass({
             content = (<FeatureInfoSection feature={features.feature} clock={clock}/>);
         }
 
-        return (<li className ='feature-info__group'><button className='btn' onClick={this.toggleCatalog}>{features.catalogItem ? features.catalogItem.name : 'Data without catalog name'}</button><ul aria-hidden={!this.state.isOpen} className='list-reset feature-info-panel-section'>{count}{content}</ul></li>);
+        return (<li className ='feature-info__group'><button className='btn' onClick={this.toggleCatalog}>{features.catalogItem ? features.catalogItem.name : 'Data without catalog name'}</button><ul aria-hidden={!this.state.isOpen} className='list-reset feature-info-panel-sections'>{count}{content}</ul></li>);
     }
 });
 module.exports = FeatureInfoCatalogItem;

@@ -1,34 +1,64 @@
+// Setting Panel
+//
+// Markup:
+// <div class="setting-panel-inner">
+// <div class="setting-panel-section setting-panel__viewer">
+// <label class="setting-panel__label"> Map View </label>
+// <ul class="setting-panel__viewer-selector list-reset clearfix">
+// <li class="col col-4"><button class="btn btn-viewer is-active">3D Terrain</button></li>
+// <li class="col col-4"><button class="btn btn-viewer ">3D Smooth</button></li>
+// <li class="col col-4"><button class="btn btn-viewer ">2D</button></li>
+// </ul>
+// </div><div class="setting-panel-section setting-panel__basemap"><label class="setting-panel__label"> Base Map </label>
+// <ul class="setting-panel__basemap-selector list-reset clearfix">
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Australian Topography" src="../build/TerriaJS/images/australian-topo.png"><span>Australian Topography</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"><span>Australian Hydrography</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap is-active"><img alt="Bing Maps Aerial with Labels" src="../build/TerriaJS/images/bing-aerial-labels.png"><span>Bing Maps Aerial with Labels</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Bing Maps Aerial" src="../build/TerriaJS/images/bing-aerial.png"><span>Bing Maps Aerial</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Bing Maps Roads" src="../build/TerriaJS/images/bing-maps-roads.png"><span d>Bing Maps Roads</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Natural Earth II" src="../build/TerriaJS/images/natural-earth.png"><span d>Natural Earth II</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="NASA Black Marble" src="../build/TerriaJS/images/black-marble.png"><span d>NASA Black Marble</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Positron (Light)" src="../build/TerriaJS/images/positron.png"><span d>Positron (Light)</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Dark Matter" src="../build/TerriaJS/images/dark-matter.png"><span>Dark Matter</span></button></li>
+// </ul></div></div>
+//
+// Style guide: Setting Panel
+
 .setting-panel{
   width: auto;
   position: relative;
   z-index: 1;
+  .setting-panel-inner{
+    @include transform (scale(0) translateZ(0));
+    @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
+    @include transform-origin(top center);
+    position: absolute;
+    margin-top: -10px;
+    z-index: -1;
+    left: -($setting-panel/2 - 15px);
+
+  }
+  &.is-open .setting-panel-inner{
+    @include transform (scale(1) translateZ(0));
+  }
 }
+
+
 
 .setting-panel-section{
   padding: $padding;
 }
-  .setting-panel-inner{
-      @include transform (scale(0) translateZ(0));
-      @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
-      @include transform-origin(top center);
-      background: #fff;
-      width: $setting-panel;
-      position: absolute;
-      margin-top: -10px;
-      z-index: -1;
-      background: $dark-lighter;
-      color: #fff;
-      border: $border-style;
-      left: -($setting-panel/2 - 15px);
-      .basemap{
-        height: 130px;
-        font-size: 10px;
-        line-height: 1;
-      }
-  .setting-panel.is-open &{
-    @include transform (scale(1) translateZ(0));
+.setting-panel-inner{
+    width: $setting-panel;
+    background: $dark-lighter;
+    color: #fff;
+    border: $border-style;
+    .basemap{
+      height: 130px;
+      font-size: 10px;
+      line-height: 1;
     }
-  }
+}
 .setting-panel__viewer-selector, .setting-panel__basemap-selector{
   margin: 0 -$padding-mini;
   li{

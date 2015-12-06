@@ -1,4 +1,11 @@
-// <ul class='list-reset data-catalog hide-if-searching'>
+// Data Catalog
+//
+// .panel-content - content in modal window panel
+// .workbench - content in workbench
+//
+// Markup:
+//<div class={{modifier_class}}>
+// <ul class="list-reset data-catalog">
 //   <li>
 //     <button class="btn btn-catalogue">
 //     <span>National Data Sets</span>
@@ -22,4 +29,6 @@
 //     </ul>
 //   </li>
 // </ul>
-
+// </div>
+//
+// Style guide: 7.0

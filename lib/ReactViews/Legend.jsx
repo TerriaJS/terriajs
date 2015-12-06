@@ -2,6 +2,7 @@
 var React = require('react');
 var ModalTriggerButton = require('./ModalTriggerButton.jsx');
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
+var defined = require('terriajs-cesium/Source/Core/defined');
 
 var Legend = React.createClass({
     propTypes:{
@@ -46,7 +47,9 @@ var Legend = React.createClass({
 
         if (nowViewingItem.legendUrl && nowViewingItem.legendUrl.length !== 0) {
             legendUrl = nowViewingItem.legendUrl.match(imageUrlRegex);
-            legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>;
+            if (legendUrl){
+              legend = <a href={legendUrl.input}><img src={legendUrl.input}/></a>;
+            }
         }
         return (
             <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')}>
