@@ -1,5 +1,5 @@
 <script type="text/html" id="now-viewing-tree-item-template">
-    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 2)">
+    <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 1)">
         <div class="data-catalog-member-top-row">
             <!-- ko if: hasChildren -->
                 <div class="data-catalog-icon-holder clickable" data-bind="click: toggleOpen">
@@ -29,8 +29,8 @@
 </script>
 
 <div class="now-viewing">
-    <div class="now-viewing-toolbar">
-        <span class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing)">Remove All</span>
+    <div class="now-viewing-toolbar no-focus-outline" data-bind = "hasFocus: panelHasFocus, attr: {  tabindex: isActive ? 0 : -1 }">
+        <button class="now-viewing-clear-all clickable" data-bind="click: nowViewing.removeAll.bind(nowViewing), attr: {  tabindex: isActive ? 0 : -1 }">Remove All</button>
     </div>
 
     <div class="now-viewing-list" data-bind="foreach: nowViewing.items">
@@ -40,73 +40,35 @@
                     <div class="now-viewing-item-drag-handle clickable" data-bind="visible: supportsReordering, cesiumSvgPath: { path: $root.svgReorder, width: 12, height: 10 }, css: { 'now-viewing-shown-item': isShown }" title="Drag to reorder data sources."></div>
                 </div>
                 <div class="now-viewing-item-icon-holder">
-                    <div class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }"></div>
+                    <button class="now-viewing-item-checkbox clickable" data-bind="click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }, attr: {tabindex: $root.isActive ? 0 : -1 }"></button>
                 </div>
-                <div class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }"></div>
+                <button class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }, attr: {  tabindex: $root.isActive ? 0 : -1 }"></button>
 
                 <div class="now-viewing-item-arrow-holder">
-                    <div class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
+                    <button class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, attr: {  tabindex: $root.isActive ? 0 : -1 }"></button>
                 </div>
             </div>
             <div class="now-viewing-item-details" data-bind="visible: isLegendVisible">
                 <div class="now-viewing-action-menu">
-                    <div class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item.">Zoom To</div>
+                    <button class="now-viewing-action clickable" data-bind="click: zoomToAndUseClock, attr: {tabindex: $root.isActive ? 0 : -1 }" title="Change the map view to show the full extent of this data item.">Zoom To</button>
                     <!-- ko if: showsInfo -->
-                    <div class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root)" title="Display information about this data item.">Info</div>
+                    <button class="now-viewing-action clickable" data-bind="click: $root.showInfo.bind($root), attr: {  tabindex: $root.isActive ? 0 : -1 }" title="Display information about this data item.">Info</button>
                     <!-- /ko -->
                     <!-- ko foreach: $root.getItemControls($data) -->
-                    <div class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name }"></div>
+                    <button class="now-viewing-action clickable" data-bind="click: activate, text: text, attr: { title: name, tabindex: $root.isActive ? 0 : -1 }"></button>
                     <!-- /ko -->
-                    <div class="now-viewing-action clickable" data-bind="click: toggleEnabled" title="Remove this data item from the Now Viewing panel and from the map.">Remove</div>
+                    <button class="now-viewing-action clickable" data-bind="click: toggleEnabled, attr: {  tabindex: $root.isActive ? 0 : -1 }" title="Remove this data item from the Now Viewing panel and from the map.">Remove</button>
                 </div>
 
-                <div class="now-viewing-item-opacity" data-bind="if: supportsOpacity">
-                    OPACITY: <span data-bind="text: Math.round(opacity * 100) + '%'"></span>
-                    <input class="now-viewing-opacity-slider" type="range" min="0" max="1" step="0.01" data-bind="value: opacity, valueUpdate: 'input'" />
+                <div class="now-viewing-section" data-bind="visible: isLoading">
+                    <div class="now-viewing-section-contents">
+                        <span data-bind="text: typeof loadingMessage !== 'undefined' ? loadingMessage : 'Loading...'"></span>
+                        <img data-bind="attr: { src: terria.baseUrl + 'images/ajax-loader.gif' }" width="16" height="16" />
+                    </div>
                 </div>
 
-                <!-- ko if: type === 'abs-itt'-->
-                <div class="now-viewing-abs-controls">
-                     <div class="now-viewing-abs-checkbox clickable" data-bind="click: function(data, event) { displayPercent = !displayPercent; }, cesiumSvgPath: { path: displayPercent ? $root.svgCheckboxChecked : $root.svgCheckboxUnchecked, width: 32, height: 32 }">TEST</div>
-                    <div class="now-viewing-abs-percent" data-bind="text: 'Display as percent of region population'"></div>
-                </div>
-                <!-- /ko -->
-
-                <!-- ko foreach: legendUrls || [] -->
-                    <!-- ko if: $root.urlIsImage($data) -->
-                    <a data-bind="attr: { href: $data }" target="_blank">
-                        <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
-                    </a>
-                    <!-- /ko -->
-
-                    <!-- ko if: !$root.urlIsImage($data) -->
-                    <a class="now-viewing-legend-text" data-bind="attr: { href: $data }" target="_blank">Open legend in a separate tab</a>
-                    <!-- /ko -->
-                <!-- /ko -->
-
-                <!-- ko if: !legendUrls || legendUrls.length === 0 -->
-                    <!-- ko if: type !== 'abs-itt' -->
-                    <div class="now-viewing-legend-text">No legend available for this data item.</div>
-                    <!-- /ko -->
-                    <!-- ko if: type === 'abs-itt' -->
-                    <div class="now-viewing-legend-text">Select at least one code in each data area.</div>
-                    <!-- /ko -->
-                <!-- /ko -->
-
-                <!-- ko if: type === 'abs-itt' -->
-                <div class="now-viewing-section">
-                    <!-- ko if: absDataset && absDataset.items && absDataset.items.length > 0 -->
-                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: absDataset.items }"></div>
-                    <!-- /ko -->
-                </div>
-                <!-- /ko -->
-
-                <!-- ko if: type === 'csv' -->
-                <div class="now-viewing-section">
-                    <!-- ko if: csvDataset -->
-                    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: csvDataset }"></div>
-                    <!-- /ko -->
-                </div>
+                <!-- ko foreach: $root.getSections($data) -->
+                <div class="now-viewing-section" data-bind="embeddedComponent: $data"></div>
                 <!-- /ko -->
             </div>
         </div>
