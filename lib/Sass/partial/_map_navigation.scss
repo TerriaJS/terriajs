@@ -1,5 +1,5 @@
 $ring-width: 10px;
-$compass-width: 90px;
+$compass-width: 80px;
 
 // Map vaigation control
 //
@@ -71,7 +71,7 @@ $compass-width: 90px;
 }
 
 .map-navigation__menu{
-  padding-right: $padding*3;
+  padding-right: $padding*2;
   li{
     padding: 0 $padding;
   }
