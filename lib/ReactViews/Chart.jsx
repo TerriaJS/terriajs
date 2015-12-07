@@ -3,7 +3,7 @@ var React = require('react');
 var Chart = React.createClass({
     getInitialState: function() {
         return {
-            isOpen: true,
+            isOpen: false,
             isVisible: false
         };
     },
