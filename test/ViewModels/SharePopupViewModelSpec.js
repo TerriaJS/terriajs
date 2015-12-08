@@ -42,6 +42,9 @@ describe('SharePopupViewModel', function () {
      * @param urlGetter a function that returns the url to test, after the sharePopup has been
      *      initialised.
      */
+    // Enable creating functions in loop - it makes this function a bunch clearer and creating
+    // two functions in a unit test isn't a big performance issue.
+    /*jshint -W083 */
     function testActiveIndexInUrl(urlGetter) {
         // Check for multiple values of active tab
         for (var fakeActiveTabIndex = 0; fakeActiveTabIndex < 2; fakeActiveTabIndex++) {
