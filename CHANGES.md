@@ -5,13 +5,12 @@ Change Log
 ### 1.0.50
 
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
+* Retrieve WFS or WCS URL associated with WMS data sources using DescribeLayer if no dataUrl is present.
 
 ### 1.0.49
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
 * Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
-* Retrieves WFS or WCS URL associated with WMS data sources using DescribeLayer if no dataUrl is present.
-* Fixed a bug that prevented feature scaling by value
 * Fixed a bug that prevented feature scaling by value.
 * Fixed a bug that prevented the csv `displayDuration` from working.
 * Fixed a bug that ignored which column of the csv file to show as the legend initially.
