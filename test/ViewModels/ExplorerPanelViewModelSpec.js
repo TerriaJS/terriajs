@@ -15,9 +15,8 @@ describe('ExplorerPanelViewModel', function () {
     });
 
     function initPanel() {
-        panel = ExplorerPanelViewModel.create({
+        panel = new ExplorerPanelViewModel({
             terria: terria,
-            container: document.createElement('div'),
             tabs: [
                 new ExplorerTabViewModel(),
                 new ExplorerTabViewModel(),
