@@ -12,6 +12,7 @@ Change Log
 * Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
 * Sorted ABS age variables numerically, not alphabetically.
 * Removed extra space at the bottom of base map buttons.
+* Share links now remember the currently active tab in the `ExplorerPanelViewModel`.
 
 ### 1.0.49
 
