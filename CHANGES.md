@@ -1,6 +1,8 @@
 
 Change Log
 ==========
+### 1.0.50
+* Sort ABS age variables numerically, not alphabetically.
 
 ### 1.0.49
 
