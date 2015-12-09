@@ -5,6 +5,7 @@ Change Log
 ### 1.0.50
 
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
+* Downgrade Leaflet to 0.7.3 to fix feature clicking problems
 
 ### 1.0.49
 
