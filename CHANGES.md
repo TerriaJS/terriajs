@@ -5,6 +5,7 @@ Change Log
 ### 1.0.50
 
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
+* Fixed the layer order changing in Cesium when a CSV variable is chosen.
 
 ### 1.0.49
 
