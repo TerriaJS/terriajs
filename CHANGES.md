@@ -5,6 +5,7 @@ Change Log
 ### 1.0.50
 
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
+* Layer name is now shown in the catalog item info panel for ESRI ArcGIS MapServer layers.
 
 ### 1.0.49
 
