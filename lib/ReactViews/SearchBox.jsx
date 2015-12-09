@@ -7,11 +7,14 @@ var Loader = require('./Loader.jsx');
 
 var CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
 var BingMapsSearchProviderViewModel = require('../ViewModels/BingMapsSearchProviderViewModel.js');
+var GazetteerSearchProviderViewModel = require('../ViewModels/GazetteerSearchProviderViewModel.js');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var SearchBox = React.createClass({
     propTypes: {
-        mapSearch: React.PropTypes.bool
+        mapSearch: React.PropTypes.bool,
+        dataSearch: React.PropTypes.bool,
+        gazetterSearch : React.PropTypes.bool
     },
 
     getInitialState: function() {
@@ -20,7 +23,9 @@ var SearchBox = React.createClass({
             dataCatalogResults: [],
             dataCatalogIsSearching: false,
             bingMapSearchResults: [],
-            bingMapIsSearching: false
+            bingMapIsSearching: false,
+            gazetterIsSearching: false,
+            gazetterSearchResults: []
         };
     },
     handleChange: function(event) {
@@ -29,21 +34,32 @@ var SearchBox = React.createClass({
         });
         var dataCatalogSearch = new CatalogItemNameSearchProviderViewModel(this.props);
         var bingMapSearch = new BingMapsSearchProviderViewModel(this.props);
+        var gazetterSearch = new GazetteerSearchProviderViewModel(this.props);
         var that = this;
 
-        //this is a promise
-        when(dataCatalogSearch.search(event.target.value)).then(function() {
-            that.setState({
-                dataCatalogResults: dataCatalogSearch.searchResults,
-                dataCatalogIsSearching: dataCatalogSearch.isSearching
+        if (that.props.dataSearch !== false) {
+            when(dataCatalogSearch.search(event.target.value)).then(function() {
+                that.setState({
+                    dataCatalogResults: dataCatalogSearch.searchResults,
+                    dataCatalogIsSearching: dataCatalogSearch.isSearching
+                });
             });
-        });
+        }
 
         if (that.props.mapSearch !== false) {
             when(bingMapSearch.search(event.target.value)).then(function() {
                 that.setState({
                     bingMapSearchResults: bingMapSearch.searchResults,
                     bingMapIsSearching: bingMapSearch.isSearching
+                });
+            });
+        }
+
+        if(that.props.gazetterSearch !== false){
+            when(gazetterSearch.search(event.target.value)).then(function(){
+                that.setState({
+                    gazetterSearchResults: gazetterSearch.searchResults,
+                    gazetterIsSearching: gazetterSearch.isSearching
                 });
             });
         }
@@ -59,6 +75,8 @@ var SearchBox = React.createClass({
         var value = this.state.value;
         var dataCatalogResults = this.state.dataCatalogResults;
         var bingMapSearchResults = this.state.bingMapSearchResults;
+        var gazetterSearchResults = this.state.gazetterSearchResults;
+        
         var searchingClass = 'search-data-search ' + (this.state.value.length > 0 ? 'searching' : '');
 
         // if is searching bing map, if result is not empty, show results. otherwise show loader
@@ -93,6 +111,21 @@ var SearchBox = React.createClass({
             }
         }
 
+        var gazetterSearchContent = null;
+        if ((this.props.gazetterSearch !== false) && value.length > 0) {
+            if (gazetterSearchResults.length === 0) {
+                if (this.state.gazetterIsSearching === false) {
+                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li> No Results found</ul>);
+                } else {
+                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li> <Loader /></ul>);
+                }
+            } else {
+                gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li>{gazetterSearchResults.map(function(item, i) {
+            return (<LocationItem item={item} key={i} />);
+          })}</ul>);
+            }
+        }
+
         //button to clear search string
         var clearSearchContent = null;
         if (value.length > 0) {
@@ -110,6 +143,7 @@ var SearchBox = React.createClass({
         <ul className ='list-reset search-results'>
           {cataLogSearchContent}
           {mapSearchContent}
+          {gazetterSearchContent}
         </ul>
       </div>
         );

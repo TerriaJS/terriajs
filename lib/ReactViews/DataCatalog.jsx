@@ -47,18 +47,18 @@ var DataCatalog = React.createClass({
         var dataCatalog = terria.catalog.group.items;
         return (
             <div className="panel-content clearfix">
-      <div className="search-data col col-5">
-      <SearchBox terria = {terria} mapSearch = {false}/>
-      <ul className = 'list-reset data-catalog hide-if-searching'>
-      {dataCatalog.map(function(group, i) {
-        return (<DataCatalogGroup onClick={this.handleChildClick.bind(this, i)} group={group} items={group.items} isLoading={group.isLoading} key={i} />);
-      }, this)}
-      </ul>
-      </div>
-      <div className="search-preview preview col col-7 block">
-        <DataPreview previewed={this.state.previewed} />
-      </div>
-      </div>
+              <div className="search-data col col-5">
+                <SearchBox terria = {terria} mapSearch = {false} gazetterSearch={false}/>
+                <ul className = 'list-reset data-catalog hide-if-searching'>
+                  {dataCatalog.map(function(group, i) {
+                    return (<DataCatalogGroup onClick={this.handleChildClick.bind(this, i)} group={group} items={group.items} isLoading={group.isLoading} key={i} />);
+                  }, this)}
+                </ul>
+              </div>
+              <div className="search-preview preview col col-7 block">
+                <DataPreview previewed={this.state.previewed} />
+              </div>
+            </div>
         );
     }
 });
