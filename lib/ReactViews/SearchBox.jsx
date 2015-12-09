@@ -79,7 +79,7 @@ var SearchBox = React.createClass({
 
         // if is searching data catalog and result is not empty, show results, otherwise show loader
         var cataLogSearchContent = null;
-        if (value.length > 0) {
+        if ((this.props.dataSearch !== false) && value.length > 0) {
             if (dataCatalogResults.length === 0) {
                 if (this.state.dataCatalogIsSearching === false) {
                     cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> No Results found</ul>);

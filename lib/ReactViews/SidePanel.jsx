@@ -30,7 +30,7 @@ var SidePanel = React.createClass({
             });
         }
         return (<div>
-            <SearchBox terria={terria}/>
+            <SearchBox terria={terria} dataSearch={false}/>
             <div className="now-viewing">
               <ul className="now-viewing__control list-reset clearfix">
                 <li><ModalTriggerButton btnText={btnAdd} classNames = 'now-viewing__add'/></li>
