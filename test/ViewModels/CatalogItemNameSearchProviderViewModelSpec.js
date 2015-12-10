@@ -3,6 +3,7 @@
 /*global require,describe,it,expect,beforeEach*/
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var CatalogItem = require('../../lib/Models/CatalogItem');
+var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var CatalogItemNameSearchProviderViewModel = require('../../lib/ViewModels/CatalogItemNameSearchProviderViewModel');
 var inherit = require('../../lib/Core/inherit');
 var runLater = require('../../lib/Core/runLater');
@@ -84,6 +85,33 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
         searchProvider.search('thing').then(function() {
             expect(searchProvider.searchResults.length).toBe(1);
             expect(searchProvider.searchResults[0].name).toBe('Thing to find');
+            done();
+        });
+    });
+
+    it('finds results of a certain type in a case-insensitive manner', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item = new WebMapServiceCatalogItem(terria);
+        item.name = 'WMS item to find';
+        catalogGroup.add(item);
+
+        searchProvider.search('to is:wMs').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('WMS item to find');
+            done();
+        });
+    });
+
+    it('finds results not of a certain type in a case-insensitive manner', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item = new WebMapServiceCatalogItem(terria);
+        item.name = 'WMS item not to find';
+        catalogGroup.add(item);
+
+        searchProvider.search('to -is:wMs').then(function() {
+            expect(searchProvider.searchResults.length).toBe(0);
             done();
         });
     });
