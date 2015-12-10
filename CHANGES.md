@@ -6,6 +6,7 @@ Change Log
 
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
 * Retrieve WFS or WCS URL associated with WMS data sources using DescribeLayer if no dataUrl is present.
+* Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
 
 ### 1.0.49
 
