@@ -117,4 +117,45 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
             done();
         });
     });
+
+    it('combines duplicate search entries of the same item in different groups', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var group1 = new CatalogGroup(terria);
+        group1.name = 'Group1';
+        catalogGroup.add(group1);
+
+        var item = new CatalogItem(terria);
+        item.name = 'Thing to find';
+        catalogGroup.add(item);
+        group1.add(item);
+
+        searchProvider.search('to').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('Thing to find');
+            expect(searchProvider.searchResults[0].tooltip).toMatch(/^In multiple locations including: /);
+            done();
+        });
+    });
+
+    it('does not combine different items with the same item name', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new CatalogItem(terria);
+        item1.name = 'Thing to find';
+        catalogGroup.add(item1);
+
+        var item2 = new CatalogItem(terria);
+        item2.name = 'Thing to find';
+        catalogGroup.add(item2);
+
+
+        searchProvider.search('to').then(function() {
+            expect(searchProvider.searchResults.length).toBe(2);
+            expect(searchProvider.searchResults[0].name).toBe('Thing to find');
+            expect(searchProvider.searchResults[1].name).toBe('Thing to find');
+            done();
+        });
+    });
+
 });
