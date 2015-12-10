@@ -36,7 +36,6 @@ describe('ExplorerPanelViewModel', function() {
             expect(panel.tabs[1].isActive).toBe(true);
             expect(panel.tabs[0].isActive).toBe(false);
 
-            // Ensure it doesn't only work for index === 1
             terria.userProperties.activeTabId = 'Tab1';
             initPanel();
 
@@ -109,5 +108,19 @@ describe('ExplorerPanelViewModel', function() {
 
             expect(terria.getUserProperty('activeTabId')).toBe('Tab2');
         });
+    });
+
+    describe('changes tabs on active tab id change', function() {
+        initPanel();
+
+        expect(panel.getActiveTabIndex()).toBe(0);
+        expect(panel.tabs[1].isActive).toBe(false);
+        expect(panel.tabs[0].isActive).toBe(true);
+
+        terria.userProperties.activeTabId = 'Tab2';
+
+        expect(panel.getActiveTabIndex()).toBe(1);
+        expect(panel.tabs[1].isActive).toBe(true);
+        expect(panel.tabs[0].isActive).toBe(false);
     });
 });
