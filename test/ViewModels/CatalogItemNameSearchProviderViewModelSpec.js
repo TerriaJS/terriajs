@@ -4,6 +4,7 @@
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
+var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var CatalogItemNameSearchProviderViewModel = require('../../lib/ViewModels/CatalogItemNameSearchProviderViewModel');
 var inherit = require('../../lib/Core/inherit');
 var runLater = require('../../lib/Core/runLater');
@@ -92,9 +93,13 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
     it('finds results of a certain type in a case-insensitive manner', function(done) {
         var catalogGroup = terria.catalog.group;
 
-        var item = new WebMapServiceCatalogItem(terria);
-        item.name = 'WMS item to find';
-        catalogGroup.add(item);
+        var item1 = new WebMapServiceCatalogItem(terria);
+        item1.name = 'WMS item to find';
+        catalogGroup.add(item1);
+
+        var item2 = new GeoJsonCatalogItem(terria, "");
+        item2.name = 'GeoJson item to find';
+        catalogGroup.add(item2);
 
         searchProvider.search('to is:wMs').then(function() {
             expect(searchProvider.searchResults.length).toBe(1);
@@ -106,12 +111,57 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
     it('finds results not of a certain type in a case-insensitive manner', function(done) {
         var catalogGroup = terria.catalog.group;
 
-        var item = new WebMapServiceCatalogItem(terria);
-        item.name = 'WMS item not to find';
-        catalogGroup.add(item);
+        var item1 = new WebMapServiceCatalogItem(terria);
+        item1.name = 'WMS item to find';
+        catalogGroup.add(item1);
+
+        var item2 = new GeoJsonCatalogItem(terria, "");
+        item2.name = 'GeoJson item to find';
+        catalogGroup.add(item2);
 
         searchProvider.search('to -is:wMs').then(function() {
-            expect(searchProvider.searchResults.length).toBe(0);
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('GeoJson item to find');
+            done();
+        });
+    });
+
+    it('finds results having a certain url', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new CatalogItem(terria);
+        item1.name = 'Server 1 item to find';
+        item1.url = "http://server1.gov.au/page";
+        catalogGroup.add(item1);
+
+        var item2 = new CatalogItem(terria);
+        item2.name = 'Server 2 item to find';
+        item2.url = "http://server2.gov.au/page";
+        catalogGroup.add(item2);
+
+        searchProvider.search('to url:server1.gov').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('Server 1 item to find');
+            done();
+        });
+    });
+
+    it('finds results that do not have a certain url', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new CatalogItem(terria);
+        item1.name = 'Server 1 item to find';
+        item1.url = "http://server1.gov.au/page";
+        catalogGroup.add(item1);
+
+        var item2 = new CatalogItem(terria);
+        item2.name = 'Server 2 item to find';
+        item2.url = "http://server2.gov.au/page";
+        catalogGroup.add(item2);
+
+        searchProvider.search('to -url:server1.gov').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('Server 2 item to find');
             done();
         });
     });
