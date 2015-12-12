@@ -13,10 +13,14 @@ var DataCatalogItem = React.createClass({
 
     addToPreview: function(event) {
         event.preventDefault();
+
+        if (this.state.isPreviewed === false){
+          window.previewUpdate.raiseEvent(this.props.item);
+        }
+
         this.setState({
-            isPreviewed: true
+            isPreviewed: !this.state.isPreviewed
         });
-        window.previewUpdate.raiseEvent(this.props.item);
     },
 
     addToMap: function(event) {
@@ -31,7 +35,7 @@ var DataCatalogItem = React.createClass({
     var item = this.props.item;
     var iconClass = 'icon ' + (this.props.item.isEnabled === true ? 'icon-minus' : 'icon-add');
     return (
-      <li className="clearfix data-catalog-item flex"><button onClick={this.addToMap} title="add to map" className="btn relative btn-add-to-map"><i className={iconClass}> </i></button><button onClick={this.addToPreview} className="btn btn-catalog-item relative">{item.name}</button></li>
+      <li className="clearfix data-catalog-item flex"><button onClick={this.addToMap} title="add to map" className="btn relative btn-add-to-map"><i className={iconClass}> </i></button><button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button></li>
       );
   }
 

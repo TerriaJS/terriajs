@@ -55,7 +55,7 @@ var DataCatalog = React.createClass({
                   }, this)}
                 </ul>
               </div>
-              <div className="search-preview preview col col-7 block">
+              <div className="data-preview preview col col-7 col-right block">
                 <DataPreview previewed={this.state.previewed} />
               </div>
             </div>

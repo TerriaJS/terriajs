@@ -49,14 +49,21 @@
   color: #000;
 }
 
-.search-preview{
-  padding-left: 0.5rem;
+.data-preview{
+  padding-left: $padding*2;
+  //avoid render error when scroll bar present
+  width: 57%;
   h4{
-    margin-top: 0.5rem;
+    margin-top: $padding;
+  }
+  figcaption{
+    height: 170px;
+    overflow-y: auto;
+    padding-right: $padding;
   }
 }
 
-.search-preview-action{
+.data-preview-action{
    -webkit-flex-direction: row;
    flex-direction: row;
    -webkit-justify-content: flex-end;
@@ -64,7 +71,7 @@
 }
 
 .search-data{
-  padding-right: $padding;
+  padding-right: $padding*2;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;

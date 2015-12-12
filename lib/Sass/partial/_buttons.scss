@@ -93,6 +93,9 @@ $btn-setting-size: 35px;
 .btn-catalog-item{
   .panel-content &{
     font-style: italic;
+    &:hover{
+      color: $color-primary;
+    }
   }
 }
 
