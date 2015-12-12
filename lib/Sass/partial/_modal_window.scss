@@ -39,6 +39,7 @@
     height: 500px;
     max-height: 100%;
     overflow: hidden;
+    position: relative;
   }
 }
 
@@ -50,9 +51,11 @@
 }
 
 .data-preview{
-  padding-left: $padding*2;
+  padding: $padding*2;
   //avoid render error when scroll bar present
-  width: 57%;
+  position: absolute;
+  top: 0;
+  right: 0;
   h4{
     margin-top: $padding;
   }
@@ -64,7 +67,20 @@
 }
 
 .terria-preview{
-  height: 200px;
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: $padding;
+  background: #d5d5d5;
+
+  .leaflet-control-container{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 10px;
+  }
+
+
 }
 
 .data-preview-action{

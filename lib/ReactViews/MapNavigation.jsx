@@ -15,7 +15,6 @@ var MapNavigation = React.createClass({
     },
 
     render: function() {
-        console.log(this.props);
         var compass = null;
         if (defined(this.props.terria.cesium)){
           compass = <Compass terria={this.props.terria} />;

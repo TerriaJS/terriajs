@@ -2,10 +2,7 @@
 
 var React = require('react');
 var markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
-var Terria = require('../Models/Terria');
-var TerriaViewer = require('./TerriaViewer.js');
-var ViewerMode = require('../Models/ViewerMode');
-var CameraView = require('../Models/CameraView');
+var DataPreviewMap = require('./DataPreviewMap.jsx');
 
 
 var DataPreview = React.createClass({
@@ -23,31 +20,6 @@ var DataPreview = React.createClass({
         };
     },
 
-    componentWillMount: function(){
-        var terria = this.props.terria;
-
-        this.terriaPreview = new Terria({
-            appName: terria.appName,
-            supportEmail: terria.supportEmail,
-            baseUrl: terria.baseUrl,
-            cesiumBaseUrl: terria.cesiumBaseUrl
-        });
-
-        this.terriaPreview.viewerMode = ViewerMode.Leaflet;
-        this.terriaPreview.homeView = terria.homeView;
-        this.terriaPreview.initialView = new CameraView(terria.currentViewer.getCurrentExtent());
-        this.terriaPreview.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
-
-        // TerriaViewer.create(this.terriaForRegionSelection, {
-        //     mapContainer: mapContainer,
-        //     uiContainer: uiContainer
-        // });
-    },
-
-    shouldComponentUpdate: function(){
-        return false;
-    },
-
     toggleOnMap: function() {
         this.props.previewed.isEnabled = !this.props.previewed.isEnabled;
         window.nowViewingUpdate.raiseEvent();
@@ -55,18 +27,7 @@ var DataPreview = React.createClass({
 
     render: function() {
         var previewed = this.props.previewed;
-        var that = this;
-        return (<figure>
-                <div className='terria-preview' ref={function(previewContainer) {
-                  if (previewContainer !== null) {
-                    var t = TerriaViewer.create(that.terriaPreview, {
-                            mapContainer: previewContainer
-                    });
-                    console.log(t);
-                  }
-              }}>
-                </div>
-                <figcaption>
+        return (<figure><DataPreviewMap terria={this.props.terria}/><figcaption>
                 <div className="title clearfix">
                 <h4 className="col col-7">{previewed.name}</h4>
                 <ul className="list-reset flex col col-5 data-preview-action">
