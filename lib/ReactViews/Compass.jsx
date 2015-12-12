@@ -25,8 +25,9 @@ var Compass = React.createClass({
     },
 
     componentDidMount: function(){
-      this.props.terria.afterViewerChanged.addEventListener(viewerChange);
-      viewerChange(this);
+      //this.props.terria.afterViewerChanged.addEventListener(viewerChange);
+      console.log(this);
+      //viewerChange(this);
     },
 
     handleMouseDown: function(e){
@@ -90,6 +91,7 @@ var Compass = React.createClass({
 
 
     render: function() {
+
       var rotationMarkerStyle = {
           transform : 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
           WebkitTransform : 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
@@ -97,8 +99,8 @@ var Compass = React.createClass({
         },
 
         outerCircleStyle = {
-          transform : 'rotate(-' + this.props.terria.cesium.scene.camera.heading + 'rad)',
-          WebkitTransform : 'rotate(-' + this.props.terria.cesium.scene.camera.heading + 'rad)',
+          transform : 'rotate(-' + this.state.heading + 'rad)',
+          WebkitTransform : 'rotate(-' + this.state.heading + 'rad)',
           opacity: ''
         };
 
