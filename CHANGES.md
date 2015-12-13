@@ -1,11 +1,14 @@
 
 Change Log
 ==========
+### 1.0.50
+* Sort ABS age variables numerically, not alphabetically.
 
 ### 1.0.50
 
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
 * Downgrade Leaflet to 0.7.3 to fix specific feature clicking problems with 2D maps.
+* Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
 
 ### 1.0.49
 
