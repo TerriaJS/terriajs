@@ -76,7 +76,7 @@ var SearchBox = React.createClass({
         var dataCatalogResults = this.state.dataCatalogResults;
         var bingMapSearchResults = this.state.bingMapSearchResults;
         var gazetterSearchResults = this.state.gazetterSearchResults;
-        
+
         var searchingClass = 'search-data-search ' + (this.state.value.length > 0 ? 'searching' : '');
 
         // if is searching bing map, if result is not empty, show results. otherwise show loader
@@ -84,9 +84,9 @@ var SearchBox = React.createClass({
         if ((this.props.mapSearch !== false) && value.length > 0) {
             if (bingMapSearchResults.length === 0) {
                 if (this.state.bingMapIsSearching === false) {
-                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li> No results found</ul>);
+                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li><li className ='label label-no-results'>No results found </li></ul>);
                 } else {
-                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li> <Loader /></ul>);
+                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li><Loader /></ul>);
                 }
             } else {
                 mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li>{bingMapSearchResults.map(function(item, i) {
@@ -100,7 +100,7 @@ var SearchBox = React.createClass({
         if ((this.props.dataSearch !== false) && value.length > 0) {
             if (dataCatalogResults.length === 0) {
                 if (this.state.dataCatalogIsSearching === false) {
-                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> No Results found</ul>);
+                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li><li className ='label label-no-results'>No results found </li></ul>);
                 } else {
                     cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> <Loader /></ul>);
                 }
@@ -115,7 +115,7 @@ var SearchBox = React.createClass({
         if ((this.props.gazetterSearch !== false) && value.length > 0) {
             if (gazetterSearchResults.length === 0) {
                 if (this.state.gazetterIsSearching === false) {
-                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li> No Results found</ul>);
+                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li><li className ='label label-no-results'>No results found </li></ul>);
                 } else {
                     gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li> <Loader /></ul>);
                 }

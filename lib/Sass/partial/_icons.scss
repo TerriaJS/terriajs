@@ -49,23 +49,41 @@
 
 
 
-.icon-refresh:before {
-  content: "\e906";
+.icon-location_on:before {
+  content: "\e900";
 }
-.icon-full-screen:before {
-  content: "\e90b";
+.icon-check_box:before {
+  content: "\e901";
 }
-.icon-minus:before {
+.icon-caret-right:before {
+  content: "\e902";
+}
+.icon-search:before {
+  content: "\e903";
+}
+.icon-eye:before {
+  content: "\e904";
+}
+.icon-share:before {
   content: "\e905";
 }
-.icon-sphere:before {
+.icon-minus:before {
+  content: "\e906";
+}
+.icon-refresh:before {
   content: "\e907";
 }
-.icon-arrow_drop_down:before {
+.icon-sphere:before {
   content: "\e908";
 }
 .icon-close:before {
   content: "\e909";
+}
+.icon-sort-desc:before {
+  content: "\e90a";
+}
+.icon-full-screen:before {
+  content: "\e90b";
 }
 .icon-minus2:before {
   content: "\e90c";
@@ -73,29 +91,11 @@
 .icon-plus:before {
   content: "\e90d";
 }
-.icon-sort-desc:before {
-  content: "\e90a";
-}
-.icon-caret-right:before {
-  content: "\e901";
-}
-.icon-search:before {
-  content: "\e902";
-}
-.icon-loader:before {
-  content: "\e90f";
-}
 .icon-circle-plus:before {
   content: "\e90e";
 }
-.icon-eye:before {
-  content: "\e903";
-}
-.icon-share:before {
-  content: "\e904";
-}
-.icon-check_box:before {
-  content: "\e900";
+.icon-loader:before {
+  content: "\e90f";
 }
 
 

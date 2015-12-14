@@ -27,7 +27,7 @@ var DataPreview = React.createClass({
 
     render: function() {
         var previewed = this.props.previewed;
-        return (<figure><DataPreviewMap terria={this.props.terria}/><figcaption>
+        return (<figure><DataPreviewMap terria={this.props.terria} previewed={this.props.previewed}/><figcaption>
                 <div className="title clearfix">
                 <h4 className="col col-7">{previewed.name}</h4>
                 <ul className="list-reset flex col col-5 data-preview-action">
