@@ -110,7 +110,7 @@ describe('CameraView', function() {
 
             var view = CameraView.fromLookAt(
                 Cartographic.fromDegrees(45, 0, 100),
-                new HeadingPitchRange(0, 90, 10000));
+                new HeadingPitchRange(0, CesiumMath.toRadians(90), 10000));
 
             var cartographic = Ellipsoid.WGS84.cartesianToCartographic(view.position);
             expect(cartographic.longitude).toEqualEpsilon(CesiumMath.toRadians(45), 1e-5);
