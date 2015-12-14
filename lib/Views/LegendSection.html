@@ -1,7 +1,9 @@
 <div data-bind="foreach: proxiedLegendUrls || []">
     <!-- ko if: $root.urlIsImage($data) -->
     <a data-bind="attr: { href: $data , tabindex: $root.nowViewingTab.isActive ? 0 : -1 }" target="_blank">
-        <img class="now-viewing-legend-image" data-bind="attr: { src: $data }" />
+        <div class="now-viewing-legend-image">
+            <img class="now-viewing-legend-image-background" data-bind="attr: { src: $data }" />
+        </div>
     </a>
     <!-- /ko -->
 

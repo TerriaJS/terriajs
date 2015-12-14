@@ -1,13 +1,21 @@
 
 Change Log
 ==========
-### 1.0.50
-* Sort ABS age variables numerically, not alphabetically.
 
 ### 1.0.50
 
+* Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
+* Fixed the layer order changing in Cesium when a CSV variable is chosen.
+* Layer name is now shown in the catalog item info panel for ESRI ArcGIS MapServer layers.
+* Retrieve WFS or WCS URL associated with WMS data sources using DescribeLayer if no dataUrl is present.
+* Downgrade Leaflet to 0.7.3 to fix specific feature clicking problems with 2D maps.
 * Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
+* Sorted ABS age variables numerically, not alphabetically.
+* Removed extra space at the bottom of base map buttons.
+* Fixed a bug that prevented region mapping from working over HTTPS.
+* The proxy is now used to avoid a mixed content warning when accessing an HTTP dataset from an HTTPS deployment of TerriaJS.
+* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
 
 ### 1.0.49
 
