@@ -4,6 +4,7 @@ Change Log
 
 ### 1.0.50
 
+* Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
 * Fixed the layer order changing in Cesium when a CSV variable is chosen.
 * Layer name is now shown in the catalog item info panel for ESRI ArcGIS MapServer layers.
