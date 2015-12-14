@@ -7,19 +7,17 @@ var ViewerMode = require('../Models/ViewerMode');
 var CameraView = require('../Models/CameraView');
 var defined = require('terriajs-cesium/Source/Core/defined');
 var DeveloperError = require('terriajs-cesium/Source/Core/DeveloperError');
-var GeoJsonCatalogItem = require('../Models/GeoJsonCatalogItem');
 var OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
 var Terria = require('../Models/Terria');
 var TerriaViewer = require('../ViewModels/TerriaViewer');
 var ViewerMode = require('../Models/ViewerMode');
-var WebMapServiceCatalogItem = require('../Models/WebMapServiceCatalogItem');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
 var createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
 
 
 var DataPreviewMap = React.createClass({
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object,
+        previewed: React.PropTypes.object
     },
 
     componentWillMount: function(){
@@ -48,14 +46,20 @@ var DataPreviewMap = React.createClass({
     },
 
     componentWillReceiveProps: function(nextProp){
+        if (defined(this.catalogItem)){
+            this.catalogItem.isEnabled = false;
+        }
+
         var previewed = nextProp.previewed;
-        if(defined(previewed.type)){
+        if (defined(previewed.type)){
             var type = previewed.type;
             var serializedCatalogItem = previewed.serializeToJson();
             var catalogItem = createCatalogMemberFromType(type, this.terriaPreview);
+
             catalogItem.updateFromJson(serializedCatalogItem);
             catalogItem.isEnabled = true;
-        };
+            this.catalogItem = catalogItem;
+        }
     },
 
     shouldComponentUpdate: function(){
