@@ -12,6 +12,8 @@ Change Log
 * Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
 * Sorted ABS age variables numerically, not alphabetically.
 * Removed extra space at the bottom of base map buttons.
+* Fixed a bug that prevented region mapping from working over HTTPS.
+* The proxy is now used to avoid a mixed content warning when accessing an HTTP dataset from an HTTPS deployment of TerriaJS.
 * Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
 
 ### 1.0.49
