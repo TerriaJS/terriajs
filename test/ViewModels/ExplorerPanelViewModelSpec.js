@@ -146,7 +146,7 @@ describe('ExplorerPanelViewModel', function() {
         initPanel();
 
         // Open by default.
-        expect(terria.userProperties.hideExplorerPanel).toBe(0);
+        expect(terria.userProperties.hideExplorerPanel).toBeUndefined();
 
         panel.isOpen = false;
 
