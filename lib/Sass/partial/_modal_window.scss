@@ -72,15 +72,8 @@
   position: relative;
   margin-bottom: $padding;
   background: #d5d5d5;
-
-  .leaflet-control-container{
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    font-size: 10px;
-  }
-
-
+  cursor: auto;
+  pointer-events: none;
 }
 
 .data-preview-action{

@@ -73,12 +73,14 @@ var DataPreviewMap = React.createClass({
                      var t = TerriaViewer.create(that.terriaPreview, {
                             mapContainer: previewContainer
                         });
+                     //disable preview map interaction
                      var map = t.terria.leaflet.map;
-                     map.touchZoom.disable();
-                     map.doubleClickZoom.disable();
-                     map.scrollWheelZoom.disable();
-                     map.boxZoom.disable();
-                     map.keyboard.disable();
+                         map.touchZoom.disable();
+                         map.doubleClickZoom.disable();
+                         map.scrollWheelZoom.disable();
+                         map.boxZoom.disable();
+                         map.keyboard.disable();
+                         map.dragging.disable();
                   }
               }}>
             </div>);
