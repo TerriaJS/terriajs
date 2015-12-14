@@ -4,6 +4,14 @@
 
 .search-results{
   margin-top: 0.5rem;
+  height: auto;
+  max-height: 0;
+  opacity: 0;
+  @include transition(all 0.5s ease-in-out);
+  .is-searching &{
+    opacity: 1;
+    max-height: 10000px;
+  }
 }
 
 

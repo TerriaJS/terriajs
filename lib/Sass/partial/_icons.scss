@@ -47,8 +47,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-
-
 .icon-location_on:before {
   content: "\e900";
 }
@@ -97,6 +95,16 @@
 .icon-loader:before {
   content: "\e90f";
 }
+.icon-spinner2:before {
+  content: "\e910";
+}
+.icon-eye2:before {
+  content: "\e911";
+}
+.icon-eye-blocked:before {
+  content: "\e912";
+}
+
 
 
 .icon-chevron-down{
@@ -131,3 +139,10 @@
   @extend .icon-plus;
 }
 
+.icon-visible{
+  @extend .icon-eye2;
+}
+
+.icon-invisible{
+  @extend .icon-eye-blocked;
+}

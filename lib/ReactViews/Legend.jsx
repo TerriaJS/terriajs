@@ -11,7 +11,8 @@ var Legend = React.createClass({
 
     getInitialState: function() {
         return {
-            isOpen: true
+            isOpen: true,
+            isVisible: true
         };
     },
 
@@ -28,6 +29,9 @@ var Legend = React.createClass({
 
     toggleVisibility: function() {
         this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
+        this.setState({
+          isVisible: !this.state.isVisible
+        });
     },
 
     zoom: function() {
@@ -56,10 +60,10 @@ var Legend = React.createClass({
               <button onClick={this.toggleDisplay} className="btn block now-viewing__item-title">{nowViewingItem.name}</button>
               <div className ="now-viewing__item-inner">
                 <ul className="list-reset flex clearfix now-viewing__item-control">
-                  <li className='zoom'><button onClick={this.zoom} title="Zoom in data" className="btn">Zoom To</button></li>
-                  <li className='info'><ModalTriggerButton btnText="info" activeTab="2"/></li>
-                  <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
-                  <li className='visibility'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn"><i className="icon icon-eye"></i></button></li>
+                  <li><button onClick={this.zoom} title="Zoom in data" className="btn zoom">Zoom To</button></li>
+                  <li><ModalTriggerButton btnText="info" classNames='info' /></li>
+                  <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
+                  <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (this.state.isVisible ? 'icon-visible' : 'icon-invisible')}></i></button></li>
                 </ul>
                 <div className="now-viewing__item-opacity">
                   <label htmlFor="opacity">Opacity: </label>

@@ -84,7 +84,7 @@ var SearchBox = React.createClass({
         var bingMapSearchResults = this.state.bingMapSearchResults;
         var gazetterSearchResults = this.state.gazetterSearchResults;
 
-        var searchingClass = 'search-data-search ' + (this.state.value.length > 0 ? 'searching' : '');
+        var searchingClass = 'search-data-search ' + (this.state.value.length > 0 ? 'is-searching' : '');
 
         // if is searching bing map, if result is not empty, show results. otherwise show loader
         var mapSearchContent = null;

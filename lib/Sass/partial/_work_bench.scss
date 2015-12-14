@@ -10,6 +10,12 @@
   background-repeat: no-repeat;
   background-size: cover;
 
+  .btn{
+    &:hover{
+      color: $color-primary;
+    }
+  }
+
   h1{
     margin: 0;
   }

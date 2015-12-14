@@ -99,8 +99,10 @@ $btn-setting-size: 35px;
   }
 }
 
+$add-to-map-btn-size: 23px;
+
 .btn-add-to-map{
-  font-size: 20px;
+  font-size: $add-to-map-btn-size;
   color: $color-primary;
 }
 
@@ -122,11 +124,14 @@ $btn-setting-size: 35px;
   border-radius: 50%;
   height: $btn-setting-size;
   width: $btn-setting-size;
-  line-height: $btn-setting-size;
   font-size: 27px;
   box-shadow: 0 0px 3px 0 rgba(#000, 0.5), 0 0px 1px 0 rgba(#000, 0.3);
   margin: 0 auto;
   display: block;
+  .icon{
+    display: block;
+    line-height: 1;
+  }
 }
 
 .btn-map{
@@ -183,6 +188,12 @@ $btn-setting-size: 35px;
 
 .btn.share-panel__button{
   padding: 0px 3px;
+}
+
+.btn-map{
+    .icon-sphere{
+    margin-top: -1px;
+  }
 }
 
 // Modal window tab buttons
@@ -394,6 +405,10 @@ $btn-setting-size: 35px;
   &:before{
     padding-right: $padding;
   }
+}
+
+button.btn.visibility{
+  font-size: 16px;
 }
 
 .kss-modifier__example{

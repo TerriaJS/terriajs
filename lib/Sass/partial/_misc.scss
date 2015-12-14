@@ -34,11 +34,13 @@
 
 .loader{
   padding: $padding;
-  .icon{
-    -webkit-animation: fa-spin 2s infinite linear;
-    animation: fa-spin 2s infinite linear;
-  }
 }
+
+.icon-loader{
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+}
+
 .no-results{
   padding: $padding;
 }

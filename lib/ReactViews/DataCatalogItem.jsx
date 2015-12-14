@@ -27,18 +27,27 @@ var DataCatalogItem = React.createClass({
         event.preventDefault();
         this.props.item.isEnabled = !this.props.item.isEnabled;
         window.nowViewingUpdate.raiseEvent();
-        //update preview as well
-        window.previewUpdate.raiseEvent(this.props.item);
+        this.addToPreview(event);
     },
 
   render: function(){
     var item = this.props.item;
-    var iconClass = 'icon ' + (this.props.item.isEnabled === true ? 'icon-minus' : 'icon-add');
-    return (
-      <li className="clearfix data-catalog-item flex"><button onClick={this.addToMap} title="add to map" className="btn relative btn-add-to-map"><i className={iconClass}> </i></button><button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button></li>
-      );
-  }
+    var iconClass;
 
+    if (this.props.item.isEnabled === true){
+        if (this.props.item.isLoading === true){
+            iconClass = 'icon icon-loader';
+        } else {
+            iconClass = 'icon icon-minus';
+        }
+    } else {
+        iconClass = 'icon icon-add';
+    }
+
+    return (
+      <li className="clearfix data-catalog-item flex"><button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'><i className={iconClass}> </i></button><button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button></li>
+      );
+    }
 });
 
 module.exports = DataCatalogItem;
