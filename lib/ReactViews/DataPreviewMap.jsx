@@ -70,9 +70,15 @@ var DataPreviewMap = React.createClass({
         var that = this;
         return (<div className='terria-preview' ref={function(previewContainer) {
                   if (previewContainer !== null) {
-                     TerriaViewer.create(that.terriaPreview, {
+                     var t = TerriaViewer.create(that.terriaPreview, {
                             mapContainer: previewContainer
-                    });
+                        });
+                     var map = t.terria.leaflet.map;
+                     map.touchZoom.disable();
+                     map.doubleClickZoom.disable();
+                     map.scrollWheelZoom.disable();
+                     map.boxZoom.disable();
+                     map.keyboard.disable();
                   }
               }}>
             </div>);

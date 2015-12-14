@@ -16,7 +16,7 @@ var ModalTriggerButton = React.createClass({
     controlModal: function(e) {
         //open modal window
         window.openModalWindow.raiseEvent();
-        if((this.props.callback !== undefined) && (typeof this.props.callback === 'function')){
+        if ((this.props.callback !== undefined) && (typeof this.props.callback === 'function')){
             this.props.callback();
         }
     },

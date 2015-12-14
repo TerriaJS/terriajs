@@ -34,7 +34,6 @@ var SearchBox = React.createClass({
     componentWillMount: function() {
         var that = this;
         window.searchData.addEventListener(function(value) {
-            console.log(value);
             that.setState({
                 value: value
             });
