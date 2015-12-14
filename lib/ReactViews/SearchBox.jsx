@@ -31,6 +31,16 @@ var SearchBox = React.createClass({
         };
     },
 
+    componentWillMount: function() {
+        var that = this;
+        window.searchData.addEventListener(function(value) {
+            console.log(value);
+            that.setState({
+                value: value
+            });
+        });
+    },
+
     handleChange: function(event) {
         this.setState({
             value: event.target.value
@@ -58,7 +68,7 @@ var SearchBox = React.createClass({
             });
         }
 
-        if(that.props.gazetterSearch !== false){
+        if (that.props.gazetterSearch !== false){
             when(gazetterSearch.search(event.target.value)).then(function(){
                 that.setState({
                     gazetterSearchResults: gazetterSearch.searchResults,
@@ -75,7 +85,7 @@ var SearchBox = React.createClass({
     },
 
     openDataCatalogSearch: function(){
-        console.log(this.state.value);
+        window.searchData.raiseEvent(this.state.value);
     },
 
     render: function() {
@@ -91,12 +101,12 @@ var SearchBox = React.createClass({
         if ((this.props.mapSearch !== false) && value.length > 0) {
             if (bingMapSearchResults.length === 0) {
                 if (this.state.bingMapIsSearching === false) {
-                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li><li className ='label label-no-results'>No results found </li></ul>);
+                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <div className='btn label'> Bing Map Search Results</div></li><li className ='label label-no-results'>No results found </li></ul>);
                 } else {
-                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li><Loader /></ul>);
+                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <div className='btn label'> Bing Map Search Results</div></li><Loader /></ul>);
                 }
             } else {
-                mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <button className='btn label'> Bing Map Search Results</button></li>{bingMapSearchResults.map(function(item, i) {
+                mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <div className='btn label'> Bing Map Search Results</div></li>{bingMapSearchResults.map(function(item, i) {
             return (<LocationItem item={item} key={i} />);
           })}</ul>);
             }
@@ -107,12 +117,12 @@ var SearchBox = React.createClass({
         if ((this.props.dataSearch !== false) && value.length > 0) {
             if (dataCatalogResults.length === 0) {
                 if (this.state.dataCatalogIsSearching === false) {
-                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li><li className ='label label-no-results'>No results found </li></ul>);
+                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> Data Catalog Search Results</div></li><li className ='label label-no-results'>No results found </li></ul>);
                 } else {
-                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li> <Loader /></ul>);
+                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> Data Catalog Search Results</div></li> <Loader /></ul>);
                 }
             } else {
-                cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Data Catalog Search Results</button></li>{dataCatalogResults.map(function(item, i) {
+                cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> Data Catalog Search Results</div></li>{dataCatalogResults.map(function(item, i) {
             return (<DataCatalogItem item={item.catalogItem} key={i} />);
           })}</ul>);
             }
@@ -122,12 +132,12 @@ var SearchBox = React.createClass({
         if ((this.props.gazetterSearch !== false) && value.length > 0) {
             if (gazetterSearchResults.length === 0) {
                 if (this.state.gazetterIsSearching === false) {
-                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li><li className ='label label-no-results'>No results found </li></ul>);
+                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> Gazetter Search Results</div></li><li className ='label label-no-results'>No results found </li></ul>);
                 } else {
-                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li> <Loader /></ul>);
+                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> Gazetter Search Results</div></li> <Loader /></ul>);
                 }
             } else {
-                gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <button className='btn label'> Gazetter Search Results</button></li>{gazetterSearchResults.map(function(item, i) {
+                gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> Gazetter Search Results</div></li>{gazetterSearchResults.map(function(item, i) {
             return (<LocationItem item={item} key={i} />);
           })}</ul>);
             }
@@ -141,7 +151,7 @@ var SearchBox = React.createClass({
 
         var linkToSearchData = null;
         if ((this.props.dataSearch === false) && value.length > 0){
-            linkToSearchData = (<li><ModalTriggerButton btnText={'Search " ' + value +' " in Data Catalog'} classNames={'btn btn-data-search icon icon-search'} callback={this.openDataCatalogSearch}/></li>);
+            linkToSearchData = (<li><ModalTriggerButton btnText={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search icon icon-search'} callback={this.openDataCatalogSearch}/></li>);
         }
 
         return (
