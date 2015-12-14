@@ -4,6 +4,7 @@ Change Log
 
 ### 1.0.50
 
+* Add support for Nominatim search API hosted by OpenStreetMap (http://wiki.openstreetmap.org/wiki/Nominatim). This work by merging to 2 queries : one with the bounding parameter for nearest results, the other without the bounding parameter. `countrycodes` values could be used into the catalog item parameters to limit the result to a set of specific countries.
 * Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
 * Fixed the layer order changing in Cesium when a CSV variable is chosen.
