@@ -14,6 +14,7 @@ Change Log
 * Removed extra space at the bottom of base map buttons.
 * Fixed a bug that prevented region mapping from working over HTTPS.
 * The proxy is now used to avoid a mixed content warning when accessing an HTTP dataset from an HTTPS deployment of TerriaJS.
+* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
 
 ### 1.0.49
 
