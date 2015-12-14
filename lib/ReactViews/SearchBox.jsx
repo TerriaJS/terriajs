@@ -4,6 +4,8 @@ var DataCatalogItem = require('./DataCatalogItem.jsx');
 var LocationItem = require('./LocationItem.jsx');
 var Loader = require('./Loader.jsx');
 
+var ModalTriggerButton = require('./ModalTriggerButton.jsx');
+
 
 var CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
 var BingMapsSearchProviderViewModel = require('../ViewModels/BingMapsSearchProviderViewModel.js');
@@ -28,6 +30,7 @@ var SearchBox = React.createClass({
             gazetterSearchResults: []
         };
     },
+
     handleChange: function(event) {
         this.setState({
             value: event.target.value
@@ -69,6 +72,10 @@ var SearchBox = React.createClass({
         this.setState({
             value: ''
         });
+    },
+
+    openDataCatalogSearch: function(){
+        console.log(this.state.value);
     },
 
     render: function() {
@@ -132,20 +139,26 @@ var SearchBox = React.createClass({
             clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='icon icon-close'></i></button>);
         }
 
+        var linkToSearchData = null;
+        if ((this.props.dataSearch === false) && value.length > 0){
+            linkToSearchData = (<li><ModalTriggerButton btnText={'Search " ' + value +' " in Data Catalog'} classNames={'btn btn-data-search icon icon-search'} callback={this.openDataCatalogSearch}/></li>);
+        }
+
         return (
             <div className={searchingClass}>
-        <form className='search-data-form relative' autoComplete='off'>
-          <label htmlFor='search' className='hide'> Type keyword to search </label>
-          <i className='icon icon-search'></i>
-          <input id='search' type='text' name='search' value={value} onChange={this.handleChange} className='search__field field' placeholder='Search' autoComplete='off'/>
-          {clearSearchContent}
-        </form>
-        <ul className ='list-reset search-results'>
-          {cataLogSearchContent}
-          {mapSearchContent}
-          {gazetterSearchContent}
-        </ul>
-      </div>
+            <form className='search-data-form relative' autoComplete='off'>
+              <label htmlFor='search' className='hide'> Type keyword to search </label>
+              <i className='icon icon-search'></i>
+              <input id='search' type='text' name='search' value={value} onChange={this.handleChange} className='search__field field' placeholder='Search' autoComplete='off'/>
+              {clearSearchContent}
+            </form>
+            <ul className ='list-reset search-results'>
+              {cataLogSearchContent}
+              {mapSearchContent}
+              {gazetterSearchContent}
+              {linkToSearchData}
+            </ul>
+          </div>
         );
     }
 });

@@ -2,7 +2,7 @@
   box-sizing: border-box;
   width: $work-bench-width;
   display: none;
-  @include transition(margin 0.05s ease-in);
+  @include transition(margin $animation-fast ease-in);
   @media(screen and min-width: $sm){
     //temp
     display: block;
@@ -20,7 +20,7 @@
   right: 0;
   left: 0;
   height: 100vh;
-  @include transition(left 0.05s ease-in);
+  @include transition(left $animation-fast ease-in);
   canvas{
     width: 100%;
     height: 100%;
@@ -35,15 +35,21 @@
       left: 0;
     }
   }
-}
+  #cesiumContainer{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 
-#cesiumContainer{
-  height: 100%;
-  position: relative;
-  .cesium-widget, canvas{
-    height: 100%;
+  .cesium-widget, .cesium-widget canvas {
+      width: 100%;
+      height: 100%;
+      touch-action: none;
   }
 }
+
 
 .modal-wrapper{
   z-index: 1;

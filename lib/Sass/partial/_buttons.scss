@@ -116,11 +116,8 @@ $btn-setting-size: 35px;
 //</div>
 //
 // Style guide: 5.3
-//
 
-.btn-map{
-  background: #fff;
-  color: #000;
+%map-btn{
   padding: 0 4px;
   border-radius: 50%;
   height: $btn-setting-size;
@@ -130,6 +127,12 @@ $btn-setting-size: 35px;
   box-shadow: 0 0px 3px 0 rgba(#000, 0.5), 0 0px 1px 0 rgba(#000, 0.3);
   margin: 0 auto;
   display: block;
+}
+
+.btn-map{
+  background: #fff;
+  color: #000;
+  @extend %map-btn;
   @include transition(all 0.5s ease-in-out);
   &:hover{
     box-shadow: 0 0px 10px 0 rgba(#000, 0.3), 0 0px 5px 0 rgba(#000, 0.6);
@@ -144,9 +147,37 @@ $btn-setting-size: 35px;
 .btn.btn-full-screen{
   background: $color-primary;
   padding: 1px 2px;
+  overflow: hidden;
+  position: relative;
+  @extend %map-btn;
+  @include transition(all $animation-fast ease-in);
   .icon{
     line-height: 40px;
     color: #fff;
+    @include transition(all $animation-fast ease-in);
+  }
+  .exit-full-screen{
+    font-size: 13px;
+    color: #fff;
+    text-transform: uppercase;
+    position: absolute;
+    padding: $padding;
+    display: block;
+    line-height: 1;
+    top: 0;
+    left: $btn-setting-size;
+    width: 135px;
+    @include transition(all $animation-fast ease-in);
+  }
+  &.is-active{
+    width: 130px;
+    border-radius: 10px;
+    .exit-full-screen{
+      left: 0;
+    }
+    .icon{
+      margin-left: - $btn-setting-size;
+    }
   }
 }
 
@@ -351,6 +382,17 @@ $btn-setting-size: 35px;
   &.is-active{
     background: rgba(#fff, 0.8);
     color: $dark;
+  }
+}
+
+
+.btn.btn-data-search{
+  border-top: $border-style;
+  display: block;
+  width: 100%;
+  margin: $padding 0;
+  &:before{
+    padding-right: $padding;
   }
 }
 

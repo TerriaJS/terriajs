@@ -29,6 +29,8 @@ var UiWrapper = function(terria) {
 
     this.onFeatureSelect = new CesiumEvent();
 
+    this.searchData = new CesiumEvent();
+
     this.terria = terria;
 
     //temp
@@ -37,6 +39,7 @@ var UiWrapper = function(terria) {
     window.openModalWindow = this.openModalWindow;
     window.terriaViewerUpdate = this.terriaViewerUpdate;
     window.onFeatureSelect = this.onFeatureSelect;
+    window.searchData = this.searchData;
 };
 
 UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps, terriaViewer) {
