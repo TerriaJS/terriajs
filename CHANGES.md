@@ -2,9 +2,6 @@
 Change Log
 ==========
 
-### 1.0.49
-
-* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
 ### 1.0.50
 
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
@@ -15,6 +12,7 @@ Change Log
 * Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
 * Sorted ABS age variables numerically, not alphabetically.
 * Removed extra space at the bottom of base map buttons.
+* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
 
 ### 1.0.49
 
