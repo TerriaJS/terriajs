@@ -238,6 +238,15 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.tableStyle.dataVariable).toBe('enum');
         }).otherwise(fail).then(done);
     });
+    it('sets dataVariable if provided', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_val.csv';
+        csvItem._tableStyle = {
+            dataVariable: 'val'
+        };
+        csvItem.load().then(function() {
+            expect(csvItem.dataSource.dataVariable).toBe('val');
+        }).otherwise(fail).then(done);
+    });
     it('colors enum fields in lat-long files the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
 
