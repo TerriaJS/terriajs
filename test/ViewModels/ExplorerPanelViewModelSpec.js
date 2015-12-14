@@ -98,9 +98,11 @@ describe('ExplorerPanelViewModel', function() {
     });
 
     describe('when activating tab', function() {
-        it('changes the activeTabId user property when tab is activated', function() {
+        beforeEach(function() {
             initPanel();
+        });
 
+        it('changes the activeTabId user property when tab is activated', function() {
             // Make sure this is not Tab2 because we're going to switch to Tab2.
             expect(terria.getUserProperty('activeTabId')).not.toBe('Tab2');
 
@@ -108,9 +110,25 @@ describe('ExplorerPanelViewModel', function() {
 
             expect(terria.getUserProperty('activeTabId')).toBe('Tab2');
         });
+
+        it('opens a hidden explorer panel by default', function() {
+            panel.isOpen = false;
+
+            panel.activateTab(panel.tabs[1]);
+
+            expect(panel.isOpen).toBe(true);
+        });
+
+        it('does not open a hidden explorer panel if second argument is passed', function() {
+            panel.isOpen = false;
+
+            panel.activateTab(panel.tabs[1], false);
+
+            expect(panel.isOpen).toBe(false);
+        });
     });
 
-    describe('changes tabs on active tab id change', function() {
+    it('changes tabs on active tab id change', function() {
         initPanel();
 
         expect(panel.getActiveTabIndex()).toBe(0);
@@ -122,5 +140,16 @@ describe('ExplorerPanelViewModel', function() {
         expect(panel.getActiveTabIndex()).toBe(1);
         expect(panel.tabs[1].isActive).toBe(true);
         expect(panel.tabs[0].isActive).toBe(false);
+    });
+
+    it('keeps userProperties.hideExplorerPanel up to date when isOpen changes', function() {
+        initPanel();
+
+        // Open by default.
+        expect(terria.userProperties.hideExplorerPanel).toBe(0);
+
+        panel.isOpen = false;
+
+        expect(terria.userProperties.hideExplorerPanel).toBe(1);
     });
 });

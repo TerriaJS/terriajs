@@ -18,7 +18,8 @@ describe('SharePopupViewModel', function() {
 
     function init() {
         sharePopup = new SharePopupViewModel({
-            terria: terria
+            terria: terria,
+            userPropWhiteList: SharePopupViewModel.defaultUserPropWhiteList.concat(['couldBeAnyString'])
         });
     }
 
@@ -44,9 +45,9 @@ describe('SharePopupViewModel', function() {
      */
     function testUserProperties(urlGetter) {
         var ACTIVE_TAB_ID = 'Search';
-        var ANY_STRING_VALUE = 'Seriously it could!';
+        var ANY_STRING_VALUE = 'Any string value';
 
-        it('includes user properties', function() {
+        it('includes whitelisted user properties', function() {
             terria.userProperties.activeTabId = ACTIVE_TAB_ID;
             terria.userProperties.couldBeAnyString = ANY_STRING_VALUE;
 
@@ -57,6 +58,17 @@ describe('SharePopupViewModel', function() {
 
             expect(parsed.activeTabId).toBe(ACTIVE_TAB_ID);
             expect(parsed.couldBeAnyString).toBe(ANY_STRING_VALUE);
+        });
+
+        it('excludes non-whitelisted user properties', function() {
+            terria.userProperties.notWhiteListed = ANY_STRING_VALUE;
+
+            init();
+
+            var url = urlGetter();
+            var parsed = parseUrl(url);
+
+            expect(parsed.notWhiteListed).toBeUndefined();
         });
     }
 
