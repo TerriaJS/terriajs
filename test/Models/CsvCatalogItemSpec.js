@@ -8,6 +8,7 @@ var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var DataTable = require('../../lib/Map/DataTable');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var TableStyle = require('../../lib/Map/TableStyle');
 var VarType = require('../../lib/Map/VarType');
 var Color = require('terriajs-cesium/Source/Core/Color');
 
@@ -22,7 +23,7 @@ beforeEach(function() {
     });
     csvItem = new CsvCatalogItem(terria);
 
-    greenTableStyle = {
+    greenTableStyle = new TableStyle ({
         "colorMap": [ 
         {
             "offset": 0,
@@ -31,7 +32,7 @@ beforeEach(function() {
             "offset": 1,
             "color": "rgba(0, 255, 0, 1.00)"
         } ]
-    };
+    });
 
 
 });
@@ -116,45 +117,37 @@ describe('CsvCatalogItem', function() {
     it('is correctly loading csv data from a file', function(done) {
         csvItem.url = 'test/csv/minimal.csv';
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource).toBeDefined();
-            expect(csvItem._tableDataSource.dataset).toBeDefined();
-            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(2);
-        }).otherwise(fail).then(done);
-    });
-
-    it('sets dataSource to the underlying czml data source', function(done) {
-        csvItem.url = 'test/csv/minimal.csv';
-        csvItem.load().then(function() {
             expect(csvItem.dataSource).toBeDefined();
-            expect(csvItem.dataSource).toEqual(csvItem._tableDataSource.czmlDataSource);
+            expect(csvItem.dataSource.dataset).toBeDefined();
+            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(2);
         }).otherwise(fail).then(done);
     });
 
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
+            expect(csvItem.dataSource.dataset.hasLocationData()).toBe(true);
         }).otherwise(fail).then(done);
     });
     it('identifies "latitude" and "longitude" fields', function(done) {
         csvItem.updateFromJson( { data: 'latitude,longitude,value\n-37,145,10' });
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
+            expect(csvItem.dataSource.dataset.hasLocationData()).toBe(true);
         }).otherwise(fail).then(done);
     });
     it('does not mistakenly identify "latvian" and "lone_person" fields', function(done) {
         csvItem.updateFromJson( { data: 'latvian,lone_person,lat,lon,value\n-37,145,-37,145,10' });
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.getVariableNamesByType(VarType.LON)).toEqual(['lon']);
-            expect(csvItem._tableDataSource.dataset.getVariableNamesByType(VarType.LAT)).toEqual(['lat']);
+            expect(csvItem.dataSource.dataset.getVariableNamesByType(VarType.LON)).toEqual(['lon']);
+            expect(csvItem.dataSource.dataset.getVariableNamesByType(VarType.LAT)).toEqual(['lat']);
         }).otherwise(fail).then(done);
     });
     it('handles numeric fields containing (quoted) thousands commas', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"' });
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.hasLocationData()).toBe(true);
-            expect(csvItem._tableDataSource.dataset.getDataValue('value', 0)).toEqual(1000);
-            expect(csvItem._tableDataSource.dataset.getDataValue('value', 1)).toBeCloseTo(234567.89,2);
+            expect(csvItem.dataSource.dataset.hasLocationData()).toBe(true);
+            expect(csvItem.dataSource.dataset.getDataValue('value', 0)).toEqual(1000);
+            expect(csvItem.dataSource.dataset.getDataValue('value', 1)).toBeCloseTo(234567.89,2);
         }).otherwise(fail).then(done);
     });
 
@@ -185,7 +178,7 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem._tableDataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
+            expect(csvItem.dataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
         }).otherwise(fail).then(done);
     });
 
@@ -225,7 +218,7 @@ describe('CsvCatalogItem', function() {
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem._tableDataSource.regionVariable).toBe('postcode');
+            expect(csvItem.dataSource.regionVariable).toBe('postcode');
         }).otherwise(fail).then(done);
 
     });
@@ -245,11 +238,20 @@ describe('CsvCatalogItem', function() {
             expect(csvItem.tableStyle.dataVariable).toBe('enum');
         }).otherwise(fail).then(done);
     });
+    it('sets dataVariable if provided', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_val.csv';
+        csvItem._tableStyle = {
+            dataVariable: 'val'
+        };
+        csvItem.load().then(function() {
+            expect(csvItem.dataSource.dataVariable).toBe('val');
+        }).otherwise(fail).then(done);
+    });
     it('colors enum fields in lat-long files the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
 
         csvItem.load().then(function() {
-            function cval(i) { return csvItem._tableDataSource.entities.values[i]._point._color._value; }
+            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
             expect(cval(0)).not.toEqual(cval(1));
             expect(cval(0)).not.toEqual(cval(2));
             expect(cval(0)).not.toEqual(cval(3));
@@ -262,7 +264,7 @@ describe('CsvCatalogItem', function() {
         csvItem.url = 'test/csv/lat_lon_novals.csv';
         csvItem.load().then(function() {
             expect(csvItem.tableStyle.dataVariable).not.toBeDefined();
-            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(5);
+            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(5);
         }).otherwise(fail).then(done);
     });
 
@@ -270,7 +272,7 @@ describe('CsvCatalogItem', function() {
         csvItem.url = 'test/csv/postcode_novals.csv';
         csvItem.load().then(function() {
             expect(csvItem.tableStyle.dataVariable).not.toBeDefined();
-            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(5);
+            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(5);
             expect(csvItem._regionMapped).toBe(true);
         }).otherwise(fail).then(done);
     });
@@ -295,7 +297,7 @@ describe('CsvCatalogItem', function() {
     it('supports feature picking on region-mapped files', function(done) {
         csvItem.url = 'test/csv/postcode_val_enum.csv';
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(6);
+            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(6);
             expect(csvItem._regionMapped).toBe(true);
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
@@ -309,7 +311,7 @@ describe('CsvCatalogItem', function() {
     it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
         csvItem.url = 'test/csv/lga_fuzzy_val.csv';
         csvItem.load().then(function() {
-            expect(csvItem._tableDataSource.dataset.getRowCount()).toEqual(3);
+            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(3);
             expect(csvItem._regionMapped).toBe(true);
             var ip = csvItem._createImageryProvider();
             expect(ip).toBeDefined();
@@ -325,7 +327,7 @@ describe('CsvCatalogItem', function() {
         //csvItem.tableStyle = { displayDuration: 5
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
-            var source = csvItem._tableDataSource;
+            var source = csvItem.dataSource;
             expect(source.dataset.getRowCount()).toEqual(10);
             expect(csvItem._regionMapped).toBe(true);
             expect(source.dataset.hasTimeData()).toBe(true);
@@ -341,10 +343,10 @@ describe('CsvCatalogItem', function() {
     });
     it('supports region-mapped files with dates and displayDuration', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
-        csvItem.tableStyle = { displayDuration: 60 * 6 }; // 6 hours
+        csvItem.tableStyle = new TableStyle({ displayDuration: 60 * 6 }); // 6 hours
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
-            var source = csvItem._tableDataSource;
+            var source = csvItem.dataSource;
             expect(source.dataset.getRowCount()).toEqual(10);
             expect(csvItem._regionMapped).toBe(true);
             expect(source.dataset.hasTimeData()).toBe(true);
@@ -364,7 +366,7 @@ describe('CsvCatalogItem', function() {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
-            var source = csvItem._tableDataSource;
+            var source = csvItem.dataSource;
             expect(source.dataset.getRowCount()).toEqual(13);
             expect(csvItem._regionMapped).toBe(false);
             expect(source.dataset.hasTimeData()).toBe(true);
@@ -377,10 +379,10 @@ describe('CsvCatalogItem', function() {
     });
     it('supports lat-long files with dates and very long displayDuration', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
-        csvItem.tableStyle = { displayDuration: 60 * 24 * 7 }; // 7 days
+        csvItem.tableStyle = new TableStyle ({ displayDuration: 60 * 24 * 7 }); // 7 days
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
-            var source = csvItem._tableDataSource;
+            var source = csvItem.dataSource;
             expect(source.dataset.getRowCount()).toEqual(13);
             expect(csvItem._regionMapped).toBe(false);
             expect(source.dataset.hasTimeData()).toBe(true);
@@ -395,7 +397,7 @@ describe('CsvCatalogItem', function() {
         csvItem.url = 'test/csv/lat_lon_enum_moving_date_unsorted.csv';
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
-            var source = csvItem._tableDataSource;
+            var source = csvItem.dataSource;
             expect(source.dataset.getRowCount()).toEqual(13);
             expect(csvItem._regionMapped).toBe(false);
             expect(source.dataset.hasTimeData()).toBe(true);
@@ -408,11 +410,11 @@ describe('CsvCatalogItem', function() {
     });
     it('handles LGA names with states for disambiguation', function(done) {
         csvItem.url = 'test/csv/lga_state_disambig.csv';
-        csvItem.tableStyle = { dataVariable: 'StateCapital' };
+        csvItem.tableStyle = new TableStyle({ dataVariable: 'StateCapital' });
 
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
-            var lgaName = csvItem._tableDataSource.dataset.variables['LGA_NAME'];
+            var lgaName = csvItem.dataSource.dataset.variables['LGA_NAME'];
             expect(Object.keys(lgaName.regionCodes).length).toEqual(8); // number of matched regions
             expect(csvItem.tableStyle.dataVariable).toBe('StateCapital');
             expect(csvItem.tableStyle.disambigVariable).toBe('State');
@@ -444,7 +446,7 @@ describe('CsvCatalogItem', function() {
     it('has the right values in descriptions of lat-long datasets for feature picking', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
-            function desc(i) { return csvItem._tableDataSource.entities.values[i].description._value; }
+            function desc(i) { return csvItem.dataSource.entities.values[i].description._value; }
             expect(desc(0)).toContain('hello');
             expect(desc(1)).toContain('boots');
         }).otherwise(fail).then(done);
@@ -461,7 +463,7 @@ describe('CsvCatalogItem', function() {
     it('has a blank in the description table for a missing number', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
-            var entities = csvItem._tableDataSource.entities.values;
+            var entities = csvItem.dataSource.entities.values;
             expect(entities.length).toBe(2);
             expect(entities[0].description.getValue()).toMatch('<td>Vals</td><td[^>]*>10</td>');
             expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*></td>');
@@ -469,20 +471,20 @@ describe('CsvCatalogItem', function() {
     });
     it('scales lat-lon points to a size ratio of 300% if scaleByValue true and respects scale value', function(done) {
         csvItem.url = 'test/csv/lat_lon_val.csv';
-        csvItem.tableStyle = { scale: 5, scaleByValue: true };
+        csvItem.tableStyle = new TableStyle({ scale: 5, scaleByValue: true });
         return csvItem.load().then(function() {
-            var pixelSizes = csvItem._tableDataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+            var pixelSizes = csvItem.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
             csvItem._minPix = Math.min.apply(null, pixelSizes);
             csvItem._maxPix = Math.max.apply(null, pixelSizes);
             // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
             expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
         }).then(function(minMax) {
             var csvItem2 = new CsvCatalogItem(terria);
-            csvItem2.tableStyle = { scale: 10, scaleByValue: true };
+            csvItem2.tableStyle = new TableStyle({ scale: 10, scaleByValue: true });
             csvItem2.url = 'test/csv/lat_lon_val.csv';
             return csvItem2.load().yield(csvItem2);
         }).then(function(csvItem2) {
-            var pixelSizes = csvItem2._tableDataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+            var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
             var minPix = Math.min.apply(null, pixelSizes);
             var maxPix = Math.max.apply(null, pixelSizes);
             // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
@@ -495,7 +497,7 @@ describe('CsvCatalogItem', function() {
     xit('renders a point with no value in transparent black', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
-            var entities = csvItem._tableDataSource.entities.values;
+            var entities = csvItem.dataSource.entities.values;
             expect(entities.length).toBe(2);
             expect(entities[0].point.color.getValue()).not.toEqual(new Color(0.0, 0.0, 0.0, 0.0));
             expect(entities[1].point.color.getValue()).toEqual(new Color(0.0, 0.0, 0.0, 0.0));
