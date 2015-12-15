@@ -396,6 +396,7 @@ $add-to-map-btn-size: 23px;
   }
 }
 
+//
 
 .btn.btn-data-search{
   border-top: $border-style;
@@ -409,6 +410,16 @@ $add-to-map-btn-size: 23px;
 
 button.btn.visibility{
   font-size: 16px;
+}
+
+//
+
+.btn-data-upload{
+  width: 100%;
+  border-bottom: 2px solid $grey-lighter;
+  &:hover, &:focus, .is-active &{
+    border-bottom: 2px solid $color-primary;
+  }
 }
 
 .kss-modifier__example{
