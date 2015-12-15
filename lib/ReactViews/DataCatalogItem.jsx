@@ -1,5 +1,7 @@
 'use strict';
 var React = require('react');
+var when = require('terriajs-cesium/Source/ThirdParty/when');
+
 var DataCatalogItem = React.createClass({
     propTypes:{
         item: React.PropTypes.object
@@ -7,7 +9,8 @@ var DataCatalogItem = React.createClass({
 
     getInitialState: function() {
         return {
-            isPreviewed: false
+            isPreviewed: false,
+            status: 'disabled'
         };
     },
 
@@ -25,8 +28,27 @@ var DataCatalogItem = React.createClass({
 
     addToMap: function(event) {
         event.preventDefault();
-        this.props.item.isEnabled = !this.props.item.isEnabled;
-        window.nowViewingUpdate.raiseEvent();
+        var that = this;
+
+        if (that.props.item.isEnabled === false) {
+            that.setState({
+                    status: 'loading'
+                });
+            when(that.props.item.load()).then(function() {
+                that.setState({
+                    status: 'loaded'
+                });
+            that.props.item.isEnabled = true;
+            window.nowViewingUpdate.raiseEvent();
+            });
+        } else{
+           this.props.item.isEnabled = false;
+           window.nowViewingUpdate.raiseEvent();
+           that.setState({
+                    status: 'disabled'
+                });
+        }
+
         this.addToPreview(event);
     },
 
@@ -34,14 +56,27 @@ var DataCatalogItem = React.createClass({
     var item = this.props.item;
     var iconClass;
 
-    if (this.props.item.isEnabled === true){
-        if (this.props.item.isLoading === true){
-            iconClass = 'icon icon-loader';
-        } else {
-            iconClass = 'icon icon-minus';
-        }
-    } else {
+    // if (this.props.item.isEnabled === true){
+    //     if (this.props.item.isLoading === true){
+    //         iconClass = 'icon icon-loader';
+    //     } else {
+    //         iconClass = 'icon icon-minus';
+    //     }
+    // } else {
+    //     iconClass = 'icon icon-add';
+    // }
+    switch(this.state.status) {
+    case 'disabled':
         iconClass = 'icon icon-add';
+        break;
+    case 'loading':
+        iconClass = 'icon icon-loader';
+        break;
+    case 'loaded':
+        iconClass = 'icon icon-minus'
+        break;
+    default:
+        iconClass = '';
     }
 
     return (
