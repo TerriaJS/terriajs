@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
+
+msgid "NOLOC_FOUND"
+msgstr "Sorry, no locations match your search query."
+
+msgid "ERR_SEARCH"
+msgstr "An error occurred while searching.  Please check your internet connection or try again later."
+
+msgid "LAYER_NAME"
+msgstr "Layer name"
+
+msgid "CORS_ERROR_WMS_SERVER_TITLE"
+msgstr "Group is not available"
+
+msgid "CORS_ERROR_WMS_SERVER"
+msgstr "An error occurred while invoking GetCapabilities on the WMS server.<p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href=\\"http://enable-cors.org/\\" target=\\"_blank\\">CORS</a>. If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS. Or, contact the '+that.terria.appName+' team by emailing <a href=\\"mailto:'+that.terria.supportEmail+'\\">'+that.terria.supportEmail+'</a> and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by '+that.terria.appName+' itself.</p><p>If you did not enter this link manually, this error may indicate that the group you opened is temporarily unavailable or there is a problem with your internet connection. Try opening the group again, and if the problem persists, please report it by sending an email to <a href=\\"mailto:'+that.terria.supportEmail+'\\">'+that.terria.supportEmail+'</a>.</p>"
+
+msgid "ADD_URL"
+msgstr "Enter the URL of the data file or web service:"
+
+msgid "ADD_INFO_FILE"
+msgstr "<strong>TIP:</strong> you can also drag data files directly onto the map."
+
+msgid "ADD_INFO_PROXY"
+msgstr "<strong>TIP:</strong> you can also add <i>proxy/<i> before the URL in case of CORS problem."

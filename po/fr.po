@@ -1,0 +1,49 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fr\n"
+
+#: innovisite.js
+msgid "Clicking on a map below will open it in a separate window or tab."
+msgstr "En cliquant sur une des carte listée ci-dessous, une nouvelle fenêtre ou un nouvel onglet va s'ouvrir."
+
+msgid "Zoom To"
+msgstr "Zoomer Vers"
+
+msgid "Remove"
+msgstr "Supprimer"
+
+msgid "Remove All"
+msgstr "Tout Supprimer"
+
+msgid "NOLOC_FOUND"
+msgstr "Désolé, aucun lieu n\\'a été trouvé."
+
+msgid "ERR_SEARCH"
+msgstr "Une erreur est survenue pendant la recherche. Veuillez vérifier votre connexion internet ou réessayer plus tard."
+
+msgid "LAYER_NAME"
+msgstr "Nom de la couche"
+
+msgid "CORS_ERROR_WMS_SERVER_TITLE"
+msgstr "Erreur d\\'accès au service WMS"
+
+msgid "CORS_ERROR_WMS_SERVER"
+msgstr "Une erreur est survenue lors de l\\'appel à GetCapabilities du serveur WMS.<p>Si vous avez saisi le lien manuellement, veuillez vérifier qu\\'il est correct.</p><p>L\\'erreur peut aussi indiquer que le serveur ne supporte pas <a href=\\"http://enable-cors.org/\\" target=\\"_blank\\">CORS</a>. Si c\\'est votre serveur, vérifiez que CORS est activé. Sinon, vous pouvez contacter l\\'administrateur du serveur et lui demander d\\'activer CORS. Vous pouvez également rajouter <i>proxy/</i> devant le lien ou me contacter par e-mail <a href=\\"mailto:'+that.terria.supportEmail+'\\">'+that.terria.supportEmail+'</a> et me demander de rajouter ce serveur dans la liste proxy de l\\'application '+that.terria.appName+'.</p><p>Si vous n\\'avez pas saisi ce lien manuellement, l\\'erreur peut provenir d\\'un problème d\\'accès temporaire sur ce groupe ou de votre connexion internet. Essayez de nouveau dans un moment et si le problème persiste, veuillez m\\'en faire part en m\\'envoyant un e-mail sur <a href=\\"mailto:'+that.terria.supportEmail+'\\">'+that.terria.supportEmail+'</a>.</p>"
+
+msgid "ADD_URL"
+msgstr "Entrez l\\'URL du fichier de données ou du service Web :"
+
+msgid "ADD_INFO_FILE"
+msgstr "<strong>INFO:</strong> vous pouvez aussi glisser-déposer vos fichiers de données directement sur la carte."
+
+msgid "ADD_INFO_PROXY"
+msgstr "<strong>AIDE:</strong> rajoutez <i>proxy/<i> devant l\\'URL en cas de problème d\\'accès CORS."
