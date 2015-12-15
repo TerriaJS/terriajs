@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach,afterEach*/
+/*global require,describe,it,expect,beforeEach*/
 var MapProgressBarViewModel = require('../../lib/ViewModels/MapProgressBarViewModel');
 var Terria = require('../../lib/Models/Terria');
 
