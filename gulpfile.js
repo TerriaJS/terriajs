@@ -20,7 +20,7 @@ var child_exec = require('child_process').exec;  // child_process is built in to
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
-var testGlob = ['./test/**/*.js'];
+var testGlob = ['./test/**/*.js', '!./test/*.js'];
 
 
 // Create the build directory, because browserify flips out if the directory that might
