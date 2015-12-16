@@ -22,7 +22,7 @@ var gulpTranslate = require('gulp-gettext-static-tags');
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
 var testGlob = ['./test/**/*.js', '!./test/*.js'];
-var lang = 'fr';
+var lang = 'fr'; // language choice from po files located into the po directory
 
 // Create the build directory, because browserify flips out if the directory that might
 // contain an existing source map doesn't exist.
