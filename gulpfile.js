@@ -16,10 +16,11 @@ var transform = require('vinyl-transform');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var resolve = require('resolve');
+var child_exec = require('child_process').exec;  // child_process is built in to node
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
-var testGlob = ['./test/**/*.js'];
+var testGlob = ['./test/**/*.js', '!./test/*.js'];
 
 
 // Create the build directory, because browserify flips out if the directory that might
@@ -54,12 +55,8 @@ gulp.task('lint', function(){
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('docs', function(){
-    var jsdoc = require('gulp-jsdoc');
-    return gulp.src(sourceGlob)
-        .pipe(jsdoc('./wwwroot/doc', undefined, {
-            plugins : ['plugins/markdown']
-        }));
+gulp.task('docs', function(done) {
+    child_exec('node ./node_modules/jsdoc/jsdoc.js ./lib -c ./jsdoc.json', undefined, done);
 });
 
 gulp.task('prepare-cesium', ['copy-cesium-assets']);
@@ -88,7 +85,7 @@ function bundle(name, bundler, minify, catchErrors) {
     if (catchErrors) {
         // Display errors to the user, and don't let them propagate.
         result = result.on('error', function(e) {
-            gutil.log('Browserify Error', e);
+            gutil.log('Browserify Error', e.message);
         });
     }
 
@@ -130,7 +127,7 @@ function watch(name, files, minify) {
         debug: true,
         cache: {},
         packageCache: {}
-    }));
+    }), { poll: 1000 } );
 
     function rebundle() {
         var start = new Date();

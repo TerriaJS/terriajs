@@ -10,12 +10,12 @@
 .now-viewing-item-top-row {
     display: table;
     width: 100%;
-    line-height: 40px;
     background-color: @now-viewing-top-row-background-color;
     border-bottom: @panel-element-border;
     border-top: @panel-element-border;
     cursor: pointer;
     table-layout: fixed;
+    padding: 5px 0;
 }
 
 .now-viewing-item-label {
@@ -24,11 +24,14 @@
     color: @now-viewing-top-row-text-color;
     word-wrap: break-word;
     max-width: 265px;
+    text-align: left;
+    vertical-align: top;
 }
 
 .now-viewing-item-icon-holder {
     display: table-cell;
     width: 20px;
+    vertical-align: top;
 }
 
 .now-viewing-item-icon {
@@ -44,6 +47,7 @@
     padding-left: 16px;
     line-height: 40px;
     fill: @now-viewing-top-row-text-color;
+    vertical-align: top;
 }
 
 .now-viewing-item-drag-handle {
@@ -103,6 +107,7 @@
 .now-viewing-item-arrow-holder {
     display: table-cell;
     width: 20px;
+    vertical-align: top;
 }
 
 .now-viewing-arrow {
@@ -119,6 +124,8 @@
   width: 15px;
   height: 15px;
   fill: @now-viewing-top-row-text-color;
+  //for firefox
+  vertical-align: top;
 }
 
 
@@ -135,6 +142,10 @@
     padding-left: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.now-viewing-legend-image-background {
+    background-color: white;
     max-width: @explorer-panel-width - 56px;
 }
 
@@ -173,7 +184,6 @@
 }
 
 .now-viewing-section {
-    padding-bottom: 20px;
     color: @now-viewing-section-text-color;
 }
 

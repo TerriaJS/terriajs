@@ -1,0 +1,22 @@
+<div data-bind="foreach: proxiedLegendUrls || []">
+    <!-- ko if: $root.urlIsImage($data) -->
+    <a data-bind="attr: { href: $data , tabindex: $root.nowViewingTab.isActive ? 0 : -1 }" target="_blank">
+        <div class="now-viewing-legend-image">
+            <img class="now-viewing-legend-image-background" data-bind="attr: { src: $data }" />
+        </div>
+    </a>
+    <!-- /ko -->
+
+    <!-- ko if: !$root.urlIsImage($data) -->
+    <a class="now-viewing-legend-text" data-bind="attr: { href: $data }" target="_blank">Open legend in a separate tab</a>
+    <!-- /ko -->
+</div>
+
+<div data-bind="if: !proxiedLegendUrls || proxiedLegendUrls.length === 0">
+    <!-- ko if: catalogMember.type !== 'abs-itt' -->
+    <div class="now-viewing-legend-text">No legend available for this data item.</div>
+    <!-- /ko -->
+    <!-- ko if: catalogMember.type === 'abs-itt' -->
+    <div class="now-viewing-legend-text">Select at least one code in each data area.</div>
+    <!-- /ko -->
+</div>
