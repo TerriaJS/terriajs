@@ -12,6 +12,7 @@ var Catalog = require('../../lib/Models/Catalog');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
+var CzmlCatalogItem = require('../../lib/Models/CzmlCatalogItem');
 
 
 describe('FeatureInfoPanelViewModel', function() {
@@ -263,6 +264,55 @@ describe('FeatureInfoPanelViewModel templating', function() {
     });
 
 });
+
+describe('FeatureInfoPanelViewModel CZML templating', function() {
+    var terria,
+        panel,
+        catalog,
+        item;
+
+    beforeEach(function(done) {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        panel = new FeatureInfoPanelViewModel({
+            terria: terria
+        });
+        createCatalogMemberFromType.register('group', CatalogGroup);
+        createCatalogMemberFromType.register('czml', CzmlCatalogItem);
+        loadJson('test/init/czml-with-template.json').then(function(json) {
+            catalog = new Catalog(terria);
+            catalog.updateFromJson(json.catalog).then(function() {
+                item = catalog.group.items[0].items[0];
+                done();
+            }).otherwise(done.fail);
+        }).otherwise(done.fail);
+    });
+
+    afterEach(function() {
+        panel.destroy();
+        panel = undefined;
+    });
+
+    it('uses and completes a string-form featureInfoTemplate if present', function(done) {
+        var target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+        item.load().then(function() {
+            expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
+            panel.terria.nowViewing.add(item);
+            var feature = item.dataSource.entities.values[0];
+            var pickedFeatures = new PickedFeatures();
+            pickedFeatures.features.push(feature);
+            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+            panel.showFeatures(pickedFeatures).then(function() {
+                expect(panel.sections[0].info).toEqual(target);
+            }).otherwise(done.fail).then(done);
+        }).otherwise(done.fail);
+
+    });
+
+});
+
 
 function domContainsText(panel, s) {
     for (var i = 0; i < panel._domNodes.length; ++i) {
