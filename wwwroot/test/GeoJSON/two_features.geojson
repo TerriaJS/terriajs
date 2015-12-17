@@ -28,12 +28,12 @@
 				"positional":"GPS Corrected 1.0M",
 				"owner":"415",
 				"project_nu":"CLE5",
-				"file_numbe":null,
+				"file.number.":10,
 				"folder_num":null,
 				"drawing_nu":null,
 				"survey_num":null,
 				"condition":2,
-				"historic_c":0E-11,
+				"historic#.":-12,
 				"funding_ba":"Capex"
 			}
 		},
@@ -63,12 +63,12 @@
 				"positional":"GPS Corrected 1.0M",
 				"owner":"TBA",
 				"project_nu":null,
-				"file_numbe":null,
+				"file.number.":11,
 				"folder_num":null,
 				"drawing_nu":null,
 				"survey_num":null,
 				"condition":1,
-				"historic_c":0E-11,
+				"historic#.":-11,
 				"funding_ba":"Initial"
 			}
 		}
