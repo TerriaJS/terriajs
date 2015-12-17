@@ -41,7 +41,7 @@ var DataCatalogItem = React.createClass({
             that.props.item.isEnabled = true;
             window.nowViewingUpdate.raiseEvent();
             });
-        } else{
+        } else {
            this.props.item.isEnabled = false;
            window.nowViewingUpdate.raiseEvent();
            that.setState({
@@ -56,16 +56,7 @@ var DataCatalogItem = React.createClass({
     var item = this.props.item;
     var iconClass;
 
-    // if (this.props.item.isEnabled === true){
-    //     if (this.props.item.isLoading === true){
-    //         iconClass = 'icon icon-loader';
-    //     } else {
-    //         iconClass = 'icon icon-minus';
-    //     }
-    // } else {
-    //     iconClass = 'icon icon-add';
-    // }
-    switch(this.state.status) {
+    switch (this.state.status) {
     case 'disabled':
         iconClass = 'icon icon-add';
         break;
@@ -73,7 +64,7 @@ var DataCatalogItem = React.createClass({
         iconClass = 'icon icon-loader';
         break;
     case 'loaded':
-        iconClass = 'icon icon-minus'
+        iconClass = 'icon icon-minus';
         break;
     default:
         iconClass = '';

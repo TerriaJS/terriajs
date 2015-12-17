@@ -20,6 +20,8 @@ var DataCatalogGroup = React.createClass({
     handleClick: function(e) {
         var that = this;
         if (that.props.group.isOpen === false) {
+            console.log(that.props.group);
+
             when(that.props.group.load()).then(function() {
                 that.setState({
                     openId: new Date()
@@ -57,7 +59,7 @@ var DataCatalogGroup = React.createClass({
 
         return (
             <li>
-              <button className ="btn btn-catalogue" onClick={this.handleClick} >{group.name}</button>
+              <button className ={'btn btn-catalogue ' + (this.props.group.isOpen ? 'is-open' : '')} onClick={this.handleClick} >{group.name}</button>
               <ul className="data-catalog-group list-reset">
                 {content}
               </ul>

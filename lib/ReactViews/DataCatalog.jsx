@@ -3,7 +3,6 @@ var React = require('react');
 var DataCatalogGroup = require('./DataCatalogGroup.jsx');
 var DataPreview = require('./DataPreview.jsx');
 var SearchBox = require('./SearchBox.jsx');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var DataCatalog = React.createClass({
     propTypes: {
@@ -35,7 +34,7 @@ var DataCatalog = React.createClass({
                 <SearchBox terria = {terria} mapSearch = {false} gazetterSearch={false}/>
                 <ul className = 'list-reset data-catalog hide-if-searching'>
                   {dataCatalog.map(function(group, i) {
-                    return (<DataCatalogGroup group={group} key={i} />);
+                    return (<DataCatalogGroup group={group} key={i}/>);
                   }, this)}
                 </ul>
               </div>
