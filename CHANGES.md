@@ -4,6 +4,7 @@ Change Log
 
 ### 1.0.50
 
+* Move opacity by 10% instead of 1%, put a select box opacity for tablets and smartphones devices
 * Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
 * Fixed the layer order changing in Cesium when a CSV variable is chosen.
