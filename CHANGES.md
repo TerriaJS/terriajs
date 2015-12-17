@@ -4,6 +4,7 @@ Change Log
 
 ### 1.0.50
 
+* Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
 * Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
 * Fixed the layer order changing in Cesium when a CSV variable is chosen.
 * Layer name is now shown in the catalog item info panel for ESRI ArcGIS MapServer layers.
@@ -13,6 +14,9 @@ Change Log
 * Sorted ABS age variables numerically, not alphabetically.
 * Removed extra space at the bottom of base map buttons.
 * Share links now remember the currently active tab in the `ExplorerPanelViewModel`.
+* Fixed a bug that prevented region mapping from working over HTTPS.
+* The proxy is now used to avoid a mixed content warning when accessing an HTTP dataset from an HTTPS deployment of TerriaJS.
+* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
 
 ### 1.0.49
 
