@@ -1,6 +1,6 @@
 'use strict';
 var React = require('react');
-var DataCatalogItem = require('./DataCatalogItem.jsx');
+var DataCatalogGroup = require('./DataCatalogGroup.jsx');
 var LocationItem = require('./LocationItem.jsx');
 var Loader = require('./Loader.jsx');
 
@@ -122,7 +122,7 @@ var SearchBox = React.createClass({
                 }
             } else {
                 cataLogSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> Data Catalog Search Results</div></li>{dataCatalogResults.map(function(item, i) {
-            return (<DataCatalogItem item={item.catalogItem} key={i} />);
+                    return (<DataCatalogGroup group={item} key={i} />);
           })}</ul>);
             }
         }

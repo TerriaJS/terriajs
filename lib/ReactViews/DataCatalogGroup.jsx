@@ -1,6 +1,6 @@
 'use strict';
 var React = require('react');
-var DataCatalogMember = require('./DataCatalogMember.jsx');
+var DataCatalogItem = require('./DataCatalogItem.jsx');
 var Loader = require('./Loader.jsx');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
@@ -13,51 +13,51 @@ var DataCatalogGroup = React.createClass({
 
     getInitialState: function() {
         return {
-            isOpen: false,
             openId: ''
         };
     },
 
-    handleClick: function() {
-        this.props.onClick(this);
-    },
-
-    handleChildClick: function(i, obj) {
+    handleClick: function(e) {
         var that = this;
-        obj.props.member.isOpen = !obj.state.isOpen;
-        obj.setState({
-            isOpen: !obj.state.isOpen
-        });
-
-        if (obj.state.isOpen === false) {
-            when(obj.props.member.load()).then(function() {
+        if (that.props.group.isOpen === false) {
+            when(that.props.group.load()).then(function() {
                 that.setState({
-                    openId: i
+                    openId: new Date()
                 });
             });
+        } else {
+            that.setState({
+                openId: new Date()
+            });
         }
+        //Should not change prop here
+        that.props.group.isOpen = !that.props.group.isOpen;
     },
 
     render: function() {
         var group = this.props.group;
-        var members = this.props.items;
-        var content = '';
-        var iconClass;
+        var members = this.props.group.items;
+        var content = null;
 
-        if (this.state.isOpen === true) {
-            var that = this;
+        if (this.props.group.isOpen === true) {
             if (members && members.length > 0) {
                 content = members.map(function(member, i) {
-                    return (<DataCatalogMember  onClick={that.handleChildClick.bind(that, i)} member={member} items={member.items} key={i} />);
+                    if (member.isGroup){
+                        return (<DataCatalogGroup group={member} key={i} />);
+                    }else {
+                        return (<DataCatalogItem item={member} key={i}/>);
+                    }
                 });
             } else {
                 content = <Loader/>;
             }
+        } else {
+            content = null;
         }
-        iconClass = 'icon icon-chevron-' + (this.state.isOpen ? 'down' : 'right');
+
         return (
             <li>
-              <button className ="btn btn-catalogue" onClick={this.handleClick} >{group.name}<i className={iconClass}></i></button>
+              <button className ="btn btn-catalogue" onClick={this.handleClick} >{group.name}</button>
               <ul className="data-catalog-group list-reset">
                 {content}
               </ul>
