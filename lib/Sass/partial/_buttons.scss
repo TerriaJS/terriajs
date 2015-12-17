@@ -1,5 +1,11 @@
 $btn-setting-size: 35px;
 
+%colored-hover{
+  &:hover{
+    color: $color-primary;
+  }
+}
+
 // Buttons
 //
 // Style guide: 5.0
@@ -259,17 +265,25 @@ $add-to-map-btn-size: 23px;
   line-height: 3rem;
   text-transform: uppercase;
   font-size: $font-size-small;
-  padding: 0 $padding;
+  padding: 0 $padding 0 $padding*4;
   font-family: $font-pop;
+  position: relative;
   @extend .icon;
   @extend .icon-add;
   &:before{
-    padding-right: $padding;
+    position: absolute;
+    font-size: 20px;
+    left: $padding;
+    top: $padding;
+  }
+  &:hover{
+    background: rgba(#fff, 0.3);
   }
   @include greybox();
 }
 
 .btn.now-viewing__remove {
+  @extend %colored-hover;
   font-family: $font-pop;
 }
 
@@ -285,6 +299,7 @@ $add-to-map-btn-size: 23px;
 //
 
 .btn.search-clear{
+  @extend %colored-hover;
   position: absolute;
   right: $padding;
   top: 2px;
