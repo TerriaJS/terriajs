@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 1.0.51
+
+* Fixed a typo that prevent clearing the search query
+* Add support for Nominatim search API hosted by OpenStreetMap (http://wiki.openstreetmap.org/wiki/Nominatim). This work by merging to 2 queries : one with the bounding parameter for nearest results, the other without the bounding parameter. `countrycodes` values could be used into the catalog item parameters to limit the result to a set of specific countries.
+
 ### 1.0.50
 
 * Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
