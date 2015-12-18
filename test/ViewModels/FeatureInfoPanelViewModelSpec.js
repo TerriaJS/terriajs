@@ -172,7 +172,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
     });
 
     it('can use _ to refer to . and # in property keys in the featureInfoTemplate', function(done) {
-        item.featureInfoTemplate = 'Historic.# {{historic__}}; file.number. {{file_number_}}';
+        item.featureInfoTemplate = 'historic.# {{historic__}}; file.number. {{file_number_}}; documents.#1 {{documents._1}}';
         item.load().then(function() {
             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
             panel.terria.nowViewing.add(item);
@@ -182,7 +182,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('Historic.# -12; file.number. 10');
+                expect(panel.sections[0].info).toBe('historic.# -12; file.number. 10; documents.#1 4');
             }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
     });
