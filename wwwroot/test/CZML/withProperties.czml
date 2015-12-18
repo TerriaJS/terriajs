@@ -5,11 +5,11 @@
         "version": "1.0"
     },
     {
-        "properties": [
-            {"value": {
-                "Type": "ABC",
-                "Name": "Test",
-                "Support table": [
+        "properties": {
+            "Type": "ABC",
+            "Name": "Test",
+            "Support table": {
+                "value": [
                     {
                         "Capacity": "14.4",
                         "Year": 2010
@@ -23,8 +23,8 @@
                         "Year": 2012
                     }
                 ]
-            }}
-        ],
+            }
+        },
         "name": "Test Zone",
         "polygon": {
             "material": {
