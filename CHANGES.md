@@ -2,6 +2,21 @@
 Change Log
 ==========
 
+### 1.0.50
+
+* Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
+* Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
+* Fixed the layer order changing in Cesium when a CSV variable is chosen.
+* Layer name is now shown in the catalog item info panel for ESRI ArcGIS MapServer layers.
+* Retrieve WFS or WCS URL associated with WMS data sources using DescribeLayer if no dataUrl is present.
+* Downgrade Leaflet to 0.7.3 to fix specific feature clicking problems with 2D maps.
+* Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
+* Sorted ABS age variables numerically, not alphabetically.
+* Removed extra space at the bottom of base map buttons.
+* Fixed a bug that prevented region mapping from working over HTTPS.
+* The proxy is now used to avoid a mixed content warning when accessing an HTTP dataset from an HTTPS deployment of TerriaJS.
+* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
+
 ### 1.0.49
 
 * Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
@@ -16,6 +31,12 @@ Change Log
 * Legend URLs are now accessed via the proxy, if applicable.
 * Fixed a bug that prevented feature scaling by value.
 * Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
+* Fixed a bug that caused a `TypeError` on load when the share URL included enabled datasets with an order different from their order in the catalog.
+* Improved the message that is shown to the user when their browser supports WebGL but it has a "major performance caveat".
+* Fixed a bug that could cause an exception in some browsers (Internet Explorer, Safari) when loading a GeoJSON with embedded styles.
+* Fixed a bug with Leaflet 2D map where clicks on animation controls or timeline would also register on the map underneath causing undesired feature selection and, when double clicked, zooming (also removed an old hack that disabled dragging while using the timeline slider)
+* Changed Australian Topography base map server and updated the associated thumbnail.
+* Added `updateApplicationOnMessageFromParentWindow` function.  After an app calls this function at startup, TerriaJS can be controlled by its parent window when embedded in an `iframe` by messages sent with `window.postMessage`.
 
 ### 1.0.48
 
