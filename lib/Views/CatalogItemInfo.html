@@ -80,7 +80,7 @@
                 </p>
 
                 <input class="catalog-item-info-baseUrl" readonly type="text" data-bind="value: catalogItem.url" size="80" onclick="this.select();" />
-                <p class="catalog-item-info-description" data-bind="if: catalogItem.type === 'wms'">
+                <p class="catalog-item-info-description" data-bind="if: catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && typeof catalogItem.layers !== 'undefined')">
                     Layer name:
                     <span class="catalog-item-info-tech-attributes" data-bind="text: catalogItem.layers"></span>
                 </p>
@@ -98,6 +98,15 @@
                 <div class="catalog-item-info-description">
                     Use the link below to download the data.  See the
                     <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>
+                    for more information on customising URL query parameters.
+                    <div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wcs' || catalogItem.dataUrlType === 'wcs-complete'">
+                <h2>Data URL</h2>
+                <div class="catalog-item-info-description">
+                    Use the link below to download the data.  See the
+                    <a href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html" target="_blank">Web Coverage Service (WCS) documentation</a>
                     for more information on customising URL query parameters.
                     <div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
                 </div>
