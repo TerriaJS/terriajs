@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 1.0.51
+
+* Fixed a typo that prevent clearing the search query
+* Add support for Nominatim search API hosted by OpenStreetMap (http://wiki.openstreetmap.org/wiki/Nominatim). This work by merging to 2 queries : one with the bounding parameter for nearest results, the other without the bounding parameter. `countrycodes` values could be used into the catalog item parameters to limit the result to a set of specific countries.
+
 ### 1.0.50
 
 * Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
@@ -13,6 +18,7 @@ Change Log
 * Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
 * Sorted ABS age variables numerically, not alphabetically.
 * Removed extra space at the bottom of base map buttons.
+* Share links now remember the currently active tab in the `ExplorerPanelViewModel`.
 * Fixed a bug that prevented region mapping from working over HTTPS.
 * The proxy is now used to avoid a mixed content warning when accessing an HTTP dataset from an HTTPS deployment of TerriaJS.
 * Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
