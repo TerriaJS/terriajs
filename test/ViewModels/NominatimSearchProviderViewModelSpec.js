@@ -16,12 +16,12 @@ describe('NominatimSearchProviderViewModel', function() {
 
         searchProvider = new NominatimSearchProviderViewModel({
             terria: terria,
-	    countryCodes: "fr"
+        countryCodes: "fr"
         });
     });
 
     afterEach(function() {
-	searchProvider = undefined;
+    searchProvider = undefined;
     });
 
     it('find a simple location', function(done) {
@@ -46,11 +46,11 @@ describe('NominatimSearchProviderViewModel', function() {
 
         searchProvider.search('place').then(function() {
             expect(searchProvider.searchResults.length > 0).toBe(true);
-	    for(var i = 0 ; i < searchProvider.searchResults.length; ++i) {
-		expect(searchProvider.searchResults[i].name).toContain('France');
-	    }
+        for(var i = 0 ; i < searchProvider.searchResults.length; ++i) {
+        expect(searchProvider.searchResults[i].name).toContain('France');
+        }
             done();
         });
     });
-    
+
 });
