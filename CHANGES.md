@@ -6,6 +6,8 @@ Change Log
 
 * Fixed a typo that prevent clearing the search query
 * Add support for Nominatim search API hosted by OpenStreetMap (http://wiki.openstreetmap.org/wiki/Nominatim). This work by merging to 2 queries : one with the bounding parameter for nearest results, the other without the bounding parameter. `countrycodes` values could be used into the catalog item parameters to limit the result to a set of specific countries.
+* Added `MapProgressBarViewModel`.  When added to the user interface with `MapProgressBarViewModel.create`, it shows a bar at the top of the map window indicating tile load progress.
+* We no longer show the entity's ID (which is usually a meaningless GUID) on the feature info panel when the feature does not have a name.  Instead, we leave the area blank.
 
 ### 1.0.50
 
