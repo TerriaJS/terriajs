@@ -1,5 +1,5 @@
 $ring-width: 10px;
-$compass-width: 80px;
+$compass-width: 70px;
 
 // Map vaigation control
 //
@@ -60,11 +60,11 @@ $compass-width: 80px;
 .zoom-control{
   background: #fff;
   color: #000;
-  width: 30px;
+  width: $ring-width*2;
   border-radius: 100px;
-  border: 2px solid #000;
+  border: 1px solid #000;
   text-align: center;
-  font-size: 18px;
+  font-size: 15px;
   .btn{
     padding: 0;
   }

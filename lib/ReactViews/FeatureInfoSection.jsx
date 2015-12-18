@@ -7,12 +7,14 @@ var FeatureInfoSection = React.createClass({
     propTypes: {
         template: React.PropTypes.object,
         feature: React.PropTypes.object,
-        clock: React.PropTypes.object
+        clock: React.PropTypes.object,
+        catalogItemName: React.PropTypes.string,
+        index: React.PropTypes.number
     },
 
     getInitialState: function() {
         return {
-            isOpen: false
+            isOpen: this.props.index === 0 ? true : false
         };
     },
 
@@ -41,11 +43,11 @@ var FeatureInfoSection = React.createClass({
 
     render: function() {
         var title = 'data group';
-        if (defined(this.props.feature.properties)){
-            title = this.props.feature.properties.name;
+        if (defined(this.props.catalogItemName)){
+            title = this.props.catalogItemName;
         }
-        var iconClass = 'icon ' + (this.state.isOpen ? 'icon-show-less' : 'icon-show-more');
-        return (<li className="feature-info-panel__section"><button onClick={this.toggleSection} className='btn'>{title}<i className={iconClass}></i></button><section className='feature-info-panel__content' aria-hidden={!this.state.isOpen} dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
+        var iconClass = 'icon ' + (this.state.isOpen ? 'icon-chevron-down' : 'icon-chevron-right');
+        return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-visible' : '')}><button onClick={this.toggleSection} className='btn btn-feature-name'>{title}<i className={iconClass}></i></button><section className='feature-info-panel__content' dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
     }
 });
 

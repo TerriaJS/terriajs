@@ -17,7 +17,8 @@ var FeatureInfoPanel = React.createClass({
         return {
             pickedFeatures: undefined,
             featureSections: undefined,
-            isVisible: true
+            isVisible: true,
+            isCollapsed: false
         };
     },
 
@@ -37,7 +38,7 @@ var FeatureInfoPanel = React.createClass({
         var that = this;
         if (defined(that.props.terria.pickedFeatures)) {
             when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function() {
-                addSectionsForFeatures(that.props.terria);
+                //addSectionsForFeatures(that.props.terria);
                 that.setState({
                     pickedFeatures: addSectionsForFeatures(that.props.terria)
                 });
@@ -49,6 +50,12 @@ var FeatureInfoPanel = React.createClass({
         this.setState({
             isVisible: false,
             pickedFeatures: undefined
+        });
+    },
+
+    toggleCollapseFeatureInfoPanel: function() {
+        this.setState({
+            isCollapsed: !this.state.isCollapsed
         });
     },
 
@@ -74,9 +81,12 @@ var FeatureInfoPanel = React.createClass({
         }
 
         return (
-            <div className="feature-info-panel" aria-hidden={!this.state.isVisible}>
-              <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
-              <ul className="list-reset">{content}</ul>
+            <div className={'feature-info-panel ' + (this.state.isCollapsed ? 'is-collapsed' : '')} aria-hidden={!this.state.isVisible}>
+              <div className='feature-info-panel__header'>
+                <button onClick={this.toggleCollapseFeatureInfoPanel} className='btn'> Feature Info Panel </button>
+                <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
+              </div>
+              <ul className="list-reset feature-info-panel__body">{content}</ul>
             </div>
         );
     }

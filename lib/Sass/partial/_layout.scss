@@ -79,8 +79,16 @@
 #aside{
   .feature-info-panel{
     position: fixed;
-    top: 100px;
-    right: 100px;
+    top: 10px;
+    right: 10px;
+    max-width: 95%;
+    z-index: 99;
+    @media screen and (min-width : $sm){
+      //temp
+      max-width: calc(100vw - 470px);
+      top: 100px;
+      right: 100px;
+    }
   }
 }
 

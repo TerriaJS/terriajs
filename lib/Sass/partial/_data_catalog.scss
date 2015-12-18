@@ -9,13 +9,11 @@
 //   <li>
 //     <button class="btn btn-catalogue">
 //     <span>National Data Sets</span>
-//     <i class="icon icon-chevron-down"></i>
 //     </button>
 //     <ul class='data-catalog-group list-reset'>
 //       <li>
-//         <button class="btn btn-catalog-group">
+//         <button class="btn btn-catalogue">
 //           <span>Communications</span>
-//           <i class="icon icon-chevron-down"></i>
 //         </button>
 //         <ul class="list-reset">
 //           <li class="clearfix data-catalog-item flex">
@@ -33,6 +31,17 @@
 //
 // Style guide: 7.0
 
-.data-catalog-group{
-  background: $faint-bg;
+.data-catalog ul{
+  padding-left: $padding/2;
+  .panel-content & {
+    background: $faint-bg;
+  }
 }
+
+.data-catalog{
+  height: calc(100% - 50px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: $padding;
+}
+

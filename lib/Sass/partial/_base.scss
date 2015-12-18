@@ -6,7 +6,6 @@ html{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
 }
 
 body{
@@ -24,7 +23,8 @@ figure{
 }
 
 input[type=text]{
-    width: calc(100% - 2px);
+  //give input some room for focus styles
+    width: calc(100% - 4px);
     border-radius: 0;
   }
 input[type=range]{
@@ -39,8 +39,8 @@ div{
 
 ::-webkit-scrollbar
 {
-  width: 10px;  /* for vertical scrollbars */
-  height: 10px; /* for horizontal scrollbars */
+  width: 5px;  /* for vertical scrollbars */
+  height: 5px; /* for horizontal scrollbars */
 }
 
 ::-webkit-scrollbar-track
@@ -80,10 +80,12 @@ div[aria-hidden='true']
 {
   display: none;
 }
-
-
 .clearfix{
   clear: both;
+}
+
+.p1{
+  padding: $padding;
 }
 
 

@@ -1,47 +1,51 @@
 // Feature info Panel
 //
+// .is-collapsed - collapsed feature info panel
+//
 // Markup:
-// <div class="feature-info-panel" aria-hidden="false">
-// <button class="btn modal-btn right" title="Close data panel"><i class="icon icon-close"></i></button>
-// <ul class="list-reset">
+// <div class="feature-info-panel {{modifier_class}}" aria-hidden="false">
+// <div class="feature-info-panel__header">
+// <button class="btn"> Feature Info Panel </button><button class="btn modal-btn right" title="Close data panel"><i class="icon icon-close"></i></button>
+// </div>
+// <ul class='list-reset feature-info-panel__body'>
 // <li class="feature-info__group">
-// <button class="btn" data-reactid=".4.1.$0.0">Broadband ADSL Availability</button>
-// <ul aria-hidden="false" class="list-reset feature-info-panel-sections">
-// <li class="feature-info-panel__section">
-// <button class="btn" data-reactid=".4.1.$0.1.1:$0.0"><span>WOLR:BQP23910</span><i class="icon icon-show-less"></i></button>
+// <ul class="list-reset feature-info-panel-sections">
+// <li class="feature-info-panel__section"><button class="btn btn-feature-name"><span>Broadband ADSL Availability</span><i class="icon icon-chevron-down" ></i></button>
 // <section class="feature-info-panel__content" aria-hidden="false">
-// <table class="cesium-infoBox-defaultTable"><tbody><tr><td>name</td><td>RHST:BQP</td></tr>
-// <tr><td>esa_name</td><td>ROOKHURST</td></tr>
+// <table class="cesium-infoBox-defaultTable">
+// <tbody>
+// <tr><td>name</td><td>ALLO:BQP30118</td></tr>
+// <tr><td>esa_name</td><td>ALLORA</td></tr>
 // <tr><td>availability_rating</td><td>E</td></tr>
 // <tr><td>availability_description</td><td>This is the lowest availability rating. Between 0 and 20 per cent of premises in the area surrounding your address have access to at least one broadband technology.</td></tr>
-// <tr><td>availability_adsl_rating</td><td>E</td></tr>
-// </tbody></table>
-// </section>
-// </li>
-// <li class="feature-info-panel__section">
-// <button class="btn"><span>WOLR:BQP23910</span><i class="icon icon-show-more"></i></button>
-// <section class="feature-info-panel__content" aria-hidden="true">
+// </tbody>
+// </table>
 // </section>
 // </li>
 // </ul>
-// </li>
 // </div>
 //
 // Style guide: 9.0
 
-
-
 .feature-info-panel{
   background:$dark;
-  width: $feature-info-panel-width;
-  max-height: $feature-info-panel-width;
+  color: #fff;
+  &.is-collapsed{
+    .feature-info-panel__body{
+      display: none;
+    }
+  }
+}
+
+.feature-info-panel__body{
+  max-height: calc(100vh - 300px);
   overflow-y: auto;
   overflow-x: hidden;
-  color: #fff;
 }
 
 .feature-info-panel-sections{
   font-size: 1rem;
+
 }
 
 .feature-info-panel__section{
@@ -51,7 +55,11 @@
 }
 
 .feature-info-panel__content{
-
+  max-height: 0;
+  overflow: hidden;
+  .feature-info-panel__section.is-visible &{
+    max-height: 1000px;
+  }
 }
 
 .feature-info__group{

@@ -437,6 +437,17 @@ button.btn.visibility{
   }
 }
 
+.btn-feature-name{
+  width: 100%;
+  position: relative;
+  padding-right: $padding*4;
+  .icon{
+    position: absolute;
+    right: $padding;
+    top: $padding;
+  }
+}
+
 .kss-modifier__example{
   .btn.btn-viewer{
     max-width: 100px;
