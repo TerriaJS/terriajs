@@ -31,15 +31,15 @@ var SidePanel = React.createClass({
         }
         return (<div>
             <SearchBox terria={terria} dataSearch={false}/>
-            <div className="now-viewing">
+            <div className="now-viewing hide-if-searching">
               <ul className="now-viewing__control list-reset clearfix">
                 <li><ModalTriggerButton btnText={btnAdd} classNames = 'now-viewing__add'/></li>
                 {remove}
               </ul>
-              {(nowViewing && nowViewing.length > 0) ? (<label className='block label-now-viewing-group'> Data Sets </label>) : null}
-              <ul className="now-viewing__content list-reset">
-                {content}
-              </ul>
+                {(nowViewing && nowViewing.length > 0) ? (<label className='block label-now-viewing-group'> Data Sets </label>) : null}
+                <ul className="now-viewing__content list-reset">
+                    {content}
+                </ul>
             </div>
         </div>);
     }

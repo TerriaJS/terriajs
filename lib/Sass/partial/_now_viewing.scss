@@ -48,7 +48,8 @@ $now-viewing-margin: 5px;
 
 .now-viewing{
   margin-top: $now-viewing-margin;
-
+  max-height: calc(100vh - 145px);
+  overflow-y: auto;
 }
 
 .now-viewing__item-control{
@@ -97,3 +98,4 @@ $now-viewing-margin: 5px;
 .now-viewing__item-legend{
   padding: $padding;
 }
+
