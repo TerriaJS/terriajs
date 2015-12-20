@@ -17,11 +17,12 @@ var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var resolve = require('resolve');
 var child_exec = require('child_process').exec;  // child_process is built in to node
+var gulpTranslate = require('gulp-gettext-static-tags');
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
 var testGlob = ['./test/**/*.js', '!./test/*.js'];
-
+var lang = 'fr'; // language choice from po files located into the po directory
 
 // Create the build directory, because browserify flips out if the directory that might
 // contain an existing source map doesn't exist.
@@ -91,7 +92,8 @@ function bundle(name, bundler, minify, catchErrors) {
 
     result = result
         .pipe(source(name))
-        .pipe(buffer());
+        .pipe(buffer())
+	.pipe(gulpTranslate('po/' + lang + '.po'));
 
     if (minify) {
         // Minify the combined source.
