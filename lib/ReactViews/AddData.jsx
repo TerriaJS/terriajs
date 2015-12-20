@@ -25,25 +25,44 @@ var AddData = React.createClass({
     getInitialState: function() {
         return {
             localDataType: dataType[0],
-            remoteDataType: dataType[0]
+            remoteDataType: dataType[0],
+            activeTab: 'local'
         };
     },
+    selectLocalOption: function(option){
+        this.setState({
+            localDataType: option
+        });
+    },
+
+    selectRemoteOption: function(option){
+        this.setState({
+            remoteDataType: option
+        });
+    },
+
+    changeTab: function(active){
+        this.setState({
+            activeTab: active
+        });
+    },
+
     render: function() {
         return (<div>
-                <h2 className='m0 p0'> Add Data </h2>
+                <h2 className='mt1 p0'> Add Data </h2>
                 <p> Add data to the map from your local system or from elsewhere on the web.</p>
                 <ul className='list-reset row relative'>
-                  <li className='col col-6 is-active'>
-                    <button className='btn btn-data-upload'> Local file</button>
-                    <div aria-hidden = 'false' className='mydata-panel_data-tab-section'>
-                    <Dropdown options={dataType} selected={this.state.localDataType} />
+                  <li className='col col-6'>
+                    <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}> Local file</button>
+                    <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
+                    <Dropdown options={dataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
                       <input className='btn'  type='file'/>
                     </div>
                   </li>
                   <li className='col col-6'>
-                    <button className='btn btn-data-upload'> Web Service</button>
-                    <div aria-hidden = 'true' className='mydata-panel_data-tab-section'>
-                    <Dropdown options={dataType} selected={this.state.remoteDataType} />
+                    <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn-data-upload ' + (this.state.activeTab === 'web' ? 'is-active' : '')}> Web Service</button>
+                    <div aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
+                    <Dropdown options={dataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
                       <input  className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
                      </div>
                   </li>

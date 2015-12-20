@@ -437,7 +437,7 @@ button.btn.visibility{
 .btn-data-upload{
   width: 100%;
   border-bottom: 2px solid $grey-lighter;
-  &:hover, &:focus, .is-active &{
+  &:hover, &:focus, &.is-active{
     border-bottom: 2px solid $color-primary;
   }
 }
