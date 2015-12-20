@@ -32,7 +32,7 @@ var FeatureInfoCatalogItem = React.createClass({
 
             }
         } else if (defined(features.feature)){
-            content = (<FeatureInfoSection feature={features.feature} clock={clock}/>);
+            content = (<FeatureInfoSection feature={features.feature} clock={clock} index={0} />);
         }
 
         return (<li className ='feature-info__group'><ul className='list-reset feature-info-panel-sections'>{count}{content}</ul></li>);

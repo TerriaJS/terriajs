@@ -10,7 +10,7 @@ var DataCatalogItem = React.createClass({
     getInitialState: function() {
         return {
             isPreviewed: false,
-            status: this.getStatus()
+            status: this.getInitialStatus()
         };
     },
 
@@ -52,7 +52,7 @@ var DataCatalogItem = React.createClass({
         this.addToPreview(event);
     },
 
-    getStatus: function(){
+    getInitialStatus: function(){
         if (this.props.item.isEnabled === true){
             if (this.props.item.isLoading === true){
                 return 'loading';
@@ -68,7 +68,7 @@ var DataCatalogItem = React.createClass({
     var item = this.props.item;
     var iconClass;
 
-    switch (this.getStatus()) {
+    switch (this.state.status) {
     case 'disabled':
         iconClass = 'icon icon-add';
         break;

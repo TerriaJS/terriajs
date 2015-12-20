@@ -28,7 +28,8 @@ var FeatureInfoPanel = React.createClass({
 
     componentWillReceiveProps: function() {
         this.setState({
-            isVisible: true
+            isVisible: true,
+            isCollapsed: false
         });
 
         this.getFeatures();
@@ -65,6 +66,7 @@ var FeatureInfoPanel = React.createClass({
         var content = null;
         // if not loading and no result, shows no result
         if (defined(this.props.terria.pickedFeatures)){
+            //since event is raised after loaded, isLoading is never true
             if (this.props.terria.pickedFeatures.isLoading === true){
                 content = <Loader/>;
             } else {

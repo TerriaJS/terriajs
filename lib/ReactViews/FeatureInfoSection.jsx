@@ -18,6 +18,12 @@ var FeatureInfoSection = React.createClass({
         };
     },
 
+    componentWillReceiveProps: function() {
+        this.setState({
+            isOpen: this.props.index === 0 ? true : false
+        });
+    },
+
     toggleSection: function() {
         this.setState({
             isOpen: !this.state.isOpen

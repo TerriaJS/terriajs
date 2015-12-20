@@ -12,8 +12,10 @@ $btn-setting-size: 35px;
 
 // Default button
 //
+// .btn-small - small button
+//
 // Markup:
-//<button class='btn'> Button </button>
+//<button class='btn {{modifier_class}}'> Button </button>
 //
 // Style guide: 5.1
 
@@ -70,6 +72,9 @@ $btn-setting-size: 35px;
     box-shadow: none;
     border-color: transparent;
   }
+}
+.btn-small{
+  padding: 0;
 }
 
 .btn-catalogue,
@@ -445,6 +450,32 @@ button.btn.visibility{
     position: absolute;
     right: $padding;
     top: $padding;
+  }
+}
+
+.btn-dropdown{
+  width: 100%;
+
+  &,
+  &:focus{
+    border-bottom: 2px solid $grey-lighter;
+  }
+  &:hover{
+    border-bottom: 2px solid $color-primary;
+  }
+
+}
+.btn-dropdown-option{
+  display: block;
+  width: 100%;
+  padding: 8px;
+
+  &:hover, &:focus{
+    color: $color-primary;
+  }
+
+  &.is-selected{
+    color: $color-primary;
   }
 }
 
