@@ -9,6 +9,7 @@ Change Log
 * Added `MapProgressBarViewModel`.  When added to the user interface with `MapProgressBarViewModel.create`, it shows a bar at the top of the map window indicating tile load progress.
 * We no longer show the entity's ID (which is usually a meaningless GUID) on the feature info panel when the feature does not have a name.  Instead, we leave the area blank.
 * Replace `.` and `#` with `_` in property names meant to be used with `featureInfoTemplate`, so that these properties can be accessed by the [mustache](https://mustache.github.io/) templating engine.
+* Fixed a bug with time-dynamic imagery layers that caused features to be picked from the next time to be displayed, in addition to the current one.
 
 ### 1.0.50
 
