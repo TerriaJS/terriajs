@@ -24,3 +24,5 @@ The following people have contributed to TerriaJS:
    * [Keat Tang](https://github.com/keattang)
 * [Urthecast](https://www.urthecast.com/)
    * [Jason Lock](https://github.com/jasonjlock)
+* [Innovisite](http://www.innovisite.com)
+   * [Fabien Pélisson](https://github.com/jeanpul)
