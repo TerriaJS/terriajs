@@ -11,6 +11,7 @@ Change Log
 * Fixed a bug with time-dynamic imagery layers that caused features to be picked from the next time to be displayed, in addition to the current one.
 * Replace `.` and `#` with `_` in property names meant to be used with `featureInfoTemplate`, so that these properties can be accessed by the [mustache](https://mustache.github.io/) templating engine.
 * Added support for time-varying properties (e.g. from a CZML file) on the feature info panel.
+* `Cesium.zoomTo` now takes the terrain height into account when zooming to a rectangle.
 
 ### 1.0.50
 
