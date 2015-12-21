@@ -229,7 +229,6 @@ $add-to-map-btn-size: 23px;
   padding: $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
-    background: $dark-lighter;
     border-bottom: 2px solid $color-primary;
   }
   &:hover , &:focus{
@@ -239,7 +238,6 @@ $add-to-map-btn-size: 23px;
 .btn.btn-tab{
   border-right: 1px solid $grey-lighter;
   @extend %btn-tab;
-
 }
 
 .btn.btn-close-modal{
