@@ -329,6 +329,7 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
     });
 
     it('uses and completes a time-varying, string-form featureInfoTemplate if present', function(done) {
+        var targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
         var targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
         var targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
 
@@ -340,10 +341,18 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
             pickedFeatures.features.push(feature);
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
-            terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+            terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
 
             return panel.showFeatures(pickedFeatures).then(function() {
+                expect(panel.sections[0].info).toEqual(targetBlank);
+
+                terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+                terria.clock.tick();
                 expect(panel.sections[0].info).toEqual(targetABC);
+
+                terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
+                terria.clock.tick();
+                expect(panel.sections[0].info).toEqual(targetDEF);
             });
         }).then(done).otherwise(done.fail);
 
