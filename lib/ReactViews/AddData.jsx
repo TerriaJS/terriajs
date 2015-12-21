@@ -2,6 +2,10 @@
 var React = require('react');
 var Dropdown = require('./Dropdown.jsx');
 var FileInput = require('./FileInput.jsx');
+var defined = require('terriajs-cesium/Source/Core/defined');
+var createCatalogItemFromFileOrUrl = require('../Models/createCatalogItemFromFileOrUrl');
+var addUserCatalogMember = require('../Models/addUserCatalogMember');
+var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var dataType = [
                 {value: 'auto', name: 'Auto-detect (recommended)'},
@@ -49,7 +53,24 @@ var AddData = React.createClass({
     },
 
     handleFile: function(e){
-        console.log('Selected file:', e.target.files[0]);
+        var files = e.target.files;
+        if (!defined(files)) {
+            console.log('file api not supported');
+        }
+
+        if (files.length > 0) {
+            var promises = [];
+
+            for (var i = 0; i < files.length; ++i) {
+                var file = files[i];
+                this.props.terria.analytics.logEvent('uploadFile', 'browse', file.name);
+                promises.push(addUserCatalogMember( this.terria, createCatalogItemFromFileOrUrl( this.props.terria, file, this.state.localDataType.value, true)));
+                }
+            when.all(promises, function() {
+                console.log('completed');
+            });
+
+        }
     },
 
     render: function() {
@@ -58,7 +79,7 @@ var AddData = React.createClass({
                   <li className='col col-6'>
                     <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
                     <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-                    <Dropdown options={dataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} /><FileInput accept=".png,.gif" onChange={this.handleFile} />
+                    <Dropdown options={dataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} /><FileInput accept=".csv,.kml" onChange={this.handleFile} />
                     </div>
                   </li>
                   <li className='col col-6'>

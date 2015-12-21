@@ -47,8 +47,11 @@
 
 .file-input{
   input{
+    opacity: 0;
+    height: 40px;
+    display: block;
+    z-index: 9;
     position: absolute;
-    z-index: -1;
   }
 }
 

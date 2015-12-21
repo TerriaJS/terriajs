@@ -8,7 +8,8 @@ var FileInput = React.createClass({
     },
   getInitialState: function() {
     return {
-      value: 'Browse for local data'
+      value: 'Browse for local data',
+      hasFocus: false
     };
   },
 
@@ -20,16 +21,10 @@ var FileInput = React.createClass({
       this.props.onChange(e);
     }
   },
-
-  selectFileToUpload: function(e){
-    e.preventDefault();
-    console.log('btn');
-  },
-
   render: function() {
     return (<form className='file-input'>
             <input type='file' onChange={this.handleChange} accept={this.props.accept} />
-            <button onClick={this.selectFileToUpload} className='btn btn-file-input'>{this.state.value}</button>
+            <label className='btn btn-file-input'>{this.state.value}</label>
             </form>);
   }
 });

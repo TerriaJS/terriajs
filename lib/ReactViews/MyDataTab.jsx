@@ -21,7 +21,7 @@ var MyDataTab = React.createClass({
                 <h3> Previously added data </h3>
                 <div > Data catalog </div>
                 </div>
-                <AddData />
+                <AddData terria={this.props.terria} />
                 </div>
                 <div className="data-preview preview col col-6 block">
                 <DataPreview terria = {this.props.terria} previewed={this.state.previewed} />
