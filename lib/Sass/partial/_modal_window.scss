@@ -1,12 +1,12 @@
-$section-height: 500px;
+$section-height: 600px;
 
 .modal-content{
   position: relative;
   width: 1000px;
   max-width: 90%;
   min-height: 100px;
-  background: #fff;
-  color: #000;
+  background: $modal-bg;
+  color: $modal-text;
 }
 .modal-overlay{
   width: 100%;
@@ -39,8 +39,8 @@ $section-height: 500px;
 .panel-content{
   padding: $padding*2;
   border-top: 1px solid $grey-lighter;
-  background: #fff;
-  color: #000;
+  background: $modal-bg;
+  color: $modal-text;
 }
 
 .data-preview{
@@ -91,12 +91,20 @@ $section-height: 500px;
 
 
 .add-data{
-  background: #f5f5f5;
-  padding: $padding;
+  background: $dark-lighter;
+  padding: $padding*2;
   height: 280px;
 }
 
 .added-data{
   //temp
-  height: 130px;
+  height: 300px;
+  padding: $padding*2;
 }
+
+.panel__my-data{
+  .top-left{
+    overflow-y: auto;
+  }
+}
+

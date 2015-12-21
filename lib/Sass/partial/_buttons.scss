@@ -228,14 +228,18 @@ $add-to-map-btn-size: 23px;
   text-transform: capitalize;
   padding: $padding*2;
   border-bottom: 2px solid transparent;
+  li[aria-selected='true'] & {
+    background: $dark-lighter;
+    border-bottom: 2px solid $color-primary;
+  }
   &:hover , &:focus{
-    color: $color-primary;
     border-bottom: 2px solid $color-primary;
   }
 }
 .btn.btn-tab{
   border-right: 1px solid $grey-lighter;
   @extend %btn-tab;
+
 }
 
 .btn.btn-close-modal{
@@ -436,6 +440,7 @@ button.btn.visibility{
 
 .btn-data-upload{
   width: 100%;
+  padding-left: 0;
   border-bottom: 2px solid $grey-lighter;
   &:hover, &:focus, &.is-active{
     border-bottom: 2px solid $color-primary;
@@ -483,7 +488,7 @@ button.btn.visibility{
 
 .btn-add-url{
   position: absolute;
-  right: 0;
+  right: 2px;
   padding: 8px;
   @extend .btn-file-input;
 }

@@ -34,14 +34,17 @@
 .data-catalog ul{
   padding-left: $padding/2;
   .panel-content & {
-    background: $faint-bg;
+    background: $dark-lighter;
   }
 }
 
-.data-catalog{
-  height: calc(100% - 50px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: $padding;
+.panel__data-catalog{
+  .data-catalog{
+    height: calc(100% - 50px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: $padding;
+  }
 }
+
 

@@ -26,20 +26,18 @@ var MyDataTab = React.createClass({
     render: function() {
         var content = null;
         if (this.state.dataCatalog) {
-            content = <DataCatalogGroup group={this.state.dataCatalog}/>;
-        }
+            content = (<div className="added-data">
+                        <small>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </small>
+                        <h3 className='mt1 mb1'> Previously added data </h3>
+                        <ul className = 'list-reset data-catalog'><DataCatalogGroup group={this.state.dataCatalog}/></ul>
+                        </div>);
+            }
         return (<div className="panel-content row">
-                <div className='col col-6'>
+                <div className='col col-6 absolute top-left'>
                 <AddData updateCatalog={this.updateCatalog} terria={this.props.terria} />
-                <small>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </small>
-                <div className="added-data">
-                <h3 className='mt1 mb1'> Previously added data </h3>
-                <ul className = 'list-reset data-catalog'>
                 {content}
-                </ul>
                 </div>
-                </div>
-                <div className="data-preview preview col col-6 block">
+                <div className="data-preview preview col col-6 relative">
                 <DataPreview terria = {this.props.terria} previewed={this.state.previewed} />
                 </div>
                 </div>);

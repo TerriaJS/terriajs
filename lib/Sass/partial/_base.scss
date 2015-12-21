@@ -65,13 +65,6 @@ section:focus{
   //border-color: rgba(0,0,0,.125);
 }
 
-li[aria-selected='true'] {
-  color: black;
-  background-color: #fff;
-  font-weight: bold;
-  opacity: 1;
-}
-
 section[aria-hidden='true'],
 main[aria-hidden='true'],
 li[aria-hidden='true'],
