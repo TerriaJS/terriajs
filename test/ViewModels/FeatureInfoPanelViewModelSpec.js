@@ -6,6 +6,7 @@ var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var runLater = require('../../lib/Core/runLater');
 var Terria = require('../../lib/Models/Terria');
 var loadJson = require('terriajs-cesium/Source/Core/loadJson');
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 
 var Catalog = require('../../lib/Models/Catalog');
@@ -84,7 +85,7 @@ describe('FeatureInfoPanelViewModel', function() {
         }).otherwise(done.fail).then(function() {
             // now, when no features are chosen, they should go away
             pickedFeatures = new PickedFeatures();
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});            
+            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
             panel.showFeatures(pickedFeatures).then(function() {
                 expect(terria.clock.onTick.numberOfListeners).toEqual(0);
             }).otherwise(done.fail).then(done);
@@ -251,7 +252,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             panel.terria.nowViewing.add(item);
             var feature = item.dataSource.entities.values[0];
             feature.properties['children'] = [
-                {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]}, 
+                {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]},
                 {name: 'Xavier', children: [{name: 'Yann', children: null}, {name: 'Yvette', children: null}]}
             ];
             var pickedFeatures = new PickedFeatures();
@@ -285,7 +286,8 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
     var terria,
         panel,
         catalog,
-        item;
+        item,
+        timeVaryingItem;
 
     beforeEach(function(done) {
         terria = new Terria({
@@ -298,11 +300,11 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
         createCatalogMemberFromType.register('czml', CzmlCatalogItem);
         loadJson('test/init/czml-with-template.json').then(function(json) {
             catalog = new Catalog(terria);
-            catalog.updateFromJson(json.catalog).then(function() {
+            return catalog.updateFromJson(json.catalog).then(function() {
                 item = catalog.group.items[0].items[0];
-                done();
-            }).otherwise(done.fail);
-        }).otherwise(done.fail);
+                timeVaryingItem = catalog.group.items[0].items[1];
+            });
+        }).then(done).otherwise(done.fail);
     });
 
     afterEach(function() {
@@ -320,13 +322,32 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
             pickedFeatures.features.push(feature);
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
-            panel.showFeatures(pickedFeatures).then(function() {
+            return panel.showFeatures(pickedFeatures).then(function() {
                 expect(panel.sections[0].info).toEqual(target);
-            }).otherwise(done.fail).then(done);
-        }).otherwise(done.fail);
-
+            });
+        }).then(done).otherwise(done.fail);
     });
 
+    it('uses and completes a time-varying, string-form featureInfoTemplate if present', function(done) {
+        var targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+        var targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+
+        timeVaryingItem.load().then(function() {
+            expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
+            panel.terria.nowViewing.add(timeVaryingItem);
+            var feature = timeVaryingItem.dataSource.entities.values[0];
+            var pickedFeatures = new PickedFeatures();
+            pickedFeatures.features.push(feature);
+            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+            terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+
+            return panel.showFeatures(pickedFeatures).then(function() {
+                expect(panel.sections[0].info).toEqual(targetABC);
+            });
+        }).then(done).otherwise(done.fail);
+
+    });
 });
 
 
