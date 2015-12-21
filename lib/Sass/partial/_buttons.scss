@@ -481,6 +481,13 @@ button.btn.visibility{
   color: #fff;
 }
 
+.btn-add-url{
+  position: absolute;
+  right: 0;
+  padding: 8px;
+  @extend .btn-file-input;
+}
+
 .kss-modifier__example{
   .btn.btn-viewer{
     max-width: 100px;

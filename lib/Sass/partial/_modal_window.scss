@@ -88,11 +88,15 @@ $section-height: 500px;
 
 
 //My data
-.added-data, .add-data{
-  height: $section-height/2 - $padding*3;
-}
+
 
 .add-data{
   background: #f5f5f5;
   padding: $padding;
+  height: 280px;
+}
+
+.added-data{
+  //temp
+  height: 130px;
 }

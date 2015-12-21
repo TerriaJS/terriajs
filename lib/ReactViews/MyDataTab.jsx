@@ -30,13 +30,14 @@ var MyDataTab = React.createClass({
         }
         return (<div className="panel-content row">
                 <div className='col col-6'>
+                <AddData updateCatalog={this.updateCatalog} terria={this.props.terria} />
+                <small>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </small>
                 <div className="added-data">
-                <h3> Previously added data </h3>
+                <h3 className='mt1 mb1'> Previously added data </h3>
                 <ul className = 'list-reset data-catalog'>
                 {content}
                 </ul>
                 </div>
-                <AddData updateCatalog={this.updateCatalog} terria={this.props.terria} />
                 </div>
                 <div className="data-preview preview col col-6 block">
                 <DataPreview terria = {this.props.terria} previewed={this.state.previewed} />
