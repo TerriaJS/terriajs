@@ -38,6 +38,10 @@ var Dropdown = React.createClass({
 
     select: function(option, event){
       this.props.selectOption(option);
+      //close drop down
+      this.setState({
+        isOpen: false
+      });
     },
 
     render: function() {

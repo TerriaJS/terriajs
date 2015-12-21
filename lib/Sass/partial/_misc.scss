@@ -45,3 +45,10 @@
   padding: $padding;
 }
 
+.file-input{
+  input{
+    position: absolute;
+    z-index: -1;
+  }
+}
+

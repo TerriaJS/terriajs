@@ -16,12 +16,14 @@ var MyDataTab = React.createClass({
     },
     render: function() {
         return (<div className="panel-content row">
-                <div className='col col-5'>
-                <h2 className='m0 p0'> Your Data </h2>
+                <div className='col col-6'>
+                <div className="added-data">
+                <h3> Previously added data </h3>
                 <div > Data catalog </div>
+                </div>
                 <AddData />
                 </div>
-                <div className="data-preview preview col col-7 block">
+                <div className="data-preview preview col col-6 block">
                 <DataPreview terria = {this.props.terria} previewed={this.state.previewed} />
                 </div>
                 </div>);

@@ -455,15 +455,12 @@ button.btn.visibility{
 
 .btn-dropdown{
   width: 100%;
+  border: 2px solid $grey-lighter;
 
-  &,
+  &:hover,
   &:focus{
-    border-bottom: 2px solid $grey-lighter;
+    border-color:$color-primary;
   }
-  &:hover{
-    border-bottom: 2px solid $color-primary;
-  }
-
 }
 .btn-dropdown-option{
   display: block;
@@ -477,6 +474,11 @@ button.btn.visibility{
   &.is-selected{
     color: $color-primary;
   }
+}
+
+.btn-file-input{
+  background: $dark;
+  color: #fff;
 }
 
 .kss-modifier__example{
