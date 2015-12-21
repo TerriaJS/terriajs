@@ -32,7 +32,7 @@ var DataPreviewMap = React.createClass({
 
         this.terriaPreview.viewerMode = ViewerMode.Leaflet;
         this.terriaPreview.homeView = terria.homeView;
-        this.terriaPreview.initialView = new CameraView(terria.currentViewer.getCurrentExtent());
+        this.terriaPreview.initialView = terria.initialView;
         this.terriaPreview.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
 
          // TODO: we shouldn't hard code the base map here. (copyed from branch analyticswithcharts)

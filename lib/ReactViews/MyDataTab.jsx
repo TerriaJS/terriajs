@@ -11,17 +11,32 @@ var MyDataTab = React.createClass({
 
     getInitialState: function() {
         return {
-            previewed: undefined
+            previewed: undefined,
+            dataCatalog: undefined
         };
     },
+
+    updateCatalog: function(dataCatalog){
+        this.setState({
+            dataCatalog: dataCatalog
+        });
+        window.nowViewingUpdate.raiseEvent();
+    },
+
     render: function() {
+        var content = null;
+        if (this.state.dataCatalog) {
+            content = <DataCatalogGroup group={this.state.dataCatalog}/>;
+        }
         return (<div className="panel-content row">
                 <div className='col col-6'>
                 <div className="added-data">
                 <h3> Previously added data </h3>
-                <div > Data catalog </div>
+                <ul className = 'list-reset data-catalog'>
+                {content}
+                </ul>
                 </div>
-                <AddData terria={this.props.terria} />
+                <AddData updateCatalog={this.updateCatalog} terria={this.props.terria} />
                 </div>
                 <div className="data-preview preview col col-6 block">
                 <DataPreview terria = {this.props.terria} previewed={this.state.previewed} />
