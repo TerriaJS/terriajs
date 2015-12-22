@@ -21,7 +21,6 @@ describe('KmlCatalogItem', function() {
     });
 
     it('can load a KML file by URL', function(done) {
-        debugger;
         kml.url = 'test/KML/vic_police.kml';
         kml.load().then(function() {
             expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
