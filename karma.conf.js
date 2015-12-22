@@ -4,6 +4,8 @@
 module.exports = function(config) {
   config.set({
 
+    browserNoActivityTimeout: 100000000,
+
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: 'wwwroot',
 
@@ -41,11 +43,23 @@ module.exports = function(config) {
     preprocessors: {
     },
 
+    customLaunchers: {
+        'PhantomJS_debug': {
+            base: 'PhantomJS',
+            debug: true
+        },
+        sl_chrome: {
+              base: 'SauceLabs',
+              browserName: 'chrome',
+              platform: 'Windows 7',
+              version: '46'
+        }
+    },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'saucelabs'],
 
 
     // web server port
@@ -67,7 +81,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['sl_chrome'],
 
 
     // Continuous Integration mode
@@ -76,6 +90,10 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultanous
-    concurrency: Infinity
+    concurrency: Infinity,
+
+    sauceLabels: {
+        testName: 'TerriaJS Unit Tests'
+    }
   })
 }

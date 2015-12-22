@@ -1,8 +1,16 @@
 language: node_js
 node_js:
 - '0.10'
+addons:
+  sauce_connect:
+    username: kevin-nationalmap
+    access_key:
+      secure: "hKffu7D30VljdS2/5E38MI10FE97brk/bH7dgbpmABT9gLed98paQBFYjyul/l6g03QHCjvXRHyU1Vrlw2EJZMMfuwap4oK6DcrHQ8hwPL/StWFfxn1kz7Lx3maAPKpOE6LaaZtHyXs6nauNjbntchkGmkEj1NZIbsuTmfSIZm0="
 script:
 - gulp lint docs release
+- npm start &
+- sleep 5
+- karma start
 #deploy:
 #  provider: s3
 #  access_key_id: AKIAJI2CLEK7CFXORVWA
