@@ -35,7 +35,7 @@ var DataPreviewMap = React.createClass({
         this.terriaPreview.initialView = terria.initialView;
         this.terriaPreview.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
 
-         // TODO: we shouldn't hard code the base map here. (copyed from branch analyticswithcharts)
+        // TODO: we shouldn't hard code the base map here. (copyed from branch analyticswithcharts)
         var positron = new OpenStreetMapCatalogItem(this.terriaPreview);
         positron.name = 'Positron (Light)';
         positron.url = 'http://basemaps.cartocdn.com/light_all/';
@@ -43,6 +43,7 @@ var DataPreviewMap = React.createClass({
         positron.opacity = 1.0;
         positron.subdomains = ['a','b','c','d'];
         this.terriaPreview.baseMap = positron;
+
     },
 
     componentWillReceiveProps: function(nextProp){

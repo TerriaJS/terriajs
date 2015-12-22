@@ -6,3 +6,12 @@
   padding: $padding 0;
   left: 0;
 }
+
+section[aria-hidden='true'].tab-panel{
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: -1;
+}

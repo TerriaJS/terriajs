@@ -16,6 +16,15 @@ var MyDataTab = React.createClass({
         };
     },
 
+    componentWillMount: function(){
+        var that = this;
+        window.previewUpdate.addEventListener(function(_previewed) {
+          that.setState({
+              previewed: _previewed
+          });
+      });
+    },
+
     updateCatalog: function(dataCatalog){
         this.setState({
             dataCatalog: dataCatalog
