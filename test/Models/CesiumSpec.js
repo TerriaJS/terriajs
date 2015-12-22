@@ -27,6 +27,10 @@ describe('Cesium Model', function() {
         document.body.removeChild(container);
     });
 
+    it('should be able to reference its container', function() {
+        expect(cesium.getContainer()).toBe(container);
+    });
+
     it('should trigger terria.tileLoadProgressEvent on globe tileLoadProgressEvent', function() {
         cesium.scene.globe.tileLoadProgressEvent.raiseEvent(3);
 
