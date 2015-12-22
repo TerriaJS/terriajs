@@ -3,9 +3,9 @@ node_js:
 - '0.10'
 addons:
   sauce_connect:
-    username: kevin-nationalmap
+    username: "kevin-nationalmap"
     access_key:
-      secure: "hKffu7D30VljdS2/5E38MI10FE97brk/bH7dgbpmABT9gLed98paQBFYjyul/l6g03QHCjvXRHyU1Vrlw2EJZMMfuwap4oK6DcrHQ8hwPL/StWFfxn1kz7Lx3maAPKpOE6LaaZtHyXs6nauNjbntchkGmkEj1NZIbsuTmfSIZm0="
+      secure: "cPJsPEUvRWVqtbJCFVB0fChHxBaXfh97UUE/LhEPfgf1kZQtASLJ2hPvjjGAGrvyUUsdzFNL08l+ZY1p914qRmGYcV7ibCgkjwVROquqoT1s8UpXWOEvBKosX8++1Lm63WthazJqg65xqEVJJgKSk763mwcyVKkiTpCGQ2awkr0="
 script:
 - gulp lint docs release
 - npm start &
