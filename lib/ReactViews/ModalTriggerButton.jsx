@@ -1,5 +1,7 @@
 'use strict';
 var React = require('react');
+
+// Any button that triggers a modal open with a callback (e.g., go to a certain tab, enabled a preview, etc)
 var ModalTriggerButton = React.createClass({
     propTypes: {
       btnText: React.PropTypes.string,

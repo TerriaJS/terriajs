@@ -1,5 +1,7 @@
 'use strict';
 var React = require('react');
+
+// the button to make the map full screen(hide the workbench)
 var FullScreenButton = React.createClass({
     propTypes: {
         terria: React.PropTypes.object

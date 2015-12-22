@@ -11,6 +11,7 @@ var Matrix4 = require('terriajs-cesium/Source/Core/Matrix4');
 var Ray = require('terriajs-cesium/Source/Core/Ray');
 var Transforms = require('terriajs-cesium/Source/Core/Transforms');
 
+// the compass on map
 var Compass = React.createClass({
     propTypes: {
         terria : React.PropTypes.object

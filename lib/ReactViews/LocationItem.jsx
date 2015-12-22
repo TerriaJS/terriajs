@@ -1,5 +1,7 @@
 'use strict';
 var React = require('react');
+
+//A Location item when doing Bing map searvh or Gazetter search
 var LocationItem = React.createClass({
     propTypes: {
       item: React.PropTypes.object

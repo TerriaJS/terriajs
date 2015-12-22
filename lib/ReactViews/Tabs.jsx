@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var DataCatalog = require('./DataCatalog.jsx');
+var DataCatalogTab = require('./DataCatalogTab.jsx');
 var MyDataTab = require('./MyDataTab.jsx');
 // var CollectionsTab = require('./CollectionsTab.jsx');
 
@@ -29,7 +29,7 @@ var Tabs = React.createClass({
     },
 
     render: function() {
-        var panels = [<DataCatalog terria={this.props.terria}/>, <MyDataTab terria={this.props.terria}/>];
+        var panels = [<DataCatalogTab terria={this.props.terria}/>, <MyDataTab terria={this.props.terria}/>];
         return (
             <div className="tabs clearfix">
               <ul className="tablist list-reset flex" role="tablist">

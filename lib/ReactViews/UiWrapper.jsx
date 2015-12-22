@@ -23,11 +23,28 @@ var UiWrapper = function(terria) {
      */
     this.previewUpdate = new CesiumEvent();
 
+    /**
+     * Gets or sets an event that is raised when modal window should be opened.
+     * @type {CesiumEvent}
+     */
     this.openModalWindow = new CesiumEvent();
 
+    /**
+     * Gets or sets an event that is raised when terriaViewer is updated
+     * @type {CesiumEvent}
+     */
     this.terriaViewerUpdate = new CesiumEvent();
 
+    /**
+     * Gets or sets an event that is raised when a feature is selected
+     * @type {CesiumEvent}
+     */
     this.onFeatureSelect = new CesiumEvent();
+
+    /**
+     * Gets or sets an event that is raised when searching data
+     * @type {CesiumEvent}
+     */
 
     this.searchData = new CesiumEvent();
 

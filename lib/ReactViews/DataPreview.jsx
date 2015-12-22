@@ -5,7 +5,7 @@ var markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
 var DataPreviewMap = require('./DataPreviewMap.jsx');
 var defined = require('terriajs-cesium/Source/Core/defined');
 
-
+//Data preview section, for the preview map see DataPreviewMap
 var DataPreview = React.createClass({
     propTypes: {
         previewed: React.PropTypes.object,
@@ -22,6 +22,7 @@ var DataPreview = React.createClass({
     },
 
     toggleOnMap: function() {
+        //From the review map we can turn on/off datasets for the main map
         this.props.previewed.isEnabled = !this.props.previewed.isEnabled;
         window.nowViewingUpdate.raiseEvent();
     },

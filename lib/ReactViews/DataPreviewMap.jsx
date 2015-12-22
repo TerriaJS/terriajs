@@ -64,6 +64,7 @@ var DataPreviewMap = React.createClass({
     },
 
     shouldComponentUpdate: function(){
+        // it should not re-render the dom element as all the updates on the map are handled by Model
         return false;
     },
 

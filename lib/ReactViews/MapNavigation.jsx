@@ -7,6 +7,8 @@ var SettingPanel = require('./SettingPanel.jsx'),
     FullScreenButton = require('./FullScreenButton.jsx'),
     defined = require('terriajs-cesium/Source/Core/defined');
 
+// The map navigation region
+// This component could probably be put in index.js of nationalmap?
 var MapNavigation = React.createClass({
     propTypes: {
       terria: React.PropTypes.object,
@@ -16,6 +18,7 @@ var MapNavigation = React.createClass({
 
     render: function() {
         var compass = null;
+        //show compass if we are in cesium mode
         if (defined(this.props.terria.cesium)){
           compass = <Compass terria={this.props.terria} />;
         }

@@ -3,6 +3,7 @@ var Mustache = require('mustache');
 var React = require('react');
 var defined = require('terriajs-cesium/Source/Core/defined');
 
+//Individual feature info section
 var FeatureInfoSection = React.createClass({
     propTypes: {
         template: React.PropTypes.object,

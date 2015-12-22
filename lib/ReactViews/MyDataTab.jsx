@@ -4,6 +4,7 @@ var DataCatalogGroup = require('./DataCatalogGroup.jsx');
 var DataPreview = require('./DataPreview.jsx');
 var AddData = require('./AddData.jsx');
 
+// My data tab include Add data section and preview section
 var MyDataTab = React.createClass({
     propTypes: {
       terria: React.PropTypes.object

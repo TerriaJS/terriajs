@@ -1,6 +1,8 @@
 'use strict';
 var React = require('react');
 
+// When uploading a file
+// use an button element to have consistent stylying
 var FileInput = React.createClass({
   propTypes: {
         onChange: React.PropTypes.func,

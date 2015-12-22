@@ -3,6 +3,7 @@ var React = require('react');
 var FeatureInfoSection = require('./FeatureInfoSection.jsx'),
     defined = require('terriajs-cesium/Source/Core/defined');
 
+// Any Catalog in a feature-info-panel
 var FeatureInfoCatalogItem = React.createClass({
     propTypes: {
         features: React.PropTypes.object,
@@ -20,6 +21,7 @@ var FeatureInfoCatalogItem = React.createClass({
         var clock = this.props.clock;
 
         if (defined(features.features)){
+         //Display no more than defined number of feature infos
           totalFeaturesCount = features.features.length;
             if (defined(features.catalogItem)) {
                 maximumShownFeatureInfos = features.catalogItem.maximumShownFeatureInfos;

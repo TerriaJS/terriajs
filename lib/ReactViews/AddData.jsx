@@ -14,7 +14,7 @@ var ArcGisCatalogGroup = require('../Models/ArcGisCatalogGroup');
 var ArcGisMapServerCatalogItem = require('../Models/ArcGisMapServerCatalogItem');
 var wfsUrlRegex = /\bwfs\b/i;
 
-
+//Local and remote data have different dataType options
 var remoteDataType = [
                 {value: 'auto', name: 'Auto-detect (recommended)'},
                 {value: 'wms-getCapabilities', name: 'Web Map Service (WMS) Server'},
@@ -40,6 +40,7 @@ var localDataType = [
                 {value: 'other', name:'Other (use conversion service)'},
                 ];
 
+//Add data panel in modal window -> My data tab
 var AddData = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
@@ -48,10 +49,10 @@ var AddData = React.createClass({
 
     getInitialState: function() {
         return {
-            localDataType: localDataType[0],
+            localDataType: localDataType[0], //By default select the first item (auto)
             remoteDataType: remoteDataType[0],
-            activeTab: 'local',
-            remoteUrl: undefined
+            activeTab: 'local', // By default local data tab is active
+            remoteUrl: undefined // By default there's no remote url
         };
     },
     selectLocalOption: function(option){

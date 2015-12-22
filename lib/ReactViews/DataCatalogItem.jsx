@@ -2,6 +2,7 @@
 var React = require('react');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
+//Individual dataset
 var DataCatalogItem = React.createClass({
     propTypes:{
         item: React.PropTypes.object

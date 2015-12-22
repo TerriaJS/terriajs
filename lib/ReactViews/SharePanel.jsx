@@ -1,5 +1,6 @@
 'use strict';
 var React = require('react');
+// The share panel doesn't do anything yet
 var SharePanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object

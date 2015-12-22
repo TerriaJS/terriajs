@@ -4,20 +4,21 @@ var DataCatalogGroup = require('./DataCatalogGroup.jsx');
 var DataPreview = require('./DataPreview.jsx');
 var SearchBox = require('./SearchBox.jsx');
 
-var DataCatalog = React.createClass({
+// The DataCatalog Tab
+var DataCatalogTab = React.createClass({
     propTypes: {
       terria:  React.PropTypes.object
     },
 
     getInitialState: function() {
         return {
-            openId: '',
             previewed: undefined
         };
     },
 
     componentWillMount: function() {
       var that = this;
+      //Update preview app if an item has been added as previewed
       window.previewUpdate.addEventListener(function(_previewed) {
           that.setState({
               previewed: _previewed
@@ -46,4 +47,4 @@ var DataCatalog = React.createClass({
     }
 });
 
-module.exports = DataCatalog;
+module.exports = DataCatalogTab;

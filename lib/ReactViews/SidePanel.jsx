@@ -7,6 +7,9 @@ var Legend = require('./Legend.jsx');
 var btnAdd = 'Add Data';
 var btnRemove = 'Remove All';
 
+// the sidepanel
+// TO DO:  rename this into workbench
+// This get re-rendered when nowViewingItem changes
 var SidePanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object

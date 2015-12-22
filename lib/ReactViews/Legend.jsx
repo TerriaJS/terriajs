@@ -4,6 +4,7 @@ var ModalTriggerButton = require('./ModalTriggerButton.jsx');
 var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
 var defined = require('terriajs-cesium/Source/Core/defined');
 
+// Maybe should be called nowViewingItem?
 var Legend = React.createClass({
     propTypes:{
       nowViewingItem: React.PropTypes.object

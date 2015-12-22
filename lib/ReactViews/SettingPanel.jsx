@@ -2,6 +2,7 @@
 var React = require('react');
 var ViewerMode = require('../Models/ViewerMode');
 
+//The basemap and viewer setting panel
 var SettingPanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,

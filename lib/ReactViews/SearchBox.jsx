@@ -6,13 +6,12 @@ var LocationItem = require('./LocationItem.jsx');
 var Loader = require('./Loader.jsx');
 
 var ModalTriggerButton = require('./ModalTriggerButton.jsx');
-
-
 var CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
 var BingMapsSearchProviderViewModel = require('../ViewModels/BingMapsSearchProviderViewModel.js');
 var GazetteerSearchProviderViewModel = require('../ViewModels/GazetteerSearchProviderViewModel.js');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
+// Handle any of the three kinds of search based on the props
 var SearchBox = React.createClass({
     propTypes: {
         mapSearch: React.PropTypes.bool,
@@ -38,6 +37,13 @@ var SearchBox = React.createClass({
             that.setState({
                 value: value
             });
+            var fakeEvent = {
+                target: {
+                    value: value
+                }
+            };
+            // this does not work for the first time but works afterwards \
+            that.handleChange(fakeEvent);
         });
     },
 
@@ -111,6 +117,8 @@ var SearchBox = React.createClass({
           })}</ul>);
             }
         }
+
+        // TO DO: simplify the search result dom
 
         // if is searching data catalog and result is not empty, show results, otherwise show loader
         var cataLogSearchContent = null;

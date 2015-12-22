@@ -8,7 +8,7 @@ var Tween = require('terriajs-cesium/Source/ThirdParty/Tween');
 var CesiumMath = require('terriajs-cesium/Source/Core/Math');
 var Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
 
-
+//Map zoom control
 var ZoomControl = React.createClass({
 
     propTypes: {

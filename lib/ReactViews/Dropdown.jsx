@@ -1,5 +1,7 @@
 'use strict';
 var React = require('react');
+
+//Use this as drop down rather than the html <select> tag so we have more consistent styling
 var Dropdown = React.createClass({
     propTypes: {
         options: React.PropTypes.array,
@@ -20,10 +22,6 @@ var Dropdown = React.createClass({
       };
     },
 
-    componentDidMount: function(){
-
-    },
-
     componentWillUnmount: function(){
       this.setState({
         isOpen: false
@@ -38,7 +36,7 @@ var Dropdown = React.createClass({
 
     select: function(option, event){
       this.props.selectOption(option);
-      //close drop down
+      //close drop down on select
       this.setState({
         isOpen: false
       });

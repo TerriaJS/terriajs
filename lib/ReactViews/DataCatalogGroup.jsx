@@ -12,6 +12,7 @@ var DataCatalogGroup = React.createClass({
     },
 
     getInitialState: function() {
+        //This is to make state update
         return {
             openId: ''
         };
@@ -55,8 +56,6 @@ var DataCatalogGroup = React.createClass({
             } else {
                 content = <Loader/>;
             }
-        } else {
-            content = null;
         }
 
         return (
