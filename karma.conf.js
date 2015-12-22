@@ -93,7 +93,8 @@ module.exports = function(config) {
     concurrency: Infinity,
 
     sauceLabels: {
-        testName: 'TerriaJS Unit Tests'
+        testName: 'TerriaJS Unit Tests',
+        tunnelIdentifier: process.env.TRAVIS_BUILD_NUMBER
     }
   })
 }
