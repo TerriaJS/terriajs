@@ -91,12 +91,12 @@ $section-height: 600px;
 .add-data{
   background: $modal-secondary-bg;
   padding: $padding*2;
-  height: 280px;
+  height: 300px;
+  overflow: visible;
 }
 
 .added-data{
   //temp
-  height: 300px;
   padding: $padding*2;
 }
 
