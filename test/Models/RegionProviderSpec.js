@@ -5,7 +5,6 @@
 var Terria = require('../../lib/Models/Terria');
 var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
-var loadText = require('terriajs-cesium/Source/Core/loadText');
 
 var terria;
 var rpl, ced;
@@ -26,9 +25,8 @@ beforeEach(function() {
 
 describe('RegionProvider', function() {
   it('parses WFS xml correctly', function(done) {
-    loadText('test/csv/mini_ced.xml').then(function(xml) {
-        ced.loadRegionsFromXML(xml);
-        expect(ced.regions.length).toEqual(6);
+    ced.loadRegionIDs().then(function(json) {
+        expect(ced.regions.length).toEqual(168);
     }).otherwise(fail).then(done);
   });
 });
