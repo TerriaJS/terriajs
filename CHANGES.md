@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 1.0.52
+
+* Dramatically improved the performance of region mapping.
+
 ### 1.0.51
 
 * Fixed a typo that prevented clearing the search query
