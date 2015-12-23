@@ -5,6 +5,7 @@ Change Log
 ### 1.0.52
 
 * Add a `getContainer()` method to Terria's `currentViewer`.
+* Dramatically improved the performance of region mapping.
 
 ### 1.0.51
 

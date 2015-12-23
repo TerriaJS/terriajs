@@ -24,8 +24,7 @@ describe('KmlCatalogItem', function() {
         kml.url = 'test/KML/vic_police.kml';
         kml.load().then(function() {
             expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
-            done();
-        });
+        }).then(done).otherwise(done.fail);
     });
 
     it('use provided dataUrl', function(done) {
@@ -34,8 +33,7 @@ describe('KmlCatalogItem', function() {
         kml.load().then(function() {
             expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
             expect(kml.dataUrl).toBe("test/test.html");
-            done();
-        });
+        }).then(done).otherwise(done.fail);
     });
 
     it('have default dataUrl and dataUrlType', function() {
