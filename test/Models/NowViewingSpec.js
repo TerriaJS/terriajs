@@ -8,7 +8,7 @@ var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWi
 var Leaflet = require('../../lib/Models/Leaflet');
 var L = require('leaflet');
 var CatalogItem = require('../../lib/Models/CatalogItem');
-
+var supportsWebGL = require('../../lib/Core/supportsWebGL');
 
 describe('NowViewing without a viewer', function() {
 
@@ -34,7 +34,7 @@ describe('NowViewing without a viewer', function() {
 // only run these tests if the browser supports WebGL
 // the browser may still not show WebGL properly - see TerriaViewer.js for a more precise test if needed
 
-if (window.WebGLRenderingContext) {
+if (supportsWebGL()) {
 
     describe('NowViewing with a minimal Cesium viewer', function() {
         var container;
@@ -100,7 +100,7 @@ describe('NowViewing with a minimal Leaflet viewer', function() {
         });
         container = document.createElement('div');
         container.id = 'container';
-        document.body.appendChild(container);    
+        document.body.appendChild(container);
         var map = L.map('container').setView([-28.5, 135], 5);
 
         leaflet = new Leaflet(terria, map);

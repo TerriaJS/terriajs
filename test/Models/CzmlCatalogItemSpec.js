@@ -158,7 +158,7 @@ describe('CzmlCatalogItem', function() {
 
     });
 
-    describe('error handling', function(done) {
+    describe('error handling', function() {
         it('fails gracefully when the data at a URL is not JSON', function(done) {
             czml.url = 'test/KML/vic_police.kml';
             czml.load().then(function() {
