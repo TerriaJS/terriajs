@@ -9,6 +9,7 @@ var Leaflet = require('../../lib/Models/Leaflet');
 var L = require('leaflet');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var supportsWebGL = require('../../lib/Core/supportsWebGL');
+var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
 
 describe('NowViewing without a viewer', function() {
 
@@ -46,7 +47,9 @@ describeIfSupported('NowViewing with a minimal Cesium viewer', function() {
     beforeEach(function() {
         container = document.createElement('div');
         document.body.appendChild(container);
-        widget = new CesiumWidget(container, {});
+        widget = new CesiumWidget(container, {
+            imageryProvider: new TileCoordinatesImageryProvider()
+        });
         terria = new Terria({
             baseUrl: './'
         });

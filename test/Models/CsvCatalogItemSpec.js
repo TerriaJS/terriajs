@@ -561,10 +561,11 @@ describe('CsvCatalogItem', function() {
                     }
                 }
             }));
+
+        // Use a regular expression for this URL because IE9 has ~1e-10 differences in the bbox parameter.
         fakeServer.respondWith(
             'GET',
             new RegExp('http://regionmap-dev\\.nationalmap\\.nicta\\.com\\.au/region_map/ows\\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\\.ogc\\.se_xml&styles=&tiled=true&service=WMS&version=1\\.1\\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\\.5285162\\d\\d%2C-4618019\\.5008772\\d\\d%2C16358747\\.0454802\\d\\d%2C-4539747\\.9839131\\d\\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson'),
-            ///http:\/\/regionmap-dev\.nationalmap\.nicta\.com\.au\/region_map\/ows\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\.ogc\.se_xml&styles=&tiled=true&service=WMS&version=1\.1\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\.5285162\d\d%2C-4618019\.5008772\d\d%2C16358747\.0454802\d\d%2C-4539747\.9839131\d\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson/,
             JSON.stringify({
                 "type": "FeatureCollection",
                 "features": [{
