@@ -5,28 +5,66 @@
 var Terria = require('../../lib/Models/Terria');
 var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
-
-var terria;
-var rpl, ced;
-
-beforeEach(function() {
-    terria = new Terria({
-        baseUrl: './',
-        regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
-    });
-    rpl = new RegionProviderList(terria);
-    ced = new RegionProvider('CED', { 
-      regionProp: 'CED_CODE', 
-      layerName: 'region_map:FID_CED_2011_AUST',
-      server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows'
-    });
-
-});
+var sinon = require('sinon');
+var URI = require('urijs');
 
 describe('RegionProvider', function() {
-  it('parses WFS xml correctly', function(done) {
-    ced.loadRegionIDs().then(function(json) {
-        expect(ced.regions.length).toEqual(168);
-    }).otherwise(fail).then(done);
-  });
+    var terria;
+    var rpl, ced;
+    var fakeServer;
+
+    beforeEach(function() {
+        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
+        fakeServer = sinon.fakeServer.create();
+        fakeServer.autoRespond = true;
+
+        fakeServer.xhr.useFilters = true;
+        fakeServer.xhr.addFilter(function(method, url, async, username, password) {
+            // Allow requests for local files.
+            var uri = new URI(url);
+            var protocol = uri.protocol();
+            return !protocol;
+        });
+
+        fakeServer.respond(function(request) {
+            fail('Unhandled request to URL: ' + request.url);
+        });
+
+        fakeServer.respondWith(
+            'GET',
+            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_CED_2011_AUST&valueReference=CED_CODE',
+            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:CED_CODE>101</region_map:CED_CODE>\n' +
+            '   </wfs:member>\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:CED_CODE>102</region_map:CED_CODE>\n' +
+            '   </wfs:member>\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:CED_CODE>103</region_map:CED_CODE>\n' +
+            '   </wfs:member>\n' +
+            '</wfs:ValueCollection>');
+
+        terria = new Terria({
+            baseUrl: './',
+            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+        });
+        rpl = new RegionProviderList(terria);
+        ced = new RegionProvider('CED', {
+            regionProp: 'CED_CODE',
+            layerName: 'region_map:FID_CED_2011_AUST',
+            server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows'
+        });
+
+    });
+
+    afterEach(function() {
+        fakeServer.restore();
+    });
+
+    it('parses WFS xml correctly', function(done) {
+        ced.loadRegionIDs().then(function(json) {
+            expect(ced.regions.length).toEqual(3);
+        }).otherwise(fail).then(done);
+    });
 });
