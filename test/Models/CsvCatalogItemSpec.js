@@ -17,12 +17,11 @@ var VarType = require('../../lib/Map/VarType');
 var terria;
 var csvItem;
 var greenTableStyle;
-var RealXMLHttpRequest;
 var fakeServer;
 
 describe('CsvCatalogItem', function() {
     beforeEach(function() {
-        RealXMLHttpRequest = XMLHttpRequest;
+        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
         fakeServer = sinon.fakeServer.create();
         fakeServer.autoRespond = true;
 
@@ -184,18 +183,6 @@ describe('CsvCatalogItem', function() {
     });
 
     it('matches LGAs by code', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_LGA_2011_AUST&valueReference=LGA_CODE11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_CODE11>10050</region_map:LGA_CODE11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_CODE11>31000</region_map:LGA_CODE11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
         csvItem.updateFromJson({
             data: 'lga_code,value\n31000,1'
         });
@@ -209,36 +196,6 @@ describe('CsvCatalogItem', function() {
 
     });
     it('matches LGAs by names in various formats', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_LGA_2011_AUST&valueReference=LGA_NAME11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Greater Geelong (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Sydney (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Melbourne (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_LGA_2011_AUST&valueReference=STE_NAME11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>New South Wales</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
         csvItem.updateFromJson({
             data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3'
         });
@@ -252,39 +209,6 @@ describe('CsvCatalogItem', function() {
 
     });
     it('matches numeric state IDs with regexes', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_STE_2011_AUST&valueReference=STE_NAME11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>New South Wales</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Queensland</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>South Australia</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Western Australia</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Tasmania</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Northern Territory</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Australian Capital Territory</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Other Territories</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
         csvItem.updateFromJson({
             data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90'
         });
@@ -296,18 +220,6 @@ describe('CsvCatalogItem', function() {
     });
 
     it('matches SA4s', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_SA4_2011_AUST&valueReference=SA4_CODE11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:SA4_CODE11>101</region_map:SA4_CODE11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:SA4_CODE11>209</region_map:SA4_CODE11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
         csvItem.updateFromJson({
             data: 'sa4,value\n209,correct'
         });
@@ -320,36 +232,6 @@ describe('CsvCatalogItem', function() {
     });
 
     it('respects tableStyle color ramping for regions', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_LGA_2011_AUST&valueReference=LGA_NAME11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Greater Geelong (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Sydney (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Melbourne (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_LGA_2011_AUST&valueReference=STE_NAME11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>New South Wales</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
         csvItem.updateFromJson({
             data: 'lga_name,value\nCity of Melbourne,0\nGreater Geelong,5\nSydney (S),10',
             tableStyle: greenTableStyle
@@ -358,38 +240,14 @@ describe('CsvCatalogItem', function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
             // let's not require a linear mapping
-            expect(csvItem._colorFunc(1)).toEqual([0, 255, 0, 255]);
-            expect(csvItem._colorFunc(0)[1]).toBeGreaterThan(64);
-            expect(csvItem._colorFunc(0)[1]).toBeLessThan(255);
-            expect(csvItem._colorFunc(2)).toEqual([0, 64, 0, 255]);
+            expect(csvItem._colorFunc(121)).toEqual([0, 255, 0, 255]);
+            expect(csvItem._colorFunc(180)[1]).toBeGreaterThan(64);
+            expect(csvItem._colorFunc(180)[1]).toBeLessThan(255);
+            expect(csvItem._colorFunc(197)).toEqual([0, 64, 0, 255]);
         }).otherwise(fail).then(done);
 
     });
     it('uses the requested region mapping column, not just the first one', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_POA_2011_AUST&valueReference=POA_CODE',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3068</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3124</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3125</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3126</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3127</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3000</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
         greenTableStyle.regionType = 'poa';
         greenTableStyle.regionVariable = 'postcode';
         csvItem.updateFromJson({
@@ -492,7 +350,7 @@ describe('CsvCatalogItem', function() {
                     },
                     "geometry_name": "the_geom",
                     "properties": {
-                        "FID": 1,
+                        "FID": 765,
                         "POA_CODE": "3124",
                         "POA_NAME": "3124",
                         "SQKM": 7.29156648352383
@@ -505,30 +363,6 @@ describe('CsvCatalogItem', function() {
                     }
                 }
             }));
-
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_POA_2011_AUST&valueReference=POA_CODE',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3068</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3124</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3125</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3126</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3127</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:POA_CODE>3000</region_map:POA_CODE>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
 
         csvItem.url = 'test/csv/postcode_val_enum.csv';
         csvItem.load().then(function() {
@@ -547,7 +381,7 @@ describe('CsvCatalogItem', function() {
     it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
         fakeServer.respondWith(
             'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
+            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
             JSON.stringify({
                 "type": "FeatureCollection",
                 "features": [{
@@ -559,7 +393,7 @@ describe('CsvCatalogItem', function() {
                     },
                     "geometry_name": "the_geom",
                     "properties": {
-                        "FID": 1,
+                        "FID": 162,
                         "LGA_CODE11": "21110",
                         "LGA_NAME11": "Boroondara (C)",
                         "STE_CODE11": "2",
@@ -574,36 +408,6 @@ describe('CsvCatalogItem', function() {
                     }
                 }
             }));
-
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_LGA_2011_AUST&valueReference=LGA_NAME11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Yarra (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Boroondara (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:LGA_NAME11>Melbourne (C)</region_map:LGA_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
-
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_LGA_2011_AUST&valueReference=STE_NAME11',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '   <wfs:member>\n' +
-            '       <region_map:STE_NAME11>Victoria</region_map:STE_NAME11>\n' +
-            '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
 
         csvItem.url = 'test/csv/lga_fuzzy_val.csv';
         csvItem.load().then(function() {
@@ -728,6 +532,65 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
     it('supports feature picking on disambiguated LGA names like Wellington, VIC', function(done) {
+        fakeServer.respondWith(
+            'GET',
+            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson',
+            JSON.stringify({
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "id": "FID_LGA_2011_AUST.143",
+                    "geometry": {
+                        "type": "MultiPolygon",
+                        "coordinates": []
+                    },
+                    "geometry_name": "the_geom",
+                    "properties": {
+                        "FID": 142,
+                        "LGA_CODE11": "18150",
+                        "LGA_NAME11": "Wellington (A)",
+                        "STE_CODE11": "1",
+                        "STE_NAME11": "New South Wales",
+                        "AREA_SQKM": 4110.08848071889
+                    }
+                }],
+                "crs": {
+                    "type": "name",
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::4326"
+                    }
+                }
+            }));
+        fakeServer.respondWith(
+            'GET',
+            new RegExp('http://regionmap-dev\\.nationalmap\\.nicta\\.com\\.au/region_map/ows\\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\\.ogc\\.se_xml&styles=&tiled=true&service=WMS&version=1\\.1\\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\\.5285162\\d\\d%2C-4618019\\.5008772\\d\\d%2C16358747\\.0454802\\d\\d%2C-4539747\\.9839131\\d\\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson'),
+            ///http:\/\/regionmap-dev\.nationalmap\.nicta\.com\.au\/region_map\/ows\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\.ogc\.se_xml&styles=&tiled=true&service=WMS&version=1\.1\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\.5285162\d\d%2C-4618019\.5008772\d\d%2C16358747\.0454802\d\d%2C-4539747\.9839131\d\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson/,
+            JSON.stringify({
+                "type": "FeatureCollection",
+                "features": [{
+                    "type": "Feature",
+                    "id": "FID_LGA_2011_AUST.225",
+                    "geometry": {
+                        "type": "MultiPolygon",
+                        "coordinates": []
+                    },
+                    "geometry_name": "the_geom",
+                    "properties": {
+                        "FID": 224,
+                        "LGA_CODE11": "26810",
+                        "LGA_NAME11": "Wellington (S)",
+                        "STE_CODE11": "2",
+                        "STE_NAME11": "Victoria",
+                        "AREA_SQKM": 10817.3680807268
+                    }
+                }],
+                "crs": {
+                    "type": "name",
+                    "properties": {
+                        "name": "urn:ogc:def:crs:EPSG::4326"
+                    }
+                }
+            }));
         csvItem.url = 'test/csv/lga_state_disambig.csv';
         var ip;
         csvItem.load().then(function() {
