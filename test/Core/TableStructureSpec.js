@@ -2,6 +2,7 @@
 
 /*global require,describe,it,expect*/
 var TableStructure = require('../../lib/Core/TableStructure');
+var VarType = require('../../lib/Map/VarType');
 
 describe('TableStructure', function() {
 
@@ -56,6 +57,15 @@ describe('TableStructure', function() {
         var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
         expect(tableStructure.getColumnNames()).toEqual(['x', 'y']);
+    });
+
+    it('sets column types', function() {
+        var data = [['x', 'lat'], [1, 5], [3, 8], [4, -3]];
+        var tableStructure = TableStructure.fromJson(data);
+        expect(tableStructure.columnsByType[VarType.SCALAR].length).toEqual(1);
+        expect(tableStructure.columnsByType[VarType.SCALAR][0].name).toEqual('x');
+        expect(tableStructure.columnsByType[VarType.LAT].length).toEqual(1);
+        expect(tableStructure.columnsByType[VarType.LAT][0].name).toEqual('lat');
     });
 
 });
