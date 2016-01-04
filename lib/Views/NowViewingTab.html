@@ -1,6 +1,6 @@
 <script type="text/html" id="now-viewing-tree-item-template">
     <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 1)">
-        <!-- ko if: name -->
+        <!-- ko if: name && isVisible -->
             <div class="data-catalog-member-top-row">
                 <!-- ko if: hasChildren -->
                     <div class="data-catalog-icon-holder clickable" data-bind="click: toggleOpen">
