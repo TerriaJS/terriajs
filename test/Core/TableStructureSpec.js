@@ -26,6 +26,28 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[1].values).toEqual([5, 8, -3]);
     });
 
+    it('can read from json object into existing structure', function() {
+        var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
+        var tableStructure = new TableStructure();
+        tableStructure.loadFromJson(data);
+        expect(tableStructure.columns.length).toEqual(2);
+        expect(tableStructure.columns[0].name).toEqual('x');
+        expect(tableStructure.columns[0].values).toEqual([1, 3, 4]);
+        expect(tableStructure.columns[1].name).toEqual('y');
+        expect(tableStructure.columns[1].values).toEqual([5, 8, -3]);
+    });
+
+    it('can read from csv string into existing structure', function() {
+        var csvString = 'x,y\r\n1,5\r\n3,8\r\n4,-3\r\n';
+        var tableStructure = new TableStructure();
+        tableStructure.loadFromCsv(csvString);
+        expect(tableStructure.columns.length).toEqual(2);
+        expect(tableStructure.columns[0].name).toEqual('x');
+        expect(tableStructure.columns[0].values).toEqual([1, 3, 4]);
+        expect(tableStructure.columns[1].name).toEqual('y');
+        expect(tableStructure.columns[1].values).toEqual([5, 8, -3]);
+    });
+
     it('can convert to ArrayOfColumns', function() {
         var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
