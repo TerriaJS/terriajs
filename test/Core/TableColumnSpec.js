@@ -1,6 +1,8 @@
 'use strict';
 
 /*global require,describe,it,expect*/
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
+
 var TableColumn = require('../../lib/Core/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 
@@ -70,6 +72,15 @@ describe('TableColumn', function() {
         expect(tableColumn.dates[0].getUTCMinutes()).toEqual(15);
         expect(tableColumn.dates[0].getUTCSeconds()).toEqual(59);
         expect(tableColumn.dates[0].getUTCMilliseconds()).toEqual(123);
+    });
+
+    it('can calculate finish dates', function() {
+        var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:30Z'];
+        var tableColumn = new TableColumn('date', data, {finalDurationSeconds: 20});
+        expect(tableColumn.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
+            JulianDate.fromIso8601('2016-01-03T12:15:50Z')
+        ]);
     });
 
     it('can handle numerical time type', function() {
