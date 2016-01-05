@@ -13,10 +13,10 @@ describe('NominatimSearchProviderViewModel', function() {
     var fakeServer;
 
     beforeEach(function() {
-        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
         fakeServer = sinon.fakeServer.create();
         fakeServer.autoRespond = true;
 
+        fakeServer.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
         fakeServer.xhr.useFilters = true;
         fakeServer.xhr.addFilter(function(method, url, async, username, password) {
             // Allow requests for local files.
@@ -41,6 +41,7 @@ describe('NominatimSearchProviderViewModel', function() {
 
     afterEach(function() {
         searchProvider = undefined;
+        fakeServer.xhr.filters.length = 0;
         fakeServer.restore();
     });
 

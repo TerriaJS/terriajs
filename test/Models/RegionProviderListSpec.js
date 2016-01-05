@@ -33,6 +33,7 @@ describe('RegionProviderList', function() {
     });
 
     afterEach(function() {
+        fakeServer.xhr.filters.length = 0;
         fakeServer.restore();
     });
 
