@@ -13,6 +13,7 @@ Change Log
 * The default style for CSV files is now 7 color bins with CK means method.
 * Improve the display of legends for CSV files, accordingly.
 * Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
+* Improved compatibility with Internet Explorer 9.
 
 ### 1.0.51
 
