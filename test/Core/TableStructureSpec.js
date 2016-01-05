@@ -81,6 +81,13 @@ describe('TableStructure', function() {
         expect(tableStructure.getColumnNames()).toEqual(['x', 'y']);
     });
 
+    it('can get column with name', function() {
+        var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
+        var tableStructure = TableStructure.fromJson(data);
+        expect(tableStructure.getColumnWithName('y')).toEqual(tableStructure.columns[1]);
+        expect(tableStructure.getColumnWithName('z')).toBeUndefined();
+    });
+
     it('sets column types', function() {
         var data = [['x', 'lat'], [1, 5], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
