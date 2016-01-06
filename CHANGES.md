@@ -13,6 +13,8 @@ Change Log
 * The default style for CSV files is now 7 color bins with CK means method.
 * Improve the display of legends for CSV files, accordingly.
 * Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
+* Create new Legend class, making it easy to generate client-side legends for different kinds of data.
+* Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
 
 ### 1.0.51
 
