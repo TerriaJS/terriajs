@@ -14,6 +14,8 @@ Change Log
 * The default style for CSV files is now 7 color bins with CK means method.
 * Improve the display of legends for CSV files, accordingly.
 * Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
+* URLs for legends are now encapsulated in a `LegendUrl` model, which accepts a mime type that will affect how the
+  legend is rendered in the sidebar.
 
 ### 1.0.51
 
