@@ -52,6 +52,11 @@ describe('Leaflet Model', function() {
         });
     });
 
+    it('should be able to reference its container', function() {
+        initLeaflet();
+        expect(leaflet.getContainer()).toBe(container);
+    });
+
     it('should trigger a tileLoadProgressEvent with the total number of tiles to be loaded for all layers', function() {
         initLeaflet();
 
