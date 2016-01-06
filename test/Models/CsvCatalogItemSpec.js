@@ -21,26 +21,9 @@ var fakeServer;
 
 describe('CsvCatalogItem', function() {
     beforeEach(function() {
-        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
-        fakeServer = sinon.fakeServer.create();
-        fakeServer.autoRespond = true;
-
-        fakeServer.xhr.useFilters = true;
-        fakeServer.xhr.addFilter(function(method, url, async, username, password) {
-            // Allow requests for local files.
-            var uri = new URI(url);
-            var protocol = uri.protocol();
-            return !protocol;
-        });
-
-        fakeServer.respond(function(request) {
-            fail('Unhandled request to URL: ' + request.url);
-        });
-
         terria = new Terria({
             baseUrl: './',
             regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
-
         });
 
         csvItem = new CsvCatalogItem(terria);
@@ -54,12 +37,6 @@ describe('CsvCatalogItem', function() {
                 "color": "rgba(0, 255, 0, 1.00)"
             }]
         });
-
-    });
-
-    afterEach(function() {
-        fakeServer.xhr.filters.length = 0;
-        fakeServer.restore();
     });
 
     it('has sensible type and typeName', function() {
@@ -335,95 +312,6 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
-
-    it('supports feature picking on region-mapped files', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
-            JSON.stringify({
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "id": "FID_POA_2011_AUST.766",
-                    "geometry": {
-                        "type": "MultiPolygon",
-                        "coordinates": []
-                    },
-                    "geometry_name": "the_geom",
-                    "properties": {
-                        "FID": 765,
-                        "POA_CODE": "3124",
-                        "POA_NAME": "3124",
-                        "SQKM": 7.29156648352383
-                    }
-                }],
-                "crs": {
-                    "type": "name",
-                    "properties": {
-                        "name": "urn:ogc:def:crs:EPSG::4326"
-                    }
-                }
-            }));
-
-        csvItem.url = 'test/csv/postcode_val_enum.csv';
-        csvItem.load().then(function() {
-            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(6);
-            expect(csvItem._regionMapped).toBe(true);
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("3124");
-            expect(r[0].description).toContain("42.42");
-            expect(r[0].description).toContain("the universe");
-        }).otherwise(fail).then(done);
-    });
-
-    it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
-            JSON.stringify({
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "id": "FID_LGA_2011_AUST.163",
-                    "geometry": {
-                        "type": "MultiPolygon",
-                        "coordinates": []
-                    },
-                    "geometry_name": "the_geom",
-                    "properties": {
-                        "FID": 162,
-                        "LGA_CODE11": "21110",
-                        "LGA_NAME11": "Boroondara (C)",
-                        "STE_CODE11": "2",
-                        "STE_NAME11": "Victoria",
-                        "AREA_SQKM": 60.1808559111785
-                    }
-                }],
-                "crs": {
-                    "type": "name",
-                    "properties": {
-                        "name": "urn:ogc:def:crs:EPSG::4326"
-                    }
-                }
-            }));
-
-        csvItem.url = 'test/csv/lga_fuzzy_val.csv';
-        csvItem.load().then(function() {
-            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(3);
-            expect(csvItem._regionMapped).toBe(true);
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Boroondara (C)");
-            expect(r[0].description).toContain("42.42");
-            expect(r[0].description).toContain("the universe");
-        }).otherwise(fail).then(done);
-    });
-
     it('supports region-mapped files with dates', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
         //csvItem.tableStyle = { displayDuration: 5
@@ -532,87 +420,6 @@ describe('CsvCatalogItem', function() {
 
         }).otherwise(fail).then(done);
     });
-    it('supports feature picking on disambiguated LGA names like Wellington, VIC', function(done) {
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson',
-            JSON.stringify({
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "id": "FID_LGA_2011_AUST.143",
-                    "geometry": {
-                        "type": "MultiPolygon",
-                        "coordinates": []
-                    },
-                    "geometry_name": "the_geom",
-                    "properties": {
-                        "FID": 142,
-                        "LGA_CODE11": "18150",
-                        "LGA_NAME11": "Wellington (A)",
-                        "STE_CODE11": "1",
-                        "STE_NAME11": "New South Wales",
-                        "AREA_SQKM": 4110.08848071889
-                    }
-                }],
-                "crs": {
-                    "type": "name",
-                    "properties": {
-                        "name": "urn:ogc:def:crs:EPSG::4326"
-                    }
-                }
-            }));
-
-        // Use a regular expression for this URL because IE9 has ~1e-10 differences in the bbox parameter.
-        fakeServer.respondWith(
-            'GET',
-            new RegExp('http://regionmap-dev\\.nationalmap\\.nicta\\.com\\.au/region_map/ows\\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\\.ogc\\.se_xml&styles=&tiled=true&service=WMS&version=1\\.1\\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\\.5285162\\d\\d%2C-4618019\\.5008772\\d\\d%2C16358747\\.0454802\\d\\d%2C-4539747\\.9839131\\d\\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson'),
-            JSON.stringify({
-                "type": "FeatureCollection",
-                "features": [{
-                    "type": "Feature",
-                    "id": "FID_LGA_2011_AUST.225",
-                    "geometry": {
-                        "type": "MultiPolygon",
-                        "coordinates": []
-                    },
-                    "geometry_name": "the_geom",
-                    "properties": {
-                        "FID": 224,
-                        "LGA_CODE11": "26810",
-                        "LGA_NAME11": "Wellington (S)",
-                        "STE_CODE11": "2",
-                        "STE_NAME11": "Victoria",
-                        "AREA_SQKM": 10817.3680807268
-                    }
-                }],
-                "crs": {
-                    "type": "name",
-                    "properties": {
-                        "name": "urn:ogc:def:crs:EPSG::4326"
-                    }
-                }
-            }));
-        csvItem.url = 'test/csv/lga_state_disambig.csv';
-        var ip;
-        csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Wellington (S)");
-            expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
-            expect(r[0].description).toContain("Melbourne");
-        }).then(function() {
-            return ip.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Wellington (A)");
-            expect(r[0].description).toContain("Wellington");
-            expect(r[0].description).toContain("Sydney");
-
-        }).otherwise(fail).then(done);
-    });
     it('has the right values in descriptions of lat-long datasets for feature picking', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
@@ -687,4 +494,198 @@ describe('CsvCatalogItem', function() {
         });
     });
 
+    describe('feature picking', function() {
+        beforeEach(function() {
+            sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
+            fakeServer = sinon.fakeServer.create();
+            fakeServer.autoRespond = true;
+
+            fakeServer.xhr.useFilters = true;
+            fakeServer.xhr.addFilter(function(method, url, async, username, password) {
+                // Allow requests for local files.
+                var uri = new URI(url);
+                var protocol = uri.protocol();
+                return !protocol && url.indexOf('//') !== 0;
+            });
+
+            fakeServer.respond(function(request) {
+                fail('Unhandled request to URL: ' + request.url);
+            });
+        });
+
+        afterEach(function() {
+            fakeServer.xhr.filters.length = 0;
+            fakeServer.restore();
+        });
+
+        it('works on region-mapped files', function(done) {
+            fakeServer.respondWith(
+                'GET',
+                'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_POA_2011_AUST.766",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 765,
+                            "POA_CODE": "3124",
+                            "POA_NAME": "3124",
+                            "SQKM": 7.29156648352383
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+
+            csvItem.url = 'test/csv/postcode_val_enum.csv';
+            csvItem.load().then(function() {
+                expect(csvItem.dataSource.dataset.getRowCount()).toEqual(6);
+                expect(csvItem._regionMapped).toBe(true);
+                var ip = csvItem._createImageryProvider();
+                expect(ip).toBeDefined();
+                return ip.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("3124");
+                expect(r[0].description).toContain("42.42");
+                expect(r[0].description).toContain("the universe");
+            }).otherwise(fail).then(done);
+        });
+
+        it('works on fuzzy-matched region-mapped files', function(done) {
+            fakeServer.respondWith(
+                'GET',
+                'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_LGA_2011_AUST.163",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 162,
+                            "LGA_CODE11": "21110",
+                            "LGA_NAME11": "Boroondara (C)",
+                            "STE_CODE11": "2",
+                            "STE_NAME11": "Victoria",
+                            "AREA_SQKM": 60.1808559111785
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+
+            csvItem.url = 'test/csv/lga_fuzzy_val.csv';
+            csvItem.load().then(function() {
+                expect(csvItem.dataSource.dataset.getRowCount()).toEqual(3);
+                expect(csvItem._regionMapped).toBe(true);
+                var ip = csvItem._createImageryProvider();
+                expect(ip).toBeDefined();
+                return ip.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("Boroondara (C)");
+                expect(r[0].description).toContain("42.42");
+                expect(r[0].description).toContain("the universe");
+            }).otherwise(fail).then(done);
+        });
+
+        it('works on disambiguated LGA names like Wellington, VIC', function(done) {
+            fakeServer.respondWith(
+                'GET',
+                'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson',
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_LGA_2011_AUST.143",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 142,
+                            "LGA_CODE11": "18150",
+                            "LGA_NAME11": "Wellington (A)",
+                            "STE_CODE11": "1",
+                            "STE_NAME11": "New South Wales",
+                            "AREA_SQKM": 4110.08848071889
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+
+            // Use a regular expression for this URL because IE9 has ~1e-10 differences in the bbox parameter.
+            fakeServer.respondWith(
+                'GET',
+                new RegExp('http://regionmap-dev\\.nationalmap\\.nicta\\.com\\.au/region_map/ows\\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\\.ogc\\.se_xml&styles=&tiled=true&service=WMS&version=1\\.1\\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\\.5285162\\d\\d%2C-4618019\\.5008772\\d\\d%2C16358747\\.0454802\\d\\d%2C-4539747\\.9839131\\d\\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson'),
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_LGA_2011_AUST.225",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 224,
+                            "LGA_CODE11": "26810",
+                            "LGA_NAME11": "Wellington (S)",
+                            "STE_CODE11": "2",
+                            "STE_NAME11": "Victoria",
+                            "AREA_SQKM": 10817.3680807268
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+            csvItem.url = 'test/csv/lga_state_disambig.csv';
+            var ip;
+            csvItem.load().then(function() {
+                expect(csvItem._regionMapped).toBe(true);
+                ip = csvItem._createImageryProvider();
+                expect(ip).toBeDefined();
+                return ip.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("Wellington (S)");
+                expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
+                expect(r[0].description).toContain("Melbourne");
+            }).then(function() {
+                return ip.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("Wellington (A)");
+                expect(r[0].description).toContain("Wellington");
+                expect(r[0].description).toContain("Sydney");
+
+            }).otherwise(fail).then(done);
+        });
+    });
 });
