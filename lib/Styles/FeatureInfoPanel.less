@@ -71,7 +71,6 @@
 .feature-info-panel-body {
     .opaque-to-input;
 }
-//data-bind="style: { 'max-width': maxWidth + 'px' }
 
 .feature-info-panel-sections {
     overflow-y: auto;
@@ -124,7 +123,20 @@
     top: 6px;
     cursor: pointer;
     font-size: 12pt;
-    color: @info-header-text-color;
+    color: @info-text-color;
+}
+
+.feature-info-panel-toggle-raw-data-button {
+    cursor: pointer;
+    font-size: 10pt;
+    float: right;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    color: @info-text-color;
+
+    &:hover {
+        color: @panel-emphasized-text-color;
+    }
 }
 
 .cesium-infoBox-defaultTable td {
