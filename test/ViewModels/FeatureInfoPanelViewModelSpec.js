@@ -150,10 +150,9 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(regex.test(panel.sections[0].info.replace(/\n/g, ''))).toBe(true);
+                expect(regex.test(panel.sections[0].rawData.replace(/\n/g, ''))).toBe(true);
             });
-        }).then(done).otherwise(done.fail);
-
+        }).otherwise(done.fail).then(done)
     });
 
     it('uses and completes a string-form featureInfoTemplate if present', function(done) {
@@ -167,8 +166,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
-            }).otherwise(done.fail).then(done);
+                expect(panel.sections[0].templatedInfo).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
         }).otherwise(done.fail);
     });
 
@@ -183,9 +181,9 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('historic.# -12; file.number. 10; documents.#1 4');
+                expect(panel.sections[0].templatedInfo).toBe('historic.# -12; file.number. 10; documents.#1 4');
             });
-        }).then(done).otherwise(done.fail);
+        }).otherwise(done.fail);
     });
 
     it('must use triple braces to embed html in template', function(done) {
@@ -200,11 +198,9 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
-            });
-        }).then(done).otherwise(done.fail);
-
-    });
+                expect(panel.sections[0].templatedInfo).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
+            }).otherwise(done.fail).then(done);
+    }).then(done).otherwise(done.fail);
 
     it('can use a json featureInfoTemplate with partials', function(done) {
         item.featureInfoTemplate = {template: '<div>test {{>foobar}}</div>', partials: {foobar: '<b>{{type}}</b>'}};
@@ -217,9 +213,9 @@ describe('FeatureInfoPanelViewModel templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('<div>test <b>Hoop_Big</b></div>');
-            });
-        }).then(done).otherwise(done.fail);
+                expect(panel.sections[0].templatedInfo).toBe('<div>test <b>Hoop_Big</b></div>');
+            }).otherwise(done.fail).then(done);
+        }).otherwise(done.fail).then(done);
     });
 
     it('sets the name from featureInfoTemplate', function(done) {
@@ -274,11 +270,10 @@ describe('FeatureInfoPanelViewModel templating', function() {
                     +       '</ul>'
                     +   '</li>'
                     + '</ul>';
-                expect(panel.sections[0].info).toBe(recursedHtml);
-            });
+
+                expect(panel.sections[0].templatedInfo).toBe(recursedHtml);
         }).then(done).otherwise(done.fail);
     });
-
 });
 
 describe('FeatureInfoPanelViewModel CZML templating', function() {
@@ -322,7 +317,7 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toEqual(target);
+                expect(panel.sections[0].templatedInfo).toEqual(target);
             });
         }).then(done).otherwise(done.fail);
     });
@@ -343,15 +338,15 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
             terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toEqual(targetBlank);
+                expect(panel.sections[0].templatedInfo).toEqual(targetBlank);
 
                 terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
                 terria.clock.tick();
-                expect(panel.sections[0].info).toEqual(targetABC);
+                expect(panel.sections[0].templatedInfo).toEqual(targetABC);
 
                 terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
                 terria.clock.tick();
-                expect(panel.sections[0].info).toEqual(targetDEF);
+                expect(panel.sections[0].templatedInfo).toEqual(targetDEF);
             });
         }).then(done).otherwise(done.fail);
 

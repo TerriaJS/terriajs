@@ -58,4 +58,59 @@ describe('FeatureInfoPanelSectionViewModel', function() {
         section.destroy();
     });
 
+    describe('when template is provided', function () {
+        var section;
+
+        beforeEach(function () {
+            var catalogItem = {
+                featureInfoTemplate: '<div>{{blah}}</div>'
+            };
+
+            section = new FeatureInfoPanelSectionViewModel(terria, feature, catalogItem);
+        });
+
+        describe('rawDataVisible', function () {
+            it('should be false on init', function () {
+                expect(section.rawDataVisible).toBe(false);
+            });
+
+            it('should be true once showRawData is called', function () {
+                section.showRawData();
+
+                expect(section.rawDataVisible).toBe(true);
+            });
+
+            it('should be false once hideRawData is called', function () {
+                section.showRawData();
+                section.hideRawData();
+
+                expect(section.rawDataVisible).toBe(false);
+            });
+        });
+
+        it('rawData should still be available', function() {
+           expect(section.rawData).toBeDefined();
+        });
+
+        it('templatedInfo should be available', function() {
+            expect(section.templatedInfo).toBeDefined();
+        });
+    });
+
+    describe('when template is not provided', function () {
+        var section;
+
+        beforeEach(function () {
+            section = new FeatureInfoPanelSectionViewModel(terria, feature, {});
+        });
+
+        it('templatedInfo should not be available', function () {
+            expect(section.templatedInfo).not.toBeDefined();
+        });
+
+        it('rawData should be available', function () {
+            expect(section.rawData).toBeDefined();
+        });
+    });
+
 });
