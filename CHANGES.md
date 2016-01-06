@@ -5,14 +5,6 @@ Change Log
 ### 1.0.52
 
 * Dramatically improved the performance of region mapping.
-
-### 1.0.51
-
-* Fixed a typo that prevented clearing the search query
-* Added support for Nominatim search API hosted by OpenStreetMap (http://wiki.openstreetmap.org/wiki/Nominatim) with `NominatimSearchProviderViewModel`. This works by merging to 2 queries : one with the bounding parameter for the nearest results, and the other without the bounding parameter. The `countryCodes` property can be set to limit the result to a set of specific countries.
-* Added `MapProgressBarViewModel`.  When added to the user interface with `MapProgressBarViewModel.create`, it shows a bar at the top of the map window indicating tile load progress.
-* We no longer show the entity's ID (which is usually a meaningless GUID) on the feature info panel when the feature does not have a name.  Instead, we leave the area blank.
-* Fixed a bug with time-dynamic imagery layers that caused features to be picked from the next time to be displayed, in addition to the current one.
 * Introduce new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
   * "auto" (default), usually means "ckmeans"
   * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
@@ -21,6 +13,14 @@ Change Log
 * The default style for CSV files is now 7 color bins with CK means method.
 * Improve the display of legends for CSV files, accordingly.
 * Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
+
+### 1.0.51
+
+* Fixed a typo that prevented clearing the search query
+* Added support for Nominatim search API hosted by OpenStreetMap (http://wiki.openstreetmap.org/wiki/Nominatim) with `NominatimSearchProviderViewModel`. This works by merging to 2 queries : one with the bounding parameter for the nearest results, and the other without the bounding parameter. The `countryCodes` property can be set to limit the result to a set of specific countries.
+* Added `MapProgressBarViewModel`.  When added to the user interface with `MapProgressBarViewModel.create`, it shows a bar at the top of the map window indicating tile load progress.
+* We no longer show the entity's ID (which is usually a meaningless GUID) on the feature info panel when the feature does not have a name.  Instead, we leave the area blank.
+* Fixed a bug with time-dynamic imagery layers that caused features to be picked from the next time to be displayed, in addition to the current one.
 * Replace `.` and `#` with `_` in property names meant to be used with `featureInfoTemplate`, so that these properties can be accessed by the [mustache](https://mustache.github.io/) templating engine.
 * Added support for time-varying properties (e.g. from a CZML file) on the feature info panel.
 * `Cesium.zoomTo` now takes the terrain height into account when zooming to a rectangle.
