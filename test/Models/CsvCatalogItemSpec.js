@@ -2,19 +2,21 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var Terria = require('../../lib/Models/Terria');
 var CatalogItem = require('../../lib/Models/CatalogItem');
+var Color = require('terriajs-cesium/Source/Core/Color');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var DataTable = require('../../lib/Map/DataTable');
+var ImageryProviderHooks = require('../../lib/Map/ImageryProviderHooks');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var TableStyle = require('../../lib/Map/TableStyle');
+var Terria = require('../../lib/Models/Terria');
 var VarType = require('../../lib/Map/VarType');
-var Color = require('terriajs-cesium/Source/Core/Color');
 
 var terria;
 var csvItem;
 var greenTableStyle;
+
 beforeEach(function() {
     terria = new Terria({
         baseUrl: './',
@@ -307,14 +309,35 @@ describe('CsvCatalogItem with lat and lon', function() {
 
 describe('CsvCatalogItem with region mapping', function() {
 
-    it('matches LGAs by code', function(done) {
-        csvItem.updateFromJson( { data: 'lga_code,value\n31000,1' });
+    beforeEach(function() {
+        // Instead of directly inspecting the recoloring function (which is a private and inaccessible variable),
+        // get it from this function call.
+        // This unfortunately makes the test test an implementation detail.
+        spyOn(ImageryProviderHooks, 'addRecolorFunc');
+    });
+
+    it('detects LGAs by code', function(done) {
+        csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
-            expect(csvItem.tableStructure).toBe(true);
-            expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem.rowPropertiesByCode('31000').value).toBe(1);
-            // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
-            expect(csvItem._colorFunc(242)).not.toEqual([0,0,0,0]);
+            csvItem.dataSource.regionPromise.then(function(region) {
+                expect(region).toBeDefined();
+                expect(region.column.name).toEqual('lga_code');
+                expect(region.regionProvider.regionType).toEqual('LGA');
+            }).otherwise(fail);
+        }).otherwise(fail).then(done);
+    });
+
+    it('matches LGAs by code', function(done) {
+        csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
+        csvItem.load().then(function() {
+            csvItem.dataSource.enable();
+            return csvItem.dataSource.regionPromise.then(function(region) {
+                expect(region).toBeDefined();
+                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+                // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
+                expect(recolorFunction(242)[0]).toBeDefined();
+                expect(recolorFunction(242)).not.toEqual([0, 0, 0, 0]);
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
