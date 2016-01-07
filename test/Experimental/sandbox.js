@@ -1,3 +1,5 @@
+'use strict';
+
 import {
     createStore,
     applyMiddleware
@@ -6,14 +8,31 @@ from 'redux';
 
 import thunk from 'redux-thunk';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 describe('sandbox', function() {
     it('does stuff', function() {
 
+        function dispatchToMe(dispatch, getState, me, action) {
+            // TODO: get the object from the state, instead of assuming they're the same thing.
+
+            var result = dispatch(action);
+            if (defined(result) && defined(result.then)) {
+                return result.then(function(result) {
+                    return {
+                        me: getState(),
+                        result: result
+                    }
+                });
+            } else {
+                return getState();
+            }
+        }
+
         class CatalogItem {
             constructor() {
-                this.isEnabled = false;
                 this.isLoading = false;
+                this.isEnabled = false;
                 this.isShown = false;
             }
 
@@ -21,20 +40,41 @@ describe('sandbox', function() {
                 return Object.assign(new this.constructor(), this, changes);
             }
 
+            load() {
+                var me = this;
+                return (dispatch, getState) => {
+                    me = dispatchToMe(dispatch, getState, me, {
+                        type: 'UPDATE',
+                        changes: {
+                            isLoading: true
+                        }
+                    });
+
+                    return dispatchToMe(dispatch, getState, me, me._doLoad()).then(dispatchResult => {
+                        dispatch({
+                            type: 'UPDATE',
+                            changes: {
+                                isLoading: false
+                            }
+                        });
+                    });
+                };
+            }
+
             enable() {
-                return dispatch => {
-                    dispatch({
+                return (dispatch, getState) => {
+                    var me = dispatchToMe(dispatch, getState, this, {
                         type: 'UPDATE',
                         changes: {
                             isEnabled: true
                         }
                     });
 
-                    return dispatch(this.load()).then(function() {
+                    return dispatchToMe(dispatch, getState, me, me.load()).then(dispatchResult => {
                         // If the catalog item is still enabled after the load completes, do the actual enable and show it.
-                        if (this.isEnabled) {
-                            return dispatch(this._doEnable()).then(function() {
-                                return dispatch(this.show());
+                        if (dispatchResult.me.isEnabled) {
+                            return dispatchToMe(dispatch, getState, dispatchResult.me, dispatchResult.me._doEnable()).then(dispatchResult => {
+                                return dispatchToMe(dispatch, getState, dispatchResult.me, this.show());
                             });
                         }
                     });
@@ -42,15 +82,17 @@ describe('sandbox', function() {
             }
 
             show() {
-                return dispatch => {
+                return (dispatch, getState) => {
                     var promise;
                     if (!this.isEnabled) {
-                        promise = dispatch(this.enable());
+                        promise = dispatchToMe(dispatch, getState, this, this.enable());
                     } else {
-                        promise = when();
+                        promise = when({
+                            me: this
+                        });
                     }
 
-                    return promise.then(function() {
+                    return promise.then(dispatchResult => {
                         dispatch({
                             type: 'UPDATE',
                             changes: {
@@ -58,7 +100,7 @@ describe('sandbox', function() {
                             }
                         });
 
-                        return dispatch(this._doShow());
+                        return dispatchToMe(dispatch, getState, dispatchResult.me, dispatchResult.me._doShow());
                     });
                 };
             }
@@ -74,20 +116,25 @@ describe('sandbox', function() {
             }
 
             _doEnable() {
-                return dispatch => {
-                    dispatch({
+                return (dispatch, getState) => {
+                    var me = dispatchToMe(dispatch, getState, this, {
                         type: 'UPDATE',
                         changes: {
                             _imageryLayer: this.createImageryLayer()
                         }
-                    })
+                    });
+                    return when({
+                        me: me
+                    });
                 };
             }
 
             _doShow() {
-                return dispatch => {
-
-                }
+                return (dispatch, getState) => {
+                    return when({
+                        me: this
+                    });
+                };
             }
         }
 
@@ -99,21 +146,10 @@ describe('sandbox', function() {
                 this.parameters = {};
             }
 
-            load() {
-                return dispatch => {
-                    dispatch({
-                        type: 'UPDATE',
-                        changes: {
-                            isLoading: true
-                        }
-                    });
-                    return when().then(function() {
-                        dispatch({
-                            type: 'UPDATE',
-                            changes: {
-                                isLoading: false
-                            }
-                        });
+            _doLoad() {
+                return (dispatch, getState) => {
+                    return when({
+                        me: this
                     });
                 };
             }
