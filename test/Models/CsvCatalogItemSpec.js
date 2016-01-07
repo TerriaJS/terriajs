@@ -334,9 +334,11 @@ describe('CsvCatalogItem with region mapping', function() {
             return csvItem.dataSource.regionPromise.then(function(region) {
                 expect(region).toBeDefined();
                 var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
-                expect(recolorFunction(242)[0]).toBeDefined();
-                expect(recolorFunction(242)).not.toEqual([0, 0, 0, 0]);
+                var indexOfThisRegion = region.regionProvider.regions.map(function(r) {
+                    return r.id;
+                }).indexOf(31000);
+                expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined();
+                expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]);
             }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
