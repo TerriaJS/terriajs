@@ -15,6 +15,7 @@ Change Log
 * Improve the display of legends for CSV files, accordingly.
 * Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
 * Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
+* Made `CswCatalogGroup` able to find geospatial datasets on more CSW servers.
 
 ### 1.0.51
 
