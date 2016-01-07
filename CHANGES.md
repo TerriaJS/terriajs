@@ -4,7 +4,16 @@ Change Log
 
 ### 1.0.52
 
+* Add a `getContainer()` method to Terria's `currentViewer`.
 * Dramatically improved the performance of region mapping.
+* Introduce new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
+  * "auto" (default), usually means "ckmeans"
+  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
+  * "quantile": use quantiles, evenly distributing values between bins
+  * "none": use the previous linear color mapping method.
+* The default style for CSV files is now 7 color bins with CK means method.
+* Improve the display of legends for CSV files, accordingly.
+* Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
 
 ### 1.0.51
 
