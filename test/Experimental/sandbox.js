@@ -40,6 +40,28 @@ describe('sandbox', function() {
                     });
                 };
             }
+
+            show() {
+                return dispatch => {
+                    var promise;
+                    if (!this.isEnabled) {
+                        promise = dispatch(this.enable());
+                    } else {
+                        promise = when();
+                    }
+
+                    return promise.then(function() {
+                        dispatch({
+                            type: 'UPDATE',
+                            changes: {
+                                isShown: true
+                            }
+                        });
+
+                        return dispatch(this._doShow());
+                    });
+                };
+            }
         }
 
         class ImageryLayerCatalogItem extends CatalogItem {
@@ -49,13 +71,24 @@ describe('sandbox', function() {
             }
 
             createImageryLayer() {
-
             }
 
             _doEnable() {
-
+                return dispatch => {
+                    dispatch({
+                        type: 'UPDATE',
+                        changes: {
+                            _imageryLayer: this.createImageryLayer()
+                        }
+                    })
+                };
             }
 
+            _doShow() {
+                return dispatch => {
+
+                }
+            }
         }
 
         class WebMapServiceCatalogItem extends ImageryLayerCatalogItem {
@@ -78,28 +111,6 @@ describe('sandbox', function() {
                         dispatch({
                             type: 'UPDATE',
                             changes: {
-                                isLoading: false
-                            }
-                        });
-                    });
-                };
-            }
-
-            show() {
-                return dispatch => {
-                    var promise;
-                    if (!this.isEnabled) {
-                        promise = dispatch(this.enable());
-                    } else {
-                        promise = when();
-                    }
-
-                    return promise.then(function() {
-                        dispatch({
-                            type: 'UPDATE',
-                            changes: {
-                                _imageryProvider: this.createImageryProvider(),
-                                isShown: true,
                                 isLoading: false
                             }
                         });
