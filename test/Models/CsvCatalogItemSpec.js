@@ -306,6 +306,10 @@ describe('CsvCatalogItem with lat and lon', function() {
     // });
 });
 
+// eg. use as regions.map(getId) to just get the ids of the regions.
+function getId(obj) {
+    return obj.id;
+}
 
 describe('CsvCatalogItem with region mapping', function() {
 
@@ -334,9 +338,7 @@ describe('CsvCatalogItem with region mapping', function() {
             return csvItem.dataSource.regionPromise.then(function(region) {
                 expect(region).toBeDefined();
                 var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var indexOfThisRegion = region.regionProvider.regions.map(function(r) {
-                    return r.id;
-                }).indexOf(31000);
+                var indexOfThisRegion = region.regionProvider.regions.map(getId).indexOf(31000);
                 expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined();
                 expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]);
             }).otherwise(fail);
