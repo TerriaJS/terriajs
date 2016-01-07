@@ -27,8 +27,8 @@ describe('TableDataSource', function() {
     it('sets the default dataVariable ignoring lat and lon', function(done) {
         loadText('/test/csv/lat_lon_val.csv').then(function(text) {
             tableDataSource.load(text);
-            expect(tableDataSource._tableStructure.activeItems.length).toEqual(1);
-            expect(tableDataSource._tableStructure.activeItems[0].name).toEqual('value');
+            expect(tableDataSource.tableStructure.activeItems.length).toEqual(1);
+            expect(tableDataSource.tableStructure.activeItems[0].name).toEqual('value');
         }).then(done).otherwise(done.fail);
     });
 
@@ -55,7 +55,7 @@ describe('TableDataSource', function() {
         loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
             tableDataSource.load(text, tableStyle);
             var features = tableDataSource.entities.values;
-            expect(tableDataSource._tableStructure.columns[0].values).not.toEqual(tableDataSource._tableStructure.columns[1].values);
+            expect(tableDataSource.tableStructure.columns[0].values).not.toEqual(tableDataSource.tableStructure.columns[1].values);
             // expect the first two features to have different scales (line above ensures they have different values)
             expect(features[0].point.pixelSize.getValue()).not.toEqual(features[1].point.pixelSize.getValue());
         }).then(done).otherwise(done.fail);
