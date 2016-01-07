@@ -156,19 +156,18 @@ describe('CsvCatalogItem with lat and lon', function() {
 
     it('handles enum fields', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
-
         csvItem.load().then(function() {
-            expect(csvItem.tableStyle.dataVariable).toBe('enum');
+            expect(csvItem.dataSource.tableStructure.activeItems[0].name).toBe('enum');
         }).otherwise(fail).then(done);
     });
 
-    it('sets dataVariable if provided', function(done) {
+    it('sets active variable to dataVariable if provided', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_val.csv';
-        csvItem._tableStyle = {
+        csvItem._tableStyle = new TableStyle({
             dataVariable: 'val'
-        };
+        });
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.dataVariable).toBe('val');
+            expect(csvItem.dataSource.tableStructure.activeItems[0].name).toBe('val');
         }).otherwise(fail).then(done);
     });
 
