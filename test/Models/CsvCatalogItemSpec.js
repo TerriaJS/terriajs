@@ -3,9 +3,8 @@
 /*global require,describe,it,expect,beforeEach,fail*/
 
 var CatalogItem = require('../../lib/Models/CatalogItem');
-var Color = require('terriajs-cesium/Source/Core/Color');
+// var Color = require('terriajs-cesium/Source/Core/Color');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
-var DataTable = require('../../lib/Map/DataTable');
 var ImageryProviderHooks = require('../../lib/Map/ImageryProviderHooks');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
@@ -419,14 +418,6 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(csvItem.dataSource.dataset.getRowCount()).toEqual(5);
             expect(csvItem._regionMapped).toBe(true);
         }).otherwise(fail).then(done);
-    });
-
-    it('counts the final row of CSV files with no trailing linefeed', function() {
-        var dataset = new DataTable();
-        dataset.loadText('postcode,value\n0800,1\n0885,2');
-        expect(dataset.getRowCount()).toEqual(2);
-        dataset.loadText('postcode,value\n0800,1\n0885,2\n');
-        expect(dataset.getRowCount()).toEqual(2);
     });
 
     it('chooses the leftmost data column when none specified', function(done) {

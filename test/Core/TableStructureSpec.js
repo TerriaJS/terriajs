@@ -97,4 +97,50 @@ describe('TableStructure', function() {
         expect(tableStructure.columnsByType[VarType.LAT][0].name).toEqual('lat');
     });
 
+    it('counts the final row of CSV files with no trailing linefeed', function() {
+        var csvString = 'postcode,value\n0800,1\n0885,2';
+        var tableStructure = new TableStructure();
+        tableStructure.loadFromCsv(csvString);
+        var rows = tableStructure.toArrayOfRows();
+        expect(rows.length).toEqual(2);
+
+        csvString = 'postcode,value\n0800,1\n0885,2\n';
+        tableStructure = new TableStructure();
+        tableStructure.loadFromCsv(csvString);
+        rows = tableStructure.toArrayOfRows();
+        expect(rows.length).toEqual(2);
+    });
+
+    // it('does not allow multiple selected variables by default', function(done) {
+    //     var dataTable = new DataTable();
+    //     loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
+    //         dataTable.loadText(text);
+    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
+    //         dataTable.setDataVariable('enum');
+    //         expect(dataTable.selectedNames.slice()).toEqual(['enum']);
+    //         dataTable.setDataVariable('val');
+    //         expect(dataTable.selectedNames.slice()).toEqual(['val']);
+    //         // also test turning off the variable
+    //         dataTable.setDataVariable('val', false);
+    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
+    //     }).then(done).otherwise(done.fail);
+    // });
+
+    // it('can allow multiple selected variables', function(done) {
+    //     var dataTable = new DataTable({allowMultiple: true});
+    //     loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
+    //         dataTable.loadText(text);
+    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
+    //         dataTable.setDataVariable('enum');
+    //         expect(dataTable.getDataVariables().slice()).toEqual(['enum']);
+    //         dataTable.setDataVariable('val');
+    //         expect(dataTable.getDataVariables().slice()).toEqual(['enum', 'val']);
+    //         // also test turning off the variables
+    //         dataTable.setDataVariable('val');
+    //         expect(dataTable.getDataVariables().slice()).toEqual(['enum']);
+    //         dataTable.setDataVariable('enum');
+    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
+    //     }).then(done).otherwise(done.fail);
+    // });
+
 });
