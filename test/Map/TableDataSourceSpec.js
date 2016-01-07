@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require*/
+var loadText = require('terriajs-cesium/Source/Core/loadText');
 var TableDataSource = require('../../lib/Map/TableDataSource');
 
 var tableDataSource;
@@ -15,31 +16,31 @@ describe('TableDataSource', function() {
         expect(tableDataSource).toBeDefined();
     });
 
-    it('can load csv into dataset variables', function(done) {
-        tableDataSource.loadUrl('/test/csv/lat_lon_val.csv').then(function() {
-            var variables = tableDataSource.dataset.variables;
-            expect(variables).toBeDefined();
-            expect(variables.lat).toBeDefined();
-            expect(variables.lon).toBeDefined();
-            expect(variables.value).toBeDefined();
-            expect(tableDataSource.dataVariable).toEqual('value');
+    it('can load csv and detect lat and lon', function(done) {
+        loadText('/test/csv/lat_lon_val.csv').then(function(text) {
+            tableDataSource.load(text);
+            expect(tableDataSource.hasLatitudeAndLongitude).toEqual(true);
         }).then(done).otherwise(done.fail);
     });
 
     it('sets the default dataVariable ignoring lat and lon', function(done) {
-        tableDataSource.loadUrl('/test/csv/lat_lon_val.csv').then(function() {
-            expect(tableDataSource.dataVariable).toEqual('value');
+        loadText('/test/csv/lat_lon_val.csv').then(function(text) {
+            tableDataSource.load(text);
+            expect(tableDataSource._tableStructure.activeItems.length).toEqual(1);
+            expect(tableDataSource._tableStructure.activeItems[0].name).toEqual('value');
         }).then(done).otherwise(done.fail);
     });
 
     it('does not set the clock when there is no date column', function(done) {
-        tableDataSource.loadUrl('/test/csv/lat_lon_val.csv').then(function() {
+        loadText('/test/csv/lat_lon_val.csv').then(function(text) {
+            tableDataSource.load(text);
             expect(tableDataSource.clock).toBeUndefined();
         }).then(done).otherwise(done.fail);
     });
 
     it('sets the clock when there is a date column', function(done) {
-        tableDataSource.loadUrl('/test/csv/lat_long_enum_moving_date.csv').then(function() {
+        loadText('/test/csv/lat_long_enum_moving_date.csv').then(function(text) {
+            tableDataSource.load(text);
             expect(tableDataSource.clock).toBeDefined();
         }).then(done).otherwise(done.fail);
     });
