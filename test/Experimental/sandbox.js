@@ -6,15 +6,34 @@ import {
 }
 from 'redux';
 
-import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 describe('sandbox', function() {
     it('does stuff', function() {
 
-        function dispatchToMe(dispatch, getState, me, action) {
+        function customThunkMiddleware({ dispatch, getState }) {
             // TODO: get the object from the state, instead of assuming they're the same thing.
+
+            return next => action => {
+                if (typeof action === 'function') {
+                    return action(dispatch, getState).then(function(result) {
+                        return {
+                            me: getState(),
+                            result: result
+                        };
+                    });
+                } else {
+                    return {
+                        result: next(action),
+                        me: getState()
+                    };
+                }
+            };
+        }
+
+        function dispatchToMe(dispatch, getState, me, action) {
 
             var result = dispatch(action);
             if (defined(result) && defined(result.then)) {
@@ -29,6 +48,13 @@ describe('sandbox', function() {
             }
         }
 
+        function resolvedPromise(me) {
+            return when({
+                me: me,
+                result: undefined
+            });
+        }
+
         class CatalogItem {
             constructor() {
                 this.isLoading = false;
@@ -41,40 +67,53 @@ describe('sandbox', function() {
             }
 
             load() {
-                var me = this;
-                return (dispatch, getState) => {
-                    me = dispatchToMe(dispatch, getState, me, {
+                var that = this;
+                return function(dispatch) {
+                    that = dispatch({
                         type: 'UPDATE',
                         changes: {
                             isLoading: true
                         }
-                    });
+                    }).me;
 
-                    return dispatchToMe(dispatch, getState, me, me._doLoad()).then(dispatchResult => {
-                        dispatch({
+                    return dispatch(that._doLoad()).then(function(dispatchResult) {
+                        that = dispatch({
                             type: 'UPDATE',
                             changes: {
                                 isLoading: false
                             }
-                        });
+                        }).me;
                     });
                 };
             }
 
             enable() {
-                return (dispatch, getState) => {
-                    var me = dispatchToMe(dispatch, getState, this, {
-                        type: 'UPDATE',
-                        changes: {
-                            isEnabled: true
-                        }
-                    });
+                var that = dispatch({
+                    type: 'UPDATE',
+                    changes: {
+                        isEnabled: true
+                    }
+                }).me;
 
-                    return dispatchToMe(dispatch, getState, me, me.load()).then(dispatchResult => {
+                return that.load().then(function(that) {
+                    // If the catalog item is still enabled after the load completes, do the actual enable and show it.
+                    if (that.isEnabled) {
+                        return that._doEnable().then(function(that) {
+                            return that.show());
+                        });
+                    } else {
+                        return that;
+                    }
+                });
+
+                var that = this;
+                return function(dispatch) {
+
+                    return dispatch(that.load()).then(function(dispatchResult) {
                         // If the catalog item is still enabled after the load completes, do the actual enable and show it.
                         if (dispatchResult.me.isEnabled) {
-                            return dispatchToMe(dispatch, getState, dispatchResult.me, dispatchResult.me._doEnable()).then(dispatchResult => {
-                                return dispatchToMe(dispatch, getState, dispatchResult.me, this.show());
+                            return dispatch(dispatchResult.me._doEnable()).then(function(dispatchResult) {
+                                return dispatch(dispatchResult.me.show());
                             });
                         }
                     });
@@ -82,25 +121,24 @@ describe('sandbox', function() {
             }
 
             show() {
-                return (dispatch, getState) => {
+                var that = this;
+                return function(dispatch) {
                     var promise;
-                    if (!this.isEnabled) {
-                        promise = dispatchToMe(dispatch, getState, this, this.enable());
+                    if (!that.isEnabled) {
+                        promise = dispatch(that.enable());
                     } else {
-                        promise = when({
-                            me: this
-                        });
+                        promise = resolvedPromise(that);
                     }
 
-                    return promise.then(dispatchResult => {
-                        dispatch({
+                    return promise.then(function(dispatchResult) {
+                        that = dispatch({
                             type: 'UPDATE',
                             changes: {
                                 isShown: true
                             }
-                        });
+                        }).me;
 
-                        return dispatchToMe(dispatch, getState, dispatchResult.me, dispatchResult.me._doShow());
+                        return dispatch(that._doShow());
                     });
                 };
             }
@@ -116,24 +154,22 @@ describe('sandbox', function() {
             }
 
             _doEnable() {
-                return (dispatch, getState) => {
-                    var me = dispatchToMe(dispatch, getState, this, {
+                var that = this;
+                return function(dispatch) {
+                    that = dispatch({
                         type: 'UPDATE',
                         changes: {
-                            _imageryLayer: this.createImageryLayer()
+                            _imageryLayer: that.createImageryLayer()
                         }
                     });
-                    return when({
-                        me: me
-                    });
+                    return resolvedPromise(that);
                 };
             }
 
             _doShow() {
-                return (dispatch, getState) => {
-                    return when({
-                        me: this
-                    });
+                var that = this;
+                return function(dispatch) {
+                    return resolvedPromise(that);
                 };
             }
         }
@@ -147,10 +183,9 @@ describe('sandbox', function() {
             }
 
             _doLoad() {
-                return (dispatch, getState) => {
-                    return when({
-                        me: this
-                    });
+                var that = this;
+                return function(dispatch) {
+                    return resolvedPromise(that);
                 };
             }
 
@@ -172,7 +207,7 @@ describe('sandbox', function() {
 
         // Create a Redux store holding the state of your app.
         // Its API is { subscribe, dispatch, getState }.
-        let createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+        let createStoreWithMiddleware = applyMiddleware(customThunkMiddleware)(createStore);
         let store = createStoreWithMiddleware(catalogItemReducer)
 
         expect(store.getState().isEnabled).toBe(false);
