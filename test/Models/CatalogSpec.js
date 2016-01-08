@@ -5,6 +5,7 @@ var Terria = require('../../lib/Models/Terria');
 var loadJson = require('terriajs-cesium/Source/Core/loadJson');
 
 var Catalog = require('../../lib/Models/Catalog');
+var CatalogItem = require('../../lib/Models/CatalogItem');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
@@ -17,6 +18,8 @@ describe('Catalog', function() {
         terria = new Terria({
             baseUrl: './'
         });
+        createCatalogMemberFromType.register('group', CatalogGroup);
+        createCatalogMemberFromType.register('item', CatalogItem);
     });
 
     it('can register group and geojson, and update from json', function(done) {
@@ -33,4 +36,196 @@ describe('Catalog', function() {
         }).otherwise(done.fail);
     });
 
+    describe('updating a moved item', function () {
+        var catalog;
+
+        beforeEach(function() {
+            catalog = new Catalog(terria);
+        });
+
+        it('works when resolving by id', function (done) {
+            catalog.updateFromJson([
+                {
+                    name: 'A',
+                    type: 'group',
+                    items: [
+                        {
+                            id: 'C',
+                            name: 'C',
+                            type: 'item',
+                            isEnabled: false
+                        }
+                    ]
+                },
+                {
+                    name: 'B',
+                    type: 'group'
+                }
+            ]).then(function() {
+                expect(catalog.group.items[0].items[0].isEnabled).toBe(false);
+                expect(catalog.group.items[0].isOpen).toBeFalsy();
+                expect(catalog.group.isOpen).toBeFalsy();
+
+                return catalog.updateFromJson([
+                    {
+                        name: 'A',
+                        type: 'group'
+                    },
+                    {
+                        name: 'B',
+                        type: 'group',
+                        items: [
+                            {
+                                id: 'C',
+                                isEnabled: true
+                            }
+                        ]
+                    }
+                ], {
+                    onlyUpdateExistingItems: true
+                });
+            }).then(function () {
+                expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
+                expect(catalog.group.items[0].isOpen).toBeTruthy();
+                expect(catalog.group.isOpen).toBeTruthy();
+                done();
+            }).otherwise(fail);
+        });
+
+        it('works when resolving by shareKeys', function (done) {
+            catalog.updateFromJson([
+                {
+                    name: 'A',
+                    type: 'group',
+                    items: [
+                        {
+                            id: 'blah',
+                            shareKeys: ['C'],
+                            name: 'C',
+                            type: 'item',
+                            isEnabled: false
+                        }
+                    ]
+                },
+                {
+                    name: 'B',
+                    type: 'group'
+                }
+            ]).then(function() {
+                expect(catalog.group.items[0].items[0].isEnabled).toBe(false);
+                expect(catalog.group.items[0].isOpen).toBeFalsy();
+                expect(catalog.group.isOpen).toBeFalsy();
+
+                return catalog.updateFromJson([
+                    {
+                        name: 'A',
+                        type: 'group'
+                    },
+                    {
+                        name: 'B',
+                        type: 'group',
+                        items: [
+                            {
+                                id: 'C',
+                                isEnabled: true
+                            }
+                        ]
+                    }
+                ], {
+                    onlyUpdateExistingItems: true
+                });
+            }).then(function () {
+                expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
+                expect(catalog.group.items[0].isOpen).toBeTruthy();
+                expect(catalog.group.isOpen).toBeTruthy();
+                done();
+            }).otherwise(fail);
+        });
+
+        it('doesn\'t cause parent group to be opened if we don\'t set isEnabled to true', function (done) {
+            catalog.updateFromJson([
+                {
+                    name: 'A',
+                    type: 'group',
+                    items: [
+                        {
+                            id: 'C',
+                            name: 'C',
+                            type: 'item'
+                        }
+                    ]
+                },
+                {
+                    name: 'B',
+                    type: 'group'
+                }
+            ]).then(function() {
+                return catalog.updateFromJson([
+                    {
+                        name: 'A',
+                        type: 'group'
+                    },
+                    {
+                        name: 'B',
+                        type: 'group',
+                        items: [
+                            {
+                                id: 'C'
+                            }
+                        ]
+                    }
+                ], {
+                    onlyUpdateExistingItems: true
+                });
+            }).then(function () {
+                expect(catalog.group.items[0].isOpen).toBeFalsy();
+                expect(catalog.group.isOpen).toBeFalsy();
+                done();
+            }).otherwise(fail);
+        });
+
+        it('doesn\'t cause parent group to be opened if isEnabled is already true', function (done) {
+            catalog.updateFromJson([
+                {
+                    name: 'A',
+                    type: 'group',
+                    items: [
+                        {
+                            id: 'C',
+                            name: 'C',
+                            type: 'item',
+                            isEnabled: true
+                        }
+                    ]
+                },
+                {
+                    name: 'B',
+                    type: 'group'
+                }
+            ]).then(function() {
+                return catalog.updateFromJson([
+                    {
+                        name: 'A',
+                        type: 'group'
+                    },
+                    {
+                        name: 'B',
+                        type: 'group',
+                        items: [
+                            {
+                                id: 'C',
+                                isEnabled: true
+                            }
+                        ]
+                    }
+                ], {
+                    onlyUpdateExistingItems: true
+                });
+            }).then(function () {
+                expect(catalog.group.items[0].isOpen).toBeFalsy();
+                expect(catalog.group.isOpen).toBeFalsy();
+                done();
+            }).otherwise(fail);
+        });
+    });
 });
