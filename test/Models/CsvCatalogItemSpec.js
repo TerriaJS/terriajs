@@ -202,32 +202,38 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(source.tableStructure.columns[0].values.length).toEqual(13);
             expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
             expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-01'));
-            // expect(source.getDataPointList(j('2015-07-31')).length).toBe(0);
-            // expect(source.getDataPointList(j('2015-08-01')).length).toBe(2);
-            // expect(source.getDataPointList(j('2015-08-02')).length).toBe(3);
-            // expect(source.getDataPointList(j('2015-08-06')).length).toBe(2);
-            // expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
+            // Test that an entity exists at the expected dates.
+            var features = source.entities.values;
+            var featureDates = features.map(getPropertiesDate);
+            expect(featureDates.indexOf('2015-07-31')).toBe(-1);  // no such dates in the input file
+            expect(featureDates.indexOf('2015-08-07')).toBe(-1);
+            var earlyFeature = features[featureDates.indexOf('2015-08-01')];
+            // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
+            // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
+            expect(earlyFeature.availability.contains(j('2015-08-01'))).toBe(true);
+            // Also test the duration of the interval is just under one day (the time between input rows).
+            var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
+            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
+            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+            // Also check that this is not misclassified as a region mapped csv file.
             source.regionPromise.then(function(region) {
                 expect(region).toBeUndefined();
             }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
-    // TODO: need to think about this one.
-    xit('supports dates and very long displayDuration', function(done) {
+    it('supports dates and very long displayDuration', function(done) {
+        var sevenDaysInMinutes = 60 * 24 * 7;
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
-        csvItem._tableStyle = new TableStyle({ displayDuration: 60 * 24 * 7 }); // 7 days
+        csvItem._tableStyle = new TableStyle({displayDuration: sevenDaysInMinutes});
         csvItem.load().then(function() {
-            var j = JulianDate.fromIso8601;
-            var source = csvItem.dataSource;
-            expect(source.dataset.getRowCount()).toEqual(13);
-            expect(csvItem._regionMapped).toBe(false);
-            expect(source.dataset.hasTimeData()).toBe(true);
-            expect(source.getDataPointList(j('2015-07-31')).length).toBe(0);
-            expect(source.getDataPointList(j('2015-08-01')).length).toBe(2);
-            expect(source.getDataPointList(j('2015-08-02')).length).toBe(5);
-            expect(source.getDataPointList(j('2015-08-06')).length).toBe(13);
-            expect(source.getDataPointList(j('2015-08-07')).length).toBe(13);
+            // Now, the features' availabilities should persist for 7 days, not just under 1 day.
+            var features = csvItem.dataSource.entities.values;
+            var featureDates = features.map(getPropertiesDate);
+            var earlyFeature = features[featureDates.indexOf('2015-08-01')];
+            expect(earlyFeature.availability.contains(JulianDate.fromIso8601('2015-08-01T12:00:00Z'))).toBe(true);
+            var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
+            expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
         }).otherwise(fail).then(done);
     });
 
@@ -304,6 +310,11 @@ describe('CsvCatalogItem with lat and lon', function() {
     //     });
     // });
 });
+
+// eg. use as entities.map(getPropertiesDate) to just get the dates of the entities.
+function getPropertiesDate(obj) {
+    return obj.properties.date;
+}
 
 // eg. use as regions.map(getId) to just get the ids of the regions.
 function getId(obj) {
