@@ -4,7 +4,7 @@ Change Log
 
 ### 1.0.52
 
-* Add support for Mapbox ImageryLayers for BaseMaps
+* Add support for Mapbox ImageryLayer for BaseMaps. An valid access token must be provided.
 * Add a `getContainer()` method to Terria's `currentViewer`.
 * Dramatically improved the performance of region mapping.
 * Introduce new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
