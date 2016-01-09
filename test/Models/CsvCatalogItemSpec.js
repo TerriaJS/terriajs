@@ -172,8 +172,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    // TODO: come back to this one.
-    xit('colors enum fields the same (only) when the value is the same', function(done) {
+    it('colors enum fields the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
             function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
