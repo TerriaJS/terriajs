@@ -24,7 +24,7 @@ beforeEach(function() {
     csvItem = new CsvCatalogItem(terria);
 
     greenTableStyle = new TableStyle ({
-        "colorMap": [ 
+        "colorMap": [
         {
             "offset": 0,
             "color": "rgba(0, 64, 0, 1.00)"
@@ -123,6 +123,15 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('is able to generate a Legend', function(done) {
+        csvItem.url = 'test/csv/minimal.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            expect(csvItem.legendUrl.mimeType).toBe('image/png');
+            expect(csvItem.legendUrl.url).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
@@ -195,7 +204,7 @@ describe('CsvCatalogItem', function() {
 
 
     it('respects tableStyle color ramping for regions', function(done) {
-        csvItem.updateFromJson( { 
+        csvItem.updateFromJson( {
             data: 'lga_name,value\nCity of Melbourne,0\nGreater Geelong,5\nSydney (S),10',
             tableStyle: greenTableStyle });
         csvItem.load().then(function() {
@@ -212,7 +221,7 @@ describe('CsvCatalogItem', function() {
     it('uses the requested region mapping column, not just the first one', function(done) {
         greenTableStyle.regionType = 'poa';
         greenTableStyle.regionVariable = 'postcode';
-        csvItem.updateFromJson( { 
+        csvItem.updateFromJson( {
             url: 'test/csv/postcode_lga_val_enum.csv',
             tableStyle: greenTableStyle });
         csvItem.load().then(function() {
@@ -451,7 +460,7 @@ describe('CsvCatalogItem', function() {
             expect(desc(1)).toContain('boots');
         }).otherwise(fail).then(done);
     });
-    
+
     it('is less than 2000 charecters when serialised to JSON then URLEncoded', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
         csvItem.load().then(function() {
@@ -490,7 +499,7 @@ describe('CsvCatalogItem', function() {
             // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
             expect(maxPix).toEqual(csvItem._maxPix * 2);
             expect(minPix).toEqual(csvItem._minPix * 2);
-        })            
+        })
         .otherwise(fail).then(done);
     });
     // Removed: not clear that this is correct behaviour, and it's failing.
@@ -504,5 +513,5 @@ describe('CsvCatalogItem', function() {
             done();
         });
     });
-    
+
 });
