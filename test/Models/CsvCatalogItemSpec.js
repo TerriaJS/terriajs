@@ -348,25 +348,37 @@ describe('CsvCatalogItem with region mapping', function() {
                 expect(regionDetails).toBeDefined();
                 var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
                 var indexOfThisRegion = regionDetails.regionProvider.regions.map(getId).indexOf(31000);
-                expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined();
-                expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]);
+                expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined(); // Test that at least one rgba component is defined.
+                expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
             }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
     it('matches LGAs by names in various formats', function(done) {
-        csvItem.updateFromJson( { data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3' });
+        csvItem.updateFromJson({data: 'lga_name,value\nMelbourne,1\nGreater Geelong,2\nSydney,3'});
+        // This test used to use this:
+        // csvItem.updateFromJson({data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3'});
+        // And test indices 197, 180 and 121. However these are for 'melbourne', 'greater geelong' and 'sydney'
+        // which don't actually match all these strings.
         csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem._colorFunc(121)).not.toEqual([0,0,0,0]);
-            expect(csvItem._colorFunc(180)).not.toEqual([0,0,0,0]);
-            expect(csvItem._colorFunc(197)).not.toEqual([0,0,0,0]);
+            csvItem.dataSource.enable();
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+                var regionNames = regionDetails.regionProvider.regions.map(getId);
+                expect(recolorFunction(regionNames.indexOf('bogan'))).not.toBeDefined(); // Test that we didn't try to recolor other regions.
+                expect(recolorFunction(regionNames.indexOf('melbourne'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
+                expect(recolorFunction(regionNames.indexOf('melbourne'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
+                expect(recolorFunction(regionNames.indexOf('greater geelong'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
+                expect(recolorFunction(regionNames.indexOf('greater geelong'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
+                expect(recolorFunction(regionNames.indexOf('sydney'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
+                expect(recolorFunction(regionNames.indexOf('sydney'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
     it('matches numeric state IDs with regexes', function(done) {
-        csvItem.updateFromJson( { data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90' });
+        csvItem.updateFromJson({data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90'});
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
@@ -375,7 +387,7 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
     it('matches SA4s', function(done) {
-        csvItem.updateFromJson( { data: 'sa4,value\n209,correct' });
+        csvItem.updateFromJson({data: 'sa4,value\n209,correct'});
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
