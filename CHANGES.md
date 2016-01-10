@@ -15,6 +15,9 @@ Change Log
 * Improve the display of legends for CSV files, accordingly.
 * Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
 * Improved compatibility with Internet Explorer 9.
+* URLs for legends are now encapsulated in a `LegendUrl` model, which accepts a mime type that will affect how the
+  legend is rendered in the sidebar.
+* Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
 
 ### 1.0.51
 

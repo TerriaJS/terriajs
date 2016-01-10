@@ -124,6 +124,15 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('is able to generate a Legend', function(done) {
+        csvItem.url = 'test/csv/minimal.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            expect(csvItem.legendUrl.mimeType).toBe('image/png');
+            expect(csvItem.legendUrl.url).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson({
             data: 'lat,lon,value\n-37,145,10'
@@ -455,25 +464,18 @@ describe('CsvCatalogItem', function() {
             scaleByValue: true
         });
         return csvItem.load().then(function() {
-                var pixelSizes = csvItem.dataSource.entities.values.map(function(e) {
-                    return e.point._pixelSize._value;
-                });
+                var pixelSizes = csvItem.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
                 csvItem._minPix = Math.min.apply(null, pixelSizes);
                 csvItem._maxPix = Math.max.apply(null, pixelSizes);
                 // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
                 expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
             }).then(function(minMax) {
                 var csvItem2 = new CsvCatalogItem(terria);
-                csvItem2.tableStyle = new TableStyle({
-                    scale: 10,
-                    scaleByValue: true
-                });
+                csvItem2.tableStyle = new TableStyle({ scale: 10, scaleByValue: true });
                 csvItem2.url = 'test/csv/lat_lon_val.csv';
                 return csvItem2.load().yield(csvItem2);
             }).then(function(csvItem2) {
-                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) {
-                    return e.point._pixelSize._value;
-                });
+                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
                 var minPix = Math.min.apply(null, pixelSizes);
                 var maxPix = Math.max.apply(null, pixelSizes);
                 // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
