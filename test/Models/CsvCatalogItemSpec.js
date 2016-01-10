@@ -14,12 +14,12 @@ var TableStyle = require('../../lib/Map/TableStyle');
 var URI = require('urijs');
 var VarType = require('../../lib/Map/VarType');
 
-var terria;
-var csvItem;
-var greenTableStyle;
-var fakeServer;
 
 describe('CsvCatalogItem', function() {
+    var terria;
+    var csvItem;
+    var greenTableStyle;
+
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './',
@@ -497,6 +497,8 @@ describe('CsvCatalogItem', function() {
     });
 
     describe('feature picking', function() {
+        var fakeServer;
+
         beforeEach(function() {
             sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
             fakeServer = sinon.fakeServer.create();
