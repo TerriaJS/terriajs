@@ -101,14 +101,14 @@ describe('TableStructure', function() {
         var csvString = 'postcode,value\n0800,1\n0885,2';
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv(csvString);
-        var rows = tableStructure.toArrayOfRows();
-        expect(rows.length).toEqual(2);
+        expect(tableStructure.columns[0].values.length).toEqual(2);
+        expect(tableStructure.columns[1].values.length).toEqual(2);
 
         csvString = 'postcode,value\n0800,1\n0885,2\n';
         tableStructure = new TableStructure();
         tableStructure.loadFromCsv(csvString);
-        rows = tableStructure.toArrayOfRows();
-        expect(rows.length).toEqual(2);
+        expect(tableStructure.columns[0].values.length).toEqual(2);
+        expect(tableStructure.columns[1].values.length).toEqual(2);
     });
 
     // it('does not allow multiple selected variables by default', function(done) {

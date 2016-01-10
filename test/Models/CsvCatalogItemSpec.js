@@ -172,8 +172,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    // TODO: come back to this one.
-    xit('colors enum fields the same (only) when the value is the same', function(done) {
+    it('colors enum fields the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
             function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
@@ -216,8 +215,8 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
             expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
             // Also check that this is not misclassified as a region mapped csv file.
-            source.regionPromise.then(function(region) {
-                expect(region).toBeUndefined();
+            source.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeUndefined();
             }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
@@ -333,10 +332,10 @@ describe('CsvCatalogItem with region mapping', function() {
     it('detects LGAs by code', function(done) {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
-            csvItem.dataSource.regionPromise.then(function(region) {
-                expect(region).toBeDefined();
-                expect(region.column.name).toEqual('lga_code');
-                expect(region.regionProvider.regionType).toEqual('LGA');
+            csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                expect(regionDetails.column.name).toEqual('lga_code');
+                expect(regionDetails.regionProvider.regionType).toEqual('LGA');
             }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
@@ -345,10 +344,10 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
             csvItem.dataSource.enable();
-            return csvItem.dataSource.regionPromise.then(function(region) {
-                expect(region).toBeDefined();
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
                 var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var indexOfThisRegion = region.regionProvider.regions.map(getId).indexOf(31000);
+                var indexOfThisRegion = regionDetails.regionProvider.regions.map(getId).indexOf(31000);
                 expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined();
                 expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]);
             }).otherwise(fail);
