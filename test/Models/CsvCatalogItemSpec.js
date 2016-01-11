@@ -35,8 +35,7 @@ describe('CsvCatalogItem with lat and lon', function() {
 
     beforeEach(function() {
         terria = new Terria({
-            baseUrl: './',
-            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
+            baseUrl: './'
         });
         csvItem = new CsvCatalogItem(terria);
     });
@@ -329,9 +328,10 @@ describe('CsvCatalogItem with region mapping', function() {
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './',
-            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
+            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
         });
         csvItem = new CsvCatalogItem(terria);
+        console.log('Note - this test may require an internet connection.');
 
         // Instead of directly inspecting the recoloring function (which is a private and inaccessible variable),
         // get it from this function call.
