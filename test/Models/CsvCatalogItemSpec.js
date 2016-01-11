@@ -407,9 +407,10 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
     it('respects tableStyle color ramping for regions', function(done) {
-        csvItem.updateFromJson( { 
+        csvItem.updateFromJson({
             data: 'lga_name,value\nmelbourne,0\ngreater geelong,5\nsydney,10',
-            tableStyle: greenTableStyle });
+            tableStyle: greenTableStyle
+        });
         csvItem.load().then(function() {
             csvItem.dataSource.enable();
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
@@ -426,15 +427,18 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
     it('uses the requested region mapping column, not just the first one', function(done) {
+        // The column names in postcode_lga_val_enum.csv are: lga_name, val1, enum, postcode.
         greenTableStyle.regionType = 'poa';
         greenTableStyle.regionVariable = 'postcode';
-        csvItem.updateFromJson( { 
+        csvItem.updateFromJson({
             url: 'test/csv/postcode_lga_val_enum.csv',
-            tableStyle: greenTableStyle });
+            tableStyle: greenTableStyle
+        });
         csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem.dataSource.regionVariable).toBe('postcode');
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                expect(csvItem.dataSource.tableStructure.columnsByType[VarType.REGION][0].name).toBe('postcode');
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
 
     });
