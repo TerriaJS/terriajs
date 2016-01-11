@@ -1,46 +1,46 @@
 'use strict';
 
 /*global require,describe,it,expect,beforeEach,fail*/
-
-var CatalogItem = require('../../lib/Models/CatalogItem');
-// var Color = require('terriajs-cesium/Source/Core/Color');
-var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
-var ImageryProviderHooks = require('../../lib/Map/ImageryProviderHooks');
+var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
+var clone = require('terriajs-cesium/Source/Core/clone');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+
+var CatalogItem = require('../../lib/Models/CatalogItem');
+var Cesium = require('../../lib/Models/Cesium');
+var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
+var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
+var ImageryProviderHooks = require('../../lib/Map/ImageryProviderHooks');
 var TableStyle = require('../../lib/Map/TableStyle');
 var Terria = require('../../lib/Models/Terria');
 var VarType = require('../../lib/Map/VarType');
 
-var terria;
-var csvItem;
-var greenTableStyle;
-
-beforeEach(function() {
-    terria = new Terria({
-        baseUrl: './',
-        regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
-
-    });
-    csvItem = new CsvCatalogItem(terria);
-
-    greenTableStyle = new TableStyle({
-        'colorMap': [
-            {
-                'offset': 0,
-                'color': 'rgba(0, 64, 0, 1.00)'
-            },
-            {
-                'offset': 1,
-                'color': 'rgba(0, 255, 0, 1.00)'
-            }
-        ]
-    });
-
-
+var greenTableStyle = new TableStyle({
+    'colorMap': [
+        {
+            'offset': 0,
+            'color': 'rgba(0, 64, 0, 1.00)'
+        },
+        {
+            'offset': 1,
+            'color': 'rgba(0, 255, 0, 1.00)'
+        }
+    ]
 });
 
 describe('CsvCatalogItem with lat and lon', function() {
+
+    var terria;
+    var csvItem;
+
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './',
+            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
+        });
+        csvItem = new CsvCatalogItem(terria);
+    });
+
     it('has sensible type and typeName', function() {
         expect(csvItem.type).toBe('csv');
         expect(csvItem.typeName).toBe('Comma-Separated Values (CSV)');
@@ -324,11 +324,23 @@ function getId(obj) {
 
 describe('CsvCatalogItem with region mapping', function() {
 
+    var terria;
+    var csvItem;
     beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './',
+            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
+        });
+        csvItem = new CsvCatalogItem(terria);
+
         // Instead of directly inspecting the recoloring function (which is a private and inaccessible variable),
         // get it from this function call.
-        // This unfortunately makes the test test an implementation detail.
+        // This unfortunately makes the test depend on an implementation detail.
         spyOn(ImageryProviderHooks, 'addRecolorFunc');
+
+        // Also, for feature detection, spy on this call; the second argument is the regionImageryProvider.
+        // This unfortunately makes the test depend on an implementation detail.
+        spyOn(ImageryLayerCatalogItem, 'enableLayer');
     });
 
     it('detects LGAs by code', function(done) {
@@ -404,7 +416,6 @@ describe('CsvCatalogItem with region mapping', function() {
             csvItem.dataSource.enable();
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
                 // There is no "rowPropertiesByCode" method any more.
                 expect(csvItem.rowPropertiesByCode(209).value).toBe('correct');
             }).otherwise(fail);
@@ -434,16 +445,16 @@ describe('CsvCatalogItem with region mapping', function() {
 
     it('uses the requested region mapping column, not just the first one', function(done) {
         // The column names in postcode_lga_val_enum.csv are: lga_name, val1, enum, postcode.
-        greenTableStyle.regionType = 'poa';
-        greenTableStyle.regionVariable = 'postcode';
+        var revisedGreenTableStyle = clone(greenTableStyle);
+        revisedGreenTableStyle.regionType = 'poa';
+        revisedGreenTableStyle.regionVariable = 'postcode';
         csvItem.updateFromJson({
             url: 'test/csv/postcode_lga_val_enum.csv',
-            tableStyle: greenTableStyle
+            tableStyle: revisedGreenTableStyle
         });
         csvItem.load().then(function() {
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
                 expect(csvItem.dataSource.tableStructure.columnsByType[VarType.REGION][0].name).toBe('postcode');
             }).otherwise(fail);
         }).otherwise(fail).then(done);
@@ -553,32 +564,40 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
     it('handles LGA names with states for disambiguation', function(done) {
-        csvItem.url = 'test/csv/lga_state_disambig.csv';
-        csvItem.tableStyle = new TableStyle({ dataVariable: 'StateCapital' });
+        csvItem.updateFromJson({
+            url: 'test/csv/lga_state_disambig.csv',
+            tableStyle: new TableStyle({dataVariable: 'StateCapital'})
+        });
         csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            var lgaName = csvItem.dataSource.dataset.variables['LGA_NAME'];
-            expect(Object.keys(lgaName.regionCodes).length).toEqual(8); // number of matched regions
-            expect(csvItem.tableStyle.dataVariable).toBe('StateCapital');
-            expect(csvItem.tableStyle.disambigVariable).toBe('State');
-            // the following test is much more rigorous.
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
+                expect(regionDetail.disambigColumn).toBeDefined();
+                expect(regionDetail.disambigColumn.name).toEqual('State');
+                // The following test is much more rigorous.
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
-    it('supports feature picking on disambiguated LGA names like Wellington, VIC', function(done) {
+    it('handles disambiguated LGA names like Wellington, VIC', function(done) {
         csvItem.url = 'test/csv/lga_state_disambig.csv';
-        var ip;
         csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
+            csvItem.dataSource.enable(); // required to create an imagery layer
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the second argument is the regionImageryProvider.
+                // This unfortunately makes the test depend on an implementation detail.
+                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                expect(regionImageryProvider).toBeDefined();
+                return regionImageryProvider.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
+            }).otherwise(fail);
         }).then(function(r) {
             expect(r[0].name).toEqual("Wellington (S)");
             expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
             expect(r[0].description).toContain("Melbourne");
         }).then(function() {
-            return ip.pickFeatures(233,152,8,2.600997237149669,-0.5686381345023742);
+            var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+            return regionImageryProvider.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
         }).then(function(r) {
             expect(r[0].name).toEqual("Wellington (A)");
             expect(r[0].description).toContain("Wellington");
@@ -586,7 +605,7 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('is less than 2000 charecters when serialised to JSON then URLEncoded', function(done) {
+    it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
         csvItem.load().then(function() {
             var url = encodeURIComponent(JSON.stringify(csvItem.serializeToJson()));
@@ -595,3 +614,36 @@ describe('CsvCatalogItem with region mapping', function() {
     });
     
 });
+
+
+// describe('CsvCatalogItem feature picking with region mapping', function() {
+
+//     var container;
+//     var widget;
+//     var cesium;
+//     var terria;
+//     var csvItem;
+
+//     beforeEach(function() {
+//         container = document.createElement('div');
+//         document.body.appendChild(container);
+//         widget = new CesiumWidget(container, {});
+//         terria = new Terria({
+//             baseUrl: './',
+//             regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
+//         });
+//         cesium = new Cesium(terria, widget);
+//         terria.currentViewer = cesium;
+//         terria.cesium = cesium;
+//         csvItem = new CsvCatalogItem(terria);
+//     });
+
+//     afterEach(function() {
+//         if (widget && !widget.isDestroyed()) {
+//             widget = widget.destroy();
+//         }
+//         document.body.removeChild(container);
+//     });
+
+
+// });
