@@ -9,7 +9,11 @@
         <span class="feature-info-panel-section-label" data-bind="text: catalogItemName"></span>
         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
     </div>
-    <div class="feature-info-panel-section-content-wrapper" data-bind ="css:feature == terria.selectedFeature ?'open': 'closed'">
-    <div class="feature-info-panel-section-content" data-bind="markdown: info, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+    <div class="feature-info-panel-section-content-wrapper" data-bind="css:feature == terria.selectedFeature ?'open': 'closed'">
+        <div class="feature-info-panel-section-content" data-bind="html: templatedInfo, visible: templatedInfo"></div>
+        <button class="feature-info-panel-toggle-raw-data-button" data-bind="visible: templatedInfo && !rawDataVisible, click: showRawData">Show Raw Data</button>
+        <button class="feature-info-panel-toggle-raw-data-button" data-bind="visible: templatedInfo && rawDataVisible, click: hideRawData">Hide Raw Data</button>
+        <div class="feature-info-panel-section-content" data-bind="html: rawData, visible: rawData && (!templatedInfo || rawDataVisible),
+          css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
     </div>
 </div>
