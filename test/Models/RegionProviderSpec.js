@@ -22,10 +22,14 @@ describe('RegionProvider', function() {
     });
 
     it('gets the correct region indices', function() {
-        regionProvider.regions = ['NSW', 'Vic', 'Qld', 'WA'];
+        var regions = ['NSW', 'Vic', 'Qld', 'WA'];
+        regionProvider.processRegionIds(regions, undefined, '');
         var regionValues = ['Vic', 'Qld', 'NSW'];
-        var target = [1, 2, 0];
-        expect(regionProvider.getRegionIndices(regionValues)).toEqual(target);
+        var result = regionProvider.mapRegionsToIndicesInto(regionValues);
+        var target = [2, 0, 1, undefined];
+        target.forEach(function(value, i) {
+            expect(result[i]).toEqual(target[i]);
+        });
     });
 
 });

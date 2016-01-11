@@ -60,7 +60,7 @@ describe('RegionProviderList', function() {
         regionProvider.loadRegionIDs().then(function() {
             expect(regionProvider.regions.length).toBeGreaterThan(0);
             var regionValues = tableStructure.getColumnWithName(regionDetail.variableName).values;
-            var regionIndices = regionProvider.getRegionIndices(regionValues);
+            var regionIndices = regionProvider.mapRegionsToIndicesInto(regionValues);
             var indexOfPostcode3068 = regionProvider.regions.map(getId).indexOf('3068');
             var indexOfPostcode2000 = regionProvider.regions.map(getId).indexOf('2000');
             expect(regionIndices[indexOfPostcode3068]).toEqual(0);
@@ -80,7 +80,7 @@ describe('RegionProviderList', function() {
         tableStructure.loadFromCsv('postcode,value\n0800,1\n0885,2');
         regionProvider.loadRegionIDs().then(function() {
             var regionValues = tableStructure.getColumnWithName('postcode').values;
-            var regionIndices = regionProvider.getRegionIndices(regionValues);
+            var regionIndices = regionProvider.mapRegionsToIndicesInto(regionValues);
             var indexOfPostcode0800 = regionProvider.regions.map(getId).indexOf('0800');
             // Check that both succeeded. This test may fail if we change how this is implemented.
             expect(Object.keys(regionIndices).length).toEqual(2);
@@ -97,7 +97,7 @@ describe('RegionProviderList', function() {
         tableStructure.loadFromCsv('postcode,value\nFitzroy North,1\nFitzroy,-1\n^(Clifton Hill|Fitzroy North)$,-1');
         regionProvider.loadRegionIDs().then(function() {
             var regionValues = tableStructure.getColumnWithName('postcode').values;
-            var regionIndices = regionProvider.getRegionIndices(regionValues);
+            var regionIndices = regionProvider.mapRegionsToIndicesInto(regionValues);
             // Check that only one succeeded. This test may fail if we change how this is implemented.
             expect(Object.keys(regionIndices).length).toEqual(1);
         }).otherwise(fail).then(done);
