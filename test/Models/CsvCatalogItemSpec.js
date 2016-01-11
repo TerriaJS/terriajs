@@ -397,7 +397,7 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    // TODO: I don't think this test applies any more?
+    // TODO: I don't think this test applies any more.
     xit('matches SA4s', function(done) {
         csvItem.updateFromJson({data: 'sa4,value\n209,correct'});
         csvItem.load().then(function() {
@@ -450,29 +450,34 @@ describe('CsvCatalogItem with region mapping', function() {
 
     });
 
-    it('handles enum fields for regions', function(done) {
+    it('can default to an enum field', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
-
         csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.tableStyle.dataVariable).toBe('enum');
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                expect(csvItem.dataSource.tableStructure.activeItems[0].name).toBe('enum');
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
     it('handles region-mapped CSVs with no data variable', function(done) {
         csvItem.url = 'test/csv/postcode_novals.csv';
         csvItem.load().then(function() {
-            expect(csvItem.tableStyle.dataVariable).not.toBeDefined();
-            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(5);
-            expect(csvItem._regionMapped).toBe(true);
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                expect(csvItem.dataSource.tableStructure.activeItems.length).toEqual(0);
+                expect(csvItem.dataSource.tableStructure.columns[0].values.length).toBeGreaterThan(1);
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
     it('chooses the leftmost data column when none specified', function(done) {
         csvItem.url = 'test/csv/val_enum_postcode.csv';
         csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            expect(csvItem.tableStyle.dataVariable).toBe('val1');
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                expect(csvItem.dataSource.tableStructure.activeItems[0].name).toEqual('val1');
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
