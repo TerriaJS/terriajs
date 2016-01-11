@@ -331,7 +331,7 @@ describe('CsvCatalogItem with region mapping', function() {
             regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
         });
         csvItem = new CsvCatalogItem(terria);
-        console.log('Note - this test may require an internet connection.');
+        console.log('Note - this test requires an internet connection.');
 
         // Instead of directly inspecting the recoloring function (which is a private and inaccessible variable),
         // get it from this function call.
