@@ -355,11 +355,8 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
     it('matches LGAs by names in various formats', function(done) {
-        csvItem.updateFromJson({data: 'lga_name,value\nMelbourne,1\nGreater Geelong,2\nSydney,3'});
-        // This test used to use this:
-        // csvItem.updateFromJson({data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3'});
-        // And test indices 197, 180 and 121. However these are for 'melbourne', 'greater geelong' and 'sydney'
-        // which don't actually match all these strings.
+        // City of Melbourne is not actually a region, but melbourne is. Same with Sydney (S) and sydney. But test they work anyway.
+        csvItem.updateFromJson({data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3'});
         csvItem.load().then(function() {
             csvItem.dataSource.enable();
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
