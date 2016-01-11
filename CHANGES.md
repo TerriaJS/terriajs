@@ -4,7 +4,6 @@ Change Log
 
 ### 1.0.52
 
-*
 * Added `MapBoxMapCatalogItem`, which is especially useful for base maps. A valid access token must be provided.
 * Added a `getContainer()` method to Terria's `currentViewer`.
 * Dramatically improved the performance of region mapping.
