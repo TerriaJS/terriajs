@@ -495,7 +495,7 @@ describe('CsvCatalogItem with region mapping', function() {
     it('supports feature picking on region-mapped files', function(done) {
         csvItem.url = 'test/csv/postcode_val_enum.csv';
         csvItem.load().then(function() {
-            csvItem.dataSource.enable(); // required to create an imagery layer
+            csvItem.dataSource.enable(); // Required to create an imagery layer.
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
                 // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
@@ -514,7 +514,7 @@ describe('CsvCatalogItem with region mapping', function() {
     it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
         csvItem.url = 'test/csv/lga_fuzzy_val.csv';
         csvItem.load().then(function() {
-            csvItem.dataSource.enable(); // required to create an imagery layer
+            csvItem.dataSource.enable(); // Required to create an imagery layer.
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
                 // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
@@ -530,23 +530,79 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('supports region-mapped files with dates', function(done) {
-        csvItem.url = 'test/csv/postcode_date_value.csv';
-        //csvItem.tableStyle = { displayDuration: 5
+    it('handles LGA names with states for disambiguation', function(done) {
+        csvItem.updateFromJson({
+            url: 'test/csv/lga_state_disambig.csv',
+            tableStyle: new TableStyle({dataVariable: 'StateCapital'})
+        });
         csvItem.load().then(function() {
-            var j = JulianDate.fromIso8601;
-            var source = csvItem.dataSource;
-            expect(source.dataset.getRowCount()).toEqual(10);
-            expect(csvItem._regionMapped).toBe(true);
-            expect(source.dataset.hasTimeData()).toBe(true);
-            expect(source.getDataPointList(j('2015-08-06')).length).toBe(0);
-            expect(source.getDataPointList(j('2015-08-07')).length).toBe(4);
-            expect(source.getDataPointList(j('2015-08-08')).length).toBe(2);
-            expect(source.getDataPointList(j('2015-08-09')).length).toBe(4);
-            expect(source.getDataPointList(j('2015-08-11')).length).toBe(0);
-            // not sure how to try different dates
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
+                expect(regionDetail.disambigColumn).toBeDefined();
+                expect(regionDetail.disambigColumn.name).toEqual('State');
+                // The following test is much more rigorous.
+            }).otherwise(fail);
+        }).otherwise(fail).then(done);
+    });
+
+    it('handles disambiguated LGA names like Wellington, VIC', function(done) {
+        csvItem.url = 'test/csv/lga_state_disambig.csv';
+        csvItem.load().then(function() {
+            csvItem.dataSource.enable(); // Required to create an imagery provider.
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the second argument is the regionImageryProvider.
+                // This unfortunately makes the test depend on an implementation detail.
+                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                expect(regionImageryProvider).toBeDefined();
+                return regionImageryProvider.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
+            }).otherwise(fail);
+        }).then(function(r) {
+            expect(r[0].name).toEqual("Wellington (S)");
+            expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
+            expect(r[0].description).toContain("Melbourne");
+        }).then(function() {
+            var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+            return regionImageryProvider.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
+        }).then(function(r) {
+            expect(r[0].name).toEqual("Wellington (A)");
+            expect(r[0].description).toContain("Wellington");
+            expect(r[0].description).toContain("Sydney");
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports region-mapped files with dates', function(done) {
+        csvItem.updateFromJson({
+            url: 'test/csv/postcode_date_value.csv'
+//            tableStyle: new TableStyle({displayDuration: 5})
+        });
+        csvItem.load().then(function() {
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                var j = JulianDate.fromIso8601;
+                var source = csvItem.dataSource;
+                expect(source.tableStructure.columns[0].values.length).toEqual(10);
+                expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+                expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
+
+                // Test that an entity exists at the expected dates.
+                var features = source.entities.values;
+                var featureDates = features.map(getPropertiesDate);
+                expect(featureDates.indexOf('2015-07-31')).toBe(-1);  // no such dates in the input file
+                expect(featureDates.indexOf('2015-08-07')).toBe(-1);
+                var earlyFeature = features[featureDates.indexOf('2015-08-01')];
+                // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
+
+                expect(source.dataset.getRowCount()).toEqual(10);
+                expect(source.dataset.hasTimeData()).toBe(true);
+                expect(source.getDataPointList(j('2015-08-06')).length).toBe(0);
+                expect(source.getDataPointList(j('2015-08-07')).length).toBe(4);
+                expect(source.getDataPointList(j('2015-08-08')).length).toBe(2);
+                expect(source.getDataPointList(j('2015-08-09')).length).toBe(4);
+                expect(source.getDataPointList(j('2015-08-11')).length).toBe(0);
+                // not sure how to try different dates
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
@@ -571,48 +627,6 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('handles LGA names with states for disambiguation', function(done) {
-        csvItem.updateFromJson({
-            url: 'test/csv/lga_state_disambig.csv',
-            tableStyle: new TableStyle({dataVariable: 'StateCapital'})
-        });
-        csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                expect(regionDetail.disambigColumn).toBeDefined();
-                expect(regionDetail.disambigColumn.name).toEqual('State');
-                // The following test is much more rigorous.
-            }).otherwise(fail);
-        }).otherwise(fail).then(done);
-    });
-
-    it('handles disambiguated LGA names like Wellington, VIC', function(done) {
-        csvItem.url = 'test/csv/lga_state_disambig.csv';
-        csvItem.load().then(function() {
-            csvItem.dataSource.enable(); // required to create an imagery layer
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the second argument is the regionImageryProvider.
-                // This unfortunately makes the test depend on an implementation detail.
-                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
-                expect(regionImageryProvider).toBeDefined();
-                return regionImageryProvider.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
-            }).otherwise(fail);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Wellington (S)");
-            expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
-            expect(r[0].description).toContain("Melbourne");
-        }).then(function() {
-            var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
-            return regionImageryProvider.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Wellington (A)");
-            expect(r[0].description).toContain("Wellington");
-            expect(r[0].description).toContain("Sydney");
-        }).otherwise(fail).then(done);
-    });
-
     it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
         csvItem.load().then(function() {
@@ -622,36 +636,3 @@ describe('CsvCatalogItem with region mapping', function() {
     });
     
 });
-
-
-// describe('CsvCatalogItem feature picking with region mapping', function() {
-
-//     var container;
-//     var widget;
-//     var cesium;
-//     var terria;
-//     var csvItem;
-
-//     beforeEach(function() {
-//         container = document.createElement('div');
-//         document.body.appendChild(container);
-//         widget = new CesiumWidget(container, {});
-//         terria = new Terria({
-//             baseUrl: './',
-//             regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
-//         });
-//         cesium = new Cesium(terria, widget);
-//         terria.currentViewer = cesium;
-//         terria.cesium = cesium;
-//         csvItem = new CsvCatalogItem(terria);
-//     });
-
-//     afterEach(function() {
-//         if (widget && !widget.isDestroyed()) {
-//             widget = widget.destroy();
-//         }
-//         document.body.removeChild(container);
-//     });
-
-
-// });
