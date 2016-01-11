@@ -4,6 +4,7 @@ Change Log
 
 ### 1.0.52
 
+*
 * Added `MapBoxMapCatalogItem`, which is especially useful for base maps. A valid access token must be provided.
 * Added a `getContainer()` method to Terria's `currentViewer`.
 * Dramatically improved the performance of region mapping.
@@ -15,17 +16,16 @@ Change Log
 * The default style for CSV files is now 7 color bins with CK means method.
 * Improved the display of legends for CSV files, accordingly.
 * Added support for color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
-* Improve the display of legends for CSV files, accordingly.
-* Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
+* Improved the display of legends for CSV files, accordingly.
 * URLs for legends are now encapsulated in a `LegendUrl` model, which accepts a mime type that will affect how the
   legend is rendered in the sidebar.
 * Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
-* Move URL config parameters to config.json, with sensible defaults. Specifically:
+* Moved URL config parameters to config.json, with sensible defaults. Specifically:
   *   regionMappingDefinitionsUrl: 'data/regionMapping.json',
   *   conversionServiceBaseUrl: '/convert/',
   *   proj4ServiceBaseUrl: '/proj4/',
   *   corsProxyBaseUrl: '/proxy/'
-* Deprecate terria.regionMappingDefinitionsUrl (set it in config.json or leave it as default).
+* Deprecated terria.regionMappingDefinitionsUrl (set it in config.json or leave it as default).
 
 ### 1.0.51
 
