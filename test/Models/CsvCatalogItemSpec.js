@@ -495,11 +495,15 @@ describe('CsvCatalogItem with region mapping', function() {
     it('supports feature picking on region-mapped files', function(done) {
         csvItem.url = 'test/csv/postcode_val_enum.csv';
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(6);
-            expect(csvItem._regionMapped).toBe(true);
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
+            csvItem.dataSource.enable(); // required to create an imagery layer
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
+                // This unfortunately makes the test depend on an implementation detail.
+                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                expect(regionImageryProvider).toBeDefined();
+                return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
+            }).otherwise(fail);
         }).then(function(r) {
             expect(r[0].name).toEqual("3124");
             expect(r[0].description).toContain("42.42");
@@ -510,11 +514,15 @@ describe('CsvCatalogItem with region mapping', function() {
     it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
         csvItem.url = 'test/csv/lga_fuzzy_val.csv';
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(3);
-            expect(csvItem._regionMapped).toBe(true);
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
+            csvItem.dataSource.enable(); // required to create an imagery layer
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
+                // This unfortunately makes the test depend on an implementation detail.
+                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                expect(regionImageryProvider).toBeDefined();
+                return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
+            }).otherwise(fail);
         }).then(function(r) {
             expect(r[0].name).toEqual("Boroondara (C)");
             expect(r[0].description).toContain("42.42");
