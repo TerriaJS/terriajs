@@ -334,10 +334,11 @@ describe('CsvCatalogItem with region mapping', function() {
     it('detects LGAs by code', function(done) {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
-            csvItem.dataSource.regionPromise.then(function(regionDetails) {
+            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
-                expect(regionDetails.column.name).toEqual('lga_code');
-                expect(regionDetails.regionProvider.regionType).toEqual('LGA');
+                var regionDetail = regionDetails[0];
+                expect(regionDetail.column.name).toEqual('lga_code');
+                expect(regionDetail.regionProvider.regionType).toEqual('LGA');
             }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
@@ -348,8 +349,9 @@ describe('CsvCatalogItem with region mapping', function() {
             csvItem.dataSource.enable();  // The recolorFunction call is only made once the layer is enabled.
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
                 var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var indexOfThisRegion = regionDetails.regionProvider.regions.map(getId).indexOf(31000);
+                var indexOfThisRegion = regionDetail.regionProvider.regions.map(getId).indexOf(31000);
                 expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined(); // Test that at least one rgba component is defined.
                 expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
             }).otherwise(fail);
@@ -363,8 +365,9 @@ describe('CsvCatalogItem with region mapping', function() {
             csvItem.dataSource.enable();
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
                 var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var regionNames = regionDetails.regionProvider.regions.map(getId);
+                var regionNames = regionDetail.regionProvider.regions.map(getId);
                 expect(recolorFunction(regionNames.indexOf('bogan'))).not.toBeDefined(); // Test that we didn't try to recolor other regions.
                 expect(recolorFunction(regionNames.indexOf('melbourne'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
                 expect(recolorFunction(regionNames.indexOf('melbourne'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
@@ -383,7 +386,8 @@ describe('CsvCatalogItem with region mapping', function() {
             csvItem.dataSource.enable();
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
-                var regionNames = regionDetails.regionProvider.regions.map(getId);
+                var regionDetail = regionDetails[0];
+                var regionNames = regionDetail.regionProvider.regions.map(getId);
                 // TODO: This is the old test, which doesn't really have an equivalent in the new csv refactor:
                 // expect(csvItem.dataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
                 // Possibly something like this?  However, this fails - it includes tasmania and not queensland.
@@ -400,6 +404,7 @@ describe('CsvCatalogItem with region mapping', function() {
             csvItem.dataSource.enable();
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
                 // There is no "rowPropertiesByCode" method any more.
                 expect(csvItem.rowPropertiesByCode(209).value).toBe('correct');
             }).otherwise(fail);
@@ -415,8 +420,9 @@ describe('CsvCatalogItem with region mapping', function() {
             csvItem.dataSource.enable();
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
                 var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var regionNames = regionDetails.regionProvider.regions.map(getId);
+                var regionNames = regionDetail.regionProvider.regions.map(getId);
                 // Require the green value to range from 64 to 255, but do not require a linear mapping.
                 expect(recolorFunction(regionNames.indexOf('melbourne'))).toEqual([0, 64, 0, 255]);
                 expect(recolorFunction(regionNames.indexOf('greater geelong'))[1]).toBeGreaterThan(64);
@@ -437,6 +443,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             return csvItem.dataSource.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
                 expect(csvItem.dataSource.tableStructure.columnsByType[VarType.REGION][0].name).toBe('postcode');
             }).otherwise(fail);
         }).otherwise(fail).then(done);
