@@ -15,6 +15,12 @@ Change Log
 * Improve the display of legends for CSV files, accordingly.
 * Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
 * Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
+* Move URL config parameters to config.json, with sensible defaults. Specifically:
+  *   regionMappingDefinitionsUrl: 'data/regionMapping.json',
+  *   conversionServiceBaseUrl: '/convert/',
+  *   proj4ServiceBaseUrl: '/proj4/',
+  *   corsProxyBaseUrl: '/proxy/'
+* Deprecate terria.regionMappingDefinitionsUrl (set it in config.json or leave it as default).
 
 ### 1.0.51
 
