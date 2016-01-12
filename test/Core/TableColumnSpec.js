@@ -76,10 +76,10 @@ describe('TableColumn', function() {
 
     it('can calculate finish dates', function() {
         var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:30Z'];
-        var tableColumn = new TableColumn('date', data, {finalDurationSeconds: 20});
+        var tableColumn = new TableColumn('date', data);
         expect(tableColumn.finishJulianDates).toEqual([
             JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
-            JulianDate.fromIso8601('2016-01-03T12:15:50Z')
+            JulianDate.fromIso8601('2016-01-03T12:15:59Z')  // final one should have the same spacing less 1s, ie. 29s.
         ]);
     });
 
