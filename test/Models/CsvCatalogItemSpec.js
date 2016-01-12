@@ -1,13 +1,11 @@
 'use strict';
 
 /*global require,describe,it,expect,beforeEach,fail*/
-var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
 var clone = require('terriajs-cesium/Source/Core/clone');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 var CatalogItem = require('../../lib/Models/CatalogItem');
-var Cesium = require('../../lib/Models/Cesium');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var ImageryProviderHooks = require('../../lib/Map/ImageryProviderHooks');
@@ -575,55 +573,58 @@ describe('CsvCatalogItem with region mapping', function() {
     it('supports region-mapped files with dates', function(done) {
         csvItem.updateFromJson({
             url: 'test/csv/postcode_date_value.csv'
-//            tableStyle: new TableStyle({displayDuration: 5})
         });
         csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+            var source = csvItem.dataSource;
+            var j = JulianDate.fromIso8601;
+            source._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            source.enable();
+            return source.regionPromise.then(function(regionDetails) {
                 expect(regionDetails).toBeDefined();
-                var j = JulianDate.fromIso8601;
-                var source = csvItem.dataSource;
+                var regionDetail = regionDetails[0];
                 expect(source.tableStructure.columns[0].values.length).toEqual(10);
                 expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
                 expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
-
-                // Test that an entity exists at the expected dates.
-                var features = source.entities.values;
-                var featureDates = features.map(getPropertiesDate);
-                expect(featureDates.indexOf('2015-07-31')).toBe(-1);  // no such dates in the input file
-                expect(featureDates.indexOf('2015-08-07')).toBe(-1);
-                var earlyFeature = features[featureDates.indexOf('2015-08-01')];
-                // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
-
-                expect(source.dataset.getRowCount()).toEqual(10);
-                expect(source.dataset.hasTimeData()).toBe(true);
-                expect(source.getDataPointList(j('2015-08-06')).length).toBe(0);
-                expect(source.getDataPointList(j('2015-08-07')).length).toBe(4);
-                expect(source.getDataPointList(j('2015-08-08')).length).toBe(2);
-                expect(source.getDataPointList(j('2015-08-09')).length).toBe(4);
-                expect(source.getDataPointList(j('2015-08-11')).length).toBe(0);
-                // not sure how to try different dates
+                // Test that the right regions have been colored (since the datasource doesn't expose the entities).
+                // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+                var regionNames = regionDetail.regionProvider.regions.map(getId);
+                
+                expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
+                expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
+                expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
+                expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
             }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
-    it('supports region-mapped files with dates and displayDuration', function(done) {
-        csvItem.url = 'test/csv/postcode_date_value.csv';
-        csvItem.tableStyle = new TableStyle({ displayDuration: 60 * 6 }); // 6 hours
+    it('supports region-mapped files with displayDuration and dates', function(done) {
+        csvItem.updateFromJson({
+            url: 'test/csv/postcode_date_value.csv',
+            tableStyle: new TableStyle({ displayDuration: 60 * 6 }) // 6 hours
+        });
         csvItem.load().then(function() {
-            var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
-            expect(source.dataset.getRowCount()).toEqual(10);
-            expect(csvItem._regionMapped).toBe(true);
-            expect(source.dataset.hasTimeData()).toBe(true);
-            expect(source.getDataPointList(j('2015-08-06')).length).toBe(0);
-            expect(source.getDataPointList(j('2015-08-07')).length).toBe(4);
-            expect(source.getDataPointList(j('2015-08-07T00:00')).length).toBe(4);
-            expect(source.getDataPointList(j('2015-08-07T05:30')).length).toBe(4);
-            expect(source.getDataPointList(j('2015-08-07T06:30')).length).toBe(0);
-            expect(source.getDataPointList(j('2015-08-11')).length).toBe(0);
-            // not sure how to try different dates
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
+            var j = JulianDate.fromIso8601;
+            var nineOclock = j('2015-08-08'); // midnight local time
+            JulianDate.addHours(nineOclock, 9, nineOclock);
+            source._catalogItem.terria.clock.currentTime = nineOclock;
+            source.enable();
+            return source.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                var regionDetail = regionDetails[0];
+                expect(source.tableStructure.columns[0].values.length).toEqual(10);
+                expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+                expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
+                // Test that no regions have been colored, since at 9am we are more than 6 hours past the start date of any row.
+                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+                var regionNames = regionDetail.regionProvider.regions.map(getId);
+
+                expect(recolorFunction(regionNames.indexOf('3121'))).not.toBeDefined();
+                expect(recolorFunction(regionNames.indexOf('3122'))).not.toBeDefined();
+                expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
+                expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
+            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
 
