@@ -45,7 +45,7 @@ describe('RegionProviderList', function() {
             "textCodes": true
     };
 
-    it('matches postcodes as expected', function(done) {
+    it('matches postcodes with bad and duplicated values', function(done) {
         var regionDetails, regionProvider;
         var regionProviderList = new RegionProviderList().initFromObject({ regionWmsMap: { POA: poaDescriptor }});
         var tableStructure = new TableStructure();
@@ -60,17 +60,20 @@ describe('RegionProviderList', function() {
         regionProvider.loadRegionIDs().then(function() {
             expect(regionProvider.regions.length).toBeGreaterThan(0);
             var regionValues = tableStructure.getColumnWithName(regionDetail.variableName).values;
-            var regionIndices = regionProvider.mapRegionsToIndicesInto(regionValues);
+            var failedMatches = [];
+            var ambiguousMatches = [];
             var indexOfPostcode3068 = regionProvider.regions.map(getId).indexOf('3068');
             var indexOfPostcode2000 = regionProvider.regions.map(getId).indexOf('2000');
+            var regionIndices = regionProvider.mapRegionsToIndicesInto(regionValues, undefined, failedMatches, ambiguousMatches);
             expect(regionIndices[indexOfPostcode3068]).toEqual(0);
             expect(regionIndices[indexOfPostcode2000]).toEqual(1);
             // Check that only two succeeded. This test may fail if we change how this is implemented.
             expect(Object.keys(regionIndices).length).toEqual(2);
-            expect('ambiguousMatches').toEqual('2000');  // A reminder to re-implement the ambiguous matches calculations in some form
-            // expect(res.successes).toBeGreaterThan(0);
-            // expect(res.failedMatches).toEqual({"5": true, "four thousand": true});
-            // expect(res.ambiguousMatches).toEqual({"2000": true});
+            expect(ambiguousMatches.length).toEqual(1);
+            expect(ambiguousMatches[0]).toEqual(4); // the fifth row (ie. index 4) has the duplicate postcode, 2000.
+            expect(failedMatches.length).toEqual(2);
+            expect(failedMatches).toContain(2);  // indices 2 and 3 are '5' and 'four thousand', which are bad.
+            expect(failedMatches).toContain(3);
         }).otherwise(fail).then(done);
     });
 
