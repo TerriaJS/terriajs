@@ -222,12 +222,9 @@ describe('CsvCatalogItem with lat and lon', function() {
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
             expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
             expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
-            // Also check that this is not misclassified as a region mapped csv file.
-            source.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeUndefined();
-            }).otherwise(fail);
         }).otherwise(fail).then(done);
     });
+
 
     it('supports dates and very long displayDuration', function(done) {
         var sevenDaysInMinutes = 60 * 24 * 7;
@@ -358,6 +355,17 @@ describe('CsvCatalogItem with region mapping', function() {
         // This unfortunately makes the test depend on an implementation detail.
         spyOn(ImageryLayerCatalogItem, 'enableLayer');
     });
+
+    it('does not think a lat-lon csv has regions', function(done) {
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem.load().then(function() {
+            var source = csvItem.dataSource;
+            return source.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeUndefined();
+            }).otherwise(fail);
+        }).otherwise(fail).then(done);
+    });
+
 
     it('detects LGAs by code', function(done) {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});

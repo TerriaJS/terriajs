@@ -5,7 +5,7 @@ var LegendSectionViewModel = require('../../lib/ViewModels/LegendSectionViewMode
 var Terria = require('../../lib/Models/Terria');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var CompositeCatalogItem = require('../../lib/Models/CompositeCatalogItem');
-var LegendUrl = require('../../lib/Models/LegendUrl');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 
 describe('LegendSectionViewModel', function() {
     var terria, catalogItem;

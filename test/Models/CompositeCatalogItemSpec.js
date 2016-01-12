@@ -5,7 +5,7 @@ var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var CompositeCatalogItem = require('../../lib/Models/CompositeCatalogItem');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
 var Terria = require('../../lib/Models/Terria');
-var LegendUrl = require('../../lib/Models/LegendUrl');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 var WMSCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 
 describe('CompositeCatalogItem', function() {
