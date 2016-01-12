@@ -235,20 +235,29 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    // TODO: need to think about this one.
-    xit('supports dates sorted randomly', function(done) {
+    it('supports dates sorted randomly', function(done) {
+        // Now that we use availability to establish when entities exist, this is not much of a test.
+        // Could delete, or change it to test something more useful.
         csvItem.url = 'test/csv/lat_lon_enum_moving_date_unsorted.csv';
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
-            expect(source.dataset.getRowCount()).toEqual(13);
-            expect(csvItem._regionMapped).toBe(false);
-            expect(source.dataset.hasTimeData()).toBe(true);
-            expect(source.getDataPointList(j('2015-07-31')).length).toBe(0);
-            expect(source.getDataPointList(j('2015-08-01')).length).toBe(2);
-            expect(source.getDataPointList(j('2015-08-02')).length).toBe(3);
-            expect(source.getDataPointList(j('2015-08-06')).length).toBe(2);
-            expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
+            expect(source.tableStructure.columns[0].values.length).toEqual(13);
+            expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+            expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-05'));
+            // Test that an entity exists at the expected dates.
+            var features = source.entities.values;
+            var featureDates = features.map(getPropertiesDate);
+            expect(featureDates.indexOf('2015-07-31')).toBe(-1);  // no such dates in the input file
+            expect(featureDates.indexOf('2015-08-07')).toBe(-1);
+            var earlyFeature = features[featureDates.indexOf('2015-08-01')];
+            // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
+            // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
+            expect(earlyFeature.availability.contains(j('2015-08-01'))).toBe(true);
+            // Also test the duration of the interval is just under one day (the time between input rows).
+            var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
+            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
+            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
         }).otherwise(fail).then(done);
     });
 
@@ -407,18 +416,18 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    // TODO: I don't think this test applies any more.
-    xit('matches SA4s', function(done) {
-        csvItem.updateFromJson({data: 'sa4,value\n209,correct'});
-        csvItem.load().then(function() {
-            csvItem.dataSource.enable();
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                // There is no "rowPropertiesByCode" method any more.
-                expect(csvItem.rowPropertiesByCode(209).value).toBe('correct');
-            }).otherwise(fail);
-        }).otherwise(fail).then(done);
-    });
+    // I think this would be better as a test of RegionProvider?
+    // it('matches SA4s', function(done) {
+    //     csvItem.updateFromJson({data: 'sa4,value\n209,correct'});
+    //     csvItem.load().then(function() {
+    //         csvItem.dataSource.enable();
+    //         return csvItem.dataSource.regionPromise.then(function(regionDetails) {
+    //             expect(regionDetails).toBeDefined();
+    //             // There is no "rowPropertiesByCode" method any more.
+    //             expect(csvItem.rowPropertiesByCode(209).value).toBe('correct');
+    //         }).otherwise(fail);
+    //     }).otherwise(fail).then(done);
+    // });
 
     it('respects tableStyle color ramping for regions', function(done) {
         csvItem.updateFromJson({
