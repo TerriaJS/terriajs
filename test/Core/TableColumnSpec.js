@@ -79,14 +79,25 @@ describe('TableColumn', function() {
         var tableColumn = new TableColumn('date', data);
         expect(tableColumn.finishJulianDates).toEqual([
             JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
-            JulianDate.fromIso8601('2016-01-03T12:15:59Z')  // final one should have the same spacing less 1s, ie. 29s.
+            JulianDate.fromIso8601('2016-01-03T12:16:00Z') // Final one should have the average spacing, 30 sec.
         ]);
     });
 
-    it('can handle numerical time type', function() {
+    it('can calculate sub-second finish dates', function() {
+        var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:00.4Z', '2016-01-03T12:15:01Z'];
+        var tableColumn = new TableColumn('date', data);
+        
+        expect(tableColumn.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:15:00.38Z'), // Shaves off 5% of 0.4, ie. 0.02.
+            JulianDate.fromIso8601('2016-01-03T12:15:00.97Z'), // Shaves off 5% of 0.6, ie. 0.03.
+            JulianDate.fromIso8601('2016-01-03T12:15:01.5Z') // Average spacing is 0.5 second.
+        ]);
+    });
+
+    it('treats numerical data in a column named time as scalars', function() {
         var data = [730, 1230, 130];
         var tableColumn = new TableColumn('date', data);
-        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.type).toEqual(VarType.SCALAR);
         expect(tableColumn.values).toEqual(data);
     });
 
