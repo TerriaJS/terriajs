@@ -123,6 +123,15 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('is able to generate a Legend', function(done) {
+        csvItem.url = 'test/csv/minimal.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            expect(csvItem.legendUrl.mimeType).toBe('image/png');
+            expect(csvItem.legendUrl.url).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
@@ -644,5 +653,5 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(url.length).toBeLessThan(2000);
         }).otherwise(fail).then(done);
     });
-    
+
 });
