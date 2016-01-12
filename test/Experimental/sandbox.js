@@ -68,23 +68,83 @@ describe('sandbox', function() {
 
             load() {
                 var that = this;
-                return function(dispatch) {
-                    that = dispatch({
-                        type: 'UPDATE',
-                        changes: {
-                            isLoading: true
-                        }
-                    }).me;
 
-                    return dispatch(that._doLoad()).then(function(dispatchResult) {
+                if (defined(that._loadingPromise)) {
+                    // Load already in progress.
+                    return that._loadingPromise;
+                }
+
+                var loadInfluencingValues = [];
+                if (defined(that._getValuesThatInfluenceLoad)) {
+                    loadInfluencingValues = that._getValuesThatInfluenceLoad();
+                }
+
+                if (arraysAreEqual(loadInfluencingValues, that._lastLoadInfluencingValues)) {
+                    // Already loaded, and nothing has changed to force a re-load.
+                    return undefined;
+                }
+
+                var loadingPromise = runLater(function() {
+                    if (defined(that._getValuesThatInfluenceLoad)) {
                         that = dispatch({
                             type: 'UPDATE',
                             changes: {
-                                isLoading: false
+                                _lastLoadInfluencingValues: that._getValuesThatInfluenceLoad()
                             }
-                        }).me;
+                        });
+                    }
+
+                    return that._load();
+                }).then(function(that) {
+                    that = dispatch({
+                        type: 'UPDATE',
+                        changes: {
+                            _loadingPromise: undefined,
+                            isLoading: false
+                        }
                     });
-                };
+                }).otherwise(function(e) {
+                    // Where do we get 'that'?  Maybe some kind of lookup
+                    that = dispatch({
+                        type: 'UPDATE',
+                        changes: {
+                            _lastLoadInfluencingValues: undefined,
+                            _loadingPromise: undefined,
+                            isEnabled: false,
+                            isLoading: false
+                        }
+                    });
+                    throw e;
+                });
+
+                var that = dispatch({
+                    type: 'UPDATE',
+                    changes: {
+                        isLoading: true,
+                        _loadingPromise: loadingPromise;
+                    }
+                });
+
+                return this._loadingPromise;
+
+                // var that = this;
+                // return function(dispatch) {
+                //     that = dispatch({
+                //         type: 'UPDATE',
+                //         changes: {
+                //             isLoading: true
+                //         }
+                //     }).me;
+
+                //     return dispatch(that._doLoad()).then(function(dispatchResult) {
+                //         that = dispatch({
+                //             type: 'UPDATE',
+                //             changes: {
+                //                 isLoading: false
+                //             }
+                //         }).me;
+                //     });
+                // };
             }
 
             enable() {
