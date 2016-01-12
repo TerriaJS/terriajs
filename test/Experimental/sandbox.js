@@ -99,25 +99,25 @@ describe('sandbox', function() {
                     // If the catalog item is still enabled after the load completes, do the actual enable and show it.
                     if (that.isEnabled) {
                         return that._doEnable().then(function(that) {
-                            return that.show());
+                            return that.show();
                         });
                     } else {
                         return that;
                     }
                 });
 
-                var that = this;
-                return function(dispatch) {
+                // var that = this;
+                // return function(dispatch) {
 
-                    return dispatch(that.load()).then(function(dispatchResult) {
-                        // If the catalog item is still enabled after the load completes, do the actual enable and show it.
-                        if (dispatchResult.me.isEnabled) {
-                            return dispatch(dispatchResult.me._doEnable()).then(function(dispatchResult) {
-                                return dispatch(dispatchResult.me.show());
-                            });
-                        }
-                    });
-                };
+                //     return dispatch(that.load()).then(function(dispatchResult) {
+                //         // If the catalog item is still enabled after the load completes, do the actual enable and show it.
+                //         if (dispatchResult.me.isEnabled) {
+                //             return dispatch(dispatchResult.me._doEnable()).then(function(dispatchResult) {
+                //                 return dispatch(dispatchResult.me.show());
+                //             });
+                //         }
+                //     });
+                // };
             }
 
             show() {
