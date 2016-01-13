@@ -6,13 +6,13 @@ Change Log
 
 * Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
   - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
-  - `TableDataSource`: Completely rewritten.
+  - `TableDataSource`: Completely rewritten and moved from `Map` to `Models` directory.
   - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
   - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
   - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
   - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
   - `LegendUrl` has been moved to the `Map` directory.
-  - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed.
+  - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
 
 ### 1.0.52
