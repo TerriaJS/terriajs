@@ -4,14 +4,39 @@
 
 var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
+var sinon = require('sinon');
+var URI = require('urijs');
 var TableStructure = require('../../lib/Core/TableStructure.js');
-var regionProvideListPromise;
-
-beforeEach(function() {
-    regionProvideListPromise = RegionProviderList.fromUrl('test/csv/regionMapping.json');
-});
 
 describe('RegionProviderList', function() {
+    var fakeServer;
+    var regionProvideListPromise;
+
+    beforeEach(function() {
+        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
+        fakeServer = sinon.fakeServer.create();
+        fakeServer.autoRespond = true;
+
+        fakeServer.xhr.useFilters = true;
+        fakeServer.xhr.addFilter(function(method, url, async, username, password) {
+            // Allow requests for local files.
+            var uri = new URI(url);
+            var protocol = uri.protocol();
+            return !protocol;
+        });
+
+        fakeServer.respond(function(request) {
+            fail('Unhandled request to URL: ' + request.url);
+        });
+
+        regionProvideListPromise = RegionProviderList.fromUrl('test/csv/regionMapping.json');
+    });
+
+    afterEach(function() {
+        fakeServer.xhr.filters.length = 0;
+        fakeServer.restore();
+    });
+
     it('loads some region providers', function(done) {
         regionProvideListPromise.then(function(rpl) {
             expect(rpl.regionProviders.length).toBeGreaterThan(2);
@@ -46,8 +71,24 @@ describe('RegionProviderList', function() {
     };
 
     it('matches postcodes with bad and duplicated values', function(done) {
+        fakeServer.respondWith(
+            'GET',
+            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_POA_2011_AUST&valueReference=POA_CODE',
+            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:POA_CODE>3068</region_map:POA_CODE>\n' +
+            '   </wfs:member>\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:POA_CODE>2000</region_map:POA_CODE>\n' +
+            '   </wfs:member>\n' +
+            '</wfs:ValueCollection>'
+        );
         var regionDetails, regionProvider;
-        var regionProviderList = new RegionProviderList().initFromObject({ regionWmsMap: { POA: poaDescriptor }});
+        var regionProviderList = new RegionProviderList().initFromObject({
+            regionWmsMap: {
+                POA: poaDescriptor
+            }
+        });
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv('postcode,value\n3068,1\n2000,2\n5,-1\nfour thousand,-4\n2000,3');
         regionDetails = regionProviderList.getRegionDetails(tableStructure.getColumnNames());
@@ -78,6 +119,18 @@ describe('RegionProviderList', function() {
     });
 
     it('handles postcodes with leading zeroes', function(done) {
+        fakeServer.respondWith(
+            'GET',
+            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_POA_2011_AUST&valueReference=POA_CODE',
+            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:POA_CODE>0800</region_map:POA_CODE>\n' +
+            '   </wfs:member>\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:POA_CODE>0885</region_map:POA_CODE>\n' +
+            '   </wfs:member>\n' +
+            '</wfs:ValueCollection>'
+        );
         var regionProvider = new RegionProvider('POA2', poaDescriptor);
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv('postcode,value\n0800,1\n0885,2');
@@ -92,6 +145,15 @@ describe('RegionProviderList', function() {
     });
 
     it('handles data-side replacements', function(done) {
+        fakeServer.respondWith(
+            'GET',
+            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_POA_2011_AUST&valueReference=POA_CODE',
+            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
+            '   <wfs:member>\n' +
+            '       <region_map:POA_CODE>3068</region_map:POA_CODE>\n' +
+            '   </wfs:member>\n' +
+            '</wfs:ValueCollection>'
+        );
         var poa2 = JSON.parse(JSON.stringify(poaDescriptor));
         //poa2.dataReplacements = [ [ '^()(?=\\d\\d\\d$)', '0' ] ];
         poa2.dataReplacements = [['^(Clifton Hill|Fitzroy North)$', '3068']];
