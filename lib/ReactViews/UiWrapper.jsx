@@ -73,11 +73,6 @@ UiWrapper.prototype.init = function(main, nav, aside, mapNav, chart, allBaseMaps
         }
     });
 
-    this.nowViewingUpdate.addEventListener(function() {
-        ReactDOM.render(<SidePanel terria={terria} />, nav);
-        ReactDOM.render(<ModalWindow terria={terria}/>, main);
-    });
-
     this.terriaViewerUpdate.addEventListener(function() {
         ReactDOM.render(<MapNavigation terria= {terria} allBaseMaps = {allBaseMaps} terriaViewer={terriaViewer} />, mapNav);
     });
