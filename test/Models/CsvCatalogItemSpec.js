@@ -9,7 +9,7 @@ var CatalogItem = require('../../lib/Models/CatalogItem');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var ImageryProviderHooks = require('../../lib/Map/ImageryProviderHooks');
-var TableStyle = require('../../lib/Map/TableStyle');
+var TableStyle = require('../../lib/Models/TableStyle');
 var Terria = require('../../lib/Models/Terria');
 var VarType = require('../../lib/Map/VarType');
 
