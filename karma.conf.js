@@ -121,7 +121,7 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultanous
-    concurrency: Infinity,
+    concurrency: 5,
 
     sauceLabels: {
         testName: 'TerriaJS Unit Tests',
