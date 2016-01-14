@@ -19,6 +19,7 @@ Change Log
 * URLs for legends are now encapsulated in a `LegendUrl` model, which accepts a mime type that will affect how the
   legend is rendered in the sidebar.
 * Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
+* Made `CswCatalogGroup` able to find geospatial datasets on more CSW servers.
 * Moved URL config parameters to config.json, with sensible defaults. Specifically:
   *   regionMappingDefinitionsUrl: 'data/regionMapping.json',
   *   conversionServiceBaseUrl: '/convert/',
