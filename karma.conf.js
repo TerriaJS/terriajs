@@ -62,6 +62,18 @@ module.exports = function(config) {
             platform: 'Windows 7',
             version: '9.0'
         },
+        sl_ie10: {
+            base: 'SauceLabs',
+            browserName: 'internet explorer',
+            platform: 'Windows 7',
+            version: '10.0'
+        },
+        sl_ie11: {
+            base: 'SauceLabs',
+            browserName: 'internet explorer',
+            platform: 'Windows 7',
+            version: '11.0'
+        },
         sl_firefox42: {
             base: 'SauceLabs',
             browserName: 'firefox',
@@ -101,8 +113,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['sl_chrome', 'sl_safari9', 'sl_firefox42', 'sl_firefox38esr'],
-
+    browsers: ['sl_chrome', 'sl_safari9', 'sl_firefox42', 'sl_firefox38esr', 'sl_ie9', 'sl_ie10', 'sl_ie11'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -110,7 +121,7 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultanous
-    concurrency: Infinity,
+    concurrency: 5,
 
     sauceLabels: {
         testName: 'TerriaJS Unit Tests',

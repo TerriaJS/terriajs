@@ -2,9 +2,42 @@
 Change Log
 ==========
 
+### 2.0.0
+
+* Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
+  - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
+  - `TableDataSource`: Completely rewritten and moved from `Map` to `Models` directory.
+  - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
+  - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
+  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
+  - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
+  - `LegendUrl` has been moved to the `Map` directory.
+  - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
+  - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
+
 ### 1.0.52
 
+* Added `MapBoxMapCatalogItem`, which is especially useful for base maps. A valid access token must be provided.
+* Added a `getContainer()` method to Terria's `currentViewer`.
 * Dramatically improved the performance of region mapping.
+* Introduced new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
+  * "auto" (default), usually means "ckmeans"
+  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
+  * "quantile": use quantiles, evenly distributing values between bins
+  * "none": use the previous linear color mapping method.
+* Improved compatibility with Internet Explorer 9.
+* The default style for CSV files is now 7 color bins with CK means method.
+* Added support for color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
+* Improved the display of legends for CSV files, accordingly.
+* URLs for legends are now encapsulated in a `LegendUrl` model, which accepts a mime type that will affect how the
+  legend is rendered in the sidebar.
+* Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
+* Moved URL config parameters to config.json, with sensible defaults. Specifically:
+  *   regionMappingDefinitionsUrl: 'data/regionMapping.json',
+  *   conversionServiceBaseUrl: '/convert/',
+  *   proj4ServiceBaseUrl: '/proj4/',
+  *   corsProxyBaseUrl: '/proxy/'
+* Deprecated terria.regionMappingDefinitionsUrl (set it in config.json or leave it as default).
 
 ### 1.0.51
 
@@ -13,14 +46,6 @@ Change Log
 * Added `MapProgressBarViewModel`.  When added to the user interface with `MapProgressBarViewModel.create`, it shows a bar at the top of the map window indicating tile load progress.
 * We no longer show the entity's ID (which is usually a meaningless GUID) on the feature info panel when the feature does not have a name.  Instead, we leave the area blank.
 * Fixed a bug with time-dynamic imagery layers that caused features to be picked from the next time to be displayed, in addition to the current one.
-* Introduce new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
-  * "auto" (default), usually means "ckmeans"
-  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
-  * "quantile": use quantiles, evenly distributing values between bins
-  * "none": use the previous linear color mapping method.
-* The default style for CSV files is now 7 color bins with CK means method.
-* Improve the display of legends for CSV files, accordingly.
-* Support color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
 * Replace `.` and `#` with `_` in property names meant to be used with `featureInfoTemplate`, so that these properties can be accessed by the [mustache](https://mustache.github.io/) templating engine.
 * Added support for time-varying properties (e.g. from a CZML file) on the feature info panel.
 * `Cesium.zoomTo` now takes the terrain height into account when zooming to a rectangle.
