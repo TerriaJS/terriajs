@@ -1,7 +1,8 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,it,expect,beforeEach,fail*/
 
+var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
 var Terria = require('../../lib/Models/Terria');
 var LegendUrl = require('../../lib/Models/LegendUrl');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
@@ -207,6 +208,46 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem.parameters).toEqual({});
         expect(wmsItem.tilingScheme).toBeUndefined();
         expect(wmsItem.getFeatureInfoFormats).toBeUndefined();
+    });
+
+    it('requests styles property', function() {
+        // Spy on the request to create an image, so that we can see what URL is requested.
+        // Unfortunately this is implementation-dependent.
+        spyOn(ImageryProvider, 'loadImage');
+        wmsItem.updateFromJson({
+            dataUrlType: 'wfs',
+            url: 'http://my.wms.com',
+            layers: 'mylayer',
+            tilingScheme: new WebMercatorTilingScheme(),
+            getFeatureInfoFormats: [],
+            parameters: {
+                styles: 'foobar'
+            }
+        });
+        var imageryLayer = wmsItem.createImageryProvider();
+        imageryLayer.requestImage(0, 0, 2);
+        var requestedUrl = ImageryProvider.loadImage.calls.argsFor(0)[0].url;
+        expect(requestedUrl.toLowerCase()).toContain('styles=foobar');
+    });
+
+    it('requests styles property even if uppercase', function() {
+        // Spy on the request to create an image, so that we can see what URL is requested.
+        // Unfortunately this is implementation-dependent.
+        spyOn(ImageryProvider, 'loadImage');
+        wmsItem.updateFromJson({
+            dataUrlType: 'wfs',
+            url: 'http://my.wms.com',
+            layers: 'mylayer',
+            tilingScheme: new WebMercatorTilingScheme(),
+            getFeatureInfoFormats: [],
+            parameters: {
+                STYLES: 'foobar'
+            }
+        });
+        var imageryLayer = wmsItem.createImageryProvider();
+        imageryLayer.requestImage(0, 0, 2);
+        var requestedUrl = ImageryProvider.loadImage.calls.argsFor(0)[0].url;
+        expect(requestedUrl.toLowerCase()).toContain('styles=foobar');
     });
 
     it('can be round-tripped with serializeToJson and updateFromJson', function() {

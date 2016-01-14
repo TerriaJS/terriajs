@@ -25,6 +25,7 @@ Change Log
   *   proj4ServiceBaseUrl: '/proj4/',
   *   corsProxyBaseUrl: '/proxy/'
 * Deprecated terria.regionMappingDefinitionsUrl (set it in config.json or leave it as default).
+* Allow WMS parameters to be specified in json in uppercase (eg. STYLES).
 
 ### 1.0.51
 
