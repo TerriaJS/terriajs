@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 1.0.54
+
+* Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed.
+
 ### 1.0.53
 
 * Improved compatibility with Internet Explorer 9.
