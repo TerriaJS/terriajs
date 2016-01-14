@@ -16,7 +16,7 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
 ### 1.0.54
 
-* Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed for Australian Bureau of Statistics catalog items.
+* Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed.
 
 ### 1.0.53
 
