@@ -1,6 +1,5 @@
 'use strict';
 var React = require('react');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
 var renderAndSubscribe = require('./renderAndSubscribe');
 
 //Individual dataset
@@ -29,9 +28,8 @@ var DataCatalogItem = React.createClass({
 
     addToMap: function(event) {
         event.preventDefault();
-        var that = this;
 
-        that.props.item.toggleEnabled();
+        this.props.item.toggleEnabled();
         this.addToPreview(event);
     },
 
