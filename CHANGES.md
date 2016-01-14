@@ -14,6 +14,15 @@ Change Log
   - `LegendUrl` has been moved to the `Map` directory.
   - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
+### 1.0.54
+
+* Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed for Australian Bureau of Statistics catalog items.
+
+### 1.0.53
+
+* Improved compatibility with Internet Explorer 9.
+* Made `CswCatalogGroup` able to find geospatial datasets on more CSW servers.
+* Allow WMS parameters to be specified in json in uppercase (eg. STYLES).
 
 ### 1.0.52
 
