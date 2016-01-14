@@ -1,6 +1,8 @@
 'use strict';
 
 /*global require*/
+var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+
 var Terria = require('../../lib/Models/Terria');
 var AbsIttCatalogItem = require('../../lib/Models/AbsIttCatalogItem');
 
@@ -28,5 +30,22 @@ describe('AbsIttCatalogItem', function() {
         expect(item.dataUrl).toBe('http://foo.com/data');
         expect(item.dataUrlType).toBe('wfs-complete');
     });
+
+    it('can update from json', function() {
+        item.updateFromJson({
+            name: 'Name',
+            description: 'Description',
+            rectangle: [-10, 10, -20, 20],
+            url: 'http://foo.bar',
+            dataCustodian: 'Data Custodian',
+        });
+        expect(item.name).toBe('Name');
+        expect(item.description).toBe('Description');
+        expect(item.rectangle).toEqual(Rectangle.fromDegrees(-10, 10, -20, 20));
+        expect(item.type).toBe('abs-itt');
+        expect(item.url.indexOf('http://foo.bar')).toBe(0);
+        expect(item.dataCustodian).toBe('Data Custodian');
+    });
+
 
 });
