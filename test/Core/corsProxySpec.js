@@ -8,6 +8,7 @@ describe('corsProxy', function() {
         corsProxy.pageIsHttps = false;
         corsProxy.proxyDomains.length = 0;
         corsProxy.corsDomains.length = 0;
+        corsProxy.alwaysUseProxy = false;
     });
 
     it('does not proxy CORS requests', function() {

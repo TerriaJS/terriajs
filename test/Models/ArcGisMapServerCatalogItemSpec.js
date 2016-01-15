@@ -6,6 +6,7 @@ var Terria = require('../../lib/Models/Terria');
 var Legend = require('../../lib/Map/Legend');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var ArcGisMapServerCatalogItem = require('../../lib/Models/ArcGisMapServerCatalogItem');
+var LegendUrl = require('../../lib/Models/LegendUrl');
 
 var terria;
 var item;
@@ -76,7 +77,7 @@ describe('ArcGisMapServerCatalogItem', function() {
             showTilesAfterMessage: false
         });
 
-        expect(item.legendUrl).toBe('http://legend.com');
+        expect(item.legendUrl).toEqual(new LegendUrl('http://legend.com'));
         expect(item.dataUrlType).toBeUndefined();
         expect(item.dataUrl).toBeUndefined();
         expect(item.metadataUrl).toBe('http://my.metadata.com');
@@ -85,6 +86,15 @@ describe('ArcGisMapServerCatalogItem', function() {
         expect(item.maximumScale).toEqual(100);
         expect(item.maximumScaleBeforeMessage).toEqual(10);
         expect(item.showTilesAfterMessage).toBe(false);
+    });
+
+    it('falls back to /legend if no legendUrl provided in json', function() {
+        item.updateFromJson({
+            metadataUrl: 'http://my.metadata.com',
+            url: 'http://my.arcgis.com/abc'
+        });
+
+        expect(item.legendUrl).toEqual(new LegendUrl('http://my.arcgis.com/abc/legend'));
     });
 
     it('can load /MapServer json for all layers', function(done) {
