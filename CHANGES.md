@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 1.0.55
+
+* Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
+
 ### 1.0.54
 
 * Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed.
