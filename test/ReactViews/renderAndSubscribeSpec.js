@@ -49,4 +49,19 @@ describe('renderAndSubscribe', function() {
         expect(spy.forceUpdate).not.toHaveBeenCalled();
         expect(secondSpy.forceUpdate).toHaveBeenCalled();
     });
+
+    it('unsubscribes when the component is unmounted', function() {
+        var spy = jasmine.createSpyObj('component', ['forceUpdate', 'componentWillUnmount']);
+
+        var result = renderAndSubscribe(spy, function() {
+            return someObject.foo;
+        });
+
+        spy.componentWillUnmount();
+
+        expect(spy.componentWillUnmount).toHaveBeenCalled();
+
+        someObject.foo = 6;
+        expect(spy.forceUpdate).not.toHaveBeenCalled();
+    });
 });
