@@ -3,6 +3,7 @@
 /*global require,describe,it,expect,beforeEach*/
 var Terria = require('../../lib/Models/Terria');
 var loadJson = require('terriajs-cesium/Source/Core/loadJson');
+var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var Catalog = require('../../lib/Models/Catalog');
 var CatalogItem = require('../../lib/Models/CatalogItem');
@@ -36,11 +37,11 @@ describe('Catalog', function() {
         }).otherwise(done.fail);
     });
 
-    describe('updating a moved item', function () {
+    describe('enableByShareKeys', function () {
         var catalog;
 
         beforeEach(function() {
-            catalog = new Catalog(terria);
+            catalog = terria.catalog;
         });
 
         it('works when resolving by id', function (done) {
@@ -66,24 +67,7 @@ describe('Catalog', function() {
                 expect(catalog.group.items[0].isOpen).toBeFalsy();
                 expect(catalog.group.isOpen).toBeFalsy();
 
-                return catalog.updateFromJson([
-                    {
-                        name: 'A',
-                        type: 'group'
-                    },
-                    {
-                        name: 'B',
-                        type: 'group',
-                        items: [
-                            {
-                                id: 'C',
-                                isEnabled: true
-                            }
-                        ]
-                    }
-                ], {
-                    onlyUpdateExistingItems: true
-                });
+                return catalog.enableByShareKeys(['C']);
             }).then(function () {
                 expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
                 expect(catalog.group.items[0].isOpen).toBeTruthy();
@@ -116,24 +100,7 @@ describe('Catalog', function() {
                 expect(catalog.group.items[0].isOpen).toBeFalsy();
                 expect(catalog.group.isOpen).toBeFalsy();
 
-                return catalog.updateFromJson([
-                    {
-                        name: 'A',
-                        type: 'group'
-                    },
-                    {
-                        name: 'B',
-                        type: 'group',
-                        items: [
-                            {
-                                id: 'C',
-                                isEnabled: true
-                            }
-                        ]
-                    }
-                ], {
-                    onlyUpdateExistingItems: true
-                });
+                return catalog.enableByShareKeys(['C']);
             }).then(function () {
                 expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
                 expect(catalog.group.items[0].isOpen).toBeTruthy();
@@ -142,7 +109,7 @@ describe('Catalog', function() {
             }).otherwise(fail);
         });
 
-        it('doesn\'t cause parent group to be opened if we don\'t set isEnabled to true', function (done) {
+        it('opens parent groups', function (done) {
             catalog.updateFromJson([
                 {
                     name: 'A',
@@ -160,31 +127,15 @@ describe('Catalog', function() {
                     type: 'group'
                 }
             ]).then(function() {
-                return catalog.updateFromJson([
-                    {
-                        name: 'A',
-                        type: 'group'
-                    },
-                    {
-                        name: 'B',
-                        type: 'group',
-                        items: [
-                            {
-                                id: 'C'
-                            }
-                        ]
-                    }
-                ], {
-                    onlyUpdateExistingItems: true
-                });
+                return catalog.enableByShareKeys(['C']);
             }).then(function () {
-                expect(catalog.group.items[0].isOpen).toBeFalsy();
-                expect(catalog.group.isOpen).toBeFalsy();
+                expect(catalog.group.items[0].isOpen).toBe(true);
+                expect(catalog.group.isOpen).toBe(true);
                 done();
             }).otherwise(fail);
         });
 
-        it('doesn\'t cause parent group to be opened if isEnabled is already true', function (done) {
+        it('works for multiple share keys', function (done) {
             catalog.updateFromJson([
                 {
                     name: 'A',
@@ -194,36 +145,51 @@ describe('Catalog', function() {
                             id: 'C',
                             name: 'C',
                             type: 'item',
-                            isEnabled: true
                         }
                     ]
                 },
                 {
                     name: 'B',
+                    type: 'group',
+                    items: [
+                        {
+                            id: 'D',
+                            name: 'D',
+                            type: 'item'
+                        }
+                    ]
+                }
+            ]).then(function() {
+                return catalog.enableByShareKeys(['C', 'D']);
+            }).then(function () {
+                expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
+                expect(catalog.group.items[1].items[0].isEnabled).toBe(true);
+                done();
+            }).otherwise(fail);
+        });
+
+        it('only enabled a catalog member after all those before it have finished loading', function (done) {
+            catalog.updateFromJson([
+                {
+                    name: 'A',
                     type: 'group'
                 }
             ]).then(function() {
-                return catalog.updateFromJson([
-                    {
-                        name: 'A',
-                        type: 'group'
-                    },
-                    {
-                        name: 'B',
-                        type: 'group',
-                        items: [
-                            {
-                                id: 'C',
-                                isEnabled: true
-                            }
-                        ]
-                    }
-                ], {
-                    onlyUpdateExistingItems: true
-                });
+                expect(catalog.group.items[0].items.length).toBe(0);
+
+                spyOn(catalog.group.items[0], 'load').and.returnValue(catalog.group.items[0].updateFromJson({
+                    items: [
+                        {
+                            id: 'C',
+                            name: 'C',
+                            type: 'item'
+                        }
+                    ]
+                }));
+
+                return catalog.enableByShareKeys(['Root Group/A', 'C']);
             }).then(function () {
-                expect(catalog.group.items[0].isOpen).toBeFalsy();
-                expect(catalog.group.isOpen).toBeFalsy();
+                expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
                 done();
             }).otherwise(fail);
         });
