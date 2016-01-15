@@ -277,7 +277,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(desc(1)).toContain('boots');
         }).otherwise(fail).then(done);
     });
-    
+
     it('has a blank in the description table for a missing number', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
@@ -303,14 +303,14 @@ describe('CsvCatalogItem with lat and lon', function() {
             csvItem2.url = 'test/csv/lat_lon_val.csv';
             return csvItem2.load().yield(csvItem2);
         }).then(function(csvItem2) {
-            var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
-            var minPix = Math.min.apply(null, pixelSizes);
-            var maxPix = Math.max.apply(null, pixelSizes);
-            // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
-            expect(maxPix).toEqual(csvItem._maxPix * 2);
-            expect(minPix).toEqual(csvItem._minPix * 2);
-        })
-        .otherwise(fail).then(done);
+                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                var minPix = Math.min.apply(null, pixelSizes);
+                var maxPix = Math.max.apply(null, pixelSizes);
+                // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
+                expect(maxPix).toEqual(csvItem._maxPix * 2);
+                expect(minPix).toEqual(csvItem._minPix * 2);
+            })
+            .otherwise(fail).then(done);
     });
 
     // Removed: not clear that this is correct behaviour, and it's failing.
@@ -546,7 +546,7 @@ describe('CsvCatalogItem with region mapping', function() {
             // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
             var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
             var regionNames = regionDetail.regionProvider.regions.map(getId);
-            
+
             expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
