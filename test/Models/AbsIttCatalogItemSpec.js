@@ -17,11 +17,12 @@ describe('AbsIttCatalogItem', function() {
         item = new AbsIttCatalogItem(terria);
     });
 
-    it('defaults to having no dataUrl', function() {
-        item.url = 'http://foo.bar';
-        expect(item.dataUrl).toBeUndefined();
-        expect(item.dataUrlType).toBeUndefined();
-    });
+    // Is this an important feature?
+    // it('defaults to having no dataUrl', function() {
+    //     item.url = 'http://foo.bar';
+    //     expect(item.dataUrl).toBeUndefined();
+    //     expect(item.dataUrlType).toBeUndefined();
+    // });
 
     it('uses explicitly-provided dataUrl and dataUrlType', function() {
         item.dataUrl = 'http://foo.com/data';
