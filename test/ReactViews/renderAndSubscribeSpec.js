@@ -59,6 +59,7 @@ describe('renderAndSubscribe', function() {
 
         spy.componentWillUnmount();
 
+        expect(result).toBe(5);
         expect(spy.componentWillUnmount).toHaveBeenCalled();
 
         someObject.foo = 6;
