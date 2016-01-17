@@ -6,6 +6,8 @@ Change Log
 
 * Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
   - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
+  - `AbsIttCatalogItem`: Completely rewritten; `dataSetID` has been deprecated in favor of `datasetId` (different capitalization). For the 2011 Australian Census data, requires `sa4_code_2011` to appear as an alias in `regionMapping.json` (it was previously missing).
+  - (PENDING) `ModelError` renamed to `TerriaError` and moved from `Models` to `Core` directory.
   - `TableDataSource`: Completely rewritten and moved from `Map` to `Models` directory.
   - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
   - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
