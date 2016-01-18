@@ -176,20 +176,20 @@ describe('AbsIttCatalogItem', function() {
             fakeServer.restore();
         });
 
+        // TODO: this test works on its own, but in the suite it fails with Unhandled request to URL: proxy/http://abs.example.com/?method=GetDatasetConcepts&datasetid=foo&format=json
         it('works with no active region', function(done) {
-
             item.updateFromJson({
                 name: 'Name',
                 datasetId: 'foo',
                 url: 'http://abs.example.com'
             });
             item.load().then(function() {
-                return item.dataSource.regionPromise.then(function(regionDetails) {
-                    // Just checks that it gets here without any errors.
-                    // Since no region column has been selected yet, do not expect any region details.
-                    expect(regionDetails).toBeUndefined();
-                    expect(item._concepts[0].activeItems.length).toEqual(0);
-                }).otherwise(fail);
+                return item.dataSource.regionPromise;
+            }).then(function(regionDetails) {
+                // Just checks that it gets here without any errors.
+                // Since no region column has been selected yet, do not expect any region details.
+                expect(regionDetails).toBeUndefined();
+                expect(item._concepts[0].activeItems.length).toEqual(0);
             }).otherwise(fail).then(done);
         });
 
