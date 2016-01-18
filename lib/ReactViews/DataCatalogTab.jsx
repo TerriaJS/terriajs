@@ -26,6 +26,10 @@ var DataCatalogTab = React.createClass({
       });
     },
 
+    onPreviewChange: function(){
+
+    },
+
     render: function() {
         var terria = this.props.terria;
         var dataCatalog = terria.catalog.group.items;

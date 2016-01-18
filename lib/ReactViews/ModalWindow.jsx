@@ -29,8 +29,6 @@ var ModalWindow = React.createClass({
         });
     },
 
-
-
     render: function() {
         return renderAndSubscribe(this, function() {
             return (<div className="data-panel-wrapper modal-wrapper fixed flex flex-center" id="data-panel-wrapper" aria-hidden={!this.state.isOpen}>

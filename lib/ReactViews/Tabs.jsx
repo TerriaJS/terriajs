@@ -3,13 +3,14 @@
 var React = require('react');
 var DataCatalogTab = require('./DataCatalogTab.jsx');
 var MyDataTab = require('./MyDataTab.jsx');
+var WelcomeTab = require('./WelcomeTab.jsx');
 // var CollectionsTab = require('./CollectionsTab.jsx');
 
 function getName(str1, str2) {
     return str1.concat(str2);
 }
 
-var items = ['data-catalog','my-data'];
+var items = ['welcome','data-catalog','my-data'];
 
 var Tabs = React.createClass({
     propTypes: {
@@ -29,7 +30,7 @@ var Tabs = React.createClass({
     },
 
     render: function() {
-        var panels = [<DataCatalogTab terria={this.props.terria}/>, <MyDataTab terria={this.props.terria}/>];
+        var panels = [<WelcomeTab />, <DataCatalogTab terria={this.props.terria}/>, <MyDataTab terria={this.props.terria}/>];
         return (
             <div className="tabs clearfix">
               <ul className="tablist list-reset flex" role="tablist">
