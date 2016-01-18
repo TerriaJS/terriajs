@@ -123,4 +123,14 @@ describe('TableColumn', function() {
         expect(result).toEqual(target);
     });
 
+    it('can divide two columns\' values', function() {
+        var result = TableColumn.divideValues(
+            new TableColumn('num', [40, 3, 8]),
+            new TableColumn('den', [10, 6, 0]),
+            'bad'
+        );
+        var target = [4, 0.5, 'bad'];
+        expect(result).toEqual(target);
+    });
+
 });
