@@ -30,7 +30,7 @@ var Tabs = React.createClass({
     },
 
     render: function() {
-        var panels = [<WelcomeTab />, <DataCatalogTab terria={this.props.terria}/>, <MyDataTab terria={this.props.terria}/>];
+        var panels = [<WelcomeTab terria= {this.props.terria} />, <DataCatalogTab terria={this.props.terria}/>, <MyDataTab terria={this.props.terria}/>];
         return (
             <div className="tabs clearfix">
               <ul className="tablist list-reset flex" role="tablist">
