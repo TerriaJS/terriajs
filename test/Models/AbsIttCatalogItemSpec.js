@@ -7,7 +7,7 @@ var Terria = require('../../lib/Models/Terria');
 var AbsIttCatalogItem = require('../../lib/Models/AbsIttCatalogItem');
 
 var sinon = require('sinon');
-var URI = require('urijs');
+// var URI = require('urijs');
 
 describe('AbsIttCatalogItem', function() {
     var terria;

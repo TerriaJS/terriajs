@@ -3,7 +3,6 @@
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 
-var arraysAreEqual = require('../../lib/Core/arraysAreEqual');
 var TableColumn = require('../../lib/Core/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 
