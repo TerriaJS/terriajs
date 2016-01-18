@@ -3,6 +3,7 @@
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 
+var arraysAreEqual = require('../../lib/Core/arraysAreEqual');
 var TableColumn = require('../../lib/Core/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 
@@ -99,6 +100,27 @@ describe('TableColumn', function() {
         var tableColumn = new TableColumn('date', data);
         expect(tableColumn.type).toEqual(VarType.SCALAR);
         expect(tableColumn.values).toEqual(data);
+    });
+
+    it('can sum three columns from array', function() {
+        var tableColumns = [
+            new TableColumn('one', [10, 1]),
+            new TableColumn('two', [25, 2.5]),
+            new TableColumn('three', [-2, 6])
+        ];
+        var result = TableColumn.sumValues(tableColumns);
+        var target = [10 + 25 - 2, 1 + 2.5 + 6];
+        expect(result).toEqual(target);
+    });
+
+    it('can sum three columns as arguments', function() {
+        var result = TableColumn.sumValues(
+            new TableColumn('one', [10, 1]),
+            new TableColumn('two', [25, 2.5]),
+            new TableColumn('three', [-2, 6])
+        );
+        var target = [10 + 25 - 2, 1 + 2.5 + 6];
+        expect(result).toEqual(target);
     });
 
 });
