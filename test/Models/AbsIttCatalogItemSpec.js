@@ -127,13 +127,56 @@ describe('AbsIttCatalogItem', function() {
                     ]
                 })
             );
+
+            fakeServer.respondWith(
+                'GET',
+                'http://abs.example.com/?method=GetCodeListValue&datasetid=foo&concept=REGIONTYPE&format=json',
+                JSON.stringify({
+                    "codes": [
+                        {
+                            "code":"AUS",
+                            "description":"Australia",
+                            "parentCode":"","parentDescription":""
+                        },
+                        {
+                            "code":"SA4",
+                            "description":"Statistical Area Level 4",
+                            "parentCode":"",
+                            "parentDescription":""
+                        }
+                    ]
+                })
+            );
+
+            fakeServer.respondWith(
+                'GET',
+                'data/regionMapping.json',
+                JSON.stringify({
+                    "regionWmsMap": {
+                        "SA4": {
+                            "layerName": "region_map:FID_SA4_2011_AUST",
+                            "server": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+                            "regionProp": "SA4_CODE11",
+                            "aliases": [
+                                "sa4_code_2011",
+                                "sa4_code",
+                                "sa4"
+                            ],
+                            "digits": 3,
+                            "description": "Statistical Area Level 4",
+                            "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json"
+                        }
+                    }
+                })
+            );
+
         });
 
         afterEach(function() {
             fakeServer.restore();
         });
 
-        it('works', function(done) {
+        it('works with no active region', function(done) {
 
             item.updateFromJson({
                 name: 'Name',
@@ -141,7 +184,12 @@ describe('AbsIttCatalogItem', function() {
                 url: 'http://abs.example.com'
             });
             item.load().then(function() {
-                console.log('boo');  // TODO: complete
+                return item.dataSource.regionPromise.then(function(regionDetails) {
+                    // Just checks that it gets here without any errors.
+                    // Since no region column has been selected yet, do not expect any region details.
+                    expect(regionDetails).toBeUndefined();
+                    expect(item._concepts[0].activeItems.length).toEqual(0);
+                }).otherwise(fail);
             }).otherwise(fail).then(done);
         });
 
