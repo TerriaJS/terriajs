@@ -1,6 +1,6 @@
 'use strict';
 var React = require('react');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
+var renderAndSubscribe = require('./renderAndSubscribe');
 
 //Individual dataset
 var DataCatalogItem = React.createClass({
@@ -10,8 +10,7 @@ var DataCatalogItem = React.createClass({
 
     getInitialState: function() {
         return {
-            isPreviewed: false,
-            status: this.getInitialStatus()
+            isPreviewed: false
         };
     },
 
@@ -29,63 +28,35 @@ var DataCatalogItem = React.createClass({
 
     addToMap: function(event) {
         event.preventDefault();
-        var that = this;
 
-        if (that.props.item.isEnabled === false) {
-            that.setState({
-                    status: 'loading'
-                });
-            when(that.props.item.load()).then(function() {
-                that.setState({
-                    status: 'loaded'
-                });
-            that.props.item.isEnabled = true;
-            window.nowViewingUpdate.raiseEvent();
-            });
-        } else {
-           this.props.item.isEnabled = false;
-           window.nowViewingUpdate.raiseEvent();
-           that.setState({
-                    status: 'disabled'
-                });
-        }
-
+        this.props.item.toggleEnabled();
         this.addToPreview(event);
     },
 
-    getInitialStatus: function(){
-        if (this.props.item.isEnabled === true){
-            if (this.props.item.isLoading === true){
-                return 'loading';
+    render: function() {
+        return renderAndSubscribe(this, function() {
+            var item = this.props.item;
+            var iconClass;
+
+            if (item.isEnabled){
+                if (item.isLoading){
+                    iconClass = 'icon icon-loader';
+                } else {
+                    iconClass = 'icon icon-minus';
+                }
             } else {
-                return 'loaded';
+                iconClass = 'icon icon-add';
             }
-        } else {
-            return 'disabled';
-        }
-    },
 
-  render: function(){
-    var item = this.props.item;
-    var iconClass;
-
-    switch (this.state.status) {
-    case 'disabled':
-        iconClass = 'icon icon-add';
-        break;
-    case 'loading':
-        iconClass = 'icon icon-loader';
-        break;
-    case 'loaded':
-        iconClass = 'icon icon-minus';
-        break;
-    default:
-        iconClass = '';
-    }
-
-    return (
-      <li className="clearfix data-catalog-item flex"><button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'><i className={iconClass}> </i></button><button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button></li>
-      );
+            return (
+                <li className="clearfix data-catalog-item flex">
+                    <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>
+                        <i className={iconClass}> </i>
+                    </button>
+                    <button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button>
+                </li>
+            );
+        });
     }
 });
 
