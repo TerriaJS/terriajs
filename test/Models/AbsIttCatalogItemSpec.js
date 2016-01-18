@@ -1,10 +1,13 @@
 'use strict';
 
-/*global require*/
+/*global require, fail*/
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 var Terria = require('../../lib/Models/Terria');
 var AbsIttCatalogItem = require('../../lib/Models/AbsIttCatalogItem');
+
+var sinon = require('sinon');
+var URI = require('urijs');
 
 describe('AbsIttCatalogItem', function() {
     var terria;
@@ -48,5 +51,100 @@ describe('AbsIttCatalogItem', function() {
         expect(item.dataCustodian).toBe('Data Custodian');
     });
 
+    describe('loading', function() {
+        var fakeServer;
+
+        beforeEach(function() {
+            fakeServer = sinon.fakeServer.create();
+            fakeServer.autoRespond = true;
+
+            fakeServer.respond(function(request) {
+                fail('Unhandled request to URL: ' + request.url);
+            });
+
+            fakeServer.respondWith(
+                'GET',
+                'data/abs_names.json',
+                JSON.stringify({
+                    AGE: "Age",
+                    MEASURE : {
+                        "Persons" : "Sex",
+                        "85 years and over" : "Age",
+                        "*" : "Measure"
+                    }
+                })
+            );
+
+            fakeServer.respondWith(
+                'GET',
+                'http://abs.example.com/?method=GetDatasetConcepts&datasetid=foo&format=json',
+                JSON.stringify({
+                    concepts: [
+                        "FREQUENCY",
+                        "STATE",
+                        "AGE",
+                        "REGIONTYPE",
+                        "REGION"
+                    ]
+                })
+            );
+
+            fakeServer.respondWith(
+                'GET',
+                'http://abs.example.com/?method=GetCodeListValue&datasetid=foo&concept=AGE&format=json',
+                JSON.stringify({
+                    codes: [
+                        {
+                            code: "A02",
+                            description: "0-2 years",
+                            parentCode: "",
+                            parentDescription: ""
+                        },
+                        {
+                            code: "0",
+                            description: "0",
+                            parentCode: "A02",
+                            parentDescription: "0-2 years"
+                        },
+                        {
+                            code: "1",
+                            description: "1",
+                            parentCode: "A02",
+                            parentDescription: "0-2 years"
+                        },
+                        {
+                            code: "2",
+                            description: "2",
+                            parentCode: "A02",
+                            parentDescription: "0-2 years"
+                        },
+                        {
+                            code: "OTHER",
+                            description: "Older than 2",
+                            parentCode: "",
+                            parentDescription: ""
+                        }
+                    ]
+                })
+            );
+        });
+
+        afterEach(function() {
+            fakeServer.restore();
+        });
+
+        it('works', function(done) {
+
+            item.updateFromJson({
+                name: 'Name',
+                datasetId: 'foo',
+                url: 'http://abs.example.com'
+            });
+            item.load().then(function() {
+                console.log('boo');  // TODO: complete
+            }).otherwise(fail).then(done);
+        });
+
+    });
 
 });
