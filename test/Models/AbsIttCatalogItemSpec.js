@@ -193,6 +193,9 @@ describe('AbsIttCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
+        // TODO: add a test of the "filter" param, eg.
+        // filter: ["MEASURE.3", "AGE.A04", "AGE.A10", "REGIONTYPE.SA4"]
+
     });
 
 });
