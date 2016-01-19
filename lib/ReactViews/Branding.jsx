@@ -1,17 +1,12 @@
 'use strict';
-var React = require('react');
-var ModalTriggerButton = require('./ModalTriggerButton.jsx');
 
-var Branding = React.createClass({
-    propTypes:{
-      terria: React.PropTypes.object
-    },
+import React from 'react';
+// import ModalTriggerButton from './ModalTriggerButton.jsx';
 
-    render: function() {
-        let imageUrl = './images/nationalmap-logo.png';
-            return (<h1>
-                    <ModalTriggerButton btnText={imageUrl} classNames = 'now-viewing__add'/>
-                    </h1>);
-    }
-});
-module.exports = Branding;
+export default class Branding extends React.Component {
+  render() {
+    return (
+        <img src="./images/nationalmap-logo.png" alt="national map" width="160" />
+    );
+  }
+}
