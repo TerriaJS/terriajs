@@ -44,7 +44,7 @@
                 <div class="now-viewing-item-icon-holder">
                     <button class="now-viewing-item-checkbox clickable" data-bind="visible: supportsToggleShown, click: toggleShown, cesiumSvgPath: { path: isShown ? $root.svgVisible : $root.svgInvisible, width: 32, height: 32 }, css: { 'now-viewing-shown-item': isShown }, attr: {tabindex: $root.isActive ? 0 : -1 }"></button>
                 </div>
-                <button class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css { 'now-viewing-shown-item': isShown }, attr: {  tabindex: $root.isActive ? 0 : -1 }"></button>
+                <button class="now-viewing-item-label clickable" data-bind="text: name, click: toggleLegendVisible, css: { 'now-viewing-shown-item': isShown }, attr: {  tabindex: $root.isActive ? 0 : -1 }"></button>
 
                 <div class="now-viewing-item-arrow-holder">
                     <button class="now-viewing-arrow" data-bind="click: toggleLegendVisible, cesiumSvgPath: { path: isLegendVisible ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, attr: {  tabindex: $root.isActive ? 0 : -1 }"></button>
