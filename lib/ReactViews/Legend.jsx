@@ -1,9 +1,8 @@
 'use strict';
-var React = require('react');
-var ModalTriggerButton = require('./ModalTriggerButton.jsx');
-var imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
-var defined = require('terriajs-cesium/Source/Core/defined');
-var renderAndSubscribe = require('./renderAndSubscribe');
+const React = require('react');
+const ModalTriggerButton = require('./ModalTriggerButton.jsx');
+const defined = require('terriajs-cesium/Source/Core/defined');
+const renderAndSubscribe = require('./renderAndSubscribe');
 
 // Maybe should be called nowViewingItem?
 var Legend = React.createClass({
@@ -53,9 +52,10 @@ var Legend = React.createClass({
             var legendUrl;
 
             if (nowViewingItem.legendUrl && nowViewingItem.legendUrl.length !== 0) {
-                legendUrl = nowViewingItem.legendUrl.match(imageUrlRegex);
-                if (legendUrl){
-                  legend = (<a href={legendUrl.input}><img src={legendUrl.input}/></a>);
+                legendUrl = nowViewingItem.legendUrl;
+
+                if (legendUrl && legendUrl.mimeType === "image/png"){
+                  legend = (<a href={legendUrl.url} target="_blank" ><img src={legendUrl.url}/></a>);
                 }
             }
             return (
