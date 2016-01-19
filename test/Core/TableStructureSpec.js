@@ -97,13 +97,20 @@ describe('TableStructure', function() {
         expect(tableStructure.columnsByType[VarType.LAT][0].name).toEqual('lat');
     });
 
-    it('counts the final row of CSV files with no trailing linefeed', function() {
+    it('counts the final row of CSV files with no trailing linefeed(s)', function() {
         var csvString = 'postcode,value\n0800,1\n0885,2';
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv(csvString);
         expect(tableStructure.columns[0].values.length).toEqual(2);
         expect(tableStructure.columns[1].values.length).toEqual(2);
 
+        csvString = csvString + '\n';
+        tableStructure = new TableStructure();
+        tableStructure.loadFromCsv(csvString);
+        expect(tableStructure.columns[0].values.length).toEqual(2);
+        expect(tableStructure.columns[1].values.length).toEqual(2);
+
+        // The ABS returns a csv data file for Australia with two final linefeeds.
         csvString = csvString + '\n';
         tableStructure = new TableStructure();
         tableStructure.loadFromCsv(csvString);
