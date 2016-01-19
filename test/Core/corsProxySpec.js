@@ -4,11 +4,17 @@
 var corsProxy = require('../../lib/Core/corsProxy');
 
 describe('corsProxy', function() {
+    var originalPageIsHttps;
+
     beforeEach(function() {
+        originalPageIsHttps = corsProxy.pageIsHttps;
         corsProxy.pageIsHttps = false;
+    });
+
+    afterEach(function() {
+        corsProxy.pageIsHttps = originalPageIsHttps;
         corsProxy.proxyDomains.length = 0;
         corsProxy.corsDomains.length = 0;
-        corsProxy.alwaysUseProxy = false;
     });
 
     it('does not proxy CORS requests', function() {
