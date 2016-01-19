@@ -14,18 +14,25 @@ var items = ['welcome','data-catalog','my-data'];
 
 var Tabs = React.createClass({
     propTypes: {
-      terria: React.PropTypes.object
+      terria: React.PropTypes.object,
+      activeTab: React.PropTypes.number
     },
 
     getInitialState: function() {
         return {
-            activeTab: 0
+            activeTab: this.props.activeTab
         };
     },
 
     clickTab: function(i) {
         this.setState({
             activeTab: i
+        });
+    },
+
+    componentWillReceiveProps: function() {
+        this.setState({
+            activeTab: this.props.activeTab
         });
     },
 
