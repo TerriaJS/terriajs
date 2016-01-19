@@ -64,10 +64,12 @@ $btn-setting-size: 35px;
 .btn{
   font-weight: 400;
   box-shadow: none;
-  border-color: transparent;
+  border: 0;
+  margin: 0;
   padding: $padding;
   text-align: left;
   cursor: pointer;
+  line-height: 21px;
   &:focus, &:hover{
     box-shadow: none;
     border-color: transparent;
@@ -76,6 +78,7 @@ $btn-setting-size: 35px;
 .btn-small{
   padding: 0;
 }
+
 
 .btn-catalogue,
 .btn-catalog-group{
@@ -260,7 +263,6 @@ $add-to-map-btn-size: 23px;
 //
 // Markup:
 // <button class="btn now-viewing__add">Add Data</button>
-// <button class="btn now-viewing__remove">Remove all</button>
 //
 // Style guide: 5.5
 //
@@ -288,12 +290,6 @@ $add-to-map-btn-size: 23px;
   }
   @include greybox();
 }
-
-.btn.now-viewing__remove {
-  @extend %colored-hover;
-  font-family: $font-pop;
-}
-
 
 // Clear search text button
 //

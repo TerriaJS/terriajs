@@ -25,26 +25,26 @@ var SidePanel = React.createClass({
             var terria = this.props.terria;
             var nowViewing = this.props.terria.nowViewing.items;
             var content = null;
-            var remove = null;
 
             if (nowViewing && nowViewing.length > 0) {
-                remove = (<li><button onClick={this.removeAll} className='btn now-viewing__remove'>{btnRemove}</button></li>);
-                content = nowViewing.map(function(item, i) {
-                    return (<Legend nowViewingItem={item} key={i} />);
-                });
+                content = (
+                <div className="now-viewing hide-if-searching">
+                    <ul className="now-viewing__header list-reset clearfix">
+                        <li className='col col-5'><label className='label'> Data Sets </label></li>
+                        <li className='col col-5'><button onClick={this.removeAll} className='btn'>{btnRemove}</button></li>
+                        <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
+                    </ul>
+                    <ul className="now-viewing__content list-reset">
+                        {nowViewing.map(function(item, i) {
+                                                    return (<Legend nowViewingItem={item} key={i} />);
+                                                })}
+                    </ul>
+                </div>);
             }
             return (<div>
                 <SearchBox terria={terria} dataSearch={false}/>
-                <div className="now-viewing hide-if-searching">
-                  <ul className="now-viewing__control list-reset clearfix">
-                    <li><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} /></li>
-                    {remove}
-                  </ul>
-                    {(nowViewing && nowViewing.length > 0) ? (<label className='block label-now-viewing-group'> Data Sets </label>) : null}
-                    <ul className="now-viewing__content list-reset">
-                        {content}
-                    </ul>
-                </div>
+                <div><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} /></div>
+                {content}
             </div>);
         });
     }

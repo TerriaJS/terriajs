@@ -13,8 +13,7 @@
 }
 
 @mixin greybox(){
-  border: $border-style;
-  background: rgba(#fff, 0.1);
+  background: $dark;
 }
 
 @mixin transform($transforms) {

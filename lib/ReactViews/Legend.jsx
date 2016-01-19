@@ -19,7 +19,6 @@ var Legend = React.createClass({
 
     removeFromMap: function() {
         this.props.nowViewingItem.isEnabled = false;
-        window.nowViewingUpdate.raiseEvent();
     },
 
     toggleDisplay: function() {
@@ -41,7 +40,6 @@ var Legend = React.createClass({
 
     changeOpacity: function(event) {
         this.props.nowViewingItem.opacity = event.target.value;
-        window.nowViewingUpdate.raiseEvent();
     },
 
     render: function() {
@@ -54,8 +52,8 @@ var Legend = React.createClass({
             if (nowViewingItem.legendUrl && nowViewingItem.legendUrl.length !== 0) {
                 legendUrl = nowViewingItem.legendUrl;
 
-                if (legendUrl && legendUrl.mimeType === "image/png"){
-                  legend = (<a href={legendUrl.url} target="_blank" ><img src={legendUrl.url}/></a>);
+                if (legendUrl && legendUrl.mimeType === 'image/png'){
+                  legend = (<a href={legendUrl.url} target='_blank' ><img src={legendUrl.url}/></a>);
                 }
             }
             return (

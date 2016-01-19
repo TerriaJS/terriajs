@@ -2,11 +2,8 @@
   font-family: $font-pop;
   height: 100vh;
   overflow: hidden;
-  padding: $padding-small;
   //temp
-  background-image: url('./TerriaJS/images/panel-bg.png');
-  background-repeat: no-repeat;
-  background-size: cover;
+  background: $dark;
 
   h1{
     margin: 0;

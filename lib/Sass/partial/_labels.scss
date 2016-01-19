@@ -1,9 +1,6 @@
-.label-now-viewing-group{
-  line-height: 3rem;
-  background-color: $dark;
-  padding: 0 $padding;
-  text-transform: uppercase;
-  margin: 5px 0;
+.label{
+  padding: $padding;
+  display: block;
 }
 
 .setting-panel__label, .share-panel__label{
@@ -14,3 +11,14 @@
 .label-no-results, .label-with-padding{
   padding: $padding;
 }
+
+.label-badge{
+  text-align: center;
+  border: 2px solid;
+  border-radius: 3px;
+  box-sizing: content-box;
+  padding: 0 $padding;
+  margin: $padding;
+  display: inline-block;
+}
+
