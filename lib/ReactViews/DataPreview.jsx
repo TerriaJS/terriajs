@@ -1,13 +1,13 @@
 'use strict';
 
-var React = require('react');
-var markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
-var DataPreviewMap = require('./DataPreviewMap.jsx');
-var defined = require('terriajs-cesium/Source/Core/defined');
-var renderAndSubscribe = require('./renderAndSubscribe');
+const React = require('react');
+const markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
+const DataPreviewMap = require('./DataPreviewMap.jsx');
+const defined = require('terriajs-cesium/Source/Core/defined');
+const renderAndSubscribe = require('./renderAndSubscribe');
 
 //Data preview section, for the preview map see DataPreviewMap
-var DataPreview = React.createClass({
+let DataPreview = React.createClass({
     propTypes: {
         previewed: React.PropTypes.object,
         terria: React.PropTypes.object
@@ -29,24 +29,24 @@ var DataPreview = React.createClass({
     },
 
     render: function() {
-            return renderAndSubscribe(this, function() {
-            var previewed = this.props.previewed;
-            var action = null;
+      return renderAndSubscribe(this, function() {
+        let previewed = this.props.previewed;
+        let action = null;
 
-            if (defined(previewed.type)){
-                action = (<ul className="list-reset flex col col-5 data-preview-action">
-                    <li><button className="btn" title ="share this data"><i className="icon icon-share"></i></button></li>
-                    <li><button onClick={this.toggleOnMap} className={'btn ' + (previewed.isEnabled ? 'btn-preview-remove-from-map' : 'btn-preview-add-to-map')} title ={previewed.isEnabled ? 'remove from map' : 'add to map'}><i className={previewed.isEnabled ? 'icon icon-minus2' : 'icon icon-plus'}></i>{previewed.isEnabled ? 'Remove' : 'Add'}</button></li>
-                    </ul>);
-            }
-            return (<figure><DataPreviewMap terria={this.props.terria} previewed={this.props.previewed}/><figcaption>
-                    <div className="title clearfix">
-                    <h4 className="col col-7">{previewed.name}</h4>
-                    {action}
-                    </div>
-                    <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
-                    </figcaption>
-                    </figure>);
+        if (defined(previewed.type)){
+            action = (<ul className="list-reset flex col col-5 data-preview-action">
+                <li><button className="btn" title ="share this data"><i className="icon icon-share"></i></button></li>
+                <li><button onClick={this.toggleOnMap} className={'btn ' + (previewed.isEnabled ? 'btn-preview-remove-from-map' : 'btn-preview-add-to-map')} title ={previewed.isEnabled ? 'remove from map' : 'add to map'}><i className={previewed.isEnabled ? 'icon icon-minus2' : 'icon icon-plus'}></i>{previewed.isEnabled ? 'Remove' : 'Add'}</button></li>
+                </ul>);
+        }
+        return (<figure><DataPreviewMap terria={this.props.terria} previewed={this.props.previewed}/><figcaption>
+                 <div className="title clearfix">
+                <h4 className="col col-7">{previewed.name}</h4>
+                {action}
+                </div>
+                <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
+                </figcaption>
+                </figure>);
         });
     }
 });

@@ -5,39 +5,38 @@ var Loader = require('./Loader.jsx');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var DataCatalogGroup = React.createClass({
-    propTypes: {
-        onClick: React.PropTypes.func,
-        group: React.PropTypes.object,
-        items: React.PropTypes.array
-    },
+  propTypes: {
+    onClick: React.PropTypes.func,
+    group: React.PropTypes.object,
+    items: React.PropTypes.array
+  },
 
-    getInitialState: function() {
-        //This is to make state update
-        return {
-            openId: ''
-        };
-    },
+  getInitialState: function() {
+    // This is to make state update
+    return {
+      openId: ''
+    };
+  },
 
-    handleClick: function(e) {
-        var that = this;
-        if (that.props.group.isOpen === false) {
-            that.setState({
-                openId: new Date()
-            });
-
-            when(that.props.group.load()).then(function() {
-                that.setState({
-                    openId: new Date()
-                });
-            });
-        } else {
-            that.setState({
-                openId: new Date()
-            });
-        }
-        //Should not change prop here
-        that.props.group.isOpen = !that.props.group.isOpen;
-    },
+  handleClick: (e)=>{
+      let that = this;
+      if (that.props.group.isOpen === false) {
+          that.setState({
+              openId: new Date()
+          });
+          when(that.props.group.load()).then(()=>{
+              that.setState({
+                  openId: new Date()
+              });
+          });
+      } else {
+          that.setState({
+              openId: new Date()
+          });
+      }
+      //Should not change prop here
+      that.props.group.isOpen = !that.props.group.isOpen;
+  },
 
     render: function() {
         var group = this.props.group;

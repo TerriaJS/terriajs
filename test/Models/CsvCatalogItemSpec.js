@@ -2,42 +2,43 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var Terria = require('../../lib/Models/Terria');
+var Color = require('terriajs-cesium/Source/Core/Color');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var CsvCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var DataTable = require('../../lib/Map/DataTable');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var sinon = require('sinon');
+var Terria = require('../../lib/Models/Terria');
 var TableStyle = require('../../lib/Map/TableStyle');
+var URI = require('urijs');
 var VarType = require('../../lib/Map/VarType');
-var Color = require('terriajs-cesium/Source/Core/Color');
 
-var terria;
-var csvItem;
-var greenTableStyle;
-beforeEach(function() {
-    terria = new Terria({
-        baseUrl: './',
-        regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
-
-    });
-    csvItem = new CsvCatalogItem(terria);
-
-    greenTableStyle = new TableStyle ({
-        "colorMap": [ 
-        {
-            "offset": 0,
-            "color": "rgba(0, 64, 0, 1.00)"
-        }, {
-            "offset": 1,
-            "color": "rgba(0, 255, 0, 1.00)"
-        } ]
-    });
-
-
-});
 
 describe('CsvCatalogItem', function() {
+    var terria;
+    var csvItem;
+    var greenTableStyle;
+
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './',
+            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json',
+        });
+
+        csvItem = new CsvCatalogItem(terria);
+
+        greenTableStyle = new TableStyle({
+            "colorMap": [{
+                "offset": 0,
+                "color": "rgba(0, 64, 0, 1.00)"
+            }, {
+                "offset": 1,
+                "color": "rgba(0, 255, 0, 1.00)"
+            }]
+        });
+    });
+
     it('has sensible type and typeName', function() {
         expect(csvItem.type).toBe('csv');
         expect(csvItem.typeName).toBe('Comma-Separated Values (CSV)');
@@ -123,58 +124,81 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('is able to generate a Legend', function(done) {
+        csvItem.url = 'test/csv/minimal.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            expect(csvItem.legendUrl.mimeType).toBe('image/png');
+            expect(csvItem.legendUrl.url).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
     it('identifies "lat" and "lon" fields', function(done) {
-        csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
+        csvItem.updateFromJson({
+            data: 'lat,lon,value\n-37,145,10'
+        });
         csvItem.load().then(function() {
             expect(csvItem.dataSource.dataset.hasLocationData()).toBe(true);
         }).otherwise(fail).then(done);
     });
     it('identifies "latitude" and "longitude" fields', function(done) {
-        csvItem.updateFromJson( { data: 'latitude,longitude,value\n-37,145,10' });
+        csvItem.updateFromJson({
+            data: 'latitude,longitude,value\n-37,145,10'
+        });
         csvItem.load().then(function() {
             expect(csvItem.dataSource.dataset.hasLocationData()).toBe(true);
         }).otherwise(fail).then(done);
     });
     it('does not mistakenly identify "latvian" and "lone_person" fields', function(done) {
-        csvItem.updateFromJson( { data: 'latvian,lone_person,lat,lon,value\n-37,145,-37,145,10' });
+        csvItem.updateFromJson({
+            data: 'latvian,lone_person,lat,lon,value\n-37,145,-37,145,10'
+        });
         csvItem.load().then(function() {
             expect(csvItem.dataSource.dataset.getVariableNamesByType(VarType.LON)).toEqual(['lon']);
             expect(csvItem.dataSource.dataset.getVariableNamesByType(VarType.LAT)).toEqual(['lat']);
         }).otherwise(fail).then(done);
     });
     it('handles numeric fields containing (quoted) thousands commas', function(done) {
-        csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"' });
+        csvItem.updateFromJson({
+            data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"'
+        });
         csvItem.load().then(function() {
             expect(csvItem.dataSource.dataset.hasLocationData()).toBe(true);
             expect(csvItem.dataSource.dataset.getDataValue('value', 0)).toEqual(1000);
-            expect(csvItem.dataSource.dataset.getDataValue('value', 1)).toBeCloseTo(234567.89,2);
+            expect(csvItem.dataSource.dataset.getDataValue('value', 1)).toBeCloseTo(234567.89, 2);
         }).otherwise(fail).then(done);
     });
 
     it('matches LGAs by code', function(done) {
-        csvItem.updateFromJson( { data: 'lga_code,value\n31000,1' });
+        csvItem.updateFromJson({
+            data: 'lga_code,value\n31000,1'
+        });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
             expect(csvItem.rowPropertiesByCode('31000').value).toBe(1);
-            // 242 is the shapefile index of LGA boundary 31000. What a crappy way to test...
-            expect(csvItem._colorFunc(242)).not.toEqual([0,0,0,0]);
+            // 1 is the index of LGA boundary 31000 in the response above.
+            expect(csvItem._colorFunc(1)).not.toEqual([0, 0, 0, 0]);
         }).otherwise(fail).then(done);
 
     });
     it('matches LGAs by names in various formats', function(done) {
-        csvItem.updateFromJson( { data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3' });
+        csvItem.updateFromJson({
+            data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3'
+        });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
-            expect(csvItem._colorFunc(121)).not.toEqual([0,0,0,0]);
-            expect(csvItem._colorFunc(180)).not.toEqual([0,0,0,0]);
-            expect(csvItem._colorFunc(197)).not.toEqual([0,0,0,0]);
+            expect(csvItem._colorFunc(0)).not.toEqual([0, 0, 0, 0]);
+            expect(csvItem._colorFunc(1)).not.toEqual([0, 0, 0, 0]);
+            expect(csvItem._colorFunc(2)).not.toEqual([0, 0, 0, 0]);
         }).otherwise(fail).then(done);
 
     });
     it('matches numeric state IDs with regexes', function(done) {
-        csvItem.updateFromJson( { data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90' });
+        csvItem.updateFromJson({
+            data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90'
+        });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
@@ -183,7 +207,9 @@ describe('CsvCatalogItem', function() {
     });
 
     it('matches SA4s', function(done) {
-        csvItem.updateFromJson( { data: 'sa4,value\n209,correct' });
+        csvItem.updateFromJson({
+            data: 'sa4,value\n209,correct'
+        });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
@@ -192,29 +218,29 @@ describe('CsvCatalogItem', function() {
 
     });
 
-
-
     it('respects tableStyle color ramping for regions', function(done) {
-        csvItem.updateFromJson( { 
+        csvItem.updateFromJson({
             data: 'lga_name,value\nCity of Melbourne,0\nGreater Geelong,5\nSydney (S),10',
-            tableStyle: greenTableStyle });
+            tableStyle: greenTableStyle
+        });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
             // let's not require a linear mapping
-            expect(csvItem._colorFunc(121)).toEqual([0,255,0,255]);
+            expect(csvItem._colorFunc(121)).toEqual([0, 255, 0, 255]);
             expect(csvItem._colorFunc(180)[1]).toBeGreaterThan(64);
             expect(csvItem._colorFunc(180)[1]).toBeLessThan(255);
-            expect(csvItem._colorFunc(197)).toEqual([0,64,0,255]);
+            expect(csvItem._colorFunc(197)).toEqual([0, 64, 0, 255]);
         }).otherwise(fail).then(done);
 
     });
     it('uses the requested region mapping column, not just the first one', function(done) {
         greenTableStyle.regionType = 'poa';
         greenTableStyle.regionVariable = 'postcode';
-        csvItem.updateFromJson( { 
+        csvItem.updateFromJson({
             url: 'test/csv/postcode_lga_val_enum.csv',
-            tableStyle: greenTableStyle });
+            tableStyle: greenTableStyle
+        });
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
             expect(csvItem._colorFunc).toBeDefined();
@@ -251,7 +277,9 @@ describe('CsvCatalogItem', function() {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
 
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+            function cval(i) {
+                return csvItem.dataSource.entities.values[i]._point._color._value;
+            }
             expect(cval(0)).not.toEqual(cval(1));
             expect(cval(0)).not.toEqual(cval(2));
             expect(cval(0)).not.toEqual(cval(3));
@@ -293,35 +321,6 @@ describe('CsvCatalogItem', function() {
         }).otherwise(fail).then(done);
     });
 
-
-    it('supports feature picking on region-mapped files', function(done) {
-        csvItem.url = 'test/csv/postcode_val_enum.csv';
-        csvItem.load().then(function() {
-            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(6);
-            expect(csvItem._regionMapped).toBe(true);
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("3124");
-            expect(r[0].description).toContain("42.42");
-            expect(r[0].description).toContain("the universe");
-        }).otherwise(fail).then(done);
-    });
-    it('supports feature picking on fuzzy-matched region-mapped files', function(done) {
-        csvItem.url = 'test/csv/lga_fuzzy_val.csv';
-        csvItem.load().then(function() {
-            expect(csvItem.dataSource.dataset.getRowCount()).toEqual(3);
-            expect(csvItem._regionMapped).toBe(true);
-            var ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(3698,2513,12,2.5323739090365693,-0.6604719122857645);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Boroondara (C)");
-            expect(r[0].description).toContain("42.42");
-            expect(r[0].description).toContain("the universe");
-        }).otherwise(fail).then(done);
-    });
     it('supports region-mapped files with dates', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
         //csvItem.tableStyle = { displayDuration: 5
@@ -341,9 +340,12 @@ describe('CsvCatalogItem', function() {
             expect(ip).toBeDefined();
         }).otherwise(fail).then(done);
     });
+
     it('supports region-mapped files with dates and displayDuration', function(done) {
         csvItem.url = 'test/csv/postcode_date_value.csv';
-        csvItem.tableStyle = new TableStyle({ displayDuration: 60 * 6 }); // 6 hours
+        csvItem.tableStyle = new TableStyle({
+            displayDuration: 60 * 6
+        }); // 6 hours
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
@@ -377,9 +379,12 @@ describe('CsvCatalogItem', function() {
             expect(source.getDataPointList(j('2015-08-07')).length).toBe(0);
         }).otherwise(fail).then(done);
     });
+
     it('supports lat-long files with dates and very long displayDuration', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
-        csvItem.tableStyle = new TableStyle ({ displayDuration: 60 * 24 * 7 }); // 7 days
+        csvItem.tableStyle = new TableStyle({
+            displayDuration: 60 * 24 * 7
+        }); // 7 days
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
@@ -410,7 +415,9 @@ describe('CsvCatalogItem', function() {
     });
     it('handles LGA names with states for disambiguation', function(done) {
         csvItem.url = 'test/csv/lga_state_disambig.csv';
-        csvItem.tableStyle = new TableStyle({ dataVariable: 'StateCapital' });
+        csvItem.tableStyle = new TableStyle({
+            dataVariable: 'StateCapital'
+        });
 
         csvItem.load().then(function() {
             expect(csvItem._regionMapped).toBe(true);
@@ -422,36 +429,17 @@ describe('CsvCatalogItem', function() {
 
         }).otherwise(fail).then(done);
     });
-    it('supports feature picking on disambiguated LGA names like Wellington, VIC', function(done) {
-        csvItem.url = 'test/csv/lga_state_disambig.csv';
-        var ip;
-        csvItem.load().then(function() {
-            expect(csvItem._regionMapped).toBe(true);
-            ip = csvItem._createImageryProvider();
-            expect(ip).toBeDefined();
-            return ip.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Wellington (S)");
-            expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
-            expect(r[0].description).toContain("Melbourne");
-        }).then(function() {
-            return ip.pickFeatures(233,152,8,2.600997237149669,-0.5686381345023742);
-        }).then(function(r) {
-            expect(r[0].name).toEqual("Wellington (A)");
-            expect(r[0].description).toContain("Wellington");
-            expect(r[0].description).toContain("Sydney");
-
-        }).otherwise(fail).then(done);
-    });
     it('has the right values in descriptions of lat-long datasets for feature picking', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
-            function desc(i) { return csvItem.dataSource.entities.values[i].description._value; }
+            function desc(i) {
+                return csvItem.dataSource.entities.values[i].description._value;
+            }
             expect(desc(0)).toContain('hello');
             expect(desc(1)).toContain('boots');
         }).otherwise(fail).then(done);
     });
-    
+
     it('is less than 2000 charecters when serialised to JSON then URLEncoded', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
         csvItem.load().then(function() {
@@ -471,27 +459,30 @@ describe('CsvCatalogItem', function() {
     });
     it('scales lat-lon points to a size ratio of 300% if scaleByValue true and respects scale value', function(done) {
         csvItem.url = 'test/csv/lat_lon_val.csv';
-        csvItem.tableStyle = new TableStyle({ scale: 5, scaleByValue: true });
+        csvItem.tableStyle = new TableStyle({
+            scale: 5,
+            scaleByValue: true
+        });
         return csvItem.load().then(function() {
-            var pixelSizes = csvItem.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
-            csvItem._minPix = Math.min.apply(null, pixelSizes);
-            csvItem._maxPix = Math.max.apply(null, pixelSizes);
-            // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
-            expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
-        }).then(function(minMax) {
-            var csvItem2 = new CsvCatalogItem(terria);
-            csvItem2.tableStyle = new TableStyle({ scale: 10, scaleByValue: true });
-            csvItem2.url = 'test/csv/lat_lon_val.csv';
-            return csvItem2.load().yield(csvItem2);
-        }).then(function(csvItem2) {
-            var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
-            var minPix = Math.min.apply(null, pixelSizes);
-            var maxPix = Math.max.apply(null, pixelSizes);
-            // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
-            expect(maxPix).toEqual(csvItem._maxPix * 2);
-            expect(minPix).toEqual(csvItem._minPix * 2);
-        })            
-        .otherwise(fail).then(done);
+                var pixelSizes = csvItem.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                csvItem._minPix = Math.min.apply(null, pixelSizes);
+                csvItem._maxPix = Math.max.apply(null, pixelSizes);
+                // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
+                expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
+            }).then(function(minMax) {
+                var csvItem2 = new CsvCatalogItem(terria);
+                csvItem2.tableStyle = new TableStyle({ scale: 10, scaleByValue: true });
+                csvItem2.url = 'test/csv/lat_lon_val.csv';
+                return csvItem2.load().yield(csvItem2);
+            }).then(function(csvItem2) {
+                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                var minPix = Math.min.apply(null, pixelSizes);
+                var maxPix = Math.max.apply(null, pixelSizes);
+                // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
+                expect(maxPix).toEqual(csvItem._maxPix * 2);
+                expect(minPix).toEqual(csvItem._minPix * 2);
+            })
+            .otherwise(fail).then(done);
     });
     // Removed: not clear that this is correct behaviour, and it's failing.
     xit('renders a point with no value in transparent black', function(done) {
@@ -504,5 +495,201 @@ describe('CsvCatalogItem', function() {
             done();
         });
     });
-    
+
+    describe('feature picking', function() {
+        var fakeServer;
+
+        beforeEach(function() {
+            sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
+            fakeServer = sinon.fakeServer.create();
+            fakeServer.autoRespond = true;
+
+            fakeServer.xhr.useFilters = true;
+            fakeServer.xhr.addFilter(function(method, url, async, username, password) {
+                // Allow requests for local files.
+                var uri = new URI(url);
+                var protocol = uri.protocol();
+                return !protocol && url.indexOf('//') !== 0;
+            });
+
+            fakeServer.respond(function(request) {
+                fail('Unhandled request to URL: ' + request.url);
+            });
+        });
+
+        afterEach(function() {
+            fakeServer.xhr.filters.length = 0;
+            fakeServer.restore();
+        });
+
+        it('works on region-mapped files', function(done) {
+            fakeServer.respondWith(
+                'GET',
+                'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_POA_2011_AUST.766",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 765,
+                            "POA_CODE": "3124",
+                            "POA_NAME": "3124",
+                            "SQKM": 7.29156648352383
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+
+            csvItem.url = 'test/csv/postcode_val_enum.csv';
+            csvItem.load().then(function() {
+                expect(csvItem.dataSource.dataset.getRowCount()).toEqual(6);
+                expect(csvItem._regionMapped).toBe(true);
+                var ip = csvItem._createImageryProvider();
+                expect(ip).toBeDefined();
+                return ip.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("3124");
+                expect(r[0].description).toContain("42.42");
+                expect(r[0].description).toContain("the universe");
+            }).otherwise(fail).then(done);
+        });
+
+        it('works on fuzzy-matched region-mapped files', function(done) {
+            fakeServer.respondWith(
+                'GET',
+                'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson',
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_LGA_2011_AUST.163",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 162,
+                            "LGA_CODE11": "21110",
+                            "LGA_NAME11": "Boroondara (C)",
+                            "STE_CODE11": "2",
+                            "STE_NAME11": "Victoria",
+                            "AREA_SQKM": 60.1808559111785
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+
+            csvItem.url = 'test/csv/lga_fuzzy_val.csv';
+            csvItem.load().then(function() {
+                expect(csvItem.dataSource.dataset.getRowCount()).toEqual(3);
+                expect(csvItem._regionMapped).toBe(true);
+                var ip = csvItem._createImageryProvider();
+                expect(ip).toBeDefined();
+                return ip.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("Boroondara (C)");
+                expect(r[0].description).toContain("42.42");
+                expect(r[0].description).toContain("the universe");
+            }).otherwise(fail).then(done);
+        });
+
+        it('works on disambiguated LGA names like Wellington, VIC', function(done) {
+            fakeServer.respondWith(
+                'GET',
+                'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson',
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_LGA_2011_AUST.143",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 142,
+                            "LGA_CODE11": "18150",
+                            "LGA_NAME11": "Wellington (A)",
+                            "STE_CODE11": "1",
+                            "STE_NAME11": "New South Wales",
+                            "AREA_SQKM": 4110.08848071889
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+
+            // Use a regular expression for this URL because IE9 has ~1e-10 differences in the bbox parameter.
+            fakeServer.respondWith(
+                'GET',
+                new RegExp('http://regionmap-dev\\.nationalmap\\.nicta\\.com\\.au/region_map/ows\\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\\.ogc\\.se_xml&styles=&tiled=true&service=WMS&version=1\\.1\\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\\.5285162\\d\\d%2C-4618019\\.5008772\\d\\d%2C16358747\\.0454802\\d\\d%2C-4539747\\.9839131\\d\\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson'),
+                JSON.stringify({
+                    "type": "FeatureCollection",
+                    "features": [{
+                        "type": "Feature",
+                        "id": "FID_LGA_2011_AUST.225",
+                        "geometry": {
+                            "type": "MultiPolygon",
+                            "coordinates": []
+                        },
+                        "geometry_name": "the_geom",
+                        "properties": {
+                            "FID": 224,
+                            "LGA_CODE11": "26810",
+                            "LGA_NAME11": "Wellington (S)",
+                            "STE_CODE11": "2",
+                            "STE_NAME11": "Victoria",
+                            "AREA_SQKM": 10817.3680807268
+                        }
+                    }],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "urn:ogc:def:crs:EPSG::4326"
+                        }
+                    }
+                }));
+            csvItem.url = 'test/csv/lga_state_disambig.csv';
+            var ip;
+            csvItem.load().then(function() {
+                expect(csvItem._regionMapped).toBe(true);
+                ip = csvItem._createImageryProvider();
+                expect(ip).toBeDefined();
+                return ip.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("Wellington (S)");
+                expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
+                expect(r[0].description).toContain("Melbourne");
+            }).then(function() {
+                return ip.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
+            }).then(function(r) {
+                expect(r[0].name).toEqual("Wellington (A)");
+                expect(r[0].description).toContain("Wellington");
+                expect(r[0].description).toContain("Sydney");
+
+            }).otherwise(fail).then(done);
+        });
+    });
 });
