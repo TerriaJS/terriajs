@@ -18,25 +18,26 @@ var DataCatalogGroup = React.createClass({
     };
   },
 
-  handleClick: (e)=>{
-      let that = this;
-      if (that.props.group.isOpen === false) {
-          that.setState({
-              openId: new Date()
-          });
-          when(that.props.group.load()).then(()=>{
-              that.setState({
-                  openId: new Date()
-              });
-          });
-      } else {
-          that.setState({
-              openId: new Date()
-          });
-      }
-      //Should not change prop here
-      that.props.group.isOpen = !that.props.group.isOpen;
-  },
+    handleClick: function(e) {
+        var that = this;
+        if (that.props.group.isOpen === false) {
+            that.setState({
+                openId: new Date()
+            });
+
+            when(that.props.group.load()).then(function() {
+                that.setState({
+                    openId: new Date()
+                });
+            });
+        } else {
+            that.setState({
+                openId: new Date()
+            });
+        }
+        //Should not change prop here
+        that.props.group.isOpen = !that.props.group.isOpen;
+    },
 
     render: function() {
         var group = this.props.group;
