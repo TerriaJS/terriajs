@@ -4,7 +4,6 @@ var React = require('react');
 var DataCatalogTab = require('./DataCatalogTab.jsx');
 var MyDataTab = require('./MyDataTab.jsx');
 var WelcomeTab = require('./WelcomeTab.jsx');
-// var CollectionsTab = require('./CollectionsTab.jsx');
 
 function getName(str1, str2) {
     return str1.concat(str2);
@@ -31,12 +30,11 @@ var Tabs = React.createClass({
     },
 
     componentWillReceiveProps: function() {
-        this.setState({
-            activeTab: this.props.activeTab
-        });
+        // This doesn't work
     },
 
     render: function() {
+
         var panels = [<WelcomeTab terria= {this.props.terria} />, <DataCatalogTab terria={this.props.terria}/>, <MyDataTab terria={this.props.terria}/>];
         return (
             <div className="tabs clearfix">

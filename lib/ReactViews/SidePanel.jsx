@@ -37,7 +37,7 @@ var SidePanel = React.createClass({
                 <SearchBox terria={terria} dataSearch={false}/>
                 <div className="now-viewing hide-if-searching">
                   <ul className="now-viewing__control list-reset clearfix">
-                    <li><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add'/></li>
+                    <li><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} /></li>
                     {remove}
                   </ul>
                     {(nowViewing && nowViewing.length > 0) ? (<label className='block label-now-viewing-group'> Data Sets </label>) : null}
