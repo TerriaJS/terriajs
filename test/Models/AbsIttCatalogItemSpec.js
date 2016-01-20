@@ -51,6 +51,32 @@ describe('AbsIttCatalogItem', function() {
         expect(item.dataCustodian).toBe('Data Custodian');
     });
 
+    it('can be round-tripped with serializeToJson and updateFromJson', function() {
+        item.updateFromJson({
+            name: 'Name',
+            description: 'Description',
+            rectangle: [-10, 10, -20, 20],
+            url: 'http://foo.bar/',
+        });
+        var json = item.serializeToJson();
+        var reconstructed = new AbsIttCatalogItem(terria);
+        reconstructed.updateFromJson(json);
+        // item.concepts has a circular dependency via its __knockoutSubscribable property,
+        // with itself being a subscriber, so it will not equal reconstructed.concepts.
+        // So check the arrays are equal, and then remove them before comparing the rest of the item.
+        expect(item.concepts.slice(), reconstructed.concepts.slice());
+        delete item.concepts;
+        delete item._concepts;
+        delete reconstructed.concepts;
+        delete reconstructed._concepts;
+        // for (var i = Object.keys(item).length - 1; i >= 0; i--) {
+        //     var k = Object.keys(item)[i];
+        //     console.log(k);
+        //     expect(reconstructed[k]).toEqual(item[k]);
+        // }
+        expect(reconstructed).toEqual(item);
+    });
+
     describe('loading', function() {
         var fakeServer;
 
@@ -195,6 +221,13 @@ describe('AbsIttCatalogItem', function() {
 
         // TODO: add a test of the "filter" param, eg.
         // filter: ["MEASURE.3", "AGE.A04", "AGE.A10", "REGIONTYPE.SA4"]
+
+        it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
+            item.load().then(function() {
+                var url = encodeURIComponent(JSON.stringify(item.serializeToJson()));
+                expect(url.length).toBeLessThan(2000);
+            }).otherwise(fail).then(done);
+        });
 
     });
 
