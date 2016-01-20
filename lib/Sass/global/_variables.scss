@@ -35,9 +35,10 @@ $feature-info-panel-width: 500px;
 $branding-height: 55px;
 $workbench-header: 180px;
 
-$border-color: rgba(#fff, 0.2);
+$border-color: rgba(#fff, 0.15);
 
-$border-style: 2px solid $border-color;
+$border-style: 1px solid $border-color;
+$box-shadow: 0px 6px 22px -6px rgba(#000, 0.75);
 
 
 $padding-small: 8px;

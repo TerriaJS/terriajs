@@ -31,7 +31,7 @@ var SharePanel = React.createClass({
         //To do : aria-hidden={!this.state.isOpen}
         return (
             <div className ={'map-nav-panel setting-panel share-panel ' + (this.state.isOpen ? 'is-open' : '')}>
-              <button onClick={this.togglePanel}  className='share-panel__button btn btn-map' title='share'><i className="icon icon-share"></i></button>
+              <button onClick={this.togglePanel}  className='share-panel__button btn btn-map' title='share'><i className="icon icon-share"></i> Share </button>
                 <div className ='share-panel-inner setting-panel-inner'>
                     <figure className="setting-panel-section"> <img src="http://placehold.it/350x150"/> </figure>
                     <div className="share-panel__label setting-panel-section">

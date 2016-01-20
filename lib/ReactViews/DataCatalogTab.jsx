@@ -44,7 +44,7 @@ var DataCatalogTab = React.createClass({
         let content = null;
         if(this.state.notSearching === true){
           content = (
-            <ul className = 'list-reset'>
+            <ul className = 'list-reset data-catalog'>
               {dataCatalog.map(function(group, i) {
                 return (<DataCatalogGroup group={group} key={i}/>);
               }, this)}

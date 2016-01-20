@@ -134,82 +134,54 @@ $add-to-map-btn-size: 23px;
 //
 // Style guide: 5.3
 
-%map-btn{
-  padding: 0 4px;
-  border-radius: 50%;
-  height: $btn-setting-size;
-  width: $btn-setting-size;
-  font-size: 27px;
-  box-shadow: 0 0px 3px 0 rgba(#000, 0.5), 0 0px 1px 0 rgba(#000, 0.3);
-  margin: 0 auto;
+.btn-map{
+  box-sizing: border-box;
+  margin: 0;
   display: block;
+  height: 40px;
+  background: $dark;
+  color: #fff;
+  text-transform: uppercase;
+  box-shadow: $box-shadow;
   .icon{
     display: block;
+    font-size: 1.5rem;
     line-height: 1;
   }
-}
-
-.btn-map{
-  background: #fff;
-  color: #000;
-  @extend %map-btn;
-  @include transition(all 0.5s ease-in-out);
   &:hover{
-    box-shadow: 0 0px 10px 0 rgba(#000, 0.3), 0 0px 5px 0 rgba(#000, 0.6);
   }
   .map-nav-panel.is-open &, &.is-active {
-    @include rotate(-180);
-    &:hover{
-    }
-  }
-}
-
-.btn.btn-full-screen{
-  background: $color-primary;
-  padding: 1px 2px;
-  overflow: hidden;
-  position: relative;
-  @extend %map-btn;
-  @include transition(all $animation-fast ease-in);
-  .icon{
-    line-height: 40px;
-    color: #fff;
-    @include transition(all $animation-fast ease-in);
-  }
-  .exit-full-screen{
-    font-size: 13px;
-    color: #fff;
-    text-transform: uppercase;
-    position: absolute;
-    padding: $padding;
-    display: block;
-    line-height: 1;
-    top: 0;
-    left: $btn-setting-size;
-    width: 135px;
-    @include transition(all $animation-fast ease-in);
-  }
-  &.is-active{
-    width: 130px;
-    border-radius: 10px;
-    .exit-full-screen{
-      left: 0;
-    }
-    .icon{
-      margin-left: - $btn-setting-size;
-    }
+    background: $color-primary;
   }
 }
 
 .btn.share-panel__button{
-  padding: 0px 3px;
+  .icon{
+    position: absolute;
+    left: 3px;
+  }
+  padding-left: 30px;
+  border-radius: 3px 0 0 3px;
+  border-right: 1px solid rgba(#fff, 0.15);
 }
 
-.btn-map{
-    .icon-sphere{
-    margin-top: -1px;
-  }
+.btn.btn-full-screen{
+  margin-right: $padding;
+  border-radius: 0 3px 3px 0;
 }
+
+.btn.setting-panel__button{
+  border-radius: 3px 0 0 3px;
+  border-right: 1px solid rgba(#fff, 0.15);
+
+}
+
+.btn.about-link__button{
+
+  border-radius: 0 3px 3px 0;
+}
+
+
 
 // Modal window tab buttons
 //
@@ -275,10 +247,11 @@ $add-to-map-btn-size: 23px;
   line-height: 3rem;
   text-transform: uppercase;
   font-size: $font-size-small;
-  padding: 0 $padding 0 $padding*4;
+  padding: 0 $padding*4;
   font-family: $font-pop;
   position: relative;
   background: $color-primary;
+  text-align: center;
   @extend .icon;
   @extend .icon-add;
   &:before{
@@ -355,6 +328,7 @@ $add-to-map-btn-size: 23px;
   padding: 0;
   position: relative;
   display: block;
+  line-height: 1.2;
   img{
     width: 100%;
     height: auto;
@@ -406,8 +380,10 @@ $add-to-map-btn-size: 23px;
   text-align: center;
   width: 100%;
   line-height: 4;
-  @include greybox();
+  background: rgba(#fff, 0.15);
+  border: 1px solid transparent;
   &:hover{
+      border: $border-style;
   }
   &.is-active{
     background: rgba(#fff, 0.8);

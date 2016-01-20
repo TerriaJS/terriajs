@@ -25,8 +25,9 @@ var MapNavigation = React.createClass({
         return (<div className='map-navigation'>
                   <ul className='list-reset flex map-navigation__menu'>
                   <li><SettingPanel terria= {this.props.terria} allBaseMaps = {this.props.allBaseMaps} terriaViewer={this.props.terriaViewer}/></li>
-                  <li><SharePanel terria={this.props.terria}/></li>
                   <li><FullScreenButton terria={this.props.terria} /></li>
+                  <li><SharePanel terria={this.props.terria}/></li>
+                  <li><a className='btn btn-map about-link__button' href='#'> About </a></li>
                   </ul>
                   {compass}
                   <ZoomControl terria={this.props.terria} />

@@ -4,12 +4,12 @@
 }
 
 .setting-panel__label, .share-panel__label{
-  display: block;
-  padding-bottom: $padding;
+  text-transform: uppercase;
+  padding: $padding 0;
 }
 
-.label-no-results, .label-with-padding{
-  padding: $padding;
+.active-map__label{
+  padding: $padding 0;
 }
 
 .label-badge{

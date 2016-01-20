@@ -19,7 +19,8 @@ var SettingPanel = React.createClass({
     },
     getInitialState: function() {
         return {
-            isOpen: false
+            isOpen: false,
+            activeMap: this.props.terria.baseMap.name
         };
     },
 
@@ -33,6 +34,18 @@ var SettingPanel = React.createClass({
         this.props.terria.baseMap = baseMap.catalogItem;
         this.props.terriaViewer.updateBaseMap();
         window.terriaViewerUpdate.raiseEvent();
+    },
+
+    mouseEnterBaseMap: function(baseMap, event) {
+        this.setState({
+            activeMap: baseMap.catalogItem.name
+        });
+    },
+
+    mouseLeaveBaseMap: function(baseMap, event) {
+        this.setState({
+            activeMap: this.props.terria.baseMap.name
+        });
     },
 
     selectViewer: function(viewer, event) {
@@ -72,10 +85,11 @@ var SettingPanel = React.createClass({
                 </ul>
                 </div>
                 <div className='setting-panel-section setting-panel__basemap'>
-                <label className='setting-panel__label'> Base Map </label>
+                <label className='label setting-panel__label'> Base Map </label>
+                <label className='label active-map__label'>{this.state.activeMap}</label>
                 <ul className='setting-panel__basemap-selector list-reset clearfix'>
                 {this.props.allBaseMaps.map(function(baseMap, i){
-                      return ( <li key ={i} className='basemap col col-4'><button className={'btn btn-basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')} onClick={that.selectBaseMap.bind(this,baseMap)}><img alt={baseMap.catalogItem.name} src ={baseMap.image}/>{baseMap.catalogItem.name}</button></li>);
+                      return ( <li key ={i} className='basemap col col-4'><button className={'btn btn-basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')} onClick={that.selectBaseMap.bind(this, baseMap)} onMouseEnter={that.mouseEnterBaseMap.bind(this, baseMap)} onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}><img alt={baseMap.catalogItem.name} src ={baseMap.image}/></button></li>);
                   }, this)}
                 </ul>
         </div>
