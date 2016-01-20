@@ -8,7 +8,7 @@
     overflow-y: auto;
   }
   .data-panel &{
-    max-height: 300px;
+    max-height: calc(60vh - 100px);
     overflow-y: auto;
   }
 }

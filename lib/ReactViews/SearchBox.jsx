@@ -175,7 +175,7 @@ let SearchBox = React.createClass({
 
         var linkToSearchData = null;
         if ((this.props.dataSearch === false) && value.length > 0){
-            linkToSearchData = (<li><ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.openDataCatalogSearch} activeTab={1} /></li>);
+            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.openDataCatalogSearch} activeTab={1} />);
         }
 
         return (
