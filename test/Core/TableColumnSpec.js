@@ -101,4 +101,35 @@ describe('TableColumn', function() {
         expect(tableColumn.values).toEqual(data);
     });
 
+    it('can sum three columns from array', function() {
+        var tableColumns = [
+            new TableColumn('one', [10, 1]),
+            new TableColumn('two', [25, 2.5]),
+            new TableColumn('three', [-2, 6])
+        ];
+        var result = TableColumn.sumValues(tableColumns);
+        var target = [10 + 25 - 2, 1 + 2.5 + 6];
+        expect(result).toEqual(target);
+    });
+
+    it('can sum three columns as arguments', function() {
+        var result = TableColumn.sumValues(
+            new TableColumn('one', [10, 1]),
+            new TableColumn('two', [25, 2.5]),
+            new TableColumn('three', [-2, 6])
+        );
+        var target = [10 + 25 - 2, 1 + 2.5 + 6];
+        expect(result).toEqual(target);
+    });
+
+    it('can divide two columns\' values', function() {
+        var result = TableColumn.divideValues(
+            new TableColumn('num', [40, 3, 8]),
+            new TableColumn('den', [10, 6, 0]),
+            'bad'
+        );
+        var target = [4, 0.5, 'bad'];
+        expect(result).toEqual(target);
+    });
+
 });
