@@ -70,6 +70,8 @@
 
 .feature-info-panel-body {
     .opaque-to-input;
+
+    position: relative;
 }
 
 .feature-info-panel-sections {
@@ -126,7 +128,7 @@
     color: @info-text-color;
 }
 
-.feature-info-panel-toggle-raw-data-button {
+.feature-info-panel-text-button {
     cursor: pointer;
     font-size: 10pt;
     float: right;
@@ -136,7 +138,80 @@
 
     &:hover {
         color: @panel-emphasized-text-color;
+        text-decoration: underline;
     }
+}
+
+.feature-info-panel-download-dropdown-options-visible {
+    .feature-info-panel-download-options {
+        display: block;
+    }
+
+    .feature-info-panel-download-show-options {
+        transform: rotate(180deg);
+    }
+}
+
+.feature-info-panel-download-show-options, .feature-info-panel-download-icon {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
+.feature-info-panel-download-show-options {
+    cursor: pointer;
+    margin-top: 10px;
+    vertical-align: top;
+
+    &:hover {
+        fill: @panel-emphasized-text-color;
+    }
+}
+
+.feature-info-panel-download-dropdown {
+    float: right;
+    padding: 0px 5px;
+    background-color: rgb(76, 78, 79);
+    margin: 10px;
+    fill: @info-text-color;
+}
+
+.feature-info-panel-download-options {
+    display: none;
+    position: fixed;
+    background-color: rgb(76, 78, 79);
+    margin-top: 2px;
+
+    & .feature-info-panel-download-option {
+        margin-left: 32px;
+    }
+}
+
+.feature-info-panel-download-option {
+    color: @info-text-color;
+    display: inline-block;
+    padding: 6px 12px 2px 2px;
+    margin: 4px 1px 4px 3px;
+    height: 19px;
+
+    &:hover {
+        color: @panel-emphasized-text-color;
+        fill: @panel-emphasized-text-color;
+        text-decoration: none;
+    }
+}
+
+.feature-info-panel-download-option-first {
+    border-right: 1px solid #CCCCCC;
+}
+
+.feature-info-panel-download-text {
+    vertical-align: 3px;
+}
+
+.feature-info-panel-download-icon {
+    margin-right: 4px;
 }
 
 .cesium-infoBox-defaultTable td {
