@@ -161,15 +161,16 @@ describe('AbsIttCatalogItem', function() {
                 JSON.stringify({
                     "codes": [
                         {
-                            "code":"AUS",
-                            "description":"Australia",
-                            "parentCode":"","parentDescription":""
+                            "code": "AUS",
+                            "description": "Australia",
+                            "parentCode": "",
+                            "parentDescription": ""
                         },
                         {
-                            "code":"SA4",
-                            "description":"Statistical Area Level 4",
-                            "parentCode":"",
-                            "parentDescription":""
+                            "code": "SA4",
+                            "description": "Statistical Area Level 4",
+                            "parentCode": "",
+                            "parentDescription": ""
                         }
                     ]
                 })
@@ -214,9 +215,22 @@ describe('AbsIttCatalogItem', function() {
 
             fakeServer.respondWith(
                 'GET',
+                'http://abs.example.com/?method=GetGenericData&datasetid=foo&and=REGIONTYPE.SA4%2CAGE.A02&or=REGION&format=csv',
+                'Time,Value,REGION,Description\n2011,26000,101,Region101\n2011,31000,102,Region102'
+            );
+
+            fakeServer.respondWith(
+                'GET',
                 'data/2011Census_TOT_AUS.csv',
                 'AUS,Tot_P_M,Tot_P_F,Tot_P_P\n0,10600000,11000000,21600000'
             );
+
+            fakeServer.respondWith(
+                'GET',
+                'data/2011Census_TOT_SA4.csv',
+                'SA4,Tot_P_M,Tot_P_F,Tot_P_P\n101,104000,104000,208000\n102,150000,160000,310000'
+            );
+
 
             fakeServer.respondWith(
                 'GET',
@@ -228,6 +242,15 @@ describe('AbsIttCatalogItem', function() {
                 })
             );
 
+            fakeServer.respondWith(
+                'GET',
+                'data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json',
+                JSON.stringify({
+                    "layer": "region_map:FID_SA4_2011_AUST",
+                    "property": "SA4_CODE11",
+                    "values": [101,102]
+                })
+            );
         });
 
         afterEach(function() {
@@ -253,8 +276,23 @@ describe('AbsIttCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
-        // TODO: add a test of the "filter" param, eg.
-        // filter: ["MEASURE.3", "AGE.A04", "AGE.A10", "REGIONTYPE.SA4"]
+        it('works with filter parameter', function(done) {
+            item.updateFromJson({
+                name: 'Name',
+                datasetId: 'foo',
+                url: 'http://abs.example.com',
+                filter: ["REGIONTYPE.SA4"]  // Should use SA4 now
+            });
+            item.load().then(function() {
+                return item.dataSource.regionPromise;
+            }).then(function(regionDetails) {
+                expect(regionDetails).toBeDefined();
+                var columnNames = item._dataSource.tableStructure.getColumnNames();
+                expect(columnNames.slice(0, 3)).toEqual(["sa4_code_2011", "Year", "0-2 years"]);
+                var percentage = item._dataSource.tableStructure.activeItems[0].values[0];
+                expect(percentage).toEqual(12.5);  // 26 / 208 * 100
+            }).otherwise(fail).then(done);
+        });
 
         it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
             item.updateFromJson({
