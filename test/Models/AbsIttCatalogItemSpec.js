@@ -41,14 +41,14 @@ describe('AbsIttCatalogItem', function() {
             description: 'Description',
             rectangle: [-10, 10, -20, 20],
             url: 'http://foo.bar',
-            dataCustodian: 'Data Custodian',
+            datasetId: 'foo'
         });
         expect(item.name).toBe('Name');
         expect(item.description).toBe('Description');
         expect(item.rectangle).toEqual(Rectangle.fromDegrees(-10, 10, -20, 20));
         expect(item.type).toBe('abs-itt');
         expect(item.url.indexOf('http://foo.bar')).toBe(0);
-        expect(item.dataCustodian).toBe('Data Custodian');
+        expect(item.datasetId).toBe('foo');
     });
 
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
@@ -57,6 +57,7 @@ describe('AbsIttCatalogItem', function() {
             description: 'Description',
             rectangle: [-10, 10, -20, 20],
             url: 'http://foo.bar/',
+            datasetId: 'foo'
         });
         var json = item.serializeToJson();
         var reconstructed = new AbsIttCatalogItem(terria);
@@ -191,8 +192,39 @@ describe('AbsIttCatalogItem', function() {
                             "digits": 3,
                             "description": "Statistical Area Level 4",
                             "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json"
+                        },
+                        "AUS": {
+                            "layerName": "region_map:FID_AUS_2011_AUST",
+                            "server": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+                            "regionProp": "AUS_CODE",
+                            "aliases": [
+                                "aus"
+                            ],
+                            "regionIdsFile": "data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json"
                         }
                     }
+                })
+            );
+
+            fakeServer.respondWith(
+                'GET',
+                'http://abs.example.com/?method=GetGenericData&datasetid=foo&and=REGIONTYPE.AUS%2CAGE.A02&or=REGION&format=csv',
+                'Time,Value,REGION,Description\n2011,5400000,0,Australia'
+            );
+
+            fakeServer.respondWith(
+                'GET',
+                'data/2011Census_TOT_AUS.csv',
+                'AUS,Tot_P_M,Tot_P_F,Tot_P_P\n0,10600000,11000000,21600000'
+            );
+
+            fakeServer.respondWith(
+                'GET',
+                'data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json',
+                JSON.stringify({
+                    "layer": "region_map:FID_AUS_2011_AUST",
+                    "property": "AUS_CODE",
+                    "values": [0]
                 })
             );
 
@@ -202,8 +234,7 @@ describe('AbsIttCatalogItem', function() {
             fakeServer.restore();
         });
 
-        // TODO: this test works on its own, but in the suite it fails with Unhandled request to URL: proxy/http://abs.example.com/?method=GetDatasetConcepts&datasetid=foo&format=json
-        it('works with no active region', function(done) {
+        it('works', function(done) {
             item.updateFromJson({
                 name: 'Name',
                 datasetId: 'foo',
@@ -212,10 +243,13 @@ describe('AbsIttCatalogItem', function() {
             item.load().then(function() {
                 return item.dataSource.regionPromise;
             }).then(function(regionDetails) {
-                // Just checks that it gets here without any errors.
-                // Since no region column has been selected yet, do not expect any region details.
-                expect(regionDetails).toBeUndefined();
-                expect(item._concepts[0].activeItems.length).toEqual(0);
+                expect(regionDetails).toBeDefined();
+                var columnNames = item._dataSource.tableStructure.getColumnNames();
+                expect(columnNames.slice(0, 3)).toEqual(["aus", "Year", "0-2 years"]);
+                expect(item._concepts[0].activeItems.length).toEqual(1);
+                expect(item.displayPercent).toBe(true);
+                var percentage = item._dataSource.tableStructure.activeItems[0].values[0];
+                expect(percentage).toEqual(25);  // 54 / 216 * 100
             }).otherwise(fail).then(done);
         });
 
@@ -223,6 +257,12 @@ describe('AbsIttCatalogItem', function() {
         // filter: ["MEASURE.3", "AGE.A04", "AGE.A10", "REGIONTYPE.SA4"]
 
         it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
+            item.updateFromJson({
+                name: 'Name',
+                description: 'Description',
+                url: 'http://abs.example.com/',
+                datasetId: 'foo'
+            });
             item.load().then(function() {
                 var url = encodeURIComponent(JSON.stringify(item.serializeToJson()));
                 expect(url.length).toBeLessThan(2000);
