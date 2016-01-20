@@ -39,11 +39,11 @@ gulp.task('release-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(testGlob), true);
 });
 
-gulp.task('makeschema', function(done) {
-    child_exec('npm run makeschema', undefined, done);
+gulp.task('make-schema', function(done) {
+    child_exec('npm run make-schema', undefined, done);
 });
 
-gulp.task('release', ['release-specs', 'makeschema']);
+gulp.task('release', ['release-specs', 'make-schema']);
 
 gulp.task('watch-specs', ['prepare-cesium'], function() {
     return watch(specJSName, glob.sync(testGlob), false);
