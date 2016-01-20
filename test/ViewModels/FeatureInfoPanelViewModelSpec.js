@@ -152,7 +152,8 @@ describe('FeatureInfoPanelViewModel templating', function() {
             return panel.showFeatures(pickedFeatures).then(function() {
                 expect(regex.test(panel.sections[0].rawData.replace(/\n/g, ''))).toBe(true);
             });
-        }).otherwise(done.fail).then(done);
+        }).then(done).otherwise(done.fail);
+
     });
 
     it('uses and completes a string-form featureInfoTemplate if present', function(done) {
@@ -167,7 +168,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
 
             return panel.showFeatures(pickedFeatures).then(function() {
                 expect(panel.sections[0].templatedInfo).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
-            });
+            }).otherwise(done.fail).then(done);
         }).otherwise(done.fail);
     });
 
@@ -184,7 +185,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             return panel.showFeatures(pickedFeatures).then(function() {
                 expect(panel.sections[0].templatedInfo).toBe('historic.# -12; file.number. 10; documents.#1 4');
             });
-        }).otherwise(done.fail);
+        }).then(done).otherwise(done.fail);
     });
 
     it('must use triple braces to embed html in template', function(done) {
@@ -196,17 +197,17 @@ describe('FeatureInfoPanelViewModel templating', function() {
             feature.properties['name'] = 'Jay<br>';
             var pickedFeatures = new PickedFeatures();
             pickedFeatures.features.push(feature);
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function () {});
+            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
-            return panel.showFeatures(pickedFeatures).then(function () {
+            return panel.showFeatures(pickedFeatures).then(function() {
                 expect(panel.sections[0].templatedInfo).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
             });
-        }).otherwise(done.fail).then(done);
+        }).then(done).otherwise(done.fail);
+
     });
 
     it('can use a json featureInfoTemplate with partials', function(done) {
         item.featureInfoTemplate = {template: '<div>test {{>foobar}}</div>', partials: {foobar: '<b>{{type}}</b>'}};
-
         return item.load().then(function() {
             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
             panel.terria.nowViewing.add(item);
@@ -218,7 +219,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
             return panel.showFeatures(pickedFeatures).then(function() {
                 expect(panel.sections[0].templatedInfo).toBe('<div>test <b>Hoop_Big</b></div>');
             });
-        }).otherwise(done.fail).then(done);
+        }).then(done).otherwise(done.fail);
     });
 
     it('sets the name from featureInfoTemplate', function(done) {
@@ -260,24 +261,24 @@ describe('FeatureInfoPanelViewModel templating', function() {
             return panel.showFeatures(pickedFeatures).then(function() {
                 var recursedHtml = ''
                     + '<ul>'
-                        + '<li>Alice'
-                            + '<ul>'
-                                + '<li>' + 'Bailey' + '<ul></ul>' + '</li>'
-                                + '<li>' + 'Beatrix' + '<ul></ul>' + '</li>'
-                            + '</ul>'
-                        + '</li>'
-                        + '<li>Xavier'
-                            + '<ul>'
-                                + '<li>' + 'Yann' + '<ul></ul>' + '</li>'
-                                + '<li>' + 'Yvette' + '<ul></ul>' + '</li>'
-                            + '</ul>'
-                        + '</li>'
+                    +   '<li>Alice'
+                    +       '<ul>'
+                    +           '<li>' + 'Bailey' + '<ul></ul>' + '</li>'
+                    +           '<li>' + 'Beatrix' + '<ul></ul>' + '</li>'
+                    +       '</ul>'
+                    +   '</li>'
+                    +   '<li>Xavier'
+                    +       '<ul>'
+                    +           '<li>' + 'Yann' + '<ul></ul>' + '</li>'
+                    +           '<li>' + 'Yvette' + '<ul></ul>' + '</li>'
+                    +       '</ul>'
+                    +   '</li>'
                     + '</ul>';
-
                 expect(panel.sections[0].templatedInfo).toBe(recursedHtml);
             });
         }).then(done).otherwise(done.fail);
     });
+
 });
 
 describe('FeatureInfoPanelViewModel CZML templating', function() {
@@ -353,6 +354,7 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
                 expect(panel.sections[0].templatedInfo).toEqual(targetDEF);
             });
         }).then(done).otherwise(done.fail);
+
     });
 });
 
