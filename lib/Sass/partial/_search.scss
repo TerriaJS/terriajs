@@ -1,20 +1,15 @@
-.is-searching ~ .hide-if-searching{
-  display: none;
-}
-
 .search-results{
   margin-top: 0.5rem;
-  height: auto;
-  max-height: 0;
-  opacity: 0;
+  background: rgba(#fff, 0.15);
+  max-height: 100%;
   @include transition(all 0.5s ease-in-out);
   .workbench &{
-    max-height: calc(100vh - 140px);
+    max-height: calc(100vh - #{$work-bench-header});
     overflow-y: auto;
   }
-  .is-searching &{
-    opacity: 1;
+  .data-panel &{
+    max-height: 300px;
+    overflow-y: auto;
   }
 }
-
 

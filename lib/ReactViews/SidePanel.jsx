@@ -16,8 +16,20 @@ var SidePanel = React.createClass({
         terria: React.PropTypes.object
     },
 
+    getInitialState: function() {
+        return {
+            notSearching: true
+        };
+    },
+
     removeAll: function() {
         this.props.terria.nowViewing.removeAll();
+    },
+
+    searchStart: function(_notSearching){
+        this.setState({
+            notSearching: _notSearching
+        });
     },
 
     render: function() {
@@ -26,7 +38,7 @@ var SidePanel = React.createClass({
             var nowViewing = this.props.terria.nowViewing.items;
             var content = null;
 
-            if (nowViewing && nowViewing.length > 0) {
+            if ((nowViewing && nowViewing.length > 0) && this.state.notSearching === true) {
                 content = (
                 <div className="now-viewing hide-if-searching">
                     <ul className="now-viewing__header list-reset clearfix">
@@ -35,15 +47,16 @@ var SidePanel = React.createClass({
                         <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
                     </ul>
                     <ul className="now-viewing__content list-reset">
-                        {nowViewing.map(function(item, i) {
-                                                    return (<Legend nowViewingItem={item} key={i} />);
-                                                })}
+                        {nowViewing.map((item, i)=>(<Legend nowViewingItem={item} key={i} />))}
                     </ul>
                 </div>);
             }
-            return (<div>
-                <SearchBox terria={terria} dataSearch={false}/>
+            return (
+                <div>
+                <div className='workbench__header'>
+                <SearchBox terria={terria} dataSearch={false} callback={this.searchStart}/>
                 <div><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} /></div>
+                </div>
                 {content}
             </div>);
         });

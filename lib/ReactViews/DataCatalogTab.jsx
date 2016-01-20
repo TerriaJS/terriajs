@@ -12,7 +12,8 @@ var DataCatalogTab = React.createClass({
 
     getInitialState: function() {
         return {
-            previewed: undefined
+            previewed: undefined,
+            notSearching: true
         };
     },
 
@@ -30,18 +31,30 @@ var DataCatalogTab = React.createClass({
 
     },
 
+    checkSearch: function(_notSearching){
+      this.setState({
+        notSearching: _notSearching
+      });
+    },
+
     render: function() {
-        var terria = this.props.terria;
-        var dataCatalog = terria.catalog.group.items;
+        let terria = this.props.terria;
+        let dataCatalog = terria.catalog.group.items;
+
+        let content = null;
+        if(this.state.notSearching === true){
+          content = (
+            <ul className = 'list-reset data-catalog'>
+              {dataCatalog.map(function(group, i) {
+                return (<DataCatalogGroup group={group} key={i}/>);
+              }, this)}
+            </ul>);
+        }
         return (
             <div className="panel-content clearfix">
               <div className="search-data col col-6">
-                <SearchBox terria = {terria} mapSearch = {false} gazetterSearch={false}/>
-                <ul className = 'list-reset data-catalog hide-if-searching'>
-                  {dataCatalog.map(function(group, i) {
-                    return (<DataCatalogGroup group={group} key={i}/>);
-                  }, this)}
-                </ul>
+                <SearchBox terria = {terria} mapSearch = {false} gazetterSearch={false} callback={this.checkSearch}/>
+                {content}
               </div>
               <div className="data-preview preview col col-6 block">
                 <DataPreview terria = {terria} previewed={this.state.previewed} />

@@ -277,6 +277,7 @@ $add-to-map-btn-size: 23px;
   padding: 0 $padding 0 $padding*4;
   font-family: $font-pop;
   position: relative;
+  background: $color-primary;
   @extend .icon;
   @extend .icon-add;
   &:before{
@@ -288,7 +289,6 @@ $add-to-map-btn-size: 23px;
   &:hover{
     background: rgba(#fff, 0.3);
   }
-  @include greybox();
 }
 
 // Clear search text button
@@ -417,13 +417,10 @@ $add-to-map-btn-size: 23px;
 //
 
 .btn.btn-data-search{
-  border-top: $border-style;
   display: block;
   width: 100%;
-  margin: $padding 0;
-  &:before{
-    padding-right: $padding;
-  }
+  color: $color-primary;
+  text-transform: uppercase;
 }
 
 button.btn.visibility{
