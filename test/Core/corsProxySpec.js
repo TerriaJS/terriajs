@@ -4,13 +4,13 @@
 var corsProxy = require('../../lib/Core/corsProxy');
 
 describe('corsProxy', function() {
-    var originalPageIsHttps;
+    var originalPageIsHttps, originalAlwaysUseProxy;
 
     beforeEach(function() {
         originalPageIsHttps = corsProxy.pageIsHttps;
         originalAlwaysUseProxy = corsProxy.alwaysUseProxy;
         corsProxy.pageIsHttps = false;
-        corsProxy.alwaysUseProxy = true;
+        corsProxy.alwaysUseProxy = false;
     });
 
     afterEach(function() {
