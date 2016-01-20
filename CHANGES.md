@@ -6,6 +6,8 @@ Change Log
 
 * Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
   - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
+  - `AbsIttCatalogItem`: Completely rewritten. The `dataSetID` json parameter has been deprecated in favor of `datasetId` (different capitalization).
+  - For the 2011 Australian Census data, requires `sa4_code_2011` to appear as an alias in `regionMapping.json` (it was previously missing in NationalMap).
   - `TableDataSource`: Completely rewritten and moved from `Map` to `Models` directory.
   - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
   - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
@@ -14,6 +16,11 @@ Change Log
   - `LegendUrl` has been moved to the `Map` directory.
   - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
+
+### 1.0.54
+
+* Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed.
+
 ### 1.0.53
 
 * Improved compatibility with Internet Explorer 9.
