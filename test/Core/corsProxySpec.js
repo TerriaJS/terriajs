@@ -8,11 +8,14 @@ describe('corsProxy', function() {
 
     beforeEach(function() {
         originalPageIsHttps = corsProxy.pageIsHttps;
+        originalAlwaysUseProxy = corsProxy.alwaysUseProxy;
         corsProxy.pageIsHttps = false;
+        corsProxy.alwaysUseProxy = true;
     });
 
     afterEach(function() {
         corsProxy.pageIsHttps = originalPageIsHttps;
+        corsProxy.alwaysUseProxy = originalAlwaysUseProxy;
         corsProxy.proxyDomains.length = 0;
         corsProxy.corsDomains.length = 0;
     });
