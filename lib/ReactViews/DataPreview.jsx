@@ -4,10 +4,12 @@ const React = require('react');
 const markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
 const DataPreviewMap = require('./DataPreviewMap.jsx');
 const defined = require('terriajs-cesium/Source/Core/defined');
-const renderAndSubscribe = require('./renderAndSubscribe');
+const ObserveModelMixin = require('./ObserveModelMixin');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 //Data preview section, for the preview map see DataPreviewMap
 let DataPreview = React.createClass({
+    mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes: {
         previewed: React.PropTypes.object,
         terria: React.PropTypes.object
@@ -29,7 +31,6 @@ let DataPreview = React.createClass({
     },
 
     render: function() {
-      return renderAndSubscribe(this, function() {
         let previewed = this.props.previewed;
         let action = null;
 
@@ -47,7 +48,6 @@ let DataPreview = React.createClass({
                 <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
                 </figcaption>
                 </figure>);
-        });
     }
 });
 module.exports = DataPreview;

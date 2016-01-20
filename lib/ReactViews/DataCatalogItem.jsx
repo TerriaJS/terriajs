@@ -1,9 +1,12 @@
 'use strict';
-var React = require('react');
-var renderAndSubscribe = require('./renderAndSubscribe');
+
+const React = require('react');
+const ObserveModelMixin = require('./ObserveModelMixin');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 //Individual dataset
 var DataCatalogItem = React.createClass({
+    mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes:{
         item: React.PropTypes.object
     },
@@ -34,29 +37,27 @@ var DataCatalogItem = React.createClass({
     },
 
     render: function() {
-        return renderAndSubscribe(this, function() {
-            var item = this.props.item;
-            var iconClass;
+        var item = this.props.item;
+        var iconClass;
 
-            if (item.isEnabled){
-                if (item.isLoading){
-                    iconClass = 'icon icon-loader';
-                } else {
-                    iconClass = 'icon icon-minus';
-                }
+        if (item.isEnabled){
+            if (item.isLoading){
+                iconClass = 'icon icon-loader';
             } else {
-                iconClass = 'icon icon-add';
+                iconClass = 'icon icon-minus';
             }
+        } else {
+            iconClass = 'icon icon-add';
+        }
 
-            return (
-                <li className="clearfix data-catalog-item flex">
-                    <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>
-                        <i className={iconClass}> </i>
-                    </button>
-                    <button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button>
-                </li>
-            );
-        });
+        return (
+            <li className="clearfix data-catalog-item flex">
+                <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>
+                    <i className={iconClass}> </i>
+                </button>
+                <button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button>
+            </li>
+        );
     }
 });
 

@@ -1,9 +1,10 @@
 'use strict';
-var React = require('react');
-var SearchBox = require('./SearchBox.jsx');
-var ModalTriggerButton = require('./ModalTriggerButton.jsx');
-var Legend = require('./Legend.jsx');
-var renderAndSubscribe = require('./renderAndSubscribe');
+const React = require('react');
+const SearchBox = require('./SearchBox.jsx');
+const ModalTriggerButton = require('./ModalTriggerButton.jsx');
+const Legend = require('./Legend.jsx');
+const ObserveModelMixin = require('./ObserveModelMixin');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 var btnAdd = 'Add Data';
 var btnRemove = 'Remove All';
@@ -12,6 +13,7 @@ var btnRemove = 'Remove All';
 // TO DO:  rename this into workbench
 // This get re-rendered when nowViewingItem changes
 var SidePanel = React.createClass({
+    mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes: {
         terria: React.PropTypes.object
     },
@@ -33,33 +35,31 @@ var SidePanel = React.createClass({
     },
 
     render: function() {
-        return renderAndSubscribe(this, function() {
-            var terria = this.props.terria;
-            var nowViewing = this.props.terria.nowViewing.items;
-            var content = null;
+        var terria = this.props.terria;
+        var nowViewing = this.props.terria.nowViewing.items;
+        var content = null;
 
-            if ((nowViewing && nowViewing.length > 0) && this.state.notSearching === true) {
-                content = (
-                <div className="now-viewing hide-if-searching">
-                    <ul className="now-viewing__header list-reset clearfix">
-                        <li className='col col-5'><label className='label'> Data Sets </label></li>
-                        <li className='col col-5'><button onClick={this.removeAll} className='btn'>{btnRemove}</button></li>
-                        <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
-                    </ul>
-                    <ul className="now-viewing__content list-reset">
-                        {nowViewing.map((item, i)=>(<Legend nowViewingItem={item} key={i} />))}
-                    </ul>
-                </div>);
-            }
-            return (
-                <div>
-                <div className='workbench__header'>
-                <SearchBox terria={terria} dataSearch={false} callback={this.searchStart}/>
-                <div><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} /></div>
-                </div>
-                {content}
+        if ((nowViewing && nowViewing.length > 0) && this.state.notSearching === true) {
+            content = (
+            <div className="now-viewing hide-if-searching">
+                <ul className="now-viewing__header list-reset clearfix">
+                    <li className='col col-5'><label className='label'> Data Sets </label></li>
+                    <li className='col col-5'><button onClick={this.removeAll} className='btn'>{btnRemove}</button></li>
+                    <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
+                </ul>
+                <ul className="now-viewing__content list-reset">
+                    {nowViewing.map((item, i)=>(<Legend nowViewingItem={item} key={i} />))}
+                </ul>
             </div>);
-        });
+        }
+        return (
+            <div>
+            <div className='workbench__header'>
+            <SearchBox terria={terria} dataSearch={false} callback={this.searchStart}/>
+            <div><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} /></div>
+            </div>
+            {content}
+        </div>);
     }
 });
 module.exports = SidePanel;
