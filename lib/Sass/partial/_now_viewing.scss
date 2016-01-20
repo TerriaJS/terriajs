@@ -48,7 +48,7 @@ $now-viewing-margin: 5px;
 
 .now-viewing{
   margin-top: $now-viewing-margin;
-  max-height: calc(100vh - #{$work-bench-header});
+  max-height: calc(100vh - #{$workbench-header});
   overflow-y: auto;
   background: rgba(#fff, 0.15);
   padding: 0  $padding-small $padding-small $padding-small;

@@ -4,7 +4,7 @@
   max-height: 100%;
   @include transition(all 0.5s ease-in-out);
   .workbench &{
-    max-height: calc(100vh - #{$work-bench-header});
+    max-height: calc(100vh - #{$workbench-header});
     overflow-y: auto;
   }
   .data-panel &{
