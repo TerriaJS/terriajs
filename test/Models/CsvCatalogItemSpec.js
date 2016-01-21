@@ -98,6 +98,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         var dataStr = 'col1, col2\ntest, 0';
         csvItem.updateFromJson({
             name: 'Name',
+            id: 'Id',
             description: 'Description',
             rectangle: [-10, 10, -20, 20],
             url: 'http://my.csv.com/test.csv',
