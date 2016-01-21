@@ -48,7 +48,7 @@ const SidePanel = React.createClass({
                 <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
             </ul>
             <ul className="now-viewing__content list-reset">
-                {nowViewing.map((item, i)=>(<NowViewingItem nowViewingItem={item} key={i} />))}
+                {nowViewing.map((item, i)=>(<NowViewingItem nowViewingItem={item} index={i} key={i} />))}
             </ul>
         </div>);
     }

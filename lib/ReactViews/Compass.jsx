@@ -1,23 +1,23 @@
 'use strict';
-var React = require('react');
-var CameraFlightPath = require('terriajs-cesium/Source/Scene/CameraFlightPath');
-var Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
-var Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
-var CesiumMath = require('terriajs-cesium/Source/Core/Math');
-var defined = require('terriajs-cesium/Source/Core/defined');
-var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
-var getTimestamp = require('terriajs-cesium/Source/Core/getTimestamp');
-var Matrix4 = require('terriajs-cesium/Source/Core/Matrix4');
-var Ray = require('terriajs-cesium/Source/Core/Ray');
-var Transforms = require('terriajs-cesium/Source/Core/Transforms');
+const React = require('react');
+const CameraFlightPath = require('terriajs-cesium/Source/Scene/CameraFlightPath');
+const Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
+const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
+const CesiumMath = require('terriajs-cesium/Source/Core/Math');
+const defined = require('terriajs-cesium/Source/Core/defined');
+const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
+const getTimestamp = require('terriajs-cesium/Source/Core/getTimestamp');
+const Matrix4 = require('terriajs-cesium/Source/Core/Matrix4');
+const Ray = require('terriajs-cesium/Source/Core/Ray');
+const Transforms = require('terriajs-cesium/Source/Core/Transforms');
 
 // the compass on map
-var Compass = React.createClass({
+const Compass = React.createClass({
     propTypes: {
         terria : React.PropTypes.object
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
             orbitCursorAngle: 0,
             heading: 0.0,
@@ -25,24 +25,24 @@ var Compass = React.createClass({
         };
     },
 
-    componentDidMount: function(){
+    componentDidMount(){
       //this.props.terria.afterViewerChanged.addEventListener(viewerChange);
       viewerChange(this);
     },
 
-    handleMouseDown: function(e){
-      var compassElement = e.currentTarget;
-      var compassRectangle = e.currentTarget.getBoundingClientRect();
-      var maxDistance = compassRectangle.width / 2.0;
-      var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
-      var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
-      var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
-      var distanceFromCenter = Cartesian2.magnitude(vector);
+    handleMouseDown(e) {
+      const compassElement = e.currentTarget;
+      const compassRectangle = e.currentTarget.getBoundingClientRect();
+      const maxDistance = compassRectangle.width / 2.0;
+      const center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
+      const clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
+      const vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+      const distanceFromCenter = Cartesian2.magnitude(vector);
 
-      var distanceFraction = distanceFromCenter / maxDistance;
+      const distanceFraction = distanceFromCenter / maxDistance;
 
-      var nominalTotalRadius = 145;
-      var norminalGyroRadius = 50;
+      const nominalTotalRadius = 145;
+      const norminalGyroRadius = 50;
 
       if (distanceFraction < norminalGyroRadius / nominalTotalRadius) {
         orbit(this, compassElement, vector);
@@ -52,27 +52,27 @@ var Compass = React.createClass({
         return true;
       }
     },
-    handleDoubleClick: function(e) {
-        var scene =  this.props.terria.cesium.scene;
-        var camera = scene.camera;
+    handleDoubleClick(e) {
+        const scene = this.props.terria.cesium.scene;
+        const camera = scene.camera;
 
-        var windowPosition = windowPositionScratch;
+        const windowPosition = windowPositionScratch;
         windowPosition.x = scene.canvas.clientWidth / 2;
         windowPosition.y = scene.canvas.clientHeight / 2;
-        var ray = camera.getPickRay(windowPosition, pickRayScratch);
+        const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-        var center = scene.globe.pick(ray, scene, centerScratch);
+        const center = scene.globe.pick(ray, scene, centerScratch);
         if (!defined(center)) {
             // Globe is barely visible, so reset to home view.
             this.props.terria.currentViewer.zoomTo( this.props.terria.homeView, 1.5);
             return;
         }
 
-        var rotateFrame = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84);
+        const rotateFrame = Transforms.eastNorthUpToFixedFrame(center, Ellipsoid.WGS84);
 
-        var lookVector = Cartesian3.subtract(center, camera.position, new Cartesian3());
+        const lookVector = Cartesian3.subtract(center, camera.position, new Cartesian3());
 
-        var flight = CameraFlightPath.createTween(scene, {
+        const flight = CameraFlightPath.createTween(scene, {
             destination: Matrix4.multiplyByPoint(rotateFrame, new Cartesian3(0.0, 0.0, Cartesian3.magnitude(lookVector)), new Cartesian3()),
             direction: Matrix4.multiplyByPointAsVector(rotateFrame, new Cartesian3(0.0, 0.0, -1.0), new Cartesian3()),
             up: Matrix4.multiplyByPointAsVector(rotateFrame, new Cartesian3(0.0, 1.0, 0.0), new Cartesian3()),
@@ -81,45 +81,43 @@ var Compass = React.createClass({
         scene.tweens.add(flight);
     },
 
-    resetRotater: function(){
+    resetRotater() {
       this.setState({
         orbitCursorOpacity: 0,
         orbitCursorAngle: 0
       });
     },
 
+    render() {
 
-
-    render: function() {
-
-      var rotationMarkerStyle = {
-          transform : 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
-          WebkitTransform : 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
+      const rotationMarkerStyle = {
+          transform: 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
+          WebkitTransform: 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
           opacity: this.state.orbitCursorOpacity
-        },
+        };
 
-        outerCircleStyle = {
-          transform : 'rotate(-' + this.state.heading + 'rad)',
-          WebkitTransform : 'rotate(-' + this.state.heading + 'rad)',
+      const outerCircleStyle = {
+          transform: 'rotate(-' + this.state.heading + 'rad)',
+          WebkitTransform: 'rotate(-' + this.state.heading + 'rad)',
           opacity: ''
         };
 
         return (
             <div className='compass' onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
-              <div className='compass-inner-ring' title='Click and drag to rotate the camera'></div>
               <div className='compass-outer-ring' style={outerCircleStyle}></div>
+              <div className='compass-inner-ring' title='Click and drag to rotate the camera'></div>
               <div className='compass-rotation-marker' style={rotationMarkerStyle}></div>
             </div>
           );
     }
 });
 
-var vectorScratch = new Cartesian2();
-var oldTransformScratch = new Matrix4();
-var newTransformScratch = new Matrix4();
-var centerScratch = new Cartesian3();
-var windowPositionScratch = new Cartesian2();
-var pickRayScratch = new Ray();
+const vectorScratch = new Cartesian2();
+const oldTransformScratch = new Matrix4();
+const newTransformScratch = new Matrix4();
+const centerScratch = new Cartesian3();
+const windowPositionScratch = new Cartesian2();
+const pickRayScratch = new Ray();
 
 function rotate(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
@@ -132,16 +130,16 @@ function rotate(viewModel, compassElement, cursorVector) {
     viewModel.isRotating = true;
     viewModel.rotateInitialCursorAngle = Math.atan2(-cursorVector.y, cursorVector.x);
 
-    var scene = viewModel.props.terria.cesium.scene;
+    let scene = viewModel.props.terria.cesium.scene;
 
-    var camera = scene.camera;
+    let camera = scene.camera;
 
-    var windowPosition = windowPositionScratch;
+    let windowPosition = windowPositionScratch;
     windowPosition.x = scene.canvas.clientWidth / 2;
     windowPosition.y = scene.canvas.clientHeight / 2;
-    var ray = camera.getPickRay(windowPosition, pickRayScratch);
+    let ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-    var viewCenter = scene.globe.pick(ray, scene, centerScratch);
+    let viewCenter = scene.globe.pick(ray, scene, centerScratch);
     if (!defined(viewCenter)) {
         viewModel.rotateFrame = Transforms.eastNorthUpToFixedFrame(camera.positionWC, Ellipsoid.WGS84, newTransformScratch);
         viewModel.rotateIsLook = true;
@@ -150,27 +148,27 @@ function rotate(viewModel, compassElement, cursorVector) {
         viewModel.rotateIsLook = false;
     }
 
-    var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
+    let oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
     camera.lookAtTransform(viewModel.rotateFrame);
     viewModel.rotateInitialCameraAngle = Math.atan2(camera.position.y, camera.position.x);
     viewModel.rotateInitialCameraDistance = Cartesian3.magnitude(new Cartesian3(camera.position.x, camera.position.y, 0.0));
     camera.lookAtTransform(oldTransform);
 
     viewModel.rotateMouseMoveFunction = function(e) {
-        var compassRectangle = compassElement.getBoundingClientRect();
-        var center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
-        var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
-        var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
-        var angle = Math.atan2(-vector.y, vector.x);
+        const compassRectangle = compassElement.getBoundingClientRect();
+        const center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
+        const clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
+        const vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+        const angle = Math.atan2(-vector.y, vector.x);
 
-        var angleDifference = angle - viewModel.rotateInitialCursorAngle;
-        var newCameraAngle = CesiumMath.zeroToTwoPi(viewModel.rotateInitialCameraAngle - angleDifference);
+        const angleDifference = angle - viewModel.rotateInitialCursorAngle;
+        const newCameraAngle = CesiumMath.zeroToTwoPi(viewModel.rotateInitialCameraAngle - angleDifference);
 
         camera = viewModel.props.terria.cesium.scene.camera;
 
         oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
         camera.lookAtTransform(viewModel.rotateFrame);
-        var currentCameraAngle = Math.atan2(camera.position.y, camera.position.x);
+        const currentCameraAngle = Math.atan2(camera.position.y, camera.position.x);
         camera.rotateRight(newCameraAngle - currentCameraAngle);
         camera.lookAtTransform(oldTransform);
 
@@ -206,15 +204,15 @@ function orbit(viewModel, compassElement, cursorVector) {
     viewModel.isOrbiting = true;
     viewModel.orbitLastTimestamp = getTimestamp();
 
-    var scene = viewModel.props.terria.cesium.scene;
-    var camera = scene.camera;
+    let scene = viewModel.props.terria.cesium.scene;
+    let camera = scene.camera;
 
-    var windowPosition = windowPositionScratch;
+    const windowPosition = windowPositionScratch;
     windowPosition.x = scene.canvas.clientWidth / 2;
     windowPosition.y = scene.canvas.clientHeight / 2;
-    var ray = camera.getPickRay(windowPosition, pickRayScratch);
+    const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-    var center = scene.globe.pick(ray, scene, centerScratch);
+    let center = scene.globe.pick(ray, scene, centerScratch);
     if (!defined(center)) {
         viewModel.orbitFrame = Transforms.eastNorthUpToFixedFrame(camera.positionWC, Ellipsoid.WGS84, newTransformScratch);
         viewModel.orbitIsLook = true;
@@ -224,19 +222,19 @@ function orbit(viewModel, compassElement, cursorVector) {
     }
 
     viewModel.orbitTickFunction = function(e) {
-        var timestamp = getTimestamp();
-        var deltaT = timestamp - viewModel.orbitLastTimestamp;
-        var rate = (viewModel.state.orbitCursorOpacity - 0.5) * 2.5 / 1000;
-        var distance = deltaT * rate;
+        const timestamp = getTimestamp();
+        const deltaT = timestamp - viewModel.orbitLastTimestamp;
+        const rate = (viewModel.state.orbitCursorOpacity - 0.5) * 2.5 / 1000;
+        const distance = deltaT * rate;
 
-        var angle = viewModel.state.orbitCursorAngle + CesiumMath.PI_OVER_TWO;
-        var x = Math.cos(angle) * distance;
-        var y = Math.sin(angle) * distance;
+        const angle = viewModel.state.orbitCursorAngle + CesiumMath.PI_OVER_TWO;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
 
         scene = viewModel.props.terria.cesium.scene;
         camera = scene.camera;
 
-        var oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
+        const oldTransform = Matrix4.clone(camera.transform, oldTransformScratch);
 
         camera.lookAtTransform(viewModel.orbitFrame);
 
@@ -256,15 +254,15 @@ function orbit(viewModel, compassElement, cursorVector) {
     };
 
     function updateAngleAndOpacity(vector, compassWidth) {
-        var angle = Math.atan2(-vector.y, vector.x);
+        const angle = Math.atan2(-vector.y, vector.x);
         viewModel.setState({
           orbitCursorAngle : CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO)
         });
 
-        var distance = Cartesian2.magnitude(vector);
-        var maxDistance = compassWidth / 2.0;
-        var distanceFraction = Math.min(distance / maxDistance, 1.0);
-        var easedOpacity = 0.5 * distanceFraction * distanceFraction + 0.5;
+        const distance = Cartesian2.magnitude(vector);
+        const maxDistance = compassWidth / 2.0;
+        const distanceFraction = Math.min(distance / maxDistance, 1.0);
+        const easedOpacity = 0.5 * distanceFraction * distanceFraction + 0.5;
         viewModel.setState({
           orbitCursorOpacity : easedOpacity
         });
@@ -273,10 +271,10 @@ function orbit(viewModel, compassElement, cursorVector) {
     }
 
     viewModel.orbitMouseMoveFunction = function(e) {
-        var compassRectangle = compassElement.getBoundingClientRect();
+        const compassRectangle = compassElement.getBoundingClientRect();
         center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
-        var clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
-        var vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+        const clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
+        const vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
         updateAngleAndOpacity(vector, compassRectangle.width);
     };
 

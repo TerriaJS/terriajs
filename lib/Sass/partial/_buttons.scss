@@ -303,6 +303,7 @@ $add-to-map-btn-size: 23px;
 
 .btn-preview-remove-from-map{
   background: $color-primary;
+  border: 1px solid $color-primary;
   color: #fff;
   &:hover{
     border: 1px solid $color-primary;
@@ -458,6 +459,10 @@ button.btn.visibility{
   right: 2px;
   padding: 8px;
   @extend .btn-file-input;
+}
+
+.btn.btn-drag{
+  cursor: move;
 }
 
 .kss-modifier__example{
