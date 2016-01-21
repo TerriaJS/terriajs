@@ -152,8 +152,7 @@ let SearchBox = React.createClass({
                             });
                     }
                 }
-                console.log(results);
-                content = <div><label className='label'>{resultLabel}</label><ul className='list-reset search-result-data-catalog data-catalog'>{results}</ul></div>
+                content = <div><label className='label'>{resultLabel}</label><ul className='list-reset search-results-items'>{results}</ul></div>
             }
             return content;
         }

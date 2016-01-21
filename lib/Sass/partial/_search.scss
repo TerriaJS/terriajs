@@ -7,6 +7,20 @@
     max-height: calc(100vh - #{$workbench-header});
     margin-top: calc(#{$input-height} + #{$padding*2});
     overflow-y: auto;
+    margin-left: -$padding-small;
+    margin-right: -$padding-small;
+    padding: 0 $padding-small;
+
+    .search-results-items{
+      background: $dark;
+      li{
+        padding: 0 $padding;
+      }
+      button{
+        border-bottom: $border-style;
+        padding: $padding 0;
+      }
+    }
   }
   .data-panel &{
     max-height: calc(60vh - 100px);
