@@ -88,6 +88,13 @@ describe('TableColumn', function() {
         expect(tableColumn.dates[0].getFullYear()).toEqual(2010);
     });
 
+    it('can detect year subtype using year title', function() {
+        var data = ['1066', '1776', '1788', '1901', '2220'];
+        var tableColumn = new TableColumn('year', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
+    });
+
 
     it('can calculate finish dates', function() {
         var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:30Z'];
