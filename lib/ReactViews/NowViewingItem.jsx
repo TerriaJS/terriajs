@@ -6,6 +6,10 @@ const defined = require('terriajs-cesium/Source/Core/defined');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
+const ALLOWED_DROP_EFFECT = 'move';
+const NO_DROPZONE = null;
+const BLANK_FUNCTION = ()=>{};
+
 // Maybe should be called nowViewingItem?
 const NowViewingItem = React.createClass({
   mixins: [ObserveModelMixin, PureRenderMixin],
@@ -17,8 +21,7 @@ const NowViewingItem = React.createClass({
   getInitialState() {
     return {
       isOpen: true,
-      isVisible: true,
-      hoverOver: 0
+      isVisible: true
     };
   },
 
@@ -48,33 +51,9 @@ const NowViewingItem = React.createClass({
   },
 
   onDragStart(e) {
-    if (!e.currentTarget || !e.currentTarget.parentElement.parentElement) {
-        return;
-    }
-
-    this.setState({
-      isOpen: false
-    });
-    let selectedIndex = parseInt(e.currentTarget.dataset.key);
   },
 
   onDragEnd(e) {
-    this.setState({
-      // Temp
-      isOpen: true
-    });
-    let selectedIndex = parseInt(e.currentTarget.dataset.key);
-  },
-
-  onDragOverDropZone(e) {
-    let dropZoneId = parseInt(e.currentTarget.dataset.key);
-    if(dropZoneId !== this.state.hoverOver) { this.setState({ hoverOver: dropZoneId });}
-  },
-
-  onDragOverItem(e){
-    let over = parseInt(e.currentTarget.dataset.key);
-    if(e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) { over++; }
-    if(over !== this.state.hoverOver) { this.setState({ hoverOver: over }); }
   },
 
   renderLegend(_nowViewingItem) {
@@ -92,11 +71,9 @@ const NowViewingItem = React.createClass({
   render() {
     const nowViewingItem = this.props.nowViewingItem;
     return (
-          <li>
-          <div className='nowViewing__drop-zone' data-key={this.props.index} onDragOver={this.onDragOverDropZone}></div>
-          <div className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')} >
+          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')} >
             <div className ="now-viewing__item-header clearfix">
-              <button draggable='true' onDragOver ={this.onDragOverItem} onDragStart={this.onDragStart} onDragEnd={this.onDragStart} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
+              <button draggable='true' data-key={this.props.index}  onDragOver ={this.onDragOverItem} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
               <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={this.state.isOpen ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
             </div>
             <div className ="now-viewing__item-inner">
@@ -114,8 +91,7 @@ const NowViewingItem = React.createClass({
                 {this.renderLegend(nowViewingItem)}
               </div>
             </div>
-            </div>
-        </li>
+            </li>
       );
   }
 });
