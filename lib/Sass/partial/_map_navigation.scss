@@ -37,13 +37,14 @@ $compass-width: 70px;
   }
 
   .compass-inner-ring{
-    height: $compass-width - $ring-width*4;
-    width: $compass-width - $ring-width*4;
+    height: $compass-width - $ring-width*3.5;
+    width: $compass-width - $ring-width*3.5;
     border-radius: 50%;
     display: block;
     position: absolute;
-    top: $ring-width*2;
-    left: $ring-width*2;
+    top: $ring-width*1.8;
+    left: $ring-width*1.8;
+    box-shadow: $box-shadow;
     background-image: url('./TerriaJS/images/compass-inner.svg');
     background-repeat: no-repeat;
     background-size: contain;
@@ -58,8 +59,8 @@ $compass-width: 70px;
 // Style guide: 6.2
 
 .zoom-control{
-  background: #fff;
-  color: #000;
+  background: $dark;
+  color: #fff;
   width: $ring-width*2;
   border-radius: 100px;
   border: 1px solid #000;
