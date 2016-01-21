@@ -34,13 +34,9 @@ const SidePanel = React.createClass({
     });
   },
 
-  render() {
-    const terria = this.props.terria;
-    const nowViewing = this.props.terria.nowViewing.items;
-    let content = null;
-
+  renderContent(nowViewing) {
     if ((nowViewing && nowViewing.length > 0) && this.state.notSearching === true) {
-      content = (
+        return (
         <div className="now-viewing">
             <ul className="now-viewing__header list-reset clearfix">
                 <li className='col col-5'><label className='label'> Data Sets </label></li>
@@ -52,13 +48,19 @@ const SidePanel = React.createClass({
             </ul>
         </div>);
     }
+  },
+
+  render() {
+    const terria = this.props.terria;
+    const nowViewing = this.props.terria.nowViewing.items;
+
     return (
         <div>
         <div className='workbench__header'>
         <SearchBox terria={terria} dataSearch={false} callback={this.searchStart}/>
         <ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} />
         </div>
-        {content}
+        {this.renderContent(nowViewing)}
     </div>);
   }
 });

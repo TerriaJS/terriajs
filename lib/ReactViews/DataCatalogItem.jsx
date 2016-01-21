@@ -36,24 +36,24 @@ var DataCatalogItem = React.createClass({
         this.addToPreview(event);
     },
 
-    render: function() {
-        var item = this.props.item;
-        var iconClass;
-
+    renderIconClass(item){
         if (item.isEnabled){
             if (item.isLoading){
-                iconClass = 'icon icon-loader';
+                return 'icon icon-loader';
             } else {
-                iconClass = 'icon icon-minus';
+                return 'icon icon-minus';
             }
         } else {
-            iconClass = 'icon icon-add';
+            return 'icon icon-add';
         }
+    },
 
+    render: function() {
+        let item = this.props.item;
         return (
             <li className="clearfix data-catalog-item flex">
                 <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>
-                    <i className={iconClass}> </i>
+                    <i className={this.renderIconClass(item)}> </i>
                 </button>
                 <button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button>
             </li>

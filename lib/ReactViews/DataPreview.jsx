@@ -30,20 +30,22 @@ let DataPreview = React.createClass({
         window.nowViewingUpdate.raiseEvent();
     },
 
-    render: function() {
-        let previewed = this.props.previewed;
-        let action = null;
-
-        if (defined(previewed.type)){
-            action = (<ul className="list-reset flex col col-5 data-preview-action">
+    renderActions(previewed) {
+        if (defined(previewed.type)) {
+            return (<ul className="list-reset flex col col-5 data-preview-action">
                 <li><button className="btn" title ="share this data"><i className="icon icon-share"></i></button></li>
                 <li><button onClick={this.toggleOnMap} className={'btn ' + (previewed.isEnabled ? 'btn-preview-remove-from-map' : 'btn-preview-add-to-map')} title ={previewed.isEnabled ? 'remove from map' : 'add to map'}><i className={previewed.isEnabled ? 'icon icon-minus2' : 'icon icon-plus'}></i>{previewed.isEnabled ? 'Remove' : 'Add'}</button></li>
                 </ul>);
         }
+    },
+
+    render: function() {
+        let previewed = this.props.previewed;
+
         return (<figure><DataPreviewMap terria={this.props.terria} previewed={this.props.previewed}/><figcaption>
                  <div className="title clearfix">
                 <h4 className="col col-7">{previewed.name}</h4>
-                {action}
+                {this.renderActions(previewed)}
                 </div>
                 <p dangerouslySetInnerHTML={{__html: markdownToHtml(previewed.description)}}></p>
                 </figcaption>

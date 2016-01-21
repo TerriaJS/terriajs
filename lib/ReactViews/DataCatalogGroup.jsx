@@ -39,14 +39,10 @@ var DataCatalogGroup = React.createClass({
         that.props.group.isOpen = !that.props.group.isOpen;
     },
 
-    render: function() {
-        var group = this.props.group;
-        var members = this.props.group.items;
-        var content = null;
-
-        if (this.props.group.isOpen === true) {
-            if (members && members.length > 0) {
-                content = members.map(function(member, i) {
+    renderGroup(group){
+        if (group.isOpen === true) {
+            if (group.items && group.items.length > 0) {
+                return group.items.map(function(member, i) {
                     if (member.isGroup){
                         return (<DataCatalogGroup group={member} key={i} />);
                     }else {
@@ -54,15 +50,18 @@ var DataCatalogGroup = React.createClass({
                     }
                 });
             } else {
-                content = <Loader/>;
+                return <Loader/>;
             }
         }
+    },
 
+    render: function() {
+        let group = this.props.group;
         return (
             <li>
-              <button className ={'btn btn-catalogue ' + (this.props.group.isOpen ? 'is-open' : '')} onClick={this.handleClick} >{group.name} <i className={'icon ' + (this.props.group.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')}></i></button>
+              <button className ={'btn btn-catalogue ' + (group.isOpen ? 'is-open' : '')} onClick={this.handleClick} >{group.name} <i className={'icon ' + (group.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')}></i></button>
               <ul className="data-catalog-group list-reset">
-                {content}
+                {this.renderGroup(group)}
               </ul>
             </li>
         );

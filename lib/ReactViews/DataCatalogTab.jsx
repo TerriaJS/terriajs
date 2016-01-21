@@ -10,14 +10,14 @@ var DataCatalogTab = React.createClass({
       terria:  React.PropTypes.object
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
             previewed: undefined,
             notSearching: true
         };
     },
 
-    componentWillMount: function() {
+    componentWillMount() {
       var that = this;
       //Update preview app if an item has been added as previewed
       window.previewUpdate.addEventListener(function(_previewed) {
@@ -27,34 +27,34 @@ var DataCatalogTab = React.createClass({
       });
     },
 
-    onPreviewChange: function(){
+    onPreviewChange(){
 
     },
 
-    checkSearch: function(_notSearching){
+    checkSearch(_notSearching){
       this.setState({
         notSearching: _notSearching
       });
     },
 
-    render: function() {
-        let terria = this.props.terria;
-        let dataCatalog = terria.catalog.group.items;
-
-        let content = null;
-        if(this.state.notSearching === true){
-          content = (
-            <ul className = 'list-reset data-catalog'>
-              {dataCatalog.map(function(group, i) {
+    renderDataCatalog(dataCatalog){
+      if(this.state.notSearching === true){
+          return (<ul className = 'list-reset data-catalog'>
+              {dataCatalog.map((group, i)=>{
                 return (<DataCatalogGroup group={group} key={i}/>);
               }, this)}
             </ul>);
         }
+    },
+
+    render() {
+        const terria = this.props.terria;
+        const dataCatalog = terria.catalog.group.items;
         return (
             <div className="panel-content clearfix">
               <div className="search-data col col-6">
                 <SearchBox terria = {terria} mapSearch = {false} gazetterSearch={false} callback={this.checkSearch}/>
-                {content}
+                {this.renderDataCatalog(dataCatalog)}
               </div>
               <div className="data-preview preview col col-6 block">
                 <DataPreview terria = {terria} previewed={this.state.previewed} />

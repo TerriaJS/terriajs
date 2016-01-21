@@ -1,16 +1,16 @@
 'use strict';
-var React = require('react');
-var FeatureInfoSection = require('./FeatureInfoSection.jsx'),
+const React = require('react');
+const FeatureInfoSection = require('./FeatureInfoSection.jsx'),
     defined = require('terriajs-cesium/Source/Core/defined');
 
 // Any Catalog in a feature-info-panel
-var FeatureInfoCatalogItem = React.createClass({
+const FeatureInfoCatalogItem = React.createClass({
     propTypes: {
         features: React.PropTypes.object,
         clock: React.PropTypes.object
     },
 
-    render: function() {
+    render() {
         var content = null;
         var count = null;
         var maximumShownFeatureInfos = null;

@@ -1,23 +1,23 @@
 'use strict';
-var React = require('react');
-var DataCatalogGroup = require('./DataCatalogGroup.jsx');
-var DataPreview = require('./DataPreview.jsx');
-var AddData = require('./AddData.jsx');
+const React = require('react');
+const DataCatalogGroup = require('./DataCatalogGroup.jsx');
+const DataPreview = require('./DataPreview.jsx');
+const AddData = require('./AddData.jsx');
 
 // My data tab include Add data section and preview section
-var MyDataTab = React.createClass({
+const MyDataTab = React.createClass({
     propTypes: {
       terria: React.PropTypes.object
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
             previewed: undefined,
             dataCatalog: undefined
         };
     },
 
-    componentWillMount: function(){
+    componentWillMount() {
         var that = this;
         window.previewUpdate.addEventListener(function(_previewed) {
           that.setState({
@@ -26,26 +26,28 @@ var MyDataTab = React.createClass({
       });
     },
 
-    updateCatalog: function(dataCatalog){
+    updateCatalog(dataCatalog) {
         this.setState({
             dataCatalog: dataCatalog
         });
         window.nowViewingUpdate.raiseEvent();
     },
 
-    render: function() {
-        var content = null;
+    renderContent() {
         if (this.state.dataCatalog) {
-            content = (<div className="added-data">
+            return (<div className="added-data">
                         <small>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </small>
                         <h3 className='mt1 mb1'> Previously added data </h3>
                         <ul className = 'list-reset data-catalog'><DataCatalogGroup group={this.state.dataCatalog}/></ul>
                         </div>);
             }
+    },
+
+    render() {
         return (<div className="panel-content row">
                 <div className='col col-6 absolute top-left'>
                 <AddData updateCatalog={this.updateCatalog} terria={this.props.terria} />
-                {content}
+                {this.renderContent()}
                 </div>
                 <div className="data-preview preview col col-6 relative">
                 <DataPreview terria = {this.props.terria} previewed={this.state.previewed} />

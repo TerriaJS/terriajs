@@ -110,16 +110,11 @@ const SearchBox = React.createClass({
     window.searchData.raiseEvent(this.state.value);
   },
 
-  render() {
+  renderSearchResult(searchType, searchResults, searchState, resultLabel) {
     const that = this;
     const value = this.state.value;
-    const bingMapSearchLabel = 'Locations';
-    const gazetterSearchLabel = 'Offical Place Names';
-    const dataCatalogSearchLabel = 'Data Catalog';
-
-    function getSearchResult(searchType, searchResults, searchState, resultLabel) {
-      let content = null;
-      let results = null;
+    let content = null;
+    let results = null;
 
       if((searchType) && value.length > 0) {
         if(searchResults.length === 0) {
@@ -149,7 +144,14 @@ const SearchBox = React.createClass({
         content = <div><label className='label label-sub-heading'>{resultLabel}</label><ul className='list-reset search-results-items'>{results}</ul></div>;
       }
       return content;
-    }
+    },
+
+  render() {
+    const that = this;
+    const value = this.state.value;
+    const bingMapSearchLabel = 'Locations';
+    const gazetterSearchLabel = 'Offical Place Names';
+    const dataCatalogSearchLabel = 'Data Catalog';
 
     // button to clear search string
     let clearSearchContent = null;
@@ -172,9 +174,9 @@ const SearchBox = React.createClass({
         </form>
         <div className ='search-results'>
           {linkToSearchData}
-          {getSearchResult(that.props.mapSearch, that.state.bingMapSearchResults, that.state.bingMapIsSearching, bingMapSearchLabel)}
-          {getSearchResult(that.props.gazetterSearch, that.state.gazetterSearchResults, that.state.gazetterIsSearching, gazetterSearchLabel)}
-          {getSearchResult(that.props.dataSearch, that.state.dataCatalogResults, that.state.dataCatalogIsSearching, dataCatalogSearchLabel)}
+          {this.renderSearchResult(that.props.mapSearch, that.state.bingMapSearchResults, that.state.bingMapIsSearching, bingMapSearchLabel)}
+          {this.renderSearchResult(that.props.gazetterSearch, that.state.gazetterSearchResults, that.state.gazetterIsSearching, gazetterSearchLabel)}
+          {this.renderSearchResult(that.props.dataSearch, that.state.dataCatalogResults, that.state.dataCatalogIsSearching, dataCatalogSearchLabel)}
         </div>
       </div>
     );

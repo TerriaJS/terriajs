@@ -60,27 +60,28 @@ var FeatureInfoPanel = React.createClass({
         });
     },
 
-    render: function() {
-        var pickedFeatures = this.state.pickedFeatures;
-        var clock = this.props.terria.clock;
-        var content = null;
-        // if not loading and no result, shows no result
+    renderContent(pickedFeatures){
+        let that = this;
         if (defined(this.props.terria.pickedFeatures)){
             //since event is raised after loaded, isLoading is never true
             if (this.props.terria.pickedFeatures.isLoading === true){
-                content = <Loader/>;
+                return <Loader/>;
             } else {
                 if (pickedFeatures && pickedFeatures.length > 0) {
-                    content = pickedFeatures.map(function(features, i) {
-                        return (<FeatureInfoCatalogItem key={i} features={features} clock={clock} />);
+                    return pickedFeatures.map(function(features, i) {
+                        return (<FeatureInfoCatalogItem key={i} features={features} clock={that.props.terria.clock} />);
                     });
                 } else {
-                    content = <li className='no-results'> No results </li>;
+                    return <li className='no-results'> No results </li>;
                 }
             }
         } else {
-            content = <li className='no-results'> No results </li>;
+            return <li className='no-results'> No results </li>;
         }
+    },
+
+    render() {
+        let pickedFeatures = this.state.pickedFeatures;
 
         return (
             <div className={'feature-info-panel ' + (this.state.isCollapsed ? 'is-collapsed' : '')} aria-hidden={!this.state.isVisible}>
@@ -88,7 +89,7 @@ var FeatureInfoPanel = React.createClass({
                 <button onClick={this.toggleCollapseFeatureInfoPanel} className='btn'> Feature Info Panel </button>
                 <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
               </div>
-              <ul className="list-reset feature-info-panel__body">{content}</ul>
+              <ul className="list-reset feature-info-panel__body">{this.renderContent(pickedFeatures)}</ul>
             </div>
         );
     }

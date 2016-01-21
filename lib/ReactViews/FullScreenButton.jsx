@@ -22,12 +22,15 @@ const FullScreenButton = React.createClass({
     this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
-  render() {
-    let content = <i className='icon icon-full-screen'></i>;
+  renderButtonText() {
     if(this.state.isActive) {
-      content = <span className='exit-full-screen'>Exit Full Screen</span>;
+      return <span className='exit-full-screen'>Exit Full Screen</span>;
     }
-    return (<div><button onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn-map btn-full-screen ' + (this.state.isActive ? 'is-active' : '')}>{content}</button></div>);
+    return <i className='icon icon-full-screen'></i>;
+  },
+
+  render() {
+    return (<div><button onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn-map btn-full-screen ' + (this.state.isActive ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
   }
 });
 module.exports = FullScreenButton;
