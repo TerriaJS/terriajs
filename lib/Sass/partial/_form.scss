@@ -27,6 +27,8 @@
   @include placeholder{
       text-transform: uppercase;
       font-size: $font-size-small;
+      text-align: center;
+      padding-right: 3rem;
     }
   input{
     padding-left: 3rem;
