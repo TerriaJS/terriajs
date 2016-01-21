@@ -243,8 +243,7 @@ $add-to-map-btn-size: 23px;
 
 .btn.now-viewing__add {
   display: block;
-  width: 100%;
-  line-height: 3rem;
+  line-height: $input-height;
   text-transform: uppercase;
   font-size: $font-size-small;
   padding: 0 $padding*4;

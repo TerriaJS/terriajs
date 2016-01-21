@@ -20,6 +20,14 @@ let SearchBox = React.createClass({
         callback: React.PropTypes.func
     },
 
+    getDefaultProps: function() {
+      return {
+        mapSearch: true,
+        dataSearch: true,
+        gazetterSearch: true
+        };
+    },
+
     getInitialState: function() {
         return {
             value: '',
@@ -43,7 +51,8 @@ let SearchBox = React.createClass({
                     value: value
                 }
             };
-            // this does not work for the first time but works afterwards \
+            // This does not work for the first time but works afterwards
+            // Not sure how to let the modal knows search has started
             that.handleChange(fakeEvent);
         });
     },
@@ -103,9 +112,7 @@ let SearchBox = React.createClass({
 
     render: function() {
         let value = this.state.value;
-        let dataCatalogResults = this.state.dataCatalogResults;
-        let bingMapSearchResults = this.state.bingMapSearchResults;
-        let gazetterSearchResults = this.state.gazetterSearchResults;
+        let that = this;
 
         // if is searching bing map, if result is not empty, show results. otherwise show loader
         let mapSearchContent = null;
@@ -114,66 +121,50 @@ let SearchBox = React.createClass({
         let gazetterSearchLabel = 'Offical Place Names';
         let dataCatalogSearchLabel = 'Data Catalog';
 
-        if ((this.props.mapSearch !== false) && value.length > 0) {
-            if (bingMapSearchResults.length === 0) {
-                if (this.state.bingMapIsSearching === false) {
-                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <div className='btn label'>{bingMapSearchLabel}</div></li><li className ='label label-no-results'>No results found </li></ul>);
-                } else {
-                    mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <div className='btn label'>{bingMapSearchLabel}</div></li><Loader /></ul>);
-                }
-            } else {
-                mapSearchContent = (<ul className='list-reset search-result-bing-map'><li> <div className='btn label'>{bingMapSearchLabel}</div></li>{bingMapSearchResults.map(function(item, i) {
-            return (<LocationItem item={item} key={i} />);
-          })}</ul>);
-            }
-        }
+        function getSearchResult(searchType, searchResults, searchState, resultLabel) {
+            let content = null;
+            let results = null;
 
-        // TO DO: simplify the search result dom
-
-        // if is searching data catalog and result is not empty, show results, otherwise show loader
-        var cataLogSearchContent = null;
-        if ((this.props.dataSearch !== false) && value.length > 0) {
-            if (dataCatalogResults.length === 0) {
-                if (this.state.dataCatalogIsSearching === false) {
-                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog data-catalog'><li> <div className='btn label'>{dataCatalogSearchLabel}</div></li><li className ='label label-no-results'>No results found </li></ul>);
-                } else {
-                    cataLogSearchContent = (<ul className='list-reset search-result-data-catalog data-catalog'><li> <div className='btn label'>{dataCatalogSearchLabel}</div></li> <Loader /></ul>);
-                }
-            } else {
-                cataLogSearchContent = (<ul className='list-reset search-result-data-catalog data-catalog'><li> <div className='btn label'>{dataCatalogSearchLabel}</div></li>{dataCatalogResults.map(function(result, i) {
-                    var group = result.catalogItem;
-
-                    if (group.isGroup === true){
-                        return (<DataCatalogGroup group={group} key={i} />);
-                    } else {
-                        return (<DataCatalogItem item={group} key={i} />);
+            if((searchType) && value.length > 0){
+                if(searchResults.length === 0){
+                    if(searchState === false){
+                      results = <li className ='label label-no-results'>No results found </li>;
                     }
-                })}</ul>);
-            }
-        }
-
-        var gazetterSearchContent = null;
-        if ((this.props.gazetterSearch !== false) && value.length > 0) {
-            if (gazetterSearchResults.length === 0) {
-                if (this.state.gazetterIsSearching === false) {
-                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> {gazetterSearchLabel}</div></li><li className ='label label-no-results'>No results found </li></ul>);
-                } else {
-                    gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> {gazetterSearchLabel}</div></li> <Loader /></ul>);
+                    else{
+                      results = <Loader />;
+                    }
                 }
-            } else {
-                gazetterSearchContent = (<ul className='list-reset search-result-data-catalog'><li> <div className='btn label'> {gazetterSearchLabel}</div></li>{gazetterSearchResults.map(function(item, i) {
-            return (<LocationItem item={item} key={i} />);
-          })}</ul>);
+                else{
+                    if(searchType !== that.props.dataSearch){
+                        results = searchResults.map(function(item, i) {
+                                    return (<LocationItem item={item} key={i} />);
+                                  });
+                        }
+                    else{
+                        results = searchResults.map(function(result, i) {
+                            let group = result.catalogItem;
+
+                                if (group.isGroup === true){
+                                    return (<DataCatalogGroup group={group} key={i} />);
+                                } else {
+                                    return (<DataCatalogItem item={group} key={i} />);
+                                }
+                            });
+                    }
+                }
+                console.log(results);
+                content = <div><label className='label'>{resultLabel}</label><ul className='list-reset search-result-data-catalog data-catalog'>{results}</ul></div>
             }
+            return content;
         }
 
         //button to clear search string
-        var clearSearchContent = null;
+        let clearSearchContent = null;
         if (value.length > 0) {
             clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='icon icon-close'></i></button>);
         }
 
-        var linkToSearchData = null;
+        let linkToSearchData = null;
         if ((this.props.dataSearch === false) && value.length > 0){
             linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.openDataCatalogSearch} activeTab={1} />);
         }
@@ -188,9 +179,9 @@ let SearchBox = React.createClass({
             </form>
             <div className ='search-results'>
               {linkToSearchData}
-              {cataLogSearchContent}
-              {mapSearchContent}
-              {gazetterSearchContent}
+              {getSearchResult(that.props.mapSearch, that.state.bingMapSearchResults, that.state.bingMapIsSearching, bingMapSearchLabel)}
+              {getSearchResult(that.props.gazetterSearch, that.state.gazetterSearchResults, that.state.gazetterIsSearching, gazetterSearchLabel)}
+              {getSearchResult(that.props.dataSearch, that.state.dataCatalogResults, that.state.dataCatalogIsSearching, dataCatalogSearchLabel)}
             </div>
           </div>
         );

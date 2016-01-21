@@ -13,7 +13,14 @@
   }
 }
 .workbench__header{
-  padding: 0  $padding-small $padding-small $padding-small;
+  padding: 0 $padding-small;
+  position: relative;
+  .now-viewing__add{
+    position: absolute;
+    left: $padding-small;
+    width: $work-bench-width - $padding-small*2;
+    top: calc(#{$input-height} + #{$padding});
+  }
 }
 
 

@@ -41,7 +41,7 @@ var SidePanel = React.createClass({
 
         if ((nowViewing && nowViewing.length > 0) && this.state.notSearching === true) {
             content = (
-            <div className="now-viewing hide-if-searching">
+            <div className="now-viewing">
                 <ul className="now-viewing__header list-reset clearfix">
                     <li className='col col-5'><label className='label'> Data Sets </label></li>
                     <li className='col col-5'><button onClick={this.removeAll} className='btn'>{btnRemove}</button></li>
@@ -56,7 +56,7 @@ var SidePanel = React.createClass({
             <div>
             <div className='workbench__header'>
             <SearchBox terria={terria} dataSearch={false} callback={this.searchStart}/>
-            <div><ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} /></div>
+            <ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} />
             </div>
             {content}
         </div>);

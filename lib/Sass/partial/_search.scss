@@ -5,6 +5,7 @@
   @include transition(all 0.5s ease-in-out);
   .workbench &{
     max-height: calc(100vh - #{$workbench-header});
+    margin-top: calc(#{$input-height} + #{$padding*2});
     overflow-y: auto;
   }
   .data-panel &{
