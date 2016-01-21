@@ -1,0 +1,6 @@
+lat,lon,enum,postcode
+-37,145,hello,2001
+-37.5,145,boots,2010
+-38,145,frogs,2011
+-37,145.5,boots,3001
+-37.25,145.25,hello,3012
