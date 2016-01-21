@@ -9,6 +9,7 @@ var CatalogItem = require('../../lib/Models/CatalogItem');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
+var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 
 
 describe('Catalog', function() {
@@ -20,11 +21,12 @@ describe('Catalog', function() {
         });
         createCatalogMemberFromType.register('group', CatalogGroup);
         createCatalogMemberFromType.register('item', CatalogItem);
+        createCatalogMemberFromType.register('imageryLayerCatalogItem', ImageryLayerCatalogItem);
     });
 
     it('can register group and geojson, and update from json', function(done) {
-        createCatalogMemberFromType.register('group', CatalogGroup);
         createCatalogMemberFromType.register('geojson', GeoJsonCatalogItem);
+
         loadJson('test/init/geojson-with-template.json').then(function(json) {
             var catalog = new Catalog(terria);
             catalog.updateFromJson(json.catalog).then(function() {
@@ -36,7 +38,7 @@ describe('Catalog', function() {
         }).otherwise(done.fail);
     });
 
-    describe('enableByShareKeys', function () {
+    describe('updateByShareKeys', function () {
         var catalog;
 
         beforeEach(function() {
@@ -66,7 +68,7 @@ describe('Catalog', function() {
                 expect(catalog.group.items[0].isOpen).toBeFalsy();
                 expect(catalog.group.isOpen).toBeFalsy();
 
-                return catalog.enableByShareKeys(['C']);
+                return catalog.updateByShareKeys({'C': {}});
             }).then(function () {
                 expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
                 expect(catalog.group.items[0].isOpen).toBeTruthy();
@@ -99,7 +101,7 @@ describe('Catalog', function() {
                 expect(catalog.group.items[0].isOpen).toBeFalsy();
                 expect(catalog.group.isOpen).toBeFalsy();
 
-                return catalog.enableByShareKeys(['C']);
+                return catalog.updateByShareKeys({'C': {}});
             }).then(function () {
                 expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
                 expect(catalog.group.items[0].isOpen).toBeTruthy();
@@ -126,7 +128,7 @@ describe('Catalog', function() {
                     type: 'group'
                 }
             ]).then(function() {
-                return catalog.enableByShareKeys(['C']);
+                return catalog.updateByShareKeys({'C': {}});
             }).then(function () {
                 expect(catalog.group.items[0].isOpen).toBe(true);
                 expect(catalog.group.isOpen).toBe(true);
@@ -143,7 +145,7 @@ describe('Catalog', function() {
                         {
                             id: 'C',
                             name: 'C',
-                            type: 'item',
+                            type: 'item'
                         }
                     ]
                 },
@@ -159,7 +161,7 @@ describe('Catalog', function() {
                     ]
                 }
             ]).then(function() {
-                return catalog.enableByShareKeys(['C', 'D']);
+                return catalog.updateByShareKeys({'C': {}, 'D': {}});
             }).then(function () {
                 expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
                 expect(catalog.group.items[1].items[0].isEnabled).toBe(true);
@@ -186,9 +188,29 @@ describe('Catalog', function() {
                     ]
                 }));
 
-                return catalog.enableByShareKeys(['Root Group/A', 'C']);
+                return catalog.updateByShareKeys({'Root Group/A': {}, 'C': {}});
             }).then(function () {
                 expect(catalog.group.items[0].items[0].isEnabled).toBe(true);
+                done();
+            }).otherwise(fail);
+        });
+
+        it('updates associated shared data like opacity', function(done) {
+            catalog.updateFromJson([
+                {
+                    name: 'A',
+                    type: 'imageryLayerCatalogItem'
+                }
+            ]).then(function() {
+                expect(catalog.group.items[0].opacity).not.toBe(0.3);
+
+                return catalog.updateByShareKeys({
+                    'Root Group/A': {
+                        opacity: 0.3
+                    }
+                });
+            }).then(function () {
+                expect(catalog.group.items[0].opacity).toBe(0.3);
                 done();
             }).otherwise(fail);
         });
