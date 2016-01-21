@@ -2,7 +2,7 @@
 const React = require('react');
 const SearchBox = require('./SearchBox.jsx');
 const ModalTriggerButton = require('./ModalTriggerButton.jsx');
-const Legend = require('./Legend.jsx');
+const NowViewingItem = require('./NowViewingItem.jsx');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
@@ -48,7 +48,7 @@ var SidePanel = React.createClass({
                     <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
                 </ul>
                 <ul className="now-viewing__content list-reset">
-                    {nowViewing.map((item, i)=>(<Legend nowViewingItem={item} key={i} />))}
+                    {nowViewing.map((item, i)=>(<NowViewingItem nowViewingItem={item} key={i} />))}
                 </ul>
             </div>);
         }

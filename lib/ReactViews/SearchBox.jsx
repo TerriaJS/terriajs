@@ -127,11 +127,10 @@ let SearchBox = React.createClass({
 
             if((searchType) && value.length > 0){
                 if(searchResults.length === 0){
-                    if(searchState === false){
-                      results = <li className ='label label-no-results'>No results found </li>;
-                    }
-                    else{
-                      results = <Loader />;
+                    if(searchState){
+                        results = <Loader />
+                    } else{
+                        results = <li className ='label'>No results found </li>;
                     }
                 }
                 else{

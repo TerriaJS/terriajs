@@ -15,10 +15,15 @@
       background: $dark;
       li{
         padding: 0 $padding;
-      }
-      button{
-        border-bottom: $border-style;
-        padding: $padding 0;
+        button{
+          border-bottom: $border-style;
+          padding: $padding 0;
+        }
+        &:last-child{
+          button{
+            border-bottom: 1px solid transparent;
+          }
+        }
       }
     }
   }

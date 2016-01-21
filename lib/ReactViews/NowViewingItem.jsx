@@ -7,7 +7,7 @@ const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // Maybe should be called nowViewingItem?
-var Legend = React.createClass({
+const NowViewingItem = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes:{
       nowViewingItem: React.PropTypes.object
@@ -45,6 +45,10 @@ var Legend = React.createClass({
         this.props.nowViewingItem.opacity = event.target.value;
     },
 
+    dragReorder: function(event){
+
+    },
+
     render: function() {
         var nowViewingItem = this.props.nowViewingItem;
 
@@ -60,7 +64,10 @@ var Legend = React.createClass({
         }
         return (
             <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')}>
-              <button onClick={this.toggleDisplay} className="btn block now-viewing__item-title">{nowViewingItem.name}</button>
+              <div className ="now-viewing__item-header clearfix">
+                <button onClick={this.dragReorder} className="btn block col col-11">{nowViewingItem.name}</button>
+                <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={this.state.isOpen ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
+              </div>
               <div className ="now-viewing__item-inner">
                 <ul className="list-reset flex clearfix now-viewing__item-control">
                   <li><button onClick={this.zoom} title="Zoom in data" className="btn zoom">Zoom To</button></li>
@@ -80,4 +87,4 @@ var Legend = React.createClass({
         );
     }
 });
-module.exports = Legend;
+module.exports = NowViewingItem;
