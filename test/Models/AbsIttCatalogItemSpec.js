@@ -82,6 +82,7 @@ describe('AbsIttCatalogItem', function() {
         var fakeServer;
 
         beforeEach(function() {
+            sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
             fakeServer = sinon.fakeServer.create();
             fakeServer.autoRespond = true;
 
@@ -255,6 +256,7 @@ describe('AbsIttCatalogItem', function() {
 
         afterEach(function() {
             fakeServer.restore();
+            fakeServer.xhr.filters.length = 0;
         });
 
         it('works', function(done) {

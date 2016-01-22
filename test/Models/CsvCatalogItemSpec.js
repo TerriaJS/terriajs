@@ -368,6 +368,15 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('does not use region mapping when regions present with lat and lon', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_postcode.csv';
+        csvItem.load().then(function() {
+            var source = csvItem.dataSource;
+            return source.regionPromise.then(function(regionDetails) {
+                expect(regionDetails).toBeUndefined();
+            }).otherwise(fail);
+        }).otherwise(fail).then(done);
+    });
 
     it('detects LGAs by code', function(done) {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
