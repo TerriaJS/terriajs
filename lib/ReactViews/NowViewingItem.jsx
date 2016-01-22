@@ -60,12 +60,12 @@ const NowViewingItem = React.createClass({
     }
     const selectedIndex = parseInt(e.currentTarget.dataset.key);
     this.props.onDragStart(selectedIndex);
-
   },
 
   onDragOver(e) {
-    const selectedIndex = parseInt(e.currentTarget.dataset.key);
-    this.props.onDragOver(e);
+    let over = parseInt(e.currentTarget.dataset.key);
+    if(e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) { over++; }
+    this.props.onDragOver(over);
     e.preventDefault();
   },
 
@@ -84,7 +84,7 @@ const NowViewingItem = React.createClass({
   render() {
     const nowViewingItem = this.props.nowViewingItem;
     return (
-          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')} onDragOver ={this.onDragOverItem} >
+          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
             <div className ="now-viewing__item-header clearfix">
               <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
               <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={this.state.isOpen ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>

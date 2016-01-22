@@ -11,24 +11,27 @@ const NowViewingContainer = React.createClass({
 
   getInitialState() {
     return {
-      placeholderIndex: 0,
-      isDropped: false,
-      draggedItemIndex: 0,
-      items: this.props.nowViewing
+      placeholderIndex: -1,
+      draggedItemIndex: -1,
+      items: this.props.nowViewing,
+      selectedItem: null
     };
   },
 
   onDragStart(i) {
     this.setState({
-      draggedItemIndex: i
+      draggedItemIndex: i,
+      selectedItem: this.state.items[i]
     });
   },
 
   onDragEnd(e) {
-   let item = this.state.items[this.state.draggedItemIndex];
-   this.state.items.splice(this.state.draggedItemIndex, 1);
-   this.state.items.splice(this.state.placeholder, 0, item);
-
+    if(this.state.placeholderIndex === -1) {
+      this.state.items.splice(this.state.draggedItemIndex, 1);
+      this.state.draggedItemIndex = -1;
+      this.setState(this.state);
+      return;
+    }
   },
 
   onDragOverDropZone(e) {
@@ -38,16 +41,18 @@ const NowViewingContainer = React.createClass({
   },
 
   onDragOverItem(i) {
-   console.log('over item');
-    // let over = parseInt(e.currentTarget.dataset.key);
-    // if(e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) { over++; }
-    // if(over !== this.state.placeholderIndex) { this.setState({ placeholderIndex: over }); }
+   if(i !== this.state.placeholderIndex) { this.setState({ placeholderIndex: i }); }
   },
 
   onDrop(e) {
-    this.setState({
-      isDropped: true
-    });
+    if(this.state.placeholderIndex !== -1) {
+      this.state.items.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
+      if(this.state.draggedItemIndex > this.state.placeholderIndex) {
+        this.state.draggedItemIndex = this.state.draggedItemIndex + 1;
+      }
+      this.state.placeholderIndex = -1;
+      this.setState(this.state);
+    }
   },
 
   onDragLeave(){
@@ -59,7 +64,7 @@ const NowViewingContainer = React.createClass({
   },
 
   renderPlaceholder(i) {
-   return <li className='nowViewing__drop-zone' data-key={i} key={i} onDrop={this.onDrop} onDragOver={this.onDragOverDropZone} ></li>;
+   return <li className={(this.state.placeholderIndex === i) ? 'nowViewing__drop-zone is-active' : 'nowViewing__drop-zone'} data-key={i} key={i} onDrop={this.onDrop} onDragOver={this.onDragOverDropZone} ></li>;
   },
 
   renderListElements() {
@@ -75,7 +80,7 @@ const NowViewingContainer = React.createClass({
   },
 
   render() {
-    return <ul className="now-viewing__content list-reset" onDragEnd={this.onDragEnd} onDragLeave={this.onDragLeave}>
+    return <ul className="now-viewing__content list-reset" onDragLeave={this.onDragLeave} onDragEnd={this.onDragEnd}>
            {this.renderListElements()}
            </ul>;
   }
