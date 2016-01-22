@@ -158,14 +158,16 @@ describe('FeatureInfoPanelSectionViewModel', function() {
                 fakeEvent = {
                     currentTarget: {
                         parentNode: {
-                            getBoundingClientRect: jasmine.createSpy('getBoundingClientRectangle')
+                            parentNode: {
+                                getBoundingClientRect: jasmine.createSpy('getBoundingClientRectangle')
+                            }
                         }
                     },
                     stopPropagation: jasmine.createSpy('stopPropagation')
                 };
 
-                fakeEvent.currentTarget.parentNode.getBoundingClientRect.and.returnValue({
-                    bottom: 10,
+                fakeEvent.currentTarget.parentNode.parentNode.getBoundingClientRect.and.returnValue({
+                    top: 10,
                     left: 15,
                     right: 35
                 });
