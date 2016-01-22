@@ -16,6 +16,7 @@ Change Log
   - `LegendUrl` has been moved to the `Map` directory.
   - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
+* Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
 
 ### 1.0.54
 
