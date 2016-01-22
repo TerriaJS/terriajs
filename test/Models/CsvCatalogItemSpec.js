@@ -361,7 +361,6 @@ describe('CsvCatalogItem with region mapping', function() {
     it('does not think a lat-lon csv has regions', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
         csvItem.load().then(function() {
-            var source = csvItem.dataSource;
             var regionDetails = csvItem.dataSource._regionDetails;
             expect(regionDetails).toBeUndefined();
         }).otherwise(fail).then(done);
@@ -370,7 +369,6 @@ describe('CsvCatalogItem with region mapping', function() {
     it('does not use region mapping when regions present with lat and lon', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_postcode.csv';
         csvItem.load().then(function() {
-            var source = csvItem.dataSource;
             var regionDetails = csvItem.dataSource._regionDetails;
             expect(regionDetails).toBeUndefined();
         }).otherwise(fail).then(done);
