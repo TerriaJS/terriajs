@@ -16,9 +16,10 @@
         <div class="feature-info-panel-section-content" data-bind="html: rawData, visible: rawData && (!templatedInfo || rawDataVisible),
           css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
 
+        <!-- ko if: rawData && (!templatedInfo || rawDataVisible) && dataDownloads.length > 0 -->
         <div class="feature-info-panel-download-dropdown">
-            <div class="feature-info-panel-download-dropdown-inner" data-bind="visible: rawData && (!templatedInfo || rawDataVisible) && dataDownloads.length > 0,
-                css: { 'feature-info-panel-download-dropdown-inner-active': downloadOptionsVisible}, style: downloadDropdownPosition">
+            <div class="feature-info-panel-download-dropdown-inner"
+                 data-bind="css: { 'feature-info-panel-download-dropdown-inner-active': downloadOptionsVisible}, style: downloadDropdownPosition">
                 <a class="feature-info-panel-download-option" data-bind="attr: { download: catalogItemName + ':' + name + '.' + dataDownloads[0].ext,
                     href: dataDownloads[0].href }, click: checkDataUriCompatibility, css: { 'feature-info-panel-download-option-first': dataDownloads.length > 1 }">
                     <span class="feature-info-panel-download-icon" data-bind="cesiumSvgPath: { path: svgDownload, width: 1792, height: 1792 }"></span>
@@ -40,7 +41,6 @@
                 </ul>
             </div>
         </div>
-
-
+        <!-- /ko -->
     </div>
 </div>
