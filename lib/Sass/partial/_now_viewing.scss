@@ -81,10 +81,12 @@ $now-viewing-margin: 5px;
   @include greybox();
   margin: $now-viewing-margin 0;
   &.is-dragging{
-    background: rgab(#fff, 0.15);
+    opacity: 0.5;
+    .now-viewing__header{
+      display: none;
+    }
     .now-viewing__item-inner{
-      max-height: 0;
-      overflow: hidden;
+      display: none;
     }
   }
 }

@@ -72,7 +72,7 @@ const NowViewingItem = React.createClass({
     render() {
         const nowViewingItem = this.props.nowViewingItem;
         return (
-          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '') + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
+          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
             <div className ="now-viewing__item-header clearfix">
               <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
               <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={this.state.isOpen ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
