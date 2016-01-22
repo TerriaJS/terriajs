@@ -120,7 +120,8 @@ $now-viewing-margin: 5px;
 
 .nowViewing__drop-zone.is-active{
   height: calc(#{$input-height} + #{$padding});
-  background: rgba(yellow, 0.5);
+  background: rgba(#FFF, 0.5);
+  border: 2px dashed #fff;
 }
 
 .nowViewing__drop-zone{
