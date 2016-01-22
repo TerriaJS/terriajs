@@ -394,14 +394,13 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
             csvItem.dataSource.enable();  // The recolorFunction call is only made once the layer is enabled.
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var indexOfThisRegion = regionDetail.regionProvider.regions.map(getId).indexOf(31000);
-                expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined(); // Test that at least one rgba component is defined.
-                expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
-            }).otherwise(fail);
+            var regionDetails = csvItem.dataSource._regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var indexOfThisRegion = regionDetail.regionProvider.regions.map(getId).indexOf(31000);
+            expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined(); // Test that at least one rgba component is defined.
+            expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
         }).otherwise(fail).then(done);
     });
 
