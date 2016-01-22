@@ -6,10 +6,6 @@ const defined = require('terriajs-cesium/Source/Core/defined');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
-const ALLOWED_DROP_EFFECT = 'move';
-const NO_DROPZONE = null;
-const BLANK_FUNCTION = ()=>{};
-
 // Maybe should be called nowViewingItem?
 const NowViewingItem = React.createClass({
   mixins: [ObserveModelMixin, PureRenderMixin],
@@ -51,9 +47,26 @@ const NowViewingItem = React.createClass({
   },
 
   onDragStart(e) {
+    this.setState({
+      isOpen: false
+    });
+
+    if (defined(e.dataTransfer)) {
+        e.dataTransfer.dropEffect = 'move';
+        e.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
+    } else {
+        e.originalEvent.dataTransfer.dropEffect = 'move';
+        e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
+    }
+    const selectedIndex = parseInt(e.currentTarget.dataset.key);
+    this.props.onDragStart(selectedIndex);
+
   },
 
-  onDragEnd(e) {
+  onDragOver(e) {
+    const selectedIndex = parseInt(e.currentTarget.dataset.key);
+    this.props.onDragOver(e);
+    e.preventDefault();
   },
 
   renderLegend(_nowViewingItem) {
@@ -71,9 +84,9 @@ const NowViewingItem = React.createClass({
   render() {
     const nowViewingItem = this.props.nowViewingItem;
     return (
-          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')} >
+          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')} onDragOver ={this.onDragOverItem} >
             <div className ="now-viewing__item-header clearfix">
-              <button draggable='true' data-key={this.props.index}  onDragOver ={this.onDragOverItem} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
+              <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
               <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={this.state.isOpen ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
             </div>
             <div className ="now-viewing__item-inner">
