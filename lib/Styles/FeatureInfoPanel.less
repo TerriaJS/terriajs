@@ -142,7 +142,9 @@
     }
 }
 
-.feature-info-panel-download-dropdown-options-visible {
+.feature-info-panel-download-dropdown-inner-active {
+    position: fixed;
+
     .feature-info-panel-download-options {
         display: block;
     }
@@ -163,6 +165,7 @@
     cursor: pointer;
     margin-top: 10px;
     vertical-align: top;
+    margin-right: 5px;
 
     &:hover {
         fill: @panel-emphasized-text-color;
@@ -171,17 +174,19 @@
 
 .feature-info-panel-download-dropdown {
     float: right;
-    padding: 0px 5px;
-    background-color: rgb(76, 78, 79);
     margin: 10px;
+    height: 35px;
+}
+
+.feature-info-panel-download-dropdown-inner {
+    background-color: rgb(76, 78, 79);
     fill: @info-text-color;
 }
 
 .feature-info-panel-download-options {
     display: none;
-    position: fixed;
     background-color: rgb(76, 78, 79);
-    margin-top: 2px;
+    border-top: 2px solid @panel-background-color;
 
     & .feature-info-panel-download-option {
         margin-left: 32px;
@@ -192,7 +197,7 @@
     color: @info-text-color;
     display: inline-block;
     padding: 6px 12px 2px 2px;
-    margin: 4px 1px 4px 3px;
+    margin: 4px 1px 4px 8px;
     height: 19px;
 
     &:hover {

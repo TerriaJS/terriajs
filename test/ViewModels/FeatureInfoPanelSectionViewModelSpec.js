@@ -205,7 +205,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
             });
 
             it('should set the position of the dropdown to just below that of the parent of the event target', function() {
-                expect(section.downloadOptionsPosition).toEqual({
+                expect(section.downloadDropdownPosition).toEqual({
                     top: '10px',
                     left: '15px',
                     width: '20px'
