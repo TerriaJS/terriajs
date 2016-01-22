@@ -16,166 +16,217 @@ const wfsUrlRegex = /\bwfs\b/i;
 
 // Local and remote data have different dataType options
 const remoteDataType = [
-                {value: 'auto', name: 'Auto-detect (recommended)'},
-                {value: 'wms-getCapabilities', name: 'Web Map Service (WMS) Server'},
-                {value: 'wmts-getCapabilities', name: 'Web Map Tile Service (WMTS) Server'},
-                {value: 'wfs-getCapabilities', name: 'Web Feature Service (WFS) Server'},
-                {value: 'esri-group', name: 'Esri ArcGIS Server'},
-                {value: 'open-street-map', name: 'Open Street Map Server'},
-                {value: 'geojson', name: 'GeoJSON'},
-                {value: 'kml', name: 'KML or KMZ'},
-                {value: 'csv', name: 'CSV'},
-                {value: 'czml', name: 'CZML'},
-                {value: 'gpx', name: 'GPX'},
-                {value: 'other', name: 'Other (use conversion service)'},
+    {
+        value: 'auto',
+        name: 'Auto-detect (recommended)'
+    },
+    {
+        value: 'wms-getCapabilities',
+        name: 'Web Map Service (WMS) Server'
+    },
+    {
+        value: 'wmts-getCapabilities',
+        name: 'Web Map Tile Service (WMTS) Server'
+    },
+    {
+        value: 'wfs-getCapabilities',
+        name: 'Web Feature Service (WFS) Server'
+    },
+    {
+        value: 'esri-group',
+        name: 'Esri ArcGIS Server'
+    },
+    {
+        value: 'open-street-map',
+        name: 'Open Street Map Server'
+    },
+    {
+        value: 'geojson',
+        name: 'GeoJSON'
+    },
+    {
+        value: 'kml',
+        name: 'KML or KMZ'
+    },
+    {
+        value: 'csv',
+        name: 'CSV'
+    },
+    {
+        value: 'czml',
+        name: 'CZML'
+    },
+    {
+        value: 'gpx',
+        name: 'GPX'
+    },
+    {
+        value: 'other',
+        name: 'Other (use conversion service)'
+    },
 ];
 
 const localDataType = [
-                {value: 'auto', name: 'Auto-detect (recommended)'},
-                {value: 'geojson', name: 'GeoJSON'},
-                {value: 'kml', name: 'KML or KMZ'},
-                {value: 'csv', name: 'CSV'},
-                {value: 'czml', name: 'CZML'},
-                {value: 'gpx', name: 'GPX'},
-                {value: 'other', name: 'Other (use conversion service)'},
+    {
+        value: 'auto',
+        name: 'Auto-detect (recommended)'
+    },
+    {
+        value: 'geojson',
+        name: 'GeoJSON'
+    },
+    {
+        value: 'kml',
+        name: 'KML or KMZ'
+    },
+    {
+        value: 'csv',
+        name: 'CSV'
+    },
+    {
+        value: 'czml',
+        name: 'CZML'
+    },
+    {
+        value: 'gpx',
+        name: 'GPX'
+    },
+    {
+        value: 'other',
+        name: 'Other (use conversion service)'
+    },
 ];
 
 // Add data panel in modal window -> My data tab
 const AddData = React.createClass({
-  propTypes: {
-    terria: React.PropTypes.object,
-    updateCatalog: React.PropTypes.func
-  },
+    propTypes: {
+        terria: React.PropTypes.object,
+        updateCatalog: React.PropTypes.func
+    },
 
-  getInitialState() {
-    return {
-      localDataType: localDataType[0], // By default select the first item (auto)
-      remoteDataType: remoteDataType[0],
-      activeTab: 'local', // By default local data tab is active
-      remoteUrl: undefined // By default there's no remote url
-    };
-  },
-  selectLocalOption(option) {
-    this.setState({
-      localDataType: option
-    });
-  },
+    getInitialState() {
+        return {
+            localDataType: localDataType[0], // By default select the first item (auto)
+            remoteDataType: remoteDataType[0],
+            activeTab: 'local', // By default local data tab is active
+            remoteUrl: undefined // By default there's no remote url
+        };
+    },
+    selectLocalOption(option) {
+        this.setState({
+            localDataType: option
+        });
+    },
 
-  selectRemoteOption(option) {
-    this.setState({
-      remoteDataType: option
-    });
-  },
+    selectRemoteOption(option) {
+        this.setState({
+            remoteDataType: option
+        });
+    },
 
-  changeTab(active) {
-    this.setState({
-      activeTab: active
-    });
-  },
+    changeTab(active) {
+        this.setState({
+            activeTab: active
+        });
+    },
 
-  handleFile(e) {
-    const that = this;
-    const files = e.target.files;
-    if (!defined(files)) {
-      console.log('file api not supported');
+    handleFile(e) {
+        const that = this;
+        const files = e.target.files;
+        if (!defined(files)) {
+            console.log('file api not supported');
+        }
+
+        if (files.length > 0) {
+            let promises = [];
+
+            for (let i = 0; i < files.length; ++i) {
+                const file = files[i];
+                this.props.terria.analytics.logEvent('uploadFile', 'browse', file.name);
+                promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
+            }
+            when.all(promises, () => {
+                const userCatalog = that.props.terria.catalog.userAddedDataGroup;
+                that.props.updateCatalog(userCatalog);
+            });
+        }
+    },
+
+    handleUrl(e) {
+        const url = this.state.remoteUrl;
+        e.preventDefault();
+        this.props.terria.analytics.logEvent('addDataUrl', url);
+        const that = this;
+        let promise;
+        if (that.state.remoteDataType.value === 'auto') {
+            const wmsThenWfs = [loadWms, loadWfs];
+            const wfsThenWms = [loadWfs, loadWms];
+            const others = [loadWmts, loadMapServer, loadMapServerLayer, loadFile];
+
+            let loadFunctions;
+
+            // Does this look like a WFS URL?  If so, try that first (before WMS).
+            // This accounts for the fact that a single URL often works as both WMS and WFS.
+            if (wfsUrlRegex.test(url)) {
+                loadFunctions = wfsThenWms.concat(others);
+            } else {
+                loadFunctions = wmsThenWfs.concat(others);
+            }
+
+            promise = loadAuto(that, loadFunctions);
+        } else if (that.state.remoteDataType.value === 'wms-getCapabilities') {
+            promise = loadWms(that);
+        } else if (that.state.remoteDataType.value === 'wfs-getCapabilities') {
+            promise = loadWfs(that);
+        } else if (that.state.remoteDataType.value === 'esri-group') {
+            promise = loadMapServer(that).otherwise(() => {
+                return loadMapServerLayer(that);
+            });
+        } else if (that.state.remoteDataType.value === 'open-street-map') {
+            promise = loadOpenStreetMapServer(that);
+        } else {
+            promise = loadFile(that);
+        }
+
+        addUserCatalogMember(this.props.terria, promise).then(() => {
+            const userCatalog = that.props.terria.catalog.userAddedDataGroup;
+            that.props.updateCatalog(userCatalog);
+        });
+    },
+
+    onRemoteUrlChange(event) {
+        this.setState({
+            remoteUrl: event.target.value
+        });
+    },
+
+    render() {
+        return (<div className='add-data clearfix'>
+        <ul className='list-reset row relative'>
+        <li className='col col-6'>
+        <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
+        <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
+        <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
+        <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
+        <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Select a local data file to add: </label>
+        <FileInput accept=".csv,.kml" onChange={this.handleFile} />
+        </div>
+        </li>
+        <li className='col col-6'>
+        <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn-data-upload ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
+        <div aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
+        <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
+        <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
+        <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Enter the URL of the data file or web service: </label>
+        <form>
+        <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+        <button onClick={this.handleUrl} className="btn btn-add-url">Add</button>
+        </form>
+        </div>
+        </li>
+        </ul>
+        </div>);
     }
-
-    if (files.length > 0) {
-      let promises = [];
-
-      for (let i = 0; i < files.length; ++i) {
-        const file = files[i];
-        this.props.terria.analytics.logEvent('uploadFile', 'browse', file.name);
-        promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
-      }
-      when.all(promises, ()=>{
-        const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-        that.props.updateCatalog(userCatalog);
-      });
-    }
-  },
-
-  handleUrl(e) {
-    const url = this.state.remoteUrl;
-    e.preventDefault();
-    this.props.terria.analytics.logEvent('addDataUrl', url);
-    const that = this;
-    let promise;
-    if (that.state.remoteDataType.value === 'auto') {
-      const wmsThenWfs = [loadWms, loadWfs];
-      const wfsThenWms = [loadWfs, loadWms];
-      const others = [loadWmts, loadMapServer, loadMapServerLayer, loadFile];
-
-      let loadFunctions;
-
-        // Does this look like a WFS URL?  If so, try that first (before WMS).
-        // This accounts for the fact that a single URL often works as both WMS and WFS.
-      if (wfsUrlRegex.test(url)) {
-        loadFunctions = wfsThenWms.concat(others);
-      }
-      else {
-        loadFunctions = wmsThenWfs.concat(others);
-      }
-
-      promise = loadAuto(that, loadFunctions);
-    }
-    else if (that.state.remoteDataType.value === 'wms-getCapabilities') {
-      promise = loadWms(that);
-    }
-    else if (that.state.remoteDataType.value === 'wfs-getCapabilities') {
-      promise = loadWfs(that);
-    }
-    else if (that.state.remoteDataType.value === 'esri-group') {
-      promise = loadMapServer(that).otherwise(()=>{
-        return loadMapServerLayer(that);
-      });
-    }
-    else if (that.state.remoteDataType.value === 'open-street-map') {
-      promise = loadOpenStreetMapServer(that);
-    }
-    else {
-      promise = loadFile(that);
-    }
-
-    addUserCatalogMember(this.props.terria, promise).then(()=>{
-      const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-      that.props.updateCatalog(userCatalog);
-    });
-  },
-
-  onRemoteUrlChange(event) {
-    this.setState({
-      remoteUrl: event.target.value
-    });
-  },
-
-  render() {
-    return (<div className='add-data clearfix'>
-            <ul className='list-reset row relative'>
-              <li className='col col-6'>
-                <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
-                <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-                <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-                <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
-                <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Select a local data file to add: </label>
-                <FileInput accept=".csv,.kml" onChange={this.handleFile} />
-                </div>
-              </li>
-              <li className='col col-6'>
-                <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn-data-upload ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
-                <div aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-                <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-                <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
-                <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Enter the URL of the data file or web service: </label>
-                <form>
-                    <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
-                    <button onClick={this.handleUrl} className="btn btn-add-url">Add</button>
-                </form>
-                 </div>
-              </li>
-            </ul>
-            </div>);
-  }
 });
 
 function loadAuto(viewModel, loadFunctions, index) {

@@ -10,44 +10,46 @@ var Dropdown = React.createClass({
     },
 
     getDefaultProps: function() {
-      return {
-        options: [],
-        selected: undefined
-      };
+        return {
+            options: [],
+            selected: undefined
+        };
     },
 
-    getInitialState: function(){
-      return {
-        isOpen: false
-      };
+    getInitialState: function() {
+        return {
+            isOpen: false
+        };
     },
 
-    componentWillUnmount: function(){
-      this.setState({
-        isOpen: false
-      });
+    componentWillUnmount: function() {
+        this.setState({
+            isOpen: false
+        });
     },
 
-    toggleList: function(){
-      this.setState({
-        isOpen: !this.state.isOpen
-      });
+    toggleList: function() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
     },
 
-    select: function(option, event){
-      this.props.selectOption(option);
-      //close drop down on select
-      this.setState({
-        isOpen: false
-      });
+    select: function(option, event) {
+        this.props.selectOption(option);
+        //close drop down on select
+        this.setState({
+            isOpen: false
+        });
     },
 
     render: function() {
-      var that = this;
+        var that = this;
 
         return (<div className={'dropdown mb2 ' + (this.state.isOpen ? 'is-open' : '')}>
                   <button onClick={this.toggleList} className='btn btn-dropdown' >{this.props.selected.name}<i className='icon icon-chevron-down right'></i></button>
-                    <ul className='list-reset dropdown__list'><li><button onClick={this.toggleList} className='btn btn-small right'><i className='icon icon-close'></i></button></li>{this.props.options.map(function(option, i){ return (<li key ={i}><button onClick={that.select.bind(null, option)} className={'btn btn-dropdown-option ' + (option === that.props.selected ? 'is-selected' : '')}>{option.name}</button></li>); })}
+                    <ul className='list-reset dropdown__list'><li><button onClick={this.toggleList} className='btn btn-small right'><i className='icon icon-close'></i></button></li>{this.props.options.map(function(option, i) {
+                return (<li key ={i}><button onClick={that.select.bind(null, option)} className={'btn btn-dropdown-option ' + (option === that.props.selected ? 'is-selected' : '')}>{option.name}</button></li>);
+            })}
                     </ul>
                 </div>);
     }

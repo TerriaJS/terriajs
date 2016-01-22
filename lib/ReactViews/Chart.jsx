@@ -1,21 +1,21 @@
 'use strict';
-var React = require('react');
+const React = require('react');
 //This is the wrapper for the chart component, not completed yet
-var Chart = React.createClass({
-    getInitialState: function() {
+const Chart = React.createClass({
+    getInitialState() {
         return {
             isOpen: false,
             isVisible: false
         };
     },
 
-    closeChart: function() {
+    closeChart() {
         this.setState({
             isOpen: false
         });
     },
 
-    render: function() {
+    render() {
         return (<div className={(this.state.isOpen === true ? 'is-open' : '') + ' chart-panel-holder'}>
             <div className="chart-panel p1">
               <div className="chart-panel-header flex flex-justify flex-center">

@@ -14,7 +14,7 @@ const Transforms = require('terriajs-cesium/Source/Core/Transforms');
 // the compass on map
 const Compass = React.createClass({
     propTypes: {
-        terria : React.PropTypes.object
+        terria: React.PropTypes.object
     },
 
     getInitialState() {
@@ -25,32 +25,32 @@ const Compass = React.createClass({
         };
     },
 
-    componentDidMount(){
-      //this.props.terria.afterViewerChanged.addEventListener(viewerChange);
-      viewerChange(this);
+    componentDidMount() {
+        //this.props.terria.afterViewerChanged.addEventListener(viewerChange);
+        viewerChange(this);
     },
 
     handleMouseDown(e) {
-      const compassElement = e.currentTarget;
-      const compassRectangle = e.currentTarget.getBoundingClientRect();
-      const maxDistance = compassRectangle.width / 2.0;
-      const center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
-      const clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
-      const vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
-      const distanceFromCenter = Cartesian2.magnitude(vector);
+        const compassElement = e.currentTarget;
+        const compassRectangle = e.currentTarget.getBoundingClientRect();
+        const maxDistance = compassRectangle.width / 2.0;
+        const center = new Cartesian2((compassRectangle.right - compassRectangle.left) / 2.0, (compassRectangle.bottom - compassRectangle.top) / 2.0);
+        const clickLocation = new Cartesian2(e.clientX - compassRectangle.left, e.clientY - compassRectangle.top);
+        const vector = Cartesian2.subtract(clickLocation, center, vectorScratch);
+        const distanceFromCenter = Cartesian2.magnitude(vector);
 
-      const distanceFraction = distanceFromCenter / maxDistance;
+        const distanceFraction = distanceFromCenter / maxDistance;
 
-      const nominalTotalRadius = 145;
-      const norminalGyroRadius = 50;
+        const nominalTotalRadius = 145;
+        const norminalGyroRadius = 50;
 
-      if (distanceFraction < norminalGyroRadius / nominalTotalRadius) {
-        orbit(this, compassElement, vector);
-      } else if (distanceFraction < 1.0) {
-        rotate(this, compassElement, vector);
-      } else {
-        return true;
-      }
+        if (distanceFraction < norminalGyroRadius / nominalTotalRadius) {
+            orbit(this, compassElement, vector);
+        } else if (distanceFraction < 1.0) {
+            rotate(this, compassElement, vector);
+        } else {
+            return true;
+        }
     },
     handleDoubleClick(e) {
         const scene = this.props.terria.cesium.scene;
@@ -64,7 +64,7 @@ const Compass = React.createClass({
         const center = scene.globe.pick(ray, scene, centerScratch);
         if (!defined(center)) {
             // Globe is barely visible, so reset to home view.
-            this.props.terria.currentViewer.zoomTo( this.props.terria.homeView, 1.5);
+            this.props.terria.currentViewer.zoomTo(this.props.terria.homeView, 1.5);
             return;
         }
 
@@ -82,24 +82,24 @@ const Compass = React.createClass({
     },
 
     resetRotater() {
-      this.setState({
-        orbitCursorOpacity: 0,
-        orbitCursorAngle: 0
-      });
+        this.setState({
+            orbitCursorOpacity: 0,
+            orbitCursorAngle: 0
+        });
     },
 
     render() {
 
-      const rotationMarkerStyle = {
-          transform: 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
-          WebkitTransform: 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
-          opacity: this.state.orbitCursorOpacity
+        const rotationMarkerStyle = {
+            transform: 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
+            WebkitTransform: 'rotate(-' + this.state.orbitCursorAngle + 'rad)',
+            opacity: this.state.orbitCursorOpacity
         };
 
-      const outerCircleStyle = {
-          transform: 'rotate(-' + this.state.heading + 'rad)',
-          WebkitTransform: 'rotate(-' + this.state.heading + 'rad)',
-          opacity: ''
+        const outerCircleStyle = {
+            transform: 'rotate(-' + this.state.heading + 'rad)',
+            WebkitTransform: 'rotate(-' + this.state.heading + 'rad)',
+            opacity: ''
         };
 
         return (
@@ -108,7 +108,7 @@ const Compass = React.createClass({
               <div className='compass-inner-ring' title='Click and drag to rotate the camera'></div>
               <div className='compass-rotation-marker' style={rotationMarkerStyle}></div>
             </div>
-          );
+            );
     }
 });
 
@@ -256,7 +256,7 @@ function orbit(viewModel, compassElement, cursorVector) {
     function updateAngleAndOpacity(vector, compassWidth) {
         const angle = Math.atan2(-vector.y, vector.x);
         viewModel.setState({
-          orbitCursorAngle : CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO)
+            orbitCursorAngle: CesiumMath.zeroToTwoPi(angle - CesiumMath.PI_OVER_TWO)
         });
 
         const distance = Cartesian2.magnitude(vector);
@@ -264,7 +264,7 @@ function orbit(viewModel, compassElement, cursorVector) {
         const distanceFraction = Math.min(distance / maxDistance, 1.0);
         const easedOpacity = 0.5 * distanceFraction * distanceFraction + 0.5;
         viewModel.setState({
-          orbitCursorOpacity : easedOpacity
+            orbitCursorOpacity: easedOpacity
         });
 
         viewModel.props.terria.cesium.notifyRepaintRequired();
@@ -308,9 +308,9 @@ function viewerChange(viewModel) {
             viewModel._unsubcribeFromPostRender = undefined;
         }
 
-        viewModel._unsubcribeFromPostRender =  viewModel.props.terria.cesium.scene.postRender.addEventListener(function() {
+        viewModel._unsubcribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(function() {
             viewModel.setState({
-              heading: viewModel.props.terria.cesium.scene.camera.heading
+                heading: viewModel.props.terria.cesium.scene.camera.heading
             });
         });
     } else {

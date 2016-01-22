@@ -4,24 +4,24 @@ const React = require('react');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
-//Individual dataset
-var DataCatalogItem = React.createClass({
+// Individual dataset
+const DataCatalogItem = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
-    propTypes:{
+    propTypes: {
         item: React.PropTypes.object
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
             isPreviewed: false
         };
     },
 
-    addToPreview: function(event) {
+    addToPreview(event) {
         event.preventDefault();
 
-        if (this.state.isPreviewed === false){
-          window.previewUpdate.raiseEvent(this.props.item);
+        if (this.state.isPreviewed === false) {
+            window.previewUpdate.raiseEvent(this.props.item);
         }
 
         this.setState({
@@ -29,26 +29,24 @@ var DataCatalogItem = React.createClass({
         });
     },
 
-    addToMap: function(event) {
+    addToMap(event) {
         event.preventDefault();
 
         this.props.item.toggleEnabled();
         this.addToPreview(event);
     },
 
-    renderIconClass(item){
-        if (item.isEnabled){
-            if (item.isLoading){
+    renderIconClass(item) {
+        if (item.isEnabled) {
+            if (item.isLoading) {
                 return 'icon icon-loader';
-            } else {
-                return 'icon icon-minus';
             }
-        } else {
-            return 'icon icon-add';
+            return 'icon icon-minus';
         }
+        return 'icon icon-add';
     },
 
-    render: function() {
+    render() {
         let item = this.props.item;
         return (
             <li className="clearfix data-catalog-item flex">
@@ -57,7 +55,7 @@ var DataCatalogItem = React.createClass({
                 </button>
                 <button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button>
             </li>
-        );
+            );
     }
 });
 

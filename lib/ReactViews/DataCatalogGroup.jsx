@@ -1,31 +1,31 @@
 'use strict';
-var React = require('react');
-var DataCatalogItem = require('./DataCatalogItem.jsx');
-var Loader = require('./Loader.jsx');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
+const React = require('react');
+const DataCatalogItem = require('./DataCatalogItem.jsx');
+const Loader = require('./Loader.jsx');
+const when = require('terriajs-cesium/Source/ThirdParty/when');
 
-var DataCatalogGroup = React.createClass({
-  propTypes: {
-    onClick: React.PropTypes.func,
-    group: React.PropTypes.object,
-    items: React.PropTypes.array
-  },
+const DataCatalogGroup = React.createClass({
+    propTypes: {
+        onClick: React.PropTypes.func,
+        group: React.PropTypes.object,
+        items: React.PropTypes.array
+    },
 
-  getInitialState: function() {
-    // This is to make state update
-    return {
-      openId: ''
-    };
-  },
+    getInitialState() {
+        // This is to make state update
+        return {
+            openId: ''
+        };
+    },
 
-    handleClick: function(e) {
-        var that = this;
+    handleClick(e) {
+        let that = this;
         if (that.props.group.isOpen === false) {
             that.setState({
                 openId: new Date()
             });
 
-            when(that.props.group.load()).then(function() {
+            when(that.props.group.load()).then(()=>{
                 that.setState({
                     openId: new Date()
                 });
@@ -39,13 +39,13 @@ var DataCatalogGroup = React.createClass({
         that.props.group.isOpen = !that.props.group.isOpen;
     },
 
-    renderGroup(group){
+    renderGroup(group) {
         if (group.isOpen === true) {
             if (group.items && group.items.length > 0) {
-                return group.items.map(function(member, i) {
-                    if (member.isGroup){
+                return group.items.map((member, i)=>{
+                    if (member.isGroup) {
                         return (<DataCatalogGroup group={member} key={i} />);
-                    }else {
+                    } else {
                         return (<DataCatalogItem item={member} key={i}/>);
                     }
                 });
@@ -55,7 +55,7 @@ var DataCatalogGroup = React.createClass({
         }
     },
 
-    render: function() {
+    render() {
         let group = this.props.group;
         return (
             <li>
@@ -64,7 +64,7 @@ var DataCatalogGroup = React.createClass({
                 {this.renderGroup(group)}
               </ul>
             </li>
-        );
+            );
     }
 });
 

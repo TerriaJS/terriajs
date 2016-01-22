@@ -1,13 +1,13 @@
 'use strict';
-var React = require('react');
-var DataCatalogGroup = require('./DataCatalogGroup.jsx');
-var DataPreview = require('./DataPreview.jsx');
-var SearchBox = require('./SearchBox.jsx');
+const React = require('react');
+const DataCatalogGroup = require('./DataCatalogGroup.jsx');
+const DataPreview = require('./DataPreview.jsx');
+const SearchBox = require('./SearchBox.jsx');
 
 // The DataCatalog Tab
-var DataCatalogTab = React.createClass({
+const DataCatalogTab = React.createClass({
     propTypes: {
-      terria:  React.PropTypes.object
+        terria: React.PropTypes.object
     },
 
     getInitialState() {
@@ -18,31 +18,29 @@ var DataCatalogTab = React.createClass({
     },
 
     componentWillMount() {
-      var that = this;
-      //Update preview app if an item has been added as previewed
-      window.previewUpdate.addEventListener(function(_previewed) {
-          that.setState({
-              previewed: _previewed
-          });
-      });
+        let that = this;
+        //Update preview app if an item has been added as previewed
+        window.previewUpdate.addEventListener(function(_previewed) {
+            that.setState({
+                previewed: _previewed
+            });
+        });
     },
 
-    onPreviewChange(){
+    onPreviewChange() {},
 
+    checkSearch(_notSearching) {
+        this.setState({
+            notSearching: _notSearching
+        });
     },
 
-    checkSearch(_notSearching){
-      this.setState({
-        notSearching: _notSearching
-      });
-    },
-
-    renderDataCatalog(dataCatalog){
-      if(this.state.notSearching === true){
-          return (<ul className = 'list-reset data-catalog'>
-              {dataCatalog.map((group, i)=>{
-                return (<DataCatalogGroup group={group} key={i}/>);
-              }, this)}
+    renderDataCatalog(dataCatalog) {
+        if (this.state.notSearching === true) {
+            return (<ul className = 'list-reset data-catalog'>
+              {dataCatalog.map((group, i) => {
+                    return (<DataCatalogGroup group={group} key={i}/>);
+                }, this)}
             </ul>);
         }
     },
@@ -60,7 +58,7 @@ var DataCatalogTab = React.createClass({
                 <DataPreview terria = {terria} previewed={this.state.previewed} />
               </div>
             </div>
-        );
+            );
     }
 });
 
