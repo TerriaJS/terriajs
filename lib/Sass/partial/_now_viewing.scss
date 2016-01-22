@@ -80,6 +80,13 @@ $now-viewing-margin: 5px;
 .now-viewing__item{
   @include greybox();
   margin: $now-viewing-margin 0;
+  &.is-dragging{
+    background: rgab(#fff, 0.15);
+    .now-viewing__item-inner{
+      max-height: 0;
+      overflow: hidden;
+    }
+  }
 }
 
 .now-viewing__item-inner{
@@ -110,10 +117,12 @@ $now-viewing-margin: 5px;
 }
 
 .nowViewing__drop-zone.is-active{
-  height: 50px;
-  background: yellow;
+  height: calc(#{$input-height} + #{$padding});
+  background: rgba(yellow, 0.5);
 }
 
 .nowViewing__drop-zone{
-  height: 5px;
+  height: 2px;
+  background: transparent;
+  @include transition(height 0.25s ease-in-out);
 }

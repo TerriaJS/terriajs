@@ -8,73 +8,73 @@ const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // Maybe should be called nowViewingItem?
 const NowViewingItem = React.createClass({
-  mixins: [ObserveModelMixin, PureRenderMixin],
-  propTypes: {
-    nowViewingItem: React.PropTypes.object,
-    index: React.PropTypes.number
-  },
+    mixins: [ObserveModelMixin, PureRenderMixin],
 
-  getInitialState() {
-    return {
-      isOpen: true,
-      isVisible: true
-    };
-  },
+    propTypes: {
+        nowViewingItem: React.PropTypes.object,
+        index: React.PropTypes.number
+    },
 
-  removeFromMap() {
-    this.props.nowViewingItem.isEnabled = false;
-  },
+    getInitialState() {
+        return {
+            isOpen: true,
+            isVisible: true
+        };
+    },
 
-  toggleDisplay() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  },
+    removeFromMap() {
+        this.props.nowViewingItem.isEnabled = false;
+    },
 
-  toggleVisibility() {
-    this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
-    this.setState({
-      isVisible: !this.state.isVisible
-    });
-  },
+    toggleDisplay() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+    },
 
-  zoom() {
-    this.props.nowViewingItem.zoomToAndUseClock();
-  },
+    toggleVisibility() {
+        this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
+        this.setState({
+            isVisible: !this.state.isVisible
+        });
+    },
 
-  changeOpacity(event) {
-    this.props.nowViewingItem.opacity = event.target.value;
-  },
+    zoom() {
+        this.props.nowViewingItem.zoomToAndUseClock();
+    },
 
-  onDragStart(e) {
-    this.setState({
-      isOpen: false
-    });
-    this.props.onDragStart(e);
-  },
+    changeOpacity(event) {
+        this.props.nowViewingItem.opacity = event.target.value;
+    },
 
-  onDragOver(e) {
-    this.props.onDragOver(e);
-  },
+    onDragStart(e) {
+        this.props.onDragStart(e);
+    },
 
-  renderLegend(_nowViewingItem) {
-    if (_nowViewingItem.legendUrl) {
-      if (_nowViewingItem.legendUrl.isImage()) {
-        return <a href={_nowViewingItem.legendUrl.url} target="_blank"><img src={_nowViewingItem.legendUrl.url}/></a>;
-      }
-      else {
-        return <a href={_nowViewingItem.legendUrl.input} target="_blank">Open legend in a separate tab</a>;
-      }
-    }
-    return 'No legend to show';
-  },
+    onDragOver(e) {
+        this.props.onDragOver(e);
+    },
 
-  render() {
-    const nowViewingItem = this.props.nowViewingItem;
-    return (
-          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
+    onDragEnd(e) {
+        this.props.onDragEnd(e);
+    },
+
+    renderLegend(_nowViewingItem) {
+        if (_nowViewingItem.legendUrl) {
+            if (_nowViewingItem.legendUrl.isImage()) {
+                return <a href={_nowViewingItem.legendUrl.url} target="_blank"><img src={_nowViewingItem.legendUrl.url}/></a>;
+            }
+            return <a href={_nowViewingItem.legendUrl.input} target="_blank">Open legend in a separate tab</a>;
+        }
+        return 'No legend to show';
+    },
+
+    render() {
+        const nowViewingItem = this.props.nowViewingItem;
+        return (
+          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '') + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
             <div className ="now-viewing__item-header clearfix">
-              <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
+              <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
               <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={this.state.isOpen ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
             </div>
             <div className ="now-viewing__item-inner">
@@ -94,6 +94,6 @@ const NowViewingItem = React.createClass({
             </div>
             </li>
       );
-  }
+    }
 });
 module.exports = NowViewingItem;
