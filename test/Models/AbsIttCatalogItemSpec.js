@@ -266,8 +266,7 @@ describe('AbsIttCatalogItem', function() {
                 url: 'http://abs.example.com'
             });
             item.load().then(function() {
-                return item.dataSource.regionPromise;
-            }).then(function(regionDetails) {
+                var regionDetails = item.dataSource._regionDetails;
                 expect(regionDetails).toBeDefined();
                 var columnNames = item._dataSource.tableStructure.getColumnNames();
                 expect(columnNames.slice(0, 3)).toEqual(["aus", "Year", "0-2 years"]);
@@ -286,8 +285,7 @@ describe('AbsIttCatalogItem', function() {
                 filter: ["REGIONTYPE.SA4"]  // Should use SA4 now
             });
             item.load().then(function() {
-                return item.dataSource.regionPromise;
-            }).then(function(regionDetails) {
+                var regionDetails = item.dataSource._regionDetails;
                 expect(regionDetails).toBeDefined();
                 var columnNames = item._dataSource.tableStructure.getColumnNames();
                 expect(columnNames.slice(0, 3)).toEqual(["sa4_code_2011", "Year", "0-2 years"]);
