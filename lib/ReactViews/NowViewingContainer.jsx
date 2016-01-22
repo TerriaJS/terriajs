@@ -3,6 +3,7 @@ const React = require('react');
 const NowViewingItem = require('./NowViewingItem.jsx');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
+const defined = require('terriajs-cesium/Source/Core/defined');
 
 const NowViewingContainer = React.createClass({
     propTypes: {
@@ -18,30 +19,44 @@ const NowViewingContainer = React.createClass({
       };
     },
 
-    onDragStart(i) {
-      this.setState({
-        draggedItemIndex: i,
-        selectedItem: this.state.items[i]
-      });
+    onDragStart(e) {
+        if (defined(e.dataTransfer)) {
+            e.dataTransfer.dropEffect = 'move';
+            e.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
+        }
+        else {
+            e.originalEvent.dataTransfer.dropEffect = 'move';
+            e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
+        }
+
+        const selectedIndex = parseInt(e.currentTarget.dataset.key, 10);
+
+        this.setState({
+          draggedItemIndex: selectedIndex,
+          selectedItem: this.state.items[selectedIndex]
+        });
     },
 
     onDragEnd(e) {
-      if(this.state.placeholderIndex === -1) {
-        this.state.items.splice(this.state.draggedItemIndex, 1);
-        this.state.draggedItemIndex = -1;
-        this.setState(this.state);
-        return;
-      }
+        if(this.state.placeholderIndex === -1) {
+            this.state.items.splice(this.state.draggedItemIndex, 1);
+            this.state.draggedItemIndex = -1;
+            this.setState(this.state);
+            return;
+        }
     },
 
     onDragOverDropZone(e) {
-      const placeholderIndex = parseInt(e.currentTarget.dataset.key);
-      if(placeholderIndex !== this.state.placeholderIndex) { this.setState({ placeholderIndex: placeholderIndex });}
-      e.preventDefault();
+        const placeholderIndex = parseInt(e.currentTarget.dataset.key, 10);
+        if(placeholderIndex !== this.state.placeholderIndex) { this.setState({ placeholderIndex: placeholderIndex });}
+        e.preventDefault();
     },
 
-    onDragOverItem(i) {
-     if(i !== this.state.placeholderIndex) { this.setState({ placeholderIndex: i }); }
+    onDragOverItem(e) {
+        let over = parseInt(e.currentTarget.dataset.key, 10);
+        if(e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) { over++; }
+        if(over !== this.state.placeholderIndex) { this.setState({ placeholderIndex: over }); }
+        e.preventDefault();
     },
 
     onDrop(e) {

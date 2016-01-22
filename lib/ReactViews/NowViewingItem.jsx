@@ -50,23 +50,11 @@ const NowViewingItem = React.createClass({
     this.setState({
       isOpen: false
     });
-
-    if (defined(e.dataTransfer)) {
-        e.dataTransfer.dropEffect = 'move';
-        e.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
-    } else {
-        e.originalEvent.dataTransfer.dropEffect = 'move';
-        e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
-    }
-    const selectedIndex = parseInt(e.currentTarget.dataset.key);
-    this.props.onDragStart(selectedIndex);
+    this.props.onDragStart(e);
   },
 
   onDragOver(e) {
-    let over = parseInt(e.currentTarget.dataset.key);
-    if(e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) { over++; }
-    this.props.onDragOver(over);
-    e.preventDefault();
+    this.props.onDragOver(e);
   },
 
   renderLegend(_nowViewingItem) {
