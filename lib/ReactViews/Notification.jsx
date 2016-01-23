@@ -1,8 +1,8 @@
 'use strict';
 const React = require('react');
 const Notification = React.createClass({
-  render() {
-    return <li className='loader'><i className='icon icon-loader'></i> Loading</li>;
-  }
+    render() {
+        return <div> Notification </div>;
+    }
 });
 module.exports = Notification;

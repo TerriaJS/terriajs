@@ -35,7 +35,6 @@ const DataCatalogGroup = React.createClass({
                 openId: new Date()
             });
         }
-        //Should not change prop here
         that.props.group.isOpen = !that.props.group.isOpen;
     },
 
@@ -45,18 +44,16 @@ const DataCatalogGroup = React.createClass({
                 return group.items.map((member, i)=>{
                     if (member.isGroup) {
                         return (<DataCatalogGroup group={member} key={i} />);
-                    } else {
-                        return (<DataCatalogItem item={member} key={i}/>);
                     }
+                    return (<DataCatalogItem item={member} key={i}/>);
                 });
-            } else {
-                return <Loader/>;
             }
+            return <Loader/>;
         }
     },
 
     render() {
-        let group = this.props.group;
+        const group = this.props.group;
         return (
             <li>
               <button className ={'btn btn-catalogue ' + (group.isOpen ? 'is-open' : '')} onClick={this.handleClick} >{group.name} <i className={'icon ' + (group.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')}></i></button>

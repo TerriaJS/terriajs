@@ -7,7 +7,7 @@ const AddData = require('./AddData.jsx');
 // My data tab include Add data section and preview section
 const MyDataTab = React.createClass({
     propTypes: {
-      terria: React.PropTypes.object
+        terria: React.PropTypes.object
     },
 
     getInitialState() {
@@ -18,12 +18,12 @@ const MyDataTab = React.createClass({
     },
 
     componentWillMount() {
-        var that = this;
-        window.previewUpdate.addEventListener(function(_previewed) {
-          that.setState({
-              previewed: _previewed
-          });
-      });
+        const that = this;
+        window.previewUpdate.addEventListener((_previewed)=>{
+            that.setState({
+                previewed: _previewed
+            });
+        });
     },
 
     updateCatalog(dataCatalog) {
@@ -40,7 +40,7 @@ const MyDataTab = React.createClass({
                         <h3 className='mt1 mb1'> Previously added data </h3>
                         <ul className = 'list-reset data-catalog'><DataCatalogGroup group={this.state.dataCatalog}/></ul>
                         </div>);
-            }
+        }
     },
 
     render() {

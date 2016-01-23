@@ -4,9 +4,7 @@ const React = require('react');
 const Terria = require('../Models/Terria');
 const TerriaViewer = require('./TerriaViewer.js');
 const ViewerMode = require('../Models/ViewerMode');
-const CameraView = require('../Models/CameraView');
 const defined = require('terriajs-cesium/Source/Core/defined');
-const DeveloperError = require('terriajs-cesium/Source/Core/DeveloperError');
 const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
 const createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
 
@@ -32,7 +30,7 @@ const DataPreviewMap = React.createClass({
         this.terriaPreview.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
 
         // TODO: we shouldn't hard code the base map here. (copyed from branch analyticswithcharts)
-        var positron = new OpenStreetMapCatalogItem(this.terriaPreview);
+        let positron = new OpenStreetMapCatalogItem(this.terriaPreview);
         positron.name = 'Positron (Light)';
         positron.url = 'http://basemaps.cartocdn.com/light_all/';
         positron.attribution = '© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0';
@@ -47,11 +45,11 @@ const DataPreviewMap = React.createClass({
             this.catalogItem.isEnabled = false;
         }
 
-        var previewed = nextProp.previewed;
+        let previewed = nextProp.previewed;
         if (defined(previewed.type)) {
-            var type = previewed.type;
-            var serializedCatalogItem = previewed.serializeToJson();
-            var catalogItem = createCatalogMemberFromType(type, this.terriaPreview);
+            let type = previewed.type;
+            let serializedCatalogItem = previewed.serializeToJson();
+            let catalogItem = createCatalogMemberFromType(type, this.terriaPreview);
 
             catalogItem.updateFromJson(serializedCatalogItem);
             catalogItem.isEnabled = true;
@@ -65,22 +63,22 @@ const DataPreviewMap = React.createClass({
     },
 
     render() {
-        let that = this;
-        return (<div className='terria-preview' ref={function(previewContainer) {
-                if (previewContainer !== null) {
-                    var t = TerriaViewer.create(that.terriaPreview, {
-                        mapContainer: previewContainer
-                    });
-                    //disable preview map interaction
-                    var map = t.terria.leaflet.map;
-                    map.touchZoom.disable();
-                    map.doubleClickZoom.disable();
-                    map.scrollWheelZoom.disable();
-                    map.boxZoom.disable();
-                    map.keyboard.disable();
-                    map.dragging.disable();
-                }
-            }}>
+        const that = this;
+        return (<div className='terria-preview' ref={(previewContainer)=>{
+            if (previewContainer !== null) {
+                const t = TerriaViewer.create(that.terriaPreview, {
+                    mapContainer: previewContainer
+                });
+                // disable preview map interaction
+                let map = t.terria.leaflet.map;
+                map.touchZoom.disable();
+                map.doubleClickZoom.disable();
+                map.scrollWheelZoom.disable();
+                map.boxZoom.disable();
+                map.keyboard.disable();
+                map.dragging.disable();
+            }
+        }}>
             </div>);
     }
 });

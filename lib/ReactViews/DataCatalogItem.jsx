@@ -47,7 +47,7 @@ const DataCatalogItem = React.createClass({
     },
 
     render() {
-        let item = this.props.item;
+        const item = this.props.item;
         return (
             <li className="clearfix data-catalog-item flex">
                 <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>

@@ -1,6 +1,6 @@
 'use strict';
 const React = require('react');
-//This is the wrapper for the chart component, not completed yet
+// This is the wrapper for the chart component, not completed yet
 const Chart = React.createClass({
     getInitialState() {
         return {

@@ -94,7 +94,7 @@ const NowViewingContainer = React.createClass({
     },
 
     renderNowViewingItem(item, i) {
-        return <NowViewingItem nowViewingItem={item} index={i} key={'placeholder-' + i} dragging={this.state.draggedItemIndex === i ? true : false} onDragOver={this.onDragOverItem} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}/>;
+        return <NowViewingItem nowViewingItem={item} index={i} key={'placeholder-' + i} dragging={this.state.draggedItemIndex === i} onDragOver={this.onDragOverItem} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}/>;
     },
 
     renderPlaceholder(i) {

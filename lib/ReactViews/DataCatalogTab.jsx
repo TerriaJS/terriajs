@@ -18,9 +18,9 @@ const DataCatalogTab = React.createClass({
     },
 
     componentWillMount() {
-        let that = this;
-        //Update preview app if an item has been added as previewed
-        window.previewUpdate.addEventListener(function(_previewed) {
+        const that = this;
+        // Update preview app if an item has been added as previewed
+        window.previewUpdate.addEventListener((_previewed)=>{
             that.setState({
                 previewed: _previewed
             });
@@ -39,8 +39,8 @@ const DataCatalogTab = React.createClass({
         if (this.state.notSearching === true) {
             return (<ul className = 'list-reset data-catalog'>
               {dataCatalog.map((group, i) => {
-                    return (<DataCatalogGroup group={group} key={i}/>);
-                }, this)}
+                  return (<DataCatalogGroup group={group} key={i}/>);
+              }, this)}
             </ul>);
         }
     },

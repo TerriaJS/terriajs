@@ -1,10 +1,10 @@
 'use strict';
-var Mustache = require('mustache');
-var React = require('react');
-var defined = require('terriajs-cesium/Source/Core/defined');
+const Mustache = require('mustache');
+const React = require('react');
+const defined = require('terriajs-cesium/Source/Core/defined');
 
-//Individual feature info section
-var FeatureInfoSection = React.createClass({
+// Individual feature info section
+const FeatureInfoSection = React.createClass({
     propTypes: {
         template: React.PropTypes.object,
         feature: React.PropTypes.object,
@@ -13,33 +13,33 @@ var FeatureInfoSection = React.createClass({
         index: React.PropTypes.number
     },
 
-    getInitialState: function() {
+    getInitialState() {
         return {
-            isOpen: this.props.index === 0 ? true : false
+            isOpen: this.props.index === 0
         };
     },
 
-    componentWillReceiveProps: function() {
+    componentWillReceiveProps() {
         this.setState({
-            isOpen: this.props.index === 0 ? true : false
+            isOpen: this.props.index === 0
         });
     },
 
-    toggleSection: function() {
+    toggleSection() {
         this.setState({
             isOpen: !this.state.isOpen
         });
     },
 
-    htmlFromFeature: function(feature, clock) {
+    htmlFromFeature(feature, clock) {
         // If a template is defined, render it using feature.properties, which is non-time-varying.
         // If no template is provided, show feature.description, which may be time-varying.
-        var data = feature.properties;
+        const data = feature.properties;
 
         if (defined(this.props.template)) {
             return Mustache.render(this.props.template, data);
         }
-        var description = feature.description.getValue(clock.currentTime);
+        const description = feature.description.getValue(clock.currentTime);
         if (description.properties) {
             return JSON.stringify(description.properties);
         }
@@ -48,16 +48,22 @@ var FeatureInfoSection = React.createClass({
         };
     },
 
-    render: function() {
-        var title = 'data group';
-        if (defined(this.props.catalogItemName)){
-            title = this.props.catalogItemName;
+    renderIconClass() {
+        return 'icon ' + (this.state.isOpen ? 'icon-chevron-down' : 'icon-chevron-right');
+    },
+
+    renderDataTitle() {
+        if(defined(this.props.catalogItemName)) {
+            return this.props.catalogItemName;
         }
-        var iconClass = 'icon ' + (this.state.isOpen ? 'icon-chevron-down' : 'icon-chevron-right');
-        return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-visible' : '')}><button onClick={this.toggleSection} className='btn btn-feature-name'>{title}<i className={iconClass}></i></button><section className='feature-info-panel__content' dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
+        return 'data group';
+    },
+
+    render() {
+        return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-visible' : '')}><button onClick={this.toggleSection} className='btn btn-feature-name'>{this.renderDataTitle()}<i className={this.renderIconClass()}></i></button><section className='feature-info-panel__content' dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
     }
 });
 
-//to do : handle if feature.description is time-varying
+// To do : handle if feature.description is time-varying
 
 module.exports = FeatureInfoSection;

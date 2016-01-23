@@ -40,7 +40,7 @@ const DataPreview = React.createClass({
     },
 
     render() {
-        let previewed = this.props.previewed;
+        const previewed = this.props.previewed;
 
         return (<figure><DataPreviewMap terria={this.props.terria} previewed={this.props.previewed}/><figcaption>
                  <div className="title clearfix">

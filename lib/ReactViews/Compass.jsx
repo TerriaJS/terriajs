@@ -26,7 +26,7 @@ const Compass = React.createClass({
     },
 
     componentDidMount() {
-        //this.props.terria.afterViewerChanged.addEventListener(viewerChange);
+        // this.props.terria.afterViewerChanged.addEventListener(viewerChange);
         viewerChange(this);
     },
 
