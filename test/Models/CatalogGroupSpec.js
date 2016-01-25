@@ -275,4 +275,39 @@ describe('CatalogGroup', function() {
             });
         });
     });
+
+    it('adds new children to the catalog index', function() {
+        var item1 = new CatalogItem(terria);
+        item1.id = 'blah';
+
+        group.add(item1);
+
+        expect(terria.catalog.shareKeyIndex['blah']).toBe(item1);
+    });
+
+    describe('removes removed children from the catalog index', function() {
+        it('when child has a specific id', function() {
+            var item1 = new CatalogItem(terria);
+            item1.id = 'blah';
+
+            group.add(item1);
+            group.remove(item1);
+
+            expect(terria.catalog.shareKeyIndex['blah']).toBeUndefined();
+        });
+
+        it('when child has no id', function() {
+            var item1 = new CatalogItem(terria);
+            item1.name = 'blah';
+            group.name = 'foo';
+
+            group.add(item1);
+
+            expect(terria.catalog.shareKeyIndex['foo/blah']).toBe(item1);
+
+            group.remove(item1);
+
+            expect(terria.catalog.shareKeyIndex['foo/blah']).toBeUndefined();
+        });
+    });
 });
