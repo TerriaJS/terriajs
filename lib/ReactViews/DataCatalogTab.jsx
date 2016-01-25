@@ -12,27 +12,18 @@ const DataCatalogTab = React.createClass({
 
     getInitialState() {
         return {
-            previewed: undefined,
-            notSearching: true
+            previewed: undefined
         };
     },
 
     onPreviewChange() {},
 
-    checkSearch(_notSearching) {
-        this.setState({
-            notSearching: _notSearching
-        });
-    },
-
     renderDataCatalog(dataCatalog) {
-        if (this.state.notSearching === true) {
-            return (<ul className = 'list-reset data-catalog'>
-              {dataCatalog.map((group, i) => {
-                  return (<DataCatalogGroup group={group} key={i}/>);
-              }, this)}
-            </ul>);
-        }
+        return (<ul className = 'list-reset data-catalog'>
+          {dataCatalog.map((group, i) => {
+              return (<DataCatalogGroup group={group} key={i}/>);
+          }, this)}
+        </ul>);
     },
 
     render() {
@@ -44,7 +35,6 @@ const DataCatalogTab = React.createClass({
                 <SearchBox terria = {terria}
                            mapSearch = {false}
                            gazetterSearch={false}
-                           callback={this.checkSearch}
                            defaultSearchText={this.props.defaultSearchText}/>
                 {this.renderDataCatalog(dataCatalog)}
               </div>

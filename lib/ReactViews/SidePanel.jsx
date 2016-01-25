@@ -19,24 +19,12 @@ const SidePanel = React.createClass({
         toggleModalWindow: React.PropTypes.func
     },
 
-    getInitialState() {
-        return {
-            notSearching: true
-        };
-    },
-
     removeAll() {
         this.props.terria.nowViewing.removeAll();
     },
 
-    searchStart(_notSearching) {
-        this.setState({
-            notSearching: _notSearching
-        });
-    },
-
     renderContent(nowViewing) {
-        if ((nowViewing && nowViewing.length > 0) && this.state.notSearching === true) {
+        if (nowViewing && nowViewing.length > 0) {
             return (
               <div className="now-viewing">
                   <ul className="now-viewing__header list-reset clearfix">
@@ -53,7 +41,7 @@ const SidePanel = React.createClass({
         return (
         <div>
         <div className='workbench__header'>
-        <SearchBox terria={this.props.terria} dataSearch={false} callback={this.searchStart} toggleModalWindow={this.props.toggleModalWindow} />
+        <SearchBox terria={this.props.terria} dataSearch={false} toggleModalWindow={this.props.toggleModalWindow} />
         <ModalTriggerButton btnHtml={btnAdd} toggleModalWindow={this.props.toggleModalWindow} classNames = 'now-viewing__add' activeTab={1} />
         </div>
         {this.renderContent(this.props.terria.nowViewing.items)}

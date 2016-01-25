@@ -45,6 +45,7 @@ const SearchBox = React.createClass({
         this.setState({
             value: nextProps.defaultSearchText
         });
+        this.doSearch(nextProps.defaultSearchText);
     },
 
     handleChange(event) {
@@ -54,42 +55,48 @@ const SearchBox = React.createClass({
         this.doSearch(event.target.value);
     },
 
-    doSearch(keyword) {
-        // let parent know search has started
-        if (this.props.callback) {
-            this.props.callback(!event.target.value);
-        }
-
+    dataCatalogSearch(keyword) {
         const dataCatalogSearch = new CatalogItemNameSearchProviderViewModel(this.props);
+        const that = this;
+        when(dataCatalogSearch.search(keyword)).then(() => {
+            that.setState({
+                dataCatalogResults: dataCatalogSearch.searchResults,
+                dataCatalogIsSearching: dataCatalogSearch.isSearching
+            });
+        });
+    },
+
+    bingMapSearch(keyword) {
         const bingMapSearch = new BingMapsSearchProviderViewModel(this.props);
+        const that = this;
+        when(bingMapSearch.search(keyword)).then(() => {
+            that.setState({
+                bingMapSearchResults: bingMapSearch.searchResults,
+                bingMapIsSearching: bingMapSearch.isSearching
+            });
+        });
+    },
+
+    gazetterSearch(keyword) {
         const gazetterSearch = new GazetteerSearchProviderViewModel(this.props);
         const that = this;
-
-        if (that.props.dataSearch !== false) {
-            when(dataCatalogSearch.search(keyword)).then(() => {
-                that.setState({
-                    dataCatalogResults: dataCatalogSearch.searchResults,
-                    dataCatalogIsSearching: dataCatalogSearch.isSearching
-                });
+        when(gazetterSearch.search(keyword)).then(() => {
+            that.setState({
+                gazetterSearchResults: gazetterSearch.searchResults,
+                gazetterIsSearching: gazetterSearch.isSearching
             });
+        });
+    },
+
+    doSearch(keyword) {
+        if (this.props.dataSearch !== false) {
+            this.dataCatalogSearch(keyword);
         }
-
-        if (that.props.mapSearch !== false) {
-            when(bingMapSearch.search(keyword)).then(() => {
-                that.setState({
-                    bingMapSearchResults: bingMapSearch.searchResults,
-                    bingMapIsSearching: bingMapSearch.isSearching
-                });
-            });
+        if (this.props.mapSearch !== false) {
+            this.bingMapSearch(keyword);
         }
-
-        if (that.props.gazetterSearch !== false) {
-            when(gazetterSearch.search(keyword)).then(() => {
-                that.setState({
-                    gazetterSearchResults: gazetterSearch.searchResults,
-                    gazetterIsSearching: gazetterSearch.isSearching
-                });
-            });
+        if (this.props.gazetterSearch !== false) {
+            this.gazetterSearch(keyword);
         }
     },
 
@@ -97,8 +104,6 @@ const SearchBox = React.createClass({
         this.setState({
             value: ''
         });
-        // Let parent component know it is currently not searching
-        this.props.callback(true);
     },
 
     searchKeyword(_component) {
@@ -158,7 +163,7 @@ const SearchBox = React.createClass({
         }
 
         return (
-            <div className='search-data-search'>
+            <div className='search'>
                 <form className='search-data-form relative' autoComplete='off'>
                   <label htmlFor='search' className='hide'> Type keyword to search </label>
                   <i className='icon icon-search'></i>
