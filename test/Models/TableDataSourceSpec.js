@@ -5,13 +5,14 @@ var loadText = require('terriajs-cesium/Source/Core/loadText');
 var TableDataSource = require('../../lib/Models/TableDataSource');
 var TableStyle = require('../../lib/Models/TableStyle');
 
-var tableDataSource;
-
-beforeEach(function() {
-    tableDataSource = new TableDataSource();
-});
 
 describe('TableDataSource', function() {
+
+    var tableDataSource;
+
+    beforeEach(function() {
+        tableDataSource = new TableDataSource();
+    });
 
     it('can be constructed', function() {
         expect(tableDataSource).toBeDefined();

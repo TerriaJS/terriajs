@@ -137,14 +137,14 @@ describe('CsvCatalogItem with lat and lon', function() {
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.hasLatitudeAndLongitude).toBe(true);
+            expect(csvItem.dataSource.tableStructure.hasLatitudeAndLongitude).toBe(true);
         }).otherwise(fail).then(done);
     });
 
     it('identifies "latitude" and "longitude" fields', function(done) {
         csvItem.updateFromJson( { data: 'latitude,longitude,value\n-37,145,10' });
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.hasLatitudeAndLongitude).toBe(true);
+            expect(csvItem.dataSource.tableStructure.hasLatitudeAndLongitude).toBe(true);
         }).otherwise(fail).then(done);
     });
 
@@ -157,11 +157,12 @@ describe('CsvCatalogItem with lat and lon', function() {
     });
 
     it('handles numeric fields containing (quoted) thousands commas', function(done) {
-        csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"' });
+        csvItem.updateFromJson({data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"'});
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.hasLatitudeAndLongitude).toBe(true);
-            expect(csvItem.dataSource.tableStructure.columns[2].values[0]).toEqual(1000);
-            expect(csvItem.dataSource.tableStructure.columns[2].values[1]).toBeCloseTo(234567.89, 2);
+            var tableStructure = csvItem.dataSource.tableStructure;
+            expect(tableStructure.hasLatitudeAndLongitude).toBe(true);
+            expect(tableStructure.columns[2].values[0]).toEqual(1000);
+            expect(tableStructure.columns[2].values[1]).toBeCloseTo(234567.89, 2);
         }).otherwise(fail).then(done);
     });
 
@@ -226,7 +227,6 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
         }).otherwise(fail).then(done);
     });
-
 
     it('supports dates and very long displayDuration', function(done) {
         var sevenDaysInMinutes = 60 * 24 * 7;

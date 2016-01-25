@@ -132,4 +132,15 @@ describe('TableColumn', function() {
         expect(result).toEqual(target);
     });
 
+    it('supports displayDuration', function() {
+        var data = ['2016-01-03', '2016-01-04', '2016-01-05'];
+        var sevenDaysInMinutes = 60 * 24 * 7;
+        var tableColumn = new TableColumn('date', data, {displayDuration: sevenDaysInMinutes});        
+        var availability = tableColumn.availabilities[0];
+        expect(availability.contains(JulianDate.fromIso8601('2016-01-09'))).toBe(true);
+        expect(availability.contains(JulianDate.fromIso8601('2016-01-11'))).toBe(false);
+        var durationInSeconds = JulianDate.secondsDifference(availability.stop, availability.start);
+        expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
+    });
+
 });
