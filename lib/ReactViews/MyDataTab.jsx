@@ -17,15 +17,6 @@ const MyDataTab = React.createClass({
         };
     },
 
-    componentWillMount() {
-        const that = this;
-        // window.previewUpdate.addEventListener((_previewed)=>{
-        //     that.setState({
-        //         previewed: _previewed
-        //     });
-        // });
-    },
-
     updateCatalog(dataCatalog) {
         this.setState({
             dataCatalog: dataCatalog
@@ -46,11 +37,12 @@ const MyDataTab = React.createClass({
     render() {
         return (<div className="panel-content row">
                 <div className='col col-6 absolute top-left'>
-                <AddData updateCatalog={this.updateCatalog} terria={this.props.terria} />
+                <AddData updateCatalog={this.updateCatalog}
+                         terria={this.props.terria}
+                />
                 {this.renderContent()}
                 </div>
                 <div className="data-preview preview col col-6 relative">
-                <DataPreview terria = {this.props.terria} previewed={this.state.previewed} />
                 </div>
                 </div>);
     }

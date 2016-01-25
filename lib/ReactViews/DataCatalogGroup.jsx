@@ -8,7 +8,9 @@ const DataCatalogGroup = React.createClass({
     propTypes: {
         onClick: React.PropTypes.func,
         group: React.PropTypes.object,
-        items: React.PropTypes.array
+        items: React.PropTypes.array,
+        previewed: React.PropTypes.object,
+        setPreview: React.PropTypes.func
     },
 
     getInitialState() {
@@ -19,7 +21,7 @@ const DataCatalogGroup = React.createClass({
     },
 
     handleClick(e) {
-        let that = this;
+        const that = this;
         if (that.props.group.isOpen === false) {
             that.setState({
                 openId: new Date()
@@ -43,9 +45,17 @@ const DataCatalogGroup = React.createClass({
             if (group.items && group.items.length > 0) {
                 return group.items.map((member, i)=>{
                     if (member.isGroup) {
-                        return (<DataCatalogGroup group={member} key={i} />);
+                        return (<DataCatalogGroup group={member}
+                                                  key={i}
+                                                  previewed={this.props.previewed}
+                                                  setPreview={this.props.setPreview}
+                                 />);
                     }
-                    return (<DataCatalogItem item={member} key={i}/>);
+                    return (<DataCatalogItem item={member}
+                                             key={i}
+                                             previewed={this.props.previewed}
+                                             setPreview={this.props.setPreview}
+                            />);
                 });
             }
             return <Loader/>;

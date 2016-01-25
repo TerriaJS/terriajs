@@ -7,21 +7,19 @@ const SearchBox = require('./SearchBox.jsx');
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object,
+        previewed: React.PropTypes.object,
+        setPreview: React.PropTypes.func
     },
-
-    getInitialState() {
-        return {
-            previewed: undefined
-        };
-    },
-
-    onPreviewChange() {},
 
     renderDataCatalog(dataCatalog) {
         return (<ul className = 'list-reset data-catalog hide-on-search'>
           {dataCatalog.map((group, i) => {
-              return (<DataCatalogGroup group={group} key={i}/>);
+              return (<DataCatalogGroup group={group}
+                                        key={i}
+                                        previewed={this.props.previewed}
+                                        setPreview={this.props.setPreview}
+                      />);
           }, this)}
         </ul>);
     },
@@ -35,11 +33,14 @@ const DataCatalogTab = React.createClass({
                 <SearchBox terria = {terria}
                            mapSearch = {false}
                            gazetterSearch={false}
-                           defaultSearchText={this.props.defaultSearchText}/>
+                           defaultSearchText={this.props.defaultSearchText}
+                />
                 {this.renderDataCatalog(dataCatalog)}
               </div>
               <div className="data-preview preview col col-6 block">
-                <DataPreview terria = {terria} previewed={this.state.previewed} />
+                <DataPreview terria = {terria}
+                             previewed={this.props.previewed}
+                             />
               </div>
             </div>
             );

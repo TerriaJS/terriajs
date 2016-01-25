@@ -13,7 +13,9 @@ const Tabs = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         activeTab: React.PropTypes.number,
-        toggleModalWindow: React.PropTypes.func
+        toggleModalWindow: React.PropTypes.func,
+        previewed: React.PropTypes.object,
+        setPreview: React.PropTypes.func
     },
 
     getInitialState() {
@@ -35,7 +37,11 @@ const Tabs = React.createClass({
             },
             {
                 title: 'data-catalog',
-                panel: <DataCatalogTab terria={this.props.terria} defaultSearchText={this.props.defaultSearchText}/>
+                panel: <DataCatalogTab terria={this.props.terria}
+                                       defaultSearchText={this.props.defaultSearchText}
+                                       previewed={this.props.previewed}
+                                       setPreview={this.props.setPreview}
+                        />
             },
             {
                 title: 'my-data',

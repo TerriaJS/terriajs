@@ -10,7 +10,9 @@ const ModalWindow = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         activeTab: React.PropTypes.number,
-        modalWindowIsOpen: React.PropTypes.bool
+        modalWindowIsOpen: React.PropTypes.bool,
+        previewed: React.PropTypes.object,
+        setPreview: React.PropTypes.func
     },
 
     closeModal() {
@@ -41,7 +43,10 @@ const ModalWindow = React.createClass({
                 <Tabs terria={ this.props.terria }
                       activeTab={ this.props.activeTab }
                       toggleModalWindow={this.props.toggleModalWindow}
-                      defaultSearchText={this.props.defaultSearchText}/>
+                      defaultSearchText={this.props.defaultSearchText}
+                      previewed={this.props.previewed}
+                      setPreview={this.props.setPreview}
+                />
               </div>
             </div>
         );

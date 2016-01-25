@@ -111,6 +111,9 @@ $btn-setting-size: 35px;
       color: $color-primary;
     }
   }
+  .is-previewed &{
+    color: $color-primary;
+  }
 }
 
 $add-to-map-btn-size: 23px;
