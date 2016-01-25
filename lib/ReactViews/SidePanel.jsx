@@ -44,7 +44,7 @@ const SidePanel = React.createClass({
                       <li className='col col-5'><button onClick={this.removeAll} className='btn'>{btnRemove}</button></li>
                       <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
                   </ul>
-                  <NowViewingContainer nowViewing={nowViewing}/>
+                  <NowViewingContainer toggleModalWindow={this.props.toggleModalWindow} nowViewing={nowViewing}/>
               </div>);
         }
     },

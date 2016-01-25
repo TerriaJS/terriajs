@@ -52,7 +52,7 @@ const Tabs = React.createClass({
                     id={getName('tablist__', item.title)}
                     role="tab"
                     aria-controls={getName('panel__', item.title)}
-                    aria-selected={that.state.activeTab === i}>
+                    aria-selected={that.props.activeTab === i}>
                   <button onClick={that.clickTab.bind(that, i)}
                     className='btn btn-tab'>{item.title.replace(/-/g, ' ')}</button>
                     </li>

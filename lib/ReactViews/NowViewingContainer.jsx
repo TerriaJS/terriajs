@@ -7,7 +7,8 @@ const defined = require('terriajs-cesium/Source/Core/defined');
 
 const NowViewingContainer = React.createClass({
     propTypes: {
-        nowViewing: React.PropTypes.array
+        nowViewing: React.PropTypes.array,
+        toggleModalWindow: React.PropTypes.func
     },
 
     getInitialState() {
@@ -94,7 +95,7 @@ const NowViewingContainer = React.createClass({
     },
 
     renderNowViewingItem(item, i) {
-        return <NowViewingItem nowViewingItem={item} index={i} key={'placeholder-' + i} dragging={this.state.draggedItemIndex === i} onDragOver={this.onDragOverItem} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}/>;
+        return <NowViewingItem nowViewingItem={item} toggleModalWindow={this.props.toggleModalWindow} index={i} key={'placeholder-' + i} dragging={this.state.draggedItemIndex === i} onDragOver={this.onDragOverItem} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}/>;
     },
 
     renderPlaceholder(i) {
