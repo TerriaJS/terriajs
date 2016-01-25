@@ -17,7 +17,8 @@ const SearchBox = React.createClass({
         mapSearch: React.PropTypes.bool,
         dataSearch: React.PropTypes.bool,
         gazetterSearch: React.PropTypes.bool,
-        callback: React.PropTypes.func
+        callback: React.PropTypes.func,
+        toggleModalWindow: React.PropTypes.func
     },
 
     getDefaultProps() {
@@ -157,7 +158,7 @@ const SearchBox = React.createClass({
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && value.length > 0) {
-            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.openDataCatalogSearch} activeTab={1} />);
+            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.openDataCatalogSearch} activeTab={1} toggleModalWindow={this.props.toggleModalWindow} />);
         }
 
         return (
