@@ -7,7 +7,8 @@ const ModalTriggerButton = React.createClass({
         btnHtml: React.PropTypes.string,
         classNames: React.PropTypes.string,
         callback: React.PropTypes.func,
-        activeTab: React.PropTypes.number
+        activeTab: React.PropTypes.number,
+        toggleModalWindow: React.PropTypes.func
     },
 
     getDefaultProps() {
@@ -18,12 +19,8 @@ const ModalTriggerButton = React.createClass({
         };
     },
 
-    controlModal() {
-        // open modal window
-        window.openModalWindow.raiseEvent(this.props.activeTab);
-        if ((this.props.callback) && (typeof this.props.callback === 'function')) {
-            this.props.callback();
-        }
+    openModal() {
+        this.props.toggleModalWindow(true, this.props.activeTab, this.props.callback);
     },
 
     renderBtnHtml() {
@@ -33,7 +30,7 @@ const ModalTriggerButton = React.createClass({
     },
 
     render() {
-        return (<button onClick={this.controlModal} className={'btn ' + this.props.classNames} dangerouslySetInnerHTML={this.renderBtnHtml()}></button>);
+        return (<button onClick={this.openModal} className={'btn ' + this.props.classNames} dangerouslySetInnerHTML={this.renderBtnHtml()}></button>);
     }
 });
 module.exports = ModalTriggerButton;

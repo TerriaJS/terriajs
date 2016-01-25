@@ -33,7 +33,7 @@ const SettingPanel = React.createClass({
     selectBaseMap(baseMap) {
         this.props.terria.baseMap = baseMap.catalogItem;
         this.props.terriaViewer.updateBaseMap();
-        window.terriaViewerUpdate.raiseEvent();
+        // window.terriaViewerUpdate.raiseEvent();
     },
 
     mouseEnterBaseMap(baseMap) {
@@ -62,7 +62,7 @@ const SettingPanel = React.createClass({
         default: return false;
         }
         this.props.terriaViewer.updateViewer();
-        window.terriaViewerUpdate.raiseEvent();
+        // window.terriaViewerUpdate.raiseEvent();
     },
 
     render() {

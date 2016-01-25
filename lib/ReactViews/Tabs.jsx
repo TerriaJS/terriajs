@@ -12,7 +12,8 @@ function getName(str1, str2) {
 const Tabs = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
-        activeTab: React.PropTypes.number
+        activeTab: React.PropTypes.number,
+        toggleModalWindow: React.PropTypes.func
     },
 
     getInitialState() {
@@ -22,13 +23,7 @@ const Tabs = React.createClass({
     },
 
     clickTab(i) {
-        this.setState({
-            activeTab: i
-        });
-    },
-
-    componentWillReceiveProps() {
-        // This doesn't work
+        this.props.toggleModalWindow(true, i, null);
     },
 
     getTabs() {
@@ -68,7 +63,7 @@ const Tabs = React.createClass({
         const that = this;
         return (that.getTabs().map((item, i) => <section
                     key={i}
-                    aria-hidden={that.state.activeTab !== i}
+                    aria-hidden={that.props.activeTab !== i}
                     id={getName('panel__', item.title)}
                     className={getName('tab-panel panel__', item.title)}
                     aria-labelledby={getName('tablist__', item.title)}

@@ -20,9 +20,9 @@ const DataCatalogItem = React.createClass({
     addToPreview(event) {
         event.preventDefault();
 
-        if (this.state.isPreviewed === false) {
-            window.previewUpdate.raiseEvent(this.props.item);
-        }
+        // if (this.state.isPreviewed === false) {
+        //     window.previewUpdate.raiseEvent(this.props.item);
+        // }
 
         this.setState({
             isPreviewed: !this.state.isPreviewed

@@ -64,6 +64,7 @@
     position: fixed;
     top: 20px;
     right: $padding;
+    z-index: 99;
 
     .compass{
       position: absolute;

@@ -42,19 +42,19 @@ const SearchBox = React.createClass({
 
     componentWillMount() {
         const that = this;
-        window.searchData.addEventListener((value) => {
-            that.setState({
-                value: value
-            });
-            const fakeEvent = {
-                target: {
-                    value: value
-                }
-            };
-            // This does not work for the first time but works afterwards
-            // Not sure how to let the modal knows search has started
-            that.handleChange(fakeEvent);
-        });
+        // window.searchData.addEventListener((value) => {
+        //     that.setState({
+        //         value: value
+        //     });
+        //     const fakeEvent = {
+        //         target: {
+        //             value: value
+        //         }
+        //     };
+        //     // This does not work for the first time but works afterwards
+        //     // Not sure how to let the modal knows search has started
+        //     that.handleChange(fakeEvent);
+        // });
     },
 
     handleChange(event) {
@@ -107,7 +107,7 @@ const SearchBox = React.createClass({
     },
 
     openDataCatalogSearch() {
-        window.searchData.raiseEvent(this.state.value);
+        // window.searchData.raiseEvent(this.state.value);
     },
 
     renderSearchResult(searchType, searchResults, searchState, resultLabel) {

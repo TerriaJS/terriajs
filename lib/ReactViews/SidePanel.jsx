@@ -15,7 +15,8 @@ const btnRemove = 'Remove All';
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object,
+        toggleModalWindow: React.PropTypes.func
     },
 
     getInitialState() {
@@ -53,7 +54,7 @@ const SidePanel = React.createClass({
         <div>
         <div className='workbench__header'>
         <SearchBox terria={this.props.terria} dataSearch={false} callback={this.searchStart}/>
-        <ModalTriggerButton btnHtml={btnAdd} classNames = 'now-viewing__add' activeTab={1} />
+        <ModalTriggerButton btnHtml={btnAdd} toggleModalWindow ={this.props.toggleModalWindow} classNames = 'now-viewing__add' activeTab={1} />
         </div>
         {this.renderContent(this.props.terria.nowViewing.items)}
         </div>);

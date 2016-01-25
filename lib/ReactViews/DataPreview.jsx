@@ -27,7 +27,7 @@ const DataPreview = React.createClass({
     toggleOnMap() {
         //From the review map we can turn on/off datasets for the main map
         this.props.previewed.isEnabled = !this.props.previewed.isEnabled;
-        window.nowViewingUpdate.raiseEvent();
+        // window.nowViewingUpdate.raiseEvent();
     },
 
     renderActions(previewed) {

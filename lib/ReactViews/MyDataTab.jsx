@@ -19,18 +19,18 @@ const MyDataTab = React.createClass({
 
     componentWillMount() {
         const that = this;
-        window.previewUpdate.addEventListener((_previewed)=>{
-            that.setState({
-                previewed: _previewed
-            });
-        });
+        // window.previewUpdate.addEventListener((_previewed)=>{
+        //     that.setState({
+        //         previewed: _previewed
+        //     });
+        // });
     },
 
     updateCatalog(dataCatalog) {
         this.setState({
             dataCatalog: dataCatalog
         });
-        window.nowViewingUpdate.raiseEvent();
+        // window.nowViewingUpdate.raiseEvent();
     },
 
     renderContent() {
