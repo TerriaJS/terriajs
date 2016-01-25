@@ -17,7 +17,8 @@ describe('AnimationViewModel', function() {
             terria: terria
         });
         animationVm.timeline = {
-            zoomTo: jasmine.createSpy('zoomTo')
+            zoomTo: jasmine.createSpy('zoomTo'),
+            resize: jasmine.createSpy('resize') // this gets triggered in saucelabs for some reason.
         };
     });
 
