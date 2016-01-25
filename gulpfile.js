@@ -17,6 +17,7 @@ var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var resolve = require('resolve');
 var child_exec = require('child_process').exec;  // child_process is built in to node
+var genSchema = require('generate-terriajs-schema');
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
@@ -39,8 +40,8 @@ gulp.task('release-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(testGlob), true);
 });
 
-gulp.task('make-schema', function(done) {
-    child_exec('npm run make-schema', undefined, done);
+gulp.task('make-schema', function() {
+    return genSchema({source: '.', dest: 'wwwroot/schema', noversionsubdir: true, quiet: true});
 });
 
 gulp.task('release', ['release-specs', 'make-schema']);
