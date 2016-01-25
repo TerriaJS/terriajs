@@ -26,11 +26,10 @@ const SidePanel = React.createClass({
     renderContent(nowViewing) {
         if (nowViewing && nowViewing.length > 0) {
             return (
-              <div className="now-viewing">
+              <div className="now-viewing hide-on-search">
                   <ul className="now-viewing__header list-reset clearfix">
-                      <li className='col col-5'><label className='label'> Data Sets </label></li>
-                      <li className='col col-5'><button onClick={this.removeAll} className='btn'>{btnRemove}</button></li>
-                      <li className='col col-2'><label className='label-badge label'> {nowViewing.length} </label></li>
+                      <li className='col col-6'><label className='label-inline'> Data Sets </label><label className='label-badge label-inline'> {nowViewing.length} </label></li>
+                      <li className='col col-6'><button onClick={this.removeAll} className='btn right'>{btnRemove}</button></li>
                   </ul>
                   <NowViewingContainer toggleModalWindow={this.props.toggleModalWindow} nowViewing={nowViewing}/>
               </div>);
@@ -39,10 +38,12 @@ const SidePanel = React.createClass({
 
     render() {
         return (
-        <div>
-        <div className='workbench__header'>
-        <SearchBox terria={this.props.terria} dataSearch={false} toggleModalWindow={this.props.toggleModalWindow} />
-        <ModalTriggerButton btnHtml={btnAdd} toggleModalWindow={this.props.toggleModalWindow} classNames = 'now-viewing__add' activeTab={1} />
+        <div className='workbench__inner'>
+        <div className='workbench__header workbench-add'>
+            <ModalTriggerButton btnHtml={btnAdd} toggleModalWindow={this.props.toggleModalWindow} classNames = 'now-viewing__add' activeTab={1} />
+        </div>
+        <div className='workbench__header workbench-search'>
+            <SearchBox terria={this.props.terria} dataSearch={false} toggleModalWindow={this.props.toggleModalWindow} />
         </div>
         {this.renderContent(this.props.terria.nowViewing.items)}
         </div>);

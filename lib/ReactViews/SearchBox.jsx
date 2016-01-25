@@ -163,7 +163,7 @@ const SearchBox = React.createClass({
         }
 
         return (
-            <div className='search'>
+            <div className={this.state.value.length > 0 ? 'is-searching search' : 'search'}>
                 <form className='search-data-form relative' autoComplete='off'>
                   <label htmlFor='search' className='hide'> Type keyword to search </label>
                   <i className='icon icon-search'></i>

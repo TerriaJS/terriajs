@@ -102,6 +102,10 @@
   height: 100%;
 }
 
+.is-searching ~ .hide-on-search{
+  display: none;
+}
+
 
 
 

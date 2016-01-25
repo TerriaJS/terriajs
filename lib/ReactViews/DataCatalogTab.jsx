@@ -19,7 +19,7 @@ const DataCatalogTab = React.createClass({
     onPreviewChange() {},
 
     renderDataCatalog(dataCatalog) {
-        return (<ul className = 'list-reset data-catalog'>
+        return (<ul className = 'list-reset data-catalog hide-on-search'>
           {dataCatalog.map((group, i) => {
               return (<DataCatalogGroup group={group} key={i}/>);
           }, this)}

@@ -248,15 +248,15 @@ $add-to-map-btn-size: 23px;
   font-size: $font-size-small;
   padding: 0 $padding*4;
   font-family: $font-pop;
-  position: relative;
   background: $color-primary;
   text-align: center;
+  width: 100%;
   @extend .icon;
   @extend .icon-add;
   &:before{
     position: absolute;
     font-size: 20px;
-    left: $padding;
+    left: 2*$padding;
     top: $padding;
   }
   &:hover{
