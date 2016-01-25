@@ -17,16 +17,6 @@ const DataCatalogTab = React.createClass({
         };
     },
 
-    componentWillMount() {
-        const that = this;
-        // Update preview app if an item has been added as previewed
-        // window.previewUpdate.addEventListener((_previewed)=>{
-        //     that.setState({
-        //         previewed: _previewed
-        //     });
-        // });
-    },
-
     onPreviewChange() {},
 
     checkSearch(_notSearching) {
@@ -51,7 +41,11 @@ const DataCatalogTab = React.createClass({
         return (
             <div className="panel-content clearfix">
               <div className="search-data col col-6">
-                <SearchBox terria = {terria} mapSearch = {false} gazetterSearch={false} callback={this.checkSearch}/>
+                <SearchBox terria = {terria}
+                           mapSearch = {false}
+                           gazetterSearch={false}
+                           callback={this.checkSearch}
+                           defaultSearchText={this.props.defaultSearchText}/>
                 {this.renderDataCatalog(dataCatalog)}
               </div>
               <div className="data-preview preview col col-6 block">

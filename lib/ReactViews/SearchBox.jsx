@@ -17,7 +17,6 @@ const SearchBox = React.createClass({
         mapSearch: React.PropTypes.bool,
         dataSearch: React.PropTypes.bool,
         gazetterSearch: React.PropTypes.bool,
-        callback: React.PropTypes.func,
         toggleModalWindow: React.PropTypes.func
     },
 
@@ -25,13 +24,14 @@ const SearchBox = React.createClass({
         return {
             mapSearch: true,
             dataSearch: true,
-            gazetterSearch: true
+            gazetterSearch: true,
+            defaultSearchText: ''
         };
     },
 
     getInitialState() {
         return {
-            value: '',
+            value: this.props.defaultSearchText,
             dataCatalogResults: [],
             dataCatalogIsSearching: false,
             bingMapSearchResults: [],
@@ -41,29 +41,22 @@ const SearchBox = React.createClass({
         };
     },
 
-    componentWillMount() {
-        const that = this;
-        // window.searchData.addEventListener((value) => {
-        //     that.setState({
-        //         value: value
-        //     });
-        //     const fakeEvent = {
-        //         target: {
-        //             value: value
-        //         }
-        //     };
-        //     // This does not work for the first time but works afterwards
-        //     // Not sure how to let the modal knows search has started
-        //     that.handleChange(fakeEvent);
-        // });
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            value: nextProps.defaultSearchText
+        });
     },
 
     handleChange(event) {
         this.setState({
             value: event.target.value
         });
+        this.doSearch(event.target.value);
+    },
 
-        if (this.props.callback && typeof this.props.callback === 'function') {
+    doSearch(keyword) {
+        // let parent know search has started
+        if (this.props.callback) {
             this.props.callback(!event.target.value);
         }
 
@@ -73,7 +66,7 @@ const SearchBox = React.createClass({
         const that = this;
 
         if (that.props.dataSearch !== false) {
-            when(dataCatalogSearch.search(event.target.value)).then(() => {
+            when(dataCatalogSearch.search(keyword)).then(() => {
                 that.setState({
                     dataCatalogResults: dataCatalogSearch.searchResults,
                     dataCatalogIsSearching: dataCatalogSearch.isSearching
@@ -82,7 +75,7 @@ const SearchBox = React.createClass({
         }
 
         if (that.props.mapSearch !== false) {
-            when(bingMapSearch.search(event.target.value)).then(() => {
+            when(bingMapSearch.search(keyword)).then(() => {
                 that.setState({
                     bingMapSearchResults: bingMapSearch.searchResults,
                     bingMapIsSearching: bingMapSearch.isSearching
@@ -91,7 +84,7 @@ const SearchBox = React.createClass({
         }
 
         if (that.props.gazetterSearch !== false) {
-            when(gazetterSearch.search(event.target.value)).then(() => {
+            when(gazetterSearch.search(keyword)).then(() => {
                 that.setState({
                     gazetterSearchResults: gazetterSearch.searchResults,
                     gazetterIsSearching: gazetterSearch.isSearching
@@ -104,11 +97,14 @@ const SearchBox = React.createClass({
         this.setState({
             value: ''
         });
+        // Let parent component know it is currently not searching
         this.props.callback(true);
     },
 
-    openDataCatalogSearch() {
-        // window.searchData.raiseEvent(this.state.value);
+    searchKeyword(_component) {
+        _component.setState({
+            defaultSearchText: this.state.value
+        });
     },
 
     renderSearchResult(searchType, searchResults, searchState, resultLabel) {
@@ -158,24 +154,31 @@ const SearchBox = React.createClass({
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && value.length > 0) {
-            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.openDataCatalogSearch} activeTab={1} toggleModalWindow={this.props.toggleModalWindow} />);
+            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.searchKeyword} activeTab={1} toggleModalWindow={this.props.toggleModalWindow} />);
         }
 
         return (
             <div className='search-data-search'>
-        <form className='search-data-form relative' autoComplete='off'>
-          <label htmlFor='search' className='hide'> Type keyword to search </label>
-          <i className='icon icon-search'></i>
-          <input id='search' type='text' name='search' value={value} onChange={this.handleChange} className='search__field field' placeholder='Search' autoComplete='off'/>
-          {clearSearchContent}
-        </form>
-        <div className ='search-results'>
-          {linkToSearchData}
-          {this.renderSearchResult(that.props.mapSearch, that.state.bingMapSearchResults, that.state.bingMapIsSearching, bingMapSearchLabel)}
-          {this.renderSearchResult(that.props.gazetterSearch, that.state.gazetterSearchResults, that.state.gazetterIsSearching, gazetterSearchLabel)}
-          {this.renderSearchResult(that.props.dataSearch, that.state.dataCatalogResults, that.state.dataCatalogIsSearching, dataCatalogSearchLabel)}
-        </div>
-      </div>
+                <form className='search-data-form relative' autoComplete='off'>
+                  <label htmlFor='search' className='hide'> Type keyword to search </label>
+                  <i className='icon icon-search'></i>
+                  <input id='search'
+                  type='text'
+                  name='search'
+                  value={value}
+                  onChange={this.handleChange}
+                  className='search__field field'
+                  placeholder='Search'
+                  autoComplete='off'/>
+                  {clearSearchContent}
+                </form>
+                <div className ='search-results'>
+                  {linkToSearchData}
+                  {this.renderSearchResult(that.props.mapSearch, that.state.bingMapSearchResults, that.state.bingMapIsSearching, bingMapSearchLabel)}
+                  {this.renderSearchResult(that.props.gazetterSearch, that.state.gazetterSearchResults, that.state.gazetterIsSearching, gazetterSearchLabel)}
+                  {this.renderSearchResult(that.props.dataSearch, that.state.dataCatalogResults, that.state.dataCatalogIsSearching, dataCatalogSearchLabel)}
+                </div>
+            </div>
             );
     }
 });

@@ -35,7 +35,7 @@ const Tabs = React.createClass({
             },
             {
                 title: 'data-catalog',
-                panel: <DataCatalogTab terria={this.props.terria}/>
+                panel: <DataCatalogTab terria={this.props.terria} defaultSearchText={this.props.defaultSearchText}/>
             },
             {
                 title: 'my-data',
