@@ -15,7 +15,8 @@ const Tabs = React.createClass({
         activeTab: React.PropTypes.number,
         toggleModalWindow: React.PropTypes.func,
         previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
+        setPreview: React.PropTypes.func,
+        defaultSearchText: React.PropTypes.string
     },
 
     getInitialState() {

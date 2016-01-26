@@ -9,7 +9,14 @@ const DataCatalogTab = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
+        setPreview: React.PropTypes.func,
+        defaultSearchText: React.PropTypes.string
+    },
+
+    getDefaultProps() {
+        return {
+            defaultSearchText: ''
+        };
     },
 
     renderDataCatalog(dataCatalog) {
