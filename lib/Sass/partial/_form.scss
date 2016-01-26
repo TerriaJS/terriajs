@@ -38,6 +38,17 @@
   .panel-content &{
     font-family: $font;
   }
+
+  .workbench__inner & {
+    padding: 0 $padding;
+    .icon{
+      position: absolute;
+      left: $padding*2;
+    }
+    .btn.search-clear{
+      right: 30px;
+    }
+  }
 }
 
 

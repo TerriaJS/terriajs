@@ -17,7 +17,8 @@ const SearchBox = React.createClass({
         mapSearch: React.PropTypes.bool,
         dataSearch: React.PropTypes.bool,
         gazetterSearch: React.PropTypes.bool,
-        toggleModalWindow: React.PropTypes.func
+        toggleModalWindow: React.PropTypes.func,
+        setPreview: React.PropTypes.func
     },
 
     getDefaultProps() {
@@ -116,30 +117,41 @@ const SearchBox = React.createClass({
         const that = this;
         const value = this.state.value;
         let content = null;
-        let results = null;
+        let results = <Loader />;
 
         if ((searchType) && value.length > 0) {
-            if (searchResults.length === 0) {
-                if (searchState) {
+            if (!searchState) {
+                if(searchResults.length > 0) {
+                    if (searchType !== that.props.dataSearch) {
+                        results = searchResults.map((item, i) => {
+                            return (<LocationItem item={item} key={i} />);
+                        });
+                    } else {
+                        results = searchResults.map((result, i) => {
+                            const group = result.catalogItem;
+                            if (group.isGroup === true) {
+                                return (<DataCatalogGroup group={group}
+                                                          key={i}
+                                                          setPreview={this.props.setPreview}
+                                        />);
+                            }
+                            return (<DataCatalogItem item={group}
+                                                     key={i}
+                                                     setPreview={this.props.setPreview}
+                                    />);
+                        });
+                    }
+                }
+                else {
                     results = <Loader />;
-                } else {
-                    results = <li className ='label'>No results found </li>;
+                    // results = <li className ='label'>No results found </li>;
                 }
             }
-            if (searchType !== that.props.dataSearch) {
-                results = searchResults.map((item, i) => {
-                    return (<LocationItem item={item} key={i} />);
-                });
-            } else {
-                results = searchResults.map((result, i) => {
-                    const group = result.catalogItem;
-                    if (group.isGroup === true) {
-                        return (<DataCatalogGroup group={group} key={i} />);
-                    }
-                    return (<DataCatalogItem item={group} key={i} />);
-                });
-            }
-            content = <div><label className='label label-sub-heading'>{resultLabel}</label><ul className='list-reset search-results-items'>{results}</ul></div>;
+
+            content = <div>
+                        <label className='label label-sub-heading'>{resultLabel}</label>
+                        <ul className='list-reset search-results-items'>{results}</ul>
+                      </div>;
         }
         return content;
     },

@@ -46,9 +46,7 @@ const SidePanel = React.createClass({
         <div className='workbench__header workbench-add'>
             <ModalTriggerButton btnHtml={btnAdd} toggleModalWindow={this.props.toggleModalWindow} classNames = 'now-viewing__add' activeTab={1} />
         </div>
-        <div className='workbench__header workbench-search'>
-            <SearchBox terria={this.props.terria} dataSearch={false} toggleModalWindow={this.props.toggleModalWindow} />
-        </div>
+        <SearchBox terria={this.props.terria} dataSearch={false} toggleModalWindow={this.props.toggleModalWindow} />
         {this.renderContent(this.props.terria.nowViewing.items)}
         </div>);
     }

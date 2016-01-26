@@ -34,6 +34,7 @@ const DataCatalogTab = React.createClass({
                            mapSearch = {false}
                            gazetterSearch={false}
                            defaultSearchText={this.props.defaultSearchText}
+                           setPreview={this.props.setPreview}
                 />
                 {this.renderDataCatalog(dataCatalog)}
               </div>

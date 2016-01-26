@@ -33,7 +33,8 @@
 }
 
 .loader{
-  padding: $padding;
+  padding: $padding !important;
+  margin-bottom: $padding;
 }
 
 .icon-loader{
