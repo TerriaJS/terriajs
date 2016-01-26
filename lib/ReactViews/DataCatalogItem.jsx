@@ -34,17 +34,21 @@ const DataCatalogItem = React.createClass({
         return 'icon icon-add';
     },
 
-    // compareItem(item1, item2) {
-    //     if(item1.dataUrl === item2.dataUrl) {
-    //         return true;
-    //     }
-    //     return false;
-    // },
+    compareItem(item1, item2) {
+        if(item1 && item2) {
+            if((item1.dataUrl === item2.dataUrl) &&
+                (item1.name === item2.name) &&
+                (item1.layers === item2.layers)) {
+                return true;
+            }
+        }
+        return false;
+    },
 
     render() {
         const item = this.props.item;
         return (
-            <li className={(this.props.previewed === item ? 'is-previewed' : '') + ' clearfix data-catalog-item flex' }>
+            <li className={(this.compareItem(this.props.previewed, item) ? 'is-previewed' : '') + ' clearfix data-catalog-item flex' }>
                 <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>
                     <i className={this.renderIconClass(item)}></i>
                 </button>

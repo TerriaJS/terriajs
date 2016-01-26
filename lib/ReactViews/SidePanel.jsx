@@ -24,6 +24,12 @@ const SidePanel = React.createClass({
         this.props.terria.nowViewing.removeAll();
     },
 
+    resetPreviewed() {
+        // Use the add data button to open modal window,
+        // the preview map should be reset
+        this.props.setPreview(null);
+    },
+
     renderContent(nowViewing) {
         if (nowViewing && nowViewing.length > 0) {
             return (
@@ -44,7 +50,12 @@ const SidePanel = React.createClass({
         return (
         <div className='workbench__inner'>
         <div className='workbench__header workbench-add'>
-            <ModalTriggerButton btnHtml={btnAdd} toggleModalWindow={this.props.toggleModalWindow} classNames = 'now-viewing__add' activeTab={1} />
+            <ModalTriggerButton btnHtml={btnAdd}
+                                toggleModalWindow={this.props.toggleModalWindow}
+                                classNames = 'now-viewing__add'
+                                activeTab={1}
+                                callback={this.resetPreviewed}
+            />
         </div>
         <SearchBox terria={this.props.terria} dataSearch={false} toggleModalWindow={this.props.toggleModalWindow} />
         {this.renderContent(this.props.terria.nowViewing.items)}
