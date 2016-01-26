@@ -16,7 +16,8 @@ const SidePanel = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes: {
         terria: React.PropTypes.object,
-        toggleModalWindow: React.PropTypes.func
+        toggleModalWindow: React.PropTypes.func,
+        setPreview: React.PropTypes.func
     },
 
     removeAll() {
@@ -31,7 +32,10 @@ const SidePanel = React.createClass({
                       <li className='col col-6'><label className='label-inline'> Data Sets </label><label className='label-badge label-inline'> {nowViewing.length} </label></li>
                       <li className='col col-6'><button onClick={this.removeAll} className='btn right'>{btnRemove}</button></li>
                   </ul>
-                  <NowViewingContainer toggleModalWindow={this.props.toggleModalWindow} nowViewing={nowViewing}/>
+                  <NowViewingContainer toggleModalWindow={this.props.toggleModalWindow} 
+                                       nowViewing={nowViewing}
+                                       setPreview={this.props.setPreview}
+                  />
               </div>);
         }
     },
