@@ -350,6 +350,14 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('works with nulls in a range not including zero', function(done) {
+        csvItem.url = 'test/csv/lat_lon_nullvalue.csv';
+        csvItem.load().then(function() {
+            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+            expect(cval(1)).toEqual(cval(0));  // colors null (row 2) the same as the lowest-value point (row 1).
+        }).otherwise(fail).then(done);
+    });
+
     // Removed: not clear that this is correct behaviour, and it's failing.
     // xit('renders a point with no value in transparent black', function(done) {
     //     csvItem.url = 'test/missingNumberFormatting.csv';
