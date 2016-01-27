@@ -1,6 +1,14 @@
 @import "@{cesium-path}/build/Widgets/widgets.css";
 @import (inline) "npm://leaflet/dist/leaflet.css";
 
+#cesiumContainer{
+    -webkit-transition: bottom @explorer-panel-close-animation-length ease-out;
+    -moz-transition: bottom @explorer-panel-close-animation-length ease-out;
+    -ms-transition: bottom @explorer-panel-close-animation-length ease-out;
+    -o-transition: bottom @explorer-panel-close-animation-length ease-out;
+    transition: bottom @explorer-panel-close-animation-length ease-out;
+}
+
 #cesiumContainer .cesium-widget-credits {
     display: block;
     position: absolute;
