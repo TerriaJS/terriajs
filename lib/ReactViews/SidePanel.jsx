@@ -1,7 +1,6 @@
 'use strict';
 const React = require('react');
 const SearchBox = require('./SearchBox.jsx');
-const ModalTriggerButton = require('./ModalTriggerButton.jsx');
 const NowViewingContainer = require('./NowViewingContainer.jsx');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
@@ -39,6 +38,13 @@ const SidePanel = React.createClass({
         }
     },
 
+    openModal() {
+        this.props.setWrapperState({
+            modalWindowIsOpen: true,
+            activeTab: 1
+        });
+    },
+
     renderCharts(nowViewing) {
         if (nowViewing && nowViewing.length > 0) {
             return (
@@ -58,11 +64,7 @@ const SidePanel = React.createClass({
         return (
         <div className='workbench__inner'>
         <div className='workbench__header workbench-add'>
-            <ModalTriggerButton btnHtml={btnAdd}
-                                setWrapperState={this.props.setWrapperState}
-                                classNames = 'now-viewing__add'
-                                activeTab={1}
-            />
+            <button onClick={this.openModal} className='now-viewing__add btn'>{btnAdd}</button>
         </div>
         <SearchBox terria={this.props.terria} dataSearch={false} setWrapperState={this.props.setWrapperState} />
         <div className="now-viewing hide-on-search">

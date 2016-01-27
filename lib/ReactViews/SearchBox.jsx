@@ -7,7 +7,6 @@ const Loader = require('./Loader.jsx');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
-const ModalTriggerButton = require('./ModalTriggerButton.jsx');
 const CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
 const BingMapsSearchProviderViewModel = require('../ViewModels/BingMapsSearchProviderViewModel.js');
 const GazetteerSearchProviderViewModel = require('../ViewModels/GazetteerSearchProviderViewModel.js');
@@ -69,10 +68,6 @@ const SearchBox = React.createClass({
         }
     },
 
-    componentWillUnmount(){
-        console.log('unmount');
-    },
-
     clearSearch() {
         this.setState({
             value: ''
@@ -81,6 +76,14 @@ const SearchBox = React.createClass({
 
     searchKeyword() {
         this.doSearch(this.state.value);
+    },
+
+    openModal() {
+        this.props.setWrapperState({
+            modalWindowIsOpen: true,
+            activeTab: 1,
+            previewed: null
+        });
     },
 
     renderSearchResult(searchType, search) {
@@ -134,7 +137,7 @@ const SearchBox = React.createClass({
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && value.length > 0) {
-            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.searchKeyword} activeTab={1} setWrapperState={this.props.setWrapperState} />);
+            linkToSearchData = (<button onClick={this.openModal} className='btn btn-data-search '>{'Search " ' + value + ' " in Data Catalog'}</button>);
         }
 
         return (

@@ -1,6 +1,5 @@
 'use strict';
 const React = require('react');
-const ModalTriggerButton = require('./ModalTriggerButton.jsx');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
@@ -45,6 +44,14 @@ const NowViewingItem = React.createClass({
         this.props.onDragEnd(e);
     },
 
+    openModal() {
+        this.props.setWrapperState({
+            modalWindowIsOpen: true,
+            activeTab: 1,
+            previewed: this.props.nowViewingItem,
+        });
+    },
+
     renderLegend(_nowViewingItem) {
         if (_nowViewingItem.legendUrl) {
             if (_nowViewingItem.legendUrl.isImage()) {
@@ -71,7 +78,7 @@ const NowViewingItem = React.createClass({
             <div className ="now-viewing__item-inner">
               <ul className="list-reset flex clearfix now-viewing__item-control">
                 <li><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn zoom">Zoom To</button></li>
-                <li><ModalTriggerButton btnHtml="info" classNames='info' setWrapperState={this.props.setWrapperState} activeTab={1} callback={this.NowViewingAsPreviewed} /></li>
+                <li><button onClick={this.openModal} className='info btn' title='info'>info</button></li>
                 <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
                 <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-visible' : 'icon-invisible')}></i></button></li>
               </ul>
