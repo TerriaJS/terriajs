@@ -129,3 +129,14 @@ $now-viewing-margin: 5px;
   background: transparent;
   @include transition(height 0.25s ease-in-out);
 }
+
+.nowViewing-chart{
+  background: $dark;
+  svg{
+    text{
+      font-size: 9px;
+      color: #fff;
+      fill: #fff;
+    }
+  }
+}
