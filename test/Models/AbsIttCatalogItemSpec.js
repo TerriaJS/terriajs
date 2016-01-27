@@ -266,14 +266,13 @@ describe('AbsIttCatalogItem', function() {
                 url: 'http://abs.example.com'
             });
             item.load().then(function() {
-                return item.dataSource.regionPromise;
-            }).then(function(regionDetails) {
+                var regionDetails = item.regionMapping.regionDetails;
                 expect(regionDetails).toBeDefined();
-                var columnNames = item._dataSource.tableStructure.getColumnNames();
+                var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.slice(0, 3)).toEqual(["aus", "Year", "0-2 years"]);
-                expect(item._concepts[0].activeItems.length).toEqual(1);
+                expect(item.concepts[0].activeItems.length).toEqual(1);
                 expect(item.displayPercent).toBe(true);
-                var percentage = item._dataSource.tableStructure.activeItems[0].values[0];
+                var percentage = item.tableStructure.activeItems[0].values[0];
                 expect(percentage).toEqual(25);  // 54 / 216 * 100
             }).otherwise(fail).then(done);
         });
@@ -286,12 +285,11 @@ describe('AbsIttCatalogItem', function() {
                 filter: ["REGIONTYPE.SA4"]  // Should use SA4 now
             });
             item.load().then(function() {
-                return item.dataSource.regionPromise;
-            }).then(function(regionDetails) {
+                var regionDetails = item.regionMapping.regionDetails;
                 expect(regionDetails).toBeDefined();
-                var columnNames = item._dataSource.tableStructure.getColumnNames();
+                var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.slice(0, 3)).toEqual(["sa4_code_2011", "Year", "0-2 years"]);
-                var percentage = item._dataSource.tableStructure.activeItems[0].values[0];
+                var percentage = item.tableStructure.activeItems[0].values[0];
                 expect(percentage).toEqual(12.5);  // 26 / 208 * 100
             }).otherwise(fail).then(done);
         });

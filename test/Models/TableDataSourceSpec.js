@@ -5,13 +5,14 @@ var loadText = require('terriajs-cesium/Source/Core/loadText');
 var TableDataSource = require('../../lib/Models/TableDataSource');
 var TableStyle = require('../../lib/Models/TableStyle');
 
-var tableDataSource;
-
-beforeEach(function() {
-    tableDataSource = new TableDataSource();
-});
 
 describe('TableDataSource', function() {
+
+    var tableDataSource;
+
+    beforeEach(function() {
+        tableDataSource = new TableDataSource();
+    });
 
     it('can be constructed', function() {
         expect(tableDataSource).toBeDefined();
@@ -20,15 +21,7 @@ describe('TableDataSource', function() {
     it('can load csv and detect lat and lon', function(done) {
         loadText('/test/csv/lat_lon_val.csv').then(function(text) {
             tableDataSource.loadFromCsv(text);
-            expect(tableDataSource.hasLatitudeAndLongitude).toEqual(true);
-        }).then(done).otherwise(done.fail);
-    });
-
-    it('sets the default dataVariable ignoring lat and lon', function(done) {
-        loadText('/test/csv/lat_lon_val.csv').then(function(text) {
-            tableDataSource.loadFromCsv(text);
-            expect(tableDataSource.tableStructure.activeItems.length).toEqual(1);
-            expect(tableDataSource.tableStructure.activeItems[0].name).toEqual('value');
+            expect(tableDataSource.tableStructure.hasLatitudeAndLongitude).toEqual(true);
         }).then(done).otherwise(done.fail);
     });
 
@@ -48,12 +41,13 @@ describe('TableDataSource', function() {
 
     it('scales points', function(done) {
         var tableStyle = new TableStyle({
-            dataVariable: 'val',
             scaleByValue: true,
             scale: 5
         });
+        tableDataSource.tableStyle = tableStyle;
         loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
-            tableDataSource.loadFromCsv(text, tableStyle);
+            tableDataSource.loadFromCsv(text);
+            tableDataSource.tableStructure.columns[3].toggleActive();
             var features = tableDataSource.entities.values;
             expect(tableDataSource.tableStructure.columns[0].values).not.toEqual(tableDataSource.tableStructure.columns[1].values);
             // expect the first two features to have different scales (line above ensures they have different values)

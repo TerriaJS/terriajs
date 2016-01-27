@@ -137,14 +137,14 @@ describe('CsvCatalogItem with lat and lon', function() {
     it('identifies "lat" and "lon" fields', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,10' });
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.hasLatitudeAndLongitude).toBe(true);
+            expect(csvItem.dataSource.tableStructure.hasLatitudeAndLongitude).toBe(true);
         }).otherwise(fail).then(done);
     });
 
     it('identifies "latitude" and "longitude" fields', function(done) {
         csvItem.updateFromJson( { data: 'latitude,longitude,value\n-37,145,10' });
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.hasLatitudeAndLongitude).toBe(true);
+            expect(csvItem.dataSource.tableStructure.hasLatitudeAndLongitude).toBe(true);
         }).otherwise(fail).then(done);
     });
 
@@ -157,11 +157,12 @@ describe('CsvCatalogItem with lat and lon', function() {
     });
 
     it('handles numeric fields containing (quoted) thousands commas', function(done) {
-        csvItem.updateFromJson( { data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"' });
+        csvItem.updateFromJson({data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"'});
         csvItem.load().then(function() {
-            expect(csvItem.dataSource.hasLatitudeAndLongitude).toBe(true);
-            expect(csvItem.dataSource.tableStructure.columns[2].values[0]).toEqual(1000);
-            expect(csvItem.dataSource.tableStructure.columns[2].values[1]).toBeCloseTo(234567.89, 2);
+            var tableStructure = csvItem.dataSource.tableStructure;
+            expect(tableStructure.hasLatitudeAndLongitude).toBe(true);
+            expect(tableStructure.columns[2].values[0]).toEqual(1000);
+            expect(tableStructure.columns[2].values[1]).toBeCloseTo(234567.89, 2);
         }).otherwise(fail).then(done);
     });
 
@@ -226,7 +227,6 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
         }).otherwise(fail).then(done);
     });
-
 
     it('supports dates and very long displayDuration', function(done) {
         var sevenDaysInMinutes = 60 * 24 * 7;
@@ -361,47 +361,39 @@ describe('CsvCatalogItem with region mapping', function() {
     it('does not think a lat-lon csv has regions', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
         csvItem.load().then(function() {
-            var source = csvItem.dataSource;
-            return source.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeUndefined();
-            }).otherwise(fail);
+            expect(csvItem.regionMapping).toBeUndefined();
         }).otherwise(fail).then(done);
     });
 
     it('does not use region mapping when regions present with lat and lon', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_postcode.csv';
         csvItem.load().then(function() {
-            var source = csvItem.dataSource;
-            return source.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeUndefined();
-            }).otherwise(fail);
+            expect(csvItem.regionMapping).toBeUndefined();
         }).otherwise(fail).then(done);
     });
 
     it('detects LGAs by code', function(done) {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                expect(regionDetail.column.name).toEqual('lga_code');
-                expect(regionDetail.regionProvider.regionType).toEqual('LGA');
-            }).otherwise(fail);
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            expect(regionDetail.column.name).toEqual('lga_code');
+            expect(regionDetail.regionProvider.regionType).toEqual('LGA');
         }).otherwise(fail).then(done);
     });
 
     it('matches LGAs by code', function(done) {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
-            csvItem.dataSource.enable();  // The recolorFunction call is only made once the layer is enabled.
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var indexOfThisRegion = regionDetail.regionProvider.regions.map(getId).indexOf(31000);
-                expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined(); // Test that at least one rgba component is defined.
-                expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
-            }).otherwise(fail);
+            csvItem.regionMapping.enable();  // The recolorFunction call is only made once the layer is enabled.
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var indexOfThisRegion = regionDetail.regionProvider.regions.map(getId).indexOf(31000);
+            expect(recolorFunction(indexOfThisRegion)[0]).toBeDefined(); // Test that at least one rgba component is defined.
+            expect(recolorFunction(indexOfThisRegion)).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
         }).otherwise(fail).then(done);
     });
 
@@ -409,20 +401,19 @@ describe('CsvCatalogItem with region mapping', function() {
         // City of Melbourne is not actually a region, but melbourne is. Same with Sydney (S) and sydney. But test they work anyway.
         csvItem.updateFromJson({data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3'});
         csvItem.load().then(function() {
-            csvItem.dataSource.enable();
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var regionNames = regionDetail.regionProvider.regions.map(getId);
-                expect(recolorFunction(regionNames.indexOf('bogan'))).not.toBeDefined(); // Test that we didn't try to recolor other regions.
-                expect(recolorFunction(regionNames.indexOf('melbourne'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
-                expect(recolorFunction(regionNames.indexOf('melbourne'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
-                expect(recolorFunction(regionNames.indexOf('greater geelong'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
-                expect(recolorFunction(regionNames.indexOf('greater geelong'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
-                expect(recolorFunction(regionNames.indexOf('sydney'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
-                expect(recolorFunction(regionNames.indexOf('sydney'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
-            }).otherwise(fail);
+            csvItem.regionMapping.enable();
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var regionNames = regionDetail.regionProvider.regions.map(getId);
+            expect(recolorFunction(regionNames.indexOf('bogan'))).not.toBeDefined(); // Test that we didn't try to recolor other regions.
+            expect(recolorFunction(regionNames.indexOf('melbourne'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
+            expect(recolorFunction(regionNames.indexOf('melbourne'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
+            expect(recolorFunction(regionNames.indexOf('greater geelong'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
+            expect(recolorFunction(regionNames.indexOf('greater geelong'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
+            expect(recolorFunction(regionNames.indexOf('sydney'))[0]).toBeDefined(); // Test that at least one rgba component is defined.
+            expect(recolorFunction(regionNames.indexOf('sydney'))).not.toEqual([0, 0, 0, 0]); // And that the color is not all zeros.
         }).otherwise(fail).then(done);
     });
 
@@ -430,17 +421,16 @@ describe('CsvCatalogItem with region mapping', function() {
     xit('matches numeric state IDs with regexes', function(done) {
         csvItem.updateFromJson({data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90'});
         csvItem.load().then(function() {
-            csvItem.dataSource.enable();
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                var regionNames = regionDetail.regionProvider.regions.map(getId);
-                // TODO: This is the old test, which doesn't really have an equivalent in the new csv refactor:
-                // expect(csvItem.dataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
-                // Possibly something like this?  However, this fails - it includes tasmania and not queensland.
-                var names = csvItem.dataSource.tableStructure.columns[0].values.map(function(id) { return regionNames[id] });
-                expect(names).toEqual(["queensland", "south australia", "western australia", "other territories"]);
-            }).otherwise(fail);
+            csvItem.regionMapping.enable();
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            var regionNames = regionDetail.regionProvider.regions.map(getId);
+            // TODO: This is the old test, which doesn't really have an equivalent in the new csv refactor:
+            // expect(csvItem.dataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
+            // Possibly something like this?  However, this fails - it includes tasmania and not queensland.
+            var names = csvItem.dataSource.tableStructure.columns[0].values.map(function(id) { return regionNames[id] });
+            expect(names).toEqual(["queensland", "south australia", "western australia", "other territories"]);
         }).otherwise(fail).then(done);
     });
 
@@ -448,7 +438,7 @@ describe('CsvCatalogItem with region mapping', function() {
     // it('matches SA4s', function(done) {
     //     csvItem.updateFromJson({data: 'sa4,value\n209,correct'});
     //     csvItem.load().then(function() {
-    //         csvItem.dataSource.enable();
+    //         csvItem.regionMapping.enable();
     //         return csvItem.dataSource.regionPromise.then(function(regionDetails) {
     //             expect(regionDetails).toBeDefined();
     //             // There is no "rowPropertiesByCode" method any more.
@@ -463,18 +453,17 @@ describe('CsvCatalogItem with region mapping', function() {
             tableStyle: greenTableStyle
         });
         csvItem.load().then(function() {
-            csvItem.dataSource.enable();
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var regionNames = regionDetail.regionProvider.regions.map(getId);
-                // Require the green value to range from 64 to 255, but do not require a linear mapping.
-                expect(recolorFunction(regionNames.indexOf('melbourne'))).toEqual([0, 64, 0, 255]);
-                expect(recolorFunction(regionNames.indexOf('greater geelong'))[1]).toBeGreaterThan(64);
-                expect(recolorFunction(regionNames.indexOf('greater geelong'))[1]).toBeLessThan(255);
-                expect(recolorFunction(regionNames.indexOf('sydney'))).toEqual([0, 255, 0, 255]);
-            }).otherwise(fail);
+            csvItem.regionMapping.enable();
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var regionNames = regionDetail.regionProvider.regions.map(getId);
+            // Require the green value to range from 64 to 255, but do not require a linear mapping.
+            expect(recolorFunction(regionNames.indexOf('melbourne'))).toEqual([0, 64, 0, 255]);
+            expect(recolorFunction(regionNames.indexOf('greater geelong'))[1]).toBeGreaterThan(64);
+            expect(recolorFunction(regionNames.indexOf('greater geelong'))[1]).toBeLessThan(255);
+            expect(recolorFunction(regionNames.indexOf('sydney'))).toEqual([0, 255, 0, 255]);
         }).otherwise(fail).then(done);
     });
 
@@ -488,10 +477,9 @@ describe('CsvCatalogItem with region mapping', function() {
             tableStyle: revisedGreenTableStyle
         });
         csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                expect(csvItem.dataSource.tableStructure.columnsByType[VarType.REGION][0].name).toBe('postcode');
-            }).otherwise(fail);
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            expect(csvItem.tableStructure.columnsByType[VarType.REGION][0].name).toBe('postcode');
         }).otherwise(fail).then(done);
 
     });
@@ -499,31 +487,28 @@ describe('CsvCatalogItem with region mapping', function() {
     it('can default to an enum field', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
         csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                expect(csvItem.dataSource.tableStructure.activeItems[0].name).toBe('enum');
-            }).otherwise(fail);
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            expect(csvItem.tableStructure.activeItems[0].name).toBe('enum');
         }).otherwise(fail).then(done);
     });
 
     it('handles region-mapped CSVs with no data variable', function(done) {
         csvItem.url = 'test/csv/postcode_novals.csv';
         csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                expect(csvItem.dataSource.tableStructure.activeItems.length).toEqual(0);
-                expect(csvItem.dataSource.tableStructure.columns[0].values.length).toBeGreaterThan(1);
-            }).otherwise(fail);
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            expect(csvItem.tableStructure.activeItems.length).toEqual(0);
+            expect(csvItem.tableStructure.columns[0].values.length).toBeGreaterThan(1);
         }).otherwise(fail).then(done);
     });
 
     it('chooses the leftmost data column when none specified', function(done) {
         csvItem.url = 'test/csv/val_enum_postcode.csv';
         csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                expect(csvItem.dataSource.tableStructure.activeItems[0].name).toEqual('val1');
-            }).otherwise(fail);
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            expect(csvItem.tableStructure.activeItems[0].name).toEqual('val1');
         }).otherwise(fail).then(done);
     });
 
@@ -533,13 +518,12 @@ describe('CsvCatalogItem with region mapping', function() {
             tableStyle: new TableStyle({dataVariable: 'StateCapital'})
         });
         csvItem.load().then(function() {
-            return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                expect(regionDetail.disambigColumn).toBeDefined();
-                expect(regionDetail.disambigColumn.name).toEqual('State');
-                // The following test is much more rigorous.
-            }).otherwise(fail);
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            expect(regionDetail.disambigColumn).toBeDefined();
+            expect(regionDetail.disambigColumn.name).toEqual('State');
+            // The following test is much more rigorous.
         }).otherwise(fail).then(done);
     });
 
@@ -548,26 +532,25 @@ describe('CsvCatalogItem with region mapping', function() {
             url: 'test/csv/postcode_date_value.csv'
         });
         csvItem.load().then(function() {
-            var source = csvItem.dataSource;
+            var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
-            source._catalogItem.terria.clock.currentTime = j('2015-08-08');
-            source.enable();
-            return source.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                expect(source.tableStructure.columns[0].values.length).toEqual(10);
-                expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
-                expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
-                // Test that the right regions have been colored (since the datasource doesn't expose the entities).
-                // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
-                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var regionNames = regionDetail.regionProvider.regions.map(getId);
-                
-                expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
-                expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
-                expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
-                expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
-            }).otherwise(fail);
+            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            regionMapping.enable();
+            var regionDetails = regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            expect(csvItem.tableStructure.columns[0].values.length).toEqual(10);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
+            // Test that the right regions have been colored (since the datasource doesn't expose the entities).
+            // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var regionNames = regionDetail.regionProvider.regions.map(getId);
+            
+            expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
         }).otherwise(fail).then(done);
     });
 
@@ -577,27 +560,26 @@ describe('CsvCatalogItem with region mapping', function() {
             tableStyle: new TableStyle({ displayDuration: 60 * 6 }) // 6 hours
         });
         csvItem.load().then(function() {
-            var source = csvItem.dataSource;
+            var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
             var nineOclock = j('2015-08-08'); // midnight local time
             JulianDate.addHours(nineOclock, 9, nineOclock);
-            source._catalogItem.terria.clock.currentTime = nineOclock;
-            source.enable();
-            return source.regionPromise.then(function(regionDetails) {
-                expect(regionDetails).toBeDefined();
-                var regionDetail = regionDetails[0];
-                expect(source.tableStructure.columns[0].values.length).toEqual(10);
-                expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
-                expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
-                // Test that no regions have been colored, since at 9am we are more than 6 hours past the start date of any row.
-                var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
-                var regionNames = regionDetail.regionProvider.regions.map(getId);
+            regionMapping._catalogItem.terria.clock.currentTime = nineOclock;
+            regionMapping.enable();
+            var regionDetails = regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            expect(csvItem.tableStructure.columns[0].values.length).toEqual(10);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
+            // Test that no regions have been colored, since at 9am we are more than 6 hours past the start date of any row.
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var regionNames = regionDetail.regionProvider.regions.map(getId);
 
-                expect(recolorFunction(regionNames.indexOf('3121'))).not.toBeDefined();
-                expect(recolorFunction(regionNames.indexOf('3122'))).not.toBeDefined();
-                expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
-                expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
-            }).otherwise(fail);
+            expect(recolorFunction(regionNames.indexOf('3121'))).not.toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3122'))).not.toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
         }).otherwise(fail).then(done);
     });
 
@@ -666,15 +648,14 @@ describe('CsvCatalogItem with region mapping', function() {
             );
             csvItem.url = 'test/csv/postcode_val_enum.csv';
             csvItem.load().then(function() {
-                csvItem.dataSource.enable(); // Required to create an imagery layer.
-                return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                    expect(regionDetails).toBeDefined();
-                    // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
-                    // This unfortunately makes the test depend on an implementation detail.
-                    var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
-                    expect(regionImageryProvider).toBeDefined();
-                    return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
-                }).otherwise(fail);
+                csvItem.regionMapping.enable(); // Required to create an imagery layer.
+                var regionDetails = csvItem.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
+                // This unfortunately makes the test depend on an implementation detail.
+                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                expect(regionImageryProvider).toBeDefined();
+                return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
             }).then(function(r) {
                 expect(r[0].name).toEqual("3124");
                 expect(r[0].description).toContain("42.42");
@@ -715,15 +696,14 @@ describe('CsvCatalogItem with region mapping', function() {
             );
             csvItem.url = 'test/csv/lga_fuzzy_val.csv';
             csvItem.load().then(function() {
-                csvItem.dataSource.enable(); // Required to create an imagery layer.
-                return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                    expect(regionDetails).toBeDefined();
-                    // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
-                    // This unfortunately makes the test depend on an implementation detail.
-                    var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
-                    expect(regionImageryProvider).toBeDefined();
-                    return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
-                }).otherwise(fail);
+                csvItem.regionMapping.enable(); // Required to create an imagery layer.
+                var regionDetails = csvItem.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
+                // This unfortunately makes the test depend on an implementation detail.
+                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                expect(regionImageryProvider).toBeDefined();
+                return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
             }).then(function(r) {
                 expect(r[0].name).toEqual("Boroondara (C)");
                 expect(r[0].description).toContain("42.42");
@@ -795,15 +775,14 @@ describe('CsvCatalogItem with region mapping', function() {
             );
             csvItem.url = 'test/csv/lga_state_disambig.csv';
             csvItem.load().then(function() {
-                csvItem.dataSource.enable(); // Required to create an imagery provider.
-                return csvItem.dataSource.regionPromise.then(function(regionDetails) {
-                    expect(regionDetails).toBeDefined();
-                    // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the second argument is the regionImageryProvider.
-                    // This unfortunately makes the test depend on an implementation detail.
-                    var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
-                    expect(regionImageryProvider).toBeDefined();
-                    return regionImageryProvider.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
-                }).otherwise(fail);
+                csvItem.regionMapping.enable(); // Required to create an imagery provider.
+                var regionDetails = csvItem.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the second argument is the regionImageryProvider.
+                // This unfortunately makes the test depend on an implementation detail.
+                var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                expect(regionImageryProvider).toBeDefined();
+                return regionImageryProvider.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
             }).then(function(r) {
                 expect(r[0].name).toEqual("Wellington (S)");
                 expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
