@@ -51,7 +51,7 @@ $now-viewing-margin: 5px;
   max-height: calc(100vh - #{$workbench-header});
   overflow-y: auto;
   background: rgba(#fff, 0.15);
-  padding: 0  $padding-small $padding-small $padding-small;
+  padding: 0  $padding-small;
 }
 
 
@@ -112,6 +112,7 @@ $now-viewing-margin: 5px;
 }
 
 .now-viewing__header{
+  padding-bottom:  $padding-small;
   .label, .btn{
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -132,6 +133,7 @@ $now-viewing-margin: 5px;
 
 .nowViewing-chart{
   background: $dark;
+  margin-bottom: $padding;
   svg{
     text{
       font-size: 9px;
