@@ -17,6 +17,22 @@ describe('TableColumn', function() {
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 
+    it('can treat hyphens as null in numeric data', function() {
+        var data = [1, '-', 4];
+        var tableColumn = new TableColumn('x', data);
+        expect(tableColumn.name).toEqual('x');
+        expect(tableColumn.values).toEqual([1, null, 4]);
+        expect(tableColumn.type).toEqual(VarType.SCALAR);
+    });
+
+    it('does not treat hyphens as null in string data', function() {
+        var data = ['%', '-', '!'];
+        var tableColumn = new TableColumn('x', data);
+        expect(tableColumn.name).toEqual('x');
+        expect(tableColumn.values).toEqual(data);
+        expect(tableColumn.type).toEqual(VarType.ENUM);
+    });
+
     it('can detect latitude type', function() {
         var data = [30.3, 31.3, 33.3];
         var tableColumn = new TableColumn('lat', data);
