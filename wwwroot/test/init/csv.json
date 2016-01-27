@@ -1,0 +1,16 @@
+{
+    "catalog": [{
+        "name": "CSV testing",
+        "type": "group",
+        "isOpen": true,
+        "items": [{
+            "name": "Lat/lon CSV from init file",
+            "type": "csv",
+            "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
+        }, {
+            "name": "Region-mapped CSV from init file",
+            "type": "csv",
+            "data": "POA,value\n2880,5\n5710,10"
+        }]
+    }]
+}

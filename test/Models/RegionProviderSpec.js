@@ -8,9 +8,40 @@ var RegionProvider = require('../../lib/Map/RegionProvider');
 var sinon = require('sinon');
 var URI = require('urijs');
 
+// This test would be nice, but regionProvider.processRegionIds is no longer exposed in the API.
+// We could test it by loading in some json via loadRegionIDs instead.
+// 
+// describe('RegionProvider indices', function() {
+
+//     var terria;
+//     var regionProviderList;
+//     var regionProvider;
+
+//     beforeEach(function() {
+//             terria = new Terria({
+//                 baseUrl: './',
+//                 regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+//             });
+//             regionProviderList = new RegionProviderList(terria);
+//             regionProvider = new RegionProvider('CED');
+//     });
+
+//     it('gets the correct region indices', function() {
+//         var regions = ['NSW', 'Vic', 'Qld', 'WA'];
+//         regionProvider.processRegionIds(regions, undefined, '');
+//         var regionValues = ['Vic', 'Qld', 'NSW'];
+//         var result = regionProvider.mapRegionsToIndicesInto(regionValues);
+//         var target = [2, 0, 1, undefined];
+//         target.forEach(function(value, i) {
+//             expect(result[i]).toEqual(target[i]);
+//         });
+//     });
+
+// });
+
 describe('RegionProvider', function() {
     var terria;
-    var rpl, ced;
+    var regionProviderList, regionProvider;
     var fakeServer;
 
     beforeEach(function() {
@@ -49,8 +80,8 @@ describe('RegionProvider', function() {
             baseUrl: './',
             regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
         });
-        rpl = new RegionProviderList(terria);
-        ced = new RegionProvider('CED', {
+        regionProviderList = new RegionProviderList(terria);
+        regionProvider = new RegionProvider('CED', {
             regionProp: 'CED_CODE',
             layerName: 'region_map:FID_CED_2011_AUST',
             server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows'
@@ -64,8 +95,8 @@ describe('RegionProvider', function() {
     });
 
     it('parses WFS xml correctly', function(done) {
-        ced.loadRegionIDs().then(function(json) {
-            expect(ced.regions.length).toEqual(3);
+        regionProvider.loadRegionIDs().then(function(json) {
+            expect(regionProvider.regions.length).toEqual(3);
         }).otherwise(fail).then(done);
     });
 });
