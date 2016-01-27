@@ -2,6 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 var clone = require('terriajs-cesium/Source/Core/clone');
+var Color = require('terriajs-cesium/Source/Core/Color');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
@@ -334,10 +335,17 @@ describe('CsvCatalogItem with lat and lon', function() {
 
     it('supports nullColor', function(done) {
         csvItem.url = 'test/csv/lat_lon_badvalue.csv';
-        csvItem._tableStyle = new TableStyle({nullColor: 'hsl(120,100%,70%)'});
+        csvItem._tableStyle = new TableStyle({
+            replaceWithNullValues: ['bad'],
+            nullColor: '#A0B0C0'
+        });
+        var nullColor = new Color(160/255, 176/255, 192/255, 1);
         csvItem.load().then(function() {
             function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).toEqual('eep');
+            expect(cval(1)).toEqual(nullColor);
+            // This next expectation checks that zeros and null values are differently colored, and that
+            // null values do not lead to coloring getting out of sync with values.
+            expect(cval(2)).not.toEqual(nullColor);
         }).otherwise(fail).then(done);
     });
 
