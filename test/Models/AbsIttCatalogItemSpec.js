@@ -124,7 +124,7 @@ describe('AbsIttCatalogItem', function() {
                     codes: [
                         {
                             code: "A02",
-                            description: "0-2 years",
+                            description: "0-1 years",
                             parentCode: "",
                             parentDescription: ""
                         },
@@ -132,23 +132,17 @@ describe('AbsIttCatalogItem', function() {
                             code: "0",
                             description: "0",
                             parentCode: "A02",
-                            parentDescription: "0-2 years"
+                            parentDescription: "0-1 years"
                         },
                         {
                             code: "1",
                             description: "1",
                             parentCode: "A02",
-                            parentDescription: "0-2 years"
-                        },
-                        {
-                            code: "2",
-                            description: "2",
-                            parentCode: "A02",
-                            parentDescription: "0-2 years"
+                            parentDescription: "0-1 years"
                         },
                         {
                             code: "OTHER",
-                            description: "Older than 2",
+                            description: "Older than 1",
                             parentCode: "",
                             parentDescription: ""
                         }
@@ -252,6 +246,18 @@ describe('AbsIttCatalogItem', function() {
                     "values": [101,102]
                 })
             );
+
+            // Regionless responses.
+            fakeServer.respondWith(
+                'GET',
+                'http://abs.example.com/?method=GetDatasetConcepts&datasetid=regionless&format=json',
+                JSON.stringify({concepts: ["FREQUENCY", "AGE"]})
+            );
+            fakeServer.respondWith(
+                'GET',
+                'http://abs.example.com/?method=GetCodeListValue&datasetid=regionless&concept=AGE&format=json',
+                JSON.stringify({codes: [{code: "test", description: "regionless years", parentCode: "", parentDescription: ""}]})
+            );
         });
 
         afterEach(function() {
@@ -266,16 +272,29 @@ describe('AbsIttCatalogItem', function() {
                 url: 'http://abs.example.com'
             });
             item.load().then(function() {
-                return item.dataSource.regionPromise;
-            }).then(function(regionDetails) {
+                var regionDetails = item.regionMapping.regionDetails;
                 expect(regionDetails).toBeDefined();
-                var columnNames = item._dataSource.tableStructure.getColumnNames();
-                expect(columnNames.slice(0, 3)).toEqual(["aus", "Year", "0-2 years"]);
-                expect(item._concepts[0].activeItems.length).toEqual(1);
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.slice(0, 3)).toEqual(["aus", "Year", "0-1 years"]);
+                expect(item.concepts[0].activeItems.length).toEqual(1);
                 expect(item.displayPercent).toBe(true);
-                var percentage = item._dataSource.tableStructure.activeItems[0].values[0];
+                var percentage = item.tableStructure.activeItems[0].values[0];
                 expect(percentage).toEqual(25);  // 54 / 216 * 100
             }).otherwise(fail).then(done);
+        });
+
+        it('gracefully handles datasets with no region', function(done) {
+            item.updateFromJson({
+                name: 'Name',
+                datasetId: 'regionless',
+                url: 'http://abs.example.com'
+            });
+            item.load().then(function() {
+                return item.dataSource.regionPromise;
+            }).otherwise(function(e) {
+                // We actually want this to fail; if it doesn't get here (eg. if you use datasetId:'foo'), will say SPEC HAS NO EXPECTATIONS.
+                expect(true).toBe(true);
+            }).then(done);
         });
 
         it('works with filter parameter', function(done) {
@@ -286,12 +305,11 @@ describe('AbsIttCatalogItem', function() {
                 filter: ["REGIONTYPE.SA4"]  // Should use SA4 now
             });
             item.load().then(function() {
-                return item.dataSource.regionPromise;
-            }).then(function(regionDetails) {
+                var regionDetails = item.regionMapping.regionDetails;
                 expect(regionDetails).toBeDefined();
-                var columnNames = item._dataSource.tableStructure.getColumnNames();
-                expect(columnNames.slice(0, 3)).toEqual(["sa4_code_2011", "Year", "0-2 years"]);
-                var percentage = item._dataSource.tableStructure.activeItems[0].values[0];
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.slice(0, 3)).toEqual(["sa4_code_2011", "Year", "0-1 years"]);
+                var percentage = item.tableStructure.activeItems[0].values[0];
                 expect(percentage).toEqual(12.5);  // 26 / 208 * 100
             }).otherwise(fail).then(done);
         });
