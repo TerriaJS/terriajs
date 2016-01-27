@@ -5,6 +5,7 @@ var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 
 var TableColumn = require('../../lib/Core/TableColumn');
 var VarType = require('../../lib/Map/VarType');
+var VarSubType = require('../../lib/Map/VarSubType');
 
 describe('TableColumn', function() {
 
@@ -74,6 +75,27 @@ describe('TableColumn', function() {
         expect(tableColumn.dates[0].getUTCMilliseconds()).toEqual(123);
     });
 
+    it('can detect time type and year subtype from yyyy', function() {
+        var data = ['2010', '2011', '2012', '2013'];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
+        expect(tableColumn.values).toEqual(data);
+        // don't test equality using new Date() because different browsers handle timezones differently
+        // so just check the date is right.
+        expect(tableColumn.dates[0].getDate()).toEqual(1);
+        expect(tableColumn.dates[0].getMonth()).toEqual(0); // January is month 0
+        expect(tableColumn.dates[0].getFullYear()).toEqual(2010);
+    });
+
+    it('can detect year subtype using year title', function() {
+        var data = ['1066', '1776', '1788', '1901', '2220'];
+        var tableColumn = new TableColumn('year', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
+    });
+
+
     it('can calculate finish dates', function() {
         var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:30Z'];
         var tableColumn = new TableColumn('date', data);
@@ -130,6 +152,17 @@ describe('TableColumn', function() {
         );
         var target = [4, 0.5, 'bad'];
         expect(result).toEqual(target);
+    });
+
+    it('supports displayDuration', function() {
+        var data = ['2016-01-03', '2016-01-04', '2016-01-05'];
+        var sevenDaysInMinutes = 60 * 24 * 7;
+        var tableColumn = new TableColumn('date', data, {displayDuration: sevenDaysInMinutes});        
+        var availability = tableColumn.availabilities[0];
+        expect(availability.contains(JulianDate.fromIso8601('2016-01-09'))).toBe(true);
+        expect(availability.contains(JulianDate.fromIso8601('2016-01-11'))).toBe(false);
+        var durationInSeconds = JulianDate.secondsDifference(availability.stop, availability.start);
+        expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
     });
 
 });

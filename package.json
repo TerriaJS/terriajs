@@ -36,6 +36,7 @@
     "cors": "^2.5.3",
     "exorcist": "^0.1.6",
     "express": "^4.12.3",
+    "generate-terriajs-schema": "^1.0.2",
     "glob": "^5.0.5",
     "glob-all": "^3.0.1",
     "gulp": "^3.8.11",
@@ -63,7 +64,8 @@
   "scripts": {
     "prepublish": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\"",
     "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
-    "postinstall": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\""
+    "postinstall": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\"",
+    "make-schema": "gulp make-schema"
   },
   "browserify": {
     "transform": [
