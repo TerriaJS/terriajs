@@ -325,11 +325,12 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('colors null differently to zeros by default', function(done) {
+    it('colors null the same as zero by default', function(done) {
         csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
         csvItem.load().then(function() {
             function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).not.toEqual(cval(2));
+            expect(cval(1)).toEqual(cval(2));
         }).otherwise(fail).then(done);
     });
 
