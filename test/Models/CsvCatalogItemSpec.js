@@ -320,7 +320,24 @@ describe('CsvCatalogItem with lat and lon', function() {
             var valueColumn = csvItem.tableStructure.columns[2];
             expect(valueColumn.values[0]).toEqual(5);
             expect(valueColumn.values[1]).toEqual(null);
-            expect(valueColumn.values[2]).toEqual(-1);
+            expect(valueColumn.values[2]).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+    it('colors null differently to zeros by default', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem.load().then(function() {
+            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+            expect(cval(1)).not.toEqual(cval(2));
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports nullColor', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({nullColor: 'hsl(120,100%,70%)'});
+        csvItem.load().then(function() {
+            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+            expect(cval(1)).toEqual('eep');
         }).otherwise(fail).then(done);
     });
 
