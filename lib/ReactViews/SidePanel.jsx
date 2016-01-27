@@ -17,18 +17,11 @@ const SidePanel = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes: {
         terria: React.PropTypes.object,
-        toggleModalWindow: React.PropTypes.func,
-        setPreview: React.PropTypes.func
+        setWrapperState: React.PropTypes.func
     },
 
     removeAll() {
         this.props.terria.nowViewing.removeAll();
-    },
-
-    resetPreviewed() {
-        // Use the add data button to open modal window,
-        // the preview map should be reset
-        this.props.setPreview(null);
     },
 
     renderNowViewing(nowViewing) {
@@ -39,9 +32,8 @@ const SidePanel = React.createClass({
                       <li className='col col-6'><label className='label-inline'> Data Sets </label><label className='label-badge label-inline'> {nowViewing.length} </label></li>
                       <li className='col col-6'><button onClick={this.removeAll} className='btn right'>{btnRemove}</button></li>
                   </ul>
-                  <NowViewingContainer toggleModalWindow={this.props.toggleModalWindow}
+                  <NowViewingContainer setWrapperState={this.props.setWrapperState}
                                        nowViewing={nowViewing}
-                                       setPreview={this.props.setPreview}
                   />
               </div>);
         }
@@ -67,13 +59,12 @@ const SidePanel = React.createClass({
         <div className='workbench__inner'>
         <div className='workbench__header workbench-add'>
             <ModalTriggerButton btnHtml={btnAdd}
-                                toggleModalWindow={this.props.toggleModalWindow}
+                                setWrapperState={this.props.setWrapperState}
                                 classNames = 'now-viewing__add'
                                 activeTab={1}
-                                callback={this.resetPreviewed}
             />
         </div>
-        <SearchBox terria={this.props.terria} dataSearch={false} toggleModalWindow={this.props.toggleModalWindow} />
+        <SearchBox terria={this.props.terria} dataSearch={false} setWrapperState={this.props.setWrapperState} />
         <div className="now-viewing hide-on-search">
           {this.renderNowViewing(this.props.terria.nowViewing.items)}
           {this.renderCharts(this.props.terria.nowViewing.items)}

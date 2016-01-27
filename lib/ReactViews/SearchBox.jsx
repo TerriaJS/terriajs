@@ -19,8 +19,7 @@ const SearchBox = React.createClass({
         mapSearch: React.PropTypes.bool,
         dataSearch: React.PropTypes.bool,
         gazetterSearch: React.PropTypes.bool,
-        toggleModalWindow: React.PropTypes.func,
-        setPreview: React.PropTypes.func,
+        setWrapperState: React.PropTypes.func,
         previewed: React.PropTypes.object
     },
 
@@ -100,13 +99,13 @@ const SearchBox = React.createClass({
                         if (group.isGroup === true) {
                             return (<DataCatalogGroup group={group}
                                                       key={i}
-                                                      setPreview={this.props.setPreview}
+                                                      setWrapperState={this.props.setWrapperState}
                                                       previewed={this.props.previewed}
                                     />);
                         }
                         return (<DataCatalogItem item={group}
                                                  key={i}
-                                                 setPreview={this.props.setPreview}
+                                                 setWrapperState={this.props.setWrapperState}
                                                  previewed={this.props.previewed}
                                 />);
                     });
@@ -135,7 +134,7 @@ const SearchBox = React.createClass({
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && value.length > 0) {
-            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.searchKeyword} activeTab={1} toggleModalWindow={this.props.toggleModalWindow} />);
+            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.searchKeyword} activeTab={1} setWrapperState={this.props.setWrapperState} />);
         }
 
         return (

@@ -12,11 +12,13 @@ const ModalWindow = React.createClass({
         activeTab: React.PropTypes.number,
         modalWindowIsOpen: React.PropTypes.bool,
         previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
+        setWrapperState: React.PropTypes.func
     },
 
     closeModal() {
-        this.props.toggleModalWindow(false, null);
+        this.props.setWrapperState({
+            modalWindowIsOpen: false
+        });
     },
 
     render() {
@@ -42,10 +44,9 @@ const ModalWindow = React.createClass({
                 </button>
                 <Tabs terria={ this.props.terria }
                       activeTab={ this.props.activeTab }
-                      toggleModalWindow={this.props.toggleModalWindow}
+                      setWrapperState={this.props.setWrapperState}
                       defaultSearchText={this.props.defaultSearchText}
                       previewed={this.props.previewed}
-                      setPreview={this.props.setPreview}
                 />
               </div>
             </div>

@@ -10,7 +10,7 @@ const DataCatalogGroup = React.createClass({
         group: React.PropTypes.object,
         items: React.PropTypes.array,
         previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
+        setWrapperState: React.PropTypes.func
     },
 
     getInitialState() {
@@ -48,13 +48,13 @@ const DataCatalogGroup = React.createClass({
                         return (<DataCatalogGroup group={member}
                                                   key={i}
                                                   previewed={this.props.previewed}
-                                                  setPreview={this.props.setPreview}
+                                                  setWrapperState={this.props.setWrapperState}
                                  />);
                     }
                     return (<DataCatalogItem item={member}
                                              key={i}
                                              previewed={this.props.previewed}
-                                             setPreview={this.props.setPreview}
+                                             setWrapperState={this.props.setWrapperState}
                             />);
                 });
             }

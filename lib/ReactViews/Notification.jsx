@@ -4,14 +4,16 @@ const Notification = React.createClass({
     propTypes: {
         notification: React.PropTypes.object,
         notificationisShow: React.PropTypes.bool,
-        dismissNotification: React.PropTypes.func
+        setWrapperState: React.PropTypes.func
     },
     renderMessage() {
         return {__html: this.props.notification.body};
     },
 
     dismissNotification() {
-        this.props.dismissNotification();
+        this.props.setWrapperState({
+            notificationisShow: false
+        });
     },
 
     render() {

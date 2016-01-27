@@ -10,18 +10,22 @@ const DataCatalogItem = React.createClass({
     propTypes: {
         item: React.PropTypes.object,
         previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
+        setWrapperState: React.PropTypes.func
     },
 
     addToPreview(event) {
         event.preventDefault();
-        this.props.setPreview(this.props.item);
+        this.props.setWrapperState({
+            previewed: this.props.item
+        });
     },
 
     addToMap(event) {
         event.preventDefault();
         this.props.item.toggleEnabled();
-        this.props.setPreview(this.props.item);
+        this.props.setWrapperState({
+            previewed: this.props.item
+        });
     },
 
     renderIconClass(item) {

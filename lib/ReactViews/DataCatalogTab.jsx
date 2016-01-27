@@ -9,7 +9,7 @@ const DataCatalogTab = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func,
+        setWrapperState: React.PropTypes.func,
         defaultSearchText: React.PropTypes.string
     },
 
@@ -25,7 +25,7 @@ const DataCatalogTab = React.createClass({
               return (<DataCatalogGroup group={group}
                                         key={i}
                                         previewed={this.props.previewed}
-                                        setPreview={this.props.setPreview}
+                                        setWrapperState={this.props.setWrapperState}
                       />);
           }, this)}
         </ul>);
@@ -41,7 +41,7 @@ const DataCatalogTab = React.createClass({
                            mapSearch = {false}
                            gazetterSearch={false}
                            defaultSearchText={this.props.defaultSearchText}
-                           setPreview={this.props.setPreview}
+                           setWrapperState={this.props.setWrapperState}
                            previewed={this.props.previewed}
                 />
                 {this.renderDataCatalog(dataCatalog)}

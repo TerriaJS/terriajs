@@ -13,9 +13,9 @@ const Tabs = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         activeTab: React.PropTypes.number,
-        toggleModalWindow: React.PropTypes.func,
+        setWrapperState: React.PropTypes.func,
         previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func,
+        setWrapperState: React.PropTypes.func,
         defaultSearchText: React.PropTypes.string
     },
 
@@ -26,7 +26,10 @@ const Tabs = React.createClass({
     },
 
     clickTab(i) {
-        this.props.toggleModalWindow(true, i, null);
+        this.props.setWrapperState({
+            modalWindowIsOpen: true,
+            activeTab: i
+        });
     },
 
     getTabs() {
@@ -41,7 +44,7 @@ const Tabs = React.createClass({
                 panel: <DataCatalogTab terria={this.props.terria}
                                        defaultSearchText={this.props.defaultSearchText}
                                        previewed={this.props.previewed}
-                                       setPreview={this.props.setPreview}
+                                       setWrapperState={this.props.setWrapperState}
                         />
             },
             {

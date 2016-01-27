@@ -10,8 +10,7 @@ const NowViewingItem = React.createClass({
     propTypes: {
         nowViewingItem: React.PropTypes.object,
         index: React.PropTypes.number,
-        toggleModalWindow: React.PropTypes.func,
-        setPreview: React.PropTypes.func
+        setWrapperState: React.PropTypes.func
     },
 
     removeFromMap() {
@@ -57,7 +56,7 @@ const NowViewingItem = React.createClass({
     },
 
     NowViewingAsPreviewed() {
-        this.props.setPreview(this.props.nowViewingItem);
+        this.props.setWrapperState(this.props.nowViewingItem);
     },
 
     render() {
@@ -72,7 +71,7 @@ const NowViewingItem = React.createClass({
             <div className ="now-viewing__item-inner">
               <ul className="list-reset flex clearfix now-viewing__item-control">
                 <li><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn zoom">Zoom To</button></li>
-                <li><ModalTriggerButton btnHtml="info" classNames='info' toggleModalWindow={this.props.toggleModalWindow} activeTab={1} callback={this.NowViewingAsPreviewed} /></li>
+                <li><ModalTriggerButton btnHtml="info" classNames='info' setWrapperState={this.props.setWrapperState} activeTab={1} callback={this.NowViewingAsPreviewed} /></li>
                 <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
                 <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-visible' : 'icon-invisible')}></i></button></li>
               </ul>

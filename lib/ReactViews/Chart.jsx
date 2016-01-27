@@ -21,7 +21,7 @@ const Chart = React.createClass({
             data: data,
             yScale: yScale,
             xScale: xScale,
-            margin: {top: 10, right: 20, bottom: 10, left: 20}
+            margin: {top: 10, right: 20, bottom: 5, left: 20}
         };
     },
     render() {
