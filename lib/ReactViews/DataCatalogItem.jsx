@@ -35,12 +35,8 @@ const DataCatalogItem = React.createClass({
     },
 
     compareItem(item1, item2) {
-        if(item1 && item2) {
-            if((item1.dataUrl === item2.dataUrl) &&
-                (item1.name === item2.name) &&
-                (item1.layers === item2.layers)) {
-                return true;
-            }
+        if((item1 && item2) && (item1 === item2)) {
+            return true;
         }
         return false;
     },

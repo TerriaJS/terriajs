@@ -51,13 +51,6 @@ const SearchBox = React.createClass({
         this.gazetterSearch = new GazetteerSearchProviderViewModel(this.props);
     },
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            value: nextProps.defaultSearchText
-        });
-        this.doSearch(nextProps.defaultSearchText);
-    },
-
     handleChange(event) {
         this.setState({
             value: event.target.value
@@ -77,16 +70,18 @@ const SearchBox = React.createClass({
         }
     },
 
+    componentWillUnmount(){
+        console.log('unmount');
+    },
+
     clearSearch() {
         this.setState({
             value: ''
         });
     },
 
-    searchKeyword(_component) {
-        _component.setState({
-            defaultSearchText: this.state.value
-        });
+    searchKeyword() {
+        this.doSearch(this.state.value);
     },
 
     renderSearchResult(searchType, search) {
