@@ -4,21 +4,24 @@ const DataCatalogGroup = require('./DataCatalogGroup.jsx');
 const DataCatalogItem = require('./DataCatalogItem.jsx');
 const LocationItem = require('./LocationItem.jsx');
 const Loader = require('./Loader.jsx');
+const ObserveModelMixin = require('./ObserveModelMixin');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 const ModalTriggerButton = require('./ModalTriggerButton.jsx');
 const CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
 const BingMapsSearchProviderViewModel = require('../ViewModels/BingMapsSearchProviderViewModel.js');
 const GazetteerSearchProviderViewModel = require('../ViewModels/GazetteerSearchProviderViewModel.js');
-const when = require('terriajs-cesium/Source/ThirdParty/when');
 
 // Handle any of the three kinds of search based on the props
 const SearchBox = React.createClass({
+    mixins: [ObserveModelMixin, PureRenderMixin],
     propTypes: {
         mapSearch: React.PropTypes.bool,
         dataSearch: React.PropTypes.bool,
         gazetterSearch: React.PropTypes.bool,
         toggleModalWindow: React.PropTypes.func,
-        setPreview: React.PropTypes.func
+        setPreview: React.PropTypes.func,
+        previewed: React.PropTypes.object
     },
 
     getDefaultProps() {
@@ -42,6 +45,12 @@ const SearchBox = React.createClass({
         };
     },
 
+    componentWillMount() {
+        this.dataCatalogSearch = new CatalogItemNameSearchProviderViewModel(this.props);
+        this.bingMapSearch = new BingMapsSearchProviderViewModel(this.props);
+        this.gazetterSearch = new GazetteerSearchProviderViewModel(this.props);
+    },
+
     componentWillReceiveProps(nextProps) {
         this.setState({
             value: nextProps.defaultSearchText
@@ -56,48 +65,15 @@ const SearchBox = React.createClass({
         this.doSearch(event.target.value);
     },
 
-    dataCatalogSearch(keyword) {
-        const dataCatalogSearch = new CatalogItemNameSearchProviderViewModel(this.props);
-        const that = this;
-        when(dataCatalogSearch.search(keyword)).then(() => {
-            that.setState({
-                dataCatalogResults: dataCatalogSearch.searchResults,
-                dataCatalogIsSearching: dataCatalogSearch.isSearching
-            });
-        });
-    },
-
-    bingMapSearch(keyword) {
-        const bingMapSearch = new BingMapsSearchProviderViewModel(this.props);
-        const that = this;
-        when(bingMapSearch.search(keyword)).then(() => {
-            that.setState({
-                bingMapSearchResults: bingMapSearch.searchResults,
-                bingMapIsSearching: bingMapSearch.isSearching
-            });
-        });
-    },
-
-    gazetterSearch(keyword) {
-        const gazetterSearch = new GazetteerSearchProviderViewModel(this.props);
-        const that = this;
-        when(gazetterSearch.search(keyword)).then(() => {
-            that.setState({
-                gazetterSearchResults: gazetterSearch.searchResults,
-                gazetterIsSearching: gazetterSearch.isSearching
-            });
-        });
-    },
-
     doSearch(keyword) {
         if (this.props.dataSearch !== false) {
-            this.dataCatalogSearch(keyword);
+            this.dataCatalogSearch.search(keyword);
         }
         if (this.props.mapSearch !== false) {
-            this.bingMapSearch(keyword);
+            this.bingMapSearch.search(keyword);
         }
         if (this.props.gazetterSearch !== false) {
-            this.gazetterSearch(keyword);
+            this.gazetterSearch.search(keyword);
         }
     },
 
@@ -113,43 +89,42 @@ const SearchBox = React.createClass({
         });
     },
 
-    renderSearchResult(searchType, searchResults, searchState, resultLabel) {
-        const that = this;
+    renderSearchResult(searchType, search) {
         const value = this.state.value;
         let content = null;
         let results = <Loader />;
-
         if ((searchType) && value.length > 0) {
-            if (!searchState) {
-                if(searchResults.length > 0) {
-                    if (searchType !== that.props.dataSearch) {
-                        results = searchResults.map((item, i) => {
+            if (!search.isSearching) {
+                if(search.searchResults.length > 0) {
+                    if (search.name !== 'Catalogue Items') {
+                        results = search.searchResults.map((item, i) => {
                             return (<LocationItem item={item} key={i} />);
                         });
                     } else {
-                        results = searchResults.map((result, i) => {
+                        results = search.searchResults.map((result, i) => {
                             const group = result.catalogItem;
                             if (group.isGroup === true) {
                                 return (<DataCatalogGroup group={group}
                                                           key={i}
                                                           setPreview={this.props.setPreview}
+                                                          previewed={this.props.previewed}
                                         />);
                             }
                             return (<DataCatalogItem item={group}
                                                      key={i}
                                                      setPreview={this.props.setPreview}
+                                                     previewed={this.props.previewed}
                                     />);
                         });
                     }
                 }
                 else {
-                    results = <Loader />;
-                    // results = <li className ='label'>No results found </li>;
+                    results = <li className ='label no-results'>No results found </li>;
                 }
             }
 
             content = <div>
-                        <label className='label label-sub-heading'>{resultLabel}</label>
+                        <label className='label label-sub-heading'>{search.name}</label>
                         <ul className='list-reset search-results-items'>{results}</ul>
                       </div>;
         }
@@ -157,11 +132,7 @@ const SearchBox = React.createClass({
     },
 
     render() {
-        const that = this;
         const value = this.state.value;
-        const bingMapSearchLabel = 'Locations';
-        const gazetterSearchLabel = 'Offical Place Names';
-        const dataCatalogSearchLabel = 'Data Catalog';
 
         // button to clear search string
         let clearSearchContent = null;
@@ -191,9 +162,9 @@ const SearchBox = React.createClass({
                 </form>
                 <div className ='search-results'>
                   {linkToSearchData}
-                  {this.renderSearchResult(that.props.mapSearch, that.state.bingMapSearchResults, that.state.bingMapIsSearching, bingMapSearchLabel)}
-                  {this.renderSearchResult(that.props.gazetterSearch, that.state.gazetterSearchResults, that.state.gazetterIsSearching, gazetterSearchLabel)}
-                  {this.renderSearchResult(that.props.dataSearch, that.state.dataCatalogResults, that.state.dataCatalogIsSearching, dataCatalogSearchLabel)}
+                  {this.renderSearchResult(this.props.mapSearch, this.bingMapSearch)}
+                  {this.renderSearchResult(this.props.gazetterSearch, this.gazetterSearch)}
+                  {this.renderSearchResult(this.props.dataSearch, this.dataCatalogSearch)}
                 </div>
             </div>
             );

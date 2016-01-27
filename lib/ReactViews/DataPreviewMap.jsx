@@ -46,7 +46,7 @@ const DataPreviewMap = React.createClass({
         }
 
         let previewed = nextProp.previewed;
-        if (defined(previewed.type)) {
+        if (previewed && defined(previewed.type)) {
             let type = previewed.type;
             let serializedCatalogItem = previewed.serializeToJson();
             let catalogItem = createCatalogMemberFromType(type, this.terriaPreview);

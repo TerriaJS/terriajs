@@ -17,28 +17,16 @@ const NowViewingItem = React.createClass({
         setPreview: React.PropTypes.func
     },
 
-    getInitialState() {
-        return {
-            isOpen: true,
-            isVisible: true
-        };
-    },
-
     removeFromMap() {
         this.props.nowViewingItem.isEnabled = false;
     },
 
     toggleDisplay() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
+        this.props.nowViewingItem.isLegendVisible = !this.props.nowViewingItem.isLegendVisible;
     },
 
     toggleVisibility() {
         this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
-        this.setState({
-            isVisible: !this.state.isVisible
-        });
     },
 
     zoom() {
@@ -77,18 +65,19 @@ const NowViewingItem = React.createClass({
 
     render() {
         const nowViewingItem = this.props.nowViewingItem;
+
         return (
-          <li className={'now-viewing__item clearfix ' + (this.state.isOpen === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
+          <li className={'now-viewing__item clearfix ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
             <div className ="now-viewing__item-header clearfix">
               <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
-              <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={this.state.isOpen ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
+              <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={nowViewingItem.isLegendVisible ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
             </div>
             <div className ="now-viewing__item-inner">
               <ul className="list-reset flex clearfix now-viewing__item-control">
                 <li><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn zoom">Zoom To</button></li>
                 <li><ModalTriggerButton btnHtml="info" classNames='info' toggleModalWindow={this.props.toggleModalWindow} activeTab={1} callback={this.NowViewingAsPreviewed} /></li>
                 <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
-                <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (this.state.isVisible ? 'icon-visible' : 'icon-invisible')}></i></button></li>
+                <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-visible' : 'icon-invisible')}></i></button></li>
               </ul>
               <div className="now-viewing__item-opacity">
                 <label htmlFor="opacity">Opacity: </label>

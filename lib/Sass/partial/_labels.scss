@@ -3,6 +3,12 @@
   display: block;
 }
 
+.no-results{
+  //temp
+  padding: $padding !important;
+  margin-bottom: $padding;
+}
+
 .setting-panel__label, .share-panel__label{
   text-transform: uppercase;
   padding: $padding 0;
