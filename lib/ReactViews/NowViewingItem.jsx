@@ -1,12 +1,9 @@
 'use strict';
 const React = require('react');
 const ModalTriggerButton = require('./ModalTriggerButton.jsx');
-const imageUrlRegex = /[.\/](png|jpg|jpeg|gif)/i;
-const defined = require('terriajs-cesium/Source/Core/defined');
 const ObserveModelMixin = require('./ObserveModelMixin');
 const PureRenderMixin = require('react-addons-pure-render-mixin');
 
-// Maybe should be called nowViewingItem?
 const NowViewingItem = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
 

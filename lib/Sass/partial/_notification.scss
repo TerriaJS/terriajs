@@ -1,7 +1,19 @@
 .notification{
+  h3{
+    margin: 0;
+  }
+  .notification__inner{
+    padding-right: $padding*3;
+  }
+  .notification__side{
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
   position: fixed;
   background: red;
   top: 0;
+  left: $work-bench-width;
   right: 0;
   z-index: 99;
   padding: $padding;

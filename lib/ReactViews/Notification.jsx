@@ -16,9 +16,15 @@ const Notification = React.createClass({
 
     render() {
         return <div className='notification' aria-hidden={ !this.props.notificationisShow }>
-                 <h3>{this.props.notification.title}</h3>
-                 <div dangerouslySetInnerHTML={this.renderMessage()} />
-                 <button className='btn btn-primary' onClick={this.dismissNotification}> Dismiss </button>
+                 <div className='notification__inner'>
+                    <h3>{this.props.notification.title}</h3>
+                    <div dangerouslySetInnerHTML={this.renderMessage()} />
+                 </div>
+                 <div className='notification__side'>
+                     <button className='btn' onClick={this.dismissNotification}>
+                        <i className='icon icon-close'></i>
+                     </button>
+                 </div>
                </div>;
     }
 });
