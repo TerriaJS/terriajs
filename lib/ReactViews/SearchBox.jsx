@@ -94,33 +94,31 @@ const SearchBox = React.createClass({
         let content = null;
         let results = <Loader />;
         if ((searchType) && value.length > 0) {
-            if (!search.isSearching) {
-                if(search.searchResults.length > 0) {
-                    if (search.name !== 'Catalogue Items') {
-                        results = search.searchResults.map((item, i) => {
-                            return (<LocationItem item={item} key={i} />);
-                        });
-                    } else {
-                        results = search.searchResults.map((result, i) => {
-                            const group = result.catalogItem;
-                            if (group.isGroup === true) {
-                                return (<DataCatalogGroup group={group}
-                                                          key={i}
-                                                          setPreview={this.props.setPreview}
-                                                          previewed={this.props.previewed}
-                                        />);
-                            }
-                            return (<DataCatalogItem item={group}
-                                                     key={i}
-                                                     setPreview={this.props.setPreview}
-                                                     previewed={this.props.previewed}
+            if(search.searchResults.length > 0) {
+                if (search.name !== 'Catalogue Items') {
+                    results = search.searchResults.map((item, i) => {
+                        return (<LocationItem item={item} key={i} />);
+                    });
+                } else {
+                    results = search.searchResults.map((result, i) => {
+                        const group = result.catalogItem;
+                        if (group.isGroup === true) {
+                            return (<DataCatalogGroup group={group}
+                                                      key={i}
+                                                      setPreview={this.props.setPreview}
+                                                      previewed={this.props.previewed}
                                     />);
-                        });
-                    }
+                        }
+                        return (<DataCatalogItem item={group}
+                                                 key={i}
+                                                 setPreview={this.props.setPreview}
+                                                 previewed={this.props.previewed}
+                                />);
+                    });
                 }
-                else {
-                    results = <li className ='label no-results'>No results found </li>;
-                }
+            }
+            else {
+                results = <li className ='label no-results'>No results found </li>;
             }
 
             content = <div>
