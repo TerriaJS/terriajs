@@ -313,6 +313,17 @@ describe('CsvCatalogItem with lat and lon', function() {
         .otherwise(fail).then(done);
     });
 
+    it('supports replaceWithNullValues', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
+        csvItem.load().then(function() {
+            var valueColumn = csvItem.tableStructure.columns[2];
+            expect(valueColumn.values[0]).toEqual(5);
+            expect(valueColumn.values[1]).toEqual(null);
+            expect(valueColumn.values[2]).toEqual(-1);
+        }).otherwise(fail).then(done);
+    });
+
     // Removed: not clear that this is correct behaviour, and it's failing.
     // xit('renders a point with no value in transparent black', function(done) {
     //     csvItem.url = 'test/missingNumberFormatting.csv';
