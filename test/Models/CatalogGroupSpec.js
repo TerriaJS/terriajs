@@ -13,7 +13,8 @@ describe('CatalogGroup', function() {
         terria = new Terria({
             baseUrl: './'
         });
-        group = new CatalogGroup(terria);
+        group = terria.catalog.group;
+        group.preserveOrder = false;
         createCatalogMemberFromType.register('group', CatalogGroup);
         createCatalogMemberFromType.register('item', CatalogItem);
     });
