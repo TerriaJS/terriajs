@@ -20,7 +20,7 @@ Change Log
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
 * Treats `-`, `na` and `NA` in csv files as if zero by default; can change this list using `tableStyle.replaceWithNullValues`, and can set an alternative color for these values using `tableStyle.nullColor`.
-* Recognises the csv datetime formats: YYYY, YYYY-MM, YYYY-MM-DD HH:MM(:SS) and YYYY/MM/DD HH:MM(:SS).
+* Recognises the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
 * Nicer formatting of datetimes from csv files in the feature info panel.
 
 ### 1.0.54
