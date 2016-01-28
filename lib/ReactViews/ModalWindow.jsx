@@ -23,9 +23,11 @@ const ModalWindow = React.createClass({
 
     render() {
         return (
-            <div className="data-panel-wrapper modal-wrapper fixed flex flex-center"
-            id="data-panel-wrapper"
-            aria-hidden={ !this.props.modalWindowIsOpen }>
+            <div className={'data-panel-wrapper modal-wrapper fixed flex flex-center ' + (this.props.modalWindowIsOpen ? 'is-open' : '')}
+                 id="data-panel-wrapper"
+                 // Temp disable
+                 // aria-hidden={!this.props.modalWindowIsOpen}
+                 >
               <div onClick={ this.closeModal }
                    id="data-panel-overlay"
                    className="modal-overlay absolute"
