@@ -11,11 +11,13 @@
 
 .setting-panel__label, .share-panel__label{
   text-transform: uppercase;
-  padding: $padding 0;
+  padding: $padding-small 0;
+  display: block;
 }
 
 .active-map__label{
-  padding: $padding 0;
+  padding: $padding-small 0;
+  font-size: $font-size-small;
 }
 
 .label-badge{

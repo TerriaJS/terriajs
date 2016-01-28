@@ -24,23 +24,30 @@
     color: #444;
     opacity: 0.5;
   }
-  @include placeholder{
+
+  input{
+    @include placeholder{
       text-transform: uppercase;
       font-size: $font-size-small;
       text-align: center;
       padding-right: 3rem;
+      @include transition(all, 0.5s linear);
     }
-  input{
     padding-left: 3rem;
     height: $input-height;
     width: 100%;
+    &:focus{
+      @include placeholder{
+      text-align: left;
+      }
+    }
   }
   .panel-content &{
     font-family: $font;
   }
 
   .workbench__inner & {
-    padding: 0 $padding;
+    padding: 0 $padding-small;
     .icon{
       position: absolute;
       left: $padding*2;

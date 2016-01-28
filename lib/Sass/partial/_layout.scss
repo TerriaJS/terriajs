@@ -52,7 +52,7 @@
 
 
 .modal-wrapper{
-  z-index: 1;
+  z-index: 99;
   top: 0;
   left: 0;
   width: 100vw;
@@ -64,7 +64,7 @@
     position: fixed;
     top: 20px;
     right: $padding;
-    z-index: 99;
+    z-index: 10;
 
     .compass{
       position: absolute;
@@ -76,7 +76,7 @@
       position: absolute;
       //temp
       right: 35px;
-      top: 200px;
+      top: 170px;
     }
 }
 
@@ -85,7 +85,7 @@
   top: 10px;
   right: 10px;
   max-width: 95%;
-  z-index: 99;
+  z-index: 5;
   @media screen and (min-width : $sm){
     //temp
     max-width: calc(100vw - 470px);

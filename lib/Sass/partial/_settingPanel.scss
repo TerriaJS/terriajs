@@ -38,7 +38,7 @@
       position: absolute;
       top: -10px;
       @include transform(rotate(45deg));
-      left: $setting-panel/2 - 8px
+      left: $setting-panel/2 - 8px;
     }
     @include transform (scale(0) translateZ(0));
     @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
@@ -58,7 +58,7 @@
 
 
 .setting-panel-section{
-  padding: $padding;
+  padding: $padding-small;
 }
 .setting-panel-inner{
     width: $setting-panel;

@@ -1,4 +1,4 @@
-$now-viewing-margin: 5px;
+$now-viewing-margin: $padding-small - 1px;
 
 // Now viewing
 //
@@ -47,9 +47,8 @@ $now-viewing-margin: 5px;
 }
 
 .now-viewing{
-  margin-top: $now-viewing-margin;
-  max-height: calc(100vh - #{$workbench-header});
-  overflow-y: auto;
+  height: calc(100vh - #{$workbench-header});
+  overflow-y: scroll;
   background: rgba(#fff, 0.15);
   padding: 0  $padding-small;
 }
@@ -79,7 +78,7 @@ $now-viewing-margin: 5px;
 
 .now-viewing__item{
   @include greybox();
-  margin: $now-viewing-margin 0;
+  margin: $now-viewing-margin/2 0;
   &.is-dragging{
     opacity: 0.5;
     .now-viewing__header{
@@ -112,7 +111,7 @@ $now-viewing-margin: 5px;
 }
 
 .now-viewing__header{
-  padding-bottom:  $padding-small;
+  padding: 0 $padding;
   .label, .btn, .label-inline{
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -126,7 +125,7 @@ $now-viewing-margin: 5px;
 }
 
 .nowViewing__drop-zone{
-  height: 2px;
+  height: 1px;
   background: transparent;
   @include transition(height 0.25s ease-in-out);
 }

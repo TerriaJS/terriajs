@@ -1,9 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
-@import url(https://fonts.googleapis.com/css?family=Montserrat:400,700);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic);
 
 
-$font-pop:'Montserrat', sans-serif;
+$font-pop:'Open Sans', sans-serif;
 $font-base: 'Open Sans', sans-serif;
 $font : $font-base;
 
@@ -28,14 +27,14 @@ $modal-secondary-bg: #f0f0f0;
 
 $font-size-large: 1.3rem;
 $font-size-base: 1rem;
-$font-size-small: 0.95rem;
-$font-size-mini: 0.8rem;
+$font-size-small: 13px;
+$font-size-mini: 10px;
 
 $work-bench-width : 350px;
 $setting-panel: 300px;
 $feature-info-panel-width: 500px;
 $branding-height: 55px;
-$workbench-header: 195px;
+$workbench-header: 175px;
 $input-height: 3rem;
 
 $border-color: rgba(#fff, 0.15);
@@ -44,7 +43,7 @@ $border-style: 1px solid $border-color;
 $box-shadow: 0px 6px 22px -6px rgba(#000, 0.75);
 
 
-$padding-small: 8px;
+$padding-small: 5px;
 $padding: 10px;
 $padding-mini: 3px;
 
