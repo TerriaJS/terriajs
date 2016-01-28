@@ -3,13 +3,12 @@
 import DataCatalogGroup from './DataCatalogGroup.jsx';
 import DataPreview from './DataPreview.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React from 'react';
 import SearchBox from './SearchBox.jsx';
 
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object,

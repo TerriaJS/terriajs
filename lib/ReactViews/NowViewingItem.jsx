@@ -1,11 +1,10 @@
 'use strict';
 
 import ObserveModelMixin from './ObserveModelMixin';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React from 'react';
 
 const NowViewingItem = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         nowViewingItem: React.PropTypes.object.isRequired,

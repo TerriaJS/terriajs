@@ -3,10 +3,9 @@ const React = require('react');
 const DataCatalogItem = require('./DataCatalogItem.jsx');
 const Loader = require('./Loader.jsx');
 import ObserveModelMixin from './ObserveModelMixin';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 const DataCatalogGroup = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         group: React.PropTypes.object,

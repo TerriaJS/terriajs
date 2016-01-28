@@ -5,7 +5,6 @@ const DataCatalogItem = require('./DataCatalogItem.jsx');
 const LocationItem = require('./LocationItem.jsx');
 const Loader = require('./Loader.jsx');
 const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 const ModalTriggerButton = require('./ModalTriggerButton.jsx');
 const CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
@@ -14,7 +13,7 @@ const GazetteerSearchProviderViewModel = require('../ViewModels/GazetteerSearchP
 
 // Handle any of the three kinds of search based on the props
 const SearchBox = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
     propTypes: {
         mapSearch: React.PropTypes.bool,
         dataSearch: React.PropTypes.bool,

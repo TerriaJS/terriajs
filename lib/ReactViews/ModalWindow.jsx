@@ -1,12 +1,11 @@
 'use strict';
 
 import ObserveModelMixin from './ObserveModelMixin';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React from 'react';
 import Tabs from './Tabs.jsx';
 
 const ModalWindow = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,

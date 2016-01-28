@@ -5,11 +5,10 @@ const markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
 const DataPreviewMap = require('./DataPreviewMap.jsx');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,

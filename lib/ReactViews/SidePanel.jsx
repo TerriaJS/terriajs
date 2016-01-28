@@ -4,13 +4,12 @@ import React from 'react';
 import SearchBox from './SearchBox.jsx';
 import NowViewingContainer from './NowViewingContainer.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 // the sidepanel
 // TO DO:  rename this into workbench
 // This get re-rendered when nowViewingItem changes
 const SidePanel = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,

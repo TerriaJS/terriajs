@@ -2,11 +2,10 @@
 
 const React = require('react');
 const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         item: React.PropTypes.object,

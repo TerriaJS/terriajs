@@ -8,10 +8,9 @@ const defined = require('terriajs-cesium/Source/Core/defined');
 const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
 const createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
 const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 const DataPreviewMap = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,

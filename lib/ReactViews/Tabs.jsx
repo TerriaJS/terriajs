@@ -3,7 +3,6 @@
 import DataCatalogTab from './DataCatalogTab.jsx';
 import MyDataTab from './MyDataTab.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
-import PureRenderMixin from 'react-addons-pure-render-mixin';
 import React from 'react';
 import WelcomeTab from './WelcomeTab.jsx';
 
@@ -12,7 +11,7 @@ function getName(str1, str2) {
 }
 
 const Tabs = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
