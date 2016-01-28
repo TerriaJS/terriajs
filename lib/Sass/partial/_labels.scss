@@ -22,11 +22,13 @@
 
 .label-badge{
   text-align: center;
-  border: 2px solid;
-  border-radius: 3px;
+  border: 1px solid;
+  border-radius: 2px;
   box-sizing: content-box;
-  padding: 0 $padding;
+  padding: 0 $padding-small;
   margin: $padding;
+  font-size: 10px;
+  line-height: 21px;
 }
 
 .label-inline{

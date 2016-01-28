@@ -483,6 +483,21 @@ button.btn.visibility{
   padding: $padding 15px $padding 5px;
 }
 
+.btn.btn-preview-toggle{
+  width: 80px;
+  text-align: center;
+  background: $color-primary;
+  color: #fff;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: $font-size-small;
+  float: right;
+  &:hover, &:focus{
+    border: 1px solid $color-primary;
+  }
+}
+
 .kss-modifier__example{
   .btn.btn-viewer{
     max-width: 100px;

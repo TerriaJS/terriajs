@@ -141,3 +141,9 @@ $now-viewing-margin: $padding-small - 1px;
     }
   }
 }
+
+.now-viewing__item-legend{
+  a, img{
+    display: block;
+  }
+}

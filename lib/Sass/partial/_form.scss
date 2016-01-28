@@ -31,7 +31,6 @@
       font-size: $font-size-small;
       text-align: center;
       padding-right: 3rem;
-      @include transition(all, 0.5s linear);
     }
     padding-left: 3rem;
     height: $input-height;
