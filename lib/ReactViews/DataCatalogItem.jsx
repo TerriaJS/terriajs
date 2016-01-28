@@ -7,21 +7,20 @@ const PureRenderMixin = require('react-addons-pure-render-mixin');
 // Individual dataset
 const DataCatalogItem = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
+
     propTypes: {
         item: React.PropTypes.object,
-        previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
+        previewedCatalogItem: React.PropTypes.object,
+        onPreviewedCatalogItemChanged: React.PropTypes.func
     },
 
-    addToPreview(event) {
-        event.preventDefault();
-        this.props.setPreview(this.props.item);
+    addToPreview() {
+        this.props.onPreviewedCatalogItemChanged(this.props.item);
     },
 
-    addToMap(event) {
-        event.preventDefault();
+    addToMap() {
+        this.addToPreview();
         this.props.item.toggleEnabled();
-        this.props.setPreview(this.props.item);
     },
 
     renderIconClass(item) {
@@ -34,23 +33,15 @@ const DataCatalogItem = React.createClass({
         return 'icon icon-add';
     },
 
-    compareItem(item1, item2) {
-        if((item1 && item2) && (item1 === item2)) {
-            return true;
-        }
-        return false;
-    },
-
     render() {
         const item = this.props.item;
         return (
-            <li className={(this.compareItem(this.props.previewed, item) ? 'is-previewed' : '') + ' clearfix data-catalog-item flex' }>
+            <li className={(this.props.previewedCatalogItem === item ? 'is-previewed' : '') + ' clearfix data-catalog-item flex' }>
                 <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>
                     <i className={this.renderIconClass(item)}></i>
                 </button>
                 <button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button>
-            </li>
-            );
+            </li>);
     }
 });
 

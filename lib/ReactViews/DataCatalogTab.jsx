@@ -1,33 +1,34 @@
 'use strict';
-const React = require('react');
-const DataCatalogGroup = require('./DataCatalogGroup.jsx');
-const DataPreview = require('./DataPreview.jsx');
-const SearchBox = require('./SearchBox.jsx');
+
+import DataCatalogGroup from './DataCatalogGroup.jsx';
+import DataPreview from './DataPreview.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
+import React from 'react';
+import SearchBox from './SearchBox.jsx';
 
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
+    mixins: [ObserveModelMixin, PureRenderMixin],
+
     propTypes: {
         terria: React.PropTypes.object,
-        previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func,
-        defaultSearchText: React.PropTypes.string
-    },
-
-    getDefaultProps() {
-        return {
-            defaultSearchText: ''
-        };
+        searchText: React.PropTypes.string,
+        previewedCatalogItem: React.PropTypes.object,
+        onSearchTextChanged: React.PropTypes.func,
+        onPreviewedCatalogItemChanged: React.PropTypes.func
     },
 
     renderDataCatalog(dataCatalog) {
-        return (<ul className = 'list-reset data-catalog hide-on-search'>
-          {dataCatalog.map((group, i) => {
-              return (<DataCatalogGroup group={group}
-                                        key={i}
-                                        previewed={this.props.previewed}
-                                        setPreview={this.props.setPreview}
-                      />);
-          }, this)}
+        return (
+            <ul className = 'list-reset data-catalog hide-on-search'>
+                {dataCatalog.map((group, i) => {
+                    return (<DataCatalogGroup group={group}
+                                              key={i}
+                                              previewedCatalogItem={this.props.previewedCatalogItem}
+                                              onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                            />);
+                }, this)}
         </ul>);
     },
 
@@ -37,19 +38,20 @@ const DataCatalogTab = React.createClass({
         return (
             <div className="panel-content clearfix">
               <div className="search-data col col-6">
-                <SearchBox terria = {terria}
-                           mapSearch = {false}
+                <SearchBox terria={terria}
+                           mapSearch={false}
                            gazetterSearch={false}
-                           defaultSearchText={this.props.defaultSearchText}
-                           setPreview={this.props.setPreview}
-                           previewed={this.props.previewed}
+                           searchText={this.props.searchText}
+                           onSearchTextChanged={this.props.onSearchTextChanged}
+                           previewedCatalogItem={this.props.previewedCatalogItem}
+                           onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                 />
                 {this.renderDataCatalog(dataCatalog)}
               </div>
               <div className="data-preview preview col col-6 block">
-                <DataPreview terria = {terria}
-                             previewed={this.props.previewed}
-                             />
+                <DataPreview terria={terria}
+                             previewedCatalogItem={this.props.previewedCatalogItem}
+                />
               </div>
             </div>
             );

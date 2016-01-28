@@ -2,19 +2,21 @@
 const React = require('react');
 const NowViewingItem = require('./NowViewingItem.jsx');
 const defined = require('terriajs-cesium/Source/Core/defined');
+const ObserveModelMixin = require('./ObserveModelMixin');
 
 const NowViewingContainer = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
-        nowViewing: React.PropTypes.array,
-        toggleModalWindow: React.PropTypes.func,
-        setPreview: React.PropTypes.func
+        nowViewingItems: React.PropTypes.array.isRequired,
+        onActivateCatalogItemInfo: React.PropTypes.func
     },
 
     getInitialState() {
         return {
             placeholderIndex: -1,
             draggedItemIndex: -1,
-            items: this.props.nowViewing,
+            items: this.props.nowViewingItems,
             selectedItem: null
         };
     },
@@ -23,8 +25,7 @@ const NowViewingContainer = React.createClass({
         if (defined(e.dataTransfer)) {
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
-        }
-        else {
+        } else {
             e.originalEvent.dataTransfer.effectAllowed = 'move';
             e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
         }
@@ -95,13 +96,13 @@ const NowViewingContainer = React.createClass({
 
     renderNowViewingItem(item, i) {
         return <NowViewingItem nowViewingItem={item}
-                               toggleModalWindow={this.props.toggleModalWindow}
-                               index={i} key={'placeholder-' + i}
+                               index={i}
+                               key={'placeholder-' + i}
                                dragging={this.state.draggedItemIndex === i}
                                onDragOver={this.onDragOverItem}
                                onDragStart={this.onDragStart}
                                onDragEnd={this.onDragEnd}
-                               setPreview={this.props.setPreview}
+                               onActivateCatalogItemInfo={this.props.onActivateCatalogItemInfo}
                 />;
     },
 
@@ -113,18 +114,23 @@ const NowViewingContainer = React.createClass({
         const items = [];
         let i;
 
-        for(i = 0; i < this.state.items.length; i++) {
+        // var nowViewingItems = this.state.items;
+        // const nowViewingItems = this.props.nowViewing.items;
+        const nowViewingItems = this.props.nowViewingItems;
+
+        for (i = 0; i < nowViewingItems.length; i++) {
             items.push(this.renderPlaceholder(i));
-            items.push(this.renderNowViewingItem(this.state.items[i], i));
+            items.push(this.renderNowViewingItem(nowViewingItems[i], i));
         }
         items.push(this.renderPlaceholder(i));
         return items;
     },
 
     render() {
-        return <ul className="now-viewing__content list-reset" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
+        return (
+            <ul className="now-viewing__content list-reset" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
               {this.renderListElements()}
-              </ul>;
+            </ul>);
     }
 });
 module.exports = NowViewingContainer;

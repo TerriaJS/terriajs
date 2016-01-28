@@ -1,55 +1,44 @@
 'use strict';
 
-const React = require('react');
-const Tabs = require('./Tabs.jsx');
-const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
+import ObserveModelMixin from './ObserveModelMixin';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
+import React from 'react';
+import Tabs from './Tabs.jsx';
 
 const ModalWindow = React.createClass({
     mixins: [ObserveModelMixin, PureRenderMixin],
-    propTypes: {
-        terria: React.PropTypes.object,
-        activeTab: React.PropTypes.number,
-        modalWindowIsOpen: React.PropTypes.bool,
-        previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
-    },
 
-    closeModal() {
-        this.props.toggleModalWindow(false, null);
+    propTypes: {
+        terria: React.PropTypes.object.isRequired,
+        isVisible: React.PropTypes.bool,
+        activeTabID: React.PropTypes.number,
+        catalogSearchText: React.PropTypes.string,
+        previewedCatalogItem: React.PropTypes.object,
+        onClose: React.PropTypes.func,
+        onCatalogSearchTextChanged: React.PropTypes.func,
+        onActiveTabChanged: React.PropTypes.func,
+        onPreviewedCatalogItemChanged: React.PropTypes.func
     },
 
     render() {
         return (
-            <div className="data-panel-wrapper modal-wrapper fixed flex flex-center"
-            id="data-panel-wrapper"
-            aria-hidden={ !this.props.modalWindowIsOpen }>
-              <div onClick={ this.closeModal }
-                   id="data-panel-overlay"
-                   className="modal-overlay absolute"
-                   tabIndex="-1">
+            <div className="data-panel-wrapper modal-wrapper fixed flex flex-center" id="data-panel-wrapper" aria-hidden={!this.props.isVisible}>
+              <div onClick={this.props.onClose} id="data-panel-overlay" className="modal-overlay absolute" tabIndex="-1">
               </div>
-              <div id="data-panel"
-                   className="data-panel modal-content mx-auto v-middle"
-                   aria-labelledby="modalTitle"
-                   aria-describedby="modalDescription"
-                   role="dialog">
-                <button onClick={ this.closeModal }
-                        className="btn btn-close-modal"
-                        title="Close data panel"
-                        data-target="close-modal">
-                        <i className='icon icon-close'></i>
+              <div id="data-panel" className="data-panel modal-content mx-auto v-middle" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
+                <button onClick={this.props.onClose} className="btn btn-close-modal" title="Close data panel" data-target="close-modal">
+                  <i className='icon icon-close'></i>
                 </button>
-                <Tabs terria={ this.props.terria }
-                      activeTab={ this.props.activeTab }
-                      toggleModalWindow={this.props.toggleModalWindow}
-                      defaultSearchText={this.props.defaultSearchText}
-                      previewed={this.props.previewed}
-                      setPreview={this.props.setPreview}
+                <Tabs terria={this.props.terria}
+                      activeTabID={this.props.activeTabID}
+                      catalogSearchText={this.props.catalogSearchText}
+                      previewedCatalogItem={this.props.previewedCatalogItem}
+                      onCatalogSearchTextChanged={this.props.onCatalogSearchTextChanged}
+                      onActiveTabChanged={this.props.onActiveTabChanged}
+                      onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                 />
               </div>
-            </div>
-        );
+            </div>);
     }
 });
 module.exports = ModalWindow;

@@ -2,42 +2,20 @@
 const React = require('react');
 const DataCatalogItem = require('./DataCatalogItem.jsx');
 const Loader = require('./Loader.jsx');
-const when = require('terriajs-cesium/Source/ThirdParty/when');
+import ObserveModelMixin from './ObserveModelMixin';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 const DataCatalogGroup = React.createClass({
+    mixins: [ObserveModelMixin, PureRenderMixin],
+
     propTypes: {
-        onClick: React.PropTypes.func,
         group: React.PropTypes.object,
-        items: React.PropTypes.array,
-        previewed: React.PropTypes.object,
-        setPreview: React.PropTypes.func
+        previewedCatalogItem: React.PropTypes.object,
+        onPreviewedCatalogItemChanged: React.PropTypes.func
     },
 
-    getInitialState() {
-        // This is to make state update
-        return {
-            openId: ''
-        };
-    },
-
-    handleClick(e) {
-        const that = this;
-        if (that.props.group.isOpen === false) {
-            that.setState({
-                openId: new Date()
-            });
-
-            when(that.props.group.load()).then(()=>{
-                that.setState({
-                    openId: new Date()
-                });
-            });
-        } else {
-            that.setState({
-                openId: new Date()
-            });
-        }
-        that.props.group.isOpen = !that.props.group.isOpen;
+    toggleOpen(e) {
+        this.props.group.toggleOpen();
     },
 
     renderGroup(group) {
@@ -47,14 +25,14 @@ const DataCatalogGroup = React.createClass({
                     if (member.isGroup) {
                         return (<DataCatalogGroup group={member}
                                                   key={i}
-                                                  previewed={this.props.previewed}
-                                                  setPreview={this.props.setPreview}
+                                                  previewedCatalogItem={this.props.previewedCatalogItem}
+                                                  onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                                  />);
                     }
                     return (<DataCatalogItem item={member}
                                              key={i}
-                                             previewed={this.props.previewed}
-                                             setPreview={this.props.setPreview}
+                                             previewedCatalogItem={this.props.previewedCatalogItem}
+                                             onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                             />);
                 });
             }
@@ -66,7 +44,7 @@ const DataCatalogGroup = React.createClass({
         const group = this.props.group;
         return (
             <li>
-              <button className ={'btn btn-catalogue ' + (group.isOpen ? 'is-open' : '')} onClick={this.handleClick} >{group.name} <i className={'icon ' + (group.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')}></i></button>
+              <button className ={'btn btn-catalogue ' + (group.isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name} <i className={'icon ' + (group.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')}></i></button>
               <ul className="data-catalog-group list-reset">
                 {this.renderGroup(group)}
               </ul>

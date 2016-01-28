@@ -7,18 +7,22 @@ const ViewerMode = require('../Models/ViewerMode');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
 const createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
+const ObserveModelMixin = require('./ObserveModelMixin');
+const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 const DataPreviewMap = React.createClass({
+    mixins: [ObserveModelMixin, PureRenderMixin],
+
     propTypes: {
-        terria: React.PropTypes.object,
-        previewed: React.PropTypes.object
+        terria: React.PropTypes.object.isRequired,
+        previewedCatalogItem: React.PropTypes.object
     },
 
     componentWillMount() {
-        let terria = this.props.terria;
+        const terria = this.props.terria;
 
         this.terriaPreview = new Terria({
-            appName: terria.appName + 'preview',
+            appName: terria.appName + ' preview',
             supportEmail: terria.supportEmail,
             baseUrl: terria.baseUrl,
             cesiumBaseUrl: terria.cesiumBaseUrl
@@ -29,15 +33,14 @@ const DataPreviewMap = React.createClass({
         this.terriaPreview.initialView = terria.initialView;
         this.terriaPreview.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
 
-        // TODO: we shouldn't hard code the base map here. (copyed from branch analyticswithcharts)
-        let positron = new OpenStreetMapCatalogItem(this.terriaPreview);
+        // TODO: we shouldn't hard code the base map here. (copied from branch analyticsWithCharts)
+        const positron = new OpenStreetMapCatalogItem(this.terriaPreview);
         positron.name = 'Positron (Light)';
         positron.url = 'http://basemaps.cartocdn.com/light_all/';
         positron.attribution = '© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0';
         positron.opacity = 1.0;
         positron.subdomains = ['a', 'b', 'c', 'd'];
         this.terriaPreview.baseMap = positron;
-
     },
 
     componentWillReceiveProps(nextProp) {
@@ -45,11 +48,11 @@ const DataPreviewMap = React.createClass({
             this.catalogItem.isEnabled = false;
         }
 
-        let previewed = nextProp.previewed;
+        const previewed = nextProp.previewedCatalogItem;
         if (previewed && defined(previewed.type)) {
-            let type = previewed.type;
-            let serializedCatalogItem = previewed.serializeToJson();
-            let catalogItem = createCatalogMemberFromType(type, this.terriaPreview);
+            const type = previewed.type;
+            const serializedCatalogItem = previewed.serializeToJson();
+            const catalogItem = createCatalogMemberFromType(type, this.terriaPreview);
 
             catalogItem.updateFromJson(serializedCatalogItem);
             catalogItem.isEnabled = true;
@@ -57,29 +60,24 @@ const DataPreviewMap = React.createClass({
         }
     },
 
-    shouldComponentUpdate() {
-        // it should not re-render the dom element as all the updates on the map are handled by Model
-        return false;
+    mapIsReady(mapContainer) {
+        if (mapContainer) {
+            const t = TerriaViewer.create(this.terriaPreview, {
+                mapContainer: mapContainer
+            });
+            // disable preview map interaction
+            const map = t.terria.leaflet.map;
+            map.touchZoom.disable();
+            map.doubleClickZoom.disable();
+            map.scrollWheelZoom.disable();
+            map.boxZoom.disable();
+            map.keyboard.disable();
+            map.dragging.disable();
+        }
     },
 
     render() {
-        const that = this;
-        return (<div className='terria-preview' ref={(previewContainer)=>{
-            if (previewContainer !== null) {
-                const t = TerriaViewer.create(that.terriaPreview, {
-                    mapContainer: previewContainer
-                });
-                // disable preview map interaction
-                let map = t.terria.leaflet.map;
-                map.touchZoom.disable();
-                map.doubleClickZoom.disable();
-                map.scrollWheelZoom.disable();
-                map.boxZoom.disable();
-                map.keyboard.disable();
-                map.dragging.disable();
-            }
-        }}>
-            </div>);
+        return (<div className='terria-preview' ref={this.mapIsReady}></div>);
     }
 });
 module.exports = DataPreviewMap;
