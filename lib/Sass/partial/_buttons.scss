@@ -474,6 +474,14 @@ button.btn.visibility{
   cursor: move;
   background: $dark;
 }
+.btn.btn-remove{
+  padding: $padding 0;
+  text-align: right;
+}
+
+.btn.btn-now-viewing-toggle{
+  padding: $padding 15px $padding 5px;
+}
 
 .kss-modifier__example{
   .btn.btn-viewer{

@@ -73,7 +73,7 @@ const NowViewingItem = React.createClass({
           <li className={'now-viewing__item clearfix ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
             <div className ="now-viewing__item-header clearfix">
               <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
-              <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={nowViewingItem.isLegendVisible ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
+              <button onClick={this.toggleDisplay} className="btn btn-now-viewing-toggle col col-1"><i className={nowViewingItem.isLegendVisible ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
             </div>
             <div className ="now-viewing__item-inner">
               <ul className="list-reset flex clearfix now-viewing__item-control">

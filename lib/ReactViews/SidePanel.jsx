@@ -29,7 +29,7 @@ const SidePanel = React.createClass({
               <div>
                   <ul className="now-viewing__header list-reset clearfix">
                       <li className='col col-6'><label className='label-inline'> Data Sets </label><label className='label-badge label-inline'> {nowViewing.length} </label></li>
-                      <li className='col col-6'><button onClick={this.removeAll} className='btn right'>{btnRemove}</button></li>
+                      <li className='col col-6'><button onClick={this.removeAll} className='btn right btn-remove'>{btnRemove}</button></li>
                   </ul>
                   <NowViewingContainer setWrapperState={this.props.setWrapperState}
                                        nowViewing={nowViewing}
