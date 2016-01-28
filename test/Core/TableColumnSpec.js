@@ -17,8 +17,8 @@ describe('TableColumn', function() {
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 
-    it('treats hyphens and blanks as zeros in numeric data', function() {
-        var data = [1, '-', '', 4];
+    it('treats hyphens and nulls as zeros in numeric data', function() {
+        var data = [1, '-', null, 4];
         var tableColumn = new TableColumn('x', data);
         expect(tableColumn.name).toEqual('x');
         expect(tableColumn.values).toEqual([1, 0, 0, 4]);
