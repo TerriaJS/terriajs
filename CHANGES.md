@@ -19,6 +19,7 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
+* Treats `-`, `na` and `NA` in csv files as if zero by default; can change this list using `tableStyle.replaceWithNullValues`, and can set an alternative color for these values using `tableStyle.nullColor`.
 * Added id matching for catalog members:
   - An `id` field can now be set in JSON for catalog members
   - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
