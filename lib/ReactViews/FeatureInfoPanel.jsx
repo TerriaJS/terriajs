@@ -1,41 +1,25 @@
 'use strict';
 
-/*global require*/
-const React = require('react');
-const Loader = require('./Loader.jsx');
-const FeatureInfoCatalogItem = require('./FeatureInfoCatalogItem.jsx');
-const defined = require('terriajs-cesium/Source/Core/defined');
-const ObserveModelMixin = require('./ObserveModelMixin');
+import defined from 'terriajs-cesium/Source/Core/defined';
+import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
+import Loader from './Loader.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
 
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        terria: React.PropTypes.object
-    },
-
-    getInitialState() {
-        return {
-            isVisible: true,
-            isCollapsed: false
-        };
+        terria: React.PropTypes.object,
+        isVisible: React.PropTypes.bool,
+        isCollapsed: React.PropTypes.bool,
+        onClose: React.PropTypes.func,
+        onToggleCollapse: React.PropTypes.func
     },
 
     getFeatures() {
         if (defined(this.props.terria.pickedFeatures)) {
             return addSectionsForFeatures(this.props.terria);
         }
-    },
-
-    closeFeatureInfoPanel() {
-        // this.setState({
-        //     isVisible: false,
-        // });
-    },
-
-    toggleCollapseFeatureInfoPanel() {
-        this.setState({
-            isCollapsed: !this.state.isCollapsed
-        });
     },
 
     renderContent(pickedFeatures) {
@@ -58,10 +42,10 @@ const FeatureInfoPanel = React.createClass({
     render() {
         const pickedFeatures = this.getFeatures();
         return (
-            <div className={'feature-info-panel ' + (this.state.isCollapsed ? 'is-collapsed' : '')} aria-hidden={!this.state.isVisible}>
+            <div className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '')} aria-hidden={!this.props.isVisible}>
               <div className='feature-info-panel__header'>
-                <button onClick={this.toggleCollapseFeatureInfoPanel} className='btn'> Feature Info Panel </button>
-                <button onClick={this.closeFeatureInfoPanel} className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
+                <button onClick={ this.props.onToggleCollapse } className='btn'> Feature Info Panel </button>
+                <button onClick={ this.props.onClose } className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
               </div>
               <ul className="list-reset feature-info-panel__body">{this.renderContent(pickedFeatures)}</ul>
             </div>
