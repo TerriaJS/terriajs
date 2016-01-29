@@ -1,8 +1,8 @@
 'use strict';
-const React = require('react');
-const DataCatalogItem = require('./DataCatalogItem.jsx');
-const Loader = require('./Loader.jsx');
+import DataCatalogItem from './DataCatalogItem.jsx';
+import Loader from './Loader.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],

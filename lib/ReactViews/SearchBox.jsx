@@ -105,6 +105,14 @@ const SearchBox = React.createClass({
         this.props.onSearchCatalog(this.props.searchText);
     },
 
+    openModal() {
+        this.props.setWrapperState({
+            modalWindowIsOpen: true,
+            activeTab: 1,
+            previewed: null
+        });
+    },
+
     renderSearchResult(searchType, search) {
         if (!searchType || !defined(this.props.searchText) || this.props.searchText.length === 0) {
             return null;
@@ -146,7 +154,7 @@ const SearchBox = React.createClass({
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && this.props.searchText.length > 0) {
-            linkToSearchData = (<button className="btn btn-data-serach" onClick={this.searchCatalog}>Search {this.props.searchText} in Data Catalog</button>);
+            linkToSearchData = (<button onClick={this.searchCatalog} className='btn btn-data-search '>Search {this.props.searchText} in Data Catalog</button>);
         }
 
         return (

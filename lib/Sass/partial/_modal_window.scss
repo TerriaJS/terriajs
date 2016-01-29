@@ -1,5 +1,12 @@
 $section-height: 60vh;
 
+.modal-wrapper{
+  visibility: hidden;
+  &.is-open{
+    visibility: visible;
+  }
+}
+
 .modal-content{
   position: relative;
   width: 1000px;
@@ -7,15 +14,38 @@ $section-height: 60vh;
   min-height: 100px;
   background: $modal-bg;
   color: $modal-text;
+  z-index: 200;
+  visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  @include transform(translateY(20%));
+  @include transition(all 0.3s);
+  opacity: 0;
+  .is-open & {
+    @include transform(translateX(0));
+    opacity: 1;
+    visibility: visible;
+  }
 }
 .modal-overlay{
+  position: fixed;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  visibility: hidden;
   top: 0;
   left: 0;
-  z-index: -1;
+  z-index: 100;
+  opacity: 0;
+  background: rgba(0,0,0,0.6);
+  @include transition(all 0.3s);
+  .is-open.modal-wrapper &{
+    opacity: 1;
+    visibility: visible;
+  }
 }
+
+
 
 .tablist{
   padding-right: 150px;
@@ -55,7 +85,6 @@ $section-height: 60vh;
   figcaption{
     height: 170px;
     overflow-y: auto;
-    padding-right: $padding;
   }
 }
 

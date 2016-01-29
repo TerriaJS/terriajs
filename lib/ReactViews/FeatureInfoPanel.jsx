@@ -4,53 +4,32 @@
 const React = require('react');
 const Loader = require('./Loader.jsx');
 const FeatureInfoCatalogItem = require('./FeatureInfoCatalogItem.jsx');
-const when = require('terriajs-cesium/Source/ThirdParty/when');
 const defined = require('terriajs-cesium/Source/Core/defined');
+const ObserveModelMixin = require('./ObserveModelMixin');
 
 const FeatureInfoPanel = React.createClass({
+    mixins: [ObserveModelMixin],
     propTypes: {
         terria: React.PropTypes.object
     },
 
     getInitialState() {
         return {
-            pickedFeatures: undefined,
-            featureSections: undefined,
             isVisible: true,
             isCollapsed: false
         };
     },
 
-    componentWillMount() {
-        this.getFeatures();
-    },
-
-    componentWillReceiveProps() {
-        this.setState({
-            isVisible: true,
-            isCollapsed: false
-        });
-
-        this.getFeatures();
-    },
-
     getFeatures() {
-        const that = this;
-        if (defined(that.props.terria.pickedFeatures)) {
-            when(that.props.terria.pickedFeatures.allFeaturesAvailablePromise).then(function() {
-                // AddSectionsForFeatures(that.props.terria);
-                that.setState({
-                    pickedFeatures: addSectionsForFeatures(that.props.terria)
-                });
-            });
+        if (defined(this.props.terria.pickedFeatures)) {
+            return addSectionsForFeatures(this.props.terria);
         }
     },
 
     closeFeatureInfoPanel() {
-        this.setState({
-            isVisible: false,
-            pickedFeatures: undefined
-        });
+        // this.setState({
+        //     isVisible: false,
+        // });
     },
 
     toggleCollapseFeatureInfoPanel() {
@@ -77,7 +56,7 @@ const FeatureInfoPanel = React.createClass({
     },
 
     render() {
-        const pickedFeatures = this.state.pickedFeatures;
+        const pickedFeatures = this.getFeatures();
         return (
             <div className={'feature-info-panel ' + (this.state.isCollapsed ? 'is-collapsed' : '')} aria-hidden={!this.state.isVisible}>
               <div className='feature-info-panel__header'>
@@ -93,8 +72,8 @@ const FeatureInfoPanel = React.createClass({
 // to add multiple catalog when several dataset turned on at the same time
 function addSectionsForFeatures(terria) {
     const features = terria.pickedFeatures.features;
+    const sections = [];
     let catalogItem;
-    let sections = [];
     features.forEach((feature)=> {
         if (!defined(feature.position)) {
             feature.position = terria.pickedFeatures.pickPosition;

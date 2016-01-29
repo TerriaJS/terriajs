@@ -28,22 +28,12 @@ const DataPreview = React.createClass({
     renderActions(previewed) {
         if (previewed && defined(previewed.type)) {
             return (
-                <div className="title clearfix">
-                  <h4 className="col col-7">{ previewed.name }</h4>
-                  <ul className="list-reset flex col col-5 data-preview-action">
-                    <li>
-                      <button className="btn" title="share this data">
-                        <i className="icon icon-share"></i>
-                      </button>
-                    </li>
-                    <li>
-                      <button onClick={ this.toggleOnMap } className={ 'btn ' + (previewed.isEnabled ? 'btn-preview-remove-from-map' : 'btn-preview-add-to-map') } title={ previewed.isEnabled ? 'remove from map' : 'add to map' }>
-                        <i className={ previewed.isEnabled ? 'icon icon-circle-minus' : 'icon icon-circle-plus' }></i>
-                        { previewed.isEnabled ? 'Remove' : 'Add' }
-                      </button>
-                    </li>
-                  </ul>
-                  <div dangerouslySetInnerHTML={ this.infoMarkup() }></div>
+                <div>
+                    <div className="clearfix">
+                        <h4 className="col col-8">{previewed.name}</h4>
+                        <button onClick={this.toggleOnMap} className={'btn btn-preview-toggle col col-4 ' + (previewed.isEnabled ? 'btn-add' : 'btn-remove')} title ={previewed.isEnabled ? 'remove from map' : 'add to map'}>{previewed.isEnabled ? 'Remove' : 'Add'}</button>
+                    </div>
+                    <div className="clearfix" dangerouslySetInnerHTML={this.infoMarkup()}></div>
                 </div>);
         }
     },
@@ -53,11 +43,12 @@ const DataPreview = React.createClass({
 
         return (
             <figure>
-              <DataPreviewMap terria={ this.props.terria } previewedCatalogItem={ this.props.previewedCatalogItem } />
+              <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewedCatalogItem} />
               <figcaption>
-                { this.renderActions(previewed) }
+                {this.renderActions(previewed)}
               </figcaption>
             </figure>);
     }
 });
+
 module.exports = DataPreview;

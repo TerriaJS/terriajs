@@ -107,20 +107,23 @@ $btn-setting-size: 35px;
 .btn-catalog-item{
   .panel-content &{
     font-style: italic;
+    padding: $padding-small;
     &:hover{
       color: $color-primary;
     }
   }
   .is-previewed &{
-    color: red;
+    color: $color-primary;
+    font-weight: 700;
   }
 }
 
-$add-to-map-btn-size: 23px;
+$add-to-map-btn-size: 20px;
 
 .btn-add-to-map{
   font-size: $add-to-map-btn-size;
   color: $color-primary;
+  padding: $padding-small;
 }
 
 // Map buttons
@@ -141,19 +144,18 @@ $add-to-map-btn-size: 23px;
   box-sizing: border-box;
   margin: 0;
   display: block;
-  height: 40px;
+  height: 30px;
   background: $dark;
   color: #fff;
   text-transform: uppercase;
-  box-shadow: $box-shadow;
+  font-size: $font-size-small;
+  padding: 5px;
   .icon{
     display: block;
-    font-size: 1.5rem;
+    font-size: 1rem;
     line-height: 1;
   }
-  &:hover{
-  }
-  .map-nav-panel.is-open &, &.is-active {
+  &:hover, .map-nav-panel.is-open &, &.is-active {
     background: $color-primary;
   }
 }
@@ -162,8 +164,9 @@ $add-to-map-btn-size: 23px;
   .icon{
     position: absolute;
     left: 3px;
+    top: 7px;
   }
-  padding-left: 30px;
+  padding-left: 20px;
   border-radius: 3px 0 0 3px;
   border-right: 1px solid rgba(#fff, 0.15);
 }
@@ -205,7 +208,7 @@ $add-to-map-btn-size: 23px;
   font-family: $font-pop;
   font-size: 1rem;
   text-transform: capitalize;
-  padding: $padding*2;
+  padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
     border-bottom: 2px solid $color-primary;
@@ -332,20 +335,18 @@ $add-to-map-btn-size: 23px;
   position: relative;
   display: block;
   line-height: 1.2;
+  border: 1px solid transparent;
   img{
     width: 100%;
     height: auto;
   }
   &:hover{
-    img{
-      @include transform (scale(1.05));
-      @include transition(0.1s all ease-in);
-      box-shadow: 0 1px 3px 0 rgba(#000, 0.5), 0 1px 1px 0 rgba(#000, 0.3);
-    }
+    border: $border-style;
   }
   &.is-active{
     @extend .icon;
     @extend .icon-check_box;
+
   }
   &:before{
     position: absolute;
@@ -355,6 +356,10 @@ $add-to-map-btn-size: 23px;
     background: $color-primary;
     color: #fff;
     z-index: 1;
+    text-align: center;
+    width: 22px;
+    border-radius: 3px;
+    height: 22px;
   }
 }
 
@@ -389,8 +394,9 @@ $add-to-map-btn-size: 23px;
       border: $border-style;
   }
   &.is-active{
-    background: rgba(#fff, 0.8);
-    color: $dark;
+    background: $color-primary;
+    border-color: $color-primary;
+    color: #fff;
   }
 }
 
@@ -467,6 +473,29 @@ button.btn.visibility{
 .btn.btn-drag{
   cursor: move;
   background: $dark;
+}
+.btn.btn-remove{
+  padding: $padding 0;
+  text-align: right;
+}
+
+.btn.btn-now-viewing-toggle{
+  padding: $padding 15px $padding 5px;
+}
+
+.btn.btn-preview-toggle{
+  width: 80px;
+  text-align: center;
+  background: $color-primary;
+  color: #fff;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  line-height: 1;
+  font-size: $font-size-small;
+  float: right;
+  &:hover, &:focus{
+    border: 1px solid $color-primary;
+  }
 }
 
 .kss-modifier__example{

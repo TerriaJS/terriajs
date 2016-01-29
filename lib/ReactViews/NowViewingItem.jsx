@@ -48,6 +48,14 @@ const NowViewingItem = React.createClass({
         this.props.onDragEnd(e);
     },
 
+    openModal() {
+        this.props.setWrapperState({
+            modalWindowIsOpen: true,
+            activeTab: 1,
+            previewed: this.props.nowViewingItem,
+        });
+    },
+
     renderLegend(_nowViewingItem) {
         if (_nowViewingItem.legendUrl) {
             if (_nowViewingItem.legendUrl.isImage()) {
@@ -59,7 +67,7 @@ const NowViewingItem = React.createClass({
     },
 
     NowViewingAsPreviewed() {
-        this.props.setPreview(this.props.nowViewingItem);
+        this.props.setWrapperState(this.props.nowViewingItem);
     },
 
     render() {
@@ -69,12 +77,12 @@ const NowViewingItem = React.createClass({
           <li className={'now-viewing__item clearfix ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
             <div className ="now-viewing__item-header clearfix">
               <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
-              <button onClick={this.toggleDisplay} className="btn block col col-1"><i className={nowViewingItem.isLegendVisible ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
+              <button onClick={this.toggleDisplay} className="btn btn-now-viewing-toggle col col-1"><i className={nowViewingItem.isLegendVisible ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
             </div>
             <div className ="now-viewing__item-inner">
               <ul className="list-reset flex clearfix now-viewing__item-control">
                 <li><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn zoom">Zoom To</button></li>
-                <li><button classNames="info" onClick={this.props.onActivateCatalogItemInfo}>info</button></li>
+                <li><button onClick={this.props.onActivateCatalogItemInfo} className='info btn' title='info'>info</button></li>
                 <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
                 <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-visible' : 'icon-invisible')}></i></button></li>
               </ul>

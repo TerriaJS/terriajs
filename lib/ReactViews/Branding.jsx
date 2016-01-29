@@ -1,16 +1,25 @@
 'use strict';
 
 import React from 'react';
-import ModalTriggerButton from './ModalTriggerButton.jsx';
 
 const Branding = React.createClass({
     propTypes: {
-        toggleModalWindow: React.PropTypes.func
+        setWrapperState: React.PropTypes.func
     },
+
+    openModal() {
+        this.props.setWrapperState({
+            modalWindowIsOpen: true,
+            activeTab: 0
+        });
+    },
+
     render() {
         return (
-            <div>
-        <ModalTriggerButton btnHtml={'<img src="./images/nationalmap-logo.png" alt="national map" width="160" />'} classNames={'logo'} callback={null} activeTab={0} toggleModalWindow={this.props.toggleModalWindow} />
+        <div>
+            <button className='logo btn' onClick={this.openModal}>
+                <img src="./images/nationalmap-logo.png" alt="national map" width="160" />
+            </button>
         </div>
             );
     }

@@ -8,9 +8,6 @@
   h1{
     margin: 0;
   }
-  nav{
-    margin-top: 1rem;
-  }
 }
 
 .workbench__inner{
@@ -18,12 +15,13 @@
 }
 
 .workbench__header{
-  padding: 0 $padding-small;
+  padding: 0 $padding-small $padding-small $padding-small;
   &.workbench-add{
     position: absolute;
     left: 0;
     right: 0;
-    top: calc(#{$input-height} + #{$padding});
+    top: calc(#{$input-height} + #{$padding-small});
+    border-bottom: 1px solid #5C636E;
   }
 }
 

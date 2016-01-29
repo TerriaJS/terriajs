@@ -28,7 +28,7 @@ const DataCatalogTab = React.createClass({
                                               onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                             />);
                 }, this)}
-        </ul>);
+            </ul>);
     },
 
     render() {
@@ -52,8 +52,7 @@ const DataCatalogTab = React.createClass({
                              previewedCatalogItem={this.props.previewedCatalogItem}
                 />
               </div>
-            </div>
-            );
+            </div>);
     }
 });
 
