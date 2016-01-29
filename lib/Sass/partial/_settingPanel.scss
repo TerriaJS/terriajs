@@ -48,7 +48,7 @@
     position: absolute;
     margin-top: 15px;
     z-index: -1;
-    left: -($setting-panel/2 - 15px);
+    left: -($setting-panel/2 - 8px);
 
   }
   &.is-open .setting-panel-inner{

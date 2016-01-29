@@ -31,7 +31,7 @@ const ModalWindow = React.createClass({
                    className="modal-overlay absolute"
                    tabIndex="-1">
               </div>
-              <div id="data-panel" className="data-panel modal-content mx-auto v-middle" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
+              <div id="data-panel" className="data-panel modal-content mx-auto" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
                 <button onClick={this.props.onClose} className="btn btn-close-modal" title="Close data panel" data-target="close-modal">
                   <i className='icon icon-close'></i>
                 </button>

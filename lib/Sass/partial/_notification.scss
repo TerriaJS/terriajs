@@ -1,20 +1,47 @@
+// Notification
+//
+// Markup:
+//<div class='notification'>
+//   <div class='notification__inner'>
+//     <h3 class='title'>Title</h3>
+//     <div class='body'>
+//     <p> Error message </p>
+//     <p> Error message </p>
+//     </div>
+//   </div>
+//   <div class='notification__footer'>
+//     <button class='btn'>
+//       OK
+//     </button>
+//   </div>
+// </div>
+//
+// Style guide: Component.notification
+
+.notification-wrapper{
+  background: rgba(#000, 0.8);
+}
 .notification{
-  h3{
-    margin: 0;
-  }
+  border-radius: 3px;
+  border: 1px solid darken($dark, 3%);
   .notification__inner{
-    padding-right: $padding*3;
+    padding: $padding $padding*2;
+    height: 200px;
+    overflow-y: auto;
   }
-  .notification__side{
-    position: absolute;
-    right: 0;
-    top: 0;
+  .body{
+    font-size: $font-size-small;
   }
-  position: fixed;
-  background: $warning;
-  top: 0;
-  left: $work-bench-width;
-  right: 0;
-  z-index: 99;
-  padding: $padding;
+
+  .btn{
+    background: rgba(#fff, 0.50);
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+    font-size: $font-size-small;
+    border-radius: 0 0 3px 3px;
+  }
+  background: $dark;
+  z-index: 300;
+  width: 300px;
 }
