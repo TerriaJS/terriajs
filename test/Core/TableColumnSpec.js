@@ -189,6 +189,36 @@ describe('TableColumn', function() {
         expect(tableColumn.values).toEqual(data);
     });
 
+    it('can detect tag type from <img>', function() {
+        var data = ['<img src="foo">', '<img src="bar">'];
+        var tableColumn = new TableColumn('image', data);
+        expect(tableColumn.type).toEqual(VarType.TAG);
+    });
+
+    it('can detect tag type from <br/>', function() {
+        var data = ['<br/>', '<br/>'];
+        var tableColumn = new TableColumn('bar', data);
+        expect(tableColumn.type).toEqual(VarType.TAG);
+    });
+
+    it('can detect tag type from <div>', function() {
+        var data = ['<div>Foo</div>', '<div>Bar</div>'];
+        var tableColumn = new TableColumn('foo', data);
+        expect(tableColumn.type).toEqual(VarType.TAG);
+    });
+
+    it('does not use tag type for <<...>>', function() {
+        var data = ['<<he>>', '<<she>>'];
+        var tableColumn = new TableColumn('who', data);
+        expect(tableColumn.type).toEqual(VarType.ENUM);
+    });
+
+    it('does not use tag type for <foo>', function() {
+        var data = ['<foo>', '<foobar>'];
+        var tableColumn = new TableColumn('fee', data);
+        expect(tableColumn.type).toEqual(VarType.ENUM);
+    });
+
     it('can sum three columns from array', function() {
         var tableColumns = [
             new TableColumn('one', [10, 1]),
