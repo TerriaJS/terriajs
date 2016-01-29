@@ -19,9 +19,12 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
-* Treats `-`, `na` and `NA` in csv files as if zero by default; can change this list using `tableStyle.replaceWithNullValues`, and can set an alternative color for these values using `tableStyle.nullColor`.
 * Recognises the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
 * Nicer formatting of datetimes from csv files in the feature info panel.
+* Introduced three new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
 * Added id matching for catalog members:
   - An `id` field can now be set in JSON for catalog members
   - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id

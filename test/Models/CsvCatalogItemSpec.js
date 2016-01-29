@@ -326,12 +326,33 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('colors null the same as zero by default', function(done) {
+    it('supports replaceWithZeroValues', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({replaceWithZeroValues: ['bad']});
+        csvItem.load().then(function() {
+            var valueColumn = csvItem.tableStructure.columns[2];
+            expect(valueColumn.values[0]).toEqual(5);
+            expect(valueColumn.values[1]).toEqual(0);
+            expect(valueColumn.values[2]).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+    it('defaults to blanks in numeric columns being zero', function(done) {
+        csvItem.url = 'test/csv/lat_lon_blankvalue.csv';
+        csvItem.load().then(function() {
+            var valueColumn = csvItem.tableStructure.columns[2];
+            expect(valueColumn.values[0]).toEqual(5);
+            expect(valueColumn.values[1]).toEqual(0);
+            expect(valueColumn.values[2]).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+    it('does not color null the same as zero', function(done) {
         csvItem.url = 'test/csv/lat_lon_badvalue.csv';
         csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
         csvItem.load().then(function() {
             function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).toEqual(cval(2));
+            expect(cval(1)).not.toEqual(cval(2));
         }).otherwise(fail).then(done);
     });
 

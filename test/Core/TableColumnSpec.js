@@ -17,16 +17,24 @@ describe('TableColumn', function() {
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 
-    it('can treat hyphens as null in numeric data', function() {
-        var data = [1, '-', 4];
+    it('treats hyphens and nulls as zeros in numeric data', function() {
+        var data = [1, '-', null, 4];
+        var tableColumn = new TableColumn('x', data);
+        expect(tableColumn.name).toEqual('x');
+        expect(tableColumn.values).toEqual([1, 0, 0, 4]);
+        expect(tableColumn.type).toEqual(VarType.SCALAR);
+    });
+
+    it('treats NA as null in numeric data', function() {
+        var data = [1, 'NA', 4];
         var tableColumn = new TableColumn('x', data);
         expect(tableColumn.name).toEqual('x');
         expect(tableColumn.values).toEqual([1, null, 4]);
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 
-    it('does not treat hyphens as null in string data', function() {
-        var data = ['%', '-', '!'];
+    it('treats hyphens, blanks and NA as strings in string data', function() {
+        var data = ['%', '-', '!', 'NA', ''];
         var tableColumn = new TableColumn('x', data);
         expect(tableColumn.name).toEqual('x');
         expect(tableColumn.values).toEqual(data);
