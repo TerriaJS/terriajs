@@ -22,6 +22,27 @@ Change Log
 * Treats `-`, `na` and `NA` in csv files as if zero by default; can change this list using `tableStyle.replaceWithNullValues`, and can set an alternative color for these values using `tableStyle.nullColor`.
 * Recognises the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
 * Nicer formatting of datetimes from csv files in the feature info panel.
+* Added id matching for catalog members:
+  - An `id` field can now be set in JSON for catalog members
+  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
+    rather than its name as is done currently.
+  - The id of an item should be accessed via `uniqueId` - if a catalog member doesn't have an id set, this returns a
+    default value of the item's name name plus the id of its parent. This means that if all the ancestors of a catalog 
+    member have no id set, its id will be its full path in the catalog.
+  - This means that if an item is renamed or moved, share links that reference it will still work.
+  - A `shareKeys` property can be also be set that contains an array of all ids that should lead to this item. This means
+    that a share link for an item that didn't previously have an id set can still be used if it's moved, as long as it
+    has its old default id set in `shareKeys`
+  - Old share links will still work as long as the items they lead to aren't renamed or moved.
+  - Refactor of JSON serialization - now rather than passing a number of flags that determine what should and shouldn't be
+    serialized, an `itemFilter` and `propertyFilter` are passed in options. These are usually composed of multiple filters,
+    combined using `combineFilters`.
+  - An index of all items currently in the catalog against all of that item's shareKeys is now maintained in `Catalog`
+    and can be used for O(1) lookups of any item regardless of its location.
+  - CatalogMembers now contain a reference to their parent CatalogGroup - this means that the catalog tree can now be
+    traversed in both directions.
+  - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
+    not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
 
 ### 1.0.54
 
