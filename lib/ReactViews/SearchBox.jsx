@@ -45,6 +45,11 @@ const SearchBox = React.createClass({
 
     componentWillUnmount() {
         this.removeDebounceTimeout();
+
+        // Cancel any searches that may be in progress
+        this.dataCatalogSearch.search('');
+        this.bingMapSearch.search('');
+        this.gazetterSearch.search('');
     },
 
     componentDidMount() {
@@ -97,7 +102,7 @@ const SearchBox = React.createClass({
     },
 
     searchCatalog() {
-        this.onSearchCatalog(this.props.searchText);
+        this.props.onSearchCatalog(this.props.searchText);
     },
 
     renderSearchResult(searchType, search) {
