@@ -44,6 +44,9 @@ Change Log
     traversed in both directions.
   - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
     not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
 
 ### 1.0.54
 
