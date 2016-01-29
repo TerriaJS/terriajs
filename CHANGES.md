@@ -23,6 +23,7 @@ Change Log
   - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
   - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
   - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
+when no variable is selected.
 * Added id matching for catalog members:
   - An `id` field can now be set in JSON for catalog members
   - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
