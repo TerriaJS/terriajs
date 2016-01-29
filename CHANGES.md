@@ -20,9 +20,9 @@ Change Log
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
 * Introduced three new json tableStyle parameters:
-  - `replaceWithZeroValues`: defaults to `[null, '-']`. These values are replaced with zero if they appear in a list with numbers. `null` catches missing values.
-  - `replaceWithNullValues`: defaults to `['na', 'NA']`. These values are replaced with null if they appear in a list with numbers.
-  - `nullColor`: defaults to a dark blue. This color is used to display null values (but it does not appear on the legend; we should add it). It is also used to display points when no variable is selected.
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
 
 ### 1.0.54
 
