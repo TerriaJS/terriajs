@@ -252,6 +252,7 @@ describe('WebMapServiceCatalogItem', function() {
 
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         wmsItem.name = 'Name';
+        wmsItem.id = 'Id';
         wmsItem.description = 'Description';
         wmsItem.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
         wmsItem.legendUrl = new LegendUrl('http://legend.com', 'image/png');
