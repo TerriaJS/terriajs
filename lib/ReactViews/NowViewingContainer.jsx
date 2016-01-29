@@ -16,7 +16,6 @@ const NowViewingContainer = React.createClass({
         return {
             placeholderIndex: -1,
             draggedItemIndex: -1,
-            items: this.props.nowViewingItems,
             selectedItem: null
         };
     },
@@ -34,13 +33,13 @@ const NowViewingContainer = React.createClass({
 
         this.setState({
             draggedItemIndex: _draggedItemIndex,
-            selectedItem: this.state.items[_draggedItemIndex]
+            selectedItem: this.props.nowViewingItems[_draggedItemIndex]
         });
     },
 
     onDragEnd(e) {
         if(e.dataTransfer.dropEffect === 'move') {
-            this.state.items.splice(this.state.draggedItemIndex, 1);
+            this.props.nowViewingItems.splice(this.state.draggedItemIndex, 1);
             this.state.draggedItemIndex = -1;
             this.state.placeholderIndex = -1;
             this.setState(this.state);
@@ -69,7 +68,7 @@ const NowViewingContainer = React.createClass({
 
     onDrop(e) {
         if(this.state.placeholderIndex !== -1) {
-            this.state.items.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
+            this.props.nowViewingItems.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
             if(this.state.draggedItemIndex > this.state.placeholderIndex) {
                 this.state.draggedItemIndex = this.state.draggedItemIndex + 1;
             }
