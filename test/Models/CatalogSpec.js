@@ -14,7 +14,7 @@ var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogIte
 
 
 describe('Catalog', function() {
-    var terria
+    var terria;
     var catalog;
 
     beforeEach(function() {
