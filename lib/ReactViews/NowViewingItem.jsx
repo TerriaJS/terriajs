@@ -1,15 +1,19 @@
 'use strict';
-const React = require('react');
-const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
+
+import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
 
 const NowViewingItem = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
 
     propTypes: {
-        nowViewingItem: React.PropTypes.object,
-        index: React.PropTypes.number,
-        setWrapperState: React.PropTypes.func
+        nowViewingItem: React.PropTypes.object.isRequired,
+        index: React.PropTypes.number.isRequired,
+        dragging: React.PropTypes.bool,
+        onDragStart: React.PropTypes.func,
+        onDragOver: React.PropTypes.func,
+        onDragEnd: React.PropTypes.func,
+        onActivateCatalogItemInfo: React.PropTypes.func
     },
 
     removeFromMap() {
@@ -78,7 +82,7 @@ const NowViewingItem = React.createClass({
             <div className ="now-viewing__item-inner">
               <ul className="list-reset flex clearfix now-viewing__item-control">
                 <li><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn zoom">Zoom To</button></li>
-                <li><button onClick={this.openModal} className='info btn' title='info'>info</button></li>
+                <li><button onClick={this.props.onActivateCatalogItemInfo} className='info btn' title='info'>info</button></li>
                 <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
                 <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-eye' : 'icon-invisible')}></i></button></li>
               </ul>

@@ -2,11 +2,10 @@
 const React = require('react');
 const ViewerMode = require('../Models/ViewerMode');
 const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 // The basemap and viewer setting panel
 const SettingPanel = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
     propTypes: {
         terria: React.PropTypes.object,
         terriaViewer: React.PropTypes.object,

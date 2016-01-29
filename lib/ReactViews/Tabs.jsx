@@ -1,35 +1,26 @@
 'use strict';
 
-const React = require('react');
-const DataCatalogTab = require('./DataCatalogTab.jsx');
-const MyDataTab = require('./MyDataTab.jsx');
-const WelcomeTab = require('./WelcomeTab.jsx');
+import DataCatalogTab from './DataCatalogTab.jsx';
+import MyDataTab from './MyDataTab.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
+import WelcomeTab from './WelcomeTab.jsx';
 
 function getName(str1, str2) {
     return str1.concat(str2);
 }
 
 const Tabs = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
-        terria: React.PropTypes.object,
-        activeTab: React.PropTypes.number,
-        setWrapperState: React.PropTypes.func,
-        previewed: React.PropTypes.object,
-        setWrapperState: React.PropTypes.func,
-        defaultSearchText: React.PropTypes.string
-    },
-
-    getInitialState() {
-        return {
-            activeTab: this.props.activeTab
-        };
-    },
-
-    clickTab(i) {
-        this.props.setWrapperState({
-            modalWindowIsOpen: true,
-            activeTab: i
-        });
+        terria: React.PropTypes.object.isRequired,
+        activeTabID: React.PropTypes.number,
+        catalogSearchText: React.PropTypes.string,
+        previewedCatalogItem: React.PropTypes.object,
+        onCatalogSearchTextChanged: React.PropTypes.func,
+        onActiveTabChanged: React.PropTypes.func,
+        onPreviewedCatalogItemChanged: React.PropTypes.func
     },
 
     getTabs() {
@@ -37,14 +28,15 @@ const Tabs = React.createClass({
         return [
             {
                 title: 'welcome',
-                panel: <WelcomeTab terria= {this.props.terria} />
+                panel: <WelcomeTab terria={this.props.terria} />
             },
             {
                 title: 'data-catalog',
                 panel: <DataCatalogTab terria={this.props.terria}
-                                       defaultSearchText={this.props.defaultSearchText}
-                                       previewed={this.props.previewed}
-                                       setWrapperState={this.props.setWrapperState}
+                                       searchText={this.props.catalogSearchText}
+                                       previewedCatalogItem={this.props.previewedCatalogItem}
+                                       onSearchTextChanged={this.props.onCatalogSearchTextChanged}
+                                       onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                         />
             },
             {
@@ -52,6 +44,10 @@ const Tabs = React.createClass({
                 panel: <MyDataTab terria={this.props.terria}/>
             }
         ];
+    },
+
+    activateTab(i) {
+        this.props.onActiveTabChanged(i);
     },
 
     renderTabs() {
@@ -62,8 +58,8 @@ const Tabs = React.createClass({
                     id={getName('tablist__', item.title)}
                     role="tab"
                     aria-controls={getName('panel__', item.title)}
-                    aria-selected={that.props.activeTab === i}>
-                  <button onClick={that.clickTab.bind(that, i)}
+                    aria-selected={that.props.activeTabID === i}>
+                  <button onClick={that.activateTab.bind(that, i)}
                     className='btn btn-tab'>{item.title.replace(/-/g, ' ')}</button>
                     </li>
                     ));
@@ -73,7 +69,7 @@ const Tabs = React.createClass({
         const that = this;
         return (that.getTabs().map((item, i) => <section
                     key={i}
-                    aria-hidden={that.props.activeTab !== i}
+                    aria-hidden={that.props.activeTabID !== i}
                     id={getName('panel__', item.title)}
                     className={getName('tab-panel panel__', item.title)}
                     aria-labelledby={getName('tablist__', item.title)}
@@ -91,4 +87,5 @@ const Tabs = React.createClass({
           </div>);
     }
 });
+
 module.exports = Tabs;

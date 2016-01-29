@@ -6,10 +6,9 @@ const Loader = require('./Loader.jsx');
 const FeatureInfoCatalogItem = require('./FeatureInfoCatalogItem.jsx');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const ObserveModelMixin = require('./ObserveModelMixin');
-const PureRenderMixin = require('react-addons-pure-render-mixin');
 
 const FeatureInfoPanel = React.createClass({
-    mixins: [ObserveModelMixin, PureRenderMixin],
+    mixins: [ObserveModelMixin],
     propTypes: {
         terria: React.PropTypes.object
     },

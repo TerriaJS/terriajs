@@ -2,18 +2,20 @@
 const React = require('react');
 const NowViewingItem = require('./NowViewingItem.jsx');
 const defined = require('terriajs-cesium/Source/Core/defined');
+const ObserveModelMixin = require('./ObserveModelMixin');
 
 const NowViewingContainer = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
-        nowViewing: React.PropTypes.array,
-        setWrapperState: React.PropTypes.func
+        nowViewingItems: React.PropTypes.array.isRequired,
+        onActivateCatalogItemInfo: React.PropTypes.func
     },
 
     getInitialState() {
         return {
             placeholderIndex: -1,
             draggedItemIndex: -1,
-            items: this.props.nowViewing,
             selectedItem: null
         };
     },
@@ -22,8 +24,7 @@ const NowViewingContainer = React.createClass({
         if (defined(e.dataTransfer)) {
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
-        }
-        else {
+        } else {
             e.originalEvent.dataTransfer.effectAllowed = 'move';
             e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
         }
@@ -32,13 +33,13 @@ const NowViewingContainer = React.createClass({
 
         this.setState({
             draggedItemIndex: _draggedItemIndex,
-            selectedItem: this.state.items[_draggedItemIndex]
+            selectedItem: this.props.nowViewingItems[_draggedItemIndex]
         });
     },
 
     onDragEnd(e) {
         if(e.dataTransfer.dropEffect === 'move') {
-            this.state.items.splice(this.state.draggedItemIndex, 1);
+            this.props.nowViewingItems.splice(this.state.draggedItemIndex, 1);
             this.state.draggedItemIndex = -1;
             this.state.placeholderIndex = -1;
             this.setState(this.state);
@@ -67,7 +68,7 @@ const NowViewingContainer = React.createClass({
 
     onDrop(e) {
         if(this.state.placeholderIndex !== -1) {
-            this.state.items.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
+            this.props.nowViewingItems.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
             if(this.state.draggedItemIndex > this.state.placeholderIndex) {
                 this.state.draggedItemIndex = this.state.draggedItemIndex + 1;
             }
@@ -94,12 +95,13 @@ const NowViewingContainer = React.createClass({
 
     renderNowViewingItem(item, i) {
         return <NowViewingItem nowViewingItem={item}
-                               setWrapperState={this.props.setWrapperState}
-                               index={i} key={'placeholder-' + i}
+                               index={i}
+                               key={'placeholder-' + i}
                                dragging={this.state.draggedItemIndex === i}
                                onDragOver={this.onDragOverItem}
                                onDragStart={this.onDragStart}
                                onDragEnd={this.onDragEnd}
+                               onActivateCatalogItemInfo={this.props.onActivateCatalogItemInfo}
                 />;
     },
 
@@ -111,18 +113,23 @@ const NowViewingContainer = React.createClass({
         const items = [];
         let i;
 
-        for(i = 0; i < this.state.items.length; i++) {
+        // var nowViewingItems = this.state.items;
+        // const nowViewingItems = this.props.nowViewing.items;
+        const nowViewingItems = this.props.nowViewingItems;
+
+        for (i = 0; i < nowViewingItems.length; i++) {
             items.push(this.renderPlaceholder(i));
-            items.push(this.renderNowViewingItem(this.state.items[i], i));
+            items.push(this.renderNowViewingItem(nowViewingItems[i], i));
         }
         items.push(this.renderPlaceholder(i));
         return items;
     },
 
     render() {
-        return <ul className="now-viewing__content list-reset" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
+        return (
+            <ul className="now-viewing__content list-reset" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
               {this.renderListElements()}
-              </ul>;
+            </ul>);
     }
 });
 module.exports = NowViewingContainer;

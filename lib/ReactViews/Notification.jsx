@@ -1,33 +1,38 @@
 'use strict';
-const React = require('react');
+
+import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
+
 const Notification = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
-        notification: React.PropTypes.object,
-        notificationisShow: React.PropTypes.bool,
-        setWrapperState: React.PropTypes.func
+        isVisible: React.PropTypes.bool,
+        title: React.PropTypes.string,
+        body: React.PropTypes.string,
+        onDismiss: React.PropTypes.func
     },
     renderMessage() {
-        return {__html: this.props.notification.body};
-    },
-
-    dismissNotification() {
-        this.props.setWrapperState({
-            notificationisShow: false
-        });
+        // TODO: render markdown and sanitize HTML
+        return {
+            __html: this.props.body
+        };
     },
 
     render() {
-        return <div className='notification' aria-hidden={ !this.props.notificationisShow }>
-                 <div className='notification__inner'>
-                    <h3>{this.props.notification.title}</h3>
-                    <div dangerouslySetInnerHTML={this.renderMessage()} />
-                 </div>
-                 <div className='notification__side'>
-                     <button className='btn' onClick={this.dismissNotification}>
-                        <i className='icon icon-close'></i>
-                     </button>
-                 </div>
-               </div>;
+        return (
+            <div className='notification' aria-hidden={ !this.props.isVisible }>
+              <div className='notification__inner'>
+                <h3>{ this.props.title }</h3>
+                <div dangerouslySetInnerHTML={ this.renderMessage() } />
+              </div>
+              <div className='notification__side'>
+                <button className='btn' onClick={ this.props.onDismiss }>
+                  <i className='icon icon-close'></i>
+                </button>
+              </div>
+            </div>);
     }
 });
+
 module.exports = Notification;
