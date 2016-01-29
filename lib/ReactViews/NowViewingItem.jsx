@@ -80,7 +80,7 @@ const NowViewingItem = React.createClass({
                 <li><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn zoom">Zoom To</button></li>
                 <li><button onClick={this.openModal} className='info btn' title='info'>info</button></li>
                 <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
-                <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-visible' : 'icon-invisible')}></i></button></li>
+                <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-eye' : 'icon-invisible')}></i></button></li>
               </ul>
               <div className="now-viewing__item-opacity">
                 <label htmlFor="opacity">Opacity: </label>

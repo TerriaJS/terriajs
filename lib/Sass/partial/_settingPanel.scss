@@ -10,19 +10,20 @@
 // <li class="col col-4"><button class="btn btn-viewer ">2D</button></li>
 // </ul>
 // </div><div class="setting-panel-section setting-panel__basemap"><label class="setting-panel__label"> Base Map </label>
+// <label class="label active-map__label">Bing Maps Aerial with Labels</label>
 // <ul class="setting-panel__basemap-selector list-reset clearfix">
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Australian Topography" src="../build/TerriaJS/images/australian-topo.png"><span>Australian Topography</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"><span>Australian Hydrography</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap is-active"><img alt="Bing Maps Aerial with Labels" src="../build/TerriaJS/images/bing-aerial-labels.png"><span>Bing Maps Aerial with Labels</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Bing Maps Aerial" src="../build/TerriaJS/images/bing-aerial.png"><span>Bing Maps Aerial</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Bing Maps Roads" src="../build/TerriaJS/images/bing-maps-roads.png"><span d>Bing Maps Roads</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Natural Earth II" src="../build/TerriaJS/images/natural-earth.png"><span d>Natural Earth II</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="NASA Black Marble" src="../build/TerriaJS/images/black-marble.png"><span d>NASA Black Marble</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Positron (Light)" src="../build/TerriaJS/images/positron.png"><span d>Positron (Light)</span></button></li>
-// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Dark Matter" src="../build/TerriaJS/images/dark-matter.png"><span>Dark Matter</span></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Australian Topography" src="../build/TerriaJS/images/australian-topo.png"></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap is-active"><img alt="Bing Maps Aerial with Labels" src="../build/TerriaJS/images/bing-aerial-labels.png"></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Bing Maps Aerial" src="../build/TerriaJS/images/bing-aerial.png"></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Bing Maps Roads" src="../build/TerriaJS/images/bing-maps-roads.png"></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Natural Earth II" src="../build/TerriaJS/images/natural-earth.png"></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="NASA Black Marble" src="../build/TerriaJS/images/black-marble.png"></button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Positron (Light)" src="../build/TerriaJS/images/positron.png"</button></li>
+// <li class="basemap col col-4"><button class="btn btn-basemap "><img alt="Dark Matter" src="../build/TerriaJS/images/dark-matter.png"></button></li>
 // </ul></div></div>
 //
-// Style guide: Setting Panel
+// Style guide: Component.setting-panel
 
 .setting-panel{
   width: auto;

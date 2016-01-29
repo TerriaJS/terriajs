@@ -1,16 +1,16 @@
 $ring-width: 10px;
 $compass-width: 70px;
 
-// Map vaigation control
+// Component
 //
-// Style guide: 6.0
+// Style guide: Component
 
 //Map Compass
 //
 // Markup:
 // <div class="compass"><div class="compass-outer-ring"></div><div class="compass-inner-ring" title="Click and drag to rotate the camera"></div><div class="compass-rotation-marker"></div></div>
 //
-// Style guide: 6.1
+// Style guide: Component.map-navigation
 
 .compass{
   cursor: default;
