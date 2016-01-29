@@ -61,7 +61,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
                 featureInfoTemplate: '<div>{{blah}}</div>'
             };
 
-            section = new FeatureInfoPanelSectionViewModel(terria, feature, catalogItem);
+            section = new FeatureInfoPanelSectionViewModel(panel, feature, catalogItem);
         });
 
         describe('rawDataVisible', function () {
@@ -96,7 +96,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
         var section;
 
         beforeEach(function () {
-            section = new FeatureInfoPanelSectionViewModel(terria, feature, {});
+            section = new FeatureInfoPanelSectionViewModel(panel, feature, {});
         });
 
         it('templatedInfo should not be available', function () {
@@ -114,7 +114,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
                 var EXPECTED_CSV_URL = 'data:attachment/csv,Foo%2Cherp%0Abar%2Cderp';
                 var EXPECTED_JSON_URL = 'data:attachment/json,%7B%22Foo%22%3A%22bar%22%2C%22herp%22%3A%22derp%22%7D';
 
-                var section = new FeatureInfoPanelSectionViewModel(terria, feature);
+                var section = new FeatureInfoPanelSectionViewModel(panel, feature);
 
                 expect(section.dataDownloads.length).toBe(2);
 
@@ -134,7 +134,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
                     'nestedHerp': 'nestedDerp'
                 };
 
-                var section = new FeatureInfoPanelSectionViewModel(terria, feature);
+                var section = new FeatureInfoPanelSectionViewModel(panel, feature);
 
                 expect(section.dataDownloads.length).toBe(1);
 
@@ -144,7 +144,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
             });
 
             it('download options dropdown should be hidden', function () {
-                var section = new FeatureInfoPanelSectionViewModel(terria, feature);
+                var section = new FeatureInfoPanelSectionViewModel(panel, feature);
                 expect(section.downloadOptionsVisible).toBe(false);
             });
         });
@@ -153,7 +153,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
             var section, fakeEvent, fakeInfoPanel, scrollListener, bodyClickListener;
 
             beforeEach(function() {
-                section = new FeatureInfoPanelSectionViewModel(terria, feature);
+                section = new FeatureInfoPanelSectionViewModel(panel, feature);
 
                 fakeEvent = {
                     currentTarget: {
@@ -259,7 +259,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
 
             beforeEach(function () {
 
-                section = new FeatureInfoPanelSectionViewModel(terria, feature);
+                section = new FeatureInfoPanelSectionViewModel(panel, feature);
 
                 clickEvent = {
                     currentTarget: {
