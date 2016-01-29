@@ -42,7 +42,7 @@ const DataPreview = React.createClass({
                         <h5>Data Custodian</h5>
                         <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
                         <h5>Web Map Service (WMS) URL </h5>
-                        <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}></p>
+                        <p className='url' dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}></p>
                     </div>
                 </div>);
         }

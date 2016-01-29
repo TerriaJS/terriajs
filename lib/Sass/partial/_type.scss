@@ -60,4 +60,15 @@ h1, h2, h3, h4, h5, h6{
 // Style guide: 1.5
 //
 
+// URL
+//
+// Markup:
+// <p class='url'> <a href='href="https://programs.communications.gov.au/geoserver/ows"'>https://programs.communications.gov.au/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows</a></p>
+//
+// Style guide: 1.6
+//
+
+.url{
+  word-wrap: break-word;
+}
 
