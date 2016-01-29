@@ -13,6 +13,8 @@ const SidePanel = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
+        mapSearchText: React.PropTypes.string,
+        onMapSearchTextChanged: React.PropTypes.func,
         onActivateAddData: React.PropTypes.func,
         onActivateCatalogItemInfo: React.PropTypes.func,
         onSearchCatalog: React.PropTypes.func
@@ -46,7 +48,7 @@ const SidePanel = React.createClass({
               <div className='workbench__header workbench-add'>
                 {this.props.onActivateAddData && <button className='btn now-viewing__add' onClick={this.props.onActivateAddData}>Add Data</button>}
               </div>
-              <SearchBox terria={this.props.terria} dataSearch={false} onSearchCatalog={this.props.onSearchCatalog} />
+              <SearchBox terria={this.props.terria} searchText={this.props.mapSearchText} onSearchTextChanged={this.props.onMapSearchTextChanged} dataSearch={false} onSearchCatalog={this.props.onSearchCatalog} />
               {this.renderContent(this.props.terria.nowViewing.items)}
             </div>);
     }

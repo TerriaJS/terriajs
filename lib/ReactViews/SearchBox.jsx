@@ -1,151 +1,158 @@
 'use strict';
-const React = require('react');
-const DataCatalogGroup = require('./DataCatalogGroup.jsx');
-const DataCatalogItem = require('./DataCatalogItem.jsx');
-const LocationItem = require('./LocationItem.jsx');
-const Loader = require('./Loader.jsx');
-const ObserveModelMixin = require('./ObserveModelMixin');
 
-const ModalTriggerButton = require('./ModalTriggerButton.jsx');
-const CatalogItemNameSearchProviderViewModel = require('../ViewModels/CatalogItemNameSearchProviderViewModel.js');
-const BingMapsSearchProviderViewModel = require('../ViewModels/BingMapsSearchProviderViewModel.js');
-const GazetteerSearchProviderViewModel = require('../ViewModels/GazetteerSearchProviderViewModel.js');
+import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
+import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
+import DataCatalogGroup from './DataCatalogGroup.jsx';
+import DataCatalogItem from './DataCatalogItem.jsx';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
+import Loader from './Loader.jsx';
+import LocationItem from './LocationItem.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
 
 // Handle any of the three kinds of search based on the props
 const SearchBox = React.createClass({
     mixins: [ObserveModelMixin],
+
     propTypes: {
+        searchText: React.PropTypes.string,
+        onSearchTextChanged: React.PropTypes.func.isRequired,
         mapSearch: React.PropTypes.bool,
         dataSearch: React.PropTypes.bool,
         gazetterSearch: React.PropTypes.bool,
-        toggleModalWindow: React.PropTypes.func,
-        setPreview: React.PropTypes.func,
-        previewed: React.PropTypes.object
+        onSearchCatalog: React.PropTypes.func,
+        previewedCatalogItem: React.PropTypes.object,
+        onPreviewedCatalogItemChanged: React.PropTypes.func
     },
 
     getDefaultProps() {
         return {
+            searchText: '',
             mapSearch: true,
             dataSearch: true,
-            gazetterSearch: true,
-            defaultSearchText: ''
-        };
-    },
-
-    getInitialState() {
-        return {
-            value: this.props.defaultSearchText,
-            dataCatalogResults: [],
-            dataCatalogIsSearching: false,
-            bingMapSearchResults: [],
-            bingMapIsSearching: false,
-            gazetterIsSearching: false,
-            gazetterSearchResults: []
+            gazetterSearch: true
         };
     },
 
     componentWillMount() {
+        this.lastSearchText = undefined;
+        this.debounceTimeout = undefined;
         this.dataCatalogSearch = new CatalogItemNameSearchProviderViewModel(this.props);
         this.bingMapSearch = new BingMapsSearchProviderViewModel(this.props);
         this.gazetterSearch = new GazetteerSearchProviderViewModel(this.props);
     },
 
+    componentWillUnmount() {
+        this.removeDebounceTimeout();
+    },
+
+    componentDidMount() {
+        this.searchWithDebounce();
+    },
+
+    componentDidUpdate() {
+        this.searchWithDebounce();
+    },
+
+    removeDebounceTimeout() {
+        if (defined(this.debounceTimeout)) {
+            clearTimeout(this.debounceTimeout);
+            this.debounceTimeout = undefined;
+        }
+    },
+
+    searchWithDebounce() {
+        if (this.lastSearchText !== this.props.searchText) {
+            // Trigger search 250ms after the last input.
+            this.removeDebounceTimeout();
+
+            this.lastSearchText = this.props.searchText;
+
+            this.debounceTimeout = setTimeout(() => {
+                this.doSearch(this.props.searchText);
+                this.debounceTimeout = undefined;
+            }, 250);
+        }
+    },
+
     handleChange(event) {
-        this.setState({
-            value: event.target.value
-        });
-        this.doSearch(event.target.value);
+        this.props.onSearchTextChanged(event.target.value);
     },
 
     doSearch(keyword) {
-        if (this.props.dataSearch !== false) {
+        if (this.props.dataSearch) {
             this.dataCatalogSearch.search(keyword);
         }
-        if (this.props.mapSearch !== false) {
+        if (this.props.mapSearch) {
             this.bingMapSearch.search(keyword);
         }
-        if (this.props.gazetterSearch !== false) {
+        if (this.props.gazetterSearch) {
             this.gazetterSearch.search(keyword);
         }
     },
 
-    componentWillUnmount(){
-        console.log('unmount');
-    },
-
     clearSearch() {
-        this.setState({
-            value: ''
-        });
+        this.props.onSearchTextChanged('');
     },
 
-    searchKeyword() {
-        this.doSearch(this.state.value);
+    searchCatalog() {
+        this.onSearchCatalog(this.props.searchText);
     },
 
     renderSearchResult(searchType, search) {
-        const value = this.state.value;
-        let content = null;
-        let results = <Loader />;
-        if ((searchType) && value.length > 0) {
-            if(search.searchResults.length > 0) {
-                if (search.name !== 'Catalogue Items') {
-                    results = search.searchResults.map((item, i) => {
-                        return (<LocationItem item={item} key={i} />);
-                    });
-                } else {
-                    results = search.searchResults.map((result, i) => {
-                        const group = result.catalogItem;
-                        if (group.isGroup === true) {
-                            return (<DataCatalogGroup group={group}
-                                                      key={i}
-                                                      setPreview={this.props.setPreview}
-                                                      previewed={this.props.previewed}
-                                    />);
-                        }
-                        return (<DataCatalogItem item={group}
-                                                 key={i}
-                                                 setPreview={this.props.setPreview}
-                                                 previewed={this.props.previewed}
-                                />);
-                    });
-                }
-            }
-            else {
-                results = <li className ='label no-results'>No results found </li>;
+        if (!searchType || !defined(this.props.searchText) || this.props.searchText.length === 0) {
+            return null;
+        }
+
+        const results = search.searchResults.map((result, i) => {
+            if (defined(result.catalogItem) && result.catalogItem.isGroup) {
+                return (<DataCatalogGroup group={result.catalogItem}
+                                          key={i}
+                                          previewedCatalogItem={this.props.previewedCatalogItem}
+                                          onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                        />);
+            } else if (defined(result.catalogItem)) {
+                return (<DataCatalogItem item={result.catalogItem}
+                                         key={i}
+                                         previewedCatalogItem={this.props.previewedCatalogItem}
+                                         onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                        />);
             }
 
-            content = <div>
-                        <label className='label label-sub-heading'>{search.name}</label>
-                        <ul className='list-reset search-results-items'>{results}</ul>
-                      </div>;
-        }
-        return content;
+            return (<LocationItem item={result} key={i} />);
+        });
+
+        return (
+            <div>
+                <label className='label label-sub-heading'>{search.name}</label>
+                {search.isSearching && <Loader />}
+                {search.searchMessage && <li className ='label no-results'>{search.searchMessage}</li>}
+                <ul className='list-reset search-results-items'>{results}</ul>
+            </div>);
     },
 
     render() {
-        const value = this.state.value;
-
         // button to clear search string
         let clearSearchContent = null;
-        if (value.length > 0) {
+        if (this.props.searchText.length > 0) {
             clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='icon icon-close'></i></button>);
         }
 
         let linkToSearchData = null;
-        if ((this.props.dataSearch === false) && value.length > 0) {
-            linkToSearchData = (<ModalTriggerButton btnHtml={'Search " ' + value + ' " in Data Catalog'} classNames={'btn btn-data-search'} callback={this.searchKeyword} activeTab={1} toggleModalWindow={this.props.toggleModalWindow} />);
+        if ((this.props.dataSearch === false) && this.props.searchText.length > 0) {
+            linkToSearchData = (<button className="btn btn-data-serach" onClick={this.searchCatalog}>Search {this.props.searchText} in Data Catalog</button>);
         }
 
         return (
-            <div className={this.state.value.length > 0 ? 'is-searching search' : 'search'}>
+            <div className={this.props.searchText.length > 0 ? 'is-searching search' : 'search'}>
                 <form className='search-data-form relative' autoComplete='off'>
                   <label htmlFor='search' className='hide'> Type keyword to search </label>
                   <i className='icon icon-search'></i>
                   <input id='search'
                   type='text'
                   name='search'
-                  value={value}
+                  value={this.props.searchText}
                   onChange={this.handleChange}
                   className='search__field field'
                   placeholder='Search'
