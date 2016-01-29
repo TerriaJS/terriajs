@@ -1,5 +1,7 @@
 'use strict';
+
 import DataCatalogItem from './DataCatalogItem.jsx';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from './Loader.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
@@ -10,15 +12,21 @@ const DataCatalogGroup = React.createClass({
     propTypes: {
         group: React.PropTypes.object,
         previewedCatalogItem: React.PropTypes.object,
-        onPreviewedCatalogItemChanged: React.PropTypes.func
+        onPreviewedCatalogItemChanged: React.PropTypes.func,
+        isOpen: React.PropTypes.bool,
+        onToggleOpen: React.PropTypes.func
     },
 
     toggleOpen(e) {
-        this.props.group.toggleOpen();
+        if (defined(this.props.onToggleOpen)) {
+            this.props.onToggleOpen();
+        } else {
+            this.props.group.toggleOpen();
+        }
     },
 
-    renderGroup(group) {
-        if (group.isOpen === true) {
+    renderGroup(group, isOpen) {
+        if (isOpen === true) {
             if (group.items && group.items.length > 0) {
                 return group.items.map((member, i)=>{
                     if (member.isGroup) {
@@ -41,11 +49,13 @@ const DataCatalogGroup = React.createClass({
 
     render() {
         const group = this.props.group;
+        const isOpen = defined(this.props.isOpen) ? this.props.isOpen : group.isOpen;
+
         return (
             <li>
-              <button className ={'btn btn-catalogue ' + (group.isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name} <i className={'icon ' + (group.isOpen ? 'icon-chevron-down' : 'icon-chevron-right')}></i></button>
+              <button className ={'btn btn-catalogue ' + (isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name} <i className={'icon ' + (isOpen ? 'icon-chevron-down' : 'icon-chevron-right')}></i></button>
               <ul className="data-catalog-group list-reset">
-                {this.renderGroup(group)}
+                {this.renderGroup(group, isOpen)}
               </ul>
             </li>
             );
