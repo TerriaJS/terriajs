@@ -1,8 +1,9 @@
 'use strict';
-const React = require('react');
-const NowViewingItem = require('./NowViewingItem.jsx');
-const defined = require('terriajs-cesium/Source/Core/defined');
-const ObserveModelMixin = require('./ObserveModelMixin');
+
+import React from 'react';
+import NowViewingItem from './NowViewingItem.jsx';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import ObserveModelMixin from './ObserveModelMixin';
 
 const NowViewingContainer = React.createClass({
     mixins: [ObserveModelMixin],
@@ -113,8 +114,6 @@ const NowViewingContainer = React.createClass({
         const items = [];
         let i;
 
-        // var nowViewingItems = this.state.items;
-        // const nowViewingItems = this.props.nowViewing.items;
         const nowViewingItems = this.props.nowViewingItems;
 
         for (i = 0; i < nowViewingItems.length; i++) {
@@ -132,4 +131,5 @@ const NowViewingContainer = React.createClass({
             </ul>);
     }
 });
+
 module.exports = NowViewingContainer;
