@@ -13,7 +13,7 @@ const FeatureInfoPanel = React.createClass({
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
         onClose: React.PropTypes.func,
-        changeFeatureInfoPanelIsCollapsed: React.PropTypes.func
+        onChangeFeatureInfoPanelIsCollapsed: React.PropTypes.func
     },
 
     getFeatures() {
@@ -43,7 +43,7 @@ const FeatureInfoPanel = React.createClass({
         return (
             <div className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '')} aria-hidden={!this.props.isVisible}>
               <div className='feature-info-panel__header'>
-                <button onClick={ this.props.changeFeatureInfoPanelIsCollapsed } className='btn'> Feature Info Panel </button>
+                <button onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Info Panel </button>
                 <button onClick={ this.props.onClose } className="btn modal-btn right" title="Close data panel"><i className="icon icon-close"></i></button>
               </div>
               <ul className="list-reset feature-info-panel__body">{this.renderContent(pickedFeatures)}</ul>
