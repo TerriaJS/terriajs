@@ -122,6 +122,8 @@ const SearchBox = React.createClass({
             if (defined(result.catalogItem) && result.catalogItem.isGroup) {
                 return (<DataCatalogGroup group={result.catalogItem}
                                           key={i}
+                                          isOpen={result.isOpen}
+                                          onToggleOpen={result.toggleOpen.bind(result)}
                                           previewedCatalogItem={this.props.previewedCatalogItem}
                                           onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                         />);
