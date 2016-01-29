@@ -6,6 +6,23 @@ Change Log
 
 * Create new Legend class, making it easy to generate client-side legends for different kinds of data.
 * Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
+### 2.0.0
+
+* Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
+  - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
+  - `AbsIttCatalogItem`: Completely rewritten. The `dataSetID` json parameter has been deprecated in favor of `datasetId` (different capitalization).
+  - For the 2011 Australian Census data, requires `sa4_code_2011` to appear as an alias in `regionMapping.json` (it was previously missing in NationalMap).
+  - `TableDataSource`: Completely rewritten and moved from `Map` to `Models` directory. Handles csvs with latitude & longitude columns.
+  - `RegionMapping`: Used instead of TableDataSource for region-mapped csvs.
+  - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
+  - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
+  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
+  - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
+  - `LegendUrl` has been moved to the `Map` directory.
+  - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
+  - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
+  - `Models/ModelError` has been replaced with `Core/TerriaError`.
+* Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
 
 ### 1.0.54
 

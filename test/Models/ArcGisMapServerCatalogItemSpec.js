@@ -6,7 +6,7 @@ var Terria = require('../../lib/Models/Terria');
 var Legend = require('../../lib/Map/Legend');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var ArcGisMapServerCatalogItem = require('../../lib/Models/ArcGisMapServerCatalogItem');
-var LegendUrl = require('../../lib/Models/LegendUrl');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 
 var terria;
 var item;
