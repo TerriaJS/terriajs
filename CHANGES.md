@@ -19,6 +19,7 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
+* Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
 
 ### 1.0.54
 
