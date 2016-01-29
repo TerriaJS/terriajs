@@ -30,6 +30,9 @@
 .feature-info-panel{
   background:$dark;
   color: #fff;
+  &, .btn, li{
+    font-size: $font-size-small;
+  }
   &.is-collapsed{
     .feature-info-panel__body{
       display: none;
