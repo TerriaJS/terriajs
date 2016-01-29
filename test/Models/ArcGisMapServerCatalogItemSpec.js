@@ -101,7 +101,9 @@ describe('ArcGisMapServerCatalogItem', function() {
         var url = 'http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer';
         item.updateFromJson({url: url});
         item.load().then(function() {
-            expect(item.mapServerData.mapName).toEqual('Australian Topography - Hydrography and Marine');
+            // TODO: replace this with a more meaningful test. This is essentially just validating that the (test) JSON we feed
+            // into it has a certain format.
+            expect(item._mapServerData.mapName).toEqual('Australian Topography - Hydrography and Marine');
             expect(item._layersData.layers.length).toBe(74);
             done();
         });
