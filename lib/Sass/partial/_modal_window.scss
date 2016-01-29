@@ -67,24 +67,24 @@ $section-height: 60vh;
 }
 
 .panel-content{
-  padding: $padding*2;
+  padding: $padding;
   border-top: 1px solid $grey-lighter;
   background: $modal-bg;
   color: $modal-text;
 }
 
 .data-preview{
-  padding: $padding*2;
+  padding-right: $padding;
   //avoid render error when scroll bar present
   position: absolute;
-  top: 0;
-  right: 0;
+  top: $padding;
+  right: $padding-small;
+  width: calc(50% - #{$padding*2});
+  bottom: $padding;
+  overflow: hidden;
+  overflow-y: scroll;
   h4{
     margin-top: $padding;
-  }
-  figcaption{
-    height: 170px;
-    overflow-y: auto;
   }
 }
 
@@ -98,12 +98,6 @@ $section-height: 60vh;
   pointer-events: none;
 }
 
-.data-preview-action{
-   -webkit-flex-direction: row;
-   flex-direction: row;
-   -webkit-justify-content: flex-end;
-   justify-content: flex-end;
-}
 
 .search-data{
   height: 100%;

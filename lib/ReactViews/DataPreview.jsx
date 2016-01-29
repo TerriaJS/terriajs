@@ -1,10 +1,10 @@
 'use strict';
 
-const React = require('react');
-const markdownToHtml = require('terriajs/lib/Core/markdownToHtml');
-const DataPreviewMap = require('./DataPreviewMap.jsx');
-const defined = require('terriajs-cesium/Source/Core/defined');
-const ObserveModelMixin = require('./ObserveModelMixin');
+import DataPreviewMap from './DataPreviewMap.jsx';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import markdownToHtml from 'terriajs/lib/Core/markdownToHtml';
+import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
 
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
@@ -19,9 +19,9 @@ const DataPreview = React.createClass({
         this.props.previewedCatalogItem.isEnabled = !this.props.previewedCatalogItem.isEnabled;
     },
 
-    infoMarkup() {
+    renderMarkup(content) {
         return {
-            __html: markdownToHtml(this.props.previewedCatalogItem.description)
+            __html: markdownToHtml(content)
         };
     },
 
@@ -31,23 +31,31 @@ const DataPreview = React.createClass({
                 <div>
                     <div className="clearfix">
                         <h4 className="col col-8">{previewed.name}</h4>
-                        <button onClick={this.toggleOnMap} className={'btn btn-preview-toggle col col-4 ' + (previewed.isEnabled ? 'btn-add' : 'btn-remove')} title ={previewed.isEnabled ? 'remove from map' : 'add to map'}>{previewed.isEnabled ? 'Remove' : 'Add'}</button>
+                        <button onClick={this.toggleOnMap}
+                                className={'btn btn-preview-toggle col col-4'}
+                                title ={previewed.isEnabled ? 'remove from map' : 'add to map'}>{previewed.isEnabled ? 'Remove' : 'Add'}</button>
                     </div>
-                    <div className="clearfix" dangerouslySetInnerHTML={this.infoMarkup()}></div>
+                    <div className="clearfix data-info">
+                        <h5>Description</h5>
+                        <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>
+                        <h5>Licence</h5>
+                        <h5>Data Custodian</h5>
+                        <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
+                        <h5>Web Map Service (WMS) URL </h5>
+                        <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}></p>
+                    </div>
                 </div>);
         }
     },
 
     render() {
         const previewed = this.props.previewedCatalogItem;
-
         return (
-            <figure>
+            <div className='data-preview__inner'>
               <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewedCatalogItem} />
-              <figcaption>
-                {this.renderActions(previewed)}
-              </figcaption>
-            </figure>);
+              {this.renderActions(previewed)}
+            </div>
+            );
     }
 });
 

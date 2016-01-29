@@ -41,7 +41,6 @@ const FeatureInfoPanel = React.createClass({
     renderContent(pickedFeatures) {
         const that = this;
         if (defined(this.props.terria.pickedFeatures)) {
-            // Since event is raised after loaded, isLoading is never true
             if (this.props.terria.pickedFeatures.isLoading === true) {
                 return <Loader/>;
             }

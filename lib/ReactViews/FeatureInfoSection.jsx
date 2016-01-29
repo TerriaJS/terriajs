@@ -1,7 +1,8 @@
 'use strict';
-const Mustache = require('mustache');
-const React = require('react');
-const defined = require('terriajs-cesium/Source/Core/defined');
+
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Mustache from 'mustache';
+import React from 'react';
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
