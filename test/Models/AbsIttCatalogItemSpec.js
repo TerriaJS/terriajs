@@ -54,6 +54,7 @@ describe('AbsIttCatalogItem', function() {
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         item.updateFromJson({
             name: 'Name',
+            id: 'Id',
             description: 'Description',
             rectangle: [-10, 10, -20, 20],
             url: 'http://foo.bar/',
