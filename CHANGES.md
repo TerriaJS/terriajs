@@ -20,9 +20,10 @@ Change Log
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
 * Introduced three new json tableStyle parameters:
-  - `replaceWithZeroValues`: defaults to `[null, '-']`. These values are replaced with zero if they appear in a list with numbers. `null` catches missing values.
-  - `replaceWithNullValues`: defaults to `['na', 'NA']`. These values are replaced with null if they appear in a list with numbers.
-  - `nullColor`: defaults to a dark blue. This color is used to display null values (but it does not appear on the legend; we should add it). It is also used to display points when no variable is selected.
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
+when no variable is selected.
 * Added id matching for catalog members:
   - An `id` field can now be set in JSON for catalog members
   - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
@@ -44,9 +45,6 @@ Change Log
     traversed in both directions.
   - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
     not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
-  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
-  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
-  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
 
 ### 1.0.54
 
