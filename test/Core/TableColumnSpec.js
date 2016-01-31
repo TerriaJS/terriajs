@@ -17,6 +17,30 @@ describe('TableColumn', function() {
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 
+    it('treats hyphens and nulls as zeros in numeric data', function() {
+        var data = [1, '-', null, 4];
+        var tableColumn = new TableColumn('x', data);
+        expect(tableColumn.name).toEqual('x');
+        expect(tableColumn.values).toEqual([1, 0, 0, 4]);
+        expect(tableColumn.type).toEqual(VarType.SCALAR);
+    });
+
+    it('treats NA as null in numeric data', function() {
+        var data = [1, 'NA', 4];
+        var tableColumn = new TableColumn('x', data);
+        expect(tableColumn.name).toEqual('x');
+        expect(tableColumn.values).toEqual([1, null, 4]);
+        expect(tableColumn.type).toEqual(VarType.SCALAR);
+    });
+
+    it('treats hyphens, blanks and NA as strings in string data', function() {
+        var data = ['%', '-', '!', 'NA', ''];
+        var tableColumn = new TableColumn('x', data);
+        expect(tableColumn.name).toEqual('x');
+        expect(tableColumn.values).toEqual(data);
+        expect(tableColumn.type).toEqual(VarType.ENUM);
+    });
+
     it('can detect latitude type', function() {
         var data = [30.3, 31.3, 33.3];
         var tableColumn = new TableColumn('lat', data);
