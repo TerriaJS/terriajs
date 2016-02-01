@@ -1,6 +1,6 @@
 "use strict";
 
-var LegendUrl = require('../../lib/Models/LegendUrl');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 
 describe('LegendUrl', function() {
     describe('isImage', function() {

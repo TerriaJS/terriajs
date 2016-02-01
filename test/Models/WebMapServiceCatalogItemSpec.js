@@ -4,7 +4,7 @@
 
 var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
 var Terria = require('../../lib/Models/Terria');
-var LegendUrl = require('../../lib/Models/LegendUrl');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
@@ -252,6 +252,7 @@ describe('WebMapServiceCatalogItem', function() {
 
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         wmsItem.name = 'Name';
+        wmsItem.id = 'Id';
         wmsItem.description = 'Description';
         wmsItem.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
         wmsItem.legendUrl = new LegendUrl('http://legend.com', 'image/png');
