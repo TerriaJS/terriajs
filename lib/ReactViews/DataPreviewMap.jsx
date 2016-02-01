@@ -48,6 +48,7 @@ const DataPreviewMap = React.createClass({
 
     componentWillReceiveProps(nextProp) {
         this.isZoomedToExtent = false;
+        this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
 
         if (defined(this.catalogItem)) {
             this.catalogItem.isEnabled = false;
