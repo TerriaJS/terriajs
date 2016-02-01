@@ -11,21 +11,22 @@
 
 // Icons
 //
-// .icon-refresh - icon refresh and icon zoom reset
-// .icon-full-screen - icon full screen mode
-// .icon-minus - icon remove from map
-// .icon-sphere - icon map setting
-// .icon-arrow_drop_down - icon show more
-// .icon-close - icon close
-// .icon-minus2 - icon zoom out
-// .icon-plus - icon zoom in
-// .icon-sort-desc - icon show less
-// .icon-caret-right - icon show more
-// .icon-search - icon search
-// .icon-loader - icon loading
-// .icon-circle-plus - icon add to map
-// .icon-share - icon share
-// .icon-check_box - icon current basemap
+// .icon-right-arrow -  icon
+// .icon-clear - icon
+// .icon-add - icon
+// .icon-remove - icon
+// .icon-eye-hidden - icon
+// .icon-location - icon
+// .icon-check_box - icon
+// .icon-caret-right - icon
+// .icon-search - icon
+// .icon-eye - icon
+// .icon-share - icon
+// .icon-sphere - icon
+// .icon-caret-down - icon
+// .icon-full-screen - icon
+// .icon-loader - icon
+// .icon-location -  icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -47,102 +48,69 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-location_on:before {
-  content: "\e900";
-}
-.icon-check_box:before {
-  content: "\e901";
-}
-.icon-caret-right:before {
-  content: "\e902";
-}
-.icon-search:before {
-  content: "\e903";
-}
-.icon-eye:before {
-  content: "\e904";
-}
-.icon-share:before {
-  content: "\e905";
-}
-.icon-minus:before {
-  content: "\e906";
-}
-.icon-refresh:before {
-  content: "\e907";
-}
-.icon-sphere:before {
-  content: "\e908";
+.icon-right-arrow:before {
+    content: "\e908";
 }
 .icon-close:before {
-  content: "\e909";
+    content: "\e909";
 }
-.icon-sort-desc:before {
-  content: "\e90a";
+.icon-add:before {
+    content: "\e900";
+}
+.icon-eye-hidden:before {
+    content: "\e901";
+}
+.icon-check_box:before {
+    content: "\e903";
+}
+.icon-caret-right:before {
+    content: "\e904";
+}
+.icon-search:before {
+    content: "\e905";
+}
+.icon-eye:before {
+    content: "\e906";
+}
+.icon-share:before {
+    content: "\e907";
+}
+.icon-remove:before {
+    content: "\e911";
+}
+.icon-refresh:before {
+    content: "\e912";
+}
+.icon-sphere:before {
+    content: "\e90c";
+}
+.icon-clear:before {
+    content: "\e913";
+}
+.icon-caret-down:before {
+    content: "\e90d";
 }
 .icon-full-screen:before {
-  content: "\e90b";
+    content: "\e90e";
 }
-.icon-minus2:before {
-  content: "\e90c";
+.icon-zoom-out:before {
+    content: "\e914";
 }
-.icon-plus:before {
-  content: "\e90d";
-}
-.icon-circle-plus:before {
-  content: "\e90e";
+.icon-zoom-in:before {
+    content: "\e915";
 }
 .icon-loader:before {
-  content: "\e90f";
+    content: "\e90f";
 }
-.icon-spinner2:before {
-  content: "\e910";
-}
-.icon-eye2:before {
-  content: "\e911";
-}
-.icon-eye-blocked:before {
-  content: "\e912";
-}
-
-
-
-.icon-chevron-down{
-  @extend .icon-sort-desc;
-}
-
-.icon-chevron-right{
-  @extend .icon-caret-right;
-}
-
-.icon-add {
-  @extend .icon-circle-plus;
-}
-
-.icon-remove{
-  @extend .icon-minus;
-}
-
-.icon-zoom-in{
-  @extend .icon-plus;
-}
-
-.icon-zoom-out{
-  @extend .icon-minus2;
-}
-
-.icon-show-less{
-  @extend .icon-minus2;
-}
-
-.icon-show-more{
-  @extend .icon-plus;
+.icon-location:before {
+    content: "\e910";
 }
 
 .icon-visible{
-  @extend .icon-eye2;
+  @extend .icon-eye;
 }
 
 .icon-invisible{
-  @extend .icon-eye-blocked;
+  @extend .icon-eye-hidden;
 }
+

@@ -1,5 +1,3 @@
-$section-height: 70vh;
-
 .modal-wrapper{
   visibility: hidden;
   &.is-open{
@@ -66,7 +64,7 @@ $section-height: 70vh;
 .tab-panel{
   width: 100%;
   .panel-content{
-    height: $section-height;
+    height: $modal-content-height;
     max-height: 100%;
     position: relative;
   }

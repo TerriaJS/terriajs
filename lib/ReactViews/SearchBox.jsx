@@ -141,9 +141,11 @@ const SearchBox = React.createClass({
         return (
             <div>
                 <label className='label label-sub-heading'>{search.name}</label>
-                {search.isSearching && <Loader />}
-                {search.searchMessage && <li className ='label no-results'>{search.searchMessage}</li>}
-                <ul className='list-reset search-results-items'>{results}</ul>
+                <ul className='list-reset search-results-items'>
+                    {search.isSearching && <Loader />}
+                    {search.searchMessage && <li className ='label no-results'>{search.searchMessage}</li>}
+                    {results}
+                </ul>
             </div>);
     },
 
@@ -151,12 +153,12 @@ const SearchBox = React.createClass({
         // button to clear search string
         let clearSearchContent = null;
         if (this.props.searchText.length > 0) {
-            clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='icon icon-close'></i></button>);
+            clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='icon icon-clear'></i></button>);
         }
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && this.props.searchText.length > 0) {
-            linkToSearchData = (<button onClick={this.searchCatalog} className='btn btn-data-search '>Search {this.props.searchText} in Data Catalog</button>);
+            linkToSearchData = (<button onClick={this.searchCatalog} className='btn btn-data-search '>Search {this.props.searchText} in Data Catalog <i className='icon icon-right-arrow'></i></button>);
         }
 
         return (

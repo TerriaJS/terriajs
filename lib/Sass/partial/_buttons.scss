@@ -55,7 +55,7 @@ $btn-setting-size: 35px;
 // Markup:
 //<div class='panel-content'>
 //<button title="add to map" class="btn relative btn-add-to-map"><i class="icon icon-add"></i></button><button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
-//<button title="add to map" class="btn relative btn-add-to-map"><i class="icon icon-minus"></i></button><button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
+//<button title="add to map" class="btn relative btn-add-to-map"><i class="icon icon-remove"></i></button><button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
 //</div>
 //
 // Style guide: Buttons.data-catalog-item
@@ -166,7 +166,7 @@ $add-to-map-btn-size: 20px;
     left: 3px;
     top: 7px;
   }
-  padding-left: 20px;
+  padding-left: 25px;
   border-radius: 3px 0 0 3px;
   border-right: 1px solid rgba(#fff, 0.15);
 }
@@ -400,14 +400,28 @@ $add-to-map-btn-size: 20px;
   }
 }
 
+// Search data catalog button
 //
+// Markup:
+// <button class="btn btn-data-search">Search in data catalog<i className='icon icon-right-arrow'></i></button>
+//
+// Style guide: Buttons.data-search
 
 .btn.btn-data-search{
   display: block;
   width: 100%;
   color: $color-primary;
   text-transform: uppercase;
+  .icon{
+    font-size: 16px;
+    position: relative;
+    &:before{
+      position: absolute;
+      top: 5px;
+    }
+  }
 }
+
 
 button.btn.visibility{
   font-size: 16px;

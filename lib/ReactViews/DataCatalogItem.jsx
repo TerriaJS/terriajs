@@ -27,7 +27,7 @@ const DataCatalogItem = React.createClass({
             if (item.isLoading) {
                 return 'icon icon-loader';
             }
-            return 'icon icon-minus';
+            return 'icon icon-remove';
         }
         return 'icon icon-add';
     },
