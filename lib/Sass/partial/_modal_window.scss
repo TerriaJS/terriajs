@@ -9,7 +9,7 @@ $section-height: 60vh;
 
 .modal-content{
   position: relative;
-  width: 1000px;
+  width: 800px;
   max-width: 90%;
   min-height: 100px;
   background: $modal-bg;
@@ -88,6 +88,9 @@ $section-height: 60vh;
   }
 }
 
+.data-preview-map{
+  position: relative;
+}
 .terria-preview{
   height: 250px;
   overflow: hidden;

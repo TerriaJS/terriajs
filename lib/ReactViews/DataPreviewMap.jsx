@@ -76,7 +76,12 @@ const DataPreviewMap = React.createClass({
     },
 
     render() {
-        return (<div className='terria-preview' ref={this.mapIsReady}></div>);
+        return (<div className='data-preview-map'>
+                    <div className='terria-preview' ref={this.mapIsReady}>
+                    </div>
+                    <label className='label-preview-badge'></label>
+                </div>
+                );
     }
 });
 module.exports = DataPreviewMap;
