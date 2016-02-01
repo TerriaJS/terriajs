@@ -29,15 +29,16 @@
     @include placeholder{
       text-transform: uppercase;
       font-size: $font-size-small;
-      text-align: center;
-      padding-right: 3rem;
+      text-align: left;
+      padding-left: calc(50% - 40px);
+      @include transition(all, 0.25s, linear);
     }
     padding-left: 3rem;
     height: $input-height;
     width: 100%;
     &:focus{
       @include placeholder{
-      text-align: left;
+      padding-left: 0;
       }
     }
   }
