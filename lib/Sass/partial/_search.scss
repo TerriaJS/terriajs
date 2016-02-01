@@ -26,7 +26,7 @@
     }
   }
   .data-panel &{
-    max-height: calc(#{$modal-content-height} - 100px);
+    max-height: calc(#{$modal-content-height} - 90px);
     overflow-y: scroll;
   }
 }

@@ -40,7 +40,7 @@
 
 .panel__data-catalog{
   .data-catalog{
-    height: calc(100% - 50px);
+    height: calc(#{$modal-content-height} - 90px);
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: $padding;
