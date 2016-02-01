@@ -29,11 +29,11 @@ const DataPreview = React.createClass({
         if (previewed && defined(previewed.type)) {
             return (
                 <div>
+                    <button onClick={this.toggleOnMap}
+                            className={'btn btn-preview-toggle clearfix'}
+                            title ={previewed.isEnabled ? 'remove from map' : 'add to map'}>{previewed.isEnabled ? 'Remove from map' : 'Add to map'}</button>
                     <div className="clearfix">
-                        <h4 className="col col-8">{previewed.name}</h4>
-                        <button onClick={this.toggleOnMap}
-                                className={'btn btn-preview-toggle col col-4'}
-                                title ={previewed.isEnabled ? 'remove from map' : 'add to map'}>{previewed.isEnabled ? 'Remove' : 'Add'}</button>
+                        <h4>{previewed.name}</h4>
                     </div>
                     <div className="clearfix data-info">
                         <h5>Description</h5>

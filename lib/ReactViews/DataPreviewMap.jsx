@@ -86,7 +86,7 @@ const DataPreviewMap = React.createClass({
                         {
                             type: 'Feature',
                             properties: {
-                                stroke: '#ffff00',
+                                stroke: '#08ABD5',
                                 'stroke-width': 2,
                                 'stroke-opacity': 1,
                                 fill: '#555555',

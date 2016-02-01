@@ -302,7 +302,6 @@ $add-to-map-btn-size: 20px;
 // Style guide: Buttons.preview-action
 
 .btn.btn-preview-toggle{
-  width: 80px;
   text-align: center;
   background: $color-primary;
   color: #fff;
@@ -311,9 +310,7 @@ $add-to-map-btn-size: 20px;
   line-height: 1;
   font-size: $font-size-small;
   margin-bottom: $padding-small;
-  .data-preview &{
-      float: right;
-  }
+  width: 100%;
   &:hover, &:focus{
     border: 1px solid $color-primary;
   }
