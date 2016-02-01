@@ -1,13 +1,15 @@
 'use strict';
 
+const CesiumMath = require('terriajs-cesium/Source/Core/Math');
+const createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
+const defined = require('terriajs-cesium/Source/Core/defined');
+const GeoJsonCatalogItem = require('../Models/GeoJsonCatalogItem');
+const ObserveModelMixin = require('./ObserveModelMixin');
+const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
 const React = require('react');
 const Terria = require('../Models/Terria');
 const TerriaViewer = require('./TerriaViewer.js');
 const ViewerMode = require('../Models/ViewerMode');
-const defined = require('terriajs-cesium/Source/Core/defined');
-const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
-const createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
-const ObserveModelMixin = require('./ObserveModelMixin');
 
 const DataPreviewMap = React.createClass({
     mixins: [ObserveModelMixin],
@@ -29,7 +31,7 @@ const DataPreviewMap = React.createClass({
 
         this.terriaPreview.viewerMode = ViewerMode.Leaflet;
         this.terriaPreview.homeView = terria.homeView;
-        this.terriaPreview.initialView = terria.initialView;
+        this.terriaPreview.initialView = terria.homeView;
         this.terriaPreview.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
 
         // TODO: we shouldn't hard code the base map here. (copied from branch analyticsWithCharts)
@@ -40,11 +42,19 @@ const DataPreviewMap = React.createClass({
         positron.opacity = 1.0;
         positron.subdomains = ['a', 'b', 'c', 'd'];
         this.terriaPreview.baseMap = positron;
+
+        this.isZoomedToExtent = false;
     },
 
     componentWillReceiveProps(nextProp) {
+        this.isZoomedToExtent = false;
+
         if (defined(this.catalogItem)) {
             this.catalogItem.isEnabled = false;
+        }
+
+        if (defined(this.rectangleCatalogItem)) {
+            this.rectangleCatalogItem.isEnabled = false;
         }
 
         const previewed = nextProp.previewedCatalogItem;
@@ -56,6 +66,62 @@ const DataPreviewMap = React.createClass({
             catalogItem.updateFromJson(serializedCatalogItem);
             catalogItem.isEnabled = true;
             this.catalogItem = catalogItem;
+
+            const that = this;
+            catalogItem.load().then(function() {
+                if (!defined(catalogItem.rectangle)) {
+                    return;
+                }
+
+                const west = CesiumMath.toDegrees(catalogItem.rectangle.west);
+                const south = CesiumMath.toDegrees(catalogItem.rectangle.south);
+                const east = CesiumMath.toDegrees(catalogItem.rectangle.east);
+                const north = CesiumMath.toDegrees(catalogItem.rectangle.north);
+
+                that.rectangleCatalogItem = new GeoJsonCatalogItem(that.terriaPreview);
+                that.rectangleCatalogItem.data = {
+                    type: 'FeatureCollection',
+                    features: [
+                        {
+                            type: 'Feature',
+                            properties: {
+                                stroke: '#ffff00',
+                                'stroke-width': 2,
+                                'stroke-opacity': 1,
+                                fill: '#555555',
+                                'fill-opacity': 0
+                            },
+                            geometry: {
+                                type: 'Polygon',
+                                coordinates: [
+                                    [
+                                        [west, south],
+                                        [west, north],
+                                        [east, north],
+                                        [east, south],
+                                        [west, south]
+                                    ]
+                                ]
+                            }
+                        }
+                    ]
+                };
+                that.rectangleCatalogItem.isEnabled = true;
+            });
+        }
+    },
+
+    clickMap() {
+        if (!defined(this.catalogItem)) {
+            return;
+        }
+
+        this.isZoomedToExtent = !this.isZoomedToExtent;
+
+        if (this.isZoomedToExtent) {
+            this.catalogItem.zoomTo();
+        } else {
+            this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
         }
     },
 
@@ -76,7 +142,7 @@ const DataPreviewMap = React.createClass({
     },
 
     render() {
-        return (<div className='data-preview-map'>
+        return (<div className='data-preview-map' onClick={this.clickMap}>
                     <div className='terria-preview' ref={this.mapIsReady}>
                     </div>
                     <label className='label-preview-badge'></label>
