@@ -101,10 +101,15 @@ describe('ArcGisMapServerCatalogItem', function() {
         var url = 'http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer';
         item.updateFromJson({url: url});
         item.load().then(function() {
-            // TODO: replace this with a more meaningful test. This is essentially just validating that the (test) JSON we feed
-            // into it has a certain format.
-            expect(item._mapServerData.mapName).toEqual('Australian Topography - Hydrography and Marine');
-            expect(item._layersData.layers.length).toBe(74);
+            // with this url, loadJson (and thus loadWithXhr) should have been called twice
+            // once for the serviceUrl, which is the same as the url plus a query param
+            // and once for the layersUrl, which is url/layers?...
+            expect(loadWithXhr.load.calls.count()).toBeGreaterThan(1);
+            // this reg exp allows for optional / at end of url and after /layers
+            var load1 = (new RegExp(url + '\/?\\?')).test(loadWithXhr.load.calls.argsFor(0)[0]);
+            var load2 = (new RegExp(url + '\/{0,2}layers\/?\\?')).test(loadWithXhr.load.calls.argsFor(1)[0]);
+            expect(load1).toBe(true);
+            expect(load2).toBe(true);
             done();
         });
     });
@@ -113,8 +118,17 @@ describe('ArcGisMapServerCatalogItem', function() {
         var url = 'http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31';
         item.updateFromJson({url: url});
         item.load().then(function() {
-            expect(item._layersData.layers.length).toBe(1);
-            expect(item._layersData.layers[0].name).toBe('Offshore_Rocks_And_Wrecks');
+            // with this url, loadJson (and thus loadWithXhr) should have been called twice
+            // once for the serviceUrl, which is the same as the url plus a query param
+            // and once for the layersUrl, which is the same url again
+            expect(loadWithXhr.load.calls.count()).toBeGreaterThan(1);
+            // this reg exp allows for optional / at end of url and after /layers
+            var re = new RegExp(url.substr(0, url.length-3) + '\/?\\?');   // the first url will be missing the number
+            var load1 = re.test(loadWithXhr.load.calls.argsFor(0)[0]);
+            var re2 = new RegExp(url + '\/?\\?');
+            var load2 = re2.test(loadWithXhr.load.calls.argsFor(1)[0]);
+            expect(load1).toBe(true);
+            expect(load2).toBe(true);
             done();
         });
     });
@@ -123,8 +137,9 @@ describe('ArcGisMapServerCatalogItem', function() {
         var url = 'http://www.ga.gov.au/gis/rest/services/42/and/3/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31';
         item.updateFromJson({url: url});
         item.load().then(function() {
-            expect(item._layersData.layers.length).toBe(1);
-            expect(item._layersData.layers[0].name).toBe('Offshore_Rocks_And_Wrecks');
+            // this reg exp allows for optional / at end of url and after /layers
+            var load2 = (new RegExp(url + '\\?')).test(loadWithXhr.load.calls.argsFor(1)[0]);
+            expect(load2).toBe(true);
             done();
         });
     });
