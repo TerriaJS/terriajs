@@ -28,10 +28,14 @@
 // Style guide: Component.feature-info-panel
 
 .feature-info-panel{
-  background:$dark;
+  background:rgba($dark, 0.9);
   color: #fff;
+  border-radius: $radius-small;
   &, .btn, li{
     font-size: $font-size-small;
+  }
+  .btn-close{
+    text-align: right;
   }
   &.is-collapsed{
     .feature-info-panel__body{
@@ -57,10 +61,9 @@
 }
 
 .feature-info-panel__content{
-  max-height: 0;
-  overflow: hidden;
+  display: none;
   .feature-info-panel__section.is-visible &{
-    max-height: 1000000px;
+    display: block;
   }
 }
 

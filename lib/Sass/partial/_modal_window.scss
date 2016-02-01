@@ -1,4 +1,4 @@
-$section-height: 60vh;
+$section-height: 70vh;
 
 .modal-wrapper{
   visibility: hidden;
@@ -9,8 +9,6 @@ $section-height: 60vh;
 
 .modal-content{
   position: relative;
-  width: 800px;
-  max-width: 90%;
   min-height: 100px;
   background: $modal-bg;
   color: $modal-text;
@@ -19,13 +17,21 @@ $section-height: 60vh;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
+  border-radius: $radius-small;
+  opacity: 0;
+  margin: auto;
+  width: 90%;
   @include transform(translateY(20%));
   @include transition(all 0.3s);
-  opacity: 0;
   .is-open & {
     @include transform(translateX(0));
     opacity: 1;
     visibility: visible;
+  }
+  @media screen and (min-width : $md){
+      margin-left: $work-bench-width + 50px;
+      margin-right: 50px;
+      width: 100%;
   }
 }
 .modal-overlay{
@@ -37,7 +43,7 @@ $section-height: 60vh;
   left: 0;
   z-index: 100;
   opacity: 0;
-  background: rgba(0,0,0,0.6);
+  background: $modal-overlay;
   @include transition(all 0.3s);
   .is-open.modal-wrapper &{
     opacity: 1;

@@ -49,7 +49,7 @@
     margin-top: 15px;
     z-index: -1;
     left: -($setting-panel/2 - 8px);
-
+    border-radius: $radius-small;
   }
   &.is-open .setting-panel-inner{
     @include transform (scale(1) translateZ(0));

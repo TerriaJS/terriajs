@@ -30,8 +30,9 @@
 //
 table.cesium-infoBox-defaultTable{
     font-family: monospace;
-    background: $dark-lighter;
+    background: rgba($dark-lighter, 0.7);
     margin: $padding 0;
+    max-width: 100%;
     td{
       border-collapse: collapse;
       border: 1px solid $dark;

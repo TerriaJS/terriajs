@@ -93,7 +93,7 @@ $btn-setting-size: 35px;
   .panel-content &{
     border-bottom: 1px solid $grey-lighter;
     &:hover{
-      background: #0074d9;
+      background: $modal-highlight;
       color: #fff;
       border-bottom: 1px solid $grey-lighter;
     }
@@ -109,11 +109,11 @@ $btn-setting-size: 35px;
     font-style: italic;
     padding: $padding-small;
     &:hover{
-      color: $color-primary;
+      color: $modal-highlight;
     }
   }
   .is-previewed &{
-    color: $color-primary;
+    color: $modal-highlight;
     font-weight: 700;
   }
 }
@@ -122,7 +122,7 @@ $add-to-map-btn-size: 20px;
 
 .btn-add-to-map{
   font-size: $add-to-map-btn-size;
-  color: $color-primary;
+  color: $modal-highlight;
   padding: $padding-small;
 }
 
@@ -151,7 +151,7 @@ $add-to-map-btn-size: 20px;
   border: 1px solid transparent;
   .icon{
     display: block;
-    font-size: 1rem;
+    font-size: 1.2rem;
     line-height: 1;
   }
   &:hover, .map-nav-panel.is-open &, &.is-active {
@@ -211,21 +211,21 @@ $add-to-map-btn-size: 20px;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
-    border-bottom: 2px solid $color-primary;
+    border-bottom: 2px solid $modal-highlight;
   }
   &:hover , &:focus{
-    border-bottom: 2px solid $color-primary;
+    border-bottom: 2px solid $modal-highlight;
   }
 }
 .btn.btn-tab{
-  border-right: 1px solid $grey-lighter;
+  border-right: 1px solid $modal-border;
   @extend %btn-tab;
 }
 
 .btn.btn-close-modal{
-  border-left: 1px solid $grey-lighter;
+  border-left: 1px solid $modal-border;
   text-transform: uppercase;
-  color: $color-primary;
+  color: $modal-highlight;
   font-size: $font-size-large;
   @extend %btn-tab;
 }
@@ -266,7 +266,7 @@ $add-to-map-btn-size: 20px;
     top: $padding;
   }
   &:hover{
-    background: rgba(#fff, 0.3);
+    background: lighten($color-primary, 10%);
   }
 }
 

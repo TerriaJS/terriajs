@@ -100,9 +100,10 @@
   z-index: 5;
   @media screen and (min-width : $sm){
     //temp
-    max-width: calc(100vw - 470px);
+    width: calc(100vw - 600px);
     top: 100px;
     right: 100px;
+    min-width: 400px;
   }
   #kss-node &{
     position: absolute;
