@@ -110,14 +110,15 @@ $btn-setting-size: 35px;
     padding: $padding-small;
     position: relative;
     width: 100%;
-    padding-right: $padding*2;
+    padding-right: $padding*2.2;
     @extend .icon;
     &:before{
        content: "\e908";
        position: absolute;
        right: 0;
-       top: 10px;
+       top: 7px;
        opacity: 0;
+       font-size: 20px;
     }
     &:hover{
       color: $modal-highlight;
@@ -129,6 +130,9 @@ $btn-setting-size: 35px;
   .is-previewed &{
     color: $modal-highlight;
     font-weight: 700;
+    &:before{
+      opacity: 1;
+    }
   }
 }
 
