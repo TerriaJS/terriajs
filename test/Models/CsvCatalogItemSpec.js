@@ -211,6 +211,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         csvItem.load().then(function() {
             var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
+            expect(source.tableStructure.activeTimeColumn.name).toEqual('date');
             expect(source.tableStructure.columns[0].values.length).toEqual(13);
             expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
             expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-01'));
@@ -268,6 +269,35 @@ describe('CsvCatalogItem with lat and lon', function() {
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
             expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
             expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+        }).otherwise(fail).then(done);
+    });
+
+    it('ignores dates if tableStyle.timeColumn is null', function(done) {
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem._tableStyle = new TableStyle({timeColumn: null});
+        csvItem.load().then(function() {
+            var source = csvItem.dataSource;
+            expect(source.tableStructure.activeTimeColumn).toBeUndefined();
+            expect(csvItem.clock).toBeUndefined();
+            expect(source.clock).toBeUndefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('uses a second date column with tableStyle.timeColumn name', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_year.csv';
+        csvItem._tableStyle = new TableStyle({timeColumn: 'year'});
+        csvItem.load().then(function() {
+            var source = csvItem.dataSource;
+            expect(source.tableStructure.activeTimeColumn.name).toEqual('year');
+        }).otherwise(fail).then(done);
+    });
+
+    it('uses a second date column with tableStyle.timeColumn index', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_year.csv';
+        csvItem._tableStyle = new TableStyle({timeColumn: 4});
+        csvItem.load().then(function() {
+            var source = csvItem.dataSource;
+            expect(source.tableStructure.activeTimeColumn.name).toEqual('year');
         }).otherwise(fail).then(done);
     });
 
