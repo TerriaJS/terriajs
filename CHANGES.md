@@ -45,6 +45,7 @@ when no variable is selected.
     traversed in both directions.
   - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
     not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
+* Legends are now generated in SVG (vector) format, which look better on high resolution devices.
 
 ### 1.0.54
 
