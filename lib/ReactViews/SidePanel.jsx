@@ -2,7 +2,7 @@
 
 import Chart from './Chart.jsx';
 import React from 'react';
-import SearchBox from './SearchBox.jsx';
+import SearchBox from './Search.jsx';
 import NowViewingContainer from './NowViewingContainer.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 

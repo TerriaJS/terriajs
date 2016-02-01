@@ -4,7 +4,7 @@ import DataCatalogGroup from './DataCatalogGroup.jsx';
 import DataPreview from './DataPreview.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
-import SearchBox from './SearchBox.jsx';
+import SearchBox from './Search.jsx';
 
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
@@ -20,13 +20,14 @@ const DataCatalogTab = React.createClass({
 
     renderDataCatalog(dataCatalog) {
         return (
-            <ul className = 'list-reset data-catalog hide-on-search'>
+            <ul className='list-reset data-catalog hide-on-search'>
                 {dataCatalog.map((group, i) => {
-                    return (<DataCatalogGroup group={group}
-                                              key={i}
-                                              previewedCatalogItem={this.props.previewedCatalogItem}
-                                              onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
-                            />);
+                    return (
+                        <DataCatalogGroup group={group}
+                                          key={i}
+                                          previewedCatalogItem={this.props.previewedCatalogItem}
+                                          onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                        />);
                 }, this)}
             </ul>);
     },
