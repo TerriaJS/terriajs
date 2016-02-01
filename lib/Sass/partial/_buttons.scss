@@ -108,8 +108,22 @@ $btn-setting-size: 35px;
   .panel-content &{
     font-style: italic;
     padding: $padding-small;
+    position: relative;
+    width: 100%;
+    padding-right: $padding*2;
+    @extend .icon;
+    &:before{
+       content: "\e908";
+       position: absolute;
+       right: 0;
+       top: 10px;
+       opacity: 0;
+    }
     &:hover{
       color: $modal-highlight;
+      &:before{
+        opacity: 1;
+      }
     }
   }
   .is-previewed &{
