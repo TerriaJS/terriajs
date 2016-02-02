@@ -2,6 +2,83 @@
 Change Log
 ==========
 
+### 2.0.0
+
+* Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
+  - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
+  - `AbsIttCatalogItem`: Completely rewritten. The `dataSetID` json parameter has been deprecated in favor of `datasetId` (different capitalization).
+  - For the 2011 Australian Census data, requires `sa4_code_2011` to appear as an alias in `regionMapping.json` (it was previously missing in NationalMap).
+  - `TableDataSource`: Completely rewritten and moved from `Map` to `Models` directory. Handles csvs with latitude & longitude columns.
+  - `RegionMapping`: Used instead of TableDataSource for region-mapped csvs.
+  - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
+  - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
+  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
+  - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
+  - `LegendUrl` has been moved to the `Map` directory.
+  - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
+  - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
+  - `Models/ModelError` has been replaced with `Core/TerriaError`.
+* Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
+* Introduced three new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
+when no variable is selected.
+* Added id matching for catalog members:
+  - An `id` field can now be set in JSON for catalog members
+  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
+    rather than its name as is done currently.
+  - The id of an item should be accessed via `uniqueId` - if a catalog member doesn't have an id set, this returns a
+    default value of the item's name name plus the id of its parent. This means that if all the ancestors of a catalog 
+    member have no id set, its id will be its full path in the catalog.
+  - This means that if an item is renamed or moved, share links that reference it will still work.
+  - A `shareKeys` property can be also be set that contains an array of all ids that should lead to this item. This means
+    that a share link for an item that didn't previously have an id set can still be used if it's moved, as long as it
+    has its old default id set in `shareKeys`
+  - Old share links will still work as long as the items they lead to aren't renamed or moved.
+  - Refactor of JSON serialization - now rather than passing a number of flags that determine what should and shouldn't be
+    serialized, an `itemFilter` and `propertyFilter` are passed in options. These are usually composed of multiple filters,
+    combined using `combineFilters`.
+  - An index of all items currently in the catalog against all of that item's shareKeys is now maintained in `Catalog`
+    and can be used for O(1) lookups of any item regardless of its location.
+  - CatalogMembers now contain a reference to their parent CatalogGroup - this means that the catalog tree can now be
+    traversed in both directions.
+  - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
+    not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
+
+### 1.0.54
+
+* Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed.
+
+### 1.0.53
+
+* Improved compatibility with Internet Explorer 9.
+* Made `CswCatalogGroup` able to find geospatial datasets on more CSW servers.
+* Allow WMS parameters to be specified in json in uppercase (eg. STYLES).
+
+### 1.0.52
+
+* Added `MapBoxMapCatalogItem`, which is especially useful for base maps. A valid access token must be provided.
+* Added a `getContainer()` method to Terria's `currentViewer`.
+* Dramatically improved the performance of region mapping.
+* Introduced new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
+  * "auto" (default), usually means "ckmeans"
+  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
+  * "quantile": use quantiles, evenly distributing values between bins
+  * "none": use the previous linear color mapping method.
+* The default style for CSV files is now 7 color bins with CK means method.
+* Added support for color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
+* Improved the display of legends for CSV files, accordingly.
+* URLs for legends are now encapsulated in a `LegendUrl` model, which accepts a mime type that will affect how the
+  legend is rendered in the sidebar.
+* Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
+* Moved URL config parameters to config.json, with sensible defaults. Specifically:
+  *   regionMappingDefinitionsUrl: 'data/regionMapping.json',
+  *   conversionServiceBaseUrl: '/convert/',
+  *   proj4ServiceBaseUrl: '/proj4/',
+  *   corsProxyBaseUrl: '/proxy/'
+* Deprecated terria.regionMappingDefinitionsUrl (set it in config.json or leave it as default).
+
 ### 1.0.51
 
 * Fixed a typo that prevented clearing the search query

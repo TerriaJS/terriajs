@@ -1,14 +1,16 @@
 <div data-bind="foreach: proxiedLegendUrls || []">
-    <!-- ko if: $root.urlIsImage($data) -->
-    <a data-bind="attr: { href: $data , tabindex: $root.nowViewingTab.isActive ? 0 : -1 }" target="_blank">
+    <!-- ko if: $data.isImage -->
+    <a data-bind="attr: { href: $data.url , tabindex: $root.nowViewingTab.isActive ? 0 : -1 }" target="_blank">
         <div class="now-viewing-legend-image">
-            <img class="now-viewing-legend-image-background" data-bind="attr: { src: $data }" />
+            <img class="now-viewing-legend-image-background"
+                 data-bind="event: { error : $data.onImageError }, attr: { src: $data.url }, visible: !$data.imageHasError"/>
         </div>
     </a>
     <!-- /ko -->
 
-    <!-- ko if: !$root.urlIsImage($data) -->
-    <a class="now-viewing-legend-text" data-bind="attr: { href: $data }" target="_blank">Open legend in a separate tab</a>
+    <!-- ko if: !$data.isImage -->
+    <a class="now-viewing-legend-text" data-bind="attr: { href: $data.url }" target="_blank">Open legend in a separate
+        tab</a>
     <!-- /ko -->
 </div>
 

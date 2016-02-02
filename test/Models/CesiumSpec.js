@@ -1,11 +1,15 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,xdescribe,it,expect,beforeEach*/
 var Cesium = require('../../lib/Models/Cesium');
 var Terria = require('../../lib/Models/Terria');
 var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
+var supportsWebGL = require('../../lib/Core/supportsWebGL');
+var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
 
-describe('Cesium Model', function() {
+var describeIfSupported = supportsWebGL() ? describe : xdescribe;
+
+describeIfSupported('Cesium Model', function() {
     var terria;
     var cesium;
     var container;
@@ -20,11 +24,18 @@ describe('Cesium Model', function() {
 
         spyOn(terria.tileLoadProgressEvent, 'raiseEvent');
 
-        cesium = new Cesium(terria, new CesiumWidget(container, {}));
+        cesium = new Cesium(terria, new CesiumWidget(container, {
+            imageryProvider: new TileCoordinatesImageryProvider()
+        }));
     });
 
     afterEach(function() {
+        cesium.viewer.destroy();
         document.body.removeChild(container);
+    });
+
+    it('should be able to reference its container', function() {
+        expect(cesium.getContainer()).toBe(container);
     });
 
     it('should trigger terria.tileLoadProgressEvent on globe tileLoadProgressEvent', function() {

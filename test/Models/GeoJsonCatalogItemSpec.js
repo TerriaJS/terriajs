@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach*/
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
-var ModelError = require('../../lib/Models/ModelError');
+var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
 
 var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
@@ -173,7 +173,7 @@ describe('GeoJsonCatalogItem', function() {
             geojson.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -186,7 +186,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -200,7 +200,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -211,7 +211,7 @@ describe('GeoJsonCatalogItem', function() {
             geojson.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -224,7 +224,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -238,7 +238,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });

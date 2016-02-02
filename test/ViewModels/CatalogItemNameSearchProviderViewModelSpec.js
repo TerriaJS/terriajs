@@ -221,12 +221,13 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
 
         var item1 = new CatalogItem(terria);
         item1.name = 'Thing to find';
+        item1.id = 'thing1';
         catalogGroup.add(item1);
 
         var item2 = new CatalogItem(terria);
         item2.name = 'Thing to find';
+        item2.id = 'thing2';
         catalogGroup.add(item2);
-
 
         searchProvider.search('to').then(function() {
             expect(searchProvider.searchResults.length).toBe(2);
