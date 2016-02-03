@@ -70,8 +70,12 @@ const DataPreviewMap = React.createClass({
 
             const that = this;
             catalogItem.load().then(function() {
-                if (!defined(catalogItem.rectangle)) {
+                if (previewed !== that.props.previewedCatalogItem || !defined(catalogItem.rectangle)) {
                     return;
+                }
+
+                if (defined(that.rectangleCatalogItem)) {
+                    that.rectangleCatalogItem.isEnabled = false;
                 }
 
                 const west = CesiumMath.toDegrees(catalogItem.rectangle.west);
