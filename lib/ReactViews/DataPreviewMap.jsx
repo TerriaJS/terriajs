@@ -70,48 +70,11 @@ const DataPreviewMap = React.createClass({
 
             const that = this;
             catalogItem.load().then(function() {
-                if (previewed !== that.props.previewedCatalogItem || !defined(catalogItem.rectangle)) {
+                if (previewed !== that.props.previewedCatalogItem) {
                     return;
                 }
 
-                if (defined(that.rectangleCatalogItem)) {
-                    that.rectangleCatalogItem.isEnabled = false;
-                }
-
-                const west = CesiumMath.toDegrees(catalogItem.rectangle.west);
-                const south = CesiumMath.toDegrees(catalogItem.rectangle.south);
-                const east = CesiumMath.toDegrees(catalogItem.rectangle.east);
-                const north = CesiumMath.toDegrees(catalogItem.rectangle.north);
-
-                that.rectangleCatalogItem = new GeoJsonCatalogItem(that.terriaPreview);
-                that.rectangleCatalogItem.data = {
-                    type: 'FeatureCollection',
-                    features: [
-                        {
-                            type: 'Feature',
-                            properties: {
-                                stroke: '#08ABD5',
-                                'stroke-width': 2,
-                                'stroke-opacity': 1,
-                                fill: '#555555',
-                                'fill-opacity': 0
-                            },
-                            geometry: {
-                                type: 'Polygon',
-                                coordinates: [
-                                    [
-                                        [west, south],
-                                        [west, north],
-                                        [east, north],
-                                        [east, south],
-                                        [west, south]
-                                    ]
-                                ]
-                            }
-                        }
-                    ]
-                };
-                that.rectangleCatalogItem.isEnabled = true;
+                that.updateBoundingRectangle();
             });
         }
     },
@@ -128,6 +91,82 @@ const DataPreviewMap = React.createClass({
         } else {
             this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
         }
+
+        this.updateBoundingRectangle();
+    },
+
+    updateBoundingRectangle() {
+        if (defined(this.rectangleCatalogItem)) {
+            this.rectangleCatalogItem.isEnabled = false;
+            this.rectangleCatalogItem = undefined;
+        }
+
+        const catalogItem = this.catalogItem;
+
+        if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {
+            return;
+        }
+
+        let west = catalogItem.rectangle.west;
+        let south = catalogItem.rectangle.south;
+        let east = catalogItem.rectangle.east;
+        let north = catalogItem.rectangle.north;
+
+        if (!this.isZoomedToExtent) {
+            // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
+            // the home view, so that it is actually visible.
+            const minimumFraction = 0.05;
+            const homeView = this.terriaPreview.homeView.rectangle;
+
+            const minimumWidth = (homeView.east - homeView.west) * minimumFraction;
+            if ((east - west) < minimumWidth) {
+                const center = (east + west) * 0.5;
+                west = center - minimumWidth * 0.5;
+                east = center + minimumWidth * 0.5;
+            }
+
+            const minimumHeight = (homeView.north - homeView.south) * minimumFraction;
+            if ((north - south) < minimumHeight) {
+                const center = (north + south) * 0.5;
+                south = center - minimumHeight * 0.5;
+                north = center + minimumHeight * 0.5;
+            }
+        }
+
+        west = CesiumMath.toDegrees(west);
+        south = CesiumMath.toDegrees(south);
+        east = CesiumMath.toDegrees(east);
+        north = CesiumMath.toDegrees(north);
+
+        this.rectangleCatalogItem = new GeoJsonCatalogItem(this.terriaPreview);
+        this.rectangleCatalogItem.data = {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    properties: {
+                        stroke: '#08ABD5',
+                        'stroke-width': 2,
+                        'stroke-opacity': 1,
+                        fill: '#555555',
+                        'fill-opacity': 0
+                    },
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [
+                            [
+                                [west, south],
+                                [west, north],
+                                [east, north],
+                                [east, south],
+                                [west, south]
+                            ]
+                        ]
+                    }
+                }
+            ]
+        };
+        this.rectangleCatalogItem.isEnabled = true;
     },
 
     mapIsReady(mapContainer) {
