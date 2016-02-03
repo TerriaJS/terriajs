@@ -115,7 +115,16 @@ describe('CsvCatalogItem with lat and lon', function() {
         var reconstructed = new CsvCatalogItem(terria);
         reconstructed.updateFromJson(json);
 
-        expect(reconstructed).toEqual(csvItem);
+        expect(reconstructed.name).toEqual(csvItem.name);
+        expect(reconstructed.id).toEqual(csvItem.id);
+        expect(reconstructed.description).toEqual(csvItem.description);
+        expect(reconstructed.rectangle).toEqual(csvItem.rectangle);
+        expect(reconstructed.url).toEqual(csvItem.url);
+        expect(reconstructed.data).toEqual(csvItem.data);
+        expect(reconstructed.dataSourceUrl).toEqual(csvItem.dataSourceUrl);
+        expect(reconstructed.dataCustodian).toEqual(csvItem.dataCustodian);
+        expect(reconstructed.dataUrl).toEqual(csvItem.dataUrl);
+        expect(reconstructed.dataUrlType).toEqual(csvItem.dataUrlType);
     });
 
     it('is correctly loading csv data from a file', function(done) {
