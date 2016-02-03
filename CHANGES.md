@@ -46,6 +46,8 @@ when no variable is selected.
   - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
     not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
 * Legends are now generated in SVG (vector) format, which look better on high resolution devices.
+* Create new Legend class, making it easy to generate client-side legends for different kinds of data.
+* Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
 
 ### 1.0.54
 
