@@ -7,7 +7,9 @@ const AddData = require('./AddData.jsx');
 // My data tab include Add data section and preview section
 const MyDataTab = React.createClass({
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object,
+        onPreviewedCatalogItemChanged: React.PropTypes.func,
+        myDataPreviewedCatalogItem: React.PropTypes.object
     },
 
     getInitialState() {
@@ -21,15 +23,17 @@ const MyDataTab = React.createClass({
         this.setState({
             dataCatalog: dataCatalog
         });
-        // window.nowViewingUpdate.raiseEvent();
     },
 
     renderContent() {
         if (this.state.dataCatalog) {
             return (<div className="added-data">
                         <small>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </small>
-                        <h3 className='mt1 mb1'> Previously added data </h3>
-                        <ul className = 'list-reset data-catalog'><DataCatalogGroup group={this.state.dataCatalog}/></ul>
+                        <h3 className='mt1 mb1'> My data sets </h3>
+                        <ul className = 'list-reset data-catalog'><DataCatalogGroup group={this.state.dataCatalog}
+                                                                                    onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                                                                                    userData={true}
+                                                                  /></ul>
                         </div>);
         }
     },
@@ -44,6 +48,7 @@ const MyDataTab = React.createClass({
                 </div>
                 <div className="data-preview preview col col-6 relative">
                 <DataPreview terria={this.props.terria}
+                             previewedCatalogItem={this.props.myDataPreviewedCatalogItem}
                 />
                 </div>
                 </div>);

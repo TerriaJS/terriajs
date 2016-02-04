@@ -13,6 +13,7 @@ const ModalWindow = React.createClass({
         activeTabID: React.PropTypes.number,
         catalogSearchText: React.PropTypes.string,
         previewedCatalogItem: React.PropTypes.object,
+        myDataPreviewedCatalogItem: React.PropTypes.object,
         onClose: React.PropTypes.func,
         onCatalogSearchTextChanged: React.PropTypes.func,
         onActiveTabChanged: React.PropTypes.func,
@@ -39,6 +40,7 @@ const ModalWindow = React.createClass({
                       activeTabID={this.props.activeTabID}
                       catalogSearchText={this.props.catalogSearchText}
                       previewedCatalogItem={this.props.previewedCatalogItem}
+                      myDataPreviewedCatalogItem={this.props.myDataPreviewedCatalogItem}
                       onCatalogSearchTextChanged={this.props.onCatalogSearchTextChanged}
                       onActiveTabChanged={this.props.onActiveTabChanged}
                       onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}

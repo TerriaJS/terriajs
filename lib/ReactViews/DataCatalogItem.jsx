@@ -10,11 +10,12 @@ const DataCatalogItem = React.createClass({
     propTypes: {
         item: React.PropTypes.object,
         previewedCatalogItem: React.PropTypes.object,
-        onPreviewedCatalogItemChanged: React.PropTypes.func
+        onPreviewedCatalogItemChanged: React.PropTypes.func,
+        userData: React.PropTypes.bool
     },
 
     addToPreview() {
-        this.props.onPreviewedCatalogItemChanged(this.props.item);
+        this.props.onPreviewedCatalogItemChanged(this.props.item, this.props.userData);
     },
 
     addToMap() {

@@ -141,7 +141,7 @@ const AddData = React.createClass({
         }
 
         if (files.length > 0) {
-            let promises = [];
+            const promises = [];
 
             for (let i = 0; i < files.length; ++i) {
                 const file = files[i];
@@ -234,7 +234,7 @@ const AddData = React.createClass({
 
 function loadAuto(viewModel, loadFunctions, index) {
     index = 0;
-    var loadFunction = loadFunctions[index];
+    const loadFunction = loadFunctions[index];
 
     return loadFunction(viewModel).otherwise(function() {
         return loadAuto(viewModel, loadFunctions, index + 1);
@@ -242,7 +242,7 @@ function loadAuto(viewModel, loadFunctions, index) {
 }
 
 function loadWms(viewModel) {
-    var wms = new WebMapServiceCatalogGroup(viewModel.props.terria);
+    const wms = new WebMapServiceCatalogGroup(viewModel.props.terria);
     wms.name = viewModel.state.remoteUrl;
     wms.url = viewModel.state.remoteUrl;
 
@@ -252,7 +252,7 @@ function loadWms(viewModel) {
 }
 
 function loadWfs(viewModel) {
-    var wfs = new WebFeatureServiceCatalogGroup(viewModel.props.terria);
+    const wfs = new WebFeatureServiceCatalogGroup(viewModel.props.terria);
     wfs.name = viewModel.state.remoteUrl;
     wfs.url = viewModel.state.remoteUrl;
 
@@ -262,7 +262,7 @@ function loadWfs(viewModel) {
 }
 
 function loadWmts(viewModel) {
-    var wmts = new WebMapTileServiceCatalogGroup(viewModel.props.terria);
+    const wmts = new WebMapTileServiceCatalogGroup(viewModel.props.terria);
     wmts.name = viewModel.state.remoteUrl;
     wmts.url = viewModel.state.remoteUrl;
 
@@ -271,9 +271,8 @@ function loadWmts(viewModel) {
     });
 }
 
-
 function loadMapServer(viewModel) {
-    var mapServer = new ArcGisCatalogGroup(viewModel.props.terria);
+    const mapServer = new ArcGisCatalogGroup(viewModel.props.terria);
     mapServer.name = viewModel.state.remoteUrl;
     mapServer.url = viewModel.state.remoteUrl;
 
@@ -283,7 +282,7 @@ function loadMapServer(viewModel) {
 }
 
 function loadMapServerLayer(viewModel) {
-    var mapServer = new ArcGisMapServerCatalogItem(viewModel.props.terria);
+    const mapServer = new ArcGisMapServerCatalogItem(viewModel.props.terria);
     mapServer.name = viewModel.state.remoteUrl;
     mapServer.url = viewModel.state.remoteUrl;
     return mapServer.load().then(function() {
@@ -292,7 +291,7 @@ function loadMapServerLayer(viewModel) {
 }
 
 function loadOpenStreetMapServer(viewModel) {
-    var openStreetMapServer = new OpenStreetMapCatalogItem(viewModel.props.terria);
+    const openStreetMapServer = new OpenStreetMapCatalogItem(viewModel.props.terria);
     openStreetMapServer.name = viewModel.state.remoteUrl;
     openStreetMapServer.url = viewModel.state.remoteUrl;
 
@@ -301,10 +300,8 @@ function loadOpenStreetMapServer(viewModel) {
     });
 }
 
-
 function loadFile(viewModel) {
     return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType, true);
 }
-
 
 module.exports = AddData;
