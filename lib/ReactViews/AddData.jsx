@@ -14,6 +14,9 @@ import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGro
 import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
 import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
+import raiseErrorOnRejectedPromise from '../Models/raiseErrorOnRejectedPromise';
+import readJson from '../Core/readJson';
+
 
 const wfsUrlRegex = /\bwfs\b/i;
 
@@ -108,7 +111,14 @@ const AddData = React.createClass({
         terria: React.PropTypes.object,
         updateCatalog: React.PropTypes.func,
         isDraggingDroppingFile: React.PropTypes.bool,
-        onFinishDroppingFile: React.PropTypes.func
+        onFinishDroppingFile: React.PropTypes.func,
+        allowDropInitFiles: React.PropTypes.bool
+    },
+
+    getDefaultProps: function() {
+        return {
+          allowDropInitFiles: true
+        };
     },
 
     getInitialState() {
@@ -150,7 +160,17 @@ const AddData = React.createClass({
             for (let i = 0; i < files.length; ++i) {
                 const file = files[i];
                 this.props.terria.analytics.logEvent('uploadFile', 'browse', file.name);
-                promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
+                if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
+                    raiseErrorOnRejectedPromise(that.props.terria, readJson(file).then((json)=>{
+                        if (that.props.allowDropInitFiles && (json.catalog || json.services)) {
+                            // This is an init file.
+                            return that.props.terria.addInitSource(json);
+                        }
+                        promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
+                    }));
+                } else {
+                    promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
+                }
             }
             when.all(promises, () => {
                 const userCatalog = that.props.terria.catalog.userAddedDataGroup;
