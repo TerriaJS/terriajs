@@ -107,10 +107,9 @@ $btn-setting-size: 35px;
 .btn-catalog-item{
   .panel-content &{
     font-style: italic;
-    padding: $padding-small;
     position: relative;
     width: 100%;
-    padding-right: $padding*2.2;
+    padding: $padding-small $padding*2.2 $padding-small $padding*3;
     @extend .icon;
     &:before{
        content: "\e908";
@@ -141,7 +140,9 @@ $add-to-map-btn-size: 20px;
 .btn-add-to-map{
   font-size: $add-to-map-btn-size;
   color: $modal-highlight;
-  padding: $padding-small;
+  padding: 6px $padding-small;
+  position: absolute;
+  left: 0;
 }
 
 // Map buttons

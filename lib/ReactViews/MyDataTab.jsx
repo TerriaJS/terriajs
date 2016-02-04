@@ -43,6 +43,8 @@ const MyDataTab = React.createClass({
                 {this.renderContent()}
                 </div>
                 <div className="data-preview preview col col-6 relative">
+                <DataPreview terria={this.props.terria}
+                />
                 </div>
                 </div>);
     }

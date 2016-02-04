@@ -13,6 +13,7 @@ const WebMapTileServiceCatalogGroup = require('../Models/WebMapTileServiceCatalo
 const ArcGisCatalogGroup = require('../Models/ArcGisCatalogGroup');
 const ArcGisMapServerCatalogItem = require('../Models/ArcGisMapServerCatalogItem');
 const wfsUrlRegex = /\bwfs\b/i;
+const ObserveModelMixin = require('./ObserveModelMixin');
 
 // Local and remote data have different dataType options
 const remoteDataType = [
@@ -99,6 +100,8 @@ const localDataType = [
 
 // Add data panel in modal window -> My data tab
 const AddData = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object,
         updateCatalog: React.PropTypes.func

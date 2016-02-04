@@ -14,14 +14,18 @@ $compass-width: 70px;
 
 .compass{
   cursor: default;
+  width: $compass-width;
+  height: $compass-width;
   .compass-outer-ring{
     background-image: url('./TerriaJS/images/compass-outer.svg');
     height: $compass-width;
     width: $compass-width;
     border-radius: 50%;
-    position: relative;
+    position: absolute;
     background-repeat: no-repeat;
     background-size: contain;
+    top: 0;
+    left: 0;
   }
 
   .compass-rotation-marker{
@@ -37,13 +41,12 @@ $compass-width: 70px;
   }
 
   .compass-inner-ring{
+    @include vertical-align();
     height: $compass-width - $ring-width*3.5;
     width: $compass-width - $ring-width*3.5;
     border-radius: 50%;
     display: block;
-    position: absolute;
-    top: $ring-width*1.75;
-    left: $ring-width*1.75;
+    margin: 0 auto;
     box-shadow: $box-shadow;
     background-image: url('./TerriaJS/images/compass-inner.svg');
     background-repeat: no-repeat;
