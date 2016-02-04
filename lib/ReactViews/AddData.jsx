@@ -1,19 +1,21 @@
 'use strict';
-const React = require('react');
-const Dropdown = require('./Dropdown.jsx');
-const FileInput = require('./FileInput.jsx');
-const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
-const defined = require('terriajs-cesium/Source/Core/defined');
-const createCatalogItemFromFileOrUrl = require('../Models/createCatalogItemFromFileOrUrl');
-const addUserCatalogMember = require('../Models/addUserCatalogMember');
-const when = require('terriajs-cesium/Source/ThirdParty/when');
-const WebFeatureServiceCatalogGroup = require('../Models/WebFeatureServiceCatalogGroup');
-const WebMapServiceCatalogGroup = require('../Models/WebMapServiceCatalogGroup');
-const WebMapTileServiceCatalogGroup = require('../Models/WebMapTileServiceCatalogGroup');
-const ArcGisCatalogGroup = require('../Models/ArcGisCatalogGroup');
-const ArcGisMapServerCatalogItem = require('../Models/ArcGisMapServerCatalogItem');
+import addUserCatalogMember from '../Models/addUserCatalogMember';
+import ArcGisCatalogGroup from '../Models/ArcGisCatalogGroup';
+import ArcGisMapServerCatalogItem from '../Models/ArcGisMapServerCatalogItem';
+import createCatalogItemFromFileOrUrl from '../Models/createCatalogItemFromFileOrUrl';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import DragDropFile from './DragDropFile.jsx';
+import Dropdown from './Dropdown.jsx';
+import FileInput from './FileInput.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
+import OpenStreetMapCatalogItem from '../Models/OpenStreetMapCatalogItem';
+import React from 'react';
+import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGroup';
+import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
+import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
+
 const wfsUrlRegex = /\bwfs\b/i;
-const ObserveModelMixin = require('./ObserveModelMixin');
 
 // Local and remote data have different dataType options
 const remoteDataType = [
@@ -205,6 +207,7 @@ const AddData = React.createClass({
 
     render() {
         return (<div className='add-data clearfix'>
+        <DragDropFile />
         <ul className='list-reset row relative'>
         <li className='col col-6'>
         <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
