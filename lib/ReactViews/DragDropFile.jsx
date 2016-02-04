@@ -4,38 +4,37 @@ import React from 'react';
 const DragDropFile = React.createClass({
     propTypes: {
         isActive: React.PropTypes.bool,
-        isTarget: React.PropTypes.bool,
         terria: React.PropTypes.object,
         handleFile: React.PropTypes.func,
         onFinishDroppingFile: React.PropTypes.func
     },
 
     handleDrop(e) {
-      e.preventDefault();
-      e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
 
-      const fakeEvent = {
-          target: e.dataTransfer
-      };
+        const fakeEvent = {
+            target: e.dataTransfer
+        };
 
-      this.props.handleFile(fakeEvent);
-      this.props.onFinishDroppingFile();
+        this.props.handleFile(fakeEvent);
+        this.props.onFinishDroppingFile();
     },
 
     handleDragEnter(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.dataTransfer.dropEffect = 'copy';
+        e.preventDefault();
+        e.stopPropagation();
+        e.dataTransfer.dropEffect = 'copy';
     },
 
     handleDragOver(e) {
-      e.preventDefault();
+        e.preventDefault();
     },
 
     handleDragLeave(e) {
-      if (e.screenX === 0 && e.screenY === 0) {
-        this.props.onFinishDroppingFile();
-      }
+        if (e.screenX === 0 && e.screenY === 0) {
+            this.props.onFinishDroppingFile();
+        }
     },
 
     render() {
