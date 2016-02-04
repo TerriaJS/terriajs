@@ -57,8 +57,8 @@ const NowViewingItem = React.createClass({
     },
 
     renderLegend(_nowViewingItem) {
-        if (_nowViewingItem.legendUrl) {
-            if (_nowViewingItem.legendUrl.isImage()) {
+        if (_nowViewingItem.legendUrl && (typeof _nowViewingItem.legendUrl === 'function')) {
+            if ((typeof _nowViewingItem.legendUrl.isImage === 'function') && _nowViewingItem.legendUrl.isImage()) {
                 return <a href={_nowViewingItem.legendUrl.url} target="_blank"><img src={_nowViewingItem.legendUrl.url}/></a>;
             }
             return <a href={_nowViewingItem.legendUrl.input} target="_blank">Open legend in a separate tab</a>;
