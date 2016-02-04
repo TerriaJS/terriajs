@@ -122,7 +122,8 @@ function build(name, files, minify) {
     // The poorly-named "debug: true" causes Browserify to generate a source map.
     return bundle(name, browserify({
         entries: files,
-        debug: true
+        debug: true,
+        extensions: ['.es6', '.jsx']
     }), minify, false);
 }
 
@@ -131,6 +132,7 @@ function watch(name, files, minify) {
         entries: files,
         debug: true,
         cache: {},
+        extensions: ['.es6', '.jsx'],
         packageCache: {}
     }), { poll: 1000 } );
 
