@@ -172,10 +172,12 @@ const AddData = React.createClass({
                     promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
                 }
             }
-            when.all(promises, () => {
-                const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-                that.props.updateCatalog(userCatalog);
-            });
+            if(promises.length > 0) {
+                when.all(promises, () => {
+                    const userCatalog = that.props.terria.catalog.userAddedDataGroup;
+                    that.props.updateCatalog(userCatalog);
+                });
+            }
         }
     },
 

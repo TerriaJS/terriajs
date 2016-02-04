@@ -34,6 +34,10 @@ const DataCatalogGroup = React.createClass({
 
     renderGroup(group, isOpen) {
         if (isOpen === true) {
+            if (group.isLoading) {
+                return <Loader/>;
+            }
+
             if (group.items && group.items.length > 0) {
                 return group.items.map((member, i)=>{
                     if (member.isGroup) {
@@ -52,7 +56,9 @@ const DataCatalogGroup = React.createClass({
                             />);
                 });
             }
-            return <Loader/>;
+            else {
+                return <div> Empty </div>;
+            }
         }
     },
 
