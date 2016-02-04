@@ -9,7 +9,9 @@ const MyDataTab = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         onPreviewedCatalogItemChanged: React.PropTypes.func,
-        myDataPreviewedCatalogItem: React.PropTypes.object
+        myDataPreviewedCatalogItem: React.PropTypes.object,
+        isDraggingDroppingFile: React.PropTypes.bool,
+        onFinishDroppingFile: React.PropTypes.func
     },
 
     getInitialState() {
@@ -43,6 +45,8 @@ const MyDataTab = React.createClass({
                 <div className='col col-6 absolute top-left'>
                 <AddData updateCatalog={this.updateCatalog}
                          terria={this.props.terria}
+                         isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
+                         onFinishDroppingFile={this.props.onFinishDroppingFile}
                 />
                 {this.renderContent()}
                 </div>

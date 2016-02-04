@@ -17,7 +17,9 @@ const ModalWindow = React.createClass({
         onClose: React.PropTypes.func,
         onCatalogSearchTextChanged: React.PropTypes.func,
         onActiveTabChanged: React.PropTypes.func,
-        onPreviewedCatalogItemChanged: React.PropTypes.func
+        onPreviewedCatalogItemChanged: React.PropTypes.func,
+        isDraggingDroppingFile: React.PropTypes.bool,
+        onFinishDroppingFile: React.PropTypes.func
     },
 
     render() {
@@ -44,6 +46,8 @@ const ModalWindow = React.createClass({
                       onCatalogSearchTextChanged={this.props.onCatalogSearchTextChanged}
                       onActiveTabChanged={this.props.onActiveTabChanged}
                       onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                      isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
+                      onFinishDroppingFile={this.props.onFinishDroppingFile}
                 />
               </div>
             </div>);

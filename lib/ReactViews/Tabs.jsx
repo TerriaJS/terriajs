@@ -21,7 +21,9 @@ const Tabs = React.createClass({
         myDataPreviewedCatalogItem: React.PropTypes.object,
         onCatalogSearchTextChanged: React.PropTypes.func,
         onActiveTabChanged: React.PropTypes.func,
-        onPreviewedCatalogItemChanged: React.PropTypes.func
+        onPreviewedCatalogItemChanged: React.PropTypes.func,
+        isDraggingDroppingFile: React.PropTypes.bool,
+        onFinishDroppingFile: React.PropTypes.func
     },
 
     getTabs() {
@@ -45,6 +47,8 @@ const Tabs = React.createClass({
                 panel: <MyDataTab terria={this.props.terria}
                                   onPreviewedCatalogItemChanged ={this.props.onPreviewedCatalogItemChanged}
                                   myDataPreviewedCatalogItem={this.props.myDataPreviewedCatalogItem}
+                                  isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
+                                  onFinishDroppingFile={this.props.onFinishDroppingFile}
                        />
             }
         ];
