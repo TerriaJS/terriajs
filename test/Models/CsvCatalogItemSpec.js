@@ -2,6 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 var clone = require('terriajs-cesium/Source/Core/clone');
+var Color = require('terriajs-cesium/Source/Core/Color');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
@@ -98,6 +99,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         var dataStr = 'col1, col2\ntest, 0';
         csvItem.updateFromJson({
             name: 'Name',
+            id: 'Id',
             description: 'Description',
             rectangle: [-10, 10, -20, 20],
             url: 'http://my.csv.com/test.csv',
@@ -113,7 +115,16 @@ describe('CsvCatalogItem with lat and lon', function() {
         var reconstructed = new CsvCatalogItem(terria);
         reconstructed.updateFromJson(json);
 
-        expect(reconstructed).toEqual(csvItem);
+        expect(reconstructed.name).toEqual(csvItem.name);
+        expect(reconstructed.id).toEqual(csvItem.id);
+        expect(reconstructed.description).toEqual(csvItem.description);
+        expect(reconstructed.rectangle).toEqual(csvItem.rectangle);
+        expect(reconstructed.url).toEqual(csvItem.url);
+        expect(reconstructed.data).toEqual(csvItem.data);
+        expect(reconstructed.dataSourceUrl).toEqual(csvItem.dataSourceUrl);
+        expect(reconstructed.dataCustodian).toEqual(csvItem.dataCustodian);
+        expect(reconstructed.dataUrl).toEqual(csvItem.dataUrl);
+        expect(reconstructed.dataUrlType).toEqual(csvItem.dataUrlType);
     });
 
     it('is correctly loading csv data from a file', function(done) {
@@ -277,7 +288,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(desc(1)).toContain('boots');
         }).otherwise(fail).then(done);
     });
-    
+
     it('has a blank in the description table for a missing number', function(done) {
         csvItem.url = 'test/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
@@ -303,14 +314,79 @@ describe('CsvCatalogItem with lat and lon', function() {
             csvItem2.url = 'test/csv/lat_lon_val.csv';
             return csvItem2.load().yield(csvItem2);
         }).then(function(csvItem2) {
-            var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
-            var minPix = Math.min.apply(null, pixelSizes);
-            var maxPix = Math.max.apply(null, pixelSizes);
-            // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
-            expect(maxPix).toEqual(csvItem._maxPix * 2);
-            expect(minPix).toEqual(csvItem._minPix * 2);
-        })
-        .otherwise(fail).then(done);
+                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                var minPix = Math.min.apply(null, pixelSizes);
+                var maxPix = Math.max.apply(null, pixelSizes);
+                // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
+                expect(maxPix).toEqual(csvItem._maxPix * 2);
+                expect(minPix).toEqual(csvItem._minPix * 2);
+            })
+            .otherwise(fail).then(done);
+    });
+
+    it('supports replaceWithNullValues', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
+        csvItem.load().then(function() {
+            var valueColumn = csvItem.tableStructure.columns[2];
+            expect(valueColumn.values[0]).toEqual(5);
+            expect(valueColumn.values[1]).toEqual(null);
+            expect(valueColumn.values[2]).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports replaceWithZeroValues', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({replaceWithZeroValues: ['bad']});
+        csvItem.load().then(function() {
+            var valueColumn = csvItem.tableStructure.columns[2];
+            expect(valueColumn.values[0]).toEqual(5);
+            expect(valueColumn.values[1]).toEqual(0);
+            expect(valueColumn.values[2]).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+    it('defaults to blanks in numeric columns being zero', function(done) {
+        csvItem.url = 'test/csv/lat_lon_blankvalue.csv';
+        csvItem.load().then(function() {
+            var valueColumn = csvItem.tableStructure.columns[2];
+            expect(valueColumn.values[0]).toEqual(5);
+            expect(valueColumn.values[1]).toEqual(0);
+            expect(valueColumn.values[2]).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+    it('does not color null the same as zero', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
+        csvItem.load().then(function() {
+            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+            expect(cval(1)).not.toEqual(cval(2));
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports nullColor', function(done) {
+        csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+        csvItem._tableStyle = new TableStyle({
+            replaceWithNullValues: ['bad'],
+            nullColor: '#A0B0C0'
+        });
+        var nullColor = new Color(160/255, 176/255, 192/255, 1);
+        csvItem.load().then(function() {
+            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+            expect(cval(1)).toEqual(nullColor);
+            // This next expectation checks that zeros and null values are differently colored, and that
+            // null values do not lead to coloring getting out of sync with values.
+            expect(cval(2)).not.toEqual(nullColor);
+        }).otherwise(fail).then(done);
+    });
+
+    it('works with nulls in a range not including zero', function(done) {
+        csvItem.url = 'test/csv/lat_lon_nullvalue.csv';
+        csvItem.load().then(function() {
+            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+            expect(cval(1)).toEqual(cval(0));  // colors null (row 2) the same as the lowest-value point (row 1).
+        }).otherwise(fail).then(done);
     });
 
     // Removed: not clear that this is correct behaviour, and it's failing.
@@ -546,7 +622,7 @@ describe('CsvCatalogItem with region mapping', function() {
             // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
             var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
             var regionNames = regionDetail.regionProvider.regions.map(getId);
-            
+
             expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
