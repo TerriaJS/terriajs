@@ -14,22 +14,26 @@ export default React.createClass({
 
     getDefaultProps() {
         return {
-            initialSearchText: ''
+            initialText: ''
         };
     },
 
     getInitialState() {
         return {
-            hasValue: !!this.props.initialSearchText.length
+            text: this.props.initialText
         };
     },
 
-    searchWithDebounce(value) {
+    hasValue() {
+        return !!this.state.text.length
+    },
+
+    searchWithDebounce() {
         // Trigger search 250ms after the last input.
         this.removeDebounceTimeout();
 
         this.debounceTimeout = setTimeout(() => {
-            this.props.onSearchTextChanged(value);
+            this.props.onSearchTextChanged(this.state.text);
             this.debounceTimeout = undefined;
         }, 250);
     },
@@ -45,15 +49,23 @@ export default React.createClass({
         const value = event.target.value;
 
         this.setState({
-            hasValue: !!value.length
+            text: value
         });
 
-        this.searchWithDebounce(value);
+        this.searchWithDebounce();
     },
 
-    clearSearch(event) {
-        this.refs.searchBox.value = '';
-        this.searchWithDebounce('');
+    clearSearch() {
+        this.setState({
+           text: ''
+        });
+        this.searchWithDebounce();
+    },
+
+    setText(text) {
+        this.setState({
+            text: text
+        });
     },
 
     render() {
@@ -70,12 +82,12 @@ export default React.createClass({
                 <input type='text'
                        name='search'
                        ref="searchBox"
-                       defaultValue={this.props.initialSearchText}
+                       value={this.state.text}
                        onChange={this.handleChange}
                        className='search__field field'
                        placeholder='Search'
                        autoComplete='off'/>
-                {this.state.hasValue && clearButton}
+                {this.hasValue() && clearButton}
             </form>
         );
     }

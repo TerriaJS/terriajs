@@ -3,47 +3,44 @@
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import Tabs from './Tabs.jsx';
+import classNames from 'classnames';
 
+// TODO: Rename this :/
 const ModalWindow = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        isVisible: React.PropTypes.bool,
-        activeTabID: React.PropTypes.number,
-        catalogSearchText: React.PropTypes.string,
-        previewedCatalogItem: React.PropTypes.object,
-        onClose: React.PropTypes.func,
-        onCatalogSearchTextChanged: React.PropTypes.func,
-        onActiveTabChanged: React.PropTypes.func,
-        onPreviewedCatalogItemChanged: React.PropTypes.func
+        viewState: React.PropTypes.object.isRequired
+    },
+
+    close() {
+        this.props.viewState.modalVisible = false;
     },
 
     render() {
         return (
-            <div className={'data-panel-wrapper modal-wrapper fixed flex flex-center ' + (this.props.isVisible ? 'is-open' : '')}
-                 id="data-panel-wrapper"
-                 // Temp disable
-                 // aria-hidden={!this.props.modalWindowIsOpen}
-                 >
-              <div onClick={this.props.onClose}
-                   id="data-panel-overlay"
-                   className="modal-overlay absolute"
-                   tabIndex="-1">
-              </div>
-              <div id="data-panel" className="data-panel modal-content" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
-                <button onClick={this.props.onClose} className="btn btn-close-modal" title="Close data panel" data-target="close-modal">
-                  <i className='icon icon-close'></i>
-                </button>
-                <Tabs terria={this.props.terria}
-                      activeTabID={this.props.activeTabID}
-                      catalogSearchText={this.props.catalogSearchText}
-                      previewedCatalogItem={this.props.previewedCatalogItem}
-                      onCatalogSearchTextChanged={this.props.onCatalogSearchTextChanged}
-                      onActiveTabChanged={this.props.onActiveTabChanged}
-                      onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
-                />
-              </div>
+            <div
+                className={classNames('data-panel-wrapper', 'modal-wrapper', 'fixed', 'flex', 'flex-center', {'is-open' : this.props.viewState.modalVisible})}
+                id="data-panel-wrapper"
+                // Temp disable
+                // aria-hidden={!this.props.modalWindowIsOpen}
+            >
+                <div onClick={this.close}
+                     id="data-panel-overlay"
+                     className="modal-overlay absolute"
+                     tabIndex="-1">
+                </div>
+                <div id="data-panel" className="data-panel modal-content" aria-labelledby="modalTitle"
+                     aria-describedby="modalDescription" role="dialog">
+                    <button onClick={this.close} className="btn btn-close-modal" title="Close data panel"
+                            data-target="close-modal">
+                        <i className='icon icon-close' />
+                    </button>
+                    <Tabs terria={this.props.terria}
+                          viewState={this.props.viewState}
+                    />
+                </div>
             </div>);
     }
 });

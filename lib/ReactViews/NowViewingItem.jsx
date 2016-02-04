@@ -13,7 +13,7 @@ const NowViewingItem = React.createClass({
         onDragStart: React.PropTypes.func,
         onDragOver: React.PropTypes.func,
         onDragEnd: React.PropTypes.func,
-        onActivateCatalogItemInfo: React.PropTypes.func
+        viewState: React.PropTypes.object.isRequired
     },
 
     removeFromMap() {
@@ -67,7 +67,7 @@ const NowViewingItem = React.createClass({
     },
 
     previewItem() {
-        this.props.onActivateCatalogItemInfo(this.props.nowViewingItem);
+        this.props.viewState.viewCatalogItem(this.props.nowViewingItem);
     },
 
     render() {

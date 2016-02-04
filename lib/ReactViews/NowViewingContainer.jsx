@@ -10,7 +10,7 @@ const NowViewingContainer = React.createClass({
 
     propTypes: {
         nowViewingItems: React.PropTypes.array.isRequired,
-        onActivateCatalogItemInfo: React.PropTypes.func
+        viewState: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -102,7 +102,7 @@ const NowViewingContainer = React.createClass({
                                onDragOver={this.onDragOverItem}
                                onDragStart={this.onDragStart}
                                onDragEnd={this.onDragEnd}
-                               onActivateCatalogItemInfo={this.props.onActivateCatalogItemInfo}
+                               viewState={this.props.viewState}
                 />;
     },
 
