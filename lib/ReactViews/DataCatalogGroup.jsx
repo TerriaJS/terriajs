@@ -14,7 +14,14 @@ const DataCatalogGroup = React.createClass({
         previewedCatalogItem: React.PropTypes.object,
         onPreviewedCatalogItemChanged: React.PropTypes.func,
         isOpen: React.PropTypes.bool,
-        onToggleOpen: React.PropTypes.func
+        onToggleOpen: React.PropTypes.func,
+        userData: React.PropTypes.bool
+    },
+
+    getDefaultProps: function() {
+        return {
+            userData: false
+        };
     },
 
     toggleOpen(e) {
@@ -34,12 +41,14 @@ const DataCatalogGroup = React.createClass({
                                                   key={i}
                                                   previewedCatalogItem={this.props.previewedCatalogItem}
                                                   onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                                                  userData={this.props.userData}
                                  />);
                     }
                     return (<DataCatalogItem item={member}
                                              key={i}
                                              previewedCatalogItem={this.props.previewedCatalogItem}
                                              onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
+                                             userData={this.props.userData}
                             />);
                 });
             }

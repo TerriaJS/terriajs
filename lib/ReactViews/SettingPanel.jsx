@@ -63,7 +63,6 @@ const SettingPanel = React.createClass({
         default: return false;
         }
         this.props.terriaViewer.updateViewer();
-        // window.terriaViewerUpdate.raiseEvent();
     },
 
     render() {

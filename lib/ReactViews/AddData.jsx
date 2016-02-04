@@ -1,17 +1,20 @@
 'use strict';
-const React = require('react');
-const Dropdown = require('./Dropdown.jsx');
-const FileInput = require('./FileInput.jsx');
-const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
-const defined = require('terriajs-cesium/Source/Core/defined');
-const createCatalogItemFromFileOrUrl = require('../Models/createCatalogItemFromFileOrUrl');
-const addUserCatalogMember = require('../Models/addUserCatalogMember');
-const when = require('terriajs-cesium/Source/ThirdParty/when');
-const WebFeatureServiceCatalogGroup = require('../Models/WebFeatureServiceCatalogGroup');
-const WebMapServiceCatalogGroup = require('../Models/WebMapServiceCatalogGroup');
-const WebMapTileServiceCatalogGroup = require('../Models/WebMapTileServiceCatalogGroup');
-const ArcGisCatalogGroup = require('../Models/ArcGisCatalogGroup');
-const ArcGisMapServerCatalogItem = require('../Models/ArcGisMapServerCatalogItem');
+import addUserCatalogMember from '../Models/addUserCatalogMember';
+import ArcGisCatalogGroup from '../Models/ArcGisCatalogGroup';
+import ArcGisMapServerCatalogItem from '../Models/ArcGisMapServerCatalogItem';
+import createCatalogItemFromFileOrUrl from '../Models/createCatalogItemFromFileOrUrl';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import DragDropFile from './DragDropFile.jsx';
+import Dropdown from './Dropdown.jsx';
+import FileInput from './FileInput.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
+import OpenStreetMapCatalogItem from '../Models/OpenStreetMapCatalogItem';
+import React from 'react';
+import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGroup';
+import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
+import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
+
 const wfsUrlRegex = /\bwfs\b/i;
 
 // Local and remote data have different dataType options
@@ -99,9 +102,13 @@ const localDataType = [
 
 // Add data panel in modal window -> My data tab
 const AddData = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object,
-        updateCatalog: React.PropTypes.func
+        updateCatalog: React.PropTypes.func,
+        isDraggingDroppingFile: React.PropTypes.bool,
+        onFinishDroppingFile: React.PropTypes.func
     },
 
     getInitialState() {
@@ -138,7 +145,7 @@ const AddData = React.createClass({
         }
 
         if (files.length > 0) {
-            let promises = [];
+            const promises = [];
 
             for (let i = 0; i < files.length; ++i) {
                 const file = files[i];
@@ -201,37 +208,43 @@ const AddData = React.createClass({
     },
 
     render() {
-        return (<div className='add-data clearfix'>
-        <ul className='list-reset row relative'>
-        <li className='col col-6'>
-        <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
-        <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-        <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-        <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
-        <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Select a local data file to add: </label>
-        <FileInput accept=".csv,.kml" onChange={this.handleFile} />
-        </div>
-        </li>
-        <li className='col col-6'>
-        <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn-data-upload ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
-        <div aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-        <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-        <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
-        <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Enter the URL of the data file or web service: </label>
-        <form>
-        <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
-        <button onClick={this.handleUrl} className="btn btn-add-url">Add</button>
-        </form>
-        </div>
-        </li>
-        </ul>
+        return (
+        <div className='add-data clearfix'>
+            <DragDropFile terria={this.props.terria}
+                          handleFile={this.handleFile}
+                          isActive={this.props.isDraggingDroppingFile}
+                          onFinishDroppingFile={this.props.onFinishDroppingFile}
+            />
+            <ul className='list-reset row relative'>
+            <li className='col col-6'>
+                <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
+                <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
+                    <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
+                    <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
+                    <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Select a local data file to add: </label>
+                    <FileInput accept=".csv,.kml" onChange={this.handleFile} />
+                </div>
+            </li>
+            <li className='col col-6'>
+                <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn-data-upload ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
+                <div aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
+                    <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
+                    <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
+                    <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Enter the URL of the data file or web service: </label>
+                    <form>
+                        <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+                        <button onClick={this.handleUrl} className="btn btn-add-url">Add</button>
+                    </form>
+                </div>
+            </li>
+            </ul>
         </div>);
     }
 });
 
 function loadAuto(viewModel, loadFunctions, index) {
     index = 0;
-    var loadFunction = loadFunctions[index];
+    const loadFunction = loadFunctions[index];
 
     return loadFunction(viewModel).otherwise(function() {
         return loadAuto(viewModel, loadFunctions, index + 1);
@@ -239,7 +252,7 @@ function loadAuto(viewModel, loadFunctions, index) {
 }
 
 function loadWms(viewModel) {
-    var wms = new WebMapServiceCatalogGroup(viewModel.props.terria);
+    const wms = new WebMapServiceCatalogGroup(viewModel.props.terria);
     wms.name = viewModel.state.remoteUrl;
     wms.url = viewModel.state.remoteUrl;
 
@@ -249,7 +262,7 @@ function loadWms(viewModel) {
 }
 
 function loadWfs(viewModel) {
-    var wfs = new WebFeatureServiceCatalogGroup(viewModel.props.terria);
+    const wfs = new WebFeatureServiceCatalogGroup(viewModel.props.terria);
     wfs.name = viewModel.state.remoteUrl;
     wfs.url = viewModel.state.remoteUrl;
 
@@ -259,7 +272,7 @@ function loadWfs(viewModel) {
 }
 
 function loadWmts(viewModel) {
-    var wmts = new WebMapTileServiceCatalogGroup(viewModel.props.terria);
+    const wmts = new WebMapTileServiceCatalogGroup(viewModel.props.terria);
     wmts.name = viewModel.state.remoteUrl;
     wmts.url = viewModel.state.remoteUrl;
 
@@ -268,9 +281,8 @@ function loadWmts(viewModel) {
     });
 }
 
-
 function loadMapServer(viewModel) {
-    var mapServer = new ArcGisCatalogGroup(viewModel.props.terria);
+    const mapServer = new ArcGisCatalogGroup(viewModel.props.terria);
     mapServer.name = viewModel.state.remoteUrl;
     mapServer.url = viewModel.state.remoteUrl;
 
@@ -280,7 +292,7 @@ function loadMapServer(viewModel) {
 }
 
 function loadMapServerLayer(viewModel) {
-    var mapServer = new ArcGisMapServerCatalogItem(viewModel.props.terria);
+    const mapServer = new ArcGisMapServerCatalogItem(viewModel.props.terria);
     mapServer.name = viewModel.state.remoteUrl;
     mapServer.url = viewModel.state.remoteUrl;
     return mapServer.load().then(function() {
@@ -289,7 +301,7 @@ function loadMapServerLayer(viewModel) {
 }
 
 function loadOpenStreetMapServer(viewModel) {
-    var openStreetMapServer = new OpenStreetMapCatalogItem(viewModel.props.terria);
+    const openStreetMapServer = new OpenStreetMapCatalogItem(viewModel.props.terria);
     openStreetMapServer.name = viewModel.state.remoteUrl;
     openStreetMapServer.url = viewModel.state.remoteUrl;
 
@@ -298,10 +310,8 @@ function loadOpenStreetMapServer(viewModel) {
     });
 }
 
-
 function loadFile(viewModel) {
     return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType, true);
 }
-
 
 module.exports = AddData;

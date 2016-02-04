@@ -10,11 +10,12 @@ const DataCatalogItem = React.createClass({
     propTypes: {
         item: React.PropTypes.object,
         previewedCatalogItem: React.PropTypes.object,
-        onPreviewedCatalogItemChanged: React.PropTypes.func
+        onPreviewedCatalogItemChanged: React.PropTypes.func,
+        userData: React.PropTypes.bool
     },
 
     addToPreview() {
-        this.props.onPreviewedCatalogItemChanged(this.props.item);
+        this.props.onPreviewedCatalogItemChanged(this.props.item, this.props.userData);
     },
 
     addToMap() {
@@ -35,11 +36,11 @@ const DataCatalogItem = React.createClass({
     render() {
         const item = this.props.item;
         return (
-            <li className={(this.props.previewedCatalogItem === item ? 'is-previewed' : '') + ' clearfix data-catalog-item flex' }>
-                <button onClick={this.addToMap} title="add to map" className='btn relative btn-add-to-map'>
+            <li className={(this.props.previewedCatalogItem === item ? 'is-previewed' : '') + ' clearfix data-catalog-item' }>
+                <button onClick={this.addToPreview} className='btn btn-catalog-item'>{item.name}</button>
+                <button onClick={this.addToMap} title="add to map" className='btn btn-add-to-map'>
                     <i className={this.renderIconClass(item)}></i>
                 </button>
-                <button onClick={this.addToPreview} className='btn btn-catalog-item relative'>{item.name}</button>
             </li>);
     }
 });

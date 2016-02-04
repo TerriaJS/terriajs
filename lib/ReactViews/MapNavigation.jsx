@@ -1,15 +1,18 @@
 'use strict';
-const React = require('react');
-const SettingPanel = require('./SettingPanel.jsx');
-const Compass = require('./Compass.jsx');
-const ZoomControl = require('./ZoomControl.jsx');
-const SharePanel = require('./SharePanel.jsx');
-const FullScreenButton = require('./FullScreenButton.jsx');
-const defined = require('terriajs-cesium/Source/Core/defined');
+import React from 'react';
+import SettingPanel from './SettingPanel.jsx';
+import Compass from './Compass.jsx';
+import ZoomControl from './ZoomControl.jsx';
+import SharePanel from './SharePanel.jsx';
+import FullScreenButton from './FullScreenButton.jsx';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import ObserveModelMixin from './ObserveModelMixin';
+import ViewerMode from '../Models/ViewerMode';
 
 // The map navigation region
 // This component could probably be put in index.js of nationalmap?
 const MapNavigation = React.createClass({
+    mixins: [ObserveModelMixin],
     propTypes: {
         terria: React.PropTypes.object,
         allBaseMaps: React.PropTypes.array,
@@ -19,7 +22,7 @@ const MapNavigation = React.createClass({
     render() {
         let compass = null;
         // show compass if we are in cesium mode
-        if (defined(this.props.terria.cesium)) {
+        if (this.props.terria.viewerMode !== ViewerMode.Leaflet) {
             compass = <Compass terria={this.props.terria} />;
         }
         return (<div className='map-navigation'>

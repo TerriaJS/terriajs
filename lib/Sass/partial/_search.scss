@@ -6,7 +6,6 @@
   .workbench &{
     max-height: calc(100vh - #{$workbench-header});
     margin-top: calc(#{$input-height} + #{$padding});
-
     overflow-y: scroll;
     padding: 0 $padding-small;
     .search-results-items{
@@ -28,7 +27,8 @@
   }
   .data-panel &{
     max-height: calc(#{$modal-content-height} - 90px);
-    overflow-y: scroll;
+    overflow-y: auto;
+    padding-right: $padding-small;
   }
 }
 
