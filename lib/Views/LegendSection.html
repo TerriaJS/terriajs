@@ -2,8 +2,15 @@
     <!-- ko if: $data.isImage -->
     <a data-bind="attr: { href: $data.url , tabindex: $root.nowViewingTab.isActive ? 0 : -1 }" target="_blank">
         <div class="now-viewing-legend-image">
+            <!-- ko if: $data.insertDirectly -->
+            <!-- class="now-viewing-legend-image-background" -->
+            <div data-bind="event: { error : $data.onImageError }, visible: !$data.imageHasError, html: $data.svgContent "/>
+            </div>
+            <!-- /ko -->
+            <!-- ko if: !$data.insertDirectly -->
             <img class="now-viewing-legend-image-background"
                  data-bind="event: { error : $data.onImageError }, attr: { src: $data.url }, visible: !$data.imageHasError"/>
+            <!-- /ko -->
         </div>
     </a>
     <!-- /ko -->
