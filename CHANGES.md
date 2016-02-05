@@ -4,6 +4,17 @@ Change Log
 
 ### 2.0.0
 
+* The following previously-deprecated functionality was removed in this version:
+  - `ArcGisMapServerCatalogGroup`
+  - `CatalogItemControl`
+  - `CatalogItemDownloadControl`
+  - Calling `BrandBarViewModel.create` with more than one parameter.
+  - `CatalogMemberControl.leftSideItemControls`
+  - `CatalogMemberControl.rightSideItemControls`
+  - `DataCatalogTabViewModel.getRightSideItemControls`
+  - `DataCatalogTabViewModel.getLeftSideItemControls`
+  - `registerCatalogItemControls`
+  - `AusGlobeViewer`
 * Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
   - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
   - `AbsIttCatalogItem`: Completely rewritten. The `dataSetID` json parameter has been deprecated in favor of `datasetId` (different capitalization).
