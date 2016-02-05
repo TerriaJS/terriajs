@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,describe,it,expect*/
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableStructure = require('../../lib/Core/TableStructure');
 var VarType = require('../../lib/Map/VarType');
 
@@ -138,9 +139,11 @@ describe('TableStructure', function() {
         var htmls = tableStructure.toRowDescriptions();
         expect(htmls[0]).toContain('Thu Oct 15 2015 12:34:56');  // Thu 15 Oct would be nicer outside USA.
         expect(htmls[0]).not.toContain('2015-10-15T12:34:56');
-        expect(htmls[1]).toContain(':56');  // Depending on the time zone this is run in, could be anything.
-        expect(htmls[1].indexOf('GMT') + htmls[1].indexOf('UTC')).toBeGreaterThan(-2);  // The time zone is shown, IE9 uses UTC, others GMT.
+
+        var expectedDate1 = JulianDate.toDate(JulianDate.fromIso8601('2015-10-02T12:34:56Z')); 
+        expect(htmls[1]).toContain('' + expectedDate1);
         expect(htmls[1]).not.toContain('2015-10-02T12:34:56');
+
         expect(htmls[2]).toContain('>2015-11-03<'); // No time is added when only the date is given.
     });
 

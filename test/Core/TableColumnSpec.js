@@ -169,6 +169,23 @@ describe('TableColumn', function() {
         expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
     });
 
+    it('detects years from numerical data in a column named time', function() {
+        var data = [730, 1230, 130];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
+        expect(tableColumn.values).toEqual(data);
+    });
+
+    it('can handle missing times', function() {
+        var data = ['2016-01-03T12:15:59.1234Z', '-', '2016-01-04T12:25:00Z'];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.dates[0].getUTCDate()).toEqual(3);
+        expect(tableColumn.dates[1]).toBeUndefined();
+        expect(tableColumn.dates[2].getUTCDate()).toEqual(4);
+    });
+
 
     it('can calculate finish dates', function() {
         var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:30Z'];
@@ -190,8 +207,8 @@ describe('TableColumn', function() {
         ]);
     });
 
-    it('treats numerical data in a column named time as scalars', function() {
-        var data = [730, 1230, 130];
+    it('treats numerical data >= 9999 in a column named time as scalars', function() {
+        var data = [9999, 1230, 130];
         var tableColumn = new TableColumn('date', data);
         expect(tableColumn.type).toEqual(VarType.SCALAR);
         expect(tableColumn.values).toEqual(data);
