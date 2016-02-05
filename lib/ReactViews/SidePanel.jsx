@@ -1,6 +1,6 @@
 'use strict';
 
-import Chart from './Chart.jsx';
+import Chart from './DemoChart.jsx';
 import React from 'react';
 import SearchBox from './SearchBox.jsx';
 import NowViewingContainer from './NowViewingContainer.jsx';
