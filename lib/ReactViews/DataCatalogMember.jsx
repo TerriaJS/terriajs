@@ -13,13 +13,15 @@ export default React.createClass({
 
     propTypes: {
         member: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        manageIsOpenLocally: React.PropTypes.bool
     },
 
     render() {
         if (this.props.member.isGroup) {
             return (
-                <DataCatalogGroup group={this.props.member} viewState={this.props.viewState} />
+                <DataCatalogGroup group={this.props.member} viewState={this.props.viewState}
+                                  manageIsOpenLocally={this.props.manageIsOpenLocally} />
             );
         } else {
             return (

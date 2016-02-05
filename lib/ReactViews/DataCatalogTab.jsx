@@ -40,7 +40,7 @@ const DataCatalogTab = React.createClass({
                 <div className="search-data col col-6">
                     <SearchBox initialText={this.props.viewState.catalogSearch}
                                onSearchTextChanged={this.onSearchTextChanged}
-                               ref="searchBox" />
+                               ref="searchBox"/>
                     {this.renderDataCatalog()}
                 </div>
                 <div className="data-preview preview col col-6 block">
@@ -53,7 +53,8 @@ const DataCatalogTab = React.createClass({
 
     renderDataCatalog() {
         const terria = this.props.terria;
-        const items = this.props.viewState.catalogSearch.length ?
+        const isSearching = !!this.props.viewState.catalogSearch.length;
+        const items = isSearching ?
             this.searchProvider.searchResults.map(result => result.catalogItem) :
             terria.catalog.group.items;
 
@@ -62,11 +63,13 @@ const DataCatalogTab = React.createClass({
                 <SearchHeader {...this.searchProvider} />
                 {items
                     .filter(defined)
-                    .map((item, i) => <DataCatalogMember viewState={this.props.viewState}
-                                                         member={item}
-                                                         key={item.uniqueId}/>)
+                    .map((item, i) => (
+                        <DataCatalogMember viewState={this.props.viewState}
+                                           member={item}
+                                           manageIsOpenLocally={isSearching}
+                                           key={item.uniqueId}/>
+                    ))
                 }
-
             </ul>);
     }
 });

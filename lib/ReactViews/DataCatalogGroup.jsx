@@ -12,11 +12,44 @@ const DataCatalogGroup = React.createClass({
 
     propTypes: {
         group: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        /** Overrides whether to get the open state of the group from the group model or manage it internally */
+        manageIsOpenLocally: React.PropTypes.bool
+    },
+
+    getDefaultProps() {
+        return {
+            manageIsOpenLocally: false
+        };
+    },
+
+    getInitialState() {
+        return {
+            /** Only used if manageIsOpenLocally === true */
+            isOpen: false
+        };
+    },
+
+    toggleStateIsOpen() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+    },
+
+    isOpen() {
+        if (this.props.manageIsOpenLocally) {
+            return this.state.isOpen;
+        } else {
+            return this.props.group.isOpen;
+        }
     },
 
     toggleOpen() {
-        this.props.group.isOpen = !this.props.group.isOpen;
+        if (this.props.manageIsOpenLocally) {
+            this.toggleStateIsOpen();
+        } else {
+            this.props.group.toggleOpen();
+        }
     },
 
     render() {
@@ -24,12 +57,12 @@ const DataCatalogGroup = React.createClass({
 
         return (
             <li>
-                <button className={classNames('btn', 'btn-catalogue', {'is-open' : group.isOpen})}
+                <button className={classNames('btn', 'btn-catalogue', {'is-open' : this.isOpen()})}
                         onClick={this.toggleOpen}>
                     {group.name}
-                    <i className={classNames('icon', {'icon-caret-down': group.isOpen}, {'icon-caret-right': !group.isOpen})} />
+                    <i className={classNames('icon', {'icon-caret-down': this.isOpen(), 'icon-caret-right': !this.isOpen()})}/>
                 </button>
-                {group.isOpen && (
+                {this.isOpen() && (
                     <ul className="data-catalog-group list-reset">
                         {this.renderGroup(group)}
                     </ul>
@@ -39,11 +72,16 @@ const DataCatalogGroup = React.createClass({
     },
 
     renderGroup(group) {
-        if (!group.isLoading) {
-            return group.items.map(item => <DataCatalogMember key={item.uniqueId} member={item} viewState={this.props.viewState} />)
-        } else {
-            return <Loader/>;
+        const children =
+                group.items.map(item => <DataCatalogMember key={item.uniqueId} member={item}
+                                                           viewState={this.props.viewState}
+                                                           overrideOpen={this.props.manageIsOpenLocally}/>);
+
+        if (group.isLoading) {
+            children.push(<Loader key="loader" />);
         }
+
+        return children;
     }
 });
 
