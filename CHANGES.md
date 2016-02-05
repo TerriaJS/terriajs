@@ -19,6 +19,8 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
+* Recognises the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
+* Nicer formatting of datetimes from csv files in the feature info panel.
 * Introduced three new json tableStyle parameters:
   - `replaceWithZeroValues`: defaults to `[null, '-']`. These values are replaced with zero if they appear in a list with numbers. `null` catches missing values.
   - `replaceWithNullValues`: defaults to `['na', 'NA']`. These values are replaced with null if they appear in a list with numbers.
@@ -51,6 +53,9 @@ when no variable is selected.
     traversed in both directions.
   - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
     not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
+* Legends are now generated in SVG (vector) format, which look better on high resolution devices.
+* Create new Legend class, making it easy to generate client-side legends for different kinds of data.
+* Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
 
 ### 1.0.54
 
