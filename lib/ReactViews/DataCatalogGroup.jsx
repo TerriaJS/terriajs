@@ -56,9 +56,7 @@ const DataCatalogGroup = React.createClass({
                             />);
                 });
             }
-            else {
-                return <div> Empty </div>;
-            }
+            return <li className ='label no-results'> No data </li>;
         }
     },
 
