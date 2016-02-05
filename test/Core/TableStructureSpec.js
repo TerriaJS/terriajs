@@ -132,6 +132,18 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[1].values.length).toEqual(2);
     });
 
+    it('can describe rows with dates with and without timezones nicely', function() {
+        var csvString = 'date,value\r\n2015-10-15T12:34:56,5\r\n2015-10-02T12:34:56Z,8\r\n2015-11-03\r\n';
+        var tableStructure = TableStructure.fromCsv(csvString);
+        var htmls = tableStructure.toRowDescriptions();
+        expect(htmls[0]).toContain('Thu Oct 15 2015 12:34:56');  // Thu 15 Oct would be nicer outside USA.
+        expect(htmls[0]).not.toContain('2015-10-15T12:34:56');
+        expect(htmls[1]).toContain(':56');  // Depending on the time zone this is run in, could be anything.
+        expect(htmls[1].indexOf('GMT') + htmls[1].indexOf('UTC')).toBeGreaterThan(-2);  // The time zone is shown, IE9 uses UTC, others GMT.
+        expect(htmls[1]).not.toContain('2015-10-02T12:34:56');
+        expect(htmls[2]).toContain('>2015-11-03<'); // No time is added when only the date is given.
+    });
+
     // it('does not allow multiple selected variables by default', function(done) {
     //     var dataTable = new DataTable();
     //     loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
