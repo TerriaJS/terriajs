@@ -15,3 +15,12 @@
   background: $dark-lighter;
   height: 300px;
 }
+
+.line-chart .axis line, .d3 .axis path {
+    stroke-width: 1px;
+    stroke: aliceblue;
+    fill: none;
+}
+.line-chart .axis .tick text {
+    fill: aliceblue;
+}
