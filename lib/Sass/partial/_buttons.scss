@@ -532,6 +532,9 @@ button.btn.visibility{
   .is-empty &{
     display: none;
   }
+  .add-data &{
+    margin-bottom: $padding;
+  }
   &:hover{
     color: $color-primary;
   }

@@ -22,19 +22,32 @@ const Dropdown = React.createClass({
         };
     },
 
+    componentWillMount() {
+        window.addEventListener('click', this.closeDropDownWhenClickOtherPlaces);
+    },
+
     componentWillUnmount() {
+        this.setState({
+            isOpen: false
+        });
+        window.removeEventListener('click', this.closeDropDownWhenClickOtherPlaces);
+    },
+
+    closeDropDownWhenClickOtherPlaces() {
         this.setState({
             isOpen: false
         });
     },
 
-    toggleList() {
+    toggleList(event) {
+        event.stopPropagation();
         this.setState({
             isOpen: !this.state.isOpen
         });
     },
 
     select(option, event) {
+        event.stopPropagation();
         this.props.selectOption(option);
         // close drop down on select
         this.setState({
@@ -50,9 +63,10 @@ const Dropdown = React.createClass({
     },
 
     render() {
-        return (<div className={'dropdown mb2 ' + (this.state.isOpen ? 'is-open' : '')}>
+        return (<div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
                   <button onClick={this.toggleList} className='btn btn-dropdown' >{this.props.selected.name}<i className='icon icon-chevron-down right'></i></button>
-                    <ul className='list-reset dropdown__list'><li><button onClick={this.toggleList} className='btn btn-small right'><i className='icon icon-close'></i></button></li>{this.renderOptions()}</ul></div>);
+                  <ul className='list-reset dropdown__list'>{this.renderOptions()}</ul>
+                </div>);
     }
 });
 module.exports = Dropdown;
