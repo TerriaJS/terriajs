@@ -22,6 +22,7 @@ const ChartPanel = React.createClass({
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         const data = [];
+        const colors = [];
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
@@ -33,6 +34,7 @@ const ChartPanel = React.createClass({
                     };
                     for (let j = 0; j < yColumns.length; j++) {
                         data.push(xColumn.dates.map(getXYFunction(j)));
+                        colors.push(yColumns[j].assignedColor);
                     }
                 }
             }
@@ -48,7 +50,7 @@ const ChartPanel = React.createClass({
                                 <div className="chart-panel-close-button">&times;</div>
                             </div>
                             <div>
-                                <Chart data={data} />
+                                <Chart data={data} colors={colors}/>
                             </div>
                         </div>
                     </div>

@@ -13,9 +13,7 @@
 import React from 'react';
 import LineChart from '../Charts/LineChart';
 
-const data = [{ x: 0, y: 20 }, { x: 1, y: 30 }, { x: 2, y: 10 }, { x: 3, y: 5 }, { x: 4, y: 8 }, { x: 5, y: 15 }, { x: 6, y: 10 }];
-const height = 100;
-const width = 300;
+const height = 300;
 
 const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
@@ -23,9 +21,9 @@ const Chart = React.createClass({
 
     getDefaultProps() {
         return {
-            width: width,
             height: height,
-            data: [data],
+            colors: undefined,
+            data: undefined,
             domain: undefined,
             margin: {top: 10, right: 20, bottom: 5, left: 20}
         };
@@ -34,7 +32,7 @@ const Chart = React.createClass({
     componentDidMount() {
         LineChart.create(this._element, {
             width: '100%',
-            height: '300px'
+            height: height
         }, this.getChartState());
     },
 
@@ -44,6 +42,7 @@ const Chart = React.createClass({
 
     getChartState() {
         return {
+            colors: this.props.colors,
             data: this.props.data,
             domain: this.props.domain
         };
