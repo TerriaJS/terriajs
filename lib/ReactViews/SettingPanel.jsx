@@ -26,13 +26,29 @@ const SettingPanel = React.createClass({
         };
     },
 
-    togglePanel() {
+    componentWillMount() {
+        window.addEventListener('click', this.closeDropDownWhenClickOtherPlaces);
+    },
+
+    componentWillUnmount() {
+        window.removeEventListener('click', this.closeDropDownWhenClickOtherPlaces);
+    },
+
+    closeDropDownWhenClickOtherPlaces() {
+        this.setState({
+            isOpen: false
+        });
+    },
+
+    togglePanel(e) {
+        e.stopPropagation();
         this.setState({
             isOpen: !this.state.isOpen
         });
     },
 
-    selectBaseMap(baseMap) {
+    selectBaseMap(baseMap, event) {
+        event.stopPropagation();
         this.props.terria.baseMap = baseMap.catalogItem;
         this.props.terriaViewer.updateBaseMap();
     },
@@ -49,7 +65,8 @@ const SettingPanel = React.createClass({
         });
     },
 
-    selectViewer(viewer) {
+    selectViewer(viewer, event) {
+        event.stopPropagation();
         switch (viewer) {
         case 0:
             this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
