@@ -278,6 +278,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.description).toBe(wmsItem.description);
         expect(reconstructed.rectangle).toEqual(wmsItem.rectangle);
         expect(reconstructed.legendUrl).toEqual(wmsItem.legendUrl);
+        expect(reconstructed.legendUrls).toEqual(wmsItem.legendUrls);
         expect(reconstructed.dataUrlType).toBe(wmsItem.dataUrlType);
         expect(reconstructed.dataUrl).toBe(wmsItem.dataUrl);
         expect(reconstructed.dataCustodian).toBe(wmsItem.dataCustodian);
@@ -286,8 +287,6 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.layers).toBe(wmsItem.layers);
         expect(reconstructed.parameters).toBe(wmsItem.parameters);
         expect(reconstructed.getFeatureInfoFormats).toEqual(wmsItem.getFeatureInfoFormats);
-
-        expect(reconstructed).toEqual(wmsItem);
     });
 
     it('can get handle plain text in textAttribution', function() {
