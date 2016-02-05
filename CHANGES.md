@@ -41,7 +41,7 @@ Change Log
   - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
     rather than its name as is done currently.
   - The id of an item should be accessed via `uniqueId` - if a catalog member doesn't have an id set, this returns a
-    default value of the item's name name plus the id of its parent. This means that if all the ancestors of a catalog 
+    default value of the item's name plus the id of its parent. This means that if all the ancestors of a catalog
     member have no id set, its id will be its full path in the catalog.
   - This means that if an item is renamed or moved, share links that reference it will still work.
   - A `shareKeys` property can be also be set that contains an array of all ids that should lead to this item. This means
@@ -60,6 +60,7 @@ Change Log
 * Legends are now generated in SVG (vector) format, which look better on high resolution devices.
 * Create new Legend class, making it easy to generate client-side legends for different kinds of data.
 * Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
+* Fix Leaflet feature selection when zoomed out enough that the world is repeated.
 
 ### 1.0.54
 
@@ -78,7 +79,7 @@ Change Log
 * Dramatically improved the performance of region mapping.
 * Introduced new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
   * "auto" (default), usually means "ckmeans"
-  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
+  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible.
   * "quantile": use quantiles, evenly distributing values between bins
   * "none": use the previous linear color mapping method.
 * The default style for CSV files is now 7 color bins with CK means method.
