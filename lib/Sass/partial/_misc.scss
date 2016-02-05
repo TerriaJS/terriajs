@@ -46,14 +46,7 @@
   padding: $padding;
 }
 
-.file-input{
-  input{
-    opacity: 0;
-    height: 40px;
-    display: block;
-    position: absolute;
-  }
-}
+
 
 input[type=range] {
     /*removes default webkit styles*/

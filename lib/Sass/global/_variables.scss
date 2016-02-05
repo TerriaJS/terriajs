@@ -1,5 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic,700);
 
 
 $font-pop:'Open Sans', sans-serif;
@@ -33,6 +32,10 @@ $font-size-large: 1.3rem;
 $font-size-base: 1rem;
 $font-size-small: 13px;
 $font-size-mini: 10px;
+
+$font-weight-bold: 700;
+$font-weight-medium: 600;
+$font-weight-light: 400;
 
 $work-bench-width : 350px;
 $setting-panel: 300px;

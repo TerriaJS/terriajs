@@ -1,22 +1,53 @@
-// TO DO: NEED TO SEPERATE MYDATA TAB STYLE INTO A DIFFERETN FILE
 //My data
+.add-data__wrapper{
+  height: 100%;
+  h4{
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: $font-weight-medium;
+  }
+}
 .add-data{
   background: $modal-secondary-bg;
-  padding: $padding*2;
-  height: 300px;
+  padding: $padding;
+  height: 100%;
   overflow: visible;
 }
 
 .added-data{
   //temp
-  padding: $padding*2;
+  padding: $padding;
 }
 
-.panel__my-data{
-  .top-left{
-    overflow-y: auto;
+.add-data__panel.local{
+  padding-right: 2px;
+}
+
+.file-input{
+  input{
+    height: $input-height;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    opacity: 0;
+    position: absolute;
   }
 }
+
+.url-input{
+  input{
+    box-sizing: border-box;
+    width: calc(100% - 50px);
+    height: $input-height;
+    float: left;
+  }
+  .btn-add-url{
+    width: 50px;
+    float: left;
+  }
+}
+
+
 
 .drag-drop-zone{
   visibility: hidden;
@@ -37,3 +68,5 @@
     }
   }
 }
+
+

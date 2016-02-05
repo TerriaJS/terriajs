@@ -79,6 +79,16 @@ $btn-setting-size: 35px;
   padding: 0;
 }
 
+.btn-primary{
+  background: $color-primary;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  &:hover{
+    background: lighten($color-primary, 10%);
+  }
+}
 
 .btn-catalogue,
 .btn-catalog-group{
@@ -105,6 +115,7 @@ $btn-setting-size: 35px;
 }
 
 .btn-catalog-item{
+  @extend %wrap;
   .panel-content &{
     font-style: italic;
     position: relative;
@@ -446,10 +457,14 @@ button.btn.visibility{
 //
 
 .btn-data-upload{
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
   width: 100%;
   padding-left: 0;
-  border-bottom: 2px solid $grey-lighter;
+  border-bottom: 2px solid $grey;
+  color: $grey;
   &:hover, &:focus, &.is-active{
+    color: $color-primary;
     border-bottom: 2px solid $color-primary;
   }
 }
@@ -488,16 +503,10 @@ button.btn.visibility{
   }
 }
 
-.btn-file-input{
-  background: $dark;
-  color: #fff;
-}
 
-.btn-add-url{
-  position: absolute;
-  right: 2px;
-  padding: 8px;
-  @extend .btn-file-input;
+
+.btn-file-input, .btn-add-url{
+  @extend .btn-primary;
 }
 
 .btn.btn-drag{
@@ -509,8 +518,23 @@ button.btn.visibility{
   text-align: right;
 }
 
+.btn-add-more-data{
+  margin-top: $padding-small;
+  @extend .btn-primary;
+}
+
 .btn.btn-now-viewing-toggle{
   padding: $padding 14px $padding 6px;
+}
+
+.btn-back-to-my-data{
+  @extend .btn-small;
+  .is-empty &{
+    display: none;
+  }
+  &:hover{
+    color: $color-primary;
+  }
 }
 
 .kss-modifier__example{
