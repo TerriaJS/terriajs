@@ -10,8 +10,8 @@
 // http://ahmadchatha.com/writings/article1.html
 // http://nicolashery.com/integrating-d3js-visualizations-in-a-react-app/
 
-const React = require('react');
-const LineChart = require('../Charts/LineChart');
+import React from 'react';
+import LineChart from '../Charts/LineChart';
 
 const data = [{ x: 0, y: 20 }, { x: 1, y: 30 }, { x: 2, y: 10 }, { x: 3, y: 5 }, { x: 4, y: 8 }, { x: 5, y: 15 }, { x: 6, y: 10 }];
 const height = 100;
@@ -26,7 +26,7 @@ const Chart = React.createClass({
             width: width,
             height: height,
             data: [data],
-            domain: {x: [0, 6], y: [0, 30]},
+            domain: undefined,
             margin: {top: 10, right: 20, bottom: 5, left: 20}
         };
     },

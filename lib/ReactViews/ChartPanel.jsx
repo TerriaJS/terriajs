@@ -1,6 +1,9 @@
 'use strict';
 
-// import defined from 'terriajs-cesium/Source/Core/defined';
+import defined from 'terriajs-cesium/Source/Core/defined';
+
+import VarType from '../Map/VarType';
+
 import Chart from './Chart.jsx';
 // import Loader from './Loader.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
@@ -18,9 +21,23 @@ const ChartPanel = React.createClass({
 
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
-        const charts = chartableItems.map((item, i)=>{
-            return (<Chart key={i}/>);
-        });
+        const data = [];
+        for (let i = chartableItems.length - 1; i >= 0; i--) {
+            const item = chartableItems[i];
+            if (item.isEnabled && defined(item.tableStructure)) {
+                const xColumn = item.timeColumn;
+                const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
+                if (defined(xColumn)) {
+                    const getXYFunction = function(j) {
+                        return (x, index)=>{ return {x: x, y: yColumns[j].values[index]}; };
+                    };
+                    for (let j = 0; j < yColumns.length; j++) {
+                        data.push(xColumn.dates.map(getXYFunction(j)));
+                    }
+                }
+            }
+        }
+
         return (
             <div className="chart-panel-holder">
                 <div className="chart-panel-holder-inner">
@@ -31,8 +48,7 @@ const ChartPanel = React.createClass({
                                 <div className="chart-panel-close-button">&times;</div>
                             </div>
                             <div>
-                                {chartableItems.length} chart lines coming soon.
-                                {charts}
+                                <Chart data={data} />
                             </div>
                         </div>
                     </div>
