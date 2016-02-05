@@ -44,6 +44,52 @@ describe('CatalogItem', function () {
         expect(item.dataUrlType).toBe('wfs');
     });
 
+    describe('time series data: ', function() {
+        beforeEach(function () {
+            spyOn(terria.timeSeriesStack, 'addLayerToTop');
+            spyOn(terria.timeSeriesStack, 'removeLayer');
+        });
+
+        describe('when item has clock', function() {
+            beforeEach(function() {
+               item.clock = {
+                   getValue: jasmine.createSpy('getValue')
+               };
+            });
+
+            it('item should be added to top of timeSeriesStack when enabled', function(done) {
+                item.isEnabled = true;
+
+                item._loadForEnablePromise.then(function() {
+                   expect(terria.timeSeriesStack.addLayerToTop).toHaveBeenCalledWith(item);
+                   done();
+                });
+            });
+
+            it('should be removed from timeSeriesStack when disabled', function(done) {
+                item.isEnabled = true;
+
+                item._loadForEnablePromise.then(function() {
+                    item.isEnabled = false;
+                    expect(terria.timeSeriesStack.removeLayer).toHaveBeenCalledWith(item);
+                    done();
+                });
+            });
+
+        });
+
+        describe('when item has no clock', function() {
+           it('should not call timeSeriesStack', function(done) {
+               item.isEnabled = true;
+
+               item._loadForEnablePromise.then(function() {
+                   expect(terria.timeSeriesStack.addLayerToTop).not.toHaveBeenCalled();
+                   done();
+               });
+           });
+        });
+    });
+
     describe('ids', function () {
         var catalog;
 
