@@ -1,4 +1,12 @@
-//temp
+.tablist{
+  @extend .list-reset;
+  @extend .clearfix;
+  padding-right: 100px;
+  li{
+    display: inline-block;
+    float: left;
+  }
+}
 
 .mydata-panel_data-tab-section{
   position: absolute;

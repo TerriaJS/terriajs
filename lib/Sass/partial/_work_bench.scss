@@ -2,9 +2,7 @@
   font-family: $font-pop;
   height: 100vh;
   overflow: hidden;
-  //temp
   background: $dark;
-
   h1{
     margin: 0;
   }
@@ -14,14 +12,23 @@
   position: relative;
 }
 
-.workbench__header{
+.workbench__add-data{
   padding: 0 $padding-small $padding-small $padding-small;
-  &.workbench-add{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(#{$input-height} + #{$padding-small});
-    border-bottom: 1px solid #5C636E;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(#{$input-height} + #{$padding-small});
+  border-bottom: 1px solid #5C636E;
+  .btn{
+    text-transform: uppercase;
+    @extend .btn-primary;
+    @extend .icon;
+    @extend .icon-add;
+    &:before{
+      position: absolute;
+      font-size: 18px;
+      left: $padding*2;
+    }
   }
 }
 

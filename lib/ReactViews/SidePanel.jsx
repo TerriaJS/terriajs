@@ -41,8 +41,8 @@ const SidePanel = React.createClass({
     render() {
         return (
             <div className='workbench__inner'>
-              <div className='workbench__header workbench-add'>
-                {this.props.onActivateAddData && <button onClick={this.props.onActivateAddData} className='now-viewing__add btn'>Add Data</button>}
+              <div className='workbench__add-data'>
+                {this.props.onActivateAddData && <button onClick={this.props.onActivateAddData} className='btn'>Add Data</button>}
               </div>
               <SearchBox terria={this.props.terria} searchText={this.props.mapSearchText} onSearchTextChanged={this.props.onMapSearchTextChanged} dataSearch={false} onSearchCatalog={this.props.onSearchCatalog} />
               <div className="now-viewing hide-on-search">

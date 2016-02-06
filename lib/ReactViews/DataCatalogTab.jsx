@@ -20,7 +20,7 @@ const DataCatalogTab = React.createClass({
 
     renderDataCatalog(dataCatalog) {
         return (
-            <ul className = 'list-reset data-catalog hide-on-search'>
+            <ul className = 'data-catalog hide-on-search'>
                 {dataCatalog.map((group, i) => {
                     return (<DataCatalogGroup group={group}
                                               key={i}
@@ -35,8 +35,8 @@ const DataCatalogTab = React.createClass({
         const terria = this.props.terria;
         const dataCatalog = terria.catalog.group.items;
         return (
-            <div className="panel-content clearfix">
-              <div className="search-data col col-6">
+            <div className="panel-content">
+              <div className="data-explorer">
                 <SearchBox terria={terria}
                            mapSearch={false}
                            gazetterSearch={false}
@@ -47,7 +47,7 @@ const DataCatalogTab = React.createClass({
                 />
                 {this.renderDataCatalog(dataCatalog)}
               </div>
-              <div className="data-preview preview col col-6 block">
+              <div className="data-preview">
                 <DataPreview terria={terria}
                              previewedCatalogItem={this.props.previewedCatalogItem}
                 />

@@ -73,11 +73,11 @@ const MyDataTab = React.createClass({
     },
 
     render() {
-        return (<div className="panel-content row">
-                <div className='add-data__wrapper col col-6'>
+        return (<div className="panel-content">
+                <div className='my-data'>
                 {this.renderContent()}
                 </div>
-                <div className="data-preview preview col col-6 relative">
+                <div className="data-preview">
                 <DataPreview terria={this.props.terria}
                              previewedCatalogItem={this.props.myDataPreviewedCatalogItem}
                 />

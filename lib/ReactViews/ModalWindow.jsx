@@ -34,9 +34,7 @@ const ModalWindow = React.createClass({
                    tabIndex="-1">
               </div>
               <div id="explorer-panel" className="explorer-panel modal-content" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
-                <button onClick={this.props.onClose} className="btn btn-close-modal" title="Close data panel" data-target="close-modal">
-                  <i className='icon icon-close'></i>
-                </button>
+                <button onClick={this.props.onClose} className="btn btn--close-modal" title="Close data panel" data-target="close-modal"></button>
                 <Tabs terria={this.props.terria}
                       activeTabID={this.props.activeTabID}
                       catalogSearchText={this.props.catalogSearchText}

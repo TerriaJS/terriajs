@@ -4,13 +4,6 @@ $btn-setting-size: 35px;
   border: 0;
   padding: 0;
 }
-
-%colored-hover{
-  &:hover{
-    color: $color-primary;
-  }
-}
-
 // Buttons
 //
 // Style guide: Buttons
@@ -18,6 +11,7 @@ $btn-setting-size: 35px;
 // Default button
 //
 // .btn-small - small button
+// .btn-primary - Primary button
 //
 // Markup:
 //<button class='btn {{modifier_class}}'> Button </button>
@@ -42,25 +36,47 @@ $btn-setting-size: 35px;
   }
 }
 
+.btn-small{
+  padding: 0;
+}
+
+.btn-primary{
+  background: $color-primary;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: $radius-small;
+  &:hover{
+    background: lighten($color-primary, 10%);
+  }
+}
 
 // Icon Buttons
 //
 // .btn--toggle - toggle icon
 // .btn--visibility - visibility icon
+// .btn--add-to-map - add to map
+// .btn--remove-from-map - remove from map
+// .btn--loading-on-map - loading on map
+// .btn--close-modal - button to close modal window
 //
-// Markup
+// Markup:
 // <button class='btn {{modifier_class}}'></button>
 //
 // Style guide: Buttons.icon-button
 
 .btn--toggle,
-.btn--visibility{
+.btn--visibility,
+.btn--add-to-map,
+.btn--remove-from-map,
+.btn--loading-on-map,
+.btn--close-modal{
   @extend .icon;
   &:before{
     line-height: $btn-default-line-height;
   }
 }
-
 
 .btn--toggle{
   @extend .icon-caret-right;
@@ -69,7 +85,6 @@ $btn-setting-size: 35px;
   }
 }
 
-
 .btn--visibility{
   @extend .icon-eye-hidden;
   &.is-visible {
@@ -77,130 +92,163 @@ $btn-setting-size: 35px;
   }
 }
 
+.btn--add-to-map{
+  @extend .icon-add;
+  color: $color-primary;
+}
 
-// Data Catalog buttons
-//
-// Data Catalog in modal window
-//
-// Style guide: Buttons.data-catalog
-//
+.btn--remove-from-map{
+  @extend .icon-remove;
+  color: $color-primary;
+}
 
+.btn--loading-on-map{
+  @extend .icon-loader;
+  color: $color-primary;
+}
 
-// Data Catalog Server
+.btn--close-modal{
+  @extend .icon-close;
+  &:hover{
+    color: $color-primary;
+  }
+}
+
+// Text and icon buttons
+//
+// .btn--location-name - location item
+//
+// Markup:
+// <button class="btn {{modifier_class}}">button text </button>
+//
+// Style guide: Buttons.icon-text-button
+
+.btn--location-name{
+  @extend .icon;
+  &:before{
+    line-height: $btn-default-line-height;
+    padding-right: $padding-small;
+    display: inline-block;
+  }
+}
+
+.btn--location-name{
+  @extend .icon-location;
+}
+
+// Data Catalog Group
 //
 // Markup:
 //<div class='panel-content'>
-//<button class="btn btn-catalogue"><span>National Data Sets</span><i class="icon icon-chevron-down"></i></button>
-//<button class="btn btn-catalogue"><span>National Data Sets</span><i class="icon icon-chevron-right"></i></button>
-//</div>
-//
-// Style guide: Buttons.data-catalog-server
-//
-
-
-// Data Catalog group
-//
-// Markup:
-//<div class='panel-content'>
-//<button class="btn btn-catalog-group"><span>Communications</span><i class="icon icon-chevron-down"></i></button>
-//<button class="btn btn-catalog-group"><span>Communications</span><i class="icon icon-chevron-right"></i></button>
+//<button class ='btn btn--catalogue' >National Data Sets</button>
+//<button class ='btn btn--catalogue is-open' >National Data Sets</button>
 //</div>
 //
 // Style guide: Buttons.data-catalog-group
 //
 
-// Data Catalog item
+.btn--catalogue{
+  font-weight: 600;
+  padding-right: 30px;
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid transparent;
+  @extend .icon;
+  @extend .icon-caret-right;
+  &.is-open{
+    @extend .icon-caret-down;
+  }
+  &:before{
+    position: absolute;
+    right: 5px;
+    top: 8px;
+  }
+  &:hover{
+    background: $modal-highlight;
+    color: #fff;
+    border-bottom: 1px solid $grey-lighter;
+  }
+}
+
+
+// Data Catalog Item
+//
+// .is-previewed - item being previewed
 //
 // Markup:
 //<div class='panel-content'>
-//<button title="add to map" class="btn relative btn-add-to-map"><i class="icon icon-add"></i></button><button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
-//<button title="add to map" class="btn relative btn-add-to-map"><i class="icon icon-remove"></i></button><button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
+// <li class='data-catalog-item {{modifier_class}}'>
+// <button class='btn btn--catalog-item'>item name</button>
+// <button title="add or remove on map" class='btn btn--catalog-item--action btn--add-to-map'></button>
+// </li>
 //</div>
 //
-// Style guide: Buttons.data-catalog-item
+// Style guide: Buttons.btn--catalog-item
 //
 
 
-// .btn-small{
-//   padding: 0;
-// }
+.btn--catalog-item{
+  @extend %wrap;
+  .panel-content &{
+    font-style: italic;
+    position: relative;
+    width: 100%;
+    padding: $padding-small $padding*2.2 $padding-small $padding*3;
+    @extend .icon;
+    @extend .icon-right-arrow;
+    &:before{
+      opacity: 0;
+      line-height: $btn-default-line-height;
+      position: absolute;
+      right: 0;
+      font-size: 1.5rem;
+    }
+    &:hover{
+      color: $modal-highlight;
+      &:before{
+        opacity: 1;
+      }
+    }
+  }
+  .is-previewed &{
+    color: $modal-highlight;
+    font-weight: $font-weight-bold;
+    &:before{
+      opacity: 1;
+    }
+  }
+}
 
-// .btn-primary{
-//   background: $color-primary;
-//   color: #fff;
-//   text-align: center;
-//   width: 100%;
-//   box-sizing: border-box;
-//   &:hover{
-//     background: lighten($color-primary, 10%);
-//   }
-// }
+// Modal window tab buttons
+//
+// Tab buttons in modal window
+//
+// Markup:
+// <div class='modal-content'>
+// <button class="btn btn--tab"><span>Button</span></button>
+// </div>
+//
+// Style guide: Buttons.modal-tab
+//
 
-// .btn-catalogue,
-// .btn-catalog-group{
-//   width: 100%;
-//   padding-right: 30px;
-//   position: relative;
-//   .icon{
-//     position: absolute;
-//     right: 5px;
-//     top: 8px;
-//   }
-//   .panel-content &{
-//     border-bottom: 1px solid $grey-lighter;
-//     &:hover{
-//       background: $modal-highlight;
-//       color: #fff;
-//       border-bottom: 1px solid $grey-lighter;
-//     }
-//   }
-// }
+// %btn-tab{
 
-// .btn-catalogue{
-//   font-weight: 600;
 // }
+.btn.btn--tab{
+  border-right: 1px solid $modal-border;
+  font-family: $font-pop;
+  font-size: 1rem;
+  text-transform: capitalize;
+  padding: $padding $padding*2;
+  border-bottom: 2px solid transparent;
+  li[aria-selected='true'] & {
+    border-bottom: 2px solid $modal-highlight;
+  }
+  &:hover , &:focus{
+    border-bottom: 2px solid $modal-highlight;
+  }
+}
 
-// .btn-catalog-item{
-//   @extend %wrap;
-//   .panel-content &{
-//     font-style: italic;
-//     position: relative;
-//     width: 100%;
-//     padding: $padding-small $padding*2.2 $padding-small $padding*3;
-//     @extend .icon;
-//     &:before{
-//        content: "\e908";
-//        position: absolute;
-//        right: 0;
-//        top: 7px;
-//        opacity: 0;
-//        font-size: 20px;
-//     }
-//     &:hover{
-//       color: $modal-highlight;
-//       &:before{
-//         opacity: 1;
-//       }
-//     }
-//   }
-//   .is-previewed &{
-//     color: $modal-highlight;
-//     font-weight: 700;
-//     &:before{
-//       opacity: 1;
-//     }
-//   }
-// }
-
-// $add-to-map-btn-size: 20px;
-
-// .btn-add-to-map{
-//   font-size: $add-to-map-btn-size;
-//   color: $modal-highlight;
-//   padding: 6px $padding-small;
-//   position: absolute;
-//   left: 0;
-// }
 
 // // Map buttons
 // //
@@ -263,134 +311,6 @@ $btn-setting-size: 35px;
 //   border-radius: 0 3px 3px 0;
 // }
 
-
-
-// // Modal window tab buttons
-// //
-// // Tab buttons in modal window
-// //
-// // .btn-tab - button to switch to differetn tab
-// // .btn-close-modal - button to close modal
-// //
-// // Markup:
-// // <div class='modal-content'>
-// // <button class="btn {{modifier_class}}"><span>Button</span></button>
-// // </div>
-// //
-// // Style guide: Buttons.modal-tab
-// //
-
-// %btn-tab{
-//   font-family: $font-pop;
-//   font-size: 1rem;
-//   text-transform: capitalize;
-//   padding: $padding $padding*2;
-//   border-bottom: 2px solid transparent;
-//   li[aria-selected='true'] & {
-//     border-bottom: 2px solid $modal-highlight;
-//   }
-//   &:hover , &:focus{
-//     border-bottom: 2px solid $modal-highlight;
-//   }
-// }
-// .btn.btn-tab{
-//   border-right: 1px solid $modal-border;
-//   @extend %btn-tab;
-// }
-
-// .btn.btn-close-modal{
-//   border-left: 1px solid $modal-border;
-//   text-transform: uppercase;
-//   color: $modal-highlight;
-//   font-size: $font-size-large;
-//   @extend %btn-tab;
-// }
-
-// .btn.label{
-//   font-weight: 700;
-//   opacity: 0.9;
-//   text-transform: uppercase;
-// }
-
-// // Work bench buttons
-// //
-// // Tab buttons in modal window
-// //
-// // Markup:
-// // <button class="btn now-viewing__add">Add Data</button>
-// //
-// // Style guide: Buttons.add-data
-// //
-
-
-// .btn.now-viewing__add {
-//   display: block;
-//   line-height: $input-height;
-//   text-transform: uppercase;
-//   font-size: $font-size-small;
-//   padding: 0 $padding*4;
-//   font-family: $font-pop;
-//   background: $color-primary;
-//   text-align: center;
-//   width: 100%;
-//   @extend .icon;
-//   @extend .icon-add;
-//   &:before{
-//     position: absolute;
-//     font-size: 20px;
-//     left: 2*$padding;
-//     top: $padding;
-//   }
-//   &:hover{
-//     background: lighten($color-primary, 10%);
-//   }
-// }
-
-// // Clear search text button
-// //
-// // button to clear search text
-// //
-// // Markup:
-// // <button class="btn search-clear"><i class="icon icon-close"></i></button>
-// //
-// // Style guide: Buttons.clear-search
-// //
-
-// .btn.search-clear{
-//   @extend %colored-hover;
-//   position: absolute;
-//   right: $padding;
-//   top: 2px;
-// }
-
-// // Add to map button
-// //
-// // Add to map button in modal window preview panel
-// //
-// // Markup:
-// // <div class='clearfix'>
-// // <button class="btn btn-preview-toggle" title="add to map">Add</button>
-// // </div>
-// // <div class='clearfix'>
-// // <button class="btn btn-preview-toggle" title="remove from map">Remove</button>
-// // </div>
-// //
-// // Style guide: Buttons.preview-action
-
-// .btn.btn-preview-toggle{
-//   text-align: center;
-//   background: $color-primary;
-//   color: #fff;
-//   border: 1px solid transparent;
-//   text-transform: uppercase;
-//   line-height: 1;
-//   font-size: $font-size-small;
-//   margin-bottom: $padding-small;
-//   width: 100%;
-//   &:hover, &:focus{
-//     border: 1px solid $color-primary;
-//   }
-// }
 
 // // Basemap selector button
 // //

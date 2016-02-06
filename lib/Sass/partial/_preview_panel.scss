@@ -1,0 +1,28 @@
+.data-preview{
+  padding-right: $padding;
+  position: absolute;
+  top: $padding;
+  right: $padding-small;
+  width: calc(50% - #{$padding*2});
+  bottom: $padding;
+  overflow: hidden;
+  overflow-y: scroll;
+  h4{
+    margin-top: $padding;
+  }
+  .btn.toggle-enable{
+    @extend .btn-primary;
+  }
+}
+
+.data-preview-map{
+  position: relative;
+}
+.terria-preview{
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+  background: #d5d5d5;
+  cursor: auto;
+  pointer-events: none;
+}

@@ -2,7 +2,7 @@
 const React = require('react');
 const Loader = React.createClass({
     render() {
-        return <li className='loader '><i className='icon icon-loader'></i> Loading</li>;
+        return <li className='loader'>Loading</li>;
     }
 });
 module.exports = Loader;

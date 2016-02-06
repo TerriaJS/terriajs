@@ -66,8 +66,8 @@ const DataCatalogGroup = React.createClass({
 
         return (
             <li>
-              <button className ={'btn btn-catalogue ' + (isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name} <i className={'icon ' + (isOpen ? 'icon-caret-down' : 'icon-caret-right')}></i></button>
-              <ul className="data-catalog-group list-reset">
+              <button className ={'btn btn--catalogue ' + (isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name}</button>
+              <ul className="data--catalog-group">
                 {this.renderGroup(group, isOpen)}
               </ul>
             </li>

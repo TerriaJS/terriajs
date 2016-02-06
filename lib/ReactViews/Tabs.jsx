@@ -68,7 +68,7 @@ const Tabs = React.createClass({
                     aria-controls={getName('panel__', item.title)}
                     aria-selected={that.props.activeTabID === i}>
                   <button onClick={that.activateTab.bind(that, i)}
-                    className='btn btn-tab'>{item.title.replace(/-/g, ' ')}</button>
+                    className='btn btn--tab'>{item.title.replace(/-/g, ' ')}</button>
                     </li>
                     ));
     },
@@ -87,12 +87,12 @@ const Tabs = React.createClass({
 
     render() {
         return (
-            <div className="tabs clearfix">
-          <ul className="tablist list-reset flex" role="tablist">
-          {this.renderTabs()}
-          </ul>
-          {this.renderPanels()}
-          </div>);
+            <div className="tabs">
+              <ul className="tablist" role="tablist">
+              {this.renderTabs()}
+              </ul>
+              {this.renderPanels()}
+            </div>);
     }
 });
 

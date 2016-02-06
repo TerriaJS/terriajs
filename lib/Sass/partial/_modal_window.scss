@@ -59,12 +59,7 @@
 }
 
 
-
-.tablist{
-  padding-right: 150px;
-}
-
-.btn-close-modal{
+.btn--close-modal{
   position: absolute;
   top: 0;
   right: 0;
@@ -80,39 +75,18 @@
 }
 
 .panel-content{
+  @extend .clearfix;
   padding: $padding;
   border-top: 1px solid $grey-lighter;
   background: $modal-bg;
   color: $modal-text;
 }
 
-.data-preview{
-  padding-right: $padding;
-  //avoid render error when scroll bar present
-  position: absolute;
-  top: $padding;
-  right: $padding-small;
-  width: calc(50% - #{$padding*2});
-  bottom: $padding;
-  overflow: hidden;
-  overflow-y: scroll;
-  h4{
-    margin-top: $padding;
-  }
+.data-explorer,
+.my-data{
+  @extend .col;
+  @extend .col-6;
 }
-
-.data-preview-map{
-  position: relative;
-}
-.terria-preview{
-  height: 250px;
-  overflow: hidden;
-  position: relative;
-  background: #d5d5d5;
-  cursor: auto;
-  pointer-events: none;
-}
-
 
 
 

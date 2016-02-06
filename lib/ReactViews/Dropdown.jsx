@@ -58,14 +58,14 @@ const Dropdown = React.createClass({
     renderOptions() {
         const that = this;
         return that.props.options.map((option, i)=>{
-            return (<li key ={i}><button onClick={that.select.bind(null, option)} className={'btn btn-dropdown-option ' + (option === that.props.selected ? 'is-selected' : '')}>{option.name}</button></li>);
+            return (<li key ={i}><button onClick={that.select.bind(null, option)} className={'btn btn--dropdown-option ' + (option === that.props.selected ? 'is-selected' : '')}>{option.name}</button></li>);
         });
     },
 
     render() {
         return (<div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
-                  <button onClick={this.toggleList} className='btn btn-dropdown' >{this.props.selected.name}<i className='icon icon-chevron-down right'></i></button>
-                  <ul className='list-reset dropdown__list'>{this.renderOptions()}</ul>
+                  <button onClick={this.toggleList} className='btn btn--dropdown' >{this.props.selected.name}</button>
+                  <ul className='dropdown__list'>{this.renderOptions()}</ul>
                 </div>);
     }
 });
