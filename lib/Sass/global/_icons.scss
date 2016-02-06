@@ -42,6 +42,8 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
+  display: block;
+  box-sizing: border-box;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;

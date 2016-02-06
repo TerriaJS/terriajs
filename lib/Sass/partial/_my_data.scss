@@ -23,30 +23,6 @@
   padding-right: 2px;
 }
 
-.file-input{
-  input{
-    height: $input-height;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    opacity: 0;
-    position: absolute;
-  }
-}
-
-.url-input{
-  input{
-    box-sizing: border-box;
-    width: calc(100% - 50px);
-    height: $input-height;
-    float: left;
-  }
-  .btn-add-url{
-    width: 50px;
-    float: left;
-  }
-}
-
 
 
 .drag-drop-zone{

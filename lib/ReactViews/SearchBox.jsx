@@ -153,30 +153,29 @@ const SearchBox = React.createClass({
         // button to clear search string
         let clearSearchContent = null;
         if (this.props.searchText.length > 0) {
-            clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}><i className ='icon icon-clear'></i></button>);
+            clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}></button>);
         }
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && this.props.searchText.length > 0) {
-            linkToSearchData = (<button onClick={this.searchCatalog} className='btn btn-data-search '>Search {this.props.searchText} in Data Catalog <i className='icon icon-right-arrow'></i></button>);
+            linkToSearchData = (<button onClick={this.searchCatalog} className='btn btn-data-search '>Search {this.props.searchText} in Data Catalog </button>);
         }
 
         return (
             <div className={this.props.searchText.length > 0 ? 'is-searching search' : 'search'}>
-                <form className='search-data-form relative' autoComplete='off'>
-                  <label htmlFor='search' className='hide'> Type keyword to search </label>
-                  <i className='icon icon-search'></i>
+                <form className='form--search-data' autoComplete='off'>
+                  <label htmlFor='search' className='form__label'> Type keyword to search </label>
                   <input id='search'
-                  type='text'
-                  name='search'
-                  value={this.props.searchText}
-                  onChange={this.handleChange}
-                  className='search__field field'
-                  placeholder='Search'
-                  autoComplete='off'/>
+                         type='text'
+                         name='search'
+                         value={this.props.searchText}
+                         onChange={this.handleChange}
+                         className='form__search-field field'
+                         placeholder='Search'
+                         autoComplete='off'/>
                   {clearSearchContent}
                 </form>
-                <div className ='search-results'>
+                <div className ='search__results'>
                   {linkToSearchData}
                   {this.renderSearchResult(this.props.mapSearch, this.bingMapSearch)}
                   {this.renderSearchResult(this.props.gazetterSearch, this.gazetterSearch)}
