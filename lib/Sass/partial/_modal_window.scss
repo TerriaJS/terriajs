@@ -1,5 +1,19 @@
 .modal-wrapper{
   visibility: hidden;
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: $padding*3 calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
+  padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
+
+  @media screen and (min-width : $md){
+    padding-left: $work-bench-width + 50px;
+    padding-right: 50px;
+  }
+
   &.is-open{
     visibility: visible;
   }
@@ -7,7 +21,6 @@
 
 .modal-content{
   position: relative;
-  min-height: 100px;
   background: $modal-bg;
   color: $modal-text;
   z-index: 200;
@@ -17,8 +30,6 @@
   backface-visibility: hidden;
   border-radius: $radius-small;
   opacity: 0;
-  margin: auto;
-  width: 90%;
   @include transform(translateY(20%));
   @include transition(all 0.3s);
   .is-open & {
@@ -27,8 +38,6 @@
     visibility: visible;
   }
   @media screen and (min-width : $md){
-      margin-left: $work-bench-width + 50px;
-      margin-right: 50px;
       width: 100%;
   }
 }

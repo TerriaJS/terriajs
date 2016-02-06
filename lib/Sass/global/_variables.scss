@@ -25,6 +25,12 @@ $faint-bg: #f5f5f5;
 
 $warning: #FF5B6F;
 
+$padding: 10px;
+$padding-small: 5px;
+$padding-mini: 3px;
+
+$btn-default-line-height: 21px;
+
 $modal-bg: $faint-bg;
 $modal-text: #000;
 $modal-secondary-bg: rgba($dark-lighter, 0.05);
@@ -32,6 +38,7 @@ $modal-overlay: rgba(#000,0.3);
 $modal-highlight: $color-primary;
 $modal-border: $grey-lighter;
 $modal-content-height: 70vh;
+$modal-header-height: $btn-default-line-height + $padding*2;
 
 $font-size-large: 1.3rem;
 $font-size-base: 1rem;
@@ -49,14 +56,14 @@ $branding-height: 55px;
 $workbench-header: 175px;
 $input-height: 3rem;
 
+
+
 $border-color: rgba(#fff, 0.15);
 
 $border-style: 1px solid $border-color;
 $box-shadow: 0px 6px 22px -6px rgba(#000, 0.75);
 
-$padding: 10px;
-$padding-small: 5px;
-$padding-mini: 3px;
+
 
 $radius-small: 2px;
 

@@ -1,50 +1,3 @@
-input,
-select,
-textarea,
-fieldset {
-  font-family: inherit;
-  font-size: 1rem;
-  box-sizing: border-box;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-input[type=text],
-input[type=date],
-input[type=datetime],
-input[type=datetime-local],
-input[type=email],
-input[type=month],
-input[type=number],
-input[type=password],
-input[type=search],
-input[type=tel],
-input[type=time],
-input[type=url],
-input[type=week] {
-  height: $input-height;
-  color: $text-dark;
-  display: block;
-  padding: .5rem .5rem;
-  vertical-align: middle;
-  -webkit-appearance: none;
-}
-
-select {
-  line-height: 1.75;
-  padding: .5rem .5rem;
-}
-
-select:not([multiple]) {
-  height: 2.25rem;
-  vertical-align: middle;
-}
-
-textarea {
-  line-height: 1.75;
-  padding: .5rem .5rem;
-}
-
 .field {
   border-style: solid;
   border-width: 1px;
@@ -74,26 +27,38 @@ textarea {
 
 // Forms
 //
+// Style guide: 3.0
+//
+
+// Search form
+//
 //.panel-content - Search form in modal window
+//.workbench__inner - Search form in workbench
 //
 // Markup:
 // <div class={{modifier_class}}>
-// <form class="form--search-data" autocomplete="off">
-// <label for="search" class="hide"> Type keyword to search </label>
-// <div class="icon icon-search"></div>
-// <input id="search" type="text" name="search" value="" class="form__search-field field" placeholder="Search" autocomplete="off">
+// <form class='form--search-data' autoComplete='off'>
+//   <label htmlFor='search' class='form__label'> Type keyword to search </label>
+//   <input id='search'
+//          type='text'
+//          name='search'
+//          class='form__search-field field'
+//          placeholder='Search'
+//          autoComplete='off'/>
+//   <button class='btn search-clear'></button>
 // </form>
 // </div>
 //
-// Style guide: 3.0
+// Style guide: 3.1
 //
 
 .form--search-data{
   font-family: $font-pop;
+  position: relative;
   .icon{
     position: absolute;
     font-size: 1.2rem;
-    color: #444;
+    color: $grey;
     opacity: 0.5;
     &:before{
         height: $input-height;
@@ -102,6 +67,8 @@ textarea {
   }
 
   input{
+    padding-left: $input-height;
+    width: 100%;
     @include placeholder{
       text-transform: uppercase;
       font-size: $font-size-small;
@@ -109,22 +76,14 @@ textarea {
       padding-left: calc(50% - 40px);
       @include transition(all, 0.25s, linear);
     }
-    padding-left: $input-height;
-    width: 100%;
     &:focus{
       @include placeholder{
       padding-left: 0;
       }
     }
   }
-  .panel-content &{
-    font-family: $font-base;
-  }
 
-  .workbench__inner & {
-    padding: 0 $padding-small;
-    font-family: $font-pop;
-    .form__label{
+  .form__label{
       @extend .icon;
       @extend .icon-search;
       // hide label text but keep it machine visible
@@ -141,9 +100,28 @@ textarea {
       @extend .icon;
       @extend .icon-clear;
     }
+
+  .panel-content &{
+    font-family: $font-base;
+  }
+
+  .workbench__inner & {
+    padding: 0 $padding-small;
+    font-family: $font-pop;
+
   }
 }
 
+// Add data from url form
+//
+// Markup:
+// <form class='url-input' autocomplete="off">
+// <input class='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+// <button class="btn btn-add-url">Add</button>
+// </form>
+//
+// Style guide: 3.2
+//
 
 form.file-input{
   input{
@@ -152,6 +130,17 @@ form.file-input{
     position: absolute;
   }
 }
+
+// Add data from local form
+//
+// Markup:
+// <form class='file-input'>
+// <input type='file'/>
+// <label class='btn btn-file-input'>Upload File</label>
+// </form>
+//
+// Style guide: 3.3
+//
 
 form.url-input{
   input{

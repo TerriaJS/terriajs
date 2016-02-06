@@ -25,7 +25,7 @@
       }
     }
   }
-  .data-panel &{
+  .explorer-panel &{
     max-height: calc(#{$modal-content-height} - 90px);
     overflow-y: auto;
     padding-right: $padding-small;

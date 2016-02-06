@@ -28,14 +28,10 @@ const SidePanel = React.createClass({
         if (nowViewing && nowViewing.length > 0) {
             return (
               <div>
-                  <ul className="now-viewing__header list-reset clearfix">
-                      <li className='col col-6'>
-                        <label className='label-inline'>Data Sets</label>
-                        <label className='label-badge label-inline'>{nowViewing.length}</label>
-                      </li>
-                      <li className='col col-6'>
-                        <button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button>
-                      </li>
+                  <ul className="now-viewing__header">
+                      <li><label className='label'>Data Sets</label></li>
+                      <li><label className='label--badge label'>{nowViewing.length}</label></li>
+                      <li><button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
                   </ul>
                   <NowViewingContainer onActivateCatalogItemInfo={this.props.onActivateCatalogItemInfo} nowViewingItems={nowViewing} />
               </div>);

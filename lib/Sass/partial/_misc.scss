@@ -64,12 +64,13 @@ input[type=range]::-webkit-slider-runnable-track {
     background: #ddd;
     border: none;
     border-radius: 3px;
+    margin-top: -3px;
 }
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
-    height: 13px;
-    width: 13px;
+    height: 12px;
+    width: 12px;
     border-radius: 50%;
     background: #fff;
     margin-top: -6px;
@@ -79,5 +80,14 @@ input[type=range]:focus {
 }
 input[type=range]:focus::-webkit-slider-runnable-track {
     background: #ccc;
+}
+
+.drop-zone{
+  background: transparent;
+  @include transition(height 0.25s ease-in-out);
+  &.is-active{
+    background: rgba(#FFF, 0.5);
+    border: 2px dashed #fff;
+  }
 }
 

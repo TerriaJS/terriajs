@@ -1,82 +1,9 @@
 $btn-setting-size: 35px;
-.btn {
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: bold;
-  text-decoration: none;
-  cursor: pointer;
-  display: inline-block;
-  line-height: 1.125rem;
-  padding: .5rem 1rem;
-  margin: 0;
-  height: auto;
-  border: 1px solid transparent;
-  vertical-align: middle;
-  -webkit-appearance: none;
-  color: inherit;
-  background-color: transparent;
-}
-
-.btn:hover {
-  text-decoration: none;
-}
-
-.btn:focus {
-  outline: none;
-  border-color: rgba(0,0,0,.125);
-  box-shadow: 0 0 0 3px rgba(0,0,0,.25);
-}
 
 ::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
-
-.btn-primary {
-  color: #fff;
-  background-color: #0074d9;
-  border-radius: 3px;
-}
-
-.btn-primary:hover {
-  box-shadow: inset 0 0 0 20rem rgba(0,0,0,.0625);
-}
-
-.btn-primary:active {
-  box-shadow: inset 0 0 0 20rem rgba(0,0,0,.125),
-    inset 0 3px 4px 0 rgba(0,0,0,.25),
-    0 0 1px rgba(0,0,0,.125);
-}
-
-.btn-primary:disabled,
-.btn-primary.is-disabled {
-  opacity: .5;
-}
-
-.btn-outline,
-.btn-outline:hover {
-  border-color: currentcolor;
-}
-
-.btn-outline {
-  border-radius: 3px;
-}
-
-.btn-outline:hover {
-  box-shadow: inset 0 0 0 20rem rgba(0,0,0,.0625);
-}
-
-.btn-outline:active {
-  box-shadow: inset 0 0 0 20rem rgba(0,0,0,.125),
-    inset 0 3px 4px 0 rgba(0,0,0,.25),
-    0 0 1px rgba(0,0,0,.125);
-}
-
-.btn-outline:disabled,
-.btn-outline.is-disabled {
-  opacity: .5;
-}
-
 
 %colored-hover{
   &:hover{
@@ -96,6 +23,60 @@ $btn-setting-size: 35px;
 //<button class='btn {{modifier_class}}'> Button </button>
 //
 // Style guide: Buttons.default
+
+.btn{
+  font-weight: $font-weight-normal;
+  box-shadow: none;
+  border: 0;
+  margin: 0;
+  text-align: left;
+  cursor: pointer;
+  line-height: $btn-default-line-height;
+  padding: $padding;
+  background-color: transparent;
+  &:focus, &:hover{
+    box-shadow: none;
+    border-color: transparent;
+    outline: none;
+    opacity: 0.9;
+  }
+}
+
+
+// Icon Buttons
+//
+// .btn--toggle - toggle icon
+// .btn--visibility - visibility icon
+//
+// Markup
+// <button class='btn {{modifier_class}}'></button>
+//
+// Style guide: Buttons.icon-button
+
+.btn--toggle,
+.btn--visibility{
+  @extend .icon;
+  &:before{
+    line-height: $btn-default-line-height;
+  }
+}
+
+
+.btn--toggle{
+  @extend .icon-caret-right;
+  .is-open &{
+    @extend .icon-caret-down;
+  }
+}
+
+
+.btn--visibility{
+  @extend .icon-eye-hidden;
+  &.is-visible {
+    @extend .icon-eye;
+  }
+}
+
 
 // Data Catalog buttons
 //
@@ -139,490 +120,466 @@ $btn-setting-size: 35px;
 // Style guide: Buttons.data-catalog-item
 //
 
-.btn{
-  font-weight: 400;
-  box-shadow: none;
-  border: 0;
-  margin: 0;
-  padding: $padding;
-  text-align: left;
-  cursor: pointer;
-  line-height: 21px;
-  &:focus, &:hover{
-    box-shadow: none;
-    border-color: transparent;
-  }
-}
-.btn-small{
-  padding: 0;
-}
 
-.btn-primary{
-  background: $color-primary;
-  color: #fff;
-  text-align: center;
-  width: 100%;
-  box-sizing: border-box;
-  &:hover{
-    background: lighten($color-primary, 10%);
-  }
-}
+// .btn-small{
+//   padding: 0;
+// }
 
-.btn-catalogue,
-.btn-catalog-group{
-  width: 100%;
-  padding-right: 30px;
-  position: relative;
-  .icon{
-    position: absolute;
-    right: 5px;
-    top: 8px;
-  }
-  .panel-content &{
-    border-bottom: 1px solid $grey-lighter;
-    &:hover{
-      background: $modal-highlight;
-      color: #fff;
-      border-bottom: 1px solid $grey-lighter;
-    }
-  }
-}
+// .btn-primary{
+//   background: $color-primary;
+//   color: #fff;
+//   text-align: center;
+//   width: 100%;
+//   box-sizing: border-box;
+//   &:hover{
+//     background: lighten($color-primary, 10%);
+//   }
+// }
 
-.btn-catalogue{
-  font-weight: 600;
-}
+// .btn-catalogue,
+// .btn-catalog-group{
+//   width: 100%;
+//   padding-right: 30px;
+//   position: relative;
+//   .icon{
+//     position: absolute;
+//     right: 5px;
+//     top: 8px;
+//   }
+//   .panel-content &{
+//     border-bottom: 1px solid $grey-lighter;
+//     &:hover{
+//       background: $modal-highlight;
+//       color: #fff;
+//       border-bottom: 1px solid $grey-lighter;
+//     }
+//   }
+// }
 
-.btn-catalog-item{
-  @extend %wrap;
-  .panel-content &{
-    font-style: italic;
-    position: relative;
-    width: 100%;
-    padding: $padding-small $padding*2.2 $padding-small $padding*3;
-    @extend .icon;
-    &:before{
-       content: "\e908";
-       position: absolute;
-       right: 0;
-       top: 7px;
-       opacity: 0;
-       font-size: 20px;
-    }
-    &:hover{
-      color: $modal-highlight;
-      &:before{
-        opacity: 1;
-      }
-    }
-  }
-  .is-previewed &{
-    color: $modal-highlight;
-    font-weight: 700;
-    &:before{
-      opacity: 1;
-    }
-  }
-}
+// .btn-catalogue{
+//   font-weight: 600;
+// }
 
-$add-to-map-btn-size: 20px;
+// .btn-catalog-item{
+//   @extend %wrap;
+//   .panel-content &{
+//     font-style: italic;
+//     position: relative;
+//     width: 100%;
+//     padding: $padding-small $padding*2.2 $padding-small $padding*3;
+//     @extend .icon;
+//     &:before{
+//        content: "\e908";
+//        position: absolute;
+//        right: 0;
+//        top: 7px;
+//        opacity: 0;
+//        font-size: 20px;
+//     }
+//     &:hover{
+//       color: $modal-highlight;
+//       &:before{
+//         opacity: 1;
+//       }
+//     }
+//   }
+//   .is-previewed &{
+//     color: $modal-highlight;
+//     font-weight: 700;
+//     &:before{
+//       opacity: 1;
+//     }
+//   }
+// }
 
-.btn-add-to-map{
-  font-size: $add-to-map-btn-size;
-  color: $modal-highlight;
-  padding: 6px $padding-small;
-  position: absolute;
-  left: 0;
-}
+// $add-to-map-btn-size: 20px;
 
-// Map buttons
-//
-// Buttons on the map
-//
-// Markup:
-// <ul class='list-reset flex map-navigation__menu'>
-//   <li><button class="setting-panel__button btn btn-map" title="change settings"><i class="icon icon-sphere"></i></button></li>
-//   <li><button class="btn btn-map btn-full-screen" title="full screen mode"><i class="icon icon-full-screen"></i></button></li>
-// </ul>
-//
-// Style guide: Buttons.map-buttons
+// .btn-add-to-map{
+//   font-size: $add-to-map-btn-size;
+//   color: $modal-highlight;
+//   padding: 6px $padding-small;
+//   position: absolute;
+//   left: 0;
+// }
 
-.btn-map{
-  box-sizing: border-box;
-  margin: 0;
-  display: block;
-  height: 30px;
-  background: $dark;
-  color: #fff;
-  text-transform: uppercase;
-  font-size: $font-size-small;
-  padding: 5px;
-  border: 1px solid transparent;
-  .icon{
-    display: block;
-    font-size: 1.2rem;
-    line-height: 1;
-  }
-  &:hover, .map-nav-panel.is-open &, &.is-active {
-    background: $color-primary;
-    border: 1px solid rgba(#fff, 0.5);
-  }
-}
+// // Map buttons
+// //
+// // Buttons on the map
+// //
+// // Markup:
+// // <ul class='list-reset flex map-navigation__menu'>
+// //   <li><button class="setting-panel__button btn btn-map" title="change settings"><i class="icon icon-sphere"></i></button></li>
+// //   <li><button class="btn btn-map btn-full-screen" title="full screen mode"><i class="icon icon-full-screen"></i></button></li>
+// // </ul>
+// //
+// // Style guide: Buttons.map-buttons
 
-.btn.share-panel__button{
-  .icon{
-    position: absolute;
-    left: 3px;
-    top: 7px;
-  }
-  padding-left: 25px;
-  border-radius: 3px 0 0 3px;
-  border-right: 1px solid rgba(#fff, 0.15);
-}
+// .btn-map{
+//   box-sizing: border-box;
+//   margin: 0;
+//   display: block;
+//   height: 30px;
+//   background: $dark;
+//   color: #fff;
+//   text-transform: uppercase;
+//   font-size: $font-size-small;
+//   padding: 5px;
+//   border: 1px solid transparent;
+//   .icon{
+//     display: block;
+//     font-size: 1.2rem;
+//     line-height: 1;
+//   }
+//   &:hover, .map-nav-panel.is-open &, &.is-active {
+//     background: $color-primary;
+//     border: 1px solid rgba(#fff, 0.5);
+//   }
+// }
 
-.btn.btn-full-screen{
-  margin-right: $padding;
-  border-radius: 0 3px 3px 0;
-}
+// .btn.share-panel__button{
+//   .icon{
+//     position: absolute;
+//     left: 3px;
+//     top: 7px;
+//   }
+//   padding-left: 25px;
+//   border-radius: 3px 0 0 3px;
+//   border-right: 1px solid rgba(#fff, 0.15);
+// }
 
-.btn.setting-panel__button{
-  border-radius: 3px 0 0 3px;
-  border-right: 1px solid rgba(#fff, 0.15);
+// .btn.btn-full-screen{
+//   margin-right: $padding;
+//   border-radius: 0 3px 3px 0;
+// }
 
-}
+// .btn.setting-panel__button{
+//   border-radius: 3px 0 0 3px;
+//   border-right: 1px solid rgba(#fff, 0.15);
 
-.btn.about-link__button{
+// }
 
-  border-radius: 0 3px 3px 0;
-}
+// .btn.about-link__button{
+
+//   border-radius: 0 3px 3px 0;
+// }
 
 
 
-// Modal window tab buttons
-//
-// Tab buttons in modal window
-//
-// .btn-tab - button to switch to differetn tab
-// .btn-close-modal - button to close modal
-//
-// Markup:
-// <div class='modal-content'>
-// <button class="btn {{modifier_class}}"><span>Button</span></button>
-// </div>
-//
-// Style guide: Buttons.modal-tab
-//
+// // Modal window tab buttons
+// //
+// // Tab buttons in modal window
+// //
+// // .btn-tab - button to switch to differetn tab
+// // .btn-close-modal - button to close modal
+// //
+// // Markup:
+// // <div class='modal-content'>
+// // <button class="btn {{modifier_class}}"><span>Button</span></button>
+// // </div>
+// //
+// // Style guide: Buttons.modal-tab
+// //
 
-%btn-tab{
-  font-family: $font-pop;
-  font-size: 1rem;
-  text-transform: capitalize;
-  padding: $padding $padding*2;
-  border-bottom: 2px solid transparent;
-  li[aria-selected='true'] & {
-    border-bottom: 2px solid $modal-highlight;
-  }
-  &:hover , &:focus{
-    border-bottom: 2px solid $modal-highlight;
-  }
-}
-.btn.btn-tab{
-  border-right: 1px solid $modal-border;
-  @extend %btn-tab;
-}
+// %btn-tab{
+//   font-family: $font-pop;
+//   font-size: 1rem;
+//   text-transform: capitalize;
+//   padding: $padding $padding*2;
+//   border-bottom: 2px solid transparent;
+//   li[aria-selected='true'] & {
+//     border-bottom: 2px solid $modal-highlight;
+//   }
+//   &:hover , &:focus{
+//     border-bottom: 2px solid $modal-highlight;
+//   }
+// }
+// .btn.btn-tab{
+//   border-right: 1px solid $modal-border;
+//   @extend %btn-tab;
+// }
 
-.btn.btn-close-modal{
-  border-left: 1px solid $modal-border;
-  text-transform: uppercase;
-  color: $modal-highlight;
-  font-size: $font-size-large;
-  @extend %btn-tab;
-}
+// .btn.btn-close-modal{
+//   border-left: 1px solid $modal-border;
+//   text-transform: uppercase;
+//   color: $modal-highlight;
+//   font-size: $font-size-large;
+//   @extend %btn-tab;
+// }
 
-.btn.label{
-  font-weight: 700;
-  opacity: 0.9;
-  text-transform: uppercase;
-}
+// .btn.label{
+//   font-weight: 700;
+//   opacity: 0.9;
+//   text-transform: uppercase;
+// }
 
-// Work bench buttons
-//
-// Tab buttons in modal window
-//
-// Markup:
-// <button class="btn now-viewing__add">Add Data</button>
-//
-// Style guide: Buttons.add-data
-//
-
-
-.btn.now-viewing__add {
-  display: block;
-  line-height: $input-height;
-  text-transform: uppercase;
-  font-size: $font-size-small;
-  padding: 0 $padding*4;
-  font-family: $font-pop;
-  background: $color-primary;
-  text-align: center;
-  width: 100%;
-  @extend .icon;
-  @extend .icon-add;
-  &:before{
-    position: absolute;
-    font-size: 20px;
-    left: 2*$padding;
-    top: $padding;
-  }
-  &:hover{
-    background: lighten($color-primary, 10%);
-  }
-}
-
-// Clear search text button
-//
-// button to clear search text
-//
-// Markup:
-// <button class="btn search-clear"><i class="icon icon-close"></i></button>
-//
-// Style guide: Buttons.clear-search
-//
-
-.btn.search-clear{
-  @extend %colored-hover;
-  position: absolute;
-  right: $padding;
-  top: 2px;
-}
-
-// Add to map button
-//
-// Add to map button in modal window preview panel
-//
-// Markup:
-// <div class='clearfix'>
-// <button class="btn btn-preview-toggle" title="add to map">Add</button>
-// </div>
-// <div class='clearfix'>
-// <button class="btn btn-preview-toggle" title="remove from map">Remove</button>
-// </div>
-//
-// Style guide: Buttons.preview-action
-
-.btn.btn-preview-toggle{
-  text-align: center;
-  background: $color-primary;
-  color: #fff;
-  border: 1px solid transparent;
-  text-transform: uppercase;
-  line-height: 1;
-  font-size: $font-size-small;
-  margin-bottom: $padding-small;
-  width: 100%;
-  &:hover, &:focus{
-    border: 1px solid $color-primary;
-  }
-}
-
-// Basemap selector button
-//
-// Select a basemap
-//
-//.is-active - current basemap
-//
-// Markup:
-//<button class="btn btn-basemap {{modifier_class}}"><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"><span>Australian Hydrography</span></button>
-//
-// Style guide: Buttons.base-map
-
-.btn.btn-basemap{
-  padding: 0;
-  position: relative;
-  display: block;
-  line-height: 1.2;
-  border: 1px solid transparent;
-  img{
-    width: 100%;
-    height: auto;
-  }
-  &:hover{
-    border: $border-style;
-  }
-  &.is-active{
-    @extend .icon;
-    @extend .icon-check_box;
-
-  }
-  &:before{
-    position: absolute;
-    right: 0;
-    top: 0;
-    font-size: 20px;
-    background: $color-primary;
-    color: #fff;
-    z-index: 1;
-    text-align: center;
-    width: 22px;
-    border-radius: 3px;
-    height: 22px;
-  }
-}
-
-.kss-modifier__example{
-  .btn.btn-basemap{
-    max-width: 100px;
-  }
-}
-
-// Viewer selector button
-//
-// Select a viewer
-//
-// .is-active - current viewer
-//
-// Markup:
-// <button class="btn btn-viewer {{modifier_class}}">3D Smooth</button>
-//
-// Style guide: Buttons.viewer
+// // Work bench buttons
+// //
+// // Tab buttons in modal window
+// //
+// // Markup:
+// // <button class="btn now-viewing__add">Add Data</button>
+// //
+// // Style guide: Buttons.add-data
+// //
 
 
-.btn.btn-viewer{
-  padding: 0;
-  text-transform: uppercase;
-  font-size: $font-size-mini;
-  text-align: center;
-  width: 100%;
-  line-height: 4;
-  background: rgba(#fff, 0.15);
-  border: 1px solid transparent;
-  &:hover{
-      border: $border-style;
-  }
-  &.is-active{
-    background: $color-primary;
-    border-color: $color-primary;
-    color: #fff;
-  }
-}
+// .btn.now-viewing__add {
+//   display: block;
+//   line-height: $input-height;
+//   text-transform: uppercase;
+//   font-size: $font-size-small;
+//   padding: 0 $padding*4;
+//   font-family: $font-pop;
+//   background: $color-primary;
+//   text-align: center;
+//   width: 100%;
+//   @extend .icon;
+//   @extend .icon-add;
+//   &:before{
+//     position: absolute;
+//     font-size: 20px;
+//     left: 2*$padding;
+//     top: $padding;
+//   }
+//   &:hover{
+//     background: lighten($color-primary, 10%);
+//   }
+// }
 
-// Search data catalog button
-//
-// Markup:
-// <button class="btn btn-data-search">Search in data catalog<i className='icon icon-right-arrow'></i></button>
-//
-// Style guide: Buttons.data-search
+// // Clear search text button
+// //
+// // button to clear search text
+// //
+// // Markup:
+// // <button class="btn search-clear"><i class="icon icon-close"></i></button>
+// //
+// // Style guide: Buttons.clear-search
+// //
 
-.btn.btn-data-search{
-  display: block;
-  width: 100%;
-  color: $color-primary;
-  text-transform: uppercase;
-  .icon{
-    font-size: 16px;
-    position: relative;
-    &:before{
-      position: absolute;
-      top: 5px;
-    }
-  }
-}
+// .btn.search-clear{
+//   @extend %colored-hover;
+//   position: absolute;
+//   right: $padding;
+//   top: 2px;
+// }
+
+// // Add to map button
+// //
+// // Add to map button in modal window preview panel
+// //
+// // Markup:
+// // <div class='clearfix'>
+// // <button class="btn btn-preview-toggle" title="add to map">Add</button>
+// // </div>
+// // <div class='clearfix'>
+// // <button class="btn btn-preview-toggle" title="remove from map">Remove</button>
+// // </div>
+// //
+// // Style guide: Buttons.preview-action
+
+// .btn.btn-preview-toggle{
+//   text-align: center;
+//   background: $color-primary;
+//   color: #fff;
+//   border: 1px solid transparent;
+//   text-transform: uppercase;
+//   line-height: 1;
+//   font-size: $font-size-small;
+//   margin-bottom: $padding-small;
+//   width: 100%;
+//   &:hover, &:focus{
+//     border: 1px solid $color-primary;
+//   }
+// }
+
+// // Basemap selector button
+// //
+// // Select a basemap
+// //
+// //.is-active - current basemap
+// //
+// // Markup:
+// //<button class="btn btn-basemap {{modifier_class}}"><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"><span>Australian Hydrography</span></button>
+// //
+// // Style guide: Buttons.base-map
+
+// .btn.btn-basemap{
+//   padding: 0;
+//   position: relative;
+//   display: block;
+//   line-height: 1.2;
+//   border: 1px solid transparent;
+//   img{
+//     width: 100%;
+//     height: auto;
+//   }
+//   &:hover{
+//     border: $border-style;
+//   }
+//   &.is-active{
+//     @extend .icon;
+//     @extend .icon-check_box;
+
+//   }
+//   &:before{
+//     position: absolute;
+//     right: 0;
+//     top: 0;
+//     font-size: 20px;
+//     background: $color-primary;
+//     color: #fff;
+//     z-index: 1;
+//     text-align: center;
+//     width: 22px;
+//     border-radius: 3px;
+//     height: 22px;
+//   }
+// }
+
+// .kss-modifier__example{
+//   .btn.btn-basemap{
+//     max-width: 100px;
+//   }
+// }
+
+// // Viewer selector button
+// //
+// // Select a viewer
+// //
+// // .is-active - current viewer
+// //
+// // Markup:
+// // <button class="btn btn-viewer {{modifier_class}}">3D Smooth</button>
+// //
+// // Style guide: Buttons.viewer
 
 
-button.btn.visibility{
-  font-size: 16px;
-}
+// .btn.btn-viewer{
+//   padding: 0;
+//   text-transform: uppercase;
+//   font-size: $font-size-mini;
+//   text-align: center;
+//   width: 100%;
+//   line-height: 4;
+//   background: rgba(#fff, 0.15);
+//   border: 1px solid transparent;
+//   &:hover{
+//       border: $border-style;
+//   }
+//   &.is-active{
+//     background: $color-primary;
+//     border-color: $color-primary;
+//     color: #fff;
+//   }
+// }
 
-//
+// // Search data catalog button
+// //
+// // Markup:
+// // <button class="btn btn-data-search">Search in data catalog<i className='icon icon-right-arrow'></i></button>
+// //
+// // Style guide: Buttons.data-search
 
-.btn-data-upload{
-  font-size: $font-size-small;
-  font-weight: $font-weight-medium;
-  width: 100%;
-  padding-left: 0;
-  border-bottom: 2px solid $grey;
-  color: $grey;
-  &:hover, &:focus, &.is-active{
-    color: $color-primary;
-    border-bottom: 2px solid $color-primary;
-  }
-}
-
-.btn-feature-name{
-  width: 100%;
-  position: relative;
-  padding-right: $padding*4;
-  .icon{
-    position: absolute;
-    right: $padding;
-    top: $padding;
-  }
-}
-
-.btn-dropdown{
-  width: 100%;
-  border: 2px solid $grey-lighter;
-
-  &:hover,
-  &:focus{
-    border-color:$color-primary;
-  }
-}
-.btn-dropdown-option{
-  display: block;
-  width: 100%;
-  padding: 8px;
-
-  &:hover, &:focus{
-    color: $color-primary;
-  }
-
-  &.is-selected{
-    color: $color-primary;
-  }
-}
+// .btn.btn-data-search{
+//   display: block;
+//   width: 100%;
+//   color: $color-primary;
+//   text-transform: uppercase;
+//   .icon{
+//     font-size: 16px;
+//     position: relative;
+//     &:before{
+//       position: absolute;
+//       top: 5px;
+//     }
+//   }
+// }
 
 
+// button.btn.visibility{
+//   font-size: 16px;
+// }
 
-.btn-file-input, .btn-add-url{
-  @extend .btn-primary;
-}
+// //
 
-.btn.btn-drag{
-  cursor: move;
-  background: $dark;
-}
-.btn.btn-remove{
-  padding: $padding 0;
-  text-align: right;
-}
+// .btn-data-upload{
+//   font-size: $font-size-small;
+//   font-weight: $font-weight-medium;
+//   width: 100%;
+//   padding-left: 0;
+//   border-bottom: 2px solid $grey;
+//   color: $grey;
+//   &:hover, &:focus, &.is-active{
+//     color: $color-primary;
+//     border-bottom: 2px solid $color-primary;
+//   }
+// }
 
-.btn-add-more-data{
-  margin-top: $padding-small;
-  @extend .btn-primary;
-}
+// .btn-feature-name{
+//   width: 100%;
+//   position: relative;
+//   padding-right: $padding*4;
+//   .icon{
+//     position: absolute;
+//     right: $padding;
+//     top: $padding;
+//   }
+// }
 
-.btn.btn-now-viewing-toggle{
-  padding: $padding 14px $padding 6px;
-}
+// .btn-dropdown{
+//   width: 100%;
+//   border: 2px solid $grey-lighter;
 
-.btn-back-to-my-data{
-  @extend .btn-small;
-  .is-empty &{
-    display: none;
-  }
-  .add-data &{
-    margin-bottom: $padding;
-  }
-  &:hover{
-    color: $color-primary;
-  }
-}
+//   &:hover,
+//   &:focus{
+//     border-color:$color-primary;
+//   }
+// }
+// .btn-dropdown-option{
+//   display: block;
+//   width: 100%;
+//   padding: 8px;
 
-.kss-modifier__example{
-  .btn.btn-viewer{
-    max-width: 100px;
-  }
-}
+//   &:hover, &:focus{
+//     color: $color-primary;
+//   }
+
+//   &.is-selected{
+//     color: $color-primary;
+//   }
+// }
+
+
+
+// .btn-file-input, .btn-add-url{
+//   @extend .btn-primary;
+// }
+
+
+
+
+// .btn-add-more-data{
+//   margin-top: $padding-small;
+//   @extend .btn-primary;
+// }
+
+
+
+
+// .btn-back-to-my-data{
+//   @extend .btn-small;
+//   .is-empty &{
+//     display: none;
+//   }
+//   .add-data &{
+//     margin-bottom: $padding;
+//   }
+//   &:hover{
+//     color: $color-primary;
+//   }
+// }
+
+
 
 
 

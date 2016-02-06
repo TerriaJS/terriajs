@@ -74,23 +74,23 @@ const NowViewingItem = React.createClass({
         const nowViewingItem = this.props.nowViewingItem;
 
         return (
-          <li className={'now-viewing__item clearfix ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
-            <div className ="now-viewing__item-header clearfix">
-              <button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn-drag block col col-11">{nowViewingItem.name}</button>
-              <button onClick={this.toggleDisplay} className="btn btn-now-viewing-toggle col col-1"><i className={nowViewingItem.isLegendVisible ? 'icon-chevron-down icon' : 'icon-chevron-right icon'}></i></button>
-            </div>
-            <div className ="now-viewing__item-inner">
-              <ul className="list-reset flex clearfix now-viewing__item-control">
-                <li><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn zoom">Zoom To</button></li>
-                <li><button onClick={this.previewItem} className='info btn' title='info'>info</button></li>
-                <li><button onClick={this.removeFromMap} title="Remove this data" className="btn remove">Remove</button></li>
-                <li className='flex-grow right-align'><button onClick={this.toggleVisibility} title="Data show/hide" className="btn visibility"><i className={'icon ' + (nowViewingItem.isShown ? 'icon-eye' : 'icon-invisible')}></i></button></li>
+          <li className={'now-viewing__item ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
+            <ul className ="now-viewing__item__header">
+              <li><button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn--drag">{nowViewingItem.name}</button></li>
+              <li><button onClick={this.toggleDisplay} className='btn btn--toggle'></button></li>
+            </ul>
+            <div className ="now-viewing__item__inner">
+              <ul className="now-viewing__item__control">
+                <li className='zoom'><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn">Zoom To</button></li>
+                <li className='info'><button onClick={this.previewItem} className='btn' title='info'>info</button></li>
+                <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
+                <li className='visibility'><button onClick={this.toggleVisibility} title="Data show/hide" className={'btn btn--visibility ' + (nowViewingItem.isShown ? 'is-visible' : '')}></button></li>
               </ul>
-              <div className="now-viewing__item-opacity">
+              <div className="now-viewing__item__opacity">
                 <label htmlFor="opacity">Opacity: </label>
                 <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
               </div>
-              <div className="now-viewing__item-legend">
+              <div className="now-viewing__item__legend">
                 {this.renderLegend(nowViewingItem)}
               </div>
             </div>
