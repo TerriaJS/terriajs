@@ -10,6 +10,9 @@
                 <!-- ko if: !hasChildren -->
                     <div class="data-catalog-icon-holder">
                         <div class="data-catalog-arrow"></div>
+                        <!-- ko if: isActive && color -->
+                            <div class="data-catalog-swatch" data-bind="style: {'background': color}"></div>
+                        <!-- /ko -->
                     </div>
                 <!-- /ko -->
                 <!-- ko if: isSelectable -->

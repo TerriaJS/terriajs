@@ -1,6 +1,5 @@
 'use strict';
 
-import Chart from './Chart.jsx';
 import React from 'react';
 import SearchBox from './SearchBox.jsx';
 import NowViewingContainer from './NowViewingContainer.jsx';
@@ -43,21 +42,6 @@ const SidePanel = React.createClass({
         }
     },
 
-    renderCharts(nowViewing) {
-        if (nowViewing && nowViewing.length > 0) {
-            return (
-              <div>
-                  <ul className="now-viewing__header list-reset clearfix">
-                      <li className='col col-6'><label className='label-inline'> Charts </label><label className='label-badge label-inline'> 1 </label></li>
-                  </ul>
-                  <div className='nowViewing-chart'>
-                      <Chart />
-                  </div>
-              </div>);
-        }
-        return null;
-    },
-
     render() {
         return (
             <div className='workbench__inner'>
@@ -67,7 +51,6 @@ const SidePanel = React.createClass({
               <SearchBox terria={this.props.terria} searchText={this.props.mapSearchText} onSearchTextChanged={this.props.onMapSearchTextChanged} dataSearch={false} onSearchCatalog={this.props.onSearchCatalog} />
               <div className="now-viewing hide-on-search">
                 {this.renderNowViewing(this.props.terria.nowViewing.items)}
-                {this.renderCharts(this.props.terria.nowViewing.items)}
               </div>
             </div>);
     }

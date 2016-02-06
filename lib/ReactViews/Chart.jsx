@@ -1,45 +1,62 @@
 'use strict';
-const React = require('react');
-const d3 = require('d3');
 
-const data = [{ x: 0, y: 20 }, { x: 1, y: 30 }, { x: 2, y: 10 }, { x: 3, y: 5 }, { x: 4, y: 8 }, { x: 5, y: 15 }, { x: 6, y: 10 }];
-const height = 100;
-const width = 300;
-const yScale = d3.scale.linear()
-      .domain([0, 30])
-      .range([0, height]);
-const xScale = d3.scale.linear()
-      .domain([0, 6])
-      .range([0, width]);
+// Two possible approaches to combining D3 and React:
+// 1. Render SVG element in React, let React keep control of the DOM.
+// 2. React treats the element like a blackbox, and D3 is in control.
+// We take the second approach, because it gives us much more of the power of D3 (animations etc).
+//
+// See also:
+// https://facebook.github.io/react/docs/working-with-the-browser.html
+// http://ahmadchatha.com/writings/article1.html
+// http://nicolashery.com/integrating-d3js-visualizations-in-a-react-app/
+
+import React from 'react';
+import LineChart from '../Charts/LineChart';
+
+const height = 300;
 
 const Chart = React.createClass({
+    // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
+    _element: undefined,
+
     getDefaultProps() {
         return {
-            width: width,
             height: height,
-            color: '#FFF',
-            data: data,
-            yScale: yScale,
-            xScale: xScale,
+            colors: undefined,
+            data: undefined,
+            domain: undefined,
             margin: {top: 10, right: 20, bottom: 5, left: 20}
         };
     },
-    render() {
-        const path = d3.svg.line()
-        .x((d)=>xScale(d.x))
-        .y((d)=>yScale(d.y))
-        .interpolate('basic');
 
-        const style = {
-            transform: 'translate(' + this.props.margin.left + 'px ,' + (-this.props.margin.bottom) + 'px )'
+    componentDidMount() {
+        LineChart.create(this._element, {
+            width: '100%',
+            height: height
+        }, this.getChartState());
+    },
+
+    componentDidUpdate() {
+        LineChart.update(this._element, this.getChartState());
+    },
+
+    getChartState() {
+        return {
+            colors: this.props.colors,
+            data: this.props.data,
+            domain: this.props.domain
         };
+    },
 
+    componentWillUnmount() {
+        LineChart.destroy(this._element);
+    },
+
+    render() {
         return (
-          <div className='chart'>
-            <svg width={this.props.width} height={this.props.height} style={style}>
-              <path d={path(this.props.data)} stroke={this.props.color} strokeWidth={this.props.stroke} fill="none" />
-            </svg>
-          </div>);
+            <div className='chart' ref={(element) => this._element = element}></div>
+        );
     }
 });
+
 module.exports = Chart;
