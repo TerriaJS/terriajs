@@ -112,11 +112,78 @@ describe('TableColumn', function() {
         expect(tableColumn.dates[0].getFullYear()).toEqual(2010);
     });
 
+    it('can detect time type from yyyy-mm', function() {
+        var data = ['2010-01', '2010-02', '2010-03', '2010-04'];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.values).toEqual(data);
+        expect(tableColumn.dates[1].getDate()).toEqual(1);
+        expect(tableColumn.dates[1].getMonth()).toEqual(1); // January is month 0
+        expect(tableColumn.dates[1].getFullYear()).toEqual(2010);
+    });
+
+    // This format can actually work, but we don't want to encourage it.
+    // it('can detect time type from yyyy/mm/dd h:mm:ss', function() {
+    //     var data = ['2010/02/12 12:34:56', '2010/02/13 1:23:45'];
+    //     var tableColumn = new TableColumn('date', data);
+    //     expect(tableColumn.type).toEqual(VarType.TIME);
+    //     expect(tableColumn.values).toEqual(data);
+    //     expect(tableColumn.dates[1].getDate()).toEqual(13);
+    //     expect(tableColumn.dates[1].getMonth()).toEqual(1); // January is month 0
+    //     expect(tableColumn.dates[1].getFullYear()).toEqual(2010);
+    //     expect(tableColumn.dates[1].getHours()).toEqual(1);
+    //     expect(tableColumn.dates[1].getMinutes()).toEqual(23);
+    //     expect(tableColumn.dates[1].getSeconds()).toEqual(45);
+    // });
+
+    it('can detect time type from yyyy-mm-dd h:mm', function() {
+        var data = ['2010-02-12 12:34', '2010-02-13 1:23'];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.values).toEqual(data);
+        expect(tableColumn.dates[1].getDate()).toEqual(13);
+        expect(tableColumn.dates[1].getMonth()).toEqual(1); // January is month 0
+        expect(tableColumn.dates[1].getFullYear()).toEqual(2010);
+        expect(tableColumn.dates[1].getHours()).toEqual(1);
+        expect(tableColumn.dates[1].getMinutes()).toEqual(23);
+        expect(tableColumn.dates[1].getSeconds()).toEqual(0);
+    });
+
+    it('can detect time type from yyyy-mm-dd h:mm:ss', function() {
+        var data = ['2010-02-12 12:34:56', '2010-02-13 1:23:45'];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.values).toEqual(data);
+        expect(tableColumn.dates[1].getDate()).toEqual(13);
+        expect(tableColumn.dates[1].getMonth()).toEqual(1); // January is month 0
+        expect(tableColumn.dates[1].getFullYear()).toEqual(2010);
+        expect(tableColumn.dates[1].getHours()).toEqual(1);
+        expect(tableColumn.dates[1].getMinutes()).toEqual(23);
+        expect(tableColumn.dates[1].getSeconds()).toEqual(45);
+    });
+
     it('can detect year subtype using year title', function() {
         var data = ['1066', '1776', '1788', '1901', '2220'];
         var tableColumn = new TableColumn('year', data);
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
+    });
+
+    it('detects years from numerical data in a column named time', function() {
+        var data = [730, 1230, 130];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
+        expect(tableColumn.values).toEqual(data);
+    });
+
+    it('can handle missing times', function() {
+        var data = ['2016-01-03T12:15:59.1234Z', '-', '2016-01-04T12:25:00Z'];
+        var tableColumn = new TableColumn('date', data);
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.dates[0].getUTCDate()).toEqual(3);
+        expect(tableColumn.dates[1]).toBeUndefined();
+        expect(tableColumn.dates[2].getUTCDate()).toEqual(4);
     });
 
 
@@ -140,11 +207,41 @@ describe('TableColumn', function() {
         ]);
     });
 
-    it('treats numerical data in a column named time as scalars', function() {
-        var data = [730, 1230, 130];
+    it('treats numerical data >= 9999 in a column named time as scalars', function() {
+        var data = [9999, 1230, 130];
         var tableColumn = new TableColumn('date', data);
         expect(tableColumn.type).toEqual(VarType.SCALAR);
         expect(tableColumn.values).toEqual(data);
+    });
+
+    it('can detect tag type from <img>', function() {
+        var data = ['<img src="foo">', '<img src="bar">'];
+        var tableColumn = new TableColumn('image', data);
+        expect(tableColumn.type).toEqual(VarType.TAG);
+    });
+
+    it('can detect tag type from <br/>', function() {
+        var data = ['<br/>', '<br/>'];
+        var tableColumn = new TableColumn('bar', data);
+        expect(tableColumn.type).toEqual(VarType.TAG);
+    });
+
+    it('can detect tag type from <div>', function() {
+        var data = ['<div>Foo</div>', '<div>Bar</div>'];
+        var tableColumn = new TableColumn('foo', data);
+        expect(tableColumn.type).toEqual(VarType.TAG);
+    });
+
+    it('does not use tag type for <<...>>', function() {
+        var data = ['<<he>>', '<<she>>'];
+        var tableColumn = new TableColumn('who', data);
+        expect(tableColumn.type).toEqual(VarType.ENUM);
+    });
+
+    it('does not use tag type for <foo>', function() {
+        var data = ['<foo>', '<foobar>'];
+        var tableColumn = new TableColumn('fee', data);
+        expect(tableColumn.type).toEqual(VarType.ENUM);
     });
 
     it('can sum three columns from array', function() {

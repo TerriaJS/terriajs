@@ -147,7 +147,7 @@ describe('ArcGisMapServerCatalogItem', function() {
     it('generates a legend with the right number of items', function(done) {
         var url = 'http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31';
         item.updateFromJson({url: url});
-        spyOn(Legend.prototype, 'asPngUrl').and.callFake(function(canvas) {
+        spyOn(Legend.prototype, 'drawSvg').and.callFake(function() {
             expect(this.items.length).toBe(2);
             expect(this.items[1].title).toBe('Wrecks');
             console.log(this);
