@@ -1,48 +1,48 @@
-//My data
-.my-data{
-  height: 100%;
-  h4{
-    margin: 0;
-    text-transform: uppercase;
-    font-weight: $font-weight-medium;
-  }
-}
-.add-data{
-  background: $modal-secondary-bg;
-  padding: $padding;
-  height: 100%;
-  overflow: visible;
-}
+// //My data
+// .my-data{
+//   height: 100%;
+//   h4{
+//     margin: 0;
+//     text-transform: uppercase;
+//     font-weight: $font-weight-medium;
+//   }
+// }
+// .add-data{
+//   background: $modal-secondary-bg;
+//   padding: $padding;
+//   height: 100%;
+//   overflow: visible;
+// }
 
-.added-data{
-  //temp
-  padding: 0 $padding 0 0;
-}
+// .added-data{
+//   //temp
+//   padding: 0 $padding 0 0;
+// }
 
-.add-data__panel.local{
-  padding-right: 2px;
-}
+// .add-data__panel.local{
+//   padding-right: 2px;
+// }
 
 
 
-.drag-drop-zone{
-  visibility: hidden;
-  height: 0;
-  width: 0;
-  &.is-active{
-    // Temp
-    visibility: visible;
-    position: fixed;
-    top: calc(20px - 15vh);
-    left: -$work-bench-width - 50px;
-    height: 100vh;
-    width: 100vw;
-    background: rgba(#fff, 0.6);
-    z-index: 99;
-    h1{
-      margin: 0 auto;
-    }
-  }
-}
+// .drag-drop-zone{
+//   visibility: hidden;
+//   height: 0;
+//   width: 0;
+//   &.is-active{
+//     // Temp
+//     visibility: visible;
+//     position: fixed;
+//     top: calc(20px - 15vh);
+//     left: -$work-bench-width - 50px;
+//     height: 100vh;
+//     width: 100vw;
+//     background: rgba(#fff, 0.6);
+//     z-index: 99;
+//     h1{
+//       margin: 0 auto;
+//     }
+//   }
+// }
 
 

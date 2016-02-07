@@ -27,6 +27,9 @@
 .notification{
   border-radius: $radius-small;
   border: 1px solid darken($dark, 3%);
+  background: $dark;
+  z-index: 300;
+  width: 300px;
   .notification__inner{
     padding: $padding $padding*2;
     height: 200px;
@@ -44,7 +47,4 @@
     font-size: $font-size-small;
     border-radius: 0 0 $radius-small $radius-small;
   }
-  background: $dark;
-  z-index: 300;
-  width: 300px;
 }

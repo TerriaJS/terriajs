@@ -13,6 +13,13 @@
   }
 }
 
+.map-navigation{
+    position: fixed;
+    top: 20px;
+    right: $padding;
+    z-index: 10;
+}
+
 .map{
   left: $work-bench-width;
   position: absolute;
@@ -50,25 +57,7 @@
   }
 }
 
-#map-nav{
-    position: fixed;
-    top: 20px;
-    right: $padding;
-    z-index: 10;
 
-    .compass{
-      position: absolute;
-      right: $padding;
-      top: 75px;
-    }
-
-    .zoom-control{
-      position: absolute;
-      //temp
-      right: 34px;
-      top: 170px;
-    }
-}
 
 // should go into national map maybe...
 #notification{

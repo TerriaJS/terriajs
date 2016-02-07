@@ -140,8 +140,8 @@ const SearchBox = React.createClass({
 
         return (
             <div>
-                <label className='label label-sub-heading'>{search.name}</label>
-                <ul className='list-reset search-results-items'>
+                <label className='label label--sub-heading'>{search.name}</label>
+                <ul className='search-results-items'>
                     {search.isSearching && <Loader />}
                     {search.searchMessage && <li className ='label no-results'>{search.searchMessage}</li>}
                     {results}
@@ -158,7 +158,7 @@ const SearchBox = React.createClass({
 
         let linkToSearchData = null;
         if ((this.props.dataSearch === false) && this.props.searchText.length > 0) {
-            linkToSearchData = (<button onClick={this.searchCatalog} className='btn btn-data-search '>Search {this.props.searchText} in Data Catalog </button>);
+            linkToSearchData = (<button onClick={this.searchCatalog} className='btn btn--data-search '>Search <i> {this.props.searchText} </i> in Data Catalog </button>);
         }
 
         return (

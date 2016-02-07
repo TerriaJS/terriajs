@@ -12,6 +12,7 @@ $btn-setting-size: 35px;
 //
 // .btn-small - small button
 // .btn-primary - Primary button
+// .btn-grey - Big grey button
 //
 // Markup:
 //<button class='btn {{modifier_class}}'> Button </button>
@@ -52,6 +53,25 @@ $btn-setting-size: 35px;
   }
 }
 
+.btn-grey{
+  padding: 0;
+  text-transform: uppercase;
+  font-size: $font-size-mini;
+  text-align: center;
+  width: 100%;
+  line-height: 4;
+  background: rgba(#fff, 0.15);
+  border: 1px solid transparent;
+  &:hover{
+      border: $border-style;
+  }
+  &.is-active{
+    background: $color-primary;
+    border-color: $color-primary;
+    color: #fff;
+  }
+}
+
 // Icon Buttons
 //
 // .btn--toggle - toggle icon
@@ -60,6 +80,12 @@ $btn-setting-size: 35px;
 // .btn--remove-from-map - remove from map
 // .btn--loading-on-map - loading on map
 // .btn--close-modal - button to close modal window
+// .btn--increase - increase a value
+// .btn--decrese - decrease a value
+// .btn--refresh - refresh a value
+// .btn--sphere - a sphere icon
+// .btn--share - share this
+// .btn--expand - expand this
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -71,7 +97,13 @@ $btn-setting-size: 35px;
 .btn--add-to-map,
 .btn--remove-from-map,
 .btn--loading-on-map,
-.btn--close-modal{
+.btn--close-modal,
+.btn--increase,
+.btn--decrease,
+.btn--refresh,
+.btn--sphere,
+.btn--share,
+.btn--expand{
   @extend .icon;
   &:before{
     line-height: $btn-default-line-height;
@@ -114,6 +146,30 @@ $btn-setting-size: 35px;
   }
 }
 
+.btn--refresh{
+  @extend .icon-refresh;
+}
+
+.btn--increase{
+  @extend .icon-zoom-in;
+}
+
+.btn--decrease{
+  @extend .icon-zoom-out;
+}
+
+.btn--sphere{
+  @extend .icon-sphere;
+}
+
+.btn--share{
+  @extend .icon-share;
+}
+
+.btn--expand{
+  @extend .icon-expand;
+}
+
 // Text and icon buttons
 //
 // .btn--location-name - location item
@@ -135,6 +191,56 @@ $btn-setting-size: 35px;
 .btn--location-name{
   @extend .icon-location;
 }
+
+// Image button
+//
+//.is-active - Active button
+//
+// Markup:
+//<button class="btn btn--image {{modifier_class}}"><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"></button>
+//
+// Style guide: Buttons.button--image
+
+.btn--image{
+  padding: 0;
+  position: relative;
+  display: block;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  img{
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  &:hover{
+    border: $border-style;
+  }
+  &.is-active{
+    @extend .icon;
+    @extend .icon-check_box;
+
+  }
+  &:before{
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 20px;
+    background: $color-primary;
+    color: #fff;
+    z-index: 1;
+    text-align: center;
+    width: 22px;
+    border-radius: $radius-small;
+    height: 22px;
+  }
+}
+
+.kss-modifier__example{
+  .btn.btn-basemap{
+    max-width: 100px;
+  }
+}
+
 
 // Data Catalog Group
 //
@@ -224,19 +330,16 @@ $btn-setting-size: 35px;
 // Tab buttons in modal window
 //
 // Markup:
-// <div class='modal-content'>
-// <button class="btn btn--tab"><span>Button</span></button>
-// </div>
+// <button class="btn btn--tab">Button</button>
 //
 // Style guide: Buttons.modal-tab
 //
 
-// %btn-tab{
-
-// }
 .btn.btn--tab{
   border-right: 1px solid $modal-border;
   font-family: $font-pop;
+  background: $modal-bg;
+  color:$modal-text;
   font-size: 1rem;
   text-transform: capitalize;
   padding: $padding $padding*2;
@@ -246,181 +349,69 @@ $btn-setting-size: 35px;
   }
   &:hover , &:focus{
     border-bottom: 2px solid $modal-highlight;
+    color: $modal-highlight;
   }
 }
 
 
-// // Map buttons
-// //
-// // Buttons on the map
-// //
-// // Markup:
-// // <ul class='list-reset flex map-navigation__menu'>
-// //   <li><button class="setting-panel__button btn btn-map" title="change settings"><i class="icon icon-sphere"></i></button></li>
-// //   <li><button class="btn btn-map btn-full-screen" title="full screen mode"><i class="icon icon-full-screen"></i></button></li>
-// // </ul>
-// //
-// // Style guide: Buttons.map-buttons
+// Map buttons
+//
+// Buttons on the map
+//
+// Markup:
+// <button class="btn btn--map" title="full screen mode"></button>
+//
+// Style guide: Buttons.map-buttons
 
-// .btn-map{
-//   box-sizing: border-box;
-//   margin: 0;
-//   display: block;
-//   height: 30px;
-//   background: $dark;
-//   color: #fff;
-//   text-transform: uppercase;
-//   font-size: $font-size-small;
-//   padding: 5px;
-//   border: 1px solid transparent;
-//   .icon{
-//     display: block;
-//     font-size: 1.2rem;
-//     line-height: 1;
-//   }
-//   &:hover, .map-nav-panel.is-open &, &.is-active {
-//     background: $color-primary;
-//     border: 1px solid rgba(#fff, 0.5);
-//   }
-// }
-
-// .btn.share-panel__button{
-//   .icon{
-//     position: absolute;
-//     left: 3px;
-//     top: 7px;
-//   }
-//   padding-left: 25px;
-//   border-radius: 3px 0 0 3px;
-//   border-right: 1px solid rgba(#fff, 0.15);
-// }
-
-// .btn.btn-full-screen{
-//   margin-right: $padding;
-//   border-radius: 0 3px 3px 0;
-// }
-
-// .btn.setting-panel__button{
-//   border-radius: 3px 0 0 3px;
-//   border-right: 1px solid rgba(#fff, 0.15);
-
-// }
-
-// .btn.about-link__button{
-
-//   border-radius: 0 3px 3px 0;
-// }
+.btn--map{
+  background: $dark;
+  text-transform: uppercase;
+  font-size: $font-size-small;
+  padding: 5px;
+  color: #fff;
+  border: 1px solid transparent;
+  display: block;
+  height: $padding*3;
+  &:hover, .is-open &, &.is-active {
+    background: $color-primary;
+    border: 1px solid rgba(#fff, 0.5);
+    text-decoration: none;
+  }
+}
 
 
-// // Basemap selector button
-// //
-// // Select a basemap
-// //
-// //.is-active - current basemap
-// //
-// // Markup:
-// //<button class="btn btn-basemap {{modifier_class}}"><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"><span>Australian Hydrography</span></button>
-// //
-// // Style guide: Buttons.base-map
+// Search data catalog button
+//
+// Markup:
+// <button class="btn btn--data-search">Search <strong> a </strong>in data catalog</button>
+//
+// Style guide: Buttons.data-search
 
-// .btn.btn-basemap{
-//   padding: 0;
-//   position: relative;
-//   display: block;
-//   line-height: 1.2;
-//   border: 1px solid transparent;
-//   img{
-//     width: 100%;
-//     height: auto;
-//   }
-//   &:hover{
-//     border: $border-style;
-//   }
-//   &.is-active{
-//     @extend .icon;
-//     @extend .icon-check_box;
-
-//   }
-//   &:before{
-//     position: absolute;
-//     right: 0;
-//     top: 0;
-//     font-size: 20px;
-//     background: $color-primary;
-//     color: #fff;
-//     z-index: 1;
-//     text-align: center;
-//     width: 22px;
-//     border-radius: 3px;
-//     height: 22px;
-//   }
-// }
-
-// .kss-modifier__example{
-//   .btn.btn-basemap{
-//     max-width: 100px;
-//   }
-// }
-
-// // Viewer selector button
-// //
-// // Select a viewer
-// //
-// // .is-active - current viewer
-// //
-// // Markup:
-// // <button class="btn btn-viewer {{modifier_class}}">3D Smooth</button>
-// //
-// // Style guide: Buttons.viewer
+.btn--data-search{
+  display: block;
+  width: auto;
+  color: $color-primary;
+  text-transform: uppercase;
+  padding-right: $padding*3;
+  i{
+    color: lighten($color-primary, 10%);
+    display: inline-block;
+    padding: 0 $padding-small;
+  }
+  @extend .icon;
+  @extend .icon-right-arrow;
+  position: relative;
+    &:before{
+      font-size: 1.5rem;
+      position: absolute;
+      top: 0;
+      right: 0;
+      line-height: $btn-default-line-height;
+      padding: 10px;
+    }
+}
 
 
-// .btn.btn-viewer{
-//   padding: 0;
-//   text-transform: uppercase;
-//   font-size: $font-size-mini;
-//   text-align: center;
-//   width: 100%;
-//   line-height: 4;
-//   background: rgba(#fff, 0.15);
-//   border: 1px solid transparent;
-//   &:hover{
-//       border: $border-style;
-//   }
-//   &.is-active{
-//     background: $color-primary;
-//     border-color: $color-primary;
-//     color: #fff;
-//   }
-// }
-
-// // Search data catalog button
-// //
-// // Markup:
-// // <button class="btn btn-data-search">Search in data catalog<i className='icon icon-right-arrow'></i></button>
-// //
-// // Style guide: Buttons.data-search
-
-// .btn.btn-data-search{
-//   display: block;
-//   width: 100%;
-//   color: $color-primary;
-//   text-transform: uppercase;
-//   .icon{
-//     font-size: 16px;
-//     position: relative;
-//     &:before{
-//       position: absolute;
-//       top: 5px;
-//     }
-//   }
-// }
-
-
-// button.btn.visibility{
-//   font-size: 16px;
-// }
-
-// //
 
 // .btn-data-upload{
 //   font-size: $font-size-small;

@@ -13,11 +13,17 @@ label {
   margin-bottom: $padding;
 }
 
-.setting-panel__label, .share-panel__label{
+.label--setting-panel,
+.label--active-map,
+.share-panel__label{
   text-transform: uppercase;
   padding: $padding-small 0;
   display: block;
 }
+.label--active-map{
+  font-size: $font-size-mini;
+}
+
 
 .active-map__label{
   padding: $padding-small 0;
@@ -34,15 +40,11 @@ label {
   font-size: 8px;
 }
 
-.label-inline{
-  display: inline-block;
-}
-
-.label-sub-heading{
+.label--sub-heading{
   text-transform: uppercase;
 }
 
-.label-preview-badge{
+.label--preview-badge{
   position: absolute;
   top: 0;
   width: 78px;
@@ -51,3 +53,11 @@ label {
   background-size: contain;
   background-color: transparent;
 }
+
+// .label-inline{
+//   display: inline-block;
+// }
+
+
+
+

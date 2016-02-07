@@ -62,7 +62,7 @@ const Tabs = React.createClass({
         const that = this;
         return (that.getTabs().map((item, i) =>
                   <li key={i}
-                    className={getName('tablist__', item.title)}
+                    className={getName('tablist__', item.title) + ' ' + (that.props.activeTabID === i ? 'is-active' : '') }
                     id={getName('tablist__', item.title)}
                     role="tab"
                     aria-controls={getName('panel__', item.title)}
@@ -79,9 +79,10 @@ const Tabs = React.createClass({
                     key={i}
                     aria-hidden={that.props.activeTabID !== i}
                     id={getName('panel__', item.title)}
-                    className={getName('tab-panel panel__', item.title)}
+                    className={getName('tab-panel panel__', item.title) + ' ' + (that.props.activeTabID === i ? 'is-active' : '')}
                     aria-labelledby={getName('tablist__', item.title)}
-                    role='tabpanel' tabIndex='0'>
+                    role='tabpanel'
+                    tabIndex='0'>
                   <h3 className="hide">{item.title.replace(/-/g, ' ')}</h3>{item.panel}</section>));
     },
 

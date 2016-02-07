@@ -6,7 +6,6 @@ const AddData = require('./AddData.jsx');
 
 const disclaimer = <small>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </small> ;
 
-
 // My data tab include Add data section and preview section
 const MyDataTab = React.createClass({
     propTypes: {
@@ -42,7 +41,7 @@ const MyDataTab = React.createClass({
         if(this.state.isUploadView === true) {
             return (
                     <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '')}>
-                    <button onClick={this.changeUploadView} className='btn btn-back-to-my-data'> Back </button>
+                    <button onClick={this.changeUploadView} className='btn btn--back-to-my-data'> Back </button>
                         <h4>Adding your own data</h4>
                         <AddData updateCatalog={this.updateCatalog}
                                  terria={this.props.terria}
@@ -55,20 +54,20 @@ const MyDataTab = React.createClass({
         if (this.state.dataCatalog) {
             return (<div className="added-data">
                         {disclaimer}
-                        <ul className = 'list-reset data-catalog'>
+                        <ul className = 'data-catalog'>
                             <DataCatalogGroup group={this.state.dataCatalog}
                                               onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
                                               userData={true}
                             />
                         </ul>
-                        <button onClick={this.changeUploadView} className='btn-add-more-data btn'> Add more data</button>
+                        <button onClick={this.changeUploadView} className='btn--add-more-data btn'> Add more data</button>
                         </div>
                     );
         }
 
         return (<div className="added-data no-added-data">
                 <p> You currently don't have any data </p>
-                <button onClick={this.changeUploadView} className='btn-add-more-data btn'> Add more data</button>
+                <button onClick={this.changeUploadView} className='btn--add-more-data btn'> Add more data</button>
                 </div>);
     },
 

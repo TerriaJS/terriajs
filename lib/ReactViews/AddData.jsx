@@ -237,7 +237,7 @@ const AddData = React.createClass({
                           isActive={this.props.isDraggingDroppingFile}
                           onFinishDroppingFile={this.props.onFinishDroppingFile}
             />
-            <ul className='list-reset row relative'>
+            <ul>
             <li className='add-data__panel local col col-6'>
                 <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
                 <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>

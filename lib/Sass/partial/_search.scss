@@ -9,6 +9,7 @@
     overflow-y: scroll;
     padding: 0 $padding-small;
     .search-results-items{
+      @extend .list-reset;
       background: $dark;
       margin-bottom: $padding-small;
       li{

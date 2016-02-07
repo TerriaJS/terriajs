@@ -8,18 +8,29 @@
   }
 }
 
-.mydata-panel_data-tab-section{
-  position: absolute;
-  width: 100%;
-  padding: $padding 0;
-  left: 0;
+.tab-panel{
+  display: none;
+  &.is-active{
+    display: block;
+  }
 }
 
-section[aria-hidden='true'].tab-panel{
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  z-index: -1;
-}
+// section.tab-panel{
+//   display: block;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   opacity: 0;
+//   z-index: -1;
+// }
+
+
+
+
+// .mydata-panel_data-tab-section{
+//   position: absolute;
+//   width: 100%;
+//   padding: $padding 0;
+//   left: 0;
+// }
+
