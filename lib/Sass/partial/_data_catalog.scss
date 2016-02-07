@@ -4,7 +4,7 @@
     @extend .list-reset;
     padding-left: $padding-small;
   }
-  .panel-content & {
+  .data-explorer & {
     background: $modal-secondary-bg;
     height: calc(#{$modal-content-height} - 90px);
     overflow-y: auto;
