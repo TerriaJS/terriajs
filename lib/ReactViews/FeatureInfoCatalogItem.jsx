@@ -36,7 +36,7 @@ const FeatureInfoCatalogItem = React.createClass({
             content = (<FeatureInfoSection feature={features.feature} clock={clock} index={0} />);
         }
 
-        return (<li className ='feature-info__group'><ul className='list-reset feature-info-panel-sections'>{count}{content}</ul></li>);
+        return (<li className ='feature-info__group'><ul className='list-reset feature-info-panel__sections'>{count}{content}</ul></li>);
     }
 });
 module.exports = FeatureInfoCatalogItem;
