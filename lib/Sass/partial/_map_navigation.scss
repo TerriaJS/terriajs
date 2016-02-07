@@ -17,9 +17,10 @@
     }
     .map-navigation__menu{
       @extend .list-reset;
+      @extend .clearfix;
       li{
-        display: inline-block;
-
+        display: block;
+        float: left;
       }
     }
 }

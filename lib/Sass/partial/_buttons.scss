@@ -370,7 +370,8 @@ $btn-setting-size: 35px;
   color: #fff;
   border: 1px solid transparent;
   display: block;
-  height: $padding*3;
+  height: $padding*3.1;
+  line-height: 18px;
   &:hover, .is-open &, &.is-active {
     background: $color-primary;
     border: 1px solid rgba(#fff, 0.5);
