@@ -11,6 +11,12 @@
   .label{
     padding-left: 0;
   }
+  &.is-hidden{
+    padding: 0;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+  }
 }
 
 .btn--back-to-my-data{

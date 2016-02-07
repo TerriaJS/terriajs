@@ -9,10 +9,15 @@
 }
 
 .tab-panel{
-  display: none;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  z-index: -1;
   &.is-active{
-    display: block;
+    z-index: 1;
+    position: relative;
+    opacity: 1;
   }
   &:focus{
     outline: none;

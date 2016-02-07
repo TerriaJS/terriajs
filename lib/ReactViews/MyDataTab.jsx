@@ -38,19 +38,6 @@ const MyDataTab = React.createClass({
     },
 
     renderContent() {
-        if(this.state.isUploadView === true) {
-            return (
-                    <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '')}>
-                    <button onClick={this.changeUploadView} className='btn btn--back-to-my-data'> Back </button>
-                        <h4>Adding your own data</h4>
-                        <AddData updateCatalog={this.updateCatalog}
-                                 terria={this.props.terria}
-                                 isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
-                                 onFinishDroppingFile={this.props.onFinishDroppingFile}
-                        />
-                    </div>
-                    );
-        }
         if (this.state.dataCatalog) {
             return (<div className="added-data">
                         {disclaimer}
@@ -64,16 +51,20 @@ const MyDataTab = React.createClass({
                         </div>
                     );
         }
-
-        return (<div className="added-data no-added-data">
-                <p> You currently don't have any data </p>
-                <button onClick={this.changeUploadView} className='btn--add-more-data btn'> Add more data</button>
-                </div>);
     },
 
     render() {
         return (<div className="panel-content">
                 <div className='my-data'>
+                <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
+                    <button onClick={this.changeUploadView} className='btn btn--back-to-my-data'> Back </button>
+                        <h4>Adding your own data</h4>
+                        <AddData updateCatalog={this.updateCatalog}
+                                 terria={this.props.terria}
+                                 isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
+                                 onFinishDroppingFile={this.props.onFinishDroppingFile}
+                        />
+                </div>
                 {this.renderContent()}
                 </div>
                 <div className="data-preview">
