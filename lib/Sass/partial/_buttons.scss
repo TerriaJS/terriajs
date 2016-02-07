@@ -112,7 +112,7 @@ $btn-setting-size: 35px;
 
 .btn--toggle{
   @extend .icon-caret-right;
-  .is-open &{
+   &.is-open{
     @extend .icon-caret-down;
   }
 }
@@ -259,11 +259,7 @@ $btn-setting-size: 35px;
   position: relative;
   width: 100%;
   border-bottom: 1px solid transparent;
-  @extend .icon;
-  @extend .icon-caret-right;
-  &.is-open{
-    @extend .icon-caret-down;
-  }
+  @extend .btn--toggle;
   &:before{
     position: absolute;
     right: 5px;

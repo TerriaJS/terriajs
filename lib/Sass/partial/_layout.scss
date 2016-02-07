@@ -85,15 +85,10 @@
     min-width: 400px;
   }
   #kss-node &{
-    position: absolute;
+    position: relative;
     top: 0;
+    left: 0;
   }
-}
-
-.top-left{
-  top: 0;
-  left: 0;
-  height: 100%;
 }
 
 .is-searching ~ .hide-on-search{
