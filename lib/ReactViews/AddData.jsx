@@ -229,37 +229,51 @@ const AddData = React.createClass({
         });
     },
 
+    renderTabs() {
+        return (
+            <ul className='add-data-tablist tablist'>
+                <li className='tablist--local'>
+                    <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn--add-data-tab ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
+                </li>
+                <li className='tablist--local'>
+                    <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn--add-data-tab ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
+                </li>
+            </ul>
+            );
+    },
+
+    renderPanels() {
+        return (
+            <div className='tab-panels'>
+            <section aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className={'tab-panel panel--local ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>
+                <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
+                <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
+                <label className='label'><strong>Step 2:</strong> Select a local data file to add: </label>
+                <FileInput accept=".csv,.kml" onChange={this.handleFile} />
+            </section>
+            <section aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className={'tab-panel panel--web ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>
+                <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
+                <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
+                <label className='label'><strong>Step 2:</strong> Enter the URL of the data file or web service: </label>
+                <form className='url-input'>
+                    <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+                    <button onClick={this.handleUrl} className="btn btn--add-url">Add</button>
+                </form>
+            </section>
+            </div>
+            );
+    },
+
     render() {
         return (
-        <div className='add-data-inner clearfix'>
+        <div className='add-data-inner'>
             <DragDropFile terria={this.props.terria}
                           handleFile={this.handleFile}
                           isActive={this.props.isDraggingDroppingFile}
                           onFinishDroppingFile={this.props.onFinishDroppingFile}
             />
-            <ul>
-            <li className='add-data__panel local col col-6'>
-                <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
-                <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-                    <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-                    <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
-                    <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Select a local data file to add: </label>
-                    <FileInput accept=".csv,.kml" onChange={this.handleFile} />
-                </div>
-            </li>
-            <li className='add-data__panel web col col-6'>
-                <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn-data-upload ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
-                <div aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-                    <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-                    <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
-                    <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Enter the URL of the data file or web service: </label>
-                    <form className='url-input'>
-                        <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
-                        <button onClick={this.handleUrl} className="btn btn-add-url">Add</button>
-                    </form>
-                </div>
-            </li>
-            </ul>
+            {this.renderTabs()}
+            {this.renderPanels()}
         </div>);
     }
 });

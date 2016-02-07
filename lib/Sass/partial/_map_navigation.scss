@@ -26,13 +26,13 @@
 
 .setting-panel__button{
   @extend .btn--sphere;
-  border-radius: 3px 0 0 3px;
+  border-radius: $radius-small 0 0 $radius-small;
   border-right: 1px solid rgba(#fff, 0.15);
 }
 
 .full-screen__button{
   margin-right: $padding;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 $radius-small $radius-small 0;
   .enter-full-screen{
     @extend .btn--expand;
   }
@@ -47,10 +47,10 @@
 }
 
 .share-panel__button{
-  border-radius: 3px 0 0 3px;
+  border-radius: $radius-small 0 0 $radius-small;
   border-right: 1px solid rgba(#fff, 0.15);
 }
 
 .about-link__button{
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 $radius-small $radius-small 0;
 }

@@ -1,3 +1,7 @@
+.search-results-items{
+  @extend .list-reset;
+}
+
 .search__results{
   margin-top: 0.5rem;
   background: rgba(#fff, 0.15);
@@ -9,7 +13,6 @@
     overflow-y: scroll;
     padding: 0 $padding-small;
     .search-results-items{
-      @extend .list-reset;
       background: $dark;
       margin-bottom: $padding-small;
       li{
@@ -27,10 +30,12 @@
       }
     }
   }
-  .explorer-panel &{
+  .panel-content &{
     max-height: calc(#{$modal-content-height} - 90px);
     overflow-y: auto;
     padding-right: $padding-small;
   }
 }
+
+
 

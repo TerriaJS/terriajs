@@ -4,7 +4,7 @@ const DataCatalogGroup = require('./DataCatalogGroup.jsx');
 const DataPreview = require('./DataPreview.jsx');
 const AddData = require('./AddData.jsx');
 
-const disclaimer = <small>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </small> ;
+const disclaimer = <p>Data added in this way is not saved or made visible to others unless you explicitly share it by using the Share panel. </p> ;
 
 // My data tab include Add data section and preview section
 const MyDataTab = React.createClass({

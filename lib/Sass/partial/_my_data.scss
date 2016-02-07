@@ -1,48 +1,47 @@
 // //My data
-// .my-data{
-//   height: 100%;
-//   h4{
-//     margin: 0;
-//     text-transform: uppercase;
-//     font-weight: $font-weight-medium;
-//   }
-// }
-// .add-data{
-//   background: $modal-secondary-bg;
-//   padding: $padding;
-//   height: 100%;
-//   overflow: visible;
-// }
+.my-data{
+  height: 100%;
+}
 
-// .added-data{
-//   //temp
-//   padding: 0 $padding 0 0;
-// }
+.add-data{
+  background: $modal-secondary-bg;
+  padding: $padding;
+  height: 100%;
+  overflow: hidden;
+  .label{
+    padding-left: 0;
+  }
+}
 
-// .add-data__panel.local{
-//   padding-right: 2px;
-// }
+.btn--back-to-my-data{
+  @extend .btn-small;
+  .add-data.is-empty &{
+    display: none;
+  }
+}
+
+.btn--add-more-data{
+  @extend .btn-primary;
+}
 
 
-
-// .drag-drop-zone{
-//   visibility: hidden;
-//   height: 0;
-//   width: 0;
-//   &.is-active{
-//     // Temp
-//     visibility: visible;
-//     position: fixed;
-//     top: calc(20px - 15vh);
-//     left: -$work-bench-width - 50px;
-//     height: 100vh;
-//     width: 100vw;
-//     background: rgba(#fff, 0.6);
-//     z-index: 99;
-//     h1{
-//       margin: 0 auto;
-//     }
-//   }
-// }
+.my-data{
+  .drop-zone{
+    display: none;
+    &.is-active{
+      display: block;
+      position: fixed;
+      top: calc(20px - 15vh);
+      left: -10rem;
+      z-index: 99;
+      width: 100vw;
+      height: 100vh;
+      z-index: 99999;
+      @media screen and (min-width : $md){
+        left: -$work-bench-width - 50px;
+      }
+    }
+  }
+}
 
 

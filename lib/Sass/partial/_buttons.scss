@@ -39,9 +39,13 @@ $btn-setting-size: 35px;
 
 .btn-small{
   padding: 0;
+  &:hover, &:focus{
+    color:$color-primary;
+  }
 }
 
 .btn-primary{
+  display: block;
   background: $color-primary;
   color: #fff;
   text-align: center;
@@ -81,7 +85,7 @@ $btn-setting-size: 35px;
 // .btn--loading-on-map - loading on map
 // .btn--close-modal - button to close modal window
 // .btn--increase - increase a value
-// .btn--decrese - decrease a value
+// .btn--decrease - decrease a value
 // .btn--refresh - refresh a value
 // .btn--sphere - a sphere icon
 // .btn--share - share this
@@ -258,7 +262,7 @@ $btn-setting-size: 35px;
   padding-right: 30px;
   position: relative;
   width: 100%;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid $grey-lighter;
   @extend .btn--toggle;
   &:before{
     position: absolute;
@@ -268,7 +272,6 @@ $btn-setting-size: 35px;
   &:hover{
     background: $modal-highlight;
     color: #fff;
-    border-bottom: 1px solid $grey-lighter;
   }
 }
 
@@ -355,7 +358,7 @@ $btn-setting-size: 35px;
 // Buttons on the map
 //
 // Markup:
-// <button class="btn btn--map" title="full screen mode"></button>
+// <button class="btn btn--map setting-panel__button" title="full screen mode"></button>
 //
 // Style guide: Buttons.map-buttons
 
@@ -408,73 +411,64 @@ $btn-setting-size: 35px;
 }
 
 
+// Dropdown trigger button
+//
+// Markup:
+// <button class="btn btn--dropdown"> Select an option </button>
+//
+// Style guide: Buttons.dropdown
 
-// .btn-data-upload{
-//   font-size: $font-size-small;
-//   font-weight: $font-weight-medium;
-//   width: 100%;
-//   padding-left: 0;
-//   border-bottom: 2px solid $grey;
-//   color: $grey;
-//   &:hover, &:focus, &.is-active{
-//     color: $color-primary;
-//     border-bottom: 2px solid $color-primary;
-//   }
-// }
-
-// .btn-dropdown{
-//   width: 100%;
-//   border: 2px solid $grey-lighter;
-
-//   &:hover,
-//   &:focus{
-//     border-color:$color-primary;
-//   }
-// }
-// .btn-dropdown-option{
-//   display: block;
-//   width: 100%;
-//   padding: 8px;
-
-//   &:hover, &:focus{
-//     color: $color-primary;
-//   }
-
-//   &.is-selected{
-//     color: $color-primary;
-//   }
-// }
+.btn--dropdown{
+  width: 100%;
+  border: 2px solid $grey-lighter;
+  &:hover,
+  &:focus{
+    border-color:$color-primary;
+  }
+}
 
 
 
-// .btn-file-input, .btn-add-url{
-//   @extend .btn-primary;
-// }
+// Dropdown options button
+//
+// Markup:
+// <button class="btn btn--dropdown-option"> WMS Server </button>
+//
+// Style guide: Buttons.dropdown-options
+
+.btn--dropdown-option{
+  width: 100%;
+  padding: $padding-small;
+  &:hover, &:focus{
+    color: $color-primary;
+  }
+  &.is-selected{
+    color: $color-primary;
+  }
+}
 
 
 
 
-// .btn-add-more-data{
-//   margin-top: $padding-small;
-//   @extend .btn-primary;
-// }
+// My data tab
+//
+// Markup:
+// <button class="btn btn--add-data-tab"> Add local data </button>
+//
+// Style guide: Buttons.btn--add-data-tab
 
-
-
-
-// .btn-back-to-my-data{
-//   @extend .btn-small;
-//   .is-empty &{
-//     display: none;
-//   }
-//   .add-data &{
-//     margin-bottom: $padding;
-//   }
-//   &:hover{
-//     color: $color-primary;
-//   }
-// }
-
+.btn--add-data-tab{
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+  width: 100%;
+  padding-left: 0;
+  border-bottom: 2px solid $grey;
+  color: $grey;
+  &:hover, &:focus, &.is-active{
+    color: $color-primary;
+    border-bottom: 2px solid $color-primary;
+  }
+}
 
 
 

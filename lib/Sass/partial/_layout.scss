@@ -20,6 +20,21 @@
     z-index: 10;
 }
 
+.modal-wrapper{
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2) $padding*3;
+  padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
+  @media screen and (min-width : $md){
+    padding-left: $work-bench-width + 50px;
+    padding-right: 50px;
+  }
+}
+
 .map{
   left: $work-bench-width;
   position: absolute;
@@ -57,9 +72,6 @@
   }
 }
 
-
-
-// should go into national map maybe...
 #notification{
   .notification-wrapper{
     position: fixed;

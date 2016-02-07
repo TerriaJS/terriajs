@@ -26,7 +26,7 @@ const FileInput = React.createClass({
     render() {
         return (<form className='file-input'>
             <input type='file' onChange={this.handleChange} accept={this.props.accept} />
-            <label className='btn btn-file-input'>{this.state.value}</label>
+            <label className='btn btn--file-input'>{this.state.value}</label>
             </form>);
     }
 });

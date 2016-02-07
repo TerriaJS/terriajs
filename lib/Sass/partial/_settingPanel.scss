@@ -54,15 +54,11 @@
     z-index: -1;
     left: -($setting-panel/2 - 8px);
     border-radius: $radius-small;
-
-
   }
   &.is-open .setting-panel__inner{
     @include transform (scale(1) translateZ(0));
   }
 }
-
-
 
 .setting-panel__section{
   padding: $padding-small;

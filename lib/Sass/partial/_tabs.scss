@@ -10,27 +10,18 @@
 
 .tab-panel{
   display: none;
+  position: relative;
   &.is-active{
     display: block;
   }
+  &:focus{
+    outline: none;
+  }
 }
-
-// section.tab-panel{
-//   display: block;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-//   opacity: 0;
-//   z-index: -1;
-// }
-
-
-
-
-// .mydata-panel_data-tab-section{
-//   position: absolute;
-//   width: 100%;
-//   padding: $padding 0;
-//   left: 0;
-// }
-
+// My data
+.add-data-tablist{
+  padding-right: 0;
+  li{
+    margin-right: 3px;
+  }
+}

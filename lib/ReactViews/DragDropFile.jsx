@@ -42,7 +42,7 @@ const DragDropFile = React.createClass({
                     onDragEnter={this.handleDragEnter}
                     onDragOver={this.handleDragOver}
                     onDragLeave={this.handleDragLeave}
-                    className={(this.props.isActive ? 'is-active' : '') + ' drag-drop-zone'}><h1> Drag & Drop File </h1></div>;
+                    className={(this.props.isActive ? 'is-active' : '') + ' drop-zone'}><h1> Drag & Drop File </h1></div>;
     }
 });
 

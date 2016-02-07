@@ -104,6 +104,9 @@ $now-viewing-margin: $padding-small - 1px;
   .btn{
     width: 100%;
   }
+  .btn--toggle.is-open{
+    padding-left: 8px;
+  }
   .now-viewing__item.is-open & {
   border-bottom: 1px solid $border-color;
   }

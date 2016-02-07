@@ -62,10 +62,10 @@ const Tabs = React.createClass({
         const that = this;
         return (that.getTabs().map((item, i) =>
                   <li key={i}
-                    className={getName('tablist__', item.title) + ' ' + (that.props.activeTabID === i ? 'is-active' : '') }
-                    id={getName('tablist__', item.title)}
+                    className={getName('tablist--', item.title) + ' ' + (that.props.activeTabID === i ? 'is-active' : '') }
+                    id={getName('tablist--', item.title)}
                     role="tab"
-                    aria-controls={getName('panel__', item.title)}
+                    aria-controls={getName('panel--', item.title)}
                     aria-selected={that.props.activeTabID === i}>
                   <button onClick={that.activateTab.bind(that, i)}
                     className='btn btn--tab'>{item.title.replace(/-/g, ' ')}</button>
@@ -78,9 +78,9 @@ const Tabs = React.createClass({
         return (that.getTabs().map((item, i) => <section
                     key={i}
                     aria-hidden={that.props.activeTabID !== i}
-                    id={getName('panel__', item.title)}
-                    className={getName('tab-panel panel__', item.title) + ' ' + (that.props.activeTabID === i ? 'is-active' : '')}
-                    aria-labelledby={getName('tablist__', item.title)}
+                    id={getName('panel--', item.title)}
+                    className={getName('tab-panel panel--', item.title) + ' ' + (that.props.activeTabID === i ? 'is-active' : '')}
+                    aria-labelledby={getName('tablist--', item.title)}
                     role='tabpanel'
                     tabIndex='0'>
                   <h3 className="hide">{item.title.replace(/-/g, ' ')}</h3>{item.panel}</section>));
