@@ -1,9 +1,12 @@
 'use strict';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
 import Mustache from 'mustache';
 import React from 'react';
 import HtmlToReact from 'html-to-react';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
+
+import markdownToHtml from '../Core/markdownToHtml';
 
 const htmlToReactParser = new HtmlToReact.Parser(React);
 
@@ -35,7 +38,7 @@ const FeatureInfoSection = React.createClass({
         });
     },
 
-    htmlFromFeature(feature, clock) {
+    descriptionFromFeature(feature, clock) {
         // If a template is defined, render it using feature.properties, which is non-time-varying.
         // If no template is provided, show feature.description, which may be time-varying.
         const data = feature.properties;
@@ -47,7 +50,7 @@ const FeatureInfoSection = React.createClass({
         if (description.properties) {
             return JSON.stringify(description.properties);
         }
-        return {__html: description};
+        return description;
     },
 
     renderDataTitle() {
@@ -57,8 +60,10 @@ const FeatureInfoSection = React.createClass({
         return 'data group';
     },
 
-    innards() {
-        return htmlToReactParser.parse(this.htmlFromFeature(this.props.feature, this.props.clock).__html);
+    sanitizedCustomMarkdown() {
+        const raw = this.descriptionFromFeature(this.props.feature, this.props.clock);
+        const html = markdownToHtml(raw, false);
+        return htmlToReactParser.parse(html);
     },
 
     render() {
@@ -66,7 +71,7 @@ const FeatureInfoSection = React.createClass({
         return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-open' : '')}>
                 <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
                 <section className='feature-info-panel__content'>
-                    {this.innards()}
+                    {this.sanitizedCustomMarkdown()}
                 </section>
                 </li>);
     }
