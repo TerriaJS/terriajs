@@ -90,6 +90,8 @@ $btn-setting-size: 35px;
 // .btn--sphere - a sphere icon
 // .btn--share - share this
 // .btn--expand - expand this
+// .btn--right - button pointing right
+// .btn--left - button pointing left
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -107,7 +109,9 @@ $btn-setting-size: 35px;
 .btn--refresh,
 .btn--sphere,
 .btn--share,
-.btn--expand{
+.btn--expand,
+.btn--left,
+.btn--right{
   @extend .icon;
   &:before{
     line-height: $btn-default-line-height;
@@ -155,11 +159,11 @@ $btn-setting-size: 35px;
 }
 
 .btn--increase{
-  @extend .icon-zoom-in;
+  @extend .icon-increase;
 }
 
 .btn--decrease{
-  @extend .icon-zoom-out;
+  @extend .icon-decrease;
 }
 
 .btn--sphere{
@@ -172,6 +176,14 @@ $btn-setting-size: 35px;
 
 .btn--expand{
   @extend .icon-expand;
+}
+
+.btn--left{
+  @extend .icon-left;
+}
+
+.btn--right{
+  @extend .icon-right;
 }
 
 // Text and icon buttons
@@ -299,14 +311,11 @@ $btn-setting-size: 35px;
     position: relative;
     width: 100%;
     padding: $padding-small $padding*2.2 $padding-small $padding*3;
-    @extend .icon;
-    @extend .icon-right-arrow;
+    @extend .btn--right;
     &:before{
       opacity: 0;
-      line-height: $btn-default-line-height;
       position: absolute;
       right: 0;
-      font-size: 1.5rem;
     }
     &:hover{
       color: $modal-highlight;
@@ -393,22 +402,19 @@ $btn-setting-size: 35px;
   color: $color-primary;
   text-transform: uppercase;
   padding-right: $padding*3;
+  position: relative;
+  @extend .btn--right;
+  &:before{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: $padding;
+  }
   i{
     color: lighten($color-primary, 10%);
     display: inline-block;
     padding: 0 $padding-small;
   }
-  @extend .icon;
-  @extend .icon-right-arrow;
-  position: relative;
-    &:before{
-      font-size: 1.5rem;
-      position: absolute;
-      top: 0;
-      right: 0;
-      line-height: $btn-default-line-height;
-      padding: 10px;
-    }
 }
 
 

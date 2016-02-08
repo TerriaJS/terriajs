@@ -20,7 +20,14 @@
 }
 
 .btn--back-to-my-data{
+  position: relative;
+  padding-left: $padding*2;
   @extend .btn-small;
+  @extend .btn--left;
+  &:before{
+    position: absolute;
+    left: 0;
+  }
   .add-data.is-empty &{
     display: none;
   }
@@ -28,26 +35,9 @@
 
 .btn--add-more-data{
   @extend .btn-primary;
+  margin-top: $padding;
 }
 
 
-.my-data{
-  .drop-zone{
-    display: none;
-    &.is-active{
-      display: block;
-      position: fixed;
-      top: calc(20px - 15vh);
-      left: -10rem;
-      z-index: 99;
-      width: 100vw;
-      height: 100vh;
-      z-index: 99999;
-      @media screen and (min-width : $md){
-        left: -$work-bench-width - 50px;
-      }
-    }
-  }
-}
 
 

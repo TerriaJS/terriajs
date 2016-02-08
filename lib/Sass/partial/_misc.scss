@@ -48,12 +48,4 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     background: #ccc;
 }
 
-.drop-zone{
-  background: transparent;
-  @include transition(height 0.25s ease-in-out);
-  &.is-active{
-    background: rgba(#FFF, 0.5);
-    border: 2px dashed #fff;
-  }
-}
 
