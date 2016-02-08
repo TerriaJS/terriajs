@@ -1,0 +1,34 @@
+{
+  "catalog": [
+    {
+      "type": "group",
+      "name": "Test Advanced CZML",
+      "isOpen": true,
+      "items": [
+        {
+          "name": "CZML with properties",
+          "type": "czml",
+          "url": "build/TerriaJS/test/CZML/withProperties.czml",
+          "featureInfoTemplate": {
+              "name": "{{Name}} {{Asset type}}",
+              "template": "<table><tbody><tr><td>Name:</td><td>{{Name}}</td></tr><tr><td>Type:</td><td>{{Type}}</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr>{{#Support table}}<tr><td>{{Year}}</td><td>{{Capacity}}</td></tr>{{/Support table}}</tbody></table>"
+          }
+        },
+        {
+          "name": "CZML with time-varying properties",
+          "type": "czml",
+          "url": "build/TerriaJS/test/CZML/withTimeVaryingProperties.czml",
+          "featureInfoTemplate": {
+              "name": "{{Name}} {{Asset type}}",
+              "template": "<table><tbody><tr><td>Name:</td><td>{{Name}}</td></tr><tr><td>Type:</td><td>{{Type}}</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr>{{#Support table}}<tr><td>{{Year}}</td><td>{{Capacity}}</td></tr>{{/Support table}}</tbody></table>"
+          }
+        },
+        {
+          "name": "CZML with time-varying description",
+          "type": "czml",
+          "url": "build/TerriaJS/test/CZML/timeVaryingDescription.czml"
+        }
+      ]
+    }
+  ]
+}
