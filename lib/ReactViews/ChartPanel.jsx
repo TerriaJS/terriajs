@@ -39,7 +39,9 @@ const ChartPanel = React.createClass({
                 }
             }
         }
-
+        if(!data.length) {
+            return null;
+        }
         return (
             <div className="chart-panel__holder">
                 <div className="chart-panel__holder__inner">
