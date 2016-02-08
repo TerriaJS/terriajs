@@ -2,6 +2,10 @@
   @extend .list-reset;
 }
 
+.is-searching.search{
+  height: 100%;
+}
+
 .search__results{
   margin-top: 0.5rem;
   background: rgba(#fff, 0.15);
@@ -32,10 +36,11 @@
       }
     }
   }
-  .panel-content &{
-    max-height: calc(#{$modal-content-height} - 90px);
+  .panel-content .is-searching &{
     overflow-y: auto;
     padding-right: $padding-small;
+    height: 100%;
+    padding-bottom: calc(#{$input-height} + #{$padding});
   }
 }
 

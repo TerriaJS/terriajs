@@ -1,3 +1,4 @@
+
 .data-catalog{
   @extend .list-reset;
   ul{
@@ -6,10 +7,10 @@
   }
   .data-explorer & {
     background: $modal-secondary-bg;
-    height: calc(#{$modal-content-height} - 90px);
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: $padding;
+    height: 100%;
   }
 }
 .data-catalog-item{
