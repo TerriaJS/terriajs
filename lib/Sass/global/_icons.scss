@@ -1,0 +1,140 @@
+@font-face {
+  font-family: 'icomoon';
+  src:url('./TerriaJS/fonts/icomoon.eot?kw6abb');
+  src:url('./TerriaJS/fonts/icomoon.eot?kw6abb#iefix') format('embedded-opentype'),
+    url('./TerriaJS/fonts/icomoon.ttf?kw6abb') format('truetype'),
+    url('./TerriaJS/fonts/icomoon.woff?kw6abb') format('woff'),
+    url('./TerriaJS/fonts/icomoon.svg?kw6abb#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+}
+
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+}
+
+
+// Icons
+//
+// .icon-right-arrow -  icon
+// .icon-clear - icon
+// .icon-add - icon
+// .icon-remove - icon
+// .icon-eye-hidden - icon
+// .icon-location - icon
+// .icon-check_box - icon
+// .icon-caret-right - icon
+// .icon-search - icon
+// .icon-eye - icon
+// .icon-share - icon
+// .icon-sphere - icon
+// .icon-caret-down - icon
+// .icon-full-screen - icon
+// .icon-loader - icon
+// .icon-location -  icon
+//
+// Markup:
+// <i class='icon {{modifier_class}}'> </i>
+//
+// Style guide: 4.0
+//
+.icon:before{
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: block;
+  box-sizing: border-box;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-remove:before {
+    content: "\e918";
+}
+.icon-right:before {
+    content: "\e900";
+}
+.icon-left:before {
+    content: "\e902";
+}
+.icon-clear:before {
+    content: "\e908";
+}
+.icon-close:before {
+    content: "\e909";
+}
+.icon-add:before {
+    content: "\e90b";
+}
+.icon-eye-hidden:before {
+    content: "\e901";
+}
+.icon-check_box:before {
+    content: "\e903";
+}
+.icon-caret-right:before {
+    content: "\e904";
+}
+.icon-search:before {
+    content: "\e905";
+}
+.icon-eye:before {
+    content: "\e906";
+}
+.icon-share:before {
+    content: "\e907";
+}
+.icon-refresh:before {
+    content: "\e912";
+}
+.icon-sphere:before {
+    content: "\e90c";
+}
+.icon-caret-down:before {
+    content: "\e90d";
+}
+.icon-expand:before {
+    content: "\e90e";
+}
+.icon-decrease:before {
+    content: "\e914";
+}
+.icon-increase:before {
+    content: "\e915";
+}
+.icon-add:before {
+    content: "\e916";
+}
+.icon-loader:before {
+    content: "\e90f";
+}
+.icon-location:before {
+    content: "\e910";
+}
+
+

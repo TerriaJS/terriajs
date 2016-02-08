@@ -1,0 +1,26 @@
+.dropdown{
+  position: relative;
+  width: 100%;
+  .dropdown__list{
+    @extend .list-reset;
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+    box-shadow: $box-shadow;
+    max-height: 0;
+    overflow-y: auto;
+    margin-top: $padding-small;
+    border-radius: $radius-small;
+    @include transition(all, $animation-fast, cubic-bezier(0.19, 1, 0.22, 1));
+  }
+
+  &.is-open{
+    .dropdown__list{
+      max-height: 190px;
+    }
+  }
+}

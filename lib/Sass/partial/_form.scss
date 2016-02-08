@@ -1,0 +1,163 @@
+.field {
+  border-style: solid;
+  border-width: 1px;
+  border-color: $field-border;
+  border-radius: $radius-small;
+}
+
+.field:focus,
+.field.is-focused {
+  outline: none;
+  border-color: rgba($color-primary, 0.5);
+  box-shadow: 0 0 0 2px rgba($grey, 0.5);
+}
+
+.field:disabled,
+.field.is-disabled {
+  background-color: rgba(0,0,0,.125);
+  opacity: .5;
+}
+
+.field:read-only:not(select),
+.field.is-read-only {
+  background-color: rgba(0,0,0,.125);
+}
+
+
+
+// Forms
+//
+// Style guide: 3.0
+//
+
+// Search form
+//
+//.panel-content - Search form in modal window
+//.workbench__inner - Search form in workbench
+//
+// Markup:
+// <div class={{modifier_class}}>
+// <form class='form--search-data' autoComplete='off'>
+//   <label htmlFor='search' class='form__label'> Type keyword to search </label>
+//   <input id='search'
+//          type='text'
+//          name='search'
+//          class='form__search-field field'
+//          placeholder='Search'
+//          autoComplete='off'/>
+//   <button class='btn search-clear'></button>
+// </form>
+// </div>
+//
+// Style guide: 3.1
+//
+
+.form--search-data{
+  font-family: $font-pop;
+  position: relative;
+  .icon{
+    position: absolute;
+    font-size: 1.2rem;
+    color: $grey;
+    opacity: 0.5;
+    &:before{
+        height: $input-height;
+        display: block;
+      }
+  }
+
+  input{
+    padding-left: $input-height;
+    width: 100%;
+    @include placeholder{
+      text-transform: uppercase;
+      font-size: $font-size-small;
+      text-align: left;
+      padding-left: calc(50% - 40px);
+      @include transition(all, 0.25s, linear);
+    }
+    &:focus{
+      @include placeholder{
+      padding-left: 0;
+      }
+    }
+  }
+
+  .form__label{
+      @extend .icon;
+      @extend .icon-search;
+      // hide label text but keep it machine visible
+      width: $input-height;
+      height: $input-height;
+      overflow: hidden;
+      &:before{
+        padding: 12px $padding*1.5;
+      }
+    }
+    .btn.search-clear{
+      right: $padding;
+      top: 0;
+      @extend .icon;
+      @extend .icon-clear;
+    }
+
+  .panel-content &{
+    font-family: $font-base;
+  }
+
+  .workbench__inner & {
+    padding: 0 $padding-small;
+    font-family: $font-pop;
+
+  }
+}
+
+// Add data from url form
+//
+// Markup:
+// <form class='url-input' autocomplete="off">
+// <input class='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+// <button class="btn btn--add-url">Add</button>
+// </form>
+//
+// Style guide: 3.2
+//
+
+form.file-input{
+  input{
+    width: 100%;
+    opacity: 0;
+    position: absolute;
+    padding: $padding;
+  }
+}
+
+// Add data from local form
+//
+// Markup:
+// <form class='file-input'>
+// <input type='file'/>
+// <label class='btn btn--file-input'>Upload File</label>
+// </form>
+//
+// Style guide: 3.3
+//
+
+form.url-input{
+  input{
+    width: calc(100% - 50px);
+    float: left;
+  }
+  .btn--add-url{
+    width: 50px;
+    float: left;
+  }
+}
+
+
+.btn--file-input, .btn--add-url{
+  @extend .btn-primary;
+}
+
+
+

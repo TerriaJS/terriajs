@@ -1,0 +1,57 @@
+// Component
+//
+// Style guide: Component
+
+.map-navigation{
+    .compass{
+      position: absolute;
+      right: $padding;
+      top: 75px;
+    }
+
+    .zoom-control{
+      position: absolute;
+      //temp
+      right: 34px;
+      top: 170px;
+    }
+    .map-navigation__menu{
+      @extend .list-reset;
+      @extend .clearfix;
+      li{
+        display: block;
+        float: left;
+      }
+    }
+}
+
+.setting-panel__button{
+  @extend .btn--sphere;
+  border-radius: $radius-small 0 0 $radius-small;
+  border-right: 1px solid rgba(#fff, 0.15);
+}
+
+.full-screen__button{
+  margin-right: $padding;
+  border-radius: 0 $radius-small $radius-small 0;
+  .enter-full-screen{
+    @extend .btn--expand;
+  }
+}
+
+.setting-panel__button,
+.full-screen__button .enter-full-screen{
+  &:before{
+    line-height: 1;
+    font-size: 1rem;
+  }
+}
+
+.share-panel__button{
+  border-radius: $radius-small 0 0 $radius-small;
+  border-right: 1px solid rgba(#fff, 0.15);
+}
+
+.about-link__button{
+  border-radius: 0 $radius-small $radius-small 0;
+}

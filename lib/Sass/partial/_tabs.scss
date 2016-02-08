@@ -1,0 +1,31 @@
+.tablist{
+  @extend .list-reset;
+  @extend .clearfix;
+  padding-right: 100px;
+  li{
+    display: inline-block;
+    float: left;
+  }
+}
+
+.tab-panel{
+  position: absolute;
+  left: -10000px;
+  z-index: -1;
+  &.is-active{
+    z-index: 1;
+    position: relative;
+    opacity: 1;
+    left: 0;
+  }
+  &:focus{
+    outline: none;
+  }
+}
+// My data
+.add-data-tablist{
+  padding-right: 0;
+  li{
+    margin-right: 3px;
+  }
+}

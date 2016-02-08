@@ -1,0 +1,63 @@
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  font-weight: bold;
+}
+
+th,
+td {
+  padding: .25rem 1rem;
+  line-height: inherit;
+}
+
+th { vertical-align: bottom }
+td { vertical-align: top }
+
+
+
+// Tables
+//
+//.cesium-infoBox-defaultTable - feature info panel table
+//
+// Markup:
+// <table class={{modifier_class}}>
+// <tbody>
+// <tr>
+// <td>name</td>
+// <td>RHST:BQP</td>
+// </tr>
+// <tr>
+// <td>esa_name</td>
+// <td>ROOKHURST</td>
+// </tr>
+// <tr>
+// <td>availability_rating</td>
+// <td>E</td>
+// </tr>
+// <tr>
+// <td>availability_description</td>
+// <td>This is the lowest availability rating. Between 0 and 20 per cent of premises in the area surrounding your address have access to at least one broadband technology.</td>
+// </tr><tr>
+// <td>availability_adsl_rating</td>
+// <td>E</td>
+// </tr>
+// </tbody></table>
+//
+// Style guide: 2.0
+//
+table.cesium-infoBox-defaultTable{
+    font-family: monospace;
+    background: rgba($dark-lighter, 0.7);
+    margin: $padding 0;
+    max-width: 100%;
+    td{
+      border-collapse: collapse;
+      border: 1px solid $dark;
+    }
+  }

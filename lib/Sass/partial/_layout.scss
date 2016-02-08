@@ -1,0 +1,112 @@
+.workbench{
+  box-sizing: border-box;
+  width: $work-bench-width;
+  display: none;
+  @include transition(margin $animation-fast ease-in);
+  @media(screen and min-width: $sm){
+    //temp
+    display: block;
+    .is-full-screen &{
+      margin-left: -$work-bench-width;
+
+    }
+  }
+}
+
+.map-navigation{
+    position: fixed;
+    top: 20px;
+    right: $padding;
+    z-index: 10;
+}
+
+.modal-wrapper{
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2) $padding*3;
+  padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
+  @media screen and (min-width : $md){
+    padding-left: $work-bench-width + 50px;
+    padding-right: 50px;
+  }
+}
+
+.map{
+  left: $work-bench-width;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100vh;
+  @include transition(left $animation-fast ease-in);
+  canvas{
+    width: 100%;
+    height: 100%;
+  }
+  // width: 100%;
+
+  @media(screen and min-width: $sm){
+    //temp
+    // width: calc(100% - $work-bench-width);
+    left: $work-bench-width;
+    .is-full-screen &{
+      left: 0;
+    }
+  }
+  #cesiumContainer{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .cesium-widget, .cesium-widget canvas {
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+  }
+}
+
+#notification{
+  .notification-wrapper{
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 99;
+  }
+}
+
+.feature-info-panel{
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  max-width: 95%;
+  z-index: 5;
+  @media screen and (min-width : $sm){
+    //temp
+    width: calc(100vw - 600px);
+    top: 100px;
+    right: 100px;
+    min-width: 400px;
+  }
+  #kss-node &{
+    position: relative;
+    top: 0;
+    left: 0;
+  }
+}
+
+.is-searching ~ .hide-on-search{
+  display: none;
+}
+
+
+
+

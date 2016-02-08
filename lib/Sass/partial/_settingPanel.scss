@@ -1,0 +1,94 @@
+// Setting Panel
+//
+// Markup:
+// <div class="setting-panel__inner">
+// <div class="setting-panel__section setting-panel__viewer">
+// <label class="label label--setting-panel"> Map View </label>
+// <ul class="setting-panel__viewer-selector">
+// <li><button class="btn btn--viewer is-active">3D Terrain</button></li>
+// <li><button class="btn btn--viewer ">3D Smooth</button></li>
+// <li><button class="btn btn--viewer ">2D</button></li>
+// </ul>
+// </div><div class="setting-panel__section setting-panel__basemap">
+// <label class="label--setting-panel"> Base Map </label>
+// <label class="label label--active-map">Bing Maps Aerial with Labels</label>
+// <ul class="setting-panel__basemap-selector">
+// <li><button class="btn btn--basemap "><img alt="Australian Topography" src="../build/TerriaJS/images/australian-topo.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"></button></li>
+// <li><button class="btn btn--basemap is-active"><img alt="Bing Maps Aerial with Labels" src="../build/TerriaJS/images/bing-aerial-labels.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Bing Maps Aerial" src="../build/TerriaJS/images/bing-aerial.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Bing Maps Roads" src="../build/TerriaJS/images/bing-maps-roads.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Natural Earth II" src="../build/TerriaJS/images/natural-earth.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="NASA Black Marble" src="../build/TerriaJS/images/black-marble.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Positron (Light)" src="../build/TerriaJS/images/positron.png"</button></li>
+// <li><button class="btn btn--basemap "><img alt="Dark Matter" src="../build/TerriaJS/images/dark-matter.png"></button></li>
+// </ul></div></div>
+//
+// Style guide: Component.setting-panel
+
+.btn--viewer{
+  @extend .btn-grey;
+}
+
+.btn--basemap{
+  @extend .btn--image;
+}
+
+.setting-panel__viewer-selector,
+.setting-panel__basemap-selector{
+  @extend .clearfix;
+  @extend .list-reset;
+}
+
+.setting-panel{
+  width: auto;
+  position: relative;
+  z-index: 1;
+  .setting-panel__inner{
+    @include transform (scale(0) translateZ(0));
+    @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
+    @include transform-origin(top center);
+    box-shadow: $box-shadow;
+    position: absolute;
+    margin-top: 15px;
+    z-index: -1;
+    left: -($setting-panel/2 - 8px);
+    border-radius: $radius-small;
+  }
+  &.is-open .setting-panel__inner{
+    @include transform (scale(1) translateZ(0));
+  }
+}
+
+.setting-panel__section{
+  padding: $padding-small;
+}
+.setting-panel__inner{
+    width: $setting-panel;
+    background: $dark;
+    color: #fff;
+    border: $border-style;
+    &:before{
+      content: '';
+      display: block;
+      height: 20px;
+      width: 20px;
+      background: $dark;
+      position: absolute;
+      top: -10px;
+      @include transform(rotate(45deg));
+      left: $setting-panel/2 - 8px;
+    }
+}
+.setting-panel__viewer-selector, .setting-panel__basemap-selector{
+  margin: 0 -$padding-mini;
+  li{
+    padding: $padding-mini;
+    @extend .col;
+    @extend .col-4;
+  }
+}
+
+
+
+

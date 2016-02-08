@@ -1,0 +1,59 @@
+label {
+  vertical-align: middle;
+}
+
+.label{
+  padding: $padding;
+  display: block;
+}
+
+.no-results{
+  //temp
+  padding: $padding !important;
+  margin-bottom: $padding;
+}
+
+.label--setting-panel,
+.label--active-map,
+.share-panel__label{
+  text-transform: uppercase;
+  padding: $padding-small 0;
+  display: block;
+}
+.label--active-map{
+  font-size: $font-size-mini;
+}
+
+
+.active-map__label{
+  padding: $padding-small 0;
+  font-size: $font-size-small;
+}
+
+.label--badge{
+  text-align: center;
+  border: 1px solid;
+  border-radius: 2px;
+  box-sizing: content-box;
+  padding: $padding-small/2 $padding-small;
+  margin-top: 7px;
+  font-size: 8px;
+}
+
+.label--sub-heading{
+  text-transform: uppercase;
+}
+
+.label--preview-badge{
+  position: absolute;
+  top: 0;
+  width: 78px;
+  height: 32px;
+  background-image: url('./TerriaJS/images/preview.svg');
+  background-size: contain;
+  background-color: transparent;
+}
+
+
+
+

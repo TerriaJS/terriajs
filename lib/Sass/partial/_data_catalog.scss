@@ -1,0 +1,32 @@
+.data-catalog{
+  @extend .list-reset;
+  ul{
+    @extend .list-reset;
+    padding-left: $padding-small;
+  }
+  .data-explorer & {
+    background: $modal-secondary-bg;
+    height: calc(#{$modal-content-height} - 90px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: $padding;
+  }
+}
+.data-catalog-item{
+  display: block;
+  width: 100%;
+  position: relative;
+  .btn--catalog-item--action{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: $padding-small;
+  }
+}
+.data--catalog-group{
+  @extend .list-reset;
+  padding-left: $padding-small;
+}
+
+
+

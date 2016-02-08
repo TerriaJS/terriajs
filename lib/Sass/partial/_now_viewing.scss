@@ -1,0 +1,164 @@
+// Save 1px for drop zone
+$now-viewing-margin: $padding-small - 1px;
+
+.now-viewing{
+  height: calc(100vh - #{$workbench-header});
+  overflow-y: scroll;
+  background: rgba(#fff, 0.15);
+  padding: 0  $padding-small;
+}
+
+.now-viewing__header{
+  @extend .list-reset;
+  @extend .clearfix;
+  .label, .btn{
+    line-height: 1;
+    text-transform: uppercase;
+    font-size: $font-size-small;
+  }
+  li{
+    display: inline-block;
+    float: left;
+    &:last-child{
+      float: right;
+    }
+  }
+}
+
+// Now viewing
+//
+// .is-open - now viewing open state
+//
+// Markup:
+// <ul class='now-viewing__content'>
+// <li class='now-viewing__item {{modifier_class}}'>
+//   <ul class ="now-viewing__item__header">
+//     <li><button class="btn btn--drag">National Broadband</button></li>
+//     <li><button class='btn btn--toggle'></button></li>
+//   </ul>
+//   <div class ="now-viewing__item__inner">
+//     <ul class="now-viewing__item__control">
+//        <li class='zoom'><button title="Zoom in data" class="btn">Zoom To</button></li>
+//        <li class='info'><button class='btn' title='info'>info</button></li>
+//        <li class='remove'><button title="Remove this data" class="btn">Remove</button></li>
+//        <li class='visibility'><button title="Data show/hide" class='btn btn--visibility '></button></li>
+//     </ul>
+//     <div class="now-viewing__item__opacity">
+//       <label htmlFor="opacity">Opacity: </label>
+//       <input type='range' name='opacity' min='0' max='1' step='0.01' />
+//     </div>
+//     <div class="now-viewing__item__legend">
+//       No legend to show
+//     </div>
+//   </div>
+//   </li>
+// </ul>
+//
+// Style guide: Component.now-viewing
+
+.kss-modifier__example{
+  .now-viewing__item{
+    width: 300px;
+  }
+}
+
+.now-viewing__content,
+.now-viewing__item__header,
+.now-viewing__item__control,
+{
+  @extend .list-reset;
+}
+
+.now-viewing__item{
+  @include greybox();
+  font-family: $font-pop;
+  margin: $now-viewing-margin/2 0;
+  &.is-dragging{
+    opacity: 0.5;
+    .now-viewing__header{
+      display: none!important;
+    }
+    .now-viewing__item-inner{
+      display: none!important;
+    }
+  }
+  .now-viewing__item__inner{
+    display: none;
+  }
+  &.is-open .now-viewing__item__inner{
+    display: block;
+  }
+}
+
+.now-viewing__item__header{
+  @extend .clearfix;
+  width: 100%;
+  li:first-child{
+    @extend .col;
+    @extend .col-11;
+  }
+  li:last-child{
+    @extend .col;
+    @extend .col-1;
+  }
+  .btn{
+    width: 100%;
+  }
+  .btn--toggle.is-open{
+    padding-left: 8px;
+  }
+  .now-viewing__item.is-open & {
+  border-bottom: 1px solid $border-color;
+  }
+}
+
+.now-viewing__item__control{
+  padding: $padding 0;
+  @extend .clearfix;
+  li{
+    display: inline-block;
+    float: left;
+    &:last-child{
+      float: right;
+    }
+  }
+  .info{
+    border-left: 1px solid $border-color;
+    border-right: 1px solid $border-color;
+  }
+  .btn{
+    text-transform: uppercase;
+    padding: 0 $padding;
+    font-size: $font-size-mini;
+    &.btn--visibility{
+      font-size: $font-size-small;
+    }
+  }
+}
+.now-viewing__item__opacity{
+  padding: 0 $padding $padding $padding;
+  border-bottom: 1px solid $border-color;
+  text-transform: uppercase;
+  font-size: $font-size-mini;
+  label{
+    margin-right: $padding-small;
+  }
+}
+
+.now-viewing__item__legend{
+  a, img{
+    display: block;
+  }
+  padding: $padding;
+}
+
+.now-viewing{
+  .drop-zone.is-active{
+    height: calc(#{$input-height} + #{$padding});
+  }
+  .drop-zone{
+    height: 1px;
+  }
+}
+
+
