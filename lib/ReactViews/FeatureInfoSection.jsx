@@ -3,6 +3,9 @@
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Mustache from 'mustache';
 import React from 'react';
+import HtmlToReact from 'html-to-react';
+
+const htmlToReactParser = new HtmlToReact.Parser(React);
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
@@ -44,9 +47,7 @@ const FeatureInfoSection = React.createClass({
         if (description.properties) {
             return JSON.stringify(description.properties);
         }
-        return {
-            __html: description
-        };
+        return {__html: description};
     },
 
     renderDataTitle() {
@@ -56,10 +57,17 @@ const FeatureInfoSection = React.createClass({
         return 'data group';
     },
 
+    innards() {
+        return htmlToReactParser.parse(this.htmlFromFeature(this.props.feature, this.props.clock).__html);
+    },
+
     render() {
+
         return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-open' : '')}>
                 <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
-                <section className='feature-info-panel__content' dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/>
+                <section className='feature-info-panel__content'>
+                    {this.innards()}
+                </section>
                 </li>);
     }
 });
