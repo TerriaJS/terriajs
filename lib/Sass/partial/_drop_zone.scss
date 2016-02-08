@@ -15,6 +15,10 @@
   .drop-zone{
     position: absolute;
     opacity: 0;
+    z-index: -1;
+    .drop-zone-inner{
+      display: none;
+    }
     &.is-active{
       @include transition(opacity, 0.2s);
       opacity: 1;
@@ -27,6 +31,9 @@
       height: 100vh;
       z-index: 99999;
       border: 0;
+      .drop-zone-inner{
+        display: block;
+      }
       @media screen and (min-width : $md){
         left: -$work-bench-width - 50px;
       }
