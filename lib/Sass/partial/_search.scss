@@ -1,4 +1,8 @@
-.search-results{
+.search-results-items{
+  @extend .list-reset;
+}
+
+.search__results{
   margin-top: 0.5rem;
   background: rgba(#fff, 0.15);
   max-height: 100%;
@@ -16,6 +20,7 @@
         button{
           border-bottom: $border-style;
           padding: $padding 0;
+          width: 100%;
         }
         &:last-child{
           button{
@@ -25,10 +30,12 @@
       }
     }
   }
-  .data-panel &{
+  .panel-content &{
     max-height: calc(#{$modal-content-height} - 90px);
     overflow-y: auto;
     padding-right: $padding-small;
   }
 }
+
+
 

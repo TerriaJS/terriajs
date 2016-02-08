@@ -14,6 +14,9 @@ import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGro
 import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
 import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
+import raiseErrorOnRejectedPromise from '../Models/raiseErrorOnRejectedPromise';
+import readJson from '../Core/readJson';
+
 
 const wfsUrlRegex = /\bwfs\b/i;
 
@@ -108,7 +111,14 @@ const AddData = React.createClass({
         terria: React.PropTypes.object,
         updateCatalog: React.PropTypes.func,
         isDraggingDroppingFile: React.PropTypes.bool,
-        onFinishDroppingFile: React.PropTypes.func
+        onFinishDroppingFile: React.PropTypes.func,
+        allowDropInitFiles: React.PropTypes.bool
+    },
+
+    getDefaultProps: function() {
+        return {
+          allowDropInitFiles: true
+        };
     },
 
     getInitialState() {
@@ -150,12 +160,24 @@ const AddData = React.createClass({
             for (let i = 0; i < files.length; ++i) {
                 const file = files[i];
                 this.props.terria.analytics.logEvent('uploadFile', 'browse', file.name);
-                promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
+                if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
+                    raiseErrorOnRejectedPromise(that.props.terria, readJson(file).then((json)=>{
+                        if (that.props.allowDropInitFiles && (json.catalog || json.services)) {
+                            // This is an init file.
+                            return that.props.terria.addInitSource(json);
+                        }
+                        promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
+                    }));
+                } else {
+                    promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
+                }
             }
-            when.all(promises, () => {
-                const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-                that.props.updateCatalog(userCatalog);
-            });
+            if(promises.length > 0) {
+                when.all(promises, () => {
+                    const userCatalog = that.props.terria.catalog.userAddedDataGroup;
+                    that.props.updateCatalog(userCatalog);
+                });
+            }
         }
     },
 
@@ -207,37 +229,51 @@ const AddData = React.createClass({
         });
     },
 
+    renderTabs() {
+        return (
+            <ul className='add-data-tablist tablist'>
+                <li className='tablist--local'>
+                    <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn--add-data-tab ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
+                </li>
+                <li className='tablist--local'>
+                    <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn--add-data-tab ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
+                </li>
+            </ul>
+            );
+    },
+
+    renderPanels() {
+        return (
+            <div className='tab-panels'>
+            <section aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className={'tab-panel panel--local ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>
+                <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
+                <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
+                <label className='label'><strong>Step 2:</strong> Select a local data file to add: </label>
+                <FileInput accept=".csv,.kml" onChange={this.handleFile} />
+            </section>
+            <section aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className={'tab-panel panel--web ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>
+                <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
+                <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
+                <label className='label'><strong>Step 2:</strong> Enter the URL of the data file or web service: </label>
+                <form className='url-input'>
+                    <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+                    <button onClick={this.handleUrl} className="btn btn--add-url">Add</button>
+                </form>
+            </section>
+            </div>
+            );
+    },
+
     render() {
         return (
-        <div className='add-data clearfix'>
+        <div className='add-data-inner'>
             <DragDropFile terria={this.props.terria}
                           handleFile={this.handleFile}
                           isActive={this.props.isDraggingDroppingFile}
                           onFinishDroppingFile={this.props.onFinishDroppingFile}
             />
-            <ul className='list-reset row relative'>
-            <li className='col col-6'>
-                <button onClick={this.changeTab.bind(null, 'local')} className={'btn btn-data-upload ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
-                <div aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-                    <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-                    <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} />
-                    <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Select a local data file to add: </label>
-                    <FileInput accept=".csv,.kml" onChange={this.handleFile} />
-                </div>
-            </li>
-            <li className='col col-6'>
-                <button onClick={this.changeTab.bind(null, 'web')} className={'btn btn-data-upload ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
-                <div aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className='mydata-panel_data-tab-section'>
-                    <label className='block mt1 mb1'> <strong className='block'>Step 1:</strong> Select type of file to add: </label>
-                    <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption}/>
-                    <label className='block mt1 mb1'> <strong className='block'>Step 2:</strong> Enter the URL of the data file or web service: </label>
-                    <form>
-                        <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
-                        <button onClick={this.handleUrl} className="btn btn-add-url">Add</button>
-                    </form>
-                </div>
-            </li>
-            </ul>
+            {this.renderTabs()}
+            {this.renderPanels()}
         </div>);
     }
 });

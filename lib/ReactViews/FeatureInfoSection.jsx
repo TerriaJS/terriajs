@@ -49,10 +49,6 @@ const FeatureInfoSection = React.createClass({
         };
     },
 
-    renderIconClass() {
-        return 'icon ' + (this.state.isOpen ? 'icon-chevron-down' : 'icon-chevron-right');
-    },
-
     renderDataTitle() {
         if(defined(this.props.catalogItemName)) {
             return this.props.catalogItemName;
@@ -61,7 +57,10 @@ const FeatureInfoSection = React.createClass({
     },
 
     render() {
-        return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-visible' : '')}><button onClick={this.toggleSection} className='btn btn-feature-name'>{this.renderDataTitle()}<i className={this.renderIconClass()}></i></button><section className='feature-info-panel__content' dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/></li>);
+        return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-open' : '')}>
+                <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
+                <section className='feature-info-panel__content' dangerouslySetInnerHTML={this.htmlFromFeature(this.props.feature, this.props.clock)}/>
+                </li>);
     }
 });
 

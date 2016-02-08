@@ -1,16 +1,14 @@
 // Feature info Panel
 //
-// .is-collapsed - collapsed feature info panel
-//
 // Markup:
-// <div class="feature-info-panel {{modifier_class}}" aria-hidden="false">
+// <div class="feature-info-panel is-visible" aria-hidden="false">
 // <div class="feature-info-panel__header">
-// <button class="btn"> Feature Info Panel </button><button class="btn modal-btn right" title="Close data panel"><i class="icon icon-close"></i></button>
+// <button class="btn"> Feature Info Panel </button><button class="btn btn--close-modal" title="Close data panel"></button>
 // </div>
-// <ul class='list-reset feature-info-panel__body'>
+// <ul class='feature-info-panel__body'>
 // <li class="feature-info__group">
-// <ul class="list-reset feature-info-panel-sections">
-// <li class="feature-info-panel__section"><button class="btn btn-feature-name"><span>Broadband ADSL Availability</span><i class="icon icon-chevron-down" ></i></button>
+// <ul class="feature-info-panel__sections">
+// <li class="feature-info-panel__section is-open"><button class="btn feature-info-panel__title is-open"><span>Broadband ADSL Availability</span></button>
 // <section class="feature-info-panel__content" aria-hidden="false">
 // <table class="cesium-infoBox-defaultTable">
 // <tbody>
@@ -31,11 +29,12 @@
   background:rgba($dark, 0.9);
   color: #fff;
   border-radius: $radius-small;
+  display: none;
+  &.is-visible{
+    display: block;
+  }
   &, .btn, li{
     font-size: $font-size-small;
-  }
-  .btn-close{
-    text-align: right;
   }
   &.is-collapsed{
     .feature-info-panel__body{
@@ -44,15 +43,29 @@
   }
 }
 
+.feature-info-panel__sections,
 .feature-info-panel__body{
-  max-height: calc(100vh - 300px);
+  @extend .list-reset;
+}
+
+.feature-info-panel__body{
+  max-height: $modal-content-height;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.feature-info-panel-sections{
-  font-size: 1rem;
+.feature-info-panel__title{
+  position: relative;
+  width: 100%;
+  @extend .btn--toggle;
+  &:before{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: $padding;
+  }
 }
+
 
 .feature-info-panel__section{
   background: rgba(#fff, 0.1);
@@ -62,7 +75,7 @@
 
 .feature-info-panel__content{
   display: none;
-  .feature-info-panel__section.is-visible &{
+  .feature-info-panel__section.is-open &{
     display: block;
   }
 }

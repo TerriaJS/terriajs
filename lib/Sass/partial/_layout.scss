@@ -13,6 +13,28 @@
   }
 }
 
+.map-navigation{
+    position: fixed;
+    top: 20px;
+    right: $padding;
+    z-index: 10;
+}
+
+.modal-wrapper{
+  position: fixed;
+  z-index: 99;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  padding: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2) $padding*3;
+  padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
+  @media screen and (min-width : $md){
+    padding-left: $work-bench-width + 50px;
+    padding-right: 50px;
+  }
+}
+
 .map{
   left: $work-bench-width;
   position: absolute;
@@ -50,37 +72,6 @@
   }
 }
 
-
-.modal-wrapper{
-  z-index: 99;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-}
-
-
-#map-nav{
-    position: fixed;
-    top: 20px;
-    right: $padding;
-    z-index: 10;
-
-    .compass{
-      position: absolute;
-      right: $padding;
-      top: 75px;
-    }
-
-    .zoom-control{
-      position: absolute;
-      //temp
-      right: 34px;
-      top: 170px;
-    }
-}
-
-// should go into national map maybe...
 #notification{
   .notification-wrapper{
     position: fixed;
@@ -106,15 +97,10 @@
     min-width: 400px;
   }
   #kss-node &{
-    position: absolute;
+    position: relative;
     top: 0;
+    left: 0;
   }
-}
-
-.top-left{
-  top: 0;
-  left: 0;
-  height: 100%;
 }
 
 .is-searching ~ .hide-on-search{

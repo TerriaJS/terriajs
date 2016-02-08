@@ -10,7 +10,7 @@ const LocationItem = React.createClass({
     render() {
         const item = this.props.item;
         return (
-            <li className="clearfix location-item"><button onClick={item.clickAction} className="btn col col-12 btn-location-name"><span className="col col-1 relative left-align"><i className='icon icon-location'> </i></span><span className='col col-11 relative'>{item.name}</span></button></li>
+            <li className="location-item"><button onClick={item.clickAction} className="btn btn--location-name">{item.name}</button></li>
             );
     }
 });

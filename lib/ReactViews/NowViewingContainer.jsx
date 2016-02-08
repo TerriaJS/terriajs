@@ -117,7 +117,7 @@ const NowViewingContainer = React.createClass({
     },
 
     renderPlaceholder(i) {
-        return <li className={(this.state.placeholderIndex === i) ? 'nowViewing__drop-zone is-active' : 'nowViewing__drop-zone'} data-key={i} key={i} onDragOver={this.onDragOverDropZone} ></li>;
+        return <li className={(this.state.placeholderIndex === i) ? 'drop-zone is-active' : 'drop-zone'} data-key={i} key={i} onDragOver={this.onDragOverDropZone} ></li>;
     },
 
     renderListElements() {
@@ -136,7 +136,7 @@ const NowViewingContainer = React.createClass({
 
     render() {
         return (
-            <ul className="now-viewing__content list-reset" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
+            <ul className="now-viewing__content" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
               {this.renderListElements()}
             </ul>);
     }

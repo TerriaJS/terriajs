@@ -21,8 +21,8 @@ const Notification = React.createClass({
 
     render() {
         return (
-            <div className='notification-wrapper flex flex-center' aria-hidden={ !this.props.isVisible }>
-              <div className='notification mx-auto'>
+            <div className='notification-wrapper' aria-hidden={ !this.props.isVisible }>
+              <div className='notification'>
                   <div className='notification__inner'>
                     <h3 className='title' >{ this.props.title }</h3>
                     <div className='body' dangerouslySetInnerHTML={ this.renderMessage() } />

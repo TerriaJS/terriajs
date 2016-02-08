@@ -189,7 +189,7 @@ const DataPreviewMap = React.createClass({
         return (<div className='data-preview-map' onClick={this.clickMap}>
                     <div className='terria-preview' ref={this.mapIsReady}>
                     </div>
-                    <label className='label-preview-badge'></label>
+                    <label className='label--preview-badge'></label>
                 </div>
                 );
     }

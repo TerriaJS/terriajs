@@ -1,41 +1,57 @@
+// Save 1px for drop zone
 $now-viewing-margin: $padding-small - 1px;
+
+.now-viewing{
+  height: calc(100vh - #{$workbench-header});
+  overflow-y: scroll;
+  background: rgba(#fff, 0.15);
+  padding: 0  $padding-small;
+}
+
+.now-viewing__header{
+  @extend .list-reset;
+  @extend .clearfix;
+  .label, .btn{
+    line-height: 1;
+    text-transform: uppercase;
+    font-size: $font-size-small;
+  }
+  li{
+    display: inline-block;
+    float: left;
+    &:last-child{
+      float: right;
+    }
+  }
+}
 
 // Now viewing
 //
 // .is-open - now viewing open state
 //
 // Markup:
-// <ul class='now-viewing__content list-reset'>
-// <li class="now-viewing__item clearfix {{modifier_class}}">
-//   <button class="btn block now-viewing__item-title">Broadband ADSL Availability</button>
-//   <div class="now-viewing__item-inner">
-//     <ul class="list-reset flex clearfix now-viewing__item-control">
-//       <li class="zoom">
-//         <button title="Zoom in data" class="btn">Zoom To</button>
-//       </li>
-//       <li class="info">
-//         <button class="btn undefined">info</button>
-//       </li>
-//       <li class="remove">
-//         <button title="Remove this data" class="btn">Remove</button>
-//       </li>
-//       <li class="visibility">
-//         <button title="Data show/hide" class="btn">
-//         <i class="icon icon-eye"></i>
-//         </button>
-//       </li>
+// <ul class='now-viewing__content'>
+// <li class='now-viewing__item {{modifier_class}}'>
+//   <ul class ="now-viewing__item__header">
+//     <li><button class="btn btn--drag">National Broadband</button></li>
+//     <li><button class='btn btn--toggle'></button></li>
+//   </ul>
+//   <div class ="now-viewing__item__inner">
+//     <ul class="now-viewing__item__control">
+//        <li class='zoom'><button title="Zoom in data" class="btn">Zoom To</button></li>
+//        <li class='info'><button class='btn' title='info'>info</button></li>
+//        <li class='remove'><button title="Remove this data" class="btn">Remove</button></li>
+//        <li class='visibility'><button title="Data show/hide" class='btn btn--visibility '></button></li>
 //     </ul>
-//     <div class="now-viewing__item-opacity">
-//       <label for="opacity">Opacity: </label>
-//       <input type="range" name="opacity" min="0" max="1" step="0.01" value="0.6">
+//     <div class="now-viewing__item__opacity">
+//       <label htmlFor="opacity">Opacity: </label>
+//       <input type='range' name='opacity' min='0' max='1' step='0.01' />
 //     </div>
-//     <div class="now-viewing__item-legend">
-//       <a href="https://programs.communications.gov.au/geoserver/ows?service=WMS&amp;version=1.3.0&amp;request=GetLegendGraphic&amp;format=image/png&amp;layer=mybroadband:MyBroadband_ADSL_Availability" data-reactid=".1.1.2.$0.1.2.0">
-//       <img src="https://programs.communications.gov.au/geoserver/ows?service=WMS&amp;version=1.3.0&amp;request=GetLegendGraphic&amp;format=image/png&amp;layer=mybroadband:MyBroadband_ADSL_Availability" data-reactid=".1.1.2.$0.1.2.0.0">
-//       </a>
+//     <div class="now-viewing__item__legend">
+//       No legend to show
 //     </div>
 //   </div>
-// </li>
+//   </li>
 // </ul>
 //
 // Style guide: Component.now-viewing
@@ -46,104 +62,103 @@ $now-viewing-margin: $padding-small - 1px;
   }
 }
 
-.now-viewing{
-  height: calc(100vh - #{$workbench-header});
-  overflow-y: scroll;
-  background: rgba(#fff, 0.15);
-  padding: 0  $padding-small;
+.now-viewing__content,
+.now-viewing__item__header,
+.now-viewing__item__control,
+{
+  @extend .list-reset;
 }
 
+.now-viewing__item{
+  @include greybox();
+  font-family: $font-pop;
+  margin: $now-viewing-margin/2 0;
+  &.is-dragging{
+    opacity: 0.5;
+    .now-viewing__header{
+      display: none!important;
+    }
+    .now-viewing__item-inner{
+      display: none!important;
+    }
+  }
+  .now-viewing__item__inner{
+    display: none;
+  }
+  &.is-open .now-viewing__item__inner{
+    display: block;
+  }
+}
 
-.now-viewing__item-header{
+.now-viewing__item__header{
+  @extend .clearfix;
   width: 100%;
-  @include transition(height 0.25s ease-in-out);
+  li:first-child{
+    @extend .col;
+    @extend .col-11;
+  }
+  li:last-child{
+    @extend .col;
+    @extend .col-1;
+  }
+  .btn{
+    width: 100%;
+  }
+  .btn--toggle.is-open{
+    padding-left: 8px;
+  }
   .now-viewing__item.is-open & {
   border-bottom: 1px solid $border-color;
   }
 }
 
-.now-viewing__item-control{
+.now-viewing__item__control{
   padding: $padding 0;
-  .btn{
-    text-transform: uppercase;
-    padding: 0 $padding;
-    font-size: $font-size-mini;
+  @extend .clearfix;
+  li{
+    display: inline-block;
+    float: left;
+    &:last-child{
+      float: right;
+    }
   }
-
   .info{
     border-left: 1px solid $border-color;
     border-right: 1px solid $border-color;
   }
-}
-
-.now-viewing__item{
-  @include greybox();
-  margin: $now-viewing-margin/2 0;
-  &.is-dragging{
-    opacity: 0.5;
-    .now-viewing__header{
-      display: none;
-    }
-    .now-viewing__item-inner{
-      display: none;
+  .btn{
+    text-transform: uppercase;
+    padding: 0 $padding;
+    font-size: $font-size-mini;
+    &.btn--visibility{
+      font-size: $font-size-small;
     }
   }
 }
-
-.now-viewing__item-inner{
-  max-height: 0;
-  overflow: hidden;
-  @include transition(height 0.25s ease-in-out);
-  .now-viewing__item.is-open &{
-    max-height: 1000px;
-  }
-}
-
-.now-viewing__item-opacity{
+.now-viewing__item__opacity{
   padding: 0 $padding $padding $padding;
   border-bottom: 1px solid $border-color;
   text-transform: uppercase;
   font-size: $font-size-mini;
-}
-
-.now-viewing__item-legend{
-  padding: $padding;
-}
-
-.now-viewing__header{
-  padding: 0 $padding;
-  .label, .btn, .label-inline{
-    text-transform: uppercase;
-    font-size: 0.9rem;
+  label{
+    margin-right: $padding-small;
   }
 }
 
-.nowViewing__drop-zone.is-active{
-  height: calc(#{$input-height} + #{$padding});
-  background: rgba(#FFF, 0.5);
-  border: 2px dashed #fff;
-}
-
-.nowViewing__drop-zone{
-  height: 1px;
-  background: transparent;
-  @include transition(height 0.25s ease-in-out);
-}
-
-.nowViewing-chart{
-  background: $dark;
-  margin-bottom: $padding;
-  svg{
-    text{
-      font-size: 9px;
-      color: #fff;
-      fill: #fff;
-    }
-  }
-}
-
-.now-viewing__item-legend{
+.now-viewing__item__legend{
   a, img{
     display: block;
   }
+  padding: $padding;
 }
+
+.now-viewing{
+  .drop-zone.is-active{
+    height: calc(#{$input-height} + #{$padding});
+  }
+  .drop-zone{
+    height: 1px;
+  }
+}
+
+

@@ -34,6 +34,10 @@ const DataCatalogGroup = React.createClass({
 
     renderGroup(group, isOpen) {
         if (isOpen === true) {
+            if (group.isLoading) {
+                return <Loader/>;
+            }
+
             if (group.items && group.items.length > 0) {
                 return group.items.map((member, i)=>{
                     if (member.isGroup) {
@@ -52,7 +56,7 @@ const DataCatalogGroup = React.createClass({
                             />);
                 });
             }
-            return <Loader/>;
+            return <li className ='label no-results'> No data </li>;
         }
     },
 
@@ -62,8 +66,8 @@ const DataCatalogGroup = React.createClass({
 
         return (
             <li>
-              <button className ={'btn btn-catalogue ' + (isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name} <i className={'icon ' + (isOpen ? 'icon-caret-down' : 'icon-caret-right')}></i></button>
-              <ul className="data-catalog-group list-reset">
+              <button className ={'btn btn--catalogue ' + (isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name}</button>
+              <ul className="data--catalog-group">
                 {this.renderGroup(group, isOpen)}
               </ul>
             </li>

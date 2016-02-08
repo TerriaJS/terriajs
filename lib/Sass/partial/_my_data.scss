@@ -1,39 +1,41 @@
-// TO DO: NEED TO SEPERATE MYDATA TAB STYLE INTO A DIFFERETN FILE
-//My data
+// //My data
+.my-data{
+  height: 100%;
+}
+
 .add-data{
   background: $modal-secondary-bg;
-  padding: $padding*2;
-  height: 300px;
-  overflow: visible;
-}
-
-.added-data{
-  //temp
-  padding: $padding*2;
-}
-
-.panel__my-data{
-  .top-left{
-    overflow-y: auto;
+  padding: $padding;
+  height: 100%;
+  overflow: hidden;
+  .label{
+    padding-left: 0;
+  }
+  &.is-hidden{
+    position: absolute;
+    left: -1000px;
   }
 }
 
-.drag-drop-zone{
-  visibility: hidden;
-  height: 0;
-  width: 0;
-  &.is-active{
-    // Temp
-    visibility: visible;
-    position: fixed;
-    top: calc(20px - 15vh);
-    left: -$work-bench-width - 50px;
-    height: 100vh;
-    width: 100vw;
-    background: rgba(#fff, 0.6);
-    z-index: 99;
-    h1{
-      margin: 0 auto;
-    }
+.btn--back-to-my-data{
+  position: relative;
+  padding-left: $padding*2;
+  @extend .btn-small;
+  @extend .btn--left;
+  &:before{
+    position: absolute;
+    left: 0;
+  }
+  .add-data.is-empty &{
+    display: none;
   }
 }
+
+.btn--add-more-data{
+  @extend .btn-primary;
+  margin-top: $padding;
+}
+
+
+
+

@@ -1,17 +1,31 @@
-//temp
-
-.mydata-panel_data-tab-section{
-  position: absolute;
-  width: 100%;
-  padding: $padding 0;
-  left: 0;
+.tablist{
+  @extend .list-reset;
+  @extend .clearfix;
+  padding-right: 100px;
+  li{
+    display: inline-block;
+    float: left;
+  }
 }
 
-section[aria-hidden='true'].tab-panel{
-  display: block;
+.tab-panel{
   position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
+  left: -10000px;
   z-index: -1;
+  &.is-active{
+    z-index: 1;
+    position: relative;
+    opacity: 1;
+    left: 0;
+  }
+  &:focus{
+    outline: none;
+  }
+}
+// My data
+.add-data-tablist{
+  padding-right: 0;
+  li{
+    margin-right: 3px;
+  }
 }

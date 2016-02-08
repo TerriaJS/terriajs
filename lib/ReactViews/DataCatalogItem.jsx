@@ -18,29 +18,27 @@ const DataCatalogItem = React.createClass({
         this.props.onPreviewedCatalogItemChanged(this.props.item, this.props.userData);
     },
 
-    addToMap() {
+    toggleEnable() {
         this.addToPreview();
         this.props.item.toggleEnabled();
     },
 
-    renderIconClass(item) {
+    renderClass(item) {
         if (item.isEnabled) {
             if (item.isLoading) {
-                return 'icon icon-loader';
+                return 'btn--loading-on-map';
             }
-            return 'icon icon-remove';
+            return 'btn--remove-from-map';
         }
-        return 'icon icon-add';
+        return 'btn--add-to-map';
     },
 
     render() {
         const item = this.props.item;
         return (
-            <li className={(this.props.previewedCatalogItem === item ? 'is-previewed' : '') + ' clearfix data-catalog-item' }>
-                <button onClick={this.addToPreview} className='btn btn-catalog-item'>{item.name}</button>
-                <button onClick={this.addToMap} title="add to map" className='btn btn-add-to-map'>
-                    <i className={this.renderIconClass(item)}></i>
-                </button>
+            <li className={(this.props.previewedCatalogItem === item ? 'is-previewed' : '') + ' data-catalog-item' }>
+               <button onClick={this.addToPreview} className='btn btn--catalog-item'>{item.name}</button>
+               <button onClick={this.toggleEnable} title="add or remove on map" className={'btn btn--catalog-item--action ' + (this.renderClass(item))}></button>
             </li>);
     }
 });

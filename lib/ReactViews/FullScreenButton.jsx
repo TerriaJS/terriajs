@@ -26,11 +26,11 @@ const FullScreenButton = React.createClass({
         if (this.state.isActive) {
             return <span className='exit-full-screen'>Exit Full Screen</span>;
         }
-        return <i className='icon icon-full-screen'></i>;
+        return <span className='enter-full-screen'></span>;
     },
 
     render() {
-        return (<div><button onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn-map btn-full-screen ' + (this.state.isActive ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
+        return (<div className='full-screen'><button onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn--map full-screen__button ' + (this.state.isActive ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
     }
 });
 module.exports = FullScreenButton;
