@@ -92,6 +92,7 @@ $btn-setting-size: 35px;
 // .btn--expand - expand this
 // .btn--right - button pointing right
 // .btn--left - button pointing left
+// .btn--close - button to close something
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -111,7 +112,8 @@ $btn-setting-size: 35px;
 .btn--share,
 .btn--expand,
 .btn--left,
-.btn--right{
+.btn--right,
+.btn--close{
   @extend .icon;
   &:before{
     line-height: $btn-default-line-height;
@@ -184,6 +186,10 @@ $btn-setting-size: 35px;
 
 .btn--right{
   @extend .icon-right;
+}
+
+.btn--close{
+  @extend .icon-close;
 }
 
 // Text and icon buttons
