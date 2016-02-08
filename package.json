@@ -11,6 +11,7 @@
     "brfs": "^1.4.0",
     "d3": "^3.5.14",
     "hammerjs": "^2.0.4",
+    "html-to-react": "^0.1.2",
     "html2canvas": "0.5.0-alpha2",
     "javascript-natural-sort": "^0.7.1",
     "leaflet": "0.7.3",
@@ -86,7 +87,12 @@
       "brfs"
     ],
     "plugin": [
-      ["browserify-resolutions", ["react"]]
+      [
+        "browserify-resolutions",
+        [
+          "react"
+        ]
+      ]
     ]
   }
 }
