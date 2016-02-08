@@ -153,7 +153,7 @@ const SearchBox = React.createClass({
         // button to clear search string
         let clearSearchContent = null;
         if (this.props.searchText.length > 0) {
-            clearSearchContent = (<button className='btn search-clear' onClick ={this.clearSearch}></button>);
+            clearSearchContent = (<button className='btn btn--search-clear' onClick ={this.clearSearch}></button>);
         }
 
         let linkToSearchData = null;

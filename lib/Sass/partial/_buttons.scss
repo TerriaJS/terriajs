@@ -398,6 +398,27 @@ a.btn--map{
   line-height: 20px;
 }
 
+// Search Clear buttons
+//
+// Buttons to clear search
+//
+// Markup:
+// <button class="btn btn--search-clear" title="clear search text"></button>
+//
+// Style guide: Buttons.btn--search-clear
+
+.btn--search-clear{
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  @extend .icon;
+  @extend .icon-clear;
+  &:before{
+    padding: 12px $padding;
+  }
+}
+
 
 // Search data catalog button
 //

@@ -97,8 +97,12 @@
     .btn.search-clear{
       right: $padding;
       top: 0;
+      padding: 0;
       @extend .icon;
       @extend .icon-clear;
+      &:before{
+        padding: $padding;
+      }
     }
 
   .panel-content &{
