@@ -61,7 +61,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
                 featureInfoTemplate: '<div>{{blah}}</div>'
             };
 
-            section = new FeatureInfoPanelSectionViewModel(panel, feature, catalogItem);
+            section = new FeatureInfoPanelSectionViewModel(panel, feature, false, catalogItem);
         });
 
         describe('rawDataVisible', function () {
