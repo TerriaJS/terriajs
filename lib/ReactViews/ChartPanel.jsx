@@ -39,15 +39,17 @@ const ChartPanel = React.createClass({
                 }
             }
         }
-
+        if(!data.length) {
+            return null;
+        }
         return (
             <div className="chart-panel__holder">
                 <div className="chart-panel__holder__inner">
-                    <div className="chart-panel" style={{height: 360}}>
+                    <div className="chart-panel" style={{height: 300}}>
                         <div className="chart-panel__body">
-                            <div className="chart-panel__header" style={{height: 30, boxSizing: 'border-box'}}>
-                                <span className="chart-panel__section-label">Charts</span>
-                                <div className="chart-panel__close-button">&times;</div>
+                            <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
+                                <span className="chart-panel__section-label label">Charts</span>
+                                <button className="btn btn--close-chart-panel"></button>
                             </div>
                             <div>
                                 <Chart data={data} colors={colors}/>
