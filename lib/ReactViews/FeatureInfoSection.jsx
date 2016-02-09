@@ -7,8 +7,12 @@ import HtmlToReact from 'html-to-react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import markdownToHtml from '../Core/markdownToHtml';
+import Chart from '../ReactViews/Chart';
 
 const htmlToReactParser = new HtmlToReact.Parser(React);
+const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
+
+let index = 0; // TODO: remove
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
@@ -62,17 +66,45 @@ const FeatureInfoSection = React.createClass({
 
     sanitizedCustomMarkdown() {
         const raw = this.descriptionFromFeature(this.props.feature, this.props.clock);
-        const html = markdownToHtml(raw, false);
-        return htmlToReactParser.parse(html);
+        const html = markdownToHtml(raw, false, {ADD_TAGS: ['chart', 'collapsible']});  // TODO: temp
+
+        const isValidNode = function() {
+            return true;
+        };
+        const elementProps = { // TODO: remove
+            key: ++index
+        };
+        const processingInstructions = [
+            {
+                // Custom <chart> processing
+                shouldProcessNode: function(node) {
+                    return node.name === 'chart';
+                },
+                processNode: function(node, children) {
+                    console.log(React.createElement(node.name, elementProps, node.data, children));
+                    const x = <Chart data={[[{x: 1, y: 10}, {x: 4, y: 20}, {x: 6, y: 14}]]}/>;
+                    return x;
+                }
+            }, {
+                // Anything else
+                shouldProcessNode: function(node) {
+                    return true;
+                },
+                processNode: processNodeDefinitions.processDefaultNode
+            }];
+
+        return htmlToReactParser.parseWithInstructions(html, isValidNode, processingInstructions);
     },
 
     render() {
-        return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-open' : '')}>
-                    <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
-                    <section className='feature-info-panel__content'>
-                        {this.sanitizedCustomMarkdown()}
-                    </section>
-                </li>);
+        return (
+            <li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-open' : '')}>
+                <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
+                <section className='feature-info-panel__content'>
+                    {this.sanitizedCustomMarkdown()}
+                </section>
+            </li>
+        );
     }
 });
 
