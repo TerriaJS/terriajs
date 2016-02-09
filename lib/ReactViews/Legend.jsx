@@ -44,24 +44,25 @@ const Legend = React.createClass({
                         return (<li key={i} onError={this.onImageError.bind(this, legend)} className="legend--svg" dangerouslySetInnerHTML={legend.safeSvgContent}></li>);
                     }
 
-                    return (<li><a key={i} onError={this.onImageError.bind(this, legend)} href={legend.url} target="_blank">
+                    return (<li key={i}><a onError={this.onImageError.bind(this, legend)} href={legend.url} target="_blank">
                                 <div className="legend--image">
                                     <img src={legend.url}/>
                                 </div>
                             </a></li>);
                 }
-                return (<li><a key={i} className="legend--text"
+                return (<li key={i}><a className="legend--text"
                            href={legend.url}
                            target="_blank">Open legend in a separate tab
-                        </a></li>);
+                            </a>
+                        </li>);
             });
 
-              if(!this.getLegends || this.getLegends().length === 0) {
+            if (!this.getLegends || this.getLegends().length === 0) {
                 if (this.props.nowViewingItem.type === 'abs-itt') {
-                    legends = <li className="legend--text">Select at least one code in each data area.</li>;
+                    legends = <li key={0} className="legend--text">Select at least one code in each data area.</li>;
                 }
-                else {
-                    legends = <li className="legend--text">No legend available for this data item.</li>;
+              else {
+                    legends = <li key={0} className="legend--text">No legend available for this data item.</li>;
                 }
             }
         }
