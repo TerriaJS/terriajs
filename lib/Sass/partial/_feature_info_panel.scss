@@ -51,13 +51,14 @@
 .feature-info-panel__body{
   max-height: $modal-content-height;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 .feature-info-panel__title{
   position: relative;
   width: 100%;
   @extend .btn--toggle;
+  padding: $padding $padding*2 $padding 0;
   &:before{
     position: absolute;
     right: 0;

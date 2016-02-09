@@ -386,11 +386,36 @@ $btn-setting-size: 35px;
   border: 1px solid transparent;
   display: block;
   height: $padding*3.1;
+  font-family: $font-pop;
   line-height: 18px;
   &:hover, .is-open &, &.is-active {
     background: $color-primary;
     border: 1px solid rgba(#fff, 0.5);
     text-decoration: none;
+  }
+}
+a.btn--map{
+  line-height: 20px;
+}
+
+// Search Clear buttons
+//
+// Buttons to clear search
+//
+// Markup:
+// <button class="btn btn--search-clear" title="clear search text"></button>
+//
+// Style guide: Buttons.btn--search-clear
+
+.btn--search-clear{
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  @extend .icon;
+  @extend .icon-clear;
+  &:before{
+    padding: 12px $padding;
   }
 }
 

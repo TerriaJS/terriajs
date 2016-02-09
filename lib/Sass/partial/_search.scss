@@ -2,13 +2,19 @@
   @extend .list-reset;
 }
 
+.is-searching.search{
+  height: 100%;
+}
+
 .search__results{
   margin-top: 0.5rem;
   background: rgba(#fff, 0.15);
   max-height: 100%;
   @include transition(all 0.5s ease-in-out);
+  .workbench .is-searching &{
+    height: calc(100vh - #{$workbench-header});
+  }
   .workbench &{
-    max-height: calc(100vh - #{$workbench-header});
     margin-top: calc(#{$input-height} + #{$padding});
     overflow-y: scroll;
     padding: 0 $padding-small;
@@ -30,10 +36,11 @@
       }
     }
   }
-  .panel-content &{
-    max-height: calc(#{$modal-content-height} - 90px);
+  .panel-content .is-searching &{
     overflow-y: auto;
     padding-right: $padding-small;
+    height: 100%;
+    padding-bottom: calc(#{$input-height} + #{$padding});
   }
 }
 

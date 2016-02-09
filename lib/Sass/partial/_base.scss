@@ -9,8 +9,9 @@ html{
 }
 
 body {
-  background: $dark;
+  background: #000;
   color: #fff;
+  overflow: hidden;
 }
 
 img { max-width: 100% }

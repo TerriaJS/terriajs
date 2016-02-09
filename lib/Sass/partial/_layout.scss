@@ -8,7 +8,6 @@
     display: block;
     .is-full-screen &{
       margin-left: -$work-bench-width;
-
     }
   }
 }
@@ -88,13 +87,13 @@
   top: 10px;
   right: 10px;
   max-width: 95%;
+  min-width: 150px;
   z-index: 5;
   @media screen and (min-width : $sm){
     //temp
-    width: calc(100vw - 600px);
+    max-width: calc(100vw - #{$work-bench-width} - 150px);
     top: 100px;
     right: 100px;
-    min-width: 400px;
   }
   #kss-node &{
     position: relative;
@@ -106,6 +105,8 @@
 .is-searching ~ .hide-on-search{
   display: none;
 }
+
+
 
 
 

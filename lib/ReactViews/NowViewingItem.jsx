@@ -1,6 +1,7 @@
 'use strict';
 
 import ObserveModelMixin from './ObserveModelMixin';
+import Legend from './Legend';
 import React from 'react';
 
 const NowViewingItem = React.createClass({
@@ -56,16 +57,6 @@ const NowViewingItem = React.createClass({
         });
     },
 
-    renderLegend(_nowViewingItem) {
-        if (_nowViewingItem.legendUrl && (typeof _nowViewingItem.legendUrl === 'function')) {
-            if ((typeof _nowViewingItem.legendUrl.isImage === 'function') && _nowViewingItem.legendUrl.isImage()) {
-                return <a href={_nowViewingItem.legendUrl.url} target="_blank"><img src={_nowViewingItem.legendUrl.url}/></a>;
-            }
-            return <a href={_nowViewingItem.legendUrl.input} target="_blank">Open legend in a separate tab</a>;
-        }
-        return 'No legend to show';
-    },
-
     previewItem() {
         this.props.onActivateCatalogItemInfo(this.props.nowViewingItem);
     },
@@ -91,7 +82,7 @@ const NowViewingItem = React.createClass({
                 <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
               </div>
               <div className="now-viewing__item__legend">
-                {this.renderLegend(nowViewingItem)}
+                <Legend nowViewingItem={nowViewingItem}/>
               </div>
             </div>
             </li>

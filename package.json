@@ -10,6 +10,7 @@
   "dependencies": {
     "brfs": "^1.4.0",
     "d3": "^3.5.14",
+    "dygraphs": "^1.1.1",
     "dompurify": "^0.7.3",
     "hammerjs": "^2.0.4",
     "html-to-react": "^0.1.2",
