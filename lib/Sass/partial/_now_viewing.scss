@@ -161,4 +161,25 @@ $now-viewing-margin: $padding-small - 1px;
   }
 }
 
+//Legend
+//
+
+.legend{
+  @extend .clearfix;
+  @extend .list-reset;
+  li{
+    display: block;
+  }
+}
+
+.legend--svg{
+  svg{
+    width: 100%;
+    > rect{
+      width: 100%;
+      fill: rgba(#fff, 0.15);
+    }
+  }
+}
+
 
