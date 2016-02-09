@@ -344,14 +344,21 @@ describe('CsvCatalogItem with lat and lon', function() {
             csvItem2.url = 'test/csv/lat_lon_val.csv';
             return csvItem2.load().yield(csvItem2);
         }).then(function(csvItem2) {
-                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
-                var minPix = Math.min.apply(null, pixelSizes);
-                var maxPix = Math.max.apply(null, pixelSizes);
-                // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
-                expect(maxPix).toEqual(csvItem._maxPix * 2);
-                expect(minPix).toEqual(csvItem._minPix * 2);
-            })
-            .otherwise(fail).then(done);
+            var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+            var minPix = Math.min.apply(null, pixelSizes);
+            var maxPix = Math.max.apply(null, pixelSizes);
+            // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
+            expect(maxPix).toEqual(csvItem._maxPix * 2);
+            expect(minPix).toEqual(csvItem._minPix * 2);
+        }).otherwise(fail).then(done);
+    });
+
+    it('does not make a feature if it is missing longitude', function(done) {
+        csvItem.url = 'test/csv/lat_lon-missing_val.csv';
+        return csvItem.load().then(function() {
+            expect(csvItem.tableStructure.columns[0].values.length).toEqual(5);
+            expect(csvItem.dataSource.entities.values.length).toEqual(4);  // one line is missing longitude.
+        }).otherwise(fail).then(done);
     });
 
     it('supports replaceWithNullValues', function(done) {
