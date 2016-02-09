@@ -41,6 +41,15 @@ describe('TableColumn', function() {
         expect(tableColumn.type).toEqual(VarType.ENUM);
     });
 
+    it('provides a null index for a null value in string data', function() {
+        var data = ['small', 'medium', null, 'big'];
+        var tableColumn = new TableColumn('size', data);
+        expect(tableColumn.type).toEqual(VarType.ENUM);
+        expect(tableColumn.usesIndicesIntoUniqueValues).toBe(true);
+        expect(tableColumn.indicesOrValues[1]).not.toBe(null);
+        expect(tableColumn.indicesOrValues[2]).toBe(null);
+    });
+
     it('can detect latitude type', function() {
         var data = [30.3, 31.3, 33.3];
         var tableColumn = new TableColumn('lat', data);
