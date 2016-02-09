@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach*/
 var KmlCatalogItem = require('../../lib/Models/KmlCatalogItem');
-var ModelError = require('../../lib/Models/ModelError');
+var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
 
 var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
@@ -100,7 +100,7 @@ describeIfSupported('KmlCatalogItem', function() {
             kml.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -113,7 +113,7 @@ describeIfSupported('KmlCatalogItem', function() {
                 kml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -127,7 +127,7 @@ describeIfSupported('KmlCatalogItem', function() {
                 kml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });

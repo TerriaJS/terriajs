@@ -3,9 +3,10 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var Terria = require('../../lib/Models/Terria');
+var Legend = require('../../lib/Map/Legend');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var ArcGisMapServerCatalogItem = require('../../lib/Models/ArcGisMapServerCatalogItem');
-var LegendUrl = require('../../lib/Models/LegendUrl');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 
 var terria;
 var item;
@@ -17,14 +18,22 @@ beforeEach(function() {
     item = new ArcGisMapServerCatalogItem(terria);
 });
 
-
 describe('ArcGisMapServerCatalogItem', function() {
 
     beforeEach(function() {
-        // item.load() ultimately calls loadWithXhr.load(), which just needs to return some json, so fake it
+        var realLoadWithXhr = loadWithXhr.load;
+        // We replace calls to GA's servers with pre-captured JSON files so our testing is isolated, but reflects real data.
         spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
-            var json = '{"currentVersion": 1.1, "folders": ["Utilities"], "services": [{"name": "2014-Map", "type": "MapServer"}]}';
-            deferred.resolve(json);
+            url = url.replace ('http://example.com/42/', '/Dynamic_National_Map_Hydrography_and_Marine/');
+            if (url.match('Dynamic_National_Map_Hydrography_and_Marine/MapServer')) {
+                url = url.replace(/^.*\/MapServer/, '/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/MapServer');
+                url = url.replace(/MapServer\/?\?f=json$/i, 'mapserver.json');
+                url = url.replace(/MapServer\/Legend\/?\?f=json$/i, 'legend.json');
+                url = url.replace(/MapServer\/Layers\/?\?f=json$/i, 'layers.json');
+                url = url.replace(/MapServer\/31\/?\?f=json$/i, '31.json');
+                arguments[0] = url;
+            }
+            return realLoadWithXhr.apply(undefined, arguments);
         });
     });
 
@@ -88,14 +97,14 @@ describe('ArcGisMapServerCatalogItem', function() {
         expect(item.legendUrl).toEqual(new LegendUrl('http://my.arcgis.com/abc/legend'));
     });
 
-    it('can load json', function(done) {
-        var url = 'http://my.arcgis.com/';
+    it('can load /MapServer json for all layers', function(done) {
+        var url = 'http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer';
         item.updateFromJson({url: url});
         item.load().then(function() {
             // with this url, loadJson (and thus loadWithXhr) should have been called twice
             // once for the serviceUrl, which is the same as the url plus a query param
             // and once for the layersUrl, which is url/layers?...
-            expect(loadWithXhr.load.calls.count()).toEqual(2);
+            expect(loadWithXhr.load.calls.count()).toBeGreaterThan(1);
             // this reg exp allows for optional / at end of url and after /layers
             var load1 = (new RegExp(url + '\/?\\?')).test(loadWithXhr.load.calls.argsFor(0)[0]);
             var load2 = (new RegExp(url + '\/{0,2}layers\/?\\?')).test(loadWithXhr.load.calls.argsFor(1)[0]);
@@ -103,22 +112,18 @@ describe('ArcGisMapServerCatalogItem', function() {
             expect(load2).toBe(true);
             done();
         });
-        // .otherwise(function() {
-        //     expect(loadWithXhr.load).toHaveBeenCalledWith('abc');
-        //     done();
-        // });
     });
 
-    it('properly loads MapServer/3', function(done) {
-        var url = 'http://my.arcgis.com/MapServer/3'; // do not put a / at the end, number must be one digit
+    it('properly loads a single layer specified as MapServer/31', function(done) {
+        var url = 'http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31';
         item.updateFromJson({url: url});
         item.load().then(function() {
             // with this url, loadJson (and thus loadWithXhr) should have been called twice
             // once for the serviceUrl, which is the same as the url plus a query param
             // and once for the layersUrl, which is the same url again
-            expect(loadWithXhr.load.calls.count()).toEqual(2);
+            expect(loadWithXhr.load.calls.count()).toBeGreaterThan(1);
             // this reg exp allows for optional / at end of url and after /layers
-            var re = new RegExp(url.substr(0, url.length-1) + '\/?\\?');   // the first url will be missing the number
+            var re = new RegExp(url.substr(0, url.length-3) + '\/?\\?');   // the first url will be missing the number
             var load1 = re.test(loadWithXhr.load.calls.argsFor(0)[0]);
             var re2 = new RegExp(url + '\/?\\?');
             var load2 = re2.test(loadWithXhr.load.calls.argsFor(1)[0]);
@@ -128,15 +133,29 @@ describe('ArcGisMapServerCatalogItem', function() {
         });
     });
 
-    it('properly loads with numbers in url', function(done) {
-        var url = 'http://my.arcgis.com/33/MapServer';
+    it('is not confused by other numbers in url', function(done) {
+        var url = 'http://www.ga.gov.au/gis/rest/services/42/and/3/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31';
         item.updateFromJson({url: url});
         item.load().then(function() {
             // this reg exp allows for optional / at end of url and after /layers
-            var load2 = (new RegExp(url + '\/{0,2}layers\/?\\?')).test(loadWithXhr.load.calls.argsFor(1)[0]);
+            var load2 = (new RegExp(url + '\\?')).test(loadWithXhr.load.calls.argsFor(1)[0]);
             expect(load2).toBe(true);
             done();
         });
+    });
+
+    it('generates a legend with the right number of items', function(done) {
+        var url = 'http://www.ga.gov.au/gis/rest/services/topography/Dynamic_National_Map_Hydrography_and_Marine/MapServer/31';
+        item.updateFromJson({url: url});
+        spyOn(Legend.prototype, 'drawSvg').and.callFake(function() {
+            expect(this.items.length).toBe(2);
+            expect(this.items[1].title).toBe('Wrecks');
+            console.log(this);
+            return '';
+        });
+        item.load().then(function() {
+            done();
+        }).otherwise(fail);
     });
 
 });

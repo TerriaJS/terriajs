@@ -4,7 +4,7 @@
 
 var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
 var Terria = require('../../lib/Models/Terria');
-var LegendUrl = require('../../lib/Models/LegendUrl');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
@@ -252,6 +252,7 @@ describe('WebMapServiceCatalogItem', function() {
 
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         wmsItem.name = 'Name';
+        wmsItem.id = 'Id';
         wmsItem.description = 'Description';
         wmsItem.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
         wmsItem.legendUrl = new LegendUrl('http://legend.com', 'image/png');
@@ -277,6 +278,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.description).toBe(wmsItem.description);
         expect(reconstructed.rectangle).toEqual(wmsItem.rectangle);
         expect(reconstructed.legendUrl).toEqual(wmsItem.legendUrl);
+        expect(reconstructed.legendUrls).toEqual(wmsItem.legendUrls);
         expect(reconstructed.dataUrlType).toBe(wmsItem.dataUrlType);
         expect(reconstructed.dataUrl).toBe(wmsItem.dataUrl);
         expect(reconstructed.dataCustodian).toBe(wmsItem.dataCustodian);
@@ -285,8 +287,6 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.layers).toBe(wmsItem.layers);
         expect(reconstructed.parameters).toBe(wmsItem.parameters);
         expect(reconstructed.getFeatureInfoFormats).toEqual(wmsItem.getFeatureInfoFormats);
-
-        expect(reconstructed).toEqual(wmsItem);
     });
 
     it('can get handle plain text in textAttribution', function() {

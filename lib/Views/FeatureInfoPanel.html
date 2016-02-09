@@ -6,7 +6,8 @@
                     <span class="feature-info-panel-section-label" data-bind="text: name"></span>
                     <div class="feature-info-panel-close-button" data-bind="click: close">&times;</div>
                 </div>
-                <div class="feature-info-panel-sections" data-bind="style: { 'max-height': maxHeight + 'px' }">
+                <div class="feature-info-panel-sections" id="feature-info-panel-sections"
+                     data-bind="style: { 'max-height': maxHeight + 'px' }">
                     <div class="feature-info-panel-section" data-bind="if: message">
                         <div class="feature-info-panel-section">
                             <div class="feature-info-panel-section-content" data-bind="html: message"></div>

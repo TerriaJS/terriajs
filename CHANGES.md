@@ -5,6 +5,67 @@ Change Log
 ### 1.0.55
 
 * Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
+### 2.0.0
+
+* The following previously-deprecated functionality was removed in this version:
+  - `ArcGisMapServerCatalogGroup`
+  - `CatalogItemControl`
+  - `CatalogItemDownloadControl`
+  - Calling `BrandBarViewModel.create` with more than one parameter.
+  - `CatalogMemberControl.leftSideItemControls`
+  - `CatalogMemberControl.rightSideItemControls`
+  - `DataCatalogTabViewModel.getRightSideItemControls`
+  - `DataCatalogTabViewModel.getLeftSideItemControls`
+  - `registerCatalogItemControls`
+  - `AusGlobeViewer`
+* Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
+  - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
+  - `AbsIttCatalogItem`: Completely rewritten. The `dataSetID` json parameter has been deprecated in favor of `datasetId` (different capitalization).
+  - For the 2011 Australian Census data, requires `sa4_code_2011` to appear as an alias in `regionMapping.json` (it was previously missing in NationalMap).
+  - `TableDataSource`: Completely rewritten and moved from `Map` to `Models` directory. Handles csvs with latitude & longitude columns.
+  - `RegionMapping`: Used instead of TableDataSource for region-mapped csvs.
+  - `DataTable` and `DataVariable` have been replaced with new classes, `TableStructure` and `TableColumn`.
+  - `RegionProvider`: `loadRegionsFromWfs`, `processRegionIds`, `applyReplacements`, `findRegionIndex` have been made internal functions.
+  - `RegionProviderList`: `chooseRegionProvider` has been changed and renamed `getRegionDetails `.
+  - `ColorMap`: `fromArray` and `fromString` have been removed, with the constructor taking on that functionality.
+  - `LegendUrl` has been moved to the `Map` directory.
+  - `TableStyle`: `loadColorMap` and `chooseColorMap` have been removed. Moved from `Map` to `Models` directory.
+  - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
+  - `Models/ModelError` has been replaced with `Core/TerriaError`.
+* Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
+* Recognises the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
+* Nicer formatting of datetimes from csv files in the feature info panel.
+* Introduced three new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
+  - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
+* Removed variables consisting only of html tags from the Now Viewing panel.
+* Added id matching for catalog members:
+  - An `id` field can now be set in JSON for catalog members
+  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
+    rather than its name as is done currently.
+  - The id of an item should be accessed via `uniqueId` - if a catalog member doesn't have an id set, this returns a
+    default value of the item's name plus the id of its parent. This means that if all the ancestors of a catalog
+    member have no id set, its id will be its full path in the catalog.
+  - This means that if an item is renamed or moved, share links that reference it will still work.
+  - A `shareKeys` property can be also be set that contains an array of all ids that should lead to this item. This means
+    that a share link for an item that didn't previously have an id set can still be used if it's moved, as long as it
+    has its old default id set in `shareKeys`
+  - Old share links will still work as long as the items they lead to aren't renamed or moved.
+  - Refactor of JSON serialization - now rather than passing a number of flags that determine what should and shouldn't be
+    serialized, an `itemFilter` and `propertyFilter` are passed in options. These are usually composed of multiple filters,
+    combined using `combineFilters`.
+  - An index of all items currently in the catalog against all of that item's shareKeys is now maintained in `Catalog`
+    and can be used for O(1) lookups of any item regardless of its location.
+  - CatalogMembers now contain a reference to their parent CatalogGroup - this means that the catalog tree can now be
+    traversed in both directions.
+  - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
+    not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
+* Legends are now generated in SVG (vector) format, which look better on high resolution devices.
+* Create new Legend class, making it easy to generate client-side legends for different kinds of data.
+* Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
+* Fix Leaflet feature selection when zoomed out enough that the world is repeated.
 
 ### 1.0.54
 
@@ -23,7 +84,7 @@ Change Log
 * Dramatically improved the performance of region mapping.
 * Introduced new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
   * "auto" (default), usually means "ckmeans"
-  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
+  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible.
   * "quantile": use quantiles, evenly distributing values between bins
   * "none": use the previous linear color mapping method.
 * The default style for CSV files is now 7 color bins with CK means method.
