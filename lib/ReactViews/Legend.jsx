@@ -29,7 +29,7 @@ const Legend = React.createClass({
     },
 
     renderLegends() {
-        let legends = this.getLegends().map((legend, i)=>{
+        let legends = this.getLegends() && this.getLegends().map((legend, i)=>{
             if(legend.isImage) {
                 if (legend.imageHasError) {return null;}
 
