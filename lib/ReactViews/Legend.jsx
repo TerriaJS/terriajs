@@ -9,8 +9,8 @@ const Legend = React.createClass({
         nowViewingItem: React.PropTypes.object
     },
 
-    onImageError() {
-        this.imageHasError = true;
+    onImageError(legend) {
+        legend.imageHasError = true;
     },
 
     getLegends() {
@@ -31,10 +31,13 @@ const Legend = React.createClass({
     renderLegends() {
         let legends = this.getLegends().map((legend, i)=>{
             if(legend.isImage) {
+                if (legend.imageHasError) {return null;}
+
                 if (legend.insertDirectly) {
-                    return (<div key={i} className="legend--svg" dangerouslySetInnerHTML={legend.safeSvgContent}></div>);
+                    return (<div key={i} onError={this.onImageError.bind(this, legend)} className="legend--svg" dangerouslySetInnerHTML={legend.safeSvgContent}></div>);
                 }
-                return (<a key={i} href={legend.url} target="_blank">
+
+                return (<a key={i} onError={this.onImageError.bind(this, legend)} href={legend.url} target="_blank">
                             <div className="legend--image">
                                 <img src={legend.url}/>
                             </div>
