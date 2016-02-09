@@ -67,12 +67,11 @@ const FeatureInfoSection = React.createClass({
     },
 
     render() {
-
         return (<li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-open' : '')}>
-                <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
-                <section className='feature-info-panel__content'>
-                    {this.sanitizedCustomMarkdown()}
-                </section>
+                    <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
+                    <section className='feature-info-panel__content'>
+                        {this.sanitizedCustomMarkdown()}
+                    </section>
                 </li>);
     }
 });
