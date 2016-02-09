@@ -81,8 +81,9 @@ const FeatureInfoSection = React.createClass({
                     return node.name === 'chart';
                 },
                 processNode: function(node, children) {
-                    console.log(React.createElement(node.name, elementProps, node.data, children));
-                    const x = <Chart data={[[{x: 1, y: 10}, {x: 4, y: 20}, {x: 6, y: 14}]]}/>;
+                    // charts ignore children.
+                    // node is eg. {type: "tag", name: "chart", attribs: {src: "filename.csv"}, children: [], next: null, parent: null, prev: null}
+                    const x = <Chart url={node.attribs.src} key='99999'/>;
                     return x;
                 }
             }, {
