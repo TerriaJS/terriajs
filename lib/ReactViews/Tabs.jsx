@@ -16,9 +16,7 @@ const Tabs = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        isDraggingDroppingFile: React.PropTypes.bool,
-        onFinishDroppingFile: React.PropTypes.func
+        viewState: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -38,9 +36,7 @@ const Tabs = React.createClass({
                 {
                     title: 'my-data',
                     panel: <MyDataTab terria={this.props.terria}
-                                      viewState={this.props.viewState}
-                                      isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
-                                      onFinishDroppingFile={this.props.onFinishDroppingFile} />
+                                      viewState={this.props.viewState} />
                 }
             ]
         };

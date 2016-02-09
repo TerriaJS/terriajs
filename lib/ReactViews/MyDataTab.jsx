@@ -14,9 +14,7 @@ const MyDataTab = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        isDraggingDroppingFile: React.PropTypes.bool,
-        onFinishDroppingFile: React.PropTypes.func
+        viewState: React.PropTypes.object
     },
 
     getInitialState() {
@@ -62,8 +60,7 @@ const MyDataTab = React.createClass({
                         <h4>Adding your own data</h4>
                         <AddData updateCatalog={this.updateCatalog}
                                  terria={this.props.terria}
-                                 isDraggingDroppingFile={this.props.isDraggingDroppingFile}
-                                 onFinishDroppingFile={this.props.onFinishDroppingFile}
+                                 viewState={this.props.viewState}
                         />
                     </div>
                     {this.renderContent()}

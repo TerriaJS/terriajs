@@ -72,6 +72,7 @@ Change Log
 * Create new Legend class, making it easy to generate client-side legends for different kinds of data.
 * Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
 * Fix Leaflet feature selection when zoomed out enough that the world is repeated.
+* Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
 
 ### 1.0.54
 

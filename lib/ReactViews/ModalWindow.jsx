@@ -11,9 +11,7 @@ const ModalWindow = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        isDraggingDroppingFile: React.PropTypes.bool,
-        onFinishDroppingFile: React.PropTypes.func
+        viewState: React.PropTypes.object.isRequired
     },
 
     close() {
@@ -36,8 +34,6 @@ const ModalWindow = React.createClass({
                     <button onClick={this.close}  className="btn btn--close-modal" title="Close data panel" data-target="close-modal"></button>
                     <Tabs terria={this.props.terria}
                           viewState={this.props.viewState}
-                          isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
-                          onFinishDroppingFile={this.props.onFinishDroppingFile}
                     />
                 </div>
             </div>);
