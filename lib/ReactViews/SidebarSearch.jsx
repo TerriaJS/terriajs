@@ -55,7 +55,7 @@ export default React.createClass({
         let linkToSearchData = null;
         if (this.state.searchText.length > 0) {
             linkToSearchData = (
-                <button onClick={this.searchInDataCatalog} className='btn btn-data-search'>
+                <button onClick={this.searchInDataCatalog} className='btn btn--data-search'>
                     Search {this.state.searchText} in Data
                     Catalog<i className='icon icon-right-arrow'/></button>);
         }
@@ -68,16 +68,16 @@ export default React.createClass({
         return (
             <div className={outerClasses}>
                 <SearchBox onSearchTextChanged={this.search}/>
-                <div className='search-results'>
+                <div className='search__results'>
                     {linkToSearchData}
                     {this.state.searches
-                        .filter(search => search.isSearching || (search.SearchHeader && search.SearchHeader.length))
+                        .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
                         .map(search => (
                             <div key={search.constructor.name}>
                                 <label className='label label-sub-heading'>{search.name}</label>
                                 <SearchHeader {...search} />
                                 <ul className='list-reset search-results-items'>
-                                    { search.SearchHeader.map((result, i) => (
+                                    { search.searchResults.map((result, i) => (
                                         <LocationItem key={result.name} item={result}/>
                                     )) }
                                 </ul>

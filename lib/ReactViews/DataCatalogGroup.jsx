@@ -14,12 +14,14 @@ const DataCatalogGroup = React.createClass({
         group: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired,
         /** Overrides whether to get the open state of the group from the group model or manage it internally */
-        manageIsOpenLocally: React.PropTypes.bool
+        manageIsOpenLocally: React.PropTypes.bool,
+        userData: React.PropTypes.bool
     },
 
     getDefaultProps() {
         return {
-            manageIsOpenLocally: false
+            manageIsOpenLocally: false,
+            userData: false
         };
     },
 
@@ -57,13 +59,12 @@ const DataCatalogGroup = React.createClass({
 
         return (
             <li>
-                <button className={classNames('btn', 'btn-catalogue', {'is-open' : this.isOpen()})}
+                <button className={classNames('btn', 'btn--catalogue', {'is-open' : this.isOpen()})}
                         onClick={this.toggleOpen}>
                     {group.name}
-                    <i className={classNames('icon', {'icon-caret-down': this.isOpen(), 'icon-caret-right': !this.isOpen()})}/>
                 </button>
                 {this.isOpen() && (
-                    <ul className="data-catalog-group list-reset">
+                    <ul className="data--catalog-group">
                         {this.renderGroup(group)}
                     </ul>
                 )}
@@ -72,13 +73,17 @@ const DataCatalogGroup = React.createClass({
     },
 
     renderGroup(group) {
-        const children =
-                group.items.map(item => <DataCatalogMember key={item.uniqueId} member={item}
-                                                           viewState={this.props.viewState}
-                                                           overrideOpen={this.props.manageIsOpenLocally}/>);
+        const children = group.items.map(item => (
+            <DataCatalogMember key={item.uniqueId} member={item}
+                               viewState={this.props.viewState}
+                               userData={this.props.userData}
+                               overrideOpen={this.props.manageIsOpenLocally}/>
+        ));
 
         if (group.isLoading) {
-            children.push(<Loader key="loader" />);
+            children.push(<Loader key="loader"/>);
+        } else if (group.items.length === 0) {
+            children.push(<li className="label no-results"> No data </li>);
         }
 
         return children;

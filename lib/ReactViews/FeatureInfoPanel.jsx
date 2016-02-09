@@ -41,12 +41,12 @@ const FeatureInfoPanel = React.createClass({
     render() {
         const pickedFeatures = this.getFeatures();
         return (
-            <div className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '')} aria-hidden={!this.props.isVisible}>
-              <div className='feature-info-panel__header clearfix'>
-                <button onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn col col-11'> Feature Info Panel </button>
-                <button onClick={ this.props.onClose } className="btn btn-close col col-1" title="Close data panel"><i className="icon icon-close"></i></button>
+            <div className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '') + ' ' + (this.props.isVisible ? 'is-visible' : '')} aria-hidden={!this.props.isVisible}>
+              <div className='feature-info-panel__header'>
+                <button onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Info Panel </button>
+                <button onClick={ this.props.onClose } className="btn btn--close-modal" title="Close data panel"></button>
               </div>
-              <ul className="list-reset feature-info-panel__body">{this.renderContent(pickedFeatures)}</ul>
+              <ul className="feature-info-panel__body">{this.renderContent(pickedFeatures)}</ul>
             </div>
             );
     }

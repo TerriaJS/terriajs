@@ -57,7 +57,7 @@ export default React.createClass({
 
     clearSearch() {
         this.setState({
-           text: ''
+            text: ''
         });
         this.searchWithDebounce();
     },
@@ -76,15 +76,14 @@ export default React.createClass({
         );
 
         return (
-            <form className='search-data-form relative' autoComplete='off' onSubmit={event => event.preventDefault()}>
-                <label htmlFor='search' className='hide'>Type keyword to search</label>
-                <i className='icon icon-search'/>
-                <input type='text'
+            <form className='form--search-data' autoComplete='off' onSubmit={event => event.preventDefault()}>
+                <label htmlFor='search' className='form__label'> Type keyword to search </label>
+                <input id='search'
+                       type='text'
                        name='search'
-                       ref="searchBox"
                        value={this.state.text}
                        onChange={this.handleChange}
-                       className='search__field field'
+                       className='form__search-field field'
                        placeholder='Search'
                        autoComplete='off'/>
                 {this.hasValue() && clearButton}

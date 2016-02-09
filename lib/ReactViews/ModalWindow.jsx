@@ -11,7 +11,9 @@ const ModalWindow = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        isDraggingDroppingFile: React.PropTypes.bool,
+        onFinishDroppingFile: React.PropTypes.func
     },
 
     close() {
@@ -21,24 +23,21 @@ const ModalWindow = React.createClass({
     render() {
         return (
             <div
-                className={classNames('data-panel-wrapper', 'modal-wrapper', 'fixed', 'flex', 'flex-center', {'is-open' : this.props.viewState.modalVisible})}
-                id="data-panel-wrapper"
-                // Temp disable
-                // aria-hidden={!this.props.modalWindowIsOpen}
+                className={classNames('data-panel-wrapper', 'modal-wrapper', {'is-open' : this.props.viewState.modalVisible})}
+                id="explorer-panel-wrapper"
+                aria-hidden={!this.props.viewState.modalVisible}
             >
                 <div onClick={this.close}
-                     id="data-panel-overlay"
-                     className="modal-overlay absolute"
+                     id="modal-overlay"
+                     className="modal-overlay"
                      tabIndex="-1">
                 </div>
-                <div id="data-panel" className="data-panel modal-content" aria-labelledby="modalTitle"
-                     aria-describedby="modalDescription" role="dialog">
-                    <button onClick={this.close} className="btn btn-close-modal" title="Close data panel"
-                            data-target="close-modal">
-                        <i className='icon icon-close' />
-                    </button>
+                <div id="explorer-panel" className="explorer-panel modal-content" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
+                    <button onClick={this.close}  className="btn btn--close-modal" title="Close data panel" data-target="close-modal"></button>
                     <Tabs terria={this.props.terria}
                           viewState={this.props.viewState}
+                          isDraggingDroppingFile ={this.props.isDraggingDroppingFile}
+                          onFinishDroppingFile={this.props.onFinishDroppingFile}
                     />
                 </div>
             </div>);

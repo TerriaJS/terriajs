@@ -1,53 +1,33 @@
-// Data Catalog
-//
-// .panel-content - content in modal window panel
-// .workbench - content in workbench
-//
-// Markup:
-//<div class={{modifier_class}}>
-// <ul class="list-reset data-catalog">
-//   <li>
-//     <button class="btn btn-catalogue">
-//     <span>National Data Sets</span>
-//     </button>
-//     <ul class='data-catalog-group list-reset'>
-//       <li>
-//         <button class="btn btn-catalogue">
-//           <span>Communications</span>
-//         </button>
-//         <ul class="list-reset">
-//           <li class="clearfix data-catalog-item flex">
-//             <button title="add to map" class="btn relative btn-add-to-map">
-//               <i class="icon icon-add"> </i>
-//             </button>
-//             <button class="btn btn-catalog-item relative">Broadband ADSL Availability</button>
-//           </li>
-//         </ul>
-//       </li>
-//     </ul>
-//   </li>
-// </ul>
-// </div>
-//
-// Style guide: Component.data-catalog
 
-.data-catalog ul{
-  padding-left: $padding/2;
-  .panel-content & {
-    background: $modal-secondary-bg;
+.data-catalog{
+  @extend .list-reset;
+  ul{
+    @extend .list-reset;
+    padding-left: $padding-small;
   }
-}
-.data-catalog-item{
-  position: relative;
-}
-
-.panel__data-catalog{
-  .data-catalog{
-    height: calc(#{$modal-content-height} - 90px);
+  .data-explorer & {
+    background: $modal-secondary-bg;
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: $padding;
+    height: 100%;
   }
 }
+.data-catalog-item{
+  display: block;
+  width: 100%;
+  position: relative;
+  .btn--catalog-item--action{
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: $padding-small;
+  }
+}
+.data--catalog-group{
+  @extend .list-reset;
+  padding-left: $padding-small;
+}
+
 
 

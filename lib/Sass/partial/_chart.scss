@@ -1,17 +1,55 @@
-.chart-panel-holder{
-  position: absolute;
-  bottom: 0;
+// D3 Axis
+
+$chart-axis-color: #fff;
+$chart-tick-color: #fff;
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: $chart-axis-color;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+
+text{
+  fill: $chart-tick-color;
+  stroke-width: 0;
+  font-size: 10px;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1px;
+}
+
+.chart-panel__holder{
+  position: fixed;
+  left: 0;
   right: 0;
-  width: 100%;
+  bottom: 0;
+  z-index: 1;
   background: $dark;
-  color: #fff;
-  max-height: 0;
-  @include transition(all 0.25s ease-in-out);
-  &.is-open{
-    max-height: 1000px;
+  padding-bottom: 13px;
+  @media(screen and min-width: $sm){
+    left: $work-bench-width;
+    .is-full-screen &{
+      left: 0;
+    }
   }
 }
-.chart-panel-section{
-  background: $dark-lighter;
-  height: 300px;
+
+.chart-panel__header{
+  position: relative;
+}
+
+.btn--close-chart-panel{
+  @extend .btn--close;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.chart{
+  background: rgba(#fff, 0.15);
 }

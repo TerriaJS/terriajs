@@ -1,78 +1,57 @@
-$ring-width: 10px;
-$compass-width: 70px;
-
 // Component
 //
 // Style guide: Component
 
-//Map Compass
-//
-// Markup:
-// <div class="compass"><div class="compass-outer-ring"></div><div class="compass-inner-ring" title="Click and drag to rotate the camera"></div><div class="compass-rotation-marker"></div></div>
-//
-// Style guide: Component.map-navigation
+.map-navigation{
+    .compass{
+      position: absolute;
+      right: $padding;
+      top: 75px;
+    }
 
-.compass{
-  cursor: default;
-  width: $compass-width;
-  height: $compass-width;
-  .compass-outer-ring{
-    background-image: url('./TerriaJS/images/compass-outer.svg');
-    height: $compass-width;
-    width: $compass-width;
-    border-radius: 50%;
-    position: absolute;
-    background-repeat: no-repeat;
-    background-size: contain;
-    top: 0;
-    left: 0;
-  }
+    .zoom-control{
+      position: absolute;
+      //temp
+      right: 34px;
+      top: 170px;
+    }
+    .map-navigation__menu{
+      @extend .list-reset;
+      @extend .clearfix;
+      li{
+        display: block;
+        float: left;
+      }
+    }
+}
 
-  .compass-rotation-marker{
-    background-image: url('./TerriaJS/images/compass-rotation-marker.svg');
-    height: $compass-width - 4px;
-    width: $compass-width - 4px;
-    border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    background-repeat: no-repeat;
-    background-size: contain;
-  }
+.setting-panel__button{
+  @extend .btn--sphere;
+  border-radius: $radius-small 0 0 $radius-small;
+  border-right: 1px solid rgba(#fff, 0.15);
+}
 
-  .compass-inner-ring{
-    @include vertical-align();
-    height: $compass-width - $ring-width*3.5;
-    width: $compass-width - $ring-width*3.5;
-    border-radius: 50%;
-    display: block;
-    margin: 0 auto;
-    box-shadow: $box-shadow;
-    background-image: url('./TerriaJS/images/compass-inner.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
+.full-screen__button{
+  margin-right: $padding;
+  border-radius: 0 $radius-small $radius-small 0;
+  .enter-full-screen{
+    @extend .btn--expand;
   }
 }
 
-//Map Zoom Control
-//
-// Markup:
-// <div class="zoom-control"><ul class="list-reset"><li><button class="btn zoom-increarse" title="zoom in"><i class="icon icon-zoom-in"></i></button></li><li><button class="btn zoom-decrease" title="reset zoom"><i class="icon icon-refresh"></i></button></li><li><button class="btn zoom-decrease" title="zoom out"><i class="icon icon-zoom-out"></i></button></li></ul></div>
-//
-// Style guide: 6.2
-
-.zoom-control{
-  background: $dark;
-  color: #fff;
-  width: $ring-width*2.2;
-  border-radius: 100px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  text-align: center;
-  font-size: 15px;
-  .btn{
-    padding: 0;
+.setting-panel__button,
+.full-screen__button .enter-full-screen{
+  &:before{
+    line-height: 1;
+    font-size: 1rem;
   }
 }
 
-.map-navigation__menu{
+.share-panel__button{
+  border-radius: $radius-small 0 0 $radius-small;
+  border-right: 1px solid rgba(#fff, 0.15);
+}
+
+.about-link__button{
+  border-radius: 0 $radius-small $radius-small 0;
 }

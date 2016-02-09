@@ -1,3 +1,7 @@
+label {
+  vertical-align: middle;
+}
+
 .label{
   padding: $padding;
   display: block;
@@ -9,37 +13,38 @@
   margin-bottom: $padding;
 }
 
-.setting-panel__label, .share-panel__label{
+.label--setting-panel,
+.label--active-map,
+.share-panel__label{
   text-transform: uppercase;
   padding: $padding-small 0;
   display: block;
 }
+.label--active-map{
+  font-size: $font-size-mini;
+}
+
 
 .active-map__label{
   padding: $padding-small 0;
   font-size: $font-size-small;
 }
 
-.label-badge{
+.label--badge{
   text-align: center;
   border: 1px solid;
   border-radius: 2px;
   box-sizing: content-box;
-  padding: 0 $padding-small;
-  margin: $padding;
-  font-size: 10px;
-  line-height: 21px;
+  padding: $padding-small/2 $padding-small;
+  margin-top: 7px;
+  font-size: 8px;
 }
 
-.label-inline{
-  display: inline-block;
-}
-
-.label-sub-heading{
+.label--sub-heading{
   text-transform: uppercase;
 }
 
-.label-preview-badge{
+.label--preview-badge{
   position: absolute;
   top: 0;
   width: 78px;
@@ -48,3 +53,7 @@
   background-size: contain;
   background-color: transparent;
 }
+
+
+
+

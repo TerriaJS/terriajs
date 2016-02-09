@@ -4,6 +4,7 @@ import React from 'react';
 import NowViewingItem from './NowViewingItem.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from './ObserveModelMixin';
+import arrayContains from '../Core/arrayContains';
 
 const NowViewingContainer = React.createClass({
     mixins: [ObserveModelMixin],
@@ -55,16 +56,25 @@ const NowViewingContainer = React.createClass({
     },
 
     onDragOverDropZone(e) {
+        if (e.dataTransfer.types && arrayContains(e.dataTransfer.types, 'Files')) {
+            return;
+        }
         const _placeholderIndex = parseInt(e.currentTarget.dataset.key, 10);
         if(_placeholderIndex !== this.state.placeholderIndex) { this.setState({ placeholderIndex: _placeholderIndex });}
         e.preventDefault();
+        e.stopPropagation();
     },
 
     onDragOverItem(e) {
+        if (e.dataTransfer.types && arrayContains(e.dataTransfer.types, 'Files')) {
+            return;
+        }
+
         let over = parseInt(e.currentTarget.dataset.key, 10);
         if(e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) { over++; }
         if(over !== this.state.placeholderIndex) { this.setState({ placeholderIndex: over }); }
         e.preventDefault();
+        e.stopPropagation();
     },
 
     onDrop(e) {
@@ -107,7 +117,7 @@ const NowViewingContainer = React.createClass({
     },
 
     renderPlaceholder(i) {
-        return <li className={(this.state.placeholderIndex === i) ? 'nowViewing__drop-zone is-active' : 'nowViewing__drop-zone'} data-key={i} key={i} onDragOver={this.onDragOverDropZone} ></li>;
+        return <li className={(this.state.placeholderIndex === i) ? 'drop-zone is-active' : 'drop-zone'} data-key={i} key={i} onDragOver={this.onDragOverDropZone} ></li>;
     },
 
     renderListElements() {
@@ -126,7 +136,7 @@ const NowViewingContainer = React.createClass({
 
     render() {
         return (
-            <ul className="now-viewing__content list-reset" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
+            <ul className="now-viewing__content" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
               {this.renderListElements()}
             </ul>);
     }

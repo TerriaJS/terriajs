@@ -7,7 +7,6 @@
 
 .modal-content{
   position: relative;
-  min-height: 100px;
   background: $modal-bg;
   color: $modal-text;
   z-index: 200;
@@ -17,8 +16,6 @@
   backface-visibility: hidden;
   border-radius: $radius-small;
   opacity: 0;
-  margin: auto;
-  width: 90%;
   @include transform(translateY(20%));
   @include transition(all 0.3s);
   .is-open & {
@@ -27,8 +24,6 @@
     visibility: visible;
   }
   @media screen and (min-width : $md){
-      margin-left: $work-bench-width + 50px;
-      margin-right: 50px;
       width: 100%;
   }
 }
@@ -49,13 +44,7 @@
   }
 }
 
-
-
-.tablist{
-  padding-right: 150px;
-}
-
-.btn-close-modal{
+.btn--close-modal{
   position: absolute;
   top: 0;
   right: 0;
@@ -71,67 +60,24 @@
 }
 
 .panel-content{
+  @extend .clearfix;
   padding: $padding;
   border-top: 1px solid $grey-lighter;
   background: $modal-bg;
   color: $modal-text;
 }
 
-.data-preview{
-  padding-right: $padding;
-  //avoid render error when scroll bar present
-  position: absolute;
-  top: $padding;
-  right: $padding-small;
-  width: calc(50% - #{$padding*2});
-  bottom: $padding;
-  overflow: hidden;
-  overflow-y: scroll;
-  h4{
-    margin-top: $padding;
-  }
+.data-explorer,
+.my-data{
+  @extend .col;
+  @extend .col-6;
 }
 
-.data-preview-map{
-  position: relative;
-}
-.terria-preview{
-  height: 250px;
-  overflow: hidden;
-  position: relative;
-  background: #d5d5d5;
-  cursor: auto;
-  pointer-events: none;
-}
-
-
-.search-data{
+.data-explorer{
   height: 100%;
-  input[type=text]{
-    border: 1px solid $grey-lighter;
-  }
-  li .btn{
-    text-align: left;
-  }
+  overflow: hidden;
+  position: relative;
 }
 
-// TO DO: NEED TO SEPERATE MYDATA TAB STYLE INTO A DIFFERETN FILE
-//My data
-.add-data{
-  background: $modal-secondary-bg;
-  padding: $padding*2;
-  height: 300px;
-  overflow: visible;
-}
 
-.added-data{
-  //temp
-  padding: $padding*2;
-}
-
-.panel__my-data{
-  .top-left{
-    overflow-y: auto;
-  }
-}
 

@@ -104,9 +104,9 @@ const Compass = React.createClass({
 
         return (
             <div className='compass' onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
-              <div className='compass-outer-ring' style={outerCircleStyle}></div>
-              <div className='compass-inner-ring' title='Click and drag to rotate the camera'></div>
-              <div className='compass-rotation-marker' style={rotationMarkerStyle}></div>
+              <div className='compass--outer-ring' style={outerCircleStyle}></div>
+              <div className='compass--inner-ring' title='Click and drag to rotate the camera'></div>
+              <div className='compass--rotation-marker' style={rotationMarkerStyle}></div>
             </div>
             );
     }

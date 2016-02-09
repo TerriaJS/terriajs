@@ -1,6 +1,5 @@
 'use strict';
 
-import Chart from './Chart.jsx';
 import React from 'react';
 import SidebarSearch from './SidebarSearch.jsx';
 import NowViewingContainer from './NowViewingContainer.jsx';
@@ -32,8 +31,8 @@ const SidePanel = React.createClass({
 
         return (
             <div className='workbench__inner'>
-                <div className='workbench__header workbench-add'>
-                    <button onClick={this.onAddDataClicked} className='now-viewing__add btn'>Add Data</button>
+                <div className='workbench__add-data'>
+                    <button onClick={this.onAddDataClicked} className='btn'>Add Data</button>
                 </div>
                 <SidebarSearch terria={this.props.terria}
                                viewState={this.props.viewState}
@@ -43,7 +42,6 @@ const SidePanel = React.createClass({
                         ]}/>
                 <div className="now-viewing hide-on-search">
                     {this.renderNowViewing(this.props.terria.nowViewing.items)}
-                    {this.renderCharts(this.props.terria.nowViewing.items)}
                 </div>
             </div>
         );
@@ -53,12 +51,12 @@ const SidePanel = React.createClass({
         if (nowViewing && nowViewing.length > 0) {
             return (
                 <div>
-                    <ul className="now-viewing__header list-reset clearfix">
-                        <li className='col col-6'>
-                            <label className='label-inline'>Data Sets</label>
-                            <label className='label-badge label-inline'>{nowViewing.length}</label>
+                    <ul className="now-viewing__header">
+                        <li>
+                            <label className='label'>Data Sets</label>
+                            <label className='label--badge label'>{nowViewing.length}</label>
                         </li>
-                        <li className='col col-6'>
+                        <li>
                             <button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button>
                         </li>
                     </ul>
@@ -68,22 +66,6 @@ const SidePanel = React.createClass({
             );
         }
     },
-
-    renderCharts(nowViewing) {
-        if (nowViewing && nowViewing.length > 0) {
-            return (
-                <div>
-                    <ul className="now-viewing__header list-reset clearfix">
-                        <li className='col col-6'><label className='label-inline'> Charts </label><label
-                            className='label-badge label-inline'> 1 </label></li>
-                    </ul>
-                    <div className='nowViewing-chart'>
-                        <Chart />
-                    </div>
-                </div>);
-        }
-        return null;
-    }
 });
 
 module.exports = SidePanel;

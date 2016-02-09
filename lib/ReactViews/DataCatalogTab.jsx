@@ -25,7 +25,7 @@ const DataCatalogTab = React.createClass({
 
         knockout.getObservable(this.props.viewState, 'catalogSearch').subscribe(function(newText) {
             this.searchProvider.search(newText);
-            this.refs.searchBox.setText(newText);
+            this.searchBox.setText(newText);
         }, this);
     },
 
@@ -36,14 +36,14 @@ const DataCatalogTab = React.createClass({
     render() {
         const terria = this.props.terria;
         return (
-            <div className="panel-content clearfix">
-                <div className="search-data col col-6">
+            <div className="panel-content">
+                <div className="data-explorer">
                     <SearchBox initialText={this.props.viewState.catalogSearch}
                                onSearchTextChanged={this.onSearchTextChanged}
-                               ref="searchBox"/>
+                               ref={ref => this.searchBox = ref} />
                     {this.renderDataCatalog()}
                 </div>
-                <div className="data-preview preview col col-6 block">
+                <div className="data-preview">
                     <DataPreview terria={terria}
                                  previewedCatalogItem={this.props.viewState.previewedItem}
                     />
@@ -59,7 +59,7 @@ const DataCatalogTab = React.createClass({
             terria.catalog.group.items;
 
         return (
-            <ul className='list-reset data-catalog'>
+            <ul className='data-catalog hide-on-search'>
                 <SearchHeader {...this.searchProvider} />
                 {items
                     .filter(defined)

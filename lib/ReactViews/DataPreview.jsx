@@ -16,7 +16,7 @@ const DataPreview = React.createClass({
     },
 
     toggleOnMap() {
-        this.props.previewViewModel.previewedLayer.toggleEnabled();
+        this.props.previewedCatalogItem.toggleEnabled();
     },
 
     renderMarkup(content) {
@@ -40,21 +40,19 @@ const DataPreview = React.createClass({
             return (
                 <div>
                     <button onClick={this.toggleOnMap}
-                            className="btn btn-preview-toggle clearfix"
+                            className="btn toggle-enable"
                             title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
                         {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
                     </button>
-                    <div className="clearfix">
-                        <h4>{previewed.name}</h4>
-                    </div>
-                    <div className="clearfix data-info">
+                    <h4>{previewed.name}</h4>
+                    <div className="data-info url">
                         <h5>Description</h5>
                         <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>
                         <h5>Licence</h5>
                         <h5>Data Custodian</h5>
                         <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
                         <h5>Web Map Service (WMS) URL </h5>
-                        <p className='url' dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}></p>
+                        <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}></p>
                     </div>
                 </div>);
         }

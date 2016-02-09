@@ -9,6 +9,29 @@
   font-style: normal;
 }
 
+@-webkit-keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+}
+
+@keyframes fa-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+}
+
+
 // Icons
 //
 // .icon-right-arrow -  icon
@@ -42,20 +65,31 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
+  display: block;
+  box-sizing: border-box;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-right-arrow:before {
+.icon-remove:before {
+    content: "\e918";
+}
+.icon-right:before {
+    content: "\e900";
+}
+.icon-left:before {
+    content: "\e902";
+}
+.icon-clear:before {
     content: "\e908";
 }
 .icon-close:before {
     content: "\e909";
 }
 .icon-add:before {
-    content: "\e900";
+    content: "\e90b";
 }
 .icon-eye-hidden:before {
     content: "\e901";
@@ -75,29 +109,26 @@
 .icon-share:before {
     content: "\e907";
 }
-.icon-remove:before {
-    content: "\e911";
-}
 .icon-refresh:before {
     content: "\e912";
 }
 .icon-sphere:before {
     content: "\e90c";
 }
-.icon-clear:before {
-    content: "\e913";
-}
 .icon-caret-down:before {
     content: "\e90d";
 }
-.icon-full-screen:before {
+.icon-expand:before {
     content: "\e90e";
 }
-.icon-zoom-out:before {
+.icon-decrease:before {
     content: "\e914";
 }
-.icon-zoom-in:before {
+.icon-increase:before {
     content: "\e915";
+}
+.icon-add:before {
+    content: "\e916";
 }
 .icon-loader:before {
     content: "\e90f";
@@ -106,11 +137,4 @@
     content: "\e910";
 }
 
-.icon-visible{
-  @extend .icon-eye;
-}
-
-.icon-invisible{
-  @extend .icon-eye-hidden;
-}
 

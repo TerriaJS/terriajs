@@ -2,26 +2,25 @@
   position: relative;
   width: 100%;
   .dropdown__list{
+    @extend .list-reset;
     overflow: hidden;
     position: absolute;
     left: 0;
-    top: 0;
     z-index: 9999;
     width: 100%;
     box-sizing: border-box;
     background: #fff;
-    box-shadow: 0 0.1em 0.25em rgba(0, 0, 0, 0.15), 0 0.1em 0.2em rgba(0, 0, 0, 0.2);
-    padding: $padding/2;
-    max-height: 190px;
+    box-shadow: $box-shadow;
+    max-height: 0;
     overflow-y: auto;
-    @include scale(0);
-    @include transform-origin(100% 0);
-    @include transition(all, 350ms, cubic-bezier(0.19, 1, 0.22, 1));
+    margin-top: $padding-small;
+    border-radius: $radius-small;
+    @include transition(all, $animation-fast, cubic-bezier(0.19, 1, 0.22, 1));
   }
 
   &.is-open{
     .dropdown__list{
-      @include scale(1);
+      max-height: 190px;
     }
   }
 }
