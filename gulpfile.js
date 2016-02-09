@@ -24,12 +24,6 @@ var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
 var testGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
 
 
-// Create the build directory, because browserify flips out if the directory that might
-// contain an existing source map doesn't exist.
-if (!fs.existsSync('wwwroot/build')) {
-    fs.mkdirSync('wwwroot/build');
-}
-
 gulp.task('build-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(testGlob), false);
 });
@@ -69,7 +63,7 @@ gulp.task('prepare-cesium', ['copy-cesium-assets']);
 gulp.task('copy-cesium-assets', function() {
     var cesium = resolve.sync('terriajs-cesium/wwwroot', {
         basedir: __dirname,
-        extentions: ['.'],
+        extensions: ['.'],
         isFile: function(file) {
             try { return fs.statSync(file).isDirectory(); }
             catch (e) { return false; }
