@@ -9,7 +9,7 @@
 .field.is-focused {
   outline: none;
   border-color: rgba($color-primary, 0.5);
-  box-shadow: 0 0 0 2px rgba($grey, 0.5);
+  box-shadow: none;
 }
 
 .field:disabled,

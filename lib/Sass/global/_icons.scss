@@ -132,6 +132,8 @@
 }
 .icon-loader:before {
     content: "\e90f";
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
 }
 .icon-location:before {
     content: "\e910";
