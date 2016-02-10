@@ -21,7 +21,7 @@ import LineChart from '../Charts/LineChart';
 import TableStructure from '../Core/TableStructure';
 // import VarType from '../Map/VarType';
 
-const defaultHeight = 260;
+const defaultHeight = 160;
 
 // TODO: Move this somewhere better.
 function getXYData(tableStructure) {
