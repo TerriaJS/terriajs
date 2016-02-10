@@ -238,28 +238,28 @@ const LocationBar = React.createClass({
     renderLatitudeLongitude() {
         if(!this.state.useProjection) {
             return (<li className="location-bar--long-lat">
-                    <label className='label'>Lat</label>{this.state.latitude}
-                    <label className='label'>Lon</label>{this.state.longitude}
-                  </li>);
+                        <div className='lat'><span>Lat</span><span>{this.state.latitude}</span></div>
+                        <div className='lon'><span>Lon</span><span>{this.state.longitude}</span></div>
+                    </li>);
         }
         return (<li class="location-bar--zone">
-                    <label className='label'>ZONE</label>{this.state.utmZone}
-                    <label className='label'>E</label>{this.state.east}
-                    <label className='label'>N</label>{this.state.north}
+                    <div className='zone'><span>ZONE</span><span>{this.state.utmZone}</span></div>
+                    <div className='e'><span>E</span><span>{this.state.east}</span></div>
+                    <div className='n'><span>N</span><span>{this.state.north}</span></div>
                 </li>);
 
     },
 
     renderElevation() {
-        return (<li><label className='label'>Elev</label>{this.state.elevation}</li>);
+        return (<li><span>Elev</span>
+                    <span>{this.state.elevation}</span>
+                </li>);
     },
 
     render() {
-        return (<button className='location-bar__wrapper btn' onClick={this.toggleUseProjection}>
-                    <ul className='location-bar'>
+        return (<button className='location-bar btn btn--map' onClick={this.toggleUseProjection}>
                           {this.renderLatitudeLongitude()}
                           {this.renderElevation()}
-                    </ul>
                 </button>);
     }
 });

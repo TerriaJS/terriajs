@@ -1,9 +1,37 @@
 //temp
 //
 .location-distance{
+  @extend .clearfix;
   position: fixed;
   bottom: $padding*3;
   right: $padding*2;
   z-index: 1;
-  background: $dark;
+}
+
+.location-bar{
+  @extend .clearfix;
+  @extend .list-reset;
+  margin-right: $padding;
+
+  span{
+    padding: 0 $padding-small;
+  }
+
+  li, div{
+    display: inline-block;
+    padding: 0 $padding-small;
+  }
+}
+
+.distance-legend,
+.location-bar{
+  float: left;
+}
+
+.distance-legend{
+  @extend .btn--map;
+  &:hover{
+    background: $dark;
+    border-color: $dark;
+  }
 }

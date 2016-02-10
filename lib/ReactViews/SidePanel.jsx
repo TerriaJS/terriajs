@@ -1,15 +1,12 @@
 'use strict';
 
-import React from 'react';
-import SidebarSearch from './SidebarSearch.jsx';
+import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
+import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
 import NowViewingContainer from './NowViewingContainer.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
-import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
-import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
+import React from 'react';
+import SidebarSearch from './SidebarSearch.jsx';
 
-// the sidepanel
-// TO DO:  rename this into workbench
-// This get re-rendered when nowViewingItem changes
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -37,9 +34,9 @@ const SidePanel = React.createClass({
                 <SidebarSearch terria={this.props.terria}
                                viewState={this.props.viewState}
                                searches={[
-                            new BingMapsSearchProviderViewModel({terria}),
-                            new GazetteerSearchProviderViewModel({terria})
-                        ]}/>
+                                   new BingMapsSearchProviderViewModel({terria}),
+                                   new GazetteerSearchProviderViewModel({terria})
+                               ]}/>
                 <div className="now-viewing hide-on-search">
                     {this.renderNowViewing(this.props.terria.nowViewing.items)}
                 </div>
@@ -52,13 +49,9 @@ const SidePanel = React.createClass({
             return (
                 <div>
                     <ul className="now-viewing__header">
-                        <li>
-                            <label className='label'>Data Sets</label>
-                            <label className='label--badge label'>{nowViewing.length}</label>
-                        </li>
-                        <li>
-                            <button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button>
-                        </li>
+                        <li><label className='label'>Data Sets</label></li>
+                        <li><label className='label--badge label'>{nowViewing.length}</label></li>
+                        <li><button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
                     </ul>
                     <NowViewingContainer viewState={this.props.viewState}
                                          nowViewingItems={nowViewing}/>

@@ -159,8 +159,8 @@ const DistanceLegend = React.createClass({
         const barStyle = {
             width: this.state.barWidth + 'px',
             left: (5 + (125 - this.state.barWidth) / 2) + 'px',
-            height: '5px',
-            backgroundColor: 'yellow'
+            height: '2px',
+            backgroundColor: '#ffffff'
         };
 
         return (<div className='distance-legend'>
