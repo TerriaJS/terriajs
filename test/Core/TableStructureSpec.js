@@ -119,7 +119,7 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[1].values.length).toEqual(2);
     });
 
-    it('ignores a final blank row of CSV files', function() {
+    it('ignores final blank rows of CSV files', function() {
         var csvString = 'postcode,value\n0800,1,\n0885,2,';
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv(csvString);
@@ -127,6 +127,12 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[1].values.length).toEqual(2);
 
         csvString = csvString + '\n';
+        tableStructure = new TableStructure();
+        tableStructure.loadFromCsv(csvString);
+        expect(tableStructure.columns[0].values.length).toEqual(2);
+        expect(tableStructure.columns[1].values.length).toEqual(2);
+
+        csvString = csvString + '\n\n\n\n\n';
         tableStructure = new TableStructure();
         tableStructure.loadFromCsv(csvString);
         expect(tableStructure.columns[0].values.length).toEqual(2);

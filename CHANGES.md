@@ -37,6 +37,11 @@ Change Log
   - `replaceWithNullValues`: Defaults to `["na", "NA"]`. These values are coloured as if they were null if they appear in a list with numbers.
   - `nullColor`: A css string. Defaults to black. This colour is used to display null values. It is also used to colour points when no variable is selected.
   - `nullLabel`: A string used to label null or blank values in the legend. Defaults to ''.
+* Improved formatting of datetimes from csv files in the feature info panel.
+* Introduced three new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
   - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
 * Removed variables consisting only of html tags from the Now Viewing panel.
 * Added id matching for catalog members:
@@ -64,6 +69,8 @@ Change Log
 * Create new Legend class, making it easy to generate client-side legends for different kinds of data.
 * Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
 * Fix Leaflet feature selection when zoomed out enough that the world is repeated.
+* Improved handling of lat/lon csv files with missing lat or lon values.
+* Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
 
 ### 1.0.54
 
