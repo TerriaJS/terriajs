@@ -61,7 +61,10 @@ const FeatureInfoSection = React.createClass({
 
     sanitizedCustomMarkdown() {
         const raw = this.descriptionFromFeature(this.props.feature, this.props.clock);
-        const html = markdownToHtml(raw, false, {ADD_TAGS: CustomComponents.names()});
+        const html = markdownToHtml(raw, false, {
+            ADD_TAGS: CustomComponents.names(),
+            ADD_ATTR: CustomComponents.attributes()
+        });
         return parseCustomHtmlToReact(html);
     },
 
