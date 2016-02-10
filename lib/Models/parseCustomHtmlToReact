@@ -1,0 +1,42 @@
+'use strict';
+
+const React = require('react');
+const HtmlToReact = require('html-to-react');
+
+const defined = require('terriajs-cesium/Source/Core/defined');
+
+const CustomComponents = require('./CustomComponents');
+
+
+const htmlToReactParser = new HtmlToReact.Parser(React);
+const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
+
+const isValidNode = function() {
+    return true;
+};
+
+let processingInstructions;
+
+function getProcessingInstructions() {
+    if (!defined(processingInstructions)) {
+        // Process custom nodes specially.
+        processingInstructions = CustomComponents.values().map(customComponentType => {
+            return {
+                shouldProcessNode: node => (node.name === customComponentType.name),
+                processNode: node => node.processNode
+            }
+        });
+        // Process all other nodes as normal.
+        processingInstructions.push({
+            shouldProcessNode: () => true,
+            processNode: processNodeDefinitions.processDefaultNode
+        });
+    }
+    return processingInstructions;
+}
+
+function parseCustomHtmlToReact(html) {
+    return htmlToReactParser.parseWithInstructions(html, isValidNode, getProcessingInstructions());
+}
+
+module.exports = parseCustomHtmlToReact;

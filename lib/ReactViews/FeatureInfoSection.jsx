@@ -2,17 +2,12 @@
 
 import Mustache from 'mustache';
 import React from 'react';
-import HtmlToReact from 'html-to-react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
+import CustomComponents from '../Models/CustomComponents';
 import markdownToHtml from '../Core/markdownToHtml';
-import Chart from '../ReactViews/Chart';
-
-const htmlToReactParser = new HtmlToReact.Parser(React);
-const processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React);
-
-let index = 0; // TODO: remove
+import parseCustomHtmlToReact from '../Models/parseCustomHtmlToReact';
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
@@ -66,35 +61,8 @@ const FeatureInfoSection = React.createClass({
 
     sanitizedCustomMarkdown() {
         const raw = this.descriptionFromFeature(this.props.feature, this.props.clock);
-        const html = markdownToHtml(raw, false, {ADD_TAGS: ['chart', 'collapsible']});  // TODO: temp
-
-        const isValidNode = function() {
-            return true;
-        };
-        const elementProps = { // TODO: remove
-            key: ++index
-        };
-        const processingInstructions = [
-            {
-                // Custom <chart> processing
-                shouldProcessNode: function(node) {
-                    return node.name === 'chart';
-                },
-                processNode: function(node, children) {
-                    // charts ignore children.
-                    // node is eg. {type: "tag", name: "chart", attribs: {src: "filename.csv"}, children: [], next: null, parent: null, prev: null}
-                    const x = <Chart url={node.attribs.src} key='99999'/>;
-                    return x;
-                }
-            }, {
-                // Anything else
-                shouldProcessNode: function(node) {
-                    return true;
-                },
-                processNode: processNodeDefinitions.processDefaultNode
-            }];
-
-        return htmlToReactParser.parseWithInstructions(html, isValidNode, processingInstructions);
+        const html = markdownToHtml(raw, false, {ADD_TAGS: CustomComponents.names()});
+        return parseCustomHtmlToReact(html);
     },
 
     render() {
