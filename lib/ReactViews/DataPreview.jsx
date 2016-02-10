@@ -12,11 +12,11 @@ const DataPreview = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        previewedCatalogItem: React.PropTypes.object,
+        previewedCatalogItem: React.PropTypes.object
     },
 
     toggleOnMap() {
-        this.props.previewedCatalogItem.isEnabled = !this.props.previewedCatalogItem.isEnabled;
+        this.props.previewedCatalogItem.toggleEnabled();
     },
 
     renderMarkup(content) {
@@ -25,13 +25,25 @@ const DataPreview = React.createClass({
         };
     },
 
+    render() {
+        const previewed = this.props.previewedCatalogItem;
+        return (
+            <div className='data-preview__inner'>
+                <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewedCatalogItem}/>
+                {this.renderActions(previewed)}
+            </div>
+        );
+    },
+
     renderActions(previewed) {
         if (previewed && defined(previewed.type)) {
             return (
                 <div>
                     <button onClick={this.toggleOnMap}
-                            className={'btn toggle-enable'}
-                            title ={previewed.isEnabled ? 'remove from map' : 'add to map'}>{previewed.isEnabled ? 'Remove from map' : 'Add to map'}</button>
+                            className="btn toggle-enable"
+                            title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
+                        {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
+                    </button>
                     <h4>{previewed.name}</h4>
                     <div className="data-info url">
                         <h5>Description</h5>
@@ -44,16 +56,6 @@ const DataPreview = React.createClass({
                     </div>
                 </div>);
         }
-    },
-
-    render() {
-        const previewed = this.props.previewedCatalogItem;
-        return (
-            <div className='data-preview__inner'>
-              <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewedCatalogItem} />
-              {this.renderActions(previewed)}
-            </div>
-            );
     }
 });
 

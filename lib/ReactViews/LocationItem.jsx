@@ -10,8 +10,12 @@ const LocationItem = React.createClass({
     render() {
         const item = this.props.item;
         return (
-            <li className="location-item"><button onClick={item.clickAction} className="btn btn--location-name">{item.name}</button></li>
-            );
+            <li className="location-item">
+                <button onClick={item.clickAction} className="btn btn--location-name">
+                    {item.name}
+                </button>
+            </li>
+        );
     }
 });
 

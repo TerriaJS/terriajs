@@ -1,9 +1,11 @@
 'use strict';
 
 import React from 'react';
-import SearchBox from './SearchBox.jsx';
+import SidebarSearch from './SidebarSearch.jsx';
 import NowViewingContainer from './NowViewingContainer.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
+import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
+import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
 
 // the sidepanel
 // TO DO:  rename this into workbench
@@ -13,43 +15,57 @@ const SidePanel = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        mapSearchText: React.PropTypes.string,
-        onMapSearchTextChanged: React.PropTypes.func,
-        onActivateAddData: React.PropTypes.func,
-        onActivateCatalogItemInfo: React.PropTypes.func,
-        onSearchCatalog: React.PropTypes.func
+        viewState: React.PropTypes.object.isRequired
     },
 
     removeAll() {
         this.props.terria.nowViewing.removeAll();
     },
 
-    renderNowViewing(nowViewing) {
-        if (nowViewing && nowViewing.length > 0) {
-            return (
-              <div>
-                  <ul className="now-viewing__header">
-                      <li><label className='label'>Data Sets</label></li>
-                      <li><label className='label--badge label'>{nowViewing.length}</label></li>
-                      <li><button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
-                  </ul>
-                  <NowViewingContainer onActivateCatalogItemInfo={this.props.onActivateCatalogItemInfo} nowViewingItems={nowViewing} />
-              </div>);
-        }
+    onAddDataClicked() {
+        this.props.viewState.openAddData();
     },
 
     render() {
+        const terria = this.props.terria;
+
         return (
             <div className='workbench__inner'>
-              <div className='workbench__add-data'>
-                {this.props.onActivateAddData && <button onClick={this.props.onActivateAddData} className='btn'>Add Data</button>}
-              </div>
-              <SearchBox terria={this.props.terria} searchText={this.props.mapSearchText} onSearchTextChanged={this.props.onMapSearchTextChanged} dataSearch={false} onSearchCatalog={this.props.onSearchCatalog} />
-              <div className="now-viewing hide-on-search">
-                {this.renderNowViewing(this.props.terria.nowViewing.items)}
-              </div>
-            </div>);
-    }
+                <div className='workbench__add-data'>
+                    <button onClick={this.onAddDataClicked} className='btn'>Add Data</button>
+                </div>
+                <SidebarSearch terria={this.props.terria}
+                               viewState={this.props.viewState}
+                               searches={[
+                            new BingMapsSearchProviderViewModel({terria}),
+                            new GazetteerSearchProviderViewModel({terria})
+                        ]}/>
+                <div className="now-viewing hide-on-search">
+                    {this.renderNowViewing(this.props.terria.nowViewing.items)}
+                </div>
+            </div>
+        );
+    },
+
+    renderNowViewing(nowViewing) {
+        if (nowViewing && nowViewing.length > 0) {
+            return (
+                <div>
+                    <ul className="now-viewing__header">
+                        <li>
+                            <label className='label'>Data Sets</label>
+                            <label className='label--badge label'>{nowViewing.length}</label>
+                        </li>
+                        <li>
+                            <button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button>
+                        </li>
+                    </ul>
+                    <NowViewingContainer viewState={this.props.viewState}
+                                         nowViewingItems={nowViewing}/>
+                </div>
+            );
+        }
+    },
 });
 
 module.exports = SidePanel;

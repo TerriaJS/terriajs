@@ -1,77 +1,92 @@
 'use strict';
 
-import DataCatalogItem from './DataCatalogItem.jsx';
+import DataCatalogMember from './DataCatalogMember.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from './Loader.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
+import classNames from 'classnames';
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        group: React.PropTypes.object,
-        previewedCatalogItem: React.PropTypes.object,
-        onPreviewedCatalogItemChanged: React.PropTypes.func,
-        isOpen: React.PropTypes.bool,
-        onToggleOpen: React.PropTypes.func,
+        group: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired,
+        /** Overrides whether to get the open state of the group from the group model or manage it internally */
+        manageIsOpenLocally: React.PropTypes.bool,
         userData: React.PropTypes.bool
     },
 
-    getDefaultProps: function() {
+    getDefaultProps() {
         return {
+            manageIsOpenLocally: false,
             userData: false
         };
     },
 
-    toggleOpen(e) {
-        if (defined(this.props.onToggleOpen)) {
-            this.props.onToggleOpen();
+    getInitialState() {
+        return {
+            /** Only used if manageIsOpenLocally === true */
+            isOpen: false
+        };
+    },
+
+    toggleStateIsOpen() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+    },
+
+    isOpen() {
+        if (this.props.manageIsOpenLocally) {
+            return this.state.isOpen;
+        } else {
+            return this.props.group.isOpen;
+        }
+    },
+
+    toggleOpen() {
+        if (this.props.manageIsOpenLocally) {
+            this.toggleStateIsOpen();
         } else {
             this.props.group.toggleOpen();
         }
     },
 
-    renderGroup(group, isOpen) {
-        if (isOpen === true) {
-            if (group.isLoading) {
-                return <Loader/>;
-            }
-
-            if (group.items && group.items.length > 0) {
-                return group.items.map((member, i)=>{
-                    if (member.isGroup) {
-                        return (<DataCatalogGroup group={member}
-                                                  key={i}
-                                                  previewedCatalogItem={this.props.previewedCatalogItem}
-                                                  onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
-                                                  userData={this.props.userData}
-                                 />);
-                    }
-                    return (<DataCatalogItem item={member}
-                                             key={i}
-                                             previewedCatalogItem={this.props.previewedCatalogItem}
-                                             onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
-                                             userData={this.props.userData}
-                            />);
-                });
-            }
-            return <li className ='label no-results'> No data </li>;
-        }
-    },
-
     render() {
         const group = this.props.group;
-        const isOpen = defined(this.props.isOpen) ? this.props.isOpen : group.isOpen;
 
         return (
             <li>
-              <button className ={'btn btn--catalogue ' + (isOpen ? 'is-open' : '')} onClick={this.toggleOpen} >{group.name}</button>
-              <ul className="data--catalog-group">
-                {this.renderGroup(group, isOpen)}
-              </ul>
+                <button className={classNames('btn', 'btn--catalogue', {'is-open' : this.isOpen()})}
+                        onClick={this.toggleOpen}>
+                    {group.name}
+                </button>
+                {this.isOpen() && (
+                    <ul className="data--catalog-group">
+                        {this.renderGroup(group)}
+                    </ul>
+                )}
             </li>
-            );
+        );
+    },
+
+    renderGroup(group) {
+        const children = group.items.map(item => (
+            <DataCatalogMember key={item.uniqueId} member={item}
+                               viewState={this.props.viewState}
+                               userData={this.props.userData}
+                               overrideOpen={this.props.manageIsOpenLocally}/>
+        ));
+
+        if (group.isLoading) {
+            children.push(<Loader key="loader"/>);
+        } else if (group.items.length === 0) {
+            children.push(<li className="label no-results"> No data </li>);
+        }
+
+        return children;
     }
 });
 
