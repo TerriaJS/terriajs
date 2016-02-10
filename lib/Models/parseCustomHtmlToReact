@@ -23,7 +23,7 @@ function getProcessingInstructions() {
         processingInstructions = CustomComponents.values().map(customComponentType => {
             return {
                 shouldProcessNode: node => (node.name === customComponentType.name),
-                processNode: node => node.processNode
+                processNode: customComponentType.processNode
             }
         });
         // Process all other nodes as normal.
