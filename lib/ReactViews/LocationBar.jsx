@@ -117,6 +117,13 @@ const LocationBar = React.createClass({
         }
     },
 
+    updateCoordinatesFromLeaflet(mouseMoveEvent) {
+        const latLng = this.props.terria.leaflet.map.mouseEventToLatLng(mouseMoveEvent);
+        const coordinates = Cartographic.fromDegrees(latLng.lng, latLng.lat);
+        coordinates.height = undefined;
+        this.cartographicToFields(coordinates);
+    },
+
     cartographicToFields(coordinates, errorBar) {
 
         const latitude = CesiumMath.toDegrees(coordinates.latitude);

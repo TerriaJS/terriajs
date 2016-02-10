@@ -29,11 +29,11 @@ const DistanceLegend = React.createClass({
     getInitialState() {
         return {
             distanceLabel: undefined,
-            barWidth: undefined
+            barWidth: 0
         };
     },
 
-    componentWillMount() {
+    componentDidMount() {
         this._removeSubscription = undefined;
         this._lastLegendUpdate = undefined;
 
@@ -158,12 +158,14 @@ const DistanceLegend = React.createClass({
     render() {
         const barStyle = {
             width: this.state.barWidth + 'px',
-            left: (5 + (125 - this.state.barWidth) / 2) + 'px'
+            left: (5 + (125 - this.state.barWidth) / 2) + 'px',
+            height: '5px',
+            backgroundColor: 'yellow'
         };
 
         return (<div className='distance-legend'>
-                  <span> {this.state.distanceLabel}</span>
-                  <span style={barStyle}></span>
+                  <label> {this.state.distanceLabel}</label>
+                  <div style={barStyle}></div>
                 </div>);
     }
 });
