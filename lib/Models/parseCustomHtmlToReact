@@ -20,12 +20,18 @@ let processingInstructions;
 function getProcessingInstructions() {
     if (!defined(processingInstructions)) {
         // Process custom nodes specially.
-        processingInstructions = CustomComponents.values().map(customComponentType => {
-            return {
-                shouldProcessNode: node => (node.name === customComponentType.name),
-                processNode: customComponentType.processNode
+        processingInstructions = [];
+        const customComponents = CustomComponents.values();
+        for (let i = 0; i < customComponents.length; i++) {
+            const customComponent = customComponents[i];
+            processingInstructions.push({
+                shouldProcessNode: node => (node.name === customComponent.name),
+                processNode: customComponent.processNode
+            });
+            if (defined(customComponent.furtherProcessing)) {
+                processingInstructions = processingInstructions.concat(customComponent.furtherProcessing);
             }
-        });
+        }
         // Process all other nodes as normal.
         processingInstructions.push({
             shouldProcessNode: () => true,
