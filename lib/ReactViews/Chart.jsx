@@ -13,16 +13,17 @@
 import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
 
 import LineChart from '../Charts/LineChart';
 import TableStructure from '../Core/TableStructure';
-import VarType from '../Map/VarType';
+// import VarType from '../Map/VarType';
 
-const height = 260;
+const defaultHeight = 260;
 
-// TODO: move this somewhere better
+// TODO: Move this somewhere better.
 function getXYData(tableStructure) {
     const data = [];
     const xColumn = tableStructure.columns[0];
@@ -43,10 +44,7 @@ const Chart = React.createClass({
     _element: undefined,
 
     _createChart(chartState) {
-        LineChart.create(this._element, {
-            width: '100%',
-            height: height
-        }, chartState);
+        LineChart.create(this._element, chartState);
     },
 
     getDefaultProps() {
@@ -54,7 +52,8 @@ const Chart = React.createClass({
             colors: undefined,
             data: undefined,
             url: undefined,
-            domain: undefined
+            domain: undefined,
+            height: undefined
             // margin: {top: 10, right: 20, bottom: 5, left: 20}
         };
     },
@@ -86,7 +85,9 @@ const Chart = React.createClass({
             colors: this.props.colors,
             data: this.props.data,
             domain: this.props.domain,
-            url: this.props.url
+            url: this.props.url,
+            width: '100%',
+            height: defaultValue(this.props.height, defaultHeight)
         };
     },
 
