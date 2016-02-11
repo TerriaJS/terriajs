@@ -1,25 +1,30 @@
 // D3 Axis
 
 $chart-axis-color: #fff;
-$chart-tick-color: #fff;
+$chart-text-color: #fff;
+$chart-line-color: #ccc;
 
 .axis path,
 .axis line {
   fill: none;
-  stroke: $chart-axis-color;
+  stroke: none;  // Hide the axes if the chart is outside the chart panel.
   stroke-width: 1px;
   shape-rendering: crispEdges;
 }
 
-text{
-  fill: $chart-tick-color;
-  stroke-width: 0;
-  font-size: 10px;
+.chart-panel .axis line {
+  stroke: $chart-axis-color;  
+}
+
+text {
+  fill: $chart-text-color;
+  // stroke-width: 0;
+  // font-size: 10px;
 }
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: $chart-line-color;
   stroke-width: 1px;
 }
 
@@ -43,6 +48,22 @@ text{
   position: relative;
 }
 
+.chart-wrapper {
+  position: relative;
+}
+
+.mini-chart-buttons {
+  position: absolute;
+  top: -15px;
+  width: 100%;
+}
+
+.btn--chart-expand {
+  background: $color-primary;
+  padding: 1px 8px;
+  float: right;
+}
+
 .btn--close-chart-panel{
   @extend .btn--close;
   position: absolute;
@@ -50,6 +71,6 @@ text{
   top: 0;
 }
 
-.chart{
+.chart, .chart-title {
   background: rgba(#fff, 0.15);
 }

@@ -76,6 +76,15 @@ describe('TableStructure', function() {
         expect(rowObjects[2]).toEqual({x: 4, y: -3});
     });
 
+    it('can convert to XY arrays', function() {
+        var data = [['a', 'b', 'c'], [1, 2, 3], [4, 5, 6], [7, 8, 9]];
+        var tableStructure = TableStructure.fromJson(data);
+        var xy = tableStructure.toXYArrays();
+        expect(xy.length).toEqual(2);
+        expect(xy[0]).toEqual([{x: 1, y: 2}, {x: 4, y: 5}, {x: 7, y: 8}]);
+        expect(xy[1]).toEqual([{x: 1, y: 3}, {x: 4, y: 6}, {x: 7, y: 9}]);
+    });
+
     it('can get column names', function() {
         var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);

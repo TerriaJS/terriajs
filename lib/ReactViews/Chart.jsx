@@ -17,27 +17,13 @@ import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
 
+import CatalogGroup from '../Models/CatalogGroup';
+import CsvCatalogItem from '../Models/CsvCatalogItem';
 import LineChart from '../Charts/LineChart';
 import TableStructure from '../Core/TableStructure';
 // import VarType from '../Map/VarType';
 
-const defaultHeight = 160;
-
-// TODO: Move this somewhere better.
-function getXYData(tableStructure) {
-    const data = [];
-    const xColumn = tableStructure.columns[0];
-    const yColumns = [tableStructure.columns[1]];
-    if (defined(xColumn)) {
-        const getXYFunction = function(j) {
-            return (x, index)=>{ return {x: x, y: yColumns[j].values[index]}; };
-        };
-        for (let j = 0; j < yColumns.length; j++) {
-            data.push(xColumn.dates.map(getXYFunction(j)));
-        }
-    }
-    return data;
-}
+const defaultHeight = 100;
 
 const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
@@ -47,15 +33,17 @@ const Chart = React.createClass({
         LineChart.create(this._element, chartState);
     },
 
-    getDefaultProps() {
-        return {
-            colors: undefined,
-            data: undefined,
-            url: undefined,
-            domain: undefined,
-            height: undefined
-            // margin: {top: 10, right: 20, bottom: 5, left: 20}
-        };
+    propTypes: {
+        colors: React.PropTypes.array,
+        url: React.PropTypes.string,
+        data: React.PropTypes.array,
+        domain: React.PropTypes.array,
+        mini: React.PropTypes.bool,
+        height: React.PropTypes.number,
+        transitionDuration: React.PropTypes.number,
+        // The following are only required if you want an expand button.
+        terria: React.PropTypes.object,
+        expandUrl: React.PropTypes.string
     },
 
     componentDidMount() {
@@ -67,7 +55,7 @@ const Chart = React.createClass({
             const tableStructure = new TableStructure('feature info');
             loadText(chartState.url).then(function(text) {
                 tableStructure.loadFromCsv(text);
-                chartState.data = getXYData(tableStructure);
+                chartState.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);
                 that._createChart(chartState);
                 return true;
             }).otherwise(function(e) {
@@ -87,7 +75,9 @@ const Chart = React.createClass({
             domain: this.props.domain,
             url: this.props.url,
             width: '100%',
-            height: defaultValue(this.props.height, defaultHeight)
+            height: defaultValue(this.props.height, defaultHeight),
+            mini: this.props.mini,
+            transitionDuration: this.props.transitionDuration
         };
     },
 
@@ -95,9 +85,33 @@ const Chart = React.createClass({
         LineChart.destroy(this._element);
     },
 
+    expand() {
+        // Does not really belong here.
+        var terria = this.props.terria;
+        var catalogItem = new CsvCatalogItem(terria, this.props.expandUrl);
+        catalogItem.name = 'Untitled-' + Math.round(Math.random() * 1000); // TODO: eg. containerViewModel.name + ': ' + title
+        var group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
+        group.isOpen = true;
+        group.add(catalogItem);
+        catalogItem.isLoading = true;
+        terria.catalog.chartableItems.push(catalogItem);  // Notify the chart panel so it shows "loading".
+        catalogItem.isEnabled = true;  // This loads it as well.
+    },
+
     render() {
+        let expandChartButtons;
+        if (defined(this.props.expandUrl)) {
+            expandChartButtons = (
+                <div className='mini-chart-buttons'>
+                    <button className='btn btn--chart-expand' onClick={this.expand}>Expand</button>
+                </div>
+            );
+        }
         return (
-            <div className='chart' ref={(element) => this._element = element}></div>
+            <div className='chart-wrapper'>
+                {expandChartButtons}
+                <div className='chart' ref={element=>{this._element = element}}></div>
+            </div>
         );
     }
 });
