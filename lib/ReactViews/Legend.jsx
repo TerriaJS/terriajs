@@ -33,7 +33,7 @@ const Legend = React.createClass({
     renderLegends() {
         let legends;
         if(this.props.nowViewingItem.isLoading) {
-            legends = <Loader/>;
+            legends = <li><Loader/></li>;
         }
         else {
             legends = this.getLegends() && this.getLegends().map((legend, i)=>{

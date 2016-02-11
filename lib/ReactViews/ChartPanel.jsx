@@ -38,14 +38,16 @@ const ChartPanel = React.createClass({
         }
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
         const isVisible = (data.length > 0) || isLoading;
-        let content;
-        if (isLoading) {
-            content = <Loader/>;
-        } else {
-            content = <Chart data={data} colors={colors} height={266}/>
-        }
         if (!isVisible) {
             return null;
+        }
+        let loader;
+        let chart;
+        if (isLoading) {
+            loader = <Loader/>;
+        }
+        if (data.length > 0) {
+            chart = <Chart data={data} colors={colors} height={266}/>
         }
         return (
             <div className="chart-panel__holder">
@@ -53,11 +55,11 @@ const ChartPanel = React.createClass({
                     <div className="chart-panel" style={{height: 300}}>
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
-                                <span className="chart-panel__section-label label">Charts</span>
+                                <span className="chart-panel__section-label label">{loader || 'Charts'}</span>
                                 <button className="btn btn--close-chart-panel"></button>
                             </div>
                             <div>
-                                {content}
+                                {chart}
                             </div>
                         </div>
                     </div>

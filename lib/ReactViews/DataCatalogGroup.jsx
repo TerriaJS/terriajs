@@ -81,7 +81,7 @@ const DataCatalogGroup = React.createClass({
         ));
 
         if (group.isLoading) {
-            children.push(<Loader key="loader"/>);
+            children.push(<li key="loader"><Loader /></li>);
         } else if (group.items.length === 0) {
             children.push(<li className="label no-results"> No data </li>);
         }

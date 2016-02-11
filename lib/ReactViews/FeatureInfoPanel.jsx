@@ -26,7 +26,7 @@ const FeatureInfoPanel = React.createClass({
         const that = this;
         if (defined(this.props.terria.pickedFeatures)) {
             if (this.props.terria.pickedFeatures.isLoading === true) {
-                return <Loader/>;
+                return <li><Loader/></li>;
             }
             if (pickedFeatures && pickedFeatures.length > 0) {
                 return pickedFeatures.map((features, i)=>{
