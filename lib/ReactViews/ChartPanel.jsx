@@ -1,6 +1,7 @@
 'use strict';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
+import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 
 import VarType from '../Map/VarType';
 
@@ -21,25 +22,20 @@ const ChartPanel = React.createClass({
 
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
-        const data = [];
-        const colors = [];
+        let colors = [];
+        let data = [];
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
                 const xColumn = item.timeColumn;
-                const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                 if (defined(xColumn)) {
-                    const getXYFunction = function(j) {
-                        return (x, index)=>{ return {x: x, y: yColumns[j].values[index]}; };
-                    };
-                    for (let j = 0; j < yColumns.length; j++) {
-                        data.push(xColumn.dates.map(getXYFunction(j)));
-                        colors.push(yColumns[j].assignedColor);
-                    }
+                    const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
+                    data = data.concat(item.tableStructure.toXYArrays(xColumn, yColumns));
+                    colors = colors.concat(yColumns.map(yColumn=>yColumn.assignedColor));
                 }
             }
         }
-        if(!data.length) {
+        if (!data.length) {
             return null;
         }
         return (
