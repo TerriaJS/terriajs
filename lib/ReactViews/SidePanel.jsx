@@ -2,7 +2,7 @@
 
 import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
 import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
-import NowViewingContainer from './NowViewingContainer.jsx';
+import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import SidebarSearch from './SidebarSearch.jsx';
@@ -54,7 +54,9 @@ const SidePanel = React.createClass({
                         <li><button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
                     </ul>
                     <NowViewingContainer viewState={this.props.viewState}
-                                         nowViewingItems={nowViewing}/>
+                                         nowViewingItems={nowViewing}
+                                         terria={this.props.terria}
+                    />
                 </div>
             );
         }

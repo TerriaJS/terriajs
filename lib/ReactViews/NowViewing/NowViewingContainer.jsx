@@ -3,15 +3,16 @@
 import React from 'react';
 import NowViewingItem from './NowViewingItem.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from './ObserveModelMixin';
-import arrayContains from '../Core/arrayContains';
+import ObserveModelMixin from './../ObserveModelMixin';
+import arrayContains from '../../Core/arrayContains';
 
 const NowViewingContainer = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         nowViewingItems: React.PropTypes.array.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        terria: React.PropTypes.object
     },
 
     getInitialState() {
@@ -113,6 +114,7 @@ const NowViewingContainer = React.createClass({
                                onDragStart={this.onDragStart}
                                onDragEnd={this.onDragEnd}
                                viewState={this.props.viewState}
+                               terria={this.props.terria}
                 />;
     },
 

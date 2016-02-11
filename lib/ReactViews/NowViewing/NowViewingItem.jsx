@@ -1,8 +1,9 @@
 'use strict';
 
-import ObserveModelMixin from './ObserveModelMixin';
-import Legend from './Legend';
+import ObserveModelMixin from './../ObserveModelMixin';
+import Legend from './../Legend';
 import React from 'react';
+import Voldemort from './Voldemort';
 
 const NowViewingItem = React.createClass({
     mixins: [ObserveModelMixin],
@@ -14,7 +15,8 @@ const NowViewingItem = React.createClass({
         onDragStart: React.PropTypes.func,
         onDragOver: React.PropTypes.func,
         onDragEnd: React.PropTypes.func,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        terria: React.PropTypes.object
     },
 
     removeFromMap() {
@@ -83,6 +85,11 @@ const NowViewingItem = React.createClass({
               </div>
               <div className="now-viewing__item__legend">
                 <Legend nowViewingItem={nowViewingItem}/>
+              </div>
+              <div className='now-viewing__item__voldemort'>
+                <Voldemort nowViewingItem={nowViewingItem}
+                           terria={this.props.terria}
+                />
               </div>
             </div>
             </li>
