@@ -48,6 +48,22 @@ text {
   position: relative;
 }
 
+.chart-wrapper {
+  position: relative;
+}
+
+.mini-chart-buttons {
+  position: absolute;
+  top: -15px;
+  width: 100%;
+}
+
+.btn--chart-expand {
+  background: $color-primary;
+  padding: 1px 8px;
+  float: right;
+}
+
 .btn--close-chart-panel{
   @extend .btn--close;
   position: absolute;

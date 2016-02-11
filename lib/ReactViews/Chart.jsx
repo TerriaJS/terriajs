@@ -17,6 +17,8 @@ import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
 
+import CatalogGroup from '../Models/CatalogGroup';
+import CsvCatalogItem from '../Models/CsvCatalogItem';
 import LineChart from '../Charts/LineChart';
 import TableStructure from '../Core/TableStructure';
 // import VarType from '../Map/VarType';
@@ -38,7 +40,10 @@ const Chart = React.createClass({
         domain: React.PropTypes.array,
         mini: React.PropTypes.bool,
         height: React.PropTypes.number,
-        transitionDuration: React.PropTypes.number
+        transitionDuration: React.PropTypes.number,
+        // The following are only required if you want an expand button.
+        terria: React.PropTypes.object,
+        expandUrl: React.PropTypes.string
     },
 
     componentDidMount() {
@@ -80,9 +85,33 @@ const Chart = React.createClass({
         LineChart.destroy(this._element);
     },
 
+    expand() {
+        // Does not really belong here.
+        var terria = this.props.terria;
+        var catalogItem = new CsvCatalogItem(terria, this.props.expandUrl);
+        catalogItem.name = 'Untitled-' + Math.round(Math.random() * 1000); // TODO: eg. containerViewModel.name + ': ' + title
+        var group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
+        group.isOpen = true;
+        group.add(catalogItem);
+        catalogItem.isLoading = true;
+        terria.catalog.chartableItems.push(catalogItem);  // Notify the chart panel so it shows "loading".
+        catalogItem.isEnabled = true;  // This loads it as well.
+    },
+
     render() {
+        let expandChartButtons;
+        if (defined(this.props.expandUrl)) {
+            expandChartButtons = (
+                <div className='mini-chart-buttons'>
+                    <button className='btn btn--chart-expand' onClick={this.expand}>Expand</button>
+                </div>
+            );
+        }
         return (
-            <div className='chart' ref={(element) => this._element = element}></div>
+            <div className='chart-wrapper'>
+                {expandChartButtons}
+                <div className='chart' ref={element=>{this._element = element}}></div>
+            </div>
         );
     }
 });

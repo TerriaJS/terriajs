@@ -6,6 +6,7 @@ import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import VarType from '../Map/VarType';
 
 import Chart from './Chart.jsx';
+import Loader from './Loader.jsx';
 // import Loader from './Loader.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
@@ -35,7 +36,15 @@ const ChartPanel = React.createClass({
                 }
             }
         }
-        if (!data.length) {
+        const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
+        const isVisible = (data.length > 0) || this.isLoading;
+        let content;
+        if (isLoading) {
+            content = <Loader/>;
+        } else {
+            content = <Chart data={data} colors={colors} height={266}/>
+        }
+        if (!isVisible) {
             return null;
         }
         return (
@@ -48,7 +57,7 @@ const ChartPanel = React.createClass({
                                 <button className="btn btn--close-chart-panel"></button>
                             </div>
                             <div>
-                                <Chart data={data} colors={colors} height={266}/>
+                                {content}
                             </div>
                         </div>
                     </div>
