@@ -37,7 +37,7 @@ const ChartPanel = React.createClass({
             }
         }
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
-        const isVisible = (data.length > 0) || this.isLoading;
+        const isVisible = (data.length > 0) || isLoading;
         let content;
         if (isLoading) {
             content = <Loader/>;
