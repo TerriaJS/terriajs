@@ -16,11 +16,13 @@ const Voldemort = React.createClass({
         let content;
 
         if(nowViewingItem.concepts && nowViewingItem.concepts.length > 0) {
-            content = nowViewingItem.concepts.map((item, i)=>{
-                <li key={i}> {item.name}</li>;
-            });
+            content = nowViewingItem.concepts.map((item, i)=>
+                <li key={i}> {item.name}</li>);
         }
-        content = <li> empty </li>;
+        else {
+          content = <li> empty </li>;
+        }
+
 
         return content;
     },
