@@ -110,8 +110,7 @@ const AddData = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         updateCatalog: React.PropTypes.func,
-        isDraggingDroppingFile: React.PropTypes.bool,
-        onFinishDroppingFile: React.PropTypes.func,
+        viewState: React.PropTypes.object,
         allowDropInitFiles: React.PropTypes.bool
     },
 
@@ -229,6 +228,10 @@ const AddData = React.createClass({
         });
     },
 
+    onFinishDroppingFile() {
+        this.props.viewState.isDraggingDroppingFile = false;
+    },
+
     renderTabs() {
         return (
             <ul className='add-data-tablist tablist'>
@@ -269,8 +272,8 @@ const AddData = React.createClass({
         <div className='add-data-inner'>
             <DragDropFile terria={this.props.terria}
                           handleFile={this.handleFile}
-                          isActive={this.props.isDraggingDroppingFile}
-                          onFinishDroppingFile={this.props.onFinishDroppingFile}
+                          isActive={this.props.viewState.isDraggingDroppingFile}
+                          onFinishDroppingFile={this.onFinishDroppingFile}
             />
             {this.renderTabs()}
             {this.renderPanels()}

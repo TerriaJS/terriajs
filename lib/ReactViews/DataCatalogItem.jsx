@@ -1,29 +1,19 @@
 'use strict';
 
-const React = require('react');
-const ObserveModelMixin = require('./ObserveModelMixin');
+import React from 'react';
+import ObserveModelMixin from './ObserveModelMixin';
+import classNames from 'classnames';
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object,
-        previewedCatalogItem: React.PropTypes.object,
-        onPreviewedCatalogItemChanged: React.PropTypes.func,
-        userData: React.PropTypes.bool
+        item: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired
     },
 
-    addToPreview() {
-        this.props.onPreviewedCatalogItemChanged(this.props.item, this.props.userData);
-    },
-
-    toggleEnable() {
-        this.addToPreview();
-        this.props.item.toggleEnabled();
-    },
-
-    renderClass(item) {
+    renderIconClass(item) {
         if (item.isEnabled) {
             if (item.isLoading) {
                 return 'btn--loading-on-map';
@@ -33,13 +23,27 @@ const DataCatalogItem = React.createClass({
         return 'btn--add-to-map';
     },
 
+    toggleEnable() {
+        this.props.item.toggleEnabled();
+    },
+
+    setPreviewedItem() {
+        this.props.viewState.viewCatalogItem(this.props.item);
+    },
+
+    isSelected() {
+        return this.props.item.isUserSupplied ? this.props.viewState.userDataPreviewedItem === this.props.item :
+            this.props.viewState.previewedItem === this.props.item;
+    },
+
     render() {
         const item = this.props.item;
         return (
-            <li className={(this.props.previewedCatalogItem === item ? 'is-previewed' : '') + ' data-catalog-item' }>
-               <button onClick={this.addToPreview} className='btn btn--catalog-item'>{item.name}</button>
-               <button onClick={this.toggleEnable} title="add or remove on map" className={'btn btn--catalog-item--action ' + (this.renderClass(item))}></button>
-            </li>);
+            <li className={classNames('clearfix', 'data-catalog-item', {'is-previewed': this.isSelected()})}>
+                <button onClick={this.setPreviewedItem} className='btn btn--catalog-item'>{item.name}</button>
+                <button onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass(item))}></button>
+            </li>
+        );
     }
 });
 

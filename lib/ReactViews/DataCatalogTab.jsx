@@ -1,10 +1,15 @@
 'use strict';
 
-import DataCatalogGroup from './DataCatalogGroup.jsx';
+import DataCatalogMember from './DataCatalogMember.jsx';
 import DataPreview from './DataPreview.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
-import SearchBox from './SearchBox.jsx';
+import SearchHeader from './Search/SearchHeader.jsx';
+import SearchBox from './Search/SearchBox.jsx';
+import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Loader from './Loader.jsx';
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
@@ -12,47 +17,60 @@ const DataCatalogTab = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        searchText: React.PropTypes.string,
-        previewedCatalogItem: React.PropTypes.object,
-        onSearchTextChanged: React.PropTypes.func,
-        onPreviewedCatalogItemChanged: React.PropTypes.func
+        viewState: React.PropTypes.object
     },
 
-    renderDataCatalog(dataCatalog) {
-        return (
-            <ul className = 'data-catalog hide-on-search'>
-                {dataCatalog.map((group, i) => {
-                    return (<DataCatalogGroup group={group}
-                                              key={i}
-                                              previewedCatalogItem={this.props.previewedCatalogItem}
-                                              onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
-                            />);
-                }, this)}
-            </ul>);
+    componentWillMount() {
+        this.searchProvider = new CatalogItemNameSearchProviderViewModel({terria: this.props.terria});
+
+        knockout.getObservable(this.props.viewState, 'catalogSearch').subscribe(function(newText) {
+            this.searchProvider.search(newText);
+            this.searchBox.setText(newText);
+        }, this);
+    },
+
+    onSearchTextChanged(newText) {
+        this.props.viewState.catalogSearch = newText;
     },
 
     render() {
         const terria = this.props.terria;
-        const dataCatalog = terria.catalog.group.items;
         return (
             <div className="panel-content">
-              <div className="data-explorer">
-                <SearchBox terria={terria}
-                           mapSearch={false}
-                           gazetterSearch={false}
-                           searchText={this.props.searchText}
-                           onSearchTextChanged={this.props.onSearchTextChanged}
-                           previewedCatalogItem={this.props.previewedCatalogItem}
-                           onPreviewedCatalogItemChanged={this.props.onPreviewedCatalogItemChanged}
-                />
-                {this.renderDataCatalog(dataCatalog)}
-              </div>
-              <div className="data-preview">
-                <DataPreview terria={terria}
-                             previewedCatalogItem={this.props.previewedCatalogItem}
-                />
-              </div>
+                <div className="data-explorer">
+                    <SearchBox initialText={this.props.viewState.catalogSearch}
+                               onSearchTextChanged={this.onSearchTextChanged}
+                               ref={ref => this.searchBox = ref} />
+                    {this.renderDataCatalog()}
+                </div>
+                <div className="data-preview">
+                    <DataPreview terria={terria}
+                                 previewedCatalogItem={this.props.viewState.previewedItem}
+                    />
+                </div>
             </div>);
+    },
+
+    renderDataCatalog() {
+        const terria = this.props.terria;
+        const isSearching = !!this.props.viewState.catalogSearch.length;
+        const items = isSearching ?
+            this.searchProvider.searchResults.map(result => result.catalogItem) :
+            terria.catalog.group.items;
+
+        return (
+            <ul className='data-catalog hide-on-search'>
+                <SearchHeader {...this.searchProvider} />
+                {items
+                    .filter(defined)
+                    .map((item, i) => (
+                        <DataCatalogMember viewState={this.props.viewState}
+                                           member={item}
+                                           manageIsOpenLocally={isSearching}
+                                           key={item.uniqueId}/>
+                    ))
+                }
+            </ul>);
     }
 });
 

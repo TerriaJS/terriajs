@@ -17,6 +17,10 @@
     top: 20px;
     right: $padding;
     z-index: 10;
+    display: none;
+    @media(screen and min-width: $sm){
+    display: block;
+  }
 }
 
 .modal-wrapper{
@@ -84,15 +88,15 @@
 
 .feature-info-panel{
   position: fixed;
-  top: 10px;
+  top: 10vh;
   right: 10px;
   max-width: 95%;
   min-width: 150px;
+  max-height: 80vh;
   z-index: 5;
   @media screen and (min-width : $sm){
     //temp
     max-width: calc(100vw - #{$work-bench-width} - 150px);
-    top: 100px;
     right: 100px;
   }
   #kss-node &{

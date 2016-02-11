@@ -49,9 +49,9 @@
 }
 
 .feature-info-panel__body{
-  max-height: $modal-content-height;
   overflow-y: auto;
   overflow-x: auto;
+  max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
 }
 
 .feature-info-panel__title{
