@@ -78,119 +78,101 @@ $btn-setting-size: 35px;
 
 // Icon Buttons
 //
-// .btn--toggle - toggle icon
-// .btn--visibility - visibility icon
-// .btn--add-to-map - add to map
-// .btn--remove-from-map - remove from map
-// .btn--loading-on-map - loading on map
-// .btn--close-modal - button to close modal window
-// .btn--increase - increase a value
-// .btn--decrease - decrease a value
-// .btn--refresh - refresh a value
-// .btn--sphere - a sphere icon
-// .btn--share - share this
-// .btn--expand - expand this
-// .btn--right - button pointing right
-// .btn--left - button pointing left
-// .btn--close - button to close something
+// .btn--add - icon button
+// .btn--checkbox-checked - icon button
+// .btn--checkbox-unchecked - icon button
+// .btn--close - icon button
+// .btn--decrease - icon button
+// .btn--expand - icon button
+// .btn--increase - icon button
+// .btn--left - icon button
+// .btn--loader - icon button
+// .btn--radio-checked - icon button
+// .btn--radio-unchecked - icon button
+// .btn--refresh - icon button
+// .btn--remove - icon button
+// .btn--right - icon button
+// .btn--share - icon button
+// .btn--sphere - icon button
+// .btn--opened - icon button
+// .btn--closed - icon button
+// .btn--visible - icon button
+// .btn--invisible - icon button 
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
 //
 // Style guide: Buttons.icon-button
 
-.btn--toggle,
-.btn--visibility,
-.btn--add-to-map,
-.btn--remove-from-map,
-.btn--loading-on-map,
-.btn--close-modal,
-.btn--increase,
-.btn--decrease,
-.btn--refresh,
-.btn--sphere,
-.btn--share,
-.btn--expand,
-.btn--left,
-.btn--right,
-.btn--close{
-  @extend .icon;
-  &:before{
-    line-height: $btn-default-line-height;
-  }
+$icons: 
+add,
+checkbox-checked,
+checkbox-unchecked,
+close,
+decrease,
+expand,
+increase,
+left,
+loader,
+radio-checked,
+radio-unchecked,
+refresh,
+remove,
+right,
+share,
+sphere,
+opened,
+closed,
+visible,
+invisible;
+
+
+@each $icon in $icons {
+    .btn--#{$icon}{
+        @extend .icon;
+        @extend .icon-#{$icon};
+        &:before{
+          line-height: $btn-default-line-height;
+        }
+    }
 }
 
 .btn--toggle{
-  @extend .icon-caret-right;
+  @extend .btn--closed;
    &.is-open{
-    @extend .icon-caret-down;
+    @extend .btn--opened;
   }
 }
 
 .btn--visibility{
-  @extend .icon-eye-hidden;
+  @extend .btn--invisible;
   &.is-visible {
-    @extend .icon-eye;
+    @extend .btn--visible;
   }
 }
 
 .btn--add-to-map{
-  @extend .icon-add;
+  @extend .btn--add;
   color: $color-primary;
 }
 
 .btn--remove-from-map{
-  @extend .icon-remove;
+  @extend .btn--remove;
   color: $color-primary;
 }
 
 .btn--loading-on-map{
-  @extend .icon-loader;
+  @extend .btn--loader;
   color: $color-primary;
 }
 
 .btn--close-modal{
-  @extend .icon-close;
+  @extend .btn--close;
   &:hover{
     color: $color-primary;
   }
 }
 
-.btn--refresh{
-  @extend .icon-refresh;
-}
-
-.btn--increase{
-  @extend .icon-increase;
-}
-
-.btn--decrease{
-  @extend .icon-decrease;
-}
-
-.btn--sphere{
-  @extend .icon-sphere;
-}
-
-.btn--share{
-  @extend .icon-share;
-}
-
-.btn--expand{
-  @extend .icon-expand;
-}
-
-.btn--left{
-  @extend .icon-left;
-}
-
-.btn--right{
-  @extend .icon-right;
-}
-
-.btn--close{
-  @extend .icon-close;
-}
 
 // Text and icon buttons
 //
@@ -238,9 +220,7 @@ $btn-setting-size: 35px;
     border: $border-style;
   }
   &.is-active{
-    @extend .icon;
-    @extend .icon-check_box;
-
+    @extend .btn--checkbox-checked;
   }
   &:before{
     position: absolute;

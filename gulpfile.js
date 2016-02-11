@@ -34,6 +34,8 @@ gulp.task('release-specs', ['prepare-cesium'], function() {
     return build(specJSName, glob.sync(testGlob), true);
 });
 
+
+
 gulp.task('make-schema', function() {
     return genSchema({source: '.', dest: 'wwwroot/schema', noversionsubdir: true, quiet: true});
 });
@@ -146,3 +148,8 @@ function watch(name, files, minify) {
 
     return rebundle();
 }
+
+var childExec = require('child_process').exec;  // child_process is built in to node
+gulp.task('styleguide', function(done) {
+    childExec('kss-node ./node_modules/terriajs/lib/Sass ./wwwroot/styleguide --template ./wwwroot/styleguide-template --css ./../build/nationalmap.css', undefined, done);
+});

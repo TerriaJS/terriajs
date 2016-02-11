@@ -21,13 +21,13 @@ const Voldemort = React.createClass({
     renderVoldemortChildren(item, key) {
         let toggleButton = null;
         let selectButton = null;
-        const classNames = 'voldemort__children ' + (item.isOpen ? 'is-open' : '');
+        const classNames = 'voldemort__children ' + (item.isOpen ? 'is-open' : '') + ' ' + (item.hasChildren ? 'has-children' : '');
 
         if(item.hasChildren) {
             toggleButton = <button onClick={this.toggleOpen.bind(this, item)} className={'btn btn--toggle ' + (item.isOpen ? 'is-open' : '')}></button>;
         }
         if(item.isSelectable) {
-            selectButton = <button onClick={this.toggleActive.bind(this, item)} className={'btn ' + (item.isActive ? 'btn--increase' : 'btn--decrease')}></button>;
+            selectButton = <button onClick={this.toggleActive.bind(this, item)} className={'btn ' + (item.isActive ? 'btn--voldemort-active' : 'btn--voldemort-inactive')}></button>;
         }
 
         if(item.hasChildren) {
@@ -36,7 +36,7 @@ const Voldemort = React.createClass({
                         {selectButton}
                         {item.name}
                         {toggleButton}
-                        <ul className>
+                        <ul>
                             {item.items.map((child, i)=>
                                 this.renderVoldemortChildren(child, i)
                             )}
