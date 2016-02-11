@@ -16,7 +16,6 @@ const NowViewingItem = React.createClass({
         onDragOver: React.PropTypes.func,
         onDragEnd: React.PropTypes.func,
         viewState: React.PropTypes.object.isRequired,
-        terria: React.PropTypes.object
     },
 
     removeFromMap() {
@@ -88,7 +87,6 @@ const NowViewingItem = React.createClass({
               </div>
               <div className='now-viewing__item__voldemort'>
                 <Voldemort nowViewingItem={nowViewingItem}
-                           terria={this.props.terria}
                 />
               </div>
             </div>

@@ -7,8 +7,7 @@ const Voldemort = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        nowViewingItem: React.PropTypes.object,
-        terria: React.PropTypes.object
+        nowViewingItem: React.PropTypes.object
     },
 
     toggleOpen(item) {

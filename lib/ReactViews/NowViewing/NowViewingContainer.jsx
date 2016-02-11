@@ -11,8 +11,7 @@ const NowViewingContainer = React.createClass({
 
     propTypes: {
         nowViewingItems: React.PropTypes.array.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        terria: React.PropTypes.object
+        viewState: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -114,7 +113,6 @@ const NowViewingContainer = React.createClass({
                                onDragStart={this.onDragStart}
                                onDragEnd={this.onDragEnd}
                                viewState={this.props.viewState}
-                               terria={this.props.terria}
                 />;
     },
 

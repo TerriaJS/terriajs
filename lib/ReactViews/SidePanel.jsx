@@ -55,7 +55,6 @@ const SidePanel = React.createClass({
                     </ul>
                     <NowViewingContainer viewState={this.props.viewState}
                                          nowViewingItems={nowViewing}
-                                         terria={this.props.terria}
                     />
                 </div>
             );
