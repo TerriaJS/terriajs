@@ -14,7 +14,7 @@ const ChartPanel = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
         onClose: React.PropTypes.func
@@ -48,7 +48,7 @@ const ChartPanel = React.createClass({
                                 <button className="btn btn--close-chart-panel"></button>
                             </div>
                             <div>
-                                <Chart data={data} colors={colors}/>
+                                <Chart data={data} colors={colors} height={266}/>
                             </div>
                         </div>
                     </div>

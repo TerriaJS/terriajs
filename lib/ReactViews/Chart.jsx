@@ -21,23 +21,7 @@ import LineChart from '../Charts/LineChart';
 import TableStructure from '../Core/TableStructure';
 // import VarType from '../Map/VarType';
 
-const defaultHeight = 160;
-
-// TODO: Move this somewhere better.
-function getXYData(tableStructure) {
-    const data = [];
-    const xColumn = tableStructure.columns[0];
-    const yColumns = [tableStructure.columns[1]];
-    if (defined(xColumn)) {
-        const getXYFunction = function(j) {
-            return (x, index)=>{ return {x: x, y: yColumns[j].values[index]}; };
-        };
-        for (let j = 0; j < yColumns.length; j++) {
-            data.push(xColumn.dates.map(getXYFunction(j)));
-        }
-    }
-    return data;
-}
+const defaultHeight = 100;
 
 const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
@@ -47,15 +31,14 @@ const Chart = React.createClass({
         LineChart.create(this._element, chartState);
     },
 
-    getDefaultProps() {
-        return {
-            colors: undefined,
-            data: undefined,
-            url: undefined,
-            domain: undefined,
-            height: undefined
-            // margin: {top: 10, right: 20, bottom: 5, left: 20}
-        };
+    propTypes: {
+        colors: React.PropTypes.array,
+        url: React.PropTypes.string,
+        data: React.PropTypes.array,
+        domain: React.PropTypes.array,
+        mini: React.PropTypes.bool,
+        height: React.PropTypes.number,
+        transitionDuration: React.PropTypes.number
     },
 
     componentDidMount() {
@@ -67,7 +50,7 @@ const Chart = React.createClass({
             const tableStructure = new TableStructure('feature info');
             loadText(chartState.url).then(function(text) {
                 tableStructure.loadFromCsv(text);
-                chartState.data = getXYData(tableStructure);
+                chartState.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);
                 that._createChart(chartState);
                 return true;
             }).otherwise(function(e) {
@@ -87,7 +70,9 @@ const Chart = React.createClass({
             domain: this.props.domain,
             url: this.props.url,
             width: '100%',
-            height: defaultValue(this.props.height, defaultHeight)
+            height: defaultValue(this.props.height, defaultHeight),
+            mini: this.props.mini,
+            transitionDuration: this.props.transitionDuration
         };
     },
 
