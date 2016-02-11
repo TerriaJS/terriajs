@@ -76,7 +76,13 @@ describe('AbsIttCatalogItem', function() {
         //     console.log(k);
         //     expect(reconstructed[k]).toEqual(item[k]);
         // }
-        expect(reconstructed).toEqual(item);
+
+        expect(reconstructed.name).toEqual(item.name);
+        expect(reconstructed.id).toEqual(item.id);
+        expect(reconstructed.description).toEqual(item.description);
+        expect(reconstructed.rectangle).toEqual(item.rectangle);
+        expect(reconstructed.url).toEqual(item.url);
+        expect(reconstructed.datasetId).toEqual(item.datasetId);
     });
 
     describe('loading', function() {

@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,describe,it,expect*/
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableStructure = require('../../lib/Core/TableStructure');
 var VarType = require('../../lib/Map/VarType');
 
@@ -118,7 +119,7 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[1].values.length).toEqual(2);
     });
 
-    it('ignores a final blank row of CSV files', function() {
+    it('ignores final blank rows of CSV files', function() {
         var csvString = 'postcode,value\n0800,1,\n0885,2,';
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv(csvString);
@@ -130,6 +131,26 @@ describe('TableStructure', function() {
         tableStructure.loadFromCsv(csvString);
         expect(tableStructure.columns[0].values.length).toEqual(2);
         expect(tableStructure.columns[1].values.length).toEqual(2);
+
+        csvString = csvString + '\n\n\n\n\n';
+        tableStructure = new TableStructure();
+        tableStructure.loadFromCsv(csvString);
+        expect(tableStructure.columns[0].values.length).toEqual(2);
+        expect(tableStructure.columns[1].values.length).toEqual(2);
+    });
+
+    it('can describe rows with dates with and without timezones nicely', function() {
+        var csvString = 'date,value\r\n2015-10-15T12:34:56,5\r\n2015-10-02T12:34:56Z,8\r\n2015-11-03\r\n';
+        var tableStructure = TableStructure.fromCsv(csvString);
+        var htmls = tableStructure.toRowDescriptions();
+        expect(htmls[0]).toContain('Thu Oct 15 2015 12:34:56');  // Thu 15 Oct would be nicer outside USA.
+        expect(htmls[0]).not.toContain('2015-10-15T12:34:56');
+
+        var expectedDate1 = JulianDate.toDate(JulianDate.fromIso8601('2015-10-02T12:34:56Z')); 
+        expect(htmls[1]).toContain('' + expectedDate1);
+        expect(htmls[1]).not.toContain('2015-10-02T12:34:56');
+
+        expect(htmls[2]).toContain('>2015-11-03<'); // No time is added when only the date is given.
     });
 
     // it('does not allow multiple selected variables by default', function(done) {
