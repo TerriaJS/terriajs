@@ -50,9 +50,11 @@ const Voldemort = React.createClass({
                                    title='select voldemort'></button>;
         }
 
-        // !name => shows the children, but without the dropdown option
-        if(!item.name && item.hasChildren) {
-            return (<li className={classNames}
+        // !name but has children=> shows the children, but without the dropdown option
+        // !name but has no children=> shows nothing
+        if(!item.name) {
+            if(item.hasChildren) {
+                return (<li className={classNames}
                           key={key}>
                           <ul>
                               {item.items.map((child, i)=>
@@ -60,25 +62,28 @@ const Voldemort = React.createClass({
                               )}
                           </ul>
                       </li>);
+            }
+            return null;
         }
 
         // both visible and has name
-        // - has children
-        if(item.hasChildren) {
+        // - has children, show dropdown options and children
+        if (item.hasChildren) {
             return (<li className={classNames}
-                            key={key}>
-                            <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
-                            <ul>
-                                {item.items.map((child, i)=>
-                                    this.renderVoldemortChildren(child, i, item)
-                                )}
-                            </ul>
-                        </li>);
+                          key={key}>
+                          <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
+                          <ul>
+                              {item.items.map((child, i)=>
+                                  this.renderVoldemortChildren(child, i, item)
+                              )}
+                          </ul>
+                      </li>);
         }
-        // - no children
+        // - no children, show only title and select options
         return <li className={classNames}key={key}>
-                  <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
-                </li>;
+                <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
+              </li>;
+
     },
 
     renderVoldemort() {
