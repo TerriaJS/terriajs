@@ -15,7 +15,18 @@ const Voldemort = React.createClass({
     },
 
     toggleActive(item) {
-        item.isActive = !item.isActive;
+        item.toggleActive();
+    },
+
+    getBtnClass(item) {
+        let btnClasses;
+
+        if(item.allowMultiple) {
+            btnClasses = item.isActive ? 'btn--voldemort-multiple-active' : 'btn--voldemort-multiple-inactive';
+        } else {
+            btnClasses = item.isActive ? 'btn--voldemort-unique-active' : 'btn--voldemort-unique-inactive';
+        }
+        return btnClasses;
     },
 
     renderVoldemortChildren(item, key) {
@@ -27,28 +38,20 @@ const Voldemort = React.createClass({
             toggleButton = <button onClick={this.toggleOpen.bind(this, item)} className={'btn btn--toggle ' + (item.isOpen ? 'is-open' : '')}></button>;
         }
         if(item.isSelectable) {
-            selectButton = <button onClick={this.toggleActive.bind(this, item)} className={'btn ' + (item.isActive ? 'btn--voldemort-active' : 'btn--voldemort-inactive')}></button>;
+            selectButton = <button onClick={this.toggleActive.bind(this, item)}
+                                   className={this.getBtnClass(item) + ' btn'}></button>;
         }
 
         if(item.hasChildren) {
             return (<li className={classNames}
-                        key={key}>
-                        {selectButton}
-                        {item.name}
-                        {toggleButton}
-                        <ul>
+                        key={key}>{toggleButton}{selectButton}{item.name}<ul>
                             {item.items.map((child, i)=>
                                 this.renderVoldemortChildren(child, i)
                             )}
                         </ul>
                     </li>);
         }
-        return <li className={classNames}
-                   key={key}>
-                   {selectButton}
-                   {item.name}
-                   {toggleButton}
-               </li>;
+        return <li className={classNames}key={key}>{toggleButton}{selectButton}{item.name}</li>;
     },
 
     renderVoldemort() {
@@ -62,7 +65,7 @@ const Voldemort = React.createClass({
                 }
             });
         } else {
-            content = <li> empty </li>;
+            content = null;
         }
         return content;
     },

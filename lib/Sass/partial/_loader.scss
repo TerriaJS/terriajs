@@ -9,6 +9,7 @@
   padding: $padding $padding $padding $padding*3 !important;
   margin-bottom: $padding;
   position: relative;
+  display: inline-block;
   @extend .icon;
   @extend .icon-loader;
   &:before{

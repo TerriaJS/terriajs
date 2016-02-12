@@ -31,25 +31,39 @@
   }
 }
 
+.icon-loader:before{
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
 
 // Icons
 //
-// .icon-right-arrow -  icon
-// .icon-clear - icon
-// .icon-add - icon
-// .icon-remove - icon
-// .icon-eye-hidden - icon
-// .icon-location - icon
-// .icon-check_box - icon
-// .icon-caret-right - icon
-// .icon-search - icon
-// .icon-eye - icon
-// .icon-share - icon
-// .icon-sphere - icon
-// .icon-caret-down - icon
-// .icon-full-screen - icon
-// .icon-loader - icon
-// .icon-location -  icon
+//.icon-add - icon
+//.icon-checkbox-checked - icon
+//.icon-checkbox-off - icon
+//.icon-checkbox-on - icon
+//.icon-clear - icon
+//.icon-close - icon
+//.icon-closed - icon
+//.icon-decrease - icon
+//.icon-expand - icon
+//.icon-increase - icon
+//.icon-invisible - icon
+//.icon-left - icon
+//.icon-loader - icon
+//.icon-location - icon
+//.icon-minus - icon
+//.icon-opened - icon
+//.icon-radio-off - icon
+//.icon-radio-on - icon
+//.icon-refresh - icon
+//.icon-remove - icon
+//.icon-right - icon
+//.icon-search - icon
+//.icon-share - icon
+//.icon-sphere - icon
+//.icon-visible - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -73,6 +87,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+
+
+
 .icon-right:before {
     content: "\e900";
 }
@@ -81,6 +99,9 @@
 }
 .icon-left:before {
     content: "\e902";
+}
+.icon-checkbox-checked:before {
+    content: "\e903";
 }
 .icon-closed:before {
     content: "\e904";
@@ -124,33 +145,27 @@
 .icon-refresh:before {
     content: "\e913";
 }
-.icon-drag-drop:before {
-    content: "\e914";
-}
 .icon-decrease:before {
     content: "\e915";
 }
 .icon-increase:before {
     content: "\e916";
 }
-.icon-plus:before {
-    content: "\e917";
-}
 .icon-minus:before {
     content: "\e918";
 }
-
-.icon-checkbox-checked:before {
-    content: "\e903";
+.icon-checkbox-off:before {
+    content: "\e917";
 }
-.icon-checkbox-unchecked:before {
-    content: "\e91a";
-}
-.icon-radio-checked:before {
-    content: "\e90a";
-}
-.icon-radio-unchecked:before {
+.icon-checkbox-on:before {
     content: "\e919";
 }
+.icon-radio-off:before {
+    content: "\e91a";
+}
+.icon-radio-on:before {
+    content: "\e91b";
+}
+
 
 
