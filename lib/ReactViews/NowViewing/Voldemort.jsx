@@ -33,10 +33,16 @@ const Voldemort = React.createClass({
         let selectButton = null;
         const classNames = 'voldemort__children ' + (item.isOpen ? 'is-open' : '') + ' ' + (item.hasChildren ? 'has-children' : '');
 
-        if(item.hasChildren) {
+        // !isVisible => hides this concept and all its children
+        if(!item.isVisible) {
+            return null;
+        }
+
+        // if Visible, calculate class names for buttons
+        if (item.hasChildren) {
             toggleButton = <button onClick={this.toggleOpen.bind(this, item)}
-                                   className={'btn btn--toggle ' + (item.isOpen ? 'is-open' : '')}
-                                   title='open voldemort'></button>;
+                                       className={'btn btn--toggle ' + (item.isOpen ? 'is-open' : '')}
+                                       title='open voldemort'></button>;
         }
         if(item.isSelectable) {
             selectButton = <button onClick={this.toggleActive.bind(this, item)}
@@ -44,17 +50,32 @@ const Voldemort = React.createClass({
                                    title='select voldemort'></button>;
         }
 
+        // !name => shows the children, but without the dropdown option
+        if(!item.name && item.hasChildren) {
+            return (<li className={classNames}
+                          key={key}>
+                          <ul>
+                              {item.items.map((child, i)=>
+                                  this.renderVoldemortChildren(child, i, item)
+                              )}
+                          </ul>
+                      </li>);
+        }
+
+        // both visible and has name
+        // - has children
         if(item.hasChildren) {
             return (<li className={classNames}
-                        key={key}>
-                        <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
-                        <ul>
-                            {item.items.map((child, i)=>
-                                this.renderVoldemortChildren(child, i, item)
-                            )}
-                        </ul>
-                    </li>);
+                            key={key}>
+                            <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
+                            <ul>
+                                {item.items.map((child, i)=>
+                                    this.renderVoldemortChildren(child, i, item)
+                                )}
+                            </ul>
+                        </li>);
         }
+        // - no children
         return <li className={classNames}key={key}>
                   <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
                 </li>;
@@ -65,11 +86,9 @@ const Voldemort = React.createClass({
         let content;
 
         if(nowViewingItem.concepts && nowViewingItem.concepts.length > 0) {
-            content = nowViewingItem.concepts.map((item, i)=>{
-                if(item.name && item.isVisible) {
-                    return this.renderVoldemortChildren(item, i);
-                }
-            });
+            content = nowViewingItem.concepts.map((item, i)=>
+                    this.renderVoldemortChildren(item, i)
+            );
         } else {
             content = null;
         }
