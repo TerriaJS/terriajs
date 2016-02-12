@@ -43,14 +43,18 @@ const Voldemort = React.createClass({
 
         if(item.hasChildren) {
             return (<li className={classNames}
-                        key={key}>{toggleButton}{selectButton}{item.name}<ul>
+                        key={key}>
+                        <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
+                        <ul>
                             {item.items.map((child, i)=>
                                 this.renderVoldemortChildren(child, i, item)
                             )}
                         </ul>
                     </li>);
         }
-        return <li className={classNames}key={key}>{toggleButton}{selectButton}{item.name}</li>;
+        return <li className={classNames}key={key}>
+                  <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
+                </li>;
     },
 
     renderVoldemort() {
