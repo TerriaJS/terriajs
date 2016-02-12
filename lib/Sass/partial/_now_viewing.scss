@@ -189,7 +189,9 @@ $now-viewing-margin: $padding-small - 1px;
 // Voldemort
 
 .voldemort{
-  padding: $padding;
+  .voldemort__inner{
+    padding: $padding;
+  }
   ul{
     @extend .list-reset;
     @extend .clearfix;
