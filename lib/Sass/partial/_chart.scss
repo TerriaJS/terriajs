@@ -48,20 +48,16 @@ text {
   position: relative;
 }
 
-.chart-wrapper {
+.preview-chart-wrapper {
   position: relative;
 }
 
-.mini-chart-buttons {
+.btn--chart-expand {
   position: absolute;
   top: -15px;
-  width: 100%;
-}
-
-.btn--chart-expand {
   background: $color-primary;
   padding: 1px 8px;
-  float: right;
+  right: 0;
 }
 
 .btn--close-chart-panel{
