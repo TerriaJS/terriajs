@@ -18,10 +18,9 @@ const Voldemort = React.createClass({
         item.toggleActive();
     },
 
-    getBtnClass(item) {
+    getBtnClass(item, parent) {
         let btnClasses;
-
-        if(item.allowMultiple) {
+        if(parent && parent.allowMultiple) {
             btnClasses = item.isActive ? 'btn--voldemort-multiple-active' : 'btn--voldemort-multiple-inactive';
         } else {
             btnClasses = item.isActive ? 'btn--voldemort-unique-active' : 'btn--voldemort-unique-inactive';
@@ -29,7 +28,7 @@ const Voldemort = React.createClass({
         return btnClasses;
     },
 
-    renderVoldemortChildren(item, key) {
+    renderVoldemortChildren(item, key, parent) {
         let toggleButton = null;
         let selectButton = null;
         const classNames = 'voldemort__children ' + (item.isOpen ? 'is-open' : '') + ' ' + (item.hasChildren ? 'has-children' : '');
@@ -39,14 +38,14 @@ const Voldemort = React.createClass({
         }
         if(item.isSelectable) {
             selectButton = <button onClick={this.toggleActive.bind(this, item)}
-                                   className={this.getBtnClass(item) + ' btn'}></button>;
+                                   className={this.getBtnClass(item, parent) + ' btn'}></button>;
         }
 
         if(item.hasChildren) {
             return (<li className={classNames}
                         key={key}>{toggleButton}{selectButton}{item.name}<ul>
                             {item.items.map((child, i)=>
-                                this.renderVoldemortChildren(child, i)
+                                this.renderVoldemortChildren(child, i, item)
                             )}
                         </ul>
                     </li>);
