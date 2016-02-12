@@ -31,6 +31,12 @@ Change Log
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
 * Recognises the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
+* Nicer formatting of datetimes from csv files in the feature info panel.
+* Introduced five new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, "-"]`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `["na", "NA"]`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to black. This colour is used to display null values. It is also used to colour points when no variable is selected.
+  - `nullLabel`: A string used to label null or blank values in the legend. Defaults to ''.
 * Improved formatting of datetimes from csv files in the feature info panel.
 * Introduced three new json tableStyle parameters:
   - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
@@ -66,6 +72,7 @@ Change Log
 * Improved handling of lat/lon csv files with missing lat or lon values.
 * Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
 * Added `CkanCatalogItem`, which can be used to reference a particular resource of any compatible type on a CKAN server.
+* Fixes a bug that caused the Now Viewing tab to display incorrectly in Internet Explorer 11 when switching directly to it from the Data Catalogue tab.
 
 ### 1.0.54
 
