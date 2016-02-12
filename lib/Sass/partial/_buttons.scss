@@ -78,53 +78,63 @@ $btn-setting-size: 35px;
 
 // Icon Buttons
 //
-// .btn--add - icon button
-// .btn--checkbox-checked - icon button
-// .btn--checkbox-unchecked - icon button
-// .btn--close - icon button
-// .btn--decrease - icon button
-// .btn--expand - icon button
-// .btn--increase - icon button
-// .btn--left - icon button
-// .btn--loader - icon button
-// .btn--radio-checked - icon button
-// .btn--radio-unchecked - icon button
-// .btn--refresh - icon button
-// .btn--remove - icon button
-// .btn--right - icon button
-// .btn--share - icon button
-// .btn--sphere - icon button
-// .btn--opened - icon button
-// .btn--closed - icon button
-// .btn--visible - icon button
-// .btn--invisible - icon button 
+//.btn--add - icon button
+//.btn--checkbox-checked - icon button
+//.btn--checkbox-off - icon button
+//.btn--checkbox-on - icon button
+//.btn--clear - icon button
+//.btn--close - icon button
+//.btn--closed - icon button
+//.btn--decrease - icon button
+//.btn--expand - icon button
+//.btn--increase - icon button
+//.btn--invisible - icon button
+//.btn--left - icon button
+//.btn--loader - icon button
+//.btn--location - icon button
+//.btn--minus - icon button
+//.btn--opened - icon button
+//.btn--radio-off - icon button
+//.btn--radio-on - icon button
+//.btn--refresh - icon button
+//.btn--remove - icon button
+//.btn--right - icon button
+//.btn--search - icon button
+//.btn--share - icon button
+//.btn--sphere - icon button
+//.btn--visible - icon button
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
 //
 // Style guide: Buttons.icon-button
 
-$icons: 
+$icons:
 add,
 checkbox-checked,
-checkbox-unchecked,
+checkbox-off,
+checkbox-on,
+clear,
 close,
+closed,
 decrease,
 expand,
 increase,
+invisible,
 left,
 loader,
-radio-checked,
-radio-unchecked,
+location,
+minus,
+opened,
+radio-off,
+radio-on,
 refresh,
 remove,
 right,
-share,
-sphere,
-opened,
-closed,
 visible,
-invisible;
+search,
+share,
+sphere;
 
 
 @each $icon in $icons {
@@ -439,6 +449,8 @@ a.btn--map{
 .btn--dropdown{
   width: 100%;
   border: 2px solid $grey-lighter;
+  color: $modal-text;
+  background: #fff;
   &:hover,
   &:focus{
     border-color:$color-primary;
