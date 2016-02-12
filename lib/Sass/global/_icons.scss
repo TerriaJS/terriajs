@@ -31,25 +31,39 @@
   }
 }
 
+.icon-loader:before{
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
 
 // Icons
 //
-// .icon-right-arrow -  icon
-// .icon-clear - icon
-// .icon-add - icon
-// .icon-remove - icon
-// .icon-eye-hidden - icon
-// .icon-location - icon
-// .icon-check_box - icon
-// .icon-caret-right - icon
-// .icon-search - icon
-// .icon-eye - icon
-// .icon-share - icon
-// .icon-sphere - icon
-// .icon-caret-down - icon
-// .icon-full-screen - icon
-// .icon-loader - icon
-// .icon-location -  icon
+//.icon-add - icon
+//.icon-checkbox-checked - icon
+//.icon-checkbox-off - icon
+//.icon-checkbox-on - icon
+//.icon-clear - icon
+//.icon-close - icon
+//.icon-closed - icon
+//.icon-decrease - icon
+//.icon-expand - icon
+//.icon-increase - icon
+//.icon-invisible - icon
+//.icon-left - icon
+//.icon-loader - icon
+//.icon-location - icon
+//.icon-minus - icon
+//.icon-opened - icon
+//.icon-radio-off - icon
+//.icon-radio-on - icon
+//.icon-refresh - icon
+//.icon-remove - icon
+//.icon-right - icon
+//.icon-search - icon
+//.icon-share - icon
+//.icon-sphere - icon
+//.icon-visible - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -73,14 +87,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-remove:before {
-    content: "\e918";
-}
+
+
+
+
 .icon-right:before {
     content: "\e900";
 }
+.icon-invisible:before {
+    content: "\e901";
+}
 .icon-left:before {
     content: "\e902";
+}
+.icon-checkbox-checked:before {
+    content: "\e903";
+}
+.icon-closed:before {
+    content: "\e904";
+}
+.icon-search:before {
+    content: "\e905";
+}
+.icon-visible:before {
+    content: "\e906";
+}
+.icon-share:before {
+    content: "\e907";
 }
 .icon-clear:before {
     content: "\e908";
@@ -91,52 +124,48 @@
 .icon-add:before {
     content: "\e90b";
 }
-.icon-eye-hidden:before {
-    content: "\e901";
-}
-.icon-check_box:before {
-    content: "\e903";
-}
-.icon-caret-right:before {
-    content: "\e904";
-}
-.icon-search:before {
-    content: "\e905";
-}
-.icon-eye:before {
-    content: "\e906";
-}
-.icon-share:before {
-    content: "\e907";
-}
-.icon-refresh:before {
-    content: "\e912";
-}
 .icon-sphere:before {
     content: "\e90c";
 }
-.icon-caret-down:before {
+.icon-opened:before {
     content: "\e90d";
 }
 .icon-expand:before {
     content: "\e90e";
 }
-.icon-decrease:before {
-    content: "\e914";
-}
-.icon-increase:before {
-    content: "\e915";
-}
-.icon-add:before {
-    content: "\e916";
-}
 .icon-loader:before {
     content: "\e90f";
-    -webkit-animation: fa-spin 2s infinite linear;
-    animation: fa-spin 2s infinite linear;
 }
 .icon-location:before {
     content: "\e910";
 }
+.icon-remove:before {
+    content: "\e912";
+}
+.icon-refresh:before {
+    content: "\e913";
+}
+.icon-decrease:before {
+    content: "\e915";
+}
+.icon-increase:before {
+    content: "\e916";
+}
+.icon-minus:before {
+    content: "\e918";
+}
+.icon-checkbox-off:before {
+    content: "\e917";
+}
+.icon-checkbox-on:before {
+    content: "\e919";
+}
+.icon-radio-off:before {
+    content: "\e91a";
+}
+.icon-radio-on:before {
+    content: "\e91b";
+}
+
 
 

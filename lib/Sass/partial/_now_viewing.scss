@@ -185,4 +185,65 @@ $now-viewing-margin: $padding-small - 1px;
   }
 }
 
+// Temp
+// Voldemort
+
+.voldemort{
+  .voldemort__inner{
+    padding: $padding;
+  }
+  ul{
+    @extend .list-reset;
+    @extend .clearfix;
+  }
+  .has-children{
+    > span{
+      text-transform: uppercase;
+    }
+  }
+  .voldemort__children {
+    > ul{
+      display: none;
+    }
+    &.is-open{
+      > ul{
+        display: block;
+      }
+    }
+  }
+}
+
+.voldemort__children__header{
+  @extend .flex;
+  span, .btn{
+    padding: $padding-small 0;
+  }
+  span{
+    width: 100%;
+    line-height: 22px;
+    }
+  .btn{
+    width: 30px;
+    &:before{
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.btn--voldemort-unique-active{
+  @extend .btn--radio-on;
+}
+
+.btn--voldemort-unique-inactive{
+  @extend .btn--radio-off;
+}
+
+.btn--voldemort-multiple-active{
+  @extend .btn--checkbox-on;
+}
+
+.btn--voldemort-multiple-inactive{
+  @extend .btn--checkbox-off;
+}
+
 

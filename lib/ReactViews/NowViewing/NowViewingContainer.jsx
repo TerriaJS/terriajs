@@ -3,8 +3,8 @@
 import React from 'react';
 import NowViewingItem from './NowViewingItem.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from './ObserveModelMixin';
-import arrayContains from '../Core/arrayContains';
+import ObserveModelMixin from './../ObserveModelMixin';
+import arrayContains from '../../Core/arrayContains';
 
 const NowViewingContainer = React.createClass({
     mixins: [ObserveModelMixin],
