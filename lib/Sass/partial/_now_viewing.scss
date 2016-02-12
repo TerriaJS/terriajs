@@ -221,12 +221,20 @@ $now-viewing-margin: $padding-small - 1px;
   }
 }
 
-.btn--voldemort-active{
+.btn--voldemort-unique-active{
   @extend .btn--radio-checked;
 }
 
-.btn--voldemort-inactive{
+.btn--voldemort-unique-inactive{
   @extend .btn--radio-unchecked;
+}
+
+.btn--voldemort-multiple-active{
+  @extend .btn--checkbox-checked;
+}
+
+.btn--voldemort-multiple-inactive{
+  @extend .btn--checkbox-unchecked;
 }
 
 
