@@ -65,6 +65,7 @@ Change Log
 * Fix Leaflet feature selection when zoomed out enough that the world is repeated.
 * Improved handling of lat/lon csv files with missing lat or lon values.
 * Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
+* Added `CkanCatalogItem`, which can be used to reference a particular resource of any compatible type on a CKAN server.
 
 ### 1.0.54
 
