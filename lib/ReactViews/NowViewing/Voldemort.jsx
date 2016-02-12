@@ -80,7 +80,7 @@ const Voldemort = React.createClass({
                       </li>);
         }
         // - no children, show only title and select options
-        return <li className={classNames}key={key}>
+        return <li className={classNames} key={key}>
                 <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
               </li>;
 
