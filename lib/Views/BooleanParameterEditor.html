@@ -8,13 +8,13 @@
 </div>
 <div data-bind="visible: parameter.hasNamedStates">
     <div class="parameter-editor-table-left">
-        <input type="radio" data-bind="value: true, checked: value, attr { title: trueDescription, id: elementID + '-true', name: elementID }" />
+        <input type="radio" data-bind="value: true, checked: value, attr: { title: trueDescription, id: elementID + '-true', name: elementID }" />
     </div>
     <div class="parameter-editor-table-right">
         <label class="parameter-editor-boolean-checkbox" data-bind="text: parameter.trueName, attr: { for: elementID + '-true', title: trueDescription }"></label>
     </div>
     <div class="parameter-editor-table-left">
-        <input type="radio" data-bind="value: false, checked: value, attr { title: falseDescription, id: elementID + '-false', name: elementID }" />
+        <input type="radio" data-bind="value: false, checked: value, attr: { title: falseDescription, id: elementID + '-false', name: elementID }" />
     </div>
     <div class="parameter-editor-table-right">
         <label class="parameter-editor-boolean-checkbox" data-bind="text: parameter.falseName, attr: { for: elementID + '-false', title: falseDescription }"></label>
