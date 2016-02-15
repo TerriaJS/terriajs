@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.0.1
+
+* Fixed a bug that caused the last selected ABS concept not to appear in the feature info panel.
+
 ### 2.0.0
 
 * The following previously-deprecated functionality was removed in this version:
