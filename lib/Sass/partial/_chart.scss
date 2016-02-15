@@ -77,7 +77,7 @@ text {
   position: absolute;
   top: -15px;
   background: $color-primary;
-  color: $modal-text;
+  color: white; // TODO
   font-family: $font-pop;
   border: none;
   padding: 1px 8px;
@@ -85,15 +85,23 @@ text {
   width: auto;
 }
 
-.chart-expand .btn--dropdown-option{
+.chart-expand .btn--dropdown-option {
   width: auto;
   float: left;
   color: $color-primary;
   &:hover, &:focus{
-    color: orange;
+    background: $color-primary;
+    color: orange;  // TODO
   }
 }
 
 .chart-expand .dropdown__list {
-  width: 50%;  // TODO: fix this
+  // undoing btn--dropdown effects.
+  width: auto;
+  right: 0;
+  left: auto;
+}
+
+.chart-expand .dropdown__list li {
+  display: inline;
 }
