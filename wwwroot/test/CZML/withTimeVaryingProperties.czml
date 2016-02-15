@@ -1,0 +1,81 @@
+[
+    {
+        "id": "document",
+        "name": "simple",
+        "version": "1.0",
+        "clock": {
+            "interval": "2012/2016"
+        }
+    },
+    {
+        "properties": {
+            "Type": [
+                {
+                    "interval": "2012/2013",
+                    "value": "ABC"
+                },
+                {
+                    "interval": "2013/2016",
+                    "value": "DEF"
+                }
+            ],
+            "Name": "Test",
+            "Support table": {
+                "value": [
+                    {
+                        "Capacity": "14.4",
+                        "Year": 2010
+                    },
+                    {
+                        "Capacity": "22.8",
+                        "Year": 2011
+                    },
+                    {
+                        "Capacity": "10.7",
+                        "Year": 2012
+                    }
+                ]
+            }
+        },
+        "name": "Test Zone",
+        "polygon": {
+            "material": {
+                "solidColor": {
+                    "color": {
+                        "rgba": [
+                            255,
+                            255,
+                            255,
+                            178
+                        ]
+                    }
+                }
+            },
+            "outline": true,
+            "outlineColor": {
+                "rgba": [
+                    50,
+                    50,
+                    50,
+                    200
+                ]
+            },
+            "positions": {
+                "cartographicDegrees": [
+                    149,
+                    -32,
+                    0,
+                    151,
+                    -32,
+                    0,
+                    151,
+                    -34,
+                    0,
+                    149,
+                    -34,
+                    0
+                ]
+            }
+        }
+    }
+]

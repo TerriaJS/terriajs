@@ -9,10 +9,38 @@
         <span class="feature-info-panel-section-label" data-bind="text: catalogItemName"></span>
         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
     </div>
-    <div class="feature-info-panel-section-content-wrapper" data-bind ="css:feature == terria.selectedFeature ?'open': 'closed'">
-        <div class="feature-info-panel-section-content" data-bind="markdown: info, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
-        <div class="feature-info-panel-section-components" data-bind="foreach: $root.getComponents()">
-            <div class="feature-info-panel-section-component" data-bind="embeddedComponent: $data"></div>
+    <div class="feature-info-panel-section-content-wrapper" data-bind="css:feature == terria.selectedFeature ?'open': 'closed'">
+        <div class="feature-info-panel-section-content" data-bind="html: templatedInfo, visible: templatedInfo"></div>
+        <button class="feature-info-panel-text-button" data-bind="visible: templatedInfo && !rawDataVisible, click: showRawData">Show Raw Data</button>
+        <button class="feature-info-panel-text-button" data-bind="visible: templatedInfo && rawDataVisible, click: hideRawData">Hide Raw Data</button>
+        <div class="feature-info-panel-section-content" data-bind="html: rawData, visible: rawData && (!templatedInfo || rawDataVisible),
+          css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
+
+        <!-- ko if: rawData && (!templatedInfo || rawDataVisible) && dataDownloads.length > 0 -->
+        <div class="feature-info-panel-download-dropdown">
+            <div class="feature-info-panel-download-dropdown-inner"
+                 data-bind="css: { 'feature-info-panel-download-dropdown-inner-active': downloadOptionsVisible}, style: downloadDropdownPosition">
+                <a class="feature-info-panel-download-option" data-bind="attr: { download: catalogItemName + ':' + name + '.' + dataDownloads[0].ext,
+                    href: dataDownloads[0].href }, click: checkDataUriCompatibility, css: { 'feature-info-panel-download-option-first': dataDownloads.length > 1 }">
+                    <span class="feature-info-panel-download-icon" data-bind="cesiumSvgPath: { path: svgDownload, width: 1792, height: 1792 }"></span>
+                    <span class="feature-info-panel-download-text">Download as <!-- ko text: dataDownloads[0].name --><!-- /ko --></span>
+                </a>
+
+                <button class="feature-info-panel-download-show-options"
+                        data-bind="click: toggleDownloadOptions, visible: dataDownloads.length > 1, cesiumSvgPath: { path: svgArrowDown, width: 32, height: 32 }">
+                </button>
+
+                <ul class="feature-info-panel-download-options" data-bind="if: dataDownloads.length > 0">
+                    <li data-bind="foreach: dataDownloads.slice(1)">
+                        <a class="feature-info-panel-download-option"
+                           data-bind="attr: { download: $root.catalogItemName + ':' + $root.name + '.' + $data.ext, href: $data.href },
+                            click: $root.checkDataUriCompatibility.bind($root)">
+                            Download as <!-- ko text: name --><!-- /ko -->
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
+        <!-- /ko -->
     </div>
 </div>

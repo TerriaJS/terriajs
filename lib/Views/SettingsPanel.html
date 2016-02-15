@@ -14,8 +14,8 @@
             <div class="settings-panel-section-content" id="base-maps">
                 <div class="settings-panel-base-map-label" data-bind="text: mouseOverBaseMap ? mouseOverBaseMap.catalogItem.name : terria.baseMap.name"></div>
                 <div class="settings-panel-base-map-choices" data-bind="foreach: baseMaps">
-                <button class="settings-panel-base-map-button" data-bind="css: { 'settings-panel-base-map-button-selected': catalogItem === $root.terria.baseMap }, event: { mouseover: $root.changeHighlightedBaseMap.bind($root), mouseout: $root.resetHightedBaseMap.bind($root) }, click: $root.selectBaseMap.bind($root)" >
-                    <img  data-bind="attr: { src: image, title: catalogItem.name }" width="75" height="75" />
+                <button class="settings-panel-base-map-button" data-bind="css: { 'settings-panel-base-map-button-selected': catalogItem === $root.terria.baseMap }, event: { mouseover: $root.changeHighlightedBaseMap.bind($root), mouseout: $root.resetHightedBaseMap.bind($root) }, click: $root.selectBaseMap.bind($root)" style='height: 77px; width: 77px;' >
+                    <img  data-bind="attr: { src: image, title: catalogItem.name, alt: catalogItem.name }"/>
                 </button>
                 </div>
             </div>

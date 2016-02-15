@@ -2,7 +2,7 @@
 TerriaJS
 ============
 
-[![Build Status](https://travis-ci.org/NICTA/TerriaJS.svg?branch=master)](https://travis-ci.org/NICTA/TerriaJS)
+[![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=master)](https://travis-ci.org/TerriaJS/terriajs)
 
 TerriaJS is a library for building rich, web-based geospatial data explorers.  It uses [Cesium](https://cesiumjs.org) for a full 3D experience.  Think Google Earth, except it runs in a web browser without a plugin.  It also uses [Leaflet](http://leafletjs.com/) for a basic 2D experience on systems that can't run Cesium.
 

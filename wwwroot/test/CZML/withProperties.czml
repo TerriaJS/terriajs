@@ -1,0 +1,69 @@
+[
+    {
+        "id": "document",
+        "name": "simple",
+        "version": "1.0"
+    },
+    {
+        "properties": {
+            "Type": "ABC",
+            "Name": "Test",
+            "Support table": {
+                "value": [
+                    {
+                        "Capacity": "14.4",
+                        "Year": 2010
+                    },
+                    {
+                        "Capacity": "22.8",
+                        "Year": 2011
+                    },
+                    {
+                        "Capacity": "10.7",
+                        "Year": 2012
+                    }
+                ]
+            }
+        },
+        "name": "Test Zone",
+        "polygon": {
+            "material": {
+                "solidColor": {
+                    "color": {
+                        "rgba": [
+                            255,
+                            255,
+                            255,
+                            178
+                        ]
+                    }
+                }
+            },
+            "outline": true,
+            "outlineColor": {
+                "rgba": [
+                    50,
+                    50,
+                    50,
+                    200
+                ]
+            },
+            "positions": {
+                "cartographicDegrees": [
+                    146,
+                    -35,
+                    0,
+                    148,
+                    -35,
+                    0,
+                    148,
+                    -33,
+                    0,
+                    146,
+                    -33,
+                    0
+                ]
+            }
+        }
+    }
+]

@@ -17,7 +17,7 @@
 				"material":"Stainless Steel",
 				"number_of_":2,
 				"comments":"Also associated with projects CCR6 and CKE6",
-				"documents":"../photos/55/k232p114.jpg",
+				"documents":{"#1":4, "#2":5},
 				"inspectors":null,
 				"inspection":"2009-12-14Z",
 				"constructi":"2009-12-17Z",
@@ -28,12 +28,12 @@
 				"positional":"GPS Corrected 1.0M",
 				"owner":"415",
 				"project_nu":"CLE5",
-				"file_numbe":null,
+				"file.number.":10,
 				"folder_num":null,
 				"drawing_nu":null,
 				"survey_num":null,
 				"condition":2,
-				"historic_c":0E-11,
+				"historic#.":-12,
 				"funding_ba":"Capex"
 			}
 		},
@@ -52,7 +52,7 @@
 				"material":"Stainless Steel",
 				"number_of_":1,
 				"comments":null,
-				"documents":"../photos/69/R55p15.jpg",
+				"documents":{"#1":-4, "#2":15},
 				"inspectors":null,
 				"inspection":"2012-09-11Z",
 				"constructi":null,
@@ -63,12 +63,12 @@
 				"positional":"GPS Corrected 1.0M",
 				"owner":"TBA",
 				"project_nu":null,
-				"file_numbe":null,
+				"file.number.":11,
 				"folder_num":null,
 				"drawing_nu":null,
 				"survey_num":null,
 				"condition":1,
-				"historic_c":0E-11,
+				"historic#.":-11,
 				"funding_ba":"Initial"
 			}
 		}

@@ -3,6 +3,8 @@
 /*global require,describe,it,expect,beforeEach*/
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var CatalogItem = require('../../lib/Models/CatalogItem');
+var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
+var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var CatalogItemNameSearchProviderViewModel = require('../../lib/ViewModels/CatalogItemNameSearchProviderViewModel');
 var inherit = require('../../lib/Core/inherit');
 var runLater = require('../../lib/Core/runLater');
@@ -88,6 +90,82 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
         });
     });
 
+    it('finds results of a certain type in a case-insensitive manner', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new WebMapServiceCatalogItem(terria);
+        item1.name = 'WMS item to find';
+        catalogGroup.add(item1);
+
+        var item2 = new GeoJsonCatalogItem(terria, "");
+        item2.name = 'GeoJson item to find';
+        catalogGroup.add(item2);
+
+        searchProvider.search('to is:wMs').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('WMS item to find');
+            done();
+        });
+    });
+
+    it('finds results not of a certain type in a case-insensitive manner', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new WebMapServiceCatalogItem(terria);
+        item1.name = 'WMS item to find';
+        catalogGroup.add(item1);
+
+        var item2 = new GeoJsonCatalogItem(terria, "");
+        item2.name = 'GeoJson item to find';
+        catalogGroup.add(item2);
+
+        searchProvider.search('to -is:wMs').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('GeoJson item to find');
+            done();
+        });
+    });
+
+    it('finds results having a certain url', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new CatalogItem(terria);
+        item1.name = 'Server 1 item to find';
+        item1.url = "http://server1.gov.au/page";
+        catalogGroup.add(item1);
+
+        var item2 = new CatalogItem(terria);
+        item2.name = 'Server 2 item to find';
+        item2.url = "http://server2.gov.au/page";
+        catalogGroup.add(item2);
+
+        searchProvider.search('to url:server1.gov').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('Server 1 item to find');
+            done();
+        });
+    });
+
+    it('finds results that do not have a certain url', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new CatalogItem(terria);
+        item1.name = 'Server 1 item to find';
+        item1.url = "http://server1.gov.au/page";
+        catalogGroup.add(item1);
+
+        var item2 = new CatalogItem(terria);
+        item2.name = 'Server 2 item to find';
+        item2.url = "http://server2.gov.au/page";
+        catalogGroup.add(item2);
+
+        searchProvider.search('to -url:server1.gov').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('Server 2 item to find');
+            done();
+        });
+    });
+
     it('stops searching after the specified number of items', function(done) {
         var catalogGroup = terria.catalog.group;
 
@@ -117,4 +195,46 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
             done();
         });
     });
+
+    it('combines duplicate search entries of the same item in different groups', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var group1 = new CatalogGroup(terria);
+        group1.name = 'Group1';
+        catalogGroup.add(group1);
+
+        var item = new CatalogItem(terria);
+        item.name = 'Thing to find';
+        catalogGroup.add(item);
+        group1.add(item);
+
+        searchProvider.search('to').then(function() {
+            expect(searchProvider.searchResults.length).toBe(1);
+            expect(searchProvider.searchResults[0].name).toBe('Thing to find');
+            expect(searchProvider.searchResults[0].tooltip).toMatch(/^In multiple locations including: /);
+            done();
+        });
+    });
+
+    it('does not combine different items with the same item name', function(done) {
+        var catalogGroup = terria.catalog.group;
+
+        var item1 = new CatalogItem(terria);
+        item1.name = 'Thing to find';
+        item1.id = 'thing1';
+        catalogGroup.add(item1);
+
+        var item2 = new CatalogItem(terria);
+        item2.name = 'Thing to find';
+        item2.id = 'thing2';
+        catalogGroup.add(item2);
+
+        searchProvider.search('to').then(function() {
+            expect(searchProvider.searchResults.length).toBe(2);
+            expect(searchProvider.searchResults[0].name).toBe('Thing to find');
+            expect(searchProvider.searchResults[1].name).toBe('Thing to find');
+            done();
+        });
+    });
+
 });

@@ -70,8 +70,9 @@
 
 .feature-info-panel-body {
     .opaque-to-input;
+
+    position: relative;
 }
-//data-bind="style: { 'max-width': maxWidth + 'px' }
 
 .feature-info-panel-sections {
     overflow-y: auto;
@@ -124,36 +125,72 @@
     top: 6px;
     cursor: pointer;
     font-size: 12pt;
-    color: @info-header-text-color;
+    color: @info-text-color;
 }
 
-.cesium-infoBox-defaultTable td {
-    padding-left: 10px;
-}
-
-.expand-chart-button {
-    position: relative;
-    background-color: blue;
-    border: 0;
-    height: 30px;
-    width: 75px;
-    font-size: 14px;
-    color: @panel-form-button-text-color;
-    left: 46%;
-    top: -180px;
+.feature-info-panel-text-button {
     cursor: pointer;
-}
-
-.feature-info-panel-section-content .chart-holder {
-    margin-top: 15px;
-}
-
-.feature-info-panel-section-content .download-chart-data {
+    font-size: 10pt;
     float: right;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    color: @info-text-color;
+
+    &:hover {
+        color: @panel-emphasized-text-color;
+        text-decoration: underline;
+    }
 }
 
-.feature-info-panel-section-content .download-chart-data-clear {
-    clear: both;
+.feature-info-panel-download-dropdown-inner-active {
+    position: fixed;
+
+    .feature-info-panel-download-options {
+        display: block;
+    }
+
+    .feature-info-panel-download-show-options {
+        transform: rotate(180deg);
+    }
+}
+
+.feature-info-panel-download-show-options, .feature-info-panel-download-icon {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+}
+
+.feature-info-panel-download-show-options {
+    cursor: pointer;
+    margin-top: 10px;
+    vertical-align: top;
+    margin-right: 5px;
+
+    &:hover {
+        fill: @panel-emphasized-text-color;
+    }
+}
+
+.feature-info-panel-download-dropdown {
+    float: right;
+    margin: 10px;
+    height: 35px;
+}
+
+.feature-info-panel-download-dropdown-inner {
+    background-color: rgb(76, 78, 79);
+    fill: @info-text-color;
+}
+
+.feature-info-panel-download-options {
+    display: none;
+    background-color: rgb(76, 78, 79);
+    border-top: 2px solid @panel-background-color;
+
+    & .feature-info-panel-download-option {
+        margin-left: 32px;
+    }
 }
 
 .feature-info-panel-section-components {
@@ -164,6 +201,36 @@
 }
 
 .feature-info-panel-section-component {
+}
+
+.feature-info-panel-download-option {
+    color: @info-text-color;
+    display: inline-block;
+    padding: 6px 12px 2px 2px;
+    margin: 4px 1px 4px 8px;
+    height: 19px;
+
+    &:hover {
+        color: @panel-emphasized-text-color;
+        fill: @panel-emphasized-text-color;
+        text-decoration: none;
+    }
+}
+
+.feature-info-panel-download-option-first {
+    border-right: 1px solid #CCCCCC;
+}
+
+.feature-info-panel-download-text {
+    vertical-align: 3px;
+}
+
+.feature-info-panel-download-icon {
+    margin-right: 4px;
+}
+
+.cesium-infoBox-defaultTable td {
+    padding-left: 10px;
 }
 
 @media print {

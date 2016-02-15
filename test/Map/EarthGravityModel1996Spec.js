@@ -1,10 +1,12 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeAll*/
+/*global require,describe,xdescribe,it,expect,beforeAll*/
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 var EarthGravityModel1996 = require('../../lib/Map/EarthGravityModel1996');
 
-describe('EarthGravityModel1996', function() {
+var describeIfSupported = EarthGravityModel1996.isSupported() ? describe : xdescribe;
+
+describeIfSupported('EarthGravityModel1996', function() {
     var egm96;
 
     beforeAll(function() {
