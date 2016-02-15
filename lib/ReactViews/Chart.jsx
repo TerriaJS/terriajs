@@ -27,10 +27,6 @@ const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
     _element: undefined,
 
-    _createChart(chartState) {
-        LineChart.create(this._element, chartState);
-    },
-
     propTypes: {
         colors: React.PropTypes.array,
         url: React.PropTypes.string,
@@ -45,13 +41,13 @@ const Chart = React.createClass({
         const that = this;
         const chartState = this.getChartState();
         if (defined(chartState.data)) {
-            this._createChart(chartState);
+            LineChart.create(this._element, chartState);
         } else if (defined(chartState.url)) {
             const tableStructure = new TableStructure('feature info');
             loadText(chartState.url).then(function(text) {
                 tableStructure.loadFromCsv(text);
                 chartState.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);
-                that._createChart(chartState);
+                LineChart.create(that._element, chartState);
                 return true;
             }).otherwise(function(e) {
                 throw new DeveloperError('Could not load chart data at ' + chartState.url);

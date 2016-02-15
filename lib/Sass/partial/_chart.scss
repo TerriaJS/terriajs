@@ -70,3 +70,30 @@ text {
 .chart, .chart-title {
   background: rgba(#fff, 0.15);
 }
+
+.chart-expand .btn--dropdown {
+  // largely to undo .btn--dropdown
+  // It would be better to add a class to the Add Data dropdown instead.
+  position: absolute;
+  top: -15px;
+  background: $color-primary;
+  color: $modal-text;
+  font-family: $font-pop;
+  border: none;
+  padding: 1px 8px;
+  right: 0;
+  width: auto;
+}
+
+.chart-expand .btn--dropdown-option{
+  width: auto;
+  float: left;
+  color: $color-primary;
+  &:hover, &:focus{
+    color: orange;
+  }
+}
+
+.chart-expand .dropdown__list {
+  width: 50%;  // TODO: fix this
+}

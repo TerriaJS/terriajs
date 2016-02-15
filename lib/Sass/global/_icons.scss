@@ -166,6 +166,9 @@
 .icon-radio-on:before {
     content: "\e91b";
 }
-
-
+.icon-dropdown {
+  @extend .icon-opened;
+  float: right;
+  margin-left: $padding-small;
+}
 
