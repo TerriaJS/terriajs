@@ -2,6 +2,10 @@
 //
 .location-distance{
   @extend .clearfix;
+  display: none;
+  @media(screen and min-width: $sm){
+    display: block;
+  }
   position: fixed;
   bottom: $padding*3;
   right: $padding*2;
