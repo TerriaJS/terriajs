@@ -162,8 +162,8 @@ describe('FeatureInfoPanelViewModel templating', function() {
             expect(regex.test(panel.sections[0].rawData.replace(/\n/g, ''))).toBe(true);
         });
 
-        it('formats large numbers with commas', function() {
-            expect(panel.sections[0].rawData.indexOf('1,234,567') >= 0).toBe(true);
+        it('formats large numbers without commas', function() {
+            expect(panel.sections[0].rawData.indexOf('1234567') >= 0).toBe(true);
         });
 
     });
@@ -204,17 +204,17 @@ describe('FeatureInfoPanelViewModel templating', function() {
         }).then(done).otherwise(done.fail);
     });
 
-    it('formats templated large numbers with commas', function(done) {
+    it('formats templated large numbers without commas', function(done) {
         item.featureInfoTemplate = 'Big {{big}}';
         return loadAndPick().then(function() {
-            expect(panel.sections[0].templatedInfo.indexOf('1,234,567') >= 0).toBe(true);
+            expect(panel.sections[0].templatedInfo.indexOf('1234567') >= 0).toBe(true);
         }).then(done).otherwise(done.fail);
     });
 
-    it('can format templated large numbers without commas', function(done) {
-        item.featureInfoTemplate = 'Big {{#nocommas}}{{big}}{{/nocommas}}';
+    it('can format templated large numbers with commas', function(done) {
+        item.featureInfoTemplate = 'Big {{#addcommas}}{{big}}{{/addcommas}}';
         return loadAndPick().then(function() {
-            expect(panel.sections[0].templatedInfo.indexOf('1234567') >= 0).toBe(true);
+            expect(panel.sections[0].templatedInfo.indexOf('1,234,567') >= 0).toBe(true);
         }).then(done).otherwise(done.fail);
     });
 
