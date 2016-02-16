@@ -204,19 +204,19 @@ describe('FeatureInfoPanelViewModel templating', function() {
         }).then(done).otherwise(done.fail);
     });
 
-    // it('formats templated large numbers with commas', function(done) {
-    //     item.featureInfoTemplate = 'Big {{big}}';
-    //     return loadAndPick().then(function() {
-    //         expect(panel.sections[0].templatedInfo.indexOf('1,234,567') >= 0).toBe(true);
-    //     }).then(done).otherwise(done.fail);
-    // });
+    it('formats templated large numbers with commas', function(done) {
+        item.featureInfoTemplate = 'Big {{big}}';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo.indexOf('1,234,567') >= 0).toBe(true);
+        }).then(done).otherwise(done.fail);
+    });
 
-    // it('can format templated large numbers without commas', function(done) {
-    //     item.featureInfoTemplate = 'Big {{#nocommas}}{{big}}{{/nocommas}}';
-    //     return loadAndPick().then(function() {
-    //         expect(panel.sections[0].templatedInfo.indexOf('1234567') >= 0).toBe(true);
-    //     }).then(done).otherwise(done.fail);
-    // });
+    it('can format templated large numbers without commas', function(done) {
+        item.featureInfoTemplate = 'Big {{#nocommas}}{{big}}{{/nocommas}}';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo.indexOf('1234567') >= 0).toBe(true);
+        }).then(done).otherwise(done.fail);
+    });
 
     it('can render a recursive featureInfoTemplate', function(done) {
 
