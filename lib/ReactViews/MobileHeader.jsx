@@ -1,18 +1,16 @@
 'use strict';
 import React from 'react';
-import Branding from './Branding.jsx';
 
 const MobileHeader = React.createClass({
     render() {
         return <div className='mobile__header'>
-                    <Branding onClick={this.props.showWelcome}/>
-                    <nav>
+                    <div className='mobile__nav'>
                       <label>Data</label>
-                      <ul>
+                      <ul className='nav'>
                         <li>Data Catalogue</li>
                         <li>Now Viewing</li>
                       </ul>
-                    </nav>
+                    </div>
                 </div>;
     }
 });

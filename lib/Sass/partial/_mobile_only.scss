@@ -1,0 +1,18 @@
+.mobile__header{
+    @media(screen and min-width: $sm){
+        display: none;
+    }
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.mobile__nav{
+    display: block;
+    float: left;
+    .nav{
+        display: none;
+    }
+}
+
+

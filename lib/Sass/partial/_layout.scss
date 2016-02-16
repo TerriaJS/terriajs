@@ -1,13 +1,21 @@
 .workbench{
   box-sizing: border-box;
-  width: $work-bench-width;
-  display: none;
-  @include transition(margin $animation-fast ease-in);
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  height: auto;
   @media(screen and min-width: $sm){
-    //temp
-    display: block;
-    .is-full-screen &{
-      margin-left: -$work-bench-width;
+    width: $work-bench-width;
+  }
+  nav{
+    display: none;
+    @include transition(margin $animation-fast ease-in);
+    @media(screen and min-width: $sm){
+      //temp
+      display: block;
+      .is-full-screen &{
+        margin-left: -$work-bench-width;
+      }
     }
   }
 }
