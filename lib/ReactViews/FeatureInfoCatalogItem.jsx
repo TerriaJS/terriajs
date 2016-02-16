@@ -28,7 +28,7 @@ const FeatureInfoCatalogItem = React.createClass({
 
                 count = totalFeaturesCount > maximumShownFeatureInfos ? (<li className='p1'>{maximumShownFeatureInfos}{' of '}{totalFeaturesCount}{' results are shown '}</li>) : null;
                 content = features.features.slice(0, maximumShownFeatureInfos).map((feature, i)=>{
-                    return (<FeatureInfoSection key={i} catalogItemName={features.catalogItem.name} feature={feature} clock={clock} template={featureInfoTemplate} index={i}/>);
+                    return (<FeatureInfoSection key={i} catalogItem={features.catalogItem} feature={feature} clock={clock} template={featureInfoTemplate} index={i}/>);
                 });
 
             }

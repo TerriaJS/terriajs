@@ -30,7 +30,7 @@ const Chart = React.createClass({
     propTypes: {
         colors: React.PropTypes.array,
         url: React.PropTypes.string,
-        data: React.PropTypes.array,
+        data: React.PropTypes.array,  // If data is provided instead of url, it must be in the format expected by LineChart (see below).
         domain: React.PropTypes.array,
         mini: React.PropTypes.bool,
         height: React.PropTypes.number,
@@ -46,7 +46,11 @@ const Chart = React.createClass({
             const tableStructure = new TableStructure('feature info');
             loadText(chartState.url).then(function(text) {
                 tableStructure.loadFromCsv(text);
-                chartState.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);
+                chartState.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);  // TODO: use y-columns.
+                // LineChart expects data to be [ [{x: x1, y: y1}, {x: x2, y: y2}], [...] ], but each subarray must also have a unique id property.
+                // The data id should be set to something unique, eg. its source id + column index.
+                // TODO: For now, since we are just showing the first column anyway, just set the column index to its index in the data.
+                chartState.data.forEach((datum, i)=>{datum.id = i;});
                 LineChart.create(that._element, chartState);
                 return true;
             }).otherwise(function(e) {

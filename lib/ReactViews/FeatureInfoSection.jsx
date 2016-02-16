@@ -15,7 +15,7 @@ const FeatureInfoSection = React.createClass({
         template: React.PropTypes.object,
         feature: React.PropTypes.object,
         clock: React.PropTypes.object,
-        catalogItemName: React.PropTypes.string,
+        catalogItem: React.PropTypes.object,
         index: React.PropTypes.number
     },
 
@@ -53,8 +53,8 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
-        if(defined(this.props.catalogItemName)) {
-            return this.props.catalogItemName;
+        if(defined(this.props.catalogItem.name)) {
+            return this.props.catalogItem.name;
         }
         return 'data group';
     },
@@ -65,7 +65,7 @@ const FeatureInfoSection = React.createClass({
             ADD_TAGS: CustomComponents.names(),
             ADD_ATTR: CustomComponents.attributes()
         });
-        return parseCustomHtmlToReact(html);
+        return parseCustomHtmlToReact(html, this.props.catalogItem, this.props.feature);
     },
 
     render() {

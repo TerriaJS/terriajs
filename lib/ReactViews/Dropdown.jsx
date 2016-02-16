@@ -51,7 +51,6 @@ const Dropdown = React.createClass({
 
     select(option, index, event) {
         event.stopPropagation();
-        console.log('dropdown', option, index, event);
         this.props.selectOption(option, index);
         // close drop down on select
         this.setState({

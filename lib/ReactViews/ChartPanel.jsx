@@ -31,7 +31,11 @@ const ChartPanel = React.createClass({
                 const xColumn = item.timeColumn;
                 if (defined(xColumn)) {
                     const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
-                    data = data.concat(item.tableStructure.toXYArrays(xColumn, yColumns));
+                    const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
+                    // Chart expects data to be [ [{x: x1, y: y1}, {x: x2, y: y2}], [...] ], but each subarray must also have a unique id property.
+                    const newData = item.tableStructure.toXYArrays(xColumn, yColumns);
+                    newData.forEach((datum, index)=>{datum.id = item.uniqueId + '-' + yColumnNumbers[index];});
+                    data = data.concat(newData);
                     colors = colors.concat(yColumns.map(yColumn=>yColumn.assignedColor));
                 }
             }
