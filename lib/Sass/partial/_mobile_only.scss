@@ -1,8 +1,6 @@
 .mobile__header{
+    @extend .sm-hide;
     font-family: $font-pop;
-    @media(screen and min-width: $sm){
-        display: none;
-    }
     position: absolute;
     right: 0;
     top: 0;
@@ -25,6 +23,7 @@
         position: fixed;
         left: 0;
         right: 0;
+        top: $sm-logo-height;
         background:$mobile-main-bg;
         color: $mobile-text;
         text-align: left;

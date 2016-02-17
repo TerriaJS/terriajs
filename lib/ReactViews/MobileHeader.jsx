@@ -16,7 +16,8 @@ const MobileHeader = React.createClass({
 
     toggleSearch() {
         this.setState({
-            searchIsOpen: !this.state.searchIsOpen
+            searchIsOpen: !this.state.searchIsOpen,
+            menuIsOpen: false
         });
     },
 
