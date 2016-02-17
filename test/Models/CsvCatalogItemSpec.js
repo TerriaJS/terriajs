@@ -471,11 +471,49 @@ describe('CsvCatalogItem with lat and lon', function() {
             }).otherwise(fail).then(done);
         });
 
-        it('supports nullColor', function(done) {
+        it('uses correct defaults', function(done) {
+            // nullColor is passed through to the columns as well, if not overridden explicitly.
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                nullColor: '#A0B0C0',
+                columns: {
+                    value: {
+                        replaceWithNullValues: ['bad']
+                    }
+                }
+            });
+            var nullColor = new Color(160/255, 176/255, 192/255, 1);
+            csvItem.load().then(function() {
+                function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+                expect(cval(1)).toEqual(nullColor);
+            }).otherwise(fail).then(done);
+        });
+
+        it('supports title and nullColor with column ref by name', function(done) {
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                nullColor: '#123456',
+                columns: {
+                    value: {
+                        replaceWithNullValues: ['bad'],
+                        nullColor: '#A0B0C0',
+                        title: 'Temperature'
+                    }
+                }
+            });
+            var nullColor = new Color(160/255, 176/255, 192/255, 1);
+            csvItem.load().then(function() {
+                expect(csvItem.tableStructure.columns[2].name).toEqual('Temperature');
+                function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+                expect(cval(1)).toEqual(nullColor);
+            }).otherwise(fail).then(done);
+        });
+
+        it('supports nullColor with column ref by number', function(done) {
             csvItem.url = 'test/csv/lat_lon_badvalue.csv';
             csvItem._tableStyle = new TableStyle({
                 columns: {
-                    value: {
+                    2: {
                         replaceWithNullValues: ['bad'],
                         nullColor: '#A0B0C0'
                     }
@@ -485,7 +523,6 @@ describe('CsvCatalogItem with lat and lon', function() {
             csvItem.load().then(function() {
                 function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
                 expect(cval(1)).toEqual(nullColor);
-                expect(cval(2)).not.toEqual(nullColor);
             }).otherwise(fail).then(done);
         });
 
