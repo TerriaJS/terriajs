@@ -71,6 +71,12 @@
                     </div>
                 </div>
 
+                <div class="now-viewing-section" data-bind="visible: typeof isFailed !== 'undefined' && isFailed">
+                    <div class="now-viewing-section-contents">
+                        <span data-bind="text: typeof failedMessage !== 'undefined' ? failedMessage : 'Failed.'"></span>
+                    </div>
+                </div>
+
                 <!-- ko foreach: $root.getSections($data) -->
                 <div class="now-viewing-section" data-bind="embeddedComponent: $data"></div>
                 <!-- /ko -->
