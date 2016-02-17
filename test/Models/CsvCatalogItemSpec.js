@@ -489,7 +489,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             }).otherwise(fail).then(done);
         });
 
-        it('supports title and nullColor with column ref by name', function(done) {
+        it('supports name and nullColor with column ref by name', function(done) {
             csvItem.url = 'test/csv/lat_lon_badvalue.csv';
             csvItem._tableStyle = new TableStyle({
                 nullColor: '#123456',
@@ -497,7 +497,7 @@ describe('CsvCatalogItem with lat and lon', function() {
                     value: {
                         replaceWithNullValues: ['bad'],
                         nullColor: '#A0B0C0',
-                        title: 'Temperature'
+                        name: 'Temperature'
                     }
                 }
             });
