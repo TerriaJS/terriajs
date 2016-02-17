@@ -4,9 +4,11 @@ Change Log
 
 ### 2.0.2
 
+* Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters. See wwwroot/test/init/test-tablestyle.json's CSV column-specific group for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
+* Added the following column-specific `tableStyle` parameters:
+  - `name`: renames the column.
+  - `type`: sets the column type; can be one of LON, LAT, ALT, TIME, SCALAR, or ENUM.
 * Displays large numbers in the Feature Info Panel without commas by default.
-* Implements a template tag which formats the number according to the user's locale, if available. Eg. `{{#localeFormat}}1234567.8{{/localeFormat}}` => 1,234,567.8.
-* Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters, or two additional column-specific parameters: "name" and "type". See wwwroot/test/init/test-tablestyle.json's CSV column-specific group for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
 
 ### 2.0.1
 
