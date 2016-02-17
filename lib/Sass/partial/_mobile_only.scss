@@ -1,4 +1,5 @@
 .mobile__header{
+    font-family: $font-pop;
     @media(screen and min-width: $sm){
         display: none;
     }
@@ -19,18 +20,35 @@
     max-width: 100px;
     text-align: center;
     .nav{
+        @extend .list-reset;
         display: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        background:$mobile-main-bg;
+        color: $mobile-text;
+        text-align: left;
+        .btn{
+            border-bottom: 1px solid $grey-lighter;
+            font-weight: 600;
+            width: 100%;
+        }
     }
-    h2{
-        margin: 0;
+    .btn--mobile-menu{
         text-transform: uppercase;
-        font-size: 4.5vw;
+        font-size: 20px;
         border-left: $border-style;
         border-right: $border-style;
         @include vertical-align;
         &:hover, &:focus{
             border-left: $border-style;
             border-right: $border-style;
+        }
+    }
+
+    &.is-open{
+        .nav{
+            display: block;
         }
     }
 }
@@ -41,20 +59,40 @@
     max-width: 100px;
     float: right;
     height: 100%;
+
     .btn--mobile-search{
         @extend .btn--search;
         margin: 0 auto;
         display: block;
-        font-size: 4vw;
+        font-size: 20px;
+    }
+
+    .btn--mobile-search-cancel{
+        position: absolute;
+        right: 0;
+        top: $padding-small;
+        text-transform: uppercase;
+        font-size: $font-size-mini;
+        font-weight: $font-weight-bold;
+        display: none;
     }
     .form--search-data{
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
-        padding: $padding-small;
+        padding: $padding-small $padding*6 $padding-small $padding-small;
         background: $dark;
-        visibility: hidden;
+        display: none;
+    }
+
+    &.is-open{
+        .form--search-data{
+            display: block;
+        }
+        .btn--mobile-search-cancel{
+            display: block;
+        }
     }
 }
 
