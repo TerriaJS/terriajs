@@ -11,6 +11,12 @@ const MyLocation = React.createClass({
         terria: React.PropTypes.object.isRequired
     },
 
+    _marker: undefined,
+
+    componentWillMount() {
+        this._marker = new GeoJsonCatalogItem(this.props.terria);
+    },
+
     getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(this.zoomToMyLocation);
@@ -26,9 +32,8 @@ const MyLocation = React.createClass({
         const rectangle = Rectangle.fromDegrees(longitude - 0.1, latitude - 0.1, longitude + 0.1, latitude + 0.1);
         this.props.terria.currentViewer.zoomTo(rectangle);
 
-        const marker = new GeoJsonCatalogItem(this.props.terria);
-        marker.name = 'Location';
-        marker.data = {
+        this._marker.name = 'My Location';
+        this._marker.data = {
             type: 'Feature',
             geometry: {
                 type: 'Point',
@@ -40,13 +45,13 @@ const MyLocation = React.createClass({
                 latitude: latitude
             }
         };
-        marker.style = {
+        this._marker.style = {
             'marker-size': 25,
             'marker-color': '#08ABD5',
             'stroke': '#ffffff',
             'stroke-width': 3
         };
-        marker.isEnabled = true;
+        this._marker.isEnabled = true;
     },
 
     handleCick() {
