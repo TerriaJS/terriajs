@@ -338,7 +338,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             csvItem._maxPix = Math.max.apply(null, pixelSizes);
             // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
             expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
-        }).then(function(minMax) {
+        }).then(function() {
             var csvItem2 = new CsvCatalogItem(terria);
             csvItem2._tableStyle = new TableStyle({scale: 10, scaleByValue: true });
             csvItem2.url = 'test/csv/lat_lon_val.csv';
@@ -437,6 +437,60 @@ describe('CsvCatalogItem with lat and lon', function() {
     //         done();
     //     });
     // });
+
+    describe('and per-column tableStyle', function() {
+
+        it('scales by value', function(done) {
+            csvItem.url = 'test/csv/lat_lon_val.csv';
+            csvItem._tableStyle = new TableStyle({
+                columns: {
+                    value: { // only scale the 'value' column
+                        scale: 5,
+                        scaleByValue: true
+                    }
+                }
+            });
+            return csvItem.load().then(function() {
+                var pixelSizes = csvItem.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                csvItem._minPix = Math.min.apply(null, pixelSizes);
+                csvItem._maxPix = Math.max.apply(null, pixelSizes);
+                // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
+                expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
+            }).then(function() {
+                var csvItem2 = new CsvCatalogItem(terria);
+                csvItem2._tableStyle = new TableStyle({scale: 10, scaleByValue: true });  // this time, apply it to all columns
+                csvItem2.url = 'test/csv/lat_lon_val.csv';
+                return csvItem2.load().yield(csvItem2);
+            }).then(function(csvItem2) {
+                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                var minPix = Math.min.apply(null, pixelSizes);
+                var maxPix = Math.max.apply(null, pixelSizes);
+                // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
+                expect(maxPix).toEqual(csvItem._maxPix * 2);
+                expect(minPix).toEqual(csvItem._minPix * 2);
+            }).otherwise(fail).then(done);
+        });
+
+        it('supports nullColor', function(done) {
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                columns: {
+                    value: {
+                        replaceWithNullValues: ['bad'],
+                        nullColor: '#A0B0C0'
+                    }
+                }
+            });
+            var nullColor = new Color(160/255, 176/255, 192/255, 1);
+            csvItem.load().then(function() {
+                function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
+                expect(cval(1)).toEqual(nullColor);
+                expect(cval(2)).not.toEqual(nullColor);
+            }).otherwise(fail).then(done);
+        });
+
+    });
+
 });
 
 // eg. use as entities.map(getPropertiesDate) to just get the dates of the entities.
