@@ -1,19 +1,20 @@
 html{
   font-size: 87.5%;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  &.terria{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 }
 
 body {
   background: #000;
   color: #fff;
-  overflow: hidden;
-  &#kss-node{
-    overflow-y: auto;
+  .terria &{
+    overflow: hidden;
   }
 }
 

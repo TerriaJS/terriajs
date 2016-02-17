@@ -9,9 +9,11 @@ const Branding = React.createClass({
 
     render() {
         return (
-            <button className='logo btn' onClick={this.props.onClick}>
-                <img src="./images/nationalmap-logo.png" alt="national map" width="160" />
-            </button>
+            <div className='branding'>
+                <button className='logo btn' onClick={this.props.onClick}>
+                    <img src="./images/nationalmap-logo.png" alt="national map" width="160" />
+                </button>
+            </div>
             );
     }
 });

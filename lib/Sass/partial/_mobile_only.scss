@@ -5,13 +5,56 @@
     position: absolute;
     right: 0;
     top: 0;
+    width: 50vw;
+    max-width: 180px;
+    padding: $padding-small;
+    height: 100%;
 }
 
 .mobile__nav{
     display: block;
     float: left;
+    height: 100%;
+    width: 60%;
+    max-width: 100px;
+    text-align: center;
     .nav{
         display: none;
+    }
+    h2{
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 4.5vw;
+        border-left: $border-style;
+        border-right: $border-style;
+        @include vertical-align;
+        &:hover, &:focus{
+            border-left: $border-style;
+            border-right: $border-style;
+        }
+    }
+}
+
+
+.mobile__search{
+    width: 40%;
+    max-width: 100px;
+    float: right;
+    height: 100%;
+    .btn--mobile-search{
+        @extend .btn--search;
+        margin: 0 auto;
+        display: block;
+        font-size: 4vw;
+    }
+    .form--search-data{
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: $padding-small;
+        background: $dark;
+        visibility: hidden;
     }
 }
 
