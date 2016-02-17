@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 2.0.2
+
+* Displays large numbers in the Feature Info Panel without commas by default.
+* Implements a template tag which formats the number according to the user's locale, if available. Eg. `{{#localeFormat}}1234567.8{{/localeFormat}}` => 1,234,567.8.
+
 ### 2.0.1
 
 * Fixed a bug that caused the last selected ABS concept not to appear in the feature info panel.
