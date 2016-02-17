@@ -158,14 +158,19 @@
           "url": "/build/TerriaJS/test/csv/3000s.csv",
           "opacity": 1,
           "tableStyle": {
-            "colorMap": "green-orange",
+            "colorMap": "black-orange",
             "columns": {
+              "Value": {
+                "name": "Postal code"
+              },
               "Mod10": {
                 "type": "enum",
-                "colorBins": 10
+                "colorBins": 10,
+                "name": "Last digit of postcode"
               },
               "Mod100": {
-                "colorPalette": "Spectral"
+                "colorPalette": "Spectral",
+                "name": "Last 2 digits of postcode"
               }
             }
           }
