@@ -15,7 +15,6 @@ var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var CzmlCatalogItem = require('../../lib/Models/CzmlCatalogItem');
 
-
 describe('FeatureInfoPanelViewModel', function() {
     var terria;
     var panel;
@@ -213,7 +212,8 @@ describe('FeatureInfoPanelViewModel templating', function() {
 
     it('can format templated large numbers with commas', function(done) {
         item.featureInfoTemplate = 'Big {{#localeFormat}}{{big}}{{/localeFormat}}';
-        var localeFormattedNumber = new Number(1234567).toLocaleString();
+        var number = 1234567;
+        var localeFormattedNumber = number.toLocaleString();
         if (localeFormattedNumber === '1234567') {
             // If the browser doesn't support toLocaleString in this way, we want it to fallback to using commas as thousand separator.
             localeFormattedNumber = '1,234,567';
