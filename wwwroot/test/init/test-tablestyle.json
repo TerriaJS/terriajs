@@ -161,7 +161,8 @@
             "colorMap": "green-orange",
             "columns": {
               "Mod10": {
-                "type": "enum"
+                "type": "enum",
+                "colorBins": 10
               },
               "Mod100": {
                 "colorPalette": "Spectral"
