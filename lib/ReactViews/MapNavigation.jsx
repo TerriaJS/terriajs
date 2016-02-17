@@ -1,12 +1,13 @@
 'use strict';
+import Compass from './Compass.jsx';
+import FullScreenButton from './FullScreenButton.jsx';
+import MyLocation from './MyLocation.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import SettingPanel from './SettingPanel.jsx';
-import Compass from './Compass.jsx';
-import ZoomControl from './ZoomControl.jsx';
 import SharePanel from './SharePanel.jsx';
-import FullScreenButton from './FullScreenButton.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
 import ViewerMode from '../Models/ViewerMode';
+import ZoomControl from './ZoomControl.jsx';
 
 // The map navigation region
 const MapNavigation = React.createClass({
@@ -26,7 +27,8 @@ const MapNavigation = React.createClass({
                 <li><div><a className='btn btn--map about-link__button' href='#' title='about'> About </a></div></li>
               </ul>
               {(this.props.terria.viewerMode !== ViewerMode.Leaflet) && <Compass terria={this.props.terria} />}
-              <ZoomControl terria={this.props.terria} />
+              <MyLocation terria={this.props.terria}/>
+              <ZoomControl terria={this.props.terria}/>
               </div>);
     }
 });

@@ -86,40 +86,44 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon-dropdown {
+  @extend .icon-opened;
+  float: right;
+  margin-left: $padding-small;
+}
 
-
-
-
-
-.icon-right:before {
+.icon-geolocation:before {
     content: "\e900";
 }
-.icon-invisible:before {
+.icon-right:before {
     content: "\e901";
 }
-.icon-left:before {
+.icon-invisible:before {
     content: "\e902";
 }
-.icon-checkbox-checked:before {
+.icon-left:before {
     content: "\e903";
 }
-.icon-closed:before {
+.icon-checkbox-checked:before {
     content: "\e904";
 }
-.icon-search:before {
+.icon-closed:before {
     content: "\e905";
 }
-.icon-visible:before {
+.icon-search:before {
     content: "\e906";
 }
-.icon-share:before {
+.icon-visible:before {
     content: "\e907";
 }
-.icon-clear:before {
+.icon-share:before {
     content: "\e908";
 }
-.icon-close:before {
+.icon-clear:before {
     content: "\e909";
+}
+.icon-close:before {
+    content: "\e90a";
 }
 .icon-add:before {
     content: "\e90b";
@@ -151,11 +155,11 @@
 .icon-increase:before {
     content: "\e916";
 }
-.icon-minus:before {
-    content: "\e918";
-}
 .icon-checkbox-off:before {
     content: "\e917";
+}
+.icon-minus:before {
+    content: "\e918";
 }
 .icon-checkbox-on:before {
     content: "\e919";
@@ -166,9 +170,5 @@
 .icon-radio-on:before {
     content: "\e91b";
 }
-.icon-dropdown {
-  @extend .icon-opened;
-  float: right;
-  margin-left: $padding-small;
-}
+
 

@@ -103,6 +103,7 @@ $btn-setting-size: 35px;
 //.btn--share - icon button
 //.btn--sphere - icon button
 //.btn--visible - icon button
+//.btn--geolocation -icon button
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -134,7 +135,8 @@ right,
 visible,
 search,
 share,
-sphere;
+sphere,
+geolocation;
 
 
 @each $icon in $icons {

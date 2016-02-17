@@ -6,6 +6,7 @@
   height: auto;
   @media(screen and min-width: $sm){
     width: $work-bench-width;
+    height: calc(100% - #{$logo-height});
   }
   nav{
     display: none;
@@ -14,7 +15,7 @@
       //temp
       display: block;
       .is-full-screen &{
-        margin-left: -$work-bench-width;
+        display: none;
       }
     }
   }
@@ -25,10 +26,6 @@
     top: 20px;
     right: $padding;
     z-index: 10;
-    display: none;
-    @media(screen and min-width: $sm){
-    display: block;
-  }
 }
 
 .modal-wrapper{

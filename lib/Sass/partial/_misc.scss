@@ -8,6 +8,10 @@
   left: 1rem;
   font-size: 0.5rem;
   color: rgba(#fff, 0.8);
+  display: none;
+  @media(screen and min-width: $sm){
+    display: block;
+  }
 }
 
 .no-results{

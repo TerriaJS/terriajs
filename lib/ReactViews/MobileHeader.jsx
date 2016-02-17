@@ -34,8 +34,8 @@ const MobileHeader = React.createClass({
                     <div className={'mobile__nav ' + (this.state.menuIsOpen ? 'is-open' : '')}>
                       <button className='btn--mobile-menu btn' onClick={this.toggleMenu}>Data</button>
                       <ul className='nav'>
-                        <li><button className='btn'> Data Catalogue</button></li>
-                        <li><button className='btn'> Now Viewing</button></li>
+                        <li><button className='btn btn--mobile-nav'> Data Catalogue</button></li>
+                        <li><button className='btn btn--mobile-nav'> Now Viewing</button></li>
                       </ul>
                     </div>
                     <div className={'mobile__search ' + (this.state.searchIsOpen ? 'is-open' : '')}>
