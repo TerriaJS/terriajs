@@ -1,15 +1,15 @@
 {
-"homeCamera": {
+  "homeCamera": {
     "north": -36,
     "east": 146,
     "south": -38,
     "west": 143
   },
-    "catalog": [
+  "catalog": [
     {
-      "name": "CSV testing",
+      "name": "CSV color maps and palettes",
       "type": "group",
-      "isOpen": true,
+      "isOpen": false,
       "items": [
         {
           "name": "Green-orange postcodes",
@@ -143,6 +143,30 @@
           "tableStyle": {
             "colorMap": "green-hsl(120,100%,70%)-white-hsl(0,100%,70%)-red",
             "featureInfoFields": { "Value": true, "Mod10": true }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSV column-specific",
+      "type": "group",
+      "isOpen": false,
+      "items": [
+        {
+          "name": "Mod10 as enum, Mod100 Spectral",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorMap": "green-orange",
+            "columns": {
+              "Mod10": {
+                "type": "enum"
+              },
+              "Mod100": {
+                "colorPalette": "Spectral"
+              }
+            }
           }
         }
       ]
