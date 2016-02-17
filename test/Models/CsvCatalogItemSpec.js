@@ -526,6 +526,21 @@ describe('CsvCatalogItem with lat and lon', function() {
             }).otherwise(fail).then(done);
         });
 
+        it('supports type', function(done) {
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                columns: {
+                    value: {
+                        replaceWithNullValues: ['bad'],
+                        type: 'enum'
+                    }
+                }
+            });
+            csvItem.load().then(function() {
+                expect(csvItem.tableStructure.columns[2].type).toEqual(VarType.ENUM);
+            }).otherwise(fail).then(done);
+        });
+
     });
 
 });
