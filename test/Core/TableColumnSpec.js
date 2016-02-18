@@ -7,49 +7,6 @@ var TableColumn = require('../../lib/Core/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 var VarSubType = require('../../lib/Map/VarSubType');
 
-var defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
-function toLocaleStringSupportsOptions() {
-  return !!(typeof Intl === 'object' && Intl && typeof Intl.NumberFormat === 'function');
-}
-describe('IE9 temp test', function() {
-    it('abcdefgh', function() {
-        var number = 5.123;
-        var options = {useGrouping: true, maximumFractionDigits: 1};
-        function x(number, options) {
-            if (number === null) {
-                return '';
-            }
-            console.log('start');
-            options = defaultValue(options, {});
-            options.useGrouping = defaultValue(options.useGrouping, false);
-            options.maximumFractionDigits = defaultValue(options.maximumFractionDigits, 20);
-            console.log('options', options);
-            if (toLocaleStringSupportsOptions()) {
-                var formatter = new Intl.NumberFormat(undefined, options);
-                return formatter.format(+number);
-            }
-            console.log('not using formatter');
-            var str = number.toString();
-            var idx = str.indexOf('.');
-            var frac = '';
-            console.log('str, idx, frac', str, '#', idx, '#', frac, '#');
-            if (idx !== -1) {
-                frac = str.substring(idx);
-                frac = frac.substring(0, options.maximumFractionDigits);
-                str = str.substring(0, idx);
-                console.log('idx was not -1, so str, frac', str, '#', frac, '#');
-            }
-            if (str.length < 5 || !options.useGrouping) {
-                console.log('str.length < 5 || !options.useGrouping');
-                return str + frac;
-            }
-            console.log('finishing', str.replace(/\B(?=(\d{3})+(?!\d))/g, ','));
-            return str.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + frac;
-        }
-        expect(x(number, options)).toEqual('5.1');
-    });
-});
-
 describe('TableColumn', function() {
 
     it('can make a new object and detect scalar type', function() {

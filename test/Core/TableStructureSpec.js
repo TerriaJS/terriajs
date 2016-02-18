@@ -67,9 +67,12 @@ describe('TableStructure', function() {
     });
 
     it('can convert to ArrayOfRows with formatting', function() {
-        var data = [['x', 'y'], [1.678, 5.123], [54321, 12345], [4, -3]];
-        var options = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
-        var target = [['x', 'new y'], ['1.678', '5.1'], ['54321', '12,345'], ['4', '-3']]; // Assume the test is run in a locale where commas are added.
+        var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {
+            x: {format: {maximumFractionDigits: 0}},
+            y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}
+        }};
+        var target = [['x', 'new y'], ['2', '9.9'], ['54321', '12,345'], ['4', '-3']]; // Assume the test is run in a locale where commas are added.
         var tableStructure = new TableStructure('foo', options);
         tableStructure = tableStructure.loadFromJson(data);
         var rows = tableStructure.toArrayOfRows();
