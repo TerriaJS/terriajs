@@ -1,5 +1,6 @@
 'use strict';
 
+/*global require,Intl:true*/
 var formatNumberToLocale = require('../../lib/Core/formatNumberToLocale');
 
 describe('formatNumberToLocale', function() {
