@@ -210,19 +210,6 @@ describe('FeatureInfoPanelViewModel templating', function() {
         }).then(done).otherwise(done.fail);
     });
 
-    it('can format templated large numbers with commas', function(done) {
-        item.featureInfoTemplate = 'Big {{#localeFormat}}{{big}}{{/localeFormat}}';
-        var number = 1234567;
-        var localeFormattedNumber = number.toLocaleString();
-        if (localeFormattedNumber === '1234567') {
-            // If the browser doesn't support toLocaleString in this way, we want it to fallback to using commas as thousand separator.
-            localeFormattedNumber = '1,234,567';
-        }
-        return loadAndPick().then(function() {
-            expect(panel.sections[0].templatedInfo.indexOf(localeFormattedNumber) >= 0).toBe(true);
-        }).then(done).otherwise(done.fail);
-    });
-
     it('can render a recursive featureInfoTemplate', function(done) {
 
         item.featureInfoTemplate = {

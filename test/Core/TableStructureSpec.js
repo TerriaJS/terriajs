@@ -66,6 +66,17 @@ describe('TableStructure', function() {
         expect(rows).toEqual(data);
     });
 
+    it('can convert to ArrayOfRows with formatting', function() {
+        var data = [['x', 'y'], [1.678, 5.123], [54321, 12345], [4, -3]];
+        var options = {columns: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var target = [['x', 'new y'], ['1.678', '5.1'], ['54321', '12,345'], ['4', '-3']]; // Assume the test is run in a locale where commas are added.
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var rows = tableStructure.toArrayOfRows();
+        expect(rows.length).toEqual(4);
+        expect(rows).toEqual(target);
+    });
+
     it('can convert to row objects', function() {
         var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
@@ -153,36 +164,19 @@ describe('TableStructure', function() {
         expect(htmls[2]).toContain('>2015-11-03<'); // No time is added when only the date is given.
     });
 
-    // it('does not allow multiple selected variables by default', function(done) {
-    //     var dataTable = new DataTable();
-    //     loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
-    //         dataTable.loadText(text);
-    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
-    //         dataTable.setDataVariable('enum');
-    //         expect(dataTable.selectedNames.slice()).toEqual(['enum']);
-    //         dataTable.setDataVariable('val');
-    //         expect(dataTable.selectedNames.slice()).toEqual(['val']);
-    //         // also test turning off the variable
-    //         dataTable.setDataVariable('val', false);
-    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
-    //     }).then(done).otherwise(done.fail);
-    // });
+    it('can describe rows with formatting', function() {
+        var data = [['x', 'y'], [1.678, 5.123], [54321, 12345], [4, -3]];
+        var options = {columns: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var htmls = tableStructure.toRowDescriptions();
+        expect(htmls[0]).toContain('new y');
+        expect(htmls[0]).toContain('1.678');
+        expect(htmls[0]).toContain('5.1');
+        expect(htmls[0]).not.toContain('5.12');
+        expect(htmls[1]).toContain('54321');
+        expect(htmls[1]).toContain('12,345');  // Assume the test is run in a locale where commas are added.
+    });
 
-    // it('can allow multiple selected variables', function(done) {
-    //     var dataTable = new DataTable({allowMultiple: true});
-    //     loadText('/test/csv/lat_lon_enum_val.csv').then(function(text) {
-    //         dataTable.loadText(text);
-    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
-    //         dataTable.setDataVariable('enum');
-    //         expect(dataTable.getDataVariables().slice()).toEqual(['enum']);
-    //         dataTable.setDataVariable('val');
-    //         expect(dataTable.getDataVariables().slice()).toEqual(['enum', 'val']);
-    //         // also test turning off the variables
-    //         dataTable.setDataVariable('val');
-    //         expect(dataTable.getDataVariables().slice()).toEqual(['enum']);
-    //         dataTable.setDataVariable('enum');
-    //         expect(dataTable.getDataVariables().slice()).toEqual([]);
-    //     }).then(done).otherwise(done.fail);
-    // });
 
 });
