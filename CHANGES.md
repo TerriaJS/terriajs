@@ -5,6 +5,9 @@ Change Log
 ### 2.0.2
 
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
+* Changed the default for `tableStyle.replaceWithZeroValues` to `[]`, ie. nothing.
+* Changed the default for `tableStyle.replaceWithNullValues` to `["-", "na", "NA"]`.
+* Changed the default for `tableStyle.nullLabel` to '(No value)'.
 
 ### 2.0.1
 
