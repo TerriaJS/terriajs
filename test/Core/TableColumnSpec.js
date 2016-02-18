@@ -48,7 +48,7 @@ describe('IE9 temp test', function() {
         }
         expect(x(number, options)).toEqual('5.1');
     });
-})
+});
 
 describe('TableColumn', function() {
 
