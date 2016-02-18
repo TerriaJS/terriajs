@@ -12,11 +12,15 @@ const DataPreview = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        previewedCatalogItem: React.PropTypes.object
+        viewState: React.PropTypes.object
     },
 
     toggleOnMap() {
-        this.props.previewedCatalogItem.toggleEnabled();
+        this.props.viewState.previewedItem.toggleEnabled();
+        if(this.props.viewState.previewedItem.isEnabled === true) {
+            this.props.viewState.togglePreview(false);
+            this.props.viewState.modalVisible = false;
+        }
     },
 
     renderMarkup(content) {
@@ -26,10 +30,10 @@ const DataPreview = React.createClass({
     },
 
     render() {
-        const previewed = this.props.previewedCatalogItem;
+        const previewed = this.props.viewState.previewedItem;
         return (
             <div className='data-preview__inner'>
-                <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewedCatalogItem}/>
+                <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.viewState.previewedItem}/>
                 {this.renderActions(previewed)}
             </div>
         );
@@ -38,7 +42,7 @@ const DataPreview = React.createClass({
     renderActions(previewed) {
         if (previewed && defined(previewed.type)) {
             return (
-                <div>
+                <div className='data-preview__body'>
                     <button onClick={this.toggleOnMap}
                             className="btn toggle-enable"
                             title={previewed.isEnabled ? 'remove from map' : 'add to map'}>

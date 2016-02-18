@@ -23,7 +23,6 @@
     width: 100%;
   }
   .is-open & {
-
     @media(screen and min-width: $sm){
       @include transform(translateX(0));
     }
@@ -67,10 +66,12 @@
 
 .panel-content{
   @extend .clearfix;
-  padding: $padding;
-  border-top: 1px solid $grey-lighter;
   background: $modal-bg;
   color: $modal-text;
+  @media(screen and min-width: $sm){
+    padding: $padding;
+    border-top: 1px solid $grey-lighter;
+  }
 }
 
 .data-explorer,

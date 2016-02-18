@@ -76,7 +76,6 @@ const Tabs = React.createClass({
     },
 
     render() {
-        console.log(this.props.viewState);
         return (
             <div className={'tabs ' + (this.props.viewState.isPreviewing ? 'is-previewing' : '')}>
                 <ul className="tablist" role="tablist">

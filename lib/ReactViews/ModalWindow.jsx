@@ -16,7 +16,7 @@ const ModalWindow = React.createClass({
 
     close() {
         this.props.viewState.modalVisible = false;
-        this.props.viewState.isPreviewing = false;
+        this.props.viewState.togglePreview(false);
     },
 
     render() {

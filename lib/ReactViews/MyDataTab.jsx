@@ -67,7 +67,7 @@ const MyDataTab = React.createClass({
                 </div>
                 <div className="data-preview">
                     <DataPreview terria={this.props.terria}
-                                 previewedCatalogItem={this.props.viewState.userDataPreviewedItem}
+                                 viewState={this.props.viewState}
                     />
                 </div>
             </div>

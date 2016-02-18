@@ -20,7 +20,8 @@
 
     .my-location{
       position: absolute;
-      top: 90vh;
+      top: 80vh;
+      z-index: 99;
       right: 2vw;
       @media(screen and min-width: $sm){
         //temp

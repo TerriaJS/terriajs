@@ -35,3 +35,10 @@
   cursor: auto;
   pointer-events: none;
 }
+
+.data-preview__body{
+  padding: $padding;
+  @media(screen and min-width: $sm){
+    padding: 0;
+  }
+}

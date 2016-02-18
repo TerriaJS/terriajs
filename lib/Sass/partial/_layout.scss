@@ -35,7 +35,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  padding: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2) $padding*3;
+  padding: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2) $padding;
   padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
   @media screen and (min-width : $md){
     padding-left: $work-bench-width + 50px;
