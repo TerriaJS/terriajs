@@ -1,12 +1,21 @@
 .data-preview{
-  padding-right: $padding;
-  position: absolute;
-  top: $padding;
-  right: $padding-small;
-  width: calc(50% - #{$padding*2});
-  bottom: $padding;
+  visibility: hidden;
+  height: 100%;
   overflow: hidden;
   overflow-y: scroll;
+  .tabs.is-previewing &{
+    visibility: visible;
+  }
+  @media(screen and min-width: $sm){
+    visibility: visible;
+    padding-right: $padding;
+    position: absolute;
+    top: $padding;
+    right: $padding-small;
+    width: calc(50% - #{$padding*2});
+    bottom: $padding;
+  }
+
   h4{
     margin-top: $padding;
   }

@@ -1,4 +1,3 @@
-
 .data-catalog{
   @extend .list-reset;
   ul{
@@ -12,7 +11,11 @@
     padding-right: $padding;
     height: 100%;
   }
+  .tabs.is-previewing .data-explorer &{
+    @extend .sm-show;
+  }
 }
+
 .data-catalog-item{
   display: block;
   width: 100%;

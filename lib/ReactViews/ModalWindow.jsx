@@ -16,6 +16,7 @@ const ModalWindow = React.createClass({
 
     close() {
         this.props.viewState.modalVisible = false;
+        this.props.viewState.isPreviewing = false;
     },
 
     render() {
@@ -30,7 +31,11 @@ const ModalWindow = React.createClass({
                      className="modal-overlay"
                      tabIndex="-1">
                 </div>
-                <div id="explorer-panel" className="explorer-panel modal-content" aria-labelledby="modalTitle" aria-describedby="modalDescription" role="dialog">
+                <div id="explorer-panel"
+                     className="explorer-panel modal-content"
+                     aria-labelledby="modalTitle"
+                     aria-describedby="modalDescription"
+                     role="dialog">
                     <button onClick={this.close}  className="btn btn--close-modal" title="Close data panel" data-target="close-modal"></button>
                     <Tabs terria={this.props.terria}
                           viewState={this.props.viewState}
