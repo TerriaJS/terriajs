@@ -12,7 +12,7 @@ function toLocaleStringSupportsOptions() {
   return !!(typeof Intl === 'object' && Intl && typeof Intl.NumberFormat === 'function');
 }
 describe('IE9 temp test', function() {
-    it('abcdefg', function() {
+    it('abcdefgh', function() {
         var number = 5.123;
         var options = {useGrouping: true, maximumFractionDigits: 1};
         function x(number, options) {
