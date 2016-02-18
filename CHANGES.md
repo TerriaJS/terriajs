@@ -5,6 +5,7 @@ Change Log
 ### 2.0.2
 
 * Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters, or two additional column-specific parameters: "name" and "type". See wwwroot/test/init/test-tablestyle.json's CSV column-specific group for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
+* Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
 
 ### 2.0.1
 
