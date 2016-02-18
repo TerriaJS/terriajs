@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.0.2
+
+* Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
+
 ### 2.0.1
 
 * Fixed a bug that caused the last selected ABS concept not to appear in the feature info panel.
