@@ -325,7 +325,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             var entities = csvItem.dataSource.entities.values;
             expect(entities.length).toBe(2);
             expect(entities[0].description.getValue()).toMatch('<td>Vals</td><td[^>]*>10</td>');
-            expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*></td>');
+            expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*>-</td>');
         }).otherwise(fail).then(done);
     });
 
