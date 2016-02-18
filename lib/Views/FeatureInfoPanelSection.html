@@ -10,10 +10,10 @@
         <span class="feature-info-panel-section-label" data-bind="text: name"></span>
     </div>
     <div class="feature-info-panel-section-content-wrapper" data-bind="css:feature == terria.selectedFeature ?'open': 'closed'">
-        <div class="feature-info-panel-section-content" data-bind="html: templatedInfo, visible: templatedInfo"></div>
+        <div class="feature-info-panel-section-content" data-bind="markdown: templatedInfo, visible: templatedInfo"></div>
         <button class="feature-info-panel-text-button" data-bind="visible: templatedInfo && !rawDataVisible, click: showRawData">Show Raw Data</button>
         <button class="feature-info-panel-text-button" data-bind="visible: templatedInfo && rawDataVisible, click: hideRawData">Hide Raw Data</button>
-        <div class="feature-info-panel-section-content" data-bind="html: rawData, visible: rawData && (!templatedInfo || rawDataVisible),
+        <div class="feature-info-panel-section-content" data-bind="markdown: rawData, visible: rawData && (!templatedInfo || rawDataVisible),
           css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
 
         <!-- ko if: rawData && (!templatedInfo || rawDataVisible) && dataDownloads.length > 0 -->
