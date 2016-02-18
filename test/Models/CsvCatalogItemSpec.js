@@ -383,13 +383,13 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('defaults to blanks in numeric columns being zero', function(done) {
+    it('defaults to blanks in numeric columns being null', function(done) {
         csvItem.url = 'test/csv/lat_lon_blankvalue.csv';
         csvItem.load().then(function() {
             var valueColumn = csvItem.tableStructure.columns[2];
             expect(valueColumn.values[0]).toEqual(5);
-            expect(valueColumn.values[1]).toEqual(0);
-            expect(valueColumn.values[2]).toEqual(0);
+            expect(valueColumn.values[1]).toEqual(null);
+            expect(valueColumn.values[2]).toEqual(null);
         }).otherwise(fail).then(done);
     });
 
