@@ -5,6 +5,7 @@ Change Log
 ### 2.0.2
 
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
+* Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
 
 ### 2.0.1
 
