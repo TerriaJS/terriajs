@@ -48,7 +48,7 @@ describe('formatNumberForLocale', function() {
 
         beforeEach(function() {
             realIntl = Intl;
-            Intl = undefined;
+            Intl = {};
         });
 
         afterEach(function() {
