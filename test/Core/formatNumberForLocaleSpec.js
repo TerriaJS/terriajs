@@ -33,6 +33,13 @@ describe('formatNumberForLocale', function() {
             expect(formatNumberForLocale(-6789123.3678, {useGrouping: true, maximumFractionDigits: 1})).toBe('-6' + separator + '789' + separator + '123.4');
         });
 
+        it('style percent works', function() {
+            expect(formatNumberForLocale(0.934, {style: 'percent'})).toBe('93.4%');
+            expect(formatNumberForLocale(1.555555, {style: 'percent'})).toBe('155.5555%');
+            expect(formatNumberForLocale(-0.4, {style: 'percent'})).toBe('-40%');
+            expect(formatNumberForLocale(0.93456, {style: 'percent', maximumFractionDigits: 2})).toBe('93.46%');
+        });
+
     });
 
     describe('without Intl', function() {
@@ -72,6 +79,13 @@ describe('formatNumberForLocale', function() {
         it('useGrouping works', function() {
             expect(formatNumberForLocale(-6789123.4, {useGrouping: true})).toBe('-6' + separator + '789' + separator + '123.4');
             expect(formatNumberForLocale(-6789123.3678, {useGrouping: true, maximumFractionDigits: 1})).toBe('-6' + separator + '789' + separator + '123.4');
+        });
+
+        it('style percent works', function() {
+            expect(formatNumberForLocale(0.934, {style: 'percent'})).toBe('93.4%');
+            expect(formatNumberForLocale(1.555555, {style: 'percent'})).toBe('155.5555%');
+            expect(formatNumberForLocale(-0.4, {style: 'percent'})).toBe('-40%');
+            expect(formatNumberForLocale(0.93456, {style: 'percent', maximumFractionDigits: 2})).toBe('93.46%');
         });
 
     });

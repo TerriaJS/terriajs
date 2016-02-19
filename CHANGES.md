@@ -8,7 +8,7 @@ Change Log
 * Added the following column-specific `tableStyle` parameters:
   - `name`: renames the column.
   - `type`: sets the column type; can be one of LON, LAT, ALT, TIME, SCALAR, or ENUM.
-  - `format`: sets the column number format, using the format of the [Javascript Intl options parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString), eg. {"format": {"useGrouping": true, "maximumFractionDigits": 2}} to add thousands separators to numbers and show only two decimal places.
+  - `format`: sets the column number format, using the format of the [Javascript Intl options parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString), eg. `{"format": {"useGrouping": true, "maximumFractionDigits": 2}}` to add thousands separators to numbers and show only two decimal places. Only the `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options are guaranteed to work in all browsers.
 * Displays large numbers in the Feature Info Panel without commas by default.
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
 

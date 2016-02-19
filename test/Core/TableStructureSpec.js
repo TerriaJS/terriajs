@@ -5,6 +5,8 @@ var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableStructure = require('../../lib/Core/TableStructure');
 var VarType = require('../../lib/Map/VarType');
 
+var separator = (Intl && typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]) || ',';
+
 describe('TableStructure', function() {
 
     it('can read from json object', function() {
@@ -72,7 +74,7 @@ describe('TableStructure', function() {
             x: {format: {maximumFractionDigits: 0}},
             y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}
         }};
-        var target = [['x', 'new y'], ['2', '9.9'], ['54321', '12,345'], ['4', '-3']]; // Assume the test is run in a locale where commas are added.
+        var target = [['x', 'new y'], ['2', '9.9'], ['54321', '12' + separator + '345'], ['4', '-3']];
         var tableStructure = new TableStructure('foo', options);
         tableStructure = tableStructure.loadFromJson(data);
         var rows = tableStructure.toArrayOfRows();
@@ -178,7 +180,7 @@ describe('TableStructure', function() {
         expect(htmls[0]).toContain('5.1');
         expect(htmls[0]).not.toContain('5.12');
         expect(htmls[1]).toContain('54321');
-        expect(htmls[1]).toContain('12,345');  // Assume the test is run in a locale where commas are added.
+        expect(htmls[1]).toContain('12' + separator + '345');
     });
 
 
