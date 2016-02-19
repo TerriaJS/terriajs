@@ -44,17 +44,24 @@ describe('formatNumberForLocale', function() {
 
     describe('without Intl', function() {
 
+        function toLocaleStringSupportsOptions() {
+            console.log('Intl: ', Intl);
+            return !!(typeof Intl === 'object' && Intl && typeof Intl.NumberFormat === 'function');
+        }
         var realIntl;
 
         beforeEach(function() {
-            if (Intl) {
+            if (toLocaleStringSupportsOptions()) {
+                console.log('undefining Intl');
                 realIntl = Intl;
-                Intl = {};
+                Intl = undefined;
             }
         });
 
         afterEach(function() {
+            console.log('realIntl: ', realIntl);
             if (realIntl) {
+                console.log('rectifying Intl');
                 Intl = realIntl;
             }
         });
