@@ -705,25 +705,21 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
     describe('when data is partially unmatchable', function() {
-        beforeEach(function() {
+        beforeEach(function(done) {
             spyOn(terria.error, 'raiseEvent');
-            csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'});
+            csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'}).otherwise(fail);
+            csvItem.load().then(done);
         });
 
-        it('emits an error event', function(done) {
-            csvItem.load().then(function() {
-                csvItem.regionMapping.enable();
-                expect(terria.error.raiseEvent).toHaveBeenCalled();
-            }).otherwise(fail).then(done);
+        it('emits an error event', function() {
+            csvItem.regionMapping.enable();
+            expect(terria.error.raiseEvent).toHaveBeenCalled();
         });
 
-        it('and showWarnings is false, it emits no error event or JS Error', function(done) {
+        it('and showWarnings is false, it emits no error event or JS Error', function() {
             csvItem.showWarnings = false;
-
-            csvItem.load().then(function() {
-                csvItem.regionMapping.enable();
-                expect(terria.error.raiseEvent).not.toHaveBeenCalled();
-            }).otherwise(fail).then(done);
+            csvItem.regionMapping.enable();
+            expect(terria.error.raiseEvent).not.toHaveBeenCalled();
         });
     });
 
