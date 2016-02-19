@@ -5,6 +5,7 @@ Change Log
 ### 2.0.2
 
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
+* Fixed showWarnings in config json not being respected by CSV catalog items.
 
 ### 2.0.1
 
