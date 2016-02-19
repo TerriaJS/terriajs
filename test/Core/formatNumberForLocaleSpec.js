@@ -7,7 +7,10 @@ describe('formatNumberForLocale', function() {
 
     describe('with Intl', function() {
 
-        var separator = (Intl && typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]) || ',';
+        var separator = ',';
+        if (typeof Intl === 'object') {
+            separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+        }
 
         it('returns strings for small integers', function() {
             expect(formatNumberForLocale(0)).toBe('0');
@@ -36,8 +39,8 @@ describe('formatNumberForLocale', function() {
         it('style percent works', function() {
             expect(formatNumberForLocale(0.934, {style: 'percent'})).toBe('93.4%');
             expect(formatNumberForLocale(1.555555, {style: 'percent'})).toBe('155.5555%');
-            expect(formatNumberForLocale(-0.4, {style: 'percent'})).toBe('-40%');
-            expect(formatNumberForLocale(0.93456, {style: 'percent', maximumFractionDigits: 2})).toBe('93.46%');
+            expect(formatNumberForLocale(-0.4, {style: 'percent'})).toContain('-40'); // Allow either -40% or -40.0%
+            expect(formatNumberForLocale(0.93456, {style: 'percent', maximumFractionDigits: 2})).toContain('93.46');  // IE11 produces 93.46 % with a space.
         });
 
     });
@@ -47,15 +50,19 @@ describe('formatNumberForLocale', function() {
         var realIntl;
 
         beforeEach(function() {
-            realIntl = Intl;
-            Intl = {};
+            if (typeof Intl === 'object') {
+                realIntl = Intl;
+                Intl = undefined;
+            }
         });
 
         afterEach(function() {
-            Intl = realIntl;
+            if (realIntl) {
+                Intl = realIntl;
+            }
         });
 
-        var separator = (Intl && typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]) || ',';
+        var separator = ',';
 
         it('returns strings for small integers', function() {
             expect(formatNumberForLocale(0)).toBe('0');
@@ -84,7 +91,7 @@ describe('formatNumberForLocale', function() {
         it('style percent works', function() {
             expect(formatNumberForLocale(0.934, {style: 'percent'})).toBe('93.4%');
             expect(formatNumberForLocale(1.555555, {style: 'percent'})).toBe('155.5555%');
-            expect(formatNumberForLocale(-0.4, {style: 'percent'})).toBe('-40%');
+            expect(formatNumberForLocale(-0.4, {style: 'percent'})).toContain('-40'); // Allow either -40% or -40.0%
             expect(formatNumberForLocale(0.93456, {style: 'percent', maximumFractionDigits: 2})).toBe('93.46%');
         });
 
