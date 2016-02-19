@@ -5,7 +5,7 @@
         <span data-bind="visible: parameter.isRequired" title="Required">*</span>
     </div>
     <div class="parameter-editor-table-right">
-        <input type="text" data-bind="value: value, attr: { id: elementID, title: parameter.description }" />
+        <input type="text" data-bind="value: value, attr: { id: elementID, title: parameter.description }" size="40" />
         <button class="parameter-editor-button" type="button" data-bind="click: selectPointOnMap"><img data-bind="attr: { src: parameter.terria.baseUrl + 'images/NM-LocationTarget.svg' }" width="35" height="35" alt="Select a point on the map" title="Select a point on the map" /></button>
     </div>
 </div>
