@@ -704,24 +704,24 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    describe('when data is partially unmatchable', function() {
-        beforeEach(function(done) {
-            spyOn(terria.error, 'raiseEvent');
-            csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'}).otherwise(fail);
-            csvItem.load().then(done);
-        });
-
-        xit('emits an error event', function() {
-            csvItem.regionMapping.enable();
-            expect(terria.error.raiseEvent).toHaveBeenCalled();
-        });
-
-        xit('and showWarnings is false, it emits no error event or JS Error', function() {
-            csvItem.showWarnings = false;
-            csvItem.regionMapping.enable();
-            expect(terria.error.raiseEvent).not.toHaveBeenCalled();
-        });
-    });
+    //describe('when data is partially unmatchable', function() {
+    //    beforeEach(function(done) {
+    //        spyOn(terria.error, 'raiseEvent');
+    //        csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'}).otherwise(fail);
+    //        csvItem.load().then(done);
+    //    });
+    //
+    //    xit('emits an error event', function() {
+    //        csvItem.regionMapping.enable();
+    //        expect(terria.error.raiseEvent).toHaveBeenCalled();
+    //    });
+    //
+    //    xit('and showWarnings is false, it emits no error event or JS Error', function() {
+    //        csvItem.showWarnings = false;
+    //        csvItem.regionMapping.enable();
+    //        expect(terria.error.raiseEvent).not.toHaveBeenCalled();
+    //    });
+    //});
 
     describe('and feature picking', function() {
         var fakeServer;
