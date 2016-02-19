@@ -40,7 +40,7 @@ describe('formatNumberForLocale', function() {
             expect(formatNumberForLocale(0.934, {style: 'percent'})).toBe('93.4%');
             expect(formatNumberForLocale(1.555555, {style: 'percent'})).toBe('155.5555%');
             expect(formatNumberForLocale(-0.4, {style: 'percent'})).toContain('-40'); // Allow either -40% or -40.0%
-            expect(formatNumberForLocale(0.93456, {style: 'percent', maximumFractionDigits: 2})).toBe('93.46%');
+            expect(formatNumberForLocale(0.93456, {style: 'percent', maximumFractionDigits: 2})).toContain('93.46');  // IE11 produces 93.46 % with a space.
         });
 
     });
