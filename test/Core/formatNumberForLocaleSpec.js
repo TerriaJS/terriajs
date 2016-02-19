@@ -47,12 +47,16 @@ describe('formatNumberForLocale', function() {
         var realIntl;
 
         beforeEach(function() {
-            realIntl = Intl;
-            Intl = {};
+            if (Intl) {
+                realIntl = Intl;
+                Intl = {};
+            }
         });
 
         afterEach(function() {
-            Intl = realIntl;
+            if (realIntl) {
+                Intl = realIntl;
+            }
         });
 
         var separator = (Intl && typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]) || ',';
