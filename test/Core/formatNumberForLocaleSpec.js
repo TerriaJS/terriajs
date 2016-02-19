@@ -44,14 +44,13 @@ describe('formatNumberForLocale', function() {
 
     describe('without Intl', function() {
 
-        function toLocaleStringSupportsOptions() {
-            console.log('Intl: ', Intl);
-            return !!(typeof Intl === 'object' && Intl && typeof Intl.NumberFormat === 'function');
-        }
         var realIntl;
 
         beforeEach(function() {
-            if (toLocaleStringSupportsOptions()) {
+            console.log('isIntlDefined?');
+            console.log('Intl typeof: ', typeof Intl);
+            console.log('Intl: ', Intl);
+            if (Intl) {
                 console.log('undefining Intl');
                 realIntl = Intl;
                 Intl = undefined;
@@ -66,7 +65,7 @@ describe('formatNumberForLocale', function() {
             }
         });
 
-        var separator = (Intl && typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]) || ',';
+        var separator = ',';
 
         it('returns strings for small integers', function() {
             expect(formatNumberForLocale(0)).toBe('0');
