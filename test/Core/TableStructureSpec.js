@@ -5,7 +5,10 @@ var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableStructure = require('../../lib/Core/TableStructure');
 var VarType = require('../../lib/Map/VarType');
 
-var separator = (Intl && typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]) || ',';
+var separator = ',';
+if (typeof Intl === 'object') {
+    separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+}
 
 describe('TableStructure', function() {
 

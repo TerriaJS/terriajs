@@ -7,7 +7,10 @@ describe('formatNumberForLocale', function() {
 
     describe('with Intl', function() {
 
-        var separator = (Intl && typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]) || ',';
+        var separator = ',';
+        if (typeof Intl === 'object') {
+            separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+        }
 
         it('returns strings for small integers', function() {
             expect(formatNumberForLocale(0)).toBe('0');
@@ -47,20 +50,14 @@ describe('formatNumberForLocale', function() {
         var realIntl;
 
         beforeEach(function() {
-            console.log('isIntlDefined?');
-            console.log('Intl typeof: ', typeof Intl);
-            console.log('Intl: ', Intl);
-            if (Intl) {
-                console.log('undefining Intl');
+            if (typeof Intl === 'object') {
                 realIntl = Intl;
                 Intl = undefined;
             }
         });
 
         afterEach(function() {
-            console.log('realIntl: ', realIntl);
             if (realIntl) {
-                console.log('rectifying Intl');
                 Intl = realIntl;
             }
         });
