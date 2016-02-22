@@ -8,46 +8,39 @@ var Terria = require('../../lib/Models/Terria');
 var URI = require('urijs');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
+var taxationStatisticsPackage = JSON.stringify(require('../../wwwroot/test/CKAN/taxation-statistics-package.json'));
+var taxationStatisticsWmsResource = JSON.stringify(require('../../wwwroot/test/CKAN/taxation-statistics-wms-resource.json'));
 
 describe('CkanCatalogItem', function() {
     var terria;
     var ckan;
+    var fakeServer;
     var taxationStatisticsPackage;
     var taxationStatisticsWmsResource;
-    var fakeServer;
 
     beforeEach(function(done) {
-        terria = new Terria({
-            baseUrl: './'
-        });
-        ckan = new CkanCatalogItem(terria);
-
-        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
-        fakeServer = sinon.fakeServer.create();
-        fakeServer.autoRespond = true;
-
-        fakeServer.xhr.useFilters = true;
-        fakeServer.xhr.addFilter(function(method, url, async, username, password) {
-            // Allow requests for local files.
-            var uri = new URI(url);
-            var protocol = uri.protocol();
-            return !protocol && url.indexOf('//') !== 0;
-        });
-
-        fakeServer.respond(function(request) {
-            fail('Unhandled request to URL: ' + request.url);
-        });
-
-        var toLoad = [
+        when.all([
             loadText('test/CKAN/taxation-statistics-package.json').then(function(text) {
                 taxationStatisticsPackage = text;
             }),
             loadText('test/CKAN/taxation-statistics-wms-resource.json').then(function(text) {
                 taxationStatisticsWmsResource = text;
             })
-        ];
+        ]).then(function() {
 
-        when.all(toLoad).then(done).otherwise(done.fail);
+            terria = new Terria({
+                baseUrl: './'
+            });
+            ckan = new CkanCatalogItem(terria);
+
+            sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
+            fakeServer = sinon.fakeServer.create();
+            fakeServer.autoRespond = true;
+
+            fakeServer.respond(function(request) {
+                fail('Unhandled request to URL: ' + request.url);
+            });
+        }).then(done).otherwise(done.fail);
     });
 
     afterEach(function() {
