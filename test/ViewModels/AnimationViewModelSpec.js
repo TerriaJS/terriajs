@@ -16,10 +16,7 @@ describe('AnimationViewModel', function() {
         animationVm = new AnimationViewModel({
             terria: terria
         });
-        animationVm.timeline = {
-            zoomTo: jasmine.createSpy('zoomTo'),
-            resize: jasmine.createSpy('resize') // this gets triggered in saucelabs for some reason.
-        };
+        animationVm.timeline = jasmine.createSpyObj('timeline', ['zoomTo', 'resize', '_makeTics']);
     });
 
     it('on init, showAnimation should be false', function() {
