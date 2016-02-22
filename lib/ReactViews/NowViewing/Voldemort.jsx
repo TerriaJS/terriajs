@@ -1,5 +1,7 @@
 'use strict';
 
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 import ObserveModelMixin from './../ObserveModelMixin';
 import React from 'react';
 
@@ -20,7 +22,7 @@ const Voldemort = React.createClass({
 
     getBtnClass(item, parent) {
         let btnClasses;
-        if(parent && parent.allowMultiple) {
+        if (parent && parent.allowMultiple) {
             btnClasses = item.isActive ? 'btn--voldemort-multiple-active' : 'btn--voldemort-multiple-inactive';
         } else {
             btnClasses = item.isActive ? 'btn--voldemort-unique-active' : 'btn--voldemort-unique-inactive';
@@ -32,36 +34,51 @@ const Voldemort = React.createClass({
         let toggleButton = null;
         let selectButton = null;
         const classNames = 'voldemort__children ' + (item.isOpen ? 'is-open' : '') + ' ' + (item.hasChildren ? 'has-children' : '');
+        const style = {};
+        if (defined(item.color)) {
+            style.color = item.color;
+        }
 
         // !isVisible => hides this concept and all its children
-        if(!item.isVisible) {
+        if (!item.isVisible) {
             return null;
         }
 
         // if Visible, calculate class names for buttons
         if (item.hasChildren) {
-            toggleButton = <button onClick={this.toggleOpen.bind(this, item)}
-                                       className={'btn btn--toggle ' + (item.isOpen ? 'is-open' : '')}
-                                       title='open voldemort'></button>;
+            toggleButton = (
+                <button onClick={this.toggleOpen.bind(this, item)}
+                    style={style}
+                    className={'btn btn--toggle ' + (item.isOpen ? 'is-open' : '')}
+                    title='open voldemort'>
+                </button>
+            );
         }
         if(item.isSelectable) {
-            selectButton = <button onClick={this.toggleActive.bind(this, item)}
-                                   className={this.getBtnClass(item, parent) + ' btn'}
-                                   title='select voldemort'></button>;
+            selectButton = (
+                <button onClick={this.toggleActive.bind(this, item)}
+                    style={style}
+                    className={this.getBtnClass(item, parent) + ' btn'}
+                    title='select voldemort'>
+                </button>
+            );
         }
 
         // !name but has children=> shows the children, but without the dropdown option
         // !name but has no children=> shows nothing
-        if(!item.name) {
-            if(item.hasChildren) {
-                return (<li className={classNames}
-                          key={key}>
-                          <ul>
-                              {item.items.map((child, i)=>
-                                  this.renderVoldemortChildren(child, i, item)
-                              )}
-                          </ul>
-                      </li>);
+        if (!item.name) {
+            if (item.hasChildren) {
+                return (
+                  <li className={classNames}
+                    style={style}
+                    key={key}>
+                    <ul>
+                        {item.items.map((child, i)=>
+                            this.renderVoldemortChildren(child, i, item)
+                        )}
+                      </ul>
+                  </li>
+                );
             }
             return null;
         }
@@ -69,20 +86,25 @@ const Voldemort = React.createClass({
         // both visible and has name
         // - has children, show dropdown options and children
         if (item.hasChildren) {
-            return (<li className={classNames}
-                          key={key}>
-                          <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
-                          <ul>
-                              {item.items.map((child, i)=>
-                                  this.renderVoldemortChildren(child, i, item)
-                              )}
-                          </ul>
-                      </li>);
+            return (
+                <li className={classNames}
+                    style={style}
+                    key={key}>
+                    <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
+                    <ul>
+                        {item.items.map((child, i)=>
+                            this.renderVoldemortChildren(child, i, item)
+                        )}
+                    </ul>
+                </li>
+            );
         }
         // - no children, show only title and select options
-        return <li className={classNames} key={key}>
+        return (
+            <li className={classNames} key={key}>
                 <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
-              </li>;
+            </li>
+        );
 
     },
 
@@ -101,11 +123,13 @@ const Voldemort = React.createClass({
     },
 
     render() {
-        return (<div className='voldemort'>
-                  <div className='voldemort__inner'>
+        return (
+            <div className='voldemort'>
+                <div className='voldemort__inner'>
                     <ul>{this.renderVoldemort()}</ul>
-                  </div>
-                </div>);
+                </div>
+            </div>
+        );
     }
 });
 module.exports = Voldemort;
