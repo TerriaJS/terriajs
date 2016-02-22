@@ -19,6 +19,13 @@ describe('formatNumberForLocale', function() {
             expect(formatNumberForLocale(-10)).toBe('-10');
         });
 
+        it('handles non-numeric input', function() {
+            expect(formatNumberForLocale(null)).toBe('');
+            expect(formatNumberForLocale(undefined)).toBe('');
+            expect(formatNumberForLocale('NA')).toBe('NA');
+            expect(formatNumberForLocale('-')).toBe('-');
+        });
+
         it('does not truncate decimals or group 000s by default', function() {
             expect(formatNumberForLocale(6789123.4567891)).toBe('6789123.4567891');
             expect(formatNumberForLocale(-6789123.4567891)).toBe('-6789123.4567891');
@@ -69,6 +76,13 @@ describe('formatNumberForLocale', function() {
             expect(formatNumberForLocale(1)).toBe('1');
             expect(formatNumberForLocale(123)).toBe('123');
             expect(formatNumberForLocale(-10)).toBe('-10');
+        });
+
+        it('handles non-numeric input', function() {
+            expect(formatNumberForLocale(null)).toBe('');
+            expect(formatNumberForLocale(undefined)).toBe('');
+            expect(formatNumberForLocale('NA')).toBe('NA');
+            expect(formatNumberForLocale('-')).toBe('-');
         });
 
         it('does not truncate decimals or group 000s by default', function() {

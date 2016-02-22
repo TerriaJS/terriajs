@@ -9,12 +9,16 @@ Change Log
   - `name`: renames the column.
   - `type`: sets the column type; can be one of LON, LAT, ALT, TIME, SCALAR, or ENUM.
   - `format`: sets the column number format, using the format of the [Javascript Intl options parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString), eg. `{"format": {"useGrouping": true, "maximumFractionDigits": 2}}` to add thousands separators to numbers and show only two decimal places. Only the `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options are guaranteed to work in all browsers.
-* Displays large numbers in the Feature Info Panel without commas by default.
+* Changed the default number format in the Feature Info Panel to not separate thousands with commas.
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`.
 * Moved `LegendHelper` to `lib/Models`.
+* Changed the default for `tableStyle.replaceWithZeroValues` to `[]`, ie. nothing.
+* Changed the default for `tableStyle.replaceWithNullValues` to `["-", "na", "NA"]`.
+* Changed the default for `tableStyle.nullLabel` to '(No value)'.
 * Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
 * Fixed showWarnings in config json not being respected by CSV catalog items.
+* Fixed exporting raw data as CSV not escaping commas in the data itself.
 
 ### 2.0.1
 
