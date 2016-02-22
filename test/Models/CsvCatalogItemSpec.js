@@ -29,6 +29,11 @@ var greenTableStyle = new TableStyle({
     ]
 });
 
+function featureColor(csvItem, i) {
+    return csvItem.dataSource.entities.values[i]._point._color._value;
+}
+
+
 describe('CsvCatalogItem with lat and lon', function() {
 
     var terria;
@@ -197,12 +202,11 @@ describe('CsvCatalogItem with lat and lon', function() {
     it('colors enum fields the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(0)).not.toEqual(cval(1));
-            expect(cval(0)).not.toEqual(cval(2));
-            expect(cval(0)).not.toEqual(cval(3));
-            expect(cval(0)).toEqual(cval(4));
-            expect(cval(1)).toEqual(cval(3));
+            expect(featureColor(csvItem, 0)).not.toEqual(featureColor(csvItem, 1));
+            expect(featureColor(csvItem, 0)).not.toEqual(featureColor(csvItem, 2));
+            expect(featureColor(csvItem, 0)).not.toEqual(featureColor(csvItem, 3));
+            expect(featureColor(csvItem, 0)).toEqual(featureColor(csvItem, 4));
+            expect(featureColor(csvItem, 1)).toEqual(featureColor(csvItem, 3));
         }).otherwise(fail).then(done);
     });
 
@@ -397,8 +401,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         csvItem.url = 'test/csv/lat_lon_badvalue.csv';
         csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).not.toEqual(cval(2));
+            expect(featureColor(csvItem, 1)).not.toEqual(featureColor(csvItem, 2));
         }).otherwise(fail).then(done);
     });
 
@@ -410,19 +413,17 @@ describe('CsvCatalogItem with lat and lon', function() {
         });
         var nullColor = new Color(160/255, 176/255, 192/255, 1);
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).toEqual(nullColor);
+            expect(featureColor(csvItem, 1)).toEqual(nullColor);
             // This next expectation checks that zeros and null values are differently colored, and that
             // null values do not lead to coloring getting out of sync with values.
-            expect(cval(2)).not.toEqual(nullColor);
+            expect(featureColor(csvItem, 2)).not.toEqual(nullColor);
         }).otherwise(fail).then(done);
     });
 
     it('works with nulls in a range not including zero', function(done) {
         csvItem.url = 'test/csv/lat_lon_nullvalue.csv';
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).toEqual(cval(0));  // colors null (row 2) the same as the lowest-value point (row 1).
+            expect(featureColor(csvItem, 1)).toEqual(featureColor(csvItem, 0));  // colors null (row 2) the same as the lowest-value point (row 1).
         }).otherwise(fail).then(done);
     });
 
@@ -484,8 +485,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             });
             var nullColor = new Color(160/255, 176/255, 192/255, 1);
             csvItem.load().then(function() {
-                function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-                expect(cval(1)).toEqual(nullColor);
+                expect(featureColor(csvItem, 1)).toEqual(nullColor);
             }).otherwise(fail).then(done);
         });
 
@@ -504,8 +504,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             var nullColor = new Color(160/255, 176/255, 192/255, 1);
             csvItem.load().then(function() {
                 expect(csvItem.tableStructure.columns[2].name).toEqual('Temperature');
-                function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-                expect(cval(1)).toEqual(nullColor);
+                expect(featureColor(csvItem, 1)).toEqual(nullColor);
             }).otherwise(fail).then(done);
         });
 
@@ -521,8 +520,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             });
             var nullColor = new Color(160/255, 176/255, 192/255, 1);
             csvItem.load().then(function() {
-                function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-                expect(cval(1)).toEqual(nullColor);
+                expect(featureColor(csvItem, 1)).toEqual(nullColor);
             }).otherwise(fail).then(done);
         });
 
