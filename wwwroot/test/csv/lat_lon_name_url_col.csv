@@ -1,0 +1,5 @@
+lat,lon,name,url,col
+-33,145,Ganymede,build/TerriaJS/test/csv_nongeo/A,1
+-33,140,Betelgeuse,build/TerriaJS/test/csv_nongeo/B,2
+-37,140,Aldebran,,1
+-37,145,Rigel,build/TerriaJS/test/csv_nongeo/C,2
