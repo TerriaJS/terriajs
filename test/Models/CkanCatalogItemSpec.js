@@ -5,7 +5,6 @@ var CkanCatalogItem = require('../../lib/Models/CkanCatalogItem');
 var loadText = require('terriajs-cesium/Source/Core/loadText');
 var sinon = require('sinon');
 var Terria = require('../../lib/Models/Terria');
-var URI = require('urijs');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
