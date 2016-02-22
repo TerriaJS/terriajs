@@ -1,6 +1,6 @@
 'use strict';
 
-import Legend from './../Legend';
+import Legend from './Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './OpacitySection';
 import React from 'react';
