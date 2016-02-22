@@ -324,7 +324,7 @@ describe('CsvCatalogItem with lat and lon', function() {
     });
 
     it('has a blank in the description table for a missing number', function(done) {
-        csvItem.url = 'test/missingNumberFormatting.csv';
+        csvItem.url = 'test/csv/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
             var entities = csvItem.dataSource.entities.values;
             expect(entities.length).toBe(2);
