@@ -36,7 +36,7 @@ const ChartPanel = React.createClass({
                     const newData = item.tableStructure.toXYArrays(xColumn, yColumns);
                     newData.forEach((datum, index)=>{datum.id = item.uniqueId + '-' + yColumnNumbers[index];});
                     data = data.concat(newData);
-                    colors = colors.concat(yColumns.map(yColumn=>yColumn.assignedColor));
+                    colors = colors.concat(yColumns.map(yColumn=>yColumn.color));
                 }
             }
         }
