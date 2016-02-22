@@ -16,6 +16,7 @@ Change Log
 * Changed the default for `tableStyle.nullLabel` to '(No value)'.
 * Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
 * Fixed showWarnings in config json not being respected by CSV catalog items.
+* Fixed hidden region mapped layers being displayed when variable selection changes.
 
 ### 2.0.1
 
