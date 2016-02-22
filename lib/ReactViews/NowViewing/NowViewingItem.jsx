@@ -35,10 +35,6 @@ const NowViewingItem = React.createClass({
         this.props.nowViewingItem.zoomToAndUseClock();
     },
 
-    changeOpacity(event) {
-        this.props.nowViewingItem.opacity = event.target.value;
-    },
-
     onDragStart(e) {
         this.props.onDragStart(e);
     },
