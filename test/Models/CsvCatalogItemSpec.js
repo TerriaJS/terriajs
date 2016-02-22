@@ -387,12 +387,12 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('defaults to blanks in numeric columns being zero', function(done) {
+    it('defaults to blanks in numeric columns being null', function(done) {
         csvItem.url = 'test/csv/lat_lon_blankvalue.csv';
         csvItem.load().then(function() {
             var valueColumn = csvItem.tableStructure.columns[2];
             expect(valueColumn.values[0]).toEqual(5);
-            expect(valueColumn.values[1]).toEqual(0);
+            expect(valueColumn.values[1]).toEqual(null);
             expect(valueColumn.values[2]).toEqual(0);
         }).otherwise(fail).then(done);
     });
@@ -419,25 +419,6 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(featureColor(csvItem, 2)).not.toEqual(nullColor);
         }).otherwise(fail).then(done);
     });
-
-    it('works with nulls in a range not including zero', function(done) {
-        csvItem.url = 'test/csv/lat_lon_nullvalue.csv';
-        csvItem.load().then(function() {
-            expect(featureColor(csvItem, 1)).toEqual(featureColor(csvItem, 0));  // colors null (row 2) the same as the lowest-value point (row 1).
-        }).otherwise(fail).then(done);
-    });
-
-    // Removed: not clear that this is correct behaviour, and it's failing.
-    // xit('renders a point with no value in transparent black', function(done) {
-    //     csvItem.url = 'test/missingNumberFormatting.csv';
-    //     return csvItem.load().then(function() {
-    //         var entities = csvItem.dataSource.entities.values;
-    //         expect(entities.length).toBe(2);
-    //         expect(entities[0].point.color.getValue()).not.toEqual(new Color(0.0, 0.0, 0.0, 0.0));
-    //         expect(entities[1].point.color.getValue()).toEqual(new Color(0.0, 0.0, 0.0, 0.0));
-    //         done();
-    //     });
-    // });
 
     describe('and per-column tableStyle', function() {
 
