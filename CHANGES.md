@@ -13,6 +13,8 @@ Change Log
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`.
 * Moved `LegendHelper` to `lib/Models`.
+* Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
+* Fixed showWarnings in config json not being respected by CSV catalog items.
 
 ### 2.0.1
 
