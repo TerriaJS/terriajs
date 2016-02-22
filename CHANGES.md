@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+### 2.0.2
+
+* Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
+* Fixed showWarnings in config json not being respected by CSV catalog items.
+
+### 2.0.1
+
+* Fixed a bug that caused the last selected ABS concept not to appear in the feature info panel.
+
 ### 2.0.0
 
 * The following previously-deprecated functionality was removed in this version:
@@ -15,7 +24,7 @@ Change Log
   - `DataCatalogTabViewModel.getLeftSideItemControls`
   - `registerCatalogItemControls`
   - `AusGlobeViewer`
-* Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
+* Streamlined CSV handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
   - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
   - `AbsIttCatalogItem`: Completely rewritten. The `dataSetID` json parameter has been deprecated in favor of `datasetId` (different capitalization).
   - For the 2011 Australian Census data, requires `sa4_code_2011` to appear as an alias in `regionMapping.json` (it was previously missing in NationalMap).
@@ -30,25 +39,26 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
-* Recognises the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
-* Improved formatting of datetimes from csv files in the feature info panel.
-* Introduced three new json tableStyle parameters:
-  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
-  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
-  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
+* Recognises the CSV datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
+* Introduced five new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, "-"]`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `["na", "NA"]`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to black. This colour is used to display null values. It is also used to colour points when no variable is selected.
+  - `nullLabel`: A string used to label null or blank values in the legend. Defaults to ''.
   - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
-* Removed variables consisting only of html tags from the Now Viewing panel.
-* Added id matching for catalog members:
+* Improved formatting of datetimes from csv files in the feature info panel.
+* Removed variables consisting only of HTML tags from the Now Viewing panel.
+* Added ID matching for catalog members:
   - An `id` field can now be set in JSON for catalog members
-  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
+  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's ID
     rather than its name as is done currently.
-  - The id of an item should be accessed via `uniqueId` - if a catalog member doesn't have an id set, this returns a
-    default value of the item's name plus the id of its parent. This means that if all the ancestors of a catalog
-    member have no id set, its id will be its full path in the catalog.
+  - The ID of an item should be accessed via `uniqueId` - if a catalog member doesn't have an ID set, this returns a
+    default value of the item's name plus the ID of its parent. This means that if all the ancestors of a catalog
+    member have no ID set, its ID will be its full path in the catalog.
   - This means that if an item is renamed or moved, share links that reference it will still work.
   - A `shareKeys` property can be also be set that contains an array of all ids that should lead to this item. This means
-    that a share link for an item that didn't previously have an id set can still be used if it's moved, as long as it
-    has its old default id set in `shareKeys`
+    that a share link for an item that didn't previously have an ID set can still be used if it's moved, as long as it
+    has its old default ID set in `shareKeys`
   - Old share links will still work as long as the items they lead to aren't renamed or moved.
   - Refactor of JSON serialization - now rather than passing a number of flags that determine what should and shouldn't be
     serialized, an `itemFilter` and `propertyFilter` are passed in options. These are usually composed of multiple filters,
@@ -59,12 +69,14 @@ Change Log
     traversed in both directions.
   - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
     not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
-* Legends are now generated in SVG (vector) format, which look better on high resolution devices.
-* Create new Legend class, making it easy to generate client-side legends for different kinds of data.
-* Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
+* Generated legends now use SVG (vector) format, which look better on high resolution devices.
+* Created new Legend class, making it easy to generate client-side legends for different kinds of data.
+* Generate client-side legends for ArcGIS MapServer catalog items, by fetching JSON file, instead of just providing link to external page.
 * Fix Leaflet feature selection when zoomed out enough that the world is repeated.
-* Improved handling of lat/lon csv files with missing lat or lon values.
+* Improved handling of lat/lon CSV files with missing latitude or longitude values.
 * Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
+* Added `CkanCatalogItem`, which can be used to reference a particular resource of any compatible type on a CKAN server.
+* Fixed a bug that caused the Now Viewing tab to display incorrectly in Internet Explorer 11 when switching directly to it from the Data Catalogue tab.
 
 ### 1.0.54
 

@@ -5,6 +5,7 @@ var CkanCatalogItem = require('../../lib/Models/CkanCatalogItem');
 var loadText = require('terriajs-cesium/Source/Core/loadText');
 var sinon = require('sinon');
 var Terria = require('../../lib/Models/Terria');
+var TerriaError = require('../../lib/Core/TerriaError');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
@@ -127,6 +128,9 @@ describe('CkanCatalogItem', function() {
             'http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12',
             taxationStatisticsPackage);
 
-        ckan.load().then(done.fail).otherwise(done);
+        ckan.load().then(done.fail).otherwise(function(e) {
+            expect(e instanceof TerriaError).toBe(true);
+            done();
+        });
     });
 });
