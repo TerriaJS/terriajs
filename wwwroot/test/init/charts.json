@@ -9,13 +9,12 @@
           "name": "Stations",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv",
-          "featureInfoTemplate" : "<h1>{{name}}</h1><table><tbody><tr><td>Value</td><td>{{value}}</td></tr><tr><td>Dynamics</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' sourceNames='1d,2d,5d'></chart></td></tr></tbody></table><p>Sample data only</p>"
+          "featureInfoTemplate" : "<h1>{{name}}</h1><table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Dynamics</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' sourceNames='1d,2d,5d'></chart></td></tr></tbody></table><p>Sample data only</p>"
         },
         {
-          "name": "ZRepeat",
+          "name": "ZRaw",
           "type": "csv",
-          "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv",
-          "featureInfoTemplate" : "<h1>{{name}}</h1><table><tbody><tr><td>Value</td><td>{{value}}</td></tr><tr><td>Dynamics</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' sourceNames='1d,2d,5d'></chart></td></tr></tbody></table><p>Sample data only</p>"
+          "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv"
         }
       ]
     }
