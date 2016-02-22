@@ -53,7 +53,7 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
-        if(defined(this.props.catalogItem.name)) {
+        if(this.props.catalogItem && defined(this.props.catalogItem.name)) {
             return this.props.catalogItem.name;
         }
         return 'data group';

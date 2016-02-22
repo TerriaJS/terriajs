@@ -9,6 +9,8 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding-right: $padding;
+    padding-bottom: $input-height+ $padding;
+    box-sizing: border-box;
     height: 100%;
   }
   .tabs.is-previewing .data-explorer &{
