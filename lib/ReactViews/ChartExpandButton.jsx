@@ -50,7 +50,7 @@ const ChartExpandButton = React.createClass({
 function expand(props, url) {
     const terria = props.terria;
     const newCatalogItem = new CsvCatalogItem(terria, url);
-    newCatalogItem.name = props.catalogItem.name + ' ' + props.feature.name + ' ' + props.chartTitle;
+    newCatalogItem.name = props.catalogItem.name + ' ' + props.feature.name + (props.chartTitle ? (' ' + props.chartTitle) : '');
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
     group.isOpen = true;
     group.add(newCatalogItem);
