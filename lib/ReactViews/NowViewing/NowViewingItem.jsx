@@ -1,7 +1,8 @@
 'use strict';
 
-import ObserveModelMixin from './../ObserveModelMixin';
 import Legend from './../Legend';
+import ObserveModelMixin from './../ObserveModelMixin';
+import OpacitySection from './OpacitySection';
 import React from 'react';
 import Voldemort from './Voldemort';
 
@@ -15,7 +16,7 @@ const NowViewingItem = React.createClass({
         onDragStart: React.PropTypes.func,
         onDragOver: React.PropTypes.func,
         onDragEnd: React.PropTypes.func,
-        viewState: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired
     },
 
     removeFromMap() {
@@ -66,32 +67,31 @@ const NowViewingItem = React.createClass({
         const nowViewingItem = this.props.nowViewingItem;
 
         return (
-          <li className={'now-viewing__item ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index} >
-            <ul className ="now-viewing__item__header">
-              <li><button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn--drag">{nowViewingItem.name}</button></li>
-              <li><button onClick={this.toggleDisplay} className={'btn btn--toggle ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '')}></button></li>
-            </ul>
-            <div className ="now-viewing__item__inner">
-              <ul className="now-viewing__item__control">
-                <li className='zoom'><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn">Zoom To</button></li>
-                <li className='info'><button onClick={this.previewItem} className='btn' title='info'>info</button></li>
-                <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
-                <li className='visibility'><button onClick={this.toggleVisibility} title="Data show/hide" className={'btn btn--visibility ' + (nowViewingItem.isShown ? 'is-visible' : '')}></button></li>
-              </ul>
-              <div className="now-viewing__item__opacity">
-                <label htmlFor="opacity">Opacity: </label>
-                <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
-              </div>
-              <div className="now-viewing__item__legend">
-                <Legend nowViewingItem={nowViewingItem}/>
-              </div>
-              <div className='now-viewing__item__voldemort'>
-                <Voldemort nowViewingItem={nowViewingItem}
-                />
-              </div>
-            </div>
+            <li className={'now-viewing__item ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index}>
+                <ul className ="now-viewing__item__header">
+                    <li><button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn--drag">{nowViewingItem.name}</button></li>
+                    <li><button onClick={this.toggleDisplay} className={'btn btn--toggle ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '')}></button></li>
+                </ul>
+                <div className ="now-viewing__item__inner">
+                    <ul className="now-viewing__item__control">
+                        <li className='zoom'><button onClick={this.zoom} data-key={this.props.index} title="Zoom in data" className="btn">Zoom To</button></li>
+                        <li className='info'><button onClick={this.previewItem} className='btn' title='info'>info</button></li>
+                        <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>
+                        <li className='visibility'><button onClick={this.toggleVisibility} title="Data show/hide" className={'btn btn--visibility ' + (nowViewingItem.isShown ? 'is-visible' : '')}></button></li>
+                    </ul>
+                    <div className="now-viewing__item__opacity">
+                        <OpacitySection nowViewingItem={nowViewingItem} />
+                    </div>
+                    <div className="now-viewing__item__legend">
+                        <Legend nowViewingItem={nowViewingItem} />
+                    </div>
+                    <div className='now-viewing__item__voldemort'>
+                        <Voldemort nowViewingItem={nowViewingItem} />
+                    </div>
+                </div>
             </li>
-      );
+        );
     }
 });
+
 module.exports = NowViewingItem;
