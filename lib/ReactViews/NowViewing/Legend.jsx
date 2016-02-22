@@ -75,7 +75,12 @@ const Legend = React.createClass({
             //     }
             // }
         }
-        return legends;
+        return (
+            <div className="now-viewing__item__legend">
+                {legends}
+            </div>
+        );
+
     },
 
     render() {

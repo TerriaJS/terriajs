@@ -124,7 +124,7 @@ const Voldemort = React.createClass({
 
     render() {
         return (
-            <div className='voldemort'>
+            <div className='now-viewing__item__voldemort'>
                 <div className='voldemort__inner'>
                     <ul>{this.renderVoldemort()}</ul>
                 </div>

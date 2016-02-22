@@ -20,7 +20,7 @@ const OpacitySection = React.createClass({
             return null;
         }
         return (
-            <div>
+            <div className="now-viewing__item__opacity">
                 <label htmlFor="opacity">Opacity: </label>
                 <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
             </div>
