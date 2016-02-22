@@ -1,3 +1,17 @@
 <div class="now-viewing-section">
-    <div class="now-viewing-section-contents" data-bind="markdown: catalogMember.shortReport"></div>
+    <div class="now-viewing-section-contents" data-bind="markdown: catalogMember.shortReport, visible: typeof catalogMember.shortReport !== 'undefined'"></div>
+    <div class="now-viewing-section-contents" data-bind="foreach: catalogMember.shortReportSections">
+        <div class="data-catalog-member" class="data-catalog-indent0">
+            <div class="data-catalog-member-top-row clickable" data-bind="click: toggleOpen">
+                <div class="data-catalog-icon-holder">
+                    <div class="data-catalog-arrow" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }, css: { 'data-catalog-opened-group': isOpen }"></div>
+                </div>
+                <div class="data-catalog-item-label now-viewing-abs-tighten" data-bind="text: name"></div>
+            </div>
+
+            <!-- ko if: isOpen -->
+                <div class="data-catalog-indent1" data-bind="markdown: content"></div>
+            <!-- /ko -->
+        </div>
+    </div>
 </div>
