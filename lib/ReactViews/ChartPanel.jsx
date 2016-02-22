@@ -1,7 +1,6 @@
 'use strict';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 
 import VarType from '../Map/VarType';
 
@@ -51,7 +50,9 @@ const ChartPanel = React.createClass({
             loader = <Loader/>;
         }
         if (data.length > 0) {
-            chart = <Chart data={data} colors={colors} height={266}/>
+            chart = (
+                <Chart data={data} colors={colors} height={266}/>
+            );
         }
         return (
             <div className="chart-panel__holder">
