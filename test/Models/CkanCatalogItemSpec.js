@@ -6,7 +6,6 @@ var loadText = require('terriajs-cesium/Source/Core/loadText');
 var sinon = require('sinon');
 var Terria = require('../../lib/Models/Terria');
 var TerriaError = require('../../lib/Core/TerriaError');
-var URI = require('urijs');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
@@ -18,37 +17,28 @@ describe('CkanCatalogItem', function() {
     var fakeServer;
 
     beforeEach(function(done) {
-        terria = new Terria({
-            baseUrl: './'
-        });
-        ckan = new CkanCatalogItem(terria);
-
-        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
-        fakeServer = sinon.fakeServer.create();
-        fakeServer.autoRespond = true;
-
-        fakeServer.xhr.useFilters = true;
-        fakeServer.xhr.addFilter(function(method, url, async, username, password) {
-            // Allow requests for local files.
-            var uri = new URI(url);
-            var protocol = uri.protocol();
-            return !protocol && url.indexOf('//') !== 0;
-        });
-
-        fakeServer.respond(function(request) {
-            fail('Unhandled request to URL: ' + request.url);
-        });
-
-        var toLoad = [
+        when.all([
             loadText('test/CKAN/taxation-statistics-package.json').then(function(text) {
                 taxationStatisticsPackage = text;
             }),
             loadText('test/CKAN/taxation-statistics-wms-resource.json').then(function(text) {
                 taxationStatisticsWmsResource = text;
             })
-        ];
+        ]).then(function() {
 
-        when.all(toLoad).then(done).otherwise(done.fail);
+            terria = new Terria({
+                baseUrl: './'
+            });
+            ckan = new CkanCatalogItem(terria);
+
+            sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
+            fakeServer = sinon.fakeServer.create();
+            fakeServer.autoRespond = true;
+
+            fakeServer.respond(function(request) {
+                fail('Unhandled request to URL: ' + request.url);
+            });
+        }).then(done).otherwise(done.fail);
     });
 
     afterEach(function() {
