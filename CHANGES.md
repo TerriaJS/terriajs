@@ -8,6 +8,7 @@ Change Log
 * Changed the default for `tableStyle.replaceWithZeroValues` to `[]`, ie. nothing.
 * Changed the default for `tableStyle.replaceWithNullValues` to `["-", "na", "NA"]`.
 * Changed the default for `tableStyle.nullLabel` to '(No value)'.
+* Fixed showWarnings in config json not being respected by CSV catalog items.
 
 ### 2.0.1
 
