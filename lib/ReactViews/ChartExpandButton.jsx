@@ -61,13 +61,21 @@ function expand(props, url) {
         // First, keep a copy of the colors used, so we can keep them the same with the new chart.
         const oldCatalogItem = group.items[existingIndex];
         existingColors = oldCatalogItem.tableStructure.columns.map(column=>column.color);
+        oldCatalogItem.isEnabled = false;
         group.remove(oldCatalogItem);
     }
     group.add(newCatalogItem);
     newCatalogItem.isLoading = true;
     terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
     newCatalogItem.isEnabled = true;  // This loads it as well.
-    // newCatalogItem.tableStructure.forEach((column, columnNumber)=>{column.color = existingColors[columnNumber];});
+    // Is there a better way to set up an action to occur once the file has loaded?
+    if (defined(existingColors) && defined(newCatalogItem._loadingPromise)) {
+        newCatalogItem._loadingPromise.then(function() {
+            if (defined(newCatalogItem.tableStructure)) {
+                newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{column.color = existingColors[columnNumber];});
+            }
+        });
+    }
 }
 
 module.exports = ChartExpandButton;
