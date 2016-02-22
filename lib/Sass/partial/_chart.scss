@@ -12,7 +12,7 @@ $chart-line-color: #ccc;
   shape-rendering: crispEdges;
 }
 
-.chart-panel .axis path {
+.chart-panel .axis path, .chart-panel .axis line {
   stroke: $chart-axis-color;  
 }
 
