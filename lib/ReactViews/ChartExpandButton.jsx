@@ -3,6 +3,7 @@
 import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
+import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 
 import CatalogGroup from '../Models/CatalogGroup';
 import CsvCatalogItem from '../Models/CsvCatalogItem';
@@ -69,12 +70,19 @@ function expand(props, url) {
     terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
     newCatalogItem.isEnabled = true;  // This loads it as well.
     // Is there a better way to set up an action to occur once the file has loaded?
-    if (defined(existingColors) && defined(newCatalogItem._loadingPromise)) {
+    if (defined(newCatalogItem._loadingPromise)) {
         newCatalogItem._loadingPromise.then(function() {
             if (defined(newCatalogItem.tableStructure)) {
-                newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{column.color = existingColors[columnNumber];});
+                newCatalogItem.tableStructure.sourceFeature = props.feature;
+                if (defined(existingColors)) {
+                    newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{column.color = existingColors[columnNumber];});
+                }
+            } else {
+                throw new DeveloperError('No table structure defined on catalog item.');
             }
         });
+    } else {
+        throw new DeveloperError('No loading promise defined on catalog item.');
     }
 }
 
