@@ -114,7 +114,9 @@ const Voldemort = React.createClass({
 
         if(nowViewingItem.concepts && nowViewingItem.concepts.length > 0) {
             content = nowViewingItem.concepts.map((item, i)=>
-                    this.renderVoldemortChildren(item, i)
+                   <div className='voldemort__inner'>
+                     <ul> {this.renderVoldemortChildren(item, i)}</ul>
+                   </div>
             );
         } else {
             content = null;
@@ -124,10 +126,8 @@ const Voldemort = React.createClass({
 
     render() {
         return (
-            <div className='now-viewing__item__voldemort'>
-                <div className='voldemort__inner'>
-                    <ul>{this.renderVoldemort()}</ul>
-                </div>
+            <div className='voldemort'>
+                    {this.renderVoldemort()}
             </div>
         );
     }

@@ -53,10 +53,9 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
-        if(this.props.catalogItem && defined(this.props.catalogItem.name)) {
-            return this.props.catalogItem.name;
-        }
-        return 'data group';
+        const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) && this.props.catalogItem.name || null;
+        const featureName = (this.props.feature && this.props.feature.name) && this.props.feature.name || null;
+        return catalogItemName.concat([' - ']).concat(featureName);
     },
 
     sanitizedCustomMarkdown() {
