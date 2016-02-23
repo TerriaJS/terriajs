@@ -57,10 +57,11 @@ function expand(props, url) {
     group.isOpen = true;
     const existingChartItemIds = group.items.map(item=>item.uniqueId);
     const existingIndex = existingChartItemIds.indexOf(newCatalogItem.uniqueId);
-    let existingColors;
+    let existingColors, activeConcepts;
     if (existingIndex >= 0) {
-        // First, keep a copy of the colors used, so we can keep them the same with the new chart.
+        // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
         const oldCatalogItem = group.items[existingIndex];
+        activeConcepts = oldCatalogItem.tableStructure.columns.map(column=>column.isActive);
         existingColors = oldCatalogItem.tableStructure.columns.map(column=>column.color);
         oldCatalogItem.isEnabled = false;
         group.remove(oldCatalogItem);
@@ -74,8 +75,11 @@ function expand(props, url) {
         newCatalogItem._loadingPromise.then(function() {
             if (defined(newCatalogItem.tableStructure)) {
                 newCatalogItem.tableStructure.sourceFeature = props.feature;
-                if (defined(existingColors)) {
-                    newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{column.color = existingColors[columnNumber];});
+                if (defined(existingColors) && defined(activeConcepts)) {
+                    newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
+                        column.isActive = activeConcepts[columnNumber];
+                        column.color = existingColors[columnNumber];
+                    });
                 }
             } else {
                 throw new DeveloperError('No table structure defined on catalog item.');
