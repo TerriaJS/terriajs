@@ -18,7 +18,7 @@ import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
 
 import LineChart from '../Charts/LineChart';
-import TableStructure from '../Core/TableStructure';
+import TableStructure from '../Map/TableStructure';
 // import VarType from '../Map/VarType';
 
 const defaultHeight = 100;

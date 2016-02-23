@@ -29,6 +29,11 @@ var greenTableStyle = new TableStyle({
     ]
 });
 
+function featureColor(csvItem, i) {
+    return csvItem.dataSource.entities.values[i]._point._color._value;
+}
+
+
 describe('CsvCatalogItem with lat and lon', function() {
 
     var terria;
@@ -197,12 +202,11 @@ describe('CsvCatalogItem with lat and lon', function() {
     it('colors enum fields the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(0)).not.toEqual(cval(1));
-            expect(cval(0)).not.toEqual(cval(2));
-            expect(cval(0)).not.toEqual(cval(3));
-            expect(cval(0)).toEqual(cval(4));
-            expect(cval(1)).toEqual(cval(3));
+            expect(featureColor(csvItem, 0)).not.toEqual(featureColor(csvItem, 1));
+            expect(featureColor(csvItem, 0)).not.toEqual(featureColor(csvItem, 2));
+            expect(featureColor(csvItem, 0)).not.toEqual(featureColor(csvItem, 3));
+            expect(featureColor(csvItem, 0)).toEqual(featureColor(csvItem, 4));
+            expect(featureColor(csvItem, 1)).toEqual(featureColor(csvItem, 3));
         }).otherwise(fail).then(done);
     });
 
@@ -320,12 +324,12 @@ describe('CsvCatalogItem with lat and lon', function() {
     });
 
     it('has a blank in the description table for a missing number', function(done) {
-        csvItem.url = 'test/missingNumberFormatting.csv';
+        csvItem.url = 'test/csv/missingNumberFormatting.csv';
         return csvItem.load().then(function() {
             var entities = csvItem.dataSource.entities.values;
             expect(entities.length).toBe(2);
             expect(entities[0].description.getValue()).toMatch('<td>Vals</td><td[^>]*>10</td>');
-            expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*></td>');
+            expect(entities[1].description.getValue()).toMatch('<td>Vals</td><td[^>]*>-</td>');
         }).otherwise(fail).then(done);
     });
 
@@ -338,7 +342,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             csvItem._maxPix = Math.max.apply(null, pixelSizes);
             // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
             expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
-        }).then(function(minMax) {
+        }).then(function() {
             var csvItem2 = new CsvCatalogItem(terria);
             csvItem2._tableStyle = new TableStyle({scale: 10, scaleByValue: true });
             csvItem2.url = 'test/csv/lat_lon_val.csv';
@@ -383,12 +387,12 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('defaults to blanks in numeric columns being zero', function(done) {
+    it('defaults to blanks in numeric columns being null', function(done) {
         csvItem.url = 'test/csv/lat_lon_blankvalue.csv';
         csvItem.load().then(function() {
             var valueColumn = csvItem.tableStructure.columns[2];
             expect(valueColumn.values[0]).toEqual(5);
-            expect(valueColumn.values[1]).toEqual(0);
+            expect(valueColumn.values[1]).toEqual(null);
             expect(valueColumn.values[2]).toEqual(0);
         }).otherwise(fail).then(done);
     });
@@ -397,8 +401,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         csvItem.url = 'test/csv/lat_lon_badvalue.csv';
         csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).not.toEqual(cval(2));
+            expect(featureColor(csvItem, 1)).not.toEqual(featureColor(csvItem, 2));
         }).otherwise(fail).then(done);
     });
 
@@ -410,33 +413,115 @@ describe('CsvCatalogItem with lat and lon', function() {
         });
         var nullColor = new Color(160/255, 176/255, 192/255, 1);
         csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).toEqual(nullColor);
+            expect(featureColor(csvItem, 1)).toEqual(nullColor);
             // This next expectation checks that zeros and null values are differently colored, and that
             // null values do not lead to coloring getting out of sync with values.
-            expect(cval(2)).not.toEqual(nullColor);
+            expect(featureColor(csvItem, 2)).not.toEqual(nullColor);
         }).otherwise(fail).then(done);
     });
 
-    it('works with nulls in a range not including zero', function(done) {
-        csvItem.url = 'test/csv/lat_lon_nullvalue.csv';
-        csvItem.load().then(function() {
-            function cval(i) { return csvItem.dataSource.entities.values[i]._point._color._value; }
-            expect(cval(1)).toEqual(cval(0));  // colors null (row 2) the same as the lowest-value point (row 1).
-        }).otherwise(fail).then(done);
+    describe('and per-column tableStyle', function() {
+
+        it('scales by value', function(done) {
+            csvItem.url = 'test/csv/lat_lon_val.csv';
+            csvItem._tableStyle = new TableStyle({
+                columns: {
+                    value: { // only scale the 'value' column
+                        scale: 5,
+                        scaleByValue: true
+                    }
+                }
+            });
+            return csvItem.load().then(function() {
+                var pixelSizes = csvItem.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                csvItem._minPix = Math.min.apply(null, pixelSizes);
+                csvItem._maxPix = Math.max.apply(null, pixelSizes);
+                // we don't want to be too prescriptive, but by default the largest object should be 150% normal, smallest is 50%, so 3x difference.
+                expect(csvItem._maxPix).toEqual(csvItem._minPix * 3);
+            }).then(function() {
+                var csvItem2 = new CsvCatalogItem(terria);
+                csvItem2._tableStyle = new TableStyle({scale: 10, scaleByValue: true });  // this time, apply it to all columns
+                csvItem2.url = 'test/csv/lat_lon_val.csv';
+                return csvItem2.load().yield(csvItem2);
+            }).then(function(csvItem2) {
+                var pixelSizes = csvItem2.dataSource.entities.values.map(function(e) { return e.point._pixelSize._value; });
+                var minPix = Math.min.apply(null, pixelSizes);
+                var maxPix = Math.max.apply(null, pixelSizes);
+                // again, we don't specify the base size, but x10 things should be twice as big as x5 things.
+                expect(maxPix).toEqual(csvItem._maxPix * 2);
+                expect(minPix).toEqual(csvItem._minPix * 2);
+            }).otherwise(fail).then(done);
+        });
+
+        it('uses correct defaults', function(done) {
+            // nullColor is passed through to the columns as well, if not overridden explicitly.
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                nullColor: '#A0B0C0',
+                columns: {
+                    value: {
+                        replaceWithNullValues: ['bad']
+                    }
+                }
+            });
+            var nullColor = new Color(160/255, 176/255, 192/255, 1);
+            csvItem.load().then(function() {
+                expect(featureColor(csvItem, 1)).toEqual(nullColor);
+            }).otherwise(fail).then(done);
+        });
+
+        it('supports name and nullColor with column ref by name', function(done) {
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                nullColor: '#123456',
+                columns: {
+                    value: {
+                        replaceWithNullValues: ['bad'],
+                        nullColor: '#A0B0C0',
+                        name: 'Temperature'
+                    }
+                }
+            });
+            var nullColor = new Color(160/255, 176/255, 192/255, 1);
+            csvItem.load().then(function() {
+                expect(csvItem.tableStructure.columns[2].name).toEqual('Temperature');
+                expect(featureColor(csvItem, 1)).toEqual(nullColor);
+            }).otherwise(fail).then(done);
+        });
+
+        it('supports nullColor with column ref by number', function(done) {
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                columns: {
+                    2: {
+                        replaceWithNullValues: ['bad'],
+                        nullColor: '#A0B0C0'
+                    }
+                }
+            });
+            var nullColor = new Color(160/255, 176/255, 192/255, 1);
+            csvItem.load().then(function() {
+                expect(featureColor(csvItem, 1)).toEqual(nullColor);
+            }).otherwise(fail).then(done);
+        });
+
+        it('supports type', function(done) {
+            csvItem.url = 'test/csv/lat_lon_badvalue.csv';
+            csvItem._tableStyle = new TableStyle({
+                columns: {
+                    value: {
+                        replaceWithNullValues: ['bad'],
+                        type: 'enum'
+                    }
+                }
+            });
+            csvItem.load().then(function() {
+                expect(csvItem.tableStructure.columns[2].type).toEqual(VarType.ENUM);
+            }).otherwise(fail).then(done);
+        });
+
     });
 
-    // Removed: not clear that this is correct behaviour, and it's failing.
-    // xit('renders a point with no value in transparent black', function(done) {
-    //     csvItem.url = 'test/missingNumberFormatting.csv';
-    //     return csvItem.load().then(function() {
-    //         var entities = csvItem.dataSource.entities.values;
-    //         expect(entities.length).toBe(2);
-    //         expect(entities[0].point.color.getValue()).not.toEqual(new Color(0.0, 0.0, 0.0, 0.0));
-    //         expect(entities[1].point.color.getValue()).toEqual(new Color(0.0, 0.0, 0.0, 0.0));
-    //         done();
-    //     });
-    // });
 });
 
 // eg. use as entities.map(getPropertiesDate) to just get the dates of the entities.
@@ -703,6 +788,25 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(url.length).toBeLessThan(2000);
         }).otherwise(fail).then(done);
     });
+
+    //describe('when data is partially unmatchable', function() {
+    //    beforeEach(function(done) {
+    //        spyOn(terria.error, 'raiseEvent');
+    //        csvItem.updateFromJson({data: 'Postcode,value\n2000,1\n9999,2'}).otherwise(fail);
+    //        csvItem.load().then(done);
+    //    });
+    //
+    //    xit('emits an error event', function() {
+    //        csvItem.regionMapping.enable();
+    //        expect(terria.error.raiseEvent).toHaveBeenCalled();
+    //    });
+    //
+    //    xit('and showWarnings is false, it emits no error event or JS Error', function() {
+    //        csvItem.showWarnings = false;
+    //        csvItem.regionMapping.enable();
+    //        expect(terria.error.raiseEvent).not.toHaveBeenCalled();
+    //    });
+    //});
 
     describe('and feature picking', function() {
         var fakeServer;
