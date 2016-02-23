@@ -9,11 +9,13 @@
     height: calc(100% - #{$logo-height});
   }
   nav{
-    display: none;
+    position: absolute;
+    left: -1000px;
     @include transition(margin $animation-fast ease-in);
     @media(screen and min-width: $sm){
       //temp
-      display: block;
+      position: relative;
+      left: 0;
       .is-full-screen &{
         display: none;
       }

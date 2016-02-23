@@ -185,6 +185,13 @@ geolocation;
   }
 }
 
+.btn--close-feature{
+  @extend .btn--close;
+  &:hover{
+    color: $color-primary;
+  }
+}
+
 
 // Text and icon buttons
 //
