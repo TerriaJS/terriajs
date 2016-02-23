@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.1.0
+
+* Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
+
 ### 2.0.2
 
 * Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters. See wwwroot/test/init/test-tablestyle.json's CSV column-specific group for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
