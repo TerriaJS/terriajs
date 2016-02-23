@@ -16,106 +16,97 @@ const Voldemort = React.createClass({
         item.isOpen = !item.isOpen;
     },
 
-    toggleActive(item) {
-        item.toggleActive();
+    toggleActive(concept) {
+        concept.toggleActive();
     },
 
-    getBtnClass(item, parent) {
+    getBtnClass(concept, parent) {
         let btnClasses;
         if (parent && parent.allowMultiple) {
-            btnClasses = item.isActive ? 'btn--voldemort-multiple-active' : 'btn--voldemort-multiple-inactive';
+            btnClasses = concept.isActive ? 'btn--voldemort-multiple-active' : 'btn--voldemort-multiple-inactive';
         } else {
-            btnClasses = item.isActive ? 'btn--voldemort-unique-active' : 'btn--voldemort-unique-inactive';
+            btnClasses = concept.isActive ? 'btn--voldemort-unique-active' : 'btn--voldemort-unique-inactive';
         }
         return btnClasses;
     },
 
-    renderVoldemortChildren(item, key, parent) {
-        let toggleButton = null;
+    renderVoldemortChildren(concept, key, parent) {
         let selectButton = null;
-        const classNames = 'voldemort__children ' + (item.isOpen ? 'is-open' : '') + ' ' + (item.hasChildren ? 'has-children' : '');
+        const classNames = 'voldemort__children ' + (concept.isOpen ? 'is-open' : '') + ' ' + (concept.hasChildren ? 'has-children' : '');
         const style = {};
-        if (defined(item.color)) {
-            style.color = item.color;
+        if (defined(concept.color)) {
+            style.color = concept.color;
         }
 
         // !isVisible => hides this concept and all its children
-        if (!item.isVisible) {
+        if (!concept.isVisible) {
             return null;
         }
 
-        // if Visible, calculate class names for buttons
-        if (item.hasChildren) {
-            toggleButton = (
-                <button onClick={this.toggleOpen.bind(this, item)}
-                    style={style}
-                    className={'btn btn--toggle ' + (item.isOpen ? 'is-open' : '')}
-                    title='open voldemort'>
-                </button>
-            );
-        }
-        if(item.isSelectable) {
+        if (concept.isSelectable) {
             selectButton = (
-                <button onClick={this.toggleActive.bind(this, item)}
+                <button onClick={this.toggleActive.bind(this, concept)}
                     style={style}
-                    className={this.getBtnClass(item, parent) + ' btn'}
+                    className={this.getBtnClass(concept, parent) + ' btn'}
                     title='select voldemort'>
                 </button>
             );
         }
 
-        // !name but has children=> shows the children, but without the dropdown option
-        // !name but has no children=> shows nothing
-        if (!item.name) {
-            if (item.hasChildren) {
-                return (
-                  <li className={classNames}
-                    style={style}
-                    key={key}>
-                    <ul>
-                        {item.items.map((child, i)=>
-                            this.renderVoldemortChildren(child, i, item)
-                        )}
-                      </ul>
-                  </li>
-                );
-            }
-            return null;
-        }
-
-        // both visible and has name
-        // - has children, show dropdown options and children
-        if (item.hasChildren) {
+        // If no children, show only title and select options.
+        if (!concept.hasChildren) {
             return (
-                <li className={classNames}
-                    style={style}
-                    key={key}>
-                    <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
-                    <ul>
-                        {item.items.map((child, i)=>
-                            this.renderVoldemortChildren(child, i, item)
-                        )}
-                    </ul>
+                <li className={classNames} key={key}>
+                    <span className='voldemort__children__header'>{selectButton}{concept.name}</span>
                 </li>
             );
         }
-        // - no children, show only title and select options
+
+        // If no name, show the children without the dropdown option.
+        if (!concept.name) {
+            return (
+              <li className={classNames}
+                style={style}
+                key={key}>
+                <ul>
+                    {concept.items.map((child, i)=>
+                        this.renderVoldemortChildren(child, i, concept)
+                    )}
+                  </ul>
+              </li>
+            );
+        }
+
+        // Otherwise show dropdown options and children
+        const toggleButton = (
+            <button onClick={this.toggleOpen.bind(this, concept)}
+                style={style}
+                className={'btn btn--toggle ' + (concept.isOpen ? 'is-open' : '')}
+                title='open voldemort'>
+            </button>
+        );
         return (
-            <li className={classNames} key={key}>
-                <span className='voldemort__children__header'>{toggleButton}{selectButton}{item.name}</span>
+            <li className={classNames}
+                style={style}
+                key={key}>
+                <span className='voldemort__children__header'>{toggleButton}{selectButton}{concept.name}</span>
+                <ul>
+                    {concept.items.map((child, i)=>
+                        this.renderVoldemortChildren(child, i, concept)
+                    )}
+                </ul>
             </li>
         );
-
     },
 
     renderVoldemort() {
         const nowViewingItem = this.props.nowViewingItem;
         let content;
 
-        if(nowViewingItem.concepts && nowViewingItem.concepts.length > 0) {
-            content = nowViewingItem.concepts.map((item, i)=>
-                   <div className='voldemort__inner' key="voldemort">
-                     <ul>{this.renderVoldemortChildren(item, i)}</ul>
+        if (nowViewingItem.concepts && nowViewingItem.concepts.length > 0) {
+            content = nowViewingItem.concepts.map((concept, i)=>
+                   <div className='voldemort__inner' key={i}>
+                        <ul>{this.renderVoldemortChildren(concept, i)}</ul>
                    </div>
             );
         } else {

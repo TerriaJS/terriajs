@@ -75,6 +75,9 @@ const Legend = React.createClass({
             //     }
             // }
         }
+        if (legends.length === 0) {
+            return null;
+        }
         return (
             <div className="now-viewing__item__legend">
                 {legends}
