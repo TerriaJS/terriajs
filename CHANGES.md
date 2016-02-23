@@ -2,6 +2,26 @@
 Change Log
 ==========
 
+### 2.1.0
+
+* Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
+
+### 2.0.2
+
+* Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters. See wwwroot/test/init/test-tablestyle.json's CSV column-specific group for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
+* Added the following column-specific `tableStyle` parameters:
+  - `name`: renames the column.
+  - `type`: sets the column type; can be one of LON, LAT, ALT, TIME, SCALAR, or ENUM.
+  - `format`: sets the column number format, using the format of the [Javascript Intl options parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString), eg. `{"format": {"useGrouping": true, "maximumFractionDigits": 2}}` to add thousands separators to numbers and show only two decimal places. Only the `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options are guaranteed to work in all browsers.
+* Changed the default number format in the Feature Info Panel to not separate thousands with commas.
+* Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
+* Changed the default for `tableStyle.replaceWithZeroValues` to `[]`, ie. nothing.
+* Changed the default for `tableStyle.replaceWithNullValues` to `["-", "na", "NA"]`.
+* Changed the default for `tableStyle.nullLabel` to '(No value)'.
+* Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
+* Fixed showWarnings in config json not being respected by CSV catalog items.
+* Fixed exporting raw data as CSV not escaping commas in the data itself.
+
 ### 2.0.1
 
 * Fixed a bug that caused the last selected ABS concept not to appear in the feature info panel.
