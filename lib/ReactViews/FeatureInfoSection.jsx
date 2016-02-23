@@ -53,8 +53,8 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
-        const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) && this.props.catalogItem.name || null;
-        const featureName = (this.props.feature && this.props.feature.name) && this.props.feature.name || null;
+        const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) && this.props.catalogItem.name || [];
+        const featureName = (this.props.feature && this.props.feature.name) && this.props.feature.name || [];
         return catalogItemName.concat([' - ']).concat(featureName);
     },
 
