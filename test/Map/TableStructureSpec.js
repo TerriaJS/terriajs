@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var TableStructure = require('../../lib/Core/TableStructure');
+var TableStructure = require('../../lib/Map/TableStructure');
 var VarType = require('../../lib/Map/VarType');
 
 var separator = ',';

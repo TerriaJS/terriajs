@@ -6,7 +6,7 @@ var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
 var sinon = require('sinon');
 var URI = require('urijs');
-var TableStructure = require('../../lib/Core/TableStructure.js');
+var TableStructure = require('../../lib/Map/TableStructure.js');
 
 describe('RegionProviderList', function() {
     var fakeServer;
