@@ -6,6 +6,21 @@ $now-viewing-margin: $padding-small - 1px;
   overflow-y: scroll;
   background: rgba(#fff, 0.15);
   padding: 0  $padding-small;
+
+  .workbench__inner.is-now-viewing &{
+    @media(screen and max-width: $sm){
+      position: fixed;
+      left: 0;
+      width: 100%;
+      background: rgba($dark, 0.8);
+      top: 140px;
+      height: auto;
+      .now-viewing__content{
+        height: 250px;
+        overflow-y: auto;
+      }
+    }
+  }
 }
 
 .now-viewing__header{

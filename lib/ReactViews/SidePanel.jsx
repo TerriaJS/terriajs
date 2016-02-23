@@ -27,7 +27,7 @@ const SidePanel = React.createClass({
         const terria = this.props.terria;
 
         return (
-            <div className='workbench__inner'>
+            <div className={'workbench__inner ' + (this.props.viewState.isNowViewingOnly ? 'is-now-viewing' : '')}>
                 <div className='workbench__add-data'>
                     <button onClick={this.onAddDataClicked} className='btn'>Add Data</button>
                 </div>

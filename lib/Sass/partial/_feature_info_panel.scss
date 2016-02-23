@@ -3,7 +3,7 @@
 // Markup:
 // <div class="feature-info-panel is-visible" aria-hidden="false">
 // <div class="feature-info-panel__header">
-// <button class="btn"> Feature Info Panel </button><button class="btn btn--close-modal" title="Close data panel"></button>
+// <button class="btn"> Feature Info Panel </button><button class="btn btn--close-feature" title="Close data panel"></button>
 // </div>
 // <ul class='feature-info-panel__body'>
 // <li class="feature-info__group">
@@ -85,4 +85,9 @@
   margin: $padding-mini 0;
 }
 
+.btn--close-feature{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
