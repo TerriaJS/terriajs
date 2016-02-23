@@ -1,8 +1,11 @@
 'use strict';
 import React from 'react';
 import SearchBox from './Search/SearchBox.jsx';
+import ObserveModelMixin from './ObserveModelMixin';
 
 const MobileHeader = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object
     },
@@ -43,6 +46,12 @@ const MobileHeader = React.createClass({
         });
     },
 
+    onClearMobileUI() {
+        this.props.viewState.toggleNowViewing(false);
+        this.props.viewState.togglePreview(false);
+        this.props.viewState.toggleModal(false);
+    },
+
     search() {
 
     },
@@ -60,6 +69,7 @@ const MobileHeader = React.createClass({
                       <SearchBox onSearchTextChanged={this.search}/>
                       <button className='btn btn--mobile-search-cancel' onClick={this.toggleSearch}>cancel</button>
                     </div>
+                    {(this.props.viewState.modalVisible || this.props.viewState.isNowViewingOnly) && <button className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Back to map</button>}
                 </div>;
     }
 });
