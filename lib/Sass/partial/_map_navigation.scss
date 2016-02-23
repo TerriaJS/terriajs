@@ -19,12 +19,13 @@
     }
 
     .my-location{
-      position: absolute;
-      top: 80vh;
+      position: fixed;
+      bottom: $input-height + $padding;
       z-index: 99;
       right: 2vw;
       @media(screen and min-width: $sm){
         //temp
+        position: absolute;
         right: 28px;
         top: 170px;
       }
