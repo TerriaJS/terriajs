@@ -15,6 +15,11 @@ var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var CzmlCatalogItem = require('../../lib/Models/CzmlCatalogItem');
 
+var separator = ',';
+if (typeof Intl === 'object') {
+    separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+}
+
 describe('FeatureInfoPanelViewModel', function() {
     var terria;
     var panel;
@@ -207,6 +212,13 @@ describe('FeatureInfoPanelViewModel templating', function() {
         item.featureInfoTemplate = 'Big {{big}}';
         return loadAndPick().then(function() {
             expect(panel.sections[0].templatedInfo.indexOf('1234567') >= 0).toBe(true);
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('can format numbers with commas', function(done) {
+        item.featureInfoTemplate = {template: 'Big {{big}}', formats: {big: {useGrouping: true}}};
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo.indexOf('1' + separator + '234' + separator + '567') >= 0).toBe(true);
         }).then(done).otherwise(done.fail);
     });
 
