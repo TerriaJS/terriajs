@@ -16,7 +16,7 @@ $now-viewing-margin: $padding-small - 1px;
       top: 140px;
       height: auto;
       .now-viewing__content{
-        height: 250px;
+        height: 255px;
         overflow-y: auto;
       }
     }
@@ -31,6 +31,7 @@ $now-viewing-margin: $padding-small - 1px;
     text-transform: uppercase;
     font-size: $font-size-small;
   }
+
   li{
     display: inline-block;
     float: left;
@@ -119,8 +120,13 @@ $now-viewing-margin: $padding-small - 1px;
   .btn{
     width: 100%;
   }
+  .btn--toggle{
+      text-align: center;
+  }
   .btn--toggle.is-open{
-    padding-left: 8px;
+    @media(screen and min-width: $sm){
+      padding-left: 8px;
+    }
   }
   .now-viewing__item.is-open & {
   border-bottom: 1px solid $border-color;
