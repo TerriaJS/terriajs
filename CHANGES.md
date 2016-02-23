@@ -5,6 +5,8 @@ Change Log
 ### 2.1.0
 
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
+* Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. See the notes under 2.0.2 for the available formatting options.
+
 
 ### 2.0.2
 
