@@ -5,28 +5,37 @@
     position: absolute;
     right: 0;
     top: 0;
-    width: 70vw;
+    width: 60vw;
     max-width: 300px;
     padding: $padding-small;
     height: 100%;
 
     .btn--mobile-add{
-        @extend .btn--add;
+        @extend .btn--increase;
         position: relative;
+        width: 120px;
+        padding: $padding-small;
+        text-transform: uppercase;
         &:before{
             position: absolute;
             top: $padding;
-            left: $padding;
+            left: $padding-small;
+            font-size: 1.5rem;
         }
         text-align: right;
-        padding-left: $padding*3;
+        padding-left: $padding*2;
     }
 
     .btn--now-viewing{
         margin: 0 $padding-small;
+        padding: $padding-small;
+        text-transform: uppercase;
         width: 50px;
         font-size: 1.5rem;
         @extend .btn--visible;
+        &.is-empty{
+            opacity: 0.5;
+        }
     }
 }
 
@@ -74,7 +83,6 @@
 
 
 .mobile__search{
-    width: 40%;
     max-width: 100px;
     float: right;
     height: 100%;
