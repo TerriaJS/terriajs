@@ -17,7 +17,9 @@ const ChartExpandButton = React.createClass({
         sourceNames: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
         feature: React.PropTypes.object,
-        chartTitle: React.PropTypes.string
+        chartTitle: React.PropTypes.string,
+        columnNames: React.PropTypes.array,
+        columnUnits: React.PropTypes.array
     },
 
     expandButton() {
@@ -80,6 +82,16 @@ function expand(props, url) {
                     newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
                         column.isActive = activeConcepts[columnNumber];
                         column.color = existingColors[columnNumber];
+                    });
+                }
+                if (defined(props.columnNames)) {
+                    newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
+                        if (props.columnNames[columnNumber]) {
+                            column.name = props.columnNames[columnNumber];
+                        }
+                        if (props.columnUnits[columnNumber]) {
+                            column.units = props.columnUnits[columnNumber];
+                        }
                     });
                 }
             } else {
