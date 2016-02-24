@@ -1,20 +1,24 @@
 .data-preview{
   visibility: hidden;
-  height: 100%;
   overflow: hidden;
-  overflow-y: scroll;
+  height: 0;
+  // on desktop, is modal is open, show preview
+  // on mobile, if modal is open and if tab says is-previewing, then show preview
   .data-panel-wrapper.is-open .tabs.is-previewing &{
     visibility: visible;
+    height: auto;
   }
   @media(screen and min-width: $sm){
     .data-panel-wrapper.is-open &{
       visibility: visible;
-      padding-right: $padding;
       position: absolute;
+      padding-right: $padding;
       top: $padding;
       right: $padding-small;
-      width: calc(50% - #{$padding*2});
       bottom: $padding;
+      width: calc(50% - #{$padding*2});
+      height: $modal-content-height;
+      overflow-y: auto;
     }
   }
 
@@ -29,6 +33,7 @@
 .data-preview-map{
   position: relative;
 }
+//Preview map
 .terria-preview{
   height: 250px;
   overflow: hidden;
@@ -39,6 +44,7 @@
 }
 
 .data-preview__body{
+  // give it a padding on mobile
   padding: $padding;
   @media(screen and min-width: $sm){
     padding: 0;

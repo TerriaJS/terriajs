@@ -1,5 +1,9 @@
 html{
-  font-size: 87.5%;
+  font-size: 95%;
+  @media (min-width: $sm) {
+    font-size: 87.5%;
+  }
+  //disallow text select because it's annoying
   &.terria{
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -117,28 +121,28 @@ textarea {
   display: none !important
 }
 
-@media (min-width: 40em) {
+@media (min-width: $sm) {
   .sm-show { display: block !important }
 }
 
-@media (min-width: 52em) {
+@media (min-width: $md) {
   .md-show { display: block !important }
 }
 
-@media (min-width: 64em) {
+@media (min-width: $lg) {
   .lg-show { display: block !important }
 }
 
 
-@media (min-width: 40em) {
+@media (min-width: $sm) {
   .sm-hide { display: none !important }
 }
 
-@media (min-width: 52em) {
+@media (min-width: $md) {
   .md-hide { display: none !important }
 }
 
-@media (min-width: 64em) {
+@media (min-width: $lg) {
   .lg-hide { display: none !important }
 }
 

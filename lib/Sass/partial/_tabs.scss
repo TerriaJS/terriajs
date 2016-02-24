@@ -8,10 +8,25 @@
   }
 }
 
+.modal-content{
+  .tablist{
+    @extend .sm-show;
+  }
+}
+
+.tabs.is-previewing .data-explorer{
+  @extend .sm-show;
+}
+
 .tab-panel{
   position: absolute;
   left: -10000px;
   z-index: -1;
+  width: 100%;
+  height: 100%;
+  @media(screen and min-width: $sm){
+    height: $modal-content-height;
+  }
   &.is-active{
     z-index: 1;
     position: relative;
@@ -21,12 +36,18 @@
   &:focus{
     outline: none;
   }
-}
-// My data
-.add-data-tablist{
-  padding-right: 0;
-  li{
-    margin-right: 3px;
+  .panel-content{
+    @extend .clearfix;
+    overflow-y: auto;
+    position: relative;
+    background: $modal-bg;
+    color: $modal-text;
+    @media(screen and min-width: $sm){
+      padding: $padding;
+      border-top: 1px solid $grey-lighter;
+      height: 100%;
+      overflow: hidden;
+    }
   }
 }
 

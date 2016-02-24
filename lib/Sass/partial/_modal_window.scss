@@ -9,24 +9,25 @@
   position: relative;
   background: $modal-bg;
   color: $modal-text;
+  border-radius: $radius-small;
   z-index: 200;
+  opacity: 0;
+  height: 100%;
+  overflow-y: auto;
   visibility: hidden;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
-  border-radius: $radius-small;
-  opacity: 0;
   @include transition(all 0.3s);
-
   @media(screen and min-width: $sm){
     @include transform(translateY(20%));
     width: 100%;
+    overflow: hidden;
   }
   .is-open & {
     @media(screen and min-width: $sm){
       @include transform(translateX(0));
     }
-
     opacity: 1;
     visibility: visible;
   }
@@ -56,47 +57,5 @@
   @extend .sm-show;
 }
 
-.tab-panel{
-  width: 100%;
-  .panel-content{
-    height: $modal-content-height;
-    max-height: 100%;
-    position: relative;
-  }
-}
-
-.panel-content{
-  @extend .clearfix;
-  background: $modal-bg;
-  color: $modal-text;
-  @media(screen and min-width: $sm){
-    padding: $padding;
-    border-top: 1px solid $grey-lighter;
-  }
-}
-
-.data-explorer,
-.my-data{
-  @media(screen and min-width: $sm){
-    width: 50%;
-    float: left;
-  }
-}
-
-.data-explorer{
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-.modal-content{
-  .tablist{
-    @extend .sm-show;
-  }
-}
-
-.tabs.is-previewing .data-explorer{
-  @extend .sm-show;
-}
 
 

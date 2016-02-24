@@ -33,16 +33,22 @@
 .modal-wrapper{
   position: fixed;
   z-index: 99;
-  top: 0;
-  left: 0;
+  top: $sm-logo-height;
   width: 100vw;
-  padding: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2) $padding;
-  padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
   bottom: $input-height;
+  padding: 0;
+
+  @media screen and (min-width : $sm){
+    padding-left: $padding*2;
+    padding-right: $padding*2;
+    padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
+    padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
+    bottom: 0;
+    top: 0;
+  }
   @media screen and (min-width : $md){
     padding-left: $work-bench-width + 50px;
     padding-right: 50px;
-    bottom: 0;
   }
 }
 
@@ -102,7 +108,7 @@
   min-width: 150px;
   max-height: 80vh;
   z-index: 5;
-  @media screen and (min-width : $sm){
+  @media screen and (min-width : $md){
     //temp
     max-width: calc(100vw - #{$work-bench-width} - 150px);
     right: 100px;
