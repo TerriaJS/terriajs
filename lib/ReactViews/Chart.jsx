@@ -55,6 +55,9 @@ const Chart = React.createClass({
                 LineChart.create(that._element, chartState);
                 return true;
             }).otherwise(function(e) {
+                // It looks better to create a blank chart than no chart.
+                chartState.data = [];
+                LineChart.create(that._element, chartState);
                 throw new DeveloperError('Could not load chart data at ' + chartState.url);
             });
         }
