@@ -54,6 +54,9 @@ describe('Clock', function() {
 
         it('should advance across a gap on tick if the tick would put currentTime into a gap', function() {
             clock.currentTime = JulianDate.fromIso8601('2016-01-07');
+
+            expect(clock.currentTime).not.toEqual(JulianDate.fromIso8601('2016-01-12'));
+
             clock.tick();
 
             expect(clock.currentTime).toEqual(JulianDate.fromIso8601('2016-01-12'));
