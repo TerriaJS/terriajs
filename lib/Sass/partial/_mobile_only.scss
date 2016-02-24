@@ -1,13 +1,33 @@
 .mobile__header{
     @extend .sm-hide;
+    @extend .flex;
     font-family: $font-pop;
     position: absolute;
     right: 0;
     top: 0;
-    width: 50vw;
-    max-width: 180px;
+    width: 70vw;
+    max-width: 300px;
     padding: $padding-small;
     height: 100%;
+
+    .btn--mobile-add{
+        @extend .btn--add;
+        position: relative;
+        &:before{
+            position: absolute;
+            top: $padding;
+            left: $padding;
+        }
+        text-align: right;
+        padding-left: $padding*3;
+    }
+
+    .btn--now-viewing{
+        margin: 0 $padding-small;
+        width: 50px;
+        font-size: 1.5rem;
+        @extend .btn--visible;
+    }
 }
 
 .mobile__nav{

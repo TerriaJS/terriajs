@@ -12,37 +12,28 @@ const MobileHeader = React.createClass({
 
     getInitialState() {
         return {
-            searchIsOpen: false,
-            menuIsOpen: false
+            searchIsOpen: false
         };
     },
 
     toggleSearch() {
         this.setState({
-            searchIsOpen: !this.state.searchIsOpen,
-            menuIsOpen: false
+            searchIsOpen: !this.state.searchIsOpen
         });
     },
 
-    toggleMenu() {
-        this.setState({
-            menuIsOpen: !this.state.menuIsOpen
-        });
-    },
 
     onMobileDataCatalogClicked() {
         this.props.viewState.openAddData();
         this.setState({
-            searchIsOpen: false,
-            menuIsOpen: false
+            searchIsOpen: false
         });
     },
 
     onMobileNowViewingClicked() {
         this.props.viewState.toggleNowViewing(true);
         this.setState({
-            searchIsOpen: false,
-            menuIsOpen: false
+            searchIsOpen: false
         });
     },
 
@@ -57,17 +48,12 @@ const MobileHeader = React.createClass({
     },
     render() {
         return <div className='mobile__header'>
-                    <div className={'mobile__nav ' + (this.state.menuIsOpen ? 'is-open' : '')}>
-                      <button className='btn--mobile-menu btn' onClick={this.toggleMenu}>Data</button>
-                      <ul className='nav'>
-                        <li><button className='btn btn--mobile-nav' onClick={this.onMobileDataCatalogClicked}> Data Catalogue</button></li>
-                        <li><button className='btn btn--mobile-nav' onClick={this.onMobileNowViewingClicked}> Now Viewing</button></li>
-                      </ul>
-                    </div>
+                    <button className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Add Data</button>
+                    <button className='btn btn-primary btn--now-viewing' onClick={this.onMobileNowViewingClicked}></button>
                     <div className={'mobile__search ' + (this.state.searchIsOpen ? 'is-open' : '')}>
-                      <button className='btn btn--mobile-search' onClick={this.toggleSearch}></button>
-                      <SearchBox onSearchTextChanged={this.search}/>
-                      <button className='btn btn--mobile-search-cancel' onClick={this.toggleSearch}>cancel</button>
+                        <button className='btn btn--mobile-search' onClick={this.toggleSearch}></button>
+                        <SearchBox onSearchTextChanged={this.search}/>
+                        <button className='btn btn--mobile-search-cancel' onClick={this.toggleSearch}>cancel</button>
                     </div>
                     {(this.props.viewState.modalVisible || this.props.viewState.isNowViewingOnly) && <button className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Back to map</button>}
                 </div>;
