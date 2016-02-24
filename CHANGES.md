@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.1.1
+
+* Fixed a bug in `CkanCatalogItem` that made it build URLs incorrectly when given a base URL ending in a slash.
+
 ### 2.1.0
 
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
