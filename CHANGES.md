@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.1.1
+
+* Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
+
 ### 2.1.0
 
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
