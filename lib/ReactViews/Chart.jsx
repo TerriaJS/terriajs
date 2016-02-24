@@ -31,9 +31,10 @@ const Chart = React.createClass({
         colors: React.PropTypes.array,
         url: React.PropTypes.string,
         data: React.PropTypes.array,  // If data is provided instead of url, it must be in the format expected by LineChart (see below).
-        domain: React.PropTypes.array,
+        domain: React.PropTypes.object,
         mini: React.PropTypes.bool,
         height: React.PropTypes.number,
+        axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number
     },
 
@@ -71,6 +72,7 @@ const Chart = React.createClass({
             url: this.props.url,
             width: '100%',
             height: defaultValue(this.props.height, defaultHeight),
+            axisLabel: this.props.axisLabel,
             mini: this.props.mini,
             transitionDuration: this.props.transitionDuration
         };

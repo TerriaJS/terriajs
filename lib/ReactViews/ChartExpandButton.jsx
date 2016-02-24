@@ -57,7 +57,8 @@ function expand(props, url) {
     group.isOpen = true;
     const existingChartItemIds = group.items.map(item=>item.uniqueId);
     const existingIndex = existingChartItemIds.indexOf(newCatalogItem.uniqueId);
-    let existingColors, activeConcepts;
+    let existingColors;
+    let activeConcepts;
     if (existingIndex >= 0) {
         // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
         const oldCatalogItem = group.items[existingIndex];
