@@ -4,11 +4,6 @@
     {
       "type": "Feature",
       "properties": {
-        "stroke": "#555555",
-        "stroke-width": 2,
-        "stroke-opacity": 1,
-        "fill": "#555555",
-        "fill-opacity": 0.5,
         "name": "unstyled polygon"
       },
       "geometry": {
@@ -38,8 +33,6 @@
     {
       "type": "Feature",
       "properties": {
-        "marker-color": "#7e7e7e",
-        "marker-size": "medium",
         "name": "unstyled marker"
       },
       "geometry": {
@@ -53,9 +46,6 @@
     {
       "type": "Feature",
       "properties": {
-        "stroke": "#555555",
-        "stroke-width": 2,
-        "stroke-opacity": 1,
         "name": "unstyled line"
       },
       "geometry": {
@@ -140,7 +130,7 @@
       "type": "Feature",
       "properties": {
         "marker-color": "#ff41f4",
-        "marker-size": "large",
+        "marker-size": "medium",
         "marker-symbol": "rocket",
         "name": "large pink rocket"
       },
@@ -155,11 +145,6 @@
     {
       "type": "Feature",
       "properties": {
-        "stroke": "#555555",
-        "stroke-width": 2,
-        "stroke-opacity": 1,
-        "fill": "#555555",
-        "fill-opacity": 0.5,
         "name": "Unstyled diamond"
       },
       "geometry": {
@@ -225,6 +210,39 @@
               -39.43195032116862
             ]
           ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#ffe400",
+        "marker-size": "small",
+        "marker-symbol": "rocket",
+        "name": "Small yellow rocket"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          144.97283935546872,
+          -39.612036199336934
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#784aff",
+        "marker-size": "large",
+        "marker-symbol": "rocket",
+        "marker-opacity": "0.3",
+        "name": "Large translucent purple rocket"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          145.31616210937497,
+          -39.59933957529531
         ]
       }
     }
