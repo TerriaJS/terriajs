@@ -6,7 +6,10 @@ Change Log
 
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
 * Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. See the notes under 2.0.2 for the available formatting options.
-
+* Added support for time-series data sets with gaps - these are skipped when scrubbing on the timeline or playing.
+* Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
+    in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
+    (which is the current time at the top-left).
 
 ### 2.0.2
 
