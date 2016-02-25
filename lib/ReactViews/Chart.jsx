@@ -43,10 +43,8 @@ const Chart = React.createClass({
 
     getInitialState() {
         // If the data is downloaded here from a URL, then store the downloaded data in state.data.
-        // If the chart is being updated for a resize, don't animate it
         return {
-            data: undefined,
-            transitionDuration: undefined
+            data: undefined
         };
     },
 
@@ -79,24 +77,25 @@ const Chart = React.createClass({
             // that.rnd = Math.random();
             // React should handle the binding for you, but it doesn't seem to work here; perhaps because it is inside a Promise?
             // So we return the bound listener function from the promise.
-            const boundComponentDidUpdate = function() {
-                that.setState({data: that.state.data, transitionDuration: 1});
-                that.componentDidUpdate();
-                that.setState({data: that.state.data});
+            const resize = function() {
+                // This function basically the same as componentDidUpdate, but it speeds up transitions.
+                if (that._element) {
+                    const localChartParameters = that.getChartParameters();
+                    localChartParameters.transitionDuration = 1;
+                    LineChart.update(that._element, localChartParameters);
+                } else {
+                    // This would happen if event listeners were not properly removed (ie. if you get this error, a bug was introduced to this code).
+                    throw new DeveloperError('Missing chart DOM element ' + that.url);
+                }
             };
             // console.log('Listening for resize on', that.props.url, that.rnd, boundComponentDidUpdate);
-            window.addEventListener('resize', boundComponentDidUpdate);
-            return boundComponentDidUpdate;
+            window.addEventListener('resize', resize);
+            return resize;
         });
     },
 
     componentDidUpdate() {
-        if (this._element) {
-            LineChart.update(this._element, this.getChartParameters());
-        } else {
-            // This would happen if event listeners were not properly removed (ie. if you get this error, a bug was introduced to this code).
-            throw new DeveloperError('Missing chart DOM element ' + this.url);
-        }
+        LineChart.update(this._element, this.getChartParameters());
     },
 
     componentWillUnmount() {
@@ -120,7 +119,7 @@ const Chart = React.createClass({
             height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.mini,
-            transitionDuration: defined(this.state.transitionDuration) ? this.state.transitionDuration : this.props.transitionDuration
+            transitionDuration: this.props.transitionDuration
         };
     },
 
