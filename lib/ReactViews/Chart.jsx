@@ -16,6 +16,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import LineChart from '../Charts/LineChart';
 import TableStructure from '../Map/TableStructure';
@@ -26,6 +27,8 @@ const defaultHeight = 100;
 const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
     _element: undefined,
+
+    _promise: undefined,
 
     propTypes: {
         colors: React.PropTypes.array,
@@ -38,39 +41,73 @@ const Chart = React.createClass({
         transitionDuration: React.PropTypes.number
     },
 
+    getInitialState() {
+        // If the data is downloaded here from a URL, then store the downloaded data in state.data.
+        return {
+            data: undefined
+        };
+    },
+
     componentDidMount() {
         const that = this;
-        const chartState = this.getChartState();
-        if (defined(chartState.data)) {
-            LineChart.create(this._element, chartState);
-        } else if (defined(chartState.url)) {
+        const chartParameters = this.getChartParameters();
+        let promise;
+        if (defined(chartParameters.data)) {
+            promise = when(LineChart.create(this._element, chartParameters));
+        } else if (defined(chartParameters.url)) {
             const tableStructure = new TableStructure('feature info');
-            loadText(chartState.url).then(function(text) {
+            promise = loadText(chartParameters.url).then(function(text) {
                 tableStructure.loadFromCsv(text);
-                chartState.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);  // TODO: use y-columns.
+                chartParameters.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);  // TODO: use y-columns.
                 // LineChart expects data to be [ [{x: x1, y: y1}, {x: x2, y: y2}], [...] ], but each subarray must also have a unique id property.
                 // The data id should be set to something unique, eg. its source id + column index.
                 // TODO: For now, since we are just showing the first column anyway, just set the column index to its index in the data.
-                chartState.data.forEach((datum, i)=>{datum.id = i;});
-                LineChart.create(that._element, chartState);
-                return true;
+                chartParameters.data.forEach((datum, i)=>{datum.id = i;});
+                LineChart.create(that._element, chartParameters);
+                that.setState({data: chartParameters.data});  // Triggers componentDidUpdate, so only do this after the line chart exists.
             }).otherwise(function(e) {
                 // It looks better to create a blank chart than no chart.
-                chartState.data = [];
-                LineChart.create(that._element, chartState);
-                throw new DeveloperError('Could not load chart data at ' + chartState.url);
+                chartParameters.data = [];
+                LineChart.create(that._element, chartParameters);
+                that.setState({data: chartParameters.data});
+                throw new DeveloperError('Could not load chart data at ' + chartParameters.url);
             });
         }
+        this._promise = promise.then(function() {
+            // that.rnd = Math.random();
+            // React should handle the binding for you, but it doesn't seem to work here; perhaps because it is inside a Promise?
+            // So we return the bound listener function from the promise.
+            const boundComponentDidUpdate = that.componentDidUpdate.bind(that);
+            // console.log('Listening for resize on', that.props.url, that.rnd, boundComponentDidUpdate);
+            window.addEventListener('resize', boundComponentDidUpdate);
+            return boundComponentDidUpdate;
+        });
     },
 
     componentDidUpdate() {
-        LineChart.update(this._element, this.getChartState());
+        if (this._element) {
+            LineChart.update(this._element, this.getChartParameters());
+        } else {
+            // This would happen if event listeners were not properly removed (ie. if you get this error, a bug was introduced to this code).
+            throw new DeveloperError('Missing chart DOM element ' + this.url);
+        }
     },
 
-    getChartState() {
+    componentWillUnmount() {
+        const that = this;
+        this._promise.then(function(listener) {
+            window.removeEventListener('resize', listener);
+            // console.log('Removed resize listener for', that.props.url, that.rnd, listener);
+            LineChart.destroy(that._element);
+            that._element = undefined;
+        });
+        this._promise = undefined;
+    },
+
+    getChartParameters() {
         return {
             colors: this.props.colors,
-            data: this.props.data,
+            data: defined(this.state.data) ? this.state.data : this.props.data,
             domain: this.props.domain,
             url: this.props.url,
             width: '100%',
@@ -79,10 +116,6 @@ const Chart = React.createClass({
             mini: this.props.mini,
             transitionDuration: this.props.transitionDuration
         };
-    },
-
-    componentWillUnmount() {
-        LineChart.destroy(this._element);
     },
 
     render() {
