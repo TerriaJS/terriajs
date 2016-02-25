@@ -43,8 +43,10 @@ const Chart = React.createClass({
 
     getInitialState() {
         // If the data is downloaded here from a URL, then store the downloaded data in state.data.
+        // If the chart is being updated for a resize, don't animate it
         return {
-            data: undefined
+            data: undefined,
+            transitionDuration: undefined
         };
     },
 
@@ -77,7 +79,11 @@ const Chart = React.createClass({
             // that.rnd = Math.random();
             // React should handle the binding for you, but it doesn't seem to work here; perhaps because it is inside a Promise?
             // So we return the bound listener function from the promise.
-            const boundComponentDidUpdate = that.componentDidUpdate.bind(that);
+            const boundComponentDidUpdate = function() {
+                that.setState({data: that.state.data, transitionDuration: 1});
+                that.componentDidUpdate();
+                that.setState({data: that.state.data});
+            };
             // console.log('Listening for resize on', that.props.url, that.rnd, boundComponentDidUpdate);
             window.addEventListener('resize', boundComponentDidUpdate);
             return boundComponentDidUpdate;
@@ -114,7 +120,7 @@ const Chart = React.createClass({
             height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.mini,
-            transitionDuration: this.props.transitionDuration
+            transitionDuration: defined(this.state.transitionDuration) ? this.state.transitionDuration : this.props.transitionDuration
         };
     },
 
