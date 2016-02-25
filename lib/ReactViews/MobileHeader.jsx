@@ -56,7 +56,7 @@ const MobileHeader = React.createClass({
                         <SearchBox onSearchTextChanged={this.search}/>
                         <button className='btn btn--mobile-search-cancel' onClick={this.toggleSearch}>cancel</button>
                     </div>
-                    {(this.props.viewState.modalVisible || this.props.viewState.isNowViewingOnly) && <button className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Back to map</button>}
+                    {(this.props.viewState.modalVisible || this.props.viewState.isNowViewingOnly) && <button className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Done</button>}
                 </div>;
     }
 });

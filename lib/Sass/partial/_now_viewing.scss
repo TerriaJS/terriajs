@@ -2,23 +2,19 @@
 $now-viewing-margin: $padding-small - 1px;
 
 .now-viewing{
-  height: calc(100vh - #{$workbench-header});
-  overflow-y: scroll;
   background: rgba(#fff, 0.15);
   padding: 0  $padding-small;
-
+  overflow-y: scroll;
+  @media(screen and min-width: $sm){
+    height: calc(100vh - #{$workbench-header});
+  }
   .workbench__inner.is-now-viewing &{
     @media(screen and max-width: $sm){
       position: fixed;
       left: 0;
       width: 100%;
-      background: rgba($dark, 0.8);
-      top: 140px;
-      height: auto;
-      .now-viewing__content{
-        height: 253px;
-        overflow-y: auto;
-      }
+      top: $sm-logo-height;
+      bottom: $input-height;
     }
   }
 }
