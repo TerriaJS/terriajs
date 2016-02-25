@@ -51,12 +51,12 @@ const DataPreview = React.createClass({
                             className="btn btn--exist-preview"
                             title='exit preview'>
                     </button>
-                    <button onClick={this.toggleOnMap}
-                            className="btn toggle-enable"
-                            title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
-                        {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
-                    </button>
                     <div className='data-preview__info'>
+                        <button onClick={this.toggleOnMap}
+                                className="btn toggle-enable"
+                                title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
+                            {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
+                        </button>
                         <h4>{previewed.name}</h4>
                         <div className="data-info url">
                             <h5>Description</h5>

@@ -31,7 +31,10 @@ const MobileHeader = React.createClass({
     },
 
     onMobileNowViewingClicked() {
+        this.props.viewState.togglePreview(false);
+        this.props.viewState.toggleModal(false);
         this.props.viewState.toggleNowViewing(true);
+
         this.setState({
             searchIsOpen: false
         });

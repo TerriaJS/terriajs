@@ -20,6 +20,7 @@ $now-viewing-margin: $padding-small - 1px;
 }
 
 .now-viewing__header{
+  @extend .sm-show;
   @extend .list-reset;
   @extend .clearfix;
   .label, .btn{
