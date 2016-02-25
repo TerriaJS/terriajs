@@ -62,9 +62,8 @@ export default React.createClass({
 
         const outerClasses = classNames(
             'search',
-            {'is-searching': this.props.searchText.length > 0}
+            {'is-searching': this.state.searchText.length > 0}
         );
-
         return (
             <div className={outerClasses}>
                 <SearchBox onSearchTextChanged={this.search}/>
@@ -76,9 +75,9 @@ export default React.createClass({
                             <div key={search.constructor.name}>
                                 <label className='label label-sub-heading'>{search.name}</label>
                                 <SearchHeader {...search} />
-                                <ul className='list-reset search-results-items'>
+                                <ul className='search-results-items'>
                                     { search.searchResults.map((result, i) => (
-                                        <LocationItem key={result.name} item={result}/>
+                                        <LocationItem key={i} item={result}/>
                                     )) }
                                 </ul>
                             </div>
