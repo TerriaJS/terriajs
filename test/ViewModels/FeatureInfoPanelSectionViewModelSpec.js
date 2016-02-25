@@ -18,7 +18,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
         });
         var properties = {
             'Foo': 'bar',
-            'herp': 'derp'
+            'herp': 'd"e"r,p'
         };
         feature = new Entity({
             name: 'Bar',
@@ -111,8 +111,9 @@ describe('FeatureInfoPanelSectionViewModel', function() {
     describe('download data', function () {
         describe('on init', function () {
             it('should generate data uris for json and csv for 2-dimensional data', function() {
-                var EXPECTED_CSV_URL = 'data:attachment/csv,Foo%2Cherp%0Abar%2Cderp';
-                var EXPECTED_JSON_URL = 'data:attachment/json,%7B%22Foo%22%3A%22bar%22%2C%22herp%22%3A%22derp%22%7D';
+                // csv should separate with commas and surround data with quotes, and make existing quotes double-quotes ("")
+                var EXPECTED_CSV_URL = 'data:attachment/csv,%22Foo%22%2C%22herp%22%0A%22bar%22%2C%22d%22%22e%22%22r%2Cp%22';
+                var EXPECTED_JSON_URL = 'data:attachment/json,%7B%22Foo%22%3A%22bar%22%2C%22herp%22%3A%22d%5C%22e%5C%22r%2Cp%22%7D';
 
                 var section = new FeatureInfoPanelSectionViewModel(panel, feature);
 
@@ -127,7 +128,7 @@ describe('FeatureInfoPanelSectionViewModel', function() {
                 expect(section.dataDownloads[1].name).toBe('JSON');
             });
 
-            it('should only generate a data uris for json for hierarchical data', function() {
+            it('should only generate data uris for json for hierarchical data', function() {
                 var EXPECTED_JSON_URL = 'data:attachment/json,%7B%22Foo%22%3A%22bar%22%2C%22herp%22%3A%7B%22nestedHerp%22%3A%22nestedDerp%22%7D%7D';
 
                 feature.properties.herp = {
