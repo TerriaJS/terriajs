@@ -2,19 +2,20 @@
 Change Log
 ==========
 
+### 2.1.1
+
+* Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
+* Fixed a bug in `CkanCatalogItem` that made it build URLs incorrectly when given a base URL ending in a slash.
+
 ### 2.1.0
 
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
-* Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. See the notes under 2.0.2 for the available formatting options.
-
-
-### 2.0.2
-
-* Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters. See wwwroot/test/init/test-tablestyle.json's CSV column-specific group for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
+* Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters. See the CSV column-specific group in `wwwroot/test/init/test-tablestyle.json` for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
 * Added the following column-specific `tableStyle` parameters:
   - `name`: renames the column.
   - `type`: sets the column type; can be one of LON, LAT, ALT, TIME, SCALAR, or ENUM.
   - `format`: sets the column number format, using the format of the [Javascript Intl options parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString), eg. `{"format": {"useGrouping": true, "maximumFractionDigits": 2}}` to add thousands separators to numbers and show only two decimal places. Only the `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options are guaranteed to work in all browsers.
+* Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. The formatting options are the same as above.
 * Changed the default number format in the Feature Info Panel to not separate thousands with commas.
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
 * Changed the default for `tableStyle.replaceWithZeroValues` to `[]`, ie. nothing.
