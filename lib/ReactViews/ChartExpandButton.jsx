@@ -3,11 +3,11 @@
 import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 
 import CatalogGroup from '../Models/CatalogGroup';
 import CsvCatalogItem from '../Models/CsvCatalogItem';
 import Dropdown from './Dropdown';
+import raiseErrorToUser from '../Models/raiseErrorToUser';
 
 const ChartExpandButton = React.createClass({
 
@@ -74,33 +74,31 @@ function expand(props, url) {
     terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
     newCatalogItem.isEnabled = true;  // This loads it as well.
     // Is there a better way to set up an action to occur once the file has loaded?
-    if (defined(newCatalogItem._loadingPromise)) {
-        newCatalogItem._loadingPromise.then(function() {
-            if (defined(newCatalogItem.tableStructure)) {
-                newCatalogItem.tableStructure.sourceFeature = props.feature;
-                if (defined(existingColors) && defined(activeConcepts)) {
-                    newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
-                        column.isActive = activeConcepts[columnNumber];
-                        column.color = existingColors[columnNumber];
-                    });
-                }
-                if (defined(props.columnNames)) {
-                    newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
-                        if (props.columnNames[columnNumber]) {
-                            column.name = props.columnNames[columnNumber];
-                        }
-                        if (props.columnUnits[columnNumber]) {
-                            column.units = props.columnUnits[columnNumber];
-                        }
-                    });
-                }
-            } else {
-                throw new DeveloperError('No table structure defined on catalog item.');
+    newCatalogItem.load().then(function() {
+        // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
+        try {
+            newCatalogItem.tableStructure.sourceFeature = props.feature;
+            if (defined(existingColors) && defined(activeConcepts)) {
+                newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
+                    column.isActive = activeConcepts[columnNumber];
+                    column.color = existingColors[columnNumber];
+                });
             }
-        });
-    } else {
-        throw new DeveloperError('No loading promise defined on catalog item.');
-    }
+            if (defined(props.columnNames)) {
+                newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
+                    if (props.columnNames[columnNumber]) {
+                        column.name = props.columnNames[columnNumber];
+                    }
+                    if (props.columnUnits[columnNumber]) {
+                        column.units = props.columnUnits[columnNumber];
+                    }
+                });
+            }
+        } catch(e) {
+            // This does not actually make it to the user.
+            return raiseErrorToUser(terria, e);
+        }
+    });
 }
 
 module.exports = ChartExpandButton;
