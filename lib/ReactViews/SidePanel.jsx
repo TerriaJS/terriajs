@@ -37,7 +37,7 @@ const SidePanel = React.createClass({
                                    new BingMapsSearchProviderViewModel({terria}),
                                    new GazetteerSearchProviderViewModel({terria})
                                ]}/>
-                <div className="now-viewing hide-on-search">
+                <div className="now-viewing">
                     {this.renderNowViewing(this.props.terria.nowViewing.items)}
                 </div>
             </div>

@@ -59,7 +59,7 @@ const DataCatalogTab = React.createClass({
             terria.catalog.group.items;
 
         return (
-            <ul className='data-catalog hide-on-search'>
+            <ul className='data-catalog'>
                 <SearchHeader {...this.searchProvider} />
                 {items
                     .filter(defined)
