@@ -163,10 +163,13 @@ const DistanceLegend = React.createClass({
             backgroundColor: '#ffffff'
         };
 
-        return (<div className='distance-legend'>
+        const distanceLabel = this.state.distanceLabel ?
+                (<div className='distance-legend'>
                   <label> {this.state.distanceLabel}</label>
                   <div style={barStyle}></div>
-                </div>);
+                 </div>) : null;
+
+        return distanceLabel;
     }
 });
 module.exports = DistanceLegend;

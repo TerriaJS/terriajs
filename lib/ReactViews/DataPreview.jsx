@@ -29,6 +29,10 @@ const DataPreview = React.createClass({
         };
     },
 
+    exitPreview() {
+        this.props.viewState.togglePreview(false);
+    },
+
     render() {
         const previewed = this.props.viewState.previewedItem;
         return (
@@ -43,6 +47,10 @@ const DataPreview = React.createClass({
         if (previewed && defined(previewed.type)) {
             return (
                 <div className='data-preview'>
+                    <button onClick={this.exitPreview}
+                            className="btn btn--exist-preview"
+                            title='exit preview'>
+                    </button>
                     <button onClick={this.toggleOnMap}
                             className="btn toggle-enable"
                             title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
