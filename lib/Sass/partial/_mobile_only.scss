@@ -5,7 +5,6 @@
     position: absolute;
     right: 0;
     top: 0;
-    width: 60vw;
     max-width: 300px;
     padding: $padding-small;
     height: 100%;
@@ -15,6 +14,7 @@
         position: relative;
         width: 120px;
         padding: $padding-small;
+        padding-left: $padding*2;
         text-transform: uppercase;
         &:before{
             position: absolute;
@@ -23,18 +23,25 @@
             font-size: 1.5rem;
         }
         text-align: right;
-        padding-left: $padding*2;
+
     }
 
     .btn--now-viewing{
         margin: 0 $padding-small;
         padding: $padding-small;
+        padding-right: $padding;
+        position: relative;
         text-transform: uppercase;
         width: 50px;
-        font-size: 1.5rem;
+        &:before{
+            font-size: 1.5rem;
+        }
         @extend .btn--visible;
-        &.is-empty{
-            opacity: 0.5;
+        .now-viewing__count{
+            position: absolute;
+            top: $padding-small;
+            right: $padding-small;
+            font-size: 0.8rem;
         }
     }
 }

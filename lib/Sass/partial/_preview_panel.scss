@@ -1,4 +1,4 @@
-.data-preview{
+.data-preview__wrapper{
   visibility: hidden;
   overflow: hidden;
   height: 0;
@@ -28,10 +28,27 @@
   .btn.toggle-enable{
     @extend .btn-primary;
   }
+  .btn--exist-preview{
+    @extend .sm-hide;
+    @extend .btn--left;
+    position: fixed;
+    top: $padding + $sm-logo-height;
+    background: #fff;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    left: $padding;
+    box-shadow: $box-shadow;
+    text-align: center;
+    font-size: 1.3rem;
+  }
 }
 
 .data-preview-map{
   position: relative;
+  .label--preview-badge{
+    @extend .sm-show;
+  }
 }
 //Preview map
 .terria-preview{
@@ -43,10 +60,6 @@
   pointer-events: none;
 }
 
-.data-preview__body{
-  // give it a padding on mobile
-  padding: $padding;
-  @media(screen and min-width: $sm){
-    padding: 0;
-  }
+.data-preview__info{
+  padding: $padding-small;
 }

@@ -17,7 +17,6 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 import raiseErrorOnRejectedPromise from '../Models/raiseErrorOnRejectedPromise';
 import readJson from '../Core/readJson';
 
-
 const wfsUrlRegex = /\bwfs\b/i;
 
 // Local and remote data have different dataType options

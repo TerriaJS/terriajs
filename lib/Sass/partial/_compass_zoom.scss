@@ -94,20 +94,15 @@ $compass-width: 70px;
 // Style guide: Component.my-location
 
 .my-location{
-  background: #fff;
-  height: $compass-width - $ring-width*3.5;
-  width: $compass-width - $ring-width*3.5;
-  border-radius: 50%;
-  overflow: hidden;
-
   .btn{
+    border-radius: 50%;
     display: block;
-    height: 100%;
-    width: 100%;
-    padding: 0;
+    background: #fff;
+    padding: $ring-width/2;
     color: $dark;
     &:before{
       font-size: 25px;
+      line-height: 1;
       text-align: center;
     }
   }

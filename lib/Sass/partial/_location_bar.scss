@@ -1,5 +1,5 @@
-//temp
-//
+$distance-bg: rgba($dark, 0.9);
+
 .location-distance{
   @extend .clearfix;
   display: none;
@@ -32,10 +32,14 @@
   float: left;
 }
 
+.location-bar,
 .distance-legend{
-  @extend .btn--map;
+  background: $distance-bg;
+  border-radius: 15px;
+  padding: $padding-small $padding;
+  font-size: 0.8rem;
+  text-align: center;
   &:hover{
-    background: $dark;
-    border-color: $dark;
+    background: $distance-bg;
   }
 }
