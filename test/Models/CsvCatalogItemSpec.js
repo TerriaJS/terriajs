@@ -365,6 +365,13 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('makes features even if no value column', function(done) {
+        csvItem.url = 'test/csv/lat_lon.csv';
+        return csvItem.load().then(function() {
+            expect(csvItem.dataSource.entities.values.length).toBeGreaterThan(1);
+        }).otherwise(fail).then(done);
+    });
+
     it('supports replaceWithNullValues', function(done) {
         csvItem.url = 'test/csv/lat_lon_badvalue.csv';
         csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
