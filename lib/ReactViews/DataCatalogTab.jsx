@@ -43,7 +43,7 @@ const DataCatalogTab = React.createClass({
                                ref={ref => this.searchBox = ref} />
                     {this.renderDataCatalog()}
                 </div>
-                <div className="data-preview">
+                <div className="data-preview__wrapper">
                     <DataPreview terria={terria}
                                  viewState={this.props.viewState}
                     />

@@ -47,9 +47,10 @@ const MobileHeader = React.createClass({
 
     },
     render() {
+        const nowViewingLength = this.props.terria.nowViewing.items.length;
         return <div className='mobile__header'>
                     <button className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Add Data</button>
-                    {(this.props.terria.nowViewing.items.length > 0) && <button className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}></button>}
+                    {(nowViewingLength > 0) && <button className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}>{nowViewingLength}</button>}
                     <div className={'mobile__search ' + (this.state.searchIsOpen ? 'is-open' : '')}>
                         <button className='btn btn--mobile-search' onClick={this.toggleSearch}></button>
                         <SearchBox onSearchTextChanged={this.search}/>

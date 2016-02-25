@@ -1,4 +1,4 @@
-.data-preview{
+.data-preview__wrapper{
   visibility: hidden;
   overflow: hidden;
   height: 0;
@@ -43,10 +43,6 @@
   pointer-events: none;
 }
 
-.data-preview__body{
-  // give it a padding on mobile
-  padding: $padding;
-  @media(screen and min-width: $sm){
-    padding: 0;
-  }
+.data-preview__info{
+  padding: $padding-small;
 }

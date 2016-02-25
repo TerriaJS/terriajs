@@ -30,7 +30,9 @@
         padding: $padding-small;
         text-transform: uppercase;
         width: 50px;
-        font-size: 1.5rem;
+        &:before{
+            font-size: 1.5rem;
+        }
         @extend .btn--visible;
     }
 }
