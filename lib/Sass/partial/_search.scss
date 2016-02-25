@@ -11,11 +11,9 @@
   background: rgba(#fff, 0.15);
   max-height: 100%;
   @include transition(all 0.5s ease-in-out);
-  .workbench .is-searching &{
-    height: calc(100vh - #{$workbench-header});
-  }
   .workbench &{
     margin-top: calc(#{$input-height} + #{$padding});
+    max-height: calc(100vh - #{$workbench-header});
     overflow-y: scroll;
     padding: 0 $padding-small;
     .search-results-items{
