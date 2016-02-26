@@ -3,7 +3,7 @@
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 
-var TableColumn = require('../../lib/Core/TableColumn');
+var TableColumn = require('../../lib/Map/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 var VarSubType = require('../../lib/Map/VarSubType');
 
@@ -17,19 +17,11 @@ describe('TableColumn', function() {
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 
-    it('treats hyphens and nulls as zeros in numeric data', function() {
-        var data = [1, '-', null, 4];
+    it('treats null, NA and hyphens as null in numeric data', function() {
+        var data = [1, 'NA', 4, '-', null, 3];
         var tableColumn = new TableColumn('x', data);
         expect(tableColumn.name).toEqual('x');
-        expect(tableColumn.values).toEqual([1, 0, 0, 4]);
-        expect(tableColumn.type).toEqual(VarType.SCALAR);
-    });
-
-    it('treats NA as null in numeric data', function() {
-        var data = [1, 'NA', 4];
-        var tableColumn = new TableColumn('x', data);
-        expect(tableColumn.name).toEqual('x');
-        expect(tableColumn.values).toEqual([1, null, 4]);
+        expect(tableColumn.values).toEqual([1, null, 4, null, null, 3]);
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 

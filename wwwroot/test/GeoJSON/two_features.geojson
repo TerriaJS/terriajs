@@ -26,7 +26,7 @@
 				"update_dat":"2010-11-19Z",
 				"disposal_d":null,
 				"positional":"GPS Corrected 1.0M",
-				"owner":"415",
+				"owner":"Jay<br>",
 				"project_nu":"CLE5",
 				"file.number.":10,
 				"folder_num":null,
@@ -34,6 +34,7 @@
 				"survey_num":null,
 				"condition":2,
 				"historic#.":-12,
+				"big":1234567,
 				"funding_ba":"Capex"
 			}
 		},
@@ -69,6 +70,7 @@
 				"survey_num":null,
 				"condition":1,
 				"historic#.":-11,
+				"big":234567,
 				"funding_ba":"Initial"
 			}
 		}
