@@ -5,6 +5,10 @@ Change Log
 ### 2.1.2
 
 * Upgraded to terriajs-cesium 1.18.0.
+#### 2.2.0
+* Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which
+    trigger `terria.disclaimerEvent`, which is listened to by `DisclaimerViewModel`. `DisclaimerViewModel` must be added
+    by the map that's using Terria.
 
 ### 2.1.1
 
