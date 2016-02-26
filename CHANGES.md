@@ -5,6 +5,7 @@ Change Log
 ### 2.1.1
 
 * Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
+* Fixed sharing of user-added time-varying csv files.
 * Fixed a bug in `CkanCatalogItem` that made it build URLs incorrectly when given a base URL ending in a slash.
 
 ### 2.1.0
