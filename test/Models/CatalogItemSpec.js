@@ -154,4 +154,51 @@ describe('CatalogItem', function () {
             });
         });
     });
+
+    describe('setting isGroup', function() {
+        beforeEach(function() {
+            spyOn(terria.disclaimerEvent, 'raiseEvent');
+        });
+
+        describe('to true when item has a disclaimer', function() {
+            beforeEach(function() {
+                item.initialMessage = {};
+                item.isEnabled = true;
+            });
+
+            it('doesn\'t immediately take effect', function() {
+                expect(item.isEnabled).toBe(false);
+            });
+
+            it('triggers a disclaimerEvent', function() {
+                expect(terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[0]).toBe(item);
+            });
+
+            it('takes effect after the callback passed to disclaimerEvent is executed', function() {
+                terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[1]();
+                expect(item.isEnabled).toBe(true);
+            });
+        });
+
+        describe('to true when item has no disclaimer', function() {
+            beforeEach(function() {
+                item.isEnabled = true;
+            });
+
+            it('immediately takes effect', function() {
+                expect(item.isEnabled).toBe(true);
+            });
+
+            it('triggers no disclaimerEvent', function() {
+                expect(terria.disclaimerEvent.raiseEvent).not.toHaveBeenCalled();
+            });
+        });
+
+        it('to false takes immediate effect', function() {
+            item.isEnabled = true;
+            item.isEnabled = false;
+
+            expect(item.isEnabled).toBe(false);
+        });
+    });
 });
