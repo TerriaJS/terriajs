@@ -19,7 +19,9 @@ const ChartExpandButton = React.createClass({
         feature: React.PropTypes.object,
         chartTitle: React.PropTypes.string,
         columnNames: React.PropTypes.array,
-        columnUnits: React.PropTypes.array
+        columnUnits: React.PropTypes.array,
+        xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+        yColumns: React.PropTypes.array
     },
 
     expandButton() {

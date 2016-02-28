@@ -32,13 +32,19 @@ const Chart = React.createClass({
 
     propTypes: {
         colors: React.PropTypes.array,
-        url: React.PropTypes.string,
-        data: React.PropTypes.array,  // If data is provided instead of url, it must be in the format expected by LineChart (see below).
         domain: React.PropTypes.object,
         mini: React.PropTypes.bool,
         height: React.PropTypes.number,
         axisLabel: React.PropTypes.object,
-        transitionDuration: React.PropTypes.number
+        transitionDuration: React.PropTypes.number,
+        // You either need to provide the data via props.data,
+        // in the format expected by LineChart (see below).
+        data: React.PropTypes.array,
+        // Or, provide a URL to the data, along with option xColumn, yColumn(s)
+        url: React.PropTypes.string,
+        xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+        yColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+        yColumns: React.PropTypes.array
     },
 
     getInitialState() {
@@ -58,10 +64,17 @@ const Chart = React.createClass({
             const tableStructure = new TableStructure('feature info');
             promise = loadText(chartParameters.url).then(function(text) {
                 tableStructure.loadFromCsv(text);
-                chartParameters.data = tableStructure.toXYArrays(tableStructure.columns[0], [tableStructure.columns[1]]);  // TODO: use y-columns.
+                const xColumn = tableStructure.getColumnWithNameOrIndex(that.props.xColumn || 0);
+                let yColumns = [tableStructure.columns[1]];
+                if (defined(that.props.yColumns)) {
+                    yColumns = that.props.yColumns.map(yCol=>tableStructure.getColumnWithNameOrIndex(yCol));
+                } else if (defined(that.props.yColumn)) {
+                    yColumns = [tableStructure.getColumnWithNameOrIndex(that.props.yColumn)];
+                }
+                chartParameters.data = tableStructure.toXYArrays(xColumn, yColumns);
                 // LineChart expects data to be [ [{x: x1, y: y1}, {x: x2, y: y2}], [...] ], but each subarray must also have a unique id property.
                 // The data id should be set to something unique, eg. its source id + column index.
-                // TODO: For now, since we are just showing the first column anyway, just set the column index to its index in the data.
+                // If we're here, the data was downloaded from a url, ie. comes from a single file, so the column index is unique by itself.
                 chartParameters.data.forEach((datum, i)=>{datum.id = i;});
                 LineChart.create(that._element, chartParameters);
                 that.setState({data: chartParameters.data});  // Triggers componentDidUpdate, so only do this after the line chart exists.
