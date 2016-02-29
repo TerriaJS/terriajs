@@ -5,13 +5,13 @@ Change Log
 ### 2.1.2
 
 * Upgraded to terriajs-cesium 1.18.0.
+* Added support for csv files which only have latitude and longitude columns (no value columns). Revised geojson display to draw from the same palette of high contrast colors.
 
 ### 2.1.1
 
 * Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
 * Fixed sharing of user-added time-varying csv files.
 * Fixed a bug in `CkanCatalogItem` that made it build URLs incorrectly when given a base URL ending in a slash.
-* Shows csv files which only have latitude and longitude columns (no value columns), using `nullColor`. `nullColor` adjusted to 50% opacity.
 
 ### 2.1.0
 
