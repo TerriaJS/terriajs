@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.1.2
+
+* Upgraded to terriajs-cesium 1.18.0.
+
 ### 2.1.1
 
 * Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
