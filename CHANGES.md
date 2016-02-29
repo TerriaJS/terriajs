@@ -5,6 +5,7 @@ Change Log
 ### 2.1.2
 
 * Upgraded to terriajs-cesium 1.18.0.
+* Fixed an error when adding a csv with one line of data.
 
 ### 2.1.1
 
