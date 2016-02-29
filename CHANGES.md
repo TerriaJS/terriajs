@@ -10,6 +10,7 @@ Change Log
 ### 2.1.2
 
 * Upgraded to terriajs-cesium 1.18.0.
+* Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
 
 ### 2.1.1
 
