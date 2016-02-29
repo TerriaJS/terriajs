@@ -50,7 +50,6 @@ const SettingPanel = React.createClass({
     selectBaseMap(baseMap, event) {
         event.stopPropagation();
         this.props.terria.baseMap = baseMap.catalogItem;
-        this.props.terriaViewer.updateBaseMap();
     },
 
     mouseEnterBaseMap(baseMap) {
