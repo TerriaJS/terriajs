@@ -314,6 +314,23 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('returns valid values for intervals', function(done) {
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem._tableStyle = new TableStyle({displayDuration: 60});
+        csvItem.load().then(function() {
+            var intervals = csvItem.intervals;
+
+            expect(intervals.length).toBe(6); // 13 rows over 6 days
+
+            // interval length is 1 houor
+            expect(intervals.get(0).start).toEqual(JulianDate.fromIso8601('2015-08-01'));
+            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00'));
+
+            expect(intervals.start).toEqual(JulianDate.fromIso8601('2015-08-01'));
+            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00'));
+        }).otherwise(fail).then(done);
+    });
+
     it('has the right values in descriptions for feature picking', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
