@@ -2,9 +2,14 @@
 Change Log
 ==========
 
+### 2.1.2
+
+* Upgraded to terriajs-cesium 1.18.0.
+
 ### 2.1.1
 
 * Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
+* Fixed sharing of user-added time-varying csv files.
 * Fixed a bug in `CkanCatalogItem` that made it build URLs incorrectly when given a base URL ending in a slash.
 
 ### 2.1.0
@@ -23,6 +28,7 @@ Change Log
 * Changed the default for `tableStyle.nullLabel` to '(No value)'.
 * Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
 * Fixed showWarnings in config json not being respected by CSV catalog items.
+* Fixed hidden region mapped layers being displayed when variable selection changes.
 * Fixed exporting raw data as CSV not escaping commas in the data itself.
 
 ### 2.0.1

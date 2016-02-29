@@ -7,7 +7,7 @@ var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 var CesiumMath = require('terriajs-cesium/Source/Core/Math');
 var CustomMatchers = require('../Utility/CustomMatchers');
 var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
-var HeadingPitchRange = require('terriajs-cesium/Source/Scene/HeadingPitchRange');
+var HeadingPitchRange = require('terriajs-cesium/Source/Core/HeadingPitchRange');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 describe('CameraView', function() {
