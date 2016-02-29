@@ -51,6 +51,19 @@
                 "tableStyle": {
                     "nullLabel": "blank"
                 }
+            },
+            {
+                "name": "Lat lon CSV with duration of 1 hour",
+                "type": "csv",
+                "url": "build/terriajs/test/csv/lat_lon_date_value.csv",
+                "tableStyle": {
+                    "displayDuration": 60
+                }
+            },
+            {
+                "name": "Lat lon CSV with no other columns",
+                "type": "csv",
+                "url": "build/terriajs/test/csv/lat_lon.csv"
             }
         ]
     }]
