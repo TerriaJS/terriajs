@@ -40,10 +40,9 @@ const Chart = React.createClass({
         // You either need to provide the data via props.data,
         // in the format expected by LineChart (see below).
         data: React.PropTypes.array,
-        // Or, provide a URL to the data, along with option xColumn, yColumn(s)
+        // Or, provide a URL to the data, along with option xColumn, yColumns
         url: React.PropTypes.string,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        yColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         yColumns: React.PropTypes.array
     },
 
@@ -68,8 +67,6 @@ const Chart = React.createClass({
                 let yColumns = [tableStructure.columns[1]];
                 if (defined(that.props.yColumns)) {
                     yColumns = that.props.yColumns.map(yCol=>tableStructure.getColumnWithNameOrIndex(yCol));
-                } else if (defined(that.props.yColumn)) {
-                    yColumns = [tableStructure.getColumnWithNameOrIndex(that.props.yColumn)];
                 }
                 chartParameters.data = tableStructure.toXYArrays(xColumn, yColumns);
                 // LineChart expects data to be [ [{x: x1, y: y1}, {x: x2, y: y2}], [...] ], but each subarray must also have a unique id property.

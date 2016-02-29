@@ -79,15 +79,21 @@ function expand(props, url) {
     newCatalogItem.load().then(function() {
         // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
         try {
-            newCatalogItem.tableStructure.sourceFeature = props.feature;
+            const tableStructure = newCatalogItem.tableStructure;
+            tableStructure.sourceFeature = props.feature;
             if (defined(existingColors) && defined(activeConcepts)) {
-                newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
+                tableStructure.columns.forEach((column, columnNumber)=>{
                     column.isActive = activeConcepts[columnNumber];
                     column.color = existingColors[columnNumber];
                 });
+            } else if (defined(props.yColumns)) {
+                const activeColumns = props.yColumns.map(nameOrIndex=>tableStructure.getColumnWithNameOrIndex(nameOrIndex));
+                tableStructure.columns.forEach(column=>{
+                    column.isActive = activeColumns.indexOf(column) >= 0;
+                });
             }
             if (defined(props.columnNames)) {
-                newCatalogItem.tableStructure.columns.forEach((column, columnNumber)=>{
+                tableStructure.columns.forEach((column, columnNumber)=>{
                     if (props.columnNames[columnNumber]) {
                         column.name = props.columnNames[columnNumber];
                     }
