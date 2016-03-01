@@ -115,5 +115,9 @@ text {
 .d3-linechart-tooltip {
   z-index: 9999;
   background-color: #444; // TODO
-  padding: 5px;
+  padding: 5px 5px 10px 10px;
+}
+
+.d3-linechart-tooltip .color {
+  width: 8px;
 }

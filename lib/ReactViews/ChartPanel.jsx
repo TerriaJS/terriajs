@@ -32,8 +32,14 @@ const ChartPanel = React.createClass({
                     const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                     const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
                     // Chart expects data to be [ [{x: x1, y: y1}, {x: x2, y: y2}], [...] ], but each subarray must also have a unique id property.
+                    // Each subarray can also have optional itemName, columnName and units.
                     const newData = item.tableStructure.toXYArrays(xColumn, yColumns);
-                    newData.forEach((datum, index)=>{datum.id = item.uniqueId + '-' + yColumnNumbers[index];});
+                    newData.forEach((datum, index)=>{
+                        datum.id = item.uniqueId + '-' + yColumnNumbers[index];
+                        datum.itemName = item.name; // May want to override with something from <chart>.
+                        datum.columnName = yColumns[index].name; // May want to override with something from <chart>.
+                        datum.units = yColumns[index].units;
+                    });
                     data = data.concat(newData);
                     colors = colors.concat(yColumns.map(yColumn=>yColumn.color));
                 }

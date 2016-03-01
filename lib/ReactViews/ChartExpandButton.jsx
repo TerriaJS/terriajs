@@ -81,6 +81,17 @@ function expand(props, url) {
         try {
             const tableStructure = newCatalogItem.tableStructure;
             tableStructure.sourceFeature = props.feature;
+            if (defined(props.columnNames)) {
+                tableStructure.columns.forEach((column, columnNumber)=>{
+                    if (props.columnNames[columnNumber]) {
+                        column.name = props.columnNames[columnNumber];
+                    }
+                    if (props.columnUnits[columnNumber]) {
+                        column.units = props.columnUnits[columnNumber];
+                    }
+                });
+            }
+            // Activate columns at the end, so that units and names flow through to the chart panel.
             if (defined(existingColors) && defined(activeConcepts)) {
                 tableStructure.columns.forEach((column, columnNumber)=>{
                     column.isActive = activeConcepts[columnNumber];
@@ -90,16 +101,6 @@ function expand(props, url) {
                 const activeColumns = props.yColumns.map(nameOrIndex=>tableStructure.getColumnWithNameOrIndex(nameOrIndex));
                 tableStructure.columns.forEach(column=>{
                     column.isActive = activeColumns.indexOf(column) >= 0;
-                });
-            }
-            if (defined(props.columnNames)) {
-                tableStructure.columns.forEach((column, columnNumber)=>{
-                    if (props.columnNames[columnNumber]) {
-                        column.name = props.columnNames[columnNumber];
-                    }
-                    if (props.columnUnits[columnNumber]) {
-                        column.units = props.columnUnits[columnNumber];
-                    }
                 });
             }
         } catch(e) {
