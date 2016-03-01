@@ -5,7 +5,7 @@ var Terria = require('../../lib/Models/Terria');
 var queryToObject = require('terriajs-cesium/Source/Core/queryToObject');
 var URI = require('urijs');
 var WMSCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
-var CSVCatalogItem = require('../../lib/Models/CSVCatalogItem');
+var CSVCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
 
