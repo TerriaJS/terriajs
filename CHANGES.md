@@ -7,8 +7,8 @@ Change Log
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
 * Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. See the notes under 2.0.2 for the available formatting options.
 * Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
-* Upgraded to terriajs-cesium 1.18.0.
 * Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
+* Upgraded to terriajs-cesium 1.18.0.
 
 ### 2.1.1
 
