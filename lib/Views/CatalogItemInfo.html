@@ -52,33 +52,24 @@
             <!-- /ko -->
 
 
-						<!-- mdDataCustodian is the data custodian from the metadata -->
-            <!-- ko if: catalogItem.mdDataCustodian -->
-            <div class="catalog-item-info-section" data-bind="if: catalogItem.mdDataCustodian && catalogItem.mdDataCustodian.length > 0">
-                <h2>Data Responsibility</h2>
-                <div class="catalog-item-info-description" data-bind="markdown: catalogItem.mdDataCustodian"></div>
+            <!-- ko foreach: sortedInfo -->
+                <!-- ko if: content && content.length > 0 -->
+                    <div class="catalog-item-info-section">
+                        <h2 data-bind="text: name"></h2>
+                        <div class="catalog-item-info-description">
+                            <div data-bind="markdown: content"></div>
+                        </div>
+                    </div>
+                <!-- /ko -->
+            <!-- /ko -->
+
+            <!-- ko if: catalogItem.dataCustodian -->
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0">
+                <h2>Data Custodian</h2>
+                <div class="catalog-item-info-description" data-bind="markdown: catalogItem.dataCustodian"></div>
             </div>
             <!-- /ko -->
 
-						<!-- downloadUrls is a list of download links from the metadata -->
-            <!-- ko if: catalogItem.downloadUrls -->
-            <div class="catalog-item-info-section" data-bind="if: catalogItem.downloadUrls && catalogItem.downloadUrls.length > 0">
-                <h2>Links</h2>
-            		<!-- ko foreach: catalogItem.downloadUrls -->
-                <div class="catalog-item-info-description">
-                	<a data-bind="attr: { href: url }, text: description" target="_blank"></a>
-								</div>
-            		<!-- /ko -->
-            </div>
-            <!-- /ko -->
-
-						<!-- if we have a link to the metadata record in a catalogue then show it -->
-            <div class="catalog-item-info-section" data-bind="if: catalogItem.metadataRecordUrl">
-                <h2>Metadata URL</h2>
-                <a data-bind="attr: { href: catalogItem.metadataRecordUrl }, text: catalogItem.metadataRecordUrl" target="_blank"></a>
-            </div>
-
-						<!-- Now spit out the rest of the WMS stuff - can be pretty sparse -->
             <div class="catalog-item-info-section" data-bind="if: catalogItem.url">
                 <h2><span data-bind="text: catalogItem.typeName"></span> URL</h2>
                 <p class="catalog-item-info-description" data-bind="if: catalogItem.type === 'wms'">
@@ -98,110 +89,87 @@
                     <span class="catalog-item-info-tech-attributes" data-bind="text: catalogItem.typeNames"></span>
                 </p>
             </div>
-            		<!-- ko foreach: sortedInfo -->
-                <!-- ko if: content && content.length > 0 -->
-                    <div class="catalog-item-info-section">
-                        <h2 data-bind="text: name"></h2>
-                        <div class="catalog-item-info-description">
-                            <div data-bind="markdown: content"></div>
-                        </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.metadataUrl">
+                <h2>Metadata URL</h2>
+                <a class="catalog-item-info-description" data-bind="attr: { href: catalogItem.metadataUrl }, text: catalogItem.metadataUrl" target="_blank"></a>
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wfs' || catalogItem.dataUrlType === 'wfs-complete'">
+                <h2>Data URL</h2>
+                <div class="catalog-item-info-description">
+                    Use the link below to download the data.  See the
+                    <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>
+                    for more information on customising URL query parameters.
+                    <div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wcs' || catalogItem.dataUrlType === 'wcs-complete'">
+                <h2>Data URL</h2>
+                <div class="catalog-item-info-description">
+                    Use the link below to download the data.  See the
+                    <a href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html" target="_blank">Web Coverage Service (WCS) documentation</a>
+                    for more information on customising URL query parameters.
+                    <div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'direct'">
+                <h2>Data URL</h2>
+                <div class="catalog-item-info-description">
+                    Use the link below to download data directly.
+                    <div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
+                </div>
+            </div>
+            <div class="catalog-item-info-section">
+                <div class="catalog-item-info-details-heading" data-bind="click: toggleShowDataDetails">
+                    <button class="catalog-item-info-details-label">Data Source Details</button>
+                    <div class="catalog-item-info-details-expand-button-holder">
+                        <button href="#" class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showDataDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
+                    </div>
+                </div>
+                <!-- ko if: showDataDetails -->
+                    <div class="catalog-item-info-table">
+                        <!-- ko if: catalogItem.metadata.dataSourceMetadata.hasChildren -->
+                        <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.dataSourceMetadata.items }">
+                        </table>
+                        <!-- /ko -->
+                        <!-- ko if: catalogItem.metadata.dataSourceErrorMessage -->
+                        <table>
+                            <tr>
+                                <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
+                                    <div class="catalog-item-info-properties-arrow"></div>
+                                    <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.dataSourceErrorMessage"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- /ko -->
                     </div>
                 <!-- /ko -->
-            		<!-- /ko -->
-
-								<!-- although this is called dataCustodian, in fact it is the person who is responsible
-								 		for the service that delivers the data -->
-            		<!-- ko if: catalogItem.dataCustodian -->
-            		<div class="catalog-item-info-section" data-bind="if: catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0">
-                		<h2>Service Responsibility</h2>
-                		<div class="catalog-item-info-description" data-bind="markdown: catalogItem.dataCustodian"></div>
-            		</div>
-            		<!-- /ko -->
-
-								<!-- This is not a metadataUrl - it just a description of the service that delivers the
-						     		data -->
-            		<div class="catalog-item-info-section" data-bind="if: catalogItem.metadataUrl">
-                		<h2>Service Description URL</h2>
-                		<a data-bind="attr: { href: catalogItem.metadataUrl }, text: catalogItem.metadataUrl" target="_blank"></a>
-            		</div>
-            		<div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wfs' || catalogItem.dataUrlType === 'wfs-complete'">
-                		<h2>Data URL</h2>
-                		<div class="catalog-item-info-description">
-                    		Use the link below to download the data.  See the
-                    		<a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>
-                    		for more information on customising URL query parameters.
-                    		<div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
-                		</div>
-            		</div>
-            		<div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'wcs' || catalogItem.dataUrlType === 'wcs-complete'">
-                		<h2>Data URL</h2>
-                		<div class="catalog-item-info-description">
-                    		Use the link below to download the data.  See the
-                    		<a href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html" target="_blank">Web Coverage Service (WCS) documentation</a>
-                    		for more information on customising URL query parameters.
-                    		<div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
-                		</div>
-            		</div>
-            		<div class="catalog-item-info-section" data-bind="if: catalogItem.dataUrlType === 'direct'">
-                		<h2>Data URL</h2>
-                		<div class="catalog-item-info-description">
-                    		Use the link below to download data directly.
-                    		<div><a data-bind="attr: { href: catalogItem.dataUrl }, text: catalogItem.dataUrl" target="_blank"></a></div>
-                		</div>
-            		</div>
-            		<div class="catalog-item-info-section">
-                		<div class="catalog-item-info-details-heading" data-bind="click: toggleShowDataDetails">
-                    		<button class="catalog-item-info-details-label">WMS Layer Details</button>
-                    		<div class="catalog-item-info-details-expand-button-holder">
-                        		<button href="#" class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showDataDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
-                    		</div>
-                		</div>
-                		<!-- ko if: showDataDetails -->
-                    		<div class="catalog-item-info-table">
-                        		<!-- ko if: catalogItem.metadata.dataSourceMetadata.hasChildren -->
-                        		<table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.dataSourceMetadata.items }">
-                        		</table>
-                        		<!-- /ko -->
-                        		<!-- ko if: catalogItem.metadata.dataSourceErrorMessage -->
-                        		<table>
-                            		<tr>
-                                		<td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
-                                    		<div class="catalog-item-info-properties-arrow"></div>
-                                    		<div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.dataSourceErrorMessage"></div>
-                                		</td>
-                            		</tr>
-                        		</table>
-                        		<!-- /ko -->
-                    		</div>
-                		<!-- /ko -->
-            		</div>
-            		<div class="catalog-item-info-section">
-                		<div class="catalog-item-info-details-heading" data-bind="click: toggleShowServiceDetails">
-                    		<button class="catalog-item-info-details-label">Service Details</button>
-                    		<div class="catalog-item-info-details-expand-button-holder">
-                        		<button class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showServiceDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
-                    		</div>
-                		</div>
-                		<!-- ko if: showServiceDetails -->
-                    		<div class="catalog-item-info-table">
-                        		<!-- ko if: catalogItem.metadata.serviceMetadata.hasChildren -->
-                        		<table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.serviceMetadata.items }">
-                        		</table>
-                        		<!-- /ko -->
-                        		<!-- ko if: catalogItem.metadata.serviceErrorMessage -->
-                        		<table>
-                            		<tr>
-                                		<td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
-                                    		<div class="catalog-item-info-properties-arrow"></div>
-                                    		<div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.serviceErrorMessage"></div>
-                                		</td>
-                            		</tr>
-                        		</table>
-                        		<!-- /ko -->
-                    		</div>
-                		<!-- /ko -->
-            		</div>
-						</div>
+            </div>
+            <div class="catalog-item-info-section">
+                <div class="catalog-item-info-details-heading" data-bind="click: toggleShowServiceDetails">
+                    <button class="catalog-item-info-details-label">Data Service Details</button>
+                    <div class="catalog-item-info-details-expand-button-holder">
+                        <button class="catalog-item-info-details-expand-button" data-bind="cesiumSvgPath: { path: showServiceDetails ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></button>
+                    </div>
+                </div>
+                <!-- ko if: showServiceDetails -->
+                    <div class="catalog-item-info-table">
+                        <!-- ko if: catalogItem.metadata.serviceMetadata.hasChildren -->
+                        <table data-bind="template: { name: 'catalog-item-info-item-template', foreach: catalogItem.metadata.serviceMetadata.items }">
+                        </table>
+                        <!-- /ko -->
+                        <!-- ko if: catalogItem.metadata.serviceErrorMessage -->
+                        <table>
+                            <tr>
+                                <td class="catalog-item-info-properties-name-cell catalog-item-info-properties-level1">
+                                    <div class="catalog-item-info-properties-arrow"></div>
+                                    <div class="catalog-item-info-properties-name" data-bind="text: catalogItem.metadata.serviceErrorMessage"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <!-- /ko -->
+                    </div>
+                <!-- /ko -->
+            </div>
         </div>
     </div>
     <div class="catalog-item-info-loading" data-bind="visible: catalogItem.metadata.isLoading">
