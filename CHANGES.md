@@ -7,6 +7,7 @@ Change Log
 * Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
 * Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
 * Upgraded to terriajs-cesium 1.18.0.
+* Fixed error when adding a csv file with numeric column names.
 
 ### 2.1.1
 
