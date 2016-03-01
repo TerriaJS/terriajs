@@ -28,6 +28,12 @@ text {
   stroke-width: 1px;
 }
 
+.selection circle {
+  fill: white;
+  opacity: 0.65;
+  r: 3;
+}
+
 .chart-panel__holder{
   position: fixed;
   left: 0;
@@ -104,4 +110,10 @@ text {
 
 .chart-expand .dropdown__list li {
   display: inline;
+}
+
+.d3-linechart-tooltip {
+  z-index: 9999;
+  background-color: #444; // TODO
+  padding: 5px;
 }

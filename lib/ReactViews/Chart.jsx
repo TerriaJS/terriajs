@@ -23,6 +23,7 @@ import TableStructure from '../Map/TableStructure';
 // import VarType from '../Map/VarType';
 
 const defaultHeight = 100;
+const tooltipClassName = 'd3-linechart-tooltip';
 
 const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
@@ -58,7 +59,7 @@ const Chart = React.createClass({
         const chartParameters = this.getChartParameters();
         let promise;
         if (defined(chartParameters.data)) {
-            promise = when(LineChart.create(this._element, chartParameters));
+            promise = when(LineChart.create(this._element, chartParameters, tooltipClassName));
         } else if (defined(chartParameters.url)) {
             const tableStructure = new TableStructure('feature info');
             promise = loadText(chartParameters.url).then(function(text) {
@@ -73,7 +74,7 @@ const Chart = React.createClass({
                 // The data id should be set to something unique, eg. its source id + column index.
                 // If we're here, the data was downloaded from a url, ie. comes from a single file, so the column index is unique by itself.
                 chartParameters.data.forEach((datum, i)=>{datum.id = i;});
-                LineChart.create(that._element, chartParameters);
+                LineChart.create(that._element, chartParameters, tooltipClassName);
                 that.setState({data: chartParameters.data});  // Triggers componentDidUpdate, so only do this after the line chart exists.
             }).otherwise(function(e) {
                 // It looks better to create a blank chart than no chart.
