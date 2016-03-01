@@ -16,25 +16,14 @@ const FeatureInfoSection = React.createClass({
         feature: React.PropTypes.object,
         clock: React.PropTypes.object,
         catalogItem: React.PropTypes.object,
-        index: React.PropTypes.number
+        isOpen: React.PropTypes.bool,
+        onClickHeader: React.PropTypes.func
     },
 
-    getInitialState() {
-        return {
-            isOpen: this.props.index === 0
-        };
-    },
-
-    componentWillReceiveProps() {
-        this.setState({
-            isOpen: this.props.index === 0
-        });
-    },
-
-    toggleSection() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
+    clickHeader() {
+        if (defined(this.props.onClickHeader)) {
+            this.props.onClickHeader(this.props.feature);
+        }
     },
 
     descriptionFromFeature(feature, clock) {
@@ -69,11 +58,13 @@ const FeatureInfoSection = React.createClass({
 
     render() {
         return (
-            <li className={'feature-info-panel__section ' + (this.state.isOpen ? 'is-open' : '')}>
-                <button onClick={this.toggleSection} className={'btn feature-info-panel__title ' + (this.state.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
-                <section className='feature-info-panel__content'>
-                    {this.sanitizedCustomMarkdown()}
-                </section>
+            <li className={'feature-info-panel__section ' + (this.props.isOpen ? 'is-open' : '')}>
+                <button onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
+                {this.props.isOpen &&
+                    <section className='feature-info-panel__content'>
+                        {this.sanitizedCustomMarkdown()}
+                    </section>
+                }
             </li>
         );
     }

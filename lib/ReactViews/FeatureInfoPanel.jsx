@@ -5,6 +5,7 @@ import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
 import Loader from './Loader.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -16,13 +17,46 @@ const FeatureInfoPanel = React.createClass({
         onChangeFeatureInfoPanelIsCollapsed: React.PropTypes.func
     },
 
+    componentDidMount() {
+        this._pickedFeaturesSubscription = knockout.getObservable(this.props.terria, 'pickedFeatures').subscribe(() => {
+            this.props.terria.selectedFeature = undefined;
+
+            const pickedFeatures = this.props.terria.pickedFeatures;
+            if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
+                pickedFeatures.allFeaturesAvailablePromise.then(() => {
+                    this.props.terria.selectedFeature = pickedFeatures.features.filter(featureHasInfo)[0];
+                });
+            }
+        });
+    },
+
+    componentWillUnmount() {
+        if (defined(this._pickedFeaturesSubscription)) {
+            this._pickedFeaturesSubscription.dispose();
+            this._pickedFeaturesSubscription = undefined;
+        }
+    },
+
     getFeatures() {
         if (defined(this.props.terria.pickedFeatures)) {
             return addSectionsForFeatures(this.props.terria);
         }
     },
 
+    toggleOpenFeature(feature) {
+        if (feature === this.props.terria.selectedFeature) {
+            this.props.terria.selectedFeature = undefined;
+        } else {
+            this.props.terria.selectedFeature = feature;
+        }
+    },
+
     renderContent(pickedFeatures) {
+        // Don't bother rendering anything for an invisible or collapsed panel.
+        if (this.props.isCollapsed || !this.props.isVisible) {
+            return undefined;
+        }
+
         const that = this;
         if (defined(this.props.terria.pickedFeatures)) {
             if (this.props.terria.pickedFeatures.isLoading === true) {
@@ -30,7 +64,12 @@ const FeatureInfoPanel = React.createClass({
             }
             if (pickedFeatures && pickedFeatures.length > 0) {
                 return pickedFeatures.map((features, i)=>{
-                    return (<FeatureInfoCatalogItem key={i} features={features} clock={that.props.terria.clock} />);
+                    return (<FeatureInfoCatalogItem key={i}
+                                                    features={features}
+                                                    clock={that.props.terria.clock}
+                                                    selectedFeature={this.props.terria.selectedFeature}
+                                                    onClickFeatureHeader={this.toggleOpenFeature}
+                            />);
                 });
             }
             return <li className='no-results'> No results </li>;
@@ -56,12 +95,15 @@ const FeatureInfoPanel = React.createClass({
 function addSectionsForFeatures(terria) {
     const features = terria.pickedFeatures.features;
     const sections = [];
-    let catalogItem;
+    const sectionMap = new Map();
+
     features.forEach((feature)=> {
         if (!defined(feature.position)) {
             feature.position = terria.pickedFeatures.pickPosition;
         }
-        catalogItem = calculateCatalogItem(terria.nowViewing, feature);
+
+        const catalogItem = calculateCatalogItem(terria.nowViewing, feature);
+
         // if feature does not have a catalog item?
         if (!defined(catalogItem)) {
             sections.push({
@@ -69,24 +111,20 @@ function addSectionsForFeatures(terria) {
                 feature: feature
             });
         } else {
-            let newItem = true;
-            let existingItemIndex;
-            for (let i = sections.length - 1; i >= 0; i--) {
-                if (catalogItem === sections[i].catalogItem) {
-                    newItem = false;
-                    existingItemIndex = i;
-                }
-            }
-            if (newItem === true) {
-                sections.push({
+            let section = sectionMap.get(catalogItem);
+            if (!defined(section)) {
+                section = {
                     catalogItem: catalogItem,
-                    features: [feature]
-                });
-            } else {
-                sections[existingItemIndex].features.push(feature);
+                    features: []
+                };
+                sections.push(section);
+                sectionMap.set(catalogItem, section);
             }
+
+            section.features.push(feature);
         }
     });
+
     return sections;
 }
 
@@ -124,6 +162,10 @@ function calculateCatalogItem(nowViewing, feature) {
     }
     // otherwise, no luck
     return undefined;
+}
+
+function featureHasInfo(feature) {
+    return (defined(feature.properties) || defined(feature.description));
 }
 
 module.exports = FeatureInfoPanel;
