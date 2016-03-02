@@ -66,7 +66,7 @@ describe('UrthecastCatalogGroup', function() {
         terria.configParameters.urthecastApiSecret = null;
 
         group = new UrthecastCatalogGroup(terria);
-        group.load().otherwise(function(terriaError) {
+        group.load().then(done.fail).otherwise(function(terriaError) {
             expect(terriaError.title).toBe('Please Provide an Urthecast API Key and Secret');
 
             done();
