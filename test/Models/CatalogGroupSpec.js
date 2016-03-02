@@ -393,4 +393,31 @@ describe('CatalogGroup', function() {
             }).otherwise(fail).then(done);
         });
     });
+
+    describe('setting isOpen', function() {
+        beforeEach(function() {
+           spyOn(terria.disclaimerEvent, 'raiseEvent');
+        });
+
+        describe('to true when group has a disclaimer', function() {
+            beforeEach(function() {
+                group.initialMessage = {};
+                group.isOpen = true;
+            });
+
+            it('triggers a disclaimerEvent', function() {
+                expect(terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[0]).toBe(group);
+            });
+        });
+
+        describe('to true when group has no disclaimer', function() {
+            beforeEach(function() {
+                group.isOpen = true;
+            });
+
+            it('triggers no disclaimerEvent', function() {
+                expect(terria.disclaimerEvent.raiseEvent).not.toHaveBeenCalled();
+            });
+        });
+    });
 });

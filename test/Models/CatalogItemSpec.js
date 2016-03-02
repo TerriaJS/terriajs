@@ -6,7 +6,6 @@ var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var Catalog = require('../../lib/Models/Catalog');
 var Terria = require('../../lib/Models/Terria');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 describe('CatalogItem', function () {
     var terria;
@@ -152,6 +151,51 @@ describe('CatalogItem', function () {
 
             it('should return the id and shareKeys if id specified', function() {
                 expect(catalog.group.items[0].items[3].allShareKeys).toEqual(['thisIsAnotherId', 'This/Is/A/Path', 'aPreviousId']);
+            });
+        });
+    });
+
+    describe('setting isEnabled', function() {
+        beforeEach(function() {
+            item.nowViewingCatalogItem = {};
+            spyOn(terria.disclaimerEvent, 'raiseEvent');
+        });
+
+        describe('to true when item has a disclaimer', function() {
+            beforeEach(function() {
+                item.initialMessage = {};
+                item.isEnabled = true;
+            });
+
+            it('triggers a disclaimerEvent', function() {
+                expect(terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[0]).toBe(item);
+            });
+
+            it('doesn\'t immediately finish enabling the view', function() {
+                expect(item.nowViewingCatalogItem.isEnabled).not.toBe(true);
+            });
+
+            it('finishes enabling the view after the callback passed to disclaimerEvent is executed', function(done) {
+                terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[1]();
+                item._loadForEnablePromise.then(function() {
+                    expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
+                }).then(done).otherwise(fail);
+            });
+        });
+
+        describe('to true when item has no disclaimer', function() {
+            beforeEach(function() {
+                item.isEnabled = true;
+            });
+
+            it('triggers no disclaimerEvent', function() {
+                expect(terria.disclaimerEvent.raiseEvent).not.toHaveBeenCalled();
+            });
+
+            it('finishes enabling the view', function(done) {
+                item._loadForEnablePromise.then(function() {
+                    expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
+                }).then(done).otherwise(fail);
             });
         });
     });
