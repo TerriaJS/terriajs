@@ -3,7 +3,6 @@
 /*global require*/
 var CkanCatalogItem = require('../../lib/Models/CkanCatalogItem');
 var loadText = require('terriajs-cesium/Source/Core/loadText');
-var sinon = require('sinon');
 var Terria = require('../../lib/Models/Terria');
 var TerriaError = require('../../lib/Core/TerriaError');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
@@ -14,7 +13,6 @@ describe('CkanCatalogItem', function() {
     var ckan;
     var taxationStatisticsPackage;
     var taxationStatisticsWmsResource;
-    var fakeServer;
 
     beforeEach(function(done) {
         when.all([
@@ -25,35 +23,30 @@ describe('CkanCatalogItem', function() {
                 taxationStatisticsWmsResource = text;
             })
         ]).then(function() {
+            jasmine.Ajax.install();
 
             terria = new Terria({
                 baseUrl: './'
             });
             ckan = new CkanCatalogItem(terria);
 
-            sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
-            fakeServer = sinon.fakeServer.create();
-            fakeServer.autoRespond = true;
+            // Fail all requests by default.
+            jasmine.Ajax.stubRequest(/.*/).andError();
 
-            fakeServer.respond(function(request) {
-                fail('Unhandled request to URL: ' + request.url);
-            });
         }).then(done).otherwise(done.fail);
     });
 
     afterEach(function() {
-        fakeServer.xhr.filters.length = 0;
-        fakeServer.restore();
+        jasmine.Ajax.uninstall();
     });
 
     it('creates a WMS catalog item when given a datasetId', function(done) {
         ckan.url = 'http://example.com';
         ckan.datasetId = 'taxation-statistics-2011-12';
 
-        fakeServer.respondWith(
-            'GET',
-            'http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12',
-            taxationStatisticsPackage);
+        jasmine.Ajax.stubRequest('http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12').andReturn({
+            responseText: taxationStatisticsPackage
+        });
 
         ckan.load().then(function() {
             expect(ckan.nowViewingCatalogItem instanceof WebMapServiceCatalogItem).toBe(true);
@@ -66,15 +59,13 @@ describe('CkanCatalogItem', function() {
         ckan.url = 'http://example.com';
         ckan.resourceId = '205ef0d1-521b-4e3c-a26c-4e49e00f1a05';
 
-        fakeServer.respondWith(
-            'GET',
-            'http://example.com/api/3/action/resource_show?id=205ef0d1-521b-4e3c-a26c-4e49e00f1a05',
-            taxationStatisticsWmsResource);
+        jasmine.Ajax.stubRequest('http://example.com/api/3/action/resource_show?id=205ef0d1-521b-4e3c-a26c-4e49e00f1a05').andReturn({
+            responseText: taxationStatisticsWmsResource
+        });
 
-        fakeServer.respondWith(
-            'GET',
-            'http://example.com/api/3/action/package_show?id=95d9e550-8b36-4273-8df7-2b76c140e73a',
-            taxationStatisticsPackage);
+        jasmine.Ajax.stubRequest('http://example.com/api/3/action/package_show?id=95d9e550-8b36-4273-8df7-2b76c140e73a').andReturn({
+            responseText: taxationStatisticsPackage
+        });
 
         ckan.load().then(function() {
             expect(ckan.nowViewingCatalogItem instanceof WebMapServiceCatalogItem).toBe(true);
@@ -88,10 +79,9 @@ describe('CkanCatalogItem', function() {
         ckan.datasetId = 'taxation-statistics-2011-12';
         ckan.resourceId = '205ef0d1-521b-4e3c-a26c-4e49e00f1a05';
 
-        fakeServer.respondWith(
-            'GET',
-            'http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12',
-            taxationStatisticsPackage);
+        jasmine.Ajax.stubRequest('http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12').andReturn({
+            responseText: taxationStatisticsPackage
+        });
 
         ckan.load().then(function() {
             expect(ckan.nowViewingCatalogItem instanceof WebMapServiceCatalogItem).toBe(true);
@@ -105,10 +95,9 @@ describe('CkanCatalogItem', function() {
         ckan.datasetId = 'taxation-statistics-2011-12';
         ckan.resourceId = 'invalid!!';
 
-        fakeServer.respondWith(
-            'GET',
-            'http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12',
-            taxationStatisticsPackage);
+        jasmine.Ajax.stubRequest('http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12').andReturn({
+            responseText: taxationStatisticsPackage
+        });
 
         ckan.load().then(function() {
             expect(ckan.nowViewingCatalogItem instanceof WebMapServiceCatalogItem).toBe(true);
@@ -123,10 +112,9 @@ describe('CkanCatalogItem', function() {
         ckan.resourceId = 'invalid!!';
         ckan.allowAnyResourceIfResourceIdNotFound = false;
 
-        fakeServer.respondWith(
-            'GET',
-            'http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12',
-            taxationStatisticsPackage);
+        jasmine.Ajax.stubRequest('http://example.com/api/3/action/package_show?id=taxation-statistics-2011-12').andReturn({
+            responseText: taxationStatisticsPackage
+        });
 
         ckan.load().then(done.fail).otherwise(function(e) {
             expect(e instanceof TerriaError).toBe(true);

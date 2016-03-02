@@ -1,14 +1,12 @@
 'use strict';
 
-/*global require,describe,beforeEach,it,afterEach,expect*/
+/*global require*/
 var Terria = require('../../lib/Models/Terria');
 var UrthecastCatalogGroup = require('../../lib/Models/UrthecastCatalogGroup');
-var sinon = require('sinon');
 
 describe('UrthecastCatalogGroup', function() {
     var terria;
     var group;
-    var requests = [];
     var sensorPlatformResponse = {
         status: 200,
         messages: [],
@@ -28,24 +26,21 @@ describe('UrthecastCatalogGroup', function() {
         terria = new Terria({
             baseUrl: './'
         });
-
-        this.xhr = sinon.useFakeXMLHttpRequest();
-        this.xhr.onCreate = function (xhr) {
-            requests.push(xhr);
-        };
-    });
-
-    afterEach(function() {
-        this.xhr.restore();
     });
 
     it('creates hierarchy of catalog items', function(done) {
+        jasmine.Ajax.install();
+
+        jasmine.Ajax.stubRequest('https://api.urthecast.com/v1/satellite_tracker/sensor_platforms?api_key=111&api_secret=111').andReturn({
+            contentType: 'application/json',
+            responseText: JSON.stringify(sensorPlatformResponse)
+        });
+
         terria.configParameters.urthecastApiKey = 111;
         terria.configParameters.urthecastApiSecret = 111;
         group = new UrthecastCatalogGroup(terria);
 
         group._load();
-        requests[0].respond(200, { "Content-Type": "application/json" }, JSON.stringify(sensorPlatformResponse));
 
         // Sensor platforms group
         expect(group.items.length).toBe(1);
