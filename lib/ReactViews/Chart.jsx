@@ -32,6 +32,8 @@ const Chart = React.createClass({
 
     _promise: undefined,
 
+    _tooltipId: undefined,
+
     propTypes: {
         domain: React.PropTypes.object,
         mini: React.PropTypes.bool,
@@ -59,7 +61,7 @@ const Chart = React.createClass({
         const chartParameters = this.getChartParameters();
         let promise;
         if (defined(chartParameters.data)) {
-            promise = when(LineChart.create(this._element, chartParameters, tooltipClassName));
+            promise = when(LineChart.create(this._element, chartParameters, chartParameters.mini ? undefined : tooltipClassName));
         } else if (defined(chartParameters.url)) {
             const tableStructure = new TableStructure('feature info');
             promise = loadText(chartParameters.url).then(function(text) {
@@ -119,13 +121,17 @@ const Chart = React.createClass({
         this._promise.then(function(listener) {
             window.removeEventListener('resize', listener);
             // console.log('Removed resize listener for', that.props.url, that.rnd, listener);
-            LineChart.destroy(that._element);
+            LineChart.destroy(that._element, that.getChartParameters());
             that._element = undefined;
         });
         this._promise = undefined;
     },
 
     getChartParameters() {
+        if (!this.props.mini && !defined(this._tooltipId)) {
+            // In case there are multiple charts with tooltips. Unlikely to pick the same random number. Remove the initial "0.".
+            this._tooltipId = 'd3-tooltip-' + Math.random().toString().substr(2);
+        }
         return {
             data: defined(this.state.data) ? this.state.data : this.props.data,
             domain: this.props.domain,
@@ -134,7 +140,8 @@ const Chart = React.createClass({
             height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.mini,
-            transitionDuration: this.props.transitionDuration
+            transitionDuration: this.props.transitionDuration,
+            tooltipId: this._tooltipId
         };
     },
 
