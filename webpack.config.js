@@ -17,17 +17,8 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: "transform?brfs"
-            },
-            {
-                test: /sinon\/pkg\/sinon\.js/,
-                loader: 'imports?define=>false,require=>false'
             }
         ]
-    },
-    resolve: {
-        alias: {
-            sinon: 'sinon/pkg/sinon.js'
-        }
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin(),
