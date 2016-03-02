@@ -30,8 +30,16 @@ text {
 
 .selection circle {
   fill: white;
+  stroke: white;
+  stroke-width: 1;
   opacity: 0.65;
-  r: 3;
+  r: 4;
+}
+
+.selection line {
+  stroke: white;
+  opacity: 0.65;
+  stroke-width: 1;
 }
 
 .chart-panel__holder{
