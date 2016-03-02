@@ -33,7 +33,6 @@
     "cors": "^2.5.3",
     "exorcist": "^0.1.6",
     "express": "^4.12.3",
-    "fake-xml-http-request": "^1.3.0",
     "generate-terriajs-schema": "^1.0.2",
     "glob": "^5.0.5",
     "glob-all": "^3.0.1",
