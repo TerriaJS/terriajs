@@ -33,18 +33,18 @@ const Chart = React.createClass({
     _promise: undefined,
 
     propTypes: {
-        colors: React.PropTypes.array,
         domain: React.PropTypes.object,
         mini: React.PropTypes.bool,
         height: React.PropTypes.number,
         axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
-        // You either need to provide the data via props.data or as an instance of ChartData.
-        data: React.PropTypes.object,
-        // Or, provide a URL to the data, along with option xColumn, yColumns
+        // You either need to provide the data via props.data or as an Array of ChartData.
+        data: React.PropTypes.array,
+        // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: React.PropTypes.string,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        yColumns: React.PropTypes.array
+        yColumns: React.PropTypes.array,
+        colors: React.PropTypes.array
     },
 
     getInitialState() {
@@ -72,15 +72,18 @@ const Chart = React.createClass({
                 const pointArrays = tableStructure.toPointArrays(xColumn, yColumns);
                 // The data id should be set to something unique, eg. its source id + column index.
                 // If we're here, the data was downloaded from a url, ie. comes from a single file, so the column index is unique by itself.
-                const parameters = {
-                    ids: pointArrays.map((d, i)=>i)
-                };
-                chartParameters.data = new ChartData(pointArrays, parameters);
-                LineChart.create(that._element, chartParameters, tooltipClassName);
+                chartParameters.data = pointArrays.map((points, index)=>
+                    new ChartData(points, {
+                        id: index,
+                        name: yColumns[index].name,
+                        color: defined(that.props.colors) ? that.props.colors[index] : undefined
+                    })
+                );
+                LineChart.create(that._element, chartParameters, chartParameters.mini ? undefined : tooltipClassName);
                 that.setState({data: chartParameters.data});  // Triggers componentDidUpdate, so only do this after the line chart exists.
             }).otherwise(function(e) {
                 // It looks better to create a blank chart than no chart.
-                chartParameters.data = new ChartData();
+                chartParameters.data = [];
                 LineChart.create(that._element, chartParameters);
                 that.setState({data: chartParameters.data});
                 throw new DeveloperError('Could not load chart data at ' + chartParameters.url);
@@ -124,7 +127,6 @@ const Chart = React.createClass({
 
     getChartParameters() {
         return {
-            colors: this.props.colors,
             data: defined(this.state.data) ? this.state.data : this.props.data,
             domain: this.props.domain,
             url: this.props.url,

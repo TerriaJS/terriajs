@@ -32,14 +32,8 @@ const ChartPanel = React.createClass({
                     const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                     const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
                     const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
-                    const parameters = {
-                        ids: pointArrays.map((d, index)=>item.uniqueId + '-' + yColumnNumbers[index]),
-                        names: pointArrays.map(()=>item.name),
-                        categoryNames: pointArrays.map((d, index)=>yColumns[index].name),
-                        units: pointArrays.map((d, index)=>yColumns[index].units),
-                        colors: pointArrays.map((d, index)=>yColumns[index].color)
-                    };
-                    data = data.concat(new ChartData(pointArrays, parameters));
+                    const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
+                    data = data.concat(thisData);
                 }
             }
         }
@@ -55,7 +49,7 @@ const ChartPanel = React.createClass({
         }
         if (data.length > 0) {
             chart = (
-                <Chart data={data} colors={colors} height={266}/>
+                <Chart data={data} height={266}/>
             );
         }
         return (
@@ -77,5 +71,16 @@ const ChartPanel = React.createClass({
         );
     }
 });
+
+function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
+    return (points, index)=>
+        new ChartData(points, {
+            id: item.uniqueId + '-' + yColumnNumbers[index],
+            name: yColumns[index].name,
+            categoryName: item.name,
+            units: yColumns[index].units,
+            color: yColumns[index].color
+        });
+}
 
 module.exports = ChartPanel;
