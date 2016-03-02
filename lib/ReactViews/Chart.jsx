@@ -18,6 +18,7 @@ import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
+import ChartData from '../Charts/ChartData';
 import LineChart from '../Charts/LineChart';
 import TableStructure from '../Map/TableStructure';
 // import VarType from '../Map/VarType';
@@ -38,9 +39,8 @@ const Chart = React.createClass({
         height: React.PropTypes.number,
         axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
-        // You either need to provide the data via props.data,
-        // in the format expected by LineChart (see below).
-        data: React.PropTypes.array,
+        // You either need to provide the data via props.data or as an instance of ChartData.
+        data: React.PropTypes.object,
         // Or, provide a URL to the data, along with option xColumn, yColumns
         url: React.PropTypes.string,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
@@ -69,16 +69,18 @@ const Chart = React.createClass({
                 if (defined(that.props.yColumns)) {
                     yColumns = that.props.yColumns.map(yCol=>tableStructure.getColumnWithNameOrIndex(yCol));
                 }
-                chartParameters.data = tableStructure.toXYArrays(xColumn, yColumns);
-                // LineChart expects data to be [ [{x: x1, y: y1}, {x: x2, y: y2}], [...] ], but each subarray must also have a unique id property.
+                const pointArrays = tableStructure.toPointArrays(xColumn, yColumns);
                 // The data id should be set to something unique, eg. its source id + column index.
                 // If we're here, the data was downloaded from a url, ie. comes from a single file, so the column index is unique by itself.
-                chartParameters.data.forEach((datum, i)=>{datum.id = i;});
+                const parameters = {
+                    ids: pointArrays.map((d, i)=>i)
+                };
+                chartParameters.data = new ChartData(pointArrays, parameters);
                 LineChart.create(that._element, chartParameters, tooltipClassName);
                 that.setState({data: chartParameters.data});  // Triggers componentDidUpdate, so only do this after the line chart exists.
             }).otherwise(function(e) {
                 // It looks better to create a blank chart than no chart.
-                chartParameters.data = [];
+                chartParameters.data = new ChartData();
                 LineChart.create(that._element, chartParameters);
                 that.setState({data: chartParameters.data});
                 throw new DeveloperError('Could not load chart data at ' + chartParameters.url);
