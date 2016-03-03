@@ -381,4 +381,23 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load();
     });
 
+    it('discards invalid layer names as long as at least one layer name is valid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.layers).toBe('single_period');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('fails to load if all layer names are invalid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,bar'
+        });
+        wmsItem.load().then(done.fail).otherwise(done);
+    });
 });

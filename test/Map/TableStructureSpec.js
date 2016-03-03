@@ -167,15 +167,20 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[1].values.length).toEqual(2);
     });
 
+    it('can read csv string where column names are numbers', function() {
+        var csvString = '1,2\n9,8\n7,6';
+        var tableStructure = new TableStructure();
+        tableStructure.loadFromCsv(csvString);
+        expect(tableStructure.columns[0].name).toEqual('1');
+        expect(tableStructure.columns[1].name).toEqual('2');
+    });
+
     it('can describe rows with dates with and without timezones nicely', function() {
         var csvString = 'date,value\r\n2015-10-15T12:34:56,5\r\n2015-10-02T12:34:56Z,8\r\n2015-11-03\r\n';
         var tableStructure = TableStructure.fromCsv(csvString);
         var htmls = tableStructure.toRowDescriptions();
         expect(htmls[0]).toContain('Thu Oct 15 2015 12:34:56');  // Thu 15 Oct would be nicer outside USA.
         expect(htmls[0]).not.toContain('2015-10-15T12:34:56');
-        // expect(htmls[1]).toContain(':56');  // Depending on the time zone this is run in, could be anything.
-        // expect(htmls[1].indexOf('GMT') + htmls[1].indexOf('UTC')).toBeGreaterThan(-2);  // The time zone is shown, IE9 uses UTC, others GMT.
-        // expect(htmls[1]).not.toContain('2015-10-02T12:34:56');
         var expectedDate1 = JulianDate.toDate(JulianDate.fromIso8601('2015-10-02T12:34:56Z'));
         expect(htmls[1]).toContain('' + expectedDate1);
         expect(htmls[1]).not.toContain('2015-10-02T12:34:56');
