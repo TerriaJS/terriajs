@@ -16,12 +16,11 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                loader: "transform?brfs"
+                loader: 'transform?brfs'
             }
         ]
     },
     plugins: [
-        new webpack.optimize.UglifyJsPlugin(),
-        new webpack.optimize.DedupePlugin()
+        new webpack.optimize.UglifyJsPlugin()
     ]
 };

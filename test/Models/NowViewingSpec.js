@@ -4,7 +4,6 @@
 var NowViewing = require('../../lib/Models/NowViewing');
 var Terria = require('../../lib/Models/Terria');
 var Cesium = require('../../lib/Models/Cesium');
-var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
 var Leaflet = require('../../lib/Models/Leaflet');
 var L = require('leaflet');
 var CatalogItem = require('../../lib/Models/CatalogItem');
@@ -44,19 +43,26 @@ describeIfSupported('NowViewing with a minimal Cesium viewer', function() {
     var terria;
     var nowViewing;
 
-    beforeEach(function() {
+    beforeEach(function(done) {
         container = document.createElement('div');
         document.body.appendChild(container);
-        widget = new CesiumWidget(container, {
-            imageryProvider: new TileCoordinatesImageryProvider()
+
+        require.ensure(['terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget'], function(require) {
+            var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
+
+            widget = new CesiumWidget(container, {
+                imageryProvider: new TileCoordinatesImageryProvider()
+            });
+            terria = new Terria({
+                baseUrl: './'
+            });
+            cesium = new Cesium(terria, widget);
+            terria.currentViewer = cesium;
+            terria.cesium = cesium;
+            nowViewing = terria.nowViewing;
+
+            done();
         });
-        terria = new Terria({
-            baseUrl: './'
-        });
-        cesium = new Cesium(terria, widget);
-        terria.currentViewer = cesium;
-        terria.cesium = cesium;
-        nowViewing = terria.nowViewing;
     });
 
     afterEach(function() {
