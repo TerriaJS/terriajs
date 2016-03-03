@@ -4,7 +4,11 @@
 module.exports = function(config) {
   config.set({
 
-    browserNoActivityTimeout: 100000000,
+    // to avoid DISCONNECTED messages when connecting to BrowserStack
+    browserDisconnectTimeout : 10000, // default 2000
+    browserDisconnectTolerance : 1, // default 0
+    browserNoActivityTimeout : 4*60*1000, //default 10000
+    captureTimeout : 4*60*1000, //default 60000
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: 'wwwroot',
@@ -44,54 +48,58 @@ module.exports = function(config) {
     },
 
     customLaunchers: {
-        sl_chrome: {
-              base: 'SauceLabs',
-              browserName: 'chrome',
-              platform: 'Windows 7',
-              version: '46.0'
+        bs_chrome: {
+              base: 'BrowserStack',
+              browser: 'chrome',
+              os: 'Windows',
+              os_version: '7'
         },
-        sl_safari9: {
-            base: 'SauceLabs',
-            browserName: 'safari',
-            platform: 'OS X 10.11',
-            version: '9.0'
+        bs_safari: {
+            base: 'BrowserStack',
+            browser: 'safari',
+            os: 'OS X',
+            os_version: 'El Capitan'
         },
-        sl_ie9: {
-            base: 'SauceLabs',
-            browserName: 'internet explorer',
-            platform: 'Windows 7',
-            version: '9.0'
+        bs_ie9: {
+            base: 'BrowserStack',
+            browser: 'ie',
+            browser_version: '9.0',
+            os: 'Windows',
+            os_version: '7'
         },
-        sl_ie10: {
-            base: 'SauceLabs',
-            browserName: 'internet explorer',
-            platform: 'Windows 7',
-            version: '10.0'
+        bs_ie10: {
+            base: 'BrowserStack',
+            browser: 'ie',
+            browser_version: '10.0',
+            os: 'Windows',
+            os_version: '7'
         },
-        sl_ie11: {
-            base: 'SauceLabs',
-            browserName: 'internet explorer',
-            platform: 'Windows 7',
-            version: '11.0'
+        bs_ie11: {
+            base: 'BrowserStack',
+            browser: 'ie',
+            browser_version: '11.0',
+            os: 'Windows',
+            os_version: '7'
         },
-        sl_firefox42: {
-            base: 'SauceLabs',
-            browserName: 'firefox',
-            platform: 'Windows 7',
-            version: '42.0'
+        bs_firefox: {
+            base: 'BrowserStack',
+            browser: 'firefox',
+            os: 'Windows',
+            os_version: '7'
         },
-        sl_firefox38esr: {
-            base: 'SauceLabs',
-            browserName: 'firefox',
-            platform: 'Windows 7',
-            version: '38.0'
+        bs_firefox_esr: {
+            base: 'BrowserStack',
+            browser: 'firefox',
+            browser_version: '38.0',
+            os: 'Windows',
+            os_version: '7'
         }
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'saucelabs'],
+    reporters: ['progress'],
 
 
     // web server port
@@ -113,7 +121,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['sl_chrome', 'sl_safari9', 'sl_firefox42', 'sl_firefox38esr', 'sl_ie9', 'sl_ie10', 'sl_ie11'],
+    browsers: ['bs_chrome', 'bs_safari9', 'bs_firefox', 'bs_firefox_esr', 'bs_ie9', 'bs_ie10', 'bs_ie11'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -123,9 +131,8 @@ module.exports = function(config) {
     // how many browser should be started simultanous
     concurrency: 5,
 
-    sauceLabels: {
-        testName: 'TerriaJS Unit Tests',
-        tunnelIdentifier: process.env.TRAVIS_BUILD_NUMBER
+    browserStack: {
+        startTunnel: true
     }
   })
 }
