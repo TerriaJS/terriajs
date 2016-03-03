@@ -136,7 +136,7 @@ const Chart = React.createClass({
             }
             tooltipSettings = {
                 id: this._tooltipId,
-                align: 'right'
+                align: 'prefer-right'
             };
         }
         return {
