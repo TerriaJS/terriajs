@@ -41,6 +41,9 @@ const ViewingControls = React.createClass({
     },
 
     previewItem() {
+        // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
+        this.props.nowViewingItem.enableWithParents();
+
         this.props.viewState.viewCatalogItem(this.props.nowViewingItem);
     },
 
