@@ -172,7 +172,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('handles one-line data with enum', function(done) {
+    it('handles one-line lat lon data with enum', function(done) {
         csvItem.updateFromJson( { data: 'lat,lon,org\n-37,145,test' });
         csvItem.load().then(function() {
             expect(csvItem.dataSource.tableStructure.hasLatitudeAndLongitude).toBe(true);
@@ -695,6 +695,14 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             expect(csvItem.tableStructure.activeItems[0].name).toBe('enum');
+        }).otherwise(fail).then(done);
+    });
+
+    it('handles one-line region mapped data with enum', function(done) {
+        csvItem.updateFromJson( { data: 'state,org\nNSW,test' });
+        csvItem.load().then(function() {
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
