@@ -7,6 +7,7 @@ Change Log
 * Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
 * Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
 * Improved performance of large csv files, especially the loading time, and the time taken to change the display variable of region-mapped files.
+* Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed error when adding a csv file with numeric column names.
 
