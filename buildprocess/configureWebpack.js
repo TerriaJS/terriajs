@@ -18,7 +18,7 @@ function configureWebpack(terriaJSBasePath, config) {
     config.module.loaders.push({
         test: /\.js$/,
         include: path.resolve(terriaJSBasePath, 'lib'),
-        loader: require.resolve('transform-loader/cacheable') + '?' + require.resolve('brfs')
+        loader: require.resolve('transform-loader') + '?' + require.resolve('brfs')
     });
 
     // Allow proj4 to load its package.json via require, for some reason.
