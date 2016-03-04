@@ -14,11 +14,19 @@ function configureWebpack(terriaJSBasePath, config) {
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
 
-    // Make brfs-style `readFileSync` calls work.  We should probably use the html loader instead.
+    // Use the raw loader for our view HTML.  We don't use the html-loader because it
+    // will doing things with images that we don't (currently) want.
     config.module.loaders.push({
-        test: /\.js$/,
-        include: path.resolve(terriaJSBasePath, 'lib'),
-        loader: require.resolve('transform-loader') + '?' + require.resolve('brfs')
+        test: /\.html$/,
+        include: path.resolve(terriaJSBasePath, 'lib', 'Views'),
+        loader: require.resolve('raw-loader')
+    });
+
+    // Allow XML in the models directory to be required-in as a raw text.
+    config.module.loaders.push({
+        test: /\.xml$/,
+        include: path.resolve(terriaJSBasePath, 'lib', 'Models'),
+        loader: require.resolve('raw-loader')
     });
 
     // Allow proj4 to load its package.json via require, for some reason.
