@@ -172,10 +172,11 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('handles one-line lat lon data with enum', function(done) {
-        csvItem.updateFromJson( { data: 'lat,lon,org\n-37,145,test' });
+    it('handles one line with enum', function(done) {
+        csvItem.updateFromJson({data: 'lat,lon,org\n-37,145,test'});
         csvItem.load().then(function() {
             expect(csvItem.dataSource.tableStructure.hasLatitudeAndLongitude).toBe(true);
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
@@ -698,11 +699,12 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('handles one-line region mapped data with enum', function(done) {
-        csvItem.updateFromJson( { data: 'state,org\nNSW,test' });
+    it('handles one line with enum', function(done) {
+        csvItem.updateFromJson({data: 'state,org\nNSW,test'});
         csvItem.load().then(function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
