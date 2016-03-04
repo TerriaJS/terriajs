@@ -23,10 +23,7 @@ var config = {
                 loader: 'imports?require=>false'
             }
         ]
-    },
-    plugins: [
-        //new webpack.optimize.UglifyJsPlugin()
-    ]
+    }
 };
 
 configureWebpack(__dirname, config);

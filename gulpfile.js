@@ -2,28 +2,18 @@
 
 /*global require*/
 
-var browserify = require('browserify');
-var buffer = require('vinyl-buffer');
 var child_exec = require('child_process').exec;  // child_process is built in to node
-var exorcist = require('exorcist');
 var fs = require('fs');
 var genSchema = require('generate-terriajs-schema');
 var glob = require('glob-all');
 var gulp = require('gulp');
-var gutil = require('gulp-util');
 var jshint = require('gulp-jshint');
 var karma = require('karma').Server;
 var path = require('path');
 var resolve = require('resolve');
-var source = require('vinyl-source-stream');
-var sourcemaps = require('gulp-sourcemaps');
-var transform = require('vinyl-transform');
-var uglify = require('gulp-uglify');
-var watchify = require('watchify');
 var webpack = require('webpack');
 var webpackConfig = require('./webpack.config.js');
 
-var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
 var testGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
 
@@ -50,8 +40,24 @@ gulp.task('build-specs', ['prepare-cesium'], function(done) {
 
 gulp.task('build', ['build-specs']);
 
-gulp.task('release-specs', ['prepare-cesium'], function() {
-    return build(specJSName, glob.sync(testGlob), true);
+gulp.task('release-specs', ['prepare-cesium'], function(done) {
+    var wp = webpack(Object.assign({}, webpackConfig, {
+        plugins: [
+            new webpack.optimize.UglifyJsPlugin(),
+            new webpack.optimize.DedupePlugin(),
+            new webpack.optimize.OccurrenceOrderPlugin()
+        ].concat(webpackConfig.plugins || [])
+    }));
+    wp.run(function(err, stats) {
+        if (stats) {
+            console.log(stats.toString({
+                colors: true,
+                modules: false,
+                chunkModules: false
+            }));
+        }
+        done(err);
+    });
 });
 
 gulp.task('make-schema', function() {
