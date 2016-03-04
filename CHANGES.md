@@ -10,6 +10,7 @@ Change Log
 * Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed error when adding a csv file with numeric column names.
+* Changed `tableStyle`'s `format` to only accept `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options. Previously some other options may have worked in some browsers.
 
 ### 2.1.1
 
