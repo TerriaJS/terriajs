@@ -13,6 +13,7 @@
     "html2canvas": "0.5.0-alpha2",
     "imports-loader": "^0.6.5",
     "javascript-natural-sort": "^0.7.1",
+    "json-loader": "^0.5.4",
     "leaflet": "0.7.3",
     "less": "^2.5.0",
     "less-plugin-npm-import": "^2.0.0",
