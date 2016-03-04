@@ -9,6 +9,7 @@ Change Log
 * Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed error when adding a csv file with numeric column names.
+* Improved csv loading to ignore any completely blank lines after the header row (ie. lines which do not even have commas).
 
 ### 2.1.1
 
