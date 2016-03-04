@@ -20,6 +20,8 @@ var sourcemaps = require('gulp-sourcemaps');
 var transform = require('vinyl-transform');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
+var webpack = require('webpack');
+var webpackConfig = require('./webpack.config.js');
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
@@ -32,8 +34,18 @@ if (!fs.existsSync('wwwroot/build')) {
     fs.mkdirSync('wwwroot/build');
 }
 
-gulp.task('build-specs', ['prepare-cesium'], function() {
-    return build(specJSName, glob.sync(testGlob), false);
+gulp.task('build-specs', ['prepare-cesium'], function(done) {
+    var wp = webpack(webpackConfig);
+    wp.run(function(err, stats) {
+        if (stats) {
+            console.log(stats.toString({
+                colors: true,
+                modules: false,
+                chunkModules: false
+            }));
+        }
+        done(err);
+    });
 });
 
 gulp.task('build', ['build-specs']);
@@ -48,8 +60,17 @@ gulp.task('make-schema', function() {
 
 gulp.task('release', ['release-specs', 'make-schema']);
 
-gulp.task('watch-specs', ['prepare-cesium'], function() {
-    return watch(specJSName, glob.sync(testGlob), false);
+gulp.task('watch-specs', ['prepare-cesium'], function(done) {
+    var wp = webpack(webpackConfig);
+    wp.watch({}, function(err, stats) {
+        if (stats) {
+            console.log(stats.toString({
+                colors: true,
+                modules: false,
+                chunkModules: false
+            }));
+        }
+    });
 });
 
 gulp.task('watch', ['watch-specs']);
@@ -103,72 +124,4 @@ function runKarma(configFile, done) {
     }, function(e) {
         return done(e);
     });
-}
-
-function bundle(name, bundler, minify, catchErrors) {
-    // Combine main.js and its dependencies into a single file.
-    var result = bundler.bundle();
-
-    if (catchErrors) {
-        // Display errors to the user, and don't let them propagate.
-        result = result.on('error', function(e) {
-            gutil.log('Browserify Error', e.message);
-        });
-    }
-
-    result = result
-        .pipe(source(name))
-        .pipe(buffer());
-
-    if (minify) {
-        // Minify the combined source.
-        // sourcemaps.init/write maintains a working source map after minification.
-        // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
-        result = result
-            .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(uglify({preserveComments: 'some', mangle: true, compress: true}))
-            .pipe(sourcemaps.write());
-    }
-
-    result = result
-        // Extract the embedded source map to a separate file.
-        .pipe(transform(function () { return exorcist('wwwroot/build/' + name + '.map'); }))
-
-        // Write the finished product.
-        .pipe(gulp.dest('wwwroot/build'));
-
-    return result;
-}
-
-function build(name, files, minify) {
-    // The poorly-named "debug: true" causes Browserify to generate a source map.
-    return bundle(name, browserify({
-        entries: files,
-        debug: true
-    }), minify, false);
-}
-
-function watch(name, files, minify) {
-    var bundler = watchify(browserify({
-        entries: files,
-        debug: true,
-        cache: {},
-        packageCache: {}
-    }), { poll: 1000 } );
-
-    function rebundle() {
-        var start = new Date();
-
-        var result = bundle(name, bundler, minify, true);
-
-        result.on('end', function() {
-            console.log('Rebuilt ' + name + ' in ' + (new Date() - start) + ' milliseconds.');
-        });
-
-        return result;
-    }
-
-    bundler.on('update', rebundle);
-
-    return rebundle();
 }
