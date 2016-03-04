@@ -35,7 +35,7 @@ const Chart = React.createClass({
 
     propTypes: {
         domain: React.PropTypes.object,
-        mini: React.PropTypes.bool,
+        inFeatureInfo: React.PropTypes.bool,
         height: React.PropTypes.number,
         axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
@@ -128,17 +128,28 @@ const Chart = React.createClass({
 
     getChartParameters() {
         // If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
-        let tooltipSettings;
-        if (!this.props.mini) {
+        let margin, tooltipSettings, titleSettings;
+        if (!this.props.inFeatureInfo) {
             if (!defined(this._tooltipId)) {
                 // In case there are multiple charts with tooltips. Unlikely to pick the same random number. Remove the initial "0.".
                 this._tooltipId = 'd3-tooltip-' + Math.random().toString().substr(2);
             }
+            margin = {
+                top: 0,  // So the title is flush with the top of the chart panel.
+                right: 40,
+                bottom: 20,
+                left: 50
+            };
             tooltipSettings = {
                 id: this._tooltipId,
                 align: 'prefer-right',
                 offset: {top: -20, left: 0, right: 0, bottom: 5}
             };
+            titleSettings = {
+                type: 'string',
+                title: 'Title to be completed',
+                height: 30
+            }
         }
         return {
             data: defined(this.state.data) ? this.state.data : this.props.data,
@@ -147,9 +158,11 @@ const Chart = React.createClass({
             width: '100%',
             height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
-            mini: this.props.mini,
+            mini: this.props.inFeatureInfo,
             transitionDuration: this.props.transitionDuration,
-            tooltip: tooltipSettings
+            margin: margin,
+            tooltip: tooltipSettings,
+            titleSettings: titleSettings
         };
     },
 

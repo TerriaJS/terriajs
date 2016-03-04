@@ -16,6 +16,11 @@ $chart-line-color: #ccc;
   stroke: $chart-axis-color;  
 }
 
+.chart-panel .chart .backing {
+  fill: rgba(#fff, 0.075);
+}
+
+
 text {
   fill: $chart-text-color;
   // stroke-width: 0;
@@ -81,8 +86,21 @@ text {
   top: 0;
 }
 
-.chart, .chart-title {
+.chart, .chart-title-from-table {
   background: rgba(#fff, 0.15);
+}
+
+.chart .backing {
+  fill: none;
+}
+
+.chart-title {
+  padding: 5px 20px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  position: absolute;
+  text-align: center;
 }
 
 .chart-expand .btn--dropdown {
