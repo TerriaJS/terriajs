@@ -2,19 +2,17 @@
 
 /*global require*/
 
-var child_exec = require('child_process').exec;  // child_process is built in to node
-var fs = require('fs');
+// Every module required-in here must be a `dependency` in package.json, not just a `devDependency`,
+// so that our postinstall script (which runs `gulp post-npm-install`) is able to run without
+// the devDependencies available.  Individual tasks, other than `prepare-cesium` and any tasks it
+// calls, may require in `devDependency` modules locally.
 var gulp = require('gulp');
-var gutil = require("gulp-util");
-var karma = require('karma').Server;
-var notifier = require('node-notifier');
-var path = require('path');
-var resolve = require('resolve');
 
 gulp.task('default', ['lint', 'build']);
 gulp.task('build', ['build-specs']);
 gulp.task('release', ['release-specs', 'make-schema']);
 gulp.task('watch', ['watch-specs']);
+gulp.task('post-npm-install', ['copy-cesium-assets']);
 
 gulp.task('build-specs', ['prepare-cesium'], function(done) {
     var webpackConfig = require('./webpack.config.js');
@@ -36,6 +34,7 @@ gulp.task('release-specs', ['prepare-cesium'], function(done) {
 });
 
 gulp.task('watch-specs', ['prepare-cesium'], function(done) {
+    var notifier = require('node-notifier');
     var webpack = require('webpack');
     var webpackConfig = require('./webpack.config.js');
 
@@ -85,7 +84,6 @@ gulp.task('make-schema', function() {
     });
 });
 
-
 gulp.task('lint', function() {
     var glob = require('glob-all');
     var jshint = require('gulp-jshint');
@@ -101,12 +99,16 @@ gulp.task('lint', function() {
 });
 
 gulp.task('docs', function(done) {
+    var child_exec = require('child_process').exec;
+
     child_exec('node ./node_modules/jsdoc/jsdoc.js ./lib -c ./jsdoc.json', undefined, done);
 });
 
-gulp.task('prepare-cesium', ['copy-cesium-assets']);
 
 gulp.task('copy-cesium-assets', function() {
+    var fs = require('fs');
+    var resolve = require('resolve'); // can we use require.resolve instead?
+
     var cesium = resolve.sync('terriajs-cesium/wwwroot', {
         basedir: __dirname,
         extentions: ['.'],
@@ -134,7 +136,10 @@ gulp.task('test', function(done) {
 });
 
 function runWebpack(config, doneCallback) {
-    var wp = webpack(webpackConfig);
+    var gutil = require("gulp-util");
+    var webpack = require('webpack');
+
+    var wp = webpack(config);
     wp.run(function(err, stats) {
         if (stats) {
             console.log(stats.toString({
@@ -156,6 +161,9 @@ function runWebpack(config, doneCallback) {
 }
 
 function runKarma(configFile, done) {
+    var karma = require('karma').Server;
+    var path = require('path');
+
     karma.start({
         configFile: path.join(__dirname, configFile)
     }, function(e) {

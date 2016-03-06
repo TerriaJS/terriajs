@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "brfs": "^1.4.0",
+    "gulp": "^3.8.11",
     "hammerjs": "^2.0.4",
     "html2canvas": "0.5.0-alpha2",
     "imports-loader": "^0.6.5",
@@ -33,26 +34,12 @@
     "webpack": "^1.12.14"
   },
   "devDependencies": {
-    "browserify": "^9.0.8",
-    "compression": "^1.4.3",
-    "cors": "^2.5.3",
-    "exorcist": "^0.1.6",
-    "express": "^4.12.3",
     "generate-terriajs-schema": "^1.0.2",
-    "glob": "^5.0.5",
     "glob-all": "^3.0.1",
-    "gulp": "^3.8.11",
-    "gulp-concat": "^2.5.2",
-    "gulp-jasmine": "^2.0.1",
     "gulp-jshint": "^2.0.0-alpha2",
-    "gulp-less": "^3.0.2",
-    "gulp-sourcemaps": "^1.5.2",
-    "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.4",
-    "gulp-watch": "^4.2.4",
     "jasmine-core": "^2.4.1",
-    "jsdoc": "^3.3.3",
-    "jshint": "2.8.x",
+    "jshint": "^2.8.x",
     "karma-browserstack-launcher": "^0.1.10",
     "karma-chrome-launcher": "^0.2.2",
     "karma-detect-browsers": "^2.0.2",
@@ -65,21 +52,14 @@
     "karma-spec-reporter": "0.0.24",
     "node-notifier": "^4.5.0",
     "terriajs-jasmine-ajax": "^3.2.0",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "vinyl-transform": "^1.0.0",
-    "watchify": "^3.1.1",
-    "yargs": "^3.7.2"
+    "terriajs-server": "git://github.com/TerriaJS/terriajs-server.git#scripts"
   },
   "scripts": {
-    "prepublish": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\"",
+    "prepublish": "gulp post-npm-install",
     "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
-    "postinstall": "bash -c \"if [ ! -d \"./wwwroot/build\" ]; then gulp prepare-cesium; fi\"",
-    "make-schema": "gulp make-schema"
-  },
-  "browserify": {
-    "transform": [
-      "brfs"
-    ]
+    "postinstall": "gulp post-npm-install",
+    "make-schema": "gulp make-schema",
+    "start": "bash ./node_modules/terriajs-server/run_server.sh --port 3002",
+    "stop": "bash ./node_modules/terriajs-server/stop_server.sh"
   }
 }
