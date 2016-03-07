@@ -16,7 +16,7 @@ $chart-line-color: #ccc;
   stroke: $chart-axis-color;  
 }
 
-.chart-panel .chart .backing {
+.chart-panel .chart .plot-area {
   fill: rgba(#fff, 0.075);
 }
 
@@ -90,7 +90,7 @@ text {
   background: rgba(#fff, 0.15);
 }
 
-.chart .backing {
+.chart .plot-area {
   fill: none;
 }
 
