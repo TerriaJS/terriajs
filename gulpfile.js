@@ -15,14 +15,14 @@ gulp.task('watch', ['watch-specs', 'copy-cesium-assets']);
 gulp.task('post-npm-install', ['copy-cesium-assets']);
 
 gulp.task('build-specs', function(done) {
-    var webpackConfig = require('./webpack.config.js');
+    var webpackConfig = require('./buildprocess/webpack.config.js');
 
     runWebpack(webpackConfig, done, true);
 });
 
 gulp.task('release-specs', function(done) {
     var webpack = require('webpack');
-    var webpackConfig = require('./webpack.config.js');
+    var webpackConfig = require('./buildprocess/webpack.config.js');
 
     runWebpack(Object.assign({}, webpackConfig, {
         plugins: [
@@ -36,7 +36,7 @@ gulp.task('release-specs', function(done) {
 gulp.task('watch-specs', function(done) {
     var notifier = require('node-notifier');
     var webpack = require('webpack');
-    var webpackConfig = require('./webpack.config.js');
+    var webpackConfig = require('./buildprocess/webpack.config.js');
 
     var wp = webpack(webpackConfig);
     wp.watch({}, function(err, stats) {
@@ -102,7 +102,7 @@ gulp.task('docs', function(done) {
     var child_exec = require('child_process').exec;
 
     var jsdocPath = require.resolve('jsdoc/jsdoc.js');
-    child_exec('node "' + jsdocPath + '" ./lib -c ./jsdoc.json', undefined, done);
+    child_exec('node "' + jsdocPath + '" ./lib -c ./buildprocess/jsdoc.json', undefined, done);
 });
 
 
@@ -125,15 +125,15 @@ gulp.task('copy-cesium-assets', function() {
 });
 
 gulp.task('test-browserstack', function(done) {
-    runKarma('karma-browserstack.conf.js', done);
+    runKarma('./buildprocess/karma-browserstack.conf.js', done);
 });
 
 gulp.task('test-saucelabs', function(done) {
-    runKarma('karma-saucelabs.conf.js', done);
+    runKarma('./buildprocess/karma-saucelabs.conf.js', done);
 });
 
 gulp.task('test', function(done) {
-    runKarma('karma-local.conf.js', done);
+    runKarma('./buildprocess/karma-local.conf.js', done);
 });
 
 function runWebpack(config, doneCallback) {

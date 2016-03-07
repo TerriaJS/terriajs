@@ -2,7 +2,7 @@
 
 /*global require*/
 var glob = require('glob-all');
-var configureWebpack = require('./buildprocess/configureWebpack');
+var configureWebpack = require('./configureWebpack');
 
 var testGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
 
@@ -26,6 +26,6 @@ var config = {
     }
 };
 
-configureWebpack(__dirname, config);
+configureWebpack(require.resolve('../package.json'), config);
 
 module.exports = config;
