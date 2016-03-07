@@ -162,7 +162,7 @@ const Chart = React.createClass({
             mini: this.props.inFeatureInfo,
             transitionDuration: this.props.transitionDuration,
             margin: margin,
-            tooltip: tooltipSettings,
+            tooltipSettings: tooltipSettings,
             titleSettings: titleSettings
         };
     },
