@@ -10,6 +10,8 @@ Change Log
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Fixed error choosing the fill colour of GeoJSON catalog items.
+* Made GeoJSON catalog items a lighter shade, and with a thicker border for better visibility of adjoining polygons.
 
 ### 2.1.1
 
