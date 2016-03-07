@@ -38,6 +38,7 @@
     "gulp-jshint": "^2.0.0",
     "gulp-util": "^3.0.7",
     "jasmine-core": "^2.4.1",
+    "jsdoc": "^3.4.0",
     "jshint": "~2.8.0",
     "karma-browserstack-launcher": "^0.1.10",
     "karma-chrome-launcher": "^0.2.2",
