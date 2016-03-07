@@ -144,8 +144,8 @@ const Chart = React.createClass({
             };
             tooltipSettings = {
                 id: this._tooltipId,
-                align: 'prefer-right',
-                offset: {top: -20, left: 0, right: 0, bottom: 5}
+                align: 'prefer-right', // With right/left alignment, the offset is relative to the svg, so need to inset.
+                offset: {top: 40, left: 50, right: 20, bottom: 5}
             };
             titleSettings = {
                 type: 'legend',
