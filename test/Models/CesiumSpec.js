@@ -2,6 +2,7 @@
 
 /*global require,describe,xdescribe,it,expect,beforeEach*/
 var Cesium = require('../../lib/Models/Cesium');
+var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
 var Terria = require('../../lib/Models/Terria');
 var supportsWebGL = require('../../lib/Core/supportsWebGL');
 var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
@@ -13,7 +14,7 @@ describeIfSupported('Cesium Model', function() {
     var cesium;
     var container;
 
-    beforeEach(function(done) {
+    beforeEach(function() {
         terria = new Terria({
             baseUrl : './'
         });
@@ -23,14 +24,9 @@ describeIfSupported('Cesium Model', function() {
 
         spyOn(terria.tileLoadProgressEvent, 'raiseEvent');
 
-        require.ensure(['terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget'], function(require) {
-            var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
-            cesium = new Cesium(terria, new CesiumWidget(container, {
-                imageryProvider: new TileCoordinatesImageryProvider()
-            }));
-            done();
-        });
-
+        cesium = new Cesium(terria, new CesiumWidget(container, {
+            imageryProvider: new TileCoordinatesImageryProvider()
+        }));
     });
 
     afterEach(function() {
