@@ -94,13 +94,24 @@ text {
   fill: none;
 }
 
-.chart-title {
+.linechart-title {
   padding: 5px 20px;
   left: 0;
   right: 0;
   margin: 0 auto;
   position: absolute;
   text-align: center;
+}
+
+.linechart-title .color {
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  margin: 0 5px 4px 7px;
+}
+
+.linechart-title .name {
+  margin-right: 7px;
 }
 
 .chart-expand .btn--dropdown {
@@ -138,20 +149,24 @@ text {
   display: inline;
 }
 
-.d3-linechart-tooltip {
+.linechart-tooltip {
   z-index: 9999;
   background-color: #444; // TODO
   padding: 5px 5px 10px 10px;
 }
 
-.d3-linechart-tooltip .color {
+.linechart-tooltip .color {
   width: 8px;
 }
 
-.d3-linechart-tooltip .value {
+.linechart-tooltip .value {
   min-width: 80px;
 }
 
-.d3-linechart-tooltip .x-value {
+.linechart-tooltip .x-value {
   min-width: 300px;
+}
+
+.linechart-tooltip .color {
+  width: 8px;
 }

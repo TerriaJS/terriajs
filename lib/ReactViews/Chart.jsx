@@ -128,7 +128,9 @@ const Chart = React.createClass({
 
     getChartParameters() {
         // If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
-        let margin, tooltipSettings, titleSettings;
+        let margin;
+        let tooltipSettings;
+        let titleSettings;
         if (!this.props.inFeatureInfo) {
             if (!defined(this._tooltipId)) {
                 // In case there are multiple charts with tooltips. Unlikely to pick the same random number. Remove the initial "0.".
@@ -146,10 +148,9 @@ const Chart = React.createClass({
                 offset: {top: -20, left: 0, right: 0, bottom: 5}
             };
             titleSettings = {
-                type: 'string',
-                title: 'Title to be completed',
+                type: 'legend',
                 height: 30
-            }
+            };
         }
         return {
             data: defined(this.state.data) ? this.state.data : this.props.data,
