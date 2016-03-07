@@ -1,8 +1,10 @@
 'use strict';
 
-/*global require,describe,it,expect,beforeEach*/
+/*global require,describe,it,expect,beforeEach,fail*/
 
+var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
 var Terria = require('../../lib/Models/Terria');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
@@ -40,15 +42,91 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem instanceof ImageryLayerCatalogItem).toBe(true);
     });
 
-    it('derives legendUrl from url if legendUrl is not explicitly provided', function() {
-        wmsItem.url = 'http://foo.com/bar';
-        expect(wmsItem.legendUrl.indexOf(wmsItem.url)).toBe(0);
-    });
+    describe('legendUrls', function() {
+        it('is used when explicitly-provided', function() {
+            wmsItem.legendUrl = new LegendUrl('http://foo.com/legend.png');
+            wmsItem.url = 'http://foo.com/somethingElse';
+            expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://foo.com/legend.png'));
+        });
 
-    it('uses explicitly-provided legendUrl', function() {
-        wmsItem.legendUrl = 'http://foo.com/legend.png';
-        wmsItem.url = 'http://foo.com/somethingElse';
-        expect(wmsItem.legendUrl).toBe('http://foo.com/legend.png');
+        it('is derived from url if not explicitly provided or read from XML', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://foo.com/bar',
+                metadataUrl: 'test/WMS/no_legend_url.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar')).toBe(0);
+                done();
+            }).otherwise(function(e) {
+                fail(e);
+                done();
+            });
+        });
+
+        it('is read from XML when specified with a single style', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/single_style_legend_url.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/legendUrl', 'image/gif'));
+                done();
+            }).otherwise(function(e) {
+                fail(e);
+                done();
+            });
+        });
+
+        it('is read from the first style tag when XML specifies multiple styles for a layer', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/multiple_style_legend_url.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/legendUrl', 'image/gif'));
+                done();
+            }).otherwise(function(e) {
+                fail(e);
+                done();
+            });
+        });
+
+        it('is read from the first LegendURL tag when XML specifies multiple LegendURL tags for a style', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/single_style_multiple_legend_urls.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/legendUrl', 'image/gif'));
+                done();
+            }).otherwise(function(e) {
+                fail(e);
+                done();
+            });
+        });
+
+
+        it('is not overridden by the XML value when set manually', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/single_style_legend_url.xml',
+                layers: 'single_period'
+            });
+
+            wmsItem.legendUrl = new LegendUrl('http://www.example.com/blahFace');
+
+            wmsItem.load().then(function() {
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/blahFace'));
+                done();
+            }).otherwise(function(e) {
+                fail(e);
+                done();
+            });
+        });
     });
 
     it('derives metadataUrl from url if metadataUrl is not explicitly provided', function() {
@@ -99,7 +177,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem.name).toBe('Name');
         expect(wmsItem.description).toBe('Description');
         expect(wmsItem.rectangle).toEqual(Rectangle.fromDegrees(-10, 10, -20, 20));
-        expect(wmsItem.legendUrl).toBe('http://legend.com');
+        expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://legend.com'));
         expect(wmsItem.dataUrlType).toBe('wfs');
         expect(wmsItem.dataUrl.indexOf('http://my.wfs.com/wfs')).toBe(0);
         expect(wmsItem.dataCustodian).toBe('Data Custodian');
@@ -132,11 +210,52 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem.getFeatureInfoFormats).toBeUndefined();
     });
 
+    it('requests styles property', function() {
+        // Spy on the request to create an image, so that we can see what URL is requested.
+        // Unfortunately this is implementation-dependent.
+        spyOn(ImageryProvider, 'loadImage');
+        wmsItem.updateFromJson({
+            dataUrlType: 'wfs',
+            url: 'http://my.wms.com',
+            layers: 'mylayer',
+            tilingScheme: new WebMercatorTilingScheme(),
+            getFeatureInfoFormats: [],
+            parameters: {
+                styles: 'foobar'
+            }
+        });
+        var imageryLayer = wmsItem.createImageryProvider();
+        imageryLayer.requestImage(0, 0, 2);
+        var requestedUrl = ImageryProvider.loadImage.calls.argsFor(0)[0].url;
+        expect(requestedUrl.toLowerCase()).toContain('styles=foobar');
+    });
+
+    it('requests styles property even if uppercase', function() {
+        // Spy on the request to create an image, so that we can see what URL is requested.
+        // Unfortunately this is implementation-dependent.
+        spyOn(ImageryProvider, 'loadImage');
+        wmsItem.updateFromJson({
+            dataUrlType: 'wfs',
+            url: 'http://my.wms.com',
+            layers: 'mylayer',
+            tilingScheme: new WebMercatorTilingScheme(),
+            getFeatureInfoFormats: [],
+            parameters: {
+                STYLES: 'foobar'
+            }
+        });
+        var imageryLayer = wmsItem.createImageryProvider();
+        imageryLayer.requestImage(0, 0, 2);
+        var requestedUrl = ImageryProvider.loadImage.calls.argsFor(0)[0].url;
+        expect(requestedUrl.toLowerCase()).toContain('styles=foobar');
+    });
+
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         wmsItem.name = 'Name';
+        wmsItem.id = 'Id';
         wmsItem.description = 'Description';
         wmsItem.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
-        wmsItem.legendUrl = 'http://legend.com';
+        wmsItem.legendUrl = new LegendUrl('http://legend.com', 'image/png');
         wmsItem.dataUrlType = 'wfs';
         wmsItem.dataUrl = 'http://my.wfs.com/wfs';
         wmsItem.dataCustodian = 'Data Custodian';
@@ -153,7 +272,21 @@ describe('WebMapServiceCatalogItem', function() {
 
         var reconstructed = new WebMapServiceCatalogItem(terria);
         reconstructed.updateFromJson(json);
-        expect(reconstructed).toEqual(wmsItem);
+
+        // We'll check for these later in toEqual but this makes it a bit easier to see what's different.
+        expect(reconstructed.name).toBe(wmsItem.name);
+        expect(reconstructed.description).toBe(wmsItem.description);
+        expect(reconstructed.rectangle).toEqual(wmsItem.rectangle);
+        expect(reconstructed.legendUrl).toEqual(wmsItem.legendUrl);
+        expect(reconstructed.legendUrls).toEqual(wmsItem.legendUrls);
+        expect(reconstructed.dataUrlType).toBe(wmsItem.dataUrlType);
+        expect(reconstructed.dataUrl).toBe(wmsItem.dataUrl);
+        expect(reconstructed.dataCustodian).toBe(wmsItem.dataCustodian);
+        expect(reconstructed.metadataUrl).toBe(wmsItem.metadataUrl);
+        expect(reconstructed.url).toBe(wmsItem.url);
+        expect(reconstructed.layers).toBe(wmsItem.layers);
+        expect(reconstructed.parameters).toBe(wmsItem.parameters);
+        expect(reconstructed.getFeatureInfoFormats).toEqual(wmsItem.getFeatureInfoFormats);
     });
 
     it('can get handle plain text in textAttribution', function() {
@@ -164,9 +297,9 @@ describe('WebMapServiceCatalogItem', function() {
     });
     it('can get handle object in textAttribution', function() {
         var test = {
-                        text : "test",
-                        link : "link"
-                    };
+            text: "test",
+            link: "link"
+        };
         wmsItem.updateFromJson({
             attribution: test
         });
@@ -190,6 +323,9 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(13);
             done();
+        }).otherwise(function() {
+            fail();
+            done();
         });
     });
 
@@ -205,8 +341,11 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(1);
             done();
+        }).otherwise(function(e) {
+            fail(e);
+            done();
         });
-    
+
     });
 
     it('can understand three-part period datetimes', function(done) {
@@ -219,6 +358,9 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(11);
+            done();
+        }).otherwise(function(e) {
+            fail(e);
             done();
         });
     });
@@ -239,4 +381,23 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load();
     });
 
+    it('discards invalid layer names as long as at least one layer name is valid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.layers).toBe('single_period');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('fails to load if all layer names are invalid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,bar'
+        });
+        wmsItem.load().then(done.fail).otherwise(done);
+    });
 });

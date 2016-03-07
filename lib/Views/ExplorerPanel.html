@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="explorer-panel-body" data-bind="isOpen, foreach: tabs, css: { 'explorer-panel-body-collapsed': !$root.isOpen }">
-      <div class="explorer-panel-frame" data-bind="css: { 'explorer-panel-frame-inactive-left': !isActive && $index() < $root.activeTabIndex, 'explorer-panel-frame-inactive-right': !isActive && $index() > $root.activeTabIndex }">
+      <div class="explorer-panel-frame" data-bind="css: { 'explorer-panel-frame-inactive-left': !isActive && $index() < $root.getActiveTabIndex(), 'explorer-panel-frame-inactive-right': !isActive && $index() > $root.getActiveTabIndex() }">
         <div class="explorer-panel-body-pane" data-bind="embeddedComponent: $data">
         </div>
       </div>

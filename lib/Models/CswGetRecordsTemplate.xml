@@ -7,11 +7,11 @@
                 <ogc:Or>
                     <ogc:PropertyIsLike wildCard="*" singleChar="#" escapeChar="!">
                         <ogc:PropertyName>dc:format</ogc:PropertyName>
-                        <ogc:Literal>OGC:WMS*</ogc:Literal>
+                        <ogc:Literal>*WMS*</ogc:Literal>
                     </ogc:PropertyIsLike>
                     <ogc:PropertyIsLike wildCard="*" singleChar="#" escapeChar="!">
                         <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
-                        <ogc:Literal>OGC:WMS*</ogc:Literal>
+                        <ogc:Literal>*WMS*</ogc:Literal>
                     </ogc:PropertyIsLike>
                 </ogc:Or>
             </ogc:Filter>

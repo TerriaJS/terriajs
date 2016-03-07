@@ -2782,7 +2782,7 @@ For further information please visit the website http://www.bom.gov.au/water/geo
         </Layer>
         <Layer queryable="1">
           <Name>ahgf_shn:AHGFWaterbody</Name>
-          <Title>AHGFWaterbody</Title>
+          <Title>AHGFWaterbody2</Title>
           <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
 For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
           <KeywordList>
@@ -2956,7 +2956,7 @@ For further information please visit the website http://www.bom.gov.au/water/geo
         </Layer>
         <Layer queryable="1">
           <Name>ahgf_gwc:AHGFWaterTableAquifer</Name>
-          <Title>AHGFWaterTableAquifer</Title>
+          <Title>AHGFWaterTableAquifer2</Title>
           <Abstract>This is a web service of the Australian Hydrological Geospatial Fabric (Geofabric). &#13;
 For further information please visit the website http://www.bom.gov.au/water/geofabric/index.shtml</Abstract>
           <KeywordList>
