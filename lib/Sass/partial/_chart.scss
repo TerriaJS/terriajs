@@ -158,7 +158,10 @@ text {
 }
 
 .linechart-tooltip .color {
-  width: 8px;
+  width: 16px;
+  height: 2px;
+  margin: 0 0 4px 0;
+  display: inline-block;
 }
 
 .linechart-tooltip .value {
@@ -170,5 +173,7 @@ text {
 }
 
 .linechart-tooltip .color {
-  width: 8px;
+  width: 16px;
+  margin-right: 11px;
+  margin-left: -5px;
 }

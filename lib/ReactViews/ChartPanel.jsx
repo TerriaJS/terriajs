@@ -21,6 +21,18 @@ const ChartPanel = React.createClass({
         onClose: React.PropTypes.func
     },
 
+    closePanel() {
+        const chartableItems = this.props.terria.catalog.chartableItems;
+        for (let i = chartableItems.length - 1; i >= 0; i--) {
+            const item = chartableItems[i];
+            if (item.isEnabled && defined(item.tableStructure)) {
+                item.tableStructure.columns
+                    .filter(column=>column.isActive)
+                    .forEach(column=>column.toggleActive());
+            }
+        }
+    },
+
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
@@ -59,7 +71,7 @@ const ChartPanel = React.createClass({
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <span className="chart-panel__section-label label">{loader || 'Charts'}</span>
-                                <button className="btn btn--close-chart-panel"></button>
+                                <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
                             </div>
                             <div>
                                 {chart}
