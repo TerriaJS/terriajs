@@ -14,6 +14,17 @@ function configureWebpack(terriaJSBasePath, config) {
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
 
+    // Use Babel to compile our JavaScript files.
+    config.module.loaders.push({
+        test: /\.js$/,
+        include: path.resolve(terriaJSBasePath, 'lib'),
+        loader: require.resolve('babel-loader'),
+        query: {
+            //presets: ['es2015'] /*,
+            //cacheDirectory: true*/
+        }
+    });
+
     // Use the raw loader for our view HTML.  We don't use the html-loader because it
     // will doing things with images that we don't (currently) want.
     config.module.loaders.push({
