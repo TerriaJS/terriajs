@@ -9,18 +9,18 @@
 var gulp = require('gulp');
 
 gulp.task('default', ['lint', 'build']);
-gulp.task('build', ['build-specs']);
-gulp.task('release', ['release-specs', 'make-schema']);
-gulp.task('watch', ['watch-specs']);
+gulp.task('build', ['build-specs', 'copy-cesium-assets']);
+gulp.task('release', ['release-specs', 'copy-cesium-assets', 'make-schema']);
+gulp.task('watch', ['watch-specs', 'copy-cesium-assets']);
 gulp.task('post-npm-install', ['copy-cesium-assets']);
 
-gulp.task('build-specs', ['prepare-cesium'], function(done) {
+gulp.task('build-specs', function(done) {
     var webpackConfig = require('./webpack.config.js');
 
     runWebpack(webpackConfig, done, true);
 });
 
-gulp.task('release-specs', ['prepare-cesium'], function(done) {
+gulp.task('release-specs', function(done) {
     var webpack = require('webpack');
     var webpackConfig = require('./webpack.config.js');
 
@@ -33,7 +33,7 @@ gulp.task('release-specs', ['prepare-cesium'], function(done) {
     }), done, true);
 });
 
-gulp.task('watch-specs', ['prepare-cesium'], function(done) {
+gulp.task('watch-specs', function(done) {
     var notifier = require('node-notifier');
     var webpack = require('webpack');
     var webpackConfig = require('./webpack.config.js');
