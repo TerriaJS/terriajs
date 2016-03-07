@@ -39,7 +39,7 @@
     "gulp-jshint": "^2.0.0-alpha2",
     "gulp-util": "^3.0.4",
     "jasmine-core": "^2.4.1",
-    "jshint": "^2.8.x",
+    "jshint": "~2.8.0",
     "karma-browserstack-launcher": "^0.1.10",
     "karma-chrome-launcher": "^0.2.2",
     "karma-detect-browsers": "^2.0.2",
