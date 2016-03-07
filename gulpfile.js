@@ -101,7 +101,8 @@ gulp.task('lint', function() {
 gulp.task('docs', function(done) {
     var child_exec = require('child_process').exec;
 
-    child_exec('node ./node_modules/jsdoc/jsdoc.js ./lib -c ./jsdoc.json', undefined, done);
+    var jsdocPath = require.resolve('jsdoc/jsdoc.js');
+    child_exec('node "' + jsdocPath + '" ./lib -c ./jsdoc.json', undefined, done);
 });
 
 
