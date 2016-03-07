@@ -30,9 +30,12 @@ const FeatureInfoSection = React.createClass({
         // If a template is defined, render it using feature.properties, which is non-time-varying.
         // If no template is provided, show feature.description, which may be time-varying.
         const data = feature.properties;
-
-        if (defined(this.props.template)) {
-            return Mustache.render(this.props.template, data);
+        const template = this.props.template;
+        if (defined(template)) {
+            if (typeof template === 'string') {
+                return Mustache.render(template, data);
+            }
+            return Mustache.render(template.template, data, template.partials);
         }
         const description = feature.description.getValue(clock.currentTime);
         if (description.properties) {
@@ -42,9 +45,13 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
-        const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) && this.props.catalogItem.name || [];
-        const featureName = (this.props.feature && this.props.feature.name) && this.props.feature.name || [];
-        return catalogItemName.concat([' - ']).concat(featureName);
+        const template = this.props.template;
+        if (typeof template === 'object' && defined(template.name)) {
+            const data = this.props.feature.properties;
+            return Mustache.render(template.name, data);
+        }
+
+        return (this.props.feature && this.props.feature.name) || '';
     },
 
     sanitizedCustomMarkdown() {
@@ -57,9 +64,10 @@ const FeatureInfoSection = React.createClass({
     },
 
     render() {
+        const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         return (
             <li className={'feature-info-panel__section ' + (this.props.isOpen ? 'is-open' : '')}>
-                <button onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{this.renderDataTitle()}</button>
+                <button onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
                 {this.props.isOpen &&
                     <section className='feature-info-panel__content'>
                         {this.sanitizedCustomMarkdown()}
