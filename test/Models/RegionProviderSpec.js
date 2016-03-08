@@ -10,7 +10,7 @@ var URI = require('urijs');
 
 // This test would be nice, but regionProvider.processRegionIds is no longer exposed in the API.
 // We could test it by loading in some json via loadRegionIDs instead.
-// 
+//
 // describe('RegionProvider indices', function() {
 
 //     var terria;
@@ -84,7 +84,8 @@ describe('RegionProvider', function() {
         regionProvider = new RegionProvider('CED', {
             regionProp: 'CED_CODE',
             layerName: 'region_map:FID_CED_2011_AUST',
-            server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows'
+            server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows',
+            serverType: "WMS"
         });
 
     });
