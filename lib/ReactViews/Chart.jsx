@@ -140,7 +140,7 @@ const Chart = React.createClass({
                 top: 0,  // So the title is flush with the top of the chart panel.
                 right: 40,
                 bottom: 20,
-                left: 50
+                left: 0
             };
             tooltipSettings = {
                 id: this._tooltipId,

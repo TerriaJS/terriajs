@@ -94,6 +94,10 @@ text {
   fill: none;
 }
 
+.chart path.line {
+  stroke-width: 2;
+}
+
 .linechart-title {
   padding: 5px 20px;
   left: 0;
