@@ -12,8 +12,12 @@ $chart-line-color: #ccc;
   shape-rendering: crispEdges;
 }
 
-.chart-panel .axis path, .chart-panel .axis line {
-  stroke: $chart-axis-color;  
+.chart-panel .axis .tick line, .chart-panel .axis path.domain {
+  stroke: $chart-axis-color;
+}
+
+.chart-panel .axis .colors line {
+  stroke-width: 2;
 }
 
 .chart-panel .chart .plot-area {
@@ -30,7 +34,7 @@ text {
 .line {
   fill: none;
   stroke: $chart-line-color;
-  stroke-width: 1px;
+  stroke-width: 1;
 }
 
 .selection circle {
@@ -180,4 +184,8 @@ text {
   width: 16px;
   margin-right: 11px;
   margin-left: -5px;
+}
+
+.chart-panel .axis .colors path {
+  stroke-width: 2;
 }
