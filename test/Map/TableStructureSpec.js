@@ -194,5 +194,34 @@ describe('TableStructure', function() {
         expect(htmls[1]).toContain('12' + separator + '345');
     });
 
+    it('can tell if it has address data', function() {
+        var data = [['x', 'y', 'Address'], [1.678, 5.123, "25 Gozzard Street, GUNGAHLIN TOWN CENTRE, ACT"],
+                                           [54321, 12345, "137 Reed Street, TUGGERANONG, ACT"],
+                                           [4, -3, "81 Mildura Street, FYSHWICK, ACT"]];
+        var options = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        expect(tableStructure.hasAddress).toBe(true);
 
+        var dataNoAddr = [['x', 'y'], [1.678, 5.123], [54321, 12345], [4, -3]];
+        var optionsNoAddr = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var tableStructureNoAddr = new TableStructure('foo', optionsNoAddr);
+        tableStructureNoAddr = tableStructure.loadFromJson(dataNoAddr);
+        expect(tableStructure.hasAddress).toBe(false);
+    });
+
+    it('can add columns', function() {
+        var dataNoAddr = [['x', 'y'], [1.678, 5.123], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(dataNoAddr);
+        var longValues = [44.0, 55.0, 66.0];
+        var latValues = [11.0, 22.0, 33.0];
+        expect(tableStructure.hasLatitudeAndLongitude).toBe(false);
+        tableStructure.addColumn("lat", latValues);
+        tableStructure.addColumn("lon", longValues);
+        expect(tableStructure.hasLatitudeAndLongitude).toBe(true);
+        expect(tableStructure.columns[VarType.LAT].values).toBe(latValues);
+        expect(tableStructure.columns[VarType.LON].values).toBe(longValues);
+    });
 });

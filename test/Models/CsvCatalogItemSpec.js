@@ -1236,20 +1236,37 @@ describe('CsvCatalogItem with region mapping', function() {
 
 describe('CsvCatalogItem with addresses', function() {
 
-    var terria;
-    var csvItem;
-    beforeEach(function() {
-        terria = new Terria({
+    it('knows the lat long coordinates of the addresses if geocoder url and key are defined', function(done) {
+        var terria = new Terria({
             baseUrl: './',
-            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+            geocoderUrl: "https://search.mapzen.com/v1/search",
+            geocoderKey: "search-wEPIcrU"
         });
-        csvItem = new CsvCatalogItem(terria);
-    });
-
-    it('knows the lat long coordinates of the addresses', function(done) {
+        var csvItem = new CsvCatalogItem(terria);
         csvItem.url = 'test/csv/address_to_lat_long.csv';
         csvItem.load().then(function() {
             expect(csvItem.regionMapping).toBeUndefined();
+            expect(csvItem.tableStructure.hasAddress).toBe(true);
+            expect(csvItem.tableStructure.hasLatitudeAndLongitude).toBe(true);
+            var rows = csvItem.tableStructure._rows;
+            expect(rows[0]).toEqual(["Lat", "Lon", "Station name", "Address"]);
+            expect(rows[1]).toEqual([-35.24381, 149.098245, "BELCONNEN HOUSE", "120 Thynne St Bruce ACT 2617"]);
+        }).otherwise(fail).then(done);
+    });
+
+    it('does not know the lat long coordinates of the addresses if geocoder url and key are undefined', function(done) {
+        var terria = new Terria({
+            baseUrl: './',
+        });
+        var csvItem = new CsvCatalogItem(terria);
+        csvItem.url = 'test/csv/address_to_lat_long.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.regionMapping).toBeUndefined();
+            expect(csvItem.tableStructure.hasAddress).toBe(true);
+            expect(csvItem.tableStructure.hasLatitudeAndLongitude).toBe(false);
+            var rows = csvItem.tableStructure._rows;
+            expect(rows[0]).toEqual(["Station name", "Address"]);
+            expect(rows[1]).toEqual(["BELCONNEN HOUSE", "120 Thynne St Bruce ACT 2617"]);
         }).otherwise(fail).then(done);
     });
 });
