@@ -12,6 +12,7 @@ Change Log
 * Added support for csv files which only location (lat/lon or region) columns, and no value columns, using a file-specific color. Revised geojson display to draw from the same palette of colors.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Improved legend and coloring of ENUM (string) columns of csv files; only the most common values are colored differently, with the rest shown as 'Other'.
 
 ### 2.1.1
 
