@@ -53,7 +53,7 @@
                 }
             },
             {
-                "name": "Lat lon CSV with duration of 1 hour",
+                "name": "Lat/lon CSV with duration of 1 hour",
                 "type": "csv",
                 "url": "build/terriajs/test/csv/lat_lon_date_value.csv",
                 "tableStyle": {
@@ -61,9 +61,41 @@
                 }
             },
             {
-                "name": "Lat lon CSV with no other columns",
+                "name": "Lat/lon CSV with no other columns",
                 "type": "csv",
                 "url": "build/terriajs/test/csv/lat_lon.csv"
+            },
+            {
+                "name": "Lat/lon with too many enum values",
+                "type": "csv",
+                "url": "build/terriajs/test/csv/lat_lon_enum_lots.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
+            },
+            {
+                "name": "Lat/lon with 9 enum values and 9 bins",
+                "type": "csv",
+                "url": "build/terriajs/test/csv/lat_lon_enum_lots2.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
+            },
+            {
+                "name": "Postcodes with 9 enum values and 9 bins",
+                "type": "csv",
+                "url": "build/terriajs/test/csv/postcode_enum_lots2.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
+            },
+            {
+                "name": "Postcodes with too many enum values",
+                "type": "csv",
+                "url": "build/terriajs/test/csv/postcode_enum_lots.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
             }
         ]
     }]

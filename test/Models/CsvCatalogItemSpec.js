@@ -434,6 +434,30 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('replaces enum tail with "Other" in the legend', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('Other');
+            expect(url).not.toContain('guinea pigs');
+            expect(url).not.toContain('unicorns');
+            expect(url).toContain('turtles');
+        }).otherwise(fail).then(done);
+    });
+
+    it('does not replace enum tail with Other if it fits', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_lots2.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            expect(csvItem.legendUrl.url).not.toContain('Other');
+            expect(csvItem.legendUrl.url).toContain('guinea pigs');
+        }).otherwise(fail).then(done);
+    });
+
+
     describe('and per-column tableStyle', function() {
 
         it('scales by value', function(done) {
@@ -806,6 +830,19 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(recolorFunction(regionNames.indexOf('3122'))).not.toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('replaces enum tail with "Other" in the legend', function(done) {
+        csvItem.url = 'test/csv/postcode_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('Other');
+            expect(url).not.toContain('guinea pigs');
+            expect(url).not.toContain('unicorns');
+            expect(url).toContain('turtles');
         }).otherwise(fail).then(done);
     });
 
