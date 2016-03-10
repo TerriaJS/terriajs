@@ -1233,3 +1233,24 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
 });
+
+describe('CsvCatalogItem with addresses', function() {
+
+    var terria;
+    var csvItem;
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './',
+            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+        });
+        csvItem = new CsvCatalogItem(terria);
+    });
+
+    it('knows the lat long coordinates of the addresses', function(done) {
+        csvItem.url = 'test/csv/address_to_lat_long.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.regionMapping).toBeUndefined();
+        }).otherwise(fail).then(done);
+    });
+});
+
