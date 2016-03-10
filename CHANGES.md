@@ -8,7 +8,7 @@ Change Log
 * Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
 * Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
 * Upgraded to terriajs-cesium 1.18.0.
-* Added support for csv files which only have latitude and longitude columns (no value columns). Revised geojson display to draw from the same palette of high contrast colors.
+* Added support for csv files which only location (lat/lon or region) columns, and no value columns, using a file-specific color. Revised geojson display to draw from the same palette of colors.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
 
