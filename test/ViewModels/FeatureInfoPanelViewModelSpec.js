@@ -15,6 +15,10 @@ var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var CzmlCatalogItem = require('../../lib/Models/CzmlCatalogItem');
 
+var separator = ',';
+if (typeof Intl === 'object') {
+    separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+}
 
 describe('FeatureInfoPanelViewModel', function() {
     var terria;
@@ -138,9 +142,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
         panel = undefined;
     });
 
-    it('has a default template', function(done) {
-        var regex = new RegExp('<td>.{0,7}Hoop_Big.{0,7}</td>');
-        item.featureInfoTemplate = undefined;
+    function loadAndPick() {
         return item.load().then(function() {
             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
             panel.terria.nowViewing.add(item);
@@ -148,93 +150,75 @@ describe('FeatureInfoPanelViewModel templating', function() {
             var pickedFeatures = new PickedFeatures();
             pickedFeatures.features.push(feature);
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+            return panel.showFeatures(pickedFeatures);
+        });
+    }
 
-            return panel.showFeatures(pickedFeatures).then(function() {
-                expect(regex.test(panel.sections[0].info.replace(/\n/g, ''))).toBe(true);
-            });
-        }).then(done).otherwise(done.fail);
+    describe('default', function() {
+
+        beforeEach(function(done) {
+            item.featureInfoTemplate = undefined;
+            return loadAndPick().then(done).otherwise(done.fail);
+        });
+
+        it('exists', function() {
+            var regex = new RegExp('<td>.{0,7}Hoop_Big.{0,7}</td>');
+            expect(regex.test(panel.sections[0].rawData.replace(/\n/g, ''))).toBe(true);
+        });
+
+        it('formats large numbers without commas', function() {
+            expect(panel.sections[0].rawData.indexOf('1234567') >= 0).toBe(true);
+        });
 
     });
 
     it('uses and completes a string-form featureInfoTemplate if present', function(done) {
         item.featureInfoTemplate = 'A {{type}} made of {{material}} with {{funding_ba}} funding.';
-        item.load().then(function() {
-            expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
-            panel.terria.nowViewing.add(item);
-            var feature = item.dataSource.entities.values[0];
-            var pickedFeatures = new PickedFeatures();
-            pickedFeatures.features.push(feature);
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-
-            return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
-            }).otherwise(done.fail).then(done);
-        }).otherwise(done.fail);
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('A Hoop_Big made of Stainless Steel with Capex funding.');
+        }).otherwise(done.fail).then(done);
     });
 
     it('can use _ to refer to . and # in property keys in the featureInfoTemplate', function(done) {
         item.featureInfoTemplate = 'historic.# {{historic__}}; file.number. {{file_number_}}; documents.#1 {{documents._1}}';
-        return item.load().then(function() {
-            expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
-            panel.terria.nowViewing.add(item);
-            var feature = item.dataSource.entities.values[0];
-            var pickedFeatures = new PickedFeatures();
-            pickedFeatures.features.push(feature);
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-
-            return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('historic.# -12; file.number. 10; documents.#1 4');
-            });
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('historic.# -12; file.number. 10; documents.#1 4');
         }).then(done).otherwise(done.fail);
     });
 
     it('must use triple braces to embed html in template', function(done) {
-        item.featureInfoTemplate = '<div>Hello {{name}} - {{{name}}}</div>';
-        return item.load().then(function() {
-            expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
-            panel.terria.nowViewing.add(item);
-            var feature = item.dataSource.entities.values[0];
-            feature.properties['name'] = 'Jay<br>';
-            var pickedFeatures = new PickedFeatures();
-            pickedFeatures.features.push(feature);
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-
-            return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
-            });
+        item.featureInfoTemplate = '<div>Hello {{owner}} - {{{owner}}}</div>';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('<div>Hello Jay&lt;br&gt; - Jay<br></div>');
         }).then(done).otherwise(done.fail);
 
     });
 
     it('can use a json featureInfoTemplate with partials', function(done) {
         item.featureInfoTemplate = {template: '<div>test {{>foobar}}</div>', partials: {foobar: '<b>{{type}}</b>'}};
-        return item.load().then(function() {
-            expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
-            panel.terria.nowViewing.add(item);
-            var feature = item.dataSource.entities.values[0];
-            var pickedFeatures = new PickedFeatures();
-            pickedFeatures.features.push(feature);
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-
-            return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toBe('<div>test <b>Hoop_Big</b></div>');
-            });
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('<div>test <b>Hoop_Big</b></div>');
         }).then(done).otherwise(done.fail);
     });
 
     it('sets the name from featureInfoTemplate', function(done) {
         item.featureInfoTemplate = {name: 'Type {{type}}'};
-        return item.load().then(function() {
-            expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
-            panel.terria.nowViewing.add(item);
-            var feature = item.dataSource.entities.values[0];
-            var pickedFeatures = new PickedFeatures();
-            pickedFeatures.features.push(feature);
-            pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].name).toBe('Type Hoop_Big');
+        }).then(done).otherwise(done.fail);
+    });
 
-            return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].name).toBe('Type Hoop_Big');
-            });
+    it('formats templated large numbers without commas', function(done) {
+        item.featureInfoTemplate = 'Big {{big}}';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo.indexOf('1234567') >= 0).toBe(true);
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('can format numbers with commas', function(done) {
+        item.featureInfoTemplate = {template: 'Big {{big}}', formats: {big: {useGrouping: true}}};
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo.indexOf('1' + separator + '234' + separator + '567') >= 0).toBe(true);
         }).then(done).otherwise(done.fail);
     });
 
@@ -274,7 +258,7 @@ describe('FeatureInfoPanelViewModel templating', function() {
                     +       '</ul>'
                     +   '</li>'
                     + '</ul>';
-                expect(panel.sections[0].info).toBe(recursedHtml);
+                expect(panel.sections[0].templatedInfo).toBe(recursedHtml);
             });
         }).then(done).otherwise(done.fail);
     });
@@ -322,7 +306,7 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toEqual(target);
+                expect(panel.sections[0].templatedInfo).toEqual(target);
             });
         }).then(done).otherwise(done.fail);
     });
@@ -343,15 +327,15 @@ describe('FeatureInfoPanelViewModel CZML templating', function() {
             terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
 
             return panel.showFeatures(pickedFeatures).then(function() {
-                expect(panel.sections[0].info).toEqual(targetBlank);
+                expect(panel.sections[0].templatedInfo).toEqual(targetBlank);
 
                 terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
                 terria.clock.tick();
-                expect(panel.sections[0].info).toEqual(targetABC);
+                expect(panel.sections[0].templatedInfo).toEqual(targetABC);
 
                 terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
                 terria.clock.tick();
-                expect(panel.sections[0].info).toEqual(targetDEF);
+                expect(panel.sections[0].templatedInfo).toEqual(targetDEF);
             });
         }).then(done).otherwise(done.fail);
 

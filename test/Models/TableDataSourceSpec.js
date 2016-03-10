@@ -4,6 +4,7 @@
 var loadText = require('terriajs-cesium/Source/Core/loadText');
 var TableDataSource = require('../../lib/Models/TableDataSource');
 var TableStyle = require('../../lib/Models/TableStyle');
+var VarType = require('../../lib/Map/VarType');
 
 
 describe('TableDataSource', function() {
@@ -32,9 +33,10 @@ describe('TableDataSource', function() {
         }).then(done).otherwise(done.fail);
     });
 
-    it('sets the clock when there is a date column', function(done) {
+    it('sets the clock when there is an active date column', function(done) {
         loadText('/test/csv/lat_long_enum_moving_date.csv').then(function(text) {
             tableDataSource.loadFromCsv(text);
+            tableDataSource.tableStructure.activeTimeColumn = tableDataSource.tableStructure.columnsByType[VarType.TIME][0];
             expect(tableDataSource.clock).toBeDefined();
         }).then(done).otherwise(done.fail);
     });

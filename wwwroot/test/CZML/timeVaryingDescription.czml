@@ -1,0 +1,62 @@
+[
+    {
+        "id": "document",
+        "name": "simple",
+        "version": "1.0",
+        "clock": {
+            "interval": "2012/2016"
+        }
+    },
+    {
+        "description": [
+            {
+                "interval": "2012/2013",
+                "string": "Early days"
+            },
+            {
+                "interval": "2013/2016",
+                "string": "Later days"
+            }
+        ],
+        "name": "Test Zone",
+        "polygon": {
+            "material": {
+                "solidColor": {
+                    "color": {
+                        "rgba": [
+                            255,
+                            255,
+                            255,
+                            178
+                        ]
+                    }
+                }
+            },
+            "outline": true,
+            "outlineColor": {
+                "rgba": [
+                    50,
+                    50,
+                    50,
+                    200
+                ]
+            },
+            "positions": {
+                "cartographicDegrees": [
+                    149,
+                    -35,
+                    0,
+                    151,
+                    -35,
+                    0,
+                    151,
+                    -33,
+                    0,
+                    149,
+                    -33,
+                    0
+                ]
+            }
+        }
+    }
+]

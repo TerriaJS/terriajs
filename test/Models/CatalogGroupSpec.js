@@ -177,7 +177,6 @@ describe('CatalogGroup', function() {
             });
         });
 
-
         it('updates existing items by id ahead of name', function (done) {
             group.updateFromJson({
                 type: 'group',
@@ -211,7 +210,6 @@ describe('CatalogGroup', function() {
             });
         });
 
-
         it('updates existing items by name', function (done) {
             group.updateFromJson({
                 type: 'group',
@@ -244,7 +242,6 @@ describe('CatalogGroup', function() {
                 done();
             });
         });
-
 
         it('only updates existing items when onlyUpdateExistingItems === true', function (done) {
             group.updateFromJson({
@@ -309,6 +306,91 @@ describe('CatalogGroup', function() {
             group.remove(item1);
 
             expect(terria.catalog.shareKeyIndex['foo/blah']).toBeUndefined();
+        });
+    });
+
+    describe('for key clashes', function() {
+        it('inserts items under an altered key if their shareKeys clash with existing keys', function (done) {
+            group.updateFromJson({
+                type: 'group',
+                items: [
+                    {
+                        name: 'A',
+                        type: 'item'
+                    },
+                    {
+                        name: 'B',
+                        id: 'uniqueId',
+                        type: 'item'
+                    }
+                ]
+            }).then(function() {
+                var noIdCatalogItem = new CatalogItem(terria);
+                noIdCatalogItem.name = 'A';
+
+                var idCatalogItem = new CatalogItem(terria);
+                idCatalogItem.id = 'uniqueId';
+
+                // When a call is specifically made to .add(), there is no effort to update existing items with the same id.
+                group.add(noIdCatalogItem);
+                group.add(idCatalogItem);
+
+                expect(terria.catalog.shareKeyIndex['Root Group/A']).not.toBe(noIdCatalogItem);
+                expect(terria.catalog.shareKeyIndex['Root Group/A']).toBeDefined();
+                expect(terria.catalog.shareKeyIndex['Root Group/A (1)']).toBe(noIdCatalogItem);
+
+                expect(terria.catalog.shareKeyIndex['uniqueId']).not.toBe(idCatalogItem);
+                expect(terria.catalog.shareKeyIndex['uniqueId']).toBeDefined();
+                expect(terria.catalog.shareKeyIndex['uniqueId (1)']).toBe(idCatalogItem);
+
+                // Add again, this time the keys will clash again but should be added under the key + '(2)'
+                var noIdCatalogItem2 = new CatalogItem(terria);
+                noIdCatalogItem2.name = 'A';
+
+                var idCatalogItem2 = new CatalogItem(terria);
+                idCatalogItem2.id = 'uniqueId';
+
+                group.add(noIdCatalogItem2);
+                group.add(idCatalogItem2);
+
+                expect(terria.catalog.shareKeyIndex['Root Group/A']).not.toBe(noIdCatalogItem2);
+                expect(terria.catalog.shareKeyIndex['uniqueId']).not.toBe(idCatalogItem2);
+
+                expect(terria.catalog.shareKeyIndex['uniqueId (1)']).toBe(idCatalogItem);
+                expect(terria.catalog.shareKeyIndex['Root Group/A (1)']).toBe(noIdCatalogItem);
+
+                expect(terria.catalog.shareKeyIndex['Root Group/A (2)']).toBe(noIdCatalogItem2);
+                expect(terria.catalog.shareKeyIndex['uniqueId (2)']).toBe(idCatalogItem2);
+            }).otherwise(fail).then(done);
+        });
+
+        it('alters the id of clashing items', function (done) {
+            group.updateFromJson({
+                type: 'group',
+                items: [
+                    {
+                        name: 'A',
+                        type: 'item'
+                    },
+                    {
+                        name: 'B',
+                        id: 'uniqueId',
+                        type: 'item'
+                    }
+                ]
+            }).then(function() {
+                var noIdCatalogItem = new CatalogItem(terria);
+                noIdCatalogItem.name = 'A';
+
+                var idCatalogItem = new CatalogItem(terria);
+                idCatalogItem.id = 'uniqueId';
+
+                group.add(noIdCatalogItem);
+                group.add(idCatalogItem);
+
+                expect(noIdCatalogItem.uniqueId).toBe('Root Group/A (1)');
+                expect(idCatalogItem.uniqueId).toBe('uniqueId (1)');
+            }).otherwise(fail).then(done);
         });
     });
 });

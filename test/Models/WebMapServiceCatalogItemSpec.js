@@ -278,6 +278,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.description).toBe(wmsItem.description);
         expect(reconstructed.rectangle).toEqual(wmsItem.rectangle);
         expect(reconstructed.legendUrl).toEqual(wmsItem.legendUrl);
+        expect(reconstructed.legendUrls).toEqual(wmsItem.legendUrls);
         expect(reconstructed.dataUrlType).toBe(wmsItem.dataUrlType);
         expect(reconstructed.dataUrl).toBe(wmsItem.dataUrl);
         expect(reconstructed.dataCustodian).toBe(wmsItem.dataCustodian);
@@ -286,8 +287,6 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.layers).toBe(wmsItem.layers);
         expect(reconstructed.parameters).toBe(wmsItem.parameters);
         expect(reconstructed.getFeatureInfoFormats).toEqual(wmsItem.getFeatureInfoFormats);
-
-        expect(reconstructed).toEqual(wmsItem);
     });
 
     it('can get handle plain text in textAttribution', function() {
@@ -382,4 +381,23 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load();
     });
 
+    it('discards invalid layer names as long as at least one layer name is valid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.layers).toBe('single_period');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('fails to load if all layer names are invalid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,bar'
+        });
+        wmsItem.load().then(done.fail).otherwise(done);
+    });
 });

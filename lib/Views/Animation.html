@@ -1,5 +1,5 @@
 <div class="animation-controls" data-bind="visible: showAnimation">
-     <div class="animation-text" title="Current Time (tz info et al)">
+    <div class="animation-text" title="Current Time (tz info et al)">
         <div class="animation-text-display" data-bind="text: currentTimeString"></div>
     </div>
     <div class="animation-control" data-bind="event: {click: gotoStart, mousedown: function() {gotoStartActive = true;} , mouseup: function() {gotoStartActive = false;}}" title="Go to beginning">
@@ -17,6 +17,9 @@
     <div class="animation-control animation-control-last" data-bind="click: toggleLoop" title="Loop at the end">
         <div class="animation-control-icon" data-bind="cesiumSvgPath: { path: svgLoop, width: 16, height: 16}, css: { 'animation-control-active': isLooping }"></div>
     </div>
+</div>
+<div class="animation-name animation-text" data-bind="visible: showAnimation" title="Current Layer">
+    <div class="animation-text-display" data-bind="text: layerName"></div>
 </div>
 <div class="animation-timeline" data-bind="visible: showAnimation">
 </div>
