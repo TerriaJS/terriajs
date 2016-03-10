@@ -10,6 +10,7 @@ Change Log
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
 
 ### 2.1.1
 
