@@ -10,6 +10,7 @@ Change Log
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
 
 ### 2.1.1
 
@@ -68,13 +69,6 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
-* Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
-* Introduced three new json tableStyle parameters:
-  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
-  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
-  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
-when no variable is selected.
-* Added id matching for catalog members:
 * Recognises the CSV datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
 * Introduced five new json tableStyle parameters:
   - `replaceWithZeroValues`: Defaults to `[null, "-"]`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
