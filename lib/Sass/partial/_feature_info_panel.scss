@@ -91,3 +91,7 @@
   right: 0;
 }
 
+.feature-info-panel:focus{
+    z-index: 99;
+    outline: none;
+}
