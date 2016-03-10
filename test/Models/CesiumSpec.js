@@ -75,7 +75,7 @@ describeIfSupported('Cesium Model', function() {
     describe('feature picking', function() {
         it('should create GeoJSON for polygon when a rasterized polygon feature is selected', function(done) {
             loadJson('test/GeoJSON/polygon.geojson').then(function(polygonGeoJson) {
-                var entity = new Entity('test');
+                var entity = new Entity();
                 entity.data = polygonGeoJson;
 
                 terria.selectedFeature = entity;
@@ -92,7 +92,7 @@ describeIfSupported('Cesium Model', function() {
 
         it('should create GeoJSON for polyline when a rasterized polyline feature is selected', function(done) {
             loadJson('test/GeoJSON/polyline.geojson').then(function(polylineGeoJson) {
-                var entity = new Entity('test');
+                var entity = new Entity();
                 entity.data = polylineGeoJson;
 
                 terria.selectedFeature = entity;

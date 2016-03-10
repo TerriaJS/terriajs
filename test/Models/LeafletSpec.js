@@ -126,7 +126,7 @@ describe('Leaflet Model', function() {
             loadJson('test/GeoJSON/polygon.geojson').then(function(polygonGeoJson) {
                 initLeaflet();
 
-                var entity = new Entity('test');
+                var entity = new Entity();
                 entity.data = polygonGeoJson;
 
                 terria.selectedFeature = entity;
@@ -145,7 +145,7 @@ describe('Leaflet Model', function() {
             loadJson('test/GeoJSON/polyline.geojson').then(function(polylineGeoJson) {
                 initLeaflet();
 
-                var entity = new Entity('test');
+                var entity = new Entity();
                 entity.data = polylineGeoJson;
 
                 terria.selectedFeature = entity;
