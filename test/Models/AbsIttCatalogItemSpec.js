@@ -6,8 +6,60 @@ var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var Terria = require('../../lib/Models/Terria');
 var AbsIttCatalogItem = require('../../lib/Models/AbsIttCatalogItem');
 
-var sinon = require('sinon');
-// var URI = require('urijs');
+describe('AbsIttCatalogItem._generateAllCombinations', function() {
+
+    it('works with one code and one concept', function() {
+        var test = [[1]];
+        var target = [[1]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+    it('works with one code per concept', function() {
+        var test = [[1], [2], [3], [4]];
+        var target = [[1, 2, 3, 4]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+    it('works with two codes in a single concept', function() {
+        var test = [[1, 10]];
+        var target = [[1], [10]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+    it('works with two codes in first concept', function() {
+        var test = [[1, 10], [2], [3], [4]];
+        var target = [[1, 2, 3, 4], [10, 2, 3, 4]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+    it('works with two codes in first two concepts', function() {
+        var test = [[1, 10], [2, 20], [3], [4]];
+        // Actually the order of the subarrays is not important.
+        var target = [[1, 2, 3, 4], [1, 20, 3, 4], [10, 2, 3, 4], [10, 20, 3, 4]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+    it('works with two codes in first three concepts', function() {
+        var test = [[1, 10], [2, 20], [3, 30], [4]];
+        // Actually the order of the subarrays is not important.
+        var target =  [[ 1, 2, 3, 4], [1, 2, 30, 4], [1, 20, 3, 4], [1, 20, 30, 4], [10, 2, 3, 4], [10, 2, 30, 4], [10, 20, 3, 4], [10, 20, 30, 4]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+    it('works with two codes in last concept', function() {
+        var test = [[1], [2], [3], [4, 40]];
+        var target = [[1, 2, 3, 4], [1, 2, 3, 40]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+    it('works with two codes in last two concepts', function() {
+        var test = [[1], [2], [3, 30], [4, 40]];
+        var target = [[1, 2, 3, 4], [1, 2, 3, 40], [1, 2, 30, 4], [1, 2, 30, 40]];
+        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
+    });
+
+});
+
 
 describe('AbsIttCatalogItem', function() {
     var terria;
@@ -19,13 +71,6 @@ describe('AbsIttCatalogItem', function() {
         });
         item = new AbsIttCatalogItem(terria);
     });
-
-    // Is this an important feature?
-    // it('defaults to having no dataUrl', function() {
-    //     item.url = 'http://foo.bar';
-    //     expect(item.dataUrl).toBeUndefined();
-    //     expect(item.dataUrlType).toBeUndefined();
-    // });
 
     it('uses explicitly-provided dataUrl and dataUrlType', function() {
         item.dataUrl = 'http://foo.com/data';
@@ -86,21 +131,14 @@ describe('AbsIttCatalogItem', function() {
     });
 
     describe('loading', function() {
-        var fakeServer;
-
         beforeEach(function() {
-            sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
-            fakeServer = sinon.fakeServer.create();
-            fakeServer.autoRespond = true;
+            jasmine.Ajax.install();
 
-            fakeServer.respond(function(request) {
-                fail('Unhandled request to URL: ' + request.url);
-            });
+            // Fail all requests by default.
+            jasmine.Ajax.stubRequest(/.*/).andError();
 
-            fakeServer.respondWith(
-                'GET',
-                'data/abs_names.json',
-                JSON.stringify({
+            jasmine.Ajax.stubRequest('data/abs_names.json').andReturn({
+                responseText: JSON.stringify({
                     AGE: "Age",
                     MEASURE : {
                         "Persons" : "Sex",
@@ -108,12 +146,10 @@ describe('AbsIttCatalogItem', function() {
                         "*" : "Measure"
                     }
                 })
-            );
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'http://abs.example.com/?method=GetDatasetConcepts&datasetid=foo&format=json',
-                JSON.stringify({
+            jasmine.Ajax.stubRequest('http://abs.example.com/?method=GetDatasetConcepts&datasetid=foo&format=json').andReturn({
+                responseText: JSON.stringify({
                     concepts: [
                         "FREQUENCY",
                         "STATE",
@@ -122,12 +158,10 @@ describe('AbsIttCatalogItem', function() {
                         "REGION"
                     ]
                 })
-            );
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'http://abs.example.com/?method=GetCodeListValue&datasetid=foo&concept=AGE&format=json',
-                JSON.stringify({
+            jasmine.Ajax.stubRequest('http://abs.example.com/?method=GetCodeListValue&datasetid=foo&concept=AGE&format=json').andReturn({
+                responseText: JSON.stringify({
                     codes: [
                         {
                             code: "A02",
@@ -155,12 +189,10 @@ describe('AbsIttCatalogItem', function() {
                         }
                     ]
                 })
-            );
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'http://abs.example.com/?method=GetCodeListValue&datasetid=foo&concept=REGIONTYPE&format=json',
-                JSON.stringify({
+            jasmine.Ajax.stubRequest('http://abs.example.com/?method=GetCodeListValue&datasetid=foo&concept=REGIONTYPE&format=json').andReturn({
+                responseText: JSON.stringify({
                     "codes": [
                         {
                             "code": "AUS",
@@ -176,12 +208,10 @@ describe('AbsIttCatalogItem', function() {
                         }
                     ]
                 })
-            );
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'data/regionMapping.json',
-                JSON.stringify({
+            jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({
+                responseText: JSON.stringify({
                     "regionWmsMap": {
                         "SA4": {
                             "layerName": "region_map:FID_SA4_2011_AUST",
@@ -207,69 +237,51 @@ describe('AbsIttCatalogItem', function() {
                         }
                     }
                 })
-            );
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'http://abs.example.com/?method=GetGenericData&datasetid=foo&and=REGIONTYPE.AUS%2CAGE.A02&or=REGION&format=csv',
-                'Time,Value,REGION,Description\n2011,5400000,0,Australia'
-            );
+            jasmine.Ajax.stubRequest('http://abs.example.com/?method=GetGenericData&datasetid=foo&and=REGIONTYPE.AUS%2CAGE.A02&or=REGION&format=csv').andReturn({
+                responseText: 'Time,Value,REGION,Description\n2011,5400000,0,Australia'
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'http://abs.example.com/?method=GetGenericData&datasetid=foo&and=REGIONTYPE.SA4%2CAGE.A02&or=REGION&format=csv',
-                'Time,Value,REGION,Description\n2011,26000,101,Region101\n2011,31000,102,Region102'
-            );
+            jasmine.Ajax.stubRequest('http://abs.example.com/?method=GetGenericData&datasetid=foo&and=REGIONTYPE.SA4%2CAGE.A02&or=REGION&format=csv').andReturn({
+                responseText: 'Time,Value,REGION,Description\n2011,26000,101,Region101\n2011,31000,102,Region102'
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'data/2011Census_TOT_AUS.csv',
-                'AUS,Tot_P_M,Tot_P_F,Tot_P_P\n0,10600000,11000000,21600000'
-            );
+            jasmine.Ajax.stubRequest('data/2011Census_TOT_AUS.csv').andReturn({
+                responseText: 'AUS,Tot_P_M,Tot_P_F,Tot_P_P\n0,10600000,11000000,21600000'
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'data/2011Census_TOT_SA4.csv',
-                'SA4,Tot_P_M,Tot_P_F,Tot_P_P\n101,104000,104000,208000\n102,150000,160000,310000'
-            );
+            jasmine.Ajax.stubRequest('data/2011Census_TOT_SA4.csv').andReturn({
+                responseText: 'SA4,Tot_P_M,Tot_P_F,Tot_P_P\n101,104000,104000,208000\n102,150000,160000,310000'
+            });
 
-
-            fakeServer.respondWith(
-                'GET',
-                'data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json',
-                JSON.stringify({
+            jasmine.Ajax.stubRequest('data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json').andReturn({
+                responseText: JSON.stringify({
                     "layer": "region_map:FID_AUS_2011_AUST",
                     "property": "AUS_CODE",
                     "values": [0]
                 })
-            );
+            });
 
-            fakeServer.respondWith(
-                'GET',
-                'data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json',
-                JSON.stringify({
+            jasmine.Ajax.stubRequest('data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json').andReturn({
+                responseText: JSON.stringify({
                     "layer": "region_map:FID_SA4_2011_AUST",
                     "property": "SA4_CODE11",
                     "values": [101,102]
                 })
-            );
+            });
 
             // Regionless responses.
-            fakeServer.respondWith(
-                'GET',
-                'http://abs.example.com/?method=GetDatasetConcepts&datasetid=regionless&format=json',
-                JSON.stringify({concepts: ["FREQUENCY", "AGE"]})
-            );
-            fakeServer.respondWith(
-                'GET',
-                'http://abs.example.com/?method=GetCodeListValue&datasetid=regionless&concept=AGE&format=json',
-                JSON.stringify({codes: [{code: "test", description: "regionless years", parentCode: "", parentDescription: ""}]})
-            );
+            jasmine.Ajax.stubRequest('http://abs.example.com/?method=GetDatasetConcepts&datasetid=regionless&format=json').andReturn({
+                responseText: JSON.stringify({concepts: ["FREQUENCY", "AGE"]})
+            });
+            jasmine.Ajax.stubRequest('http://abs.example.com/?method=GetCodeListValue&datasetid=regionless&concept=AGE&format=json').andReturn({
+                responseText: JSON.stringify({codes: [{code: "test", description: "regionless years", parentCode: "", parentDescription: ""}]})
+            });
         });
 
         afterEach(function() {
-            fakeServer.restore();
-            fakeServer.xhr.filters.length = 0;
+            jasmine.Ajax.uninstall();
         });
 
         it('works', function(done) {

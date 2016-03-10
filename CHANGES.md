@@ -2,9 +2,58 @@
 Change Log
 ==========
 
+### 2.1.2
+
+* Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
+* Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
+* Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
+* Upgraded to terriajs-cesium 1.18.0.
+* Fixed an error when adding a csv with one line of data.
+* Fixed error when adding a csv file with numeric column names.
+
+### 2.1.1
+
+* Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
+* Fixed sharing of user-added time-varying csv files.
+* Fixed a bug in `CkanCatalogItem` that made it build URLs incorrectly when given a base URL ending in a slash.
+
+### 2.1.0
+
+* Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
+* Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters. See the CSV column-specific group in `wwwroot/test/init/test-tablestyle.json` for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
+* Added the following column-specific `tableStyle` parameters:
+  - `name`: renames the column.
+  - `type`: sets the column type; can be one of LON, LAT, ALT, TIME, SCALAR, or ENUM.
+  - `format`: sets the column number format, using the format of the [Javascript Intl options parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString), eg. `{"format": {"useGrouping": true, "maximumFractionDigits": 2}}` to add thousands separators to numbers and show only two decimal places. Only the `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options are guaranteed to work in all browsers.
+* Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. The formatting options are the same as above.
+* Changed the default number format in the Feature Info Panel to not separate thousands with commas.
+* Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
+* Changed the default for `tableStyle.replaceWithZeroValues` to `[]`, ie. nothing.
+* Changed the default for `tableStyle.replaceWithNullValues` to `["-", "na", "NA"]`.
+* Changed the default for `tableStyle.nullLabel` to '(No value)'.
+* Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
+* Fixed showWarnings in config json not being respected by CSV catalog items.
+* Fixed hidden region mapped layers being displayed when variable selection changes.
+* Fixed exporting raw data as CSV not escaping commas in the data itself.
+
+### 2.0.1
+
+* Fixed a bug that caused the last selected ABS concept not to appear in the feature info panel.
+
 ### 2.0.0
 
-* Streamlined csv handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
+* The following previously-deprecated functionality was removed in this version:
+  - `ArcGisMapServerCatalogGroup`
+  - `CatalogItemControl`
+  - `CatalogItemDownloadControl`
+  - Calling `BrandBarViewModel.create` with more than one parameter.
+  - `CatalogMemberControl.leftSideItemControls`
+  - `CatalogMemberControl.rightSideItemControls`
+  - `DataCatalogTabViewModel.getRightSideItemControls`
+  - `DataCatalogTabViewModel.getLeftSideItemControls`
+  - `registerCatalogItemControls`
+  - `AusGlobeViewer`
+* Streamlined CSV handling framework. Breaking changes include the APIs of (not including those which begin with `_`):
   - `CsvCatalogItem`: `rowProperties`, `rowPropertiesByCode`, `dynamicUpdate` have been removed.
   - `AbsIttCatalogItem`: Completely rewritten. The `dataSetID` json parameter has been deprecated in favor of `datasetId` (different capitalization).
   - For the 2011 Australian Census data, requires `sa4_code_2011` to appear as an alias in `regionMapping.json` (it was previously missing in NationalMap).
@@ -19,22 +68,26 @@ Change Log
   - `FeatureInfoPanelSectionViewModel`: its constructor now takes a `FeatureInfoPanelViewModel` as its first argument, instead of `Terria`.
   - `Models/ModelError` has been replaced with `Core/TerriaError`.
 * Removed blank feature info sections for uncoloured regions of region-mapped CSVs.
-* Introduced three new json tableStyle parameters:
-  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
-  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a list with numbers.
-  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
-when no variable is selected.
-* Added id matching for catalog members:
+* Recognises the CSV datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
+* Introduced five new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, "-"]`. These values are coloured as if they were zero if they appear in a list with numbers. `null` catches missing values.
+  - `replaceWithNullValues`: Defaults to `["na", "NA"]`. These values are coloured as if they were null if they appear in a list with numbers.
+  - `nullColor`: A css string. Defaults to black. This colour is used to display null values. It is also used to colour points when no variable is selected.
+  - `nullLabel`: A string used to label null or blank values in the legend. Defaults to ''.
+  - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
+* Improved formatting of datetimes from csv files in the feature info panel.
+* Removed variables consisting only of HTML tags from the Now Viewing panel.
+* Added ID matching for catalog members:
   - An `id` field can now be set in JSON for catalog members
-  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's id
+  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's ID
     rather than its name as is done currently.
-  - The id of an item should be accessed via `uniqueId` - if a catalog member doesn't have an id set, this returns a
-    default value of the item's name name plus the id of its parent. This means that if all the ancestors of a catalog 
-    member have no id set, its id will be its full path in the catalog.
+  - The ID of an item should be accessed via `uniqueId` - if a catalog member doesn't have an ID set, this returns a
+    default value of the item's name plus the ID of its parent. This means that if all the ancestors of a catalog
+    member have no ID set, its ID will be its full path in the catalog.
   - This means that if an item is renamed or moved, share links that reference it will still work.
   - A `shareKeys` property can be also be set that contains an array of all ids that should lead to this item. This means
-    that a share link for an item that didn't previously have an id set can still be used if it's moved, as long as it
-    has its old default id set in `shareKeys`
+    that a share link for an item that didn't previously have an ID set can still be used if it's moved, as long as it
+    has its old default ID set in `shareKeys`
   - Old share links will still work as long as the items they lead to aren't renamed or moved.
   - Refactor of JSON serialization - now rather than passing a number of flags that determine what should and shouldn't be
     serialized, an `itemFilter` and `propertyFilter` are passed in options. These are usually composed of multiple filters,
@@ -45,8 +98,14 @@ when no variable is selected.
     traversed in both directions.
   - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
     not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
-* Create new Legend class, making it easy to generate client-side legends for different kinds of data.
-* Generate client-side legends for ArcGis MapServer catalog items, by fetching JSON file, instead of just providing link to external image.
+* Generated legends now use SVG (vector) format, which look better on high resolution devices.
+* Created new Legend class, making it easy to generate client-side legends for different kinds of data.
+* Generate client-side legends for ArcGIS MapServer catalog items, by fetching JSON file, instead of just providing link to external page.
+* Fix Leaflet feature selection when zoomed out enough that the world is repeated.
+* Improved handling of lat/lon CSV files with missing latitude or longitude values.
+* Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
+* Added `CkanCatalogItem`, which can be used to reference a particular resource of any compatible type on a CKAN server.
+* Fixed a bug that caused the Now Viewing tab to display incorrectly in Internet Explorer 11 when switching directly to it from the Data Catalogue tab.
 
 ### 1.0.54
 
@@ -65,7 +124,7 @@ when no variable is selected.
 * Dramatically improved the performance of region mapping.
 * Introduced new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
   * "auto" (default), usually means "ckmeans"
-  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible. 
+  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible.
   * "quantile": use quantiles, evenly distributing values between bins
   * "none": use the previous linear color mapping method.
 * The default style for CSV files is now 7 color bins with CK means method.
