@@ -8,6 +8,7 @@ Change Log
 * Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
 * Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
 * Upgraded to terriajs-cesium 1.18.0.
+* Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
 * Improved csv loading to ignore any completely blank lines after the header row (ie. lines which do not even have commas).
 
