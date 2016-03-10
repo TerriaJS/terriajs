@@ -65,7 +65,7 @@ const ChartPanel = React.createClass({
             );
         }
         return (
-            <div className="chart-panel__holder">
+            <div className="chart-panel__holder" tabIndex='-1'>
                 <div className="chart-panel__holder__inner">
                     <div className="chart-panel" style={{height: 300}}>
                         <div className="chart-panel__body">

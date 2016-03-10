@@ -189,3 +189,7 @@ text {
 .chart-panel .axis .colors path {
   stroke-width: 2;
 }
+
+.chart-panel__holder:focus{
+  z-index: 99;
+}

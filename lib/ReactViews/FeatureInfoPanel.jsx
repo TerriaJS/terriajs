@@ -80,7 +80,7 @@ const FeatureInfoPanel = React.createClass({
     render() {
         const pickedFeatures = this.getFeatures();
         return (
-            <div className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '') + ' ' + (this.props.isVisible ? 'is-visible' : '')} aria-hidden={!this.props.isVisible}>
+            <div tabIndex='-1' className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '') + ' ' + (this.props.isVisible ? 'is-visible' : '')} aria-hidden={!this.props.isVisible}>
               <div className='feature-info-panel__header'>
                 <button onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Info Panel </button>
                 <button onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>
