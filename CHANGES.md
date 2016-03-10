@@ -11,6 +11,7 @@ Change Log
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
 * Added support for grouping catalog items retrieved from a CSW server according to criteria specified in the init file (via the `metadataGroups` property) or from a `domainSpecification` and a call to the `GetDomain` service on the CSW server.
+* Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
 
 ### 2.1.1
 
