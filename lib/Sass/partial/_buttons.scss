@@ -420,9 +420,7 @@ a.btn--map{
   top: 0;
   @extend .icon;
   @extend .icon-clear;
-  &:before{
-    padding: 12px $padding;
-  }
+  @extend .sm-hide;
 }
 
 

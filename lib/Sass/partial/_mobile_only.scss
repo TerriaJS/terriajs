@@ -18,6 +18,7 @@
     background: #fff;
     height: 100%;
     overflow-y: auto;
+    padding: $padding-small 0;
 }
 
 
@@ -58,7 +59,7 @@
     .btn--mobile-add{
         @extend .btn--increase;
         position: relative;
-        padding: $padding/2;
+        padding: $padding/2 $padding;
         padding-left: $padding*3;
         text-transform: uppercase;
         width: auto;
@@ -98,7 +99,7 @@
         position: absolute;
         left: 0;
         right: 0;
-        top: $sm-logo-height + $padding-small*2;
+        top: $mobile-header-height;
         background:$mobile-main-bg;
         color: $mobile-text;
         text-align: left;
@@ -128,10 +129,14 @@
         font-size: 20px;
     }
 
+    .btn--search-clear{
+        display: none;
+    }
+
     .btn--mobile-search-cancel{
         position: absolute;
         right: 0;
-        top: $padding-small;
+        top: $padding;
         text-transform: uppercase;
         font-size: $font-size-mini;
         font-weight: $font-weight-bold;
@@ -139,7 +144,7 @@
     }
     .form--search-data{
         position: fixed;
-        top: 0;
+        top: $padding/2;
         left: 0;
         right: 0;
         padding: $padding-small $padding*6 $padding-small $padding-small;
