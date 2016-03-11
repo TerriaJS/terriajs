@@ -1,25 +1,20 @@
 .workbench{
   box-sizing: border-box;
-  width: 100%;
   position: relative;
   z-index: 1;
-  height: auto;
-  @media(screen and min-width: $sm){
-    width: $work-bench-width;
-    height: calc(100% - #{$logo-height});
+  width: $work-bench-width;
+  height: calc(100% - #{$logo-height});
+  @extend .sm-show;
+  .is-full-screen &{
+    display: none;
   }
   nav{
     position: absolute;
     left: -1000px;
     @include transition(margin $animation-fast ease-in);
-    @media(screen and min-width: $sm){
-      //temp
-      position: relative;
-      left: 0;
-      .is-full-screen &{
-        display: none;
-      }
-    }
+    //temp
+    position: relative;
+    left: 0;
   }
 }
 

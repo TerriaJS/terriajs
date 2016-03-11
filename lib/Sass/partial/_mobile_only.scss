@@ -3,7 +3,7 @@
     position: fixed;
     top: $sm-logo-height;
     bottom: $input-height;
-    background: #fff;
+    background: rgba(#fff, 0.8);
     left: 0;
     right: 0;
     color: $modal-text;
@@ -14,17 +14,29 @@
     }
 }
 
+.modal--mobile-bg{
+    background: #fff;
+    height: 100%;
+}
+
+
+.mobile__ui{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: auto;
+    z-index: 1;
+}
 
 .mobile__header{
     @extend .sm-hide;
     @extend .flex;
     font-family: $font-pop;
-    position: absolute;
-    right: 0;
-    top: 0;
-    max-width: 300px;
+    width: 100%;
+    background: $dark;
     padding: $padding-small;
-    height: 100%;
+    height: auto;
 
     .btn--mobile-add{
         @extend .btn--increase;

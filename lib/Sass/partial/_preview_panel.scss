@@ -2,14 +2,7 @@
   visibility: hidden;
   overflow: hidden;
   height: 0;
-  // on desktop, is modal is open, show preview
-  // on mobile, if modal is open and if tab says is-previewing, then show preview
-  .data-panel-wrapper.is-open .tabs.is-previewing &{
-    visibility: visible;
-    height: auto;
-  }
-  @media(screen and min-width: $sm){
-    .data-panel-wrapper.is-open &{
+  .data-panel-wrapper.is-open &{
       visibility: visible;
       position: absolute;
       padding-right: $padding;
@@ -19,7 +12,6 @@
       width: calc(50% - #{$padding*2});
       height: $modal-content-height;
       overflow-y: auto;
-    }
   }
 
   h4{

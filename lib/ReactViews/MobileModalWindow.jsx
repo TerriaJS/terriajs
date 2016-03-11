@@ -22,16 +22,20 @@ const MobileModalWindow = React.createClass({
         case 'search':
             return 'search';
         case 'data':
-            return <DataCatalogTab terria={this.props.terria}
-                           viewState={this.props.viewState}
-                    />;
+            return <div className='modal--mobile-bg'>
+                        <DataCatalogTab terria={this.props.terria}
+                                        viewState={this.props.viewState}
+                    />
+                    </div>;
         case 'preview':
-            return <DataPreview terria={this.props.terria}
-                            viewState={this.props.viewState}
-                    />;
+            return <div className='modal--mobile-bg'>
+                        <DataPreview terria={this.props.terria}
+                                     viewState={this.props.viewState}
+                    />
+                    </div>;
         case 'nowViewing':
             return <NowViewingContainer viewState={this.props.viewState}
-                                    terria={this.props.terria}
+                                        terria={this.props.terria}
                     />;
         default:
             return null;

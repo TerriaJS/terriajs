@@ -84,6 +84,7 @@ $now-viewing-margin: $padding-small - 1px;
 
 .now-viewing__item{
   @include greybox();
+  color: #fff;
   font-family: $font-pop;
   margin: $now-viewing-margin/2 0;
   &.is-dragging{
