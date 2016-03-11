@@ -11,6 +11,7 @@ Change Log
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Added support for running the automated tests on the local system (via `gulp test`), on BrowserStack (via `gulp test-browserstack`), and on Sauce Labs (via `gulp test-saucelabs`).
 * Changed `tableStyle`'s `format` to only accept `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options. Previously some other options may have worked in some browsers.
 * Improved color palette for string (ENUM) columns of csv files.
 * Improved csv loading to ignore any completely blank lines after the header row (ie. lines which do not even have commas).
