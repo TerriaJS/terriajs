@@ -16,6 +16,7 @@ Change Log
 * Improved csv loading to ignore any completely blank lines after the header row (ie. lines which do not even have commas).
 * Added support for grouping catalog items retrieved from a CSW server according to criteria specified in the init file (via the `metadataGroups` property) or from a `domainSpecification` and a call to the `GetDomain` service on the CSW server.
 * Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
+* Improved readability of ArcGis catalog items and legends by replacing underscores with spaces.
 
 ### 2.1.1
 
