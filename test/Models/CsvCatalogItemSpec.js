@@ -189,6 +189,18 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('handles missing lines', function(done) {
+        csvItem.url = 'test/csv/blank_line.csv';
+        csvItem.load().then(function() {
+            var tableStructure = csvItem.dataSource.tableStructure;
+            var latColumn = tableStructure.columnsByType[VarType.LAT][0];
+            var lonColumn = tableStructure.columnsByType[VarType.LON][0];
+            expect(tableStructure.columns[0].values.length).toBe(7);
+            expect(latColumn.minimumValue).toBeLessThan(-30);
+            expect(lonColumn.minimumValue).toBeGreaterThan(150);
+        }).otherwise(fail).then(done);
+    });
+
     it('handles enum fields', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
