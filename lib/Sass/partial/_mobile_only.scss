@@ -33,7 +33,20 @@
 
 .mobile__header{
     @extend .sm-hide;
-    @extend .flex;
+    @extend .clearfix;
+    .group{
+        @extend .flex;
+        @extend .col-6;
+        float: left;
+    }
+    .group-left{
+
+    }
+
+    .group-right{
+         justify-content: flex-end;
+    }
+
     justify-content: space-between;
     font-family: $font-pop;
     width: 100%;
@@ -44,14 +57,14 @@
     .btn--mobile-add{
         @extend .btn--increase;
         position: relative;
-        width: 120px;
-        padding: $padding-small;
-        padding-left: $padding*2;
+        padding: $padding/2;
+        padding-left: $padding*3;
         text-transform: uppercase;
+        width: auto;
         &:before{
             position: absolute;
             top: $padding;
-            left: $padding-small;
+            left: $padding/2;
             font-size: 1.5rem;
         }
         text-align: right;
@@ -79,38 +92,25 @@
 }
 
 .mobile__nav{
-    .nav{
         @extend .list-reset;
         display: none;
-        position: fixed;
+        position: absolute;
         left: 0;
         right: 0;
-        top: $sm-logo-height;
+        top: $sm-logo-height + $padding-small*2;
         background:$mobile-main-bg;
         color: $mobile-text;
         text-align: left;
+        li{
+            padding: $padding-small*3;
+        }
         .btn{
             border-bottom: 1px solid $grey-lighter;
             font-weight: 600;
             width: 100%;
         }
-    }
-    .btn--mobile-menu{
-        text-transform: uppercase;
-        font-size: 20px;
-        border-left: $border-style;
-        border-right: $border-style;
-        @include vertical-align;
-        &:hover, &:focus{
-            border-left: $border-style;
-            border-right: $border-style;
-        }
-    }
-
     &.is-open{
-        .nav{
-            display: block;
-        }
+        display: block;
     }
 }
 
@@ -181,6 +181,16 @@
     box-shadow: $box-shadow;
     text-align: center;
     font-size: 1.3rem;
+}
+
+.btn--menu-mobile{
+    font-size: 25px;
+    padding: $padding/2;
+    border-radius: $radius-small;
+    margin: $padding/2;
+    &:hover, &:focus, & {
+        border: 1px solid rgba(#fff, 0.5);
+    }
 }
 
 
