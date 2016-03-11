@@ -25,23 +25,10 @@
   h4{
     margin-top: $padding;
   }
-  .btn.toggle-enable{
-    @extend .btn-primary;
-  }
-  .btn--exist-preview{
-    @extend .sm-hide;
-    @extend .btn--left;
-    position: fixed;
-    top: $padding + $sm-logo-height;
-    background: #fff;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
-    left: $padding;
-    box-shadow: $box-shadow;
-    text-align: center;
-    font-size: 1.3rem;
-  }
+}
+
+.btn.toggle-enable{
+  @extend .btn-primary;
 }
 
 .data-preview-map{

@@ -2,6 +2,7 @@
 import React from 'react';
 import SearchBox from './Search/SearchBox.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
+import MobileModalWindow from './MobileModalWindow';
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -24,25 +25,23 @@ const MobileHeader = React.createClass({
 
 
     onMobileDataCatalogClicked() {
-        this.props.viewState.openAddData();
+        this.props.viewState.toggleModal(true);
+        this.props.viewState.switchMobileView('data');
         this.setState({
             searchIsOpen: false
         });
     },
 
     onMobileNowViewingClicked() {
-        this.props.viewState.togglePreview(false);
-        this.props.viewState.toggleModal(false);
-        this.props.viewState.toggleNowViewing(true);
-
+        this.props.viewState.toggleModal(true);
+        this.props.viewState.switchMobileView('nowViewing');
         this.setState({
             searchIsOpen: false
         });
     },
 
     onClearMobileUI() {
-        this.props.viewState.toggleNowViewing(false);
-        this.props.viewState.togglePreview(false);
+        this.props.viewState.switchMobileView(null);
         this.props.viewState.toggleModal(false);
     },
 
@@ -59,6 +58,7 @@ const MobileHeader = React.createClass({
                         <SearchBox onSearchTextChanged={this.search}/>
                         <button className='btn btn--mobile-search-cancel' onClick={this.toggleSearch}>cancel</button>
                     </div>
+                    <MobileModalWindow terria={this.props.terria} viewState={this.props.viewState}/>
                     {(this.props.viewState.modalVisible || this.props.viewState.isNowViewingOnly) && <button className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Done</button>}
                 </div>;
     }

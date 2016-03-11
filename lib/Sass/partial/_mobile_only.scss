@@ -1,3 +1,20 @@
+.modal--mobile{
+    @extend .sm-hide;
+    position: fixed;
+    top: $sm-logo-height;
+    bottom: $input-height;
+    background: #fff;
+    left: 0;
+    right: 0;
+    color: $modal-text;
+    overflow-y: auto;
+    display: none;
+    &.is-open{
+        display: block;
+    }
+}
+
+
 .mobile__header{
     @extend .sm-hide;
     @extend .flex;
@@ -142,6 +159,21 @@
     background: #fff;
     color: #000;
     text-align: center;
+}
+
+.btn--exist-preview{
+    @extend .sm-hide;
+    @extend .btn--left;
+    position: fixed;
+    top: $padding + $sm-logo-height;
+    background: #fff;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    left: $padding;
+    box-shadow: $box-shadow;
+    text-align: center;
+    font-size: 1.3rem;
 }
 
 

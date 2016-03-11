@@ -38,23 +38,24 @@ const SidePanel = React.createClass({
                                    new GazetteerSearchProviderViewModel({terria})
                                ]}/>
                 <div className="now-viewing">
-                    {this.renderNowViewing(this.props.terria.nowViewing.items)}
+                    {this.renderNowViewing()}
                 </div>
             </div>
         );
     },
 
-    renderNowViewing(nowViewing) {
-        if (nowViewing && nowViewing.length > 0) {
+    renderNowViewing() {
+        if (this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0) {
+            console.log('called');
             return (
                 <div>
                     <ul className="now-viewing__header">
                         <li><label className='label'>Data Sets</label></li>
-                        <li><label className='label--badge label'>{nowViewing.length}</label></li>
+                        <li><label className='label--badge label'>{this.props.terria.nowViewing.items.length}</label></li>
                         <li><button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
                     </ul>
                     <NowViewingContainer viewState={this.props.viewState}
-                                         nowViewingItems={nowViewing}
+                                         terria={this.props.terria}
                     />
                 </div>
             );

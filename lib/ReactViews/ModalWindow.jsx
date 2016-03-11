@@ -16,15 +16,14 @@ const ModalWindow = React.createClass({
 
     close() {
         this.props.viewState.modalVisible = false;
-        this.props.viewState.togglePreview(false);
+        this.props.viewState.switchMobileView('nowViewing');
     },
 
     render() {
         return (
-            <div
-                className={classNames('data-panel-wrapper', 'modal-wrapper', {'is-open' : this.props.viewState.modalVisible})}
-                id="explorer-panel-wrapper"
-                aria-hidden={!this.props.viewState.modalVisible}
+            <div className={classNames('data-panel-wrapper', 'modal-wrapper', {'is-open' : this.props.viewState.modalVisible})}
+                 id="explorer-panel-wrapper"
+                 aria-hidden={!this.props.viewState.modalVisible}
             >
                 <div onClick={this.close}
                      id="modal-overlay"

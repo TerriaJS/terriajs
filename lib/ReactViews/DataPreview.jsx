@@ -28,10 +28,9 @@ const DataPreview = React.createClass({
 
     toggleOnMap() {
         this.props.viewState.previewedItem.toggleEnabled();
-        if(this.props.viewState.previewedItem.isEnabled === true) {
-            this.props.viewState.togglePreview(false);
-            this.props.viewState.modalVisible = false;
-        }
+        // if(this.props.viewState.previewedItem.isEnabled === true) {
+        //     this.props.viewState.modalVisible = false;
+        // }
     },
 
     renderMarkup(content) {
@@ -41,7 +40,7 @@ const DataPreview = React.createClass({
     },
 
     exitPreview() {
-        this.props.viewState.togglePreview(false);
+        this.props.viewState.switchMobileView('data');
     },
 
     render() {

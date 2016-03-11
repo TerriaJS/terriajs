@@ -27,16 +27,14 @@ const DataCatalogItem = React.createClass({
         this.props.item.toggleEnabled();
         // set preview as well
         this.props.viewState.viewCatalogItem(this.props.item);
-        // Let tab know preview is showing
-        // this is for mobile, for more details ask chloe
-        this.props.viewState.togglePreview(true);
+        // mobile switch to nowvewing
+        this.props.viewState.switchMobileView('preview');
     },
 
     setPreviewedItem() {
         this.props.viewState.viewCatalogItem(this.props.item);
-        // Let tab know preview is showing
-        // this is for mobile, for more details ask chloe
-        this.props.viewState.togglePreview(true);
+        // mobile switch to nowvewing
+        this.props.viewState.switchMobileView('preview');
     },
 
     isSelected() {
