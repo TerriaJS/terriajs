@@ -31,6 +31,8 @@
     "superagent": "~1.7.0",
     "terriajs-cesium": "1.18.1",
     "togeojson": "^0.13.0",
+    "ts-loader": "^0.8.1",
+    "typescript": "^1.8.7",
     "urijs": "^1.17.1",
     "urthecast": "^1.0.0",
     "webpack": "^1.12.14"
