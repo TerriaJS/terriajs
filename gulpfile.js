@@ -2,22 +2,24 @@
 
 /*global require*/
 
+var browserify = require('browserify');
+var buffer = require('vinyl-buffer');
+var child_exec = require('child_process').exec;  // child_process is built in to node
+var exorcist = require('exorcist');
 var fs = require('fs');
+var genSchema = require('generate-terriajs-schema');
 var glob = require('glob-all');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var browserify = require('browserify');
 var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
-var exorcist = require('exorcist');
-var buffer = require('vinyl-buffer');
-var transform = require('vinyl-transform');
-var source = require('vinyl-source-stream');
-var watchify = require('watchify');
+var karma = require('karma').Server;
+var path = require('path');
 var resolve = require('resolve');
-var child_exec = require('child_process').exec;  // child_process is built in to node
-var genSchema = require('generate-terriajs-schema');
+var source = require('vinyl-source-stream');
+var sourcemaps = require('gulp-sourcemaps');
+var transform = require('vinyl-transform');
+var uglify = require('gulp-uglify');
+var watchify = require('watchify');
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
@@ -81,7 +83,27 @@ gulp.task('copy-cesium-assets', function() {
         .pipe(gulp.dest('wwwroot/build/Cesium'));
 });
 
+gulp.task('test-browserstack', function(done) {
+    runKarma('karma-browserstack.conf.js', done);
+});
+
+gulp.task('test-saucelabs', function(done) {
+    runKarma('karma-saucelabs.conf.js', done);
+});
+
+gulp.task('test', function(done) {
+    runKarma('karma-local.conf.js', done);
+});
+
 gulp.task('default', ['lint', 'build']);
+
+function runKarma(configFile, done) {
+    karma.start({
+        configFile: path.join(__dirname, configFile)
+    }, function(e) {
+        return done(e);
+    });
+}
 
 function bundle(name, bundler, minify, catchErrors) {
     // Combine main.js and its dependencies into a single file.
