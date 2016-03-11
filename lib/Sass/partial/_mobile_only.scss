@@ -53,6 +53,7 @@
     background: $dark;
     padding: $padding-small;
     height: auto;
+    padding-top: $padding;
 
     .btn--mobile-add{
         @extend .btn--increase;
@@ -172,7 +173,7 @@
     @extend .sm-hide;
     @extend .btn--left;
     position: fixed;
-    top: $padding + $sm-logo-height;
+    top: $padding*2 + $sm-logo-height;
     background: #fff;
     height: 40px;
     width: 40px;

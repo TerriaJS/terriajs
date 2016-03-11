@@ -30,7 +30,7 @@ $input-height: 40px;
 
 $sm-logo-height: $input-height;
 $logo-height: 70px;
-$mobile-header-height: $sm-logo-height + $padding-small*2;
+$mobile-header-height: $sm-logo-height + $padding-small + $padding;
 
 $modal-bg: $faint-bg;
 $modal-text: #000;

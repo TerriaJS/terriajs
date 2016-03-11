@@ -55,8 +55,10 @@ const MobileHeader = React.createClass({
     },
 
     search() {
-
+        this.props.viewState.toggleModal(true);
+        this.props.viewState.switchMobileView('search');
     },
+
     render() {
         const nowViewingLength = this.props.terria.nowViewing.items.length;
         return <div className='mobile__ui'>

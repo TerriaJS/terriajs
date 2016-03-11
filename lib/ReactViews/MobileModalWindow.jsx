@@ -4,6 +4,7 @@ import SearchBox from './Search/SearchBox.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import DataCatalogTab from './DataCatalogTab.jsx';
 import DataPreview from './DataPreview.jsx';
+import MobileSearch from './MobileSearch.jsx';
 import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
 
 import classNames from 'classnames';
@@ -19,7 +20,9 @@ const MobileModalWindow = React.createClass({
     renderModalContent() {
         switch(this.props.viewState.mobileView) {
         case 'search':
-            return 'search';
+            return <MobileSearch terria={this.props.terria}
+                                 viewState={this.props.viewState}
+                   />;
         case 'data':
             return <div className='modal--mobile-bg'>
                         <DataCatalogTab terria={this.props.terria}
