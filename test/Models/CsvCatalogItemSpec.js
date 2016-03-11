@@ -384,6 +384,13 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('makes features even if no value column', function(done) {
+        csvItem.url = 'test/csv/lat_lon.csv';
+        return csvItem.load().then(function() {
+            expect(csvItem.dataSource.entities.values.length).toBeGreaterThan(1);
+        }).otherwise(fail).then(done);
+    });
+
     it('supports replaceWithNullValues', function(done) {
         csvItem.url = 'test/csv/lat_lon_badvalue.csv';
         csvItem._tableStyle = new TableStyle({replaceWithNullValues: ['bad']});
@@ -596,13 +603,14 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetail = regionDetails[0];
             expect(regionDetail.column.name).toEqual('lga_code');
             expect(regionDetail.regionProvider.regionType).toEqual('LGA');
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
     it('matches LGAs by code', function(done) {
         csvItem.updateFromJson({data: 'lga_code,value\n31000,1'});
         csvItem.load().then(function() {
-            csvItem.regionMapping.enable();  // The recolorFunction call is only made once the layer is enabled.
+            csvItem.isEnabled = true;  // The recolorFunction call is only made once the layer is enabled.
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
@@ -617,7 +625,7 @@ describe('CsvCatalogItem with region mapping', function() {
         // City of Melbourne is not actually a region, but melbourne is. Same with Sydney (S) and sydney. But test they work anyway.
         csvItem.updateFromJson({data: 'lga_name,value\nCity of Melbourne,1\nGreater Geelong,2\nSydney (S),3'});
         csvItem.load().then(function() {
-            csvItem.regionMapping.enable();
+            csvItem.isEnabled = true;
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
@@ -637,7 +645,7 @@ describe('CsvCatalogItem with region mapping', function() {
     xit('matches numeric state IDs with regexes', function(done) {
         csvItem.updateFromJson({data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90'});
         csvItem.load().then(function() {
-            csvItem.regionMapping.enable();
+            csvItem.isEnabled = true;
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
@@ -654,7 +662,7 @@ describe('CsvCatalogItem with region mapping', function() {
     // it('matches SA4s', function(done) {
     //     csvItem.updateFromJson({data: 'sa4,value\n209,correct'});
     //     csvItem.load().then(function() {
-    //         csvItem.regionMapping.enable();
+    //         csvItem.isEnabled = true;
     //         return csvItem.dataSource.regionPromise.then(function(regionDetails) {
     //             expect(regionDetails).toBeDefined();
     //             // There is no "rowPropertiesByCode" method any more.
@@ -669,7 +677,7 @@ describe('CsvCatalogItem with region mapping', function() {
             tableStyle: greenTableStyle
         });
         csvItem.load().then(function() {
-            csvItem.regionMapping.enable();
+            csvItem.isEnabled = true;
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
@@ -680,6 +688,7 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(recolorFunction(regionNames.indexOf('greater geelong'))[1]).toBeGreaterThan(64);
             expect(recolorFunction(regionNames.indexOf('greater geelong'))[1]).toBeLessThan(255);
             expect(recolorFunction(regionNames.indexOf('sydney'))).toEqual([0, 255, 0, 255]);
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
@@ -706,6 +715,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             expect(csvItem.tableStructure.activeItems[0].name).toBe('enum');
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
@@ -718,13 +728,15 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('handles region-mapped CSVs with no data variable', function(done) {
+    it('handles no data variable', function(done) {
         csvItem.url = 'test/csv/postcode_novals.csv';
         csvItem.load().then(function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             expect(csvItem.tableStructure.activeItems.length).toEqual(0);
             expect(csvItem.tableStructure.columns[0].values.length).toBeGreaterThan(1);
+            csvItem.isEnabled = true;
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
@@ -760,7 +772,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
             regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
-            regionMapping.enable();
+            csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
@@ -776,6 +788,7 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
@@ -790,7 +803,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var nineOclock = j('2015-08-08'); // midnight local time
             JulianDate.addHours(nineOclock, 9, nineOclock);
             regionMapping._catalogItem.terria.clock.currentTime = nineOclock;
-            regionMapping.enable();
+            csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
@@ -824,13 +837,13 @@ describe('CsvCatalogItem with region mapping', function() {
     //    });
     //
     //    xit('emits an error event', function() {
-    //        csvItem.regionMapping.enable();
+    //        csvItem.isEnabled = true;
     //        expect(terria.error.raiseEvent).toHaveBeenCalled();
     //    });
     //
     //    xit('and showWarnings is false, it emits no error event or JS Error', function() {
     //        csvItem.showWarnings = false;
-    //        csvItem.regionMapping.enable();
+    //        csvItem.isEnabled = true;
     //        expect(terria.error.raiseEvent).not.toHaveBeenCalled();
     //    });
     //});
@@ -873,7 +886,7 @@ describe('CsvCatalogItem with region mapping', function() {
 
                 csvItem.url = csvFile;
                 csvItem.load().then(function() {
-                    csvItem.regionMapping.enable(); // Required to create an imagery layer.
+                    csvItem.isEnabled = true; // Required to create an imagery layer.
                     var regionDetails = csvItem.regionMapping.regionDetails;
                     expect(regionDetails).toBeDefined();
                     // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
@@ -929,7 +942,7 @@ describe('CsvCatalogItem with region mapping', function() {
 
                 csvItem.url = csvFile;
                 csvItem.load().then(function() {
-                    csvItem.regionMapping.enable(); // Required to create an imagery layer.
+                    csvItem.isEnabled = true; // Required to create an imagery layer.
                     var regionDetails = csvItem.regionMapping.regionDetails;
                     expect(regionDetails).toBeDefined();
                     // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
@@ -1011,7 +1024,7 @@ describe('CsvCatalogItem with region mapping', function() {
                 });
                 csvItem.url = csvFile;
                 csvItem.load().then(function() {
-                    csvItem.regionMapping.enable(); // Required to create an imagery provider.
+                    csvItem.isEnabled = true; // Required to create an imagery provider.
                     var regionDetails = csvItem.regionMapping.regionDetails;
                     expect(regionDetails).toBeDefined();
                     // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the second argument is the regionImageryProvider.
