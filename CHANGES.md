@@ -10,6 +10,7 @@ Change Log
 * Upgraded to terriajs-cesium 1.18.0.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Added support for running the automated tests on the local system (via `gulp test`), on BrowserStack (via `gulp test-browserstack`), and on Sauce Labs (via `gulp test-saucelabs`).
 
 ### 2.1.1
 
