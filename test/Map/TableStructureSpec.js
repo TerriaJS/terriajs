@@ -6,8 +6,8 @@ var TableStructure = require('../../lib/Map/TableStructure');
 var VarType = require('../../lib/Map/VarType');
 
 var separator = ',';
-if (typeof Intl === 'object') {
-    separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
+    separator = (Intl.NumberFormat().format(1000)[1]);
 }
 
 describe('TableStructure', function() {
