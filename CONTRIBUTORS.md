@@ -2,7 +2,7 @@
 
 The following people have contributed to TerriaJS:
 
-* [NICTA](http://www.nicta.com.au/)
+* [NICTA](http://www.nicta.com.au/) / [CSIRO Data61](http://www.csiro.au/en/Research/D61)
    * [Bill Simpson-Young](https://github.com/bsimyo)
    * [Keith Grochow](https://github.com/kgrochow)
    * [Kevin Ring](https://github.com/kring)
@@ -26,3 +26,5 @@ The following people have contributed to TerriaJS:
    * [Jason Lock](https://github.com/jasonjlock)
 * [Innovisite](http://www.innovisite.com)
    * [Fabien Pélisson](https://github.com/jeanpul)
+* [CSIRO Oceans and Atmosphere](http://www.csiro.au/en/Research/OandA)
+   * [Simon Pigot](https://github.com/sppigot) 
