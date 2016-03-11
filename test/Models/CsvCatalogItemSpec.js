@@ -171,6 +171,14 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('handles one line with enum', function(done) {
+        csvItem.updateFromJson({data: 'lat,lon,org\n-37,145,test'});
+        csvItem.load().then(function() {
+            expect(csvItem.dataSource.tableStructure.hasLatitudeAndLongitude).toBe(true);
+            expect(csvItem.legendUrl).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
     it('handles numeric fields containing (quoted) thousands commas', function(done) {
         csvItem.updateFromJson({data: 'lat,lon,value\n-37,145,"1,000"\n-38,145,"234,567.89"'});
         csvItem.load().then(function() {
@@ -178,6 +186,18 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(tableStructure.hasLatitudeAndLongitude).toBe(true);
             expect(tableStructure.columns[2].values[0]).toEqual(1000);
             expect(tableStructure.columns[2].values[1]).toBeCloseTo(234567.89, 2);
+        }).otherwise(fail).then(done);
+    });
+
+    it('handles missing lines', function(done) {
+        csvItem.url = 'test/csv/blank_line.csv';
+        csvItem.load().then(function() {
+            var tableStructure = csvItem.dataSource.tableStructure;
+            var latColumn = tableStructure.columnsByType[VarType.LAT][0];
+            var lonColumn = tableStructure.columnsByType[VarType.LON][0];
+            expect(tableStructure.columns[0].values.length).toBe(7);
+            expect(latColumn.minimumValue).toBeLessThan(-30);
+            expect(lonColumn.minimumValue).toBeGreaterThan(150);
         }).otherwise(fail).then(done);
     });
 
@@ -686,6 +706,15 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             expect(csvItem.tableStructure.activeItems[0].name).toBe('enum');
+        }).otherwise(fail).then(done);
+    });
+
+    it('handles one line with enum', function(done) {
+        csvItem.updateFromJson({data: 'state,org\nNSW,test'});
+        csvItem.load().then(function() {
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
