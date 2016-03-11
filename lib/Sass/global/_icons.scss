@@ -64,6 +64,10 @@
 //.icon-share - icon
 //.icon-sphere - icon
 //.icon-visible - icon
+//.icon-facebook - icon
+//.icon-twitter - icon
+//.icon-link - icon
+//.icon-menu - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -92,38 +96,47 @@
   margin-left: $padding-small;
 }
 
-.icon-geolocation:before {
-    content: "\e900";
+.icon-facebook:before {
+    content: "\e90a";
+}
+.icon-twitter:before {
+    content: "\e911";
+}
+.icon-link:before {
+    content: "\e91d";
+}
+.icon-menu:before {
+    content: "\e91c";
 }
 .icon-right:before {
-    content: "\e901";
+    content: "\e900";
 }
 .icon-invisible:before {
-    content: "\e902";
+    content: "\e901";
 }
 .icon-left:before {
-    content: "\e903";
+    content: "\e902";
 }
 .icon-checkbox-checked:before {
-    content: "\e904";
+    content: "\e903";
 }
 .icon-closed:before {
-    content: "\e905";
+    content: "\e904";
 }
 .icon-search:before {
-    content: "\e906";
+    content: "\e905";
 }
 .icon-visible:before {
-    content: "\e907";
+    content: "\e906";
 }
 .icon-share:before {
-    content: "\e908";
+    content: "\e907";
 }
 .icon-clear:before {
-    content: "\e909";
+    content: "\e908";
 }
 .icon-close:before {
-    content: "\e90a";
+    content: "\e909";
 }
 .icon-add:before {
     content: "\e90b";
@@ -155,11 +168,11 @@
 .icon-increase:before {
     content: "\e916";
 }
-.icon-checkbox-off:before {
-    content: "\e917";
-}
 .icon-minus:before {
     content: "\e918";
+}
+.icon-checkbox-off:before {
+    content: "\e917";
 }
 .icon-checkbox-on:before {
     content: "\e919";

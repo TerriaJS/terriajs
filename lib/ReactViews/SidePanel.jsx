@@ -46,7 +46,6 @@ const SidePanel = React.createClass({
 
     renderNowViewing() {
         if (this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0) {
-            console.log('called');
             return (
                 <div>
                     <ul className="now-viewing__header">

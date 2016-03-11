@@ -1,7 +1,5 @@
 .branding{
-  width: 30vw;
   height: $sm-logo-height;
-  padding: $padding-small;
   @include transition(all, 0.5s, linear);
   .logo{
     padding: 0;

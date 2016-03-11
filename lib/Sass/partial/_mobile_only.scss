@@ -1,13 +1,13 @@
 .modal--mobile{
-    @extend .sm-hide;
     position: fixed;
-    top: $sm-logo-height;
-    bottom: $input-height;
+    top: $mobile-header-height;
+    bottom: 0;
     background: rgba(#fff, 0.8);
     left: 0;
     right: 0;
     color: $modal-text;
-    overflow-y: auto;
+    overflow: hidden;
+    padding-bottom: $input-height;
     display: none;
     &.is-open{
         display: block;
@@ -17,10 +17,12 @@
 .modal--mobile-bg{
     background: #fff;
     height: 100%;
+    overflow-y: auto;
 }
 
 
 .mobile__ui{
+    @extend .sm-hide;
     position: fixed;
     top: 0;
     left: 0;
@@ -32,6 +34,7 @@
 .mobile__header{
     @extend .sm-hide;
     @extend .flex;
+    justify-content: space-between;
     font-family: $font-pop;
     width: 100%;
     background: $dark;
@@ -76,12 +79,6 @@
 }
 
 .mobile__nav{
-    display: block;
-    float: left;
-    height: 100%;
-    width: 60%;
-    max-width: 100px;
-    text-align: center;
     .nav{
         @extend .list-reset;
         display: none;
@@ -164,13 +161,11 @@
 }
 
 .btn--mobile-clear{
+    @extend .btn-primary;
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #fff;
-    color: #000;
-    text-align: center;
 }
 
 .btn--exist-preview{

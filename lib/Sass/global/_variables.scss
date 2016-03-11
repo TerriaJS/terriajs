@@ -28,8 +28,9 @@ $padding-mini: 3px;
 $btn-default-line-height: 20px;
 $input-height: 40px;
 
-$sm-logo-height: $input-height + $padding-small*2;
+$sm-logo-height: $input-height;
 $logo-height: 70px;
+$mobile-header-height: $sm-logo-height + $padding-small*2;
 
 $modal-bg: $faint-bg;
 $modal-text: #000;

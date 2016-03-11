@@ -17,7 +17,6 @@ const MobileModalWindow = React.createClass({
     },
 
     renderModalContent() {
-        console.log(this.props.viewState);
         switch(this.props.viewState.mobileView) {
         case 'search':
             return 'search';
@@ -34,18 +33,32 @@ const MobileModalWindow = React.createClass({
                     />
                     </div>;
         case 'nowViewing':
-            return <NowViewingContainer viewState={this.props.viewState}
-                                        terria={this.props.terria}
-                    />;
+            return <div className='modal--mobile-bg'>
+                        <NowViewingContainer viewState={this.props.viewState}
+                                             terria={this.props.terria}
+                        />
+                    </div>;
         default:
             return null;
         }
     },
 
-    render() {
+    onClearMobileUI() {
+        this.props.viewState.switchMobileView(null);
+        this.props.viewState.toggleModal(false);
+    },
 
-        return <div className={classNames('modal--mobile', {'is-open' : this.props.viewState.modalVisible})}>
+    componentWillReceiveProps() {
+        if(this.props.terria.nowViewing.items.length === 0) {
+            this.props.viewState.switchMobileView(null);
+            this.props.viewState.toggleModal(false);
+        }
+    },
+
+    render() {
+        return <div className={classNames('modal--mobile', {'is-open' : this.props.viewState.modalVisible && this.props.viewState.mobileView})}>
                     {this.renderModalContent()}
+                    {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Done</button>}
                 </div>;
     }
 });
