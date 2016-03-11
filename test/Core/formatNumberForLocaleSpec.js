@@ -8,8 +8,8 @@ describe('formatNumberForLocale', function() {
     describe('with Intl', function() {
 
         var separator = ',';
-        if (typeof Intl === 'object') {
-            separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+        if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
+            separator = Intl.NumberFormat().format(1000)[1];
         }
 
         it('returns strings for small integers', function() {
