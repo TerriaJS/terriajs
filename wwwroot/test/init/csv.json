@@ -17,7 +17,10 @@
             {
                 "name": "CSV (with 0) with blank values as zero",
                 "type": "csv",
-                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0"
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0",
+                "tableStyle": {
+                    "replaceWithZeroValues": [null]
+                }
             },
             {
                 "name": "CSV (with 0) with blank values separated",
@@ -32,7 +35,10 @@
             {
                 "name": "CSV (no 0) with blank values as zero",
                 "type": "csv",
-                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1"
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+                "tableStyle": {
+                    "replaceWithZeroValues": [null]
+                }
             },
             {
                 "name": "CSV (no 0) with blank values separated",
