@@ -11,19 +11,22 @@ Change Log
 
 * Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
 * Fixed the calculation of a csv file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
-* Improved performance of large csv files, especially the loading time, and the time taken to change the display variable of region-mapped files.
 * Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
+* Improved performance of large csv files, especially the loading time, and the time taken to change the display variable of region-mapped files.
 * Upgraded to terriajs-cesium 1.18.0.
 * Added support for CSV files with only location (lat/lon or region) columns, and no value columns, using a file-specific color. Revised GeoJSON display to draw from the same palette of colors.
 * Fixed a bug that prevented GeoJSON styles from being applied correctly in some cases.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Improved legend and coloring of ENUM (string) columns of csv files; only the most common values are colored differently, with the rest shown as 'Other'.
 * Added support for running the automated tests on the local system (via `gulp test`), on BrowserStack (via `gulp test-browserstack`), and on Sauce Labs (via `gulp test-saucelabs`).
 * Changed `tableStyle`'s `format` to only accept `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options. Previously some other options may have worked in some browsers.
 * Improved color palette for string (ENUM) columns of csv files.
 * Improved csv loading to ignore any completely blank lines after the header row (ie. lines which do not even have commas).
 * Added support for grouping catalog items retrieved from a CSW server according to criteria specified in the init file (via the `metadataGroups` property) or from a `domainSpecification` and a call to the `GetDomain` service on the CSW server.
 * Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
+* Improved ABS display (to hide the regions) when a concept is deselected.
+* Improved readability of ArcGis catalog items and legends by replacing underscores with spaces.
 * `ArcGisMapServerCatalogItem` metadata is now cached by the proxy for only 24 hours.
 
 ### 2.1.1
