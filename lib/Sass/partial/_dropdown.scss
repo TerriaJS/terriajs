@@ -5,26 +5,38 @@
     @extend .list-reset;
     overflow: hidden;
     position: absolute;
-    left: 0;
     z-index: 9999;
-    width: 100%;
     box-sizing: border-box;
     background: #fff;
-    box-shadow: $box-shadow;
     max-height: 0;
     overflow-y: auto;
-    margin-top: $padding-small;
     border-radius: $radius-small;
     @include transition(all, $animation-fast, cubic-bezier(0.19, 1, 0.22, 1));
   }
-
-  &.is-open{
+    &.is-open{
     .dropdown__list{
-      max-height: 190px;
+      max-height: none;
     }
   }
 }
 
 .preview-chart-wrapper .dropdown.is-open .dropdown__list{
   overflow: hidden;
+  right: 0;
+}
+
+.my-data{
+  .dropdown{
+    .dropdown__list{
+        left: 0;
+        width: 100%;
+        box-shadow: $box-shadow;
+        margin-top: $padding-small;
+    }
+    &.is-open{
+      .dropdown__list{
+        max-height: 190px;
+      }
+    }
+  }
 }
