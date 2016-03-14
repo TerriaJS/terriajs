@@ -2,10 +2,13 @@
     z-index: 1;
     position: absolute;
     top: 0;
-    left: $work-bench-width;
+    left: 0;
     background: rgba(255, 255, 255, 0.8);
     height: 5px;
     transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
+    @media screen and (min-width : $sm){
+        left: $work-bench-width;
+    }
 }
 
 .map-progress-bar--complete {

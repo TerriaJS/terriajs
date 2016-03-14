@@ -103,7 +103,10 @@ $btn-setting-size: 35px;
 //.btn--share - icon button
 //.btn--sphere - icon button
 //.btn--visible - icon button
-//.btn--geolocation -icon button
+//.btn--facebook -icon button
+//.btn--twitter -icon button
+//.btn--link -icon button
+//.btn--menu -icon button
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -136,7 +139,11 @@ visible,
 search,
 share,
 sphere,
-geolocation;
+geolocation,
+facebook,
+twitter,
+link,
+menu;
 
 
 @each $icon in $icons {
@@ -413,9 +420,7 @@ a.btn--map{
   top: 0;
   @extend .icon;
   @extend .icon-clear;
-  &:before{
-    padding: 12px $padding;
-  }
+  @extend .sm-hide;
 }
 
 
@@ -508,6 +513,8 @@ a.btn--map{
     border-bottom: 2px solid $color-primary;
   }
 }
+
+
 
 
 

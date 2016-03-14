@@ -6,6 +6,17 @@ import markdownToHtml from 'terriajs/lib/Core/markdownToHtml';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 
+//sort this, but why?
+const infoSectionOrder = [
+    'Disclaimer',
+    'Description',
+    'Data Description',
+    'Service Description',
+    'Resource Description',
+    'Licence',
+    'Access Constraints'
+];
+
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
     mixins: [ObserveModelMixin],
@@ -17,10 +28,9 @@ const DataPreview = React.createClass({
 
     toggleOnMap() {
         this.props.viewState.previewedItem.toggleEnabled();
-        if(this.props.viewState.previewedItem.isEnabled === true) {
-            this.props.viewState.togglePreview(false);
-            this.props.viewState.modalVisible = false;
-        }
+        // if(this.props.viewState.previewedItem.isEnabled === true) {
+        //     this.props.viewState.modalVisible = false;
+        // }
     },
 
     renderMarkup(content) {
@@ -30,7 +40,7 @@ const DataPreview = React.createClass({
     },
 
     exitPreview() {
-        this.props.viewState.togglePreview(false);
+        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.data);
     },
 
     render() {
@@ -60,7 +70,7 @@ const DataPreview = React.createClass({
                         <h4>{previewed.name}</h4>
                         <div className="data-info url">
                             <h5>Description</h5>
-                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>
+                            {this.renderDescription(previewed)}
                             <h5>Licence</h5>
                             <h5>Data Custodian</h5>
                             <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
@@ -70,6 +80,13 @@ const DataPreview = React.createClass({
                     </div>
                 </div>);
         }
+    },
+
+    renderDescription(previewed){
+        if(previewed.hasDescription){
+            return <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>;
+        }
+        return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>
     }
 });
 

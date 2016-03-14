@@ -10,7 +10,7 @@ const NowViewingContainer = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        nowViewingItems: React.PropTypes.array.isRequired,
+        terria: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired
     },
 
@@ -35,13 +35,13 @@ const NowViewingContainer = React.createClass({
 
         this.setState({
             draggedItemIndex: _draggedItemIndex,
-            selectedItem: this.props.nowViewingItems[_draggedItemIndex]
+            selectedItem: this.props.terria.nowViewing.items[_draggedItemIndex]
         });
     },
 
     onDragEnd(e) {
         if(e.dataTransfer.dropEffect === 'move') {
-            this.props.nowViewingItems.splice(this.state.draggedItemIndex, 1);
+            this.props.terria.nowViewing.items.splice(this.state.draggedItemIndex, 1);
             this.state.draggedItemIndex = -1;
             this.state.placeholderIndex = -1;
             this.setState(this.state);
@@ -79,7 +79,7 @@ const NowViewingContainer = React.createClass({
 
     onDrop(e) {
         if(this.state.placeholderIndex !== -1) {
-            this.props.nowViewingItems.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
+            this.props.terria.nowViewing.items.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
             if(this.state.draggedItemIndex > this.state.placeholderIndex) {
                 this.state.draggedItemIndex = this.state.draggedItemIndex + 1;
             }
@@ -124,7 +124,7 @@ const NowViewingContainer = React.createClass({
         const items = [];
         let i;
 
-        const nowViewingItems = this.props.nowViewingItems;
+        const nowViewingItems = this.props.terria.nowViewing.items;
 
         for (i = 0; i < nowViewingItems.length; i++) {
             items.push(this.renderPlaceholder(i));

@@ -1,25 +1,20 @@
 .workbench{
   box-sizing: border-box;
-  width: 100%;
   position: relative;
   z-index: 1;
-  height: auto;
-  @media(screen and min-width: $sm){
-    width: $work-bench-width;
-    height: calc(100% - #{$logo-height});
+  width: $work-bench-width;
+  height: calc(100% - #{$logo-height});
+  @extend .sm-show;
+  .is-full-screen &{
+    display: none;
   }
   nav{
     position: absolute;
     left: -1000px;
     @include transition(margin $animation-fast ease-in);
-    @media(screen and min-width: $sm){
-      //temp
-      position: relative;
-      left: 0;
-      .is-full-screen &{
-        display: none;
-      }
-    }
+    //temp
+    position: relative;
+    left: 0;
   }
 }
 
@@ -33,11 +28,8 @@
 .modal-wrapper{
   position: fixed;
   z-index: 99;
-  top: $sm-logo-height;
   width: 100vw;
-  bottom: $input-height;
-  padding: 0;
-
+  display: none;
   @media screen and (min-width : $sm){
     padding-left: $padding*2;
     padding-right: $padding*2;
@@ -45,6 +37,7 @@
     padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
     bottom: 0;
     top: 0;
+    display: block;
   }
   @media screen and (min-width : $md){
     padding-left: $work-bench-width + 50px;

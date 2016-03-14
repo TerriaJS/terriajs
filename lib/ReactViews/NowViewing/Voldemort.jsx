@@ -48,7 +48,7 @@ const Voldemort = React.createClass({
                 <button onClick={this.toggleActive.bind(this, concept)}
                     style={style}
                     className={this.getBtnClass(concept, parent) + ' btn'}
-                    title='select voldemort'>
+                    title='select variable'>
                 </button>
             );
         }
@@ -82,7 +82,7 @@ const Voldemort = React.createClass({
             <button onClick={this.toggleOpen.bind(this, concept)}
                 style={style}
                 className={'btn btn--toggle ' + (concept.isOpen ? 'is-open' : '')}
-                title='open voldemort'>
+                title='open variable selection'>
             </button>
         );
         return (
