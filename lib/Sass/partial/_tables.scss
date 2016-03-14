@@ -23,10 +23,9 @@ td { vertical-align: top }
 
 // Tables
 //
-//.cesium-infoBox-defaultTable - feature info panel table
-//
 // Markup:
-// <table class={{modifier_class}}>
+// <div class='feature-info-panel__content'>
+// <table>
 // <tbody>
 // <tr>
 // <td>name</td>
@@ -48,10 +47,11 @@ td { vertical-align: top }
 // <td>E</td>
 // </tr>
 // </tbody></table>
+// </div>
 //
 // Style guide: 2.0
 //
-table.cesium-infoBox-defaultTable{
+.feature-info-panel__content table{
     font-family: monospace;
     background: rgba($dark-lighter, 0.7);
     margin: $padding 0;
@@ -60,4 +60,9 @@ table.cesium-infoBox-defaultTable{
       border-collapse: collapse;
       border: 1px solid $dark;
     }
+  }
+
+
+  td.chart{
+    padding: 0;
   }
