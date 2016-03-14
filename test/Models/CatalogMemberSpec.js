@@ -18,7 +18,7 @@ describe('CatalogMember', function () {
 
     describe('triggering load()', function() {
         beforeEach(function() {
-            spyOn(terria.disclaimerEvent, 'raiseEvent');
+            spyOn(terria, 'disclaimerListener');
             member._load = function() {
                return when.resolve(); // make the implementation-specific _load method return instantly, it's not on trial here.
             };

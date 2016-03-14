@@ -46,7 +46,7 @@ describe('DisclaimerViewModel', function() {
     it('should allow an already-accepted disclaimer to go straight through without displaying', function() {
         keyRecorded = true;
 
-        terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
+        terria.disclaimerListener(catalogItem, successCallback);
 
         expect(successCallback).toHaveBeenCalled();
         expect(PopupMessageViewModel.open).not.toHaveBeenCalled();
@@ -55,7 +55,7 @@ describe('DisclaimerViewModel', function() {
 
     describe('for a non-confirmation disclaimer', function() {
         beforeEach(function() {
-            terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
+            terria.disclaimerListener(catalogItem, successCallback);
         });
 
         it('should open a popup message', function() {
@@ -84,7 +84,7 @@ describe('DisclaimerViewModel', function() {
         it('if no key is specified, opens a confirmation dialog with the correct success callback', function() {
             catalogItem.initialMessage.key = undefined;
 
-            terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
+            terria.disclaimerListener(catalogItem, successCallback);
 
             var options = PopupMessageConfirmationViewModel.open.calls.argsFor(0)[1];
             checkOptions(options);
@@ -94,18 +94,18 @@ describe('DisclaimerViewModel', function() {
         });
 
         it('should pass options from the catalogItem correctly', function() {
-            terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
+            terria.disclaimerListener(catalogItem, successCallback);
             checkOptions(PopupMessageConfirmationViewModel.open.calls.argsFor(0)[1]);
         });
 
         it('should pass the ui container straight through to the modal', function() {
-            terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
+            terria.disclaimerListener(catalogItem, successCallback);
             expect(PopupMessageConfirmationViewModel.open.calls.argsFor(0)[0]).toBe(UI_CONTAINER);
         });
 
         describe('if a key is specified', function() {
             beforeEach(function() {
-                terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
+                terria.disclaimerListener(catalogItem, successCallback);
             });
 
             it('should not record the popup message as being accepted in local storage until after the success ' +
@@ -118,8 +118,8 @@ describe('DisclaimerViewModel', function() {
             });
 
             it('should only a modal once for a certain key', function() {
-                terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
-                terria.disclaimerEvent.raiseEvent(catalogItem, successCallback);
+                terria.disclaimerListener(catalogItem, successCallback);
+                terria.disclaimerListener(catalogItem, successCallback);
 
                 expect(PopupMessageConfirmationViewModel.open.calls.count()).toBe(1);
             });
@@ -139,11 +139,11 @@ describe('DisclaimerViewModel', function() {
 
                 for (var i = 1; i <= 3; i++) {
                     var item1Callback = jasmine.createSpy('item 1 callback ' + i);
-                    terria.disclaimerEvent.raiseEvent(catalogItem, item1Callback);
+                    terria.disclaimerListener(catalogItem, item1Callback);
                     item1Callbacks.push(item1Callback);
 
                     var item2Callback = jasmine.createSpy('item 2 callback ' + i);
-                    terria.disclaimerEvent.raiseEvent(catalogItem2, item2Callback);
+                    terria.disclaimerListener(catalogItem2, item2Callback);
                     item2Callbacks.push(item2Callback);
                 }
             });

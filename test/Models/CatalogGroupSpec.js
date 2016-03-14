@@ -396,7 +396,7 @@ describe('CatalogGroup', function() {
 
     describe('setting isOpen', function() {
         beforeEach(function() {
-           spyOn(terria.disclaimerEvent, 'raiseEvent');
+           spyOn(terria, 'disclaimerListener');
         });
 
         describe('to true when group has a disclaimer', function() {
@@ -406,7 +406,7 @@ describe('CatalogGroup', function() {
             });
 
             it('triggers a disclaimerEvent', function() {
-                expect(terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[0]).toBe(group);
+                expect(terria.disclaimerListener.calls.argsFor(0)[0]).toBe(group);
             });
         });
 
@@ -416,7 +416,7 @@ describe('CatalogGroup', function() {
             });
 
             it('triggers no disclaimerEvent', function() {
-                expect(terria.disclaimerEvent.raiseEvent).not.toHaveBeenCalled();
+                expect(terria.disclaimerListener).not.toHaveBeenCalled();
             });
         });
     });

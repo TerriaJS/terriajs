@@ -158,7 +158,7 @@ describe('CatalogItem', function () {
     describe('setting isEnabled', function() {
         beforeEach(function() {
             item.nowViewingCatalogItem = {};
-            spyOn(terria.disclaimerEvent, 'raiseEvent');
+            spyOn(terria, 'disclaimerListener');
         });
 
         describe('to true when item has a disclaimer', function() {
@@ -168,7 +168,7 @@ describe('CatalogItem', function () {
             });
 
             it('triggers a disclaimerEvent', function() {
-                expect(terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[0]).toBe(item);
+                expect(terria.disclaimerListener.calls.argsFor(0)[0]).toBe(item);
             });
 
             it('doesn\'t immediately finish enabling the view', function() {
@@ -176,7 +176,7 @@ describe('CatalogItem', function () {
             });
 
             it('finishes enabling the view after the callback passed to disclaimerEvent is executed', function(done) {
-                terria.disclaimerEvent.raiseEvent.calls.argsFor(0)[1]();
+                terria.disclaimerListener.calls.argsFor(0)[1]();
                 item._loadForEnablePromise.then(function() {
                     expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
                 }).then(done).otherwise(fail);
@@ -189,7 +189,7 @@ describe('CatalogItem', function () {
             });
 
             it('triggers no disclaimerEvent', function() {
-                expect(terria.disclaimerEvent.raiseEvent).not.toHaveBeenCalled();
+                expect(terria.disclaimerListener).not.toHaveBeenCalled();
             });
 
             it('finishes enabling the view', function(done) {
