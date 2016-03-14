@@ -4,7 +4,6 @@
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
-var runLater = require('../../lib/core/runLater');
 
 var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
 var loadText = require('terriajs-cesium/Source/Core/loadText');
