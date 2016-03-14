@@ -138,7 +138,7 @@ const Chart = React.createClass({
             }
             margin = {
                 top: 0,  // So the title is flush with the top of the chart panel.
-                right: 40,
+                right: 20,
                 bottom: 20,
                 left: 0
             };
