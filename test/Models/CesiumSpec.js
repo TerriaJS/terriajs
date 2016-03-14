@@ -2,6 +2,10 @@
 
 /*global require,describe,xdescribe,it,expect,beforeEach*/
 var Cesium = require('../../lib/Models/Cesium');
+var Color = require('terriajs-cesium/Source/Core/Color');
+var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var GeoJsonDataSource = require('terriajs-cesium/Source/DataSources/GeoJsonDataSource');
+var loadJson = require('terriajs-cesium/Source/Core/loadJson');
 var Terria = require('../../lib/Models/Terria');
 var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
 var supportsWebGL = require('../../lib/Core/supportsWebGL');
@@ -27,6 +31,8 @@ describeIfSupported('Cesium Model', function() {
         cesium = new Cesium(terria, new CesiumWidget(container, {
             imageryProvider: new TileCoordinatesImageryProvider()
         }));
+
+        terria.cesium = cesium;
     });
 
     afterEach(function() {
@@ -64,5 +70,69 @@ describeIfSupported('Cesium Model', function() {
         cesium.scene.globe.tileLoadProgressEvent.raiseEvent(2);
 
         expect(terria.tileLoadProgressEvent.raiseEvent.calls.mostRecent().args).toEqual([2, 2]);
+    });
+
+    describe('feature picking', function() {
+        it('should create GeoJSON for polygon when a rasterized polygon feature is selected', function(done) {
+            loadJson('test/GeoJSON/polygon.geojson').then(function(polygonGeoJson) {
+                var entity = new Entity();
+                entity.data = polygonGeoJson;
+
+                terria.selectedFeature = entity;
+
+                expect(terria.cesium._highlightPromise).toBeDefined();
+                expect(terria.cesium._removeHighlightCallback).toBeDefined();
+
+                return terria.cesium._highlightPromise.then(function() {
+                    expect(terria.dataSources.length).toBe(1);
+                    expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
+                });
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('should create GeoJSON for polyline when a rasterized polyline feature is selected', function(done) {
+            loadJson('test/GeoJSON/polyline.geojson').then(function(polylineGeoJson) {
+                var entity = new Entity();
+                entity.data = polylineGeoJson;
+
+                terria.selectedFeature = entity;
+
+                expect(terria.cesium._highlightPromise).toBeDefined();
+                expect(terria.cesium._removeHighlightCallback).toBeDefined();
+
+                return terria.cesium._highlightPromise.then(function() {
+                    expect(terria.dataSources.length).toBe(1);
+                    expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
+                });
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('should update the style of a vector polygon when selected', function(done) {
+            GeoJsonDataSource.load('test/GeoJSON/polygon.geojson').then(function(dataSource) {
+                terria.dataSources.add(dataSource);
+
+                var entity = dataSource.entities.values[0];
+
+                terria.selectedFeature = entity;
+                expect(entity.polygon.outlineColor.getValue()).toEqual(Color.WHITE);
+
+                terria.selectedFeature = undefined;
+                expect(entity.polygon.outlineColor.getValue()).not.toEqual(Color.WHITE);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('should update the style of a vector polyline when selected', function(done) {
+            GeoJsonDataSource.load('test/GeoJSON/polyline.geojson').then(function(dataSource) {
+                terria.dataSources.add(dataSource);
+
+                var entity = dataSource.entities.values[0];
+
+                terria.selectedFeature = entity;
+                expect(entity.polyline.width.getValue()).toEqual(2);
+
+                terria.selectedFeature = undefined;
+                expect(entity.polyline.width.getValue()).not.toEqual(2);
+            }).then(done).otherwise(done.fail);
+        });
     });
 });

@@ -13,6 +13,7 @@ Change Log
 * Fixed a bug that prevented GeoJSON styles from being applied correctly in some cases.
 * Fixed an error when adding a csv with one line of data.
 * Fixed error when adding a csv file with numeric column names.
+* Polygons and polylines are now highlighted on click when the geometry is available.
 * Improved legend and coloring of ENUM (string) columns of csv files; only the most common values are colored differently, with the rest shown as 'Other'.
 * Added support for running the automated tests on the local system (via `gulp test`), on BrowserStack (via `gulp test-browserstack`), and on Sauce Labs (via `gulp test-saucelabs`).
 * Changed `tableStyle`'s `format` to only accept `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options. Previously some other options may have worked in some browsers.
