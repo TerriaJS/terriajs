@@ -1,17 +1,14 @@
 'use strict';
-import React from 'react';
-import SearchBox from './Search/SearchBox.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
+import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
+import classNames from 'classnames';
 import DataCatalogTab from './DataCatalogTab.jsx';
 import DataPreview from './DataPreview.jsx';
+import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
 import MobileSearch from './MobileSearch.jsx';
 import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
-import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
-import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
-import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
-
-
-import classNames from 'classnames';
+import ObserveModelMixin from './ObserveModelMixin';
+import React from 'react';
 
 
 const MobileModalWindow = React.createClass({

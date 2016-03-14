@@ -19,7 +19,7 @@ const MobileHeader = React.createClass({
     },
 
     toggleSearch() {
-        this.toggleView('search');
+        this.toggleView(this.props.viewState.mobileViewOptions.search);
     },
 
     toggleMenu() {
@@ -29,14 +29,14 @@ const MobileHeader = React.createClass({
     },
 
     onMobileDataCatalogClicked() {
-        this.toggleView('data');
+        this.toggleView(this.props.viewState.mobileViewOptions.data);
     },
 
     onMobileNowViewingClicked() {
-        this.toggleView('nowViewing');
+        this.toggleView(this.props.viewState.mobileViewOptions.nowViewing);
     },
 
-    refresh(){
+    refresh() {
         location.reload();
     },
 
@@ -44,10 +44,10 @@ const MobileHeader = React.createClass({
 
     },
 
-    toggleView(viewname){
-        if(this.props.viewState.mobileView !== this.props.viewState.mobileViewOptions[viewname]) {
+    toggleView(viewname) {
+        if(this.props.viewState.mobileView !== viewname) {
             this.props.viewState.toggleModal(true);
-            this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions[viewname]);
+            this.props.viewState.switchMobileView(viewname);
         } else {
             this.props.viewState.toggleModal(false);
             this.props.viewState.switchMobileView(null);
