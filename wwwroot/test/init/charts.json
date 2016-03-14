@@ -9,7 +9,7 @@
           "name": "Star Stations",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv",
-          "featureInfoTemplate" : "<h1>{{name}}</h1><table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Signal at 560Hz</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' source-names='1d,2d,5d' long-names='Last 24 hours,Last 48 hours,Last 5 days' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units=',mW,mW' y-column='1'></chart></td></tr></tbody></table><p>Sample data only</p>"
+          "featureInfoTemplate" : "<table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Signal at 560Hz</td><td class='chart'><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' source-names='1d,2d,5d' long-names='Last 24 hours,Last 48 hours,Last 5 days' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units=',mW,mW' y-column='1'></chart></td></tr></tbody></table><p>Sample data only</p>"
         },
         {
           "name": "Sheep Stations",
@@ -17,7 +17,7 @@
           "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
           "featureInfoTemplate" : {
             "name": "Number {{value}}",
-            "template": "<h1>{{enum}}</h1><p>All sheep stations have the same data currently.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='1'></chart>"
+            "template": "<p>All sheep stations have the same data currently.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='1'></chart>"
           }
         }
       ]

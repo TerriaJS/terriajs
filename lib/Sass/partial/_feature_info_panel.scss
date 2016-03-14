@@ -32,6 +32,7 @@
   display: none;
   &.is-visible{
     display: block;
+    z-index: 10;
   }
   &, .btn, li{
     font-size: $font-size-small;
