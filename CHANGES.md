@@ -24,6 +24,7 @@ Change Log
 * Improved ABS display (to hide the regions) when a concept is deselected.
 * Improved readability of ArcGis catalog items and legends by replacing underscores with spaces.
 * `ArcGisMapServerCatalogItem` metadata is now cached by the proxy for only 24 hours.
+* Improved the feature info panel to update the display of time-varying region-mapped csv files for the current time.
 
 ### 2.1.1
 
