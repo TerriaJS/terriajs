@@ -167,6 +167,7 @@ text {
   z-index: 9999;
   background-color: #444; // TODO
   padding: 5px 5px 10px 10px;
+  font-size: 10px;
 }
 
 .linechart-tooltip .color {
@@ -181,7 +182,7 @@ text {
 }
 
 .linechart-tooltip .x-value {
-  min-width: 300px;
+  margin: 0;
 }
 
 .linechart-tooltip .color {
