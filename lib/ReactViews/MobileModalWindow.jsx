@@ -6,6 +6,10 @@ import DataCatalogTab from './DataCatalogTab.jsx';
 import DataPreview from './DataPreview.jsx';
 import MobileSearch from './MobileSearch.jsx';
 import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
+import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
+import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
+import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
+
 
 import classNames from 'classnames';
 
@@ -18,24 +22,31 @@ const MobileModalWindow = React.createClass({
     },
 
     renderModalContent() {
+        const terria = this.props.terria;
+
         switch(this.props.viewState.mobileView) {
-        case 'search':
+        case this.props.viewState.mobileViewOptions.search:
             return <MobileSearch terria={this.props.terria}
                                  viewState={this.props.viewState}
+                                 searches={[
+                                     new BingMapsSearchProviderViewModel({terria}),
+                                     new GazetteerSearchProviderViewModel({terria}),
+                                     new CatalogItemNameSearchProviderViewModel({terria})
+                                 ]}
                    />;
-        case 'data':
+        case this.props.viewState.mobileViewOptions.data:
             return <div className='modal--mobile-bg'>
                         <DataCatalogTab terria={this.props.terria}
                                         viewState={this.props.viewState}
                     />
                     </div>;
-        case 'preview':
+        case this.props.viewState.mobileViewOptions.preview:
             return <div className='modal--mobile-bg'>
                         <DataPreview terria={this.props.terria}
                                      viewState={this.props.viewState}
                     />
                     </div>;
-        case 'nowViewing':
+        case this.props.viewState.mobileViewOptions.nowViewing:
             return <div className='modal--mobile-bg'>
                         <NowViewingContainer viewState={this.props.viewState}
                                              terria={this.props.terria}
@@ -52,7 +63,8 @@ const MobileModalWindow = React.createClass({
     },
 
     componentWillReceiveProps() {
-        if(this.props.terria.nowViewing.items.length === 0) {
+        if((this.props.terria.nowViewing.items.length === 0) &&
+          (this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.nowViewing)) {
             this.props.viewState.switchMobileView(null);
             this.props.viewState.toggleModal(false);
         }

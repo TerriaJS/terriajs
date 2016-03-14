@@ -40,7 +40,7 @@ const DataPreview = React.createClass({
     },
 
     exitPreview() {
-        this.props.viewState.switchMobileView('data');
+        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.data);
     },
 
     render() {

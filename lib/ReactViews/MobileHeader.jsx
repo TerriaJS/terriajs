@@ -14,15 +14,12 @@ const MobileHeader = React.createClass({
 
     getInitialState() {
         return {
-            searchIsOpen: false,
             menuIsOpen: false
         };
     },
 
     toggleSearch() {
-        this.setState({
-            searchIsOpen: !this.state.searchIsOpen
-        });
+        this.toggleView('search');
     },
 
     toggleMenu() {
@@ -31,23 +28,12 @@ const MobileHeader = React.createClass({
         });
     },
 
-
     onMobileDataCatalogClicked() {
-        this.props.viewState.toggleModal(true);
-        this.props.viewState.switchMobileView('data');
-        this.setState({
-            searchIsOpen: false,
-            menuIsOpen: false
-        });
+        this.toggleView('data');
     },
 
     onMobileNowViewingClicked() {
-        this.props.viewState.toggleModal(true);
-        this.props.viewState.switchMobileView('nowViewing');
-        this.setState({
-            searchIsOpen: false,
-            menuIsOpen: false
-        });
+        this.toggleView('nowViewing');
     },
 
     refresh(){
@@ -55,8 +41,20 @@ const MobileHeader = React.createClass({
     },
 
     search() {
-        this.props.viewState.toggleModal(true);
-        this.props.viewState.switchMobileView('search');
+
+    },
+
+    toggleView(viewname){
+        if(this.props.viewState.mobileView !== this.props.viewState.mobileViewOptions[viewname]) {
+            this.props.viewState.toggleModal(true);
+            this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions[viewname]);
+        } else {
+            this.props.viewState.toggleModal(false);
+            this.props.viewState.switchMobileView(null);
+        }
+        this.setState({
+            menuIsOpen: false
+        });
     },
 
     render() {
@@ -70,7 +68,7 @@ const MobileHeader = React.createClass({
                         <div className='group group-right'>
                             <button className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Data</button>
                             {(nowViewingLength > 0) && <button className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}><span className='now-viewing__count'>{nowViewingLength}</span></button>}
-                            <div className={'mobile__search ' + (this.state.searchIsOpen ? 'is-open' : '')}>
+                            <div className={'mobile__search ' + ((this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.search) ? 'is-open' : '')}>
                                 <button className='btn btn--mobile-search' onClick={this.toggleSearch}></button>
                                 <SearchBox onSearchTextChanged={this.search}/>
                                 <button className='btn btn--mobile-search-cancel' onClick={this.toggleSearch}>cancel</button>
