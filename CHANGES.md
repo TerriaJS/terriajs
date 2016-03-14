@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.2.1
+
+* Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
+
 ### 2.2.0
 
 * Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
