@@ -933,8 +933,9 @@ describe('CsvCatalogItem with region mapping', function() {
                     return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("3124");
-                    expect(r[0].description).toContain("42.42");
-                    expect(r[0].description).toContain("the universe");
+                    var description = r[0].description.getValue(terria.clock.currentTime);
+                    expect(description).toContain("42.42");
+                    expect(description).toContain("the universe");
                 }).otherwise(fail).then(done);
             });
         });
@@ -989,8 +990,9 @@ describe('CsvCatalogItem with region mapping', function() {
                     return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("Boroondara (C)");
-                    expect(r[0].description).toContain("42.42");
-                    expect(r[0].description).toContain("the universe");
+                    var description = r[0].description.getValue(terria.clock.currentTime);
+                    expect(description).toContain("42.42");
+                    expect(description).toContain("the universe");
                 }).otherwise(fail).then(done);
             });
         });
@@ -1071,15 +1073,17 @@ describe('CsvCatalogItem with region mapping', function() {
                     return regionImageryProvider.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("Wellington (S)");
-                    expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
-                    expect(r[0].description).toContain("Melbourne");
+                    var description = r[0].description.getValue(terria.clock.currentTime);
+                    expect(description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
+                    expect(description).toContain("Melbourne");
                 }).then(function() {
                     var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
                     return regionImageryProvider.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("Wellington (A)");
-                    expect(r[0].description).toContain("Wellington");
-                    expect(r[0].description).toContain("Sydney");
+                    var description = r[0].description.getValue(terria.clock.currentTime);
+                    expect(description).toContain("Wellington");
+                    expect(description).toContain("Sydney");
                 }).otherwise(fail).then(done);
             });
         });
