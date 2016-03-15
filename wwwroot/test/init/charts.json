@@ -6,6 +6,11 @@
       "isOpen": true,
       "items": [
         {
+          "name": "Power Stations",
+          "type": "csv",
+          "url": "test/powergen_no_time.csv"
+        },
+        {
           "name": "Star Stations",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv",
