@@ -453,9 +453,8 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
             expect(url).toContain('Other');
-            expect(url).not.toContain('guinea pigs');
             expect(url).not.toContain('unicorns');
-            expect(url).toContain('turtles');
+            expect(url).toContain('guinea pigs');
         }).otherwise(fail).then(done);
     });
 
@@ -465,7 +464,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
             expect(csvItem.legendUrl.url).not.toContain('Other');
-            expect(csvItem.legendUrl.url).toContain('guinea pigs');
+            expect(csvItem.legendUrl.url).toContain('turtles');
         }).otherwise(fail).then(done);
     });
 
@@ -852,9 +851,8 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
             expect(url).toContain('Other');
-            expect(url).not.toContain('guinea pigs');
             expect(url).not.toContain('unicorns');
-            expect(url).toContain('turtles');
+            expect(url).toContain('guinea pigs');
         }).otherwise(fail).then(done);
     });
 
