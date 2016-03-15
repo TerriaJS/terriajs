@@ -44,6 +44,7 @@ const DataPreviewMap = React.createClass({
         this.terriaPreview.baseMap = positron;
 
         this.isZoomedToExtent = false;
+        this.componentWillReceiveProps(this.props);
     },
 
     componentWillReceiveProps(nextProp) {

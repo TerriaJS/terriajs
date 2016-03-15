@@ -19,7 +19,11 @@ td {
 th { vertical-align: bottom }
 td { vertical-align: top }
 
-
+@media screen and (max-width : $sm){
+  table, tr, th, td{
+    display: block;
+  }
+}
 
 // Tables
 //

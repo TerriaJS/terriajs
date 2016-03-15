@@ -47,7 +47,9 @@ const DataPreview = React.createClass({
         const previewed = this.props.viewState.previewedItem;
         return (
             <div className='data-preview__inner'>
-                <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.viewState.previewedItem}/>
+                <DataPreviewMap terria={this.props.terria}
+                                previewedCatalogItem={previewed}
+                />
                 {this.renderActions(previewed)}
             </div>
         );
