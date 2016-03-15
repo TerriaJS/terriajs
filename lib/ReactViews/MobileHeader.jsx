@@ -92,6 +92,7 @@ const MobileHeader = React.createClass({
                         <li><a href=''>About</a></li>
                         <li><a href=''>Related maps</a></li>
                         <li><a href=''>Support</a></li>
+                        <li className='social'>Share</li>
                     </ul>
                     <MobileModalWindow terria={this.props.terria}
                                        viewState={this.props.viewState}

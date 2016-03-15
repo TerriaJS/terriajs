@@ -32,7 +32,7 @@
     left: 0;
     width: 100vw;
     height: auto;
-    z-index: 1;
+    z-index: 13;
 }
 
 .mobile__header{
@@ -107,7 +107,21 @@
         color: $mobile-text;
         text-align: left;
         li{
-            padding: $padding-small*3;
+            padding: 0 $padding-small*3;
+            &.social{
+                text-align: right;
+                padding: $padding-small*3;
+            }
+            a{
+                padding: $padding-small*3 0;
+                color: $text-dark;
+                display: block;
+                border-bottom: 1px solid $grey-lighter;
+                &:hover,
+                &:focus{
+                    color: $color-primary;
+                }
+            }
         }
         .btn{
             border-bottom: 1px solid $grey-lighter;
