@@ -34,6 +34,8 @@ const MobileHeader = React.createClass({
         this.setState({
             menuIsOpen: !this.state.menuIsOpen
         });
+        this.props.viewState.toggleModal(false);
+        this.props.viewState.switchMobileView(null);
     },
 
     onMobileDataCatalogClicked() {

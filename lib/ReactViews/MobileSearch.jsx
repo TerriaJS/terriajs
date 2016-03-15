@@ -49,7 +49,7 @@ const MobileSearch = React.createClass({
         const search = this.props.searches
                       .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
 
-        const items = search.isSearching ? search.searchResults.map(result => result.catalogItem) : terria.catalog.group.items;
+        const items = search.searchResults.map(result => result.catalogItem);
 
         return <ul className='data-catalog mobile-search-results '>
                     <SearchHeader {...search} />

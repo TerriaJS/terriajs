@@ -54,8 +54,7 @@ const MyDataTab = React.createClass({
         return (
             <div className="panel-content">
                 <div className='my-data'>
-                    <div
-                        className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
+                    <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
                         <button onClick={this.changeUploadView} className='btn btn--back-to-my-data'> Back</button>
                         <h4>Adding your own data</h4>
                         <AddData updateCatalog={this.updateCatalog}

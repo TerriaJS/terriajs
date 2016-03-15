@@ -8,6 +8,9 @@
     transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
     @media screen and (min-width : $sm){
         left: $work-bench-width;
+        .is-full-screen &{
+            left: 0;
+        }
     }
 }
 
