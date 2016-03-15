@@ -131,6 +131,7 @@ const Chart = React.createClass({
         let margin;
         let tooltipSettings;
         let titleSettings;
+        let grid;
         if (!this.props.inFeatureInfo) {
             if (!defined(this._tooltipId)) {
                 // In case there are multiple charts with tooltips. Unlikely to pick the same random number. Remove the initial "0.".
@@ -151,6 +152,10 @@ const Chart = React.createClass({
                 type: 'legend',
                 height: 30
             };
+            grid = {
+                x: true,
+                y: true
+            };
         }
         return {
             data: defined(this.state.data) ? this.state.data : this.props.data,
@@ -163,7 +168,8 @@ const Chart = React.createClass({
             transitionDuration: this.props.transitionDuration,
             margin: margin,
             tooltipSettings: tooltipSettings,
-            titleSettings: titleSettings
+            titleSettings: titleSettings,
+            grid: grid
         };
     },
 

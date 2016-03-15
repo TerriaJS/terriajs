@@ -1,6 +1,8 @@
 // D3 Axis
 
+$chart-area-color: rgba(#fff, 0.075);
 $chart-axis-color: #fff;
+$chart-grid-color: rgba(#fff, 0.085);
 $chart-text-color: #fff;
 $chart-line-color: #ccc;
 
@@ -12,8 +14,11 @@ $chart-line-color: #ccc;
   shape-rendering: crispEdges;
 }
 
-.chart-panel .axis .tick line, .chart-panel .axis path.domain {
+.chart-panel .axis path.domain {
   stroke: $chart-axis-color;
+}
+.chart-panel .axis .tick line {
+  stroke: $chart-grid-color;
 }
 
 .chart-panel .axis .colors line {
@@ -21,7 +26,7 @@ $chart-line-color: #ccc;
 }
 
 .chart-panel .chart .plot-area {
-  fill: rgba(#fff, 0.075);
+  fill: $chart-area-color;
 }
 
 
