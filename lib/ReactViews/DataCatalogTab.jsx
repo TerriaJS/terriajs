@@ -67,7 +67,8 @@ const DataCatalogTab = React.createClass({
                         <DataCatalogMember viewState={this.props.viewState}
                                            member={item}
                                            manageIsOpenLocally={isSearching}
-                                           key={item.uniqueId}/>
+                                           key={item.uniqueId}
+                        />
                     ))
                 }
             </ul>);

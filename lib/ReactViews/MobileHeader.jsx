@@ -1,5 +1,8 @@
 'use strict';
 import React from 'react';
+import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
+import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
+import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
 import SearchBox from './Search/SearchBox.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
@@ -13,8 +16,13 @@ const MobileHeader = React.createClass({
     },
 
     getInitialState() {
+        const terria = this.props.terria;
         return {
-            menuIsOpen: false
+            menuIsOpen: false,
+            searchText: '',
+            searches: [new BingMapsSearchProviderViewModel({terria}),
+                       new GazetteerSearchProviderViewModel({terria}),
+                       new CatalogItemNameSearchProviderViewModel({terria})]
         };
     },
 
@@ -40,8 +48,11 @@ const MobileHeader = React.createClass({
         location.reload();
     },
 
-    search() {
-
+    search(newText) {
+        this.setState({
+            searchText: newText
+        });
+        this.state.searches.forEach(search => search.search(newText));
     },
 
     toggleView(viewname) {
@@ -69,9 +80,11 @@ const MobileHeader = React.createClass({
                             <button className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Data</button>
                             {(nowViewingLength > 0) && <button className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}><span className='now-viewing__count'>{nowViewingLength}</span></button>}
                             <div className={'mobile__search ' + ((this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.search) ? 'is-open' : '')}>
-                                <button className='btn btn--mobile-search' onClick={this.toggleSearch}></button>
+                                <button className='btn btn--mobile-search'
+                                        onClick={this.toggleSearch}></button>
                                 <SearchBox onSearchTextChanged={this.search}/>
-                                <button className='btn btn--mobile-search-cancel' onClick={this.toggleSearch}>cancel</button>
+                                <button className='btn btn--mobile-search-cancel'
+                                        onClick={this.toggleSearch}>cancel</button>
                             </div>
                         </div>
                     </div>
@@ -80,7 +93,10 @@ const MobileHeader = React.createClass({
                         <li><a href=''>Related maps</a></li>
                         <li><a href=''>Support</a></li>
                     </ul>
-                    <MobileModalWindow terria={this.props.terria} viewState={this.props.viewState}/>
+                    <MobileModalWindow terria={this.props.terria}
+                                       viewState={this.props.viewState}
+                                       searches={this.state.searches}
+                    />
                 </div>;
     }
 });

@@ -199,4 +199,20 @@
     }
 }
 
+.search-results-toggle{
+    @extend .clearfix;
+    .btn{
+        @extend .col-6;
+        text-transform: uppercase;
+        text-align: center;
+        &.is-active{
+            color: $color-primary;
+        }
+    }
+}
+
+.search--mobile .data-catalog{
+    padding: $padding;
+}
+
 

@@ -1,10 +1,8 @@
 'use strict';
-import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
-import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
+
 import classNames from 'classnames';
 import DataCatalogTab from './DataCatalogTab.jsx';
 import DataPreview from './DataPreview.jsx';
-import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
 import MobileSearch from './MobileSearch.jsx';
 import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
@@ -15,22 +13,19 @@ const MobileModalWindow = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object,
+        searches: React.PropTypes.array
     },
 
     renderModalContent() {
-        const terria = this.props.terria;
-
         switch(this.props.viewState.mobileView) {
         case this.props.viewState.mobileViewOptions.search:
-            return <MobileSearch terria={this.props.terria}
+            return <div className='modal--mobile-bg'>
+                    <MobileSearch terria={this.props.terria}
                                  viewState={this.props.viewState}
-                                 searches={[
-                                     new BingMapsSearchProviderViewModel({terria}),
-                                     new GazetteerSearchProviderViewModel({terria}),
-                                     new CatalogItemNameSearchProviderViewModel({terria})
-                                 ]}
-                   />;
+                                 searches={this.props.searches}
+                   />
+                   </div>;
         case this.props.viewState.mobileViewOptions.data:
             return <div className='modal--mobile-bg'>
                         <DataCatalogTab terria={this.props.terria}

@@ -8,9 +8,9 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 export default React.createClass({
     render() {
         if (this.props.isSearching) {
-            return <li><Loader key="loader"/></li>;
+            return <div><Loader key="loader"/></div>;
         } else if (this.props.searchMessage) {
-            return <li key="message" className='label no-results'>{this.props.searchMessage}</li>;
+            return <div key="message" className='label no-results'>{this.props.searchMessage}</div>;
         } else {
             return null;
         }

@@ -318,23 +318,21 @@ menu;
 
 .btn--catalog-item{
   @extend %wrap;
-  .panel-content &{
-    font-style: italic;
-    position: relative;
-    width: 100%;
-    padding: $padding-small $padding*2.2 $padding-small $padding*3;
-    @extend .btn--right;
-    &:before{
+  font-style: italic;
+  position: relative;
+  width: 100%;
+  padding: $padding-small $padding*2.2 $padding-small $padding*3;
+  @extend .btn--right;
+  &:before{
       opacity: 0;
       position: absolute;
       right: 0;
-    }
-    &:hover{
+  }
+  &:hover{
       color: $modal-highlight;
       &:before{
         opacity: 1;
       }
-    }
   }
   .is-previewed &{
     color: $modal-highlight;
