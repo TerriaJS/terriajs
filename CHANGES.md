@@ -5,6 +5,7 @@ Change Log
 ### 2.2.1
 
 * Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
+* Improved legend when `tableStyle.colorBins` is 0.
 
 ### 2.2.0
 
