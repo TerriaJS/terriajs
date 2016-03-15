@@ -112,11 +112,11 @@ describeIfSupported('Cesium Model', function() {
     });
 
     describe('feature picking', function() {
-        describe('via pickLocation', function() {
+        describe('via pickFromLocation', function() {
             it('should populate terria.pickedFeatures', function() {
                 expect(terria.pickedFeatures).toBeUndefined();
 
-                cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {});
+                cesium.pickFromLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {});
 
                 expect(terria.pickedFeatures).not.toBeUndefined();
                 expect(terria.pickedFeatures.pickPosition).toEqual(EXPECTED_POS);
@@ -125,7 +125,7 @@ describeIfSupported('Cesium Model', function() {
 
 
             it('should pass tile coordinates to associated imagery provider', function() {
-                cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
+                cesium.pickFromLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
                     'http://example.com/1': {x: 1, y: 2, level: 3},
                     'http://example.com/2': {x: 4, y: 5, level: 6}
                 });
@@ -135,7 +135,7 @@ describeIfSupported('Cesium Model', function() {
             });
 
             testFeatureInfoProcessing(function() {
-                cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
+                cesium.pickFromLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
                     'http://example.com/1': {x: 1, y: 2, level: 3},
                     'http://example.com/2': {x: 4, y: 5, level: 6}
                 });
@@ -147,7 +147,7 @@ describeIfSupported('Cesium Model', function() {
                 existingFeatures[0].name = '1';
                 existingFeatures[1].name = '2';
 
-                cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
+                cesium.pickFromLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
                     'http://example.com/1': {
                         x: 1,
                         y: 2,
@@ -163,13 +163,11 @@ describeIfSupported('Cesium Model', function() {
                     expect(terria.pickedFeatures.features[0].name).toBe('1');
                     expect(terria.pickedFeatures.features[1].name).toBe('2');
                     expect(terria.pickedFeatures.features[2].name).toBe('3');
-
-                    done();
-                });
+                }).then(done).otherwise(done.fail);
             });
 
             stateTests(function() {
-                cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
+                cesium.pickFromLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
                     'http://example.com/1': {
                         x: 1,
                         y: 2,
@@ -300,9 +298,7 @@ describeIfSupported('Cesium Model', function() {
                     expect(terria.pickedFeatures.features[0].imageryLayer).toBe(imageryLayers[1]);
                     expect(terria.pickedFeatures.features[1].imageryLayer).toBe(imageryLayers[1]);
                     expect(terria.pickedFeatures.features[2].imageryLayer).toBe(imageryLayers[0]);
-
-                    done();
-                }).otherwise(done.fail);
+                }).then(done).otherwise(done.fail);
             });
 
             it('from an ImageryLayerFeatureInfo into an Entity', function(done) {
