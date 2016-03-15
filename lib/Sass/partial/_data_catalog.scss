@@ -2,7 +2,7 @@
   @extend .list-reset;
   ul{
     @extend .list-reset;
-    padding-left: $padding-small;
+    padding-left: $padding;
   }
   .data-explorer & {
     background: $modal-secondary-bg;
@@ -12,6 +12,17 @@
     box-sizing: border-box;
     @media screen and (min-width : $sm){
     height: calc(70vh - #{$input-height + $padding*2});
+    }
+  }
+  & > li > .btn--catalogue{
+    font-weight: 600;
+  }
+
+  .data--catalog-group{
+    .btn--catalogue{
+      &:before{
+        color: darken($grey-lighter, 10%);
+      }
     }
   }
 }
