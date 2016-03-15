@@ -76,9 +76,9 @@ const SettingPanel = React.createClass({
         case 2:
             this.props.terria.viewerMode = ViewerMode.Leaflet;
             break;
-        default: return false;
+        default:
+            return;
         }
-        this.props.terriaViewer.updateViewer();
     },
 
     render() {

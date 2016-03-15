@@ -6,7 +6,7 @@
   height: calc(100% - #{$logo-height});
   @extend .sm-show;
   .is-full-screen &{
-    display: none;
+    display: none!important;
   }
   nav{
     position: absolute;
