@@ -1,10 +1,3 @@
-.modal-wrapper{
-  visibility: hidden;
-  &.is-open{
-    visibility: visible;
-  }
-}
-
 .modal-content{
   position: relative;
   background: $modal-bg;

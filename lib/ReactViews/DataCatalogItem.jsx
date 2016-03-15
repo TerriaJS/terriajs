@@ -28,13 +28,13 @@ const DataCatalogItem = React.createClass({
         // set preview as well
         this.props.viewState.viewCatalogItem(this.props.item);
         // mobile switch to nowvewing
-        this.props.viewState.switchMobileView('preview');
+        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },
 
     setPreviewedItem() {
         this.props.viewState.viewCatalogItem(this.props.item);
         // mobile switch to nowvewing
-        this.props.viewState.switchMobileView('preview');
+        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },
 
     isSelected() {

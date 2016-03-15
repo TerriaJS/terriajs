@@ -27,17 +27,23 @@
 
 .modal-wrapper{
   position: fixed;
-  z-index: 99;
   width: 100vw;
-  display: none;
+  visibility: hidden;
+  z-index: -100;
+  opacity: 0;
   @media screen and (min-width : $sm){
+    z-index: 99;
     padding-left: $padding*2;
     padding-right: $padding*2;
     padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
     padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
     bottom: 0;
     top: 0;
-    display: block;
+    visibility: hidden;
+    &.is-open{
+      visibility: visible;
+      opacity: 1;
+    }
   }
   @media screen and (min-width : $md){
     padding-left: $work-bench-width + 50px;

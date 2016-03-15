@@ -45,6 +45,8 @@ const ViewingControls = React.createClass({
         this.props.nowViewingItem.enableWithParents();
 
         this.props.viewState.viewCatalogItem(this.props.nowViewingItem);
+
+        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },
 
     render() {
