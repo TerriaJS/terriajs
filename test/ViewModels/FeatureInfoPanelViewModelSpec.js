@@ -16,8 +16,8 @@ var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var CzmlCatalogItem = require('../../lib/Models/CzmlCatalogItem');
 
 var separator = ',';
-if (typeof Intl === 'object') {
-    separator = (typeof Intl.NumberFormat === 'function' && Intl.NumberFormat().format(1000)[1]);
+if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
+    separator = (Intl.NumberFormat().format(1000)[1]);
 }
 
 describe('FeatureInfoPanelViewModel', function() {

@@ -6,22 +6,22 @@ var Terria = require('../../lib/Models/Terria');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var UrthecastCatalogItem = require('../../lib/Models/UrthecastCatalogItem');
 
-var terria;
-var urthecastCatalogItem;
+describe('UrthecastCatalogItem', function() {
+    var terria;
+    var urthecastCatalogItem;
 
-beforeEach(function() {
-    terria = new Terria({
-        baseUrl: './'
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+
+        urthecastCatalogItem = new UrthecastCatalogItem(terria);
+
+        urthecastCatalogItem.name = 'True RGB';
+        urthecastCatalogItem.platform = 'theia';
+        urthecastCatalogItem.renderer = 'rgb';
     });
 
-    urthecastCatalogItem = new UrthecastCatalogItem(terria);
-
-    urthecastCatalogItem.name = 'True RGB';
-    urthecastCatalogItem.platform = 'theia';
-    urthecastCatalogItem.renderer = 'rgb';
-});
-
-describe('UrthecastCatalogItem', function() {
     it('has sensible type and typeName', function() {
         expect(urthecastCatalogItem.type).toBe('urthecast');
         expect(urthecastCatalogItem.typeName).toBe('Urthecast Map Tiles Service Renderer');
@@ -31,7 +31,7 @@ describe('UrthecastCatalogItem', function() {
         expect(urthecastCatalogItem).toBeDefined();
     });
 
-    it('is derived from ImageryLayerDataItemViewModel', function() {
+    it('is derived from ImageryLayerCatalogItem', function() {
         expect(urthecastCatalogItem instanceof ImageryLayerCatalogItem).toBe(true);
     });
 
