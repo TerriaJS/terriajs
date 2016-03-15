@@ -36,7 +36,7 @@ const MobileSearch = React.createClass({
                         .map(search => (<div key={search.constructor.name}>
                                         <label className='label label-sub-heading'>{search.name}</label>
                                         <SearchHeader {...search} />
-                                        <ul className='search-results-items'>
+                                        <ul className=' mobile-search-results search-results-items'>
                                             { search.searchResults.map((result, i) => (
                                                 <LocationItem key={i} item={result}/>
                                             ))}
@@ -51,7 +51,7 @@ const MobileSearch = React.createClass({
 
         const items = search.isSearching ? search.searchResults.map(result => result.catalogItem) : terria.catalog.group.items;
 
-        return <ul className='data-catalog'>
+        return <ul className='data-catalog mobile-search-results '>
                     <SearchHeader {...search} />
                     {items.filter(defined)
                           .map((item, i) => (

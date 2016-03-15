@@ -19,6 +19,9 @@
     height: 100%;
     overflow-y: auto;
     padding: $padding-small 0;
+    &.search{
+        overflow: hidden;
+    }
 }
 
 
@@ -130,7 +133,8 @@
     }
 
     .btn--search-clear{
-        display: none;
+        right: 70px;
+        top: 16px;
     }
 
     .btn--mobile-search-cancel{
@@ -201,18 +205,30 @@
 
 .search-results-toggle{
     @extend .clearfix;
+    box-shadow: 0px 6px 10px -6px rgba(#000, 0.35);
+    padding-bottom: $padding-small;
     .btn{
         @extend .col-6;
         text-transform: uppercase;
         text-align: center;
-        &.is-active{
+        &.is-active,
+        &:hover,
+        &:focus{
             color: $color-primary;
         }
+    }
+    .search--location{
+        border-right: 1px solid $grey-lighter;
     }
 }
 
 .search--mobile .data-catalog{
     padding: $padding;
+}
+
+.mobile-search-results{
+    height: calc(100vh - #{$mobile-header-height + $input-height + 60px});
+    overflow-y: auto;
 }
 
 
