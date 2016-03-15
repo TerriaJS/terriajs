@@ -17,7 +17,7 @@ const ChartExpandButton = React.createClass({
         sourceNames: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
         feature: React.PropTypes.object,
-        chartTitle: React.PropTypes.string,
+        id: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         columnNames: React.PropTypes.array,
         columnUnits: React.PropTypes.array,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
@@ -56,7 +56,7 @@ function expand(props, url) {
     const terria = props.terria;
     const newCatalogItem = new CsvCatalogItem(terria, url);
     newCatalogItem.name = props.feature.name;
-    newCatalogItem.id = props.feature.name + (props.chartTitle ? (' ' + props.chartTitle) : '') + ' (' + props.catalogItem.name + ')';
+    newCatalogItem.id = props.feature.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
     group.isOpen = true;
     const existingChartItemIds = group.items.map(item=>item.uniqueId);
@@ -81,16 +81,14 @@ function expand(props, url) {
         try {
             const tableStructure = newCatalogItem.tableStructure;
             tableStructure.sourceFeature = props.feature;
-            if (defined(props.columnNames)) {
-                tableStructure.columns.forEach((column, columnNumber)=>{
-                    if (props.columnNames[columnNumber]) {
-                        column.name = props.columnNames[columnNumber];
-                    }
-                    if (props.columnUnits[columnNumber]) {
-                        column.units = props.columnUnits[columnNumber];
-                    }
-                });
-            }
+            tableStructure.columns.forEach((column, columnNumber)=>{
+                if (defined(props.columnNames) && props.columnNames[columnNumber]) {
+                    column.name = props.columnNames[columnNumber];
+                }
+                if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
+                    column.units = props.columnUnits[columnNumber];
+                }
+            });
             // Activate columns at the end, so that units and names flow through to the chart panel.
             if (defined(existingColors) && defined(activeConcepts)) {
                 tableStructure.columns.forEach((column, columnNumber)=>{

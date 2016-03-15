@@ -6,10 +6,15 @@
       "isOpen": true,
       "items": [
         {
+          "name": "Power Stations",
+          "type": "csv",
+          "url": "test/powergen_no_time.csv"
+        },
+        {
           "name": "Star Stations",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv",
-          "featureInfoTemplate" : "<table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Signal at 560Hz</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' source-names='1d,2d,5d' long-names='Last 24 hours,Last 48 hours,Last 5 days' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units=',mW,mW' y-column='1'></chart></td></tr></tbody></table><p>Sample data only</p>"
+          "featureInfoTemplate" : "<table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Signal at 560Hz</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' source-names='1d,2d,5d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units=',Watts,Watts' y-column='1'></chart></td></tr></tbody></table><p>Sample data only</p>"
         },
         {
           "name": "Sheep Stations",
