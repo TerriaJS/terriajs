@@ -14,10 +14,10 @@ var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
-var Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
 var SceneTransforms = require('terriajs-cesium/Source/Scene/SceneTransforms');
 var TileBoundingBox = require('terriajs-cesium/Source/Scene/TileBoundingBox');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 
 var describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -32,6 +32,7 @@ describeIfSupported('Cesium Model', function() {
     var LONG_RAD = CesiumMath.toRadians(LONG_DEGREES);
     var EXPECTED_POS = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(LONG_DEGREES, LAT_DEGREES, HEIGHT));
     var RECTANGLE_CONTAINING_EXPECTED_POS = new Rectangle(LONG_RAD - 0.1, LAT_RAD - 0.1, LONG_RAD + 0.1, LAT_RAD + 0.1);
+    var expectedPosScreenCoords;
 
     var imageryLayers, imageryLayerPromises;
 
@@ -52,11 +53,12 @@ describeIfSupported('Cesium Model', function() {
         cesium = new Cesium(terria, cesiumWidget);
         cesium.scene.globe._imageryLayerCollection.removeAll(true);
 
+        expectedPosScreenCoords = SceneTransforms.wgs84ToWindowCoordinates(cesium.scene, EXPECTED_POS);
+
         imageryLayers = [];
         imageryLayerPromises = [];
 
         var IMAGERY_PROVIDER_URLS = ['http://example.com/1', 'http://example.com/2'];
-
         IMAGERY_PROVIDER_URLS.forEach(function(url) {
             var provider = new TileCoordinatesImageryProvider();
             provider.url = url;
@@ -110,7 +112,6 @@ describeIfSupported('Cesium Model', function() {
     });
 
     describe('feature picking', function() {
-
         describe('via pickLocation', function() {
             it('should populate terria.pickedFeatures', function() {
                 expect(terria.pickedFeatures).toBeUndefined();
@@ -122,20 +123,22 @@ describeIfSupported('Cesium Model', function() {
                 expect(terria.pickedFeatures.allFeaturesAvailablePromise).not.toBeUndefined();
             });
 
-            describe('when passing tile coordinates', function() {
-                beforeEach(function() {
-                    cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
-                        'http://example.com/1': {x: 1, y: 2, level: 3},
-                        'http://example.com/2': {x: 4, y: 5, level: 6}
-                    });
+
+            it('should pass tile coordinates to associated imagery provider', function() {
+                cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
+                    'http://example.com/1': {x: 1, y: 2, level: 3},
+                    'http://example.com/2': {x: 4, y: 5, level: 6}
                 });
 
-                it('should pass tile coordinates to associated imagery provider', function() {
-                    expect(imageryLayers[0]._imageryProvider.pickFeatures.calls.argsFor(0)).toEqual([1, 2, 3, LONG_RAD, LAT_RAD]);
-                    expect(imageryLayers[1]._imageryProvider.pickFeatures.calls.argsFor(0)).toEqual([4, 5, 6, LONG_RAD, LAT_RAD]);
-                });
+                expect(imageryLayers[0]._imageryProvider.pickFeatures.calls.argsFor(0)).toEqual([1, 2, 3, LONG_RAD, LAT_RAD]);
+                expect(imageryLayers[1]._imageryProvider.pickFeatures.calls.argsFor(0)).toEqual([4, 5, 6, LONG_RAD, LAT_RAD]);
+            });
 
-                testFeatureInfoProcessing();
+            testFeatureInfoProcessing(function() {
+                cesium.pickLocation({lat: LAT_DEGREES, lng: LONG_DEGREES, height: HEIGHT}, {
+                    'http://example.com/1': {x: 1, y: 2, level: 3},
+                    'http://example.com/2': {x: 4, y: 5, level: 6}
+                });
             });
 
             it('existing features are included in pickFeatures along with ones got from imagery layers', function(done) {
@@ -190,17 +193,20 @@ describeIfSupported('Cesium Model', function() {
                 });
 
                 tile.data = {
-                    imagery: imageryLayers.map(function(layer) {
+                    imagery: imageryLayers.map(function(layer, i) {
                         return {
                             readyImagery: {
                                 imageryLayer: layer,
-                                    rectangle: RECTANGLE_CONTAINING_EXPECTED_POS
+                                rectangle: RECTANGLE_CONTAINING_EXPECTED_POS,
+                                x: i + 1,
+                                y: i + 2,
+                                level: i + 3
                             },
                             textureCoordinateRectangle: {
                                 x: 0.5,
-                                    z: 0.5,
-                                    y: 0.5,
-                                    w: 0.5
+                                z: 0.5,
+                                y: 0.5,
+                                w: 0.5
                             }
                         };
                     })
@@ -210,69 +216,120 @@ describeIfSupported('Cesium Model', function() {
             });
 
             stateTests(function() {
-                doClick({position: SceneTransforms.wgs84ToWindowCoordinates(cesium.scene, EXPECTED_POS)});
+                doClick({position: expectedPosScreenCoords});
             });
 
-            describe('feature info processing', function() {
-                beforeEach(function() {
-                    doClick({position: SceneTransforms.wgs84ToWindowCoordinates(cesium.scene, EXPECTED_POS)});
-                });
+            testFeatureInfoProcessing(function() {
+                doClick({position: expectedPosScreenCoords});
+            });
 
-                testFeatureInfoProcessing();
+            it('includes vector features alongside raster ones', function(done) {
+                var vectorFeatures = [{
+                    id: new Entity({
+                        name: 'entity1'
+                    })
+                }, {
+                    primitive: {
+                        id: new Entity({
+                            name: 'entity2'
+                        })
+                    }
+                }];
+
+                spyOn(cesium.scene, 'drillPick').and.returnValue(vectorFeatures);
+
+                var rasterFeature = new ImageryLayerFeatureInfo();
+                rasterFeature.name = 'entity3';
+                imageryLayerPromises[0].resolve([rasterFeature]);
+                imageryLayerPromises[1].resolve([]);
+
+                doClick({position: expectedPosScreenCoords});
+
+                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                    expect(cesium.scene.drillPick).toHaveBeenCalledWith(expectedPosScreenCoords);
+
+                    expect(terria.pickedFeatures.features[0].name).toBe('entity1');
+                    expect(terria.pickedFeatures.features[1].name).toBe('entity2');
+                    expect(terria.pickedFeatures.features[2].name).toBe('entity3');
+                }).then(done).otherwise(done.fail);
+            });
+
+            it('records tile coordinates when getting raster features', function(done) {
+                doClick({position: expectedPosScreenCoords});
+
+                imageryLayerPromises[0].resolve([]);
+                imageryLayerPromises[1].resolve([]);
+
+                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                    expect(terria.pickedFeatures.providerCoords['http://example.com/1']).toEqual({
+                        x: 1,
+                        y: 2,
+                        level: 3
+                    });
+                    expect(terria.pickedFeatures.providerCoords['http://example.com/2']).toEqual({
+                        x: 2,
+                        y: 3,
+                        level: 4
+                    });
+                }).then(done).otherwise(done.fail);
             });
         });
     });
 
-    function testFeatureInfoProcessing() {
-        it('correctly processes feature info from imagery providers to a single list of entities', function(done) {
-            var featureInfo1 = new ImageryLayerFeatureInfo();
-            var featureInfo2 = new ImageryLayerFeatureInfo();
-            var featureInfo3 = new ImageryLayerFeatureInfo();
+    function testFeatureInfoProcessing(beforeFn) {
+        describe('correctly processes feature info', function() {
+            beforeEach(beforeFn);
 
-            featureInfo1.name = 'name1';
-            featureInfo2.name = 'name2';
-            featureInfo3.name = 'name3';
+            it('from imagery providers to a single list of entities', function(done) {
+                var featureInfo1 = new ImageryLayerFeatureInfo();
+                var featureInfo2 = new ImageryLayerFeatureInfo();
+                var featureInfo3 = new ImageryLayerFeatureInfo();
 
-            imageryLayerPromises[0].resolve([featureInfo1]);
-            imageryLayerPromises[1].resolve([featureInfo2, featureInfo3]);
+                featureInfo1.name = 'name1';
+                featureInfo2.name = 'name2';
+                featureInfo3.name = 'name3';
 
-            terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
-                expect(terria.pickedFeatures.features[0].name).toBe('name2');
-                expect(terria.pickedFeatures.features[1].name).toBe('name3');
-                expect(terria.pickedFeatures.features[2].name).toBe('name1');
+                imageryLayerPromises[0].resolve([featureInfo1]);
+                imageryLayerPromises[1].resolve([featureInfo2, featureInfo3]);
 
-                expect(terria.pickedFeatures.features[0].imageryLayer).toBe(imageryLayers[1]);
-                expect(terria.pickedFeatures.features[1].imageryLayer).toBe(imageryLayers[1]);
-                expect(terria.pickedFeatures.features[2].imageryLayer).toBe(imageryLayers[0]);
+                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                    expect(terria.pickedFeatures.features[0].name).toBe('name2');
+                    expect(terria.pickedFeatures.features[1].name).toBe('name3');
+                    expect(terria.pickedFeatures.features[2].name).toBe('name1');
 
-                done();
-            }).otherwise(done.fail);
-        });
+                    expect(terria.pickedFeatures.features[0].imageryLayer).toBe(imageryLayers[1]);
+                    expect(terria.pickedFeatures.features[1].imageryLayer).toBe(imageryLayers[1]);
+                    expect(terria.pickedFeatures.features[2].imageryLayer).toBe(imageryLayers[0]);
 
-        it('correctly transforms an ImageryLayerFeatureInfo into an Entity', function(done) {
-            var featureInfo = new ImageryLayerFeatureInfo();
+                    done();
+                }).otherwise(done.fail);
+            });
 
-            featureInfo.name = 'name1';
-            featureInfo.description = 'a description';
-            featureInfo.properties = {};
-            featureInfo.position = Cartographic.fromDegrees(LONG_DEGREES, LAT_DEGREES, HEIGHT);
-            featureInfo.coords = {x: 1, y: 2, level: 3};
+            it('from an ImageryLayerFeatureInfo into an Entity', function(done) {
+                var featureInfo = new ImageryLayerFeatureInfo();
 
-            imageryLayerPromises[0].resolve([featureInfo]);
-            imageryLayerPromises[1].resolve([]);
+                featureInfo.name = 'name1';
+                featureInfo.description = 'a description';
+                featureInfo.properties = {};
+                featureInfo.position = Cartographic.fromDegrees(LONG_DEGREES, LAT_DEGREES, HEIGHT);
+                featureInfo.coords = {x: 1, y: 2, level: 3};
 
-            terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
-                var entity = terria.pickedFeatures.features[0];
+                imageryLayerPromises[0].resolve([featureInfo]);
+                imageryLayerPromises[1].resolve([]);
 
-                expect(entity.id).toBe('name1');
-                expect(entity.name).toBe('name1');
-                expect(entity.properties).toBe(featureInfo.properties);
-                expect(entity.imageryLayer).toBe(imageryLayers[0]);
-                expect(entity.position._value).toEqual(EXPECTED_POS);
-                expect(entity.coords).toEqual({x: 1, y: 2, level: 3});
+                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                    var entity = terria.pickedFeatures.features[0];
 
-                done();
-            }).otherwise(done.fail);
+                    expect(entity.id).toBe('name1');
+                    expect(entity.name).toBe('name1');
+                    expect(entity.properties).toBe(featureInfo.properties);
+                    expect(entity.imageryLayer).toBe(imageryLayers[0]);
+                    expect(entity.position._value).toEqual(EXPECTED_POS);
+                    expect(entity.coords).toEqual({x: 1, y: 2, level: 3});
+
+                    done();
+                }).otherwise(done.fail);
+            });
         });
     }
 
