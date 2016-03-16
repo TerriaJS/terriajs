@@ -1,5 +1,6 @@
 'use strict';
 
+import classNames from 'classnames';
 import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -21,7 +22,9 @@ const ChartExpandButton = React.createClass({
         columnNames: React.PropTypes.array,
         columnUnits: React.PropTypes.array,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        yColumns: React.PropTypes.array
+        yColumns: React.PropTypes.array,
+        canDownload: React.PropTypes.bool,
+        raiseToTitle: React.PropTypes.bool
     },
 
     expandButton() {
@@ -36,17 +39,31 @@ const ChartExpandButton = React.createClass({
         if (!defined(this.props.sources)) {
             return null;
         }
+        let downloadButton;
         if (defined(this.props.sourceNames)) {
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
+            if (this.props.canDownload) {
+                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={sourceNameObjects}>Download</Dropdown>;
+            }
             return (
-                <div className='chart-expand'>
-                    <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand</Dropdown>
+                <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
+                    <div className='chart-dropdown-button'>
+                        {downloadButton}
+                    </div>
+                    <div className='chart-dropdown-button'>
+                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand</Dropdown>
+                    </div>
                 </div>
             );
         }
-
+        if (this.props.canDownload) {
+            downloadButton = <button className='btn btn--chart-expand' onClick={this.downloadButton}>Download</button>;
+        }
         return (
-            <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>
+            <div className='chart-expand'>
+                {downloadButton}
+                <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>
+            </div>
         );
     }
 

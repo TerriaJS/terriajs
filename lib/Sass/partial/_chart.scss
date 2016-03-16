@@ -78,11 +78,11 @@ text {
 }
 
 .btn--chart-expand {
-  position: absolute;
   z-index: 999;
   background: $color-primary;
   padding: 1px 8px;
   right: 0;
+  margin-right: 3px;
 }
 
 .btn--close-chart-panel{
@@ -129,26 +129,37 @@ text {
   margin-right: 7px;
 }
 
-.chart-expand{
+.chart-expand {
   z-index: 999;
+  position: absolute;
+  right: 0;
+  // width: 100%;
+}
+
+.raise-to-title {
+  top: 1px;
+}
+
+.chart-expand .chart-dropdown-button {
+  position: relative;
+  float: right;
 }
 
 .chart-expand .btn--dropdown {
   // largely to undo .btn--dropdown
   // It would be better to add a class to the Add Data dropdown instead.
-  position: absolute;
-  top: -25px;
   background: $color-primary;
   z-index: 999;
   color: white; // TODO
   font-family: $font-pop;
   border: none;
   padding: 1px 8px;
-  right: 0;
+  margin-right: 3px;
   width: auto;
+  float: right;
 }
 
-.chart-expand .btn--dropdown-option {
+.chart-dropdown-button .btn--dropdown-option {
   width: auto;
   float: left;
   color: $color-primary;
