@@ -36,16 +36,20 @@ const ChartPanel = React.createClass({
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
+        let xUnits;
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
                 const xColumn = item.timeColumn;
                 if (defined(xColumn)) {
                     const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
-                    const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
-                    const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
-                    const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
-                    data = data.concat(thisData);
+                    if (yColumns.length > 0) {
+                        const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
+                        const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
+                        const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
+                        data = data.concat(thisData);
+                        xUnits = defined(xUnits) ? xUnits : xColumn.units;
+                    }
                 }
             }
         }
@@ -61,7 +65,7 @@ const ChartPanel = React.createClass({
         }
         if (data.length > 0) {
             chart = (
-                <Chart data={data} height={266}/>
+                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={266}/>
             );
         }
         return (
