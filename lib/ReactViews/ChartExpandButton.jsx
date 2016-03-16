@@ -89,11 +89,15 @@ function expand(props, url) {
                     column.units = props.columnUnits[columnNumber];
                 }
             });
+            if (defined(existingColors)) {
+                tableStructure.columns.forEach((column, columnNumber)=>{
+                    column.color = existingColors[columnNumber];
+                });
+            }
             // Activate columns at the end, so that units and names flow through to the chart panel.
-            if (defined(existingColors) && defined(activeConcepts)) {
+            if (defined(activeConcepts) && activeConcepts.some(a=>a)) {
                 tableStructure.columns.forEach((column, columnNumber)=>{
                     column.isActive = activeConcepts[columnNumber];
-                    column.color = existingColors[columnNumber];
                 });
             } else if (defined(props.yColumns)) {
                 const activeColumns = props.yColumns.map(nameOrIndex=>tableStructure.getColumnWithNameOrIndex(nameOrIndex));
