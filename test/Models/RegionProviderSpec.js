@@ -5,8 +5,6 @@
 var Terria = require('../../lib/Models/Terria');
 var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
-var sinon = require('sinon');
-var URI = require('urijs');
 
 // This test would be nice, but regionProvider.processRegionIds is no longer exposed in the API.
 // We could test it by loading in some json via loadRegionIDs instead.
@@ -42,29 +40,12 @@ var URI = require('urijs');
 describe('RegionProvider', function() {
     var terria;
     var regionProviderList, regionProvider;
-    var fakeServer;
 
     beforeEach(function() {
-        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
-        fakeServer = sinon.fakeServer.create();
-        fakeServer.autoRespond = true;
+        jasmine.Ajax.install();
 
-        fakeServer.xhr.useFilters = true;
-        fakeServer.xhr.addFilter(function(method, url, async, username, password) {
-            // Allow requests for local files.
-            var uri = new URI(url);
-            var protocol = uri.protocol();
-            return !protocol;
-        });
-
-        fakeServer.respond(function(request) {
-            fail('Unhandled request to URL: ' + request.url);
-        });
-
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_CED_2011_AUST&valueReference=CED_CODE',
-            '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
+        jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?service=wfs&version=2.0&request=getPropertyValue&typenames=region_map%3AFID_CED_2011_AUST&valueReference=CED_CODE').andReturn({
+            responseText: '<wfs:ValueCollection xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:region_map="http://region_map" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://regionmap-dev.nationalmap.nicta.com.au:80/region_map/schemas/wfs/2.0/wfs.xsd">\n' +
             '   <wfs:member>\n' +
             '       <region_map:CED_CODE>101</region_map:CED_CODE>\n' +
             '   </wfs:member>\n' +
@@ -74,7 +55,8 @@ describe('RegionProvider', function() {
             '   <wfs:member>\n' +
             '       <region_map:CED_CODE>103</region_map:CED_CODE>\n' +
             '   </wfs:member>\n' +
-            '</wfs:ValueCollection>');
+            '</wfs:ValueCollection>'
+        });
 
         terria = new Terria({
             baseUrl: './',
@@ -88,11 +70,6 @@ describe('RegionProvider', function() {
             serverType: "WMS"
         });
 
-    });
-
-    afterEach(function() {
-        fakeServer.xhr.filters.length = 0;
-        fakeServer.restore();
     });
 
     it('parses WFS xml correctly', function(done) {
