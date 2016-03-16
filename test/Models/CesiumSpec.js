@@ -12,7 +12,6 @@ var supportsWebGL = require('../../lib/Core/supportsWebGL');
 
 var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
 var ImageryLayer = require('terriajs-cesium/Source/Scene/ImageryLayer');
-var ImageryLayerCollection = require('terriajs-cesium/Source/Scene/ImageryLayerCollection');
 var CesiumMath = require('terriajs-cesium/Source/Core/Math');
 var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
