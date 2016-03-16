@@ -8,6 +8,10 @@ var WMSCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var CSVCatalogItem = require('../../lib/Models/CsvCatalogItem');
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var createCatalogMemberFromType = require('../../lib/Models/createCatalogMemberFromType');
+var PickedFeatures = require('../../lib/Map/PickedFeatures');
+var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
+var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 
 describe('SharePopupViewModel', function() {
     var terria;
@@ -39,6 +43,7 @@ describe('SharePopupViewModel', function() {
     function doTests(urlGetter) {
         testUserProperties(urlGetter);
         testSharedCatalogMembers(urlGetter);
+        testFeaturePicking(urlGetter);
     }
 
     /**
@@ -248,11 +253,81 @@ describe('SharePopupViewModel', function() {
                     init();
 
                     var url = urlGetter();
-                    var initSources = JSON.parse(parseUrl(url).start).initSources;
+                    var initSources = getInitSources(url);
 
                     return initSources.length > 2 ? initSources[1].sharedCatalogMembers : {};
                 });
             }
+        });
+    }
+
+    function testFeaturePicking(urlGetter) {
+        describe('when sharing picked features', function() {
+            var parsed;
+
+            beforeEach(function() {
+                terria.selectedFeature = new Entity({
+                    id: 'C-ID',
+                    name: 'C',
+                    imageryLayer: {}
+                });
+
+                var features = new PickedFeatures();
+                features.providerCoords = {
+                    'http://example.com/1': {x: 1, y: 2, level: 3}
+                };
+                features.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(2, 4, 6));
+                features.features = [
+                    new Entity({
+                        id: 'A-ID',
+                        name: 'A'
+                    }),
+                    new Entity({
+                        id: 'B-ID',
+                        name: 'B'
+                    }),
+                    terria.selectedFeature
+                ];
+
+                terria.pickedFeatures = features;
+
+                init();
+
+                var url = urlGetter();
+                parsed = getInitSources(url)[1].pickedFeatures;
+            });
+
+            it('should pass providerCoords as-is', function() {
+                expect(parsed.providerCoords).toEqual({
+                    'http://example.com/1': {x: 1, y: 2, level: 3}
+                });
+            });
+
+            it('should generate pickCoords from pickPosition', function() {
+                // Conversion of coordinates isn't exact
+                expect(parsed.pickCoords).toEqual({
+                    lng: 2,
+                    lat: 3.999999999999998,
+                    height: 6.000000649901364
+                });
+            });
+
+            it('should include id and name of picked vector features while excluding rasters', function() {
+                expect(parsed.entities).toEqual([{
+                    name: 'A',
+                    id: 'A-ID'
+                }, {
+                    name: 'B',
+                    id: 'B-ID'
+                }]);
+            });
+
+            it('should include the id and name of the selected feature', function() {
+                expect(parsed.current).toEqual({
+                    id: 'C-ID',
+                    name: 'C'
+                });
+            });
         });
     }
 
@@ -261,6 +336,10 @@ describe('SharePopupViewModel', function() {
             terria: terria,
             userPropWhiteList: SharePopupViewModel.defaultUserPropWhiteList.concat(['couldBeAnyString'])
         });
+    }
+
+    function getInitSources(url) {
+        return JSON.parse(parseUrl(url).start).initSources;
     }
 
     /**

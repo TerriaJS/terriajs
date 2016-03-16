@@ -8,6 +8,8 @@ var CesiumMath = require('terriajs-cesium/Source/Core/Math');
 var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
+var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 
 
 describe('Leaflet Model', function() {
@@ -299,6 +301,12 @@ describe('Leaflet Model', function() {
                 terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
                     expect(terria.pickedFeatures.isLoading).toBe(false);
                 }).then(done).otherwise(done.fail);
+            });
+
+            it('records pickPosition', function() {
+                trigger();
+
+                expect(terria.pickedFeatures.pickPosition).toEqual(Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(50, 50)));
             });
 
             describe('after feature picked', function() {
