@@ -33,6 +33,19 @@ const ChartPanel = React.createClass({
         }
     },
 
+    synthesizeTableStructure() {
+        const chartableItems = this.props.terria.catalog.chartableItems;
+        for (let i = chartableItems.length - 1; i >= 0; i--) {
+            const item = chartableItems[i];
+            if (item.isEnabled && defined(item.tableStructure)) {
+                const xColumn = item.timeColumn;
+                if (defined(xColumn)) {
+                    const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
+                }
+            }
+        }
+    },
+
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
