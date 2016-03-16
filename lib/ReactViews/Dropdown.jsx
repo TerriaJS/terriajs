@@ -7,7 +7,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 // Uses the contents of the element as the name of the dropdown if none selected.
 const Dropdown = React.createClass({
     propTypes: {
-        options: React.PropTypes.array, // Must be an array of objects with name properties.
+        options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button>.
         selected: React.PropTypes.object,
         selectOption: React.PropTypes.func // The callback function; its arguments are the chosen object and its index.
     },
@@ -61,18 +61,33 @@ const Dropdown = React.createClass({
     renderOptions() {
         const that = this;
         return that.props.options.map((option, i)=>{
-            return (<li key={i}><button onClick={that.select.bind(null, option, i)} className={'btn btn--dropdown-option ' + (option === that.props.selected ? 'is-selected' : '')}>{option.name}</button></li>);
+            return (<li key={i}>{renderOption(that, option, i)}</li>);
         });
     },
 
     render() {
-        return (<div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
-                  <button onClick={this.toggleList} className='btn btn--dropdown' >
+        return (
+            <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
+                <button onClick={this.toggleList} className='btn btn--dropdown' >
                     {defined(this.props.selected) ? this.props.selected.name : this.props.children}
                     <span className="icon icon-dropdown"></span>
-                  </button>
-                  <ul className='dropdown__list'>{this.renderOptions()}</ul>
-                </div>);
+                </button>
+                <ul className='dropdown__list'>{this.renderOptions()}</ul>
+            </div>
+        );
     }
 });
+
+function renderOption(that, option, index) {
+    const className = 'btn btn--dropdown-option ' + (option === that.props.selected ? 'is-selected' : '');
+    if (defined(option.href)) {
+        return (
+            <a href={option.href} className={className}>{option.name}</a>
+        );
+    }
+    return (
+        <button onClick={that.select.bind(null, option, index)} className={className}>{option.name}</button>
+    );
+}
+
 module.exports = Dropdown;

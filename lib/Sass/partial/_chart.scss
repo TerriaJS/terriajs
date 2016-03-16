@@ -159,6 +159,16 @@ text {
   float: right;
 }
 
+.chart-expand a.btn {
+  color: white; // TODO
+  &:hover, &:focus{
+    text-decoration: none;
+  }
+}
+.chart-expand a.btn--dropdown-option {
+  color: $color-primary;
+}
+
 .chart-dropdown-button .btn--dropdown-option {
   width: auto;
   float: left;
