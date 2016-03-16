@@ -4,6 +4,11 @@
 var Leaflet = require('../../lib/Models/Leaflet');
 var Terria = require('../../lib/Models/Terria');
 var L = require('leaflet');
+var CesiumMath = require('terriajs-cesium/Source/Core/Math');
+var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
+var when = require('terriajs-cesium/Source/ThirdParty/when');
+var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+
 
 describe('Leaflet Model', function() {
     var terria;
@@ -12,7 +17,7 @@ describe('Leaflet Model', function() {
 
     beforeEach(function() {
         terria = new Terria({
-            baseUrl : './'
+            baseUrl: './'
         });
         container = document.createElement('div');
         container.id = 'container';
@@ -113,6 +118,246 @@ describe('Leaflet Model', function() {
             layers[0]._tilesToLoad = count;
             layers[1]._tilesToLoad = 0;
             layers[0].fire('tileload');
+        }
+    });
+
+    describe('feature picking', function() {
+        var latlng = {lat: 50, lng: 50};
+        var deferred1, deferred2;
+
+
+        beforeEach(function() {
+            deferred1 = when.defer();
+            deferred2 = when.defer();
+
+            terria.nowViewing.items = [
+                {
+                    isEnabled: true,
+                    isShown: true,
+                    imageryLayer: {
+                        pickFeatures: jasmine.createSpy('pickFeatures').and.returnValue(deferred1.promise),
+                        imageryProvider: {
+                            url: 'http://example.com/1'
+                        }
+                    }
+                },
+                {
+                    isEnabled: true,
+                    isShown: true,
+                    imageryLayer: {
+                        pickFeatures: jasmine.createSpy('pickFeatures').and.returnValue(deferred2.promise),
+                        imageryProvider: {
+                            url: 'http://example.com/2'
+                        }
+                    }
+                },
+                {
+                    isEnabled: false,
+                    isShown: true,
+                    imageryLayer: {
+                        pickFeatures: jasmine.createSpy('pickFeatures'),
+                        imageryProvider: {
+                            url: 'http://example.com/3'
+                        }
+                    }
+                },
+                {
+                    isEnabled: false,
+                    isShown: true,
+                    imageryLayer: {
+                        pickFeatures: jasmine.createSpy('pickFeatures'),
+                        imageryProvider: {
+                            url: 'http://example.com/4'
+                        }
+                    }
+                }
+            ];
+        });
+
+        describe('from location', function() {
+            beforeEach(function() {
+                initLeaflet();
+            });
+
+            commonFeaturePickingTests(function() {
+                leaflet.pickFromLocation(latlng, {});
+            });
+
+            it('uses tileCoordinates when provided', function() {
+                leaflet.pickFromLocation(latlng, {
+                    'http://example.com/1': {x: 100, y: 200, level: 300},
+                    'http://example.com/2': {x: 400, y: 500, level: 600}
+                });
+
+                expect(terria.nowViewing.items[0].imageryLayer.pickFeatures.calls.argsFor(0)[3]).toEqual({
+                    x: 100,
+                    y: 200
+                });
+                expect(terria.nowViewing.items[0].imageryLayer.pickFeatures.calls.argsFor(0)[4]).toBe(300);
+                expect(terria.nowViewing.items[1].imageryLayer.pickFeatures.calls.argsFor(0)[3]).toEqual({
+                    x: 400,
+                    y: 500
+                });
+                expect(terria.nowViewing.items[1].imageryLayer.pickFeatures.calls.argsFor(0)[4]).toBe(600);
+            });
+
+            it('adds existingFeatures to end result', function(done) {
+                var existing = new ImageryLayerFeatureInfo();
+                existing.name = 'existing';
+                leaflet.pickFromLocation(latlng, {}, [existing]);
+                finishPickingPromise();
+
+                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                    expect(terria.pickedFeatures.features[0].name).toBe('existing');
+                }).then(done).otherwise(done.fail);
+            });
+        });
+
+        describe('from click', function() {
+            var click;
+
+            beforeEach(function() {
+                spyOn(map, 'on').and.callFake(function(type, callback) {
+                    if (type === 'click') {
+                        click = callback;
+                    }
+                });
+
+                initLeaflet();
+            });
+
+            commonFeaturePickingTests(function() {
+                click({
+                    latlng: latlng
+                });
+            });
+
+            describe('when combining vector and raster features', function() {
+                var vectorFeature1, vectorFeature2;
+
+                beforeEach(function() {
+                    vectorFeature1 = new Entity({
+                        name: 'vector1'
+                    });
+                    vectorFeature2 = new Entity({
+                        name: 'vector2'
+                    });
+                });
+
+                it('includes vector features with click events both before and after the map click event', function(done) {
+                    // vector and map clicks can come in any order.
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature1);
+                    click({
+                        latlng: latlng
+                    });
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature2);
+
+                    finishPickingPromise();
+
+                    terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                        expect(terria.pickedFeatures.features.length).toBe(5);
+                        expect(terria.pickedFeatures.features[0].name).toBe('vector1');
+                        expect(terria.pickedFeatures.features[1].name).toBe('vector2');
+                        expect(terria.pickedFeatures.features[2].name).toBe('1');
+                    }).then(done).otherwise(done.fail);
+                });
+
+                it('resets the picked vector features if a subsequent map click is made', function(done) {
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature1);
+                    click({
+                        latlng: latlng
+                    });
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature2);
+
+                    // The reset happens in a runLater, which a second click will always come behind in a browser,
+                    // but this isn't guaranteed in unit tests because they're just two setTimeouts racing each other,
+                    // so give this a healthy 500ms delay to make sure it comes in behind the 0ms delay in Leaflet.js.
+                    setTimeout(function() {
+                        click({
+                            latlng: latlng
+                        });
+                        finishPickingPromise();
+                        terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                            expect(terria.pickedFeatures.features.length).toBe(3);
+                            expect(terria.pickedFeatures.features[0].name).toBe('1');
+                        }).then(done).otherwise(done.fail);
+                    }, 500);
+                });
+            });
+        });
+
+        function commonFeaturePickingTests(trigger) {
+            it('correctly tracks loading state', function(done) {
+                expect(terria.pickedFeatures).toBeUndefined();
+
+                trigger();
+
+                expect(terria.pickedFeatures.isLoading).toBe(true);
+
+                finishPickingPromise();
+
+                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
+                    expect(terria.pickedFeatures.isLoading).toBe(false);
+                }).then(done).otherwise(done.fail);
+            });
+
+            describe('after feature picked', function() {
+                beforeEach(trigger);
+
+                it('populates terria.pickedFeatures', function() {
+                    expect(terria.pickedFeatures).toBeDefined();
+                    expect(terria.pickedFeatures.allFeaturesAvailablePromise).toBeDefined();
+                });
+
+                it('calls pickFeatures for all enabled and shown layers', function() {
+                    expect(terria.nowViewing.items[0].imageryLayer.pickFeatures).toHaveBeenCalledWith(
+                        leaflet.map, CesiumMath.toRadians(50), CesiumMath.toRadians(50), undefined, undefined
+                    );
+                    expect(terria.nowViewing.items[1].imageryLayer.pickFeatures).toHaveBeenCalledWith(
+                        leaflet.map, CesiumMath.toRadians(50), CesiumMath.toRadians(50), undefined, undefined
+                    );
+                    expect(terria.nowViewing.items[2].imageryLayer.pickFeatures).not.toHaveBeenCalled();
+                    expect(terria.nowViewing.items[3].imageryLayer.pickFeatures).not.toHaveBeenCalled();
+                });
+
+                describe('after pickFeatures returns for all layers', function() {
+                    beforeEach(function(done) {
+                        finishPickingPromise();
+
+                        terria.pickedFeatures.allFeaturesAvailablePromise.then(done).otherwise(done.fail);
+                    });
+
+                    it('combines promise results', function() {
+                        expect(terria.pickedFeatures.features[0].name).toBe('1');
+                        expect(terria.pickedFeatures.features[1].name).toBe('2');
+                        expect(terria.pickedFeatures.features[2].name).toBe('3');
+                    });
+
+                    it('records pick coords', function() {
+                        expect(terria.pickedFeatures.providerCoords).toEqual({
+                            'http://example.com/1': {x: 1, y: 2, level: 3},
+                            'http://example.com/2': {x: 4, y: 5, level: 6}
+                        });
+                    });
+
+                    it('sets imageryLayer on features', function() {
+                        expect(terria.pickedFeatures.features[0].imageryLayer).toBe(terria.nowViewing.items[0].imageryLayer);
+                        expect(terria.pickedFeatures.features[1].imageryLayer).toBe(terria.nowViewing.items[1].imageryLayer);
+                    });
+                });
+            });
+        }
+
+        function finishPickingPromise() {
+            var featureInfo1 = new ImageryLayerFeatureInfo();
+            featureInfo1.name = '1';
+            var featureInfo2 = new ImageryLayerFeatureInfo();
+            featureInfo2.name = '2';
+            var featureInfo3 = new ImageryLayerFeatureInfo();
+            featureInfo3.name = '3';
+
+            deferred1.resolve({features: [featureInfo1], coords: {x: 1, y: 2, level: 3}});
+            deferred2.resolve({features: [featureInfo2, featureInfo3], coords: {x: 4, y: 5, level: 6}});
         }
     });
 });
