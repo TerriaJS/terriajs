@@ -18,7 +18,8 @@ const ChartPanel = React.createClass({
         terria: React.PropTypes.object.isRequired,
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
-        onClose: React.PropTypes.func
+        onClose: React.PropTypes.func,
+        viewState: React.PropTypes.object
     },
 
     closePanel() {
@@ -31,6 +32,11 @@ const ChartPanel = React.createClass({
                     .forEach(column=>column.toggleActive());
             }
         }
+    },
+
+    bringToFront(){
+        //bring chart to front
+        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
     },
 
     render() {
@@ -69,7 +75,7 @@ const ChartPanel = React.createClass({
             );
         }
         return (
-            <div className="chart-panel__holder" tabIndex='-1'>
+            <div className={`chart-panel__holder ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart ? 'is-top' : ''}`} onClick={this.bringToFront}>
                 <div className="chart-panel__holder__inner">
                     <div className="chart-panel" style={{height: 300}}>
                         <div className="chart-panel__body">

@@ -199,7 +199,6 @@ text {
   stroke-width: 2;
 }
 
-.chart-panel__holder:focus{
+.chart-panel__holder.is-top{
   z-index: 99;
-  outline: none;
 }

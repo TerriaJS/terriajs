@@ -92,9 +92,8 @@
   right: 0;
 }
 
-.feature-info-panel:focus{
+.feature-info-panel.is-top{
     z-index: 99;
-    outline: none;
 }
 
 .feature-info-panel__content{
