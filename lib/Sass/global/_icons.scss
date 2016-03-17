@@ -68,6 +68,7 @@
 //.icon-twitter - icon
 //.icon-link - icon
 //.icon-menu - icon
+//.icon-download -icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -96,6 +97,9 @@
   margin-left: $padding-small;
 }
 
+.icon-download:before {
+    content: "\e91e";
+}
 .icon-twitter:before {
     content: "\e900";
 }
@@ -186,4 +190,3 @@
 .icon-radio-on:before {
     content: "\e91c";
 }
-
