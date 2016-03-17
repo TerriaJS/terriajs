@@ -70,7 +70,6 @@ const Dropdown = React.createClass({
             <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
                 <button onClick={this.toggleList} className='btn btn--dropdown' >
                     {defined(this.props.selected) ? this.props.selected.name : this.props.children}
-                    <span className="icon icon-dropdown"></span>
                 </button>
                 <ul className='dropdown__list'>{this.renderOptions()}</ul>
             </div>

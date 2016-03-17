@@ -45,7 +45,7 @@ const ChartExpandButton = React.createClass({
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
             const nameAndHrefObjects = this.props.sourceNames.map((name, i)=>{ return {name: name, href: that.props.sources[i]}; });
             if (this.props.canDownload) {
-                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects}>Download</Dropdown>;
+                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects}><i className='icon icon--dropdown'></i></Dropdown>;
             }
             return (
                 <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
@@ -60,7 +60,7 @@ const ChartExpandButton = React.createClass({
         }
         if (this.props.canDownload) {
             const href = this.props.sources[0];
-            downloadButton = <a className='btn btn--chart-expand' href={href}>Download</a>;
+            downloadButton = <a className='btn btn--download' href={href}></a>;
         }
         return (
             <div className='chart-expand'>
