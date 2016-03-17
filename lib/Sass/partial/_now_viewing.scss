@@ -2,7 +2,7 @@
 $now-viewing-margin: $padding-small - 1px;
 
 .now-viewing{
-  background: rgba(#fff, 0.15);
+  background: $overlay;
   padding: 0  $padding-small;
   overflow-y: scroll;
   @media(screen and min-width: $sm){

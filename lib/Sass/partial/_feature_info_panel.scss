@@ -79,7 +79,8 @@
 
 
 .feature-info-panel__section{
-  background: rgba(255, 255, 255, 0.04);
+  @extend .clearfix;
+  background: $overlay;
 }
 
 .feature-info-panel__content{
