@@ -38,19 +38,30 @@ const ChartPanel = React.createClass({
     synthesizeTableStructure() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         const columnArrays = [];
+        const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             let columns = [item.timeColumn];
             if (item.isEnabled && defined(item.tableStructure)) {
-                if (defined(columns)) {
-                    columns = columns.concat(item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive));
+                if (!defined(columns[0])) {
+                    continue;
+                }
+                const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
+                columns = columns.concat(yColumns);
+                columnArrays.push(columns);
+                for (let j = yColumns.length - 1; j >= 0; j--) {
+                    columnItemNames.push(item.name);
                 }
             }
-            if (columns.length > 1) {
-                columnArrays.push(columns);
+        }
+        const result = TableStructure.fromColumnArrays(columnArrays);
+        // Adjust the column names.
+        if (defined(result)) {
+            for (let k = result.columns.length - 1; k >= 0; k--) {
+                result.columns[k].name = columnItemNames[k] + ' ' + result.columns[k].name;
             }
         }
-        return TableStructure.fromColumnArrays(columnArrays);
+        return result;
     },
 
     render() {
@@ -89,7 +100,7 @@ const ChartPanel = React.createClass({
             );
         }
         const tableStructureToDownload = this.synthesizeTableStructure();
-        // TODO: add checkForCompa
+        // TODO: add checkForCompatability.
         const href = defined(tableStructureToDownload) ? DataUri.make('csv', tableStructureToDownload.toCsvString()) : '';
         return (
             <div className="chart-panel__holder" tabIndex='-1'>
