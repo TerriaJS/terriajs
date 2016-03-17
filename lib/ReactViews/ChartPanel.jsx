@@ -55,8 +55,6 @@ const ChartPanel = React.createClass({
                 }
             }
         }
-        return TableStructure.fromColumnArrays(columnArrays);
-
         const result = TableStructure.fromColumnArrays(columnArrays);
         // Adjust the column names.
         if (defined(result)) {
