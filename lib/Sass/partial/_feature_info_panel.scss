@@ -26,7 +26,7 @@
 // Style guide: Component.feature-info-panel
 
 .feature-info-panel{
-  background:rgba($dark, 0.9);
+  background:rgba($dark, 0.95);
   color: #fff;
   border-radius: $radius-small;
   display: none;
@@ -44,6 +44,10 @@
   }
 }
 
+.feature-info-panel__section {
+  border-top: 1px solid $dark-lighter;
+}
+
 .feature-info-panel__sections,
 .feature-info-panel__body{
   @extend .list-reset;
@@ -55,11 +59,16 @@
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
 }
 
+.feature-info-panel__header{
+  background: $dark;
+}
+
 .feature-info-panel__title{
   position: relative;
   width: 100%;
+  background: $dark;
   @extend .btn--toggle;
-  padding: $padding $padding*2 $padding 0;
+  padding: $padding $padding*2 $padding $padding;
   &:before{
     position: absolute;
     right: 0;
@@ -70,9 +79,8 @@
 
 
 .feature-info-panel__section{
-  background: rgba(#fff, 0.1);
-  padding: 0 $padding;
-  border-bottom: 1px solid rgba($dark, 0.8);
+  @extend .clearfix;
+  background: $overlay;
 }
 
 .feature-info-panel__content{
@@ -83,7 +91,6 @@
 }
 
 .feature-info__group{
-  margin: $padding-mini 0;
 }
 
 .btn--close-feature{
@@ -92,14 +99,16 @@
   right: 0;
 }
 
-.feature-info-panel:focus{
+.feature-info-panel.is-top{
     z-index: 99;
-    outline: none;
 }
 
 .feature-info-panel__content{
   position: relative;
   td{
     position: relative;
+  }
+  p{
+    padding: 0 $padding;
   }
 }

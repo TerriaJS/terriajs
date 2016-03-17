@@ -93,7 +93,6 @@ text {
 }
 
 .chart, .chart-title-from-table {
-  background: rgba(#fff, 0.15);
   line-height: 2;
 }
 
@@ -220,7 +219,6 @@ text {
   stroke-width: 2;
 }
 
-.chart-panel__holder:focus{
+.chart-panel__holder.is-top{
   z-index: 99;
-  outline: none;
 }

@@ -36,6 +36,10 @@
     left: 0;
     top: 0;
     padding: $padding-small;
+    font-size: 1.6rem;
+    &.btn--remove-from-map{
+      font-size: 1.7rem;
+    }
   }
 }
 .data--catalog-group{
