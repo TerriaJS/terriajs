@@ -41,6 +41,7 @@
     "generate-terriajs-schema": "^1.2.1",
     "glob-all": "^3.0.1",
     "gulp-jshint": "^2.0.0",
+    "gulp-typescript": "^2.12.1",
     "gulp-util": "^3.0.7",
     "jasmine-core": "^2.4.1",
     "jsdoc": "^3.4.0",

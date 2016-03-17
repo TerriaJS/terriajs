@@ -98,11 +98,22 @@ gulp.task('lint', function() {
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('docs', function(done) {
+gulp.task('transform-typescript', function() {
+    var typescript = require('gulp-typescript');
+
+    return gulp.src('lib/**/*.ts')
+            .pipe(typescript({
+                outDir: 'build/',
+                target: 'ES5'
+            }))
+            .pipe(gulp.dest('build/generated'));
+});
+
+gulp.task('docs', ['transform-typescript'], function(done) {
     var child_exec = require('child_process').exec;
 
     var jsdocPath = require.resolve('jsdoc/jsdoc.js');
-    child_exec('node "' + jsdocPath + '" ./lib -c ./buildprocess/jsdoc.json', undefined, done);
+    child_exec('node "' + jsdocPath + '" ./lib ./build/generated -c ./buildprocess/jsdoc.json', undefined, done);
 });
 
 
