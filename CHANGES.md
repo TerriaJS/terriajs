@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.3.0
+
+* Share links now contain details about the picked point, picked features and currently selected feature.
+
 ### 2.2.1
 
 * Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
