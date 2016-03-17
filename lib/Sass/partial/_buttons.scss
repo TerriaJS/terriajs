@@ -322,7 +322,7 @@ download;
   font-style: italic;
   position: relative;
   width: 100%;
-  padding: $padding-small $padding*2.2 $padding-small $padding*3;
+  padding: $padding-small $padding*2.2 $padding-small $padding*4;
   @extend .btn--right;
   &:before{
       opacity: 0;
