@@ -111,7 +111,7 @@ const ChartPanel = React.createClass({
             const href = DataUri.make('csv', tableStructureToDownload.toCsvString());
             // TODO: if you add true to this to forceError, you'll see it never gets raised... why?
             const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.terria, href);
-            downloadButton = <a className='btn btn--chart-expand' download='chart data.csv' href={href} onClick={checkCompatibility}>Download</a>;
+            downloadButton = <a className='btn btn--download' download='chart data.csv' href={href} onClick={checkCompatibility}>Download</a>;
         }
         return (
             <div className={`chart-panel__holder ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart ? 'is-top' : ''}`} onClick={this.bringToFront}>
@@ -121,7 +121,7 @@ const ChartPanel = React.createClass({
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <div className='left'><span className="chart-panel__section-label label">{loader || 'Charts'}</span></div>
                                 <div className='right'>
-                                    <a download='chart data.csv' className='btn--download btn' href={href}>Download</a>
+                                    {downloadButton}
                                     <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
                                 </div>
                             </div>
