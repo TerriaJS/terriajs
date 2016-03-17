@@ -35,28 +35,41 @@ const ChartPanel = React.createClass({
             }
         }
     },
+
     synthesizeTableStructure() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         const columnArrays = [];
+        const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             let columns = [item.timeColumn];
             if (item.isEnabled && defined(item.tableStructure)) {
-                if (defined(columns)) {
-                    columns = columns.concat(item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive));
+                if (!defined(columns[0])) {
+                    continue;
                 }
-            }
-            if (columns.length > 1) {
+                const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
+                columns = columns.concat(yColumns);
                 columnArrays.push(columns);
+                for (let j = yColumns.length - 1; j >= 0; j--) {
+                    columnItemNames.push(item.name);
+                }
             }
         }
         return TableStructure.fromColumnArrays(columnArrays);
-    },
 
-    bringToFront() {
+        const result = TableStructure.fromColumnArrays(columnArrays);
+        // Adjust the column names.
+        if (defined(result)) {
+            for (let k = result.columns.length - 1; k >= 0; k--) {
+                result.columns[k].name = columnItemNames[k] + ' ' + result.columns[k].name;
+            }
+        }
+        return result;
+},
+
+    bringToFront(){
         //bring chart to front
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
-
     },
 
     render() {
@@ -95,8 +108,13 @@ const ChartPanel = React.createClass({
             );
         }
         const tableStructureToDownload = this.synthesizeTableStructure();
-        // TODO: add checkForCompa
-        const href = defined(tableStructureToDownload) ? DataUri.make('csv', tableStructureToDownload.toCsvString()) : '';
+        let downloadButton;
+        if (defined(tableStructureToDownload)) {
+            const href = DataUri.make('csv', tableStructureToDownload.toCsvString());
+            // TODO: if you add true to this to forceError, you'll see it never gets raised... why?
+            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.terria, href);
+            downloadButton = <a className='btn btn--chart-expand' download='chart data.csv' href={href} onClick={checkCompatibility}>Download</a>;
+        }
         return (
             <div className={`chart-panel__holder ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart ? 'is-top' : ''}`} onClick={this.bringToFront}>
                 <div className="chart-panel__holder__inner">
