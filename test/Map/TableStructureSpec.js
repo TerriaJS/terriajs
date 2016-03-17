@@ -86,6 +86,14 @@ describe('TableStructure', function() {
         expect(rows).toEqual(target);
     });
 
+    it('can convert to csv', function() {
+        var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
+        var tableStructure = new TableStructure();
+        tableStructure = tableStructure.loadFromJson(data);
+        var csvString = tableStructure.toCsvString();
+        expect(csvString).toEqual('x,y\n1.678,9.883\n54321,12345\n4,-3');
+    });
+
     it('can convert to row objects', function() {
         var data = [['x', 'y'], [1, 5.12345], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
