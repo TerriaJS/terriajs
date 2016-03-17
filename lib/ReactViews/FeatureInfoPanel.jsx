@@ -77,10 +77,17 @@ const FeatureInfoPanel = React.createClass({
         return <li className='no-results'> No results </li>;
     },
 
+    bringToFront() {
+        //bring feature info panel to front
+        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.featureInfoPanel);
+    },
+
     render() {
         const pickedFeatures = this.getFeatures();
         return (
-            <div tabIndex='-1' className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '') + ' ' + (this.props.isVisible ? 'is-visible' : '')} aria-hidden={!this.props.isVisible}>
+            <div className={`feature-info-panel ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.featureInfoPanel ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
+                aria-hidden={!this.props.isVisible}
+                onClick={this.bringToFront} >
               <div className='feature-info-panel__header'>
                 <button onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Info Panel </button>
                 <button onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>

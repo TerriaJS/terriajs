@@ -20,7 +20,8 @@ const ChartPanel = React.createClass({
         terria: React.PropTypes.object.isRequired,
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
-        onClose: React.PropTypes.func
+        onClose: React.PropTypes.func,
+        viewState: React.PropTypes.object
     },
 
     closePanel() {
@@ -34,7 +35,6 @@ const ChartPanel = React.createClass({
             }
         }
     },
-
     synthesizeTableStructure() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         const columnArrays = [];
@@ -51,6 +51,12 @@ const ChartPanel = React.createClass({
             }
         }
         return TableStructure.fromColumnArrays(columnArrays);
+    },
+
+    bringToFront() {
+        //bring chart to front
+        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
+
     },
 
     render() {
@@ -92,14 +98,16 @@ const ChartPanel = React.createClass({
         // TODO: add checkForCompa
         const href = defined(tableStructureToDownload) ? DataUri.make('csv', tableStructureToDownload.toCsvString()) : '';
         return (
-            <div className="chart-panel__holder" tabIndex='-1'>
+            <div className={`chart-panel__holder ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart ? 'is-top' : ''}`} onClick={this.bringToFront}>
                 <div className="chart-panel__holder__inner">
                     <div className="chart-panel" style={{height: 300}}>
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
-                                <span className="chart-panel__section-label label">{loader || 'Charts'}</span>
-                                <a className='btn btn--chart-expand' download='chart data.csv' href={href}>Download</a>
-                                <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
+                                <div className='left'><span className="chart-panel__section-label label">{loader || 'Charts'}</span></div>
+                                <div className='right'>
+                                    <a download='chart data.csv' className='btn--download btn' href={href}>Download</a>
+                                    <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
+                                </div>
                             </div>
                             <div>
                                 {chart}

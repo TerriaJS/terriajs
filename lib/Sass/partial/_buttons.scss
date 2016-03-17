@@ -103,10 +103,11 @@ $btn-setting-size: 35px;
 //.btn--share - icon button
 //.btn--sphere - icon button
 //.btn--visible - icon button
-//.btn--facebook -icon button
-//.btn--twitter -icon button
-//.btn--link -icon button
-//.btn--menu -icon button
+//.btn--facebook - icon button
+//.btn--twitter - icon button
+//.btn--link - icon button
+//.btn--menu - icon button
+//.btn--download - icon button
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -143,7 +144,8 @@ geolocation,
 facebook,
 twitter,
 link,
-menu;
+menu,
+download;
 
 
 @each $icon in $icons {
@@ -320,7 +322,7 @@ menu;
   font-style: italic;
   position: relative;
   width: 100%;
-  padding: $padding-small $padding*2.2 $padding-small $padding*3;
+  padding: $padding-small $padding*2.2 $padding-small $padding*4;
   @extend .btn--right;
   &:before{
       opacity: 0;
@@ -415,9 +417,9 @@ a.btn--map{
   position: absolute;
   right: 0;
   top: 0;
+  padding: $padding;
   @extend .icon;
   @extend .icon-clear;
-  @extend .sm-hide;
 }
 
 

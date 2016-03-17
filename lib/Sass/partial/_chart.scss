@@ -75,6 +75,20 @@ text {
 
 .chart-panel__header{
   position: relative;
+  @extend .clearfix;
+  .left{
+    @extend .col;
+    @extend .col-8;
+  }
+  .right{
+    @extend .col;
+    @extend .col-4;
+  }
+  .btn--download{
+    text-transform: uppercase;
+    color: #fff;
+    display: flex;
+  }
 }
 
 .btn--chart-expand {
@@ -93,7 +107,6 @@ text {
 }
 
 .chart, .chart-title-from-table {
-  background: rgba(#fff, 0.15);
   line-height: 2;
 }
 
@@ -220,7 +233,8 @@ text {
   stroke-width: 2;
 }
 
-.chart-panel__holder:focus{
+.chart-panel__holder.is-top{
   z-index: 99;
-  outline: none;
 }
+
+
