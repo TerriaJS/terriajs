@@ -100,8 +100,13 @@ const ChartPanel = React.createClass({
             );
         }
         const tableStructureToDownload = this.synthesizeTableStructure();
-        // TODO: add checkForCompatability.
-        const href = defined(tableStructureToDownload) ? DataUri.make('csv', tableStructureToDownload.toCsvString()) : '';
+        let downloadButton;
+        if (defined(tableStructureToDownload)) {
+            const href = DataUri.make('csv', tableStructureToDownload.toCsvString());
+            // TODO: if you add true to this to forceError, you'll see it never gets raised... why?
+            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.terria, href);
+            downloadButton = <a className='btn btn--chart-expand' download='chart data.csv' href={href} onClick={checkCompatibility}>Download</a>;
+        }
         return (
             <div className="chart-panel__holder" tabIndex='-1'>
                 <div className="chart-panel__holder__inner">
@@ -109,7 +114,7 @@ const ChartPanel = React.createClass({
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <span className="chart-panel__section-label label">{loader || 'Charts'}</span>
-                                <a className='btn btn--chart-expand' download='chart data.csv' href={href}>Download</a>
+                                {downloadButton}
                                 <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
                             </div>
                             <div>
