@@ -104,7 +104,7 @@ gulp.task('transform-typescript', function() {
     return gulp.src('lib/**/*.ts')
             .pipe(typescript({
                 outDir: 'build/',
-                target: 'ES5'
+                target: 'ES2015'
             }))
             .pipe(gulp.dest('build/generated'));
 });

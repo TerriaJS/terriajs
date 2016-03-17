@@ -15,12 +15,6 @@ var updateFromJson = require('../Core/updateFromJson');
 /**
  * A member of a {@link CatalogGroup}.  A member may be a {@link CatalogItem} or a
  * {@link CatalogGroup}.
- *
- * @alias CatalogMember
- * @constructor
- * @abstract
- *
- * @param {Terria} terria The Terria instance.
  */
 abstract class CatalogMember {
     private _terria: any;
@@ -132,6 +126,10 @@ abstract class CatalogMember {
      */
     public parent: any = undefined;
 
+    /**
+     * Initializes a new instance.
+     * @param {Terria} terria The Terria instance.
+     */
     constructor(terria) {
         this._terria = terria;
         knockout.track(this, ['name', 'info', 'infoSectionOrder', 'description', 'isUserSupplied', 'isPromoted', 'initialMessage', 'isHidden', 'cacheDuration', 'customProperties']);
