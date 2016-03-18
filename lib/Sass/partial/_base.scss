@@ -449,3 +449,12 @@ textarea {
 {
   background: rgba(#000, 0.3);
 }
+
+
+.bottom-dock {
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    left: 360px;
+}

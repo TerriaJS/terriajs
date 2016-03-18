@@ -104,20 +104,20 @@ const TimelineControls = React.createClass({
                 <button className="animation-control" onClick={this.togglePlay} title="Play">
                     PLAY
                 </button>
-                <div className="animation-control"
+                <button className="animation-control"
                      onClick={this.playSlower}
                      title="Play Slower">
                     SLOW
-                </div>
-                <div className="animation-control animation-control-nofill"
+                </button>
+                <button className="animation-control animation-control-nofill"
                      onClick={this.playFaster}
                      title="Play Faster">
                     FAST
-                </div>
-                <div className="animation-control animation-control-last" onClick={this.toggleLoop}
+                </button>
+                <button className="animation-control animation-control-last" onClick={this.toggleLoop}
                      title="Loop at the end">
                     LOOP
-                </div>
+                </button>
             </div>
         );
     }
