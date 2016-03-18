@@ -4,23 +4,20 @@ import React from 'react';
 import AnimationViewModel from '../../ViewModels/AnimationViewModel';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
-import CesiumTimeline from 'terriajs-cesium/Source/Widgets/Timeline';
+import WrappedTimeline from 'terriajs-cesium/Source/Widgets/Timeline/Timeline';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import {formatDateTime, formatDate, formatTime} from './DateFormats';
 
-const Timeline = React.createClass({
+const CesiumTimeline = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         autoPlay: React.PropTypes.bool
     },
 
-    getInitialState() {
+    componentDidMount() {
+        this.cesiumTimeline = new WrappedTimeline(this.timelineContainer, this.props.terria.clock);
 
-    },
-
-    componentWillMount() {
-        this.cesiumTimeline = new CesiumTimeline(this.timelineContainer, this.props.terria.clock);
-
-        this.cesiumTimeline.makeLabel = function(time) {
+        this.cesiumTimeline.makeLabel = time => {
             const totalDays = JulianDate.daysDifference(this.props.terria.clock.stopTime, this.props.terria.clock.startTime);
             if (totalDays > 14) {
                 return formatDate(JulianDate.toDate(time), this.locale);
@@ -31,7 +28,7 @@ const Timeline = React.createClass({
             return formatDateTime(JulianDate.toDate(time), this.locale);
         };
 
-        this.cesiumTimeline.scrubFunction = function(e) {
+        this.cesiumTimeline.scrubFunction = e => {
             const clock = e.clock;
             clock.currentTime = e.timeJulian;
             clock.shouldAnimate = false;
@@ -42,11 +39,15 @@ const Timeline = React.createClass({
         this.cesiumTimeline.zoomTo(this.terria.clock.startTime, this.terria.clock.stopTime);
     },
 
+    shouldComponentUpdate() {
+        return false;
+    },
+
     render() {
         return (
-            <div class="animation-timeline" ref={ref => this.timelineContainer = ref} />
+            <div className="animation-timeline" ref={ref => this.timelineContainer = ref} />
         );
     }
 });
 
-module.exports = Timeline;
+module.exports = CesiumTimeline;

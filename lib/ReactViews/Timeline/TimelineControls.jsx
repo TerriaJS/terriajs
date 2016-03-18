@@ -4,6 +4,7 @@ import React from 'react';
 
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import {formatDateTime} from './DateFormats';
 
 const TimelineControls = React.createClass({
     propTypes: {
@@ -14,7 +15,9 @@ const TimelineControls = React.createClass({
     },
 
     getInitialState() {
-
+        return {
+            currentTimeString: ''
+        };
     },
 
     componentWillMount() {
@@ -90,35 +93,30 @@ const TimelineControls = React.createClass({
     render() {
         return (
             <div>
-                <div class="animation-text" title="Current Time (tz info et al)">
-                    <div class="animation-text-display" data-bind="text: currentTimeString"></div>
+                <div className="animation-text" title="Current Time (tz info et al)">
+                    <div className="animation-text-display">{this.state.currentTimeString}</div>
                 </div>
-                <div class="animation-control"
-                     data-bind="event: {click: gotoStart, mousedown: function() {gotoStartActive = true;} , mouseup: function() {gotoStartActive = false;}}"
+                <button className="animation-control"
+                     onClick={this.gotoStart}
                      title="Go to beginning">
-                    <div class="animation-control-icon animation-control-nofill"
-                         data-bind="cesiumSvgPath: { path: svgGotoStart, width: 16, height: 16}, css: { 'animation-control-highlight': gotoStartActive }"></div>
+                    START
+                </button>
+                <button className="animation-control" onClick={this.togglePlay} title="Play">
+                    PLAY
+                </button>
+                <div className="animation-control"
+                     onClick={this.playSlower}
+                     title="Play Slower">
+                    SLOW
                 </div>
-                <div class="animation-control" data-bind="click: togglePlay" title="Play">
-                    <div class="animation-control-icon"
-                         data-bind="cesiumSvgPath: { path: isPlaying ? $root.svgPause : $root.svgPlay, width: 18, height: 18}"></div>
+                <div className="animation-control animation-control-nofill"
+                     onClick={this.playFaster}
+                     title="Play Faster">
+                    FAST
                 </div>
-                <div class="animation-control"
-                     data-bind="event: {click: playSlower, mousedown: function() {slowerActive = true;} , mouseup: function() {slowerActive = false;}}"
-                     title="Play slower">
-                    <div class="animation-control-icon animation-control-nofill"
-                         data-bind="cesiumSvgPath: { path: svgSlower, width: 16, height: 16}, css: { 'animation-control-highlight': slowerActive }"></div>
-                </div>
-                <div class="animation-control animation-control-nofill"
-                     data-bind="event: {click: playFaster, mousedown: function() {fasterActive = true;} , mouseup: function() {fasterActive = false;}}"
-                     title="Play faster">
-                    <div class="animation-control-icon"
-                         data-bind="cesiumSvgPath: { path: svgFaster, width: 16, height: 16}, css: { 'animation-control-highlight': fasterActive }"></div>
-                </div>
-                <div class="animation-control animation-control-last" data-bind="click: toggleLoop"
+                <div className="animation-control animation-control-last" onClick={this.toggleLoop}
                      title="Loop at the end">
-                    <div class="animation-control-icon"
-                         data-bind="cesiumSvgPath: { path: svgLoop, width: 16, height: 16}, css: { 'animation-control-active': isLooping }"></div>
+                    LOOP
                 </div>
             </div>
         );

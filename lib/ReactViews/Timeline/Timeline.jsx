@@ -3,7 +3,9 @@
 import React from 'react';
 import AnimationViewModel from '../../ViewModels/AnimationViewModel';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import defined from ''
+import TimelineControls from './TimelineControls';
+import CesiumTimeline from './CesiumTimeline';
+import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 
 const Timeline = React.createClass({
     propTypes: {
@@ -13,7 +15,6 @@ const Timeline = React.createClass({
 
     getInitialState() {
         return {
-            isPlaying: false,
             isLooping: false
         };
     },
@@ -24,51 +25,31 @@ const Timeline = React.createClass({
     },
 
     updateForNewTopLayer() {
+        const terria = this.props.terria;
 
+        //default to playing and looping when shown unless told otherwise
+        if (this.props.autoPlay) {
+            terria.clock.tick();
+            terria.clock.shouldAnimate = true;
+        }
+        terria.clock.clockRange = ClockRange.LOOP_STOP;
+
+        this.setState({
+            isLooping: terria.clock.clockRange === ClockRange.LOOP_STOP,
+            layerName: terria.timeSeriesStack.topLayer.name
+        });
     },
 
-
-
     render() {
+        const terria = this.props.terria;
+
         return (
             <div>
-                <div class="animation-controls" data-bind="visible: showAnimation">
-                    <div class="animation-text" title="Current Time (tz info et al)">
-                        <div class="animation-text-display" data-bind="text: currentTimeString"></div>
-                    </div>
-                    <div class="animation-control"
-                         data-bind="event: {click: gotoStart, mousedown: function() {gotoStartActive = true;} , mouseup: function() {gotoStartActive = false;}}"
-                         title="Go to beginning">
-                        <div class="animation-control-icon animation-control-nofill"
-                             data-bind="cesiumSvgPath: { path: svgGotoStart, width: 16, height: 16}, css: { 'animation-control-highlight': gotoStartActive }"></div>
-                    </div>
-                    <div class="animation-control" data-bind="click: togglePlay" title="Play">
-                        <div class="animation-control-icon"
-                             data-bind="cesiumSvgPath: { path: isPlaying ? $root.svgPause : $root.svgPlay, width: 18, height: 18}"></div>
-                    </div>
-                    <div class="animation-control"
-                         data-bind="event: {click: playSlower, mousedown: function() {slowerActive = true;} , mouseup: function() {slowerActive = false;}}"
-                         title="Play slower">
-                        <div class="animation-control-icon animation-control-nofill"
-                             data-bind="cesiumSvgPath: { path: svgSlower, width: 16, height: 16}, css: { 'animation-control-highlight': slowerActive }"></div>
-                    </div>
-                    <div class="animation-control animation-control-nofill"
-                         data-bind="event: {click: playFaster, mousedown: function() {fasterActive = true;} , mouseup: function() {fasterActive = false;}}"
-                         title="Play faster">
-                        <div class="animation-control-icon"
-                             data-bind="cesiumSvgPath: { path: svgFaster, width: 16, height: 16}, css: { 'animation-control-highlight': fasterActive }"></div>
-                    </div>
-                    <div class="animation-control animation-control-last" data-bind="click: toggleLoop"
-                         title="Loop at the end">
-                        <div class="animation-control-icon"
-                             data-bind="cesiumSvgPath: { path: svgLoop, width: 16, height: 16}, css: { 'animation-control-active': isLooping }"></div>
-                    </div>
+                <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
+                <div className="animation-name animation-text" title="Current Layer">
+                    <div className="animation-text-display">{this.state.layerName}</div>
                 </div>
-                <div class="animation-name animation-text" data-bind="visible: showAnimation" title="Current Layer">
-                    <div class="animation-text-display" data-bind="text: layerName"></div>
-                </div>
-                <div class="animation-timeline" data-bind="visible: showAnimation">
-                </div>
+                <CesiumTimeline terria={terria} />
             </div>
         );
     }
