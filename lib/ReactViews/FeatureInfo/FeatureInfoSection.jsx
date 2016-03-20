@@ -5,9 +5,9 @@ import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import CustomComponents from '../Models/CustomComponents';
-import markdownToHtml from '../Core/markdownToHtml';
-import parseCustomHtmlToReact from '../Models/parseCustomHtmlToReact';
+import CustomComponents from '../../Models/CustomComponents';
+import markdownToHtml from '../../Core/markdownToHtml';
+import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({

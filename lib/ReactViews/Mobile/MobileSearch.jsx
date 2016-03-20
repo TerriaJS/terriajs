@@ -4,7 +4,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
 import LocationItem from '../LocationItem.jsx';
-import DataCatalogMember from '../DataCatalogMember.jsx';
+import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
 import classNames from 'classnames';
 
 // A Location item when doing Bing map searvh or Gazetter search

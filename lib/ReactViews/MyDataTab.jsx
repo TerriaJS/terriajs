@@ -1,6 +1,6 @@
 'use strict';
 const React = require('react');
-const DataCatalogGroup = require('./DataCatalogGroup.jsx');
+const DataCatalogGroup = require('./DataCatalog/DataCatalogGroup.jsx');
 const DataPreview = require('./DataPreview.jsx');
 const AddData = require('./AddData.jsx');
 import ObserveModelMixin from './ObserveModelMixin';

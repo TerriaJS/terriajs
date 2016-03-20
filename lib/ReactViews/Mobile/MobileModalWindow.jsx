@@ -1,7 +1,7 @@
 'use strict';
 
 import classNames from 'classnames';
-import DataCatalogMember from '../DataCatalogMember.jsx';
+import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
 import DataPreview from '../DataPreview.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import MobileSearch from './MobileSearch.jsx';

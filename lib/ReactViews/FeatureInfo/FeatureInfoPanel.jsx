@@ -2,8 +2,8 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
-import Loader from './Loader.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import Loader from '../Loader.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 

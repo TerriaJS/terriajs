@@ -1,6 +1,6 @@
 'use strict';
 
-import DataCatalogMember from './DataCatalogMember.jsx';
+import DataCatalogMember from './DataCatalog/DataCatalogMember.jsx';
 import DataPreview from './DataPreview.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
