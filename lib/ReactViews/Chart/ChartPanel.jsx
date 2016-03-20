@@ -2,15 +2,15 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import DataUri from '../Core/DataUri';
-import TableStructure from '../Map/TableStructure';
-import VarType from '../Map/VarType';
+import DataUri from '../../Core/DataUri';
+import TableStructure from '../../Map/TableStructure';
+import VarType from '../../Map/VarType';
 
 import Chart from './Chart.jsx';
-import ChartData from '../Charts/ChartData';
-import Loader from './Loader.jsx';
+import ChartData from '../../Charts/ChartData';
+import Loader from '../Loader.jsx';
 // import Loader from './Loader.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
 const ChartPanel = React.createClass({

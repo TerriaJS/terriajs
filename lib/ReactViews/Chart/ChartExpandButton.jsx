@@ -5,10 +5,10 @@ import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import CatalogGroup from '../Models/CatalogGroup';
-import CsvCatalogItem from '../Models/CsvCatalogItem';
-import Dropdown from './Dropdown';
-import raiseErrorToUser from '../Models/raiseErrorToUser';
+import CatalogGroup from '../../Models/CatalogGroup';
+import CsvCatalogItem from '../../Models/CsvCatalogItem';
+import Dropdown from '../Dropdown';
+import raiseErrorToUser from '../../Models/raiseErrorToUser';
 
 const ChartExpandButton = React.createClass({
 
