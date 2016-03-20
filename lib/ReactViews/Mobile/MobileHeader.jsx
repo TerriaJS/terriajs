@@ -1,12 +1,12 @@
 'use strict';
 import React from 'react';
-import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
-import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
-import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
-import SearchBox from './Search/SearchBox.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import BingMapsSearchProviderViewModel from '../../ViewModels/BingMapsSearchProviderViewModel.js';
+import CatalogItemNameSearchProviderViewModel from '../../ViewModels/CatalogItemNameSearchProviderViewModel.js';
+import GazetteerSearchProviderViewModel from '../../ViewModels/GazetteerSearchProviderViewModel.js';
+import SearchBox from '../Search/SearchBox.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
-import Branding from './Branding.jsx';
+import Branding from '../Branding.jsx';
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],

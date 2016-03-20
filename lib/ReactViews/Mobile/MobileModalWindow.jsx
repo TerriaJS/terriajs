@@ -1,12 +1,12 @@
 'use strict';
 
 import classNames from 'classnames';
-import DataCatalogMember from './DataCatalogMember.jsx';
-import DataPreview from './DataPreview.jsx';
+import DataCatalogMember from '../DataCatalogMember.jsx';
+import DataPreview from '../DataPreview.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import MobileSearch from './MobileSearch.jsx';
-import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import NowViewingContainer from '../NowViewing/NowViewingContainer.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
 
