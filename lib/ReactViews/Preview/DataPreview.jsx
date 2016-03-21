@@ -3,7 +3,7 @@
 import DataPreviewMap from './DataPreviewMap.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import markdownToHtml from 'terriajs/lib/Core/markdownToHtml';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
 //sort this, but why?

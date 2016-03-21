@@ -1,15 +1,15 @@
 'use strict';
 
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
-const createCatalogMemberFromType = require('../Models/createCatalogMemberFromType');
+const createCatalogMemberFromType = require('../../Models/createCatalogMemberFromType');
 const defined = require('terriajs-cesium/Source/Core/defined');
-const GeoJsonCatalogItem = require('../Models/GeoJsonCatalogItem');
-const ObserveModelMixin = require('./ObserveModelMixin');
-const OpenStreetMapCatalogItem = require('../Models/OpenStreetMapCatalogItem');
+const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
+const ObserveModelMixin = require('../ObserveModelMixin');
+const OpenStreetMapCatalogItem = require('../../Models/OpenStreetMapCatalogItem');
 const React = require('react');
-const Terria = require('../Models/Terria');
-const TerriaViewer = require('./TerriaViewer.js');
-const ViewerMode = require('../Models/ViewerMode');
+const Terria = require('../../Models/Terria');
+const TerriaViewer = require('../TerriaViewer.js');
+const ViewerMode = require('../../Models/ViewerMode');
 
 const DataPreviewMap = React.createClass({
     mixins: [ObserveModelMixin],

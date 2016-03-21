@@ -2,7 +2,7 @@
 
 import classNames from 'classnames';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
-import DataPreview from '../DataPreview.jsx';
+import DataPreview from '../Preview/DataPreview.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import MobileSearch from './MobileSearch.jsx';
 import NowViewingContainer from '../NowViewing/NowViewingContainer.jsx';
