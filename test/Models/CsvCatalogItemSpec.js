@@ -1118,12 +1118,12 @@ describe('CsvCatalogItem with region mapping', function() {
                     expect(description).not.toContain("beta");
                     expect(description).not.toContain("gamma");
                     expect(description).not.toContain("omega");
-                    var description = r[0].description.getValue(JulianDate.fromIso8601('2016-01-02T15:00:00Z'));
+                    description = r[0].description.getValue(JulianDate.fromIso8601('2016-01-02T15:00:00Z'));
                     expect(description).toContain("gamma");
                     expect(description).not.toContain("delta");
                     expect(description).not.toContain("alpha");
                     expect(description).not.toContain("omega");
-                    var description = r[0].description.getValue(JulianDate.fromIso8601('2016-01-03T15:00:00Z'));
+                    description = r[0].description.getValue(JulianDate.fromIso8601('2016-01-03T15:00:00Z'));
                     expect(description).toContain("omega");
                     expect(description).not.toContain("zeta");
                     expect(description).not.toContain("alpha");
