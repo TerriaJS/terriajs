@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.2.2
+
+* Added `fogSettings` option to init file to customise fog settings, introduced in Cesium 1.16.
+
 ### 2.2.1
 
 * Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
