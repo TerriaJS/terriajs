@@ -23,7 +23,8 @@ const DataPreview = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object
+        viewState: React.PropTypes.object,
+        previewed: React.PropTypes.object
     },
 
     toggleOnMap() {
@@ -44,7 +45,7 @@ const DataPreview = React.createClass({
     },
 
     render() {
-        const previewed = this.props.viewState.previewedItem;
+        const previewed = this.props.previewed;
         return (
             <div className='data-preview__inner'>
                 <DataPreviewMap terria={this.props.terria}

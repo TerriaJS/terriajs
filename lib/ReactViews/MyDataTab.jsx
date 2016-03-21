@@ -67,6 +67,7 @@ const MyDataTab = React.createClass({
                 <div className="data-preview__wrapper">
                     <DataPreview terria={this.props.terria}
                                  viewState={this.props.viewState}
+                                 previewed={this.props.viewState.userDataPreviewedItem}
                     />
                 </div>
             </div>

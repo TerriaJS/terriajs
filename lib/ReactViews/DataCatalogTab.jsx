@@ -46,6 +46,7 @@ const DataCatalogTab = React.createClass({
                 <div className="data-preview__wrapper">
                     <DataPreview terria={terria}
                                  viewState={this.props.viewState}
+                                 previewed={this.props.viewState.previewedItem}
                     />
                 </div>
             </div>);
