@@ -13,7 +13,7 @@ import raiseErrorToUser from '../../Models/raiseErrorToUser';
 const ChartExpandButton = React.createClass({
 
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
         sources: React.PropTypes.array,
         sourceNames: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
