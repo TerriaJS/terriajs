@@ -43,6 +43,7 @@ const MobileModalWindow = React.createClass({
             return <div className='modal--mobile-bg'>
                         <DataPreview terria={this.props.terria}
                                      viewState={this.props.viewState}
+                                     previewed={this.props.viewState.previewedItem}
                         />
                     </div>;
         case this.props.viewState.mobileViewOptions.nowViewing:

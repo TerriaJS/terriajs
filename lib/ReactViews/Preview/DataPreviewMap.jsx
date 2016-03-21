@@ -8,7 +8,7 @@ const ObserveModelMixin = require('../ObserveModelMixin');
 const OpenStreetMapCatalogItem = require('../../Models/OpenStreetMapCatalogItem');
 const React = require('react');
 const Terria = require('../../Models/Terria');
-const TerriaViewer = require('../TerriaViewer.js');
+const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
 
 const DataPreviewMap = React.createClass({
