@@ -315,6 +315,19 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('ignores dates if tableStyle.timeColumn is set to null from json', function(done) {
+        // The test above did not pick up a problem in updateFromJson when the meaning of Cesium's defined was changed to also mean notNull (Cesium 1.19).
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem._tableStyle = new TableStyle();
+        csvItem._tableStyle.updateFromJson({timeColumn: null});
+        csvItem.load().then(function() {
+            var source = csvItem.dataSource;
+            expect(source.tableStructure.activeTimeColumn).toBeUndefined();
+            expect(csvItem.clock).toBeUndefined();
+            expect(source.clock).toBeUndefined();
+        }).otherwise(fail).then(done);
+    });
+
     it('uses a second date column with tableStyle.timeColumn name', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_date_year.csv';
         csvItem._tableStyle = new TableStyle({timeColumn: 'year'});
