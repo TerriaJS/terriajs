@@ -4,7 +4,7 @@
 
 // Every module required-in here must be a `dependency` in package.json, not just a `devDependency`,
 // so that our postinstall script (which runs `gulp post-npm-install`) is able to run without
-// the devDependencies available.  Individual tasks, other than `prepare-cesium` and any tasks it
+// the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
 // calls, may require in `devDependency` modules locally.
 var gulp = require('gulp');
 
@@ -117,23 +117,19 @@ gulp.task('docs', ['transform-typescript'], function(done) {
     child_exec('node "' + jsdocPath + '" ./lib ./build/generated -c ./buildprocess/jsdoc.json', undefined, done);
 });
 
-
 gulp.task('copy-cesium-assets', function() {
     var fs = require('fs');
-    var resolve = require('resolve'); // can we use require.resolve instead?
+    var path = require('path');
 
-    var cesium = resolve.sync('terriajs-cesium/wwwroot', {
-        basedir: __dirname,
-        extentions: ['.'],
-        isFile: function(file) {
-            try { return fs.statSync(file).isDirectory(); }
-            catch (e) { return false; }
-        }
-    });
+    var cesiumPackage = require.resolve('terriajs-cesium/package.json');
+    var cesiumRoot = path.dirname(cesiumPackage);
+    var cesiumWebRoot = path.join(cesiumRoot, 'wwwroot');
+
     return gulp.src([
-            cesium + '/**'
-        ], { base: cesium })
-        .pipe(gulp.dest('wwwroot/build/Cesium'));
+        path.join(cesiumWebRoot, '**')
+    ], {
+        base: cesiumWebRoot
+    }).pipe(gulp.dest('wwwroot/build/Cesium'));
 });
 
 gulp.task('test-browserstack', function(done) {
