@@ -1,6 +1,5 @@
 'use strict';
 
-/*global require*/
 declare var require: any;
 
 var defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
