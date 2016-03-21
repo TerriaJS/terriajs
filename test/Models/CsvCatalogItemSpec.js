@@ -319,7 +319,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         // The test above did not pick up a problem in updateFromJson when the meaning of Cesium's defined was changed to also mean notNull (Cesium 1.19).
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
         csvItem._tableStyle = new TableStyle();
-        csvItem._tableStyle.updateFromJson({timeColumn: null})
+        csvItem._tableStyle.updateFromJson({timeColumn: null});
         csvItem.load().then(function() {
             var source = csvItem.dataSource;
             expect(source.tableStructure.activeTimeColumn).toBeUndefined();
