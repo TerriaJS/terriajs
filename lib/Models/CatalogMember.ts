@@ -18,7 +18,7 @@ var updateFromJson = require('../Core/updateFromJson');
  */
 abstract class CatalogMember {
     private _terria: any;
-    
+
     /**
      * Gets or sets the name of the item.  This property is observable.
      * @type {String}

@@ -104,7 +104,8 @@ gulp.task('transform-typescript', function() {
     return gulp.src('lib/**/*.ts')
             .pipe(typescript({
                 outDir: 'build/',
-                target: 'ES2015'
+                target: 'ES2015',
+                module: 'commonjs'
             }))
             .pipe(gulp.dest('build/generated'));
 });

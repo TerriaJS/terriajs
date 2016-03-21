@@ -19,23 +19,13 @@ function configureWebpack(terriaJSBasePath, config) {
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
 
-    // Use Babel to compile our JavaScript files.
-    // config.module.loaders.push({
-    //     test: /\.js$/,
-    //     include: path.resolve(terriaJSBasePath, 'lib'),
-    //     loader: require.resolve('babel-loader'),
-    //     query: {
-    //         //presets: ['es2015'] /*,
-    //         //cacheDirectory: true*/
-    //     }
-    // });
-
     config.module.loaders.push({
         test: /\.ts$/,
         include: path.resolve(terriaJSBasePath, 'lib'),
         loader: require.resolve('ts-loader'),
         query: {
             compilerOptions: {
+                module: 'commonjs',
                 target: 'es5',
                 sourceMap: true
             }
