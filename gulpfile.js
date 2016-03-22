@@ -23,7 +23,7 @@ var watchify = require('watchify');
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
-var testGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
+var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
 
 
 gulp.task('build-specs', ['prepare-cesium'], function() {
