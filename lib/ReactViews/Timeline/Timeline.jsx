@@ -6,6 +6,8 @@ import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
+import {formatDateTime} from './DateFormats';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 
 const Timeline = React.createClass({
     propTypes: {
@@ -20,14 +22,28 @@ const Timeline = React.createClass({
     },
 
     componentWillMount() {
-        knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.updateForNewTopLayer());
-        window.addEventListener('resize', () => this.timeline && this.timeline.resize(), false);
+        this.topLayerSubscription = knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.updateForNewTopLayer());
+        this.resizeListener = () => this.timeline && this.timeline.resize();
+        window.addEventListener('resize', this.resizeListener, false);
+
+        this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(clock => {
+            const time = clock.currentTime;
+            this.setState({
+                currentTimeString: formatDateTime(JulianDate.toDate(time), this.props.locale)
+            });
+        });
+    },
+
+    componentWillUnmount() {
+        this.removeTickEvent();
+        this.topLayerSubscription.dispose();
+        window.removeEventListener('resize', this.resizeListener);
     },
 
     updateForNewTopLayer() {
         const terria = this.props.terria;
 
-        //default to playing and looping when shown unless told otherwise
+        // default to playing and looping when shown unless told otherwise
         if (this.props.autoPlay) {
             terria.clock.tick();
             terria.clock.shouldAnimate = true;
@@ -36,7 +52,7 @@ const Timeline = React.createClass({
 
         this.setState({
             isLooping: terria.clock.clockRange === ClockRange.LOOP_STOP,
-            layerName: terria.timeSeriesStack.topLayer.name
+            layerName: terria.timeSeriesStack.topLayer && terria.timeSeriesStack.topLayer.name
         });
     },
 
@@ -44,12 +60,15 @@ const Timeline = React.createClass({
         const terria = this.props.terria;
 
         return (
-            <div>
-                <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
-                <div className="animation-name animation-text" title="Current Layer">
-                    <div className="animation-text-display">{this.state.layerName}</div>
+            <div className="timeline">
+                <div className="timeline__text-row">
+                    <div className="timeline__text-cell" title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
+                    <div className="timeline__text-cell" title="Current Layer">{this.state.layerName}</div>
                 </div>
-                <CesiumTimeline terria={terria} />
+                <div className="timeline__controls-row">
+                    <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
+                    <CesiumTimeline terria={terria} />
+                </div>
             </div>
         );
     }

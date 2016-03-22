@@ -36,7 +36,7 @@ const CesiumTimeline = React.createClass({
         };
 
         this.cesiumTimeline.addEventListener('settime', this.cesiumTimeline.scrubFunction, false);
-        this.cesiumTimeline.zoomTo(this.terria.clock.startTime, this.terria.clock.stopTime);
+        this.cesiumTimeline.zoomTo(this.props.terria.clock.startTime, this.props.terria.clock.stopTime);
     },
 
     shouldComponentUpdate() {
@@ -45,7 +45,7 @@ const CesiumTimeline = React.createClass({
 
     render() {
         return (
-            <div className="animation-timeline" ref={ref => this.timelineContainer = ref} />
+            <div className="timeline__cesium-timeline" ref={ref => this.timelineContainer = ref} />
         );
     }
 });

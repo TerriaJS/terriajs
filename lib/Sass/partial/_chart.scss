@@ -29,6 +29,10 @@ $chart-line-color: #ccc;
   fill: $chart-area-color;
 }
 
+.chart-panel__holder {
+  padding-bottom: 13px;
+}
+
 
 text {
   fill: $chart-text-color;
@@ -55,22 +59,6 @@ text {
   stroke: white;
   opacity: 0.65;
   stroke-width: 1;
-}
-
-.chart-panel__holder{
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10;
-  background: $dark;
-  padding-bottom: 13px;
-  @media(screen and min-width: $sm){
-    left: $work-bench-width;
-    .is-full-screen &{
-      left: 0;
-    }
-  }
 }
 
 .chart-panel__header{

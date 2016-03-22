@@ -3,8 +3,6 @@
 import React from 'react';
 
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
-import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
-import {formatDateTime} from './DateFormats';
 
 const TimelineControls = React.createClass({
     propTypes: {
@@ -18,19 +16,6 @@ const TimelineControls = React.createClass({
         return {
             currentTimeString: ''
         };
-    },
-
-    componentWillMount() {
-        this.removeTickEvent = this.props.clock.onTick.addEventListener(clock => {
-            const time = clock.currentTime;
-            this.setState({
-                currentTimeString: formatDateTime(JulianDate.toDate(time), this.props.locale)
-            });
-        });
-    },
-
-    componentWillUnmount() {
-        this.removeTickEvent();
     },
 
     gotoStart() {
@@ -92,30 +77,20 @@ const TimelineControls = React.createClass({
 
     render() {
         return (
-            <div>
-                <div className="animation-text" title="Current Time (tz info et al)">
-                    <div className="animation-text-display">{this.state.currentTimeString}</div>
-                </div>
-                <button className="animation-control"
-                     onClick={this.gotoStart}
-                     title="Go to beginning">
+            <div className="timeline__controls">
+                <button className="" onClick={this.gotoStart} title="Go to beginning">
                     START
                 </button>
-                <button className="animation-control" onClick={this.togglePlay} title="Play">
+                <button className="" onClick={this.togglePlay} title="Play">
                     PLAY
                 </button>
-                <button className="animation-control"
-                     onClick={this.playSlower}
-                     title="Play Slower">
+                <button className="" onClick={this.playSlower} title="Play Slower">
                     SLOW
                 </button>
-                <button className="animation-control animation-control-nofill"
-                     onClick={this.playFaster}
-                     title="Play Faster">
+                <button className="" onClick={this.playFaster} title="Play Faster">
                     FAST
                 </button>
-                <button className="animation-control animation-control-last" onClick={this.toggleLoop}
-                     title="Loop at the end">
+                <button className="" onClick={this.toggleLoop} title="Loop at the end">
                     LOOP
                 </button>
             </div>
