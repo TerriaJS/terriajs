@@ -63,10 +63,10 @@ const ChartPanel = React.createClass({
             }
         }
         return result;
-},
+    },
 
-    bringToFront(){
-        //bring chart to front
+    bringToFront() {
+        // Bring chart to front.
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
     },
 
