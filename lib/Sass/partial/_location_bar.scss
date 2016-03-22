@@ -6,8 +6,8 @@ $distance-bg: rgba($dark, 0.9);
   @media(screen and min-width: $sm){
     display: block;
   }
-  position: fixed;
-  bottom: $padding*3;
+  position: absolute;
+  top: -60px;
   right: $padding*2;
   z-index: 1;
 }

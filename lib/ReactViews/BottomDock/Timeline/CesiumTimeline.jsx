@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import AnimationViewModel from '../../ViewModels/AnimationViewModel';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import WrappedTimeline from 'terriajs-cesium/Source/Widgets/Timeline/Timeline';
