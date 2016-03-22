@@ -6,21 +6,24 @@ import markdownToHtml from 'terriajs/lib/Core/markdownToHtml';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import naturalSort from 'javascript-natural-sort';
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 
-//sort this, but why?
-const infoSectionOrder = [
-    'Disclaimer',
-    'Description',
-    'Data Description',
-    'Service Description',
-    'Resource Description',
-    'Licence',
-    'Access Constraints'
-];
+
 
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
     mixins: [ObserveModelMixin],
+
+    // Should get it from option
+    _deFaultInfoSectionOrder : [
+        'Disclaimer',
+        'Description',
+        'Data Description',
+        'Service Description',
+        'Resource Description',
+        'Licence',
+        'Access Constraints'
+    ],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
@@ -45,11 +48,12 @@ const DataPreview = React.createClass({
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.data);
     },
 
-    sortInfoSections(items){
+    sortInfoSections(items) {
         naturalSort.insensitive = true;
+        const infoSectionOrder = defaultValue(this.props.previewed.infoSectionOrder, this.__deFaultInfoSectionOrder);
         items.sort(function(a, b) {
-            var aIndex = infoSectionOrder.indexOf(a.name);
-            var bIndex = infoSectionOrder.indexOf(b.name);
+            const aIndex = infoSectionOrder.indexOf(a.name);
+            const bIndex = infoSectionOrder.indexOf(b.name);
             if (aIndex >= 0 && bIndex < 0) {
                 return -1;
             } else if (aIndex < 0 && bIndex >= 0) {
@@ -60,7 +64,6 @@ const DataPreview = React.createClass({
                 return aIndex - bIndex;
             }
         });
-        console.log(items);
         return items;
     },
 
@@ -78,10 +81,10 @@ const DataPreview = React.createClass({
     },
 
     renderSections(previewed) {
-        if(previewed){
+        if(previewed) {
             const items = previewed.info.slice();
             return this.sortInfoSections(items).map((item, i)=>
-                <div key={i}><h5>{item.name}</h5><p dangerouslySetInnerHTML={this.renderMarkup(item.content)}></p></div>);
+                <div key={i}><h4>{item.name}</h4><p dangerouslySetInnerHTML={this.renderMarkup(item.content)}/></div>);
         }
     },
 
@@ -99,14 +102,14 @@ const DataPreview = React.createClass({
                                 title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
                             {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
                         </button>
-                        <h4>{previewed.name}</h4>
+                        <h3>{previewed.name}</h3>
                         <div className="data-info url">
-                            <h5>Description</h5>
+                            <h4>Description</h4>
                             {this.renderDescription(previewed)}
-                            <h5>Data Custodian</h5>
-                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
-                            <h5>Web Map Service (WMS) URL </h5>
-                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}></p>
+                            <h4>Data Custodian</h4>
+                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}/>
+                            <h4>Web Map Service (WMS) URL </h4>
+                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}/>
                             {this.renderSections(previewed)}
                         </div>
                     </div>
@@ -114,8 +117,8 @@ const DataPreview = React.createClass({
         }
     },
 
-    renderDescription(previewed){
-        if(previewed.hasDescription){
+    renderDescription(previewed) {
+        if(previewed.hasDescription) {
             return <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>;
         }
         return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>
