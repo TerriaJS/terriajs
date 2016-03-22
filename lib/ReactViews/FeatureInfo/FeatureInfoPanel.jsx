@@ -6,6 +6,7 @@ import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -18,9 +19,17 @@ const FeatureInfoPanel = React.createClass({
     },
 
     componentDidMount() {
+        const createFakeSelectedFeatureDuringPicking = true;
         this._pickedFeaturesSubscription = knockout.getObservable(this.props.terria, 'pickedFeatures').subscribe(() => {
-            this.props.terria.selectedFeature = undefined;
-
+            if (createFakeSelectedFeatureDuringPicking) {
+                const fakeFeature = new Entity({
+                    id: 'Pick Location'
+                });
+                fakeFeature.position = this.props.terria.pickedFeatures.pickPosition;
+                this.props.terria.selectedFeature = fakeFeature;
+            } else {
+                this.props.terria.selectedFeature = undefined;
+            }
             const pickedFeatures = this.props.terria.pickedFeatures;
             if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                 pickedFeatures.allFeaturesAvailablePromise.then(() => {
