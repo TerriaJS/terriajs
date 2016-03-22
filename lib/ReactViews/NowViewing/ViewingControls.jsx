@@ -1,10 +1,14 @@
 'use strict';
 
+import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 
 import ObserveModelMixin from '../ObserveModelMixin';
-import PickedFeatures from '../../Map/PickedFeatures';
+import PickedFeatures from 'terriajs/lib/Map/PickedFeatures';
+
 import React from 'react';
 
 const ViewingControls = React.createClass({
@@ -33,10 +37,22 @@ const ViewingControls = React.createClass({
         pickedFeatures.features.push(nowViewingItem.tableStructure.sourceFeature);
         pickedFeatures.allFeaturesAvailablePromise = when();
         pickedFeatures.isLoading = false;
+        const xyzPosition = nowViewingItem.tableStructure.sourceFeature.position.getValue(nowViewingItem.terria.clock.currentTime);
+        const ellipsoid = Ellipsoid.WGS84;
+        // Code replicated from GazetteerSearchProviderViewModel.
+        const bboxRadians = 0.1;  // GazetterSearchProviderViewModel uses 0.2 degrees ~ 0.0035 radians. 1 degree ~ 110km. 0.1 radian ~ 700km.
+
+        const latLonPosition = Cartographic.fromCartesian(xyzPosition, ellipsoid);
+        const south = latLonPosition.latitude + bboxRadians / 2;
+        const west = latLonPosition.longitude - bboxRadians / 2;
+        const north = latLonPosition.latitude - bboxRadians / 2;
+        const east = latLonPosition.longitude + bboxRadians / 2;
+        const rectangle = new Rectangle(west, south, east, north);
+        const flightDurationSeconds = 1;
         // TODO: This is bad. How can we do it better?
         setTimeout(function() {
             nowViewingItem.terria.pickedFeatures = pickedFeatures;
-            nowViewingItem.terria.currentViewer.zoomTo({position: nowViewingItem.tableStructure.sourceFeature.position.getValue(nowViewingItem.terria.clock.currentTime)}, 1);
+            nowViewingItem.terria.currentViewer.zoomTo(rectangle, flightDurationSeconds);
         }, 50);
     },
 
