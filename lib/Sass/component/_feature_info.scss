@@ -85,6 +85,7 @@
 
 .feature-info-panel__content{
   display: none;
+  padding: $padding-small;
   .feature-info-panel__section.is-open &{
     display: block;
   }
@@ -103,8 +104,5 @@
   position: relative;
   td{
     position: relative;
-  }
-  p{
-    padding: 0 $padding;
   }
 }
