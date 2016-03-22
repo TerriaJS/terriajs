@@ -10,13 +10,18 @@
 				  </svg>
                 </a>
                 <!-- /ko -->
+                <!-- ko if: typeof invoke !== 'undefined' -->
+                <div class="data-catalog-icon-holder clickable" data-bind="click: $root.clickAdd.bind($root)">
+                    <div class="data-catalog-item-plus" data-bind="cesiumSvgPath: { path: $root.svgPlus, width: 11, height: 12 }"></div>
+                </div>
+                <!-- /ko -->
                 <!-- ko foreach: $root.getLeftSideMemberControls($data) -->
                 <div class="data-catalog-left-side-control">
                     <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
                 </div>
                 <!-- /ko -->
-                <a href="#" class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: isEnabled, text: name, click: zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></a>
-                <div class="data-catalog-item-label" data-bind="visible: !isEnabled, text: name"></div>
+                <a href="#" class="data-catalog-item-label data-catalog-enabled-item clickable" data-bind="visible: typeof isEnabled !== 'undefined' && isEnabled, text: name, click: typeof zoomToAndUseClock !== 'undefined' && zoomToAndUseClock" title="Change the map view to show the full extent of this data item."></a>
+                <div class="data-catalog-item-label" data-bind="visible: typeof isEnabled === 'undefined' || !isEnabled, text: name"></div>
                 <!-- ko foreach: $root.getRightSideMemberControls($data) -->
                 <div class="data-catalog-right-side-control">
                     <div class="clickable" data-bind="click: activate, attr: { title: name }, cesiumSvgPath: { path: svgIcon, width: svgWidth, height: svgHeight }, css: cssClass"></div>
