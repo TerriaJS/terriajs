@@ -93,6 +93,7 @@ function expand(props, url) {
     }
     group.add(newCatalogItem);
     newCatalogItem.isLoading = true;
+    newCatalogItem.isMappable = false;
     terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
     newCatalogItem.isEnabled = true;  // This loads it as well.
     // Is there a better way to set up an action to occur once the file has loaded?

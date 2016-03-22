@@ -46,10 +46,14 @@ const NowViewingItem = React.createClass({
 
     render() {
         const nowViewingItem = this.props.nowViewingItem;
-
+        let chartIcon;
+        if (!nowViewingItem.isMappable) {
+            chartIcon = <li><i className='icon icon-line-chart'></i></li>;
+        }
         return (
             <li className={'now-viewing__item ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index}>
                 <ul className ="now-viewing__item__header">
+                    {chartIcon}
                     <li><button draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn--drag">{nowViewingItem.name}</button></li>
                     <li><button onClick={this.toggleDisplay} className={'btn btn--toggle ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '')}></button></li>
                 </ul>
