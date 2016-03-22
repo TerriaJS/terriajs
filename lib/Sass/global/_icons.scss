@@ -69,6 +69,7 @@
 //.icon-link - icon
 //.icon-menu - icon
 //.icon-download -icon
+//.icon-line-chart - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -103,96 +104,99 @@
   }
 }
 
-.icon-download:before {
-    content: "\e91e";
-}
 .icon-twitter:before {
-    content: "\e900";
-}
-.icon-facebook:before {
     content: "\e901";
 }
-.icon-link:before {
-    content: "\e91d";
-}
-.icon-menu:before {
+.icon-facebook:before {
     content: "\e902";
 }
-.icon-geolocation:before {
+.icon-menu:before {
     content: "\e903";
 }
-.icon-right:before {
+.icon-geolocation:before {
     content: "\e904";
 }
-.icon-invisible:before {
+.icon-right:before {
     content: "\e905";
 }
-.icon-left:before {
+.icon-invisible:before {
     content: "\e906";
 }
-.icon-checkbox-checked:before {
+.icon-left:before {
     content: "\e907";
 }
-.icon-closed:before {
+.icon-checkbox-checked:before {
     content: "\e908";
 }
-.icon-search:before {
+.icon-closed:before {
     content: "\e909";
 }
-.icon-visible:before {
+.icon-search:before {
     content: "\e90a";
 }
-.icon-share:before {
+.icon-visible:before {
     content: "\e90b";
 }
-.icon-clear:before {
+.icon-share:before {
     content: "\e90c";
 }
-.icon-close:before {
+.icon-clear:before {
     content: "\e90d";
 }
-.icon-add:before {
+.icon-close:before {
     content: "\e90e";
 }
-.icon-sphere:before {
+.icon-add:before {
     content: "\e90f";
 }
-.icon-opened:before {
+.icon-sphere:before {
     content: "\e910";
 }
-.icon-expand:before {
+.icon-opened:before {
     content: "\e911";
 }
-.icon-loader:before {
+.icon-expand:before {
     content: "\e912";
 }
-.icon-location:before {
+.icon-loader:before {
     content: "\e913";
 }
-.icon-remove:before {
+.icon-location:before {
     content: "\e914";
 }
-.icon-refresh:before {
+.icon-remove:before {
     content: "\e915";
 }
-.icon-decrease:before {
+.icon-refresh:before {
     content: "\e916";
 }
-.icon-increase:before {
+.icon-decrease:before {
     content: "\e917";
 }
-.icon-checkbox-off:before {
+.icon-increase:before {
     content: "\e918";
 }
-.icon-minus:before {
+.icon-checkbox-off:before {
     content: "\e919";
 }
-.icon-checkbox-on:before {
+.icon-minus:before {
     content: "\e91a";
 }
-.icon-radio-off:before {
+.icon-checkbox-on:before {
     content: "\e91b";
 }
-.icon-radio-on:before {
+.icon-radio-off:before {
     content: "\e91c";
+}
+.icon-radio-on:before {
+    content: "\e91d";
+}
+.icon-link:before {
+    content: "\e91e";
+}
+.icon-download:before {
+    content: "\e91f";
+}
+.icon-line-chart:before {
+    content: "\e900";
 }

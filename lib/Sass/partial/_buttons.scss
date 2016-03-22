@@ -108,6 +108,7 @@ $btn-setting-size: 35px;
 //.btn--link - icon button
 //.btn--menu - icon button
 //.btn--download - icon button
+//.btn--line-chart -icon button
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -145,7 +146,8 @@ facebook,
 twitter,
 link,
 menu,
-download;
+download,
+line-chart;
 
 
 @each $icon in $icons {
