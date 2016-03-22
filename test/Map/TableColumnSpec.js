@@ -42,6 +42,13 @@ describe('TableColumn', function() {
         expect(tableColumn.indicesOrValues[2]).toBe(null);
     });
 
+    it('ignores missing values when calculating min/max', function() {
+        var data = [130.3, 131.3, null, 133.3];
+        var tableColumn = new TableColumn('lat', data);
+        expect(tableColumn.maximumValue).toBe(133.3);
+        expect(tableColumn.minimumValue).toBe(130.3);
+    });
+
     it('can detect latitude type', function() {
         var data = [30.3, 31.3, 33.3];
         var tableColumn = new TableColumn('lat', data);

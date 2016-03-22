@@ -2,15 +2,53 @@
 Change Log
 ==========
 
+### 2.2.1
+
+* Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
+
+### 2.2.0
+
+* Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
+* Fixed the calculation of a CSV file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
+* Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
+* Improved performance of large CSV files, especially the loading time, and the time taken to change the display variable of region-mapped files.
+* Added support for CSV files with only location (lat/lon or region) columns, and no value columns, using a file-specific color. Revised GeoJSON display to draw from the same palette of colors.
+* Fixed a bug that prevented GeoJSON styles from being applied correctly in some cases.
+* Fixed an error when adding a CSV with one line of data.
+* Fixed error when adding a CSV file with numeric column names.
+* Polygons and polylines are now highlighted on click when the geometry is available.
+* Improved legend and coloring of ENUM (string) columns of CSV files; only the most common values are colored differently, with the rest shown as 'Other'.
+* Added support for running the automated tests on the local system (via `gulp test`), on BrowserStack (via `gulp test-browserstack`), and on Sauce Labs (via `gulp test-saucelabs`).
+* Changed `tableStyle`'s `format` to only accept `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options. Previously some other options may have worked in some browsers.
+* Improved color palette for string (ENUM) columns of CSV files.
+* Improved CSV loading to ignore any completely blank lines after the header row (ie. lines which do not even have commas).
+* Added support for grouping catalog items retrieved from a CSW server according to criteria specified in the init file (via the `metadataGroups` property) or from a `domainSpecification` and a call to the `GetDomain` service on the CSW server.
+* Added `UrlTemplateCatalogItem`, which can be used to access maps via a URL template.
+* Improved ABS display (to hide the regions) when a concept is deselected.
+* Improved readability of ArcGIS catalog items and legends by replacing underscores with spaces.
+* `ArcGisMapServerCatalogItem` metadata is now cached by the proxy for only 24 hours.
+* Improved the feature info panel to update the display of time-varying region-mapped CSV files for the current time.
+* Updated to [Cesium](http://cesiumjs.org) 1.18.  Significant changes relevant to TerriaJS users include:
+  * Improved terrain performance by up to 35%. Added support for fog near the horizon, which improves performance by rendering less terrain tiles and reduces terrain tile requests. [#3154](https://github.com/AnalyticalGraphicsInc/cesium/pull/3154)
+  * Reduced the amount of GPU and CPU memory used by terrain by using compression. The CPU memory was reduced by up to 40%, and approximately another 25% in Chrome.
+  * Fixed an issue where the sun texture is not generated correctly on some mobile devices. [#3141](https://github.com/AnalyticalGraphicsInc/cesium/issues/3141)
+  * Cesium now honors window.devicePixelRatio on browsers that support the CSS imageRendering attribute. This greatly improves performance on mobile devices and high DPI displays by rendering at the browser-recommended resolution. This also reduces bandwidth usage and increases battery life in these cases.
+
+### 2.1.1
+
+* Fixed sharing of time-varying czml files; the timeline was not showing on the shared link.
+* Fixed sharing of user-added time-varying csv files.
+* Fixed a bug in `CkanCatalogItem` that made it build URLs incorrectly when given a base URL ending in a slash.
+
 ### 2.1.0
 
 * Moved `TableColumn`, `TableStructure`, and the classes based on `Concept` to `lib/Map`. Moved `LegendHelper` to `lib/Models`.
-* Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. See the notes under 2.0.2 for the available formatting options.
 * Added column-specific styling to CSV files, using a new `tableStyle.columns` json parameter. This is an object whose keys are column names or indices, and whose values are objects of column-specific tableStyle parameters. See the CSV column-specific group in `wwwroot/test/init/test-tablestyle.json` for an example. [#1097](https://github.com/TerriaJS/terriajs/issues/1097)
 * Added the following column-specific `tableStyle` parameters:
   - `name`: renames the column.
   - `type`: sets the column type; can be one of LON, LAT, ALT, TIME, SCALAR, or ENUM.
   - `format`: sets the column number format, using the format of the [Javascript Intl options parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString), eg. `{"format": {"useGrouping": true, "maximumFractionDigits": 2}}` to add thousands separators to numbers and show only two decimal places. Only the `useGrouping`, `maximumFractionDigits` and `styling: "percent"` options are guaranteed to work in all browsers.
+* Added column-specific formatting to the feature info panel for all file types, eg. `"featureInfoTemplate" : {"template": "{{SPEED}} m/s", "formats": {"SPEED": {"maximumFractionDigits": 2}}}`. The formatting options are the same as above.
 * Changed the default number format in the Feature Info Panel to not separate thousands with commas.
 * Fixed a bug that caused the content on the feature info panel to be rendered as pure HTML instead of as mixed HTML / Markdown.
 * Changed the default for `tableStyle.replaceWithZeroValues` to `[]`, ie. nothing.
@@ -18,6 +56,7 @@ Change Log
 * Changed the default for `tableStyle.nullLabel` to '(No value)'.
 * Application name and support email can now be set in config.json's "parameters" section as "appName" and "supportEmail".
 * Fixed showWarnings in config json not being respected by CSV catalog items.
+* Fixed hidden region mapped layers being displayed when variable selection changes.
 * Fixed exporting raw data as CSV not escaping commas in the data itself.
 
 ### 2.0.1
