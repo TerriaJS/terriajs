@@ -1,14 +1,13 @@
 'use strict';
 
 import DataPreviewMap from './DataPreviewMap.jsx';
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import InvokeFunction from '../Analytics/InvokeFunction';
 import markdownToHtml from 'terriajs/lib/Core/markdownToHtml';
+import naturalSort from 'javascript-natural-sort';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import naturalSort from 'javascript-natural-sort';
-import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
-
-
 
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
@@ -74,8 +73,7 @@ const DataPreview = React.createClass({
                 <DataPreviewMap terria={this.props.terria}
                                 previewedCatalogItem={previewed}
                 />
-                {this.renderActions(previewed)}
-
+                {previewed && this.renderActions(previewed)}
             </div>
         );
     },
@@ -89,7 +87,7 @@ const DataPreview = React.createClass({
     },
 
     renderActions(previewed) {
-        if (previewed && defined(previewed.type)) {
+        if (previewed.isMappable) {
             return (
                 <div className='data-preview'>
                     <button onClick={this.exitPreview}
@@ -114,6 +112,9 @@ const DataPreview = React.createClass({
                         </div>
                     </div>
                 </div>);
+        } else if(typeof previewed.invoke) {
+            return <InvokeFunction previewed={previewed}
+                            terria={this.props.terria}/>
         }
     },
 
