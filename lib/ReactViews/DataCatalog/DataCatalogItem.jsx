@@ -3,6 +3,7 @@
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 import classNames from 'classnames';
+import addedByUser from '../../Core/addedByUser';
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
@@ -38,16 +39,17 @@ const DataCatalogItem = React.createClass({
     },
 
     isSelected() {
-        return this.props.item.isUserSupplied ? this.props.viewState.userDataPreviewedItem === this.props.item :
+        return addedByUser(this.props.item) ?
+            this.props.viewState.userDataPreviewedItem === this.props.item :
             this.props.viewState.previewedItem === this.props.item;
     },
 
     render() {
         const item = this.props.item;
         return (
-            <li className={classNames('clearfix', 'data-catalog-item', {'is-previewed': this.isSelected()})}>
-                <button onClick={this.setPreviewedItem} className='btn btn--catalog-item'>{item.name}</button>
-                <button onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass(item))}></button>
+            <li className={classNames('clearfix', {'is-previewed': this.isSelected()})}>
+                <button onClick={this.setPreviewedItem} className={`btn ${item.isMappable ? 'btn--catalog-item' : 'btn--service-item'}`}>{item.name}</button>
+                {item.isMappable && <button onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass(item))}></button>}
             </li>
         );
     }

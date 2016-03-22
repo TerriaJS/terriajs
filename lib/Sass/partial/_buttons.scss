@@ -513,6 +513,15 @@ a.btn--map{
   }
 }
 
+//Service button
+//
+.btn--service-item{
+  &:hover,
+  &.is-previewed{
+    color: $color-primary;
+  }
+}
+
 
 
 
