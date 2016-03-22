@@ -7,7 +7,14 @@ const WelcomeTab = React.createClass({
     },
 
     render() {
-        return <div className="panel-content" dangerouslySetInnerHTML={this.props.terria.welcome()}></div>;
+        return (<div>
+            <div className="panel-content" dangerouslySetInnerHTML={this.props.terria.welcome()}/>
+            <If condition={true}>
+                This is an example of an If
+            <Else />
+                This won't get shown.
+            </If>
+        </div>);
     }
 });
 module.exports = WelcomeTab;
