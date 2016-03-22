@@ -140,9 +140,7 @@ describe('SharePopupViewModel', function() {
                 getParsedShareLinkFor([{
                     name: 'C',
                     type: 'csv',
-                    data: {
-                        'blah': 'otherBlah'
-                    },
+                    data: 'blah',
                     isEnabled: true
                 }]).then(function(parsed) {
                     expect(Object.keys(parsed).length).toBe(0);
