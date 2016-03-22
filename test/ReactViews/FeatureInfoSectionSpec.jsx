@@ -25,12 +25,12 @@ describe('FeatureInfoSection', function() {
         };
         feature = new Entity({
             name: 'Bar',
-            properties: properties,
-            description: {getValue: function() { return '<p>hi!</p>'; }}
+            properties: properties
         });
     });
 
     it('does something', function() {
+        feature.description = {getValue: function() { return '<p>hi!</p>'; }};
         const tester = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(tester);
@@ -43,50 +43,62 @@ describe('FeatureInfoSection', function() {
         expect(p.props.children[1][0]).toBe('hi!'); // As above.
     });
 
-    // it('calls forceUpdate when observables used in the render change', function() {
-    //     var result = renderAndSubscribe(spy, function() {
-    //         return someObject.foo;
+    // TODO
+    it('uses a white background for complete HTML documents only', function() {
+        feature.description = {getValue: function() { return '<html><body>hi!</body></html>';}};
+        // var section = new FeatureInfoPanelSectionViewModel(panel, feature);
+        // expect(section.useWhiteBackground).toBe(true);
+        // section.destroy();
+
+        feature.description = {getValue: function() { return '<div>hi!</div>';}};
+        // section = new FeatureInfoPanelSectionViewModel(panel, feature);
+        // expect(section.useWhiteBackground).toBe(false);
+        // section.destroy();
+
+        feature.description = {getValue: function() { return '<html attr="yes">\n<body>hi!</body>\n</html>';}};
+        // section = new FeatureInfoPanelSectionViewModel(panel, feature);
+        // expect(section.useWhiteBackground).toBe(true);
+        // section.destroy();
+    });
+
+
+    // describe('when template is provided', function () {
+    //     var section;
+
+    //     beforeEach(function() {
+    //         var catalogItem = {
+    //             featureInfoTemplate: '<div>{{blah}}</div>'
+    //         };
+
+    //         section = new FeatureInfoPanelSectionViewModel(panel, feature, catalogItem);
     //     });
 
-    //     expect(result).toBe(5);
-    //     expect(spy.forceUpdate).not.toHaveBeenCalled();
-
-    //     someObject.foo = 6;
-    //     expect(spy.forceUpdate).toHaveBeenCalled();
-    // });
-
-    // it('does not call forceUpdate for observables accessed in a nested call to renderAndSubscribe', function() {
-    //     var secondSpy = jasmine.createSpyObj('nested component', ['forceUpdate']);
-
-    //     var result = renderAndSubscribe(spy, function() {
-    //         renderAndSubscribe(secondSpy, function() {
-    //             return someObject.bar;
+    //     describe('rawDataVisible', function () {
+    //         it('should be false on init', function () {
+    //             expect(section.rawDataVisible).toBe(false);
     //         });
-    //         return someObject.foo;
+
+    //         it('should be true once showRawData is called', function () {
+    //             section.showRawData();
+
+    //             expect(section.rawDataVisible).toBe(true);
+    //         });
+
+    //         it('should be false once hideRawData is called', function () {
+    //             section.showRawData();
+    //             section.hideRawData();
+
+    //             expect(section.rawDataVisible).toBe(false);
+    //         });
     //     });
 
-    //     expect(result).toBe(5);
-    //     expect(spy.forceUpdate).not.toHaveBeenCalled();
-    //     expect(secondSpy.forceUpdate).not.toHaveBeenCalled();
-
-    //     someObject.bar = 'goodbye';
-    //     expect(spy.forceUpdate).not.toHaveBeenCalled();
-    //     expect(secondSpy.forceUpdate).toHaveBeenCalled();
-    // });
-
-    // it('unsubscribes when the component is unmounted', function() {
-    //     var spy = jasmine.createSpyObj('component', ['forceUpdate', 'componentWillUnmount']);
-
-    //     var result = renderAndSubscribe(spy, function() {
-    //         return someObject.foo;
+    //     it('rawData should still be available', function() {
+    //        expect(section.rawData).toBeDefined();
     //     });
 
-    //     spy.componentWillUnmount();
-
-    //     expect(result).toBe(5);
-    //     expect(spy.componentWillUnmount).toHaveBeenCalled();
-
-    //     someObject.foo = 6;
-    //     expect(spy.forceUpdate).not.toHaveBeenCalled();
+    //     it('templatedInfo should be available', function() {
+    //         expect(section.templatedInfo).toBeDefined();
+    //     });
     // });
+
 });
