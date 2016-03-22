@@ -1,0 +1,21 @@
+{
+    "catalog": [
+        {
+          "name": "Terria Analytics",
+          "type": "group",
+          "isOpen": false,
+          "items": [
+            {
+              "name": "Spatial Detailing",
+              "type": "spatial-detailing-function",
+              "url": "http://parlmap.terria.io:31113/jobs"
+            },
+            {
+              "name": "Regions like this",
+              "type": "places-like-me-function",
+              "url": "http://parlmap.terria.io:31113/jobs"
+            }
+          ]
+        }
+    ]
+}
