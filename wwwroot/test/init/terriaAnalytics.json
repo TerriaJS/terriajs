@@ -19,12 +19,12 @@
             {
               "name": "Victoria Crime (LGA)",
               "type": "csv",
-              "url": "/test/vic_assault.csv"
+              "url": "test/vic_assault.csv"
             },
             {
               "name": "NSW NEXIS 2012 (LGA)",
               "type": "csv",
-              "url": "/test/NSW_LGA_NEXIS_201212.csv"
+              "url": "test/NSW_LGA_NEXIS_201212.csv"
             }
           ]
         }
