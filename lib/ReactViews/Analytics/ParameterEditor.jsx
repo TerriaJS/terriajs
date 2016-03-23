@@ -53,6 +53,7 @@ const ParameterEditor = React.createClass({
     render() {
         return (<form>
                 <label>{this.props.parameter.name}</label>
+                {this.props.parameter.isRequired && <span>required</span>}
                 {this.renderEditor()}
                 </form>);
     }

@@ -14,7 +14,7 @@ const DataPreview = React.createClass({
     mixins: [ObserveModelMixin],
 
     // Should get it from option
-    _deFaultInfoSectionOrder : [
+    _defaultInfoSectionOrder: [
         'Disclaimer',
         'Description',
         'Data Description',
@@ -49,7 +49,7 @@ const DataPreview = React.createClass({
 
     sortInfoSections(items) {
         naturalSort.insensitive = true;
-        const infoSectionOrder = defaultValue(this.props.previewed.infoSectionOrder, this.__deFaultInfoSectionOrder);
+        const infoSectionOrder = defaultValue(this.props.previewed.infoSectionOrder, this._defaultInfoSectionOrder);
         items.sort(function(a, b) {
             const aIndex = infoSectionOrder.indexOf(a.name);
             const bIndex = infoSectionOrder.indexOf(b.name);
@@ -59,9 +59,8 @@ const DataPreview = React.createClass({
                 return 1;
             } else if (aIndex < 0 && bIndex < 0) {
                 return naturalSort(a.name, b.name);
-            } else {
-                return aIndex - bIndex;
             }
+            return aIndex - bIndex;
         });
         return items;
     },
@@ -124,7 +123,7 @@ const DataPreview = React.createClass({
         if(previewed.hasDescription) {
             return <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>;
         }
-        return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>
+        return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>;
     }
 });
 

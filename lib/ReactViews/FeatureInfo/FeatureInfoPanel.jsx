@@ -11,7 +11,8 @@ import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired,
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
         onClose: React.PropTypes.func,
@@ -73,12 +74,15 @@ const FeatureInfoPanel = React.createClass({
             }
             if (pickedFeatures && pickedFeatures.length > 0) {
                 return pickedFeatures.map((features, i)=>{
-                    return (<FeatureInfoCatalogItem key={i}
-                                                    features={features}
-                                                    clock={that.props.terria.clock}
-                                                    selectedFeature={this.props.terria.selectedFeature}
-                                                    onClickFeatureHeader={this.toggleOpenFeature}
-                            />);
+                    return (
+                        <FeatureInfoCatalogItem
+                            key={i}
+                            features={features}
+                            clock={that.props.terria.clock}
+                            selectedFeature={this.props.terria.selectedFeature}
+                            onClickFeatureHeader={this.toggleOpenFeature}
+                        />
+                    );
                 });
             }
             return <li className='no-results'> No results </li>;
@@ -87,7 +91,7 @@ const FeatureInfoPanel = React.createClass({
     },
 
     bringToFront() {
-        //bring feature info panel to front
+        // Bring feature info panel to front.
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.featureInfoPanel);
     },
 
