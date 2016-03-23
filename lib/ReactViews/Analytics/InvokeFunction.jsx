@@ -35,7 +35,7 @@ const InvokeFunction = React.createClass({
           });
           // Show the Now Viewing panel
           that.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
-
+          that.props.viewState.toggleModal(false);
           return promise;
       } catch (e) {
           if (e instanceof TerriaError) {
