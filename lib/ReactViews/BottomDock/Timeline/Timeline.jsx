@@ -14,9 +14,14 @@ const Timeline = React.createClass({
         autoPlay: React.PropTypes.bool
     },
 
+    getDefaultProps() {
+        return {
+            autoPlay: true
+        };
+    },
+
     getInitialState() {
         return {
-            isLooping: false,
             currentTimeString: '<>'
         };
     },
@@ -51,19 +56,19 @@ const Timeline = React.createClass({
         terria.clock.clockRange = ClockRange.LOOP_STOP;
 
         this.setState({
-            isLooping: terria.clock.clockRange === ClockRange.LOOP_STOP,
             layerName: terria.timeSeriesStack.topLayer && terria.timeSeriesStack.topLayer.name
         });
     },
 
     render() {
         const terria = this.props.terria;
+        const layerName = terria.timeSeriesStack.topLayer && terria.timeSeriesStack.topLayer.name;
 
         return (
             <div className="timeline">
                 <div className="timeline__text-row">
                     <div className="timeline__text-cell" title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
-                    <div className="timeline__text-cell" title="Current Layer">{this.state.layerName}</div>
+                    <div className="timeline__text-cell" title="Current Layer">{layerName}</div>
                 </div>
                 <div className="timeline__controls-row">
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />

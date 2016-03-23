@@ -6,10 +6,12 @@ import DistanceLegend from './DistanceLegend.jsx';
 import LocationBar from './LocationBar.jsx';
 import Timeline from './Timeline/Timeline.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+//import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 const BottomDock = React.createClass({
     mixins: [ObserveModelMixin],
+
+    displayName: 'BottomDock',
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
@@ -23,19 +25,30 @@ const BottomDock = React.createClass({
 
     render() {
         const terria = this.props.terria;
+        const blah = terria.catalog.chartableItems;
+
+        if (this.props.terria.catalog.chartableItems.length) {
+            alert('hello');
+        }
 
         return (
             <div className='bottom-dock'>
                 <div className='location-distance'>
-                    <LocationBar terria={terria}/>
-                    <DistanceLegend terria={terria}/>
                 </div>
-                <If condition={this.props.topLayer}>
-                    <Timeline terria={terria}/>
-                </If>
+                <ChartPanel terria={terria} blah={this.props.terria.catalog.chartableItems} />
             </div>
         );
     }
 });
 
 module.exports = BottomDock;
+
+//<LocationBar terria={terria}/>
+//<DistanceLegend terria={terria}/>
+//<If condition={this.props.topLayer}>
+//    <Timeline terria={terria}/>
+//</If>
+
+//<If condition={terria.catalog.chartableItems.length}>
+//<ChartPanel terria={terria} isVisible={terria.catalog.chartableItems.length} />
+//</If>

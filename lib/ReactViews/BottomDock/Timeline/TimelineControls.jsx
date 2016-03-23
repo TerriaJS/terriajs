@@ -3,6 +3,8 @@
 import React from 'react';
 
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import classnames from 'classnames';
 
 const TimelineControls = React.createClass({
     propTypes: {
@@ -54,7 +56,6 @@ const TimelineControls = React.createClass({
         this.props.clock.tick();
         this.props.clock.multiplier *= 2;
         this.props.clock.shouldAnimate = true;
-        this.isPlaying = true;
 
         this.props.currentViewer.notifyRepaintRequired();
     },
@@ -62,36 +63,39 @@ const TimelineControls = React.createClass({
     toggleLoop() {
         this.props.analytics.logEvent('navigation', 'click', 'toggleLoop');
 
-        this.isLooping = !this.isLooping;
-        if (this.isLooping) {
-            this.props.clock.clockRange = ClockRange.LOOP_STOP;
+        if (this.isLooping()) {
+            this.props.clock.clockRange = ClockRange.CLAMPED;
         } else {
-            this.props.clock.clockRange = ClockRange.UNBOUNDED;
+            this.props.clock.clockRange = ClockRange.LOOP_STOP;
         }
+    },
 
-        if ((JulianDate.greaterThan(this.props.clock.startTime, this.props.clock.currentTime)) ||
-            (JulianDate.lessThan(this.props.clock.stopTime, this.props.clock.currentTime))) {
-            this.props.clock.currentTime = this.props.clock.startTime;
-        }
+    isLooping() {
+        return this.props.clock.clockRange === ClockRange.LOOP_STOP;
+    },
+
+    isPlaying() {
+        return this.props.clock.shouldAnimate;
     },
 
     render() {
         return (
             <div className="timeline__controls">
-                <button className="" onClick={this.gotoStart} title="Go to beginning">
-                    START
+                <button className="btn btn--timeline-control" onClick={this.gotoStart} title="Go to beginning">
+                    B
                 </button>
-                <button className="" onClick={this.togglePlay} title="Play">
-                    PLAY
+                <button
+                    className={classnames('btn', 'btn--timeline-control', {'btn--play': this.isPlaying(), 'btn--pause': !this.isPlaying()})}
+                    onClick={this.togglePlay} title="Play"/>
+                <button className="btn btn--timeline-control" onClick={this.playSlower} title="Play Slower">
+                    S
                 </button>
-                <button className="" onClick={this.playSlower} title="Play Slower">
-                    SLOW
+                <button className="btn btn--timeline-control" onClick={this.playFaster} title="Play Faster">
+                    F
                 </button>
-                <button className="" onClick={this.playFaster} title="Play Faster">
-                    FAST
-                </button>
-                <button className="" onClick={this.toggleLoop} title="Loop at the end">
-                    LOOP
+                <button className={classnames('btn', 'btn--timeline-control', {'is-active': this.isLooping()})}
+                        onClick={this.toggleLoop} title="Loop at the end">
+                    L
                 </button>
             </div>
         );
