@@ -10,6 +10,12 @@ import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
 import Terria from '../../lib/Models/Terria';
 
+function getShallowRenderedOutput(jsx) {
+    const renderer = ReactTestUtils.createRenderer();
+    renderer.render(jsx);
+    return renderer.getRenderOutput();
+}
+
 describe('FeatureInfoSection', function() {
 
     let terria;
@@ -31,10 +37,8 @@ describe('FeatureInfoSection', function() {
 
     it('does something', function() {
         feature.description = {getValue: function() { return '<p>hi!</p>'; }};
-        const tester = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(tester);
-        const result = renderer.getRenderOutput();
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
+        const result = getShallowRenderedOutput(section);
         // expect(result.type).toBe('li');
         const content = result.props.children[1];
         expect(content.type).toBe('section');
