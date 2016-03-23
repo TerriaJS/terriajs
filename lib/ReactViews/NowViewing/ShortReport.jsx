@@ -1,6 +1,9 @@
 'use strict';
 
+import CustomComponents from '../../Models/CustomComponents';
+import markdownToHtml from '../../Core/markdownToHtml';
 import ObserveModelMixin from './../ObserveModelMixin';
+import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
 import React from 'react';
 
 const ShortReport = React.createClass({
@@ -10,13 +13,29 @@ const ShortReport = React.createClass({
         nowViewingItem: React.PropTypes.object.isRequired
     },
 
-    renderReports() {
+    sanitizedCustomMarkdown(content) {
+        const html = markdownToHtml(content, false, {
+            ADD_TAGS: CustomComponents.names(),
+            ADD_ATTR: CustomComponents.attributes()
+        });
+        return parseCustomHtmlToReact('<div>' + html + '</div>', this.props.catalogItem, this.props.feature);
+    },
+
+    renderShortReport() {
+        const report = this.props.nowViewingItem.shortReport;
+        if (report) {
+            return this.sanitizedCustomMarkdown(report);
+        }
+        return null;
+    },
+
+    renderShortReportSections() {
         const sections = this.props.nowViewingItem.shortReportSections;
         if(sections && sections.length > 0) {
-            return this.props.nowViewingItem.shortReportSections.map((r, i )=>
+            return this.props.nowViewingItem.shortReportSections.map((r, i)=>
                     <div key={i}>
                         <button className='btn'>{r.name}</button>
-                        <div dangerouslySetInnerHTML={{__html: r.content}} />
+                        {this.sanitizedCustomMarkdown(r.content)}
                     </div>
                 );
         }
@@ -26,7 +45,8 @@ const ShortReport = React.createClass({
     render() {
         return (
             <div className="now-viewing__item__short-report">
-                {this.renderReports()}
+                {this.renderShortReport()}
+                {this.renderShortReportSections()}
             </div>
         );
     }
