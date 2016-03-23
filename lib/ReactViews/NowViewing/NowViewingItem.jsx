@@ -6,6 +6,7 @@ import OpacitySection from './OpacitySection';
 import React from 'react';
 import ViewingControls from './ViewingControls';
 import Voldemort from './Voldemort';
+import ShortReport from './ShortReport';
 
 const NowViewingItem = React.createClass({
     mixins: [ObserveModelMixin],
@@ -62,6 +63,7 @@ const NowViewingItem = React.createClass({
                     <OpacitySection nowViewingItem={nowViewingItem} />
                     <Legend nowViewingItem={nowViewingItem} />
                     <Voldemort nowViewingItem={nowViewingItem} />
+                    <ShortReport nowViewingItem={nowViewingItem}/>
                 </div>
             </li>
         );

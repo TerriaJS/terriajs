@@ -70,9 +70,9 @@ const DataPreview = React.createClass({
         const previewed = this.props.previewed;
         return (
             <div className='data-preview__inner'>
-                <DataPreviewMap terria={this.props.terria}
-                                previewedCatalogItem={previewed}
-                />
+                {previewed && previewed.isMappable && <DataPreviewMap terria={this.props.terria}
+                                                                      previewedCatalogItem={previewed}
+                />}
                 {previewed && this.renderActions(previewed)}
             </div>
         );
@@ -114,7 +114,9 @@ const DataPreview = React.createClass({
                 </div>);
         } else if(typeof previewed.invoke) {
             return <InvokeFunction previewed={previewed}
-                            terria={this.props.terria}/>
+                                   terria={this.props.terria}
+                                   viewState={this.props.viewState}
+                                   />
         }
     },
 

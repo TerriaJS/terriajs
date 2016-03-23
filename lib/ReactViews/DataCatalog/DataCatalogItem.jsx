@@ -4,6 +4,7 @@ import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 import classNames from 'classnames';
 import addedByUser from '../../Core/addedByUser';
+import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
@@ -33,6 +34,8 @@ const DataCatalogItem = React.createClass({
     },
 
     setPreviewedItem() {
+        raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
+        this.props.item.load();
         this.props.viewState.viewCatalogItem(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);

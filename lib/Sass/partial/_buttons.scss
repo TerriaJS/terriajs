@@ -519,7 +519,7 @@ a.btn--map{
 //
 .btn--service-item{
   &:hover,
-  &.is-previewed{
+  li.is-previewed &{
     color: $color-primary;
   }
 }

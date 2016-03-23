@@ -1,35 +1,60 @@
 'use strict';
 import React from 'react';
-import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
+import PointParameterEditor from './PointParameterEditor';
 
 const ParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         parameter: React.PropTypes.object,
-        onChange: React.PropTypes.func
+        onChange: React.PropTypes.func,
+        viewState: React.PropTypes.object,
+        parameterValues: React.PropTypes.object
     },
 
-    renderEditor(){
+    onChange(e) {
+        this.props.parameterValues[this.props.parameter.id] = e.target.value;
+    },
+
+    renderEditor() {
         switch(this.props.parameter.type) {
-            case 'point':
-                return <input className='field' type="number" name="points" onChange={this.props.onChange}/>;
-            case 'enumeration':
-                return <select onChange={this.props.onChange}>
-                            {this.props.parameter.posibleValues.map((v, i)=><option value={v} key={i}>{v}</option>)}
-                       </select>;
-            default:
-                return <input className='field' type="text" value={this.props.parameter.value} onChange={this.props.onChange}/>;
+        case 'point':
+            return <PointParameterEditor previewed={this.props.previewed}
+                                         viewState={this.props.viewState}
+                                         parameter={this.props.parameter}
+                                         parameterValues={this.props.parameterValues}
+                    />;
+        case 'enumeration':
+            return <select className='field'
+                           onChange={this.onChange}
+                           value={this.props.parameterValues[this.props.parameter.id]}
+                    >
+                         {this.props.parameter.possibleValues.map((v, i)=>
+                            <option value={v} key={i}>{v}</option>)}
+                    </select>;
+        case 'dateTime':
+            return <input className='field'
+                          type="datetime-local"
+                          placeholder="YYYY-MM-DDTHH:mm:ss.sss"
+                          onChange={this.onChange}
+                          value={this.props.parameterValues[this.props.parameter.id]}
+                    />
+        default:
+            return <input className='field'
+                          type="text"
+                          onChange={this.onChange}
+                          value={this.props.parameterValues[this.props.parameter.id]}
+                    />;
         }
     },
 
     render() {
-        return (<div>
-                {this.props.parameter.name}
+        return (<form>
+                <label>{this.props.parameter.name}</label>
                 {this.renderEditor()}
-                </div>);
+                </form>);
     }
 });
 
