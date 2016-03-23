@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.2.2
+
+* Fix broken URLs for ABS ITT catalog items.
+
 ### 2.2.1
 
 * Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
