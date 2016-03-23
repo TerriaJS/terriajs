@@ -53,7 +53,7 @@ const ChartExpandButton = React.createClass({
                         {downloadButton}
                     </div>
                     <div className='chart-dropdown-button'>
-                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand</Dropdown>
+                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand ▾</Dropdown>
                     </div>
                 </div>
             );
