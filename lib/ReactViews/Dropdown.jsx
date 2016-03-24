@@ -10,7 +10,8 @@ const Dropdown = React.createClass({
         className: React.PropTypes.string, // Class added to the dropdown button.
         options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button>.
         selected: React.PropTypes.object,
-        selectOption: React.PropTypes.func // The callback function; its arguments are the chosen object and its index.
+        selectOption: React.PropTypes.func, // The callback function; its arguments are the chosen object and its index.
+        textProperty: React.PropTypes.string // property to display as text
     },
 
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
@@ -19,7 +20,8 @@ const Dropdown = React.createClass({
     getDefaultProps() {
         return {
             options: [],
-            selected: undefined
+            selected: undefined,
+            textProperty: 'name'
         };
     },
 
@@ -92,7 +94,7 @@ const Dropdown = React.createClass({
         return (
             <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
                 <button onClick={this.toggleList} className={'btn btn--dropdown ' + (this.props.className || '')} ref={element=>{this._element = element;}}>
-                    {defined(this.props.selected) ? this.props.selected.name : this.props.children}
+                    {defined(this.props.selected) ? this.props.selected[this.props.textProperty] : this.props.children}
                 </button>
                 <ul className='dropdown__list'>{this.renderOptions()}</ul>
             </div>
@@ -104,11 +106,11 @@ function renderOption(that, option, index) {
     const className = 'btn btn--dropdown-option ' + (option === that.props.selected ? 'is-selected' : '');
     if (defined(option.href)) {
         return (
-            <a href={option.href} className={className}>{option.name}</a>
+            <a href={option.href} className={className}>{option[that.props.textProperty]}</a>
         );
     }
     return (
-        <button onClick={that.select.bind(null, option, index)} className={className}>{option.name}</button>
+        <button onClick={that.select.bind(null, option, index)} className={className}>{option[that.props.textProperty]}</button>
     );
 }
 

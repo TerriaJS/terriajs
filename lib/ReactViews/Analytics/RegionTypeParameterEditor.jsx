@@ -4,9 +4,10 @@
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import loadView from '../../Core/loadView';
+import ObserveModelMixin from '../ObserveModelMixin';
 
 const RegionTypeParameterEditor = React.createClass({
+    mixins: [ObserveModelMixin],
     propTypes: {
         previewed: React.PropTypes.object,
         parameter: React.PropTypes.object,
@@ -30,9 +31,8 @@ const RegionTypeParameterEditor = React.createClass({
         if(!defined(e.target.value)) {
             this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
         } else {
-            this.props.parameterValues[this.props.parameter.id] = e.target.value;
+            this.props.parameterValues[this.props.parameter.id] = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
         }
-        this.getAllOptions();
     },
 
     getDefaultValue() {
@@ -55,9 +55,11 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     render() {
-        return <select value={this.props.parameterValues[this.props.parameter.id]}
-                       onChange={this.onChange}>
-                       {this.state.regionProviders.map((r, i)=>(<option value={r.regionType} key={i}>{r.regionType}</option>))}
+        return <select onChange={this.onChange}>
+                       {this.state.regionProviders.map((r, i)=>
+                        (<option value={r.regionType}
+                                 key={i}
+                         >{r.regionType}</option>))}
                 </select>;
     }
 });

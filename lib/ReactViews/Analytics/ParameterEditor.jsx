@@ -44,12 +44,11 @@ const ParameterEditor = React.createClass({
                           onChange={this.onChange}
                           value={this.props.parameterValues[this.props.parameter.id]}
                     />;
-        // case 'region':
-        //     return <RegionParameterEditor previewed={this.props.previewed}
-        //                                   viewState={this.props.viewState}
-        //                                   parameter={this.props.parameter}
-        //                                   parameterValues={this.props.parameterValues}
-        //             />;
+        case 'region':
+            return <RegionParameterEditor previewed={this.props.previewed}
+                                          parameter={this.props.parameter}
+                                          parameterValues={this.props.parameterValues}
+                    />;
         case 'regionType':
             return <RegionTypeParameterEditor previewed={this.props.previewed}
                                               parameter={this.props.parameter}
