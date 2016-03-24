@@ -25,6 +25,8 @@ const RegionParameterEditor = React.createClass({
     _lastPickedFeatures : undefined,
     _loadingRegionProvider : undefined,
     _selectedRegionCatalogItem : undefined,
+    _displayValue: '',
+    _regionNames: [],
     regionProvider: undefined,
 
     propTypes: {
@@ -88,12 +90,18 @@ const RegionParameterEditor = React.createClass({
         });
         knockout.getObservable(this, 'regionProvider').subscribe(this.addRegionLayer);
     },
+
+    componentDidMount() {
+        TerriaViewer.create(this.terriaForRegionSelection, {
+            mapContainer: this.refs.mapContainer,
+            uiContainer: this.refs.uiContainer
+        });
+    },
+
     getInitialState() {
         return {
-            displayValue: '',
             autocompleteVisible: false,
-            autoCompleteOptions: [],
-            regionNames: []
+            autoCompleteOptions: []
         };
     },
 
@@ -105,18 +113,19 @@ const RegionParameterEditor = React.createClass({
             value = value.realRegion;
         }
         this.props.parameterValues[this.props.parameter.id] = value;
-        this.setState({
-            displayValue: ''
-        });
+        this._displayValue = '';
     },
 
     textChange(e){
+        //Reset region value
+        this.regionValue(undefined);
         const result = [];
-        const regions = this.props.parameter.getRegionProvider(this.props.parameterValues);
+        const regions = this.regionProvider.regions;
+        const regionNames = this._regionNames;
         if(regions && regions.length > 0) {
             for(let i = 0; i < regions.length; i ++) {
-                const name = this.state.regionNames[i];
-                if (name && name.toLowerCase().indexOf(this.state.displayValue) >= 0) {
+                const name = regionNames[i];
+                if (name && name.toLowerCase().indexOf(e.target.value) >= 0) {
                     result.push({
                         name: name,
                         id: regions[i].id,
@@ -129,16 +138,99 @@ const RegionParameterEditor = React.createClass({
                 }
             }
         }
-
+        this._displayValue = e.target.value;
         this.setState({
-            autocompleteVisible: this.state.displayValue.length &&
+            autocompleteVisible: e.target.value.length &&
                                  result.length > 0 &&
                                  result.length < 100,
-            displayValue: e.target.value,
             autoCompleteOptions: result
         });
     },
 
+    selectRegion(region) {
+        this.regionValue(region);
+        this.setState({
+            autocompleteVisible: false,
+            autoCompleteOptions: []
+        });
+    },
+
+    renderOptions() {
+        return <ul className={`autocomplete ${this.state.autocompleteVisible ? '' : 'is-hidden'}`}>{this.state.autoCompleteOptions.map((op, i)=>
+                    <li className="" key={i} onClick={this.selectRegion.bind(this, op)}>{op.name}</li>
+                )}
+                </ul>;
+    },
+
+    getDisplayValue(){
+        const region = this.regionValue();
+            if (!defined(region)) {
+                return this._displayValue;
+            }
+            const index = this.regionProvider.regions.indexOf(region);
+            if (index >= 0 && this._regionNames[index]) {
+                return this._regionNames[index];
+            } else {
+                return region.id;
+            }
+    },
+
+    render(){
+        this.updateMapFromValue();
+        return <div>
+                    <div className="parameter-editor-text-input">
+                        <input className='field'
+                               type="text"
+                               size="45"
+                               autoComplete="off"
+                               value={this.getDisplayValue()}
+                               onChange={this.textChange}
+                               placeholder="Type a region name or click the map below"
+                        />
+                        {this.renderOptions()}
+                    </div>
+                    <div className="data-preview-map">
+                        <div className="terria-preview" ref='mapContainer'></div>
+                        <div className="parameter-editor-map-ui" ref='uiContainer'></div>
+                    </div>
+                </div>;
+    },
+
+    addRegionLayer() {
+        const that = this;
+        if (defined(this._selectedRegionCatalogItem)) {
+            this._selectedRegionCatalogItem.isEnabled = false;
+            this._selectedRegionCatalogItem = undefined;
+        }
+
+        if (!defined(this.regionProvider)) {
+            return;
+        }
+
+        this._loadingRegionProvider = this.regionProvider;
+
+        when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
+            if (that.regionProvider !== that._loadingRegionProvider) {
+                return;
+            }
+            that._regionNames = that.regionProvider.regionNames;
+
+            if (defined(catalogItem)) {
+                catalogItem.isEnabled = false;
+                catalogItem = undefined;
+            }
+
+            catalogItem = new WebMapServiceCatalogItem(that.terriaForRegionSelection);
+            catalogItem.url = that.regionProvider.server;
+            catalogItem.layers = that.regionProvider.layerName;
+            catalogItem.parameters = {
+                styles: 'border_black_fill_aqua'
+            };
+            catalogItem.isEnabled = true;
+
+            that._loadingRegionProvider = undefined;
+        });
+    },
     updateMapFromValue() {
         if (!defined(this.regionProvider)) {
             return;
@@ -178,77 +270,6 @@ const RegionParameterEditor = React.createClass({
                 that._selectedRegionCatalogItem = undefined;
             }
         });
-    },
-
-    selectRegion(region) {
-        this.regionValue(region);
-    },
-
-    renderOptions() {
-        return <ul>{this.state.autoCompleteOptions.map((op, i)=>
-                    <li className="" onClick={this.selectRegion}>{op.name}</li>
-                )}
-                </ul>;
-    },
-
-    mapIsReady(mapContainer) {
-        if (mapContainer) {
-            const t = TerriaViewer.create(this.terriaForRegionSelection, {
-                mapContainer: mapContainer
-            });
-        }
-    },
-
-    addRegionLayer() {
-        const that = this;
-        if (defined(this._selectedRegionCatalogItem)) {
-            this._selectedRegionCatalogItem.isEnabled = false;
-            this._selectedRegionCatalogItem = undefined;
-        }
-
-        if (!defined(this.regionProvider)) {
-            return;
-        }
-
-        this._loadingRegionProvider = this.regionProvider;
-
-        when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
-            if (that.regionProvider !== that._loadingRegionProvider) {
-                return;
-            }
-            // that.setState({
-            //     regionNames: that.regionProvider.regionNames
-            // });
-
-            if (defined(catalogItem)) {
-                catalogItem.isEnabled = false;
-                catalogItem = undefined;
-            }
-
-            catalogItem = new WebMapServiceCatalogItem(that.terriaForRegionSelection);
-            catalogItem.url = that.regionProvider.server;
-            catalogItem.layers = that.regionProvider.layerName;
-            catalogItem.parameters = {
-                styles: 'border_black_fill_aqua'
-            };
-            catalogItem.isEnabled = true;
-
-            that._loadingRegionProvider = undefined;
-        });
-    },
-
-    render(){
-        this.updateMapFromValue();
-        return <div>
-                    <div className="parameter-editor-text-input">
-                        <input className='field' type="text" size="45" autoComplete="off" value={this.state.displayValue} onChange={this.textChange} placeholder="Type a region name or click the map below"/>
-                        {this.renderOptions()}
-                    </div>
-                    <div className="parameter-editor-map-holder">
-                        <div className="parameter-editor-map" ref={this.mapIsReady}></div>
-                        <div className="parameter-editor-map-ui"></div>
-                    </div>
-                </div>;
     }
 });
 

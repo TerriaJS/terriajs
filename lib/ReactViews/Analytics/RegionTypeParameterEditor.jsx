@@ -21,27 +21,25 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     componentWillMount() {
-        if(!defined(this.props.parameterValues[this.props.parameter.id])) {
-            this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
-        }
         this.getAllOptions();
     },
 
     onChange(e) {
-        if(!defined(e.target.value)) {
-            this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
-        } else {
-            this.props.parameterValues[this.props.parameter.id] = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
-        }
+        this.props.parameterValues[this.props.parameter.id] = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
     },
 
     getDefaultValue() {
         const nowViewingItems = this.props.previewed.terria.nowViewing.items;
-        for (let i = 0; i < nowViewingItems.length; ++i) {
-            const item = nowViewingItems[i];
-            if (defined(item.regionMapping) && defined(item.regionMapping.regionDetails) && item.regionMapping.regionDetails.length > 0) {
-                return item.regionMapping.regionDetails[0].regionProvider;
+        if(nowViewingItems.length > 0) {
+            for (let i = 0; i < nowViewingItems.length; ++i) {
+                const item = nowViewingItems[i];
+                if (defined(item.regionMapping) && defined(item.regionMapping.regionDetails) && item.regionMapping.regionDetails.length > 0) {
+                    return item.regionMapping.regionDetails[0].regionProvider;
+                }
             }
+        }
+        if(this.state.regionProviders.length) {
+            return this.state.regionProviders[0];
         }
     },
 
@@ -55,6 +53,9 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     render() {
+        if(!defined(this.props.parameterValues[this.props.parameter.id])) {
+            this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
+        }
         return <select onChange={this.onChange}>
                        {this.state.regionProviders.map((r, i)=>
                         (<option value={r.regionType}
