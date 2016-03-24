@@ -3,6 +3,9 @@ import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
 import PointParameterEditor from './PointParameterEditor';
+import RegionParameterEditor from './RegionParameterEditor';
+import RegionTypeParameterEditor from './RegionTypeParameterEditor';
+
 
 const ParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -40,7 +43,18 @@ const ParameterEditor = React.createClass({
                           placeholder="YYYY-MM-DDTHH:mm:ss.sss"
                           onChange={this.onChange}
                           value={this.props.parameterValues[this.props.parameter.id]}
-                    />
+                    />;
+        // case 'region':
+        //     return <RegionParameterEditor previewed={this.props.previewed}
+        //                                   viewState={this.props.viewState}
+        //                                   parameter={this.props.parameter}
+        //                                   parameterValues={this.props.parameterValues}
+        //             />;
+        case 'regionType':
+            return <RegionTypeParameterEditor previewed={this.props.previewed}
+                                              parameter={this.props.parameter}
+                                              parameterValues={this.props.parameterValues}
+                    />;
         default:
             return <input className='field'
                           type="text"

@@ -5,10 +5,8 @@ import React from 'react';
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import defineProperties from 'terriajs-cesium/Source/Core/defineProperties';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import loadView from '../../Core/loadView';
 import MapInteractionMode from '../../Models/MapInteractionMode';
 import ObserveModelMixin from '../ObserveModelMixin';
 
