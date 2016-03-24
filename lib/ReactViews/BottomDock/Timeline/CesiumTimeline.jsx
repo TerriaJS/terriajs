@@ -35,7 +35,17 @@ const CesiumTimeline = React.createClass({
         };
 
         this.cesiumTimeline.addEventListener('settime', this.cesiumTimeline.scrubFunction, false);
+
+        this.topLayerSubscription = knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.zoom());
+        this.zoom();
+    },
+
+    zoom() {
         this.cesiumTimeline.zoomTo(this.props.terria.clock.startTime, this.props.terria.clock.stopTime);
+    },
+
+    componentWillUnmount() {
+        this.topLayerSubscription.dispose();
     },
 
     shouldComponentUpdate() {

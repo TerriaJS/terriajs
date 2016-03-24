@@ -27,7 +27,6 @@ const Timeline = React.createClass({
     },
 
     componentWillMount() {
-        this.topLayerSubscription = knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.updateForNewTopLayer());
         this.resizeListener = () => this.timeline && this.timeline.resize();
         window.addEventListener('resize', this.resizeListener, false);
 
@@ -37,6 +36,9 @@ const Timeline = React.createClass({
                 currentTimeString: formatDateTime(JulianDate.toDate(time), this.props.locale)
             });
         });
+
+        this.topLayerSubscription = knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.updateForNewTopLayer());
+        this.updateForNewTopLayer();
     },
 
     componentWillUnmount() {
