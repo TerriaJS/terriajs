@@ -21,7 +21,7 @@ const MapNavigation = React.createClass({
     render() {
         return (<div className='map-navigation'>
               <ul className='map-navigation__menu'>
-                <li><SettingPanel terria= {this.props.terria} allBaseMaps = {this.props.allBaseMaps} terriaViewer={this.props.terriaViewer}/></li>
+                <li><SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps} terriaViewer={this.props.terriaViewer}/></li>
                 <li><FullScreenButton terria={this.props.terria} /></li>
                 <li><SharePanel terria={this.props.terria}/></li>
                 <li><div><a className='btn btn--map about-link__button' href='#' title='about'> About </a></div></li>
