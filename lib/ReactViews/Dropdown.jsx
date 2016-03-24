@@ -7,6 +7,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 // Uses the contents of the element as the name of the dropdown if none selected.
 const Dropdown = React.createClass({
     propTypes: {
+        className: React.PropTypes.string, // Class added to the dropdown button.
         options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button>.
         selected: React.PropTypes.object,
         selectOption: React.PropTypes.func // The callback function; its arguments are the chosen object and its index.
@@ -90,7 +91,7 @@ const Dropdown = React.createClass({
     render() {
         return (
             <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
-                <button onClick={this.toggleList} className='btn btn--dropdown' ref={element=>{this._element = element;}}>
+                <button onClick={this.toggleList} className={'btn btn--dropdown ' + (this.props.className || '')} ref={element=>{this._element = element;}}>
                     {defined(this.props.selected) ? this.props.selected.name : this.props.children}
                 </button>
                 <ul className='dropdown__list'>{this.renderOptions()}</ul>
