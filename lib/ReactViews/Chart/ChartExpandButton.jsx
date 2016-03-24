@@ -100,6 +100,7 @@ function expand(props, url) {
     newCatalogItem.load().then(function() {
         // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
         try {
+            newCatalogItem.sourceCatalogItem = props.catalogItem;
             const tableStructure = newCatalogItem.tableStructure;
             tableStructure.sourceFeature = props.feature;
             tableStructure.columns.forEach((column, columnNumber)=>{
