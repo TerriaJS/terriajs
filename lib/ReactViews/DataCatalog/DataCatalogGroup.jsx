@@ -1,8 +1,8 @@
 'use strict';
 
 import DataCatalogMember from './DataCatalogMember.jsx';
-import Loader from './Loader.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import Loader from '../Loader.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import classNames from 'classnames';
 

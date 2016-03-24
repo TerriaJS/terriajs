@@ -5,12 +5,14 @@ import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import CustomComponents from '../Models/CustomComponents';
-import markdownToHtml from '../Core/markdownToHtml';
-import parseCustomHtmlToReact from '../Models/parseCustomHtmlToReact';
+import CustomComponents from '../../Models/CustomComponents';
+import markdownToHtml from '../../Core/markdownToHtml';
+import ObserveModelMixin from '../ObserveModelMixin';
+import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
+    mixins: [ObserveModelMixin],
     propTypes: {
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
         feature: React.PropTypes.object,

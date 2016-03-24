@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import classNames from 'classnames';
 
 // Individual dataset

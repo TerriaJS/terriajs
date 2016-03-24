@@ -1,18 +1,19 @@
 'use strict';
 
+import classNames from 'classnames';
 import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import CatalogGroup from '../Models/CatalogGroup';
-import CsvCatalogItem from '../Models/CsvCatalogItem';
-import Dropdown from './Dropdown';
-import raiseErrorToUser from '../Models/raiseErrorToUser';
+import CatalogGroup from '../../Models/CatalogGroup';
+import CsvCatalogItem from '../../Models/CsvCatalogItem';
+import Dropdown from '../Dropdown';
+import raiseErrorToUser from '../../Models/raiseErrorToUser';
 
 const ChartExpandButton = React.createClass({
 
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
         sources: React.PropTypes.array,
         sourceNames: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
@@ -21,7 +22,9 @@ const ChartExpandButton = React.createClass({
         columnNames: React.PropTypes.array,
         columnUnits: React.PropTypes.array,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        yColumns: React.PropTypes.array
+        yColumns: React.PropTypes.array,
+        canDownload: React.PropTypes.bool,
+        raiseToTitle: React.PropTypes.bool
     },
 
     expandButton() {
@@ -36,17 +39,34 @@ const ChartExpandButton = React.createClass({
         if (!defined(this.props.sources)) {
             return null;
         }
+        const that = this;
+        let downloadButton;
         if (defined(this.props.sourceNames)) {
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
+            const nameAndHrefObjects = this.props.sourceNames.map((name, i)=>{ return {name: name, href: that.props.sources[i]}; });
+            if (this.props.canDownload) {
+                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects}><i className='icon icon-download'></i></Dropdown>;
+            }
             return (
-                <div className='chart-expand'>
-                    <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand</Dropdown>
+                <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
+                    <div className='chart-dropdown-button'>
+                        {downloadButton}
+                    </div>
+                    <div className='chart-dropdown-button'>
+                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand ▾</Dropdown>
+                    </div>
                 </div>
             );
         }
-
+        if (this.props.canDownload) {
+            const href = this.props.sources[0];
+            downloadButton = <a className='btn btn--download' href={href}></a>;
+        }
         return (
-            <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>
+            <div className='chart-expand'>
+                {downloadButton}
+                <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>
+            </div>
         );
     }
 
@@ -73,6 +93,7 @@ function expand(props, url) {
     }
     group.add(newCatalogItem);
     newCatalogItem.isLoading = true;
+    newCatalogItem.isMappable = false;
     terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
     newCatalogItem.isEnabled = true;  // This loads it as well.
     // Is there a better way to set up an action to occur once the file has loaded?

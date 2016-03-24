@@ -2,7 +2,7 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import FeatureInfoSection from './FeatureInfoSection.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
 // Any Catalog in a feature-info-panel

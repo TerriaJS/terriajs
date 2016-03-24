@@ -1,7 +1,7 @@
 'use strict';
 
-import DataCatalogMember from './DataCatalogMember.jsx';
-import DataPreview from './DataPreview.jsx';
+import DataCatalogMember from './DataCatalog/DataCatalogMember.jsx';
+import DataPreview from './Preview/DataPreview.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import SearchHeader from './Search/SearchHeader.jsx';
@@ -46,6 +46,7 @@ const DataCatalogTab = React.createClass({
                 <div className="data-preview__wrapper">
                     <DataPreview terria={terria}
                                  viewState={this.props.viewState}
+                                 previewed={this.props.viewState.previewedItem}
                     />
                 </div>
             </div>);

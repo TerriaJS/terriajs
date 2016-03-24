@@ -1,12 +1,12 @@
 'use strict';
 
 import classNames from 'classnames';
-import DataCatalogMember from './DataCatalogMember.jsx';
-import DataPreview from './DataPreview.jsx';
+import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
+import DataPreview from '../Preview/DataPreview.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import MobileSearch from './MobileSearch.jsx';
-import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import NowViewingContainer from '../NowViewing/NowViewingContainer.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
 
@@ -43,6 +43,7 @@ const MobileModalWindow = React.createClass({
             return <div className='modal--mobile-bg'>
                         <DataPreview terria={this.props.terria}
                                      viewState={this.props.viewState}
+                                     previewed={this.props.viewState.previewedItem}
                         />
                     </div>;
         case this.props.viewState.mobileViewOptions.nowViewing:

@@ -12,7 +12,7 @@ th {
 
 th,
 td {
-  padding: .25rem 1rem;
+  padding: .5rem 1rem;
   line-height: inherit;
 }
 
@@ -57,8 +57,6 @@ td { vertical-align: top }
 //
 .feature-info-panel__content table{
     font-family: monospace;
-    background: rgba($dark-lighter, 0.7);
-    margin: $padding 0;
     max-width: 100%;
     td{
       border-collapse: collapse;

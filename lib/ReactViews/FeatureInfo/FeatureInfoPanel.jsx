@@ -2,15 +2,17 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
-import Loader from './Loader.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import Loader from '../Loader.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired,
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
         onClose: React.PropTypes.func,
@@ -18,9 +20,17 @@ const FeatureInfoPanel = React.createClass({
     },
 
     componentDidMount() {
+        const createFakeSelectedFeatureDuringPicking = true;
         this._pickedFeaturesSubscription = knockout.getObservable(this.props.terria, 'pickedFeatures').subscribe(() => {
-            this.props.terria.selectedFeature = undefined;
-
+            if (createFakeSelectedFeatureDuringPicking) {
+                const fakeFeature = new Entity({
+                    id: 'Pick Location'
+                });
+                fakeFeature.position = this.props.terria.pickedFeatures.pickPosition;
+                this.props.terria.selectedFeature = fakeFeature;
+            } else {
+                this.props.terria.selectedFeature = undefined;
+            }
             const pickedFeatures = this.props.terria.pickedFeatures;
             if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                 pickedFeatures.allFeaturesAvailablePromise.then(() => {
@@ -64,12 +74,15 @@ const FeatureInfoPanel = React.createClass({
             }
             if (pickedFeatures && pickedFeatures.length > 0) {
                 return pickedFeatures.map((features, i)=>{
-                    return (<FeatureInfoCatalogItem key={i}
-                                                    features={features}
-                                                    clock={that.props.terria.clock}
-                                                    selectedFeature={this.props.terria.selectedFeature}
-                                                    onClickFeatureHeader={this.toggleOpenFeature}
-                            />);
+                    return (
+                        <FeatureInfoCatalogItem
+                            key={i}
+                            features={features}
+                            clock={that.props.terria.clock}
+                            selectedFeature={this.props.terria.selectedFeature}
+                            onClickFeatureHeader={this.toggleOpenFeature}
+                        />
+                    );
                 });
             }
             return <li className='no-results'> No results </li>;
@@ -77,10 +90,17 @@ const FeatureInfoPanel = React.createClass({
         return <li className='no-results'> No results </li>;
     },
 
+    bringToFront() {
+        // Bring feature info panel to front.
+        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.featureInfoPanel);
+    },
+
     render() {
         const pickedFeatures = this.getFeatures();
         return (
-            <div tabIndex='-1' className={'feature-info-panel ' + (this.props.isCollapsed ? 'is-collapsed' : '') + ' ' + (this.props.isVisible ? 'is-visible' : '')} aria-hidden={!this.props.isVisible}>
+            <div className={`feature-info-panel ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.featureInfoPanel ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
+                aria-hidden={!this.props.isVisible}
+                onClick={this.bringToFront} >
               <div className='feature-info-panel__header'>
                 <button onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Info Panel </button>
                 <button onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>

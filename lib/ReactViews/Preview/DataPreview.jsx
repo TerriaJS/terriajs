@@ -3,27 +3,30 @@
 import DataPreviewMap from './DataPreviewMap.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import markdownToHtml from 'terriajs/lib/Core/markdownToHtml';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-
-//sort this, but why?
-const infoSectionOrder = [
-    'Disclaimer',
-    'Description',
-    'Data Description',
-    'Service Description',
-    'Resource Description',
-    'Licence',
-    'Access Constraints'
-];
+import naturalSort from 'javascript-natural-sort';
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
     mixins: [ObserveModelMixin],
 
+    // Should get it from option
+    _defaultInfoSectionOrder: [
+        'Disclaimer',
+        'Description',
+        'Data Description',
+        'Service Description',
+        'Resource Description',
+        'Licence',
+        'Access Constraints'
+    ],
+
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object
+        viewState: React.PropTypes.object,
+        previewed: React.PropTypes.object
     },
 
     toggleOnMap() {
@@ -43,16 +46,43 @@ const DataPreview = React.createClass({
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.data);
     },
 
+    sortInfoSections(items) {
+        naturalSort.insensitive = true;
+        const infoSectionOrder = defaultValue(this.props.previewed.infoSectionOrder, this._defaultInfoSectionOrder);
+        items.sort(function(a, b) {
+            const aIndex = infoSectionOrder.indexOf(a.name);
+            const bIndex = infoSectionOrder.indexOf(b.name);
+            if (aIndex >= 0 && bIndex < 0) {
+                return -1;
+            } else if (aIndex < 0 && bIndex >= 0) {
+                return 1;
+            } else if (aIndex < 0 && bIndex < 0) {
+                return naturalSort(a.name, b.name);
+            }
+            return aIndex - bIndex;
+        });
+        return items;
+    },
+
     render() {
-        const previewed = this.props.viewState.previewedItem;
+        const previewed = this.props.previewed;
         return (
             <div className='data-preview__inner'>
                 <DataPreviewMap terria={this.props.terria}
                                 previewedCatalogItem={previewed}
                 />
                 {this.renderActions(previewed)}
+
             </div>
         );
+    },
+
+    renderSections(previewed) {
+        if(previewed) {
+            const items = previewed.info.slice();
+            return this.sortInfoSections(items).map((item, i)=>
+                <div key={i}><h4>{item.name}</h4><p dangerouslySetInnerHTML={this.renderMarkup(item.content)}/></div>);
+        }
     },
 
     renderActions(previewed) {
@@ -69,26 +99,26 @@ const DataPreview = React.createClass({
                                 title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
                             {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
                         </button>
-                        <h4>{previewed.name}</h4>
+                        <h3>{previewed.name}</h3>
                         <div className="data-info url">
-                            <h5>Description</h5>
+                            <h4>Description</h4>
                             {this.renderDescription(previewed)}
-                            <h5>Licence</h5>
-                            <h5>Data Custodian</h5>
-                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
-                            <h5>Web Map Service (WMS) URL </h5>
-                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}></p>
+                            <h4>Data Custodian</h4>
+                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}/>
+                            <h4>Web Map Service (WMS) URL </h4>
+                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}/>
+                            {this.renderSections(previewed)}
                         </div>
                     </div>
                 </div>);
         }
     },
 
-    renderDescription(previewed){
-        if(previewed.hasDescription){
+    renderDescription(previewed) {
+        if(previewed.hasDescription) {
             return <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>;
         }
-        return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>
+        return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>;
     }
 });
 

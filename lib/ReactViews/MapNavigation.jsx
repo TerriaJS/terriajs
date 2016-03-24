@@ -1,5 +1,5 @@
 'use strict';
-import Compass from './Compass.jsx';
+import Compass from './CompassZoom/Compass.jsx';
 import FullScreenButton from './FullScreenButton.jsx';
 import MyLocation from './MyLocation.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
@@ -7,7 +7,7 @@ import React from 'react';
 import SettingPanel from './SettingPanel.jsx';
 import SharePanel from './SharePanel.jsx';
 import ViewerMode from '../Models/ViewerMode';
-import ZoomControl from './ZoomControl.jsx';
+import ZoomControl from './CompassZoom/ZoomControl.jsx';
 
 // The map navigation region
 const MapNavigation = React.createClass({

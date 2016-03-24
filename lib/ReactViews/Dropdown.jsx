@@ -7,10 +7,13 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 // Uses the contents of the element as the name of the dropdown if none selected.
 const Dropdown = React.createClass({
     propTypes: {
-        options: React.PropTypes.array, // Must be an array of objects with name properties.
+        options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button>.
         selected: React.PropTypes.object,
         selectOption: React.PropTypes.func // The callback function; its arguments are the chosen object and its index.
     },
+
+    // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
+    _element: undefined,
 
     getDefaultProps() {
         return {
@@ -36,14 +39,33 @@ const Dropdown = React.createClass({
         window.removeEventListener('click', this.closeDropDownWhenClickOtherPlaces);
     },
 
-    closeDropDownWhenClickOtherPlaces() {
+    closeDropDownWhenClickOtherPlaces(evt) {
+        // If this dropdown is already closed, don't worry about the rest of the checks.
+        if (!this.state.isOpen) {
+            return;
+        }
+        // console.log('closeDropDownWhenClickOtherPlaces', evt.target, this._element, 'isOpen:', this.state.isOpen);
+        // Ignore if we clicked on this element.
+        if (evt.target === this._element) {
+            return;
+        }
+        // Ignore if we clicked on any children of this element. Might want to extend this recursively?
+        for (let i = this._element.childNodes.length - 1; i >= 0; i--) {
+            if (evt.target === this._element.childNodes[i]) {
+                return;
+            }
+        }
+        // Ignore if we clicked on the parent of this element.
+        if (evt.target === this._element.parentElement) {
+            return;
+        }
         this.setState({
             isOpen: false
         });
     },
 
     toggleList(event) {
-        event.stopPropagation();
+        // event.stopPropagation();
         this.setState({
             isOpen: !this.state.isOpen
         });
@@ -61,18 +83,32 @@ const Dropdown = React.createClass({
     renderOptions() {
         const that = this;
         return that.props.options.map((option, i)=>{
-            return (<li key={i}><button onClick={that.select.bind(null, option, i)} className={'btn btn--dropdown-option ' + (option === that.props.selected ? 'is-selected' : '')}>{option.name}</button></li>);
+            return (<li key={i}>{renderOption(that, option, i)}</li>);
         });
     },
 
     render() {
-        return (<div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
-                  <button onClick={this.toggleList} className='btn btn--dropdown' >
+        return (
+            <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
+                <button onClick={this.toggleList} className='btn btn--dropdown' ref={element=>{this._element = element;}}>
                     {defined(this.props.selected) ? this.props.selected.name : this.props.children}
-                    <span className="icon icon-dropdown"></span>
-                  </button>
-                  <ul className='dropdown__list'>{this.renderOptions()}</ul>
-                </div>);
+                </button>
+                <ul className='dropdown__list'>{this.renderOptions()}</ul>
+            </div>
+        );
     }
 });
+
+function renderOption(that, option, index) {
+    const className = 'btn btn--dropdown-option ' + (option === that.props.selected ? 'is-selected' : '');
+    if (defined(option.href)) {
+        return (
+            <a href={option.href} className={className}>{option.name}</a>
+        );
+    }
+    return (
+        <button onClick={that.select.bind(null, option, index)} className={className}>{option.name}</button>
+    );
+}
+
 module.exports = Dropdown;
