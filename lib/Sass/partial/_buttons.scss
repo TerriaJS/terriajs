@@ -515,9 +515,14 @@ a.btn--map{
   }
 }
 
+.btn--timeline-control {
+    height: 29px;
+    width: 34px;
 
-
-
-
-
-
+    &.is-active {
+        color: $color-primary;
+    }
+    &:active {
+        color: $color-primary;
+    }
+}

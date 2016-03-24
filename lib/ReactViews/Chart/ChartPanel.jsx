@@ -22,7 +22,7 @@ const ChartPanel = React.createClass({
         terria: React.PropTypes.object.isRequired,
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
-        onClose: React.PropTypes.func,
+        onHeightChange: React.PropTypes.func,
         viewState: React.PropTypes.object
     },
 
@@ -36,6 +36,10 @@ const ChartPanel = React.createClass({
                     .forEach(column=>column.toggleActive());
             }
         }
+    },
+
+    componentDidUpdate() {
+        this.props.onHeightChange && this.props.onHeightChange();
     },
 
     synthesizeTableStructure() {
