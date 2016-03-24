@@ -6,31 +6,34 @@ import DistanceLegend from './DistanceLegend.jsx';
 import LocationBar from './LocationBar.jsx';
 import Timeline from './Timeline/Timeline.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 const BottomDock = React.createClass({
     mixins: [ObserveModelMixin],
 
+    displayName: 'BottomDock',
+
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        topLayer: React.PropTypes.object // for some reason this needs to be a separate prop for ObserveModelMixin to pick it up.
+        terria: React.PropTypes.object.isRequired
     },
 
     componentDidUpdate() {
-        const offsetHeight = document.querySelector('.bottom-dock').offsetHeight;
-        document.querySelector('.cesium-widget-credits').style.bottom = offsetHeight + 'px';
+        this.onHeightChange();
+    },
+
+    onHeightChange() {
+        setTimeout(() => this.props.terria.commonViewerProps.shiftDisclaimerPx = document.querySelector('.bottom-dock').offsetHeight, 0);
     },
 
     render() {
         const terria = this.props.terria;
-
         return (
             <div className='bottom-dock'>
                 <div className='location-distance'>
                     <LocationBar terria={terria}/>
                     <DistanceLegend terria={terria}/>
                 </div>
-                <If condition={this.props.topLayer}>
+                <ChartPanel terria={terria} onHeightChange={this.onHeightChange} />
+                <If condition={terria.timeSeriesStack.topLayer}>
                     <Timeline terria={terria}/>
                 </If>
             </div>
@@ -39,3 +42,8 @@ const BottomDock = React.createClass({
 });
 
 module.exports = BottomDock;
+
+
+
+
+
