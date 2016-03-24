@@ -57,11 +57,14 @@ const ViewingControls = React.createClass({
     },
 
     previewItem() {
+        let item = this.props.nowViewingItem;
+        // If this is a chartable item opened from another catalog item, get the info of the original item.
+        if (defined(item.sourceCatalogItem)) {
+            item = item.sourceCatalogItem;
+        }
         // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
-        this.props.nowViewingItem.enableWithParents();
-
-        this.props.viewState.viewCatalogItem(this.props.nowViewingItem);
-
+        item.enableWithParents();
+        this.props.viewState.viewCatalogItem(item);
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },
 
@@ -76,10 +79,10 @@ const ViewingControls = React.createClass({
             zoomButton = <li className='zoom'><button onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To</button></li>;
         }
         if (defined(nowViewingItem.tableStructure) && defined(nowViewingItem.tableStructure.sourceFeature)) {
-            openFeatureButton = <li className='open-feature'><button onClick={this.openFeature} title="Open source feature" className="btn">Feature Info</button></li>;
+            openFeatureButton = <li className='open-feature'><button onClick={this.openFeature} title="Open source feature" className="btn">Zoom To</button></li>;
         }
         if (nowViewingItem.showsInfo) {
-            infoButton = <li className='info'><button onClick={this.previewItem} className='btn' title='info'>Info</button></li>;
+            infoButton = <li className='info'><button onClick={this.previewItem} className='btn' title='info'>About This Data Set</button></li>;
         }
         removeButton = <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>;
         if (nowViewingItem.supportsToggleShown) {

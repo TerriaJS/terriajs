@@ -22,7 +22,26 @@
           "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
           "featureInfoTemplate" : {
             "name": "Number {{value}}",
-            "template": "<p>All sheep stations have the same data currently.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='1'></chart>"
+            "template": "<p>All sheep stations have the same time series plot.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='1'></chart>"
+          }
+        },
+        {
+          "name": "XY Plot",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv_nongeo/xy.csv"
+        },
+        {
+          "name": "Time series",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv_nongeo/time_series.csv"
+        },
+        {
+          "name": "Train Stations",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
+          "featureInfoTemplate" : {
+            "name": "Number {{value}}",
+            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/xy.csv'></chart>"
           }
         }
       ]
