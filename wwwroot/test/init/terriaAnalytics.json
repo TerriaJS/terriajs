@@ -30,6 +30,12 @@
                     "name": "NSW NEXIS 2012 (LGA)",
                     "type": "csv",
                     "url": "test/NSW_LGA_NEXIS_201212.csv"
+                },
+                {
+                    "name": "Why-am-I-special Result Test",
+                    "type": "geojson",
+                    "data": {"type": "FeatureCollection", "properties": {}, "features": []},
+                    "shortReport": "These are the top characteristics that make Foo unique or special:\n\n<chart sources='build/TerriaJS/test/csv_nongeo/B_1d.csv' source-names='1d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart>"
                 }
             ]
         }
