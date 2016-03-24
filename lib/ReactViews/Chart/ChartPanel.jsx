@@ -48,16 +48,18 @@ const ChartPanel = React.createClass({
         const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
-            let columns = [item.timeColumn];
+            let columns = [getXColumn(item)];
             if (item.isEnabled && defined(item.tableStructure)) {
                 if (!defined(columns[0])) {
                     continue;
                 }
                 const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
-                columns = columns.concat(yColumns);
-                columnArrays.push(columns);
-                for (let j = yColumns.length - 1; j >= 0; j--) {
-                    columnItemNames.push(item.name);
+                if (yColumns.length > 0) {
+                    columns = columns.concat(yColumns);
+                    columnArrays.push(columns);
+                    for (let j = yColumns.length - 1; j >= 0; j--) {
+                        columnItemNames.push(item.name);
+                    }
                 }
             }
         }
@@ -80,13 +82,22 @@ const ChartPanel = React.createClass({
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
         let xUnits;
+        let xType;
+        const itemsToInactivate = [];
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
-                const xColumn = item.timeColumn;
+                const xColumn = getXColumn(item);
                 if (defined(xColumn)) {
                     const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                     if (yColumns.length > 0) {
+                        if (!defined(xType)) {
+                            xType = xColumn.type;
+                        } else if (xColumn.type !== xType) {
+                            // If this x column type doesn't match the previous one, flag it to turn it off.
+                            itemsToInactivate.push(i);
+                            continue;
+                        }
                         const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
                         const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
                         const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
@@ -96,6 +107,13 @@ const ChartPanel = React.createClass({
                 }
             }
         }
+        // TODO: This changes chartableItems, which will trigger a re-render... check & improve.
+        itemsToInactivate.forEach(i=>{
+            chartableItems[i].tableStructure.columns.forEach(column=>{
+                column.isActive = false;
+            });
+        });
+
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
         const isVisible = (data.length > 0) || isLoading;
         if (!isVisible) {
@@ -142,6 +160,10 @@ const ChartPanel = React.createClass({
         );
     }
 });
+
+function getXColumn(item) {
+    return item.timeColumn || (item.tableStructure && item.tableStructure.columnsByType[VarType.SCALAR][0]);
+}
 
 function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
     return (points, index)=>
