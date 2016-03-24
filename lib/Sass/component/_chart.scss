@@ -6,44 +6,45 @@ $chart-grid-color: rgba(#fff, 0.085);
 $chart-text-color: #fff;
 $chart-line-color: #ccc;
 
-.axis path,
-.axis line {
+.line-chart .axis path,
+.line-chart .axis line {
   fill: none;
   stroke: none;  // Hide the axes if the chart is outside the chart panel.
   stroke-width: 1px;
   shape-rendering: crispEdges;
 }
 
-.chart-panel .axis path.domain {
+.chart-panel .line-chart .axis path.domain {
   stroke: $chart-axis-color;
 }
-.chart-panel .axis .tick line {
+.chart-panel .line-chart .axis .tick line {
   stroke: $chart-grid-color;
 }
 
-.chart-panel .axis .colors line {
+.chart-panel .line-chart .axis .colors line {
   stroke-width: 2;
 }
 
-.chart-panel .chart .plot-area {
+.chart-panel .line-chart .plot-area {
   fill: $chart-area-color;
 }
 
-
-text {
-  fill: $chart-text-color;
-  font-family: monospace;
-  // stroke-width: 0;
-  // font-size: 10px;
+.chart-panel .line-chart text {
+  font-size: 120%;
 }
 
-.line {
+.line-chart text {
+  fill: $chart-text-color;
+  font-family: monospace;
+}
+
+.line-chart .line {
   fill: none;
   stroke: $chart-line-color;
   stroke-width: 1;
 }
 
-.selection circle {
+.line-chart .selection circle {
   fill: white;
   stroke: white;
   stroke-width: 1;
@@ -51,13 +52,13 @@ text {
   r: 4;
 }
 
-.selection line {
+.line-chart .selection line {
   stroke: white;
   opacity: 0.65;
   stroke-width: 1;
 }
 
-.chart-panel__holder{
+.chart-panel__holder {
   position: fixed;
   left: 0;
   right: 0;
@@ -65,7 +66,7 @@ text {
   z-index: 10;
   background: $dark;
   padding-bottom: 13px;
-  @media(screen and min-width: $sm){
+  @media(screen and min-width: $sm) {
     left: $work-bench-width;
     .is-full-screen &{
       left: 0;
@@ -73,7 +74,7 @@ text {
   }
 }
 
-.chart-panel__header{
+.chart-panel__header {
   position: relative;
   @extend .clearfix;
   .left{
@@ -84,7 +85,7 @@ text {
     @extend .col;
     @extend .col-4;
   }
-  .btn--download{
+  .btn--download {
     text-transform: uppercase;
     color: #fff;
     display: flex;
@@ -99,26 +100,26 @@ text {
   margin-right: 3px;
 }
 
-.btn--close-chart-panel{
+.btn--close-chart-panel {
   @extend .btn--close;
   position: absolute;
   right: 0;
   top: 0;
 }
 
-.chart, .chart-title-from-table {
+.line-chart, .chart-title-from-table {
   line-height: 2;
 }
 
-.chart-title-from-table{
+.chart-title-from-table {
   padding: 0 $padding;
 }
 
-.chart .plot-area {
+.line-chart .plot-area {
   fill: none;
 }
 
-.chart path.line {
+.line-chart path.line {
   stroke-width: 2;
 }
 
@@ -140,6 +141,8 @@ text {
 
 .linechart-title .name {
   margin-right: 7px;
+  font-family: monospace;
+  font-size: 120%;
 }
 
 .chart-expand {

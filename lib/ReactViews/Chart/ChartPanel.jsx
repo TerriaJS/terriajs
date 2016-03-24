@@ -13,6 +13,8 @@ import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
+const height = 250;
+
 const ChartPanel = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -101,8 +103,9 @@ const ChartPanel = React.createClass({
             loader = <Loader/>;
         }
         if (data.length > 0) {
+            // TODO: use a calculation for the 34 pixels taken off...
             chart = (
-                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={266}/>
+                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height - 34}/>
             );
         }
         const tableStructureToDownload = this.synthesizeTableStructure();
@@ -116,7 +119,7 @@ const ChartPanel = React.createClass({
         return (
             <div className={`chart-panel__holder ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart ? 'is-top' : ''}`} onClick={this.bringToFront}>
                 <div className="chart-panel__holder__inner">
-                    <div className="chart-panel" style={{height: 300}}>
+                    <div className="chart-panel" style={{height: height}}>
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <div className='left'><span className="chart-panel__section-label label">{loader || 'Charts'}</span></div>
