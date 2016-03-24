@@ -17,6 +17,7 @@ const DataPreview = React.createClass({
         'Disclaimer',
         'Description',
         'Data Description',
+        'Dataset Description',
         'Service Description',
         'Resource Description',
         'Licence',
@@ -81,7 +82,7 @@ const DataPreview = React.createClass({
         if(previewed) {
             const items = previewed.info.slice();
             return this.sortInfoSections(items).map((item, i)=>
-                <div key={i}><h4>{item.name}</h4><p dangerouslySetInnerHTML={this.renderMarkup(item.content)}/></div>);
+                item.content && item.content.length > 0 && <div key={i}><h4>{item.name}</h4><p dangerouslySetInnerHTML={this.renderMarkup(item.content)}/></div>);
         }
     },
 
@@ -101,7 +102,6 @@ const DataPreview = React.createClass({
                         </button>
                         <h3>{previewed.name}</h3>
                         <div className="data-info url">
-                            <h4>Description</h4>
                             {this.renderDescription(previewed)}
                             <h4>Data Custodian</h4>
                             <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}/>
@@ -115,10 +115,15 @@ const DataPreview = React.createClass({
     },
 
     renderDescription(previewed) {
-        if(previewed.hasDescription) {
-            return <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>;
+        if (previewed.description && previewed.description.length > 0) {
+            return (
+                <div>
+                    <h4>Description</h4>
+                    <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>
+                </div>);
+        } else if (!previewed.hasDescription) {
+            return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>;
         }
-        return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>;
     }
 });
 
