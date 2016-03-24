@@ -192,6 +192,9 @@ $now-viewing-margin: $padding-small - 1px;
 }
 
 .legend--svg{
+  text{
+    fill: #fff;
+  }
   .tick-mark{
     stroke: #fff;
   }

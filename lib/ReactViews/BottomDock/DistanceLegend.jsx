@@ -6,7 +6,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import EllipsoidGeodesic from 'terriajs-cesium/Source/Core/EllipsoidGeodesic';
 import getTimestamp from 'terriajs-cesium/Source/Core/getTimestamp';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from './../ObserveModelMixin';
 
 const geodesic = new EllipsoidGeodesic();
 

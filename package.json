@@ -85,10 +85,12 @@
     "make-schema": "gulp make-schema"
   },
   "browserify": {
+    "debug": true,
     "transform": [
       [
         "babelify",
         {
+          "sourceMaps": false,
           "plugins": [
             "jsx-control-statements"
           ],
@@ -99,14 +101,6 @@
         }
       ],
       "brfs"
-    ],
-    "plugin": [
-      [
-        "browserify-resolutions",
-        [
-          "react"
-        ]
-      ]
     ]
   }
 }

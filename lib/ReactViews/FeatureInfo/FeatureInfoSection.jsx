@@ -62,7 +62,8 @@ const FeatureInfoSection = React.createClass({
             ADD_TAGS: CustomComponents.names(),
             ADD_ATTR: CustomComponents.attributes()
         });
-        return parseCustomHtmlToReact('<div>' + html + '</div>', this.props.catalogItem, this.props.feature);
+        const result = parseCustomHtmlToReact('<div>' + html + '</div>', this.props.catalogItem, this.props.feature);
+        return result;
     },
 
     render() {
