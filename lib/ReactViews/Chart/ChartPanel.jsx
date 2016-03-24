@@ -20,7 +20,7 @@ const ChartPanel = React.createClass({
         terria: React.PropTypes.object.isRequired,
         isVisible: React.PropTypes.bool,
         isCollapsed: React.PropTypes.bool,
-        onHeightChange: React.PropTypes.func
+        onHeightChange: React.PropTypes.func,
         viewState: React.PropTypes.object
     },
 

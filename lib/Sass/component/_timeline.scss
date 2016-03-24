@@ -2,6 +2,8 @@
     display: table;
     width: 100%;
     padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
 
     &__text-row {
         display: table-row;
@@ -9,6 +11,10 @@
 
     &__text-cell {
         display: table-cell;
+
+        &--time {
+            padding-left: 15px;
+        }
     }
 
     &__controls-row {
@@ -17,7 +23,7 @@
 
     &__controls {
         display: table-cell;
-        width: 150px;
+        width: 180px;
         vertical-align: middle;
     }
 
@@ -25,6 +31,24 @@
         display: table-cell;
         height: 19px;
         vertical-align: bottom;
+    }
+
+    // Normalise the icons.
+    .icon-forward3, .icon-backward2 {
+        &:before {
+            font-size: 20px;
+        }
+    }
+
+    .icon-refresh:before {
+        font-size: 18px;
+    }
+
+    .icon-backToStart, .icon-play, .icon-pause {
+        width: 10px;
+        margin-left: 7px;
+        display: inline-block;
+        vertical-align: 2px;
     }
 }
 

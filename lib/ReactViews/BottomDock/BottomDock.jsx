@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import ChartPanel from '../ChartPanel.jsx';
+import ChartPanel from '../Chart/ChartPanel.jsx';
 import DistanceLegend from './DistanceLegend.jsx';
 import LocationBar from './LocationBar.jsx';
 import Timeline from './Timeline/Timeline.jsx';

@@ -1,13 +1,29 @@
 @font-face {
-  font-family: 'icomoon';
-  src:url('./TerriaJS/fonts/icomoon.eot?kw6abb');
-  src:url('./TerriaJS/fonts/icomoon.eot?kw6abb#iefix') format('embedded-opentype'),
-    url('./TerriaJS/fonts/icomoon.ttf?kw6abb') format('truetype'),
-    url('./TerriaJS/fonts/icomoon.woff?kw6abb') format('woff'),
-    url('./TerriaJS/fonts/icomoon.svg?kw6abb#icomoon') format('svg');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'icomoon';
+    src: url('./TerriaJS/fonts/icomoon.eot?7u40jo');
+    src: url('./TerriaJS/fonts/icomoon.eot?7u40jo#iefix') format('embedded-opentype'),
+    url('./TerriaJS/fonts/icomoon.ttf?7u40jo') format('truetype'),
+    url('./TerriaJS/fonts/icomoon.woff?7u40jo') format('woff'),
+    url('./TerriaJS/fonts/icomoon.svg?7u40jo#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 
 @-webkit-keyframes fa-spin {
   0% {
@@ -70,6 +86,12 @@
 //.icon-menu - icon
 //.icon-download -icon
 //.icon-line-chart - icon
+//.icon-backToStart - icon
+//.icon-pause - icon
+//.icon-play - icon
+//.icon-backward2 - icon
+//.icon-forward3 - icon
+//.icon-loop2 - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -104,99 +126,118 @@
   }
 }
 
-.icon-twitter:before {
-    content: "\e901";
-}
-.icon-facebook:before {
-    content: "\e902";
-}
-.icon-menu:before {
-    content: "\e903";
-}
-.icon-geolocation:before {
-    content: "\e904";
-}
-.icon-right:before {
-    content: "\e905";
-}
-.icon-invisible:before {
-    content: "\e906";
-}
-.icon-left:before {
-    content: "\e907";
-}
-.icon-checkbox-checked:before {
-    content: "\e908";
-}
-.icon-closed:before {
-    content: "\e909";
-}
-.icon-search:before {
-    content: "\e90a";
-}
-.icon-visible:before {
-    content: "\e90b";
-}
-.icon-share:before {
-    content: "\e90c";
-}
-.icon-clear:before {
-    content: "\e90d";
-}
-.icon-close:before {
-    content: "\e90e";
-}
-.icon-add:before {
-    content: "\e90f";
-}
-.icon-sphere:before {
-    content: "\e910";
-}
-.icon-opened:before {
-    content: "\e911";
-}
-.icon-expand:before {
-    content: "\e912";
-}
-.icon-loader:before {
-    content: "\e913";
-}
-.icon-location:before {
-    content: "\e914";
-}
-.icon-remove:before {
-    content: "\e915";
-}
-.icon-refresh:before {
-    content: "\e916";
-}
-.icon-decrease:before {
-    content: "\e917";
-}
-.icon-increase:before {
-    content: "\e918";
-}
-.icon-checkbox-off:before {
-    content: "\e919";
-}
-.icon-minus:before {
-    content: "\e91a";
-}
-.icon-checkbox-on:before {
-    content: "\e91b";
-}
-.icon-radio-off:before {
-    content: "\e91c";
-}
-.icon-radio-on:before {
-    content: "\e91d";
-}
-.icon-link:before {
-    content: "\e91e";
-}
-.icon-download:before {
-    content: "\e91f";
-}
-.icon-line-chart:before {
+.icon-backToStart:before {
     content: "\e900";
 }
+.icon-pause:before {
+    content: "\e901";
+}
+.icon-play:before {
+    content: "\e902";
+}
+.icon-line-chart:before {
+    content: "\e903";
+}
+.icon-twitter:before {
+    content: "\e904";
+}
+.icon-facebook:before {
+    content: "\e905";
+}
+.icon-menu:before {
+    content: "\e906";
+}
+.icon-geolocation:before {
+    content: "\e907";
+}
+.icon-right:before {
+    content: "\e908";
+}
+.icon-invisible:before {
+    content: "\e909";
+}
+.icon-left:before {
+    content: "\e90a";
+}
+.icon-checkbox-checked:before {
+    content: "\e90b";
+}
+.icon-closed:before {
+    content: "\e90c";
+}
+.icon-search:before {
+    content: "\e90d";
+}
+.icon-visible:before {
+    content: "\e90e";
+}
+.icon-share:before {
+    content: "\e90f";
+}
+.icon-clear:before {
+    content: "\e910";
+}
+.icon-close:before {
+    content: "\e911";
+}
+.icon-add:before {
+    content: "\e912";
+}
+.icon-sphere:before {
+    content: "\e913";
+}
+.icon-opened:before {
+    content: "\e914";
+}
+.icon-expand:before {
+    content: "\e915";
+}
+.icon-loader:before {
+    content: "\e916";
+}
+.icon-location:before {
+    content: "\e917";
+}
+.icon-remove:before {
+    content: "\e918";
+}
+.icon-refresh:before {
+    content: "\e919";
+}
+.icon-decrease:before {
+    content: "\e91a";
+}
+.icon-increase:before {
+    content: "\e91b";
+}
+.icon-checkbox-off:before {
+    content: "\e91c";
+}
+.icon-minus:before {
+    content: "\e91d";
+}
+.icon-checkbox-on:before {
+    content: "\e91e";
+}
+.icon-radio-off:before {
+    content: "\e91f";
+}
+.icon-radio-on:before {
+    content: "\e920";
+}
+.icon-link:before {
+    content: "\e921";
+}
+.icon-download:before {
+    content: "\e922";
+}
+.icon-backward2:before {
+    content: "\e923";
+}
+.icon-forward3:before {
+    content: "\e924";
+}
+.icon-loop2:before {
+    content: "\e925";
+}
+

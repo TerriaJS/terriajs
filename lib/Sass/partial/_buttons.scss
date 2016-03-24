@@ -516,23 +516,13 @@ a.btn--map{
 }
 
 .btn--timeline-control {
-    height: 34px;
+    height: 29px;
+    width: 34px;
+
     &.is-active {
         color: $color-primary;
     }
     &:active {
         color: $color-primary;
-    }
-}
-
-.btn--play {
-    &:before {
-        content: '|>'
-    }
-}
-
-.btn--pause {
-    &:before {
-        content: '||'
     }
 }

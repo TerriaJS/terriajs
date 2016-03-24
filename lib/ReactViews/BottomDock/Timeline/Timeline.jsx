@@ -67,7 +67,7 @@ const Timeline = React.createClass({
         return (
             <div className="timeline">
                 <div className="timeline__text-row">
-                    <div className="timeline__text-cell" title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
+                    <div className="timeline__text-cell timeline__text-cell--time" title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
                     <div className="timeline__text-cell" title="Current Layer">{layerName}</div>
                 </div>
                 <div className="timeline__controls-row">
