@@ -5,6 +5,7 @@ $chart-axis-color: #fff;
 $chart-grid-color: rgba(#fff, 0.085);
 $chart-text-color: #fff;
 $chart-line-color: #ccc;
+$chart-darker: darken($dark, 8%);
 
 .line-chart .axis path,
 .line-chart .axis line {
@@ -76,6 +77,7 @@ $chart-line-color: #ccc;
 
 .chart-panel__header {
   position: relative;
+  background-color: $chart-darker;
   @extend .clearfix;
   .left{
     @extend .col;
@@ -205,9 +207,8 @@ $chart-line-color: #ccc;
 
 .linechart-tooltip {
   z-index: 9999;
-  background-color: #444; // TODO
+  background-color: $chart-darker;
   padding: 5px 5px 10px 10px;
-  font-size: 10px;
   font-family: monospace;
 }
 
