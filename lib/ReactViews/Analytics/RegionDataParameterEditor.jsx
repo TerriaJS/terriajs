@@ -36,7 +36,7 @@ const RegionDataParameterEditor = React.createClass({
         const newValue = !this.isActive(catalogItem, column);
 
         if (newValue) {
-            this.value[column.name] = {
+            this.value()[column.name] = {
                 regionProvider: this.regionProvider,
                 regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                 valueColumn: column
@@ -44,29 +44,29 @@ const RegionDataParameterEditor = React.createClass({
 
             // If only one dataset can be active at a time, deactivate all others.
             if (this.props.parameter.singleSelect) {
-                for (const columnName in this.value) {
-                    if (this.value.hasOwnProperty(columnName) && columnName !== column.name) {
-                        this.value[columnName] = false;
+                for (const columnName in this.value()) {
+                    if (this.value().hasOwnProperty(columnName) && columnName !== column.name) {
+                        this.value()[columnName] = false;
                     }
                 }
             }
         } else {
-            this.value[column.name] = false;
+            this.value()[column.name] = false;
             this.getCatalogItemDetails(this.catalogItemDetails, catalogItem).isEntirelyActive = false;
         }
     },
 
     isActive(catalogItem, column) {
-        if (!defined(this.value)) {
-            this.value = {};
+        if (!defined(this.value())) {
+            this.value({});
         }
 
-        if (!defined(this.value[column.name])) {
-            this.value[column.name] = false;
-            knockout.track(this.value, [column.name]);
+        if (!defined(this.value()[column.name])) {
+            this.value()[column.name] = false;
+            knockout.track(this.value(), [column.name]);
 
-            if (!this.parameter.singleSelect || Object.keys(this.value).length === 1) {
-                this.value[column.name] = {
+            if (!this.props.parameter.singleSelect || Object.keys(this.value()).length === 1) {
+                this.value()[column.name] = {
                     regionProvider: this.props.parameter.getRegionProvider(this.props.parameterValues),
                     regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                     valueColumn: column
@@ -74,10 +74,10 @@ const RegionDataParameterEditor = React.createClass({
             }
         }
 
-        return defined(this.value[column.name]) &&
-               this.value[column.name] &&
-               this.value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
-               this.value[column.name].valueColumn === column;
+        return defined(this.value()[column.name]) &&
+               this.value()[column.name] &&
+               this.value()[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
+               this.value()[column.name].valueColumn === column;
     },
 
     getCatalogItemDetails(catalogItemDetails, catalogItem) {
@@ -127,10 +127,8 @@ const RegionDataParameterEditor = React.createClass({
     renderContnt() {
         if(this.catalogItemsWithMatchingRegion().length > 0) {
             return <ul>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
-                <li key ={i}
-                    onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
-                    className={`${this.catalogItemIsOpen(catalogItem)}`}>{catalogItem.name}{this.renderItemChildren(catalogItem)}
-                </li>
+                <li key ={i}><button onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
+                                     className={`btn btn--catalog-item ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
             )}</ul>;
         }
         return <div className="parameter-editor-important-note">
@@ -140,13 +138,13 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     renderItemChildren(catalogItem) {
-        return this.props.previewed.regionMapping.tableStructure.columns.map((column, i)=>{
-            if(column.type === VarType.SCALAR) {
-                return <li key ={i}
-                           onClick={this.toggleActive.bind(this, catalogItem)}
-                           className={`${this.isActive(catalogItem, column)}`}>{column.name}></li>;
+        return <ul>{catalogItem.regionMapping.tableStructure.columns.map((column, i)=>{
+            if (column.type === VarType.SCALAR) {
+                return <li key ={i}><button onClick={this.toggleActive.bind(this, catalogItem)}
+                                            className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}
+                                    >{column.name}</button></li>;
             }
-        });
+        })}</ul>;
     },
 
     render() {

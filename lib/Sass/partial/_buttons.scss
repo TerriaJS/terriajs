@@ -344,6 +344,9 @@ line-chart;
       opacity: 1;
     }
   }
+  &.is-active{
+    color: $modal-highlight;
+  }
 }
 
 // Modal window tab buttons
