@@ -56,7 +56,6 @@ const RegionTypeParameterEditor = React.createClass({
         if(!defined(this.props.parameterValues[this.props.parameter.id])) {
             this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
         }
-        console.log(this.props.parameterValues[this.props.parameter.id]);
         return <select className='field'
                        onChange={this.onChange}
                        value={this.props.parameterValues[this.props.parameter.id] ? this.props.parameterValues[this.props.parameter.id].regionType : ''}>

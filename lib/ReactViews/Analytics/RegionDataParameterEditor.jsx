@@ -18,12 +18,17 @@ const RegionDataParameterEditor = React.createClass({
 
     catalogItemDetails: {},
 
-    value(_value){
-        if (!arguments.length) {
-            return this.props.parameterValues[this.props.parameter.id];
-        }
-        this.props.parameterValues[this.props.parameter.id] = _value;
+    componentWillMount() {
+        knockout.defineProperty(this, 'value', {
+            get: function() {
+                return this.props.parameterValues[this.props.parameter.id];
+            },
+            set: function(value) {
+                this.props.parameterValues[this.props.parameter.id] = value;
+            }
+        });
     },
+
     regionProvider() {
         return this.props.parameter.getRegionProvider(this.props.parameterValues);
     },
@@ -36,7 +41,7 @@ const RegionDataParameterEditor = React.createClass({
         const newValue = !this.isActive(catalogItem, column);
 
         if (newValue) {
-            this.value()[column.name] = {
+            this.value[column.name] = {
                 regionProvider: this.regionProvider,
                 regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                 valueColumn: column
@@ -44,29 +49,29 @@ const RegionDataParameterEditor = React.createClass({
 
             // If only one dataset can be active at a time, deactivate all others.
             if (this.props.parameter.singleSelect) {
-                for (const columnName in this.value()) {
-                    if (this.value().hasOwnProperty(columnName) && columnName !== column.name) {
-                        this.value()[columnName] = false;
+                for (const columnName in this.value) {
+                    if (this.value.hasOwnProperty(columnName) && columnName !== column.name) {
+                        this.value[columnName] = false;
                     }
                 }
             }
         } else {
-            this.value()[column.name] = false;
+            this.value[column.name] = false;
             this.getCatalogItemDetails(this.catalogItemDetails, catalogItem).isEntirelyActive = false;
         }
     },
 
     isActive(catalogItem, column) {
-        if (!defined(this.value())) {
-            this.value({});
+        if (!defined(this.value)) {
+            this.value = {};
         }
 
-        if (!defined(this.value()[column.name])) {
-            this.value()[column.name] = false;
-            knockout.track(this.value(), [column.name]);
+        if (!defined(this.value[column.name])) {
+            this.value[column.name] = false;
+            knockout.track(this.value, [column.name]);
 
-            if (!this.props.parameter.singleSelect || Object.keys(this.value()).length === 1) {
-                this.value()[column.name] = {
+            if (!this.props.parameter.singleSelect || Object.keys(this.value).length === 1) {
+                this.value[column.name] = {
                     regionProvider: this.props.parameter.getRegionProvider(this.props.parameterValues),
                     regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                     valueColumn: column
@@ -74,10 +79,10 @@ const RegionDataParameterEditor = React.createClass({
             }
         }
 
-        return defined(this.value()[column.name]) &&
-               this.value()[column.name] &&
-               this.value()[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
-               this.value()[column.name].valueColumn === column;
+        return defined(this.value[column.name]) &&
+               this.value[column.name] &&
+               this.value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
+               this.value[column.name].valueColumn === column;
     },
 
     getCatalogItemDetails(catalogItemDetails, catalogItem) {
@@ -93,7 +98,7 @@ const RegionDataParameterEditor = React.createClass({
         return catalogItemDetails[catalogItem.uniqueId];
     },
 
-    toggleEntireCatalogItem (catalogItem) {
+    toggleEntireCatalogItem(catalogItem) {
         const details = this.getCatalogItemDetails(this.catalogItemDetails, catalogItem);
         details.isEntirelyActive = !details.isEntirelyActive;
 

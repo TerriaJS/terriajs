@@ -162,7 +162,7 @@ const RegionParameterEditor = React.createClass({
                 </ul>;
     },
 
-    getDisplayValue(){
+    getDisplayValue() {
         const region = this.regionValue();
             if (!defined(region)) {
                 return this._displayValue;
@@ -175,7 +175,7 @@ const RegionParameterEditor = React.createClass({
             }
     },
 
-    render(){
+    render() {
         this.updateMapFromValue();
         return <div>
                     <div className="parameter-editor-text-input">
@@ -231,6 +231,7 @@ const RegionParameterEditor = React.createClass({
             that._loadingRegionProvider = undefined;
         });
     },
+
     updateMapFromValue() {
         if (!defined(this.regionProvider)) {
             return;
