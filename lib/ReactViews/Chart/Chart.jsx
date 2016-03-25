@@ -61,10 +61,12 @@ const Chart = React.createClass({
         let promise;
         if (defined(chartParameters.data)) {
             promise = when(LineChart.create(this._element, chartParameters));
-        } else if (defined(chartParameters.url)) {
+        } else if (defined(chartParameters.url) || defined(chartParameters.sourceData)) {
             const tableStructure = new TableStructure('feature info');
-            promise = loadText(chartParameters.url).then(function(text) {
-                tableStructure.loadFromCsv(text);
+            const loadPromise = defined(chartParameters.sourceData)
+                ? when(chartParameters.sourceData).then(tableStructure.loadFromJson.bind(tableStructure))
+                : loadText(chartParameters.url).then(tableStructure.loadFromCsv.bind(tableStructure));
+            promise = loadPromise.then(function(tableStructure) {
                 const xColumn = tableStructure.getColumnWithNameOrIndex(that.props.xColumn || 0);
                 let yColumns = [tableStructure.columns[1]];
                 if (defined(that.props.yColumns)) {
