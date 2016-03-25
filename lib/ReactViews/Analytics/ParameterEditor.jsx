@@ -6,7 +6,7 @@ import PointParameterEditor from './PointParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import RegionDataParameterEditor from './RegionDataParameterEditor';
-
+import BooleanParameterEditor from './BooleanParameterEditor';
 
 const ParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -59,6 +59,11 @@ const ParameterEditor = React.createClass({
             return <RegionDataParameterEditor previewed={this.props.previewed}
                                               parameter={this.props.parameter}
                                               parameterValues={this.props.parameterValues}
+                    />;
+        case 'boolean':
+            return <BooleanParameterEditor previewed={this.props.previewed}
+                                           parameter={this.props.parameter}
+                                           parameterValues={this.props.parameterValues}
                     />;
         default:
             return <input className='field'
