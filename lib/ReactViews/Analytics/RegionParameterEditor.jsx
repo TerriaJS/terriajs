@@ -1,12 +1,9 @@
 'use strict';
 
 /*global require*/
-import CameraView from '../../Models/CameraView';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import GeoJsonCatalogItem from '../../Models/GeoJsonCatalogItem';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import loadView from '../../Core/loadView';
 import ObserveModelMixin from '../ObserveModelMixin';
 import OpenStreetMapCatalogItem from '../../Models/OpenStreetMapCatalogItem';
 import React from 'react';
@@ -16,15 +13,14 @@ import ViewerMode from '../../Models/ViewerMode';
 import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
-
 let catalogItem;
 
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
-    _lastPickedFeatures : undefined,
-    _loadingRegionProvider : undefined,
-    _selectedRegionCatalogItem : undefined,
+    _lastPickedFeatures: undefined,
+    _loadingRegionProvider: undefined,
+    _selectedRegionCatalogItem: undefined,
     _displayValue: '',
     _regionNames: [],
     regionProvider: undefined,
@@ -61,34 +57,53 @@ const RegionParameterEditor = React.createClass({
         // handle feature picking
         const that = this;
         knockout.getObservable(this.terriaForRegionSelection, 'pickedFeatures').subscribe(function() {
-        const pickedFeatures = that.terriaForRegionSelection.pickedFeatures;
-        that._lastPickedFeatures = pickedFeatures;
-        when(pickedFeatures.allFeaturesAvailablePromise, function() {
-        if (pickedFeatures !== that._lastPickedFeatures || pickedFeatures.features.length === 0) {
-            return;
-        }
-        const feature = pickedFeatures.features[0];
-        that._lastRegionFeature = feature.data;
-        that.regionValue(that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp], that.props.parameterValues));
+            const pickedFeatures = that.terriaForRegionSelection.pickedFeatures;
+            that._lastPickedFeatures = pickedFeatures;
+            when(pickedFeatures.allFeaturesAvailablePromise, function() {
+                if (pickedFeatures !== that._lastPickedFeatures || pickedFeatures.features.length === 0) {
+                    return;
+                }
+                const feature = pickedFeatures.features[0];
+                that._lastRegionFeature = feature.data;
+                that.regionValue = that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp], that.props.parameterValues);
 
-        if (defined(that._selectedRegionCatalogItem)) {
-            that._selectedRegionCatalogItem.isEnabled = false;
-            that._selectedRegionCatalogItem = undefined;
-        }
+                if (defined(that._selectedRegionCatalogItem)) {
+                    that._selectedRegionCatalogItem.isEnabled = false;
+                    that._selectedRegionCatalogItem = undefined;
+                }
 
-        if (defined(feature.data) && feature.data.type === 'Feature') {
-            that._selectedRegionCatalogItem = new GeoJsonCatalogItem(that.terriaForRegionSelection);
-            that._selectedRegionCatalogItem.data = feature.data;
-            that._selectedRegionCatalogItem.isEnabled = true;
-        }
+                if (defined(feature.data) && feature.data.type === 'Feature') {
+                    that._selectedRegionCatalogItem = new GeoJsonCatalogItem(that.terriaForRegionSelection);
+                    that._selectedRegionCatalogItem.data = feature.data;
+                    that._selectedRegionCatalogItem.isEnabled = true;
+                }
             });
         });
+
+        knockout.defineProperty(this, 'regionValue', {
+            get: function() {
+                return this.props.parameter.getValue(this.props.parameterValues);
+            },
+            set: function(value) {
+                if (defined(value) && defined(value.realRegion)) {
+                    value = value.realRegion;
+                }
+                this.props.parameterValues[this.props.parameter.id] = value;
+                this._displayValue = undefined;
+                this.updateMapFromValue(this);
+            }
+        });
+
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
                 return this.props.parameter.getRegionProvider(this.props.parameterValues);
             }
         });
+
         knockout.getObservable(this, 'regionProvider').subscribe(this.addRegionLayer);
+
+        this.addRegionLayer();
+        this.updateMapFromValue();
     },
 
     componentDidMount() {
@@ -105,20 +120,20 @@ const RegionParameterEditor = React.createClass({
         };
     },
 
-    regionValue(value) {
-        if (!arguments.length) {
-            return this.props.parameter.getValue(this.props.parameterValues);
-        }
-        if (defined(value) && defined(value.realRegion)) {
-            value = value.realRegion;
-        }
-        this.props.parameterValues[this.props.parameter.id] = value;
-        this._displayValue = '';
-    },
+    textChange(e) {
+        // Reset region value
+        this.regionValue = undefined;
 
-    textChange(e){
-        //Reset region value
-        this.regionValue(undefined);
+        // if input is empty
+        if (!defined(e.target.value)) {
+            this.setState({
+                autocompleteVisible: false,
+                autoCompleteOptions: []
+            });
+            return;
+        }
+
+        // if has text, populate auto complete
         const result = [];
         const regions = this.regionProvider.regions;
         const regionNames = this._regionNames;
@@ -140,15 +155,15 @@ const RegionParameterEditor = React.createClass({
         }
         this._displayValue = e.target.value;
         this.setState({
-            autocompleteVisible: e.target.value.length &&
-                                 result.length > 0 &&
+            autocompleteVisible: result.length > 0 &&
                                  result.length < 100,
             autoCompleteOptions: result
         });
     },
 
     selectRegion(region) {
-        this.regionValue(region);
+        this.regionValue = region;
+        // After choosing a region from auto complete
         this.setState({
             autocompleteVisible: false,
             autoCompleteOptions: []
@@ -163,16 +178,16 @@ const RegionParameterEditor = React.createClass({
     },
 
     getDisplayValue() {
-        const region = this.regionValue();
-            if (!defined(region)) {
-                return this._displayValue;
-            }
-            const index = this.regionProvider.regions.indexOf(region);
-            if (index >= 0 && this._regionNames[index]) {
-                return this._regionNames[index];
-            } else {
-                return region.id;
-            }
+        const region = this.regionValue;
+        if (!defined(region)) {
+            return this._displayValue;
+        }
+        const index = this.regionProvider.regions.indexOf(region);
+        if (index >= 0 && this._regionNames[index]) {
+            return this._regionNames[index];
+        } else {
+            return region.id;
+        }
     },
 
     render() {
@@ -237,7 +252,7 @@ const RegionParameterEditor = React.createClass({
             return;
         }
 
-        const value = this.regionValue();
+        const value = this.regionValue;
         const parameter = this.props.parameter;
         const parameterValues = this.props.parameterValues;
         const terria = this.props.previewed.terria;
