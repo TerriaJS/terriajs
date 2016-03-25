@@ -56,7 +56,9 @@ const RegionTypeParameterEditor = React.createClass({
         if(!defined(this.props.parameterValues[this.props.parameter.id])) {
             this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
         }
-        return <select onChange={this.onChange}>
+        console.log(this.props.parameterValues[this.props.parameter.id]);
+        return <select onChange={this.onChange}
+                       value={this.props.parameterValues[this.props.parameter.id] ? this.props.parameterValues[this.props.parameter.id].regionType : ''}>
                        {this.state.regionProviders.map((r, i)=>
                         (<option value={r.regionType}
                                  key={i}

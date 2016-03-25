@@ -5,6 +5,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import PointParameterEditor from './PointParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
+import RegionDataParameterEditor from './RegionDataParameterEditor';
 
 
 const ParameterEditor = React.createClass({
@@ -51,6 +52,11 @@ const ParameterEditor = React.createClass({
                     />;
         case 'regionType':
             return <RegionTypeParameterEditor previewed={this.props.previewed}
+                                              parameter={this.props.parameter}
+                                              parameterValues={this.props.parameterValues}
+                    />;
+        case 'regionData':
+            return <RegionDataParameterEditor previewed={this.props.previewed}
                                               parameter={this.props.parameter}
                                               parameterValues={this.props.parameterValues}
                     />;
