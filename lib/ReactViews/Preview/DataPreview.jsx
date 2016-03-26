@@ -103,11 +103,9 @@ const DataPreview = React.createClass({
                         <h3>{previewed.name}</h3>
                         <div className="data-info url">
                             {this.renderDescription(previewed)}
-                            <h4>Data Custodian</h4>
-                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}/>
-                            <h4>Web Map Service (WMS) URL </h4>
-                            <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}/>
                             {this.renderSections(previewed)}
+                            {this.renderDataCustodian(previewed)}
+                            {this.renderUrl(previewed)}
                         </div>
                     </div>);
         } else if(typeof previewed.invoke) {
@@ -128,6 +126,40 @@ const DataPreview = React.createClass({
         } else if (!previewed.hasDescription) {
             return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>;
         }
+    },
+
+    renderDataCustodian(previewed) {
+        if (previewed.dataCustodian && previewed.dataCustodian.length > 0) {
+            return (
+                <div>
+                    <h4>Data Custodian</h4>
+                    <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
+                </div>);
+        }
+    },
+
+    renderUrl(previewed) {
+        if (previewed.url && previewed.url.length > 0) {
+            return (
+                <div>
+                    <h4>{previewed.typeName} URL</h4>
+                    {previewed.type === 'wms' && <p>This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank">WMS service</a>, which generates map images on request. It can be used in GIS software with this URL:</p>}
+                    {previewed.type === 'wfs' && <p>This is a <a href="https://en.wikipedia.org/wiki/Web_Feature_Service" target="_blank">WFS service</a>, which transfers raw spatial data on request. It can be used in GIS software with this URL:</p>}
+                    <input readOnly type="text" value={previewed.url} size="80" onClick={this.selectUrl} />
+                    {
+                        (previewed.type === 'wms' || (previewed.type === 'esri-mapServer' && defined(previewed.layers))) &&
+                        <p>Layer name{previewed.layers.split(',').length > 1 ? 's' : ''}: {previewed.layers}</p>
+                    }
+                    {
+                        (previewed.type === 'wfs') &&
+                        <p>Type name{previewed.typeNames.split(',').length > 1 ? 's' : ''}: {previewed.typeNames}</p>
+                    }
+                </div>);
+        }
+    },
+
+    selectUrl(e) {
+        e.target.select();
     }
 });
 
