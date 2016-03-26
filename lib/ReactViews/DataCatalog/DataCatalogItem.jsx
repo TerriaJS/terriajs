@@ -50,8 +50,8 @@ const DataCatalogItem = React.createClass({
     render() {
         const item = this.props.item;
         return (
-            <li className={classNames('clearfix', {'is-previewed': this.isSelected()})}>
-                <button onClick={this.setPreviewedItem} className={`btn ${item.isMappable ? 'btn--catalog-item' : 'btn--service-item'}`}>{item.name}</button>
+            <li className={classNames('clearfix data-catalog-item', {'is-previewed': this.isSelected()})}>
+                <button onClick={this.setPreviewedItem} className={`btn btn--catalog-item ${item.isMappable ? 'catalog-item' : 'service-item'}`}>{item.name}</button>
                 {item.isMappable && <button onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass(item))}></button>}
             </li>
         );

@@ -37,7 +37,7 @@ const RegionDataParameterEditor = React.createClass({
         return this.props.parameter.getEnabledItemsWithMatchingRegionType(this.props.parameterValues);
     },
 
-    toggleActive(catalogItem, column){
+    toggleActive(catalogItem, column) {
         const newValue = !this.isActive(catalogItem, column);
 
         if (newValue) {

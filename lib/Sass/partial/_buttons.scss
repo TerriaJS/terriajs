@@ -518,14 +518,6 @@ a.btn--map{
   }
 }
 
-//Service button
-//
-.btn--service-item{
-  &:hover,
-  li.is-previewed &{
-    color: $color-primary;
-  }
-}
 
 .btn--timeline-control {
     height: 29px;
