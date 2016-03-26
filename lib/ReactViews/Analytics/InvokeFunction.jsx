@@ -5,9 +5,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import TerriaError from '../../Core/TerriaError';
-import CustomComponents from '../../Models/CustomComponents';
-import markdownToHtml from '../../Core/markdownToHtml';
-import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
+import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
 const InvokeFunction = React.createClass({
     mixins: [ObserveModelMixin],
@@ -23,14 +21,6 @@ const InvokeFunction = React.createClass({
     componentWillMount() {
        this.setParams();
        knockout.track(this._parameterValues);
-    },
-
-    sanitizedCustomMarkdown(content) {
-        const html = markdownToHtml(content, false, {
-            ADD_TAGS: CustomComponents.names(),
-            ADD_ATTR: CustomComponents.attributes()
-        });
-        return parseCustomHtmlToReact('<div>' + html + '</div>', this.props.previewed, null);
     },
 
     submit() {
@@ -76,7 +66,7 @@ const InvokeFunction = React.createClass({
         return (<div>
                     <div className="invoke-function__content">
                         <h2>{this.props.previewed.name}</h2>
-                        <div className="invoke-function__description">{this.sanitizedCustomMarkdown(this.props.previewed.description)}</div>
+                        <div className="invoke-function__description">{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
                         {this.getParams()}
                     </div>
                     <div className="invoke-function__footer">

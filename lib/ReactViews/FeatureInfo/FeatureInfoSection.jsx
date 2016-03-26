@@ -2,13 +2,9 @@
 
 import Mustache from 'mustache';
 import React from 'react';
-
 import defined from 'terriajs-cesium/Source/Core/defined';
-
-import CustomComponents from '../../Models/CustomComponents';
-import markdownToHtml from '../../Core/markdownToHtml';
 import ObserveModelMixin from '../ObserveModelMixin';
-import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
+import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
@@ -56,16 +52,6 @@ const FeatureInfoSection = React.createClass({
         return (this.props.feature && this.props.feature.name) || '';
     },
 
-    sanitizedCustomMarkdown() {
-        const raw = this.descriptionFromFeature(this.props.feature, this.props.clock);
-        const html = markdownToHtml(raw, false, {
-            ADD_TAGS: CustomComponents.names(),
-            ADD_ATTR: CustomComponents.attributes()
-        });
-        const result = parseCustomHtmlToReact('<div>' + html + '</div>', this.props.catalogItem, this.props.feature);
-        return result;
-    },
-
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         return (
@@ -73,7 +59,7 @@ const FeatureInfoSection = React.createClass({
                 <button onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
                 {this.props.isOpen &&
                     <section className='feature-info-panel__content'>
-                        {this.sanitizedCustomMarkdown()}
+                        {renderMarkdownInReact(this.descriptionFromFeature(this.props.feature, this.props.clock), this.props.catalogItem, this.props.feature)}
                     </section>
                 }
             </li>
