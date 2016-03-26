@@ -4,13 +4,9 @@
   height: 0;
   .data-panel-wrapper.is-open &{
       visibility: visible;
-      position: absolute;
-      padding-right: $padding;
-      top: $padding;
-      right: $padding-small;
-      bottom: $padding;
-      width: calc(50% - #{$padding*2});
-      height: $modal-content-height;
+      width: 50%;
+      float: right;
+      height: 100%;
       overflow-y: auto;
   }
 

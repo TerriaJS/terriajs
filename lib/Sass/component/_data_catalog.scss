@@ -11,7 +11,7 @@
     padding-right: $padding;
     box-sizing: border-box;
     @media screen and (min-width : $sm){
-    height: calc(70vh - #{$input-height + $padding*2});
+    height: calc(100% - #{$input-height});
     }
   }
   & > li > .btn--catalogue{
