@@ -131,9 +131,9 @@ const RegionDataParameterEditor = React.createClass({
 
     renderContnt() {
         if(this.catalogItemsWithMatchingRegion().length > 0) {
-            return <ul>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
+            return <ul className='parameter-editor-tree'>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
                 <li key ={i}><button onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
-                                     className={`btn btn--catalog-item ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
+                                     className={`btn btn--catalogue ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
             )}</ul>;
         }
         return <div className="parameter-editor-important-note">
@@ -143,11 +143,16 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     renderItemChildren(catalogItem) {
-        return <ul>{catalogItem.regionMapping.tableStructure.columns.map((column, i)=>{
+        return <ul className='parameter-editor-tree'>{catalogItem.regionMapping.tableStructure.columns.map((column, i)=>{
             if (column.type === VarType.SCALAR) {
-                return <li key ={i}><button onClick={this.toggleActive.bind(this, catalogItem)}
-                                            className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}
-                                    >{column.name}</button></li>;
+                return <li key ={i}
+                           className='clearfix data-catalog-item'>
+                            <button onClick={this.toggleActive.bind(this, catalogItem)}
+                                    className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}
+                            >{column.name}</button>
+                            <button onClick={this.toggleActive.bind(this, catalogItem)} title="add to map"
+                                    className={`btn btn--catalog-item--action ${this.isActive(catalogItem, column) ? 'btn--remove-from-map' : 'btn--add-to-map'}`}></button>
+                        </li>;
             }
         })}</ul>;
     },
