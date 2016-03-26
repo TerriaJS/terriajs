@@ -146,7 +146,7 @@ const DataPreview = React.createClass({
                     <h4>{previewed.typeName} URL</h4>
                     {previewed.type === 'wms' && <p>This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank">WMS service</a>, which generates map images on request. It can be used in GIS software with this URL:</p>}
                     {previewed.type === 'wfs' && <p>This is a <a href="https://en.wikipedia.org/wiki/Web_Feature_Service" target="_blank">WFS service</a>, which transfers raw spatial data on request. It can be used in GIS software with this URL:</p>}
-                    <input readOnly type="text" value={previewed.url} size="80" onClick={this.selectUrl} />
+                    <input readOnly className ='field' type="text" value={previewed.url} onClick={this.selectUrl} />
                     {
                         (previewed.type === 'wms' || (previewed.type === 'esri-mapServer' && defined(previewed.layers))) &&
                         <p>Layer name{previewed.layers.split(',').length > 1 ? 's' : ''}: {previewed.layers}</p>
