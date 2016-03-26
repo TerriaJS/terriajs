@@ -43,6 +43,7 @@ const Chart = React.createClass({
         data: React.PropTypes.array,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: React.PropTypes.string,
+        sourceData: React.PropTypes.array,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         yColumns: React.PropTypes.array,
         colors: React.PropTypes.array
@@ -163,6 +164,7 @@ const Chart = React.createClass({
             data: defined(this.state.data) ? this.state.data : this.props.data,
             domain: this.props.domain,
             url: this.props.url,
+            sourceData: this.props.sourceData,
             width: '100%',
             height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
