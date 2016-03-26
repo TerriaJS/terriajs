@@ -344,6 +344,9 @@ line-chart;
       opacity: 1;
     }
   }
+  &.is-active{
+    color: $modal-highlight;
+  }
 }
 
 // Modal window tab buttons
@@ -515,6 +518,7 @@ a.btn--map{
   }
 }
 
+
 .btn--timeline-control {
     height: 29px;
     width: 34px;
@@ -525,4 +529,17 @@ a.btn--map{
     &:active {
         color: $color-primary;
     }
+}
+
+.btn--file-input, .btn--add-url{
+  @extend .btn-primary;
+}
+
+.btn--radio{
+  padding: $padding-small;
+  &:before{
+    color: $color-primary;
+    display: inline-block;
+    padding: $padding-small $padding-small $padding-small 0;
+  }
 }

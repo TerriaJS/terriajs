@@ -57,4 +57,13 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     background: #ccc;
 }
 
+.autocomplete{
+  @extend .list-reset;
+  max-height: 200px;
+  overflow-y: auto;
+  &.is-hidden{
+    display: none;
+  }
+}
+
 
