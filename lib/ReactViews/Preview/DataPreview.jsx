@@ -93,6 +93,7 @@ const DataPreview = React.createClass({
     },
 
     renderActions(previewed) {
+        const metadataItem = defined(previewed.nowViewingCatalogItem) ? previewed.nowViewingCatalogItem : previewed;
         if (previewed.isMappable) {
             return (<div className='data-preview__info'>
                         <button onClick={this.toggleOnMap}
@@ -102,10 +103,10 @@ const DataPreview = React.createClass({
                         </button>
                         <h3>{previewed.name}</h3>
                         <div className="data-info url">
-                            {this.renderDescription(previewed)}
-                            {this.renderSections(previewed)}
-                            {this.renderDataCustodian(previewed)}
-                            {this.renderUrl(previewed)}
+                            {this.renderDescription(metadataItem)}
+                            {this.renderSections(metadataItem)}
+                            {this.renderDataCustodian(metadataItem)}
+                            {this.renderUrl(metadataItem)}
                         </div>
                     </div>);
         } else if(typeof previewed.invoke) {
