@@ -73,7 +73,13 @@ const DataPreview = React.createClass({
                 {previewed && previewed.isMappable && <DataPreviewMap terria={this.props.terria}
                                                                       previewedCatalogItem={previewed}
                 />}
-                {previewed && this.renderActions(previewed)}
+                <div className='data-preview'>
+                    <button onClick={this.exitPreview}
+                            className="btn btn--exist-preview"
+                            title='exit preview'>
+                    </button>
+                    {previewed && this.renderActions(previewed)}
+                </div>
             </div>
         );
     },
@@ -88,13 +94,7 @@ const DataPreview = React.createClass({
 
     renderActions(previewed) {
         if (previewed.isMappable) {
-            return (
-                <div className='data-preview'>
-                    <button onClick={this.exitPreview}
-                            className="btn btn--exist-preview"
-                            title='exit preview'>
-                    </button>
-                    <div className='data-preview__info'>
+            return (<div className='data-preview__info'>
                         <button onClick={this.toggleOnMap}
                                 className="btn toggle-enable"
                                 title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
@@ -109,8 +109,7 @@ const DataPreview = React.createClass({
                             <p dangerouslySetInnerHTML={this.renderMarkup(previewed.url)}/>
                             {this.renderSections(previewed)}
                         </div>
-                    </div>
-                </div>);
+                    </div>);
         } else if(typeof previewed.invoke) {
             return <InvokeFunction previewed={previewed}
                                    terria={this.props.terria}

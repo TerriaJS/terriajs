@@ -34,7 +34,10 @@ const InvokeFunction = React.createClass({
           });
           // Show the Now Viewing panel
           that.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
+          // Close modal window
           that.props.viewState.toggleModal(false);
+          // mobile switch to nowvewing
+          this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
           return promise;
       } catch (e) {
           if (e instanceof TerriaError) {
@@ -63,7 +66,7 @@ const InvokeFunction = React.createClass({
     );},
 
     render() {
-        return (<div>
+        return (<div className='invoke-function'>
                     <div className="invoke-function__content">
                         <h3>{this.props.previewed.name}</h3>
                         <div className="invoke-function__description">{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
