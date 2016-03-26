@@ -534,3 +534,12 @@ a.btn--map{
 .btn--file-input, .btn--add-url{
   @extend .btn-primary;
 }
+
+.btn--radio{
+  padding: $padding-small;
+  &:before{
+    color: $color-primary;
+    display: inline-block;
+    padding: $padding-small $padding-small $padding-small 0;
+  }
+}
