@@ -36,9 +36,15 @@
     height: 100%;
     overflow: hidden;
   }
-
 }
 
-
+.data-explorer,
+.my-data{
+    @media(screen and min-width: $sm){
+      width: 50%;
+      float: left;
+      height: 100%;
+    }
+}
 
 
