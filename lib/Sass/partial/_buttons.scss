@@ -530,3 +530,7 @@ a.btn--map{
         color: $color-primary;
     }
 }
+
+.btn--file-input, .btn--add-url{
+  @extend .btn-primary;
+}

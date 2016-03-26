@@ -69,7 +69,7 @@ const Tabs = React.createClass({
                 className={classNames('tab-panel', getName('panel--', item.title), {'is-active': this.props.viewState.modalTabIndex === i})}
                 aria-labelledby={getName('tablist--', item.title)}
                 role='tabpanel' tabIndex='0'>
-                <h3 className="hide">{item.title.replace(/-/g, ' ')}</h3>
+                <h2 className="hide">{item.title.replace(/-/g, ' ')}</h2>
                 {item.panel}
             </section>
         ));

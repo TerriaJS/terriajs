@@ -56,7 +56,7 @@ const MyDataTab = React.createClass({
                 <div className='my-data'>
                     <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
                         <button onClick={this.changeUploadView} className='btn btn--back-to-my-data'> Back</button>
-                        <h4>Adding your own data</h4>
+                        <h3>Adding your own data</h3>
                         <AddData updateCatalog={this.updateCatalog}
                                  terria={this.props.terria}
                                  viewState={this.props.viewState}

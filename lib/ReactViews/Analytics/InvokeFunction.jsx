@@ -65,7 +65,7 @@ const InvokeFunction = React.createClass({
     render() {
         return (<div>
                     <div className="invoke-function__content">
-                        <h2>{this.props.previewed.name}</h2>
+                        <h3>{this.props.previewed.name}</h3>
                         <div className="invoke-function__description">{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
                         {this.getParams()}
                     </div>

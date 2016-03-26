@@ -1,6 +1,5 @@
 'use strict';
 import React from 'react';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
 import PointParameterEditor from './PointParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
@@ -15,8 +14,11 @@ const ParameterEditor = React.createClass({
         parameter: React.PropTypes.object,
         onChange: React.PropTypes.func,
         viewState: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        parameterValues: React.PropTypes.object,
+        previewed: React.PropTypes.object
     },
+
+    fieldId: new Date().getTime(),
 
     onChange(e) {
         this.props.parameterValues[this.props.parameter.id] = e.target.value;
@@ -76,9 +78,8 @@ const ParameterEditor = React.createClass({
 
     render() {
         return (<form>
-                <label>{this.props.parameter.name}</label>
-                {this.props.parameter.isRequired && <span>required</span>}
-                {this.renderEditor()}
+                  <label className='label--parameter-editor' htmlFor={this.fieldId + this.props.parameter.type}>{this.props.parameter.name}{this.props.parameter.isRequired && <span>(required)</span>}</label>
+                  <div id={this.fieldId + this.props.parameter.type} className='field--parameter-editor'>{this.renderEditor()}</div>
                 </form>);
     }
 });
