@@ -13,8 +13,6 @@ import ViewerMode from '../../Models/ViewerMode';
 import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
-let catalogItem;
-
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -23,6 +21,7 @@ const RegionParameterEditor = React.createClass({
     _selectedRegionCatalogItem: undefined,
     _displayValue: '',
     _regionNames: [],
+    _regionsCatalogItem: undefined,
     regionProvider: undefined,
 
     propTypes: {
@@ -212,10 +211,6 @@ const RegionParameterEditor = React.createClass({
 
     addRegionLayer() {
         const that = this;
-        if (defined(this._selectedRegionCatalogItem)) {
-            this._selectedRegionCatalogItem.isEnabled = false;
-            this._selectedRegionCatalogItem = undefined;
-        }
 
         if (!defined(this.regionProvider)) {
             return;
@@ -229,18 +224,18 @@ const RegionParameterEditor = React.createClass({
             }
             that._regionNames = that.regionProvider.regionNames;
 
-            if (defined(catalogItem)) {
-                catalogItem.isEnabled = false;
-                catalogItem = undefined;
+            if (defined(that._regionsCatalogItem)) {
+                that._regionsCatalogItem.isEnabled = false;
+                that._regionsCatalogItem = undefined;
             }
 
-            catalogItem = new WebMapServiceCatalogItem(that.terriaForRegionSelection);
-            catalogItem.url = that.regionProvider.server;
-            catalogItem.layers = that.regionProvider.layerName;
-            catalogItem.parameters = {
+            that._regionsCatalogItem = new WebMapServiceCatalogItem(that.terriaForRegionSelection);
+            that._regionsCatalogItem.url = that.regionProvider.server;
+            that._regionsCatalogItem.layers = that.regionProvider.layerName;
+            that._regionsCatalogItem.parameters = {
                 styles: 'border_black_fill_aqua'
             };
-            catalogItem.isEnabled = true;
+            that._regionsCatalogItem.isEnabled = true;
 
             that._loadingRegionProvider = undefined;
         });
@@ -249,6 +244,11 @@ const RegionParameterEditor = React.createClass({
     updateMapFromValue() {
         if (!defined(this.regionProvider)) {
             return;
+        }
+
+        if (defined(this._selectedRegionCatalogItem)) {
+            this._selectedRegionCatalogItem.isEnabled = false;
+            this._selectedRegionCatalogItem = undefined;
         }
 
         const value = this.regionValue;

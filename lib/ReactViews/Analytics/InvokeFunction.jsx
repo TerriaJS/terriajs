@@ -54,7 +54,7 @@ const InvokeFunction = React.createClass({
 
     getParams() {
        return this.props.previewed.parameters.map((param, i)=>
-        <ParameterEditor key={i}
+        <ParameterEditor key={param.id}
                          parameter={param}
                          viewState={this.props.viewState}
                          previewed={this.props.previewed}
