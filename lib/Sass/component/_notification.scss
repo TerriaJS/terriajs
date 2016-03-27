@@ -1,7 +1,10 @@
 .notification-wrapper{
   display: none;
+  align-items: center;
+  justify-content: center;
+
   &.is-visible{
-    display: block;
+    @extend .flex;
   }
 }
 // Notification
