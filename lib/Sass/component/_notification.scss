@@ -48,3 +48,23 @@
     border-radius: 0 0 $radius-small $radius-small;
   }
 }
+
+//Map interaction window
+
+.map-interaction-window{
+  display: none;
+  position: fixed;
+  left: 50%;
+  background: #fff;
+  width: 200px;
+  top: 50px;
+  z-index: 999;
+  color: #000;
+  padding: $padding;
+  &.is-active{
+    display: block;
+  }
+  .map-interaction-content{
+    margin-bottom: $padding;
+  }
+}

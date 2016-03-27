@@ -24,7 +24,7 @@ const ShortReport = React.createClass({
         if(sections && sections.length > 0) {
             return this.props.nowViewingItem.shortReportSections.map((r, i)=>
                     <div key={i}>
-                        <button className='btn'>{r.name}</button>
+                        <label>{r.name}</label>
                         {renderMarkdownInReact(r.content, this.props.nowViewingItem, null)}
                     </div>
                 );
