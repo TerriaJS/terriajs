@@ -31,7 +31,7 @@ const Notification = React.createClass({
         }
 
         return (
-              <div className='notification-wrapper' aria-hidden={!isVisible}>
+              <div className={`notification-wrapper ${isVisible ? 'is-visible' : ''}`} aria-hidden={!isVisible}>
                 <div className='notification'>
                     <div className='notification__inner'>
                       <h3 className='title' >{title}</h3>

@@ -1,5 +1,8 @@
 .notification-wrapper{
   display: none;
+  &.is-visible{
+    display: block;
+  }
 }
 // Notification
 //
