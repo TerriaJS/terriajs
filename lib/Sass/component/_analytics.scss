@@ -1,3 +1,10 @@
 .parameter-editor-tree{
   @extend .list-reset;
 }
+
+.invoke-function{
+  padding: $padding-small;
+  @media screen and (min-width : $sm){
+    padding: 0;
+  }
+}
