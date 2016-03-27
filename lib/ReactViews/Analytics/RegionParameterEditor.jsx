@@ -190,7 +190,6 @@ const RegionParameterEditor = React.createClass({
     },
 
     render() {
-        this.updateMapFromValue();
         return <div>
                     <div className="field--parameter-editor">
                         <input className='field'

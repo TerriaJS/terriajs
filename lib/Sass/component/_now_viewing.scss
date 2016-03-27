@@ -229,6 +229,10 @@ $now-viewing-margin: $padding-small - 1px;
   }
 }
 
+.now-viewing__item__short-report{
+  padding: $padding;
+}
+
 .voldemort__children__header{
   @extend .flex;
   span, .btn{

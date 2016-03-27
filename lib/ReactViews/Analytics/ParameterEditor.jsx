@@ -6,6 +6,9 @@ import RegionParameterEditor from './RegionParameterEditor';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import RegionDataParameterEditor from './RegionDataParameterEditor';
 import BooleanParameterEditor from './BooleanParameterEditor';
+import DateTimeParameterEditor from './DateTimeParameterEditor';
+import EnumerationParameterEditor from './EnumerationParameterEditor';
+import GenericParameterEditor from './GenericParameterEditor';
 
 const ParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -33,19 +36,15 @@ const ParameterEditor = React.createClass({
                                          parameterValues={this.props.parameterValues}
                     />;
         case 'enumeration':
-            return <select className='field'
-                           onChange={this.onChange}
-                           value={this.props.parameterValues[this.props.parameter.id]}
-                    >
-                         {this.props.parameter.possibleValues.map((v, i)=>
-                            <option value={v} key={i}>{v}</option>)}
-                    </select>;
+            return <EnumerationParameterEditor previewed={this.props.previewed}
+                                               viewState={this.props.viewState}
+                                               parameter={this.props.parameter}
+                                               parameterValues={this.props.parameterValues}
+                    />;
         case 'dateTime':
-            return <input className='field'
-                          type="datetime-local"
-                          placeholder="YYYY-MM-DDTHH:mm:ss.sss"
-                          onChange={this.onChange}
-                          value={this.props.parameterValues[this.props.parameter.id]}
+            return <DateTimeParameterEditor previewed={this.props.previewed}
+                                            parameter={this.props.parameter}
+                                            parameterValues={this.props.parameterValues}
                     />;
         case 'region':
             return <RegionParameterEditor previewed={this.props.previewed}
@@ -68,10 +67,9 @@ const ParameterEditor = React.createClass({
                                            parameterValues={this.props.parameterValues}
                     />;
         default:
-            return <input className='field'
-                          type="text"
-                          onChange={this.onChange}
-                          value={this.props.parameterValues[this.props.parameter.id]}
+            return <GenericParameterEditor previewed={this.props.previewed}
+                                           parameter={this.props.parameter}
+                                           parameterValues={this.props.parameterValues}
                     />;
         }
     },
