@@ -108,11 +108,6 @@
     font-family: $font-base;
     @extend .sm-show;
   }
-
-  .workbench__inner & {
-    padding: 0 $padding-small;
-    font-family: $font-pop;
-  }
 }
 
 // Add data from url form

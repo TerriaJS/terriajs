@@ -1,6 +1,5 @@
 'use strict';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import SearchHeader from './Search/SearchHeader.jsx';
@@ -13,7 +12,6 @@ export default React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        searchText: React.PropTypes.string,
         searches: React.PropTypes.array
     },
 
@@ -23,50 +21,41 @@ export default React.createClass({
         };
     },
 
-    getInitialState() {
-        return {
-            searchText: this.props.searchText
-        }
-    },
-
     componentWillMount() {
         this.setState({
             searches: this.props.searches || []
         });
     },
 
+    componentWillReceiveProps(nextProps) {
+        this.state.searches.forEach(search => search.search(nextProps.searchText));
+    },
+
     componentWillUnmount() {
         // Cancel any searches that may be in progress
-        this.search('');
+        this.state.searches.forEach(search => search.search(''));
     },
 
     search(newText) {
-        this.setState({
-            searchText: newText
-        });
         this.state.searches.forEach(search => search.search(newText));
     },
 
     searchInDataCatalog() {
-        this.props.viewState.searchInCatalog(this.state.searchText);
+        this.props.viewState.searchInCatalog(this.props.searchText);
     },
 
     render() {
         let linkToSearchData = null;
-        if (this.state.searchText.length > 0) {
+
+        if (this.props.searchText.length > 0) {
             linkToSearchData = (
                 <button onClick={this.searchInDataCatalog} className='btn btn--data-search'>
-                    Search {this.state.searchText} in Data
+                    Search {this.props.searchText} in Data
                     Catalog<i className='icon icon-right-arrow'/></button>);
         }
 
-        const outerClasses = classNames(
-            'search',
-            {'is-searching': this.state.searchText.length > 0}
-        );
         return (
-            <div className={outerClasses}>
-                <SearchBox onSearchTextChanged={this.search}/>
+            <div className='search'>
                 <div className='search__results'>
                     {linkToSearchData}
                     {this.state.searches
@@ -86,8 +75,5 @@ export default React.createClass({
                 </div>
             </div>
         );
-    },
-
-    searchResult(result) {
     }
 });

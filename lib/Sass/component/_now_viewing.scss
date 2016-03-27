@@ -2,12 +2,6 @@
 $now-viewing-margin: $padding-small - 1px;
 
 .now-viewing{
-  background: $overlay;
-  padding: 0  $padding-small;
-  overflow-y: scroll;
-  @media(screen and min-width: $sm){
-    height: calc(100vh - #{$workbench-header});
-  }
   .workbench__inner.is-now-viewing &{
     @media(screen and max-width: $sm){
       position: fixed;

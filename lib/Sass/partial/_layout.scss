@@ -3,18 +3,10 @@
   position: relative;
   z-index: 1;
   width: $work-bench-width;
-  height: calc(100% - #{$logo-height});
+  height: 100vh;
   @extend .sm-show;
   .is-full-screen &{
     display: none!important;
-  }
-  nav{
-    position: absolute;
-    left: -1000px;
-    @include transition(margin $animation-fast ease-in);
-    //temp
-    position: relative;
-    left: 0;
   }
 }
 
