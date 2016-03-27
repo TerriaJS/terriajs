@@ -80,7 +80,7 @@ const PointParameterEditor = React.createClass({
 
     render(){
         return <div className=''>
-                    <input className='field' type="text" onChange={this.onTextChange} value={this.state.value}/>
+                    <input className='field field--parameter-editor' type="text" onChange={this.onTextChange} value={this.state.value}/>
                     <button onClick={this.selectPointOnMap} className='btn btn-primary btn-selector'>Select location</button>
                 </div>;
     }
