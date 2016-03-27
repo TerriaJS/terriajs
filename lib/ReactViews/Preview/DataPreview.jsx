@@ -4,10 +4,10 @@ import DataPreviewMap from './DataPreviewMap.jsx';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import InvokeFunction from '../Analytics/InvokeFunction';
-import markdownToHtml from 'terriajs/lib/Core/markdownToHtml';
 import naturalSort from 'javascript-natural-sort';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
@@ -36,12 +36,6 @@ const DataPreview = React.createClass({
         // if(this.props.viewState.previewedItem.isEnabled === true) {
         //     this.props.viewState.modalVisible = false;
         // }
-    },
-
-    renderMarkup(content) {
-        return {
-            __html: markdownToHtml(content)
-        };
     },
 
     exitPreview() {
@@ -88,7 +82,7 @@ const DataPreview = React.createClass({
         if(previewed) {
             const items = previewed.info.slice();
             return this.sortInfoSections(items).map((item, i)=>
-                item.content && item.content.length > 0 && <div key={i}><h4>{item.name}</h4><p dangerouslySetInnerHTML={this.renderMarkup(item.content)}/></div>);
+                item.content && item.content.length > 0 && <div key={i}><h4>{item.name}</h4>{renderMarkdownInReact(item.content, previewed)}</div>);
         }
     },
 
@@ -122,7 +116,7 @@ const DataPreview = React.createClass({
             return (
                 <div>
                     <h4>Description</h4>
-                    <p dangerouslySetInnerHTML={this.renderMarkup(previewed.description)}></p>
+                    {renderMarkdownInReact(previewed.description, previewed)}
                 </div>);
         } else if (!previewed.hasDescription) {
             return <p>Please contact the provider of this data for more information, including information about usage rights and constraints.</p>;
@@ -134,7 +128,7 @@ const DataPreview = React.createClass({
             return (
                 <div>
                     <h4>Data Custodian</h4>
-                    <p dangerouslySetInnerHTML={this.renderMarkup(previewed.dataCustodian)}></p>
+                    {renderMarkdownInReact(previewed.dataCustodian, previewed)}
                 </div>);
         }
     },
