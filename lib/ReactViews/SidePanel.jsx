@@ -39,19 +39,23 @@ const SidePanel = React.createClass({
     render() {
         const terria = this.props.terria;
         return (
-            <div className={'workbench__inner ' + (this.props.viewState.isNowViewingOnly ? 'is-now-viewing' : '')}>
-                <SearchBox onSearchTextChanged={this.search}/>
-                <div className='workbench__add-data'>
-                    <button onClick={this.onAddDataClicked} className='btn'>Add Data</button>
+            <div className={'workbench__inner'}>
+                <div className='workbench__header'>
+                    <SearchBox onSearchTextChanged={this.search}/>
+                    <div className='workbench__add-data'>
+                        <button onClick={this.onAddDataClicked} className='btn'>Add Data</button>
+                    </div>
                 </div>
-                {this.state.searchText.length > 0 && <SidebarSearch terria={this.props.terria}
-                                                                     viewState={this.props.viewState}
-                                                                     searches={[
-                                                                         new BingMapsSearchProviderViewModel({terria}),
-                                                                         new GazetteerSearchProviderViewModel({terria})
-                                                                     ]}
-                                                                    searchText={this.state.searchText}/>}
-                {this.state.searchText.length === 0 && this.renderNowViewing()}
+                <div className='workbench__body'>
+                    {this.state.searchText.length > 0 && <SidebarSearch terria={this.props.terria}
+                                                                         viewState={this.props.viewState}
+                                                                         searches={[
+                                                                             new BingMapsSearchProviderViewModel({terria}),
+                                                                             new GazetteerSearchProviderViewModel({terria})
+                                                                         ]}
+                                                                        searchText={this.state.searchText}/>}
+                    {this.state.searchText.length === 0 && this.renderNowViewing()}
+                </div>
             </div>
         );
     },
