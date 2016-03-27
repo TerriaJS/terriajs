@@ -12,12 +12,6 @@ const Notification = React.createClass({
         notification: React.PropTypes.object,
         onDismiss: React.PropTypes.func
     },
-    renderMessage() {
-        // TODO: render markdown and sanitize HTML
-        return {
-            __html: this.props.body
-        };
-    },
 
     render() {
         let isVisible = false;
