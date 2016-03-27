@@ -1,9 +1,9 @@
 'use strict';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import renderMarkdownInReact from '../Core/renderMarkdownInReact';
+import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
 const Notification = React.createClass({
     mixins: [ObserveModelMixin],
