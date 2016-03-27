@@ -137,7 +137,7 @@ const RegionDataParameterEditor = React.createClass({
             )}</ul>;
         }
         return <div className="parameter-editor-important-note">
-                    No characteristics are available because you have not added any data to the map for this region type, <span data-bind="text: regionProvider ? regionProvider.regionType : 'None'"></span>.
+                    No characteristics are available because you have not added any data to the map for this region type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
                     You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines and dragging and dropping it onto the map.
                 </div>;
     },
