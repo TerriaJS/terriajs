@@ -144,11 +144,9 @@ const ChartPanel = React.createClass({
                     <div className="chart-panel" style={{height: height}}>
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
-                                <div className='left'><span className="chart-panel__section-label label">{loader || 'Charts'}</span></div>
-                                <div className='right'>
-                                    {downloadButton}
-                                    <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
-                                </div>
+                                <label className="chart-panel__section-label label">{loader || 'Charts'}</label>
+                                {downloadButton}
+                                <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
                             </div>
                             <div>
                                 {chart}
