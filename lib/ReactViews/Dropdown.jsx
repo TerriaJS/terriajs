@@ -30,7 +30,7 @@ const Dropdown = React.createClass({
 
     componentWillMount() {
         // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
-        _element: undefined;
+        this._element = undefined;
 
         window.addEventListener('click', this.closeDropDownWhenClickOtherPlaces);
     },
