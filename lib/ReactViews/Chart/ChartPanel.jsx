@@ -139,7 +139,7 @@ const ChartPanel = React.createClass({
             downloadButton = <a className='btn btn--download' download='chart data.csv' href={href} onClick={checkCompatibility}>Download</a>;
         }
         return (
-            <div className={`chart-panel__holder ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart ? 'is-top' : ''}`} onClick={this.bringToFront}>
+            <div className={`chart-panel__holder ${(this.props.viewState && this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart) ? 'is-top' : ''}`} onClick={this.bringToFront}>
                 <div className="chart-panel__holder__inner">
                     <div className="chart-panel" style={{height: height}}>
                         <div className="chart-panel__body">
