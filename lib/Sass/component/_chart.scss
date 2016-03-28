@@ -78,19 +78,22 @@ $chart-darker: darken($dark, 8%);
 .chart-panel__header {
   position: relative;
   background-color: $chart-darker;
-  @extend .clearfix;
-  .left{
-    @extend .col;
-    @extend .col-8;
-  }
-  .right{
-    @extend .col;
-    @extend .col-4;
+  label, .btn{
+    display: inline-block;
+    vertical-align: top;
   }
   .btn--download {
     text-transform: uppercase;
     color: #fff;
-    display: flex;
+    float: right;
+    margin-right: $input-height;
+    &:hover, &:focus{
+      text-decoration: none;
+      color: $color-primary;
+    }
+    &:before{
+      display: inline-block;
+    }
   }
 }
 
@@ -107,6 +110,10 @@ $chart-darker: darken($dark, 8%);
   position: absolute;
   right: 0;
   top: 0;
+  &:hover,
+  &:focus{
+    color: $color-primary;
+  }
 }
 
 .line-chart, .chart-title-from-table {

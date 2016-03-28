@@ -5,6 +5,7 @@ label {
 .label{
   padding: $padding;
   display: block;
+  line-height: $btn-default-line-height;
 }
 
 .no-results{
