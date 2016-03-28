@@ -16,14 +16,6 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
-    _lastPickedFeatures: undefined,
-    _loadingRegionProvider: undefined,
-    _selectedRegionCatalogItem: undefined,
-    _displayValue: '',
-    _regionNames: [],
-    _regionsCatalogItem: undefined,
-    regionProvider: undefined,
-
     propTypes: {
         previewed: React.PropTypes.object,
         parameter: React.PropTypes.object,
@@ -31,6 +23,15 @@ const RegionParameterEditor = React.createClass({
     },
 
     componentWillMount() {
+
+        this._lastPickedFeatures = undefined;
+        this._loadingRegionProvider = undefined;
+        this._selectedRegionCatalogItem = undefined;
+        this._displayValue = '';
+        this._regionNames = [];
+        this._regionsCatalogItem = undefined;
+        this.regionProvider = undefined;
+
         const terria = this.props.previewed.terria;
 
         this.terriaForRegionSelection = new Terria({

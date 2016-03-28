@@ -16,9 +16,8 @@ const RegionDataParameterEditor = React.createClass({
         parameterValues: React.PropTypes.object
     },
 
-    catalogItemDetails: {},
-
     componentWillMount() {
+        this.catalogItemDetails = {};
         knockout.defineProperty(this, 'value', {
             get: function() {
                 return this.props.parameterValues[this.props.parameter.id];
