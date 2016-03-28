@@ -3,7 +3,6 @@
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import Tabs from './Tabs.jsx';
-import classNames from 'classnames';
 
 // TODO: Rename this :/
 const ModalWindow = React.createClass({
@@ -19,9 +18,15 @@ const ModalWindow = React.createClass({
         this.props.viewState.switchMobileView('nowViewing');
     },
 
+    bringToFront() {
+        // Bring chart to front.
+        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.modelWindow);
+    },
+
     render() {
         return (
-            <div className={classNames('data-panel-wrapper', 'modal-wrapper', {'is-open' : this.props.viewState.modalVisible})}
+            <div onClick={this.bringToFront}
+                 className={`data-panel-wrapper modal-wrapper ${this.props.viewState.modalVisible ? 'is-open' : ''} ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.modelWindow ? 'is-top' : ''}`}
                  id="explorer-panel-wrapper"
                  aria-hidden={!this.props.viewState.modalVisible}
             >

@@ -86,9 +86,8 @@ const SettingPanel = React.createClass({
         const currentViewer = this.props.terria.viewerMode;
         const currentBaseMap = this.props.terria.baseMap.name;
 
-        // To do : aria-hidden={!this.state.isOpen}
         return (
-            <div className ={'setting-panel ' + (this.state.isOpen ? 'is-open' : '')}>
+            <div className ={'setting-panel ' + (this.state.isOpen ? 'is-open' : '')} aria-hidden={!this.state.isOpen}>
               <button onClick={this.togglePanel} className='setting-panel__button btn btn--map' title='change settings'></button>
                 <div className ='setting-panel__inner'>
                 <div className='setting-panel__section setting-panel__viewer'>

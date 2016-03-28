@@ -15,7 +15,9 @@ const MapNavigation = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         allBaseMaps: React.PropTypes.array,
-        terriaViewer: React.PropTypes.object
+        terriaViewer: React.PropTypes.object,
+        // might be useful?
+        viewState: React.PropTypes.object
     },
 
     render() {
@@ -23,7 +25,7 @@ const MapNavigation = React.createClass({
               <ul className='map-navigation__menu'>
                 <li><SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps} terriaViewer={this.props.terriaViewer}/></li>
                 <li><FullScreenButton terria={this.props.terria} /></li>
-                <li><SharePanel terria={this.props.terria}/></li>
+                <li><SharePanel terria={this.props.terria} /></li>
                 <li><div><a className='btn btn--map about-link__button' href='#' title='about'> About </a></div></li>
               </ul>
               {(this.props.terria.viewerMode !== ViewerMode.Leaflet) && <Compass terria={this.props.terria} />}

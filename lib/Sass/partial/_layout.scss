@@ -14,7 +14,7 @@
     position: fixed;
     top: 20px;
     right: $padding;
-    z-index: 10;
+    z-index: $front-component-z-index + 1;
 }
 
 .modal-wrapper{
@@ -24,9 +24,9 @@
   z-index: -100;
   opacity: 0;
   @media screen and (min-width : $sm){
-    z-index: 99;
+    z-index: $front-component-z-index - 1;
     padding-left: $padding*2;
-    padding-right: $padding*2;
+    padding-right: 80px;
     padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
     padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
     bottom: 0;
@@ -38,8 +38,8 @@
     }
   }
   @media screen and (min-width : $md){
-    padding-left: $work-bench-width + 50px;
-    padding-right: 50px;
+    padding-left: 80px;
+    padding-right: 80px;
   }
 }
 
@@ -108,7 +108,7 @@
 }
 
 .is-top{
-  z-index: 99!important;
+  z-index: $front-component-z-index!important;
 }
 
 
