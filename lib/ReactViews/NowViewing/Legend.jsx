@@ -37,7 +37,7 @@ const Legend = React.createClass({
     renderLegends() {
         let legends;
         if (this.props.nowViewingItem.isLoading) {
-            legends = <li><Loader/></li>;
+            legends = <li><Loader message={this.props.nowViewingItem.loadingMessage}/></li>;
         } else {
             legends = this.getLegends() && this.getLegends().map((legend, i)=>{
                 if (legend.isImage) {
