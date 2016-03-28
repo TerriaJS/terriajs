@@ -1,17 +1,15 @@
 'use strict';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
-
-import DataUri from '../../Core/DataUri';
-import TableStructure from '../../Map/TableStructure';
-import VarType from '../../Map/VarType';
-
 import Chart from './Chart.jsx';
 import ChartData from '../../Charts/ChartData';
+import DataUri from '../../Core/DataUri';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader.jsx';
-// import Loader from './Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import TableStructure from '../../Map/TableStructure';
+import triggerResize from 'terriajs/lib/Core/triggerResize';
+import VarType from '../../Map/VarType';
 
 const height = 250;
 
@@ -21,7 +19,7 @@ const ChartPanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         onHeightChange: React.PropTypes.func,
-        viewState: React.PropTypes.object
+        viewState: React.PropTypes.object.isRequired
     },
 
     closePanel() {
@@ -76,6 +74,16 @@ const ChartPanel = React.createClass({
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
     },
 
+    toggleBodyClass(isVisible){
+        const body = document.body;
+        body.classList.toggle('chart-is-visible', isVisible);
+        this.props.terria.currentViewer.notifyRepaintRequired();
+        // Allow any animations to finish, then trigger a resize.
+        setTimeout(function() {
+            triggerResize();
+        }, this.props.animationDuration || 1);
+    },
+
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
@@ -114,6 +122,9 @@ const ChartPanel = React.createClass({
 
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
         const isVisible = (data.length > 0) || isLoading;
+
+        this.toggleBodyClass(isVisible);
+
         if (!isVisible) {
             return null;
         }

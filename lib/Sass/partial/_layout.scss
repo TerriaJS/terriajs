@@ -48,10 +48,12 @@
   position: absolute;
   top: 0;
   right: 0;
-  left: 0;
-  height: 100vh;
+  bottom: 0;
   @include transition(left $animation-fast ease-in);
   // width: 100%;
+  body.chart-is-visible &{
+    bottom: $chart-height;
+  }
 
   @media(screen and min-width: $sm){
     //temp

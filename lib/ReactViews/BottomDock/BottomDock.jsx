@@ -14,7 +14,7 @@ const BottomDock = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object
+        viewState: React.PropTypes.object.isRequired
     },
 
     componentDidUpdate() {
