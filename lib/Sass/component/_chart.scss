@@ -233,6 +233,10 @@ $chart-darker: darken($dark, 8%);
   margin-left: -5px;
 }
 
+.preview-chart-wrapper{
+  position: relative;
+}
+
 .chart-panel .axis .colors path {
   stroke-width: 2;
 }
