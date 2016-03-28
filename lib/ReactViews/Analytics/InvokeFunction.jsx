@@ -16,11 +16,10 @@ const InvokeFunction = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    _parameterValues: {},
-
     componentWillMount() {
-       this.setParams();
-       knockout.track(this._parameterValues);
+        this._parameterValues = {};
+        this.setParams();
+        knockout.track(this._parameterValues);
     },
 
     submit() {
