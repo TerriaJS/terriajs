@@ -50,10 +50,7 @@ const ChartExpandButton = React.createClass({
             return (
                 <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
                     <div className='chart-dropdown-button'>
-                        {downloadButton}
-                    </div>
-                    <div className='chart-dropdown-button'>
-                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand&nbsp;▾</Dropdown>
+                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand&nbsp;▾</Dropdown>{downloadButton}
                     </div>
                 </div>
             );
@@ -64,8 +61,7 @@ const ChartExpandButton = React.createClass({
         }
         return (
             <div className='chart-expand'>
-                {downloadButton}
-                <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>
+                <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>{downloadButton}
             </div>
         );
     }

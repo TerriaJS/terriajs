@@ -3,7 +3,6 @@
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import Tabs from './Tabs.jsx';
-import classNames from 'classnames';
 
 // TODO: Rename this :/
 const ModalWindow = React.createClass({
@@ -19,23 +18,28 @@ const ModalWindow = React.createClass({
         this.props.viewState.switchMobileView('nowViewing');
     },
 
+    bringToFront() {
+        // Bring modal window to front.
+        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.modelWindow);
+    },
+
     render() {
         return (
-            <div className={classNames('data-panel-wrapper', 'modal-wrapper', {'is-open' : this.props.viewState.modalVisible})}
+            <div onClick={this.bringToFront}
+                 className={`data-panel-wrapper modal-wrapper ${this.props.viewState.modalVisible ? 'is-open' : ''} ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.modelWindow ? 'is-top' : ''}`}
                  id="explorer-panel-wrapper"
                  aria-hidden={!this.props.viewState.modalVisible}
             >
                 <div onClick={this.close}
                      id="modal-overlay"
                      className="modal-overlay"
-                     tabIndex="-1">
-                </div>
+                     tabIndex="-1"/>
                 <div id="explorer-panel"
                      className="explorer-panel modal-content"
                      aria-labelledby="modalTitle"
                      aria-describedby="modalDescription"
                      role="dialog">
-                    <button onClick={this.close}  className="btn btn--close-modal" title="Close data panel" data-target="close-modal"></button>
+                    <button onClick={this.close} className="btn btn--close-modal" title="Close data panel" data-target="close-modal" />
                     <Tabs terria={this.props.terria}
                           viewState={this.props.viewState}
                     />
