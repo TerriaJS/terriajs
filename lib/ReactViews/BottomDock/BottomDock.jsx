@@ -13,7 +13,8 @@ const BottomDock = React.createClass({
     displayName: 'BottomDock',
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired
+        terria: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired
     },
 
     componentDidUpdate() {
@@ -32,7 +33,7 @@ const BottomDock = React.createClass({
                     <LocationBar terria={terria}/>
                     <DistanceLegend terria={terria}/>
                 </div>
-                <ChartPanel terria={terria} onHeightChange={this.onHeightChange} />
+                <ChartPanel terria={terria} onHeightChange={this.onHeightChange} viewState={this.props.viewState}/>
                 <If condition={terria.timeSeriesStack.topLayer}>
                     <Timeline terria={terria}/>
                 </If>
