@@ -11,7 +11,7 @@ const MapInteractionWindow = React.createClass({
     },
 
     render() {
-      const interactionMode = this.props.terria.mapInteractionModeStack[this.props.terria.mapInteractionModeStack.length - 1];
+        const interactionMode = this.props.terria.mapInteractionModeStack && this.props.terria.mapInteractionModeStack[this.props.terria.mapInteractionModeStack.length - 1];
         return (
             <div className={`map-interaction-window ${interactionMode ? 'is-active' : ''}`} aria-hidden={ !interactionMode }>
               <div className='map-interaction-content'>{interactionMode && interactionMode.message}</div><button onClick={interactionMode && interactionMode.onCancel}
