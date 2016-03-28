@@ -19,7 +19,7 @@ const ModalWindow = React.createClass({
     },
 
     bringToFront() {
-        // Bring chart to front.
+        // Bring modal window to front.
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.modelWindow);
     },
 
@@ -33,14 +33,13 @@ const ModalWindow = React.createClass({
                 <div onClick={this.close}
                      id="modal-overlay"
                      className="modal-overlay"
-                     tabIndex="-1">
-                </div>
+                     tabIndex="-1"/>
                 <div id="explorer-panel"
                      className="explorer-panel modal-content"
                      aria-labelledby="modalTitle"
                      aria-describedby="modalDescription"
                      role="dialog">
-                    <button onClick={this.close}  className="btn btn--close-modal" title="Close data panel" data-target="close-modal"></button>
+                    <button onClick={this.close} className="btn btn--close-modal" title="Close data panel" data-target="close-modal" />
                     <Tabs terria={this.props.terria}
                           viewState={this.props.viewState}
                     />

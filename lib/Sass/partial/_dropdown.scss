@@ -1,6 +1,4 @@
 .dropdown{
-  position: relative;
-  width: 100%;
   .dropdown__list{
     @extend .list-reset;
     overflow: hidden;
@@ -21,13 +19,22 @@
 }
 
 //drop down for chart
-.preview-chart-wrapper .dropdown.is-open .dropdown__list{
-  right: 0;
-  top: 25px;
+.preview-chart-wrapper {
+  .dropdown{
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown__list{
+        @extend .flex;
+        right: 0;
+        top: 25px;
+    }
 }
 
 .my-data{
   .dropdown{
+      position: relative;
+      width: 100%;
     .dropdown__list{
         left: 0;
         width: 100%;

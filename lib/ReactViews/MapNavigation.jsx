@@ -15,9 +15,7 @@ const MapNavigation = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         allBaseMaps: React.PropTypes.array,
-        terriaViewer: React.PropTypes.object,
-        // might be useful?
-        viewState: React.PropTypes.object
+        terriaViewer: React.PropTypes.object
     },
 
     render() {
