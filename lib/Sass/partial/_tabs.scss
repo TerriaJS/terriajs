@@ -51,9 +51,10 @@
 
 // Welcome tab
 .welcome__inner{
-    max-width: 600px;
+    max-width: 500px;
     margin: 15vh auto;
     color: #fff;
+    font-weight: 300;
     h3{
       font-size: 1.5rem;
       margin-bottom: 2.1rem;
@@ -76,8 +77,17 @@
 .panel--welcome .panel-content{
   background: rgb(93, 126, 96);
   background-image: url('./TerriaJS/images/welcome-bg.jpg');
+  background-size: cover;
   .btn--github{
     float: right;
+    background: rgb(60, 66, 79);
+    color: #fff;
+    border-radius: $radius-medium;
+    padding: $padding-small $padding;
+    &:hover{
+      background: $color-primary;
+      text-decoration: none;
+    }
   }
 }
 
