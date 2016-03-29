@@ -41,7 +41,7 @@ const RegionDataParameterEditor = React.createClass({
 
         if (newValue) {
             this.value[column.name] = {
-                regionProvider: this.regionProvider,
+                regionProvider: this.regionProvider(),
                 regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                 valueColumn: column
             };
@@ -71,7 +71,7 @@ const RegionDataParameterEditor = React.createClass({
 
             if (!this.props.parameter.singleSelect || Object.keys(this.value).length === 1) {
                 this.value[column.name] = {
-                    regionProvider: this.props.parameter.getRegionProvider(this.props.parameterValues),
+                    regionProvider: this.regionProvider(),
                     regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                     valueColumn: column
                 };
@@ -146,10 +146,10 @@ const RegionDataParameterEditor = React.createClass({
             if (column.type === VarType.SCALAR) {
                 return <li key ={i}
                            className='clearfix data-catalog-item'>
-                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem)}
+                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem, column)}
                                     className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}
                             >{column.name}</button>
-                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem)} title="add to map"
+                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem, column)} title="add to map"
                                     className={`btn btn--catalog-item--action ${this.isActive(catalogItem, column) ? 'btn--remove-from-map' : 'btn--add-to-map'}`}></button>
                         </li>;
             }
