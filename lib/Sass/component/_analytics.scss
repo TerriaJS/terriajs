@@ -18,6 +18,7 @@
 .invoke-function{
   padding: $padding-small;
   position: relative;
+  height: 100%;
   @media screen and (min-width : $sm){
     padding: 0;
   }
@@ -27,7 +28,7 @@
   @media screen and (min-width : $sm){
     max-height: calc(70vh - #{$padding*2});
   }
-  max-height: 85vh;
+  max-height: 100%;
   overflow-y: auto;
   padding-bottom: $input-height + $padding;
   padding-right: $padding;
@@ -38,8 +39,6 @@
 
 .field--parameter-editor{
   .terria-preview{
-    margin: $padding;
-    border: $padding-small solid #fff;
-    box-shadow: $box-shadow;
+
   }
 }

@@ -46,6 +46,9 @@
   position: relative;
   background: #d5d5d5;
   cursor: auto;
+  margin: $padding;
+  border: $padding-small solid #fff;
+  box-shadow: $box-shadow;
 }
 
 .data-preview__info{
