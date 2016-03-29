@@ -34,6 +34,7 @@ const BooleanParameterEditor = React.createClass({
                     <button className={`btn btn--radio ${classNames}`}
                             title={description}
                             onClick={this.onClick}
+                            type="button"
                     >
                     {name}
                     </button>
