@@ -84,6 +84,10 @@
     color: #fff;
     border-radius: $radius-medium;
     padding: $padding-small $padding;
+    &:before{
+      display: inline-block;
+      margin-right: 5px;
+    }
     &:hover{
       background: $color-primary;
       text-decoration: none;

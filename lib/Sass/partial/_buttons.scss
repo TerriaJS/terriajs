@@ -147,8 +147,9 @@ twitter,
 link,
 menu,
 download,
-line-chart;
-
+line-chart,
+github,
+stats-bars;
 
 @each $icon in $icons {
     .btn--#{$icon}{
