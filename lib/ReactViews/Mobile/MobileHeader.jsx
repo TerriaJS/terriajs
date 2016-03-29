@@ -75,17 +75,17 @@ const MobileHeader = React.createClass({
         return <div className='mobile__ui'>
                     <div className='mobile__header'>
                         <div className='group group-left'>
-                            <button onClick={this.toggleMenu} className='btn btn--menu btn--menu-mobile' title='toggle navigation'></button>
+                            <button type='button' onClick={this.toggleMenu} className='btn btn--menu btn--menu-mobile' title='toggle navigation'></button>
                             <Branding onClick={this.refresh}/>
                         </div>
                         <div className='group group-right'>
-                            <button className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Data</button>
-                            {(nowViewingLength > 0) && <button className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}><span className='now-viewing__count'>{nowViewingLength}</span></button>}
+                            <button type='button' className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Data</button>
+                            {(nowViewingLength > 0) && <button type='button' className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}><span className='now-viewing__count'>{nowViewingLength}</span></button>}
                             <div className={'mobile__search ' + ((this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.search) ? 'is-open' : '')}>
-                                <button className='btn btn--mobile-search'
+                                <button type='button' className='btn btn--mobile-search'
                                         onClick={this.toggleSearch}></button>
                                 <SearchBox onSearchTextChanged={this.search}/>
-                                <button className='btn btn--mobile-search-cancel'
+                                <button type='button' className='btn btn--mobile-search-cancel'
                                         onClick={this.toggleSearch}>cancel</button>
                             </div>
                         </div>

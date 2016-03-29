@@ -26,7 +26,7 @@ const SharePanel = React.createClass({
         // To do : aria-hidden={!this.state.isOpen}
         return (
             <div className ={'setting-panel' + (this.state.isOpen ? 'is-open' : '')}>
-                <button onClick={this.togglePanel} className='share-panel__button btn btn--map' title='share'> Share </button>
+                <button type='button' onClick={this.togglePanel} className='share-panel__button btn btn--map' title='share'> Share </button>
             </div>
             );
     }

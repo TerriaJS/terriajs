@@ -81,19 +81,19 @@ const TimelineControls = React.createClass({
     render() {
         return (
             <div className="timeline__controls">
-                <button className="btn btn--timeline-control" onClick={this.gotoStart} title="Go to beginning">
+                <button type='button' className="btn btn--timeline-control" onClick={this.gotoStart} title="Go to beginning">
                     <i className='icon icon-backToStart' />
                 </button>
-                <button className='btn btn--timeline-control' onClick={this.togglePlay} title="Play">
+                <button type='button' className='btn btn--timeline-control' onClick={this.togglePlay} title="Play">
                     <i className={classnames('icon', {'icon-pause': this.isPlaying(), 'icon-play': !this.isPlaying()})} />
                 </button>
-                <button className="btn btn--timeline-control" onClick={this.playSlower} title="Play Slower">
+                <button type='button' className="btn btn--timeline-control" onClick={this.playSlower} title="Play Slower">
                     <i className='icon icon-backward2' />
                 </button>
-                <button className="btn btn--timeline-control" onClick={this.playFaster} title="Play Faster">
+                <button type='button' className="btn btn--timeline-control" onClick={this.playFaster} title="Play Faster">
                     <i className='icon icon-forward3' />
                 </button>
-                <button className={classnames('btn', 'btn--timeline-control', {'is-active': this.isLooping()})}
+                <button type='button' className={classnames('btn', 'btn--timeline-control', {'is-active': this.isLooping()})}
                         onClick={this.toggleLoop} title="Loop at the end">
                     <i className='icon icon-refresh' />
                 </button>

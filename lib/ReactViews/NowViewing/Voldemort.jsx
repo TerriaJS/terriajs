@@ -45,7 +45,7 @@ const Voldemort = React.createClass({
 
         if (concept.isSelectable) {
             selectButton = (
-                <button onClick={this.toggleActive.bind(this, concept)}
+                <button type='button' onClick={this.toggleActive.bind(this, concept)}
                     style={style}
                     className={this.getBtnClass(concept, parent) + ' btn'}
                     title='select variable'>
@@ -79,7 +79,7 @@ const Voldemort = React.createClass({
 
         // Otherwise show dropdown options and children
         const toggleButton = (
-            <button onClick={this.toggleOpen.bind(this, concept)}
+            <button type='button' onClick={this.toggleOpen.bind(this, concept)}
                 style={style}
                 className={'btn btn--toggle ' + (concept.isOpen ? 'is-open' : '')}
                 title='open variable selection'>

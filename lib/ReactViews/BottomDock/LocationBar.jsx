@@ -257,7 +257,7 @@ const LocationBar = React.createClass({
     },
 
     render() {
-        return (<button className='location-bar btn' onClick={this.toggleUseProjection}>
+        return (<button type='button' className='location-bar btn' onClick={this.toggleUseProjection}>
                           {this.renderLatitudeLongitude()}
                           {this.renderElevation()}
                 </button>);

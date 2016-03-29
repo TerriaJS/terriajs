@@ -44,7 +44,7 @@ const DragDropFile = React.createClass({
                     onDragLeave={this.handleDragLeave}
                     className={(this.props.isActive ? 'is-active' : '') + ' drop-zone'}>
                         <div className='drop-zone-inner'>
-                            <h1> Drag & Drop </h1>
+                            <h3 className='dnd-heading'> Drag & Drop </h3>
                             <div>Your data anywhere to view on the map</div>
                         </div>
                     </div>;

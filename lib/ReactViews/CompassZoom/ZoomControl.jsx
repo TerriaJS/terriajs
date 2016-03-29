@@ -119,9 +119,9 @@ const ZoomControl = React.createClass({
         return (
         <div className='zoom-control'>
           <ul>
-            <li><button onClick={this.zoomIn} className='btn btn--increase' title='zoom in'></button></li>
-            <li><button onClick={this.zoomReset} className='btn btn--refresh' title='reset zoom'></button></li>
-            <li><button onClick={this.zoomOut} className='btn btn--decrease' title='zoom out'></button></li>
+            <li><button type='button' onClick={this.zoomIn} className='btn btn--increase' title='zoom in'></button></li>
+            <li><button type='button' onClick={this.zoomReset} className='btn btn--refresh' title='reset zoom'></button></li>
+            <li><button type='button' onClick={this.zoomOut} className='btn btn--decrease' title='zoom out'></button></li>
           </ul>
       </div>);
     }

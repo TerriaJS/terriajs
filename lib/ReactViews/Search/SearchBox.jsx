@@ -70,7 +70,7 @@ export default React.createClass({
 
     render() {
         const clearButton = (
-            <button className='btn btn--search-clear' onClick={this.clearSearch}></button>
+            <button type='button' className='btn btn--search-clear' onClick={this.clearSearch}></button>
         );
 
         return (

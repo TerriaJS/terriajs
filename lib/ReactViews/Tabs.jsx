@@ -25,7 +25,9 @@ const Tabs = React.createClass({
             tabs: this.props.tabs || [
                 {
                     title: 'welcome',
-                    panel: <WelcomeTab terria={this.props.terria}/>
+                    panel: <WelcomeTab terria={this.props.terria}
+                                       viewState={this.props.viewState}
+                    />
                 },
                 {
                     title: 'data-catalog',
@@ -36,7 +38,8 @@ const Tabs = React.createClass({
                 {
                     title: 'my-data',
                     panel: <MyDataTab terria={this.props.terria}
-                                      viewState={this.props.viewState} />
+                                      viewState={this.props.viewState}
+                    />
                 }
             ]
         };
@@ -54,7 +57,7 @@ const Tabs = React.createClass({
                 role="tab"
                 aria-controls={getName('panel--', item.title)}
                 aria-selected={this.props.viewState.modalTabIndex === i}>
-                <button onClick={this.activateTab.bind(this, i)}
+                <button type='button' onClick={this.activateTab.bind(this, i)}
                         className='btn btn--tab'>{item.title.replace(/-/g, ' ')}</button>
             </li>
         ));
@@ -69,7 +72,7 @@ const Tabs = React.createClass({
                 className={classNames('tab-panel', getName('panel--', item.title), {'is-active': this.props.viewState.modalTabIndex === i})}
                 aria-labelledby={getName('tablist--', item.title)}
                 role='tabpanel' tabIndex='0'>
-                <h3 className="hide">{item.title.replace(/-/g, ' ')}</h3>
+                <h2 className="hide">{item.title.replace(/-/g, ' ')}</h2>
                 {item.panel}
             </section>
         ));

@@ -2,13 +2,12 @@
 
 import Mustache from 'mustache';
 import React from 'react';
-
 import defined from 'terriajs-cesium/Source/Core/defined';
-
-import CustomComponents from '../../Models/CustomComponents';
-import markdownToHtml from '../../Core/markdownToHtml';
 import ObserveModelMixin from '../ObserveModelMixin';
-import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
+import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+
+// We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
+Mustache.escape = function(string) { return string; };
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
@@ -43,6 +42,8 @@ const FeatureInfoSection = React.createClass({
         if (description.properties) {
             return JSON.stringify(description.properties);
         }
+        // TODO: This description could contain injected <script> tags etc. We must sanitize it.
+        // But do not escape it completely, because it also contains important html markup, eg. <table>.
         return description;
     },
 
@@ -56,24 +57,14 @@ const FeatureInfoSection = React.createClass({
         return (this.props.feature && this.props.feature.name) || '';
     },
 
-    sanitizedCustomMarkdown() {
-        const raw = this.descriptionFromFeature(this.props.feature, this.props.clock);
-        const html = markdownToHtml(raw, false, {
-            ADD_TAGS: CustomComponents.names(),
-            ADD_ATTR: CustomComponents.attributes()
-        });
-        const result = parseCustomHtmlToReact('<div>' + html + '</div>', this.props.catalogItem, this.props.feature);
-        return result;
-    },
-
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         return (
             <li className={'feature-info-panel__section ' + (this.props.isOpen ? 'is-open' : '')}>
-                <button onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
+                <button type='button' onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
                 {this.props.isOpen &&
                     <section className='feature-info-panel__content'>
-                        {this.sanitizedCustomMarkdown()}
+                        {renderMarkdownInReact(this.descriptionFromFeature(this.props.feature, this.props.clock), this.props.catalogItem, this.props.feature)}
                     </section>
                 }
             </li>
