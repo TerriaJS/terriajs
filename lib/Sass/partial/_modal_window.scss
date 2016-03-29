@@ -16,13 +16,15 @@
     @include transform(translateY(20%));
     width: 100%;
     overflow: hidden;
+    max-width: 1000px;
+    margin: 0 auto;
   }
   .is-open & {
     @media(screen and min-width: $sm){
       @include transform(translateX(0));
+      opacity: 1;
+      visibility: visible;
     }
-    opacity: 1;
-    visibility: visible;
   }
 }
 .modal-overlay{

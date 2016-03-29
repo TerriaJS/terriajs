@@ -61,7 +61,7 @@ const ChartExpandButton = React.createClass({
         }
         return (
             <div className='chart-expand'>
-                <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>{downloadButton}
+                <button type='button' className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>{downloadButton}
             </div>
         );
     }

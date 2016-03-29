@@ -155,7 +155,7 @@ const ChartPanel = React.createClass({
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <label className="chart-panel__section-label label">{loader || 'Charts'}</label>
                                 {downloadButton}
-                                <button className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
+                                <button type='button' className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
                             </div>
                             <div>
                                 {chart}

@@ -8,7 +8,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 const Dropdown = React.createClass({
     propTypes: {
         className: React.PropTypes.string, // Class added to the dropdown button.
-        options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button>.
+        options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button type='button'>.
         selected: React.PropTypes.object,
         selectOption: React.PropTypes.func, // The callback function; its arguments are the chosen object and its index.
         textProperty: React.PropTypes.string // property to display as text
@@ -93,7 +93,7 @@ const Dropdown = React.createClass({
     render() {
         return (
             <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
-                <button onClick={this.toggleList} className={'btn btn--dropdown ' + (this.props.className || '')} ref={element=>{this._element = element;}}>
+                <button type='button' onClick={this.toggleList} className={'btn btn--dropdown ' + (this.props.className || '')} ref={element=>{this._element = element;}}>
                     {defined(this.props.selected) ? this.props.selected[this.props.textProperty] : this.props.children}
                 </button>
                 <ul className='dropdown__list'>{this.renderOptions()}</ul>
@@ -110,7 +110,7 @@ function renderOption(that, option, index) {
         );
     }
     return (
-        <button onClick={that.select.bind(null, option, index)} className={className}>{option[that.props.textProperty]}</button>
+        <button type='button' onClick={that.select.bind(null, option, index)} className={className}>{option[that.props.textProperty]}</button>
     );
 }
 

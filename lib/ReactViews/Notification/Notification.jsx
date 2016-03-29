@@ -32,7 +32,7 @@ const Notification = React.createClass({
                       <div className='body'>{renderMarkdownInReact(message)}</div>
                     </div>
                     <div className='notification__footer'>
-                      <button className='btn'
+                      <button type='button' className='btn'
                               onClick={this.props.onDismiss}>OK</button>
                     </div>
                 </div>

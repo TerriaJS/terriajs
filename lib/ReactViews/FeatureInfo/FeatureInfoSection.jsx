@@ -61,7 +61,7 @@ const FeatureInfoSection = React.createClass({
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         return (
             <li className={'feature-info-panel__section ' + (this.props.isOpen ? 'is-open' : '')}>
-                <button onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
+                <button type='button' onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
                 {this.props.isOpen &&
                     <section className='feature-info-panel__content'>
                         {renderMarkdownInReact(this.descriptionFromFeature(this.props.feature, this.props.clock), this.props.catalogItem, this.props.feature)}

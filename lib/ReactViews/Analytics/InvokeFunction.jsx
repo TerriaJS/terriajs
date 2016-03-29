@@ -72,7 +72,7 @@ const InvokeFunction = React.createClass({
                         {this.getParams()}
                     </div>
                     <div className="invoke-function__footer">
-                        <button className='btn btn-primary' onClick={this.submit}>Run Analysis</button>
+                        <button type='button' type='button' className='btn btn-primary' onClick={this.submit}>Run Analysis</button>
                     </div>
                 </div>);
     }

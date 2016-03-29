@@ -266,4 +266,8 @@ $now-viewing-margin: $padding-small - 1px;
   @extend .btn--checkbox-off;
 }
 
+.now-viewing__item__legend{
+  font-size: 12px;
+}
+
 

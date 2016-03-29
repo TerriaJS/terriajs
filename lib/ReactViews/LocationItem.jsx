@@ -11,7 +11,7 @@ const LocationItem = React.createClass({
         const item = this.props.item;
         return (
             <li className="location-item">
-                <button onClick={item.clickAction} className="btn btn--location-name">
+                <button type='button' onClick={item.clickAction} className="btn btn--location-name">
                     {item.name}
                 </button>
             </li>

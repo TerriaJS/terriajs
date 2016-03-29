@@ -131,7 +131,7 @@ const RegionDataParameterEditor = React.createClass({
     renderContnt() {
         if(this.catalogItemsWithMatchingRegion().length > 0) {
             return <ul className='parameter-editor-tree'>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
-                <li key ={i}><button onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
+                <li key ={i}><button type='button' onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
                                      className={`btn btn--catalogue ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
             )}</ul>;
         }
@@ -146,10 +146,10 @@ const RegionDataParameterEditor = React.createClass({
             if (column.type === VarType.SCALAR) {
                 return <li key ={i}
                            className='clearfix data-catalog-item'>
-                            <button onClick={this.toggleActive.bind(this, catalogItem)}
+                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem)}
                                     className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}
                             >{column.name}</button>
-                            <button onClick={this.toggleActive.bind(this, catalogItem)} title="add to map"
+                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem)} title="add to map"
                                     className={`btn btn--catalog-item--action ${this.isActive(catalogItem, column) ? 'btn--remove-from-map' : 'btn--add-to-map'}`}></button>
                         </li>;
             }

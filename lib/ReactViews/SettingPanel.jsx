@@ -88,13 +88,13 @@ const SettingPanel = React.createClass({
 
         return (
             <div className ={'setting-panel ' + (this.state.isOpen ? 'is-open' : '')} aria-hidden={!this.state.isOpen}>
-              <button onClick={this.togglePanel} className='setting-panel__button btn btn--map' title='change settings'></button>
+              <button type='button' onClick={this.togglePanel} className='setting-panel__button btn btn--map' title='change settings'></button>
                 <div className ='setting-panel__inner'>
                 <div className='setting-panel__section setting-panel__viewer'>
                 <label className='label label--setting-panel'> Map View </label>
                 <ul className='setting-panel__viewer-selector'>
                     {this.props.viewerModes.map((viewerMode, i) => {
-                        return (<li key ={i}><button onClick={that.selectViewer.bind(this, i)} className={'btn btn--viewer ' + (i === currentViewer ? 'is-active' : '')}>{viewerMode}</button></li>);
+                        return (<li key ={i}><button type='button' onClick={that.selectViewer.bind(this, i)} className={'btn btn--viewer ' + (i === currentViewer ? 'is-active' : '')}>{viewerMode}</button></li>);
                     }, this)}
                 </ul>
                 </div>
@@ -103,7 +103,7 @@ const SettingPanel = React.createClass({
                     <label className='label label--active-map'>{this.state.activeMap}</label>
                     <ul className='setting-panel__basemap-selector'>
                         {this.props.allBaseMaps.map((baseMap, i) => {
-                            return (<li key ={i}><button className={'btn btn--basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')}
+                            return (<li key ={i}><button type='button' className={'btn btn--basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')}
                                                          onClick={that.selectBaseMap.bind(this, baseMap)}
                                                          onMouseEnter={that.mouseEnterBaseMap.bind(this, baseMap)}
                                                          onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}>

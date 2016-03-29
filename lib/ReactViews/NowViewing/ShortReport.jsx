@@ -34,9 +34,10 @@ const ShortReport = React.createClass({
 
     render() {
         return (
-            <div className="now-viewing__item__short-report">
-                {this.renderShortReport()}
-                {this.renderShortReportSections()}
+            <div className="now-viewing__item__short-report__wrapper">
+            {(this.renderShortReport() || this.renderShortReportSections()) &&
+                <div className='now-viewing__item__short-report'>{this.renderShortReport()}
+                {this.renderShortReportSections()}</div>}
             </div>
         );
     }
