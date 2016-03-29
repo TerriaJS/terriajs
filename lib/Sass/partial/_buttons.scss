@@ -29,6 +29,7 @@ $btn-setting-size: 35px;
   line-height: $btn-default-line-height;
   padding: $padding;
   background-color: transparent;
+  @include transition(all 0.05s linear);
   &:focus, &:hover{
     box-shadow: none;
     border-color: transparent;
@@ -298,10 +299,10 @@ folder;
   .icon-folder{
     position: absolute;
     left: 0;
-    padding: $padding $padding-small;
+    padding: 9px $padding-small;
     top: 0;
     font-size: 1.6rem;
-    color: #444;
+    opacity: 0.5;
   }
   &:before{
     position: absolute;
