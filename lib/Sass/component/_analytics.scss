@@ -32,3 +32,11 @@
     margin-top: 0;
   }
 }
+
+.field--parameter-editor{
+  .terria-preview{
+    margin: $padding;
+    border: $padding-small solid #fff;
+    box-shadow: $box-shadow;
+  }
+}
