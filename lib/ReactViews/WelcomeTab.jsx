@@ -1,5 +1,6 @@
 'use strict';
-const React = require('react');
+import React from 'react';
+import renderMarkdownInReact from '../Core/renderMarkdownInReact';
 // The welcome tab, not used in current design
 const WelcomeTab = React.createClass({
     propTypes: {
@@ -8,7 +9,7 @@ const WelcomeTab = React.createClass({
 
     render() {
         return (<div>
-                    <div className="panel-content" dangerouslySetInnerHTML={this.props.terria.welcome()}/>
+                    <div className="panel-content">{renderMarkdownInReact(this.props.terria.welcome)}</div>
                 </div>);
     }
 });
