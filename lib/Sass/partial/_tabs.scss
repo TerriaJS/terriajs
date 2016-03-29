@@ -52,7 +52,7 @@
 // Welcome tab
 .welcome__inner{
     max-width: 500px;
-    margin: 15vh auto;
+    margin: 6vh auto;
     color: #fff;
     font-weight: 300;
     h3{
@@ -68,6 +68,11 @@
       margin: $padding 0;
       width: calc(50% - #{$padding});
       float: left;
+      border: 0;
+      &:hover,
+      &:focus{
+        border: 0;
+      }
     }
   .btn--first{
     margin-right: $padding;
