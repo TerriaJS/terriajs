@@ -18,14 +18,18 @@ const RegionDataParameterEditor = React.createClass({
 
     componentWillMount() {
         this.catalogItemDetails = {};
-        knockout.defineProperty(this, 'value', {
-            get: function() {
-                return this.props.parameterValues[this.props.parameter.id];
-            },
-            set: function(value) {
-                this.props.parameterValues[this.props.parameter.id] = value;
-            }
-        });
+    },
+
+    componentWillReceiveProps(nextProps) {
+        this.catalogItemDetails = {};
+    },
+
+    getValue() {
+        return this.props.parameterValues[this.props.parameter.id];
+    },
+
+    setValue(value) {
+        this.props.parameterValues[this.props.parameter.id] = value;
     },
 
     regionProvider() {
@@ -37,10 +41,11 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     toggleActive(catalogItem, column) {
+        var value = this.getValue();
         const newValue = !this.isActive(catalogItem, column);
 
         if (newValue) {
-            this.value[column.name] = {
+            value[column.name] = {
                 regionProvider: this.regionProvider(),
                 regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                 valueColumn: column
@@ -48,29 +53,32 @@ const RegionDataParameterEditor = React.createClass({
 
             // If only one dataset can be active at a time, deactivate all others.
             if (this.props.parameter.singleSelect) {
-                for (const columnName in this.value) {
-                    if (this.value.hasOwnProperty(columnName) && columnName !== column.name) {
-                        this.value[columnName] = false;
+                for (const columnName in value) {
+                    if (value.hasOwnProperty(columnName) && columnName !== column.name) {
+                        value[columnName] = false;
                     }
                 }
             }
         } else {
-            this.value[column.name] = false;
+            value[column.name] = false;
             this.getCatalogItemDetails(this.catalogItemDetails, catalogItem).isEntirelyActive = false;
         }
     },
 
     isActive(catalogItem, column) {
-        if (!defined(this.value)) {
-            this.value = {};
+        var value = this.getValue();
+
+        if (!defined(value)) {
+            value = {};
+            this.setValue(value);
         }
 
-        if (!defined(this.value[column.name])) {
-            this.value[column.name] = false;
-            knockout.track(this.value, [column.name]);
+        if (!defined(value[column.name])) {
+            value[column.name] = false;
+            knockout.track(value, [column.name]);
 
-            if (!this.props.parameter.singleSelect || Object.keys(this.value).length === 1) {
-                this.value[column.name] = {
+            if (!this.props.parameter.singleSelect || Object.keys(value).length === 1) {
+                value[column.name] = {
                     regionProvider: this.regionProvider(),
                     regionColumn: catalogItem.regionMapping.regionDetails[0].column,
                     valueColumn: column
@@ -78,10 +86,10 @@ const RegionDataParameterEditor = React.createClass({
             }
         }
 
-        return defined(this.value[column.name]) &&
-               this.value[column.name] &&
-               this.value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
-               this.value[column.name].valueColumn === column;
+        return defined(value[column.name]) &&
+               value[column.name] &&
+               value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
+               value[column.name].valueColumn === column;
     },
 
     getCatalogItemDetails(catalogItemDetails, catalogItem) {
@@ -128,7 +136,7 @@ const RegionDataParameterEditor = React.createClass({
         return details.isEntirelyActive;
     },
 
-    renderContnt() {
+    renderContent() {
         if(this.catalogItemsWithMatchingRegion().length > 0) {
             return <div className="parameter-editor--data"><ul className='parameter-editor-tree'>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
                 <li key ={i}><button type='button' onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
@@ -158,7 +166,7 @@ const RegionDataParameterEditor = React.createClass({
 
     render() {
         return <div className='parameter-editor'>
-                    {this.renderContnt()}
+                    {this.renderContent()}
                </div>;
     }
 });

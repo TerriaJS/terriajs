@@ -17,6 +17,9 @@ const InvokeFunction = React.createClass({
     },
 
     componentWillMount() {
+        this._parameterValues = {};
+        knockout.track(this, ['_parameterValues']);
+
         this.initializeParameters(this.props);
     },
 

@@ -15,17 +15,12 @@ const ParameterEditor = React.createClass({
 
     propTypes: {
         parameter: React.PropTypes.object,
-        onChange: React.PropTypes.func,
         viewState: React.PropTypes.object,
         parameterValues: React.PropTypes.object,
         previewed: React.PropTypes.object
     },
 
     fieldId: new Date().getTime(),
-
-    onChange(e) {
-        this.props.parameterValues[this.props.parameter.id] = e.target.value;
-    },
 
     renderEditor() {
         switch(this.props.parameter.type) {
