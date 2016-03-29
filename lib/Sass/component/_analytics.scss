@@ -26,7 +26,7 @@
 
 .invoke-function__content{
   @media screen and (min-width : $sm){
-    max-height: calc(70vh - #{$padding*2});
+    max-height: calc(#{$modal-content-height} - #{$padding*2});
   }
   max-height: 100%;
   overflow-y: auto;
