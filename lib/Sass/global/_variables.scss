@@ -1,13 +1,14 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,500,400italic,600);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
 
 
 $font-pop:'Lato', sans-serif;
 $font-base: 'Open Sans', sans-serif;
-$font-mono: 'monospace', sans-serif;
+$font-mono: monospace, sans-serif;
 $font : $font-base;
 
 $color-primary: #08ABD5;
+$color-secondary: #06CCFF;
 
 $animation-fast: 0.1s;
 
@@ -36,7 +37,7 @@ $mobile-header-height: $sm-logo-height + $padding-small + $padding + 2px;
 $modal-bg: $faint-bg;
 $modal-text: #000;
 $modal-secondary-bg: rgba($dark-lighter, 0.05);
-$modal-overlay: rgba(#000,0.5);
+$modal-overlay: rgba(#000,0.7);
 $modal-highlight: $color-primary;
 $modal-border: $grey-lighter;
 $modal-content-height: 70vh;
@@ -66,6 +67,7 @@ $border-color: rgba(#fff, 0.15);
 $border-style: 1px solid $border-color;
 $box-shadow: 0px 6px 22px -6px rgba(#000, 0.75);
 
+$radius-medium: 3px;
 $radius-small: 2px;
 
 //screen sizes

@@ -147,8 +147,9 @@ twitter,
 link,
 menu,
 download,
-line-chart;
-
+line-chart,
+github,
+stats-bars;
 
 @each $icon in $icons {
     .btn--#{$icon}{
@@ -365,14 +366,16 @@ line-chart;
   background: $modal-bg;
   color:$modal-text;
   font-size: 1rem;
-  text-transform: capitalize;
+  text-transform: uppercase;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
-    border-bottom: 2px solid $modal-highlight;
+    background: #fff;
+    color: $modal-highlight;
+
   }
   &:hover , &:focus{
-    border-bottom: 2px solid $modal-highlight;
+    background: #fff;
     color: $modal-highlight;
   }
 }

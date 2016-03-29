@@ -92,6 +92,8 @@
 //.icon-backward2 - icon
 //.icon-forward3 - icon
 //.icon-loop2 - icon
+//.icon-github - icon
+//.icon-stats-bars -icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -240,4 +242,11 @@
 .icon-loop2:before {
     content: "\e925";
 }
+.icon-stats-bars:before {
+    content: "\e927";
+}
+.icon-github:before {
+    content: "\e926";
+}
+
 
