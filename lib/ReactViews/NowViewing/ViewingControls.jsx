@@ -76,19 +76,19 @@ const ViewingControls = React.createClass({
         let showButton = null;
         let openFeatureButton = null;
         if (nowViewingItem.isMappable) {
-            zoomButton = <li className='zoom'><button onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To</button></li>;
+            zoomButton = <li className='zoom'><button type='button' onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To</button></li>;
         }
         if (defined(nowViewingItem.tableStructure) && defined(nowViewingItem.tableStructure.sourceFeature)) {
-            openFeatureButton = <li className='open-feature'><button onClick={this.openFeature} title="Open source feature" className="btn">Zoom To</button></li>;
+            openFeatureButton = <li className='open-feature'><button type='button' onClick={this.openFeature} title="Open source feature" className="btn">Zoom To</button></li>;
         }
         if (nowViewingItem.showsInfo) {
-            infoButton = <li className='info'><button onClick={this.previewItem} className='btn' title='info'>About This Data Set</button></li>;
+            infoButton = <li className='info'><button type='button' onClick={this.previewItem} className='btn' title='info'>About This Data Set</button></li>;
         }
-        removeButton = <li className='remove'><button onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>;
+        removeButton = <li className='remove'><button type='button' onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>;
         if (nowViewingItem.supportsToggleShown) {
             showButton = (
                 <li className='visibility'>
-                    <button onClick={this.toggleVisibility} title="Data show/hide" className={'btn btn--visibility ' + (nowViewingItem.isShown ? 'is-visible' : '')}></button>
+                    <button type='button' onClick={this.toggleVisibility} title="Data show/hide" className={'btn btn--visibility ' + (nowViewingItem.isShown ? 'is-visible' : '')}></button>
                 </li>
             );
         }

@@ -54,7 +54,7 @@ const Tabs = React.createClass({
                 role="tab"
                 aria-controls={getName('panel--', item.title)}
                 aria-selected={this.props.viewState.modalTabIndex === i}>
-                <button onClick={this.activateTab.bind(this, i)}
+                <button type='button' onClick={this.activateTab.bind(this, i)}
                         className='btn btn--tab'>{item.title.replace(/-/g, ' ')}</button>
             </li>
         ));

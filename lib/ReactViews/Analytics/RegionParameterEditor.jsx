@@ -172,7 +172,7 @@ const RegionParameterEditor = React.createClass({
 
     renderOptions() {
         return <ul className={`autocomplete ${this.state.autocompleteVisible ? '' : 'is-hidden'}`}>{this.state.autoCompleteOptions.map((op, i)=>
-                    <li className="" key={i}><button className='btn' onClick={this.selectRegion.bind(this, op)}>{op.name}</button></li>
+                    <li className="" key={i}><button type='button' className='btn' onClick={this.selectRegion.bind(this, op)}>{op.name}</button></li>
                 )}
                 </ul>;
     },

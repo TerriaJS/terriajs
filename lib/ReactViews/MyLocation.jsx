@@ -59,7 +59,7 @@ const MyLocation = React.createClass({
     },
     render() {
         return <div className='my-location'>
-                  <button className='btn btn--my-location btn--geolocation'
+                  <button type='button' className='btn btn--my-location btn--geolocation'
                           title='go to my location'
                           onClick={this.handleCick}></button>
                </div>;

@@ -69,9 +69,9 @@ const MobileSearch = React.createClass({
         return (
             <div className="search--mobile">
             <div className='search-results-toggle'>
-                <button className={classNames('search--location', 'btn', {'is-active' : this.state.searchResultType === 0})}
+                <button type='button' className={classNames('search--location', 'btn', {'is-active' : this.state.searchResultType === 0})}
                         onClick={this.toggleSearchResults.bind(this, 0)}>Location</button>
-                <button className={classNames('search--data', 'btn', {'is-active' : this.state.searchResultType === 1})}
+                <button type='button' className={classNames('search--data', 'btn', {'is-active' : this.state.searchResultType === 1})}
                         onClick={this.toggleSearchResults.bind(this, 1)}>Data</button>
             </div>
                 {this.state.searchResultType === 0 && this.renderLocationResult()}

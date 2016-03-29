@@ -43,7 +43,7 @@ const SidePanel = React.createClass({
                 <div className='workbench__header'>
                     <SearchBox onSearchTextChanged={this.search}/>
                     <div className='workbench__add-data'>
-                        <button onClick={this.onAddDataClicked} className='btn'>Add Data</button>
+                        <button type='button' onClick={this.onAddDataClicked} className='btn'>Add Data</button>
                     </div>
                 </div>
                 <div className='workbench__body'>
@@ -67,7 +67,7 @@ const SidePanel = React.createClass({
                     <ul className="now-viewing__header">
                         <li><label className='label'>Data Sets</label></li>
                         <li><label className='label--badge label'>{this.props.terria.nowViewing.items.length}</label></li>
-                        <li><button onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
+                        <li><button type='button' onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
                     </ul>
                     <NowViewingContainer viewState={this.props.viewState}
                                          terria={this.props.terria}

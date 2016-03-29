@@ -68,7 +68,7 @@ const DataPreview = React.createClass({
                                                                       previewedCatalogItem={previewed}
                 />}
                 <div className='data-preview'>
-                    <button onClick={this.exitPreview}
+                    <button type='button' onClick={this.exitPreview}
                             className="btn btn--exist-preview"
                             title='exit preview'>
                     </button>
@@ -90,7 +90,7 @@ const DataPreview = React.createClass({
         const metadataItem = defined(previewed.nowViewingCatalogItem) ? previewed.nowViewingCatalogItem : previewed;
         if (previewed.isMappable) {
             return (<div className='data-preview__info'>
-                        <button onClick={this.toggleOnMap}
+                        <button type='button' onClick={this.toggleOnMap}
                                 className="btn toggle-enable"
                                 title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
                             {previewed.isEnabled ? 'Remove from map' : 'Add to map'}

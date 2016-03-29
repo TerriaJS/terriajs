@@ -31,10 +31,10 @@ const BooleanParameterEditor = React.createClass({
 
         }
         return (<div className='radio'>
-                    <button className={`btn btn--radio ${classNames}`}
+                    <button type='button' className={`btn btn--radio ${classNames}`}
                             title={description}
                             onClick={this.onClick}
-                            type="button"
+                            type='button'
                     >
                     {name}
                     </button>

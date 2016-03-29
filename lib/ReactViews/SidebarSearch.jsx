@@ -49,7 +49,7 @@ export default React.createClass({
 
         if (this.props.searchText.length > 0) {
             linkToSearchData = (
-                <button onClick={this.searchInDataCatalog} className='btn btn--data-search'>
+                <button type='button' onClick={this.searchInDataCatalog} className='btn btn--data-search'>
                     Search {this.props.searchText} in Data
                     Catalog<i className='icon icon-right-arrow'/></button>);
         }
