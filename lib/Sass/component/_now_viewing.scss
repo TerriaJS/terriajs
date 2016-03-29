@@ -248,6 +248,11 @@ $now-viewing-margin: $padding-small - 1px;
       font-size: 1.2rem;
     }
   }
+  .btn--toggle{
+    &.is-open{
+      margin-top: -10px;
+    }
+  }
 }
 
 .btn--voldemort-unique-active{
@@ -272,7 +277,7 @@ $now-viewing-margin: $padding-small - 1px;
 
 .now-viewing__item__short-report{
   .collapsible-header {
-    color: #06CCFF;
+    color: $color-secondary;
     .btn--toggle {
       padding-left: 0;
     }
