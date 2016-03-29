@@ -365,7 +365,7 @@ line-chart;
   background: $modal-bg;
   color:$modal-text;
   font-size: 1rem;
-  text-transform: capitalize;
+  text-transform: uppercase;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {

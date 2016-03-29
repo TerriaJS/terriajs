@@ -25,7 +25,9 @@ const Tabs = React.createClass({
             tabs: this.props.tabs || [
                 {
                     title: 'welcome',
-                    panel: <WelcomeTab terria={this.props.terria}/>
+                    panel: <WelcomeTab terria={this.props.terria}
+                                       viewState={this.props.viewState}
+                    />
                 },
                 {
                     title: 'data-catalog',
@@ -36,7 +38,8 @@ const Tabs = React.createClass({
                 {
                     title: 'my-data',
                     panel: <MyDataTab terria={this.props.terria}
-                                      viewState={this.props.viewState} />
+                                      viewState={this.props.viewState}
+                    />
                 }
             ]
         };
