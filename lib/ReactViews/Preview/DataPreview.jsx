@@ -60,13 +60,23 @@ const DataPreview = React.createClass({
         return items;
     },
 
+    renderPreview(previewed) {
+        if(defined(previewed)) {
+            if(previewed.isMappable) {
+                return <DataPreviewMap terria={this.props.terria}
+                                   previewedCatalogItem={previewed}
+                    />;
+                }
+            return null;
+        }
+        return <h3> Select a dataset from the catalog on the left</h3>;
+    },
+
     render() {
         const previewed = this.props.previewed;
         return (
             <div className='data-preview__inner'>
-                {previewed && previewed.isMappable && <DataPreviewMap terria={this.props.terria}
-                                                                      previewedCatalogItem={previewed}
-                />}
+                {this.renderPreview(previewed)}
                 <div className='data-preview'>
                     <button type='button' onClick={this.exitPreview}
                             className="btn btn--exist-preview"

@@ -3,12 +3,12 @@
   overflow: hidden;
   height: 0;
   @media screen and (min-width : $sm){
-    padding-left: $padding;
+    padding-left: $padding*2;
   }
 
   .data-panel-wrapper.is-open &{
       visibility: visible;
-      width: 50%;
+      width: 60%;
       float: right;
       height: 100%;
       overflow-y: auto;
