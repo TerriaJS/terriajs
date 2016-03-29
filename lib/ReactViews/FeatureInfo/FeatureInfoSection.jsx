@@ -7,7 +7,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
-// Mustache.escape = function(string) { return string; };
+Mustache.escape = function(string) { return string; };
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
