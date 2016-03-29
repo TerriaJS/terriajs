@@ -1,0 +1,5 @@
+.share-panel {
+    @include dd-panel($share-panel-width, $share-panel-caret-left);
+}
+
+

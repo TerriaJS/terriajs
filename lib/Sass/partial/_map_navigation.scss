@@ -40,8 +40,7 @@
     }
 }
 
-.setting-panel__button{
-  @extend .btn--sphere;
+.dd-panel__button{
   border-radius: $radius-small 0 0 $radius-small;
   border-right: 1px solid rgba(#fff, 0.15);
 }
@@ -54,7 +53,7 @@
   }
 }
 
-.setting-panel__button,
+.dd-panel__button,
 .full-screen__button .enter-full-screen{
   &:before{
     line-height: 1;

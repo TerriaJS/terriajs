@@ -1,8 +1,8 @@
 'use strict';
 import React from 'react';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../../ObserveModelMixin';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
-import GeoJsonCatalogItem from '../Models/GeoJsonCatalogItem';
+const GeoJsonCatalogItem = require('../../../Models/GeoJsonCatalogItem');
 
 const MyLocation = React.createClass({
     mixins: [ObserveModelMixin],
@@ -65,4 +65,5 @@ const MyLocation = React.createClass({
                </div>;
     }
 });
-module.exports = MyLocation;
+
+export default MyLocation;
