@@ -62,7 +62,7 @@ const NowViewingItem = React.createClass({
                     <ViewingControls nowViewingItem={nowViewingItem} viewState={this.props.viewState} />
                     <OpacitySection nowViewingItem={nowViewingItem} />
                     <Legend nowViewingItem={nowViewingItem} />
-                    <Voldemort nowViewingItem={nowViewingItem} />
+                    <Voldemort nowViewingItem={nowViewingItem}/>
                     <ShortReport nowViewingItem={nowViewingItem}/>
                 </div>
             </li>
