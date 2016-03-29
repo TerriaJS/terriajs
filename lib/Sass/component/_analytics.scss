@@ -3,9 +3,14 @@
 }
 
 .parameter-editor--data{
-  max-height: 200px;
-  overflow-y: auto;
-  margin-right: $padding;
+}
+
+.invoke-function__footer{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 .invoke-function{
@@ -13,5 +18,17 @@
   position: relative;
   @media screen and (min-width : $sm){
     padding: 0;
+  }
+}
+
+.invoke-function__content{
+  @media screen and (min-width : $sm){
+    max-height: calc(70vh - #{$padding*2});
+  }
+  max-height: 85vh;
+  overflow-y: auto;
+  padding-bottom: $input-height;
+  h3{
+    margin-top: 0;
   }
 }
