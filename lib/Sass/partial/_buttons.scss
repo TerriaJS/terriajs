@@ -311,6 +311,9 @@ folder;
   &:hover{
     background: $modal-highlight;
     color: #fff;
+    .icon-folder{
+      color: #fff;
+    }
   }
 }
 
