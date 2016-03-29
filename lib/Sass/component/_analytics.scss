@@ -10,6 +10,7 @@
 
 .invoke-function{
   padding: $padding-small;
+  position: relative;
   @media screen and (min-width : $sm){
     padding: 0;
   }

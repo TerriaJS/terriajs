@@ -17,9 +17,11 @@ const InvokeFunction = React.createClass({
     },
 
     componentWillMount() {
-        this._parameterValues = {};
-        this.setParams();
-        knockout.track(this._parameterValues);
+        this.initializeParameters(this.props);
+    },
+
+    componentWillReceiveProps(nextProps) {
+        this.initializeParameters(nextProps);
     },
 
     submit() {
@@ -46,12 +48,16 @@ const InvokeFunction = React.createClass({
       }
     },
 
-    setParams() {
-        const parameters = this.props.previewed.parameters;
+    initializeParameters(props) {
+        this._parameterValues = {};
+
+        const parameters = props.previewed.parameters;
         for (let i = 0; i < parameters.length; ++i) {
             const parameter = parameters[i];
             this._parameterValues[parameter.id] = parameter.defaultValue;
         }
+
+        knockout.track(this._parameterValues);
     },
 
     getParams() {
