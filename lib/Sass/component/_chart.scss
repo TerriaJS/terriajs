@@ -263,4 +263,12 @@ $chart-darker: darken($dark, 8%);
   }
 }
 
+.chart-panel__section-label{
+  .loader{
+    padding: 0px 0px 0px $padding*3 !important;
+    &:before{
+      top: 0px;
+    }
+  }
+}
 
