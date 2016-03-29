@@ -369,10 +369,12 @@ line-chart;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
-    border-bottom: 2px solid $modal-highlight;
+    background: #fff;
+    color: $modal-highlight;
+
   }
   &:hover , &:focus{
-    border-bottom: 2px solid $modal-highlight;
+    background: #fff;
     color: $modal-highlight;
   }
 }

@@ -22,8 +22,8 @@ const WelcomeTab = React.createClass({
                     <div className="welcome__inner">
                         {renderMarkdownInReact(this.props.terria.welcome)}
                         <div className='welcome-actions'>
-                          <button className='btn btn-primary' onClick={this.openAddData} >Explore the Data Catalog</button>
-                          <button className='btn btn-primary' onClick={this.openUserData} >Load your own data</button>
+                          <button className='btn btn-primary btn--first' onClick={this.openAddData} >Explore the Data Catalog</button>
+                          <button className='btn btn-primary btn--second' onClick={this.openUserData} >Load your own data</button>
                         </div>
                     </div>
                 </div>);

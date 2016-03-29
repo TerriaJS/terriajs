@@ -48,3 +48,36 @@
 }
 
 
+
+// Welcome tab
+.welcome__inner{
+    max-width: 600px;
+    margin: 15vh auto;
+    color: #fff;
+    h3{
+      font-size: 1.5rem;
+      margin-bottom: 2.1rem;
+      font-weight: 300;
+    }
+}
+
+.welcome-actions{
+  @extend .clearfix;
+  .btn-primary{
+      margin: $padding 0;
+      width: calc(50% - #{$padding});
+      float: left;
+    }
+  .btn--first{
+    margin-right: $padding;
+  }
+}
+
+.panel--welcome .panel-content{
+  background: rgb(93, 126, 96);
+  background-image: url('./TerriaJS/images/welcome-bg.jpg');
+  .btn--github{
+    float: right;
+  }
+}
+
