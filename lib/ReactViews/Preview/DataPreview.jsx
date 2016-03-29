@@ -69,7 +69,7 @@ const DataPreview = React.createClass({
                 }
             return null;
         }
-        return <h3> Select a dataset from the catalog on the left</h3>;
+        return <h3>Add a Dataset to see preview</h3>;
     },
 
     render() {
