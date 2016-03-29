@@ -11,12 +11,22 @@
       width: 60%;
       float: right;
       height: 100%;
-      overflow-y: auto;
+      overflow: hidden;
   }
 
   h4{
     margin-top: $padding;
   }
+}
+
+.data-preview__inner{
+  height: 100%;
+  overflow-y: auto;
+}
+
+.data-preview{
+  height: 100%;
+  overflow: hidden;
 }
 
 .btn.toggle-enable{
