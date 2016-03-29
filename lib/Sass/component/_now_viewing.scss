@@ -270,4 +270,13 @@ $now-viewing-margin: $padding-small - 1px;
   font-size: 12px;
 }
 
+.now-viewing__item__short-report{
+  .collapsible-header {
+    color: #06CCFF;
+    .btn--toggle {
+      padding-left: 0;
+    }
+  }
+}
+
 

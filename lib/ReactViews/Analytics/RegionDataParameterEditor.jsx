@@ -130,10 +130,10 @@ const RegionDataParameterEditor = React.createClass({
 
     renderContnt() {
         if(this.catalogItemsWithMatchingRegion().length > 0) {
-            return <ul className='parameter-editor-tree'>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
+            return <div className="parameter-editor--data"><ul className='parameter-editor-tree'>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
                 <li key ={i}><button type='button' onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
                                      className={`btn btn--catalogue ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
-            )}</ul>;
+            )}</ul></div>;
         }
         return <div className="parameter-editor-important-note">
                     No characteristics are available because you have not added any data to the map for this region type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
