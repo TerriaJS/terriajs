@@ -64,6 +64,7 @@ const DataCatalogGroup = React.createClass({
         return (
             <li>
                 <button type='button' className={classNames('btn', 'btn--catalogue', {'is-open': this.isOpen()})} onClick={this.toggleOpen}>
+                    <i className='btn--folder'/>
                     {group.name}
                 </button>
                 {contents}

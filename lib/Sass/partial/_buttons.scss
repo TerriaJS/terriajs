@@ -109,7 +109,9 @@ $btn-setting-size: 35px;
 //.btn--menu - icon button
 //.btn--download - icon button
 //.btn--line-chart -icon button
-//
+//.btn--github - icon button
+//.btn--stats-bars - icon button
+//.btn--folder -icon button
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
 //
@@ -149,7 +151,8 @@ menu,
 download,
 line-chart,
 github,
-stats-bars;
+stats-bars,
+folder;
 
 @each $icon in $icons {
     .btn--#{$icon}{
@@ -290,8 +293,16 @@ stats-bars;
   padding-right: 30px;
   position: relative;
   width: 100%;
-  border-bottom: 1px solid $grey-lighter;
   @extend .btn--toggle;
+  padding-left: $padding*4;
+  .icon-folder{
+    position: absolute;
+    left: 0;
+    padding: $padding $padding-small;
+    top: 0;
+    font-size: 1.6rem;
+    color: #444;
+  }
   &:before{
     position: absolute;
     right: 5px;

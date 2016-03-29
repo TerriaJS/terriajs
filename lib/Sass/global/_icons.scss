@@ -94,6 +94,7 @@
 //.icon-loop2 - icon
 //.icon-github - icon
 //.icon-stats-bars -icon
+//.icon-folder - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -128,6 +129,9 @@
   }
 }
 
+.icon-folder:before {
+    content: "\e928";
+}
 .icon-backToStart:before {
     content: "\e900";
 }
@@ -242,11 +246,11 @@
 .icon-loop2:before {
     content: "\e925";
 }
-.icon-stats-bars:before {
-    content: "\e927";
-}
 .icon-github:before {
     content: "\e926";
+}
+.icon-stats-bars:before {
+    content: "\e927";
 }
 
 
