@@ -61,36 +61,32 @@ const DataPreview = React.createClass({
     },
 
     renderPreview(previewed) {
-        if(defined(previewed)) {
-            if(previewed.isMappable) {
-                return <DataPreviewMap terria={this.props.terria}
-                                   previewedCatalogItem={previewed}
-                    />;
-                }
-            return null;
-        }
-        return <h3>Select a dataset to see a preview</h3>;
+        if(previewed.isMappable) {
+            return <DataPreviewMap terria={this.props.terria}
+                               previewedCatalogItem={previewed}
+                />;
+            }
+        return null;
     },
 
     render() {
         const previewed = this.props.previewed;
         return (
                 <div className='data-preview'>
+                    {previewed && this.renderActions(previewed)}
+                    {!previewed && <h3>Select a dataset to see a preview</h3>}
                     <button type='button' onClick={this.exitPreview}
                             className="btn btn--exist-preview"
                             title='exit preview'>
                     </button>
-                    {previewed && this.renderActions(previewed)}
                 </div>
         );
     },
 
     renderSections(previewed) {
-        if(previewed) {
-            const items = previewed.info.slice();
-            return this.sortInfoSections(items).map((item, i)=>
+        const items = previewed.info.slice();
+        return this.sortInfoSections(items).map((item, i)=>
                 item.content && item.content.length > 0 && <div key={i}><h4>{item.name}</h4>{renderMarkdownInReact(item.content, previewed)}</div>);
-        }
     },
 
     renderActions(previewed) {

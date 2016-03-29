@@ -17,9 +17,9 @@ const WelcomeTab = React.createClass({
     },
 
     render() {
-        return (<div>
+        return (<div className="panel-content">
                     <a className='btn btn--github'>Fork on Github</a>
-                    <div className="panel-content">
+                    <div className="welcome__inner">
                         {renderMarkdownInReact(this.props.terria.welcome)}
                         <div className='welcome-actions'>
                           <button className='btn btn-primary' onClick={this.openAddData} >Explore the Data Catalog</button>
