@@ -6,6 +6,9 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
+// We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
+// Mustache.escape = function(string) { return string; };
+
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
     mixins: [ObserveModelMixin],
@@ -39,6 +42,8 @@ const FeatureInfoSection = React.createClass({
         if (description.properties) {
             return JSON.stringify(description.properties);
         }
+        // TODO: This description could contain injected <script> tags etc. We must sanitize it.
+        // But do not escape it completely, because it also contains important html markup, eg. <table>.
         return description;
     },
 
