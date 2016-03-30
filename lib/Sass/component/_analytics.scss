@@ -1,8 +1,12 @@
 .parameter-editor-tree{
   @extend .list-reset;
+  .btn--catalogue{
+  padding-left: $padding;
+  }
 }
 
 .parameter-editor--data{
+    background: #fff;
 }
 
 .invoke-function__footer{
