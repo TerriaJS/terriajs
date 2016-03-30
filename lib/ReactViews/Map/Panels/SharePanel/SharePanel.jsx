@@ -1,12 +1,17 @@
 'use strict';
+
 import React from 'react';
-import DropdownPanel from '../DropdownPanel.jsx';
+import buildShareLink from './BuildShareLink';
+import ObserverModelMixin from '../../../ObserveModelMixin';
 
 const SharePanel = React.createClass({
+    mixins: [ObserverModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object,
         userPropWhiteList: React.PropTypes.array,
-        shortenUrls: React.PropTypes.bool
+        shortenUrls: React.PropTypes.bool,
+        isOpen: React.PropTypes.bool.isRequired
     },
 
     getDefaultProps() {
@@ -31,25 +36,27 @@ const SharePanel = React.createClass({
     },
 
     render() {
+        const shareLink = this.props.isOpen && buildShareLink(this.props.terria);
+
         return (
-            <DropdownPanel btnClass="btn--map" btnText="Share" btnTitle="change settings" className="share-panel">
-                <div>
-                    <label className='label label--setting-panel'>Share</label>
+            <div>
+                <If condition={this.props.isOpen}>
+                    <label className='label label--setting-panel dd-panel__section'>Share</label>
                     <img></img>
-                    <label>
+                    <label className="dd-panel__section">
                         To copy to clipboard, click the link below and press CTRL+C or ⌘+C:
-                        <input type="text" />
+                        <input type="text" value={shareLink.longUrl} readOnly/>
                     </label>
-                    <label>
+                    <label className="dd-panel__section">
                         To embed, copy this code to embed this map into an HTML page:
-                        <input type="text" />
+                        <input type="text"/>
                     </label>
-                    <label>
-                        <input type="checkbox" />
+                    <label className="dd-panel__section">
+                        <input type="checkbox"/>
                         Shorten the share URL using a web service
                     </label>
-                </div>
-            </DropdownPanel>
+                </If>
+            </div>
         );
     }
 });

@@ -49,7 +49,7 @@ const DropdownPanel = React.createClass({
                     <div className='dd-panel__inner'>
                         {React.Children.map(this.props.children, child =>
                             React.cloneElement(child, {
-                                className: (child.props.className || '') + ' dd-panel__section'
+                                isOpen: this.state.isOpen
                             })
                         )}
                     </div>
