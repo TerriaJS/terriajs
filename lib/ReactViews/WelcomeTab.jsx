@@ -18,7 +18,6 @@ const WelcomeTab = React.createClass({
 
     render() {
         return (<div className="panel-content">
-                    <a className='btn btn--github' href='https://github.com/TerriaJS/terriajs' target="_blank">Fork on Github</a>
                     <div className="welcome__inner">
                         {renderMarkdownInReact(this.props.terria.welcome)}
                         <div className='welcome-actions'>

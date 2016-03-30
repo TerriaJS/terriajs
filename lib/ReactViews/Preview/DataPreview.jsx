@@ -3,7 +3,6 @@
 import DataPreviewMap from './DataPreviewMap.jsx';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import InvokeFunction from '../Analytics/InvokeFunction';
 import naturalSort from 'javascript-natural-sort';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
@@ -109,12 +108,8 @@ const DataPreview = React.createClass({
                         </div>
                     </div>
                     </div>);
-        } else if(typeof previewed.invoke) {
-            return <InvokeFunction previewed={previewed}
-                                   terria={this.props.terria}
-                                   viewState={this.props.viewState}
-                    />
         }
+        return null;
     },
 
     renderDescription(previewed) {
