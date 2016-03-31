@@ -35,10 +35,10 @@
   border: 1px solid darken($dark, 3%);
   background: $dark;
   z-index: 300;
-  width: 300px;
+  width: 400px;
   .notification__inner{
     padding: $padding $padding*2;
-    height: 200px;
+    height: 300px;
     overflow-y: auto;
   }
   .body{

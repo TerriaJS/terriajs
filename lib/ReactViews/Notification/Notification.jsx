@@ -29,6 +29,7 @@ const Notification = React.createClass({
                 <div className='notification'>
                     <div className='notification__inner'>
                       <h3 className='title' >{title}</h3>
+                      <div><img src='./build/TerriaJS/images/feature.gif'/></div>
                       <div className='body'>{renderMarkdownInReact(message)}</div>
                     </div>
                     <div className='notification__footer'>
