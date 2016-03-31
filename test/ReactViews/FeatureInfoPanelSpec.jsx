@@ -8,7 +8,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
 import FeatureInfoPanel from 'terriajs/lib/ReactViews/FeatureInfo/FeatureInfoPanel';
-import Loader from 'terriajs/lib/ReactViews/Loader';
+import Loader from '../../lib/ReactViews/Loader';
 import PickedFeatures from 'terriajs/lib/Map/PickedFeatures';
 import runLater from 'terriajs/lib/Core/runLater';
 import Terria from 'terriajs/lib/Models/Terria';
