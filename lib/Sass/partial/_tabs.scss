@@ -47,10 +47,9 @@
     }
 }
 
-
-
-// Welcome tab
-.welcome__inner{
+// Getting started tab
+.panel--getting-started{
+  .panel__inner{
     max-width: 500px;
     margin: 6vh auto;
     color: #fff;
@@ -60,43 +59,33 @@
       margin-bottom: 2.1rem;
       font-weight: 300;
     }
-}
-
-.welcome-actions{
-  @extend .clearfix;
-  .btn-primary{
-      margin: $padding 0;
-      width: calc(50% - #{$padding});
-      float: left;
-      border: 0;
-      &:hover,
-      &:focus{
+  }
+  .panel-actions{
+    @extend .clearfix;
+    .btn-primary{
+        margin: $padding 0;
+        width: calc(50% - #{$padding});
+        float: left;
         border: 0;
+        &:hover,
+        &:focus{
+          border: 0;
+        }
       }
+    .btn--first{
+      margin-right: $padding;
     }
-  .btn--first{
-    margin-right: $padding;
+  }
+  .panel-content{
+    background: rgb(93, 126, 96);
+    background-image: url('../images/welcome-bg.jpg');
+    background-size: cover;
   }
 }
 
-.panel--welcome .panel-content{
-  background: rgb(93, 126, 96);
-  background-image: url('./TerriaJS/images/welcome-bg.jpg');
-  background-size: cover;
-  .btn--github{
-    float: right;
-    background: rgb(60, 66, 79);
-    color: #fff;
-    border-radius: $radius-medium;
-    padding: $padding-small $padding;
-    &:before{
-      display: inline-block;
-      margin-right: 5px;
-    }
-    &:hover{
-      background: $color-primary;
-      text-decoration: none;
-    }
-  }
-}
+
+
+
+
+
 

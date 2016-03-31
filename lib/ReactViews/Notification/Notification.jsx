@@ -23,13 +23,13 @@ const Notification = React.createClass({
             title = this.props.notification.title;
             message = this.props.notification.message;
         }
-
+        console.log(window.location.host);
         return (
               <div className={`notification-wrapper ${isVisible ? 'is-visible' : ''}`} aria-hidden={!isVisible}>
                 <div className='notification'>
                     <div className='notification__inner'>
                       <h3 className='title' >{title}</h3>
-                      <div><img src='./build/TerriaJS/images/feature.gif'/></div>
+                      {window.location.host === 'localhost:3001' && <div><img src='./build/TerriaJS/images/feature.gif'/></div>}
                       <div className='body'>{renderMarkdownInReact(message)}</div>
                     </div>
                     <div className='notification__footer'>
