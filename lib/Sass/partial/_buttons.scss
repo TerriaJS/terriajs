@@ -113,6 +113,11 @@ $btn-setting-size: 35px;
 //.btn--github - icon button
 //.btn--stats-bars - icon button
 //.btn--folder -icon button
+<<<<<<< HEAD
+=======
+//.btn-folder-open - icon
+//.btn-folder - icon
+>>>>>>> newui
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
 //
@@ -153,7 +158,12 @@ download,
 line-chart,
 github,
 stats-bars,
+<<<<<<< HEAD
 folder;
+=======
+folder,
+folder-open;
+>>>>>>> newui
 
 @each $icon in $icons {
     .btn--#{$icon}{

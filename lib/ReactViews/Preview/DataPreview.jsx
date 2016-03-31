@@ -113,8 +113,9 @@ const DataPreview = React.createClass({
             return <InvokeFunction previewed={previewed}
                                    terria={this.props.terria}
                                    viewState={this.props.viewState}
-                    />
+                    />;
         }
+        return null;
     },
 
     renderDescription(previewed) {
