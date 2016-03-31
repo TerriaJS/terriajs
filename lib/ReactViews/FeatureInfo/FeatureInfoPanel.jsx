@@ -102,8 +102,8 @@ const FeatureInfoPanel = React.createClass({
                 aria-hidden={!this.props.isVisible}
                 onClick={this.bringToFront} >
               <div className='feature-info-panel__header'>
-                <button onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Info Panel </button>
-                <button onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>
+                <button type='button' onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Information </button>
+                <button type='button' onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>
               </div>
               <ul className="feature-info-panel__body">{this.renderContent(pickedFeatures)}</ul>
             </div>

@@ -1,5 +1,11 @@
 .notification-wrapper{
   display: none;
+  align-items: center;
+  justify-content: center;
+
+  &.is-visible{
+    @extend .flex;
+  }
 }
 // Notification
 //
@@ -29,10 +35,10 @@
   border: 1px solid darken($dark, 3%);
   background: $dark;
   z-index: 300;
-  width: 300px;
+  width: 400px;
   .notification__inner{
     padding: $padding $padding*2;
-    height: 200px;
+    height: 300px;
     overflow-y: auto;
   }
   .body{
@@ -46,5 +52,25 @@
     width: 100%;
     font-size: $font-size-small;
     border-radius: 0 0 $radius-small $radius-small;
+  }
+}
+
+//Map interaction window
+
+.map-interaction-window{
+  display: none;
+  position: fixed;
+  left: 50%;
+  background: #fff;
+  width: 200px;
+  top: 50px;
+  z-index: 999;
+  color: #000;
+  padding: $padding;
+  &.is-active{
+    display: block;
+  }
+  .map-interaction-content{
+    margin-bottom: $padding;
   }
 }

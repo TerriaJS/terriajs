@@ -1,0 +1,178 @@
+@parameter-editor-table-right-width: 500px;
+
+.invoke-function-panel {
+    .modal;
+    width: 800px;
+    height: 520px;
+}
+
+.invoke-function-panel-content {
+    position: absolute;
+    top: 40px;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    padding: 15px;
+}
+
+.invoke-function-panel-footer {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    left: 0;
+    right: 0;
+    background-color: @modal-header-background-color;
+    border-top: @panel-element-border;
+    text-align: center;
+}
+
+.invoke-function-panel-footer button{
+    background-color: @panel-form-button-background-color;
+    border: 0;
+    height: 30px;
+    font-size: 14px;
+    color: @panel-form-button-text-color;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.invoke-function-panel-description {
+    font-size: 10pt;
+    font-weight: normal;
+    color: @panel-text-color;
+    word-break: break-word;
+}
+
+.invoke-function-panel-content em {
+    font-weight: bold;
+}
+
+.invoke-function-parameters {
+}
+
+.invoke-function-parameter {
+    padding-top: 20px;
+}
+
+.invoke-function-panel-go-button {
+    padding: 20px;
+    text-align: center;
+}
+
+.parameter-editor-table-left {
+    display: inline-block;
+    position: relative;
+    width: 150px;
+    text-align: right;
+    vertical-align: top;
+    font-weight: bold;
+}
+
+.parameter-editor-table-right {
+    display: inline-block;
+    width: @parameter-editor-table-right-width;
+    padding-left: 10px;
+    vertical-align: top;
+}
+
+.parameter-editor-heading {
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.parameter-editor-tree-item {
+    display: table;
+}
+
+.parameter-editor-tree-item-element {
+    display: table-cell;
+}
+
+.parameter-editor-tree-icon-holder {
+    width: 20px;
+}
+
+.parameter-editor-tree-arrow {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  fill: @catalog-group-text-color;
+}
+
+.parameter-editor-tree-indent {
+    padding-left: 12px;
+}
+
+.parameter-editor-table-right select {
+    margin-top: 0;
+}
+
+.parameter-editor-map-holder {
+    position: relative;
+    width: 3 * @parameter-editor-table-right-width / 4;
+    height: @parameter-editor-table-right-width / 2;
+}
+
+.parameter-editor-map, .parameter-editor-map-ui {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.parameter-editor-map-ui {
+    pointer-events: none;
+}
+
+.parameter-editor-text-input {
+    padding-bottom: 10px;
+}
+
+.parameter-editor-text-input input {
+    height: 20px;
+}
+
+.parameter-editor-autocomplete {
+    background-color: white;
+    border: 1px solid black;
+    padding: 5px;
+    position: absolute;
+    z-index: 100;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    width: 300px;
+    max-height: 200px;
+    overflow: auto;
+}
+
+.parameter-editor-autocomplete-option {
+    cursor: pointer;
+    color: black;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.parameter-editor-autocomplete-option:hover {
+    background-color: blue;
+    color: white;
+}
+
+.parameter-editor-important-note {
+    padding: 5px;
+    border: 1px solid #555555;
+}
+
+.parameter-editor-button {
+    vertical-align: middle;
+    background-color: @panel-form-button-background-color;
+    border: 0;
+    color: @panel-form-button-text-color;
+    padding: 3px;
+}
+
+.parameter-editor-button img {
+    vertical-align: middle;
+}

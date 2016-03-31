@@ -3,7 +3,7 @@
   background: $modal-bg;
   color: $modal-text;
   border-radius: $radius-small;
-  z-index: 200;
+  z-index: $front-component-z-index - 1;
   opacity: 0;
   height: 100%;
   overflow-y: auto;
@@ -16,13 +16,15 @@
     @include transform(translateY(20%));
     width: 100%;
     overflow: hidden;
+    max-width: 1000px;
+    margin: 0 auto;
   }
   .is-open & {
     @media(screen and min-width: $sm){
       @include transform(translateX(0));
+      opacity: 1;
+      visibility: visible;
     }
-    opacity: 1;
-    visibility: visible;
   }
 }
 .modal-overlay{
@@ -33,7 +35,7 @@
   visibility: hidden;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: $front-component-z-index - 10;
   opacity: 0;
   background: $modal-overlay;
   @include transition(all 0.3s);

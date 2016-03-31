@@ -10,8 +10,8 @@ const Branding = React.createClass({
     render() {
         return (
             <div className='branding'>
-                <button className='logo btn' onClick={this.props.onClick}>
-                    <img src="./images/branding.png" alt="TERRORium" width="160" />
+                <button type='button' className='logo btn' onClick={this.props.onClick}>
+                    <img src="./images/branding.png" alt="Terria App Name" width="160" />
                 </button>
             </div>
         );

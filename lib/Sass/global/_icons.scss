@@ -89,9 +89,13 @@
 //.icon-backToStart - icon
 //.icon-pause - icon
 //.icon-play - icon
-//.icon-backward2 - icon
-//.icon-forward3 - icon
-//.icon-loop2 - icon
+//.icon-backward - icon
+//.icon-forward - icon
+//.icon-loop - icon
+//.icon-github - icon
+//.icon-stats-bars -icon
+//.icon-folder-open - icon
+//.icon-folder - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -126,6 +130,12 @@
   }
 }
 
+.icon-folder-open:before {
+    content: "\e928";
+}
+.icon-folder:before {
+    content: "\e929";
+}
 .icon-backToStart:before {
     content: "\e900";
 }
@@ -231,13 +241,19 @@
 .icon-download:before {
     content: "\e922";
 }
-.icon-backward2:before {
+.icon-backward:before {
     content: "\e923";
 }
-.icon-forward3:before {
+.icon-forward:before {
     content: "\e924";
 }
-.icon-loop2:before {
+.icon-loop:before {
     content: "\e925";
+}
+.icon-github:before {
+    content: "\e926";
+}
+.icon-stats-bars:before {
+    content: "\e927";
 }
 

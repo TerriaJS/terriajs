@@ -50,10 +50,7 @@ const ChartExpandButton = React.createClass({
             return (
                 <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
                     <div className='chart-dropdown-button'>
-                        {downloadButton}
-                    </div>
-                    <div className='chart-dropdown-button'>
-                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand&nbsp;▾</Dropdown>
+                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects}>Expand&nbsp;▾</Dropdown>{downloadButton}
                     </div>
                 </div>
             );
@@ -64,8 +61,7 @@ const ChartExpandButton = React.createClass({
         }
         return (
             <div className='chart-expand'>
-                {downloadButton}
-                <button className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>
+                <button type='button' className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>{downloadButton}
             </div>
         );
     }
@@ -100,6 +96,7 @@ function expand(props, url) {
     newCatalogItem.load().then(function() {
         // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
         try {
+            newCatalogItem.sourceCatalogItem = props.catalogItem;
             const tableStructure = newCatalogItem.tableStructure;
             tableStructure.sourceFeature = props.feature;
             tableStructure.columns.forEach((column, columnNumber)=>{

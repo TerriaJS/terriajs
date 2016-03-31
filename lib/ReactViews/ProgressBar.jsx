@@ -5,7 +5,7 @@ import EventHelper from 'terriajs-cesium/Source/Core/EventHelper';
 import classnames from 'classnames';
 
 // The map navigation region
-const MapNavigation = React.createClass({
+const ProgressBar = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired
     },
@@ -48,4 +48,4 @@ const MapNavigation = React.createClass({
         );
     }
 });
-module.exports = MapNavigation;
+module.exports = ProgressBar;

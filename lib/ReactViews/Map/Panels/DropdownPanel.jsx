@@ -41,6 +41,7 @@ const DropdownPanel = React.createClass({
         return (
             <div className={classnames({'is-open': this.state.isOpen}, this.props.className)}>
                 <button onClick={this.togglePanel}
+                        type='button'
                         className={classnames('dd-panel__button', 'btn', this.props.btnClass)}
                         title={this.props.btnTitle}>
                     {this.props.btnText}

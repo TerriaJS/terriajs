@@ -8,18 +8,17 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 const Dropdown = React.createClass({
     propTypes: {
         className: React.PropTypes.string, // Class added to the dropdown button.
-        options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button>.
+        options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button type='button'>.
         selected: React.PropTypes.object,
-        selectOption: React.PropTypes.func // The callback function; its arguments are the chosen object and its index.
+        selectOption: React.PropTypes.func, // The callback function; its arguments are the chosen object and its index.
+        textProperty: React.PropTypes.string // property to display as text
     },
-
-    // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
-    _element: undefined,
 
     getDefaultProps() {
         return {
             options: [],
-            selected: undefined
+            selected: undefined,
+            textProperty: 'name'
         };
     },
 
@@ -30,6 +29,9 @@ const Dropdown = React.createClass({
     },
 
     componentWillMount() {
+        // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
+        this._element = undefined;
+
         window.addEventListener('click', this.closeDropDownWhenClickOtherPlaces);
     },
 
@@ -91,8 +93,8 @@ const Dropdown = React.createClass({
     render() {
         return (
             <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '')}>
-                <button onClick={this.toggleList} className={'btn btn--dropdown ' + (this.props.className || '')} ref={element=>{this._element = element;}}>
-                    {defined(this.props.selected) ? this.props.selected.name : this.props.children}
+                <button type='button' onClick={this.toggleList} className={'btn btn--dropdown ' + (this.props.className || '')} ref={element=>{this._element = element;}}>
+                    {defined(this.props.selected) ? this.props.selected[this.props.textProperty] : this.props.children}
                 </button>
                 <ul className='dropdown__list'>{this.renderOptions()}</ul>
             </div>
@@ -104,11 +106,11 @@ function renderOption(that, option, index) {
     const className = 'btn btn--dropdown-option ' + (option === that.props.selected ? 'is-selected' : '');
     if (defined(option.href)) {
         return (
-            <a href={option.href} className={className}>{option.name}</a>
+            <a href={option.href} className={className}>{option[that.props.textProperty]}</a>
         );
     }
     return (
-        <button onClick={that.select.bind(null, option, index)} className={className}>{option.name}</button>
+        <button type='button' onClick={that.select.bind(null, option, index)} className={className}>{option[that.props.textProperty]}</button>
     );
 }
 

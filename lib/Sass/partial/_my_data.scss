@@ -1,11 +1,3 @@
-.data-explorer,
-  .my-data{
-    @media(screen and min-width: $sm){
-      width: 50%;
-      float: left;
-    }
-}
-
 // My data
 .add-data-tablist{
   padding-right: 0;
@@ -16,7 +8,7 @@
 
 // //My data
 .my-data{
-  height: 100%;
+  overflow-y: hidden;
 }
 
 .add-data{
@@ -31,6 +23,11 @@
     position: absolute;
     left: -1000px;
   }
+}
+
+.added-data{
+  height: 100%;
+  overflow-y: auto;
 }
 
 .btn--back-to-my-data{

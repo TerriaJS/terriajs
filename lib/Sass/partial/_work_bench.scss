@@ -1,6 +1,6 @@
 .workbench{
   font-family: $font-pop;
-  background: $dark;
+  background: $overlay;
   h1{
     margin: 0;
   }
@@ -8,16 +8,22 @@
 
 .workbench__inner{
   position: relative;
-  height: 100%;
+}
+
+.workbench__header{
+    padding: 0 $padding-small;
+    border-bottom: 1px solid $overlay;
+    background: $dark;
+}
+
+.workbench__body{
+    padding: 0 $padding-small;
+    overflow-y: auto;
+    height: calc(100vh - #{$workbench-header + $logo-height});
 }
 
 .workbench__add-data{
-  padding: 0 $padding-small $padding-small $padding-small;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(#{$input-height} + #{$padding-small});
-  border-bottom: 1px solid #5C636E;
+  margin: $padding-small 0;
   .btn{
     text-transform: uppercase;
     @extend .btn-primary;

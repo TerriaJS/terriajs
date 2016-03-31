@@ -35,7 +35,7 @@ const Chart = React.createClass({
 
     propTypes: {
         domain: React.PropTypes.object,
-        inFeatureInfo: React.PropTypes.bool,
+        styling: React.PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
         height: React.PropTypes.number,
         axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
@@ -43,9 +43,11 @@ const Chart = React.createClass({
         data: React.PropTypes.array,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: React.PropTypes.string,
+        sourceData: React.PropTypes.array,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         yColumns: React.PropTypes.array,
-        colors: React.PropTypes.array
+        colors: React.PropTypes.array,
+        highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
     },
 
     getInitialState() {
@@ -61,16 +63,18 @@ const Chart = React.createClass({
         let promise;
         if (defined(chartParameters.data)) {
             promise = when(LineChart.create(this._element, chartParameters));
-        } else if (defined(chartParameters.url)) {
+        } else if (defined(chartParameters.url) || defined(chartParameters.sourceData)) {
             const tableStructure = new TableStructure('feature info');
-            promise = loadText(chartParameters.url).then(function(text) {
-                tableStructure.loadFromCsv(text);
-                const xColumn = tableStructure.getColumnWithNameOrIndex(that.props.xColumn || 0);
-                let yColumns = [tableStructure.columns[1]];
+            const loadPromise = defined(chartParameters.sourceData)
+                ? when(chartParameters.sourceData).then(tableStructure.loadFromJson.bind(tableStructure))
+                : loadText(chartParameters.url).then(tableStructure.loadFromCsv.bind(tableStructure));
+            promise = loadPromise.then(function(table) {
+                const xColumn = table.getColumnWithNameOrIndex(that.props.xColumn || 0);
+                let yColumns = [table.columns[1]];
                 if (defined(that.props.yColumns)) {
-                    yColumns = that.props.yColumns.map(yCol=>tableStructure.getColumnWithNameOrIndex(yCol));
+                    yColumns = that.props.yColumns.map(yCol=>table.getColumnWithNameOrIndex(yCol));
                 }
-                const pointArrays = tableStructure.toPointArrays(xColumn, yColumns);
+                const pointArrays = table.toPointArrays(xColumn, yColumns);
                 // The data id should be set to something unique, eg. its source id + column index.
                 // If we're here, the data was downloaded from a url, ie. comes from a single file, so the column index is unique by itself.
                 chartParameters.data = pointArrays.map((points, index)=>
@@ -132,7 +136,7 @@ const Chart = React.createClass({
         let tooltipSettings;
         let titleSettings;
         let grid;
-        if (!this.props.inFeatureInfo) {
+        if (this.props.styling !== 'feature-info') {
             if (!defined(this._tooltipId)) {
                 // In case there are multiple charts with tooltips. Unlikely to pick the same random number. Remove the initial "0.".
                 this._tooltipId = 'd3-tooltip-' + Math.random().toString().substr(2);
@@ -157,19 +161,29 @@ const Chart = React.createClass({
                 y: true
             };
         }
+        if (defined(this.props.highlightX)) {
+            tooltipSettings = undefined;
+        }
+        if (this.props.styling === 'histogram') {
+            titleSettings = undefined;
+            margin = {top: 0, right: 0, bottom: 0, left: 0};
+        }
+
         return {
             data: defined(this.state.data) ? this.state.data : this.props.data,
             domain: this.props.domain,
             url: this.props.url,
+            sourceData: this.props.sourceData,
             width: '100%',
             height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
-            mini: this.props.inFeatureInfo,
+            mini: this.props.styling === 'feature-info',
             transitionDuration: this.props.transitionDuration,
             margin: margin,
             tooltipSettings: tooltipSettings,
             titleSettings: titleSettings,
-            grid: grid
+            grid: grid,
+            highlightX: this.props.highlightX
         };
     },
 

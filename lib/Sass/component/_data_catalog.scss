@@ -11,11 +11,16 @@
     padding-right: $padding;
     box-sizing: border-box;
     @media screen and (min-width : $sm){
-    height: calc(70vh - #{$input-height + $padding*2});
+    height: calc(100% - #{$input-height});
     }
   }
   & > li > .btn--catalogue{
     font-weight: 600;
+    border-bottom: 1px solid $grey-lighter;
+    padding-left: $padding;
+    .btn--group-indicator{
+      display: none;
+    }
   }
 
   .data--catalog-group{
@@ -33,6 +38,7 @@
   position: relative;
   .btn--catalog-item--action{
     position: absolute;
+    color: $color-primary;
     left: 0;
     top: 0;
     padding: $padding-small;

@@ -29,6 +29,7 @@ $btn-setting-size: 35px;
   line-height: $btn-default-line-height;
   padding: $padding;
   background-color: transparent;
+  @include transition(all 0.05s linear);
   &:focus, &:hover{
     box-shadow: none;
     border-color: transparent;
@@ -109,6 +110,10 @@ $btn-setting-size: 35px;
 //.btn--menu - icon button
 //.btn--download - icon button
 //.btn--line-chart -icon button
+//.btn--github - icon button
+//.btn--stats-bars - icon button
+//.btn--folder -icon button
+//.btn-folder-open - icon
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -147,8 +152,11 @@ twitter,
 link,
 menu,
 download,
-line-chart;
-
+line-chart,
+github,
+stats-bars,
+folder,
+folder-open;
 
 @each $icon in $icons {
     .btn--#{$icon}{
@@ -289,8 +297,16 @@ line-chart;
   padding-right: 30px;
   position: relative;
   width: 100%;
-  border-bottom: 1px solid $grey-lighter;
   @extend .btn--toggle;
+  padding-left: $padding*4;
+  .btn--group-indicator{
+    position: absolute;
+    left: 0;
+    padding: 9px $padding-small;
+    top: 0;
+    font-size: 1.6rem;
+    opacity: 0.5;
+  }
   &:before{
     position: absolute;
     right: 5px;
@@ -299,6 +315,9 @@ line-chart;
   &:hover{
     background: $modal-highlight;
     color: #fff;
+    .btn--group-indicator{
+      color: #fff;
+    }
   }
 }
 
@@ -344,6 +363,9 @@ line-chart;
       opacity: 1;
     }
   }
+  &.is-active{
+    color: $modal-highlight;
+  }
 }
 
 // Modal window tab buttons
@@ -362,14 +384,16 @@ line-chart;
   background: $modal-bg;
   color:$modal-text;
   font-size: 1rem;
-  text-transform: capitalize;
+  text-transform: uppercase;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
-    border-bottom: 2px solid $modal-highlight;
+    background: #fff;
+    color: $modal-highlight;
+
   }
   &:hover , &:focus{
-    border-bottom: 2px solid $modal-highlight;
+    background: #fff;
     color: $modal-highlight;
   }
 }
@@ -515,6 +539,7 @@ a.btn--map{
   }
 }
 
+
 .btn--timeline-control {
     height: 29px;
     width: 34px;
@@ -525,4 +550,17 @@ a.btn--map{
     &:active {
         color: $color-primary;
     }
+}
+
+.btn--file-input, .btn--add-url{
+  @extend .btn-primary;
+}
+
+.btn--radio{
+  padding: $padding-small;
+  &:before{
+    color: $color-primary;
+    display: inline-block;
+    padding: $padding-small $padding-small $padding-small 0;
+  }
 }

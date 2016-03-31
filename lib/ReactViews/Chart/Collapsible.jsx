@@ -32,7 +32,7 @@ const Collapsible = React.createClass({
         return (
             <div className='collapsible'>
                 <div className='collapsible-header'>
-                    <button onClick={this.toggleOpen} className={'btn btn--toggle ' + (this.state.isOpen === true ? 'is-open' : '')}></button>
+                    <button type='button' onClick={this.toggleOpen} className={'btn btn--toggle ' + (this.state.isOpen === true ? 'is-open' : '')}></button>
                     <span>{this.props.title}</span>
                 </div>
                 {body}

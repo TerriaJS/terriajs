@@ -3,6 +3,7 @@
   border-width: 1px;
   border-color: $field-border;
   border-radius: $radius-small;
+  width: 100%;
 }
 
 .field:focus,
@@ -108,11 +109,6 @@
     font-family: $font-base;
     @extend .sm-show;
   }
-
-  .workbench__inner & {
-    padding: 0 $padding-small;
-    font-family: $font-pop;
-  }
 }
 
 // Add data from url form
@@ -157,9 +153,28 @@ form.url-input{
   }
 }
 
+.field--parameter-editor{
+  margin-bottom: $padding;
+  position: relative;
+  input, select{
+    width: 100%;
+    display: block;
+  }
+}
 
-.btn--file-input, .btn--add-url{
-  @extend .btn-primary;
+.autocomplete {
+  background: #fff;
+  padding: $padding;
+  box-shadow: $box-shadow;
+  position: absolute;
+  z-index: 99;
+  right: 0;
+  left: 0;
+  .btn{
+    &:hover, &:focus{
+      color: $color-primary;
+    }
+  }
 }
 
 

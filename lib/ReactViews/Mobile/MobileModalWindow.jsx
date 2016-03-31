@@ -73,7 +73,7 @@ const MobileModalWindow = React.createClass({
     render() {
         return <div className={classNames('modal--mobile', {'is-open' : this.props.viewState.modalVisible && this.props.viewState.mobileView})}>
                     {this.renderModalContent()}
-                    {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Done</button>}
+                    {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button type='button' className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Done</button>}
                 </div>;
     }
 });

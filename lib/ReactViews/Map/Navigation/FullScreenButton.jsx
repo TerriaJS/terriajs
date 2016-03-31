@@ -1,10 +1,13 @@
 'use strict';
 const React = require('react');
 
-// the button to make the map full screen(hide the workbench)
+import triggerResize from 'terriajs/lib/Core/triggerResize';
+
+// The button to make the map full screen and hide the workbench.
 const FullScreenButton = React.createClass({
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object,
+        animationDuration: React.PropTypes.number // Defaults to 1 millisecond.
     },
 
     getInitialState() {
@@ -20,6 +23,10 @@ const FullScreenButton = React.createClass({
 
         body.classList.toggle('is-full-screen', !this.state.isActive);
         this.props.terria.currentViewer.notifyRepaintRequired();
+        // Allow any animations to finish, then trigger a resize.
+        setTimeout(function() {
+            triggerResize();
+        }, this.props.animationDuration || 1);
     },
 
     renderButtonText() {
@@ -30,7 +37,7 @@ const FullScreenButton = React.createClass({
     },
 
     render() {
-        return (<div className='full-screen'><button onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn--map full-screen__button ' + (this.state.isActive ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
+        return (<div className='full-screen'><button type='button' onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn--map full-screen__button ' + (this.state.isActive ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
     }
 });
 module.exports = FullScreenButton;

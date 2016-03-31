@@ -2,21 +2,31 @@
   visibility: hidden;
   overflow: hidden;
   height: 0;
+  @media screen and (min-width : $sm){
+    padding-left: $padding*2;
+  }
+
   .data-panel-wrapper.is-open &{
       visibility: visible;
-      position: absolute;
-      padding-right: $padding;
-      top: $padding;
-      right: $padding-small;
-      bottom: $padding;
-      width: calc(50% - #{$padding*2});
-      height: $modal-content-height;
-      overflow-y: auto;
+      width: 60%;
+      float: right;
+      height: 100%;
+      overflow: hidden;
   }
 
   h4{
     margin-top: $padding;
   }
+}
+
+.data-preview__inner{
+  height: 100%;
+  overflow-y: auto;
+}
+
+.data-preview{
+  height: 100%;
+  overflow: hidden;
 }
 
 .btn.toggle-enable{
@@ -36,7 +46,9 @@
   position: relative;
   background: #d5d5d5;
   cursor: auto;
-  pointer-events: none;
+  margin: $padding;
+  border: $padding-small solid #fff;
+  box-shadow: $box-shadow;
 }
 
 .data-preview__info{
