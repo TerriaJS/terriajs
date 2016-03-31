@@ -9,10 +9,10 @@ import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
 import FeatureInfoPanel from 'terriajs/lib/ReactViews/FeatureInfo/FeatureInfoPanel';
 import Loader from '../../lib/ReactViews/Loader';
-import PickedFeatures from 'terriajs/lib/Map/PickedFeatures';
-import runLater from 'terriajs/lib/Core/runLater';
-import Terria from 'terriajs/lib/Models/Terria';
-import ViewState from 'terriajs/lib/ReactViewModels/ViewState';
+import PickedFeatures from '../../lib/Map/PickedFeatures';
+import runLater from '../../lib/Core/runLater';
+import Terria from '../../lib/Models/Terria';
+import ViewState from '../../lib/ReactViewModels/ViewState';
 
 var separator = ',';
 if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
