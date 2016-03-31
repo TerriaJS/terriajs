@@ -3,7 +3,6 @@
 import React from 'react';
 
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
-import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import classnames from 'classnames';
 
 const TimelineControls = React.createClass({
@@ -88,10 +87,10 @@ const TimelineControls = React.createClass({
                     <i className={classnames('icon', {'icon-pause': this.isPlaying(), 'icon-play': !this.isPlaying()})} />
                 </button>
                 <button type='button' className="btn btn--timeline-control" onClick={this.playSlower} title="Play Slower">
-                    <i className='icon icon-backward2' />
+                    <i className='icon icon-backward' />
                 </button>
                 <button type='button' className="btn btn--timeline-control" onClick={this.playFaster} title="Play Faster">
-                    <i className='icon icon-forward3' />
+                    <i className='icon icon-forward' />
                 </button>
                 <button type='button' className={classnames('btn', 'btn--timeline-control', {'is-active': this.isLooping()})}
                         onClick={this.toggleLoop} title="Loop at the end">
