@@ -8,11 +8,11 @@ import ReactTestUtils from 'react-addons-test-utils';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
 import FeatureInfoPanel from 'terriajs/lib/ReactViews/FeatureInfo/FeatureInfoPanel';
-import Loader from 'terriajs/lib/ReactViews/Loader.jsx';
+import Loader from 'terriajs/lib/ReactViews/Loader';
 import PickedFeatures from 'terriajs/lib/Map/PickedFeatures';
 import runLater from 'terriajs/lib/Core/runLater';
 import Terria from 'terriajs/lib/Models/Terria';
-import ViewState from 'terriajs/lib/ReactViewModels/ViewState.js';
+import ViewState from 'terriajs/lib/ReactViewModels/ViewState';
 
 var separator = ',';
 if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
