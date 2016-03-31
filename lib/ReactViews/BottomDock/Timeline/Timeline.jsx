@@ -49,16 +49,18 @@ const Timeline = React.createClass({
 
     updateForNewTopLayer() {
         const terria = this.props.terria;
+        const newTopLayer = terria.timeSeriesStack.topLayer;
 
         // default to playing and looping when shown unless told otherwise
-        if (this.props.autoPlay) {
+        if (newTopLayer && this.props.autoPlay) {
             terria.clock.tick();
             terria.clock.shouldAnimate = true;
         }
+
         terria.clock.clockRange = ClockRange.LOOP_STOP;
 
         this.setState({
-            layerName: terria.timeSeriesStack.topLayer && terria.timeSeriesStack.topLayer.name
+            layerName: newTopLayer && newTopLayer.name
         });
     },
 
