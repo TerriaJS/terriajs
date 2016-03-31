@@ -11,13 +11,14 @@ const SharePanel = React.createClass({
         terria: React.PropTypes.object,
         userPropWhiteList: React.PropTypes.array,
         shortenUrls: React.PropTypes.bool,
-        isOpen: React.PropTypes.bool.isRequired
+        isOpen: React.PropTypes.bool
     },
 
     getDefaultProps() {
         return {
             userPropWhiteList: ['hideExplorerPanel', 'activeTabId'],
-            shortenUrls: true
+            shortenUrls: true,
+            isOpen: false
         };
     },
 
@@ -36,11 +37,12 @@ const SharePanel = React.createClass({
     },
 
     render() {
-        const shareLink = this.props.isOpen && buildShareLink(this.props.terria);
+        // Only generate it if we're currently open
+        if (this.props.isOpen) {
+            const shareLink = buildShareLink(this.props.terria);
 
-        return (
-            <div>
-                <If condition={this.props.isOpen}>
+            return (
+                <div>
                     <label className='label label--setting-panel dd-panel__section'>Share</label>
                     <img></img>
                     <label className="dd-panel__section">
@@ -55,9 +57,9 @@ const SharePanel = React.createClass({
                         <input type="checkbox"/>
                         Shorten the share URL using a web service
                     </label>
-                </If>
-            </div>
-        );
+                </div>
+            );
+        }
     }
 });
 

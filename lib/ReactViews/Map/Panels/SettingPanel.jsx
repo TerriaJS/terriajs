@@ -70,7 +70,7 @@ const SettingPanel = React.createClass({
         // To do : aria-hidden={!this.state.isOpen}
         return (
             <DropdownPanel btnClass="btn--map btn--sphere" btnTitle="change settings" className="setting-panel">
-                <div className='setting-panel__viewer'>
+                <div className='setting-panel__viewer dd-panel__section'>
                     <label className='label label--setting-panel'> Map View </label>
                     <ul className='setting-panel__viewer-selector'>
                         <For each="viewerMode" of={this.props.viewerModes} index="i">
@@ -81,7 +81,7 @@ const SettingPanel = React.createClass({
                         </For>
                     </ul>
                 </div>
-                <div className='setting-panel__basemap'>
+                <div className='setting-panel__basemap dd-panel__section'>
                     <label className='label label--setting-panel'> Base Map </label>
                     <label className='label label--active-map'>{this.state.activeMap}</label>
                     <ul className='setting-panel__basemap-selector'>

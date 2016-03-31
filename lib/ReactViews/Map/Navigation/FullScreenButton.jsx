@@ -1,7 +1,7 @@
 'use strict';
 const React = require('react');
 
-import triggerResize from 'terriajs/lib/Core/triggerResize';
+import triggerResize from '../../../Core/triggerResize';
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = React.createClass({

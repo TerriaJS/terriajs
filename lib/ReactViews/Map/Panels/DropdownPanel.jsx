@@ -16,25 +16,44 @@ const DropdownPanel = React.createClass({
         };
     },
 
-    componentWillMount() {
-        window.addEventListener('click', this.closeDropDownWhenClickOtherPlaces);
-    },
-
     componentWillUnmount() {
-        window.removeEventListener('click', this.closeDropDownWhenClickOtherPlaces);
+        window.removeEventListener('click', this.close);
     },
 
-    closeDropDownWhenClickOtherPlaces() {
-        this.setState({
-            isOpen: false
-        });
+    close(e) {
+        // Only close if this wasn't a click on our open/close button.
+        if (!e[this.getDoNotReactId()]) {
+            this.setOpen(false);
+        }
+    },
+
+    onPanelClicked(e) {
+        e.stopPropagation();
     },
 
     togglePanel(e) {
-        e.stopPropagation();
+        // Tag this event so that we know not to react to it when it hits the window.
+        // We could just set stopPropagation on it, but this would mean that clicks on other buttons that stopPropagation
+        // would cause the panel not to close.
+        e.nativeEvent[this.getDoNotReactId()] = true;
+
+        this.setOpen(!this.state.isOpen);
+    },
+
+    setOpen(open) {
+        if (open) {
+            window.addEventListener('click', this.close);
+        } else {
+            window.removeEventListener('click', this.close);
+        }
+
         this.setState({
-            isOpen: !this.state.isOpen
+            isOpen: open
         });
+    },
+
+    getDoNotReactId() {
+        return `do-not-react-${this.props.btnText}-${this.props.btnTitle}-${this.props.btnClass}`;
     },
 
     render() {
@@ -47,7 +66,7 @@ const DropdownPanel = React.createClass({
                     {this.props.btnText}
                 </button>
                 <If condition={this.state.isOpen}>
-                    <div className='dd-panel__inner'>
+                    <div className='dd-panel__inner' onClick={this.onPanelClicked}>
                         {React.Children.map(this.props.children, child =>
                             React.cloneElement(child, {
                                 isOpen: this.state.isOpen
