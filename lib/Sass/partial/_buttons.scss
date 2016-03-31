@@ -113,11 +113,8 @@ $btn-setting-size: 35px;
 //.btn--github - icon button
 //.btn--stats-bars - icon button
 //.btn--folder -icon button
-<<<<<<< HEAD
-=======
 //.btn-folder-open - icon
-//.btn-folder - icon
->>>>>>> newui
+//
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
 //
@@ -158,12 +155,8 @@ download,
 line-chart,
 github,
 stats-bars,
-<<<<<<< HEAD
-folder;
-=======
 folder,
 folder-open;
->>>>>>> newui
 
 @each $icon in $icons {
     .btn--#{$icon}{
@@ -306,7 +299,7 @@ folder-open;
   width: 100%;
   @extend .btn--toggle;
   padding-left: $padding*4;
-  .icon-folder{
+  .btn--group-indicator{
     position: absolute;
     left: 0;
     padding: 9px $padding-small;
@@ -322,7 +315,7 @@ folder-open;
   &:hover{
     background: $modal-highlight;
     color: #fff;
-    .icon-folder{
+    .btn--group-indicator{
       color: #fff;
     }
   }

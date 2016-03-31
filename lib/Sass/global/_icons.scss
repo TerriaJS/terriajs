@@ -89,20 +89,12 @@
 //.icon-backToStart - icon
 //.icon-pause - icon
 //.icon-play - icon
-<<<<<<< HEAD
-//.icon-backward2 - icon
-//.icon-forward3 - icon
-//.icon-loop2 - icon
-//.icon-github - icon
-//.icon-stats-bars -icon
-=======
 //.icon-backward - icon
 //.icon-forward - icon
 //.icon-loop - icon
 //.icon-github - icon
 //.icon-stats-bars -icon
 //.icon-folder-open - icon
->>>>>>> newui
 //.icon-folder - icon
 //
 // Markup:
@@ -138,18 +130,12 @@
   }
 }
 
-<<<<<<< HEAD
-.icon-folder:before {
-    content: "\e928";
-}
-=======
 .icon-folder-open:before {
     content: "\e928";
 }
 .icon-folder:before {
     content: "\e929";
 }
->>>>>>> newui
 .icon-backToStart:before {
     content: "\e900";
 }
@@ -270,8 +256,4 @@
 .icon-stats-bars:before {
     content: "\e927";
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> newui
 
