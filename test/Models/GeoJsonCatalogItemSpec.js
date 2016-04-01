@@ -260,21 +260,25 @@ describe('GeoJsonCatalogItem', function() {
         beforeEach(function(){
             currentViewer = geojson.terria.currentViewer;
             geojson.url = 'test/GeoJSON/polygon.topojson';
+            terria.disclaimerListener = function(member, callback) {
+                callback();
+            };
+            geojson.isEnabled = true;
         });
 
         it('can add attribution', function(done) {
-            geojson.isEnabled = true;
             spyOn(currentViewer, 'addAttribution');
-            geojson.load().then(function() {
+            geojson.load();
+            geojson._loadForEnablePromise.then(function() {
                 expect(currentViewer.addAttribution).toHaveBeenCalled();
                 done();
             });
         });
 
-        it('can add attribution', function(done) {
-            geojson.isEnabled = true;
+        it('can remove attribution', function(done) {
             spyOn(currentViewer, 'removeAttribution');
-            geojson.load().then(function() {
+            geojson.load();
+            geojson._loadForEnablePromise.then(function() {
                 geojson.isEnabled = false;
                 expect(currentViewer.removeAttribution).toHaveBeenCalled();
                 done();
