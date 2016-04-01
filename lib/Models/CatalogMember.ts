@@ -35,13 +35,13 @@ abstract class CatalogMember {
     * In future this may replace 'description' above - this list should not contain
     * sections named 'description' or 'Description' if the 'description' property
     * is also set as both will be displayed.
-    * The object is of the form {name:string, content:string}.
+    * The object is of the form {name:string, content:string, confirmation: boolean, confirmText: string, width: number, height: number}.
     * Content will be rendered as Markdown with HTML.
     * This property is observable.
     * @type {Object[]}
     * @default []
     */
-    public info: {name:string, content:string}[] = [];
+    public info: {name:string, content:string, confirmation?: boolean, confirmText?: string, width?: number, height?: number}[] = [];
 
     /**
      * Gets or sets the array of section titles definining the display order of info sections.  If this property
@@ -126,12 +126,25 @@ abstract class CatalogMember {
     public parent: any = undefined;
 
     /**
+     * Gets or sets a value indicating whether this data source is currently loading.  This property is observable.
+     * @type {Boolean}
+     */
+     public isLoading: boolean = false;
+
+    /**
+     * Whether this catalog member is waiting for a disclaimer to be accepted before showing itself.
+     * @type {boolean}
+     */
+    public isWaitingForDisclaimer: boolean = false;
+
+    /**
      * Initializes a new instance.
      * @param {Terria} terria The Terria instance.
      */
     constructor(terria) {
         this._terria = terria;
-        knockout.track(this, ['name', 'info', 'infoSectionOrder', 'description', 'isUserSupplied', 'isPromoted', 'initialMessage', 'isHidden', 'cacheDuration', 'customProperties']);
+        knockout.track(this, ['name', 'info', 'infoSectionOrder', 'description', 'isUserSupplied', 'isPromoted',
+            'initialMessage', 'isHidden', 'cacheDuration', 'customProperties', 'isLoading', 'isWaitingForDisclaimer']);
     }
 
     /**
@@ -240,6 +253,10 @@ abstract class CatalogMember {
         var allShareKeys = [this.uniqueId];
 
         return this.shareKeys ? allShareKeys.concat(this.shareKeys) : allShareKeys;
+    }
+
+    get needsDisclaimerShown(): boolean {
+        return defined(this.initialMessage) && (!defined(this.initialMessage.key) || !this.terria.getLocalProperty(this.initialMessage.key));
     }
 
     /**
@@ -368,6 +385,59 @@ abstract class CatalogMember {
      * groups, and all its parents and ancestors in the tree.
      */
     abstract enableWithParents(): void;
+
+    waitForDisclaimerIfNeeded(): any {
+        if (this.needsDisclaimerShown) {
+            this.isWaitingForDisclaimer = true;
+            var deferred = when.defer();
+            this.terria.disclaimerListener(this, function() {
+                this.isWaitingForDisclaimer = false;
+                deferred.resolve();
+            }.bind(this));
+            return deferred.promise;
+        } else {
+            return when();
+        }
+    }
+
+    load(): any {
+        if (defined(this._loadingPromise)) {
+            // Load already in progress.
+            return this._loadingPromise;
+        }
+
+        var loadInfluencingValues = [];
+        if (defined(this._getValuesThatInfluenceLoad)) {
+            loadInfluencingValues = this._getValuesThatInfluenceLoad();
+        }
+
+        if (arraysAreEqual(loadInfluencingValues, this._lastLoadInfluencingValues)) {
+            // Already loaded, and nothing has changed to force a re-load.
+            return undefined;
+        }
+
+        this.isLoading = true;
+
+        var that = this;
+
+        return runLater(function() {
+            that._lastLoadInfluencingValues = [];
+            if (defined(that._getValuesThatInfluenceLoad)) {
+                that._lastLoadInfluencingValues = that._getValuesThatInfluenceLoad();
+            }
+
+            return that._load();
+        }).then(function(result) {
+            that._loadingPromise = undefined;
+            that.isLoading = false;
+            return result;
+        }).otherwise(function(e) {
+            that._lastLoadInfluencingValues = undefined;
+            that._loadingPromise = undefined;
+            that.isLoading = false;
+            throw e; // keep throwing this so we can chain more otherwises.
+        });
+    };
 }
 
 var descriptionRegex = /description/i;
