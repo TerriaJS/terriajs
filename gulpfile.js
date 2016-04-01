@@ -17,7 +17,7 @@ gulp.task('post-npm-install', ['copy-cesium-assets']);
 gulp.task('build-specs', function(done) {
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
-    runWebpack(webpackConfig, done, true);
+    runWebpack(webpackConfig, done);
 });
 
 gulp.task('release-specs', function(done) {
@@ -30,7 +30,7 @@ gulp.task('release-specs', function(done) {
             new webpack.optimize.DedupePlugin(),
             new webpack.optimize.OccurrenceOrderPlugin()
         ].concat(webpackConfig.plugins || [])
-    }), done, true);
+    }), done);
 });
 
 gulp.task('watch-specs', function(done) {
@@ -142,6 +142,56 @@ gulp.task('test-saucelabs', function(done) {
 
 gulp.task('test', function(done) {
     runKarma('./buildprocess/karma-local.conf.js', done);
+});
+
+// Create a single .js file with all of TerriaJS + Cesium!
+gulp.task('build-libs', function(done) {
+    var fs = require('fs');
+    var glob = require('glob-all');
+    var path = require('path');
+    var webpackConfig = require('./buildprocess/webpack.lib.config.js');
+
+    // Build an index.js to export all of the modules.
+    var index = '';
+
+    index += '\'use strict\'\n';
+    index += '\n';
+    index += '/*global require*/\n';
+    index += '\n';
+    index += 'module.exports = {};\n';
+    index += 'module.exports.Cesium = require(\'terriajs-cesium/Source/Cesium\');\n';
+
+    var modules = glob.sync([
+        './lib/**/*.js',
+        './lib/**/*.ts',
+        '!./lib/CopyrightModule.js',
+        '!./lib/cesiumWorkerBootstrapper.js',
+        '!./lib/ThirdParty/**',
+        '!./lib/SvgPaths/**'
+    ]);
+
+    var directories = {};
+
+    modules.forEach(function(filename) {
+        var module = filename.substring(0, filename.length - path.extname(filename).length);
+        var moduleName = path.relative('./lib', module);
+        moduleName = moduleName.replace(path.sep, '/');
+        var moduleParts = moduleName.split('/');
+
+        for (var i = 0; i < moduleParts.length - 1; ++i) {
+            var propertyName = moduleParts.slice(0, i + 1).join('.');
+            if (!directories[propertyName]) {
+                directories[propertyName] = true;
+                index += 'module.exports.' + propertyName + ' = {};\n';
+            }
+        }
+
+        index += 'module.exports.' + moduleParts.join('.') + ' = require(\'' + module + '\');\n';
+    });
+
+    fs.writeFileSync('terria.lib.js', index);
+
+    runWebpack(webpackConfig, done);
 });
 
 function runWebpack(config, doneCallback) {
