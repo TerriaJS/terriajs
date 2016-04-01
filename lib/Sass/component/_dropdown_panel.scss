@@ -4,7 +4,7 @@
     .dd-panel__inner{
         @include transform (scale(0) translateZ(0));
         @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
-        @include transform-origin(top center);
+        @include transform-origin($caret-left, top);
         box-shadow: $box-shadow;
         position: absolute;
         margin-top: 15px;

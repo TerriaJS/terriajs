@@ -43,13 +43,29 @@ const DropdownPanel = React.createClass({
     setOpen(open) {
         if (open) {
             window.addEventListener('click', this.close);
+
+            // If we're opening we want to immediately cause the panel to render, then just after then change the css
+            // class on it so it animates.
+            this.setState({
+                isOpen: true
+            });
+
+            setTimeout(() => this.setState({
+                isOpenCss: true
+            }), 0);
         } else {
             window.removeEventListener('click', this.close);
-        }
 
-        this.setState({
-            isOpen: open
-        });
+            // If we're closing we want to immediately change the css class to cause it to animate shut, then when it's
+            // finished actually stop it rendering with isOpen = false
+            this.setState({
+                isOpenCss: false
+            });
+
+            setTimeout(() => this.setState({
+                isOpen: false
+            }), 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
+        }
     },
 
     getDoNotReactId() {
@@ -58,7 +74,7 @@ const DropdownPanel = React.createClass({
 
     render() {
         return (
-            <div className={classnames({'is-open': this.state.isOpen}, this.props.className)}>
+            <div className={classnames({'is-open': this.state.isOpenCss}, this.props.className)}>
                 <button onClick={this.togglePanel}
                         type='button'
                         className={classnames('dd-panel__button', 'btn', this.props.btnClass)}
