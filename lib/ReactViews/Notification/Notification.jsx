@@ -13,31 +13,48 @@ const Notification = React.createClass({
         onDismiss: React.PropTypes.func
     },
 
+    dismiss() {
+        if (this.props.onDismiss) {
+            this.props.onDismiss();
+        }
+
+        if (this.props.notification && this.props.notification.confirmAction) {
+            this.props.notification.confirmAction();
+        }
+    },
+
     render() {
         let isVisible = false;
         let title = '';
         let message = '';
+        let buttonCaption = 'OK';
+        let width, height;
 
         if (defined(this.props.notification)) {
             isVisible = true;
             title = this.props.notification.title;
             message = this.props.notification.message;
+            buttonCaption = this.props.notification.confirmText;
+            width = this.props.notification.width;
+            height = this.props.notification.height;
         }
-        console.log(window.location.host);
+
         return (
-              <div className={`notification-wrapper ${isVisible ? 'is-visible' : ''}`} aria-hidden={!isVisible}>
-                <div className='notification'>
+            <div className={`notification-wrapper ${isVisible ? 'is-visible' : ''}`} aria-hidden={!isVisible}>
+                <div className='notification' style={{width, height}}>
                     <div className='notification__inner'>
-                      <h3 className='title' >{title}</h3>
-                      {window.location.host === 'localhost:3001' && <div><img src='./build/TerriaJS/images/feature.gif'/></div>}
-                      <div className='body'>{renderMarkdownInReact(message)}</div>
+                        <h3 className='title'>{title}</h3>
+                        {window.location.host === 'localhost:3001' && title.toLowerCase().indexOf('error') >= 0 &&
+                            <div><img src='./build/TerriaJS/images/feature.gif'/></div>
+                        }
+                        <div className='body'>{renderMarkdownInReact(message)}</div>
                     </div>
                     <div className='notification__footer'>
-                      <button type='button' className='btn'
-                              onClick={this.props.onDismiss}>OK</button>
+                        <button type='button' className='btn' onClick={this.dismiss}>{buttonCaption}</button>
                     </div>
                 </div>
-              </div>);
+            </div>
+        );
     }
 });
 
