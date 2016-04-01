@@ -1,6 +1,5 @@
 @mixin dd-panel($width, $caret-left) {
     width: auto;
-
     .dd-panel__inner{
         @include transform (scale(0) translateZ(0));
         @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
@@ -15,6 +14,9 @@
         border: $border-style;
         width: $width;
         right: 10px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        overflow-x: hidden;
 
         &:before{
             content: '';

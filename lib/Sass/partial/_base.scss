@@ -89,6 +89,13 @@ select {
   padding: .5rem .5rem;
 }
 
+::selection {
+  background: $color-primary; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: $color-primary; /* Gecko Browsers */
+}
+
 select:not([multiple]) {
   height: 2.55rem;
   vertical-align: middle;

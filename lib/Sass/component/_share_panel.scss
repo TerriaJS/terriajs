@@ -1,5 +1,31 @@
 .share-panel {
     @include dd-panel($share-panel-width, $share-panel-caret-left);
+    .img--share{
+      width: 100%;
+      height: $share-panel-width / 4*3;
+      overflow: hidden;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+    }
+    p{
+      margin: $padding 0;
+      display: block;
+    }
+    input[type='text']{
+      color: #fff;
+      background: $overlay;
+    }
+
+    .shorten-url{
+      .btn{
+        padding: 0;
+        &:before{
+          display: inline-block;
+          padding-right: $padding-small;
+        }
+      }
+    }
 }
 
 
