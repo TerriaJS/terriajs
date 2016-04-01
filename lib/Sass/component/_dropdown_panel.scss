@@ -14,10 +14,6 @@
         border: $border-style;
         width: $width;
         right: 10px;
-        max-height: calc(100vh - 100px);
-        overflow-y: auto;
-        overflow-x: hidden;
-
         &:before{
             content: '';
             display: block;

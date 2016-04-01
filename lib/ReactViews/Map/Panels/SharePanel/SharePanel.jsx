@@ -108,7 +108,7 @@ const SharePanel = React.createClass({
                     <div className='dd_panel-header dd-panel__section'><label className='dd-panel__section share-panel__label'>Share</label></div>
                     <div className="dd-panel__section">
                         <div className="img--share" style={shareImgStyle}></div>
-                        <div className='image--link'><a href={this.state.imageUrl}>View full size image</a></div>
+                        <div className='image--link'><a href={this.state.imageUrl} target='_blank'>View full size image</a></div>
                     </div>
                     <div className="dd-panel__section">
                         <p>To copy to clipboard, click the link below and press CTRL+C or ⌘+C:</p>
