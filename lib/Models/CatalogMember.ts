@@ -5,6 +5,7 @@ declare var require: any;
 const arraysAreEqual: <T>(left: T[], right: T[]) => boolean = require('../Core/arraysAreEqual');
 const defaultValue: <T>(a: T, b: T) => T = require('terriajs-cesium/Source/Core/defaultValue');
 const defined: (value: any) => boolean = require('terriajs-cesium/Source/Core/defined');
+const DeveloperError: any = require('terriajs-cesium/Source/Core/DeveloperError');
 const freezeObject: any = require('terriajs-cesium/Source/Core/freezeObject');
 const knockout: any = require('terriajs-cesium/Source/ThirdParty/knockout');
 const runLater: any = require('../Core/runLater');
