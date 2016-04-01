@@ -36,7 +36,10 @@ describe('FeatureInfoSection', function() {
     });
 
     it('does something', function() {
-        feature.description = {getValue: function() { return '<p>hi!</p>'; }};
+        feature.description = {
+            getValue: function() { return '<p>hi!</p>'; },
+            isConstant: true
+        };
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
         // expect(result.type).toBe('li');

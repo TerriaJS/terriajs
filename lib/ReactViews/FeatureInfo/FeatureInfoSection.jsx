@@ -3,6 +3,8 @@
 import Mustache from 'mustache';
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
+
+import arraysAreEqual from '../../Core/arraysAreEqual';
 import ObserveModelMixin from '../ObserveModelMixin';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
@@ -36,7 +38,6 @@ const FeatureInfoSection = React.createClass({
                 })
             });
         }
-        setCurrentFeatureValues(feature, this.props.clock.currentTime);
     },
 
     componentWillUnmount() {
@@ -53,7 +54,7 @@ const FeatureInfoSection = React.createClass({
     },
 
     descriptionFromFeature(feature, clock) {
-        const data = feature.currentProperties;
+        const data = feature.currentProperties || getCurrentProperties(feature, clock.currentTime);
         const template = this.props.template;
         if (defined(template)) {
             if (typeof template === 'string') {
@@ -61,7 +62,7 @@ const FeatureInfoSection = React.createClass({
             }
             return Mustache.render(template.template, data, template.partials);
         }
-        const description = feature.currentDescription;
+        const description = feature.currentDescription || getCurrentDescription(feature, clock.currentTime);
         // if (description && description.properties) {
         //     return JSON.stringify(description.properties);
         // }
@@ -94,6 +95,7 @@ const FeatureInfoSection = React.createClass({
     },
 
     render() {
+        // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         return (
             <li className={'feature-info-panel__section ' + (this.props.isOpen ? 'is-open' : '')}>
@@ -121,16 +123,46 @@ function areAllPropertiesConstant(properties) {
     return result;
 }
 
-function setCurrentFeatureValues(feature, currentTime) {
+// Because x.getValue() returns the same object if it has not changed, we don't need this.
+// function newObjectOnlyIfChanged(oldObject, newObject) {
+//     // Does a shallow compare, and returns the old object if there is no change, otherwise the new object.
+//     if (defined(oldObject) && defined(newObject) && arraysAreEqual(Object.keys(oldObject), Object.keys(newObject))) {
+//         for (const key in newObject) {
+//             if (newObject.hasOwnProperty(key)) {
+//                 if (oldObject[key] !== newObject[key]) {
+//                     return newObject;
+//                 }
+//             }
+//         }
+//         return oldObject;
+//     }
+//     // If the keys have changed, then just use the new object.
+//     return newObject;
+// }
+
+function getCurrentProperties(feature, currentTime) {
+    // Use this instead of the straight feature.currentProperties, so it works the first time through.
     if (typeof feature.properties.getValue === 'function') {
-        feature.currentProperties = feature.properties.getValue(currentTime);
-    } else {
-        feature.currentProperties = feature.properties;
+        return feature.properties.getValue(currentTime);
     }
+    return feature.properties;
+}
+
+function getCurrentDescription(feature, currentTime) {
     if (typeof feature.description.getValue === 'function') {
-        feature.currentDescription = feature.description.getValue(currentTime);
-    } else {
-        feature.currentDescription = feature.description;
+        return feature.description.getValue(currentTime);
+    }
+    return feature.description;
+}
+
+function setCurrentFeatureValues(feature, currentTime) {
+    const newProperties = getCurrentProperties(feature, currentTime);
+    if (newProperties !== feature.currentProperties) {
+        feature.currentProperties = newProperties;
+    }
+    const newDescription = getCurrentDescription(feature, currentTime);
+    if (newDescription !== feature.currentDescription) {
+        feature.currentDescription = newDescription;
     }
 }
 
