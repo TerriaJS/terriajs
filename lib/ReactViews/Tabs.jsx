@@ -4,7 +4,7 @@ import DataCatalogTab from './DataCatalogTab.jsx';
 import MyDataTab from './MyDataTab.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
-import WelcomeTab from './WelcomeTab.jsx';
+import GettingStartedTab from './GettingStartedTab.jsx';
 import classNames from 'classnames';
 
 function getName(str1, str2) {
@@ -24,13 +24,13 @@ const Tabs = React.createClass({
         return {
             tabs: this.props.tabs || [
                 {
-                    title: 'welcome',
-                    panel: <WelcomeTab terria={this.props.terria}
+                    title: 'getting-started',
+                    panel: <GettingStartedTab terria={this.props.terria}
                                        viewState={this.props.viewState}
                     />
                 },
                 {
-                    title: 'data-catalog',
+                    title: 'data-catalogue',
                     panel: <DataCatalogTab terria={this.props.terria}
                                            viewState={this.props.viewState}
                     />

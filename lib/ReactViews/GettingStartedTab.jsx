@@ -2,7 +2,7 @@
 import React from 'react';
 import renderMarkdownInReact from '../Core/renderMarkdownInReact';
 // The welcome tab, not used in current design
-const WelcomeTab = React.createClass({
+const GettingStartedTab = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired
@@ -18,14 +18,14 @@ const WelcomeTab = React.createClass({
 
     render() {
         return (<div className="panel-content">
-                    <div className="welcome__inner">
+                    <div className="panel__inner">
                         {renderMarkdownInReact(this.props.terria.welcome)}
-                        <div className='welcome-actions'>
-                          <button className='btn btn-primary btn--first' onClick={this.openAddData} >Explore the Data Catalog</button>
+                        <div className='panel-actions'>
+                          <button className='btn btn-primary btn--first' onClick={this.openAddData} >Explore the Data Catalogue</button>
                           <button className='btn btn-primary btn--second' onClick={this.openUserData} >Load your own data</button>
                         </div>
                     </div>
                 </div>);
     }
 });
-module.exports = WelcomeTab;
+module.exports = GettingStartedTab;

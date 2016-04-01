@@ -23,7 +23,9 @@ var watchify = require('watchify');
 
 var specJSName = 'TerriaJS-specs.js';
 var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
-var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
+var testJsGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
+var testJsxGlob = ['./test/**/*.jsx'];
+var testGlob = testJsGlob.concat(testJsxGlob);
 
 
 gulp.task('build-specs', ['prepare-cesium'], function() {
@@ -51,7 +53,7 @@ gulp.task('watch-specs', ['prepare-cesium'], function() {
 gulp.task('watch', ['watch-specs']);
 
 gulp.task('lint', function(){
-    var sources = glob.sync(sourceGlob.concat(testGlob));
+    var sources = glob.sync(sourceGlob.concat(testJsGlob));
     return gulp.src(sources)
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
