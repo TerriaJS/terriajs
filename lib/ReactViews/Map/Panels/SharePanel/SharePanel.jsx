@@ -104,7 +104,7 @@ const SharePanel = React.createClass({
                 `src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>` : '';
             const shareImgStyle = {backgroundImage: 'url(' + this.state.imageUrl + ')'};
             return (
-                <div>
+                <div className='dd-panel__content'>
                     <div className='dd_panel-header dd-panel__section'><label className='dd-panel__section share-panel__label'>Share</label></div>
                     <div className="dd-panel__section">
                         <div className="img--share" style={shareImgStyle}></div>
