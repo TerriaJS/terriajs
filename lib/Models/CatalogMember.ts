@@ -2,21 +2,68 @@
 
 declare var require: any;
 
-var defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
-var defined = require('terriajs-cesium/Source/Core/defined');
-var defineProperties = require('terriajs-cesium/Source/Core/defineProperties');
-var DeveloperError = require('terriajs-cesium/Source/Core/DeveloperError');
-var freezeObject = require('terriajs-cesium/Source/Core/freezeObject');
-var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
-var serializeToJson = require('../Core/serializeToJson');
-var updateFromJson = require('../Core/updateFromJson');
+const arraysAreEqual: <T>(left: T[], right: T[]) => boolean = require('../Core/arraysAreEqual');
+const defaultValue: <T>(a: T, b: T) => T = require('terriajs-cesium/Source/Core/defaultValue');
+const defined: (value: any) => boolean = require('terriajs-cesium/Source/Core/defined');
+const freezeObject: any = require('terriajs-cesium/Source/Core/freezeObject');
+const knockout: any = require('terriajs-cesium/Source/ThirdParty/knockout');
+const runLater: any = require('../Core/runLater');
+const serializeToJson: any = require('../Core/serializeToJson');
+const updateFromJson: any = require('../Core/updateFromJson');
+const when: any = require('terriajs-cesium/Source/ThirdParty/when');
 
 /**
  * A member of a {@link CatalogGroup}.  A member may be a {@link CatalogItem} or a
  * {@link CatalogGroup}.
  */
 abstract class CatalogMember {
-    private _terria: any;
+    /**
+     * Gets or sets the set of default updater functions to use in {@link CatalogMember#updateFromJson}.  Types derived from this type
+     * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#updaters} property.
+     * @type {Object}
+     */
+    public static defaultUpdaters: Object = freezeObject({});
+
+    /**
+     * Gets or sets the set of default serializer functions to use in {@link CatalogMember#serializeToJson}.  Types derived from this type
+     * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
+     * @type {Object}
+     */
+    public static defaultSerializers: Object = freezeObject({});
+
+    /**
+     * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogMember}-derived object
+     * for a share link.
+     * @type {String[]}
+     */
+    public static defaultPropertiesForSharing: string[] = freezeObject([
+        'name'
+    ]);
+
+    /** A collection of static filters functions used during serialization */
+    public static itemFilters = {
+        /** Item filter that returns true if the item is a {@link CatalogItem} that is enabled, or another kind of {@link CatalogMember}. */
+        enabled: function(item) {
+            return !defined(item.isEnabled) || item.isEnabled;
+        },
+        /** Item filter that returns true if an item has no local data. */
+        noLocalData: function(item) {
+            return !defined(item.data);
+        },
+        /** Item filter that returns true if the item is user supplied */
+        userSuppliedOnly: function(item) {
+            return item.isUserSupplied;
+        }
+    };
+
+    public static propertyFilters = {
+        /**
+         * Property filter that returns true if the property is in that item's {@link CatalogMember#propertiesForSharing} array.
+         */
+        sharedOnly: function(property, item) {
+            return item.propertiesForSharing.indexOf(property) >= 0;
+        }
+    };
 
     /**
      * Gets or sets the name of the item.  This property is observable.
@@ -31,17 +78,17 @@ abstract class CatalogMember {
     public description: string = '';
 
     /**
-    * Gets or sets the array of section titles and contents for display in the layer info panel.
-    * In future this may replace 'description' above - this list should not contain
-    * sections named 'description' or 'Description' if the 'description' property
-    * is also set as both will be displayed.
-    * The object is of the form {name:string, content:string, confirmation: boolean, confirmText: string, width: number, height: number}.
-    * Content will be rendered as Markdown with HTML.
-    * This property is observable.
-    * @type {Object[]}
-    * @default []
-    */
-    public info: {name:string, content:string, confirmation?: boolean, confirmText?: string, width?: number, height?: number}[] = [];
+     * Gets or sets the array of section titles and contents for display in the layer info panel.
+     * In future this may replace 'description' above - this list should not contain
+     * sections named 'description' or 'Description' if the 'description' property
+     * is also set as both will be displayed.
+     * The object is of the form {name:string, content:string, confirmation: boolean, confirmText: string, width: number, height: number}.
+     * Content will be rendered as Markdown with HTML.
+     * This property is observable.
+     * @type {Object[]}
+     * @default []
+     */
+    public info: {name: string, content: string, confirmation?: boolean, confirmText?: string, width?: number, height?: number}[] = [];
 
     /**
      * Gets or sets the array of section titles definining the display order of info sections.  If this property
@@ -137,11 +184,17 @@ abstract class CatalogMember {
      */
     public isWaitingForDisclaimer: boolean = false;
 
+    private _terria: any;
+
+    private _loadingPromise: any;
+
+    private _lastLoadInfluencingValues: any;
+
     /**
      * Initializes a new instance.
      * @param {Terria} terria The Terria instance.
      */
-    constructor(terria) {
+    constructor(terria: any) {
         this._terria = terria;
         knockout.track(this, ['name', 'info', 'infoSectionOrder', 'description', 'isUserSupplied', 'isPromoted',
             'initialMessage', 'isHidden', 'cacheDuration', 'customProperties', 'isLoading', 'isWaitingForDisclaimer']);
@@ -174,7 +227,7 @@ abstract class CatalogMember {
     }
 
     /**
-      * Gets the Terria instance.
+     * Gets the Terria instance.
      * @memberOf CatalogMember.prototype
      * @type {Terria}
      */
@@ -218,15 +271,15 @@ abstract class CatalogMember {
     }
 
     /**
-    * Tests whether a description is available, either in the 'description' property
-    * or as a member of the 'info' array.
-    * @memberOf CatalogMember.prototype
-    * @type bool
-    */
+     * Tests whether a description is available, either in the 'description' property
+     * or as a member of the 'info' array.
+     * @memberOf CatalogMember.prototype
+     * @type bool
+     */
     get hasDescription(): boolean {
         return !!this.description ||
             (this.info &&
-             this.info.some(function(i){
+             this.info.some(function(i: {name: string, content: string}): boolean {
                 return descriptionRegex.test(i.name);
             }));
     }
@@ -241,7 +294,7 @@ abstract class CatalogMember {
             return this.id;
         }
 
-        var parentKey = this.parent ? this.parent.uniqueId + '/' : '';
+        const parentKey = this.parent ? this.parent.uniqueId + '/' : '';
 
         return parentKey + this.name;
     }
@@ -250,62 +303,15 @@ abstract class CatalogMember {
      * All keys that have historically been used to resolve this member - the current uniqueId + past shareKeys.
      */
     get allShareKeys(): string[] {
-        var allShareKeys = [this.uniqueId];
+        const allShareKeys = [this.uniqueId];
 
         return this.shareKeys ? allShareKeys.concat(this.shareKeys) : allShareKeys;
     }
 
     get needsDisclaimerShown(): boolean {
-        return defined(this.initialMessage) && (!defined(this.initialMessage.key) || !this.terria.getLocalProperty(this.initialMessage.key));
+        return defined(this.initialMessage) && (!defined(this.initialMessage.key) ||
+               !this.terria.getLocalProperty(this.initialMessage.key));
     }
-
-    /**
-     * Gets or sets the set of default updater functions to use in {@link CatalogMember#updateFromJson}.  Types derived from this type
-     * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#updaters} property.
-     * @type {Object}
-     */
-    public static defaultUpdaters: Object = freezeObject({});
-
-    /**
-     * Gets or sets the set of default serializer functions to use in {@link CatalogMember#serializeToJson}.  Types derived from this type
-     * should expose this instance - cloned and modified if necesary - through their {@link CatalogMember#serializers} property.
-     * @type {Object}
-     */
-    public static defaultSerializers: Object = freezeObject({});
-
-    /**
-     * Gets or sets the default set of properties that are serialized when serializing a {@link CatalogMember}-derived object
-     * for a share link.
-     * @type {String[]}
-     */
-    public static defaultPropertiesForSharing: string[] = freezeObject([
-        'name'
-    ]);
-
-    /** A collection of static filters functions used during serialization */
-    public static itemFilters = {
-        /** Item filter that returns true if the item is user supplied */
-        userSuppliedOnly: function(item) {
-            return item.isUserSupplied;
-        },
-        /** Item filter that returns true if the item is a {@link CatalogItem} that is enabled, or another kind of {@link CatalogMember}. */
-        enabled: function(item) {
-            return !defined(item.isEnabled) || item.isEnabled;
-        },
-        /** Item filter that returns true if an item has no local data. */
-        noLocalData: function(item) {
-            return !defined(item.data);
-        }
-    };
-
-    public static propertyFilters = {
-        /**
-         * Property filter that returns true if the property is in that item's {@link CatalogMember#propertiesForSharing} array.
-         */
-        sharedOnly: function(property, item) {
-            return item.propertiesForSharing.indexOf(property) >= 0;
-        }
-    };
 
     /**
      * Updates the catalog member from a JSON object-literal description of it.
@@ -320,9 +326,9 @@ abstract class CatalogMember {
      *                                                    may be created by this update.
      * @param {Boolean} [options.isUserSupplied] If specified, sets the {@link CatalogMember#isUserSupplied} property of updated catalog members
      *                                           to the given value.  If not specified, the property is left unchanged.
-      * @returns {Promise} A promise that resolves when the update is complete.
-    */
-    updateFromJson(json: Object, options?: {onlyUpdateExistingItems?: boolean, isUserSupplied?: boolean}): any {
+     * @returns {Promise} A promise that resolves when the update is complete.
+     */
+    public updateFromJson(json: Object, options?: {onlyUpdateExistingItems?: boolean, isUserSupplied?: boolean}): any {
         if (defined(options) && defined(options.isUserSupplied)) {
             this.isUserSupplied = options.isUserSupplied;
         }
@@ -340,10 +346,10 @@ abstract class CatalogMember {
      *          whether that item should be serialized.
      * @return {Object} The serialized JSON object-literal.
      */
-    serializeToJson(options?: {propertyFilter?: () => boolean, itemFilter?: () => boolean}): Object {
+    public serializeToJson(options?: {propertyFilter?: () => boolean, itemFilter?: () => boolean}): Object {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
-        var result = serializeToJson(this, options.propertyFilter, options);
+        const result = serializeToJson(this, options.propertyFilter, options);
         result.type = this.type;
         result.id = this.uniqueId;
 
@@ -359,8 +365,8 @@ abstract class CatalogMember {
      * @param {String} sectionName The name of the section to find.
      * @return {Object} The section, or undefined if no section with that name exists.
      */
-    findInfoSection(sectionName: string) {
-        for (var i = 0; i < this.info.length; ++i) {
+    public findInfoSection(sectionName: string) {
+        for (let i = 0; i < this.info.length; ++i) {
             if (this.info[i].name === sectionName) {
                 return this.info[i];
             }
@@ -372,8 +378,8 @@ abstract class CatalogMember {
      * Goes up the hierarchy and determines if this CatalogMember is connected with the root in terria.catalog, or whether it's
      * part of a disconnected sub-tree.
      */
-    connectsWithRoot(): boolean {
-        var item = this;
+    public connectsWithRoot(): boolean {
+        let item = this;
         while (item.parent) {
             item = item.parent;
         }
@@ -384,12 +390,12 @@ abstract class CatalogMember {
      * "Enables" this catalog member in a way that makes sense for its implementation (e.g. isEnabled for items, isOpen for
      * groups, and all its parents and ancestors in the tree.
      */
-    abstract enableWithParents(): void;
+    public abstract enableWithParents(): void;
 
-    waitForDisclaimerIfNeeded(): any {
+    public waitForDisclaimerIfNeeded(): any {
         if (this.needsDisclaimerShown) {
             this.isWaitingForDisclaimer = true;
-            var deferred = when.defer();
+            const deferred = when.defer();
             this.terria.disclaimerListener(this, function() {
                 this.isWaitingForDisclaimer = false;
                 deferred.resolve();
@@ -400,13 +406,13 @@ abstract class CatalogMember {
         }
     }
 
-    load(): any {
+    public load(): any {
         if (defined(this._loadingPromise)) {
             // Load already in progress.
             return this._loadingPromise;
         }
 
-        var loadInfluencingValues = [];
+        const loadInfluencingValues = [];
         if (defined(this._getValuesThatInfluenceLoad)) {
             loadInfluencingValues = this._getValuesThatInfluenceLoad();
         }
@@ -418,7 +424,7 @@ abstract class CatalogMember {
 
         this.isLoading = true;
 
-        var that = this;
+        const that = this;
 
         return runLater(function() {
             that._lastLoadInfluencingValues = [];
@@ -438,9 +444,13 @@ abstract class CatalogMember {
             throw e; // keep throwing this so we can chain more otherwises.
         });
     };
+
+    protected abstract _load(): any;
+
+    protected abstract _getValuesThatInfluenceLoad(): any[];
 }
 
-var descriptionRegex = /description/i;
+const descriptionRegex = /description/i;
 
 /**
  * Gets the ids of all parents of a catalog member, ordered from the closest descendant to the most distant. Ignores

@@ -55,7 +55,8 @@
     "karma-spec-reporter": "0.0.24",
     "node-notifier": "^4.5.0",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "^1.4.0"
+    "terriajs-server": "^1.4.0",
+    "tslint": "^3.6.0"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",

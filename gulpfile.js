@@ -84,7 +84,9 @@ gulp.task('make-schema', function() {
     });
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', ['lint-javascript', 'lint-typescript']);
+
+gulp.task('lint-javascript', function() {
     var glob = require('glob-all');
     var jshint = require('gulp-jshint');
 
@@ -96,6 +98,22 @@ gulp.task('lint', function() {
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(jshint.reporter('fail'));
+});
+
+gulp.task('lint-typescript', function() {
+    var child_exec = require('child_process').execSync;
+    var gutil = require('gulp-util');
+
+    var tslintPath = require.resolve('tslint/bin/tslint');
+
+    try {
+        child_exec('node "' + tslintPath + '" "./lib/Models/CatalogMember.ts"', {
+            cwd: __dirname,
+            stdio: 'inherit'
+        });
+    } catch(e) {
+        throw new gutil.PluginError('tslint', 'tslint exited with an error.', { showStack: false});
+    }
 });
 
 gulp.task('transform-typescript', function() {
@@ -114,7 +132,9 @@ gulp.task('docs', ['transform-typescript'], function(done) {
     var child_exec = require('child_process').exec;
 
     var jsdocPath = require.resolve('jsdoc/jsdoc.js');
-    child_exec('node "' + jsdocPath + '" ./lib ./build/generated -c ./buildprocess/jsdoc.json', undefined, done);
+    child_exec('node "' + jsdocPath + '" ./lib ./build/generated -c ./buildprocess/jsdoc.json', {
+        cwd: __dirname
+    }, done);
 });
 
 gulp.task('copy-cesium-assets', function() {
