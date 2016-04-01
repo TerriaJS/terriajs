@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
@@ -23,7 +23,7 @@
     "sanitize-caja": "^0.1.3",
     "simple-statistics": "^1.0.1",
     "superagent": "~1.7.0",
-    "terriajs-cesium": "1.18.1",
+    "terriajs-cesium": "1.19.1",
     "togeojson": "^0.9.0",
     "urijs": "^1.16.0",
     "urthecast": "^1.0.0"
