@@ -1,0 +1,21 @@
+lat,lon,enum
+-37,141,dogs
+-39,142,mice
+-38,143,frogs
+-37,144,eels
+-36,147,dogs
+-27,145,cats
+-29,145,cats
+-28,144,frogs
+-27,146,puppies
+-26,147,ferrets
+-37,135,cats
+-38,135,cats
+-39,135,cats
+-40,135.5,eels
+-36,134,dogs
+-25,135,cats
+-26,133,cats
+-28,136,turtles
+-27,137,guinea pigs
+-24,138,cats

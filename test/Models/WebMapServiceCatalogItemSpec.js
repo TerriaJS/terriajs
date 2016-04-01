@@ -129,15 +129,15 @@ describe('WebMapServiceCatalogItem', function() {
         });
     });
 
-    it('derives metadataUrl from url if metadataUrl is not explicitly provided', function() {
+    it('derives getCapabilitiesUrl from url if getCapabilitiesUrl is not explicitly provided', function() {
         wmsItem.url = 'http://foo.com/bar';
-        expect(wmsItem.metadataUrl.indexOf(wmsItem.url)).toBe(0);
+        expect(wmsItem.getCapabilitiesUrl.indexOf(wmsItem.url)).toBe(0);
     });
 
-    it('uses explicitly-provided metadataUrl', function() {
-        wmsItem.metadataUrl = 'http://foo.com/metadata';
+    it('uses explicitly-provided getCapabilitiesUrl', function() {
+        wmsItem.getCapabilitiesUrl = 'http://foo.com/metadata';
         wmsItem.url = 'http://foo.com/somethingElse';
-        expect(wmsItem.metadataUrl).toBe('http://foo.com/metadata');
+        expect(wmsItem.getCapabilitiesUrl).toBe('http://foo.com/metadata');
     });
 
     it('defaults to having no dataUrl', function() {
@@ -163,7 +163,7 @@ describe('WebMapServiceCatalogItem', function() {
             dataUrlType: 'wfs',
             dataUrl: 'http://my.wfs.com/wfs',
             dataCustodian: 'Data Custodian',
-            metadataUrl: 'http://my.metadata.com',
+            getCapabilitiesUrl: 'http://my.metadata.com',
             url: 'http://my.wms.com',
             layers: 'mylayer',
             parameters: {
@@ -181,7 +181,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem.dataUrlType).toBe('wfs');
         expect(wmsItem.dataUrl.indexOf('http://my.wfs.com/wfs')).toBe(0);
         expect(wmsItem.dataCustodian).toBe('Data Custodian');
-        expect(wmsItem.metadataUrl).toBe('http://my.metadata.com');
+        expect(wmsItem.getCapabilitiesUrl).toBe('http://my.metadata.com');
         expect(wmsItem.url).toBe('http://my.wms.com');
         expect(wmsItem.layers).toBe('mylayer');
         expect(wmsItem.parameters).toEqual({
@@ -381,4 +381,23 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load();
     });
 
+    it('discards invalid layer names as long as at least one layer name is valid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.layers).toBe('single_period');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('fails to load if all layer names are invalid', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'foo,bar'
+        });
+        wmsItem.load().then(done.fail).otherwise(done);
+    });
 });
