@@ -130,12 +130,6 @@
   }
 }
 
-.icon-folder-open:before {
-    content: "\e928";
-}
-.icon-folder:before {
-    content: "\e929";
-}
 .icon-backToStart:before {
     content: "\e900";
 }
@@ -156,9 +150,6 @@
 }
 .icon-menu:before {
     content: "\e906";
-}
-.icon-geolocation:before {
-    content: "\e907";
 }
 .icon-right:before {
     content: "\e908";
@@ -256,4 +247,12 @@
 .icon-stats-bars:before {
     content: "\e927";
 }
-
+.icon-folder-open:before {
+    content: "\e928";
+}
+.icon-folder:before {
+    content: "\e929";
+}
+.icon-geolocation:before {
+    content: "\e92a";
+}

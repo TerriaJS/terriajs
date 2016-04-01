@@ -1,5 +1,5 @@
 table {
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   max-width: 100%;
   width: 100%;
@@ -20,8 +20,13 @@ th { vertical-align: bottom }
 td { vertical-align: top }
 
 @media screen and (max-width : $sm){
-  table, tr, th, td{
+  table, tbody, tr, th{
     display: block;
+    width: 100%;
+  }
+  td{
+    display: block;
+    max-width: 100%;
   }
 }
 

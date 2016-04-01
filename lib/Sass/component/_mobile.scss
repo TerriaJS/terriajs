@@ -47,15 +47,15 @@
     @extend .clearfix;
     .group{
         @extend .flex;
-        @extend .col-6;
         float: left;
     }
     .group-left{
-
+        @extend .col-7;
     }
 
     .group-right{
-         justify-content: flex-end;
+        @extend .col-5;
+        justify-content: flex-end;
     }
 
     justify-content: space-between;
@@ -219,6 +219,7 @@
     padding: $padding/2;
     border-radius: $radius-small;
     margin: $padding/2;
+    width: 37px;
     &:hover, &:focus, & {
         border: 1px solid rgba(#fff, 0.5);
     }
