@@ -6,6 +6,10 @@ import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
+import Iso8601 from 'terriajs-cesium/Source/Core/Iso8601';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
+import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';
 
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
 import Terria from '../../lib/Models/Terria';
@@ -14,6 +18,17 @@ function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
     renderer.render(jsx);
     return renderer.getRenderOutput();
+}
+
+function getContentAndDescription(renderedResult) {
+    const content = renderedResult.props.children[1];
+    const descriptionElement = content.props.children.props.children[1][0]; // I have no idea why it's in this position, and don't want to test that it always is.
+    const descriptionText = descriptionElement.props.children[1][0]; // Ditto.
+    return {
+        content: renderedResult.props.children[1],
+        descriptionElement: descriptionElement,
+        descriptionText: descriptionText
+    };
 }
 
 describe('FeatureInfoSection', function() {
@@ -35,16 +50,42 @@ describe('FeatureInfoSection', function() {
         });
     });
 
-    it('does something', function() {
-        feature.description = {getValue: function() { return '<p>hi!</p>'; }};
+    it('renders a static description', function() {
+        feature.description = {
+            getValue: function() { return '<p>hi!</p>'; },
+            isConstant: true
+        };
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
         // expect(result.type).toBe('li');
-        const content = result.props.children[1];
+        const {content, descriptionElement, descriptionText} = getContentAndDescription(result);
         expect(content.type).toBe('section');
-        const p = content.props.children.props.children[1][0]; // I have no idea why it's in this position, and don't want to test that it always is.
-        expect(p.type).toBe('p');
-        expect(p.props.children[1][0]).toBe('hi!'); // As above.
+        expect(descriptionElement.type).toBe('p');
+        expect(descriptionText).toBe('hi!');
+    });
+
+    it('renders a time-varying description', function() {
+        feature.description = new TimeIntervalCollectionProperty();
+        // show.intervals.addInterval(new TimeInterval({start: Iso8601.MINIMUM_VALUE, stop: Iso8601.MAXIMUM_VALUE, data: false}));
+        feature.description.intervals.addInterval(new TimeInterval({start: JulianDate.fromDate(new Date('2010-01-01')), stop: JulianDate.fromDate(new Date('2011-01-01')), data: '<p>hi</p>'}));
+        feature.description.intervals.addInterval(new TimeInterval({start: JulianDate.fromDate(new Date('2011-01-01')), stop: JulianDate.fromDate(new Date('2012-01-01')), data: '<p>bye</p>'}));
+        terria.clock.currentTime = JulianDate.fromDate(new Date('2011-06-30'));
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
+        const result = getShallowRenderedOutput(section);
+        // expect(result.type).toBe('li');
+        let {content, descriptionElement, descriptionText} = getContentAndDescription(result);
+        expect(content.type).toBe('section');
+        expect(descriptionElement.type).toBe('p');
+        expect(descriptionText).toBe('bye');
+
+        terria.clock.currentTime = JulianDate.fromDate(new Date('2010-06-30'));
+        const section2 = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
+        const result2 = getShallowRenderedOutput(section2);
+        // expect(result.type).toBe('li');
+        ({content, descriptionElement, descriptionText} = getContentAndDescription(result2));
+        expect(content.type).toBe('section');
+        expect(descriptionElement.type).toBe('p');
+        expect(descriptionText).toBe('hi');
     });
 
     // TODO

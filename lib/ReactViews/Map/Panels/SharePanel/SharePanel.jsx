@@ -96,34 +96,37 @@ const SharePanel = React.createClass({
     },
 
     render() {
+
         // Only generate it if we're currently open
         if (this.props.isOpen) {
+
             const iframeCode = this.state.shareUrl.length ? `<iframe style="width: 720px; height: 405px; border: none;"` +
                 `src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>` : '';
-
+            const shareImgStyle = {backgroundImage: 'url(' + this.state.imageUrl + ')'};
             return (
-                <div>
-                    <h3 className='dd_panel-header dd-panel__section'>Share</h3>
+                <div className='dd-panel__content'>
+                    <div className='dd_panel-header dd-panel__section'><label className='dd-panel__section share-panel__label'>Share</label></div>
                     <div className="dd-panel__section">
-                        <img src={this.state.imageUrl}/>
+                        <div className="img--share" style={shareImgStyle}></div>
+                        <div className='image--link'><a href={this.state.imageUrl} target='_blank'>View full size image</a></div>
                     </div>
-                    <label className="dd-panel__section">
-                        To copy to clipboard, click the link below and press CTRL+C or ⌘+C:
+                    <div className="dd-panel__section">
+                        <p>To copy to clipboard, click the link below and press CTRL+C or ⌘+C:</p>
                         <input className="field" type="text" value={this.state.shareUrl}
                                placeholder={this.state.placeholder} readOnly
                                onClick={e => e.target.select()}/>
-                    </label>
-                    <label className="dd-panel__section">
-                        To embed, copy this code to embed this map into an HTML page:
+                    </div>
+                    <div className="dd-panel__section">
+                        <p>To embed, copy this code to embed this map into an HTML page:</p>
                         <input className="field" type="text" readOnly placeholder={this.state.placeholder}
                                value={iframeCode}
                                onClick={e => e.target.select()}/>
-                    </label>
-                    <label className="dd-panel__section">
-                        <input type="checkbox" checked={this.shouldShorten()} onChange={this.onShortenClicked}
-                               disabled={!this.isUrlShortenable()}/>
-                        Shorten the share URL using a web service
-                    </label>
+                    </div>
+                    <If condition={this.isUrlShortenable()}>
+                    <div className="dd-panel__section shorten-url">
+                        <button className={`btn ${this.shouldShorten() ? 'btn--checkbox-on' : 'btn--checkbox-off'}`} onClick={this.onShortenClicked}>Shorten the share URL using a web service</button>
+                    </div>
+                    </If>
                 </div>
             );
         }
