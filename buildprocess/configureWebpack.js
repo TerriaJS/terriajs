@@ -20,8 +20,8 @@ function configureWebpack(terriaJSBasePath, config) {
         include: path.resolve(terriaJSBasePath, 'lib'),
         loader: require.resolve('babel-loader'),
         query: {
-            //presets: ['es2015'] /*,
-            //cacheDirectory: true*/
+            sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
+            presets: ['es2015']
         }
     });
 
