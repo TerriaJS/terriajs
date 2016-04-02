@@ -315,6 +315,19 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('ignores dates if tableStyle.timeColumn is set to null from json', function(done) {
+        // The test above did not pick up a problem in updateFromJson when the meaning of Cesium's defined was changed to also mean notNull (Cesium 1.19).
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem._tableStyle = new TableStyle();
+        csvItem._tableStyle.updateFromJson({timeColumn: null});
+        csvItem.load().then(function() {
+            var source = csvItem.dataSource;
+            expect(source.tableStructure.activeTimeColumn).toBeUndefined();
+            expect(csvItem.clock).toBeUndefined();
+            expect(source.clock).toBeUndefined();
+        }).otherwise(fail).then(done);
+    });
+
     it('uses a second date column with tableStyle.timeColumn name', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_date_year.csv';
         csvItem._tableStyle = new TableStyle({timeColumn: 'year'});
@@ -445,6 +458,29 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(featureColor(csvItem, 2)).not.toEqual(nullColor);
         }).otherwise(fail).then(done);
     });
+
+    it('replaces enum tail with "Other" in the legend', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('Other');
+            expect(url).not.toContain('unicorns');
+            expect(url).toContain('guinea pigs');
+        }).otherwise(fail).then(done);
+    });
+
+    it('does not replace enum tail with Other if it fits', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_lots2.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            expect(csvItem.legendUrl.url).not.toContain('Other');
+            expect(csvItem.legendUrl.url).toContain('turtles');
+        }).otherwise(fail).then(done);
+    });
+
 
     describe('and per-column tableStyle', function() {
 
@@ -821,6 +857,18 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('replaces enum tail with "Other" in the legend', function(done) {
+        csvItem.url = 'test/csv/postcode_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('Other');
+            expect(url).not.toContain('unicorns');
+            expect(url).toContain('guinea pigs');
+        }).otherwise(fail).then(done);
+    });
+
     it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
         csvItem.url = 'test/csv/postcode_enum.csv';
         csvItem.load().then(function() {
@@ -849,6 +897,32 @@ describe('CsvCatalogItem with region mapping', function() {
     //});
 
     describe('and feature picking', function() {
+
+        var postcode3124 = {
+            "type": "FeatureCollection",
+            "features": [{
+                "type": "Feature",
+                "id": "FID_POA_2011_AUST.766",
+                "geometry": {
+                    "type": "MultiPolygon",
+                    "coordinates": []
+                },
+                "geometry_name": "the_geom",
+                "properties": {
+                    "FID": 765,
+                    "POA_CODE": "3124",
+                    "POA_NAME": "3124",
+                    "SQKM": 7.29156648352383
+                }
+            }],
+            "crs": {
+                "type": "name",
+                "properties": {
+                    "name": "urn:ogc:def:crs:EPSG::4326"
+                }
+            }
+        };
+
         it('works', function(done) {
             var csvFile = 'test/csv/postcode_val_enum.csv';
 
@@ -858,30 +932,7 @@ describe('CsvCatalogItem with region mapping', function() {
                 'data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json'
             ]).then(function(resources) {
                 jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson').andReturn({
-                    responseText: JSON.stringify({
-                        "type": "FeatureCollection",
-                        "features": [{
-                            "type": "Feature",
-                            "id": "FID_POA_2011_AUST.766",
-                            "geometry": {
-                                "type": "MultiPolygon",
-                                "coordinates": []
-                            },
-                            "geometry_name": "the_geom",
-                            "properties": {
-                                "FID": 765,
-                                "POA_CODE": "3124",
-                                "POA_NAME": "3124",
-                                "SQKM": 7.29156648352383
-                            }
-                        }],
-                        "crs": {
-                            "type": "name",
-                            "properties": {
-                                "name": "urn:ogc:def:crs:EPSG::4326"
-                            }
-                        }
-                    })
+                    responseText: JSON.stringify(postcode3124)
                 });
 
                 csvItem.url = csvFile;
@@ -896,8 +947,9 @@ describe('CsvCatalogItem with region mapping', function() {
                     return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("3124");
-                    expect(r[0].description).toContain("42.42");
-                    expect(r[0].description).toContain("the universe");
+                    var description = r[0].description; //.getValue(terria.clock.currentTime);
+                    expect(description).toContain("42.42");
+                    expect(description).toContain("the universe");
                 }).otherwise(fail).then(done);
             });
         });
@@ -952,8 +1004,9 @@ describe('CsvCatalogItem with region mapping', function() {
                     return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("Boroondara (C)");
-                    expect(r[0].description).toContain("42.42");
-                    expect(r[0].description).toContain("the universe");
+                    var description = r[0].description; //.getValue(terria.clock.currentTime);
+                    expect(description).toContain("42.42");
+                    expect(description).toContain("the universe");
                 }).otherwise(fail).then(done);
             });
         });
@@ -1034,15 +1087,60 @@ describe('CsvCatalogItem with region mapping', function() {
                     return regionImageryProvider.pickFeatures(464, 314, 9, 2.558613543017636, -0.6605448031188106);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("Wellington (S)");
-                    expect(r[0].description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
-                    expect(r[0].description).toContain("Melbourne");
+                    var description = r[0].description; //.getValue(terria.clock.currentTime);
+                    expect(description).toContain("Wellington"); // leaving it open whether it should show server-side ID or provided value
+                    expect(description).toContain("Melbourne");
                 }).then(function() {
                     var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
                     return regionImageryProvider.pickFeatures(233, 152, 8, 2.600997237149669, -0.5686381345023742);
                 }).then(function(r) {
                     expect(r[0].name).toEqual("Wellington (A)");
-                    expect(r[0].description).toContain("Wellington");
-                    expect(r[0].description).toContain("Sydney");
+                    var description = r[0].description; //.getValue(terria.clock.currentTime);
+                    expect(description).toContain("Wellington");
+                    expect(description).toContain("Sydney");
+                }).otherwise(fail).then(done);
+            });
+        });
+
+        it('time-varying features update with time', function(done) {
+            var csvFile = 'test/csv/postcode_val_enum_time.csv';
+
+            loadAndStubTextResources(done, [
+                csvFile,
+                terria.configParameters.regionMappingDefinitionsUrl,
+                'data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json'
+            ]).then(function(resources) {
+                jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_POA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_POA_2011_AUST&x=217&y=199&info_format=application%2Fjson').andReturn({
+                    responseText: JSON.stringify(postcode3124)
+                });
+
+                csvItem.url = csvFile;
+                csvItem.load().then(function() {
+                    csvItem.isEnabled = true; // Required to create an imagery layer.
+                    var regionDetails = csvItem.regionMapping.regionDetails;
+                    expect(regionDetails).toBeDefined();
+                    // We are spying on calls to ImageryLayerCatalogItem.enableLayer; the argument[1] is the regionImageryProvider.
+                    // This unfortunately makes the test depend on an implementation detail.
+                    var regionImageryProvider = ImageryLayerCatalogItem.enableLayer.calls.argsFor(0)[1];
+                    expect(regionImageryProvider).toBeDefined();
+                    return regionImageryProvider.pickFeatures(3698, 2513, 12, 2.5323739090365693, -0.6604719122857645);
+                }).then(function(r) {
+                    expect(r[0].name).toEqual("3124");
+                    var description = r[0].description.getValue(JulianDate.fromIso8601('2016-01-01T15:00:00Z'));
+                    expect(description).toContain("alpha");
+                    expect(description).not.toContain("beta");
+                    expect(description).not.toContain("gamma");
+                    expect(description).not.toContain("omega");
+                    description = r[0].description.getValue(JulianDate.fromIso8601('2016-01-02T15:00:00Z'));
+                    expect(description).toContain("gamma");
+                    expect(description).not.toContain("delta");
+                    expect(description).not.toContain("alpha");
+                    expect(description).not.toContain("omega");
+                    description = r[0].description.getValue(JulianDate.fromIso8601('2016-01-03T15:00:00Z'));
+                    expect(description).toContain("omega");
+                    expect(description).not.toContain("zeta");
+                    expect(description).not.toContain("alpha");
+                    expect(description).not.toContain("beta");
                 }).otherwise(fail).then(done);
             });
         });
