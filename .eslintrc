@@ -42,7 +42,7 @@
         "consistent-return": 0,
         "curly": [1, "multi-line"],
         "default-case": 0,
-        "dot-notation": [1, {
+        "dot-notation": [0, {
             "allowKeywords": true,
             "allowPattern": ""
         }],
@@ -78,7 +78,7 @@
         "no-redeclare": 1,
         "no-return-assign": 1,
         "no-script-url": 1,
-        "no-self-compare": 1,
+        "no-self-compare": 0,
         "no-sequences": 1,
         "no-throw-literal": 0,
         "no-unused-expressions": 0,
@@ -91,7 +91,7 @@
         "radix": 1,
         "vars-on-top": 0,
         "wrap-iife": [1, "inside"],
-        "yoda": [1, "never"],
+        "yoda": [0, "never"],
 
         /* Strict Mode */
         "strict": [0, "global"],
