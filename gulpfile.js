@@ -85,17 +85,19 @@ gulp.task('make-schema', function() {
 });
 
 gulp.task('lint', function() {
-    var glob = require('glob-all');
-    var jshint = require('gulp-jshint');
+    var child_exec = require('child_process').execSync;
+    var gutil = require('gulp-util');
 
-    var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
-    var testGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
+    var eslintPath = require.resolve('eslint/bin/eslint.js');
 
-    var sources = glob.sync(sourceGlob.concat(testGlob));
-    return gulp.src(sources)
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'))
-        .pipe(jshint.reporter('fail'));
+    try {
+        child_exec('node "' + eslintPath + '" lib --ignore-pattern lib/ThirdParty --max-warnings 0', {
+            cwd: __dirname,
+            stdio: 'inherit'
+        });
+    } catch(e) {
+        throw new gutil.PluginError('eslint', 'eslint exited with an error.', { showStack: false});
+    }
 });
 
 // Create a single .js file with all of TerriaJS + Cesium!

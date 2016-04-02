@@ -37,6 +37,8 @@
     "webpack": "^1.12.14"
   },
   "devDependencies": {
+    "babel-eslint": "^6.0.2",
+    "eslint": "^2.6.0",
     "generate-terriajs-schema": "^1.2.1",
     "glob-all": "^3.0.1",
     "gulp-jshint": "^2.0.0",
