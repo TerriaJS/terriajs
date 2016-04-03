@@ -28,20 +28,17 @@ const Notification = React.createClass({
         let title = '';
         let message = '';
         let buttonCaption = 'OK';
-        let width, height;
 
         if (defined(this.props.notification)) {
             isVisible = true;
             title = this.props.notification.title;
             message = this.props.notification.message;
             buttonCaption = this.props.notification.confirmText;
-            width = this.props.notification.width;
-            height = this.props.notification.height;
         }
 
         return (
             <div className={`notification-wrapper ${isVisible ? 'is-visible' : ''}`} aria-hidden={!isVisible}>
-                <div className='notification' style={{width, height}}>
+                <div className='notification'>
                     <div className='notification__inner'>
                         <h3 className='title'>{title}</h3>
                         {window.location.host === 'localhost:3001' && title.toLowerCase().indexOf('error') >= 0 &&

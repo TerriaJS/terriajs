@@ -35,10 +35,12 @@
   border: 1px solid darken($dark, 3%);
   background: $dark;
   z-index: 300;
-  width: 400px;
+  width: 500px;
+  height: auto;
   .notification__inner{
     padding: $padding $padding*2;
     height: 100%;
+    max-height: calc(100vh - #{$input-height + $padding*2});
     overflow-y: auto;
   }
   .body{
