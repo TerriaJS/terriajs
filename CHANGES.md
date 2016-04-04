@@ -5,6 +5,7 @@ Change Log
 ### 2.3.0
 
 * Share links now contain details about the picked point, picked features and currently selected feature.
+* Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
 
 ### 2.2.1
 
