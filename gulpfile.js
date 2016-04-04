@@ -18,12 +18,14 @@ gulp.task('watch', ['watch-specs', 'copy-cesium-assets']);
 gulp.task('post-npm-install', ['copy-cesium-assets']);
 
 gulp.task('build-specs', function(done) {
+    var runWebpack = require('./buildprocess/runWebpack.js');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
     runWebpack(webpackConfig, done);
 });
 
 gulp.task('release-specs', function(done) {
+    var runWebpack = require('./buildprocess/runWebpack.js');
     var webpack = require('webpack');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
@@ -38,43 +40,10 @@ gulp.task('release-specs', function(done) {
 });
 
 gulp.task('watch-specs', function(done) {
-    var notifier = require('node-notifier');
-    var webpack = require('webpack');
+    var watchWebpack = require('./buildprocess/watchWebpack');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
-    var wp = webpack(webpackConfig);
-    wp.watch({}, function(err, stats) {
-        if (stats) {
-            console.log(stats.toString({
-                colors: true,
-                modules: false,
-                chunkModules: false
-            }));
-
-            var jsonStats = stats.toJson();
-            if (err || (jsonStats.errors && jsonStats.errors.length > 0)) {
-                notifier.notify({
-                    title: 'Error building TerriaJS specs',
-                    message: stats.toString({
-                        colors: false,
-                        hash: false,
-                        version: false,
-                        timings: false,
-                        assets: false,
-                        chunks: false,
-                        chunkModules: false,
-                        modules: false,
-                        children: false,
-                        cached: false,
-                        reasons: false,
-                        source: false,
-                        errorDetails: true,
-                        chunkOrigins: false
-                    })
-                });
-            }
-        }
-    });
+    watchWebpack(webpackConfig, done);
 });
 
 gulp.task('make-schema', function() {
@@ -89,19 +58,13 @@ gulp.task('make-schema', function() {
 });
 
 gulp.task('lint', function() {
-    var child_exec = require('child_process').execSync;
-    var gutil = require('gulp-util');
+    var runExternalModule = require('./buildprocess/runExternalModule');
 
-    var eslintPath = require.resolve('eslint/bin/eslint.js');
-
-    try {
-        child_exec('node "' + eslintPath + '" lib --ignore-pattern lib/ThirdParty --max-warnings 0', {
-            cwd: __dirname,
-            stdio: 'inherit'
-        });
-    } catch(e) {
-        throw new gutil.PluginError('eslint', 'eslint exited with an error.', { showStack: false});
-    }
+    runExternalModule('eslint/bin/eslint.js', [
+        'lib',
+        '--ignore-pattern', 'lib/ThirdParty',
+        '--max-warnings', '0'
+    ]);
 });
 
 // Create a single .js file with all of TerriaJS + Cesium!
@@ -109,6 +72,7 @@ gulp.task('build-libs', function(done) {
     var fs = require('fs');
     var glob = require('glob-all');
     var path = require('path');
+    var runWebpack = require('./buildprocess/runWebpack.js');
     var webpackConfig = require('./buildprocess/webpack.lib.config.js');
 
     // Build an index.js to export all of the modules.
@@ -154,11 +118,13 @@ gulp.task('build-libs', function(done) {
     runWebpack(webpackConfig, done);
 });
 
-gulp.task('docs', function(done) {
-    var child_exec = require('child_process').exec;
+gulp.task('docs', function() {
+    var runExternalModule = require('./buildprocess/runExternalModule');
 
-    var jsdocPath = require.resolve('jsdoc/jsdoc.js');
-    child_exec('node "' + jsdocPath + '" ./lib -c ./buildprocess/jsdoc.json', undefined, done);
+    runExternalModule('jsdoc/jsdoc.js', [
+        './lib',
+        '-c', './buildprocess/jsdoc.json'
+    ]);
 });
 
 
@@ -187,31 +153,6 @@ gulp.task('test-saucelabs', function(done) {
 gulp.task('test', function(done) {
     runKarma('./buildprocess/karma-local.conf.js', done);
 });
-
-function runWebpack(config, doneCallback) {
-    var gutil = require("gulp-util");
-    var webpack = require('webpack');
-
-    var wp = webpack(config);
-    wp.run(function(err, stats) {
-        if (stats) {
-            console.log(stats.toString({
-                colors: true,
-                modules: false,
-                chunkModules: false
-            }));
-
-            if (!err) {
-                var jsonStats = stats.toJson();
-                if (jsonStats.errors && jsonStats.errors.length > 0) {
-                    err = new gutil.PluginError('build-specs', 'Build has errors (see above).');
-                }
-            }
-        }
-
-        doneCallback(err);
-    });
-}
 
 function runKarma(configFile, done) {
     var karma = require('karma').Server;
