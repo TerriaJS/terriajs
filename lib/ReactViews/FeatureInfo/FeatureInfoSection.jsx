@@ -3,6 +3,7 @@
 import Mustache from 'mustache';
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import isArray from 'terriajs-cesium/Source/Core/isArray';
 
 // import arraysAreEqual from '../../Core/arraysAreEqual';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -54,13 +55,14 @@ const FeatureInfoSection = React.createClass({
     },
 
     descriptionFromFeature(feature, clock) {
-        const data = feature.currentProperties || getCurrentProperties(feature, clock.currentTime);
         const template = this.props.template;
         if (defined(template)) {
+            const properties = feature.currentProperties || getCurrentProperties(feature, clock.currentTime);
+            const context = replaceBadKeyCharacters(properties);
             if (typeof template === 'string') {
-                return Mustache.render(template, data);
+                return Mustache.render(template, context);
             }
-            return Mustache.render(template.template, data, template.partials);
+            return Mustache.render(template.template, context, template.partials);
         }
         const description = feature.currentDescription || getCurrentDescription(feature, clock.currentTime);
         // if (description && description.properties) {
@@ -74,8 +76,9 @@ const FeatureInfoSection = React.createClass({
     renderDataTitle() {
         const template = this.props.template;
         if (typeof template === 'object' && defined(template.name)) {
-            const data = this.props.feature.properties;
-            return Mustache.render(template.name, data);
+            const properties = this.props.feature.properties;
+            const context = replaceBadKeyCharacters(properties);
+            return Mustache.render(template.name, context);
         }
 
         return (this.props.feature && this.props.feature.name) || '';
@@ -109,6 +112,22 @@ const FeatureInfoSection = React.createClass({
         );
     }
 });
+
+// Recursively replace '.' and '#' in property keys with _, since Mustache cannot reference keys with these characters.
+function replaceBadKeyCharacters(properties) {
+    // if properties is anything other than an Object type, return it. Otherwise recurse through its properties.
+    if (!properties || typeof properties !== 'object' || isArray(properties)) {
+        return properties;
+    }
+    const result = {};
+    for (const key in properties) {
+        if (properties.hasOwnProperty(key)) {
+            const cleanKey = key.replace(/[.#]/g, '_');
+            result[cleanKey] = replaceBadKeyCharacters(properties[key]);
+        }
+    }
+    return result;
+}
 
 // To do : handle if feature.description is time-varying
 function areAllPropertiesConstant(properties) {

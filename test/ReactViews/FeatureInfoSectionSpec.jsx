@@ -14,6 +14,11 @@ import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/T
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
 import Terria from '../../lib/Models/Terria';
 
+let separator = ',';
+if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
+    separator = (Intl.NumberFormat().format(1000)[1]);
+}
+
 function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
     renderer.render(jsx);
@@ -41,20 +46,23 @@ describe('FeatureInfoSection', function() {
             baseUrl: './'
         });
         const properties = {
-            'Foo': 'bar',
-            'moo': 'd"e"r,p'
+            'foo': 'bar',
+            'material': 'steel',
+            'material.process.#1': 'smelted',
+            'size': '12345678',
+            'efficiency': '0.2345678'
         };
         feature = new Entity({
             name: 'Bar',
-            properties: properties,
-            description: {
-                getValue: function() { return '<p>hi!</p>'; },
-                isConstant: true
-            }
+            properties: properties
         });
     });
 
     it('renders a static description', function() {
+        feature.description = {
+            getValue: function() { return '<p>hi!</p>'; },
+            isConstant: true
+        };
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
         // expect(result.type).toBe('li');
@@ -101,6 +109,34 @@ describe('FeatureInfoSection', function() {
         expect(terria.clock.onTick.numberOfListeners).toEqual(1);
         renderer.unmount();
         expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+    });
+
+    describe('templating', function() {
+
+        it('uses and completes a string-form featureInfoTemplate if present', function() {
+            const template = 'This is a {{material}} {{foo}}.';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const descriptionText = getContentAndDescription(result).descriptionText;
+            expect(descriptionText).toBe('This is a steel bar.');
+        });
+
+        it('can use _ to refer to . and # in property keys in the featureInfoTemplate', function() {
+            const template = 'Made from {{material_process__1}} {{material}}.';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const descriptionText = getContentAndDescription(result).descriptionText;
+            expect(descriptionText).toBe('Made from smelted steel.');
+        });
+
+        it('formats large numbers without commas', function() {
+            const template = 'Size: {{size}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const descriptionText = getContentAndDescription(result).descriptionText;
+            expect(descriptionText).toBe('Size: 12345678');
+        });
+
     });
 
     // TODO
