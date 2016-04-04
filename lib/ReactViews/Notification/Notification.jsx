@@ -33,7 +33,7 @@ const Notification = React.createClass({
             isVisible = true;
             title = this.props.notification.title;
             message = this.props.notification.message;
-            buttonCaption = this.props.notification.confirmText;
+            buttonCaption = this.props.notification.confirmText.length ? this.props.notification.confirmText : buttonCaption;
         }
 
         return (
