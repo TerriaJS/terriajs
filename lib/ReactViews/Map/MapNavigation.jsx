@@ -27,14 +27,14 @@ const MapNavigation = React.createClass({
             <div className='map-navigation'>
                 <ul className='map-navigation__menu'>
                     <li>
+                        <FullScreenButton terria={this.props.terria}/>
+                    </li>
+                    <li>
                         <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}
                                       terriaViewer={this.props.terriaViewer}/>
                     </li>
                     <li>
-                        <FullScreenButton terria={this.props.terria}/>
-                    </li>
-                    <li>
-                        <DropdownPanel btnClass="btn--map" btnText="Share" btnTitle="change settings"
+                        <DropdownPanel btnClass="btn--map btn--share" btnText="Share" btnTitle="change settings"
                                        className="share-panel">
                             <SharePanel terria={this.props.terria}/>
                         </DropdownPanel>

@@ -414,14 +414,12 @@ folder-open;
   font-size: $font-size-small;
   padding: 5px;
   color: #fff;
-  border: 1px solid transparent;
   display: block;
   height: $padding*3.1;
   font-family: $font-pop;
   line-height: 18px;
   &:hover, .is-open &, &.is-active {
     background: $color-primary;
-    border: 1px solid rgba(#fff, 0.5);
     text-decoration: none;
   }
 }

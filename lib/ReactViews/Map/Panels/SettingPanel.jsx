@@ -69,7 +69,7 @@ const SettingPanel = React.createClass({
 
         // To do : aria-hidden={!this.state.isOpen}
         return (
-            <DropdownPanel btnClass="btn--map btn--sphere" btnTitle="change settings" className="setting-panel">
+            <DropdownPanel btnClass="btn--map btn--sphere" btnTitle="Change view" className="setting-panel" btnText="Map">
                 <div className='setting-panel__viewer dd-panel__section'>
                     <label className='label label--setting-panel'> Map View </label>
                     <ul className='setting-panel__viewer-selector'>
