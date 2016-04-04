@@ -7,7 +7,7 @@
 
 // Every module required-in here must be a `dependency` in package.json, not just a `devDependency`,
 // so that our postinstall script (which runs `gulp post-npm-install`) is able to run without
-// the devDependencies available.  Individual tasks, other than `npm-post-install` and any tasks it
+// the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
 // calls, may require in `devDependency` modules locally.
 var gulp = require('gulp');
 

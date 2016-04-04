@@ -1,8 +1,11 @@
+/*eslint-env node*/
+
 'use strict';
 
 /*global require*/
 var glob = require('glob-all');
 var configureWebpack = require('./configureWebpack');
+var path = require('path');
 
 var testGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
 
@@ -26,6 +29,6 @@ var config = {
     }
 };
 
-configureWebpack(require.resolve('../package.json'), config);
+configureWebpack(path.resolve(__dirname, '../'), config);
 
 module.exports = config;

@@ -1,9 +1,10 @@
+/*eslint-env node*/
+
 'use strict';
 
 /*global require*/
-var glob = require('glob-all');
 var configureWebpack = require('./configureWebpack');
-var webpack = require("webpack");
+var path = require('path');
 
 var config = {
     entry: './terria.lib.js',
@@ -17,6 +18,6 @@ var config = {
     devtool: 'source-map'
 };
 
-configureWebpack(require.resolve('../package.json'), config);
+configureWebpack(path.resolve(__dirname, '../'), config);
 
 module.exports = config;

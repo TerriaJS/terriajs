@@ -4,13 +4,6 @@
 var path = require('path');
 
 function configureWebpack(terriaJSBasePath, config) {
-    // Allow the base path to include package.json, because node doesn't allow `require.resolve('terriajs')`, sadly,
-    // but `require.resolve('terriajs/package.json')` is fine.
-    var packageJsonIndex = terriaJSBasePath.lastIndexOf('package.json');
-    if (packageJsonIndex === terriaJSBasePath.length - 'package.json'.length) {
-        terriaJSBasePath = terriaJSBasePath.substring(0, packageJsonIndex - 1);
-    }
-
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
 
