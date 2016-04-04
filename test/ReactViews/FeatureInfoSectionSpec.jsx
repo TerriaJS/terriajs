@@ -46,11 +46,13 @@ describe('FeatureInfoSection', function() {
             baseUrl: './'
         });
         const properties = {
+            'name': 'Kay',
             'foo': 'bar',
             'material': 'steel',
             'material.process.#1': 'smelted',
             'size': '12345678',
-            'efficiency': '0.2345678'
+            'efficiency': '0.2345678',
+            'owner_html': 'Jay<br>Smith'
         };
         feature = new Entity({
             name: 'Bar',
@@ -137,7 +139,33 @@ describe('FeatureInfoSection', function() {
             expect(descriptionText).toBe('Size: 12345678');
         });
 
+        // Do we want this?
+        xit('must use triple braces to embed html in template', function() {
+            const template = '<div>Hello {{owner_html}} - {{{owner_html}}}</div>';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const descriptionText = getContentAndDescription(result).descriptionText;
+            expect(descriptionText).toBe('<div>Hello Jay&lt;br&gt;Smith - Jay<br>Smith</div>');
+        });
+
+        it('can use a json featureInfoTemplate with partials', function() {
+            const template = {template: '<div>test {{>boldfoo}}</div>', partials: {boldfoo: '<b>{{foo}}</b>'}};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const descriptionText = getContentAndDescription(result).descriptionText;
+            expect(descriptionText).toBe('<div>test <b>bar</b></div>');
+        });
+
+        it('sets the name from featureInfoTemplate', function() {
+            const template = {name: '{{name}} {{foo}}'};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const content = getContentAndDescription(result).content;
+            expect(content).toBe('Kay bar');
+        });
+
     });
+
 
     // TODO
     it('uses a white background for complete HTML documents only', function() {
