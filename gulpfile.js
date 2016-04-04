@@ -1,3 +1,6 @@
+/*eslint-env node*/
+/*eslint no-sync: 0*/
+
 'use strict';
 
 /*global require*/
@@ -25,6 +28,7 @@ gulp.task('release-specs', function(done) {
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
     runWebpack(Object.assign({}, webpackConfig, {
+        devtool: 'source-map',
         plugins: [
             new webpack.optimize.UglifyJsPlugin(),
             new webpack.optimize.DedupePlugin(),
