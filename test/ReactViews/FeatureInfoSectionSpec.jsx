@@ -158,10 +158,10 @@ describe('FeatureInfoSection', function() {
 
         it('sets the name from featureInfoTemplate', function() {
             const template = {name: '{{name}} {{foo}}'};
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const content = getContentAndDescription(result).content;
-            expect(content).toBe('Kay bar');
+            const name = result.props.children[0].props.children.join('');
+            expect(name).toContain('Kay bar');
         });
 
     });

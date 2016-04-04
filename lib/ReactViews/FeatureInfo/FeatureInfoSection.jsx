@@ -62,7 +62,10 @@ const FeatureInfoSection = React.createClass({
             if (typeof template === 'string') {
                 return Mustache.render(template, context);
             }
-            return Mustache.render(template.template, context, template.partials);
+            if (defined(template.template)) {
+                return Mustache.render(template.template, context, template.partials);
+            }
+            // Eg. template might only specify a name, eg. {name: '{{foo}}'}; in this case, fall back on the description field.
         }
         const description = feature.currentDescription || getCurrentDescription(feature, clock.currentTime);
         // if (description && description.properties) {
