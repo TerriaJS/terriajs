@@ -40,7 +40,7 @@
   .notification__inner{
     padding: $padding $padding*2;
     height: 100%;
-    max-height: calc(100vh - #{$input-height + $padding*2});
+    max-height: calc(100vh - #{$input-height*3});
     overflow-y: auto;
   }
   .body{

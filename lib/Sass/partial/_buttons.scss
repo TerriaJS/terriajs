@@ -530,7 +530,7 @@ a.btn--map{
   font-size: $font-size-small;
   font-weight: $font-weight-medium;
   width: 100%;
-  padding-left: 0;
+  padding: $padding-small $padding-small $padding-small 0;
   border-bottom: 2px solid $grey;
   color: $grey;
   &:hover, &:focus, &.is-active{
