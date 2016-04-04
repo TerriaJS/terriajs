@@ -78,6 +78,7 @@ $chart-darker: darken($dark, 8%);
 .chart-panel__header {
   position: relative;
   background-color: $chart-darker;
+  font-size: 13px;
   label, .btn{
     display: inline-block;
     vertical-align: top;
