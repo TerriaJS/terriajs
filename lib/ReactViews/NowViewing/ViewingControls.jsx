@@ -22,11 +22,6 @@ const ViewingControls = React.createClass({
     removeFromMap() {
         this.props.nowViewingItem.isEnabled = false;
     },
-
-    toggleVisibility() {
-        this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
-    },
-
     zoomTo() {
         this.props.nowViewingItem.zoomToAndUseClock();
     },
@@ -73,7 +68,6 @@ const ViewingControls = React.createClass({
         let zoomButton = null;
         let infoButton = null;
         let removeButton = null;
-        let showButton = null;
         let openFeatureButton = null;
         if (nowViewingItem.isMappable) {
             zoomButton = <li className='zoom'><button type='button' onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To</button></li>;
@@ -85,20 +79,12 @@ const ViewingControls = React.createClass({
             infoButton = <li className='info'><button type='button' onClick={this.previewItem} className='btn' title='info'>About This Data Set</button></li>;
         }
         removeButton = <li className='remove'><button type='button' onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>;
-        if (nowViewingItem.supportsToggleShown) {
-            showButton = (
-                <li className='visibility'>
-                    <button type='button' onClick={this.toggleVisibility} title="Data show/hide" className={'btn btn--visibility ' + (nowViewingItem.isShown ? 'is-visible' : '')}></button>
-                </li>
-            );
-        }
         return (
             <ul className="now-viewing__item__control">
                 {zoomButton}
                 {openFeatureButton}
                 {infoButton}
                 {removeButton}
-                {showButton}
             </ul>
         );
     }

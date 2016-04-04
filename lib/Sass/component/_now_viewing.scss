@@ -103,8 +103,13 @@ $now-viewing-margin: $padding-small - 1px;
   width: 100%;
   li:first-child{
     @extend .col;
-    @extend .col-11;
+    @extend .col-1;
   }
+  li:nth-child(2){
+    @extend .col;
+    @extend .col-10;
+  }
+
   li:last-child{
     @extend .col;
     @extend .col-1;
@@ -131,16 +136,12 @@ $now-viewing-margin: $padding-small - 1px;
   li{
     display: inline-block;
     float: left;
-    &:last-child{
-      float: right;
-    }
   }
   .info{
     border-left: 1px solid $border-color;
     border-right: 1px solid $border-color;
   }
   .btn{
-    text-transform: uppercase;
     padding: 0 $padding;
     font-size: $font-size-mini;
     &.btn--visibility{

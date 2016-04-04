@@ -45,6 +45,10 @@ const NowViewingItem = React.createClass({
         });
     },
 
+    toggleVisibility() {
+        this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
+    },
+
     render() {
         const nowViewingItem = this.props.nowViewingItem;
         let chartIcon;
@@ -55,6 +59,9 @@ const NowViewingItem = React.createClass({
         return (
             <li className={'now-viewing__item ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')} onDragOver ={this.onDragOver} data-key={this.props.index}>
                 <ul className ="now-viewing__item__header">
+                {(nowViewingItem.supportsToggleShown) && (<li className='visibility'>
+                                                            <button type='button' onClick={this.toggleVisibility} title="Data show/hide" className={'btn ' + (nowViewingItem.isShown ? 'btn--checkbox-on ' : 'btn--checkbox-off')}></button>
+                                                        </li>)}
                     <li><button type='button' draggable='true' data-key={this.props.index} onDragStart={this.onDragStart} onDragEnd={this.onDragEnd} className="btn btn--drag">{chartIcon}{nowViewingItem.name}</button></li>
                     <li><button type='button' onClick={this.toggleDisplay} className={'btn btn--toggle ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '')}></button></li>
                 </ul>
