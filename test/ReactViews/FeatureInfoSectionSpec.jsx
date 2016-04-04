@@ -46,15 +46,15 @@ describe('FeatureInfoSection', function() {
         };
         feature = new Entity({
             name: 'Bar',
-            properties: properties
+            properties: properties,
+            description: {
+                getValue: function() { return '<p>hi!</p>'; },
+                isConstant: true
+            }
         });
     });
 
     it('renders a static description', function() {
-        feature.description = {
-            getValue: function() { return '<p>hi!</p>'; },
-            isConstant: true
-        };
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
         // expect(result.type).toBe('li');
@@ -64,11 +64,15 @@ describe('FeatureInfoSection', function() {
         expect(descriptionText).toBe('hi!');
     });
 
+    function timeVaryingDescription() {
+        const desc = new TimeIntervalCollectionProperty();
+        desc.intervals.addInterval(new TimeInterval({start: JulianDate.fromDate(new Date('2010-01-01')), stop: JulianDate.fromDate(new Date('2011-01-01')), data: '<p>hi</p>'}));
+        desc.intervals.addInterval(new TimeInterval({start: JulianDate.fromDate(new Date('2011-01-01')), stop: JulianDate.fromDate(new Date('2012-01-01')), data: '<p>bye</p>'}));
+        return desc;
+    }
+
     it('renders a time-varying description', function() {
-        feature.description = new TimeIntervalCollectionProperty();
-        // show.intervals.addInterval(new TimeInterval({start: Iso8601.MINIMUM_VALUE, stop: Iso8601.MAXIMUM_VALUE, data: false}));
-        feature.description.intervals.addInterval(new TimeInterval({start: JulianDate.fromDate(new Date('2010-01-01')), stop: JulianDate.fromDate(new Date('2011-01-01')), data: '<p>hi</p>'}));
-        feature.description.intervals.addInterval(new TimeInterval({start: JulianDate.fromDate(new Date('2011-01-01')), stop: JulianDate.fromDate(new Date('2012-01-01')), data: '<p>bye</p>'}));
+        feature.description = timeVaryingDescription();
         terria.clock.currentTime = JulianDate.fromDate(new Date('2011-06-30'));
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
@@ -86,6 +90,17 @@ describe('FeatureInfoSection', function() {
         expect(content.type).toBe('section');
         expect(descriptionElement.type).toBe('p');
         expect(descriptionText).toBe('hi');
+    });
+
+    it('removes all clock event listeners', function() {
+        feature.description = timeVaryingDescription();
+        const renderer = ReactTestUtils.createRenderer();
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
+        renderer.render(section);
+        renderer._instance._instance.componentDidMount();
+        expect(terria.clock.onTick.numberOfListeners).toEqual(1);
+        renderer.unmount();
+        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
     });
 
     // TODO

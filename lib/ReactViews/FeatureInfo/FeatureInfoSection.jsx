@@ -4,7 +4,7 @@ import Mustache from 'mustache';
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import arraysAreEqual from '../../Core/arraysAreEqual';
+// import arraysAreEqual from '../../Core/arraysAreEqual';
 import ObserveModelMixin from '../ObserveModelMixin';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
