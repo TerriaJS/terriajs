@@ -92,6 +92,7 @@ $now-viewing-margin: $padding-small - 1px;
   }
   .now-viewing__item__inner{
     display: none;
+    padding: $padding;
   }
   &.is-open .now-viewing__item__inner{
     display: block;
@@ -131,8 +132,8 @@ $now-viewing-margin: $padding-small - 1px;
 }
 
 .now-viewing__item__control{
-  padding: $padding 0;
   @extend .clearfix;
+  margin: 0px -10px;
   li{
     display: inline-block;
     float: left;
@@ -163,7 +164,7 @@ $now-viewing-margin: $padding-small - 1px;
   a, img{
     display: block;
   }
-  padding: $padding;
+  padding: $padding 0;
 }
 
 .now-viewing{
@@ -208,6 +209,8 @@ $now-viewing-margin: $padding-small - 1px;
 .now-viewing__item__voldemort{
   .voldemort__inner{
     padding: $padding;
+    background: $overlay;
+    margin-bottom: $padding;
   }
   ul{
     @extend .list-reset;
