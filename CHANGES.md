@@ -4,7 +4,7 @@ Change Log
 
 ### 2.3.0
 
-* Added a mechanism for hiding the source of a CatalogItem in the view info popup.
+* Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 
 ### 2.2.1
 
