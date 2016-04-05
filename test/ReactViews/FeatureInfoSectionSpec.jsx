@@ -108,9 +108,27 @@ describe('FeatureInfoSection', function() {
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         renderer.render(section);
         renderer._instance._instance.componentDidMount();
-        expect(terria.clock.onTick.numberOfListeners).toEqual(1);
+        // expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // may be true, but we don't want to require this implementation.
         renderer.unmount();
-        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+        expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
+    });
+
+    // TODO
+    it('uses a white background for complete HTML documents only', function() {
+        feature.description = {getValue: function() { return '<html><body>hi!</body></html>';}};
+        // var section = new FeatureInfoPanelSectionViewModel(panel, feature);
+        // expect(section.useWhiteBackground).toBe(true);
+        // section.destroy();
+
+        feature.description = {getValue: function() { return '<div>hi!</div>';}};
+        // section = new FeatureInfoPanelSectionViewModel(panel, feature);
+        // expect(section.useWhiteBackground).toBe(false);
+        // section.destroy();
+
+        feature.description = {getValue: function() { return '<html attr="yes">\n<body>hi!</body>\n</html>';}};
+        // section = new FeatureInfoPanelSectionViewModel(panel, feature);
+        // expect(section.useWhiteBackground).toBe(true);
+        // section.destroy();
     });
 
     describe('templating', function() {
@@ -139,6 +157,14 @@ describe('FeatureInfoSection', function() {
             expect(descriptionText).toBe('Size: 12345678');
         });
 
+        it('can format numbers with commas', function() {
+            const template = {template: 'Size: {{size}}', formats: {size: {useGrouping: true}}};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const descriptionText = getContentAndDescription(result).descriptionText;
+            expect(descriptionText).toBe('Size: 12' + separator + '345' + separator + '678');
+        });
+
         // Do we want this?
         xit('must use triple braces to embed html in template', function() {
             const template = '<div>Hello {{owner_html}} - {{{owner_html}}}</div>';
@@ -164,64 +190,114 @@ describe('FeatureInfoSection', function() {
             expect(name).toContain('Kay bar');
         });
 
+        it('can render a recursive featureInfoTemplate', function() {
+            const template = {
+                template: '<ul>{{>show_children}}</ul>',
+                partials: {
+                    show_children: '{{#children}}<li>{{name}}<ul>{{>show_children}}</ul></li>{{/children}}'
+                }
+            };
+            feature.properties.children = [
+                {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]},
+                {name: 'Xavier', children: [{name: 'Yann', children: null}, {name: 'Yvette', children: null}]}
+            ];
+            const recursedHtml = ''
+                + '<ul>'
+                +   '<li>Alice'
+                +       '<ul>'
+                +           '<li>' + 'Bailey' + '<ul></ul>' + '</li>'
+                +           '<li>' + 'Beatrix' + '<ul></ul>' + '</li>'
+                +       '</ul>'
+                +   '</li>'
+                +   '<li>Xavier'
+                +       '<ul>'
+                +           '<li>' + 'Yann' + '<ul></ul>' + '</li>'
+                +           '<li>' + 'Yvette' + '<ul></ul>' + '</li>'
+                +       '</ul>'
+                +   '</li>'
+                + '</ul>';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            const descriptionText = getContentAndDescription(result).descriptionText;
+            expect(descriptionText).toBe(recursedHtml);
+        });
+
     });
 
+    // describe('CZML templating', function() {
+    //     var terria,
+    //         panel,
+    //         catalog,
+    //         item,
+    //         timeVaryingItem;
 
-    // TODO
-    it('uses a white background for complete HTML documents only', function() {
-        feature.description = {getValue: function() { return '<html><body>hi!</body></html>';}};
-        // var section = new FeatureInfoPanelSectionViewModel(panel, feature);
-        // expect(section.useWhiteBackground).toBe(true);
-        // section.destroy();
-
-        feature.description = {getValue: function() { return '<div>hi!</div>';}};
-        // section = new FeatureInfoPanelSectionViewModel(panel, feature);
-        // expect(section.useWhiteBackground).toBe(false);
-        // section.destroy();
-
-        feature.description = {getValue: function() { return '<html attr="yes">\n<body>hi!</body>\n</html>';}};
-        // section = new FeatureInfoPanelSectionViewModel(panel, feature);
-        // expect(section.useWhiteBackground).toBe(true);
-        // section.destroy();
-    });
-
-
-    // describe('when template is provided', function () {
-    //     var section;
-
-    //     beforeEach(function() {
-    //         var catalogItem = {
-    //             featureInfoTemplate: '<div>{{blah}}</div>'
-    //         };
-
-    //         section = new FeatureInfoPanelSectionViewModel(panel, feature, catalogItem);
+    //     beforeEach(function(done) {
+    //         terria = new Terria({
+    //             baseUrl: './'
+    //         });
+    //         panel = new FeatureInfoPanelViewModel({
+    //             terria: terria
+    //         });
+    //         createCatalogMemberFromType.register('group', CatalogGroup);
+    //         createCatalogMemberFromType.register('czml', CzmlCatalogItem);
+    //         return loadJson('test/init/czml-with-template.json').then(function(json) {
+    //             catalog = new Catalog(terria);
+    //             return catalog.updateFromJson(json.catalog).then(function() {
+    //                 item = catalog.group.items[0].items[0];
+    //                 timeVaryingItem = catalog.group.items[0].items[1];
+    //             });
+    //         }).then(done).otherwise(done.fail);
     //     });
 
-    //     describe('rawDataVisible', function () {
-    //         it('should be false on init', function () {
-    //             expect(section.rawDataVisible).toBe(false);
-    //         });
-
-    //         it('should be true once showRawData is called', function () {
-    //             section.showRawData();
-
-    //             expect(section.rawDataVisible).toBe(true);
-    //         });
-
-    //         it('should be false once hideRawData is called', function () {
-    //             section.showRawData();
-    //             section.hideRawData();
-
-    //             expect(section.rawDataVisible).toBe(false);
-    //         });
+    //     afterEach(function() {
+    //         panel.destroy();
+    //         panel = undefined;
     //     });
 
-    //     it('rawData should still be available', function() {
-    //        expect(section.rawData).toBeDefined();
+    //     it('uses and completes a string-form featureInfoTemplate if present', function() {
+    //         var target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+    //         return item.load().then(function() {
+    //             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
+    //             panel.terria.nowViewing.add(item);
+    //             var feature = item.dataSource.entities.values[0];
+    //             var pickedFeatures = new PickedFeatures();
+    //             pickedFeatures.features.push(feature);
+    //             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+    //             return panel.showFeatures(pickedFeatures).then(function() {
+    //                 expect(panel.sections[0].templatedInfo).toEqual(target);
+    //             });
+    //         }).then(done).otherwise(done.fail);
     //     });
 
-    //     it('templatedInfo should be available', function() {
-    //         expect(section.templatedInfo).toBeDefined();
+    //     it('uses and completes a time-varying, string-form featureInfoTemplate if present', function() {
+    //         var targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+    //         var targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+    //         var targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+
+    //         return timeVaryingItem.load().then(function() {
+    //             expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
+    //             panel.terria.nowViewing.add(timeVaryingItem);
+    //             var feature = timeVaryingItem.dataSource.entities.values[0];
+    //             var pickedFeatures = new PickedFeatures();
+    //             pickedFeatures.features.push(feature);
+    //             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+
+    //             terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
+
+    //             return panel.showFeatures(pickedFeatures).then(function() {
+    //                 expect(panel.sections[0].templatedInfo).toEqual(targetBlank);
+
+    //                 terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+    //                 terria.clock.tick();
+    //                 expect(panel.sections[0].templatedInfo).toEqual(targetABC);
+
+    //                 terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
+    //                 terria.clock.tick();
+    //                 expect(panel.sections[0].templatedInfo).toEqual(targetDEF);
+    //             });
+    //         }).then(done).otherwise(done.fail);
+
     //     });
     // });
 

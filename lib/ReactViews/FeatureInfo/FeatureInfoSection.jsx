@@ -6,6 +6,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
 
 // import arraysAreEqual from '../../Core/arraysAreEqual';
+import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 
@@ -54,11 +55,12 @@ const FeatureInfoSection = React.createClass({
         }
     },
 
-    descriptionFromFeature(feature, clock) {
+    descriptionFromFeature() {
+        const feature = this.props.feature;
+        const clock = this.props.clock;
         const template = this.props.template;
         if (defined(template)) {
-            const properties = feature.currentProperties || getCurrentProperties(feature, clock.currentTime);
-            const context = replaceBadKeyCharacters(properties);
+            const context = propertyValues(feature, clock, template.formats);
             if (typeof template === 'string') {
                 return Mustache.render(template, context);
             }
@@ -77,10 +79,11 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
+        const feature = this.props.feature;
+        const clock = this.props.clock;
         const template = this.props.template;
         if (typeof template === 'object' && defined(template.name)) {
-            const properties = this.props.feature.properties;
-            const context = replaceBadKeyCharacters(properties);
+            const context = propertyValues(feature, clock, template.formats);
             return Mustache.render(template.name, context);
         }
 
@@ -108,13 +111,35 @@ const FeatureInfoSection = React.createClass({
                 <button type='button' onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
                 {this.props.isOpen &&
                     <section className='feature-info-panel__content'>
-                        {renderMarkdownInReact(this.descriptionFromFeature(this.props.feature, this.props.clock), this.props.catalogItem, this.props.feature)}
+                        {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
                     </section>
                 }
             </li>
         );
     }
 });
+
+function propertyValues(feature, clock, formats) {
+    // Manipulate the properties before templating them.
+    // If they require .getValue, apply that.
+    // If they have bad keys, fix them.
+    // If they have formatting, apply it.
+    const properties = feature.currentProperties || getCurrentProperties(feature, clock.currentTime);
+    const result = replaceBadKeyCharacters(properties);
+    if (defined(formats)) {
+        applyFormatsInPlace(result, formats);
+    }
+    return result;
+}
+
+function applyFormatsInPlace(properties, formats) {
+    // Optionally format each property. Updates properties in place, returning nothing.
+    for (const key in formats) {
+        if (properties.hasOwnProperty(key)) {
+            properties[key] = formatNumberForLocale(properties[key], formats[key]);
+        }
+    }
+}
 
 // Recursively replace '.' and '#' in property keys with _, since Mustache cannot reference keys with these characters.
 function replaceBadKeyCharacters(properties) {
