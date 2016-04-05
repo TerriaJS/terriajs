@@ -73,6 +73,7 @@
     "kss": "^2.1.1",
     "react-addons-pure-render-mixin": "0.14.7",
     "react-addons-test-utils": "0.14.7",
+    "react-shallow-testutils": "^1.0.0",
     "terriajs-jasmine-ajax": "^3.2.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
