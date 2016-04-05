@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.3.0
+
+* Added a mechanism for hiding the source of a CatalogItem in the view info popup.
+
 ### 2.2.1
 
 * Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
