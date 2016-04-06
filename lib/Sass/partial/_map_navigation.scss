@@ -48,12 +48,21 @@
   }
 }
 
-.dd-panel__button,
-.full-screen__button .enter-full-screen{
+.dd-panel__button{
+  padding-left: $padding*3.5;
+  position: relative;
   &:before{
     line-height: 1;
-    font-size: 1rem;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 5px;
+    top: 4px;
+  }
+}
 
+.full-screen__button .enter-full-screen{
+  &:before{
+    font-size: 1.6rem;
   }
 }
 
