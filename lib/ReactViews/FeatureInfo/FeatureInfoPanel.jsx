@@ -115,7 +115,7 @@ const FeatureInfoPanel = React.createClass({
 function addSectionsForFeatures(terria) {
     const features = terria.pickedFeatures.features;
     const sections = [];
-    const sectionMap = new Map();
+    const sectionMap = {};
 
     features.forEach((feature)=> {
         if (!defined(feature.position)) {
@@ -131,14 +131,14 @@ function addSectionsForFeatures(terria) {
                 feature: feature
             });
         } else {
-            let section = sectionMap.get(catalogItem);
+            let section = sectionMap.catalogItem;
             if (!defined(section)) {
                 section = {
                     catalogItem: catalogItem,
                     features: []
                 };
                 sections.push(section);
-                sectionMap.set(catalogItem, section);
+                sectionMap.catalogItem = section;
             }
 
             section.features.push(feature);
