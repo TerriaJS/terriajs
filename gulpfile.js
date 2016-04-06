@@ -61,7 +61,7 @@ gulp.task('lint', function() {
     var runExternalModule = require('./buildprocess/runExternalModule');
 
     runExternalModule('eslint/bin/eslint.js', [
-        'lib',
+        'lib', 'test',
         '--ignore-pattern', 'lib/ThirdParty',
         '--max-warnings', '0'
     ]);
