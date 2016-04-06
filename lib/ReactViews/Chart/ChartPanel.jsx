@@ -3,6 +3,7 @@
 import Chart from './Chart.jsx';
 import ChartData from '../../Charts/ChartData';
 import DataUri from '../../Core/DataUri';
+import classList from '../../Core/classList';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
