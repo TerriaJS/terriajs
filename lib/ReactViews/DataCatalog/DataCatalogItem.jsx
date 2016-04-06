@@ -60,7 +60,7 @@ const DataCatalogItem = React.createClass({
         return (
             <li className={classNames('clearfix data-catalog-item', {'is-previewed': this.isSelected()})}>
                 <button type='button' onClick={this.setPreviewedItem} className={`btn btn--catalog-item ${item.isMappable ? 'catalog-item' : 'service-item'}`}>{item.name}</button>
-                <If condition={!defined(this.invoke)}>
+                <If condition={!defined(item.invoke)}>
                     <button type='button' onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass())}></button>
                   <Else />
                     <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars'></button>
