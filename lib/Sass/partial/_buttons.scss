@@ -404,7 +404,7 @@ folder-open;
 // Buttons on the map
 //
 // Markup:
-// <button class="btn btn--map setting-panel__button" title="full screen mode"></button>
+// <button class="btn btn--map full-screen__button" title="full screen mode"></button>
 //
 // Style guide: Buttons.map-buttons
 
@@ -426,7 +426,6 @@ folder-open;
 a.btn--map{
   line-height: 20px;
 }
-
 // Search Clear buttons
 //
 // Buttons to clear search
