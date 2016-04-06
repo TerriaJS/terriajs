@@ -3,6 +3,7 @@
 /*global require*/
 var CatalogMember = require('../../lib/Models/CatalogMember');
 var Terria = require('../../lib/Models/Terria');
+var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 describe('CatalogMember', function () {
     var terria;
