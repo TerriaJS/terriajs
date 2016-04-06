@@ -1,6 +1,3 @@
-'use strict';
-
-/*global require*/
 var path = require('path');
 
 function configureWebpack(terriaJSBasePath, config) {

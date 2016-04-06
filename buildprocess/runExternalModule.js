@@ -1,8 +1,6 @@
-/*eslint-env node*/
-/*eslint no-sync: 0*/
-
 var spawnSync = require('child_process').spawnSync;
 var gutil = require('gulp-util');
+var foo = 'bar';
 
 function runExternalModule(module, args) {
     var modulePath = require.resolve(module);

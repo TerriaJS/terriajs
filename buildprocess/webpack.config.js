@@ -1,8 +1,3 @@
-/*eslint-env node*/
-
-'use strict';
-
-/*global require*/
 var glob = require('glob-all');
 var configureWebpack = require('./configureWebpack');
 var path = require('path');
