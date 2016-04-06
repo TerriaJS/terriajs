@@ -196,6 +196,7 @@ $now-viewing-margin: $padding-small - 1px;
   }
   svg{
     width: 100%;
+    display: block;
     > rect{
       width: 100%;
       fill: rgba(#fff, 0.15);
@@ -210,7 +211,6 @@ $now-viewing-margin: $padding-small - 1px;
   .voldemort__inner{
     padding: 0 $padding;
     background: $overlay;
-    margin-bottom: $padding;
   }
   ul{
     @extend .list-reset;
