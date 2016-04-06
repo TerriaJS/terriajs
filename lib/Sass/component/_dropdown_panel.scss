@@ -18,7 +18,7 @@
         color: #fff;
         border: $border-style;
         width: $width;
-        right: 10px;
+        right: $padding*3;
         &:before{
             content: '';
             display: block;
