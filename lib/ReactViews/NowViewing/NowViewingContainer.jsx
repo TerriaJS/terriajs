@@ -40,13 +40,15 @@ const NowViewingContainer = React.createClass({
     },
 
     onDragEnd(e) {
-        if(e.dataTransfer.dropEffect === 'move') {
+        if ((defined(e.dataTransfer) && (e.dataTransfer.dropEffect === 'move'))
+            || (e.originalEvent.dataTransfer.dropEffect === 'move')) {
             this.props.terria.nowViewing.items.splice(this.state.draggedItemIndex, 1);
             this.state.draggedItemIndex = -1;
             this.state.placeholderIndex = -1;
             this.setState(this.state);
             return;
         }
+
         if(this.state.placeholderIndex !== -1 || this.state.draggedItemIndex !== -1) {
             this.setState({
                 placeholderIndex: -1,

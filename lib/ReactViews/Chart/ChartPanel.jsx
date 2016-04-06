@@ -3,7 +3,7 @@
 import Chart from './Chart.jsx';
 import ChartData from '../../Charts/ChartData';
 import DataUri from '../../Core/DataUri';
-import classList from '../../Core/classList';
+import ClassList from 'class-list';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -77,7 +77,12 @@ const ChartPanel = React.createClass({
 
     toggleBodyClass(isVisible){
         const body = document.body;
-        body.classList.toggle('chart-is-visible', isVisible);
+        if(isVisible) {
+            ClassList(body).add('chart-is-visible');
+        }else {
+            ClassList(body).remove('chart-is-visible');
+        }
+
         this.props.terria.currentViewer.notifyRepaintRequired();
         // Allow any animations to finish, then trigger a resize.
         setTimeout(function() {
