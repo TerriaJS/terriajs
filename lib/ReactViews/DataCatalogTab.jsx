@@ -8,7 +8,6 @@ import SearchHeader from './Search/SearchHeader.jsx';
 import SearchBox from './Search/SearchBox.jsx';
 import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import Loader from './Loader.jsx';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 // The DataCatalog Tab
