@@ -10,7 +10,8 @@ const FeatureInfoCatalogItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        features: React.PropTypes.object,
+        features: React.PropTypes.array,
+        catalogItem: React.PropTypes.object,
         clock: React.PropTypes.object,
         selectedFeature: React.PropTypes.object,
         onClickFeatureHeader: React.PropTypes.func
@@ -24,19 +25,20 @@ const FeatureInfoCatalogItem = React.createClass({
         let totalFeaturesCount = 0;
 
         const features = this.props.features;
+        const catalogItem = this.props.catalogItem;
         const clock = this.props.clock;
 
-        if (defined(features.features)) {
+        if (defined(features)) {
             // Display no more than defined number of feature infos
-            totalFeaturesCount = features.features.length;
-            if (defined(features.catalogItem)) {
-                maximumShownFeatureInfos = features.catalogItem.maximumShownFeatureInfos;
-                featureInfoTemplate = features.catalogItem.featureInfoTemplate;
+            totalFeaturesCount = features.length;
+            if (defined(catalogItem)) {
+                maximumShownFeatureInfos = catalogItem.maximumShownFeatureInfos;
+                featureInfoTemplate = catalogItem.featureInfoTemplate;
 
                 count = totalFeaturesCount > maximumShownFeatureInfos ? (<li className='p1'>{maximumShownFeatureInfos}{' of '}{totalFeaturesCount}{' results are shown '}</li>) : null;
-                content = features.features.slice(0, maximumShownFeatureInfos).map((feature, i)=>{
+                content = features.slice(0, maximumShownFeatureInfos).map((feature, i)=>{
                     return (<FeatureInfoSection key={i}
-                                                catalogItem={features.catalogItem}
+                                                catalogItem={catalogItem}
                                                 feature={feature}
                                                 clock={clock}
                                                 template={featureInfoTemplate}
@@ -46,12 +48,12 @@ const FeatureInfoCatalogItem = React.createClass({
                 });
 
             }
-        } else if (defined(features.feature)) {
-            content = (<FeatureInfoSection feature={features.feature}
-                                           clock={clock}
-                                           isOpen={features.feature === this.props.selectedFeature}
-                                           onClickHeader={this.props.onClickFeatureHeader}
-                        />);
+        // } else if (defined(features.feature)) {
+        //     content = (<FeatureInfoSection feature={features.feature}
+        //                                    clock={clock}
+        //                                    isOpen={features.feature === this.props.selectedFeature}
+        //                                    onClickHeader={this.props.onClickFeatureHeader}
+        //                 />);
         }
 
         return (<li className ='feature-info__group'><ul className='feature-info-panel__sections'>{count}{content}</ul></li>);

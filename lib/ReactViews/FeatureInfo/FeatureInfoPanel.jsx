@@ -47,105 +47,95 @@ const FeatureInfoPanel = React.createClass({
         }
     },
 
-    getFeatures() {
-        if (defined(this.props.terria.pickedFeatures)) {
-            return addSectionsForFeatures(this.props.terria);
-        }
-    },
-
-    toggleOpenFeature(feature) {
-        if (feature === this.props.terria.selectedFeature) {
-            this.props.terria.selectedFeature = undefined;
-        } else {
-            this.props.terria.selectedFeature = feature;
-        }
-    },
-
-    renderContent(pickedFeatures) {
-        // Don't bother rendering anything for an invisible or collapsed panel.
-        if (this.props.isCollapsed || !this.props.isVisible) {
-            return undefined;
-        }
-
-        const that = this;
-        if (defined(this.props.terria.pickedFeatures)) {
-            if (this.props.terria.pickedFeatures.isLoading === true) {
-                return <li><Loader/></li>;
-            }
-            if (pickedFeatures && pickedFeatures.length > 0) {
-                return pickedFeatures.map((features, i)=>{
-                    return (
-                        <FeatureInfoCatalogItem
-                            key={i}
-                            features={features}
-                            clock={that.props.terria.clock}
-                            selectedFeature={this.props.terria.selectedFeature}
-                            onClickFeatureHeader={this.toggleOpenFeature}
-                        />
-                    );
-                });
-            }
-            return <li className='no-results'> No results </li>;
-        }
-        return <li className='no-results'> No results </li>;
-    },
-
     bringToFront() {
         // Bring feature info panel to front.
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.featureInfoPanel);
     },
 
     render() {
-        const pickedFeatures = this.getFeatures();
+        const terria = this.props.terria;
+        const componentOnTop = (this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.featureInfoPanel);
         return (
-            <div className={`feature-info-panel ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.featureInfoPanel ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
+            <div className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
                 aria-hidden={!this.props.isVisible}
                 onClick={this.bringToFront} >
-              <div className='feature-info-panel__header'>
-                <button type='button' onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Information </button>
-                <button type='button' onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>
-              </div>
-              <ul className="feature-info-panel__body">{this.renderContent(pickedFeatures)}</ul>
+                <div className='feature-info-panel__header'>
+                    <button type='button' onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Information </button>
+                    <button type='button' onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>
+                </div>
+                <ul className="feature-info-panel__body">
+                    <Choose>
+                        <When condition={this.props.isCollapsed || !this.props.isVisible}>
+                        </When>
+                        <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
+                            <li><Loader/></li>
+                        </When>
+                        <When condition={!terria.pickedFeatures || terria.pickedFeatures.length === 0}>
+                            <li className='no-results'> No results </li>
+                        </When>
+                        <Otherwise>
+                            {getFeatureInfoCatalogItems(terria)}
+                        </Otherwise>
+                    </Choose>
+                </ul>
             </div>
-            );
+        );
     }
 });
 
-// to add multiple catalog when several dataset turned on at the same time
-function addSectionsForFeatures(terria) {
-    const features = terria.pickedFeatures.features;
-    const sections = [];
-    const sectionMap = {};
+function getFeatureInfoCatalogItems(terria) {
 
-    features.forEach((feature)=> {
-        if (!defined(feature.position)) {
-            feature.position = terria.pickedFeatures.pickPosition;
-        }
-
-        const catalogItem = calculateCatalogItem(terria.nowViewing, feature);
-
-        // if feature does not have a catalog item?
-        if (!defined(catalogItem)) {
-            sections.push({
-                catalogItem: undefined,
-                feature: feature
-            });
+    function toggleOpenFeature(feature) {
+        if (feature === terria.selectedFeature) {
+            terria.selectedFeature = undefined;
         } else {
-            let section = sectionMap.catalogItem;
-            if (!defined(section)) {
-                section = {
-                    catalogItem: catalogItem,
-                    features: []
-                };
-                sections.push(section);
-                sectionMap.catalogItem = section;
-            }
+            terria.selectedFeature = feature;
+        }
+    }
 
-            section.features.push(feature);
+    const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(terria);
+
+    return catalogItems.map((catalogItem, i) => {
+        const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem);
+        return (
+            <FeatureInfoCatalogItem
+                key={i}
+                catalogItem={catalogItem}
+                features={features}
+                clock={terria.clock}
+                selectedFeature={terria.selectedFeature}
+                onClickFeatureHeader={toggleOpenFeature}
+            />
+        );
+    });
+}
+
+// Returns an object of {catalogItems, featureCatalogItemPairs}.
+function getFeaturesGroupedByCatalogItems(terria) {
+    if (!defined(terria.pickedFeatures)) {
+        return [];
+    }
+    const features = terria.pickedFeatures.features;
+    const featureCatalogItemPairs = [];  // Will contain objects of {feature, catalogItem}.
+    const catalogItems = []; // Will contain a list of all unique catalog items.
+
+    features.forEach(feature => {
+        // Why was this here? Surely changing the feature objects is not a good side-effect?
+        // if (!defined(feature.position)) {
+        //     feature.position = terria.pickedFeatures.pickPosition;
+        // }
+        const catalogItem = calculateCatalogItem(terria.nowViewing, feature);
+        // if feature does not have a catalog item?
+        featureCatalogItemPairs.push({
+            catalogItem: catalogItem,
+            features: []
+        });
+        if (catalogItems.indexOf(catalogItem) === -1) {  // Note this works for undefined too.
+            catalogItems.push(catalogItem);
         }
     });
 
-    return sections;
+    return {catalogItems, featureCatalogItemPairs};
 }
 
 function calculateCatalogItem(nowViewing, feature) {
