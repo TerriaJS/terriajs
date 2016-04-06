@@ -4,6 +4,7 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
+import {getMountedInstance, findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
 
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Iso8601 from 'terriajs-cesium/Source/Core/Iso8601';
@@ -19,22 +20,28 @@ if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
     separator = (Intl.NumberFormat().format(1000)[1]);
 }
 
+const contentClass = 'feature-info-panel__content';
+
 function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
     renderer.render(jsx);
     return renderer.getRenderOutput();
 }
 
-function getContentAndDescription(renderedResult) {
-    const content = renderedResult.props.children[1];
-    const descriptionElement = content.props.children.props.children[1][0]; // I have no idea why it's in this position, and don't want to test that it always is.
-    const descriptionText = descriptionElement.props.children[1][0]; // Ditto.
-    return {
-        content: renderedResult.props.children[1],
-        descriptionElement: descriptionElement,
-        descriptionText: descriptionText
-    };
+function findAllEqualTo(reactElement, text) {
+    return findAll(reactElement, (element) => element && element === text);
 }
+
+// function getContentAndDescription(renderedResult) {
+//     const content = findAllWithClass(renderedResult, contentClass)[0];
+//     const descriptionElement = content.props.children.props.children[1][0]; // I have no idea why it's in this position, and don't want to test that it always is.
+//     const descriptionText = descriptionElement.props.children[1][0]; // Ditto.
+//     return {
+//         content: renderedResult.props.children[1],
+//         descriptionElement: descriptionElement,
+//         descriptionText: descriptionText
+//     };
+// }
 
 describe('FeatureInfoSection', function() {
 
@@ -67,11 +74,8 @@ describe('FeatureInfoSection', function() {
         };
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
-        // expect(result.type).toBe('li');
-        const {content, descriptionElement, descriptionText} = getContentAndDescription(result);
-        expect(content.type).toBe('section');
-        expect(descriptionElement.type).toBe('p');
-        expect(descriptionText).toBe('hi!');
+        expect(findAllWithType(result, 'p').length).toEqual(1);
+        expect(findAllEqualTo(result, 'hi!').length).toEqual(1);
     });
 
     function timeVaryingDescription() {
@@ -86,29 +90,23 @@ describe('FeatureInfoSection', function() {
         terria.clock.currentTime = JulianDate.fromDate(new Date('2011-06-30'));
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
-        // expect(result.type).toBe('li');
-        let {content, descriptionElement, descriptionText} = getContentAndDescription(result);
-        expect(content.type).toBe('section');
-        expect(descriptionElement.type).toBe('p');
-        expect(descriptionText).toBe('bye');
+        expect(findAllEqualTo(result, 'hi').length).toEqual(0);
+        expect(findAllEqualTo(result, 'bye').length).toEqual(1);
 
         terria.clock.currentTime = JulianDate.fromDate(new Date('2010-06-30'));
         const section2 = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result2 = getShallowRenderedOutput(section2);
-        // expect(result.type).toBe('li');
-        ({content, descriptionElement, descriptionText} = getContentAndDescription(result2));
-        expect(content.type).toBe('section');
-        expect(descriptionElement.type).toBe('p');
-        expect(descriptionText).toBe('hi');
+        expect(findAllEqualTo(result2, 'hi').length).toEqual(1);
+        expect(findAllEqualTo(result2, 'bye').length).toEqual(0);
     });
 
-    it('removes all clock event listeners', function() {
+    it('removes any clock event listeners', function() {
         feature.description = timeVaryingDescription();
         const renderer = ReactTestUtils.createRenderer();
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         renderer.render(section);
-        renderer._instance._instance.componentDidMount();
-        // expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // may be true, but we don't want to require this implementation.
+        getMountedInstance(renderer).componentDidMount();
+        // expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // currently true, but we don't want to require this implementation.
         renderer.unmount();
         expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });
@@ -137,56 +135,57 @@ describe('FeatureInfoSection', function() {
             const template = 'This is a {{material}} {{foo}}.';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const descriptionText = getContentAndDescription(result).descriptionText;
-            expect(descriptionText).toBe('This is a steel bar.');
+            expect(findAllEqualTo(result, 'This is a steel bar.').length).toEqual(1);
         });
 
         it('can use _ to refer to . and # in property keys in the featureInfoTemplate', function() {
             const template = 'Made from {{material_process__1}} {{material}}.';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const descriptionText = getContentAndDescription(result).descriptionText;
-            expect(descriptionText).toBe('Made from smelted steel.');
+            expect(findAllEqualTo(result, 'Made from smelted steel.').length).toEqual(1);
         });
 
         it('formats large numbers without commas', function() {
             const template = 'Size: {{size}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const descriptionText = getContentAndDescription(result).descriptionText;
-            expect(descriptionText).toBe('Size: 12345678');
+            expect(findAllEqualTo(result, 'Size: 12345678').length).toEqual(1);
         });
 
         it('can format numbers with commas', function() {
             const template = {template: 'Size: {{size}}', formats: {size: {useGrouping: true}}};
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const descriptionText = getContentAndDescription(result).descriptionText;
-            expect(descriptionText).toBe('Size: 12' + separator + '345' + separator + '678');
+            expect(findAllEqualTo(result, 'Size: 12' + separator + '345' + separator + '678').length).toEqual(1);
         });
 
         // Do we want this?
         xit('must use triple braces to embed html in template', function() {
-            const template = '<div>Hello {{owner_html}} - {{{owner_html}}}</div>';
+            const template = '<div>Hello {{owner_html}} - {{{owner_html}}}.</div>';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const descriptionText = getContentAndDescription(result).descriptionText;
-            expect(descriptionText).toBe('<div>Hello Jay&lt;br&gt;Smith - Jay<br>Smith</div>');
+            expect(findAllEqualTo(result, 'Hello Jay&lt;br&gt;Smith - Jay').length).toEqual(1);
+            expect(findAllWithType(result, 'br').length).toEqual(1);
+            expect(findAllEqualTo(result, 'Smith.').length).toEqual(1);
         });
 
         it('can use a json featureInfoTemplate with partials', function() {
-            const template = {template: '<div>test {{>boldfoo}}</div>', partials: {boldfoo: '<b>{{foo}}</b>'}};
+            const template = {template: '<div class="jj">test {{>boldfoo}}</div>', partials: {boldfoo: '<b>{{foo}}</b>'}};
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const descriptionText = getContentAndDescription(result).descriptionText;
-            expect(descriptionText).toBe('<div>test <b>bar</b></div>');
+            expect(findAllWithClass(result, 'jk').length).toEqual(0); // just to be sure the null case gives 0.
+            expect(findAllWithClass(result, 'jj').length).toEqual(1);
+            expect(findAllWithType(result, 'b').length).toEqual(1);
+            expect(findAllEqualTo(result, 'test ').length).toEqual(1);
+            expect(findAllEqualTo(result, 'bar').length).toEqual(1);
         });
 
         it('sets the name from featureInfoTemplate', function() {
             const template = {name: '{{name}} {{foo}}'};
             const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const name = result.props.children[0].props.children.join('');
+            const nameElement = findAllWithClass(result, 'feature-info-panel__title')[0];
+            const name = nameElement.props.children.join(''); // Kay, space, and bar wind up in separate children, so join them together.
             expect(name).toContain('Kay bar');
         });
 
@@ -201,25 +200,26 @@ describe('FeatureInfoSection', function() {
                 {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]},
                 {name: 'Xavier', children: [{name: 'Yann', children: null}, {name: 'Yvette', children: null}]}
             ];
-            const recursedHtml = ''
-                + '<ul>'
-                +   '<li>Alice'
-                +       '<ul>'
-                +           '<li>' + 'Bailey' + '<ul></ul>' + '</li>'
-                +           '<li>' + 'Beatrix' + '<ul></ul>' + '</li>'
-                +       '</ul>'
-                +   '</li>'
-                +   '<li>Xavier'
-                +       '<ul>'
-                +           '<li>' + 'Yann' + '<ul></ul>' + '</li>'
-                +           '<li>' + 'Yvette' + '<ul></ul>' + '</li>'
-                +       '</ul>'
-                +   '</li>'
-                + '</ul>';
+            // const recursedHtml = ''
+            //     + '<ul>'
+            //     +   '<li>Alice'
+            //     +       '<ul>'
+            //     +           '<li>' + 'Bailey' + '<ul></ul>' + '</li>'
+            //     +           '<li>' + 'Beatrix' + '<ul></ul>' + '</li>'
+            //     +       '</ul>'
+            //     +   '</li>'
+            //     +   '<li>Xavier'
+            //     +       '<ul>'
+            //     +           '<li>' + 'Yann' + '<ul></ul>' + '</li>'
+            //     +           '<li>' + 'Yvette' + '<ul></ul>' + '</li>'
+            //     +       '</ul>'
+            //     +   '</li>'
+            //     + '</ul>';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            const descriptionText = getContentAndDescription(result).descriptionText;
-            expect(descriptionText).toBe(recursedHtml);
+            const content = findAllWithClass(result, contentClass)[0];
+            expect(findAllWithType(content, 'ul').length).toEqual(7);
+            expect(findAllWithType(content, 'li').length).toEqual(6);
         });
 
     });
