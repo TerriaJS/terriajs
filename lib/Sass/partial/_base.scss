@@ -91,9 +91,11 @@ select {
 
 ::selection {
   background: $color-primary; /* WebKit/Blink Browsers */
+  color: #fff;
 }
 ::-moz-selection {
   background: $color-primary; /* Gecko Browsers */
+  color: #fff;
 }
 
 select:not([multiple]) {
