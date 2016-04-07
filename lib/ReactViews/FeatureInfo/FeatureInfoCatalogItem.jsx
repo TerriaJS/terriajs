@@ -25,12 +25,11 @@ const FeatureInfoCatalogItem = React.createClass({
     },
 
     render() {
-
-        let content = null;
-        let count = null;
+        let featureInfoSections = null;
         let maximumShownFeatureInfos = null;
         let featureInfoTemplate;
         let totalFeaturesCount = 0;
+        let hiddenNumber;
 
         const features = this.props.features;
         const catalogItem = this.props.catalogItem;
@@ -42,9 +41,8 @@ const FeatureInfoCatalogItem = React.createClass({
             if (defined(catalogItem)) {
                 maximumShownFeatureInfos = catalogItem.maximumShownFeatureInfos;
                 featureInfoTemplate = catalogItem.featureInfoTemplate;
-
-                count = totalFeaturesCount > maximumShownFeatureInfos ? (<li className='p1'>{maximumShownFeatureInfos}{' of '}{totalFeaturesCount}{' results are shown '}</li>) : null;
-                content = features.slice(0, maximumShownFeatureInfos).map((feature, i) => {
+                hiddenNumber = totalFeaturesCount - maximumShownFeatureInfos;  // A positive hiddenNumber => some are hidden; negative means none are.
+                featureInfoSections = features.slice(0, maximumShownFeatureInfos).map((feature, i) => {
                     return (
                         <FeatureInfoSection key={i}
                             catalogItem={catalogItem}
@@ -58,21 +56,26 @@ const FeatureInfoCatalogItem = React.createClass({
                 });
 
             }
-        // } else if (defined(features.feature)) {
-        //     content = (<FeatureInfoSection feature={features.feature}
-        //                                    clock={terria.clock}
-        //                                    isOpen={features.feature === terria.selectedFeature}
-        //                                    onClickHeader={this.toggleOpenFeature}
-        //                 />);
         }
 
         return (
             <li className ='feature-info__group'>
                 <ul className='feature-info-panel__sections'>
-                    {count}{content}
+                    <If condition={hiddenNumber === 1}>
+                        <li className='feature-info-panel__not_all'>
+                            More than {maximumShownFeatureInfos} {catalogItem.name} features were found. The first {maximumShownFeatureInfos} are shown below.
+                        </li>
+                    </If>
+                    <If condition={hiddenNumber > 1}>
+                        <li className='feature-info-panel__not_all'>
+                            {totalFeaturesCount} {catalogItem.name} features were found. The first {maximumShownFeatureInfos} are shown below.
+                        </li>
+                    </If>
+                    {featureInfoSections}
                 </ul>
             </li>
         );
     }
 });
+
 module.exports = FeatureInfoCatalogItem;

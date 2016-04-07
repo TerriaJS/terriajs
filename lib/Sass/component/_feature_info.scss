@@ -53,6 +53,11 @@
   @extend .list-reset;
 }
 
+.feature-info-panel__not_all{
+  margin-left: 10px;
+  color: $info-color;
+}
+
 .feature-info-panel__body{
   overflow-y: auto;
   overflow-x: auto;
