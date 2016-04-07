@@ -59,7 +59,10 @@ describe('FeatureInfoSection', function() {
             'material.process.#1': 'smelted',
             'size': '12345678',
             'efficiency': '0.2345678',
-            'owner_html': 'Jay<br>Smith'
+            'owner_html': 'Jay<br>Smith',
+            'ampersand': 'A & B',
+            'lessThan': 'A < B',
+            'unsafe': 'ok!<script>alert("gotcha")</script>'
         };
         feature = new Entity({
             name: 'Bar',
@@ -74,6 +77,19 @@ describe('FeatureInfoSection', function() {
         };
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         const result = getShallowRenderedOutput(section);
+        expect(findAllWithType(result, 'p').length).toEqual(1);
+        expect(findAllEqualTo(result, 'hi!').length).toEqual(1);
+    });
+
+    it('does not render unsafe html', function() {
+        feature.description = {
+            getValue: function() { return '<script>alert("gotcha")</script><p>hi!</p>'; },
+            isConstant: true
+        };
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
+        const result = getShallowRenderedOutput(section);
+        expect(findAllWithType(result, 'script').length).toEqual(0);
+        expect(findAllEqualTo(result, 'alert("gotcha")').length).toEqual(0);
         expect(findAllWithType(result, 'p').length).toEqual(1);
         expect(findAllEqualTo(result, 'hi!').length).toEqual(1);
     });
@@ -159,14 +175,38 @@ describe('FeatureInfoSection', function() {
             expect(findAllEqualTo(result, 'Size: 12' + separator + '345' + separator + '678').length).toEqual(1);
         });
 
-        // Do we want this?
-        xit('must use triple braces to embed html in template', function() {
-            const template = '<div>Hello {{owner_html}} - {{{owner_html}}}.</div>';
+        it('does not escape ampersand as &amp;', function() {
+            const template = {template: 'Ampersand: {{ampersand}}'};
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Hello Jay&lt;br&gt;Smith - Jay').length).toEqual(1);
+            expect(findAllEqualTo(result, 'Ampersand: A & B').length).toEqual(1);
+            expect(findAllEqualTo(result, '&amp;').length).toEqual(0);
+        });
+
+        it('does not escape < as &lt;', function() {
+            const template = {template: 'Less than: {{lessThan}}'};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Less than: A < B').length).toEqual(1);
+            expect(findAllEqualTo(result, '&lt;').length).toEqual(0);
+        });
+
+        it('can embed safe html in template', function() {
+            const template = '<div>Hello {{owner_html}}.</div>';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hello Jay').length).toEqual(1);
             expect(findAllWithType(result, 'br').length).toEqual(1);
             expect(findAllEqualTo(result, 'Smith.').length).toEqual(1);
+        });
+
+        it('cannot embed unsafe html in template', function() {
+            const template = '<div>Hello {{unsafe}}</div>';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hello ok!').length).toEqual(1);
+            expect(findAllWithType(result, 'script').length).toEqual(0);
+            expect(findAllEqualTo(result, 'alert("gotcha")').length).toEqual(0);
         });
 
         it('can use a json featureInfoTemplate with partials', function() {
