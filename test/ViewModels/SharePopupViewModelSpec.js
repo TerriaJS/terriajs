@@ -12,6 +12,7 @@ var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
+var hashFromString = require('../../lib/Core/hashFromString');
 
 describe('SharePopupViewModel', function() {
     var terria;
@@ -264,12 +265,18 @@ describe('SharePopupViewModel', function() {
     function testFeaturePicking(urlGetter) {
         describe('when sharing picked features', function() {
             var parsed;
+            var aProps = {a: true};
+            var aHash = hashFromString(JSON.stringify(aProps) + 'A');
+            var bProps = {b: true};
+            var bHash = hashFromString(JSON.stringify(bProps) + 'B');
+            var cProps = {c: true};
+            var cHash = hashFromString(JSON.stringify(cProps) + 'C');
 
             beforeEach(function() {
                 terria.selectedFeature = new Entity({
-                    id: 'C-ID',
                     name: 'C',
-                    imageryLayer: {}
+                    imageryLayer: {},
+                    properties: cProps
                 });
 
                 var features = new PickedFeatures();
@@ -279,12 +286,12 @@ describe('SharePopupViewModel', function() {
                 features.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(2, 4, 6));
                 features.features = [
                     new Entity({
-                        id: 'A-ID',
-                        name: 'A'
+                        name: 'A',
+                        properties: aProps
                     }),
                     new Entity({
-                        id: 'B-ID',
-                        name: 'B'
+                        name: 'B',
+                        properties: bProps
                     }),
                     terria.selectedFeature
                 ];
@@ -312,20 +319,20 @@ describe('SharePopupViewModel', function() {
                 });
             });
 
-            it('should include id and name of picked vector features while excluding rasters', function() {
+            it('should include hash and name of picked vector features while excluding rasters', function() {
                 expect(parsed.entities).toEqual([{
                     name: 'A',
-                    id: 'A-ID'
+                    hash: aHash
                 }, {
                     name: 'B',
-                    id: 'B-ID'
+                    hash: bHash
                 }]);
             });
 
-            it('should include the id and name of the selected feature', function() {
+            it('should include the hash and name of the selected feature', function() {
                 expect(parsed.current).toEqual({
-                    id: 'C-ID',
-                    name: 'C'
+                    name: 'C',
+                    hash: cHash
                 });
             });
         });
