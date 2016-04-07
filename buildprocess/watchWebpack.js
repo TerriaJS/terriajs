@@ -5,10 +5,15 @@ function watchWebpack(config, doneCallback) {
     var wp = webpack(config);
     wp.watch({}, function(err, stats) {
         if (stats) {
+            // Fairly minimal output for 'gulp watch'. 
             console.log(stats.toString({
                 colors: true,
                 modules: false,
-                chunkModules: false
+                chunkModules: false,
+                version: false,
+                hash: false,
+                chunks: true,
+                assets: false
             }));
 
             var jsonStats = stats.toJson();
