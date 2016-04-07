@@ -55,6 +55,7 @@ const FeatureInfoPanel = React.createClass({
     render() {
         const terria = this.props.terria;
         const componentOnTop = (this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.featureInfoPanel);
+        const featureInfoCatalogItems = getFeatureInfoCatalogItems(terria);
         return (
             <div className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
                 aria-hidden={!this.props.isVisible}
@@ -70,11 +71,11 @@ const FeatureInfoPanel = React.createClass({
                         <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
                             <li><Loader/></li>
                         </When>
-                        <When condition={!terria.pickedFeatures || terria.pickedFeatures.length === 0}>
+                        <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
                             <li className='no-results'> No results </li>
                         </When>
                         <Otherwise>
-                            {getFeatureInfoCatalogItems(terria)}
+                            {featureInfoCatalogItems}
                         </Otherwise>
                     </Choose>
                 </ul>
@@ -96,7 +97,8 @@ function getFeatureInfoCatalogItems(terria) {
     const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(terria);
 
     return catalogItems.map((catalogItem, i) => {
-        const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem);
+        // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
+        const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);
         return (
             <FeatureInfoCatalogItem
                 key={i}
@@ -113,7 +115,7 @@ function getFeatureInfoCatalogItems(terria) {
 // Returns an object of {catalogItems, featureCatalogItemPairs}.
 function getFeaturesGroupedByCatalogItems(terria) {
     if (!defined(terria.pickedFeatures)) {
-        return [];
+        return {catalogItems: [], featureCatalogItemPairs: []};
     }
     const features = terria.pickedFeatures.features;
     const featureCatalogItemPairs = [];  // Will contain objects of {feature, catalogItem}.
@@ -125,10 +127,9 @@ function getFeaturesGroupedByCatalogItems(terria) {
         //     feature.position = terria.pickedFeatures.pickPosition;
         // }
         const catalogItem = calculateCatalogItem(terria.nowViewing, feature);
-        // if feature does not have a catalog item?
         featureCatalogItemPairs.push({
             catalogItem: catalogItem,
-            features: []
+            feature: feature
         });
         if (catalogItems.indexOf(catalogItem) === -1) {  // Note this works for undefined too.
             catalogItems.push(catalogItem);

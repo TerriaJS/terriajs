@@ -4,8 +4,9 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
+import {findWithType} from 'react-shallow-testutils';
 
-import Entity from 'terriajs-cesium/Source/DataSources/Entity';
+// import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
 import FeatureInfoPanel from '../../lib/ReactViews/FeatureInfo/FeatureInfoPanel';
 import Loader from '../../lib/ReactViews/Loader';
@@ -14,10 +15,10 @@ import runLater from '../../lib/Core/runLater';
 import Terria from '../../lib/Models/Terria';
 import ViewState from '../../lib/ReactViewModels/ViewState';
 
-var separator = ',';
-if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
-    separator = (Intl.NumberFormat().format(1000)[1]);
-}
+// var separator = ',';
+// if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
+//     separator = (Intl.NumberFormat().format(1000)[1]);
+// }
 
 function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
@@ -64,8 +65,7 @@ describe('FeatureInfoPanel-jsx', function() {
         terria.pickedFeatures = pickedFeatures;
         const panel = <FeatureInfoPanel terria={terria} viewState={viewState} isVisible={true}/>;
         const result = getShallowRenderedOutput(panel);
-        // Looks for Loader in this location: <div> <div></div> <ul> <li> <Loader> </li> </ul> </div>
-        expect(result.props.children[1].props.children.props.children.type === Loader).toBe(true);
+        expect(findWithType(result, Loader)).toBeDefined();
     });
 
 });

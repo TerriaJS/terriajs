@@ -59,7 +59,7 @@
     "jasmine-core": "^2.4.1",
     "jsdoc": "^3.3.3",
     "jshint": "2.8.x",
-    "jsx-control-statements": "^3.1.0",
+    "jsx-control-statements": "git://github.com/RacingTadpole/jsx-control-statements#37_multiwhen",
     "karma": "^0.13.15",
     "karma-browserstack-launcher": "^0.1.10",
     "karma-chrome-launcher": "^0.2.2",
