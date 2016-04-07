@@ -86,14 +86,6 @@ const FeatureInfoPanel = React.createClass({
 
 function getFeatureInfoCatalogItems(terria) {
 
-    function toggleOpenFeature(feature) {
-        if (feature === terria.selectedFeature) {
-            terria.selectedFeature = undefined;
-        } else {
-            terria.selectedFeature = feature;
-        }
-    }
-
     const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(terria);
 
     return catalogItems.map((catalogItem, i) => {
@@ -104,9 +96,7 @@ function getFeatureInfoCatalogItems(terria) {
                 key={i}
                 catalogItem={catalogItem}
                 features={features}
-                clock={terria.clock}
-                selectedFeature={terria.selectedFeature}
-                onClickFeatureHeader={toggleOpenFeature}
+                terria={terria}
             />
         );
     });
@@ -140,15 +130,15 @@ function getFeaturesGroupedByCatalogItems(terria) {
 }
 
 function calculateCatalogItem(nowViewing, feature) {
-    // some data sources (czml, geojson, kml) have an entity collection defined on the entity
-    // (and therefore the feature)
-    // then match up the data source on the feature with a now-viewing item's data source
-    let result;
-    let i;
     if (!defined(nowViewing)) {
-        // so that specs do not need to define a nowViewing
+        // So that specs do not need to define a nowViewing.
         return undefined;
     }
+    // "Data sources" (eg. czml, geojson, kml, csv) have an entity collection defined on the entity
+    // (and therefore the feature).
+    // Then match up the data source on the feature with a now-viewing item's data source.
+    let result;
+    let i;
     if (defined(feature.entityCollection) && defined(feature.entityCollection.owner)) {
         const dataSource = feature.entityCollection.owner;
         for (i = nowViewing.items.length - 1; i >= 0; i--) {
@@ -159,7 +149,7 @@ function calculateCatalogItem(nowViewing, feature) {
         }
         return result;
     }
-    // If there is no data source, but there is an imagery layer (eg. ArcGIS)
+    // If there is no data source, but there is an imagery layer (eg. ArcGIS),
     // we can match up the imagery layer on the feature with a now-viewing item.
     if (defined(feature.imageryLayer)) {
         const imageryLayer = feature.imageryLayer;
@@ -171,7 +161,7 @@ function calculateCatalogItem(nowViewing, feature) {
         }
         return result;
     }
-    // otherwise, no luck
+    // Otherwise, no luck.
     return undefined;
 }
 

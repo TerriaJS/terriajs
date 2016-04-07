@@ -12,12 +12,20 @@ const FeatureInfoCatalogItem = React.createClass({
     propTypes: {
         features: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
-        clock: React.PropTypes.object,
-        selectedFeature: React.PropTypes.object,
-        onClickFeatureHeader: React.PropTypes.func
+        terria: React.PropTypes.object.isRequired
+    },
+
+    toggleOpenFeature(feature) {
+        const terria = this.props.terria;
+        if (feature === terria.selectedFeature) {
+            terria.selectedFeature = undefined;
+        } else {
+            terria.selectedFeature = feature;
+        }
     },
 
     render() {
+
         let content = null;
         let count = null;
         let maximumShownFeatureInfos = null;
@@ -26,7 +34,7 @@ const FeatureInfoCatalogItem = React.createClass({
 
         const features = this.props.features;
         const catalogItem = this.props.catalogItem;
-        const clock = this.props.clock;
+        const terria = this.props.terria;
 
         if (defined(features)) {
             // Display no more than defined number of feature infos
@@ -36,27 +44,35 @@ const FeatureInfoCatalogItem = React.createClass({
                 featureInfoTemplate = catalogItem.featureInfoTemplate;
 
                 count = totalFeaturesCount > maximumShownFeatureInfos ? (<li className='p1'>{maximumShownFeatureInfos}{' of '}{totalFeaturesCount}{' results are shown '}</li>) : null;
-                content = features.slice(0, maximumShownFeatureInfos).map((feature, i)=>{
-                    return (<FeatureInfoSection key={i}
-                                                catalogItem={catalogItem}
-                                                feature={feature}
-                                                clock={clock}
-                                                template={featureInfoTemplate}
-                                                isOpen={feature === this.props.selectedFeature}
-                                                onClickHeader={this.props.onClickFeatureHeader}
-                            />);
+                content = features.slice(0, maximumShownFeatureInfos).map((feature, i) => {
+                    return (
+                        <FeatureInfoSection key={i}
+                            catalogItem={catalogItem}
+                            feature={feature}
+                            clock={terria.clock}
+                            template={featureInfoTemplate}
+                            isOpen={feature === terria.selectedFeature}
+                            onClickHeader={this.toggleOpenFeature}
+                        />
+                    );
                 });
 
             }
         // } else if (defined(features.feature)) {
         //     content = (<FeatureInfoSection feature={features.feature}
-        //                                    clock={clock}
-        //                                    isOpen={features.feature === this.props.selectedFeature}
-        //                                    onClickHeader={this.props.onClickFeatureHeader}
+        //                                    clock={terria.clock}
+        //                                    isOpen={features.feature === terria.selectedFeature}
+        //                                    onClickHeader={this.toggleOpenFeature}
         //                 />);
         }
 
-        return (<li className ='feature-info__group'><ul className='feature-info-panel__sections'>{count}{content}</ul></li>);
+        return (
+            <li className ='feature-info__group'>
+                <ul className='feature-info-panel__sections'>
+                    {count}{content}
+                </ul>
+            </li>
+        );
     }
 });
 module.exports = FeatureInfoCatalogItem;

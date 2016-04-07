@@ -59,7 +59,7 @@ describe('FeatureInfoPanel-jsx', function() {
         expect(result.props.className).toContain('visible');
     });
 
-    it('displays a message while asychronously obtaining feature information', function() {
+    it('displays loader while asychronously loading feature information', function() {
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
         terria.pickedFeatures = pickedFeatures;
