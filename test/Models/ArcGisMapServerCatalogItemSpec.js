@@ -111,6 +111,12 @@ describe('ArcGisMapServerCatalogItem', function() {
                 expect(item.info[0].content).toBe('server copyright text');
             });
 
+            it('adds nothing if neither server or layer json has copyright text', function() {
+                update({}, {});
+
+                expect(item.info.length).toBe(0);
+            });
+
             function update(serverJson, layerJson) {
                 item._legendUrl = '';
                 item.updateFromMetadata(serverJson, {layers: [layerJson]}, undefined, true, layerJson);
