@@ -1,179 +1,168 @@
-"use strict";
+/*eslint-env node*/
+/*eslint no-sync: 0*/
+
+'use strict';
 
 /*global require*/
 
-var browserify = require('browserify');
-var buffer = require('vinyl-buffer');
-var child_exec = require('child_process').exec;  // child_process is built in to node
-var exorcist = require('exorcist');
-var fs = require('fs');
-var genSchema = require('generate-terriajs-schema');
-var glob = require('glob-all');
+// Every module required-in here must be a `dependency` in package.json, not just a `devDependency`,
+// so that our postinstall script (which runs `gulp post-npm-install`) is able to run without
+// the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
+// calls, may require in `devDependency` modules locally.
 var gulp = require('gulp');
-var gutil = require('gulp-util');
-var jshint = require('gulp-jshint');
-var karma = require('karma').Server;
-var path = require('path');
-var resolve = require('resolve');
-var source = require('vinyl-source-stream');
-var sourcemaps = require('gulp-sourcemaps');
-var transform = require('vinyl-transform');
-var uglify = require('gulp-uglify');
-var watchify = require('watchify');
 
-var specJSName = 'TerriaJS-specs.js';
-var sourceGlob = ['./lib/**/*.js', '!./lib/ThirdParty/**/*.js'];
-var testJsGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
-var testJsxGlob = ['./test/**/*.jsx'];
-var testGlob = testJsGlob.concat(testJsxGlob);
+gulp.task('default', ['lint', 'build']);
+gulp.task('build', ['build-specs', 'copy-cesium-assets']);
+gulp.task('release', ['release-specs', 'copy-cesium-assets', 'make-schema']);
+gulp.task('watch', ['watch-specs', 'copy-cesium-assets']);
+gulp.task('post-npm-install', ['copy-cesium-assets']);
 
+gulp.task('build-specs', function(done) {
+    var runWebpack = require('./buildprocess/runWebpack.js');
+    var webpackConfig = require('./buildprocess/webpack.config.js');
 
-gulp.task('build-specs', ['prepare-cesium'], function() {
-    return build(specJSName, glob.sync(testGlob), false);
+    runWebpack(webpackConfig, done);
 });
 
-gulp.task('build', ['build-specs']);
+gulp.task('release-specs', function(done) {
+    var runWebpack = require('./buildprocess/runWebpack.js');
+    var webpack = require('webpack');
+    var webpackConfig = require('./buildprocess/webpack.config.js');
 
-gulp.task('release-specs', ['prepare-cesium'], function() {
-    return build(specJSName, glob.sync(testGlob), true);
+    runWebpack(Object.assign({}, webpackConfig, {
+        devtool: 'source-map',
+        plugins: [
+            new webpack.optimize.UglifyJsPlugin(),
+            new webpack.optimize.DedupePlugin(),
+            new webpack.optimize.OccurrenceOrderPlugin()
+        ].concat(webpackConfig.plugins || [])
+    }), done);
+});
+
+gulp.task('watch-specs', function(done) {
+    var watchWebpack = require('./buildprocess/watchWebpack');
+    var webpackConfig = require('./buildprocess/webpack.config.js');
+
+    watchWebpack(webpackConfig, done);
 });
 
 
 
 gulp.task('make-schema', function() {
-    return genSchema({source: '.', dest: 'wwwroot/schema', noversionsubdir: true, quiet: true});
+    var genSchema = require('generate-terriajs-schema');
+
+    return genSchema({
+        source: '.',
+        dest: 'wwwroot/schema',
+        noversionsubdir: true,
+        quiet: true
+    });
 });
 
-gulp.task('release', ['release-specs', 'make-schema']);
+gulp.task('lint', function() {
+    var runExternalModule = require('./buildprocess/runExternalModule');
 
-gulp.task('watch-specs', ['prepare-cesium'], function() {
-    return watch(specJSName, glob.sync(testGlob), false);
+    runExternalModule('eslint/bin/eslint.js', [
+        'lib', 'test',
+        '--ignore-pattern', 'lib/ThirdParty',
+        '--max-warnings', '0'
+    ]);
 });
 
-gulp.task('watch', ['watch-specs']);
+// Create a single .js file with all of TerriaJS + Cesium!
+gulp.task('build-libs', function(done) {
+    var fs = require('fs');
+    var glob = require('glob-all');
+    var path = require('path');
+    var runWebpack = require('./buildprocess/runWebpack.js');
+    var webpackConfig = require('./buildprocess/webpack.lib.config.js');
 
-gulp.task('lint', function(){
-    var sources = glob.sync(sourceGlob.concat(testJsGlob));
-    return gulp.src(sources)
-        .pipe(jshint())
-        .pipe(jshint.reporter('default'))
-        .pipe(jshint.reporter('fail'));
+    // Build an index.js to export all of the modules.
+    var index = '';
+
+    index += '\'use strict\'\n';
+    index += '\n';
+    index += '/*global require*/\n';
+    index += '\n';
+    index += 'module.exports = {};\n';
+    index += 'module.exports.Cesium = require(\'terriajs-cesium/Source/Cesium\');\n';
+
+    var modules = glob.sync([
+            './lib/**/*.js',
+            './lib/**/*.ts',
+            '!./lib/CopyrightModule.js',
+            '!./lib/cesiumWorkerBootstrapper.js',
+            '!./lib/ThirdParty/**',
+            '!./lib/SvgPaths/**'
+    ]);
+
+    var directories = {};
+
+    modules.forEach(function(filename) {
+        var module = filename.substring(0, filename.length - path.extname(filename).length);
+        var moduleName = path.relative('./lib', module);
+        moduleName = moduleName.replace(path.sep, '/');
+        var moduleParts = moduleName.split('/');
+
+        for (var i = 0; i < moduleParts.length - 1; ++i) {
+            var propertyName = moduleParts.slice(0, i + 1).join('.');
+            if (!directories[propertyName]) {
+                directories[propertyName] = true;
+                index += 'module.exports.' + propertyName + ' = {};\n';
+            }
+        }
+
+        index += 'module.exports.' + moduleParts.join('.') + ' = require(\'' + module + '\');\n';
+    });
+
+    fs.writeFileSync('terria.lib.js', index);
+
+    runWebpack(webpackConfig, done);
 });
 
-gulp.task('docs', function(done) {
-    child_exec('node ./node_modules/jsdoc/jsdoc.js ./lib -c ./jsdoc.json', undefined, done);
+gulp.task('docs', function() {
+    var runExternalModule = require('./buildprocess/runExternalModule');
+
+    runExternalModule('jsdoc/jsdoc.js', [
+        './lib',
+        '-c', './buildprocess/jsdoc.json'
+    ]);
 });
 
-gulp.task('prepare-cesium', ['copy-cesium-assets']);
 
 gulp.task('copy-cesium-assets', function() {
-    var cesium = resolve.sync('terriajs-cesium/wwwroot', {
-        basedir: __dirname,
-        extensions: ['.'],
-        isFile: function(file) {
-            try { return fs.statSync(file).isDirectory(); }
-            catch (e) { return false; }
-        }
-    });
+    var path = require('path');
+
+    var cesiumPackage = require.resolve('terriajs-cesium/package.json');
+    var cesiumRoot = path.dirname(cesiumPackage);
+    var cesiumWebRoot = path.join(cesiumRoot, 'wwwroot');
+
     return gulp.src([
-            cesium + '/**'
-        ], { base: cesium })
-        .pipe(gulp.dest('wwwroot/build/Cesium'));
+        path.join(cesiumWebRoot, '**')
+    ], {
+        base: cesiumWebRoot
+    }).pipe(gulp.dest('wwwroot/build/Cesium'));
 });
 
 gulp.task('test-browserstack', function(done) {
-    runKarma('karma-browserstack.conf.js', done);
+    runKarma('./buildprocess/karma-browserstack.conf.js', done);
 });
 
 gulp.task('test-saucelabs', function(done) {
-    runKarma('karma-saucelabs.conf.js', done);
+    runKarma('./buildprocess/karma-saucelabs.conf.js', done);
 });
 
 gulp.task('test', function(done) {
-    runKarma('karma-local.conf.js', done);
+    runKarma('./buildprocess/karma-local.conf.js', done);
 });
 
-gulp.task('default', ['lint', 'build']);
-
 function runKarma(configFile, done) {
+    var karma = require('karma').Server;
+    var path = require('path');
+
     karma.start({
         configFile: path.join(__dirname, configFile)
     }, function(e) {
         return done(e);
     });
 }
-
-function bundle(name, bundler, minify, catchErrors) {
-    // Combine main.js and its dependencies into a single file.
-    var result = bundler.bundle();
-
-    if (catchErrors) {
-        // Display errors to the user, and don't let them propagate.
-        result = result.on('error', function(e) {
-            gutil.log('Browserify Error', e.message);
-        });
-    }
-
-    result = result
-        .pipe(source(name))
-        .pipe(buffer());
-
-    if (minify) {
-        // Minify the combined source.
-        // sourcemaps.init/write maintains a working source map after minification.
-        // "preserveComments: 'some'" preserves JSDoc-style comments tagged with @license or @preserve.
-        result = result
-            .pipe(sourcemaps.init({ loadMaps: true }))
-            .pipe(uglify({preserveComments: 'some', mangle: true, compress: true}))
-            .pipe(sourcemaps.write());
-    }
-
-    result = result
-        // Extract the embedded source map to a separate file.
-        .pipe(transform(function () { return exorcist('wwwroot/build/' + name + '.map'); }))
-
-        // Write the finished product.
-        .pipe(gulp.dest('wwwroot/build'));
-
-    return result;
-}
-
-function build(name, files, minify) {
-    // The poorly-named "debug: true" causes Browserify to generate a source map.
-    return bundle(name, browserify({
-        entries: files,
-        debug: true,
-        extensions: ['.es6', '.jsx']
-    }), minify, false);
-}
-
-function watch(name, files, minify) {
-    var bundler = watchify(browserify({
-        entries: files,
-        debug: true,
-        cache: {},
-        extensions: ['.es6', '.jsx'],
-        packageCache: {}
-    }), { poll: 1000 } );
-
-    function rebundle() {
-        var start = new Date();
-
-        var result = bundle(name, bundler, minify, true);
-
-        result.on('end', function() {
-            console.log('Rebuilt ' + name + ' in ' + (new Date() - start) + ' milliseconds.');
-        });
-
-        return result;
-    }
-
-    bundler.on('update', rebundle);
-
-    return rebundle();
-}
-
-var childExec = require('child_process').exec;  // child_process is built in to node
-gulp.task('styleguide', function(done) {
-    childExec('kss-node ./node_modules/terriajs/lib/Sass ./wwwroot/styleguide --template ./wwwroot/styleguide-template --css ./../build/nationalmap.css', undefined, done);
-});

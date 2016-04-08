@@ -2,9 +2,15 @@
 Change Log
 ==========
 
+### 3.0.0
+
+* TerriaJS-based application are now best built using Webpack instead of Browserify.
+
 ### 2.3.0
 
 * Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
+* Added a mechanism for hiding the source of a CatalogItem in the view info popup.
+* Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 
 ### 2.2.1
 
