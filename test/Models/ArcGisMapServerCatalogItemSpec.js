@@ -88,6 +88,37 @@ describe('ArcGisMapServerCatalogItem', function() {
         expect(item.showTilesAfterMessage).toBe(false);
     });
 
+    describe('after updating metadata', function() {
+        describe('copyright text', function() {
+            it('comes from layer json if valid', function() {
+                update({copyrightText: 'server copyright text'}, {copyrightText: 'layer copyright text'});
+
+                expect(item.info[0].name).toBe('Copyright Text');
+                expect(item.info[0].content).toBe('layer copyright text');
+            });
+
+            it('reverts to server json layer json if undefined', function() {
+                update({copyrightText: 'server copyright text'}, {});
+
+                expect(item.info[0].name).toBe('Copyright Text');
+                expect(item.info[0].content).toBe('server copyright text');
+            });
+
+            it('reverts to server json layer json if empty string', function() {
+                update({copyrightText: 'server copyright text'}, {copyrightText: ''});
+
+                expect(item.info[0].name).toBe('Copyright Text');
+                expect(item.info[0].content).toBe('server copyright text');
+            });
+
+            function update(serverJson, layerJson) {
+                item._legendUrl = '';
+                item.updateFromMetadata(serverJson, {layers: [layerJson]}, undefined, true, layerJson);
+
+            }
+        });
+    });
+
     it('falls back to /legend if no legendUrl provided in json', function() {
         item.updateFromJson({
             metadataUrl: 'http://my.metadata.com',
