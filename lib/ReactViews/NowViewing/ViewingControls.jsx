@@ -7,7 +7,7 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 
 import ObserveModelMixin from '../ObserveModelMixin';
-import PickedFeatures from 'terriajs/lib/Map/PickedFeatures';
+import PickedFeatures from '../../Map/PickedFeatures';
 
 import React from 'react';
 

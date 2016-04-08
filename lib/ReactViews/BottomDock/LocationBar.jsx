@@ -7,7 +7,7 @@ import EarthGravityModel1996 from '../../Map/EarthGravityModel1996';
 import EllipsoidTerrainProvider from 'terriajs-cesium/Source/Core/EllipsoidTerrainProvider';
 import Intersections2D from 'terriajs-cesium/Source/Core/Intersections2D';
 import ObserveModelMixin from './../ObserveModelMixin';
-import proj4 from 'proj4';
+import proj4 from 'proj4/lib/index.js';
 import React from 'react';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
