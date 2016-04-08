@@ -76,7 +76,7 @@ describe('LegendHelper', function() {
 function getColorArrayFromCssColorString(cssString) {
     var canvas = document.createElement("canvas");
     if (!canvas) {
-        return defaultColorArray; // Failed
+        return undefined; // Failed
     }
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = cssString;

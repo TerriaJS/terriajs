@@ -1,5 +1,6 @@
 // Production steps of ECMA-262, Edition 6, 22.1.2.1
 // Reference: https://people.mozilla.org/~jorendorff/es6-draft.html#sec-array.from
+'use strict';
 if (!Array.from) {
   Array.from = (function () {
     var toStr = Object.prototype.toString;
@@ -27,7 +28,7 @@ if (!Array.from) {
       var items = Object(arrayLike);
 
       // 3. ReturnIfAbrupt(items).
-      if (arrayLike == null) {
+      if (arrayLike === null) {
         throw new TypeError("Array.from requires an array-like object - not null or undefined");
       }
 
