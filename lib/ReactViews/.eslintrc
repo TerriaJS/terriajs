@@ -2,9 +2,7 @@
   "parser": "babel-eslint",
   "env": {
     "browser": true,
-    "commonjs": true,
-    "node": true,
-    "mocha": true
+    "commonjs": true
   },
   "rules": {
     "valid-jsdoc": 1,

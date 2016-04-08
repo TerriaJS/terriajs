@@ -1,17 +1,24 @@
 var path = require('path');
 
 function configureWebpack(terriaJSBasePath, config) {
+    config.resolve = config.resolve || {};
+    config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
+    config.resolve.extensions.push('.jsx');
+
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
 
     // Use Babel to compile our JavaScript files.
     config.module.loaders.push({
-        test: /\.js$/,
-        include: path.resolve(terriaJSBasePath, 'lib'),
+        test: /\.jsx?$/,
+        include: [
+            path.resolve(terriaJSBasePath, 'lib'),
+            path.resolve(terriaJSBasePath, 'test')
+        ],
         loader: require.resolve('babel-loader'),
         query: {
             sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
-            presets: ['es2015'],
+            presets: ['es2015', 'react'],
             plugins: [
                 require.resolve('jsx-control-statements')
             ]
@@ -39,9 +46,14 @@ function configureWebpack(terriaJSBasePath, config) {
         loader: require.resolve('json-loader')
     });
 
-    // Allow entities to load its entities.json file.
+    // Allow entities to load its json files.
     config.module.loaders.push({
-        test: require.resolve('entities/maps/entities.json'),
+        test: [
+            require.resolve('entities/maps/decode.json'),
+            require.resolve('entities/maps/entities.json'),
+            require.resolve('entities/maps/legacy.json'),
+            require.resolve('entities/maps/xml.json')
+        ],
         loader: require.resolve('json-loader')
     });
 

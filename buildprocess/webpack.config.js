@@ -2,7 +2,7 @@ var glob = require('glob-all');
 var configureWebpack = require('./configureWebpack');
 var path = require('path');
 
-var testGlob = ['./test/**/*.js', '!./test/Utility/*.js'];
+var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
 
 var config = {
     entry: glob.sync(testGlob),
