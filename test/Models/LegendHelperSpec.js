@@ -4,7 +4,6 @@
 var LegendHelper = require('../../lib/Models/LegendHelper');
 var TableColumn = require('../../lib/Map/TableColumn');
 var TableStyle = require('../../lib/Models/TableStyle');
-require('../ArrayFromPolyfill');
 
 describe('LegendHelper', function() {
 
@@ -81,5 +80,6 @@ function getColorArrayFromCssColorString(cssString) {
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = cssString;
     ctx.fillRect(0, 0, 2, 2);
-    return Array.from(ctx.getImageData(0, 0, 1, 1).data);
+    var uints = ctx.getImageData(0, 0, 1, 1).data;
+    return [uints[0], uints[1], uints[2], uints[3]];
 }
