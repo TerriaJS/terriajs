@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+### 2.3.0
+
+* Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
+* Added a mechanism for hiding the source of a CatalogItem in the view info popup.
+* Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
+
 ### 2.2.1
 
 * Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.
