@@ -39,6 +39,13 @@ describe('CatalogMember', function () {
 
             member.load().then(done.fail).otherwise(done);
         });
+
+        it('returns the same promise for subsequent calls', function() {
+            var promise1 = member.load();
+            var promise2 = member.load();
+
+            expect(promise1).toBe(promise2);
+        });
     });
 
     describe('infoWithoutSources', function() {
