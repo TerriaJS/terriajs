@@ -8,6 +8,8 @@ Change Log
 * Added a mechanism for hiding the source of a CatalogItem in the view info popup.
 * Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 * Fixed display when `tableStyle.colorBins` is 0.
+* Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
+* Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
 
 ### 2.2.1
 
