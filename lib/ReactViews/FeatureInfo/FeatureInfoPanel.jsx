@@ -21,21 +21,26 @@ const FeatureInfoPanel = React.createClass({
 
     componentDidMount() {
         const createFakeSelectedFeatureDuringPicking = true;
-        this._pickedFeaturesSubscription = knockout.getObservable(this.props.terria, 'pickedFeatures').subscribe(() => {
-            if (createFakeSelectedFeatureDuringPicking) {
-                const fakeFeature = new Entity({
-                    id: 'Pick Location'
-                });
-                fakeFeature.position = this.props.terria.pickedFeatures.pickPosition;
-                this.props.terria.selectedFeature = fakeFeature;
+        const terria = this.props.terria;
+        this._pickedFeaturesSubscription = knockout.getObservable(terria, 'pickedFeatures').subscribe(() => {
+            const pickedFeatures = terria.pickedFeatures;
+            if (!defined(pickedFeatures)) {
+                terria.selectedFeature = undefined;
             } else {
-                this.props.terria.selectedFeature = undefined;
-            }
-            const pickedFeatures = this.props.terria.pickedFeatures;
-            if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
-                pickedFeatures.allFeaturesAvailablePromise.then(() => {
-                    this.props.terria.selectedFeature = pickedFeatures.features.filter(featureHasInfo)[0];
-                });
+                if (createFakeSelectedFeatureDuringPicking) {
+                    const fakeFeature = new Entity({
+                        id: 'Pick Location'
+                    });
+                    fakeFeature.position = pickedFeatures.pickPosition;
+                    terria.selectedFeature = fakeFeature;
+                } else {
+                    terria.selectedFeature = undefined;
+                }
+                if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
+                    pickedFeatures.allFeaturesAvailablePromise.then(() => {
+                        terria.selectedFeature = pickedFeatures.features.filter(featureHasInfo)[0];
+                    });
+                }
             }
         });
     },
