@@ -13,6 +13,7 @@ var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 var hashFromString = require('../../lib/Core/hashFromString');
+var CustomMatchers = require('../Utility/CustomMatchers');
 
 describe('SharePopupViewModel', function() {
     var terria;
@@ -311,12 +312,12 @@ describe('SharePopupViewModel', function() {
             });
 
             it('should generate pickCoords from pickPosition', function() {
+                jasmine.addMatchers(CustomMatchers);
+
                 // Conversion of coordinates isn't exact
-                expect(parsed.pickCoords).toEqual({
-                    lng: 2,
-                    lat: 3.999999999999998,
-                    height: 6.000000649901364
-                });
+                expect(parsed.pickCoords.lng).toBe(2);
+                expect(parsed.pickCoords.lat).toEqualEpsilon(4, 0.0001);
+                expect(parsed.pickCoords.height).toEqualEpsilon(6, 0.0001);
             });
 
             it('should include hash and name of picked vector features while excluding rasters', function() {
