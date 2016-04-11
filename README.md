@@ -2,7 +2,7 @@
 TerriaJS
 ============
 
-[![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=master)](https://travis-ci.org/TerriaJS/terriajs)
+[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=master)](https://travis-ci.org/TerriaJS/terriajs)
 
 TerriaJS is a library for building rich, web-based geospatial data explorers.  It uses [Cesium](https://cesiumjs.org) for a full 3D experience.  Think Google Earth, except it runs in a web browser without a plugin.  It also uses [Leaflet](http://leafletjs.com/) for a basic 2D experience on systems that can't run Cesium.
 
@@ -28,3 +28,5 @@ The entire process can be easily automated using [gulp](http://gulpjs.com/).  Se
 [index.less](https://github.com/NICTA/nationalmap/blob/master/index.less) customizes various aspects of the appearance and `@import`s the less files for the TerriaJS components that the application uses.
 
 All assets in `node_modules/terriajs/wwwroot` should be copied to `[your app's web root directory]/build/TerriaJS`.
+
+We'd like to thank these awesome online services that provide us with free accounts for our open source work!  [BrowserStack](https://www.browserstack.com), [Sauce Labs](https://saucelabs.com/), [Travis CI](https://travis-ci.org/)

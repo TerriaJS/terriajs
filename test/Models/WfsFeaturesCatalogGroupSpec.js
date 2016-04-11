@@ -1,11 +1,9 @@
 'use strict';
 
-/*global require,describe,it,expect,fail*/
+/*global require*/
 
 var Terria = require('../../lib/Models/Terria');
 var WfsFeaturesCatalogGroup = require('../../lib/Models/WfsFeaturesCatalogGroup');
-var sinon = require('sinon');
-var URI = require('urijs');
 
 var cedJson =  {
   "name": "Commonwealth Electoral Divisions (group from features)",
@@ -31,31 +29,18 @@ var cedJson =  {
 };
 
 describe('WfsFeaturesCatalogGroup', function() {
-    var fakeServer;
     var terria;
     var wfsGroup;
 
     beforeEach(function(done) {
-        sinon.xhr.supportsCORS = true; // force Sinon to use XMLHttpRequest even on IE9
-        fakeServer = sinon.fakeServer.create();
-        fakeServer.autoRespond = true;
+        jasmine.Ajax.install();
 
-        fakeServer.xhr.useFilters = true;
-        fakeServer.xhr.addFilter(function(method, url, async, username, password) {
-            // Allow requests for local files.
-            var uri = new URI(url);
-            var protocol = uri.protocol();
-            return !protocol;
+        jasmine.Ajax.stubRequest(/.*/).andCallFunction(function(stub, xhr) {
+            done.fail(xhr.url);
         });
 
-        fakeServer.respond(function(request) {
-            fail('Unhandled request to URL: ' + request.url);
-        });
-
-        fakeServer.respondWith(
-            'GET',
-            'http://regionmap-dev.nationalmap.nicta.com.au/admin_bnds_abs/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=admin_bnds%3ACOM20111216_ELB_region&outputFormat=JSON&propertyName=ELECT_DIV%2CSTATE',
-            JSON.stringify({
+        jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/admin_bnds_abs/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=admin_bnds%3ACOM20111216_ELB_region&outputFormat=JSON&propertyName=ELECT_DIV%2CSTATE').andReturn({
+            responseText: JSON.stringify({
                 "type": "FeatureCollection",
                 "totalFeatures": 150,
                 "features": [{
@@ -156,7 +141,8 @@ describe('WfsFeaturesCatalogGroup', function() {
                     }
                 }],
                 "crs": null
-            }));
+            })
+        });
 
         terria = new Terria({
             baseUrl: './'
@@ -165,11 +151,6 @@ describe('WfsFeaturesCatalogGroup', function() {
 
         wfsGroup.updateFromJson(cedJson);
         wfsGroup.load().otherwise(done.fail).then(done);
-    });
-
-    afterEach(function() {
-        fakeServer.xhr.filters.length = 0;
-        fakeServer.restore();
     });
 
     it('groups Commonwealth Electoral Divisions from our test region mapping server into 8 states', function() {
