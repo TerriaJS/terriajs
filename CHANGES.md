@@ -9,6 +9,7 @@ Change Log
 * Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 * Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
 * Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
+* Showed a message in the catalog item info panel that informs the user that a catalog item is local and can't be shared.
 
 ### 2.2.1
 
