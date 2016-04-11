@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,describe,it,expect*/
+var CustomMatchers = require('../Utility/CustomMatchers');
 var LegendHelper = require('../../lib/Models/LegendHelper');
 var TableColumn = require('../../lib/Map/TableColumn');
 var TableStyle = require('../../lib/Models/TableStyle');
@@ -50,15 +51,16 @@ describe('LegendHelper', function() {
 
     it('colors points via a color gradient when colorBins is 0', function() {
         // This tests the implementation of the color gradient code, which may not be desirable.
+        jasmine.addMatchers(CustomMatchers);
         var tableStyle = new TableStyle({
-            colorMap: '#000000-#0000FE',  // Use #FE so there is a clear midpoint at #7F.
+            colorMap: '#000000-#0000FF',
             colorBins: 0
         });
         var legendHelper = new LegendHelper(tableColumn, tableStyle);
         expect(legendHelper).toBeDefined();
         expect(legendHelper.legendUrl()).toBeDefined();  // Side-effects. Hmmm.
-        expect(legendHelper.getColorArrayFromValue(9)).toEqual([0, 0, 254, 255]);
-        expect(legendHelper.getColorArrayFromValue(5)).toEqual([0, 0, 127, 255]); // With #FF as the top end, some browsers have 128 here.
+        expect(legendHelper.getColorArrayFromValue(9)).toEqual([0, 0, 255, 255]);
+        expect(legendHelper.getColorArrayFromValue(5)[2]).toEqualEpsilon(127, 2);
         expect(legendHelper.getColorArrayFromValue(1)).toEqual([0, 0, 0, 255]);
         var legend = legendHelper._legend;
         var numItems = legend.items.length;
