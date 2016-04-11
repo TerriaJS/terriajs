@@ -3,10 +3,14 @@
 /*global require*/
 var AnimationViewModel = require('../../lib/ViewModels/AnimationViewModel');
 var Terria = require('../../lib/Models/Terria');
-var CatalogItem = require('../../lib/Models/CatalogItem');
+var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
+var L = require('leaflet');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
+var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
 
 describe('AnimationViewModel', function() {
-    var terria;
+    var terria, catalogItem;
     var animationVm;
 
     beforeEach(function() {
@@ -16,21 +20,20 @@ describe('AnimationViewModel', function() {
         animationVm = new AnimationViewModel({
             terria: terria
         });
-        animationVm.timeline = {
-            zoomTo: jasmine.createSpy('zoomTo'),
-            resize: jasmine.createSpy('resize') // this gets triggered in saucelabs for some reason.
-        };
+        animationVm.timeline = jasmine.createSpyObj('timeline', ['zoomTo', 'resize', '_makeTics']);
+
+        catalogItem = new ImageryLayerCatalogItem(terria);
+        catalogItem.clock = jasmine.createSpyObj('clock', ['getValue']);
     });
 
     it('on init, showAnimation should be false', function() {
-       expect(animationVm.showAnimation).toBe(false);
+        expect(animationVm.showAnimation).toBe(false);
     });
 
     describe('when a layer is added to the time series stack', function() {
         var LAYER_NAME = 'blahface';
 
         beforeEach(function() {
-            var catalogItem = buildCatalogItem();
             catalogItem.name = LAYER_NAME;
 
             terria.timeSeriesStack.addLayerToTop(catalogItem);
@@ -47,8 +50,6 @@ describe('AnimationViewModel', function() {
 
     describe('when the last layer is removed from the time series stack', function() {
         beforeEach(function() {
-            var catalogItem = buildCatalogItem();
-
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.timeSeriesStack.removeLayer(catalogItem);
         });
@@ -58,11 +59,33 @@ describe('AnimationViewModel', function() {
         });
     });
 
-    function buildCatalogItem() {
-        var catalogItem = new CatalogItem(terria);
-        catalogItem.clock = {
-            getValue: jasmine.createSpy('getValue')
-        };
-        return catalogItem;
-    }
+    describe('timelineTic format', function() {
+        it('should be used if provided', function() {
+            catalogItem.dateFormat.timelineTic = 'mmm';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            expect(animationVm.timeline.makeLabel(JulianDate.fromIso8601('2016-01-01'))).toBe('Jan');
+        });
+
+        it('should not be used if not provided', function() {
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            expect(animationVm.timeline.makeLabel(JulianDate.fromIso8601('2016-01-01'))).toBe('01/01/2016, 00:00:00');
+        });
+    });
+
+    describe('currentTime format', function() {
+        it('should be used if provided', function() {
+            catalogItem.dateFormat.currentTime = 'mmm';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01');
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('Jan');
+        });
+
+        it('should not be used if not provided', function() {
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01');
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('01/01/2016, 00:00:00');
+        });
+    });
 });

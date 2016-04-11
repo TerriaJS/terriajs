@@ -9,6 +9,9 @@ Change Log
 * Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 * Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
 * Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
+* Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
+    in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
+    (which is the current time at the top-left).
 
 ### 2.2.1
 
