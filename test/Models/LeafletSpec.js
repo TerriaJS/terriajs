@@ -6,6 +6,7 @@ var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 var GeoJsonDataSource = require('terriajs-cesium/Source/DataSources/GeoJsonDataSource');
 var Leaflet = require('../../lib/Models/Leaflet');
 var Terria = require('../../lib/Models/Terria');
+var CesiumTileLayer = require('../../lib/Map/CesiumTileLayer');
 var L = require('leaflet');
 var CesiumMath = require('terriajs-cesium/Source/Core/Math');
 var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
@@ -14,6 +15,8 @@ var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 var loadJson = require('terriajs-cesium/Source/Core/loadJson');
+
+var DEFAULT_ZOOM_LEVEL = 5;
 
 describe('Leaflet Model', function() {
     var terria;
@@ -27,7 +30,7 @@ describe('Leaflet Model', function() {
         container = document.createElement('div');
         container.id = 'container';
         document.body.appendChild(container);
-        map = L.map('container').setView([-28.5, 135], 5);
+        map = L.map('container').setView([-28.5, 135], DEFAULT_ZOOM_LEVEL);
 
         spyOn(terria.tileLoadProgressEvent, 'raiseEvent');
 
@@ -140,42 +143,50 @@ describe('Leaflet Model', function() {
                 {
                     isEnabled: true,
                     isShown: true,
-                    imageryLayer: {
+                    imageryLayer: new CesiumTileLayer({
                         pickFeatures: jasmine.createSpy('pickFeatures').and.returnValue(deferred1.promise),
-                        imageryProvider: {
-                            url: 'http://example.com/1'
+                        url: 'http://example.com/1',
+                        ready: true,
+                        tilingScheme: {
+                            positionToTileXY: function() { return {x: 1, y: 2}}
                         }
-                    }
+                    })
                 },
                 {
                     isEnabled: true,
                     isShown: true,
-                    imageryLayer: {
+                    imageryLayer: new CesiumTileLayer({
                         pickFeatures: jasmine.createSpy('pickFeatures').and.returnValue(deferred2.promise),
-                        imageryProvider: {
-                            url: 'http://example.com/2'
+                        url: 'http://example.com/2',
+                        ready: true,
+                        tilingScheme: {
+                            positionToTileXY: function() { return {x: 4, y: 5}}
                         }
-                    }
+                    })
                 },
                 {
                     isEnabled: false,
                     isShown: true,
-                    imageryLayer: {
+                    imageryLayer: new CesiumTileLayer({
                         pickFeatures: jasmine.createSpy('pickFeatures'),
-                        imageryProvider: {
-                            url: 'http://example.com/3'
+                        url: 'http://example.com/3',
+                        ready: true,
+                        tilingScheme: {
+                            positionToTileXY: function() { return {x: 1, y: 2}}
                         }
-                    }
+                    })
                 },
                 {
                     isEnabled: false,
                     isShown: true,
-                    imageryLayer: {
+                    imageryLayer: new CesiumTileLayer({
                         pickFeatures: jasmine.createSpy('pickFeatures'),
-                        imageryProvider: {
-                            url: 'http://example.com/4'
+                        url: 'http://example.com/4',
+                        ready: true,
+                        tilingScheme: {
+                            positionToTileXY: function() { return {x: 1, y: 2}}
                         }
-                    }
+                    })
                 }
             ];
         });
@@ -195,16 +206,14 @@ describe('Leaflet Model', function() {
                     'http://example.com/2': {x: 400, y: 500, level: 600}
                 });
 
-                expect(terria.nowViewing.items[0].imageryLayer.pickFeatures.calls.argsFor(0)[3]).toEqual({
-                    x: 100,
-                    y: 200
-                });
-                expect(terria.nowViewing.items[0].imageryLayer.pickFeatures.calls.argsFor(0)[4]).toBe(300);
-                expect(terria.nowViewing.items[1].imageryLayer.pickFeatures.calls.argsFor(0)[3]).toEqual({
-                    x: 400,
-                    y: 500
-                });
-                expect(terria.nowViewing.items[1].imageryLayer.pickFeatures.calls.argsFor(0)[4]).toBe(600);
+                expect(terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(0)[0]).toBe(100);
+                expect(terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(0)[1]).toBe(200);
+                expect(terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(0)[2]).toBe(300);
+
+
+                expect(terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(0)[0]).toBe(400);
+                expect(terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(0)[1]).toBe(500);
+                expect(terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures.calls.argsFor(0)[2]).toBe(600);
             });
 
             it('adds existingFeatures to end result', function(done) {
@@ -322,14 +331,14 @@ describe('Leaflet Model', function() {
                 });
 
                 it('calls pickFeatures for all enabled and shown layers', function() {
-                    expect(terria.nowViewing.items[0].imageryLayer.pickFeatures).toHaveBeenCalledWith(
-                        leaflet.map, CesiumMath.toRadians(50), CesiumMath.toRadians(50), undefined, undefined
+                    expect(terria.nowViewing.items[0].imageryLayer.imageryProvider.pickFeatures).toHaveBeenCalledWith(
+                        1, 2, DEFAULT_ZOOM_LEVEL, CesiumMath.toRadians(50), CesiumMath.toRadians(50)
                     );
-                    expect(terria.nowViewing.items[1].imageryLayer.pickFeatures).toHaveBeenCalledWith(
-                        leaflet.map, CesiumMath.toRadians(50), CesiumMath.toRadians(50), undefined, undefined
+                    expect(terria.nowViewing.items[1].imageryLayer.imageryProvider.pickFeatures).toHaveBeenCalledWith(
+                        4, 5, DEFAULT_ZOOM_LEVEL, CesiumMath.toRadians(50), CesiumMath.toRadians(50)
                     );
-                    expect(terria.nowViewing.items[2].imageryLayer.pickFeatures).not.toHaveBeenCalled();
-                    expect(terria.nowViewing.items[3].imageryLayer.pickFeatures).not.toHaveBeenCalled();
+                    expect(terria.nowViewing.items[2].imageryLayer.imageryProvider.pickFeatures).not.toHaveBeenCalled();
+                    expect(terria.nowViewing.items[3].imageryLayer.imageryProvider.pickFeatures).not.toHaveBeenCalled();
                 });
 
                 describe('after pickFeatures returns for all layers', function() {
@@ -347,8 +356,8 @@ describe('Leaflet Model', function() {
 
                     it('records pick coords', function() {
                         expect(terria.pickedFeatures.providerCoords).toEqual({
-                            'http://example.com/1': {x: 1, y: 2, level: 3},
-                            'http://example.com/2': {x: 4, y: 5, level: 6}
+                            'http://example.com/1': {x: 1, y: 2, level: DEFAULT_ZOOM_LEVEL},
+                            'http://example.com/2': {x: 4, y: 5, level: DEFAULT_ZOOM_LEVEL}
                         });
                     });
 
@@ -438,8 +447,8 @@ describe('Leaflet Model', function() {
             var featureInfo3 = new ImageryLayerFeatureInfo();
             featureInfo3.name = '3';
 
-            deferred1.resolve({features: [featureInfo1], coords: {x: 1, y: 2, level: 3}});
-            deferred2.resolve({features: [featureInfo2, featureInfo3], coords: {x: 4, y: 5, level: 6}});
+            deferred1.resolve([featureInfo1]);
+            deferred2.resolve([featureInfo2, featureInfo3]);
         }
     });
 });
