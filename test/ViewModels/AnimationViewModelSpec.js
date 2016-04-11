@@ -5,9 +5,6 @@ var AnimationViewModel = require('../../lib/ViewModels/AnimationViewModel');
 var Terria = require('../../lib/Models/Terria');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var L = require('leaflet');
-var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
-var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
 
 describe('AnimationViewModel', function() {
     var terria, catalogItem;
