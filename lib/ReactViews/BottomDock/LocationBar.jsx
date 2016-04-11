@@ -242,7 +242,7 @@ const LocationBar = React.createClass({
                         <div className='lon'><span>Lon</span><span>{this.state.longitude}</span></div>
                     </li>);
         }
-        return (<li class="location-bar--zone">
+        return (<li className="location-bar--zone">
                     <div className='zone'><span>ZONE</span><span>{this.state.utmZone}</span></div>
                     <div className='e'><span>E</span><span>{this.state.east}</span></div>
                     <div className='n'><span>N</span><span>{this.state.north}</span></div>

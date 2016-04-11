@@ -1,6 +1,3 @@
-'use strict';
-
-/*global require*/
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import VarType from '../../Map/VarType';

@@ -25,7 +25,7 @@ export default React.createClass({
     },
 
     hasValue() {
-        return !!this.state.text.length
+        return !!this.state.text.length;
     },
 
     searchWithDebounce() {

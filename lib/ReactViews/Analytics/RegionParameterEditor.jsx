@@ -1,6 +1,3 @@
-'use strict';
-
-/*global require*/
 import defined from 'terriajs-cesium/Source/Core/defined';
 import GeoJsonCatalogItem from '../../Models/GeoJsonCatalogItem';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';

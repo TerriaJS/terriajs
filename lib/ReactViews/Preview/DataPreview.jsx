@@ -65,7 +65,7 @@ const DataPreview = React.createClass({
             return <DataPreviewMap terria={this.props.terria}
                                previewedCatalogItem={previewed}
                 />;
-            }
+        }
         return null;
     },
 

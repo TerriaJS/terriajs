@@ -115,7 +115,7 @@ const AddData = React.createClass({
 
     getDefaultProps: function() {
         return {
-          allowDropInitFiles: true
+            allowDropInitFiles: true
         };
     },
 

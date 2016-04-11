@@ -27,7 +27,7 @@ const SidePanel = React.createClass({
     getInitialState() {
         return {
             searchText: ''
-        }
+        };
     },
 
     search(newText) {

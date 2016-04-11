@@ -46,8 +46,6 @@ gulp.task('watch-specs', function(done) {
     watchWebpack(webpackConfig, done);
 });
 
-
-
 gulp.task('make-schema', function() {
     var genSchema = require('generate-terriajs-schema');
 

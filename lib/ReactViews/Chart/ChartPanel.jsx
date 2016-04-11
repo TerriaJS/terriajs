@@ -75,7 +75,7 @@ const ChartPanel = React.createClass({
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
     },
 
-    toggleBodyClass(isVisible){
+    toggleBodyClass(isVisible) {
         const body = document.body;
         if(isVisible) {
             ClassList(body).add('chart-is-visible');

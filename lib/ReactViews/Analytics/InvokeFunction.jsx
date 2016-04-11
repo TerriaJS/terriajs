@@ -28,9 +28,9 @@ const InvokeFunction = React.createClass({
     },
 
     submit() {
-      const that = this;
-      console.log(this._parameterValues);
-      try {
+        const that = this;
+        console.log(this._parameterValues);
+        try {
           const promise = when(this.props.previewed.invoke(this._parameterValues)).otherwise(function(terriaError) {
               if (terriaError instanceof TerriaError) {
                   that.props.previewed.terria.error.raiseEvent(terriaError);
@@ -64,7 +64,7 @@ const InvokeFunction = React.createClass({
     },
 
     getParams() {
-       return this.props.previewed.parameters.map((param, i)=>
+        return this.props.previewed.parameters.map((param, i)=>
         <ParameterEditor key={param.id}
                          parameter={param}
                          viewState={this.props.viewState}

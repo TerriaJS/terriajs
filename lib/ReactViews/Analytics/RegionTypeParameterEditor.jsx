@@ -1,6 +1,3 @@
-'use strict';
-
-/*global require*/
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';

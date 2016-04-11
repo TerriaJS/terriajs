@@ -1,6 +1,3 @@
-'use strict';
-
-/*global require*/
 import React from 'react';
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
@@ -26,7 +23,7 @@ const PointParameterEditor = React.createClass({
         };
     },
 
-    onTextChange(e){
+    onTextChange(e) {
         this.setValue(e.target.value);
         this.setState({
             value: e.target.value
@@ -36,20 +33,20 @@ const PointParameterEditor = React.createClass({
     getValue() {
         const cartographic = this.props.parameterValues[this.props.parameter.id];
         if (defined(cartographic)) {
-                return CesiumMath.toDegrees(cartographic.longitude) + ',' + CesiumMath.toDegrees(cartographic.latitude);
+            return CesiumMath.toDegrees(cartographic.longitude) + ',' + CesiumMath.toDegrees(cartographic.latitude);
         } else {
             return '';
         }
     },
 
-    setValue(value){
+    setValue(value) {
         const coordinates = value.split(',');
         if (coordinates.length >= 2) {
             this.props.parameterValues[this.props.parameter.id] = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
         }
     },
 
-    selectPointOnMap(){
+    selectPointOnMap() {
         const terria = this.props.previewed.terria;
         const that = this;
         // Cancel any feature picking already in progress.
@@ -78,7 +75,7 @@ const PointParameterEditor = React.createClass({
         that.props.viewState.toggleModal(false);
     },
 
-    render(){
+    render() {
         return <div className=''>
                     <input className='field field--parameter-editor' type="text" onChange={this.onTextChange} value={this.state.value}/>
                     <button type='button' onClick={this.selectPointOnMap} className='btn btn-primary btn-selector'>Select location</button>
