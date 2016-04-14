@@ -6,8 +6,16 @@
         "commonjs": true
     },
     "plugins": [
-        "react"
+        "react",
+        "jsx-control-statements"
     ],
+    "globals": {
+        "If": true,
+        "Else": true,
+        "For": true,
+        "When": true,
+        "Otherwise": true
+    },
     "rules": {
         /*Possible Errors */
         "no-cond-assign": [1, "except-parens"],
@@ -107,7 +115,8 @@
         "no-shadow-restricted-names": 1,
         "no-shadow": 0,
         "no-undef-init": 1,
-        "no-undef": 1,
+        "no-undef": 0,
+        "jsx-control-statements/jcs-no-undef": 2,
         "no-undefined": 0,
         "no-unused-vars": [1, {
             "vars": "local",

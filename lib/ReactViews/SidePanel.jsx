@@ -1,5 +1,3 @@
-'use strict';
-
 import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
 import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
 import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';

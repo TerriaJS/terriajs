@@ -7,7 +7,6 @@ import ReactTestUtils from 'react-addons-test-utils';
 import {getMountedInstance, findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
 
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
-import Iso8601 from 'terriajs-cesium/Source/Core/Iso8601';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';

@@ -1,13 +1,16 @@
 {
   "parser": "babel-eslint",
+
   "env": {
     "browser": true,
     "commonjs": true
   },
   "rules": {
-    "valid-jsdoc": 1,
-    "consistent-return": 1,
-    "no-else-return": 1,
+    "react/no-danger": 0,
+    "valid-jsdoc": 0,
+    "require-jsdoc": 1,
+    "consistent-return": 0,
+    "no-else-return": 0,
     "no-multi-spaces": 1,
     "no-multi-str": 1,
     "vars-on-top": 1,

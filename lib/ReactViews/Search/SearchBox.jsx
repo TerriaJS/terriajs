@@ -9,7 +9,8 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 export default React.createClass({
     propTypes: {
         initialSearchText: React.PropTypes.string,
-        onSearchTextChanged: React.PropTypes.func.isRequired
+        onSearchTextChanged: React.PropTypes.func.isRequired,
+        initialText: React.PropTypes.string
     },
 
     getDefaultProps() {
@@ -70,7 +71,7 @@ export default React.createClass({
 
     render() {
         const clearButton = (
-            <button type='button' className='btn btn--search-clear' onClick={this.clearSearch}></button>
+            <button type='button' className='btn btn--search-clear' onClick={this.clearSearch} />
         );
 
         return (

@@ -9,13 +9,13 @@ import NowViewingContainer from '../NowViewing/NowViewingContainer.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
-
 const MobileModalWindow = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object,
-        searches: React.PropTypes.array
+        searches: React.PropTypes.array,
+        viewState: React.PropTypes.object.isRequired
     },
 
     renderModalContent() {
@@ -71,7 +71,7 @@ const MobileModalWindow = React.createClass({
     },
 
     render() {
-        return <div className={classNames('modal--mobile', {'is-open' : this.props.viewState.modalVisible && this.props.viewState.mobileView})}>
+        return <div className={classNames('modal--mobile', {'is-open': this.props.viewState.modalVisible && this.props.viewState.mobileView})}>
                     {this.renderModalContent()}
                     {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button type='button' className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Done</button>}
                 </div>;

@@ -3,8 +3,6 @@
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import SearchHeader from './Search/SearchHeader.jsx';
-import SearchBox from './Search/SearchBox.jsx';
-import classNames from 'classnames';
 import LocationItem from './LocationItem.jsx';
 
 // Handle any of the three kinds of search based on the props
@@ -12,7 +10,9 @@ export default React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        searches: React.PropTypes.array
+        searches: React.PropTypes.array,
+        viewState: React.PropTypes.object.isRequired,
+        searchText: React.PropTypes.string
     },
 
     getDefaultProps() {

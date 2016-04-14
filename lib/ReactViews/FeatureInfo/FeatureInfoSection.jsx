@@ -5,7 +5,6 @@ import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
 
-// import arraysAreEqual from '../../Core/arraysAreEqual';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
@@ -31,7 +30,11 @@ const FeatureInfoSection = React.createClass({
         };
     },
 
-    componentDidMount() {
+    componentWillUnmount() {
+        if (defined(this.state.clockSubscription)) {
+            // Remove the event listener.
+            this.state.clockSubscription();
+        }
         const feature = this.props.feature;
         if (!this.isConstant()) {
             this.setState({
@@ -39,13 +42,6 @@ const FeatureInfoSection = React.createClass({
                     setCurrentFeatureValues(feature, clock.currentTime);
                 })
             });
-        }
-    },
-
-    componentWillUnmount() {
-        if (defined(this.state.clockSubscription)) {
-            // Remove the event listener.
-            this.state.clockSubscription();
         }
     },
 
@@ -119,6 +115,13 @@ const FeatureInfoSection = React.createClass({
     }
 });
 
+/**
+ * Gets a map of property labels to property values for a feature at the provided clock's time.
+ *
+ * @param {Entity} feature a feature to get values for
+ * @param {Clock} clock a clock to get the time from
+ * @param {Object} [formats] A map of property labels to the number formats that should be applied for them.
+ */
 function propertyValues(feature, clock, formats) {
     // Manipulate the properties before templating them.
     // If they require .getValue, apply that.
@@ -132,6 +135,12 @@ function propertyValues(feature, clock, formats) {
     return result;
 }
 
+/**
+ * Formats values in an object if their keys match the provided formats object.
+ *
+ * @param {Object} properties a map of property labels to property values.
+ * @param {Object} formats A map of property labels to the number formats that should be applied for them.
+ */
 function applyFormatsInPlace(properties, formats) {
     // Optionally format each property. Updates properties in place, returning nothing.
     for (const key in formats) {
@@ -141,7 +150,9 @@ function applyFormatsInPlace(properties, formats) {
     }
 }
 
-// Recursively replace '.' and '#' in property keys with _, since Mustache cannot reference keys with these characters.
+/**
+ * Recursively replace '.' and '#' in property keys with _, since Mustache cannot reference keys with these characters.
+ */
 function replaceBadKeyCharacters(properties) {
     // if properties is anything other than an Object type, return it. Otherwise recurse through its properties.
     if (!properties || typeof properties !== 'object' || isArray(properties)) {
@@ -157,7 +168,12 @@ function replaceBadKeyCharacters(properties) {
     return result;
 }
 
-// To do : handle if feature.description is time-varying
+/**
+ * Determines whether all properties in the provided properties object have an isConstant flag set - otherwise they're
+ * assumed to be time-varying.
+ *
+ * @returns {boolean}
+ */
 function areAllPropertiesConstant(properties) {
     // test this by assuming property is time-varying only if property.isConstant === false.
     // (so if it is undefined or true, it is constant.)
@@ -187,6 +203,13 @@ function areAllPropertiesConstant(properties) {
 //     return newObject;
 // }
 
+/**
+ * Gets properties from a feature at the provided time.
+ *
+ * @param {Entity} feature
+ * @param {JulianDate} currentTime
+ * @returns {Object} The properties for that time.
+ */
 function getCurrentProperties(feature, currentTime) {
     // Use this instead of the straight feature.currentProperties, so it works the first time through.
     if (typeof feature.properties.getValue === 'function') {
@@ -195,6 +218,12 @@ function getCurrentProperties(feature, currentTime) {
     return feature.properties;
 }
 
+/**
+ * Gets a text description for the provided feature at a certain time.
+ * @param {Entity} feature
+ * @param {JulianDate} currentTime
+ * @returns {String}
+ */
 function getCurrentDescription(feature, currentTime) {
     if (typeof feature.description.getValue === 'function') {
         return feature.description.getValue(currentTime);
@@ -202,6 +231,11 @@ function getCurrentDescription(feature, currentTime) {
     return feature.description;
 }
 
+/**
+ * Updates {@link Entity#currentProperties} and {@link Entity#currentDescription} with the values at the provided time.
+ * @param {Entity} feature
+ * @param {JulianDate} currentTime
+ */
 function setCurrentFeatureValues(feature, currentTime) {
     const newProperties = getCurrentProperties(feature, currentTime);
     if (newProperties !== feature.currentProperties) {

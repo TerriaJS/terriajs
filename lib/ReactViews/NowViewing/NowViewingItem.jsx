@@ -18,7 +18,8 @@ const NowViewingItem = React.createClass({
         onDragStart: React.PropTypes.func,
         onDragOver: React.PropTypes.func,
         onDragEnd: React.PropTypes.func,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        setWrapperState: React.PropTypes.func
     },
 
     toggleDisplay() {

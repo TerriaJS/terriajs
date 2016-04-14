@@ -26,7 +26,6 @@ const Compass = React.createClass({
     },
 
     componentDidMount() {
-        // this.props.terria.afterViewerChanged.addEventListener(viewerChange);
         viewerChange(this);
     },
 
@@ -130,16 +129,14 @@ function rotate(viewModel, compassElement, cursorVector) {
     viewModel.isRotating = true;
     viewModel.rotateInitialCursorAngle = Math.atan2(-cursorVector.y, cursorVector.x);
 
-    let scene = viewModel.props.terria.cesium.scene;
-
+    const scene = viewModel.props.terria.cesium.scene;
     let camera = scene.camera;
-
-    let windowPosition = windowPositionScratch;
+    const windowPosition = windowPositionScratch;
     windowPosition.x = scene.canvas.clientWidth / 2;
     windowPosition.y = scene.canvas.clientHeight / 2;
-    let ray = camera.getPickRay(windowPosition, pickRayScratch);
+    const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-    let viewCenter = scene.globe.pick(ray, scene, centerScratch);
+    const viewCenter = scene.globe.pick(ray, scene, centerScratch);
     if (!defined(viewCenter)) {
         viewModel.rotateFrame = Transforms.eastNorthUpToFixedFrame(camera.positionWC, Ellipsoid.WGS84, newTransformScratch);
         viewModel.rotateIsLook = true;

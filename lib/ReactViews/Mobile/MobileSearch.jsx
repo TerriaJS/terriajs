@@ -45,7 +45,6 @@ const MobileSearch = React.createClass({
     },
 
     renderDataCatalogResult() {
-        const terria = this.props.terria;
         const search = this.props.searches
                       .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
 
@@ -69,10 +68,14 @@ const MobileSearch = React.createClass({
         return (
             <div className="search--mobile">
             <div className='search-results-toggle'>
-                <button type='button' className={classNames('search--location', 'btn', {'is-active' : this.state.searchResultType === 0})}
-                        onClick={this.toggleSearchResults.bind(this, 0)}>Location</button>
-                <button type='button' className={classNames('search--data', 'btn', {'is-active' : this.state.searchResultType === 1})}
-                        onClick={this.toggleSearchResults.bind(this, 1)}>Data</button>
+                <button type='button'
+                        className={classNames('search--location', 'btn', {'is-active': this.state.searchResultType === 0})}
+                        onClick={this.toggleSearchResults.bind(this, 0)}>Location
+                </button>
+                <button type='button'
+                        className={classNames('search--data', 'btn', {'is-active': this.state.searchResultType === 1})}
+                        onClick={this.toggleSearchResults.bind(this, 1)}>Data
+                </button>
             </div>
                 {this.state.searchResultType === 0 && this.renderLocationResult()}
                 {this.state.searchResultType === 1 && this.renderDataCatalogResult()}
