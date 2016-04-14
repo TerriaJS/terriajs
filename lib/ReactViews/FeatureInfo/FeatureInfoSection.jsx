@@ -44,11 +44,9 @@ const FeatureInfoSection = React.createClass({
     },
 
     generateTemplateData() {
-        if (this.props.template) {
-            this.setState({
-                templateData: propertyValues(this.props.feature, this.props.clock, this.props.template.formats)
-            });
-        }
+        this.setState({
+            templateData: propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats)
+        });
     },
 
     componentDidMount() {
@@ -146,12 +144,11 @@ const FeatureInfoSection = React.createClass({
                         <If condition={!this.hasTemplate() || this.state.showRawData}>
                             {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
 
-                            <If condition={this.hasTemplate()}>
-                                <FeatureInfoDownload key='download'
-                                                     viewState={this.props.viewState}
-                                                     data={this.state.templateData}
-                                                     name={this.props.catalogItem.name}/>
-                            </If>
+                            <FeatureInfoDownload key='download'
+                                                 viewState={this.props.viewState}
+                                                 data={this.state.templateData}
+                                                 name={this.props.catalogItem.name}/>
+
                         </If>
                     </section>
                 </If>

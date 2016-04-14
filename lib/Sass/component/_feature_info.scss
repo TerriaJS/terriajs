@@ -129,10 +129,14 @@
 }
 
 .feature-info-download {
-    float: right;
+  float: right;
+  margin: 10px 1px;
 }
 
 .feature-info-panel__raw-data-button {
-    width: auto;
-    float: right;
+  width: auto;
+  float: right;
+
+  margin-bottom: 13px;
+  margin-right: 1px;
 }

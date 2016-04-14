@@ -40,18 +40,21 @@ const Dropdown = React.createClass({
 
     resetDownloadDropdownPosition() {
         setTimeout(() => {
-            this.setState({
-                dropdownPosition: {
-                    top: 'inherit',
-                    left: 'inherit',
-                    right: 'inherit'
-                }
-            });
+            if (!this.dismounted) {
+                this.setState({
+                    dropdownPosition: {
+                        top: 'inherit',
+                        left: 'inherit',
+                        right: 'inherit'
+                    }
+                });
+            }
         }, 100);
     },
 
     componentWillUnmount() {
-        this.hideList();
+        this.removeListeners();
+        this.dismounted = true;
     },
 
     hideList() {
@@ -60,7 +63,10 @@ const Dropdown = React.createClass({
         });
 
         this.resetDownloadDropdownPosition();
+        this.removeListeners();
+    },
 
+    removeListeners() {
         document.body.removeEventListener('click', this.hideList);
         this.buttonElement.removeEventListener('click', this.nativeButtonListener);
         this.nativeButtonListener = undefined;
