@@ -21,7 +21,7 @@
   }
   .is-open & {
     @media(screen and min-width: $sm){
-      @include transform(translateX(0));
+      @include transform(none);
       opacity: 1;
       visibility: visible;
     }

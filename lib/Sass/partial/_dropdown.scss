@@ -1,50 +1,60 @@
-.dropdown{
-  .dropdown__list{
+.dropdown {
+  position: relative;
+
+  .dropdown__list {
     @extend .list-reset;
+
+    @include transform (scaleY(0) translateZ(0));
+    @include transition($animation-fast transform cubic-bezier(0.19, 1, 0.22, 1));
+    @include transform-origin(center, top);
     overflow: hidden;
-    position: absolute;
+    position: fixed;
     z-index: 9999;
     box-sizing: border-box;
     background: #fff;
-    max-height: 0;
-    overflow-y: auto;
     border-radius: $radius-small;
-    @include transition(all, $animation-fast, cubic-bezier(0.19, 1, 0.22, 1));
+    @include transition(transform, $animation-fast);
   }
-    &.is-open{
-    .dropdown__list{
-      max-height: none;
+//cubic-bezier(0.19, 1, 0.22, 1)
+  &.is-open {
+    .dropdown__list {
+      transform: scaleY(1) translateY(0)
     }
   }
 }
 
 //drop down for chart
 .preview-chart-wrapper {
-  .dropdown{
+  .dropdown {
     position: relative;
     display: inline-block;
   }
-  .dropdown__list{
-        @extend .flex;
-        right: 3px;
-        top: 25px;
-    }
+  .dropdown__list {
+    @extend .flex;
+  }
 }
 
-.my-data{
-  .dropdown{
-      position: relative;
-      width: 100%;
-    .dropdown__list{
-        left: 0;
-        width: 100%;
-        box-shadow: $box-shadow;
-        margin-top: $padding-small;
+.my-data {
+  .dropdown {
+    position: relative;
+    width: 100%;
+
+    .dropdown__list {
+      box-shadow: $box-shadow;
+      margin-top: $padding-small;
     }
-    &.is-open{
-      .dropdown__list{
-        max-height: 190px;
+
+    &.is-open {
+      .dropdown__list {
+        height: 190px;
+        overflow-y: auto;
       }
     }
+  }
+}
+
+.feature-info-download {
+  .dropdown__list {
+    @extend .flex;
   }
 }

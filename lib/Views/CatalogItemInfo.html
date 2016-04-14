@@ -45,7 +45,12 @@
             </div>
             <!-- /ko -->
 
-            <!-- ko if: !catalogItem.hasDescription -->
+            <!-- ko if: catalogItem.dataUrlType === 'local' -->
+            <div class="catalog-item-info-section">
+                <div class="catalog-item-info-description">This file only exists in your browser. To share it, you must load it onto a public web server.</div>
+            </div>
+            <!-- /ko -->
+            <!-- ko if: catalogItem.dataUrlType !== 'local' && !catalogItem.hasDescription -->
             <div class="catalog-item-info-section">
                 <div class="catalog-item-info-description">Please contact the provider of this data for more information, including information about usage rights and constraints.</div>
             </div>

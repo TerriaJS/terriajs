@@ -30,18 +30,33 @@
   color: #fff;
   border-radius: $radius-small;
   display: none;
+
   &.is-visible{
     display: block;
     z-index: 10;
   }
+
   &, .btn, li{
     font-size: $font-size-small;
   }
+
+  .btn {
+    padding: 4px 9px;
+    margin-right: 4px;
+  }
+
+  .btn--download {
+    padding: 3px;
+    width: 27px;
+    margin-left: 3px;
+  }
+
   &.is-collapsed{
     .feature-info-panel__body{
       display: none;
     }
   }
+
 }
 
 .feature-info-panel__section {
@@ -111,4 +126,17 @@
   td{
     position: relative;
   }
+}
+
+.feature-info-download {
+  float: right;
+  margin: 10px 1px;
+}
+
+.feature-info-panel__raw-data-button {
+  width: auto;
+  float: right;
+
+  margin-bottom: 13px;
+  margin-right: 1px;
 }

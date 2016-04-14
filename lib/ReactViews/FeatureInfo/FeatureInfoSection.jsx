@@ -4,10 +4,12 @@ import Mustache from 'mustache';
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
+import classNames from 'classnames';
 
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import FeatureInfoDownload from './FeatureInfoDownload';
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) { return string; };
@@ -16,6 +18,7 @@ Mustache.escape = function(string) { return string; };
 const FeatureInfoSection = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
+        viewState: React.PropTypes.object.isRequired,
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
         feature: React.PropTypes.object,
         clock: React.PropTypes.object,
@@ -26,7 +29,8 @@ const FeatureInfoSection = React.createClass({
 
     getInitialState() {
         return {
-            clockSubscription: undefined
+            clockSubscription: undefined,
+            showRawData: false
         };
     },
 
@@ -35,6 +39,23 @@ const FeatureInfoSection = React.createClass({
             // Remove the event listener.
             this.state.clockSubscription();
         }
+    },
+
+    componentWillMount() {
+        this.generateTemplateData();
+    },
+
+    componentWillReceiveProps() {
+        this.generateTemplateData();
+    },
+
+    generateTemplateData() {
+        this.setState({
+            templateData: propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats)
+        });
+    },
+
+    componentDidMount() {
         const feature = this.props.feature;
         if (!this.isConstant()) {
             this.setState({
@@ -51,27 +72,23 @@ const FeatureInfoSection = React.createClass({
         }
     },
 
+    hasTemplate() {
+        return this.props.template && (typeof this.props.template === 'string' || this.props.template.template);
+    },
+
+    descriptionFromTemplate() {
+        const template = this.props.template;
+        return typeof template === 'string' ?
+            Mustache.render(template, this.state.templateData) :
+            Mustache.render(template.template, this.state.templateData, template.partials);
+    },
+
     descriptionFromFeature() {
         const feature = this.props.feature;
-        const clock = this.props.clock;
-        const template = this.props.template;
-        if (defined(template)) {
-            const context = propertyValues(feature, clock, template.formats);
-            if (typeof template === 'string') {
-                return Mustache.render(template, context);
-            }
-            if (defined(template.template)) {
-                return Mustache.render(template.template, context, template.partials);
-            }
-            // Eg. template might only specify a name, eg. {name: '{{foo}}'}; in this case, fall back on the description field.
-        }
-        const description = feature.currentDescription || getCurrentDescription(feature, clock.currentTime);
-        // if (description && description.properties) {
-        //     return JSON.stringify(description.properties);
-        // }
+
         // TODO: This description could contain injected <script> tags etc. We must sanitize it.
         // But do not escape it completely, because it also contains important html markup, eg. <table>.
-        return description;
+        return feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
     },
 
     renderDataTitle() {
@@ -99,17 +116,41 @@ const FeatureInfoSection = React.createClass({
         return isConstant;
     },
 
+    toggleRawData() {
+        this.setState({
+            showRawData: !this.state.showRawData
+        });
+    },
+
     render() {
         // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         return (
-            <li className={'feature-info-panel__section ' + (this.props.isOpen ? 'is-open' : '')}>
-                <button type='button' onClick={this.clickHeader} className={'btn feature-info-panel__title ' + (this.props.isOpen ? 'is-open' : '')}>{catalogItemName} - {this.renderDataTitle()}</button>
-                {this.props.isOpen &&
+            <li className={classNames('feature-info-panel__section', {'is-open': this.props.isOpen})}>
+                <button type='button' onClick={this.clickHeader}
+                        className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
+                    {catalogItemName} - {this.renderDataTitle()}
+                </button>
+                <If condition={this.props.isOpen}>
                     <section className='feature-info-panel__content'>
-                        {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
+                        <If condition={this.hasTemplate()}>
+                            {renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature)}
+                            <button type="button" className="btn btn-primary feature-info-panel__raw-data-button" onClick={this.toggleRawData}>
+                                {this.state.showRawData ? 'Hide' : 'Show'} Raw Data
+                            </button>
+                        </If>
+
+                        <If condition={!this.hasTemplate() || this.state.showRawData}>
+                            {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
+
+                            <FeatureInfoDownload key='download'
+                                                 viewState={this.props.viewState}
+                                                 data={this.state.templateData}
+                                                 name={this.props.catalogItem.name}/>
+
+                        </If>
                     </section>
-                }
+                </If>
             </li>
         );
     }

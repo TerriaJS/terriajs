@@ -10,7 +10,7 @@ $chart-darker: darken($dark, 8%);
 .line-chart .axis path,
 .line-chart .axis line {
   fill: none;
-  stroke: none;  // Hide the axes if the chart is outside the chart panel.
+  stroke: none; // Hide the axes if the chart is outside the chart panel.
   stroke-width: 1px;
   shape-rendering: crispEdges;
 }
@@ -18,6 +18,7 @@ $chart-darker: darken($dark, 8%);
 .chart-panel .line-chart .axis path.domain {
   stroke: $chart-axis-color;
 }
+
 .chart-panel .line-chart .axis .tick line {
   stroke: $chart-grid-color;
 }
@@ -69,7 +70,7 @@ $chart-darker: darken($dark, 8%);
   padding-bottom: 13px;
   @media(screen and min-width: $sm) {
     left: $work-bench-width;
-    .is-full-screen &{
+    .is-full-screen & {
       left: 0;
     }
   }
@@ -79,7 +80,7 @@ $chart-darker: darken($dark, 8%);
   position: relative;
   background-color: $chart-darker;
   font-size: 13px;
-  label, .btn{
+  label, .btn {
     display: inline-block;
     vertical-align: top;
   }
@@ -88,11 +89,11 @@ $chart-darker: darken($dark, 8%);
     color: #fff;
     float: right;
     margin-right: $input-height;
-    &:hover, &:focus{
+    &:hover, &:focus {
       text-decoration: none;
       color: $color-primary;
     }
-    &:before{
+    &:before {
       display: inline-block;
     }
   }
@@ -112,7 +113,7 @@ $chart-darker: darken($dark, 8%);
   right: 0;
   top: 0;
   &:hover,
-  &:focus{
+  &:focus {
     color: $color-primary;
   }
 }
@@ -174,7 +175,6 @@ $chart-darker: darken($dark, 8%);
 .chart-expand .btn--dropdown {
   // largely to undo .btn--dropdown
   // It would be better to add a class to the Add Data dropdown instead.
-  background: $color-primary;
   z-index: 999;
   color: white; // TODO
   font-family: $font-pop;
@@ -185,23 +185,13 @@ $chart-darker: darken($dark, 8%);
   float: right;
 }
 
-.chart-expand a.btn {
-  color: white; // TODO
-  &:hover, &:focus{
-    text-decoration: none;
-  }
-}
-.chart-expand a.btn--dropdown-option {
-  color: $color-primary;
-}
-
 .chart-dropdown-button .btn--dropdown-option {
   width: auto;
   float: left;
   color: $color-primary;
-  &:hover, &:focus{
+  &:hover, &:focus {
     background: $color-primary;
-    color: orange;  // TODO
+    color: orange; // TODO
   }
 }
 
@@ -241,33 +231,44 @@ $chart-darker: darken($dark, 8%);
   margin-left: -5px;
 }
 
-.preview-chart-wrapper{
+.preview-chart-wrapper {
   position: relative;
 }
 
 .chart-panel .axis .colors path {
   stroke-width: 2;
 }
-.chart-expand{
-  .btn--download{
+
+.chart-expand {
+  a.btn {
+    color: white; // TODO
+    &:hover, &:focus {
+      text-decoration: none;
+    }
+  }
+
+  a.btn--dropdown-option {
+    color: $color-primary;
+  }
+
+  .btn--download {
     width: $input-height;
-    background: $color-primary;
     display: inline-block;
-    padding: 0px;
     text-align: center;
-    &:before{
+    &:before {
       line-height: 22px;
     }
   }
-  .btn--chart-expand{
+
+  .btn--chart-expand {
     display: inline-block;
   }
 }
 
-.chart-panel__section-label{
-  .loader{
+.chart-panel__section-label {
+  .loader {
     padding: 0px 0px 0px $padding*3 !important;
-    &:before{
+    &:before {
       top: 0px;
     }
   }
