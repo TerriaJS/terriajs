@@ -41,6 +41,7 @@
     "compression": "^1.4.3",
     "cors": "^2.5.3",
     "eslint": "^1.10.3",
+    "eslint-plugin-jsx-control-statements": "^1.1.0",
     "eslint-plugin-react": "^3.15.0",
     "exorcist": "^0.1.6",
     "express": "^4.12.3",

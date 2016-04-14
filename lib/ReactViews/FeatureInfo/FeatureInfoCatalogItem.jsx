@@ -12,7 +12,8 @@ const FeatureInfoCatalogItem = React.createClass({
     propTypes: {
         features: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
-        terria: React.PropTypes.object.isRequired
+        terria: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired
     },
 
     toggleOpenFeature(feature) {
@@ -45,6 +46,7 @@ const FeatureInfoCatalogItem = React.createClass({
                 featureInfoSections = features.slice(0, maximumShownFeatureInfos).map((feature, i) => {
                     return (
                         <FeatureInfoSection key={i}
+                            viewState={this.props.viewState}
                             catalogItem={catalogItem}
                             feature={feature}
                             clock={terria.clock}

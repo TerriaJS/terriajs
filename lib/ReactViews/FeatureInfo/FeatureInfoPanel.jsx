@@ -57,17 +57,39 @@ const FeatureInfoPanel = React.createClass({
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.featureInfoPanel);
     },
 
+    getFeatureInfoCatalogItems() {
+        const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
+
+        return catalogItems.map((catalogItem, i) => {
+            // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
+            const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);
+            return (
+                <FeatureInfoCatalogItem
+                    key={i}
+                    viewState={this.props.viewState}
+                    catalogItem={catalogItem}
+                    features={features}
+                    terria={this.props.terria}
+                />
+            );
+        });
+    },
+
     render() {
         const terria = this.props.terria;
         const componentOnTop = (this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.featureInfoPanel);
-        const featureInfoCatalogItems = getFeatureInfoCatalogItems(terria);
+        const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
         return (
-            <div className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
+            <div
+                className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
                 aria-hidden={!this.props.isVisible}
-                onClick={this.bringToFront} >
+                onClick={this.bringToFront}>
                 <div className='feature-info-panel__header'>
-                    <button type='button' onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'> Feature Information </button>
-                    <button type='button' onClick={ this.props.onClose } className="btn btn--close-feature" title="Close data panel"></button>
+                    <button type='button' onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'>
+                        Feature Information
+                    </button>
+                    <button type='button' onClick={ this.props.onClose } className="btn btn--close-feature"
+                            title="Close data panel"/>
                 </div>
                 <ul className="feature-info-panel__body">
                     <Choose>
@@ -77,7 +99,7 @@ const FeatureInfoPanel = React.createClass({
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className='no-results'> No results </li>
+                            <li className='no-results'> No results</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}
@@ -89,23 +111,6 @@ const FeatureInfoPanel = React.createClass({
     }
 });
 
-function getFeatureInfoCatalogItems(terria) {
-
-    const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(terria);
-
-    return catalogItems.map((catalogItem, i) => {
-        // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
-        const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);
-        return (
-            <FeatureInfoCatalogItem
-                key={i}
-                catalogItem={catalogItem}
-                features={features}
-                terria={terria}
-            />
-        );
-    });
-}
 
 // Returns an object of {catalogItems, featureCatalogItemPairs}.
 function getFeaturesGroupedByCatalogItems(terria) {

@@ -48,6 +48,7 @@ $btn-setting-size: 35px;
 .btn-primary{
   display: block;
   background: $color-primary;
+  font-family: 'Open Sans', sans-serif;
   color: #fff;
   text-align: center;
   width: 100%;
@@ -486,7 +487,6 @@ a.btn--map{
   width: 100%;
   border: 2px solid $grey-lighter;
   color: $modal-text;
-  background: #fff;
   &:hover,
   &:focus{
     border-color:$color-primary;

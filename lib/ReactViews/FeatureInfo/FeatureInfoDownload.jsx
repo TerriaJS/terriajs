@@ -1,0 +1,113 @@
+import React from 'react';
+import ObserveModelMixin from '../ObserveModelMixin';
+import classNames from 'classnames';
+import Dropdown from '../Dropdown';
+import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
+
+const FeatureInfoDownload = React.createClass({
+    propTypes: {
+        data: React.PropTypes.object.isRequired,
+        name: React.PropTypes.string.isRequired,
+        viewState: React.PropTypes.object.isRequired,
+        canUseDataUri: React.PropTypes.bool
+    },
+
+    getDefaultProps() {
+        return {
+            canUseDataUri: !(FeatureDetection.isInternetExplorer() || /Edge/.exec(navigator.userAgent))
+        };
+    },
+
+    checkDataUriCompatibility(event) {
+        if (!this.props.canUseDataUri) {
+            event.preventDefault();
+
+            this.props.viewState.notifications.push({
+                title: 'Browser Does Not Support Data Download',
+                message: 'Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not ' +
+                'support the data uri functionality needed to download data as a file. To download, copy the following uri ' +
+                'into another browser such as Chrome, Firefox or Safari: ' + event.currentTarget.getAttribute('href')
+            });
+        }
+    },
+
+    getLinks() {
+        return [
+            {
+                href: makeDataUri('csv', generateCsvData(this.props.data)),
+                download: `${this.props.name}.csv`,
+                label: 'CSV'
+            },
+            {
+                href: makeDataUri('json', JSON.stringify(this.props.data)),
+                download: `${this.props.name}.json`,
+                label: 'JSON'
+            }
+        ].filter(download => !!download.href);
+    },
+
+    render() {
+        const links = this.getLinks();
+
+        return (
+            <Dropdown options={links}
+                      textProperty="label"
+                      className="feature-info-download"
+                      buttonClassName="btn-primary">
+                <i style={{display: 'inline-block'}} className="icon icon-download"/> Download Data&nbsp;▾
+            </Dropdown>
+        );
+    }
+});
+
+/**
+ * Turns a file with the supplied type and stringified data into a data uri that can be set as the href of an anchor tag.
+ */
+function makeDataUri(type, dataString) {
+    if (dataString) {
+        // Using attachment/* mime type makes safari download as attachment.
+        return 'data:attachment/' + type + ',' + encodeURIComponent(dataString);
+    } else {
+        return undefined;
+    }
+}
+
+/**
+ * Turns a 2-dimensional javascript object into a CSV string, with the first row being the property names and the second
+ * row being the data. If the object is too hierarchical to be made into a CSV, returns undefined.
+ */
+function generateCsvData(data) {
+    if (!data) {
+        return;
+    }
+    var row1 = [];
+    var row2 = [];
+
+    var keys = Object.keys(data);
+    for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        var type = typeof data[key];
+
+        // If data is too hierarchical to fit in a table, just return undefined as we can't generate a CSV.
+        if (type === 'object') { //covers both objects and arrays.
+            return;
+        }
+        if (type === 'function') {
+            // Ignore template functions we may add.
+            continue;
+        }
+
+        row1.push(makeSafeForCsv(key));
+        row2.push(makeSafeForCsv(data[key]));
+    }
+
+    return row1.join(',') + '\n' + row2.join(',');
+}
+
+function makeSafeForCsv(value) {
+    value = value ? `${value}` : '';
+
+    return '"' + value.replace(/"/g, '""') + '"';
+}
+
+export default FeatureInfoDownload;

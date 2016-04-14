@@ -62,7 +62,7 @@ const Chart = React.createClass({
         const chartParameters = this.getChartParameters();
         let promise;
         if (defined(chartParameters.data)) {
-            promise = when(LineChart.create(this._element, chartParameters));
+            promise = when(LineChart.create(this.buttonElement, chartParameters));
         } else if (defined(chartParameters.url) || defined(chartParameters.sourceData)) {
             const tableStructure = new TableStructure('feature info');
             const loadPromise = defined(chartParameters.sourceData)
@@ -84,12 +84,12 @@ const Chart = React.createClass({
                         color: defined(that.props.colors) ? that.props.colors[index] : undefined
                     })
                 );
-                LineChart.create(that._element, chartParameters);
+                LineChart.create(that.buttonElement, chartParameters);
                 that.setState({data: chartParameters.data});  // Triggers componentDidUpdate, so only do this after the line chart exists.
             }).otherwise(function(e) {
                 // It looks better to create a blank chart than no chart.
                 chartParameters.data = [];
-                LineChart.create(that._element, chartParameters);
+                LineChart.create(that.buttonElement, chartParameters);
                 that.setState({data: chartParameters.data});
                 throw new DeveloperError('Could not load chart data at ' + chartParameters.url);
             });
@@ -100,10 +100,10 @@ const Chart = React.createClass({
             // So we return the bound listener function from the promise.
             const resize = function() {
                 // This function basically the same as componentDidUpdate, but it speeds up transitions.
-                if (that._element) {
+                if (that.buttonElement) {
                     const localChartParameters = that.getChartParameters();
                     localChartParameters.transitionDuration = 1;
-                    LineChart.update(that._element, localChartParameters);
+                    LineChart.update(that.buttonElement, localChartParameters);
                 } else {
                     // This would happen if event listeners were not properly removed (ie. if you get this error, a bug was introduced to this code).
                     throw new DeveloperError('Missing chart DOM element ' + that.url);
@@ -116,7 +116,7 @@ const Chart = React.createClass({
     },
 
     componentDidUpdate() {
-        LineChart.update(this._element, this.getChartParameters());
+        LineChart.update(this.buttonElement, this.getChartParameters());
     },
 
     componentWillUnmount() {
@@ -124,8 +124,8 @@ const Chart = React.createClass({
         this._promise.then(function(listener) {
             window.removeEventListener('resize', listener);
             // console.log('Removed resize listener for', that.props.url, that.rnd, listener);
-            LineChart.destroy(that._element, that.getChartParameters());
-            that._element = undefined;
+            LineChart.destroy(that.buttonElement, that.getChartParameters());
+            that.buttonElement = undefined;
         });
         this._promise = undefined;
     },
@@ -189,7 +189,7 @@ const Chart = React.createClass({
 
     render() {
         return (
-            <div className='chart' ref={element=>{this._element = element;}}></div>
+            <div className='chart' ref={element=>{this.buttonElement = element;}}></div>
         );
     }
 });

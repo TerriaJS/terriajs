@@ -9,7 +9,7 @@ import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import TableStructure from '../../Map/TableStructure';
-import triggerResize from 'terriajs/lib/Core/triggerResize';
+import triggerResize from '../../Core/triggerResize';
 import VarType from '../../Map/VarType';
 
 const height = 250;
