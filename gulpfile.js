@@ -19,9 +19,10 @@ gulp.task('post-npm-install', ['copy-cesium-assets']);
 
 gulp.task('build-specs', function(done) {
     var runWebpack = require('./buildprocess/runWebpack.js');
+    var webpack = require('webpack');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
-    runWebpack(webpackConfig, done);
+    runWebpack(webpack, webpackConfig, done);
 });
 
 gulp.task('release-specs', function(done) {
@@ -29,7 +30,7 @@ gulp.task('release-specs', function(done) {
     var webpack = require('webpack');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
-    runWebpack(Object.assign({}, webpackConfig, {
+    runWebpack(webpack, Object.assign({}, webpackConfig, {
         devtool: 'source-map',
         plugins: [
             new webpack.optimize.UglifyJsPlugin(),
@@ -41,9 +42,10 @@ gulp.task('release-specs', function(done) {
 
 gulp.task('watch-specs', function(done) {
     var watchWebpack = require('./buildprocess/watchWebpack');
+    var webpack = require('webpack');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
-    watchWebpack(webpackConfig, done);
+    watchWebpack(webpack, webpackConfig, done);
 });
 
 gulp.task('make-schema', function() {
@@ -73,6 +75,7 @@ gulp.task('build-libs', function(done) {
     var glob = require('glob-all');
     var path = require('path');
     var runWebpack = require('./buildprocess/runWebpack.js');
+    var webpack = require('webpack');
     var webpackConfig = require('./buildprocess/webpack.lib.config.js');
 
     // Build an index.js to export all of the modules.
@@ -115,7 +118,7 @@ gulp.task('build-libs', function(done) {
 
     fs.writeFileSync('terria.lib.js', index);
 
-    runWebpack(webpackConfig, done);
+    runWebpack(webpack, webpackConfig, done);
 });
 
 gulp.task('docs', function() {
