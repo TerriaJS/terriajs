@@ -11,6 +11,7 @@ Change Log
 * Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
 * Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
 * Showed a message in the catalog item info panel that informs the user that a catalog item is local and can't be shared.
+* TerriaJS now obtains its list of domains that the proxy will proxy for from the `proxyableDomains/` service.  The URL can be overridden by setting `parameters.proxyableDomainsUrl` in `config.json`.
 
 ### 2.2.1
 
