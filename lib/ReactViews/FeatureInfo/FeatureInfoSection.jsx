@@ -34,13 +34,6 @@ const FeatureInfoSection = React.createClass({
         };
     },
 
-    componentWillUnmount() {
-        if (defined(this.state.clockSubscription)) {
-            // Remove the event listener.
-            this.state.clockSubscription();
-        }
-    },
-
     componentWillMount() {
         this.generateTemplateData();
 
@@ -51,6 +44,13 @@ const FeatureInfoSection = React.createClass({
                     setCurrentFeatureValues(feature, clock.currentTime);
                 })
             });
+        }
+    },
+
+    componentWillUnmount() {
+        if (defined(this.state.clockSubscription)) {
+            // Remove the event listener.
+            this.state.clockSubscription();
         }
     },
 
@@ -144,7 +144,7 @@ const FeatureInfoSection = React.createClass({
                             <FeatureInfoDownload key='download'
                                                  viewState={this.props.viewState}
                                                  data={this.state.templateData}
-                                                 name={this.props.catalogItem.name}/>
+                                                 name={this.props.catalogItem && this.props.catalogItem.name}/>
 
                         </If>
                     </section>

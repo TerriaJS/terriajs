@@ -120,8 +120,7 @@ describe('FeatureInfoSection', function() {
         const renderer = ReactTestUtils.createRenderer();
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         renderer.render(section);
-        getMountedInstance(renderer).componentDidMount();
-        // expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // currently true, but we don't want to require this implementation.
+        //expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // currently true, but we don't want to require this implementation.
         renderer.unmount();
         expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });

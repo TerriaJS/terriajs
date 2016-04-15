@@ -40,21 +40,9 @@ function configureWebpack(terriaJSBasePath, config) {
         loader: require.resolve('raw-loader')
     });
 
-    // Allow proj4 to load its package.json via require, for some reason.
     config.module.loaders.push({
-        test: require.resolve('proj4/package.json'),
-        loader: require.resolve('json-loader')
-    });
-
-    // Allow entities to load its json files.
-    config.module.loaders.push({
-        test: [
-            require.resolve('entities/maps/decode.json'),
-            require.resolve('entities/maps/entities.json'),
-            require.resolve('entities/maps/legacy.json'),
-            require.resolve('entities/maps/xml.json')
-        ],
-        loader: require.resolve('json-loader')
+        test: /\.json$/,
+        loader: "json"
     });
 
     // Don't let Cesium's `buildModuleUrl` and `TaskProcessor` see require - only the AMD version is relevant.
