@@ -1,11 +1,12 @@
 var notifier = require('node-notifier');
-var webpack = require('webpack');
 
-function watchWebpack(config, doneCallback) {
+function watchWebpack(webpack, config, doneCallback) {
+    // webpack is passed as a parameter instead of require-in because otherwise, when TerriaJS is npm link'd,
+    // node will end up loading two copies of webpack.  That causes problems with some plugins (e.g. dedupe).
     var wp = webpack(config);
     wp.watch({}, function(err, stats) {
         if (stats) {
-            // Fairly minimal output for 'gulp watch'. 
+            // Fairly minimal output for 'gulp watch'.
             console.log(stats.toString({
                 colors: true,
                 modules: false,
