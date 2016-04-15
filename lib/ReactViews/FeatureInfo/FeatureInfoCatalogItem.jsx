@@ -26,15 +26,15 @@ const FeatureInfoCatalogItem = React.createClass({
     },
 
     render() {
-        let featureInfoSections = null;
-        let maximumShownFeatureInfos = null;
-        let featureInfoTemplate;
-        let totalFeaturesCount = 0;
-        let hiddenNumber;
-
         const features = this.props.features;
         const catalogItem = this.props.catalogItem;
         const terria = this.props.terria;
+
+        let featureInfoSections = null;
+        let featureInfoTemplate;
+        let totalFeaturesCount = 0;
+        let hiddenNumber;
+        let maximumShownFeatureInfos = terria.configParameters.defaultMaximumShownFeatureInfos;
 
         if (defined(features)) {
             // Display no more than defined number of feature infos
@@ -42,22 +42,22 @@ const FeatureInfoCatalogItem = React.createClass({
             if (defined(catalogItem)) {
                 maximumShownFeatureInfos = catalogItem.maximumShownFeatureInfos;
                 featureInfoTemplate = catalogItem.featureInfoTemplate;
-                hiddenNumber = totalFeaturesCount - maximumShownFeatureInfos;  // A positive hiddenNumber => some are hidden; negative means none are.
-                featureInfoSections = features.slice(0, maximumShownFeatureInfos).map((feature, i) => {
-                    return (
-                        <FeatureInfoSection key={i}
-                            viewState={this.props.viewState}
-                            catalogItem={catalogItem}
-                            feature={feature}
-                            clock={terria.clock}
-                            template={featureInfoTemplate}
-                            isOpen={feature === terria.selectedFeature}
-                            onClickHeader={this.toggleOpenFeature}
-                        />
-                    );
-                });
-
             }
+            hiddenNumber = totalFeaturesCount - maximumShownFeatureInfos;  // A positive hiddenNumber => some are hidden; negative means none are.
+            featureInfoSections = features.slice(0, maximumShownFeatureInfos).map((feature, i) => {
+                return (
+                    <FeatureInfoSection key={i}
+                        viewState={this.props.viewState}
+                        catalogItem={catalogItem}
+                        feature={feature}
+                        clock={terria.clock}
+                        template={featureInfoTemplate}
+                        isOpen={feature === terria.selectedFeature}
+                        onClickHeader={this.toggleOpenFeature}
+                    />
+                );
+            });
+
         }
 
         return (

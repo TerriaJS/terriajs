@@ -23,7 +23,7 @@ const FeatureInfoSection = React.createClass({
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
         feature: React.PropTypes.object,
         clock: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,
+        catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
         isOpen: React.PropTypes.bool,
         onClickHeader: React.PropTypes.func
     },
@@ -147,7 +147,7 @@ const FeatureInfoSection = React.createClass({
                             <FeatureInfoDownload key='download'
                                                  viewState={this.props.viewState}
                                                  data={this.state.templateData}
-                                                 name={this.props.catalogItem.name}/>
+                                                 name={catalogItemName}/>
 
                         </If>
                     </section>
