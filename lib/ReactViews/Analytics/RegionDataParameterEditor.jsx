@@ -38,7 +38,7 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     toggleActive(catalogItem, column) {
-        var value = this.getValue();
+        const value = this.getValue();
         const newValue = !this.isActive(catalogItem, column);
 
         if (newValue) {
@@ -63,7 +63,7 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     isActive(catalogItem, column) {
-        var value = this.getValue();
+        let value = this.getValue();
 
         if (!defined(value)) {
             value = {};
@@ -151,11 +151,15 @@ const RegionDataParameterEditor = React.createClass({
             if (column.type === VarType.SCALAR) {
                 return <li key ={i}
                            className='clearfix data-catalog-item'>
+                            <button type='button'
+                                    onClick={this.toggleActive.bind(this, catalogItem, column)}
+                                    className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}>
+                                {column.name}
+                            </button>
                             <button type='button' onClick={this.toggleActive.bind(this, catalogItem, column)}
-                                    className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}
-                            >{column.name}</button>
-                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem, column)} title="add to map"
-                                    className={`btn btn--catalog-item--action ${this.isActive(catalogItem, column) ? 'btn--remove-from-map' : 'btn--add-to-map'}`}></button>
+                                    title="add to map"
+                                    className={`btn btn--catalog-item--action ${this.isActive(catalogItem, column) ? 'btn--remove-from-map' : 'btn--add-to-map'}`}
+                            />
                         </li>;
             }
         })}</ul>;

@@ -68,6 +68,9 @@ const ChartExpandButton = React.createClass({
 
 });
 
+/**
+ * Expands a chart into the bottom dock.
+ */
 function expand(props, url) {
     const terria = props.terria;
     const newCatalogItem = new CsvCatalogItem(terria, url);

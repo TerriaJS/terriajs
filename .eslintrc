@@ -14,6 +14,7 @@
         "Else": true,
         "For": true,
         "When": true,
+        "Choose": true,
         "Otherwise": true
     },
     "rules": {
@@ -179,7 +180,6 @@
         "no-unneeded-ternary": 1,
         "object-curly-spacing": 0, // see Babel section
         "one-var": [0, "never"],
-        "operator-assignment": [0, "never"],
         "padded-blocks": [0, "never"],
         "quote-props": [0, "as-needed"],
         "quotes": [0, "single"],

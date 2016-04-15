@@ -39,7 +39,7 @@ const DataCatalogTab = React.createClass({
                 <div className="data-explorer">
                     <SearchBox initialText={this.props.viewState.catalogSearch}
                                onSearchTextChanged={this.onSearchTextChanged}
-                               ref={ref => this.searchBox = ref} />
+                               ref={ref => {this.searchBox = ref;}} />
                     {this.renderDataCatalog()}
                 </div>
                 <div className="data-preview__wrapper">

@@ -102,7 +102,9 @@ const localDataType = [
     },
 ];
 
-// Add data panel in modal window -> My data tab
+/**
+ * Add data panel in modal window -> My data tab
+ */
 const AddData = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -280,6 +282,11 @@ const AddData = React.createClass({
     }
 });
 
+/**
+ * Loads data, automatically determining the format.
+ *
+ * @returns {Promise}
+ */
 function loadAuto(viewModel, loadFunctions, index) {
     index = 0;
     const loadFunction = loadFunctions[index];
@@ -289,6 +296,11 @@ function loadAuto(viewModel, loadFunctions, index) {
     });
 }
 
+/**
+ * Loads a Web Map Service catalog group.
+ *
+ * @returns {Promise}
+ */
 function loadWms(viewModel) {
     const wms = new WebMapServiceCatalogGroup(viewModel.props.terria);
     wms.name = viewModel.state.remoteUrl;
@@ -299,6 +311,11 @@ function loadWms(viewModel) {
     });
 }
 
+/**
+ * Loads a Web Feature Service catalog group.
+ *
+ * @returns {Promise}
+ */
 function loadWfs(viewModel) {
     const wfs = new WebFeatureServiceCatalogGroup(viewModel.props.terria);
     wfs.name = viewModel.state.remoteUrl;
@@ -309,6 +326,11 @@ function loadWfs(viewModel) {
     });
 }
 
+/**
+ * Loads a Web Map Tile Service catalog group.
+ *
+ * @returns {Promise}
+ */
 function loadWmts(viewModel) {
     const wmts = new WebMapTileServiceCatalogGroup(viewModel.props.terria);
     wmts.name = viewModel.state.remoteUrl;
@@ -319,6 +341,11 @@ function loadWmts(viewModel) {
     });
 }
 
+/**
+ * Loads an ArcGis catalog group.
+ *
+ * @returns {Promise.<T>}
+ */
 function loadMapServer(viewModel) {
     const mapServer = new ArcGisCatalogGroup(viewModel.props.terria);
     mapServer.name = viewModel.state.remoteUrl;
@@ -329,6 +356,11 @@ function loadMapServer(viewModel) {
     });
 }
 
+/**
+ * Loads a single ArcGis layer.
+ *
+ * @returns {Promise.<T>}
+ */
 function loadMapServerLayer(viewModel) {
     const mapServer = new ArcGisMapServerCatalogItem(viewModel.props.terria);
     mapServer.name = viewModel.state.remoteUrl;
@@ -338,6 +370,12 @@ function loadMapServerLayer(viewModel) {
     });
 }
 
+/**
+ * Loads an item from a open street map server.
+ *
+ * @param viewModel
+ * @returns {Promise.<T>}
+ */
 function loadOpenStreetMapServer(viewModel) {
     const openStreetMapServer = new OpenStreetMapCatalogItem(viewModel.props.terria);
     openStreetMapServer.name = viewModel.state.remoteUrl;
@@ -348,6 +386,9 @@ function loadOpenStreetMapServer(viewModel) {
     });
 }
 
+/**
+ * Loads a catalog item from a file.
+ */
 function loadFile(viewModel) {
     return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType, true);
 }

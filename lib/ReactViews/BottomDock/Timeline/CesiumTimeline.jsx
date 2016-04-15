@@ -54,7 +54,7 @@ const CesiumTimeline = React.createClass({
 
     render() {
         return (
-            <div className="timeline__cesium-timeline" ref={ref => this.timelineContainer = ref} />
+            <div className="timeline__cesium-timeline" ref={ref => {this.timelineContainer = ref;}} />
         );
     }
 });

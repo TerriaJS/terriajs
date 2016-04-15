@@ -1,6 +1,4 @@
 import React from 'react';
-import ObserveModelMixin from '../ObserveModelMixin';
-import classNames from 'classnames';
 import Dropdown from '../Dropdown';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 
@@ -14,7 +12,7 @@ const FeatureInfoDownload = React.createClass({
 
     getDefaultProps() {
         return {
-            canUseDataUri: !(FeatureDetection.isInternetExplorer() || /Edge/.exec(navigator.userAgent))
+            canUseDataUri: !(FeatureDetection.isInternetExplorer() || (/Edge/).exec(navigator.userAgent))
         };
     },
 
@@ -80,16 +78,17 @@ function generateCsvData(data) {
     if (!data) {
         return;
     }
-    var row1 = [];
-    var row2 = [];
 
-    var keys = Object.keys(data);
-    for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
-        var type = typeof data[key];
+    const row1 = [];
+    const row2 = [];
+    const keys = Object.keys(data);
+
+    for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        const type = typeof data[key];
 
         // If data is too hierarchical to fit in a table, just return undefined as we can't generate a CSV.
-        if (type === 'object') { //covers both objects and arrays.
+        if (type === 'object') { // covers both objects and arrays.
             return;
         }
         if (type === 'function') {
@@ -104,6 +103,10 @@ function generateCsvData(data) {
     return row1.join(',') + '\n' + row2.join(',');
 }
 
+/**
+ * Makes a string safe for insertion into a CSV by wrapping it in inverted commas (") and changing inverted commas within
+ * it to double-inverted-commas ("") as per CSV convention.
+ */
 function makeSafeForCsv(value) {
     value = value ? `${value}` : '';
 

@@ -43,6 +43,15 @@ const FeatureInfoSection = React.createClass({
 
     componentWillMount() {
         this.generateTemplateData();
+
+        const feature = this.props.feature;
+        if (!this.isConstant()) {
+            this.setState({
+                clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
+                    setCurrentFeatureValues(feature, clock.currentTime);
+                })
+            });
+        }
     },
 
     componentWillReceiveProps() {
@@ -53,17 +62,6 @@ const FeatureInfoSection = React.createClass({
         this.setState({
             templateData: propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats)
         });
-    },
-
-    componentDidMount() {
-        const feature = this.props.feature;
-        if (!this.isConstant()) {
-            this.setState({
-                clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
-                    setCurrentFeatureValues(feature, clock.currentTime);
-                })
-            });
-        }
     },
 
     clickHeader() {
