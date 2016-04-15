@@ -4,7 +4,7 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import {getMountedInstance, findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
+import {findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
 
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';

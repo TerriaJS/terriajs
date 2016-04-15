@@ -1,5 +1,5 @@
 {
-    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:jsx-control-statements/recommended"],
     "parser": "babel-eslint",
     "env": {
         "browser": true,
@@ -9,15 +9,9 @@
         "react",
         "jsx-control-statements"
     ],
-    "globals": {
-        "If": true,
-        "Else": true,
-        "For": true,
-        "When": true,
-        "Choose": true,
-        "Otherwise": true
-    },
     "rules": {
+        "jsx-control-statements/jsx-use-if-tag": 0,
+
         /*Possible Errors */
         "no-cond-assign": [1, "except-parens"],
         "no-console": 0,
@@ -116,8 +110,6 @@
         "no-shadow-restricted-names": 1,
         "no-shadow": 0,
         "no-undef-init": 1,
-        "no-undef": 0,
-        "jsx-control-statements/jcs-no-undef": 2,
         "no-undefined": 0,
         "no-unused-vars": [1, {
             "vars": "local",
