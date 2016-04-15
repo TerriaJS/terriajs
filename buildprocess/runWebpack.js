@@ -1,7 +1,8 @@
 var gutil = require("gulp-util");
-var webpack = require('webpack');
 
-function runWebpack(config, doneCallback) {
+function runWebpack(webpack, config, doneCallback) {
+    // webpack is passed as a parameter instead of require-in because otherwise, when TerriaJS is npm link'd,
+    // node will end up loading two copies of webpack.  That causes problems with some plugins (e.g. dedupe).
     var wp = webpack(config);
     wp.run(function(err, stats) {
         if (stats) {
