@@ -126,11 +126,11 @@ const FeatureInfoSection = React.createClass({
     render() {
         // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
+        const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         return (
             <li className={classNames('feature-info-panel__section', {'is-open': this.props.isOpen})}>
-                <button type='button' onClick={this.clickHeader}
-                        className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
-                    {catalogItemName} - {this.renderDataTitle()}
+                <button type='button' onClick={this.clickHeader} className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
+                    {fullName}
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className='feature-info-panel__content'>
