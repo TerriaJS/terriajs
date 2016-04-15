@@ -3,7 +3,7 @@ $now-viewing-margin: $padding-small - 1px;
 
 .now-viewing{
   .workbench__inner.is-now-viewing &{
-    @media(screen and max-width: $sm){
+    @media screen and (max-width: $sm){
       position: fixed;
       left: 0;
       width: 100%;
@@ -122,7 +122,7 @@ $now-viewing-margin: $padding-small - 1px;
       text-align: center;
   }
   .btn--toggle.is-open{
-    @media(screen and min-width: $sm){
+    @media screen and (min-width: $sm){
       padding-left: 8px;
     }
   }

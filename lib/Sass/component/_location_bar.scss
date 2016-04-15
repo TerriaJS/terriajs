@@ -3,7 +3,7 @@ $distance-bg: rgba($dark, 0.9);
 .location-distance{
   @extend .clearfix;
   display: none;
-  @media(screen and min-width: $sm){
+  @media screen and (min-width: $sm){
     display: block;
   }
   position: absolute;

@@ -40,7 +40,7 @@
 
 .data-explorer,
 .my-data{
-    @media(screen and min-width: $sm){
+    @media screen and (min-width: $sm){
       width: 40%;
       float: left;
       height: 100%;

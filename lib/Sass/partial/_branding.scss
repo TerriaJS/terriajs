@@ -11,7 +11,7 @@
     max-height: 100%;
     width: auto;
   }
-  @media(screen and min-width: $sm){
+  @media screen and (min-width: $sm){
       width: 100%;
       padding: $padding;
       height: $logo-height;

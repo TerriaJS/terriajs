@@ -55,7 +55,7 @@
     bottom: $chart-height;
   }
 
-  @media(screen and min-width: $sm){
+  @media screen and (min-width: $sm) {
     //temp
     // width: calc(100% - $work-bench-width);
     left: $work-bench-width;
