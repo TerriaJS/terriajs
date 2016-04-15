@@ -8,7 +8,7 @@
     bottom: 0;
     z-index: 10;
     background: $dark;
-    @media(screen and min-width: $sm){
+    @media screen and (min-width: $sm){
         left: $work-bench-width;
         .is-full-screen &{
             left: 0;

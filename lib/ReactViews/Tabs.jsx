@@ -13,7 +13,7 @@ const Tabs = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired,
-        tabs: React.PropTypes.array.isRequired
+        tabs: React.PropTypes.array
     },
 
     getInitialState() {
