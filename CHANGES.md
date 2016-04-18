@@ -5,6 +5,7 @@ Change Log
 ### 2.3.1
 
 * Fixed display when `tableStyle.colorBins` is 0.
+* Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
 
 ### 2.3.0
 
