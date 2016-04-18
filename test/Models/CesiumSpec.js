@@ -8,6 +8,7 @@ var GeoJsonDataSource = require('terriajs-cesium/Source/DataSources/GeoJsonDataS
 var loadJson = require('terriajs-cesium/Source/Core/loadJson');
 var Terria = require('../../lib/Models/Terria');
 var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
+var Terria = require('../../lib/Models/Terria');
 var supportsWebGL = require('../../lib/Core/supportsWebGL');
 
 var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');

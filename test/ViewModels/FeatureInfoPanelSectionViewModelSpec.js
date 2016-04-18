@@ -37,17 +37,17 @@ describe('FeatureInfoPanelSectionViewModel', function() {
     });
 
     it('uses a white background for complete HTML documents only', function() {
-        feature.description = {getValue: function() { return '<html><body>hi!</body></html>'}};
+        feature.description = {getValue: function() { return '<html><body>hi!</body></html>'; }};
         var section = new FeatureInfoPanelSectionViewModel(panel, feature);
         expect(section.useWhiteBackground).toBe(true);
         section.destroy();
 
-        feature.description = {getValue: function() { return '<div>hi!</div>'}};
+        feature.description = {getValue: function() { return '<div>hi!</div>'; }};
         section = new FeatureInfoPanelSectionViewModel(panel, feature);
         expect(section.useWhiteBackground).toBe(false);
         section.destroy();
 
-        feature.description = {getValue: function() { return '<html attr="yes">\n<body>hi!</body>\n</html>'}};
+        feature.description = {getValue: function() { return '<html attr="yes">\n<body>hi!</body>\n</html>'; }};
         section = new FeatureInfoPanelSectionViewModel(panel, feature);
         expect(section.useWhiteBackground).toBe(true);
         section.destroy();

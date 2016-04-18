@@ -148,7 +148,7 @@ describe('Leaflet Model', function() {
                         url: 'http://example.com/1',
                         ready: true,
                         tilingScheme: {
-                            positionToTileXY: function() { return {x: 1, y: 2}}
+                            positionToTileXY: function() { return {x: 1, y: 2}; }
                         }
                     })
                 },
@@ -160,7 +160,7 @@ describe('Leaflet Model', function() {
                         url: 'http://example.com/2',
                         ready: true,
                         tilingScheme: {
-                            positionToTileXY: function() { return {x: 4, y: 5}}
+                            positionToTileXY: function() { return {x: 4, y: 5}; }
                         }
                     })
                 },
@@ -172,7 +172,7 @@ describe('Leaflet Model', function() {
                         url: 'http://example.com/3',
                         ready: true,
                         tilingScheme: {
-                            positionToTileXY: function() { return {x: 1, y: 2}}
+                            positionToTileXY: function() { return {x: 1, y: 2}; }
                         }
                     })
                 },
@@ -184,7 +184,7 @@ describe('Leaflet Model', function() {
                         url: 'http://example.com/4',
                         ready: true,
                         tilingScheme: {
-                            positionToTileXY: function() { return {x: 1, y: 2}}
+                            positionToTileXY: function() { return {x: 1, y: 2}; }
                         }
                     })
                 }
