@@ -4,6 +4,7 @@ Change Log
 
 ### 2.3.0
 
+* Share links now contain details about the picked point, picked features and currently selected feature.
 * Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
 * Added a mechanism for hiding the source of a CatalogItem in the view info popup.
 * Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
@@ -12,6 +13,8 @@ Change Log
 * Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
     in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
     (which is the current time at the top-left).
+* Showed a message in the catalog item info panel that informs the user that a catalog item is local and can't be shared.
+* TerriaJS now obtains its list of domains that the proxy will proxy for from the `proxyableDomains/` service.  The URL can be overridden by setting `parameters.proxyableDomainsUrl` in `config.json`.
 
 ### 2.2.1
 
