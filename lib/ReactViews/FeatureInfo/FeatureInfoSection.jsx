@@ -22,7 +22,7 @@ const FeatureInfoSection = React.createClass({
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
         feature: React.PropTypes.object,
         clock: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,
+        catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
         isOpen: React.PropTypes.bool,
         onClickHeader: React.PropTypes.func
     },
@@ -123,11 +123,11 @@ const FeatureInfoSection = React.createClass({
     render() {
         // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
+        const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         return (
             <li className={classNames('feature-info-panel__section', {'is-open': this.props.isOpen})}>
-                <button type='button' onClick={this.clickHeader}
-                        className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
-                    {catalogItemName} - {this.renderDataTitle()}
+                <button type='button' onClick={this.clickHeader} className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
+                    {fullName}
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className='feature-info-panel__content'>
@@ -144,8 +144,7 @@ const FeatureInfoSection = React.createClass({
                             <FeatureInfoDownload key='download'
                                                  viewState={this.props.viewState}
                                                  data={this.state.templateData}
-                                                 name={this.props.catalogItem && this.props.catalogItem.name}/>
-
+                                                 name={catalogItemName}/>
                         </If>
                     </section>
                 </If>

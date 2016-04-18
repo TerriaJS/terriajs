@@ -223,7 +223,7 @@ describe('FeatureInfoSection', function() {
             const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template}/>;
             const result = getShallowRenderedOutput(section);
             const nameElement = findAllWithClass(result, 'feature-info-panel__title')[0];
-            const name = nameElement.props.children.join(''); // Kay, space, and bar wind up in separate children, so join them together.
+            const name = nameElement.props.children;
             expect(name).toContain('Kay bar');
         });
 
