@@ -29,6 +29,19 @@
         top: 170px;
       }
     }
+
+    .measure-tool{
+      position: fixed;
+      bottom: $input-height + $padding;
+      right: 2vw;
+      @media(screen and min-width: $sm){
+        //temp
+        position: absolute;
+        right: 70px;
+        top: 170px;
+      }
+    }
+
     .map-navigation__menu{
       @extend .list-reset;
       @extend .clearfix;

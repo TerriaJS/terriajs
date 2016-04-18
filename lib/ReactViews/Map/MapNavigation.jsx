@@ -4,6 +4,7 @@ import React from 'react';
 
 import Compass from './Navigation/Compass.jsx';
 import MyLocation from './Navigation/MyLocation.jsx';
+import MeasureTool from './Navigation/MeasureTool.jsx';
 import ZoomControl from './Navigation/ZoomControl.jsx';
 import SettingPanel from './Panels/SettingPanel.jsx';
 import SharePanel from './Panels/SharePanel/SharePanel.jsx';
@@ -47,6 +48,7 @@ const MapNavigation = React.createClass({
                     <Compass terria={this.props.terria}/>
                 </If>
                 <MyLocation terria={this.props.terria}/>
+                <MeasureTool terria={this.props.terria}/>
                 <ZoomControl terria={this.props.terria}/>
             </div>
         );

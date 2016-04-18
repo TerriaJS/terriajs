@@ -106,3 +106,18 @@ $compass-width: 71px;
     }
   }
 }
+
+.measure-tool{
+  .btn{
+    border-radius: 50%;
+    display: block;
+    background: #fff;
+    padding: $ring-width/2;
+    color: $dark;
+    &:before{
+      font-size: 25px;
+      line-height: 1;
+      text-align: center;
+    }
+  }
+}
