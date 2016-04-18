@@ -54,6 +54,24 @@ function configureWebpack(terriaJSBasePath, config) {
         test: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
         loader: require.resolve('imports-loader') + '?require=>false'
     });
+
+    config.devServer = {
+        stats: 'minimal',
+        port: 3003,
+        contentBase: "wwwroot/",
+        proxy: {
+            "*": {
+                target: "http://localhost:3001",
+                bypass: function (req, res, proxyOptions) {
+                    if (req.url.indexOf('/proxy') !== 0 && req.url.indexOf('/proj4lookup') !== 0 &&
+                        req.url.indexOf('/convert') !== 0 && req.url.indexOf('/proxydomains') !== 0 &&
+                        req.url.indexOf('/errorpage') !== 0 && req.url.indexOf('/initfile') !== 0) {
+                        return req.originalUrl;
+                    }
+                }
+            }
+        },
+    };
 }
 
 module.exports = configureWebpack;
