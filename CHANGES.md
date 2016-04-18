@@ -2,9 +2,21 @@
 Change Log
 ==========
 
-### 2.2.2
+### 2.3.1
 
-* Added `fogSettings` option to init file to customise fog settings, introduced in Cesium 1.16.
+* Fixed display when `tableStyle.colorBins` is 0.
+* Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
+
+### 2.3.0
+
+* Share links now contain details about the picked point, picked features and currently selected feature.
+* Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
+* Added a mechanism for hiding the source of a CatalogItem in the view info popup.
+* Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
+* Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
+* Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
+* Showed a message in the catalog item info panel that informs the user that a catalog item is local and can't be shared.
+* TerriaJS now obtains its list of domains that the proxy will proxy for from the `proxyableDomains/` service.  The URL can be overridden by setting `parameters.proxyableDomainsUrl` in `config.json`.
 
 ### 2.2.1
 

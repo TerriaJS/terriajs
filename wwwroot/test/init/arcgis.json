@@ -33,8 +33,10 @@
             },
           "featureInfoTemplate" : {
             "template": "{{>header}}Red is {{Red}}. Blue is {{Blue}}. Green is {{Green}}.{{>footer}}",
-            "header": "<h1>Color Information</h1><br>",
-            "footer": "<br>Thank you for clicking here.</br>"
+            "partials": {
+              "header": "<h1>Color Information</h1><br>",
+              "footer": "<br>Thank you for clicking here.</br>"
+            }
           }
         }
       ]

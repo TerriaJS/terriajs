@@ -54,18 +54,18 @@
                 <!-- /ko -->
             </div>
 
-            <!-- ko if: isOpen && (isLoading || items.length === 0) -->
+            <!-- ko if: isOpen && (isLoading || isWaitingForDisclaimer || items.length === 0) -->
                 <div class="data-catalog-group-contents">
                     <div class="data-catalog-member" data-bind="css: 'data-catalog-indent' + ($parents.length - 1)">
                         <div class="data-catalog-member-top-row">
-                            <div class="data-catalog-item-label" data-bind="visible: isLoading">Loading...</div>
-                            <div class="data-catalog-item-label" data-bind="visible: !isLoading">This group does not contain any items.</div>
+                            <div class="data-catalog-item-label" data-bind="visible: isLoading || isWaitingForDisclaimer">Loading...</div>
+                            <div class="data-catalog-item-label" data-bind="visible: !(isLoading || isWaitingForDisclaimer)">This group does not contain any items.</div>
                         </div>
                     </div>
                 </div>
             <!-- /ko -->
 
-            <!-- ko if: isOpen -->
+            <!-- ko if: isOpen && !isWaitingForDisclaimer -->
                 <div class="data-catalog-group-contents" data-bind="template: { name: 'data-catalog-item-template', foreach: items }"></div>
             <!-- /ko -->
         </div>
@@ -79,7 +79,7 @@
                 <div class="data-catalog-top-group-icon" data-bind="cesiumSvgPath: { path: isOpen ? $root.svgArrowDown : $root.svgArrowRight, width: 32, height: 32 }"></div>
             </div>
         </div>
-        <!-- ko if: isLoading -->
+        <!-- ko if: isOpen && (isLoading || isWaitingForDisclaimer) -->
             <div class="data-catalog-top-group-contents">
                 <div class="data-catalog-member data-catalog-indent0">
                     <div class="data-catalog-member-top-row">
@@ -88,7 +88,7 @@
                 </div>
             </div>
         <!-- /ko -->
-        <!-- ko if: typeof items !== 'undefined' && isOpen -->
+        <!-- ko if: typeof items !== 'undefined' && isOpen && !isWaitingForDisclaimer -->
             <div class="data-catalog-top-group-contents" data-bind="visible: items.length === 0 && !isLoading">
                 <div class="data-catalog-member data-catalog-indent0">
                     <div class="data-catalog-member-top-row">
