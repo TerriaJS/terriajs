@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 2.3.1
+
+* Fixed display when `tableStyle.colorBins` is 0.
+
 ### 2.3.0
 
 * Share links now contain details about the picked point, picked features and currently selected feature.
