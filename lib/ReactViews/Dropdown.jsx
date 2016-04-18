@@ -13,7 +13,9 @@ const Dropdown = React.createClass({
         selected: React.PropTypes.object,
         selectOption: React.PropTypes.func, // The callback function; its arguments are the chosen object and its index.
         textProperty: React.PropTypes.string, // property to display as text
-        matchWidth: React.PropTypes.bool
+        matchWidth: React.PropTypes.bool,
+        buttonClassName: React.PropTypes.string,
+        children: React.PropTypes.array
     },
 
     getDefaultProps() {
@@ -84,7 +86,7 @@ const Dropdown = React.createClass({
         const addScrollListeners = (element, listeningToSoFar) => {
             if (element.scrollHeight > element.clientHeight) {
                 element.addEventListener('scroll', this.hideList);
-                listeningToSoFar.push(element)
+                listeningToSoFar.push(element);
             }
 
             if (element !== document.body) {
@@ -100,7 +102,7 @@ const Dropdown = React.createClass({
         const dropdownPosition = {
             top: outerDropdownPosition.bottom + 'px',
             right: window.innerWidth - outerDropdownPosition.right + 'px'
-        }
+        };
 
         if (this.props.matchWidth) {
             dropdownPosition.left = outerDropdownPosition.left + 'px';
@@ -119,7 +121,8 @@ const Dropdown = React.createClass({
         this.nativeButtonListener = event => {
             event.stopPropagation();
             this.hideList();
-        }
+        };
+
         this.buttonElement.addEventListener('click', this.nativeButtonListener);
     },
 

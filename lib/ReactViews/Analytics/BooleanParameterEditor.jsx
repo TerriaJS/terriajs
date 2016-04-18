@@ -1,6 +1,3 @@
-'use strict';
-
-/*global require*/
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 
@@ -20,7 +17,7 @@ const BooleanParameterEditor = React.createClass({
         let name;
         let description;
         let classNames;
-        if(state === true) {
+        if (state === true) {
             name = this.props.parameter.trueName || this.props.parameter.name;
             description = this.props.parameter.trueDescription || this.props.parameter.description;
             classNames = this.props.parameterValues[this.props.parameter.id] && this.props.parameterValues[this.props.parameter.id] === true ? 'btn--radio-on' : 'btn--radio-off';
@@ -30,22 +27,25 @@ const BooleanParameterEditor = React.createClass({
             classNames = this.props.parameterValues[this.props.parameter.id] && this.props.parameterValues[this.props.parameter.id] === true ? 'btn--radio-off' : 'btn--radio-on';
 
         }
-        return (<div className='radio'>
-                    <button type='button' className={`btn btn--radio ${classNames}`}
-                            title={description}
-                            onClick={this.onClick}
-                            type='button'
-                    >
+        return (
+            <div className='radio'>
+                <button type='button'
+                        className={`btn btn--radio ${classNames}`}
+                        title={description}
+                        onClick={this.onClick}>
                     {name}
-                    </button>
-                </div>);
+                </button>
+            </div>
+        );
     },
 
     render() {
-        return (<div>
+        return (
+            <div>
                 {!this.props.parameter.hasNamedStates && this.renderRadio(true)}
                 {this.props.parameter.hasNamedStates && <div>{this.renderRadio(true)}{this.renderRadio(false)}</div>}
-                </div>);
+            </div>
+        );
     }
 });
 

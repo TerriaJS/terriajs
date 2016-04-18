@@ -3,7 +3,6 @@ import React from 'react';
 import L from 'leaflet';
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import EllipsoidGeodesic from 'terriajs-cesium/Source/Core/EllipsoidGeodesic';
 import getTimestamp from 'terriajs-cesium/Source/Core/getTimestamp';
 import ObserveModelMixin from './../ObserveModelMixin';
@@ -22,6 +21,7 @@ const distances = [
 
 const DistanceLegend = React.createClass({
     mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object,
     },

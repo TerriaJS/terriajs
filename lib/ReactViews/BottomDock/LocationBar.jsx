@@ -7,7 +7,7 @@ import EarthGravityModel1996 from '../../Map/EarthGravityModel1996';
 import EllipsoidTerrainProvider from 'terriajs-cesium/Source/Core/EllipsoidTerrainProvider';
 import Intersections2D from 'terriajs-cesium/Source/Core/Intersections2D';
 import ObserveModelMixin from './../ObserveModelMixin';
-import proj4 from 'proj4';
+import proj4 from 'proj4/lib/index.js';
 import React from 'react';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
@@ -242,7 +242,7 @@ const LocationBar = React.createClass({
                         <div className='lon'><span>Lon</span><span>{this.state.longitude}</span></div>
                     </li>);
         }
-        return (<li class="location-bar--zone">
+        return (<li className="location-bar--zone">
                     <div className='zone'><span>ZONE</span><span>{this.state.utmZone}</span></div>
                     <div className='e'><span>E</span><span>{this.state.east}</span></div>
                     <div className='n'><span>N</span><span>{this.state.north}</span></div>

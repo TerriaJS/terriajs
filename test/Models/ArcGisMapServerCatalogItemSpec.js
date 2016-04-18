@@ -44,7 +44,7 @@ describe('ArcGisMapServerCatalogItem', function() {
 
     it('throws if constructed without a Terria instance', function() {
         expect(function() {
-            var viewModel = new ArcGisMapServerCatalogItem(); // jshint ignore:line
+            var viewModel = new ArcGisMapServerCatalogItem(); // eslint-disable-line no-unused-vars
         }).toThrow();
     });
 

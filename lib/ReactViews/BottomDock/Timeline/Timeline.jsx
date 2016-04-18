@@ -11,7 +11,8 @@ import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 const Timeline = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        autoPlay: React.PropTypes.bool
+        autoPlay: React.PropTypes.bool,
+        locale: React.PropTypes.object
     },
 
     getDefaultProps() {

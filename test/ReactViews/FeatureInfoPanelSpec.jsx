@@ -8,7 +8,7 @@ import {findWithType} from 'react-shallow-testutils';
 
 // import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
-import FeatureInfoPanel from '../../lib/ReactViews/FeatureInfo/FeatureInfoPanel';
+import FeatureInfoPanel  from '../../lib/ReactViews/FeatureInfo/FeatureInfoPanel';
 import Loader from '../../lib/ReactViews/Loader';
 import PickedFeatures from '../../lib/Map/PickedFeatures';
 import runLater from '../../lib/Core/runLater';

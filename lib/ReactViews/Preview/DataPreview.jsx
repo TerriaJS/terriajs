@@ -65,7 +65,7 @@ const DataPreview = React.createClass({
             return <DataPreviewMap terria={this.props.terria}
                                previewedCatalogItem={previewed}
                 />;
-            }
+        }
         return null;
     },
 
@@ -109,7 +109,7 @@ const DataPreview = React.createClass({
                         </div>
                     </div>
                     </div>);
-        } else if(typeof previewed.invoke) {
+        } else if(typeof previewed.invoke !== 'undefined') {
             return <InvokeFunction previewed={previewed}
                                    terria={this.props.terria}
                                    viewState={this.props.viewState}

@@ -12,7 +12,8 @@ const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getInitialState() {

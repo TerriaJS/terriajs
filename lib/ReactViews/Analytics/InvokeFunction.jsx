@@ -28,27 +28,27 @@ const InvokeFunction = React.createClass({
     },
 
     submit() {
-      const that = this;
-      console.log(this._parameterValues);
-      try {
-          const promise = when(this.props.previewed.invoke(this._parameterValues)).otherwise(function(terriaError) {
-              if (terriaError instanceof TerriaError) {
-                  that.props.previewed.terria.error.raiseEvent(terriaError);
-              }
-          });
-          // Show the Now Viewing panel
-          that.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
-          // Close modal window
-          that.props.viewState.toggleModal(false);
-          // mobile switch to nowvewing
-          this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
-          return promise;
-      } catch (e) {
-          if (e instanceof TerriaError) {
-              that.props.previewed.terria.error.raiseEvent(e);
-          }
-          return undefined;
-      }
+        try {
+            const promise = when(this.props.previewed.invoke(this._parameterValues))
+                .otherwise(terriaError => {
+                    if (terriaError instanceof TerriaError) {
+                        this.props.previewed.terria.error.raiseEvent(terriaError);
+                    }
+                });
+            // Show the Now Viewing panel
+            this.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
+            // Close modal window
+            this.props.viewState.toggleModal(false);
+            // mobile switch to nowvewing
+            this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
+
+            return promise;
+        } catch (e) {
+            if (e instanceof TerriaError) {
+                this.props.previewed.terria.error.raiseEvent(e);
+            }
+            return undefined;
+        }
     },
 
     initializeParameters(props) {
@@ -64,7 +64,7 @@ const InvokeFunction = React.createClass({
     },
 
     getParams() {
-       return this.props.previewed.parameters.map((param, i)=>
+        return this.props.previewed.parameters.map((param, i)=>
         <ParameterEditor key={param.id}
                          parameter={param}
                          viewState={this.props.viewState}
@@ -81,7 +81,7 @@ const InvokeFunction = React.createClass({
                         {this.getParams()}
                     </div>
                     <div className="invoke-function__footer">
-                        <button type='button' type='button' className='btn btn-primary' onClick={this.submit}>Run Analysis</button>
+                        <button type='button' className='btn btn-primary' onClick={this.submit}>Run Analysis</button>
                     </div>
                 </div>);
     }

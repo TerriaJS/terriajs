@@ -11,17 +11,20 @@ const SharePanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         userPropWhiteList: React.PropTypes.array,
-        isOpen: React.PropTypes.bool
+        isOpen: React.PropTypes.bool,
+        shortenUrls: React.PropTypes.bool
     },
 
     getDefaultProps() {
         return {
-            isOpen: false
+            isOpen: false,
+            shortenUrls: false
         };
     },
 
     getInitialState() {
         return {
+            shortenUrls: this.props.shortenUrls && this.props.terria.getLocalProperty('shortenShareUrls'),
             imageUrl: '',
             shareUrl: ''
         };
@@ -64,12 +67,6 @@ const SharePanel = React.createClass({
         this.setState({
             shareUrl: buildShareLink(this.props.terria)
         });
-    },
-
-    getInitialState() {
-        return {
-            shortenUrls: this.props.shortenUrls && this.props.terria.getLocalProperty('shortenShareUrls')
-        };
     },
 
     isUrlShortenable() {

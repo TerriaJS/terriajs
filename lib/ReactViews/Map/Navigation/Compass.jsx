@@ -26,7 +26,6 @@ const Compass = React.createClass({
     },
 
     componentDidMount() {
-        // this.props.terria.afterViewerChanged.addEventListener(viewerChange);
         viewerChange(this);
     },
 
@@ -119,6 +118,9 @@ const centerScratch = new Cartesian3();
 const windowPositionScratch = new Cartesian2();
 const pickRayScratch = new Ray();
 
+/**
+ * TODO: What does this do?
+ */
 function rotate(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
     document.removeEventListener('mousemove', viewModel.rotateMouseMoveFunction, false);
@@ -130,16 +132,14 @@ function rotate(viewModel, compassElement, cursorVector) {
     viewModel.isRotating = true;
     viewModel.rotateInitialCursorAngle = Math.atan2(-cursorVector.y, cursorVector.x);
 
-    let scene = viewModel.props.terria.cesium.scene;
-
+    const scene = viewModel.props.terria.cesium.scene;
     let camera = scene.camera;
-
-    let windowPosition = windowPositionScratch;
+    const windowPosition = windowPositionScratch;
     windowPosition.x = scene.canvas.clientWidth / 2;
     windowPosition.y = scene.canvas.clientHeight / 2;
-    let ray = camera.getPickRay(windowPosition, pickRayScratch);
+    const ray = camera.getPickRay(windowPosition, pickRayScratch);
 
-    let viewCenter = scene.globe.pick(ray, scene, centerScratch);
+    const viewCenter = scene.globe.pick(ray, scene, centerScratch);
     if (!defined(viewCenter)) {
         viewModel.rotateFrame = Transforms.eastNorthUpToFixedFrame(camera.positionWC, Ellipsoid.WGS84, newTransformScratch);
         viewModel.rotateIsLook = true;
@@ -188,6 +188,9 @@ function rotate(viewModel, compassElement, cursorVector) {
     document.addEventListener('mouseup', viewModel.rotateMouseUpFunction, false);
 }
 
+/**
+ * TODO: What does this do?
+ */
 function orbit(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
     document.removeEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
@@ -253,6 +256,9 @@ function orbit(viewModel, compassElement, cursorVector) {
         viewModel.orbitLastTimestamp = timestamp;
     };
 
+    /**
+     * TODO: What does this do?
+     */
     function updateAngleAndOpacity(vector, compassWidth) {
         const angle = Math.atan2(-vector.y, vector.x);
         viewModel.setState({
@@ -301,6 +307,9 @@ function orbit(viewModel, compassElement, cursorVector) {
     updateAngleAndOpacity(cursorVector, compassElement.getBoundingClientRect().width);
 }
 
+/**
+ * TODO: What does this do?
+ */
 function viewerChange(viewModel) {
     if (defined(viewModel.props.terria.cesium)) {
         if (viewModel._unsubcribeFromPostRender) {

@@ -22,7 +22,7 @@ const BottomDock = React.createClass({
     },
 
     onHeightChange() {
-        setTimeout(() => this.props.terria.commonViewerProps.shiftDisclaimerPx = document.querySelector('.bottom-dock').offsetHeight, 0);
+        setTimeout(() => {this.props.terria.commonViewerProps.shiftDisclaimerPx = document.querySelector('.bottom-dock').offsetHeight;}, 0);
     },
 
     render() {
@@ -43,8 +43,3 @@ const BottomDock = React.createClass({
 });
 
 module.exports = BottomDock;
-
-
-
-
-

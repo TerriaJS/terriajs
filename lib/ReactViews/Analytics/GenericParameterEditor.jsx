@@ -1,6 +1,3 @@
-'use strict';
-
-/*global require*/
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 

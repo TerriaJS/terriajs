@@ -7,16 +7,13 @@ import React from 'react';
 import GettingStartedTab from './GettingStartedTab.jsx';
 import classNames from 'classnames';
 
-function getName(str1, str2) {
-    return str1.concat(str2);
-}
-
 const Tabs = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        tabs: React.PropTypes.array
     },
 
     getInitialState() {
@@ -52,10 +49,10 @@ const Tabs = React.createClass({
     renderTabs() {
         return (this.state.tabs.map((item, i) =>
             <li key={i}
-                className={getName('tablist--', item.title)}
-                id={getName('tablist--', item.title)}
+                className={'tablist--' + item.title}
+                id={'tablist--' + item.title}
                 role="tab"
-                aria-controls={getName('panel--', item.title)}
+                aria-controls={'panel--' + item.title}
                 aria-selected={this.props.viewState.modalTabIndex === i}>
                 <button type='button' onClick={this.activateTab.bind(this, i)}
                         className='btn btn--tab'>{item.title.replace(/-/g, ' ')}</button>
@@ -68,9 +65,9 @@ const Tabs = React.createClass({
             <section
                 key={item.title}
                 aria-hidden={this.props.viewState.modalTabIndex !== i}
-                id={getName('panel--', item.title)}
-                className={classNames('tab-panel', getName('panel--', item.title), {'is-active': this.props.viewState.modalTabIndex === i})}
-                aria-labelledby={getName('tablist--', item.title)}
+                id={'panel--' + item.title}
+                className={classNames('tab-panel', 'panel--' + item.title, {'is-active': this.props.viewState.modalTabIndex === i})}
+                aria-labelledby={'tablist--' + item.title}
                 role='tabpanel' tabIndex='0'>
                 <h2 className="hide">{item.title.replace(/-/g, ' ')}</h2>
                 {item.panel}

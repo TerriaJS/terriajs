@@ -43,13 +43,12 @@ const NowViewingContainer = React.createClass({
         if ((defined(e.dataTransfer) && (e.dataTransfer.dropEffect === 'move'))
             || (e.originalEvent.dataTransfer.dropEffect === 'move')) {
             this.props.terria.nowViewing.items.splice(this.state.draggedItemIndex, 1);
-            this.state.draggedItemIndex = -1;
-            this.state.placeholderIndex = -1;
-            this.setState(this.state);
-            return;
-        }
 
-        if(this.state.placeholderIndex !== -1 || this.state.draggedItemIndex !== -1) {
+            this.setState({
+                draggedItemIndex: -1,
+                placeholderIndex: -1
+            });
+        } else if (this.state.placeholderIndex !== -1 || this.state.draggedItemIndex !== -1) {
             this.setState({
                 placeholderIndex: -1,
                 draggedItemIndex: -1
@@ -80,13 +79,16 @@ const NowViewingContainer = React.createClass({
     },
 
     onDrop(e) {
-        if(this.state.placeholderIndex !== -1) {
+        if (this.state.placeholderIndex !== -1) {
             this.props.terria.nowViewing.items.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
-            if(this.state.draggedItemIndex > this.state.placeholderIndex) {
-                this.state.draggedItemIndex = this.state.draggedItemIndex + 1;
+            if (this.state.draggedItemIndex > this.state.placeholderIndex) {
+                this.setState({
+                    draggedItemIndex: this.state.draggedItemIndex + 1
+                });
             }
-            this.state.placeholderIndex = -1;
-            this.setState(this.state);
+            this.setState({
+                placeholderIndex: -1
+            });
         }
     },
 

@@ -111,8 +111,9 @@ const FeatureInfoPanel = React.createClass({
     }
 });
 
-
-// Returns an object of {catalogItems, featureCatalogItemPairs}.
+/**
+ * Returns an object of {catalogItems, featureCatalogItemPairs}.
+ */
 function getFeaturesGroupedByCatalogItems(terria) {
     if (!defined(terria.pickedFeatures)) {
         return {catalogItems: [], featureCatalogItemPairs: []};
@@ -126,7 +127,7 @@ function getFeaturesGroupedByCatalogItems(terria) {
         // if (!defined(feature.position)) {
         //     feature.position = terria.pickedFeatures.pickPosition;
         // }
-        const catalogItem = calculateCatalogItem(terria.nowViewing, feature);
+        const catalogItem = determineCatalogItem(terria.nowViewing, feature);
         featureCatalogItemPairs.push({
             catalogItem: catalogItem,
             feature: feature
@@ -139,11 +140,19 @@ function getFeaturesGroupedByCatalogItems(terria) {
     return {catalogItems, featureCatalogItemPairs};
 }
 
-function calculateCatalogItem(nowViewing, feature) {
+/**
+ * Figures out what the catalog item for a feature is.
+ *
+ * @param nowViewing {@link NowViewing} to look in the items for.
+ * @param feature Feature to match
+ * @returns {CatalogItem}
+ */
+function determineCatalogItem(nowViewing, feature) {
     if (!defined(nowViewing)) {
         // So that specs do not need to define a nowViewing.
         return undefined;
     }
+
     // "Data sources" (eg. czml, geojson, kml, csv) have an entity collection defined on the entity
     // (and therefore the feature).
     // Then match up the data source on the feature with a now-viewing item's data source.
@@ -159,6 +168,7 @@ function calculateCatalogItem(nowViewing, feature) {
         }
         return result;
     }
+
     // If there is no data source, but there is an imagery layer (eg. ArcGIS),
     // we can match up the imagery layer on the feature with a now-viewing item.
     if (defined(feature.imageryLayer)) {
@@ -171,10 +181,14 @@ function calculateCatalogItem(nowViewing, feature) {
         }
         return result;
     }
+
     // Otherwise, no luck.
     return undefined;
 }
 
+/**
+ * Determines whether the passed feature has properties or a description.
+ */
 function featureHasInfo(feature) {
     return (defined(feature.properties) || defined(feature.description));
 }

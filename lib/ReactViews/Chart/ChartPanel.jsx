@@ -20,7 +20,8 @@ const ChartPanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         onHeightChange: React.PropTypes.func,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        animationDuration: React.PropTypes.number
     },
 
     closePanel() {
@@ -75,7 +76,7 @@ const ChartPanel = React.createClass({
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
     },
 
-    toggleBodyClass(isVisible){
+    toggleBodyClass(isVisible) {
         const body = document.body;
         if(isVisible) {
             ClassList(body).add('chart-is-visible');
@@ -161,7 +162,7 @@ const ChartPanel = React.createClass({
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <label className="chart-panel__section-label label">{loader || 'Charts'}</label>
                                 {downloadButton}
-                                <button type='button' className="btn btn--close-chart-panel" onClick={this.closePanel}></button>
+                                <button type='button' className="btn btn--close-chart-panel" onClick={this.closePanel} />
                             </div>
                             <div>
                                 {chart}
@@ -174,10 +175,23 @@ const ChartPanel = React.createClass({
     }
 });
 
+/**
+ * Gets the column that will be used for the X axis of the chart.
+ *
+ * @returns {TableColumn}
+ */
 function getXColumn(item) {
     return item.timeColumn || (item.tableStructure && item.tableStructure.columnsByType[VarType.SCALAR][0]);
 }
 
+/**
+ * Returns a function that will create a {@link ChartData} object for a let of points and a column index.
+ *
+ * @param item The item to create a chart for
+ * @param yColumns Columns that can be used for the y index of the chart.
+ * @param yColumnNumbers TODO: What is this?
+ * @returns {Function} that returns a {@link ChartData}
+ */
 function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
     return (points, index)=>
         new ChartData(points, {

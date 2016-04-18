@@ -28,9 +28,9 @@ const DataCatalogItem = React.createClass({
 
     renderItemIcon() {
         if(this.props.item.isMappable) {
-            return <button type='button' onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass())}></button>;
+            return <button type='button' onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass())} />;
         }
-        return <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars'></button>;
+        return <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars' />;
     },
 
     toggleEnable() {
@@ -59,12 +59,26 @@ const DataCatalogItem = React.createClass({
         const item = this.props.item;
         return (
             <li className={classNames('clearfix data-catalog-item', {'is-previewed': this.isSelected()})}>
-                <button type='button' onClick={this.setPreviewedItem} className={`btn btn--catalog-item ${item.isMappable ? 'catalog-item' : 'service-item'}`}>{item.name}</button>
-                <If condition={!defined(item.invoke)}>
-                    <button type='button' onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass())}></button>
-                  <Else />
-                    <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars'></button>
-                </If>
+                <button type='button'
+                        onClick={this.setPreviewedItem}
+                        className={`btn btn--catalog-item ${item.isMappable ? 'catalog-item' : 'service-item'}`}>
+                    {item.name}
+                </button>
+                <Choose>
+                    <When condition={!defined(item.invoke)}>
+                        <button type='button' onClick={this.toggleEnable}
+                                title="add to map"
+                                className={'btn btn--catalog-item--action ' + (this.renderIconClass())}
+                        />
+                    </When>
+                    <Otherwise>
+                        <button type='button'
+                                onClick={this.setPreviewedItem}
+                                title="preview"
+                                className='btn btn--catalog-item--action btn--stats-bars'
+                        />
+                    </Otherwise>
+                </Choose>
             </li>
         );
     }

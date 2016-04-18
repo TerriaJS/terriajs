@@ -4,10 +4,9 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import {getMountedInstance, findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
+import {findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
 
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
-import Iso8601 from 'terriajs-cesium/Source/Core/Iso8601';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';
@@ -121,8 +120,7 @@ describe('FeatureInfoSection', function() {
         const renderer = ReactTestUtils.createRenderer();
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock}/>;
         renderer.render(section);
-        getMountedInstance(renderer).componentDidMount();
-        // expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // currently true, but we don't want to require this implementation.
+        //expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // currently true, but we don't want to require this implementation.
         renderer.unmount();
         expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });
