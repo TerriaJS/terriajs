@@ -83,9 +83,11 @@ const FeatureInfoSection = React.createClass({
 
     descriptionFromFeature() {
         const feature = this.props.feature;
-
-        // TODO: This description could contain injected <script> tags etc. We must sanitize it.
-        // But do not escape it completely, because it also contains important html markup, eg. <table>.
+        // This description could contain injected <script> tags etc.
+        // Before rendering, we will pass it through renderMarkdownInReact, which applies
+        //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
+        //     parseCustomHtmlToReact (which calls htmlToReactParser).
+        // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
         return feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
     },
 
