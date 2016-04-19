@@ -42,7 +42,7 @@ function configureWebpack(terriaJSBasePath, config) {
 
     config.module.loaders.push({
         test: /\.json$/,
-        loader: "json"
+        loader: 'json'
     });
 
     // Don't let Cesium's `buildModuleUrl` and `TaskProcessor` see require - only the AMD version is relevant.
@@ -55,22 +55,50 @@ function configureWebpack(terriaJSBasePath, config) {
         loader: require.resolve('imports-loader') + '?require=>false'
     });
 
+    config.module.loaders.push({
+        test: /\.scss$/,
+        loaders: [require.resolve('style-loader'), require.resolve('css-loader') + '?sourceMap', require.resolve('sass-loader') + '?sourceMap']
+    });
+
+    config.module.loaders.push({
+        test: /\.(png|jpg|svg|gif)$/,
+        loader: require.resolve('url-loader') + '?limit=8192'
+    });
+
+    config.module.loaders.push({
+        test: /fonts\/.*\.woff(2)?(\?.+)?$/,
+        loader: require.resolve('url-loader') + '?limit=10000&mimetype=application/font-woff'
+    });
+
+    config.module.loaders.push({
+        test: /fonts\/.*\.(ttf|eot|svg)(\?.+)?/,
+        loader: require.resolve('file-loader')
+    });
+
     config.devServer = {
         stats: 'minimal',
         port: 3003,
-        contentBase: "wwwroot/",
-        proxy: {
-            "*": {
-                target: "http://localhost:3001",
-                bypass: function (req, res, proxyOptions) {
-                    if (req.url.indexOf('/proxy') !== 0 && req.url.indexOf('/proj4lookup') !== 0 &&
-                        req.url.indexOf('/convert') !== 0 && req.url.indexOf('/proxydomains') !== 0 &&
-                        req.url.indexOf('/errorpage') !== 0 && req.url.indexOf('/initfile') !== 0) {
-                        return req.originalUrl;
-                    }
-                }
-            }
-        },
+        contentBase: 'wwwroot/',
+        //proxy: {
+        //    '*': {
+        //        target: 'http://localhost:3001',
+        //        bypass: function (req, res, proxyOptions) {
+        //            if (req.url.indexOf('/proxy') !== 0 && req.url.indexOf('/proj4lookup') !== 0 &&
+        //                req.url.indexOf('/convert') !== 0 && req.url.indexOf('/proxydomains') !== 0 &&
+        //                req.url.indexOf('/errorpage') !== 0 && req.url.indexOf('/initfile') !== 0) {
+        //                return req.originalUrl;
+        //            }
+        //        }
+        //    }
+        //},
+    };
+
+    //config.resolve.root = (config.resolve.root || []).concat([
+    //    path.resolve('./lib/Sass')
+    //]);
+
+    config.sassLoader = {
+        includePaths: [path.resolve(__dirname, "../lib/Sass")]
     };
 }
 
