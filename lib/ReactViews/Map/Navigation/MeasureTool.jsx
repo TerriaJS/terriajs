@@ -21,13 +21,25 @@ const MeasureTool = React.createClass({
 
     getInitialState() {
         return {
-            pointOne : undefined,
-            pointTwo : undefined,
+            headPoint : undefined,
+            tailPoints : [],
+            totalDistanceMetres : 0,
+            userPointOptions : {
+                                   color : Color.WHITE,
+                                   pixelSize : 8,
+                                   outlineColor : Color.BLACK,
+                                   outlineWidth : 2
+                               },
+            measureToolHeader : "<strong>Measuring Tool</strong></br>",
             datasource: new CustomDataSource('User polygon')
         };
     },
 
     prettifyDistance(distance) {
+        if (distance <= 0)
+        {
+            return "";
+        }
         // Given a number representing a distance in metres, make it human readable
         var label = "m";
         if (distance > 999)
@@ -42,50 +54,85 @@ const MeasureTool = React.createClass({
         return distanceStr;
     },
 
+    editPoint() {
+        console.log("Edit point!");
+    },
+
+    nearExistingPoint(pickedPoint, that) {
+        return false;
+    },
+
+    cleanUp(terria, that) {
+        terria.dataSources.remove(this.state.datasource);
+        that.state.datasource = new CustomDataSource('User polygon');
+        that.state.headPoint = undefined;
+        that.state.tailPoints = [];
+        that.state.totalDistanceMetres = 0;
+    },
+
+    prepareToAddNewPoint(terria, that) {
+        terria.mapInteractionModeStack.pop();
+        var distanceStr = that.prettifyDistance(that.state.totalDistanceMetres);
+        var message = "<i>Click to add another point</i>";
+        var buttonText = "Cancel";
+        if (distanceStr.length > 0)
+        {
+            message = distanceStr + "</br>" + message;
+            buttonText = "Done";
+        }
+        const pickPointMode = new MapInteractionMode({
+            message: that.state.measureToolHeader + message,
+            buttonText: buttonText,
+            onCancel: function() {
+                terria.mapInteractionModeStack.pop();
+                that.cleanUp(terria, that);
+            }
+        });
+        terria.mapInteractionModeStack.push(pickPointMode);
+
+        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
+            if (defined(pickedFeatures.pickPosition)) {
+                var pickedPoint = pickedFeatures.pickPosition;
+                if (that.nearExistingPoint(pickedPoint, that))
+                {
+                    that.editPoint();
+                }
+                else
+                {
+                    var lastPoint = that.state.headPoint;
+                    if (that.state.tailPoints.length > 0)
+                    {
+                        lastPoint = that.state.tailPoints[that.state.tailPoints.length - 1];
+                    }
+                    var distance = CesiumCartesian.distance(pickedPoint, lastPoint);
+
+                    that.setState({ totalDistanceMetres : that.state.totalDistanceMetres + distance });
+
+                    that.state.tailPoints.push(pickedPoint);
+                    that.state.datasource.entities.add({
+                        name: 'Another Point',
+                        point : that.state.userPointOptions,
+                        position: pickedPoint
+                    });
+                }
+                that.prepareToAddNewPoint(terria, that);
+            }
+        });
+    },
+
     enterMeasureMode() {
-        console.log("Enter measure mode...");
         const terria = this.props.terria;
         const that = this;
         // Cancel any feature picking already in progress.
         terria.pickedFeatures = undefined;
 
         that.state.datasource.entities.add({
-            name: 'First Point',
-            point : {
-                color : Color.WHITE,
-                pixelSize : 8,
-                outlineColor : Color.BLACK,
-                outlineWidth : 2
-            },
-            position: new CallbackProperty(function(date, result) {
-                if (defined(that.state.pointOne))
-                {
-                    return that.state.pointOne;
-                }
-            }, false)
-        });
-        that.state.datasource.entities.add({
-            name: 'Second Point',
-            point : {
-                color : Color.WHITE,
-                pixelSize : 8,
-                outlineColor : Color.BLACK,
-                outlineWidth : 2
-            },
-            position: new CallbackProperty(function(date, result) {
-                if (defined(that.state.pointTwo))
-                {
-                    return that.state.pointTwo;
-                }
-            }, false)
-        });
-        that.state.datasource.entities.add({
             name: 'Line',
             polyline: {
                         positions : new CallbackProperty(function(date, result) {
-                                if (defined(that.state.pointOne) & defined(that.state.pointTwo))
+                                if (defined(that.state.tailPoints))
                                 {
-                                    return [that.state.pointOne, that.state.pointTwo];
+                                    return [that.state.headPoint].concat(that.state.tailPoints);
                                 }
                         }, false),
                         material : Color.WHITE,
@@ -95,44 +142,25 @@ const MeasureTool = React.createClass({
         terria.dataSources.add(this.state.datasource);
 
         const pickPointMode = new MapInteractionMode({
-            message: 'Measure Tool: Select first point.',
+            message: that.state.measureToolHeader + "<i>Click to add a point</i>",
+            buttonText: "Cancel",
             onCancel: function() {
                 terria.mapInteractionModeStack.pop();
+                that.cleanUp(terria, that);
             }
         });
         terria.mapInteractionModeStack.push(pickPointMode);
 
         knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
-
-                // User has picked one point, wait for second.
-                terria.mapInteractionModeStack.pop();
-                const pickPointMode = new MapInteractionMode({
-                    message: 'Measure Tool: Select second point.',
-                    onCancel: function() {
-                        terria.mapInteractionModeStack.pop();
-                    }
+                var pickedPoint = pickedFeatures.pickPosition;
+                that.setState({headPoint : pickedPoint});
+                that.state.datasource.entities.add({
+                    name: 'First Point',
+                    point : that.state.userPointOptions,
+                    position: pickedPoint
                 });
-                terria.mapInteractionModeStack.push(pickPointMode);
-                var firstPt = pickedFeatures.pickPosition;
-                console.log("First point picked: " + firstPt);
-                that.setState({pointOne : firstPt});
-
-                knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
-                    if (defined(pickedFeatures.pickPosition)) {
-                        // User has picked both points
-                        var secondPt = pickedFeatures.pickPosition;
-                        console.log("Second point picked: " + secondPt);
-                        var firstPt = that.state.pointOne;
-                        that.setState({pointTwo : secondPt});
-                        var distance = CesiumCartesian.distance(firstPt, secondPt);
-                        console.log("DISTANCE...");
-                        var distanceStr = that.prettifyDistance(distance);
-                        console.log(distanceStr);
-                        terria.mapInteractionModeStack.pop();
-
-                    }
-                });
+                that.prepareToAddNewPoint(terria, that);
             }
         });
     },
