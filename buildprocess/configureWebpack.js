@@ -79,27 +79,25 @@ function configureWebpack(terriaJSBasePath, config) {
         stats: 'minimal',
         port: 3003,
         contentBase: 'wwwroot/',
-        //proxy: {
-        //    '*': {
-        //        target: 'http://localhost:3001',
-        //        bypass: function (req, res, proxyOptions) {
-        //            if (req.url.indexOf('/proxy') !== 0 && req.url.indexOf('/proj4lookup') !== 0 &&
-        //                req.url.indexOf('/convert') !== 0 && req.url.indexOf('/proxydomains') !== 0 &&
-        //                req.url.indexOf('/errorpage') !== 0 && req.url.indexOf('/initfile') !== 0) {
-        //                return req.originalUrl;
-        //            }
-        //        }
-        //    }
-        //},
+        proxy: {
+            '*': {
+                target: 'http://localhost:3001',
+                bypass: function (req, res, proxyOptions) {
+                    if (req.url.indexOf('/proxy') !== 0 && req.url.indexOf('/proj4lookup') !== 0 &&
+                        req.url.indexOf('/convert') !== 0 && req.url.indexOf('/proxydomains') !== 0 &&
+                        req.url.indexOf('/errorpage') !== 0 && req.url.indexOf('/initfile') !== 0) {
+                        return req.originalUrl;
+                    }
+                }
+            }
+        },
     };
-
-    //config.resolve.root = (config.resolve.root || []).concat([
-    //    path.resolve('./lib/Sass')
-    //]);
 
     config.sassLoader = {
         includePaths: [path.resolve(__dirname, "../lib/Sass")]
     };
+
+    return config;
 }
 
 module.exports = configureWebpack;

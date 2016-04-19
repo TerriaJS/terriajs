@@ -21,7 +21,7 @@ const GettingStartedTab = React.createClass({
                     <div className="panel__inner">
                         {renderMarkdownInReact(this.props.terria.welcome)}
                         <div className='panel-actions'>
-                          <button className='btn btn-primary btn--first' onClick={this.openAddData} >Explore the Data Catalogue</button>
+                          <button className='btn btn-primary btn--first' onClick={this.openAddData} >Explore the Data Catalogue 22</button>
                           <button className='btn btn-primary btn--second' onClick={this.openUserData} >Load your own data</button>
                         </div>
                     </div>

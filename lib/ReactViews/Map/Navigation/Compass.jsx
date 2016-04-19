@@ -29,6 +29,13 @@ const Compass = React.createClass({
         viewerChange(this);
     },
 
+    componentWillUnmount() {
+        document.removeEventListener('mousemove', this.orbitMouseMoveFunction, false);
+        document.removeEventListener('mouseup', this.orbitMouseUpFunction, false);
+        this._unsubscribeFromClockTick && this._unsubscribeFromClockTick();
+        this._unsubscribeFromPostRender && this._unsubscribeFromPostRender();
+    },
+
     handleMouseDown(e) {
         const compassElement = e.currentTarget;
         const compassRectangle = e.currentTarget.getBoundingClientRect();
@@ -51,6 +58,7 @@ const Compass = React.createClass({
             return true;
         }
     },
+
     handleDoubleClick(e) {
         const scene = this.props.terria.cesium.scene;
         const camera = scene.camera;
@@ -302,7 +310,7 @@ function orbit(viewModel, compassElement, cursorVector) {
 
     document.addEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
     document.addEventListener('mouseup', viewModel.orbitMouseUpFunction, false);
-    viewModel.props.terria.clock.onTick.addEventListener(viewModel.orbitTickFunction);
+    viewModel._unsubscribeFromClockTick = viewModel.props.terria.clock.onTick.addEventListener(viewModel.orbitTickFunction);
 
     updateAngleAndOpacity(cursorVector, compassElement.getBoundingClientRect().width);
 }
@@ -312,20 +320,20 @@ function orbit(viewModel, compassElement, cursorVector) {
  */
 function viewerChange(viewModel) {
     if (defined(viewModel.props.terria.cesium)) {
-        if (viewModel._unsubcribeFromPostRender) {
-            viewModel._unsubcribeFromPostRender();
-            viewModel._unsubcribeFromPostRender = undefined;
+        if (viewModel._unsubscribeFromPostRender) {
+            viewModel._unsubscribeFromPostRender();
+            viewModel._unsubscribeFromPostRender = undefined;
         }
 
-        viewModel._unsubcribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(function() {
+        viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(function() {
             viewModel.setState({
                 heading: viewModel.props.terria.cesium.scene.camera.heading
             });
         });
     } else {
-        if (viewModel._unsubcribeFromPostRender) {
-            viewModel._unsubcribeFromPostRender();
-            viewModel._unsubcribeFromPostRender = undefined;
+        if (viewModel._unsubscribeFromPostRender) {
+            viewModel._unsubscribeFromPostRender();
+            viewModel._unsubscribeFromPostRender = undefined;
         }
         viewModel.showCompass = false;
     }
