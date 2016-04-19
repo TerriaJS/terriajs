@@ -140,11 +140,12 @@ const FeatureInfoSection = React.createClass({
 
                         <If condition={!this.hasTemplate() || this.state.showRawData}>
                             {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
-
-                            <FeatureInfoDownload key='download'
-                                                 viewState={this.props.viewState}
-                                                 data={this.state.templateData}
-                                                 name={catalogItemName}/>
+                            <If condition={defined(this.state.templateData)}>
+                                <FeatureInfoDownload key='download'
+                                    viewState={this.props.viewState}
+                                    data={this.state.templateData}
+                                    name={catalogItemName} />
+                            </If>
                         </If>
                     </section>
                 </If>
@@ -250,7 +251,7 @@ function areAllPropertiesConstant(properties) {
  */
 function getCurrentProperties(feature, currentTime) {
     // Use this instead of the straight feature.currentProperties, so it works the first time through.
-    if (typeof feature.properties.getValue === 'function') {
+    if (defined(feature.properties) && typeof feature.properties.getValue === 'function') {
         return feature.properties.getValue(currentTime);
     }
     return feature.properties;
