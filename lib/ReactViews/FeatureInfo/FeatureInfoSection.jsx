@@ -35,8 +35,6 @@ const FeatureInfoSection = React.createClass({
     },
 
     componentWillMount() {
-        this.generateTemplateData();
-
         const feature = this.props.feature;
         if (!this.isConstant()) {
             this.setState({
@@ -54,14 +52,8 @@ const FeatureInfoSection = React.createClass({
         }
     },
 
-    componentWillReceiveProps() {
-        this.generateTemplateData();
-    },
-
-    generateTemplateData() {
-        this.setState({
-            templateData: propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats)
-        });
+    getTemplateData() {
+        return propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
     },
 
     clickHeader() {
@@ -76,9 +68,10 @@ const FeatureInfoSection = React.createClass({
 
     descriptionFromTemplate() {
         const template = this.props.template;
+        const templateData = this.getTemplateData();
         return typeof template === 'string' ?
-            Mustache.render(template, this.state.templateData) :
-            Mustache.render(template.template, this.state.templateData, template.partials);
+            Mustache.render(template, templateData) :
+            Mustache.render(template.template, templateData, template.partials);
     },
 
     descriptionFromFeature() {
@@ -126,6 +119,7 @@ const FeatureInfoSection = React.createClass({
         // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
+        const templateData = this.getTemplateData();
         return (
             <li className={classNames('feature-info-panel__section', {'is-open': this.props.isOpen})}>
                 <button type='button' onClick={this.clickHeader} className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
@@ -142,10 +136,10 @@ const FeatureInfoSection = React.createClass({
 
                         <If condition={!this.hasTemplate() || this.state.showRawData}>
                             {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
-                            <If condition={defined(this.state.templateData)}>
+                            <If condition={defined(templateData)}>
                                 <FeatureInfoDownload key='download'
                                     viewState={this.props.viewState}
-                                    data={this.state.templateData}
+                                    data={templateData}
                                     name={catalogItemName} />
                             </If>
                         </If>
