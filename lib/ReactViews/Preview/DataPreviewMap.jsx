@@ -47,10 +47,23 @@ const DataPreviewMap = React.createClass({
         this.terriaPreview.baseMap = positron;
 
         this.isZoomedToExtent = false;
-        this.componentWillReceiveProps(this.props);
+        this.lastPreviewedCatalogItem = undefined;
+        this.removePreviewFromMap = undefined;
     },
 
-    componentWillReceiveProps(nextProp) {
+    componentDidMount() {
+        this.updatePreview();
+    },
+
+    componentDidUpdate() {
+        this.updatePreview();
+    },
+
+    updatePreview() {
+        if (this.lastPreviewedCatalogItem === this.props.previewedCatalogItem) {
+            return;
+        }
+
         this.isZoomedToExtent = false;
         this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
 
@@ -63,47 +76,58 @@ const DataPreviewMap = React.createClass({
             this.rectangleCatalogItem.isEnabled = false;
         }
 
-        let previewed = nextProp.previewedCatalogItem;
+        let previewed = this.props.previewedCatalogItem;
         if (previewed && defined(previewed.type) && previewed.isMappable) {
             const that = this;
-            when(previewed.load()).then(function() {
-                function showImageryLayer(component, catalogItem) {
-                    const imageryProvider = catalogItem._createImageryProvider();
-                    const layer = ImageryLayerCatalogItem.enableLayer(catalogItem, imageryProvider, catalogItem.opacity, undefined, component.terriaPreview);
-                    ImageryLayerCatalogItem.showLayer(catalogItem, layer, component.terriaPreview);
-                    component.updateBoundingRectangle(catalogItem);
-
-                    if (defined(component.removePreviewFromMap)) {
-                        component.removePreviewFromMap();
-                        component.removePreviewFromMap = undefined;
-                    }
-
-                    component.removePreviewFromMap = function() {
-                        ImageryLayerCatalogItem.hideLayer(catalogItem, layer, component.terriaPreview);
-                        ImageryLayerCatalogItem.disableLayer(catalogItem, layer, component.terriaPreview);
-                    };
-                }
-
-                if (defined(previewed._createImageryProvider) || (defined(previewed.nowViewingCatalogItem) && defined(previewed.nowViewingCatalogItem._createImageryProvider))) {
-                    if (defined(previewed.nowViewingCatalogItem)) {
-                        return when(previewed.nowViewingCatalogItem.load()).then(showImageryLayer.bind(undefined, that, previewed.nowViewingCatalogItem));
-                    } else {
-                        showImageryLayer(that, previewed);
-                    }
+            return when(previewed.load()).then(function() {
+                // If this item has a separate now viewing item, load it before continuing.
+                let nowViewingItem;
+                let loadNowViewingItemPromise;
+                if (defined(previewed.nowViewingCatalogItem)) {
+                    nowViewingItem = previewed.nowViewingCatalogItem;
+                    loadNowViewingItemPromise = when(nowViewingItem.load());
                 } else {
-                    const type = previewed.type;
-                    const serializedCatalogItem = previewed.serializeToJson();
-                    const catalogItem = createCatalogMemberFromType(type, that.terriaPreview);
-
-                    catalogItem.updateFromJson(serializedCatalogItem);
-                    catalogItem.isEnabled = true;
-
-                    that.updateBoundingRectangle(catalogItem);
-
-                    that.removePreviewFromMap = function() {
-                        catalogItem.isEnabled = false;
-                    };
+                    nowViewingItem = previewed;
+                    loadNowViewingItemPromise = when();
                 }
+
+                return loadNowViewingItemPromise.then(function() {
+                    // Now that the item is loaded, add it to the map.
+                    // Unless we've started previewing something else in the meantime!
+                    if (!that.isMounted() || previewed !== that.props.previewedCatalogItem) {
+                        return;
+                    }
+
+                    // if (defined(that.removePreviewFromMap)) {
+                    //     that.removePreviewFromMap();
+                    //     that.removePreviewFromMap = undefined;
+                    // }
+
+                    if (defined(nowViewingItem._createImageryProvider)) {
+                        const imageryProvider = nowViewingItem._createImageryProvider();
+                        const layer = ImageryLayerCatalogItem.enableLayer(nowViewingItem, imageryProvider, nowViewingItem.opacity, undefined, that.terriaPreview);
+                        ImageryLayerCatalogItem.showLayer(nowViewingItem, layer, that.terriaPreview);
+                        that.updateBoundingRectangle(nowViewingItem);
+
+                        that.removePreviewFromMap = function() {
+                            ImageryLayerCatalogItem.hideLayer(nowViewingItem, layer, that.terriaPreview);
+                            ImageryLayerCatalogItem.disableLayer(nowViewingItem, layer, that.terriaPreview);
+                        };
+                    } else {
+                        // const type = previewed.type;
+                        // const serializedCatalogItem = previewed.serializeToJson();
+                        // const catalogItem = createCatalogMemberFromType(type, that.terriaPreview);
+
+                        // catalogItem.updateFromJson(serializedCatalogItem);
+                        // catalogItem.isEnabled = true;
+
+                        // that.updateBoundingRectangle(catalogItem);
+
+                        // that.removePreviewFromMap = function() {
+                        //     catalogItem.isEnabled = false;
+                        // };
+                    }
+                });
             });
         }
     },
