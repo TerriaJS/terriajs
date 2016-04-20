@@ -98,11 +98,6 @@ const DataPreviewMap = React.createClass({
                         return;
                     }
 
-                    // if (defined(that.removePreviewFromMap)) {
-                    //     that.removePreviewFromMap();
-                    //     that.removePreviewFromMap = undefined;
-                    // }
-
                     if (defined(nowViewingItem._createImageryProvider)) {
                         const imageryProvider = nowViewingItem._createImageryProvider();
                         const layer = ImageryLayerCatalogItem.enableLayer(nowViewingItem, imageryProvider, nowViewingItem.opacity, undefined, that.terriaPreview);
@@ -113,19 +108,13 @@ const DataPreviewMap = React.createClass({
                             ImageryLayerCatalogItem.hideLayer(nowViewingItem, layer, that.terriaPreview);
                             ImageryLayerCatalogItem.disableLayer(nowViewingItem, layer, that.terriaPreview);
                         };
-                    } else {
-                        // const type = previewed.type;
-                        // const serializedCatalogItem = previewed.serializeToJson();
-                        // const catalogItem = createCatalogMemberFromType(type, that.terriaPreview);
+                    } else if (defined(nowViewingItem.dataSource)) {
+                        const dataSource = nowViewingItem.dataSource;
+                        that.terriaPreview.dataSources.add(dataSource);
 
-                        // catalogItem.updateFromJson(serializedCatalogItem);
-                        // catalogItem.isEnabled = true;
-
-                        // that.updateBoundingRectangle(catalogItem);
-
-                        // that.removePreviewFromMap = function() {
-                        //     catalogItem.isEnabled = false;
-                        // };
+                        that.removePreviewFromMap = function() {
+                            that.terriaPreview.dataSources.remove(dataSource);
+                        };
                     }
                 });
             });
