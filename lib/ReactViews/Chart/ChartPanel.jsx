@@ -80,15 +80,15 @@ const ChartPanel = React.createClass({
         const body = document.body;
         if(isVisible) {
             ClassList(body).add('chart-is-visible');
-        }else {
+        } else {
             ClassList(body).remove('chart-is-visible');
         }
-
         this.props.terria.currentViewer.notifyRepaintRequired();
-        // Allow any animations to finish, then trigger a resize.
-        setTimeout(function() {
-            triggerResize();
-        }, this.props.animationDuration || 1);
+        // toggleBodyClass was introduced in 3542ad0 - why does it do this?
+        // // Allow any animations to finish, then trigger a resize.
+        // setTimeout(function() {
+        //     triggerResize();
+        // }, this.props.animationDuration || 1000); // This 1000 should match the default duration in LineChart.
     },
 
     render() {
@@ -120,7 +120,7 @@ const ChartPanel = React.createClass({
                 }
             }
         }
-        // TODO: This changes chartableItems, which will trigger a re-render... check & improve.
+        // This changes chartableItems. Does this trigger a re-render?
         itemsToInactivate.forEach(i=>{
             chartableItems[i].tableStructure.columns.forEach(column=>{
                 column.isActive = false;
