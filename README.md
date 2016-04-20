@@ -44,7 +44,7 @@ gulp watch                                         # Build the site, and watch f
 
 Now visit the site in your browser at `http://localhost:3001`.
  
-See the [wiki](https://github.com/NICTA/nationalmap/wiki) for more detailed information about how to build and run it.
+More information: [Deploying your own Terria Map](https://github.com/NICTA/nationalmap/wiki/Deploying-your-own-Terria-Map)
 
 ### Using TerriaJS in an existing application
 
