@@ -9,8 +9,9 @@ var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 var Color = require('terriajs-cesium/Source/Core/Color');
 var CallbackProperty = require('terriajs-cesium/Source/DataSources/CallbackProperty');
 var CustomDataSource = require('terriajs-cesium/Source/DataSources/CustomDataSource');
-var CesiumCartesian = require('terriajs-cesium/Source/Core/Cartesian3');
-
+var EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
+var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
+var Entity = require('terriajs-cesium/Source/DataSources/Entity.js');
 
 const MeasureTool = React.createClass({
     mixins: [ObserveModelMixin],
@@ -23,10 +24,12 @@ const MeasureTool = React.createClass({
         return {
             headPoint : undefined,
             tailPoints : [],
+            closeLoopPoint : undefined,
+            inMeasureMode : false,
             totalDistanceMetres : 0,
             userPointOptions : {
                                    color : Color.WHITE,
-                                   pixelSize : 8,
+                                   pixelSize : 20, //8,
                                    outlineColor : Color.BLACK,
                                    outlineWidth : 2
                                },
@@ -54,12 +57,47 @@ const MeasureTool = React.createClass({
         return distanceStr;
     },
 
-    editPoint() {
-        console.log("Edit point!");
-    },
+    clickedExistingPoint(that, features) {
+        if (features.length < 1)
+        {
+            return false;
+        }
 
-    nearExistingPoint(pickedPoint, that) {
-        return false;
+        features.forEach((feature)=> {
+            if (!defined(feature.position))
+            {
+                console.log("!!!!!!");
+                return;
+            }
+            var point = feature.position.getValue(that.props.terria.clock.currentTime);
+
+            if (point === that.state.headPoint)
+            {
+                console.log("END LINE!");
+                if (that.state.tailPoints.length > 2)
+                {
+                    that.setState({closeLoopPoint : point});
+                }
+                return;
+            }
+            else
+            {
+                // TODO recalcuate total distance
+                console.log("removing point...");
+                console.log(point);
+                var index = that.state.tailPoints.indexOf(point);
+                console.log(that.state.tailPoints);
+                console.log("index " + index);
+                if (index > -1)
+                {
+                    console.log("SPLICE!");
+                    that.state.tailPoints.splice(index, 1);
+                }
+                that.state.datasource.entities.remove(feature);
+                return;
+            }
+        });
+        return true;
     },
 
     cleanUp(terria, that) {
@@ -68,6 +106,22 @@ const MeasureTool = React.createClass({
         that.state.headPoint = undefined;
         that.state.tailPoints = [];
         that.state.totalDistanceMetres = 0;
+        that.setState({inMeasureMode : false});
+    },
+
+    updateDistance(that, pickedPoint) {
+        var lastPoint = that.state.headPoint;
+        if (that.state.tailPoints.length > 0)
+        {
+            lastPoint = that.state.tailPoints[that.state.tailPoints.length - 1];
+        }
+        // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
+        // curvature. This is not what we want.
+        var pickedPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(pickedPoint);
+        var lastPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(lastPoint);
+        var geodesic = new EllipsoidGeodesic(pickedPointCartographic, lastPointCartographic);
+
+        that.setState({ totalDistanceMetres : that.state.totalDistanceMetres + geodesic.surfaceDistance });
     },
 
     prepareToAddNewPoint(terria, that) {
@@ -93,27 +147,22 @@ const MeasureTool = React.createClass({
         knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
                 var pickedPoint = pickedFeatures.pickPosition;
-                if (that.nearExistingPoint(pickedPoint, that))
+                if (that.clickedExistingPoint(that, pickedFeatures.features))
                 {
-                    that.editPoint();
+                    console.log("Existing point. Returning.");
+                    return;
                 }
                 else
                 {
-                    var lastPoint = that.state.headPoint;
-                    if (that.state.tailPoints.length > 0)
-                    {
-                        lastPoint = that.state.tailPoints[that.state.tailPoints.length - 1];
-                    }
-                    var distance = CesiumCartesian.distance(pickedPoint, lastPoint);
-
-                    that.setState({ totalDistanceMetres : that.state.totalDistanceMetres + distance });
+                    that.updateDistance(that, pickedPoint);
 
                     that.state.tailPoints.push(pickedPoint);
-                    that.state.datasource.entities.add({
+                    var pointEntity = new Entity({
                         name: 'Another Point',
                         point : that.state.userPointOptions,
                         position: pickedPoint
                     });
+                    that.state.datasource.entities.add(pointEntity);
                 }
                 that.prepareToAddNewPoint(terria, that);
             }
@@ -123,6 +172,13 @@ const MeasureTool = React.createClass({
     enterMeasureMode() {
         const terria = this.props.terria;
         const that = this;
+        if (that.state.inMeasureMode || that.state.closeLoopPoint)
+        {
+            // Do nothing
+            return;
+        }
+        that.setState({inMeasureMode : true});
+
         // Cancel any feature picking already in progress.
         terria.pickedFeatures = undefined;
 
@@ -130,10 +186,11 @@ const MeasureTool = React.createClass({
             name: 'Line',
             polyline: {
                         positions : new CallbackProperty(function(date, result) {
-                                if (defined(that.state.tailPoints))
+                                if (defined(that.state.headPoint))
                                 {
                                     return [that.state.headPoint].concat(that.state.tailPoints);
                                 }
+                                return undefined;
                         }, false),
                         material : Color.WHITE,
                         width : 1
@@ -155,11 +212,12 @@ const MeasureTool = React.createClass({
             if (defined(pickedFeatures.pickPosition)) {
                 var pickedPoint = pickedFeatures.pickPosition;
                 that.setState({headPoint : pickedPoint});
-                that.state.datasource.entities.add({
+                var firstPointEntity = new Entity({
                     name: 'First Point',
                     point : that.state.userPointOptions,
                     position: pickedPoint
                 });
+                that.state.datasource.entities.add(firstPointEntity);
                 that.prepareToAddNewPoint(terria, that);
             }
         });
