@@ -71,10 +71,10 @@ const DataPreviewMap = React.createClass({
                 //     return;
                 // }
 
-                // Preview the nowViewingCatalogItem if there is one.
-                previewed = defaultValue(previewed.nowViewingCatalogItem, previewed);
-
                 if (defined(previewed._createImageryProvider)) {
+                    // Preview the nowViewingCatalogItem if there is one.
+                    previewed = defaultValue(previewed.nowViewingCatalogItem, previewed);
+
                     const imageryProvider = previewed._createImageryProvider();
                     const layer = ImageryLayerCatalogItem.enableLayer(previewed, imageryProvider, previewed.opacity, undefined, that.terriaPreview);
                     ImageryLayerCatalogItem.showLayer(previewed, layer, that.terriaPreview);
