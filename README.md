@@ -46,6 +46,13 @@ Now visit the site in your browser at `http://localhost:3001`.
  
 More information: [Deploying your own Terria Map](https://github.com/NICTA/nationalmap/wiki/Deploying-your-own-Terria-Map)
 
+### Components and naming
+
+* **[Terria™](http://terria.io)** is the overall name for the spatial data platform, including closed-source spatial analytics developed by Data61.
+* **TerriaJS** is this JavaScript library consisting of the 2D/3D map, catalog management and many spatial data connectors.
+* **[TerriaMap](https://github.com/TerriaJS/TerriaMap)** is a complete website starting point, using TerriaJS.
+* **[TerriaJS-Server]** is a NodeJS-based server that provides proxying and support services for TerriaJS.
+
 ### Using TerriaJS in an existing application
 
 ```
