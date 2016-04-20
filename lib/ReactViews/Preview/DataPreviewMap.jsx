@@ -67,22 +67,29 @@ const DataPreviewMap = React.createClass({
         if (previewed && defined(previewed.type) && previewed.isMappable) {
             const that = this;
             when(previewed.load()).then(function() {
-                // if (previewed !== that.props.previewedCatalogItem) {
-                //     return;
-                // }
+                function showImageryLayer(component, catalogItem) {
+                    const imageryProvider = catalogItem._createImageryProvider();
+                    const layer = ImageryLayerCatalogItem.enableLayer(catalogItem, imageryProvider, catalogItem.opacity, undefined, component.terriaPreview);
+                    ImageryLayerCatalogItem.showLayer(catalogItem, layer, component.terriaPreview);
+                    component.updateBoundingRectangle(catalogItem);
 
-                if (defined(previewed._createImageryProvider)) {
-                    // Preview the nowViewingCatalogItem if there is one.
-                    previewed = defaultValue(previewed.nowViewingCatalogItem, previewed);
+                    if (defined(component.removePreviewFromMap)) {
+                        component.removePreviewFromMap();
+                        component.removePreviewFromMap = undefined;
+                    }
 
-                    const imageryProvider = previewed._createImageryProvider();
-                    const layer = ImageryLayerCatalogItem.enableLayer(previewed, imageryProvider, previewed.opacity, undefined, that.terriaPreview);
-                    ImageryLayerCatalogItem.showLayer(previewed, layer, that.terriaPreview);
-
-                    that.removePreviewFromMap = function() {
-                        ImageryLayerCatalogItem.hideLayer(previewed, layer, that.terriaPreview);
-                        ImageryLayerCatalogItem.disableLayer(previewed, layer, that.terriaPreview);
+                    component.removePreviewFromMap = function() {
+                        ImageryLayerCatalogItem.hideLayer(catalogItem, layer, component.terriaPreview);
+                        ImageryLayerCatalogItem.disableLayer(catalogItem, layer, component.terriaPreview);
                     };
+                }
+
+                if (defined(previewed._createImageryProvider) || (defined(previewed.nowViewingCatalogItem) && defined(previewed.nowViewingCatalogItem._createImageryProvider))) {
+                    if (defined(previewed.nowViewingCatalogItem)) {
+                        return when(previewed.nowViewingCatalogItem.load()).then(showImageryLayer.bind(undefined, that, previewed.nowViewingCatalogItem));
+                    } else {
+                        showImageryLayer(that, previewed);
+                    }
                 } else {
                     const type = previewed.type;
                     const serializedCatalogItem = previewed.serializeToJson();
@@ -91,25 +98,28 @@ const DataPreviewMap = React.createClass({
                     catalogItem.updateFromJson(serializedCatalogItem);
                     catalogItem.isEnabled = true;
 
+                    that.updateBoundingRectangle(catalogItem);
+
                     that.removePreviewFromMap = function() {
                         catalogItem.isEnabled = false;
                     };
                 }
-
-                that.updateBoundingRectangle(previewed);
             });
         }
     },
 
     clickMap() {
-        if (!defined(this.catalogItem)) {
+        if (!defined(this.props.previewedCatalogItem)) {
             return;
         }
 
         this.isZoomedToExtent = !this.isZoomedToExtent;
 
         if (this.isZoomedToExtent) {
-            this.catalogItem.zoomTo();
+            const catalogItem = defaultValue(this.props.previewedCatalogItem.nowViewingCatalogItem, this.props.previewedCatalogItem);
+            if (defined(catalogItem.rectangle)) {
+                this.terriaPreview.currentViewer.zoomTo(catalogItem.rectangle);
+            }
         } else {
             this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
         }
@@ -123,7 +133,8 @@ const DataPreviewMap = React.createClass({
             this.rectangleCatalogItem = undefined;
         }
 
-        const catalogItem = defaultValue(previewed, this.props.previewedCatalogItem);
+        let catalogItem = defaultValue(previewed, this.props.previewedCatalogItem);
+        catalogItem = defaultValue(catalogItem.nowViewingCatalogItem, catalogItem);
 
         if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {
             return;
