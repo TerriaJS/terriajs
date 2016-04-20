@@ -54,7 +54,7 @@ npm install terriajs
 
 TerriaJS is composed of a number of CommonJS modules, making it easy to incorporate only the parts you need into your application.  Building a TerriaJS application consists of three steps:
 
-1. Build the code with [browserify](http://browserify.org/) (or a similar tool).
+1. Build the code with [webpack](https://webpack.github.io/) (or a similar tool).
 2. Build the CSS with [less](http://lesscss.org/).
 3. Copy the runtime resources to a directory accessible from your application's web server.
 
