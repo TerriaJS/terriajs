@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "repository": {
@@ -15,6 +15,7 @@
     "class-list": "^0.1.1",
     "classnames": "^2.2.3",
     "css-loader": "^0.23.1",
+    "dateformat": "^1.0.12",
     "d3": "^3.5.14",
     "dompurify": "^0.7.3",
     "gulp": "^3.9.1",
