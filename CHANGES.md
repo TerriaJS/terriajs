@@ -2,6 +2,17 @@
 Change Log
 ==========
 
+### 3.0.0
+
+* TerriaJS-based application are now best built using Webpack instead of Browserify.
+### 2.3.1
+
+* Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
+    in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
+    (which is the current time at the top-left).
+* Fixed display when `tableStyle.colorBins` is 0.
+* Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
+
 ### 2.3.0
 
 * Share links now contain details about the picked point, picked features and currently selected feature.
