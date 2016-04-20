@@ -2,14 +2,17 @@
 
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
 const createCatalogMemberFromType = require('../../Models/createCatalogMemberFromType');
+const defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
+const ImageryLayerCatalogItem = require('../../Models/ImageryLayerCatalogItem');
 const ObserveModelMixin = require('../ObserveModelMixin');
 const OpenStreetMapCatalogItem = require('../../Models/OpenStreetMapCatalogItem');
 const React = require('react');
 const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
+const when = require('terriajs-cesium/Source/ThirdParty/when');
 
 const DataPreviewMap = React.createClass({
     mixins: [ObserveModelMixin],
@@ -51,31 +54,49 @@ const DataPreviewMap = React.createClass({
         this.isZoomedToExtent = false;
         this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
 
-        if (defined(this.catalogItem)) {
-            this.catalogItem.isEnabled = false;
+        if (defined(this.removePreviewFromMap)) {
+            this.removePreviewFromMap();
+            this.removePreviewFromMap = undefined;
         }
 
         if (defined(this.rectangleCatalogItem)) {
             this.rectangleCatalogItem.isEnabled = false;
         }
 
-        const previewed = nextProp.previewedCatalogItem;
+        let previewed = nextProp.previewedCatalogItem;
         if (previewed && defined(previewed.type) && previewed.isMappable) {
-            const type = previewed.type;
-            const serializedCatalogItem = previewed.serializeToJson();
-            const catalogItem = createCatalogMemberFromType(type, this.terriaPreview);
-
-            catalogItem.updateFromJson(serializedCatalogItem);
-            catalogItem.isEnabled = true;
-            this.catalogItem = catalogItem;
-
             const that = this;
-            catalogItem.load().then(function() {
-                if (previewed !== that.props.previewedCatalogItem) {
-                    return;
+            when(previewed.load()).then(function() {
+                // if (previewed !== that.props.previewedCatalogItem) {
+                //     return;
+                // }
+
+                // Preview the nowViewingCatalogItem if there is one.
+                previewed = defaultValue(previewed.nowViewingCatalogItem, previewed);
+
+                if (defined(previewed._createImageryProvider)) {
+                    const imageryProvider = previewed._createImageryProvider();
+                    const layer = ImageryLayerCatalogItem.enableLayer(previewed, imageryProvider, previewed.opacity, undefined, that.terriaPreview);
+                    ImageryLayerCatalogItem.showLayer(previewed, layer, that.terriaPreview);
+
+                    that.removePreviewFromMap = function() {
+                        ImageryLayerCatalogItem.hideLayer(previewed, layer, that.terriaPreview);
+                        ImageryLayerCatalogItem.disableLayer(previewed, layer, that.terriaPreview);
+                    };
+                } else {
+                    const type = previewed.type;
+                    const serializedCatalogItem = previewed.serializeToJson();
+                    const catalogItem = createCatalogMemberFromType(type, that.terriaPreview);
+
+                    catalogItem.updateFromJson(serializedCatalogItem);
+                    catalogItem.isEnabled = true;
+
+                    that.removePreviewFromMap = function() {
+                        catalogItem.isEnabled = false;
+                    };
                 }
 
-                that.updateBoundingRectangle();
+                that.updateBoundingRectangle(previewed);
             });
         }
     },
@@ -96,13 +117,13 @@ const DataPreviewMap = React.createClass({
         this.updateBoundingRectangle();
     },
 
-    updateBoundingRectangle() {
+    updateBoundingRectangle(previewed) {
         if (defined(this.rectangleCatalogItem)) {
             this.rectangleCatalogItem.isEnabled = false;
             this.rectangleCatalogItem = undefined;
         }
 
-        const catalogItem = this.catalogItem;
+        const catalogItem = defaultValue(previewed, this.props.previewedCatalogItem);
 
         if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {
             return;
