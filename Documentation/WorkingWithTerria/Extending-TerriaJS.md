@@ -6,10 +6,6 @@ The startup list of init files loaded in a TerriaJS application is specified in 
 
 To add an item to the catalog, the easiest thing to do is to find a similar item in the list and mirror yours after that.  You can also find the complete list of catalog member "types" in [registerCatalogMembers.js](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/registerCatalogMembers.js).  The list of properties that are supported by a given catalog item type can be found in each view-model class's code (for example, [WebMapServiceCatalogItem](https://github.com/TerriaJS/terriajs/blob/master/src/Models/WebMapServiceCatalogItem.js)) and documentation (generated with `gulp docs`).
 
-# Gain programmatic access to the Catalog and Now Viewing panels
-
-Most applications built on National Map will include their own version of [main.js](https://github.com/NICTA/nationalmap/blob/master/src/viewer/main.js).  It is this source file that creates the `ApplicationViewModel` and `CatalogViewModel`.  Your version of `main.js` can create any additional UI components you need and pass these objects through to them.
-
 # Find a item or group in the catalog
 
 The easiest way to find an item in the catalog is to use the `findFirstItemByName` method on `CatalogGroupViewModel`:
@@ -59,7 +55,7 @@ To programmatically add an item to the catalog, first, find the group you want t
 
 As of this writing, the National Map user interface currently requires two levels of groups before an actual catalog item.  For example, you can put a catalog item under `National Data Sets -> Vegetation` but not directly under `National Data Sets`.
 
-Next, create a new catalog item view-model of the appropriate type and set its properties.  View-models are found in [src/ViewModels](https://github.com/NICTA/nationalmap/tree/master/src/ViewModels) and have `ItemViewModel` in their name.  For example:
+Next, create a new catalog item view-model of the appropriate type and set its properties.  View-models are found in [lib/ViewModels](/lib/ViewModels) and have `ItemViewModel` in their name.  For example:
 
     var newItem = new WebMapServiceItemViewModel(catalog.application);
     newItem.name = 'An AMAZING data source!';
@@ -77,18 +73,18 @@ The user interface will automatically update to show the new item.
 
 # Add a new type of catalog item
 
-You can add a new type of catalog item to National Map by extending `CatalogItemViewModel`.  The existing catalog items in National Map, such as [WebMapServiceItemViewModel](https://github.com/NICTA/nationalmap/blob/master/src/ViewModels/WebMapServiceItemViewModel.js) and [GeoJsonItemViewModel](https://github.com/NICTA/nationalmap/blob/master/src/ViewModels/GeoJsonItemViewModel.js) serve as good examples of how to do this.
+You can add a new type of catalog item by extending `CatalogItemViewModel`.  The existing catalog items, such as [WebMapServiceItemViewModel](/lib/ViewModels/WebMapServiceItemViewModel.js) and [GeoJsonItemViewModel](/lib/ViewModels/GeoJsonItemViewModel.js) serve as good examples of how to do this.
 
-In order for the new data source to be configurable via `init_nm.json`, you also need to add it to [registerCatalogViewModels.js](https://github.com/NICTA/nationalmap/blob/master/src/ViewModels/registerCatalogViewModels.js) with a unique `type` identifier.
-
-If you wrote a new type of catalog item that might be of use to other projects using National Map, you should open a pull request!
+In order for the new data source to be configurable an init file, you also need to add it to [registerCatalogViewModels.js](/lib/ViewModels/registerCatalogViewModels.js) with a unique `type` identifier.
 
 # Add a new type of group
 
-It is also possible to extend National Map with custom catalog item groups.  This is done when you want part of your catalog to be built by querying a remote server.  For example, National Map includes an out-of-the-box group to retrieve data sources from a WMS server's `GetCapabilities` response.
+It is also possible to add custom catalog item group types.  This is done when you want part of your catalog to be built by querying a remote server.  For example, TerriaJS includes a a group type to retrieve data sources from a WMS server's `GetCapabilities` response.
 
-To create a custom type of group, extend `CatalogGroupViewModel`.  [WebMapServiceGroupViewModel.js](https://github.com/NICTA/nationalmap/blob/master/src/ViewModels/WebMapServiceGroupViewModel.js) serves as a good example of how to do this.
+To create a custom type of group, extend `CatalogGroupViewModel`.  [WebMapServiceGroupViewModel.js](/lib/ViewModels/WebMapServiceGroupViewModel.js) serves as a good example of how to do this.
 
-In order for the new group to be configurable via `init_nm.json`, you also need to add it to [registerCatalogViewModels.js](https://github.com/NICTA/nationalmap/blob/master/src/ViewModels/registerCatalogViewModels.js) with a unique `type` identifier.
+In order for the new group to be usable in an init file, you also need to add it to [registerCatalogViewModels.js](/lib/ViewModels/registerCatalogViewModels.js) with a unique `type` identifier.
 
-If you wrote a new type of catalog item group that might be of use to other projects using National Map, you should open a pull request!
+# Contributing
+
+If you add a new feature or item or group type that might be of use to other projects, please consider contributing it back as a pull request. See the [Contributors Guide](/Documentation/Contributors).
