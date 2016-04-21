@@ -1,12 +1,15 @@
 ## Catalog management
 
-Tips for working with specific spatial file types and services.
+Tips for working with specific spatial file types and services:
 
-* [CKAN](CKAN.md)
 * [Data providers guide](Data-Providers-Guide.md)
-* [Format conversion service](Format-Conversion-Service.md)
+* [CKAN](CKAN.md)
 * [GeoJSON](GeoJSON.md)
+* [Web Map Service (WMS)](Web-Map-Service.md)
+
+Other issues to consider with TerriaJS catalogs:
+
+* [Performance testing](Performance-testing.md)
 * [Issues with CORS](Handling-CORS.md)
 * [Catalog (init) files](Initialization-File.md)
-* [Web Map Service (WMS)](Web-Map-Service.md)
-* [Performance testing](Performance-testing.md)
+* [Format conversion service](Format-Conversion-Service.md)
