@@ -1,4 +1,4 @@
-# Deploying your own Terria Map
+# Deploying a Terria Map
 
 If you run into problems, check [TerriaJS's Problems and Solutions](https://github.com/TerriaJS/terriajs/wiki/Problems-and-Solutions).
 

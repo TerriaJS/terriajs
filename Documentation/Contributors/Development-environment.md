@@ -1,7 +1,6 @@
-# Modifying a TerriaJS-based site
-(including National Map)
+# Setting up a TerriaJS development environment
 
-First, [deploy and build your instance](Deploying a copy of National Map).
+First, [deploy and build your instance](/Documentation/Deployment/Deploying-Terria-Map.md).
 
 ## Updating Build
 
@@ -14,9 +13,9 @@ gulp
 npm start
 ```
 
-## Building National Map against a modified TerriaJS
+## Building a Terria based site against a modified TerriaJS
 
-What if you need to make changes to [TerriaJS](https://github.com/TerriaJS/terriajs) while working on National Map?
+What if you need to make changes to [TerriaJS](https://github.com/TerriaJS/terriajs) while working on a site that depends on it?
 
 In the process above, the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `npm install`.  Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `npm install`.  Instead, follow these instructions.
 
@@ -92,7 +91,7 @@ npm start
 
 ## Documentation
 
-Documentation is automatically generated from the source via jdocs.  It will be place in the public/doc folder.  
+Documentation is automatically generated from the source via jdocs.  It will be placed in the public/doc folder.  
 
 It is still very early stages, so the documentation is rather minimal and referencing the source code is probably a better way to determine the best way to use the existing functionality.
 
@@ -102,19 +101,6 @@ You can click [here](http://nationalmap.nicta.com.au/doc/) to reference the docu
 
 The test suite is run by opening a web browser on [http://localhost:3001/SpecRunner.html](http://localhost:3001/SpecRunner.html).  The specs themselves are found in the `test/` directory.
 
-## Contributing
-
-All code modifications should be made via GitHub pull requests.  Please do not commit code directly to `master`, even if GitHub allows you to do so.  Pull requests may be merged by anyone with commit access to the repo and who feels qualified to review the changes.  Developers should not merge their own pull requests.
-
-Before merging a pull request:
-* Verify the code builds successfully and there are no jshint warnings (run `gulp`).
-* Check basic functionality of the map, such as enabling data sources in both 2D and 3D.
-* Verify that all specs pass.  If anything you did might be browser-dependent, you should run the specs in all the major supported browsers.
-* Review the code itself for quality of implementation and consistency with coding conventions.  Until we have our own coding conventions, we can [use Cesium's](https://github.com/AnalyticalGraphicsInc/cesium/wiki/JavaScript-Coding-Conventions).
-
-Reviewers are welcome to make minor edits to a pull request (e.g. fixing typos) before merging it.  If a reviewer makes larger changes, someone else - maybe the original author of the pull request - should take a look at the changes before the entire pull request is merged.
-
-After you merge a pull request, delete the associated branch if you can.  You will see an option for this on the GitHub pull request page.
 
 ## Gulp Tasks
 
