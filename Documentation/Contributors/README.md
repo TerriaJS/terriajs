@@ -1,5 +1,6 @@
 ## TerriaJS Contributor's Guide
 
+[CONTRIBUTING.md](/CONTRIBUTING.md)
 
 All code modifications should be made via GitHub pull requests.  Please do not commit code directly to `master`, even if GitHub allows you to do so.  Pull requests may be merged by anyone with commit access to the repo and who feels qualified to review the changes.  Developers should not merge their own pull requests.
 
