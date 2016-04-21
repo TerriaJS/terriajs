@@ -1,7 +1,4 @@
-If you want to contribute to National Map and do not yet have commit access to the main repo, you may want to [fork the repo](https://help.github.com/articles/fork-a-repo) using the GitHub UI, and then clone your fork instead of cloning the main repo. 
-
-
-## Building TerriaJS against a modified Cesium
+## Working on TerriaJS and Cesium
 
 What if you need to make changes to [Cesium](https://github.com/AnalyticalGraphicsInc/cesium) while working on TerriaJS?
 

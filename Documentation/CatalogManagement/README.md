@@ -6,7 +6,7 @@ Tips for working with specific spatial file types and services:
 * [GeoJSON](GeoJSON.md)
 * [Web Map Service (WMS)](Web-Map-Service.md)
 
-See also the National Map [Data providers guide](https://github.com/NICTA/nationalmap/wiki/Data-Providers-Guide)
+See also the National Map [Data providers guide](https://github.com/NICTA/nationalmap/wiki/Data-Providers-Guide).
 
 Other issues to consider with TerriaJS catalogs:
 
