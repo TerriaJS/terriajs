@@ -4,7 +4,7 @@ These guides cover configuring, skinning and tweaking Terria. You'll need some b
 
 First, read [Deployment](/Documentation/Deployment) to get up and running.
 
-* [How to skin a Terria Map](How-to-skin-NationalMap.md)
+* [How to skin a Terria Map](How-to-skin-a-Terria-Map.md)
 * [TerriaJS URL parameters](TerriaJS-URL-parameters.md)
 * [How to control TerriaJS through an `<iframe>`](TerriaJS-in-iframe.md)
 * [Make your own map without writing code](http://stevebennett.me/2015/07/02/your-own-personal-national-map-with-terriajs-no-coding-and-nothing-to-deploy/)
