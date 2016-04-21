@@ -1,12 +1,14 @@
-This page describes how to do some things that commonly need to be done when building an application on top of TerriaJS.
+# Extending TerriaJS
 
-# Add a catalog item to the initial catalog that is loaded at startup
+Here are some of the common things you'll want to do to extend TerriaJS with new behaviour.
+
+### Add a catalog item to the initial catalog that is loaded at startup
 
 The startup list of init files loaded in a TerriaJS application is specified in the `initializationUrls` property in a config file, typically called `config.json`, that is passed to the `Terria.start` function.  If an item in `initializationUrls` ends with `.json`, it is assumed to be a relative or absolute URL to the init file.  Otherwise, the init file URL is formed as `'init/' + item + '.json'`.
 
 To add an item to the catalog, the easiest thing to do is to find a similar item in the list and mirror yours after that.  You can also find the complete list of catalog member "types" in [registerCatalogMembers.js](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/registerCatalogMembers.js).  The list of properties that are supported by a given catalog item type can be found in each view-model class's code (for example, [WebMapServiceCatalogItem](https://github.com/TerriaJS/terriajs/blob/master/src/Models/WebMapServiceCatalogItem.js)) and documentation (generated with `gulp docs`).
 
-# Find a item or group in the catalog
+### Find a item or group in the catalog
 
 The easiest way to find an item in the catalog is to use the `findFirstItemByName` method on `CatalogGroupViewModel`:
 
@@ -25,7 +27,7 @@ You can also loop over the individual items manually as you would any Javascript
         }
     }
 
-# Enable, disable, hide, or show a catalog item
+### Enable, disable, hide, or show a catalog item
 
 You can enable a catalog item programmatically just by setting its `isEnabled` property.
 
@@ -44,7 +46,7 @@ You can show or disable it in the same way:
 
 Enabling a catalog item that is already enabled but not shown will NOT cause it to be shown.
 
-# Programmatically add an item to the catalog
+### Programmatically add an item to the catalog
 
 To programmatically add an item to the catalog, first, find the group you want to add it to:
 
@@ -71,13 +73,13 @@ Finally, add the new item to the group you found earlier:
 
 The user interface will automatically update to show the new item.
 
-# Add a new type of catalog item
+### Add a new type of catalog item
 
 You can add a new type of catalog item by extending `CatalogItemViewModel`.  The existing catalog items, such as [WebMapServiceItemViewModel](/lib/ViewModels/WebMapServiceItemViewModel.js) and [GeoJsonItemViewModel](/lib/ViewModels/GeoJsonItemViewModel.js) serve as good examples of how to do this.
 
 In order for the new data source to be configurable an init file, you also need to add it to [registerCatalogViewModels.js](/lib/ViewModels/registerCatalogViewModels.js) with a unique `type` identifier.
 
-# Add a new type of group
+### Add a new type of group
 
 It is also possible to add custom catalog item group types.  This is done when you want part of your catalog to be built by querying a remote server.  For example, TerriaJS includes a a group type to retrieve data sources from a WMS server's `GetCapabilities` response.
 
@@ -85,6 +87,6 @@ To create a custom type of group, extend `CatalogGroupViewModel`.  [WebMapServic
 
 In order for the new group to be usable in an init file, you also need to add it to [registerCatalogViewModels.js](/lib/ViewModels/registerCatalogViewModels.js) with a unique `type` identifier.
 
-# Contributing
+### Contributing
 
 If you add a new feature or item or group type that might be of use to other projects, please consider contributing it back as a pull request. See the [Contributors Guide](/Documentation/Contributors).
