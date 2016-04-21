@@ -1,16 +1,11 @@
 'use strict';
 
 /*global require,describe,xdescribe,it,expect,beforeEach*/
-var Cesium = require('../../lib/Models/Cesium');
 var Color = require('terriajs-cesium/Source/Core/Color');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 var GeoJsonDataSource = require('terriajs-cesium/Source/DataSources/GeoJsonDataSource');
 var loadJson = require('terriajs-cesium/Source/Core/loadJson');
-var Terria = require('../../lib/Models/Terria');
 var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
-var Terria = require('../../lib/Models/Terria');
-var supportsWebGL = require('../../lib/Core/supportsWebGL');
-
 var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
 var ImageryLayer = require('terriajs-cesium/Source/Scene/ImageryLayer');
 var CesiumMath = require('terriajs-cesium/Source/Core/Math');
@@ -21,7 +16,10 @@ var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayer
 var SceneTransforms = require('terriajs-cesium/Source/Scene/SceneTransforms');
 var TileBoundingBox = require('terriajs-cesium/Source/Scene/TileBoundingBox');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
-var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+
+var Cesium = require('../../lib/Models/Cesium');
+var Terria = require('../../lib/Models/Terria');
+var supportsWebGL = require('../../lib/Core/supportsWebGL');
 
 var describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
