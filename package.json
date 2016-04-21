@@ -48,6 +48,7 @@
     "eslint": "^2.7.0",
     "eslint-plugin-jsx-control-statements": "git+https://github.com/AlexGilleran/eslint-plugin-jsx-control-statements.git",
     "eslint-plugin-react": "^4.3.0",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "generate-terriajs-schema": "^1.2.1",
     "glob-all": "^3.0.1",
@@ -72,9 +73,11 @@
     "react-addons-test-utils": "0.14.7",
     "react-shallow-testutils": "^1.0.0",
     "sass-loader": "^3.2.0",
+    "string-replace-webpack-plugin": "0.0.3",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^1.4.1",
-    "url-loader": "^0.5.7"
+    "url-loader": "^0.5.7",
+    "worker-loader": "^0.7.0"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",

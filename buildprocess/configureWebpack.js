@@ -1,12 +1,80 @@
 var path = require('path');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var StringReplacePlugin = require("string-replace-webpack-plugin");
+const cesiumDir = path.dirname(require.resolve('terriajs-cesium'));
+const DirectoryLoader = require('./directory-loader');
+const webpack = require('webpack');
 
-function configureWebpack(terriaJSBasePath, config) {
+function configureWebpack(terriaJSBasePath, config, devMode) {
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
-
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
+
+
+
+    config.module.loaders.push({
+        test: /\.js?$/,
+        include: path.dirname(require.resolve('terriajs-cesium')),
+        exclude: [
+            require.resolve('terriajs-cesium/Source/ThirdParty/zip'),
+            require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
+            require.resolve('terriajs-cesium/Source/Core/TaskProcessor')
+        ],
+        loader: StringReplacePlugin.replace({
+            replacements: [
+                {
+                    pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
+                    replacement: function (match, p1, offset, string) {
+                        return "require('" + cesiumDir + "/Source/" + p1 + "')";
+                    }
+                }
+            ]
+        })
+    });
+
+    config.module.loaders.push({
+        test: /\.js?$/,
+        include: require.resolve('terriajs-cesium/Source/ThirdParty/zip'),
+        loader: StringReplacePlugin.replace({
+            replacements: [
+                {
+                    pattern: /new Worker\(obj\.zip\.workerScriptsPath \+(.*)\)/ig,
+                    replacement: function (match, p1, offset, string) {
+                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/ThirdParty/Workers/' + " + p1 + ")()";
+                    }
+                }
+            ]
+        })
+    });
+
+    config.module.loaders.push({
+        test: /\.js?$/,
+        include: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
+        loader: StringReplacePlugin.replace({
+            replacements: [
+                {
+                    pattern: /function getWorkerUrl\((.*)\)/ig,
+                    replacement: function (match, p1, offset, string) {
+                        return "function getWorkerUrl2()";
+                    }
+                },
+                {
+                    pattern: /getWorkerUrl\(\'.*Workers\/(.*)\'\)/ig,
+                    replacement: function (match, p1, offset, string) {
+                        return "'" + p1 + "'";
+                    }
+                },
+                {
+                    pattern: /new Worker\((.*)\)/ig,
+                    replacement: function (match, p1, offset, string) {
+                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/Workers/' + " + p1 + ")()";
+                    }
+                }
+            ]
+        })
+    });
 
     // Use Babel to compile our JavaScript files.
     config.module.loaders.push({
@@ -25,6 +93,8 @@ function configureWebpack(terriaJSBasePath, config) {
         }
     });
 
+    //
+
     // Use the raw loader for our view HTML.  We don't use the html-loader because it
     // will doing things with images that we don't (currently) want.
     config.module.loaders.push({
@@ -41,8 +111,20 @@ function configureWebpack(terriaJSBasePath, config) {
     });
 
     config.module.loaders.push({
+        test: /\.json|xml$/,
+        loader: require.resolve('file-loader'),
+        include: cesiumDir + '/Source/Assets'
+    });
+
+    config.module.loaders.push({
+        test: /\/Workers\/$/,
+        loader: require.resolve('file-loader'),
+        include: cesiumDir
+    });
+
+    config.module.loaders.push({
         test: /\.json$/,
-        loader: 'json'
+        loader: require.resolve('json-loader')
     });
 
     // Don't let Cesium's `buildModuleUrl` and `TaskProcessor` see require - only the AMD version is relevant.
@@ -50,15 +132,11 @@ function configureWebpack(terriaJSBasePath, config) {
         test: require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
         loader: require.resolve('imports-loader') + '?require=>false'
     });
-    config.module.loaders.push({
-        test: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
-        loader: require.resolve('imports-loader') + '?require=>false'
-    });
 
-    config.module.loaders.push({
-        test: /\.scss$/,
-        loaders: [require.resolve('style-loader'), require.resolve('css-loader') + '?sourceMap', require.resolve('sass-loader') + '?sourceMap']
-    });
+    //config.module.loaders.push({
+    //    test: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
+    //    loader: require.resolve('imports-loader') + '?require=>false'
+    //});
 
     config.module.loaders.push({
         test: /\.(png|jpg|svg|gif)$/,
@@ -96,6 +174,33 @@ function configureWebpack(terriaJSBasePath, config) {
     config.sassLoader = {
         includePaths: [path.resolve(__dirname, "../lib/Sass")]
     };
+
+    config.plugins = (config.plugins || []).concat([
+        new StringReplacePlugin(),
+        //new webpack.ResolverPlugin(new DirectoryLoader([
+        //    path.dirname(require.resolve('terriajs-cesium/Source/Workers/cesiumWorkerBootstrapper')),
+        //    path.dirname(require.resolve('terriajs-cesium/Source/ThirdParty/Workers/inflate'))
+        //]))
+    ]);
+
+
+    if (devMode) {
+        config.module.loaders.push({
+            test: /\.scss$/,
+            loaders: [require.resolve('style-loader'), require.resolve('css-loader') + '?sourceMap', require.resolve('sass-loader') + '?sourceMap']
+        });
+    } else {
+        config.module.loaders.push({
+            test: /\.scss$/,
+            loader: ExtractTextPlugin.extract(require.resolve('css-loader') + '?sourceMap!' + require.resolve('sass-loader') + '?sourceMap')
+        });
+
+        config.plugins.push(
+            new ExtractTextPlugin("nationalmap.css", {
+                disable: devMode
+            })
+        );
+    }
 
     return config;
 }
