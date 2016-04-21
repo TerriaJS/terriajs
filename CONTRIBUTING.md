@@ -1,4 +1,6 @@
-We love pull requests.  We strive to promptly review them, provide feedback, and merge.  
+## Contributing to TerriaJS
+
+Thank you for getting involved with TerriaJS! We love pull requests.  We strive to promptly review them, provide feedback, and merge.  
 
 A pull request MUST:
 
