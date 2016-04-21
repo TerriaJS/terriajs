@@ -1,10 +1,10 @@
 #### Information for system administrators and developers
 
 
-* [Deploying-your-own-Terria-Map.md](Deploying-Terria-Map.md)
-* [Deploying and building](Deploying-and-building-TerriaJS.md)
-* [Overall system architecture](Overall-system-architecture.md)
-* [Problems and solutions](Problems-and-Solutions.md)
+* [Deploying your own Terria Map.md](Deploying-Terria-Map.md): The quick start guide.
+* [Deploying and building](Deploying-and-building-TerriaJS.md): The more detailed version.
+* [Overall system architecture](Overall-system-architecture.md): How the bits fit together.
+* [Problems and solutions](Problems-and-Solutions.md): Go here if something bad happens.
 
 Once you're up and running, see [Working with Terria](/Documentation/WorkingWithTerria) for tweaking, configuring and skinning information.
 
