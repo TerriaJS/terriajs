@@ -34,7 +34,8 @@ const MeasureTool = React.createClass({
                                },
             measureToolHeader : "<strong>Measuring Tool</strong></br>",
             pointEntities: new CustomDataSource('Points'),
-            otherEntities: new CustomDataSource('Lines and polygons')
+            otherEntities: new CustomDataSource('Lines and polygons'),
+            polygon : undefined
         };
     },
 
@@ -75,6 +76,7 @@ const MeasureTool = React.createClass({
     },
 
     clickedExistingPoint(that, features) {
+        console.log("How many features? " + features.length);
         if (features.length < 1)
         {
             return false;
@@ -82,17 +84,18 @@ const MeasureTool = React.createClass({
 
         features.forEach((feature)=> {
             var index = that.state.pointEntities.entities.values.indexOf(feature);
+            console.log("INDEX: " + index);
 
-            if (index === 0)
+            if (index === 0 && !that.state.closeLoop)
             {
-                that.setState({closeLoop : true});
-                that.state.otherEntities.entities.add({
+                that.state.polygon = that.state.otherEntities.entities.add({
                         name : 'User polygon',
                         polygon : {
                             hierarchy : new CallbackProperty(function(date, result) { return new PolygonHierarchy(that.getPointsForShape(that)); }, false),
                             material: new Color(0.9, 0.9, 0.9, 0.25)
                        }
                     });
+                that.setState({closeLoop : true});
                 return;
             }
             else
@@ -100,6 +103,11 @@ const MeasureTool = React.createClass({
                 // TODO recalcuate total distance
                 console.log("removing point...");
                 that.state.pointEntities.entities.remove(feature);
+                if (that.getNumberOfPointEntities(that) < 2 && that.state.closeLoop)
+                {
+                    that.setState({closeLoop : false});
+                    that.state.otherEntities.entities.remove(that.state.polygon);
+                }
                 return;
             }
         });
@@ -110,75 +118,97 @@ const MeasureTool = React.createClass({
         return that.state.pointEntities.entities.values.length;
     },
 
-    // Pythonically, -1 will provide last point (just don't try -2 etc).
-    getPoint(that, index) {
-        if (index === -1)
-        {
-            index = that.getNumberOfPointEntities(that) - 1;
-        }
-
-        if (index < 0 || index >= that.getNumberOfPointEntities(that))
-        {
-            console.log("Index out of bounds while retrieving point");
-            return undefined;
-        }
-        var entity = that.state.pointEntities.entities.values[index];
-        var entityPos = entity.position.getValue(that.props.terria.clock.currentTime);
-        return entityPos;
-    },
-
     cleanUp(terria, that) {
         terria.dataSources.remove(this.state.pointEntities);
         that.state.pointEntities = new CustomDataSource('Points');
         terria.dataSources.remove(this.state.otherEntities);
         that.state.otherEntities = new CustomDataSource('Lines and polygons');
-        that.state.totalDistanceMetres = 0;
-        that.setState({inMeasureMode : false});
-        that.setState({closeLoop : false});
+        that.setState({inMeasureMode : false,
+                       closeLoop : false,
+                       totalDistanceMetres : 0});
     },
 
-    updateDistance(that, pickedPoint) {
-        var lastPoint = that.getPoint(that, -1);
+    getGeodesicDistance(pointOne, pointTwo) {
         // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
         // curvature. This is not what we want.
-        var pickedPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(pickedPoint);
-        var lastPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(lastPoint);
+        var pickedPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(pointOne);
+        var lastPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(pointTwo);
         var geodesic = new EllipsoidGeodesic(pickedPointCartographic, lastPointCartographic);
-
-        that.setState({ totalDistanceMetres : that.state.totalDistanceMetres + geodesic.surfaceDistance });
+        return geodesic.surfaceDistance;
     },
 
-    prepareToAddNewPoint(terria, that) {
-        terria.mapInteractionModeStack.pop();
+    updateDistance(that) {
+        this.setState({ totalDistanceMetres : 0 });
+        if (that.state.pointEntities.entities.values.length < 1)
+        {
+            return;
+        }
+
+        var prevPoint = that.state.pointEntities.entities.values[0];
+        var prevPointPos = prevPoint.position.getValue(that.props.terria.clock.currentTime);
+        for (var i=1; i < that.getNumberOfPointEntities(that); i++)
+        {
+            var currentPoint = that.state.pointEntities.entities.values[i];
+            var currentPointPos = currentPoint.position.getValue(that.props.terria.clock.currentTime);
+
+            that.setState({ totalDistanceMetres : that.state.totalDistanceMetres + that.getGeodesicDistance(prevPointPos, currentPointPos)});
+
+            prevPointPos = currentPointPos;
+        }
+        if (that.state.closeLoop)
+        {
+            var firstPoint = that.state.pointEntities.entities.values[0];
+            var firstPointPos = firstPoint.position.getValue(that.props.terria.clock.currentTime);
+            that.setState({ totalDistanceMetres : that.state.totalDistanceMetres + that.getGeodesicDistance(prevPointPos, firstPointPos)});
+        }
+    },
+
+    getDistanceMessage(that) {
         var distanceStr = that.prettifyDistance(that.state.totalDistanceMetres);
-        var message = "<i>Click to add another point</i>";
-        var buttonText = "Cancel";
+        var word = "a";
+        if (that.state.pointEntities.entities.values.length > 0)
+        {
+            word = "another";
+        }
+        var message = "<i>Click to add " + word + " point</i>";
         if (distanceStr.length > 0)
         {
             message = distanceStr + "</br>" + message;
+        }
+        return that.state.measureToolHeader + message;
+    },
+
+    getButtonText(that) {
+        var buttonText = "Cancel";
+        if (that.state.totalDistanceMetres > 0)
+        {
             buttonText = "Done";
         }
+        return buttonText;
+    },
+
+    mapInteractionModeUpdate(terria, that) {
+        terria.mapInteractionModeStack.pop();
         const pickPointMode = new MapInteractionMode({
-            message: that.state.measureToolHeader + message,
-            buttonText: buttonText,
+            message: that.getDistanceMessage(that),
+            buttonText: that.getButtonText(that),
             onCancel: function() {
                 terria.mapInteractionModeStack.pop();
                 that.cleanUp(terria, that);
             }
         });
         terria.mapInteractionModeStack.push(pickPointMode);
+        return pickPointMode;
+    },
+
+    prepareToAddNewPoint(terria, that) {
+        var pickPointMode = that.mapInteractionModeUpdate(terria, that);
 
         knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
                 var pickedPoint = pickedFeatures.pickPosition;
-                if (that.clickedExistingPoint(that, pickedFeatures.features))
+                if (!that.clickedExistingPoint(that, pickedFeatures.features))
                 {
-                    return;
-                }
-                else
-                {
-                    that.updateDistance(that, pickedPoint);
-
                     var pointEntity = new Entity({
                         name: 'Another Point',
                         point : that.state.userPointOptions,
@@ -186,6 +216,7 @@ const MeasureTool = React.createClass({
                     });
                     that.state.pointEntities.entities.add(pointEntity);
                 }
+                that.updateDistance(that);
                 that.prepareToAddNewPoint(terria, that);
             }
         });
@@ -223,8 +254,8 @@ const MeasureTool = React.createClass({
         terria.dataSources.add(this.state.otherEntities);
 
         const pickPointMode = new MapInteractionMode({
-            message: that.state.measureToolHeader + "<i>Click to add a point</i>",
-            buttonText: "Cancel",
+            message: that.getDistanceMessage(that),
+            buttonText: that.getButtonText(that),
             onCancel: function() {
                 terria.mapInteractionModeStack.pop();
                 that.cleanUp(terria, that);
