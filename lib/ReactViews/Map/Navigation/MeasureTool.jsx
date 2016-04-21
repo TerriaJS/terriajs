@@ -5,6 +5,7 @@ import MapInteractionMode from '../../../Models/MapInteractionMode';
 import defined from 'terriajs-cesium/Source/Core/defined';
 var Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
 var PolylineGraphics = require('terriajs-cesium/Source/DataSources/PolylineGraphics');
+var PolygonHierarchy = require('terriajs-cesium/Source/Core/PolygonHierarchy');
 var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 var Color = require('terriajs-cesium/Source/Core/Color');
 var CallbackProperty = require('terriajs-cesium/Source/DataSources/CallbackProperty');
@@ -32,7 +33,8 @@ const MeasureTool = React.createClass({
                                    outlineWidth : 2
                                },
             measureToolHeader : "<strong>Measuring Tool</strong></br>",
-            datasource: new CustomDataSource('User polygon')
+            pointEntities: new CustomDataSource('Points'),
+            otherEntities: new CustomDataSource('Lines and polygons')
         };
     },
 
@@ -55,6 +57,23 @@ const MeasureTool = React.createClass({
         return distanceStr;
     },
 
+    getPointsForShape(that) {
+        if (defined(that.state.pointEntities.entities))
+        {
+            var pos = [];
+            for (var i=0; i < that.getNumberOfPointEntities(that); i++)
+            {
+                var obj = that.state.pointEntities.entities.values[i];
+                if (defined(obj.position))
+                {
+                    var position = obj.position.getValue(that.props.terria.clock.currentTime);
+                    pos.push(position);
+                }
+            }
+            return pos;
+        }
+    },
+
     clickedExistingPoint(that, features) {
         if (features.length < 1)
         {
@@ -62,61 +81,57 @@ const MeasureTool = React.createClass({
         }
 
         features.forEach((feature)=> {
-            if (!defined(feature.position))
-            {
-                console.log("!!!!!!");
-                return;
-            }
-            //var point = feature.position.getValue(that.props.terria.clock.currentTime);
-            var index = that.state.datasource.entities.values.indexOf(feature);
-            console.log("INDEX " + index);
+            var index = that.state.pointEntities.entities.values.indexOf(feature);
 
-            if (index === 1) // If first point
+            if (index === 0)
             {
-                console.log("END LINE!");
                 that.setState({closeLoop : true});
+                that.state.otherEntities.entities.add({
+                        name : 'User polygon',
+                        polygon : {
+                            hierarchy : new CallbackProperty(function(date, result) { return new PolygonHierarchy(that.getPointsForShape(that)); }, false),
+                            material: new Color(0.9, 0.9, 0.9, 0.25)
+                       }
+                    });
                 return;
             }
             else
             {
                 // TODO recalcuate total distance
                 console.log("removing point...");
-                that.state.datasource.entities.remove(feature);
+                that.state.pointEntities.entities.remove(feature);
                 return;
             }
         });
         return true;
     },
 
-    getNumberOfEntities(that) {
-        return that.state.datasource.entities.values.length;
+    getNumberOfPointEntities(that) {
+        return that.state.pointEntities.entities.values.length;
     },
 
-    // Pythonically, -1 will provide last point (but don't try -2 etc).
-    getPoint(that, ind) {
-        // First entity is the polyline, and we're counting for points.
-        var index = ind;
+    // Pythonically, -1 will provide last point (just don't try -2 etc).
+    getPoint(that, index) {
         if (index === -1)
         {
-            index = that.getNumberOfEntities(that) - 1;
-        } else
-        {
-            index = index + 1;
+            index = that.getNumberOfPointEntities(that) - 1;
         }
 
-        if (index < 0 || index >= that.getNumberOfEntities(that))
+        if (index < 0 || index >= that.getNumberOfPointEntities(that))
         {
             console.log("Index out of bounds while retrieving point");
             return undefined;
         }
-        var entity = that.state.datasource.entities.values[index];
+        var entity = that.state.pointEntities.entities.values[index];
         var entityPos = entity.position.getValue(that.props.terria.clock.currentTime);
         return entityPos;
     },
 
     cleanUp(terria, that) {
-        terria.dataSources.remove(this.state.datasource);
-        that.state.datasource = new CustomDataSource('User polygon');
+        terria.dataSources.remove(this.state.pointEntities);
+        that.state.pointEntities = new CustomDataSource('Points');
+        terria.dataSources.remove(this.state.otherEntities);
+        that.state.otherEntities = new CustomDataSource('Lines and polygons');
         that.state.totalDistanceMetres = 0;
         that.setState({inMeasureMode : false});
         that.setState({closeLoop : false});
@@ -158,7 +173,6 @@ const MeasureTool = React.createClass({
                 var pickedPoint = pickedFeatures.pickPosition;
                 if (that.clickedExistingPoint(that, pickedFeatures.features))
                 {
-                    console.log("Existing point. Returning.");
                     return;
                 }
                 else
@@ -170,7 +184,7 @@ const MeasureTool = React.createClass({
                         point : that.state.userPointOptions,
                         position: pickedPoint
                     });
-                    that.state.datasource.entities.add(pointEntity);
+                    that.state.pointEntities.entities.add(pointEntity);
                 }
                 that.prepareToAddNewPoint(terria, that);
             }
@@ -190,36 +204,23 @@ const MeasureTool = React.createClass({
         // Cancel any feature picking already in progress.
         terria.pickedFeatures = undefined;
 
-        that.state.datasource.entities.add({
+        that.state.otherEntities.entities.add({
             name: 'Line',
             polyline: {
                         positions : new CallbackProperty(function(date, result) {
-
-                                if (defined(that.state.datasource.entities))
-                                {
-                                    var pos = [];
-                                    for (var i=0; i < that.getNumberOfEntities(that); i++)
-                                    {
-                                        var obj = that.state.datasource.entities.values[i];
-                                        if (defined(obj.position))
-                                        {
-                                            var position = obj.position.getValue(that.props.terria.clock.currentTime);
-                                            pos.push(position);
-                                        }
-                                        if (that.state.closeLoop)
-                                        {
-                                            pos.push(pos[0]);
-                                        }
-                                    }
-                                    return pos;
-                                }
-
+                            var pos = that.getPointsForShape(that);
+                            if (that.state.closeLoop)
+                            {
+                                pos.push(pos[0]);
+                            }
+                            return pos;
                         }, false),
                         material : Color.WHITE,
                         width : 1
-                    }
+                      }
         });
-        terria.dataSources.add(this.state.datasource);
+        terria.dataSources.add(this.state.pointEntities);
+        terria.dataSources.add(this.state.otherEntities);
 
         const pickPointMode = new MapInteractionMode({
             message: that.state.measureToolHeader + "<i>Click to add a point</i>",
@@ -239,7 +240,7 @@ const MeasureTool = React.createClass({
                     point : that.state.userPointOptions,
                     position: pickedPoint
                 });
-                that.state.datasource.entities.add(firstPointEntity);
+                that.state.pointEntities.entities.add(firstPointEntity);
                 that.prepareToAddNewPoint(terria, that);
             }
         });
