@@ -1,3 +1,5 @@
+## Handling Cross-Origin-Resource-Sharing (CORS) issues
+
 A common problem when you add a new data source to TerriaJS is this error:
 
 `...the server does not support CORS. If this is your server, verify that CORS is enabled and enable it if it is not. If you do not control the server, please contact the administrator of the server and ask them to enable CORS. Or ... ask us to add this server to the list of non-CORS-supporting servers that may be proxied.`
