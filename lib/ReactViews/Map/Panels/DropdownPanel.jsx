@@ -6,10 +6,7 @@ import classnames from 'classnames';
 const DropdownPanel = React.createClass({
     propTypes: {
         btnClass: React.PropTypes.string.isRequired,
-        children: React.PropTypes.oneOfType([
-            React.PropTypes.array,
-            React.PropTypes.object
-        ]).isRequired,
+        children: React.PropTypes.any.isRequired,
         btnTitle: React.PropTypes.string,
         btnText: React.PropTypes.string,
         className: React.PropTypes.string
