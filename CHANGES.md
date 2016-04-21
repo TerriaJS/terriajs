@@ -2,6 +2,29 @@
 Change Log
 ==========
 
+### 3.0.0
+
+* TerriaJS-based application are now best built using Webpack instead of Browserify.
+### 2.3.1
+
+* Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
+    in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
+    (which is the current time at the top-left).
+* Fixed display when `tableStyle.colorBins` is 0.
+* Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
+* Support ArcGis MapServer extents specified in a wider range of projections, including GDA MGA zones.
+
+### 2.3.0
+
+* Share links now contain details about the picked point, picked features and currently selected feature.
+* Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
+* Added a mechanism for hiding the source of a CatalogItem in the view info popup.
+* Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
+* Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
+* Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
+* Showed a message in the catalog item info panel that informs the user that a catalog item is local and can't be shared.
+* TerriaJS now obtains its list of domains that the proxy will proxy for from the `proxyableDomains/` service.  The URL can be overridden by setting `parameters.proxyableDomainsUrl` in `config.json`.
+
 ### 2.2.1
 
 * Improved legend and coloring of ENUM (string) columns of CSV files, to sort first by frequency, then alphabetically.

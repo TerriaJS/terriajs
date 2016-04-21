@@ -154,4 +154,49 @@ describe('CatalogItem', function () {
             });
         });
     });
+
+    describe('setting isEnabled', function() {
+        beforeEach(function() {
+            item.nowViewingCatalogItem = {};
+            spyOn(terria, 'disclaimerListener');
+        });
+
+        describe('to true when item has a disclaimer', function() {
+            beforeEach(function() {
+                item.initialMessage = {};
+                item.isEnabled = true;
+            });
+
+            it('triggers a disclaimerEvent', function() {
+                expect(terria.disclaimerListener.calls.argsFor(0)[0]).toBe(item);
+            });
+
+            it('doesn\'t immediately finish enabling the view', function() {
+                expect(item.nowViewingCatalogItem.isEnabled).not.toBe(true);
+            });
+
+            it('finishes enabling the view after the callback passed to disclaimerEvent is executed', function(done) {
+                terria.disclaimerListener.calls.argsFor(0)[1]();
+                item._loadForEnablePromise.then(function() {
+                    expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
+                }).then(done).otherwise(fail);
+            });
+        });
+
+        describe('to true when item has no disclaimer', function() {
+            beforeEach(function() {
+                item.isEnabled = true;
+            });
+
+            it('triggers no disclaimerEvent', function() {
+                expect(terria.disclaimerListener).not.toHaveBeenCalled();
+            });
+
+            it('finishes enabling the view', function(done) {
+                item._loadForEnablePromise.then(function() {
+                    expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
+                }).then(done).otherwise(fail);
+            });
+        });
+    });
 });

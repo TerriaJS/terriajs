@@ -170,7 +170,7 @@ describe('NominatimSearchProviderViewModel', function() {
 
         searchProvider.search('place').then(function() {
             expect(searchProvider.searchResults.length > 0).toBe(true);
-            for(var i = 0 ; i < searchProvider.searchResults.length; ++i) {
+            for(var i = 0; i < searchProvider.searchResults.length; ++i) {
                 expect(searchProvider.searchResults[i].name).toContain('France');
             }
             done();

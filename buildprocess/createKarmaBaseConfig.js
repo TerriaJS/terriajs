@@ -8,7 +8,7 @@ module.exports = function(config) {
         captureTimeout: 4 * 60 * 1000, //default 60000
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
-        basePath: 'wwwroot',
+        basePath: '../wwwroot',
 
         // frameworks to use
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter

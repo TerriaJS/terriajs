@@ -2,8 +2,6 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var Terria = require('../../lib/Models/Terria');
-var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
 
 // This test would be nice, but regionProvider.processRegionIds is no longer exposed in the API.
@@ -38,8 +36,7 @@ var RegionProvider = require('../../lib/Map/RegionProvider');
 // });
 
 describe('RegionProvider', function() {
-    var terria;
-    var regionProviderList, regionProvider;
+    var regionProvider;
 
     beforeEach(function() {
         jasmine.Ajax.install();
@@ -58,11 +55,6 @@ describe('RegionProvider', function() {
             '</wfs:ValueCollection>'
         });
 
-        terria = new Terria({
-            baseUrl: './',
-            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
-        });
-        regionProviderList = new RegionProviderList(terria);
         regionProvider = new RegionProvider('CED', {
             regionProp: 'CED_CODE',
             layerName: 'region_map:FID_CED_2011_AUST',
