@@ -22,14 +22,12 @@ const MeasureTool = React.createClass({
 
     getInitialState() {
         return {
-            headPoint : undefined,
-            tailPoints : [],
-            closeLoopPoint : undefined,
+            closeLoop : false,
             inMeasureMode : false,
             totalDistanceMetres : 0,
             userPointOptions : {
                                    color : Color.WHITE,
-                                   pixelSize : 20, //8,
+                                   pixelSize : 8,
                                    outlineColor : Color.BLACK,
                                    outlineWidth : 2
                                },
@@ -69,30 +67,20 @@ const MeasureTool = React.createClass({
                 console.log("!!!!!!");
                 return;
             }
-            var point = feature.position.getValue(that.props.terria.clock.currentTime);
+            //var point = feature.position.getValue(that.props.terria.clock.currentTime);
+            var index = that.state.datasource.entities.values.indexOf(feature);
+            console.log("INDEX " + index);
 
-            if (point === that.state.headPoint)
+            if (index === 1) // If first point
             {
                 console.log("END LINE!");
-                if (that.state.tailPoints.length > 2)
-                {
-                    that.setState({closeLoopPoint : point});
-                }
+                that.setState({closeLoop : true});
                 return;
             }
             else
             {
                 // TODO recalcuate total distance
                 console.log("removing point...");
-                console.log(point);
-                var index = that.state.tailPoints.indexOf(point);
-                console.log(that.state.tailPoints);
-                console.log("index " + index);
-                if (index > -1)
-                {
-                    console.log("SPLICE!");
-                    that.state.tailPoints.splice(index, 1);
-                }
                 that.state.datasource.entities.remove(feature);
                 return;
             }
@@ -100,21 +88,42 @@ const MeasureTool = React.createClass({
         return true;
     },
 
+    getNumberOfEntities(that) {
+        return that.state.datasource.entities.values.length;
+    },
+
+    // Pythonically, -1 will provide last point (but don't try -2 etc).
+    getPoint(that, ind) {
+        // First entity is the polyline, and we're counting for points.
+        var index = ind;
+        if (index === -1)
+        {
+            index = that.getNumberOfEntities(that) - 1;
+        } else
+        {
+            index = index + 1;
+        }
+
+        if (index < 0 || index >= that.getNumberOfEntities(that))
+        {
+            console.log("Index out of bounds while retrieving point");
+            return undefined;
+        }
+        var entity = that.state.datasource.entities.values[index];
+        var entityPos = entity.position.getValue(that.props.terria.clock.currentTime);
+        return entityPos;
+    },
+
     cleanUp(terria, that) {
         terria.dataSources.remove(this.state.datasource);
         that.state.datasource = new CustomDataSource('User polygon');
-        that.state.headPoint = undefined;
-        that.state.tailPoints = [];
         that.state.totalDistanceMetres = 0;
         that.setState({inMeasureMode : false});
+        that.setState({closeLoop : false});
     },
 
     updateDistance(that, pickedPoint) {
-        var lastPoint = that.state.headPoint;
-        if (that.state.tailPoints.length > 0)
-        {
-            lastPoint = that.state.tailPoints[that.state.tailPoints.length - 1];
-        }
+        var lastPoint = that.getPoint(that, -1);
         // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
         // curvature. This is not what we want.
         var pickedPointCartographic = Ellipsoid.WGS84.cartesianToCartographic(pickedPoint);
@@ -156,7 +165,6 @@ const MeasureTool = React.createClass({
                 {
                     that.updateDistance(that, pickedPoint);
 
-                    that.state.tailPoints.push(pickedPoint);
                     var pointEntity = new Entity({
                         name: 'Another Point',
                         point : that.state.userPointOptions,
@@ -186,11 +194,26 @@ const MeasureTool = React.createClass({
             name: 'Line',
             polyline: {
                         positions : new CallbackProperty(function(date, result) {
-                                if (defined(that.state.headPoint))
+
+                                if (defined(that.state.datasource.entities))
                                 {
-                                    return [that.state.headPoint].concat(that.state.tailPoints);
+                                    var pos = [];
+                                    for (var i=0; i < that.getNumberOfEntities(that); i++)
+                                    {
+                                        var obj = that.state.datasource.entities.values[i];
+                                        if (defined(obj.position))
+                                        {
+                                            var position = obj.position.getValue(that.props.terria.clock.currentTime);
+                                            pos.push(position);
+                                        }
+                                        if (that.state.closeLoop)
+                                        {
+                                            pos.push(pos[0]);
+                                        }
+                                    }
+                                    return pos;
                                 }
-                                return undefined;
+
                         }, false),
                         material : Color.WHITE,
                         width : 1
@@ -211,7 +234,6 @@ const MeasureTool = React.createClass({
         knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
                 var pickedPoint = pickedFeatures.pickPosition;
-                that.setState({headPoint : pickedPoint});
                 var firstPointEntity = new Entity({
                     name: 'First Point',
                     point : that.state.userPointOptions,
