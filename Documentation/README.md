@@ -1,7 +1,7 @@
 ## TerriaJS Documentation
 
 * [Deployment](Deployment): getting started with deploying Terria and optional support services.
-* [Making Maps with Terria][WorkingWithTerria]: How to configure and tweak Terria, including skinning, URL parameters and advanced uses.
+* [Making Maps with Terria](WorkingWithTerria): How to configure and tweak Terria, including skinning, URL parameters and advanced uses.
 * [Catalog Management](CatalogManagement): tips for data providers and catalog managers about working with specific data source types and managing catalog files, dealing with servers that don't support CORS.
 * [Contributors](Contributors): How to add new features to Terria, be part of the TerriaJS development team, how to set up a development environment, how to write tests and perform code reviews.
 

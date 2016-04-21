@@ -1,6 +1,13 @@
 ## TerriaJS Contributor's Guide
 
-[CONTRIBUTING.md](/CONTRIBUTING.md)
+For the basic overview of how to contribute, see [CONTRIBUTING.md](/CONTRIBUTING.md)
+
+* [Setting up Saucelabs](Setting-up-Saucelabs-locally.md): Creating a local Saucelabs instance for cross-browser testing.
+* [Using Docker](Using-Docker.md): How to use Docker for development and deployment.
+* [Setting up a development environment](Development-environment.md)
+
+
+### How we do pull requests
 
 All code modifications should be made via GitHub pull requests.  Please do not commit code directly to `master`, even if GitHub allows you to do so.  Pull requests may be merged by anyone with commit access to the repo and who feels qualified to review the changes.  Developers should not merge their own pull requests.
 
