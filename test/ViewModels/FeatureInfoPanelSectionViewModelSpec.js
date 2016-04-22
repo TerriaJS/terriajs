@@ -5,6 +5,10 @@ var FeatureInfoPanelViewModel = require('../../lib/ViewModels/FeatureInfoPanelVi
 var FeatureInfoPanelSectionViewModel = require('../../lib/ViewModels/FeatureInfoPanelSectionViewModel');
 var Terria = require('../../lib/Models/Terria');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var PickedFeatures = require('../../lib/Map/PickedFeatures');
+var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
+var CesiumMath = require('terriajs-cesium/Source/Core/Math');
+var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 
 
 describe('FeatureInfoPanelSectionViewModel', function() {
@@ -89,6 +93,33 @@ describe('FeatureInfoPanelSectionViewModel', function() {
 
         it('templatedInfo should be available', function() {
             expect(section.templatedInfo).toBeDefined();
+        });
+    });
+
+
+    describe('lat and long of the clicked point', function() {
+        var section;
+
+        beforeEach(function() {
+            var catalogItem = {
+                featureInfoTemplate: '<div>{{terria.coords.latitude}} {{terria.coords.longitude}}</div>'
+            };
+            terria.pickedFeatures = new PickedFeatures();
+            terria.pickedFeatures.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(2, 4, 6));
+
+            section = new FeatureInfoPanelSectionViewModel(panel, feature, catalogItem);
+        });
+
+        it('should be available to the template', function() {
+            expect(section.templatedInfo).toBe('<div>3.999999999999998 2</div>');
+        });
+
+        it('should not be present in raw data', function() {
+            expect(section.rawData.terria).toBeUndefined();
+        });
+
+        it('should not stop CSVs from being available', function() {
+            expect(section.dataDownloads.length).toBe(2);
         });
     });
 
