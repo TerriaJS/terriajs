@@ -6,6 +6,7 @@ Change Log
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
 * Injected clicked lat and long into templates under `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+* Fixed an exception being thrown when selecting a region while another region highlight was still loading.
 
 ### 2.3.1
 
