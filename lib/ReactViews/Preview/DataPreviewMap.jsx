@@ -47,6 +47,7 @@ const DataPreviewMap = React.createClass({
         this.isZoomedToExtent = false;
         this.lastPreviewedCatalogItem = undefined;
         this.removePreviewFromMap = undefined;
+        this.previewBadgeElement = undefined;
     },
 
     componentDidMount() {
@@ -61,6 +62,8 @@ const DataPreviewMap = React.createClass({
         if (this.lastPreviewedCatalogItem === this.props.previewedCatalogItem) {
             return;
         }
+
+        this.previewBadgeElement.textContent = 'PREVIEW LOADING...';
 
         this.isZoomedToExtent = false;
         this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
@@ -98,25 +101,10 @@ const DataPreviewMap = React.createClass({
 
                     if (defined(nowViewingItem.showOnSeparateMap)) {
                         that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(that.terriaPreview.currentViewer);
+                        that.previewBadgeElement.textContent = 'PREVIEW';
+                    } else {
+                        that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
                     }
-        //             if (defined(nowViewingItem._createImageryProvider)) {
-        //                 const imageryProvider = nowViewingItem._createImageryProvider();
-        //                 const layer = ImageryLayerCatalogItem.enableLayer(nowViewingItem, imageryProvider, nowViewingItem.opacity, undefined, that.terriaPreview);
-        //                 ImageryLayerCatalogItem.showLayer(nowViewingItem, layer, that.terriaPreview);
-        //                 that.updateBoundingRectangle(nowViewingItem);
-
-        //                 that.removePreviewFromMap = function() {
-        //                     ImageryLayerCatalogItem.hideLayer(nowViewingItem, layer, that.terriaPreview);
-        //                     ImageryLayerCatalogItem.disableLayer(nowViewingItem, layer, that.terriaPreview);
-        //                 };
-        //             } else if (defined(nowViewingItem.dataSource)) {
-        //                 const dataSource = nowViewingItem.dataSource;
-        //                 that.terriaPreview.dataSources.add(dataSource);
-
-        //                 that.removePreviewFromMap = function() {
-        //                     that.terriaPreview.dataSources.remove(dataSource);
-        //                 };
-        //             }
                 });
             });
         }
@@ -232,11 +220,15 @@ const DataPreviewMap = React.createClass({
         }
     },
 
+    refPreviewBadge(element) {
+        this.previewBadgeElement = element;
+    },
+
     render() {
         return (<div className='data-preview-map' onClick={this.clickMap}>
                     <div className='terria-preview' ref={this.mapIsReady}>
                     </div>
-                    <label className='label--preview-badge'></label>
+                    <label className='label--preview-badge' ref={this.refPreviewBadge}>PREVIEW LOADING...</label>
                 </div>
                 );
     }
