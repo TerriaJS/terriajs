@@ -1,11 +1,9 @@
 'use strict';
 
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
-const createCatalogMemberFromType = require('../../Models/createCatalogMemberFromType');
 const defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
-const ImageryLayerCatalogItem = require('../../Models/ImageryLayerCatalogItem');
 const ObserveModelMixin = require('../ObserveModelMixin');
 const OpenStreetMapCatalogItem = require('../../Models/OpenStreetMapCatalogItem');
 const React = require('react');
@@ -76,7 +74,7 @@ const DataPreviewMap = React.createClass({
             this.rectangleCatalogItem.isEnabled = false;
         }
 
-        let previewed = this.props.previewedCatalogItem;
+        const previewed = this.props.previewedCatalogItem;
         if (previewed && defined(previewed.type) && previewed.isMappable) {
             const that = this;
             return when(previewed.load()).then(function() {
@@ -98,24 +96,27 @@ const DataPreviewMap = React.createClass({
                         return;
                     }
 
-                    if (defined(nowViewingItem._createImageryProvider)) {
-                        const imageryProvider = nowViewingItem._createImageryProvider();
-                        const layer = ImageryLayerCatalogItem.enableLayer(nowViewingItem, imageryProvider, nowViewingItem.opacity, undefined, that.terriaPreview);
-                        ImageryLayerCatalogItem.showLayer(nowViewingItem, layer, that.terriaPreview);
-                        that.updateBoundingRectangle(nowViewingItem);
-
-                        that.removePreviewFromMap = function() {
-                            ImageryLayerCatalogItem.hideLayer(nowViewingItem, layer, that.terriaPreview);
-                            ImageryLayerCatalogItem.disableLayer(nowViewingItem, layer, that.terriaPreview);
-                        };
-                    } else if (defined(nowViewingItem.dataSource)) {
-                        const dataSource = nowViewingItem.dataSource;
-                        that.terriaPreview.dataSources.add(dataSource);
-
-                        that.removePreviewFromMap = function() {
-                            that.terriaPreview.dataSources.remove(dataSource);
-                        };
+                    if (defined(nowViewingItem.showOnSeparateMap)) {
+                        that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(that.terriaPreview.currentViewer);
                     }
+        //             if (defined(nowViewingItem._createImageryProvider)) {
+        //                 const imageryProvider = nowViewingItem._createImageryProvider();
+        //                 const layer = ImageryLayerCatalogItem.enableLayer(nowViewingItem, imageryProvider, nowViewingItem.opacity, undefined, that.terriaPreview);
+        //                 ImageryLayerCatalogItem.showLayer(nowViewingItem, layer, that.terriaPreview);
+        //                 that.updateBoundingRectangle(nowViewingItem);
+
+        //                 that.removePreviewFromMap = function() {
+        //                     ImageryLayerCatalogItem.hideLayer(nowViewingItem, layer, that.terriaPreview);
+        //                     ImageryLayerCatalogItem.disableLayer(nowViewingItem, layer, that.terriaPreview);
+        //                 };
+        //             } else if (defined(nowViewingItem.dataSource)) {
+        //                 const dataSource = nowViewingItem.dataSource;
+        //                 that.terriaPreview.dataSources.add(dataSource);
+
+        //                 that.removePreviewFromMap = function() {
+        //                     that.terriaPreview.dataSources.remove(dataSource);
+        //                 };
+        //             }
                 });
             });
         }
