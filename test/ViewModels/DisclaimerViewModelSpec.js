@@ -20,7 +20,7 @@ var UI_CONTAINER = 'ui';
 
 describe('DisclaimerViewModel', function() {
     var terria, catalogItem;
-    var disclaimerVm;
+    var disclaimerVm; // eslint-disable-line no-unused-vars
     var successCallback, keyRecorded;
 
     beforeEach(function() {

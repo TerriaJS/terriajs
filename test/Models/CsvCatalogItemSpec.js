@@ -52,7 +52,7 @@ describe('CsvCatalogItem with lat and lon', function() {
 
     it('throws if constructed without a Terria instance', function() {
         expect(function() {
-            var viewModel = new CsvCatalogItem(); // jshint ignore:line
+            var viewModel = new CsvCatalogItem(); // eslint-disable-line no-unused-vars
         }).toThrow();
     });
 
@@ -689,7 +689,7 @@ describe('CsvCatalogItem with region mapping', function() {
             // TODO: This is the old test, which doesn't really have an equivalent in the new csv refactor:
             // expect(csvItem.dataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
             // Possibly something like this?  However, this fails - it includes tasmania and not queensland.
-            var names = csvItem.dataSource.tableStructure.columns[0].values.map(function(id) { return regionNames[id] });
+            var names = csvItem.dataSource.tableStructure.columns[0].values.map(function(id) { return regionNames[id]; });
             expect(names).toEqual(["queensland", "south australia", "western australia", "other territories"]);
         }).otherwise(fail).then(done);
     });
