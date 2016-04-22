@@ -141,6 +141,7 @@ $chart-darker: darken($dark, 8%);
   position: absolute;
   text-align: center;
   overflow: hidden;
+  height: 18px
 }
 
 .linechart-title .color {
@@ -221,8 +222,21 @@ $chart-darker: darken($dark, 8%);
   min-width: 80px;
 }
 
+.linechart-tooltip p {
+  margin: 1px 0;
+}
+
 .linechart-tooltip .x-value {
-  margin: 0;
+  margin-bottom: 10px;
+}
+
+.linechart-tooltip .category-name {
+  margin-top: 5px;
+}
+
+.linechart-tooltip td {
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 .linechart-tooltip .color {

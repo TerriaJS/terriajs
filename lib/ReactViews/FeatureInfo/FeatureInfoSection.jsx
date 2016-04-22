@@ -35,8 +35,6 @@ const FeatureInfoSection = React.createClass({
     },
 
     componentWillMount() {
-        this.generateTemplateData();
-
         const feature = this.props.feature;
         if (!this.isConstant()) {
             this.setState({
@@ -54,14 +52,8 @@ const FeatureInfoSection = React.createClass({
         }
     },
 
-    componentWillReceiveProps() {
-        this.generateTemplateData();
-    },
-
-    generateTemplateData() {
-        this.setState({
-            templateData: propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats)
-        });
+    getTemplateData() {
+        return propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
     },
 
     clickHeader() {
@@ -76,16 +68,19 @@ const FeatureInfoSection = React.createClass({
 
     descriptionFromTemplate() {
         const template = this.props.template;
+        const templateData = this.getTemplateData();
         return typeof template === 'string' ?
-            Mustache.render(template, this.state.templateData) :
-            Mustache.render(template.template, this.state.templateData, template.partials);
+            Mustache.render(template, templateData) :
+            Mustache.render(template.template, templateData, template.partials);
     },
 
     descriptionFromFeature() {
         const feature = this.props.feature;
-
-        // TODO: This description could contain injected <script> tags etc. We must sanitize it.
-        // But do not escape it completely, because it also contains important html markup, eg. <table>.
+        // This description could contain injected <script> tags etc.
+        // Before rendering, we will pass it through renderMarkdownInReact, which applies
+        //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
+        //     parseCustomHtmlToReact (which calls htmlToReactParser).
+        // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
         return feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
     },
 
@@ -124,6 +119,7 @@ const FeatureInfoSection = React.createClass({
         // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
+        const templateData = this.getTemplateData();
         return (
             <li className={classNames('feature-info-panel__section', {'is-open': this.props.isOpen})}>
                 <button type='button' onClick={this.clickHeader} className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
@@ -140,11 +136,12 @@ const FeatureInfoSection = React.createClass({
 
                         <If condition={!this.hasTemplate() || this.state.showRawData}>
                             {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
-
-                            <FeatureInfoDownload key='download'
-                                                 viewState={this.props.viewState}
-                                                 data={this.state.templateData}
-                                                 name={catalogItemName}/>
+                            <If condition={defined(templateData)}>
+                                <FeatureInfoDownload key='download'
+                                    viewState={this.props.viewState}
+                                    data={templateData}
+                                    name={catalogItemName} />
+                            </If>
                         </If>
                     </section>
                 </If>
@@ -250,7 +247,7 @@ function areAllPropertiesConstant(properties) {
  */
 function getCurrentProperties(feature, currentTime) {
     // Use this instead of the straight feature.currentProperties, so it works the first time through.
-    if (typeof feature.properties.getValue === 'function') {
+    if (defined(feature.properties) && typeof feature.properties.getValue === 'function') {
         return feature.properties.getValue(currentTime);
     }
     return feature.properties;

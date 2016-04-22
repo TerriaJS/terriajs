@@ -1,5 +1,7 @@
 'use strict';
 
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 import Legend from './Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './OpacitySection';
@@ -70,7 +72,9 @@ const NowViewingItem = React.createClass({
                     <ViewingControls nowViewingItem={nowViewingItem} viewState={this.props.viewState} />
                     <OpacitySection nowViewingItem={nowViewingItem} />
                     <Legend nowViewingItem={nowViewingItem} />
-                    {(nowViewingItem.concepts && nowViewingItem.concepts.length) && <Voldemort nowViewingItem={nowViewingItem}/>}
+                    <If condition={(defined(nowViewingItem.concepts) && nowViewingItem.concepts.length > 0)}>
+                        <Voldemort nowViewingItem={nowViewingItem}/>
+                    </If>
                     <ShortReport nowViewingItem={nowViewingItem}/>
                 </div>
             </li>

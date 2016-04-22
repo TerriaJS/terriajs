@@ -9,7 +9,7 @@ const Collapsible = React.createClass({
     propTypes: {
         title: React.PropTypes.string,
         startsOpen: React.PropTypes.bool,
-        children: React.PropTypes.array
+        children: React.PropTypes.any
     },
 
     getInitialState: function() {
