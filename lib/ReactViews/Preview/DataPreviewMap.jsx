@@ -1,7 +1,7 @@
 'use strict';
 
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
-const createCatalogMemberFromType = require('../../Models/createCatalogMemberFromType');
+const defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
 const ObserveModelMixin = require('../ObserveModelMixin');
@@ -10,6 +10,7 @@ const React = require('react');
 const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
+const when = require('terriajs-cesium/Source/ThirdParty/when');
 
 const DataPreviewMap = React.createClass({
     mixins: [ObserveModelMixin],
@@ -44,51 +45,91 @@ const DataPreviewMap = React.createClass({
         this.terriaPreview.baseMap = positron;
 
         this.isZoomedToExtent = false;
-        this.componentWillReceiveProps(this.props);
+        this.lastPreviewedCatalogItem = undefined;
+        this.removePreviewFromMap = undefined;
+        this.previewBadgeElement = undefined;
     },
 
-    componentWillReceiveProps(nextProp) {
+    componentDidMount() {
+        this.updatePreview();
+    },
+
+    componentDidUpdate() {
+        this.updatePreview();
+    },
+
+    updatePreview() {
+        if (this.lastPreviewedCatalogItem === this.props.previewedCatalogItem) {
+            return;
+        }
+
+        this.previewBadgeElement.textContent = 'PREVIEW LOADING...';
+
         this.isZoomedToExtent = false;
         this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
 
-        if (defined(this.catalogItem)) {
-            this.catalogItem.isEnabled = false;
+        if (defined(this.removePreviewFromMap)) {
+            this.removePreviewFromMap();
+            this.removePreviewFromMap = undefined;
         }
 
         if (defined(this.rectangleCatalogItem)) {
             this.rectangleCatalogItem.isEnabled = false;
         }
 
-        const previewed = nextProp.previewedCatalogItem;
+        const previewed = this.props.previewedCatalogItem;
         if (previewed && defined(previewed.type) && previewed.isMappable) {
-            const type = previewed.type;
-            const serializedCatalogItem = previewed.serializeToJson();
-            const catalogItem = createCatalogMemberFromType(type, this.terriaPreview);
-
-            catalogItem.updateFromJson(serializedCatalogItem);
-            catalogItem.isEnabled = true;
-            this.catalogItem = catalogItem;
-
             const that = this;
-            catalogItem.load().then(function() {
-                if (previewed !== that.props.previewedCatalogItem) {
-                    return;
+            return when(previewed.load()).then(function() {
+                // If this item has a separate now viewing item, load it before continuing.
+                let nowViewingItem;
+                let loadNowViewingItemPromise;
+                if (defined(previewed.nowViewingCatalogItem)) {
+                    nowViewingItem = previewed.nowViewingCatalogItem;
+                    loadNowViewingItemPromise = when(nowViewingItem.load());
+                } else {
+                    nowViewingItem = previewed;
+                    loadNowViewingItemPromise = when();
                 }
 
-                that.updateBoundingRectangle();
+                return loadNowViewingItemPromise.then(function() {
+                    // Now that the item is loaded, add it to the map.
+                    // Unless we've started previewing something else in the meantime!
+                    if (!that.isMounted() || previewed !== that.props.previewedCatalogItem) {
+                        return;
+                    }
+
+                    if (defined(nowViewingItem.showOnSeparateMap)) {
+                        that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(that.terriaPreview.currentViewer);
+                        if (that.removePreviewFromMap) {
+                            that.previewBadgeElement.textContent = 'PREVIEW';
+                        } else {
+                            that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
+                        }
+                    } else {
+                        that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
+                    }
+
+                    that.updateBoundingRectangle();
+                });
+            }).otherwise(function() {
+                that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
             });
         }
     },
 
     clickMap() {
-        if (!defined(this.catalogItem)) {
+        if (!defined(this.props.previewedCatalogItem)) {
             return;
         }
 
         this.isZoomedToExtent = !this.isZoomedToExtent;
 
         if (this.isZoomedToExtent) {
-            this.catalogItem.zoomTo();
+            const catalogItem = defaultValue(this.props.previewedCatalogItem.nowViewingCatalogItem, this.props.previewedCatalogItem);
+            if (defined(catalogItem.rectangle)) {
+                this.terriaPreview.currentViewer.zoomTo(catalogItem.rectangle);
+            }
         } else {
             this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
         }
@@ -102,7 +143,8 @@ const DataPreviewMap = React.createClass({
             this.rectangleCatalogItem = undefined;
         }
 
-        const catalogItem = this.catalogItem;
+        let catalogItem = this.props.previewedCatalogItem;
+        catalogItem = defaultValue(catalogItem.nowViewingCatalogItem, catalogItem);
 
         if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {
             return;
@@ -186,11 +228,15 @@ const DataPreviewMap = React.createClass({
         }
     },
 
+    refPreviewBadge(element) {
+        this.previewBadgeElement = element;
+    },
+
     render() {
         return (<div className='data-preview-map' onClick={this.clickMap}>
                     <div className='terria-preview' ref={this.mapIsReady}>
                     </div>
-                    <label className='label--preview-badge'></label>
+                    <label className='label--preview-badge' ref={this.refPreviewBadge}>PREVIEW LOADING...</label>
                 </div>
                 );
     }
