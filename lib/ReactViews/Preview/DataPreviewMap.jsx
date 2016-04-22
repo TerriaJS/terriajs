@@ -101,11 +101,19 @@ const DataPreviewMap = React.createClass({
 
                     if (defined(nowViewingItem.showOnSeparateMap)) {
                         that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(that.terriaPreview.currentViewer);
-                        that.previewBadgeElement.textContent = 'PREVIEW';
+                        if (that.removePreviewFromMap) {
+                            that.previewBadgeElement.textContent = 'PREVIEW';
+                        } else {
+                            that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
+                        }
                     } else {
                         that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
                     }
+
+                    that.updateBoundingRectangle();
                 });
+            }).otherwise(function() {
+                that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
             });
         }
     },
@@ -129,13 +137,13 @@ const DataPreviewMap = React.createClass({
         this.updateBoundingRectangle();
     },
 
-    updateBoundingRectangle(previewed) {
+    updateBoundingRectangle() {
         if (defined(this.rectangleCatalogItem)) {
             this.rectangleCatalogItem.isEnabled = false;
             this.rectangleCatalogItem = undefined;
         }
 
-        let catalogItem = defaultValue(previewed, this.props.previewedCatalogItem);
+        let catalogItem = this.props.previewedCatalogItem;
         catalogItem = defaultValue(catalogItem.nowViewingCatalogItem, catalogItem);
 
         if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {
