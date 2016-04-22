@@ -185,11 +185,7 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
     };
 
     config.plugins = (config.plugins || []).concat([
-        new StringReplacePlugin(),
-        //new webpack.ResolverPlugin(new DirectoryLoader([
-        //    path.dirname(require.resolve('terriajs-cesium/Source/Workers/cesiumWorkerBootstrapper')),
-        //    path.dirname(require.resolve('terriajs-cesium/Source/ThirdParty/Workers/inflate'))
-        //]))
+        new StringReplacePlugin()
     ]);
 
 
