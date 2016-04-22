@@ -7,7 +7,6 @@ var Terria = require('../../lib/Models/Terria');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 var PickedFeatures = require('../../lib/Map/PickedFeatures');
 var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
-var CesiumMath = require('terriajs-cesium/Source/Core/Math');
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 
 
