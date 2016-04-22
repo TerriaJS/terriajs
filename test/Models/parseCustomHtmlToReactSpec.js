@@ -57,4 +57,14 @@ describe('parseCustomHtmlToReact and registerCustomComponentTypes', function() {
         expect(chart.props.tableStructure).toBeDefined();
     });
 
+    it('parses a chart with a data attribute containing json', function() {
+        const result = parseCustomHtmlToReact('<chart data="[[&quot;x&quot;,&quot;y&quot;,&quot;z&quot;],[1,10,3],[2,15,9],[3,8, 12],[5,25,4]]">');
+        const charts = findAllWithType(result, Chart);
+        expect(charts.length).toEqual(1);
+        const chart = charts[0];
+        expect(chart.props.tableStructure).toBeDefined();
+    });
+
+    // TODO: add tests for badly formed data strings.
+
 });
