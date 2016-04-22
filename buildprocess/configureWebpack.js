@@ -9,10 +9,10 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
+    config.resolve.alias = config.resolve.alias || {};
+
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
-
-
 
     config.module.loaders.push({
         test: /\.js?$/,
@@ -55,21 +55,30 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
         loader: StringReplacePlugin.replace({
             replacements: [
                 {
-                    pattern: /function getWorkerUrl\((.*)\)/ig,
+                    pattern: /new Worker\(getBootstrapperUrl\(\)\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "function getWorkerUrl2()";
+                        return "require('" + require.resolve('worker-loader') + "!" + require.resolve('../lib/cesiumWorkerBootstrapper') + "')()";
                     }
                 },
                 {
-                    pattern: /getWorkerUrl\(\'.*Workers\/(.*)\'\)/ig,
+                    pattern: "new Worker(getWorkerUrl('Workers/transferTypedArrayTest.js'))",
                     replacement: function (match, p1, offset, string) {
-                        return "'" + p1 + "'";
+                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/Workers/transferTypedArrayTest.js')()";
                     }
-                },
+                }
+            ]
+        })
+    });
+
+    config.module.loaders.push({
+        test: /\.js?$/,
+        include: path.dirname(require.resolve('terriajs-cesium')) + '/Source/Workers',
+        loader: StringReplacePlugin.replace({
+            replacements: [
                 {
-                    pattern: /new Worker\((.*)\)/ig,
+                    pattern: /require\(\'Workers\/\' \+ moduleName\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/Workers/' + " + p1 + ")()";
+                        return "require('./' + moduleName)";
                     }
                 }
             ]
