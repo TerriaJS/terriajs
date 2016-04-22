@@ -85,6 +85,7 @@
     "postinstall": "gulp post-npm-install",
     "make-schema": "gulp make-schema",
     "start": "bash ./node_modules/terriajs-server/run_server.sh --port 3002",
-    "stop": "bash ./node_modules/terriajs-server/stop_server.sh"
+    "stop": "bash ./node_modules/terriajs-server/stop_server.sh",
+    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.js --hot"
   }
 }

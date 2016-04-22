@@ -51,6 +51,21 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
 
     config.module.loaders.push({
         test: /\.js?$/,
+        include: cesiumDir + '/Source/ThirdParty/Workers',
+        loader: StringReplacePlugin.replace({
+            replacements: [
+                {
+                    pattern: "})(this)",
+                    replacement: function (match, p1, offset, string) {
+                        return "})(self)";
+                    }
+                }
+            ]
+        })
+    });
+
+    config.module.loaders.push({
+        test: /\.js?$/,
         include: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
         loader: StringReplacePlugin.replace({
             replacements: [
@@ -162,7 +177,7 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
         loader: require.resolve('file-loader')
     });
 
-    config.devServer = {
+    config.devServer = config.devServer || {
         stats: 'minimal',
         port: 3003,
         contentBase: 'wwwroot/',
