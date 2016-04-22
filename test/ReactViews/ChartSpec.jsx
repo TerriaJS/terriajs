@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,expect*/
+/*global expect,fail*/
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 
@@ -9,14 +9,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 import {getMountedInstance} from 'react-shallow-testutils';
 
 import Chart  from '../../lib/ReactViews/Chart/Chart';
-// import Loader from '../../lib/ReactViews/Loader';
-// import Terria from '../../lib/Models/Terria';
-// import ViewState from '../../lib/ReactViewModels/ViewState';
-
-// var separator = ',';
-// if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
-//     separator = (Intl.NumberFormat().format(1000)[1]);
-// }
+import TableStructure  from '../../lib/Map/TableStructure';
 
 function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
@@ -47,9 +40,23 @@ describe('Chart', function() {
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(chart);
         const instance = getMountedInstance(renderer);
-        instance.getChartDataPromise().then(function(data) {
+        instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].points.length).toEqual(8);
+        }).then(done).otherwise(fail);
+    });
+
+    it('can have csv data passed directly', function(done) {
+        const csvString = 'x,y\r\n1,5\r\n3,8\r\n4,-3\r\n';
+        const tableStructure = TableStructure.fromCsv(csvString);
+        const chart = <Chart tableStructure={tableStructure} />;
+        const renderer = ReactTestUtils.createRenderer();
+        renderer.render(chart);
+        const instance = getMountedInstance(renderer);
+        instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
+            expect(data.length).toEqual(1);
+            expect(data[0].name).toEqual('y');
+            expect(data[0].points.length).toEqual(3);
         }).then(done).otherwise(fail);
     });
 

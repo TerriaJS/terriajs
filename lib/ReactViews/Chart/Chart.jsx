@@ -39,55 +39,63 @@ const Chart = React.createClass({
         height: React.PropTypes.number,
         axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
-        // You either need to provide the data via props.data or as an Array of ChartData.
+        highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+        // You can provide the data directly via props.data (ChartData[]):
         data: React.PropTypes.array,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: React.PropTypes.string,
-        sourceData: React.PropTypes.array,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         yColumns: React.PropTypes.array,
         colors: React.PropTypes.array,
-        highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+        // Or, provide a tableStructure directly.
+        tableStructure: React.PropTypes.object
     },
 
-    getChartDataPromise() {
+    chartDataArrayFromTableStructure(table) {
+        const xColumn = table.getColumnWithNameOrIndex(this.props.xColumn || 0);
+        let yColumns = [table.columns[1]];
+        if (defined(this.props.yColumns)) {
+            yColumns = this.props.yColumns.map(yCol=>table.getColumnWithNameOrIndex(yCol));
+        }
+        const pointArrays = table.toPointArrays(xColumn, yColumns);
+        // The data id should be set to something unique, eg. its source id + column index.
+        // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
+        return pointArrays.map((points, index)=>
+            new ChartData(points, {
+                id: index,
+                name: yColumns[index].name,
+                color: defined(this.props.colors) ? this.props.colors[index] : undefined
+            })
+        );
+    },
+
+    getChartDataPromise(chartParameters) {
         // Returns a promise that resolves to an array of ChartData.
         const that = this;
-        const chartParameters = this.getChartParameters();
         if (defined(chartParameters.data)) {
+            // Nothing to do - the data was provided.
             return when(chartParameters.data);
-        } else if (defined(chartParameters.url) || defined(chartParameters.sourceData)) {
+        } else if (defined(that.props.url)) {
+            // Load in the data file as a TableStructure.
             const tableStructure = new TableStructure('feature info');
-            const loadPromise = defined(chartParameters.sourceData)
-                ? when(chartParameters.sourceData).then(tableStructure.loadFromJson.bind(tableStructure))
-                : loadText(chartParameters.url).then(tableStructure.loadFromCsv.bind(tableStructure));
-            return loadPromise.then(function(table) {
-                const xColumn = table.getColumnWithNameOrIndex(that.props.xColumn || 0);
-                let yColumns = [table.columns[1]];
-                if (defined(that.props.yColumns)) {
-                    yColumns = that.props.yColumns.map(yCol=>table.getColumnWithNameOrIndex(yCol));
-                }
-                const pointArrays = table.toPointArrays(xColumn, yColumns);
-                // The data id should be set to something unique, eg. its source id + column index.
-                // If we're here, the data was downloaded from a url, ie. comes from a single file, so the column index is unique by itself.
-                return pointArrays.map((points, index)=>
-                    new ChartData(points, {
-                        id: index,
-                        name: yColumns[index].name,
-                        color: defined(that.props.colors) ? that.props.colors[index] : undefined
-                    })
-                );
-            }).otherwise(function(e) {
-                // It looks better to create a blank chart than no chart.
-                return [];
-            });
+            return loadText(that.props.url)
+                .then(tableStructure.loadFromCsv.bind(tableStructure))
+                .then(that.chartDataArrayFromTableStructure)
+                .otherwise(function(e) {
+                    // It looks better to create a blank chart than no chart.
+                    return [];
+                });
+        } else if (defined(that.props.tableStructure)) {
+            // We were given a tableStructure, just convert it to a chartDataArray.
+            const chartDataArray = that.chartDataArrayFromTableStructure(that.props.tableStructure);
+            return when(chartDataArray);
         }
     },
 
     componentDidMount() {
         const that = this;
         const chartParameters = that.getChartParameters();
-        const promise = that.getChartDataPromise();
+        const promise = that.getChartDataPromise(chartParameters);
         promise.then(function(data) {
             chartParameters.data = data;
             LineChart.create(that.buttonElement, chartParameters);
@@ -129,6 +137,7 @@ const Chart = React.createClass({
     },
 
     getChartParameters() {
+        // Return the parameters for LineChart.js (or other chart type).
         // If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
         let margin;
         let tooltipSettings;
@@ -170,8 +179,6 @@ const Chart = React.createClass({
         return {
             data: this.props.data,
             domain: this.props.domain,
-            url: this.props.url,
-            sourceData: this.props.sourceData,
             width: '100%',
             height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
