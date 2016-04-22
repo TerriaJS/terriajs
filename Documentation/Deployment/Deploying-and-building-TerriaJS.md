@@ -1,6 +1,6 @@
 # Deploying and building TerriaJS
 
-> If you run into problems, don't forget to check [[Problems and Solutions]].
+If you run into problems, don't forget to check [Problems and Solutions](Problems-and-Solutions.md).
 
 This page explains how to deploy TerriaJS, which is the JavaScript library that powers sites like NationalMap. There are three reasons to do this:
 
