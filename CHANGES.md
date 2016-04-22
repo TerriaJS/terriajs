@@ -5,6 +5,8 @@ Change Log
 ### 3.0.0
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
+* Injected clicked lat and long into templates under `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+
 ### 2.3.1
 
 * Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
