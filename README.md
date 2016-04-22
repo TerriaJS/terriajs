@@ -52,7 +52,7 @@ More information: [Deploying your own Terria Map](https://github.com/NICTA/natio
 * **TerriaJS** is this JavaScript library consisting of the 2D/3D map, catalog management and many spatial data connectors.
 * **[TerriaMap](https://github.com/TerriaJS/TerriaMap)** is a complete website starting point, using TerriaJS.
 * **[TerriaJS-Server](https://github.com/TerriaJS/TerriaJS-Server)** is a NodeJS-based server that provides proxying and support services for TerriaJS.
-* **[NationalMap](https://github.com/NICTA/NationalMap) is the flagship Terria deployment, and the origin of the TerriaJS library.
+* **[NationalMap](https://github.com/NICTA/NationalMap)** is the flagship Terria deployment, and the origin of the TerriaJS library.
 
 ### Using TerriaJS in an existing application
 
