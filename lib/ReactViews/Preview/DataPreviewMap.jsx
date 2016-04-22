@@ -101,6 +101,11 @@ const DataPreviewMap = React.createClass({
 
                     if (defined(nowViewingItem.showOnSeparateMap)) {
                         that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(that.terriaPreview.currentViewer);
+
+                        if (defined(nowViewingItem.clock) && defined(nowViewingItem.clock.currentTime)) {
+                            that.terriaPreview.clock.currentTime = nowViewingItem.clock.currentTime;
+                        }
+
                         if (that.removePreviewFromMap) {
                             that.previewBadgeElement.textContent = 'PREVIEW';
                         } else {
