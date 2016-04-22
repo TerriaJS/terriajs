@@ -9,13 +9,8 @@ import ReactTestUtils from 'react-addons-test-utils';
 import {getMountedInstance} from 'react-shallow-testutils';
 
 import Chart  from '../../lib/ReactViews/Chart/Chart';
+import ChartData  from '../../lib/Charts/ChartData';
 import TableStructure  from '../../lib/Map/TableStructure';
-
-function getShallowRenderedOutput(jsx) {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(jsx);
-    return renderer.getRenderOutput();
-}
 
 describe('Chart', function() {
 
@@ -46,7 +41,7 @@ describe('Chart', function() {
         }).then(done).otherwise(fail);
     });
 
-    it('can have csv data passed directly', function(done) {
+    it('can have TableStructure data passed directly', function(done) {
         const csvString = 'x,y\r\n1,5\r\n3,8\r\n4,-3\r\n';
         const tableStructure = TableStructure.fromCsv(csvString);
         const chart = <Chart tableStructure={tableStructure} />;
@@ -57,6 +52,19 @@ describe('Chart', function() {
             expect(data.length).toEqual(1);
             expect(data[0].name).toEqual('y');
             expect(data[0].points.length).toEqual(3);
+        }).then(done).otherwise(fail);
+    });
+
+    it('can have an array of ChartData passed directly', function(done) {
+        const chartData = new ChartData([{x: 2, y: 5}, {x: 6, y: 2}], {name: 'foo'});
+        const chart = <Chart data={[chartData]} />;
+        const renderer = ReactTestUtils.createRenderer();
+        renderer.render(chart);
+        const instance = getMountedInstance(renderer);
+        instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
+            expect(data.length).toEqual(1);
+            expect(data[0].name).toEqual('foo');
+            expect(data[0].points.length).toEqual(2);
         }).then(done).otherwise(fail);
     });
 
