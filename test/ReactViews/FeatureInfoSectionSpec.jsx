@@ -122,7 +122,7 @@ describe('FeatureInfoSection', function() {
         const renderer = ReactTestUtils.createRenderer();
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
         renderer.render(section);
-        //expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // currently true, but we don't want to require this implementation.
+        expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
         renderer.unmount();
         expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });

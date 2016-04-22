@@ -50,25 +50,18 @@ const Chart = React.createClass({
         highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
     },
 
-    getInitialState() {
-        // If the data is downloaded here from a URL, then store the downloaded data in state.data.
-        return {
-            data: undefined
-        };
-    },
-
-    componentDidMount() {
+    getChartDataPromise() {
+        // Returns a promise that resolves to an array of ChartData.
         const that = this;
         const chartParameters = this.getChartParameters();
-        let promise;
         if (defined(chartParameters.data)) {
-            promise = when(LineChart.create(this.buttonElement, chartParameters));
+            return when(chartParameters.data);
         } else if (defined(chartParameters.url) || defined(chartParameters.sourceData)) {
             const tableStructure = new TableStructure('feature info');
             const loadPromise = defined(chartParameters.sourceData)
                 ? when(chartParameters.sourceData).then(tableStructure.loadFromJson.bind(tableStructure))
                 : loadText(chartParameters.url).then(tableStructure.loadFromCsv.bind(tableStructure));
-            promise = loadPromise.then(function(table) {
+            return loadPromise.then(function(table) {
                 const xColumn = table.getColumnWithNameOrIndex(that.props.xColumn || 0);
                 let yColumns = [table.columns[1]];
                 if (defined(that.props.yColumns)) {
@@ -77,24 +70,29 @@ const Chart = React.createClass({
                 const pointArrays = table.toPointArrays(xColumn, yColumns);
                 // The data id should be set to something unique, eg. its source id + column index.
                 // If we're here, the data was downloaded from a url, ie. comes from a single file, so the column index is unique by itself.
-                chartParameters.data = pointArrays.map((points, index)=>
+                return pointArrays.map((points, index)=>
                     new ChartData(points, {
                         id: index,
                         name: yColumns[index].name,
                         color: defined(that.props.colors) ? that.props.colors[index] : undefined
                     })
                 );
-                LineChart.create(that.buttonElement, chartParameters);
-                that.setState({data: chartParameters.data});  // Triggers componentDidUpdate, so only do this after the line chart exists.
             }).otherwise(function(e) {
                 // It looks better to create a blank chart than no chart.
-                chartParameters.data = [];
-                LineChart.create(that.buttonElement, chartParameters);
-                that.setState({data: chartParameters.data});
-                throw new DeveloperError('Could not load chart data at ' + chartParameters.url);
+                return [];
             });
         }
-        this._promise = promise.then(function() {
+    },
+
+    componentDidMount() {
+        const that = this;
+        const chartParameters = that.getChartParameters();
+        const promise = that.getChartDataPromise();
+        promise.then(function(data) {
+            chartParameters.data = data;
+            LineChart.create(that.buttonElement, chartParameters);
+        });
+        that._promise = promise.then(function() {
             // that.rnd = Math.random();
             // React should handle the binding for you, but it doesn't seem to work here; perhaps because it is inside a Promise?
             // So we return the bound listener function from the promise.
@@ -170,7 +168,7 @@ const Chart = React.createClass({
         }
 
         return {
-            data: defined(this.state.data) ? this.state.data : this.props.data,
+            data: this.props.data,
             domain: this.props.domain,
             url: this.props.url,
             sourceData: this.props.sourceData,
