@@ -15,7 +15,7 @@ const Dropdown = React.createClass({
         textProperty: React.PropTypes.string, // property to display as text
         matchWidth: React.PropTypes.bool,
         buttonClassName: React.PropTypes.string,
-        children: React.PropTypes.array
+        children: React.PropTypes.oneOfType([React.PropTypes.array, React.PropTypes.object])
     },
 
     getDefaultProps() {
