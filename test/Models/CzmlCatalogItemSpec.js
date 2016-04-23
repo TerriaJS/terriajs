@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach*/
 var CzmlCatalogItem = require('../../lib/Models/CzmlCatalogItem');
-var ModelError = require('../../lib/Models/ModelError');
+var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
 
 var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
@@ -23,9 +23,27 @@ describe('CzmlCatalogItem', function() {
         it('works by URL', function(done) {
             czml.url = 'test/CZML/verysimple.czml';
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                done();
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).otherwise(done.fail).then(done);
+        });
+
+        it('have default dataUrl and dataUrlType', function() {
+            czml.updateFromJson({
+                url: 'test/CZML/verysimple.czml',
             });
+            expect(czml.dataUrl).toBe('test/CZML/verysimple.czml');
+            expect(czml.dataUrlType).toBe('direct');
+        });
+
+        it('use provided dataUrl and dataUrlType', function(done) {
+            czml.url = 'test/CZML/verysimple.czml';
+            czml.dataUrl ="test/test.html";
+            czml.dataUrlType ="fake type";
+            czml.load().then(function() {
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                expect(czml.dataUrl).toBe("test/test.html");
+                expect(czml.dataUrlType).toBe("fake type");
+            }).otherwise(done.fail).then(done);
         });
 
         it('works by string', function(done) {
@@ -33,9 +51,8 @@ describe('CzmlCatalogItem', function() {
                 czml.data = s;
                 czml.dataSourceUrl = 'anything.czml';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                    done();
-                });
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                }).otherwise(done.fail).then(done);
             });
         });
 
@@ -44,20 +61,39 @@ describe('CzmlCatalogItem', function() {
                 czml.data = blob;
                 czml.dataSourceUrl = 'anything.geojson';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                    done();
-                });
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                }).otherwise(done.fail).then(done);
             });
         });
+
+    });
+
+    describe('embedding CZML', function() {
+        it('works with dataSourceUrl', function(done) {
+            czml.data = JSON.parse('[{"id": "document", "version": "1.0"}, {"position": {"cartographicDegrees": [133.0, -25.0, 0.0]}}]');
+            czml.dataSourceUrl = 'something.czml';
+            czml.load().then(function() {
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+
+        it('works without dataSourceUrl', function(done) {
+            czml.data = JSON.parse('[{"id": "document", "version": "1.0"}, {"position": {"cartographicDegrees": [133.0, -25.0, 0.0]}}]');
+            expect(czml.dataSourceUrl).toBeUndefined();
+            czml.load().then(function() {
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).otherwise(done.fail).then(done);
+        });
+
     });
 
     describe('loading a CZML file with a moving vehicle', function() {
         it('works by URL', function(done) {
             czml.url = 'test/CZML/Vehicle.czml';
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                done();
-            });
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).otherwise(done.fail).then(done);
         });
 
         it('works by string', function(done) {
@@ -65,9 +101,8 @@ describe('CzmlCatalogItem', function() {
                 czml.data = s;
                 czml.dataSourceUrl = 'anything.czml';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                    done();
-                });
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                }).otherwise(done.fail).then(done);
             });
         });
 
@@ -76,9 +111,8 @@ describe('CzmlCatalogItem', function() {
                 czml.data = blob;
                 czml.dataSourceUrl = 'anything.geojson';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                    done();
-                });
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                }).otherwise(done.fail).then(done);
             });
         });
     });
@@ -87,9 +121,8 @@ describe('CzmlCatalogItem', function() {
         it('works by URL', function(done) {
             czml.url = 'test/CZML/simple.czml';
             czml.load().then(function() {
-                expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                done();
-            });
+                expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).otherwise(done.fail).then(done);
         });
 
         it('works by string', function(done) {
@@ -97,9 +130,8 @@ describe('CzmlCatalogItem', function() {
                 czml.data = s;
                 czml.dataSourceUrl = 'anything.czml';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                    done();
-                });
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                }).otherwise(done.fail).then(done);
             });
         });
 
@@ -108,20 +140,20 @@ describe('CzmlCatalogItem', function() {
                 czml.data = blob;
                 czml.dataSourceUrl = 'anything.geojson';
                 czml.load().then(function() {
-                    expect(czml._czmlDataSource.entities.values.length).toBeGreaterThan(0);
-                    done();
-                });
+                    expect(czml.dataSource.entities.values.length).toBeGreaterThan(0);
+                }).otherwise(done.fail).then(done);
             });
         });
+
     });
 
-    describe('error handling', function(done) {
+    describe('error handling', function() {
         it('fails gracefully when the data at a URL is not JSON', function(done) {
             czml.url = 'test/KML/vic_police.kml';
             czml.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -134,7 +166,7 @@ describe('CzmlCatalogItem', function() {
                 czml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -148,7 +180,7 @@ describe('CzmlCatalogItem', function() {
                 czml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -159,7 +191,7 @@ describe('CzmlCatalogItem', function() {
             czml.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -172,7 +204,7 @@ describe('CzmlCatalogItem', function() {
                 czml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -186,7 +218,7 @@ describe('CzmlCatalogItem', function() {
                 czml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });

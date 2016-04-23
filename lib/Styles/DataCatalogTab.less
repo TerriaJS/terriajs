@@ -1,8 +1,15 @@
+@catalog-top-group-background-color: rgba(0,0,0, 0.2);
+@catalog-top-group-text-color: @panel-emphasized-text-color;
+@catalog-group-text-color: @panel-text-color;
+@catalog-open-group-text-color: @panel-emphasized-text-color;
+@catalog-item-text-color: @panel-text-color;
+@catalog-enabled-item-text-color: @panel-selected-text-color;
+
 .data-catalog-top-group-header {
     display: table;
     width: 100%;
     line-height: 40px;
-    background-color: rgba(0,0,0, 0.2);
+    background-color: @catalog-top-group-background-color;
     border-bottom: @panel-element-border;
     cursor: pointer;
     table-layout: fixed;
@@ -12,7 +19,7 @@
     display: table-cell;
     padding-left: 16px;
     font-size: 15px;
-    color: @panel-emphasized-text-color;
+    color: @catalog-top-group-text-color;
     word-wrap: break-word;
     max-width: 252px;
 }
@@ -21,7 +28,7 @@
     position: relative;
     width: 12px;
     height: 12px;
-    fill: @panel-emphasized-text-color;
+    fill: @catalog-top-group-text-color;
     margin-right: 16px;
 }
 
@@ -45,7 +52,7 @@
     display: table-cell;
     font-family: @default-font;
     font-size: 14px;
-    color: @panel-text-color;
+    color: @catalog-item-text-color;
     font-weight: lighter;
     word-wrap: break-word;
     max-width: 75px;
@@ -54,7 +61,7 @@
 .data-catalog-group-label {
     display: table-cell;
     font-size: 15px;
-    color: @panel-text-color;
+    color: @catalog-group-text-color;
     word-wrap: break-word;
     max-width: 252px;
 }
@@ -62,11 +69,6 @@
 .data-catalog-group-contents {
     padding-top: 5px;
     padding-bottom: 10px;
-}
-
-.data-catalog-opened-group {
-    color: @panel-emphasized-text-color;
-    fill: @panel-emphasized-text-color;
 }
 
 .data-catalog-indent0 {
@@ -104,22 +106,14 @@
     position: relative;
     width: 12px;
     height: 12px;
-    fill: @panel-text-color;
+    fill: @catalog-item-text-color;
 }
 
 .data-catalog-arrow {
   position: relative;
   width: 12px;
   height: 12px;
-  fill: @panel-text-color;
-}
-
-.data-catalog-item-checkbox {
-  position: relative;
-  top: 2px;
-  width: 15px;
-  height: 15px;
-  fill: @panel-text-color;
+  fill: @catalog-group-text-color;
 }
 
 .data-catalog-icon-holder {
@@ -127,31 +121,177 @@
     width: 20px;
 }
 
-.data-catalog-item-info {
+.data-catalog-item-checkbox {
+	position: relative;
+	top: 2px;
+	width: 15px;
+	height: 15px;
+	fill: none;
+	stroke: @catalog-item-text-color;
+	stroke-opacity: 1;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 4;
+}
+.data-catalog-item-checkbox rect {
+	fill-opacity: 0;
+	stroke: @catalog-item-text-color;
+	stroke-opacity: 1;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 4;
+}
+.data-catalog-item-checkbox path {
+	fill-opacity: 0;
+	stroke: @catalog-item-text-color;
+	stroke-opacity: 0;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-miterlimit: 4;
+}
+
+.data-catalog-item-checkbox.loading rect {
+	stroke: @catalog-enabled-item-text-color;
+	stroke-dasharray: 80;
+	stroke-dashoffset: 0;
+	animation: border-loading 1.25s linear;
+	-moz-animation: border-loading 1.25s linear;
+	-webkit-animation: border-loading 1.25s linear;
+	-o-animation: border-loading 1.25s linear;
+	animation-iteration-count: infinite;
+	-moz-animation-iteration-count: infinite;
+	-webkit-animation-iteration-count: infinite;
+	-o-animation-iteration-count: infinite;
+}
+
+.data-catalog-item-checkbox.loading path {
+	stroke-opacity: 0;
+	fill-opacity: 0;
+}
+
+.data-catalog-item-checkbox.checked rect {
+	stroke: @catalog-enabled-item-text-color;
+	stroke-dasharray: 80;
+	stroke-dashoffset: 0;
+	animation: border-fill 0.25s ease-out;
+	-moz-animation: border-fill 0.25s ease-out;
+	-webkit-animation: border-fill 0.25s ease-out;
+	-o-animation: border-fill 0.25s ease-out;
+	animation-iteration-count: 1;
+	-moz-animation-iteration-count: 1;
+	-webkit-animation-iteration-count: 1;
+	-o-animation-iteration-count: 1;
+}
+
+.data-catalog-item-checkbox.checked path {
+	stroke: @catalog-top-group-background-color; // this should be bg color
+	stroke-dashoffset: 0;
+	stroke-dasharray: 100;
+	fill-opacity: 1;
+	fill: @catalog-enabled-item-text-color;
+	animation: check-fill 0.8s ease-out;
+	-moz-animation: check-fill 0.8s ease-out;
+	-webkit-animation: check-fill 0.8s ease-out;
+	-o-animation: check-fill 0.8s ease-out;
+	animation-iteration-count: 1;
+	-moz-animation-iteration-count: 1;
+	-webkit-animation-iteration-count: 1;
+	-o-animation-iteration-count: 1;
+}
+
+@keyframes border-loading {
+	from {
+		stroke-dasharray: 10, 70;
+	    stroke-dashoffset: 0;
+	}
+	to {
+		stroke-dasharray: 10, 70;
+	    stroke-dashoffset: 80;
+	}
+}
+
+@keyframes border-fill {
+	from {
+	    stroke-dashoffset: -40;
+	    stroke-dasharray: 10, 70;
+	}
+	to {
+	    stroke-dashoffset: 0;
+	    stroke-dasharray: 80,10;
+	}
+}
+
+@keyframes check-fill {
+	0% {
+	    fill: hsla(193, 85%, 35%, 0);
+	    stroke: hsla(193, 85%, 90%, 1);
+	    stroke-dashoffset: 100;
+	    stroke-dasharray: 100;
+	}
+	40% {
+	    fill: hsla(193, 85%, 35%, 0);
+	    stroke: hsla(193, 85%, 90%, 1);
+	    stroke-dashoffset: 0;
+	    stroke-dasharray: 100;
+	}
+	100% {
+	    fill: hsla(193, 85%, 35%, 1);
+	    stroke: hsla(212, 12%, 21%, 1);
+	}
+}
+
+
+.data-catalog-control {
     display: table-cell;
-    text-align: right;
     width: 25px;
     vertical-align: middle;
 }
 
-.data-catalog-info-icon {
+.data-catalog-right-side-control {
+    .data-catalog-control;
+    text-align: right;
+}
+
+.data-catalog-left-side-control {
+    .data-catalog-control;
+    text-align: left;
+}
+
+.data-catalog-item-info {
+    .data-catalog-right-side-control
+}
+
+.data-catalog-control-icon {
     position: relative;
     width: 18px;
     height: 18px;
-    fill: @panel-text-color;
+    fill: @catalog-item-text-color;
     margin-right: 16px;
     opacity: 0.5;
     -webkit-transition: opacity 0.2s ease;
     -moz-transition: opacity 0.2s ease;
     -o-transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 1;
+    }
 }
 
-.data-catalog-info-icon:hover {
-  opacity: 1;
+.data-catalog-info-icon {
+  display: block;
+    .data-catalog-control-icon
 }
 
 .data-catalog-enabled-item {
     font-weight: normal;
-    color: @panel-selected-text-color;
-    fill: @panel-selected-text-color;
+    color: @catalog-enabled-item-text-color;
+    fill: @catalog-enabled-item-text-color;
+}
+
+.data-catalog-opened-group {
+    color: @catalog-open-group-text-color;
+    fill: @catalog-open-group-text-color;
 }

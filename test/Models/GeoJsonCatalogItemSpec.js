@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach*/
 var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
-var ModelError = require('../../lib/Models/ModelError');
+var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
 
 var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
@@ -23,7 +23,27 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/bike_racks.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
+                done();
+            });
+        });
+
+        it('have default dataUrl and dataUrlType', function() {
+            geojson.updateFromJson({
+                url: 'test/GeoJSON/bike_racks.geojson',
+            });
+            expect(geojson.dataUrl).toBe('test/GeoJSON/bike_racks.geojson');
+            expect(geojson.dataUrlType).toBe('direct');
+        });
+
+        it('use provided dataUrl', function(done) {
+            geojson.url = 'test/GeoJSON/bike_racks.geojson';
+            geojson.dataUrl ="test/test.html";
+            geojson.dataUrlType ="fake type";
+            geojson.load().then(function() {
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataUrl).toBe("test/test.html");
+                expect(geojson.dataUrlType).toBe("fake type");
                 done();
             });
         });
@@ -33,7 +53,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -44,7 +64,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -55,7 +75,7 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/cemeteries.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -65,7 +85,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -76,7 +96,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -87,7 +107,7 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/gme.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -97,7 +117,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -108,7 +128,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -119,7 +139,7 @@ describe('GeoJsonCatalogItem', function() {
         it('works by URL', function(done) {
             geojson.url = 'test/GeoJSON/EsriEnvelope.geojson';
             geojson.load().then(function() {
-                expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                 done();
             });
         });
@@ -129,7 +149,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = s;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -140,7 +160,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.data = blob;
                 geojson.dataSourceUrl = 'anything.geojson';
                 geojson.load().then(function() {
-                    expect(geojson._geoJsonDataSource.entities.values.length).toBeGreaterThan(0);
+                    expect(geojson.dataSource.entities.values.length).toBeGreaterThan(0);
                     done();
                 });
             });
@@ -153,7 +173,7 @@ describe('GeoJsonCatalogItem', function() {
             geojson.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -166,7 +186,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -180,7 +200,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -191,7 +211,7 @@ describe('GeoJsonCatalogItem', function() {
             geojson.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -204,7 +224,7 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -218,9 +238,50 @@ describe('GeoJsonCatalogItem', function() {
                 geojson.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
+            });
+        });
+    });
+
+    describe('TopoJSON', function() {
+        it('computes extent of TopoJSON before rendering', function(done) {
+            geojson.url = 'test/GeoJSON/polygon.topojson';
+            geojson.load().then(function() {
+                expect(geojson.rectangle.width).not.toBeCloseTo(0, 1);
+                done();
+            });
+        });
+    });
+
+    describe('Adding and removing attribution', function() {
+        var currentViewer;
+        beforeEach(function(){
+            currentViewer = geojson.terria.currentViewer;
+            geojson.url = 'test/GeoJSON/polygon.topojson';
+            terria.disclaimerListener = function(member, callback) {
+                callback();
+            };
+            geojson.isEnabled = true;
+        });
+
+        it('can add attribution', function(done) {
+            spyOn(currentViewer, 'addAttribution');
+            geojson.load();
+            geojson._loadForEnablePromise.then(function() {
+                expect(currentViewer.addAttribution).toHaveBeenCalled();
+                done();
+            });
+        });
+
+        it('can remove attribution', function(done) {
+            spyOn(currentViewer, 'removeAttribution');
+            geojson.load();
+            geojson._loadForEnablePromise.then(function() {
+                geojson.isEnabled = false;
+                expect(currentViewer.removeAttribution).toHaveBeenCalled();
+                done();
             });
         });
     });

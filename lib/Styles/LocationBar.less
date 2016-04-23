@@ -31,3 +31,10 @@
         display: none;
     }
 }
+
+// Don't display the distance legend on small screens like mobile phones.
+@media screen and (max-width: 700px), screen and (max-height: 420px) {
+    .location-bar {
+        display: none;
+    }
+}

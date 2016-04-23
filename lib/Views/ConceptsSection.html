@@ -1,0 +1,3 @@
+<div class="now-viewing-section" data-bind="if: catalogMember.concepts && catalogMember.concepts.length > 0">
+    <div class="now-viewing-section-contents" data-bind="template: { name: 'now-viewing-tree-item-template', foreach: catalogMember.concepts }"></div>
+</div>

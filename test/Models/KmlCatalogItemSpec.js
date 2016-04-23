@@ -2,14 +2,17 @@
 
 /*global require,describe,it,expect,beforeEach*/
 var KmlCatalogItem = require('../../lib/Models/KmlCatalogItem');
-var ModelError = require('../../lib/Models/ModelError');
+var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
 
 var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
 var loadText = require('terriajs-cesium/Source/Core/loadText');
 var loadXML = require('terriajs-cesium/Source/Core/loadXML');
 
-describe('KmlCatalogItem', function() {
+// KML requires support for Blob.  See https://github.com/TerriaJS/terriajs/issues/508
+var describeIfSupported = typeof Blob !== 'undefined' ? describe : xdescribe;
+
+describeIfSupported('KmlCatalogItem', function() {
     var terria;
     var kml;
 
@@ -23,9 +26,25 @@ describe('KmlCatalogItem', function() {
     it('can load a KML file by URL', function(done) {
         kml.url = 'test/KML/vic_police.kml';
         kml.load().then(function() {
-            expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
-            done();
+            expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('use provided dataUrl', function(done) {
+        kml.url = 'test/KML/vic_police.kml';
+        kml.dataUrl ="test/test.html";
+        kml.load().then(function() {
+            expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
+            expect(kml.dataUrl).toBe("test/test.html");
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('have default dataUrl and dataUrlType', function() {
+        kml.updateFromJson({
+            url: 'test/KML/vic_police.kml',
         });
+        expect(kml.dataUrl).toBe('test/KML/vic_police.kml');
+        expect(kml.dataUrlType).toBe('direct');
     });
 
     it('can load a KML file by provided XML data', function(done) {
@@ -33,9 +52,8 @@ describe('KmlCatalogItem', function() {
             kml.data = xml;
             kml.dataSourceUrl = 'anything.kml';
             kml.load().then(function() {
-                expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
-                done();
-            });
+                expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).then(done).otherwise(done.fail);
         });
     });
 
@@ -44,9 +62,8 @@ describe('KmlCatalogItem', function() {
             kml.data = blob;
             kml.dataSourceUrl = 'anything.kml';
             kml.load().then(function() {
-                expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
-                done();
-            });
+                expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).then(done).otherwise(done.fail);
         });
     });
 
@@ -55,18 +72,16 @@ describe('KmlCatalogItem', function() {
             kml.data = s;
             kml.dataSourceUrl = 'anything.kml';
             kml.load().then(function() {
-                expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
-                done();
-            });
+                expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).then(done).otherwise(done.fail);
         });
     });
 
     it('can load a KMZ file by URL', function(done) {
         kml.url = 'test/KML/vic_police.kmz';
         kml.load().then(function() {
-            expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
-            done();
-        });
+            expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
+        }).then(done).otherwise(done.fail);
     });
 
     it('can load a KMZ file by provided Blob', function(done) {
@@ -74,9 +89,8 @@ describe('KmlCatalogItem', function() {
             kml.data = blob;
             kml.dataSourceUrl = 'anything.kmz';
             kml.load().then(function() {
-                expect(kml._kmlDataSource.entities.values.length).toBeGreaterThan(0);
-                done();
-            });
+                expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
+            }).then(done).otherwise(done.fail);
         });
     });
 
@@ -86,7 +100,7 @@ describe('KmlCatalogItem', function() {
             kml.load().then(function() {
                 done.fail('Load should not succeed.');
             }).otherwise(function(e) {
-                expect(e instanceof ModelError).toBe(true);
+                expect(e instanceof TerriaError).toBe(true);
                 done();
             });
         });
@@ -99,7 +113,7 @@ describe('KmlCatalogItem', function() {
                 kml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });
@@ -113,7 +127,7 @@ describe('KmlCatalogItem', function() {
                 kml.load().then(function() {
                     done.fail('Load should not succeed.');
                 }).otherwise(function(e) {
-                    expect(e instanceof ModelError).toBe(true);
+                    expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
             });

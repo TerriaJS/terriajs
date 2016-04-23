@@ -1,0 +1,28 @@
+{
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "source": {
+        "includePattern": ".+\\.((js(doc)?)|png)$",
+        "excludePattern": "((^|\\/|\\\\)_)|(^ThirdParty/)"
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "default": {
+            "staticFiles": {
+                "paths": ["tutorials/static/"]
+            }
+        }
+    },
+    "opts": {
+        "recurse": true,
+        "encoding": "utf8",
+        "destination": "./wwwroot/doc/",
+        "tutorials": "./tutorials/"
+    }
+ }

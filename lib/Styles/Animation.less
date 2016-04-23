@@ -15,13 +15,14 @@
     font-family: 'Roboto Mono', light;
     font-size: 13px;
     color: @menu-bar-text-color;
-    padding-left: 1px;
+    padding-left: 3px;
     padding-right: 1px;
     padding-top: 1px;
     height: 18px;
     cursor: pointer;
-    text-align: center;
+    text-align: left;
     border-bottom: @panel-element-border;
+    white-space: nowrap;
 }
 
 .animation-text-display {
@@ -82,6 +83,18 @@
     z-index: 2000;
 }
 
+.animation-name {
+    position: absolute;
+    bottom: 28px;
+    left: 168px;
+    background-color: rgba(47, 53, 60, 0.8);
+    right: 1px;
+    height: 17px;
+    line-height: 14px;
+    padding-left: 5px;
+    font-size: 12px;
+    z-index: 2;
+}
 
 .animation-displace {
     margin-bottom: 26px;

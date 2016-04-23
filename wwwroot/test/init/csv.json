@@ -1,0 +1,108 @@
+{
+    "catalog": [{
+        "name": "CSV testing",
+        "type": "group",
+        "isOpen": true,
+        "items": [
+            {
+                "name": "Lat/lon CSV from init file",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
+            },
+            {
+                "name": "Region-mapped CSV from init file",
+                "type": "csv",
+                "data": "POA,value\n2880,5\n5710,10"
+            },
+            {
+                "name": "CSV (with 0) with blank values as zero",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0",
+                "tableStyle": {
+                    "replaceWithZeroValues": [null]
+                }
+            },
+            {
+                "name": "CSV (with 0) with blank values separated",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,0",
+                "tableStyle": {
+                    "replaceWithZeroValues": [],
+                    "nullColor": "green",
+                    "nullLabel": "blank"
+                }
+            },
+            {
+                "name": "CSV (no 0) with blank values as zero",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+                "tableStyle": {
+                    "replaceWithZeroValues": [null]
+                }
+            },
+            {
+                "name": "CSV (no 0) with blank values separated",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+                "tableStyle": {
+                    "replaceWithZeroValues": [],
+                    "nullColor": "green",
+                    "nullLabel": "blank"
+                }
+            },
+            {
+                "name": "CSV with blank string values",
+                "type": "csv",
+                "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
+                "tableStyle": {
+                    "nullLabel": "blank"
+                }
+            },
+            {
+                "name": "Lat/lon CSV with duration of 1 hour",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv",
+                "tableStyle": {
+                    "displayDuration": 60
+                }
+            },
+            {
+                "name": "Lat/lon CSV with no other columns",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon.csv"
+            },
+            {
+                "name": "Lat/lon with too many enum values",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
+            },
+            {
+                "name": "Lat/lon with 9 enum values and 9 bins",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_lots2.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
+            },
+            {
+                "name": "Postcodes with 9 enum values and 9 bins",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/postcode_enum_lots2.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
+            },
+            {
+                "name": "Postcodes with too many enum values",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/postcode_enum_lots.csv",
+                "tableStyle": {
+                    "colorBins": 9
+                }
+            }
+        ]
+    }]
+}

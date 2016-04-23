@@ -1,0 +1,6 @@
+lat,lon,enum,val
+-37,145,hello,6
+-37.5,145,boots,7
+-38,145,frogs,5
+-37,145.5,boots,6.5
+-37.25,145.25,hello,5.5

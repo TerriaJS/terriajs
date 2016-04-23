@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" version="2.0.2" service="CSW" resultType="results" startPosition="{startPosition}" maxRecords="100">
+    <csw:Query typeNames="csw:Record" xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">
+        <csw:ElementSetName>full</csw:ElementSetName>
+        <csw:Constraint version="1.1.0">
+            <ogc:Filter>
+                <ogc:Or>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="#" escapeChar="!">
+                        <ogc:PropertyName>dc:format</ogc:PropertyName>
+                        <ogc:Literal>%WMS%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="#" escapeChar="!">
+                        <ogc:PropertyName>OnlineResourceType</ogc:PropertyName>
+                        <ogc:Literal>%WMS%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                    <ogc:PropertyIsLike wildCard="%" singleChar="#" escapeChar="!">
+                        <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName>
+                        <ogc:Literal>%WMS%</ogc:Literal>
+                    </ogc:PropertyIsLike>
+                </ogc:Or>
+            </ogc:Filter>
+        </csw:Constraint>
+    </csw:Query>
+</csw:GetRecords>

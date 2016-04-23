@@ -1,6 +1,8 @@
+@menu-bar-right-offset: 25px;
+
 .menu-bar {
     position: absolute;
-    right: 25px;
+    right: @menu-bar-right-offset;
     top: 20px;
     height: 20px;
 }
@@ -54,6 +56,12 @@
 }
 
 @media print {
+    .menu-bar {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 700px), screen and (max-height: 420px) {
     .menu-bar {
         display: none;
     }

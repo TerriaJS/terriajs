@@ -1,6 +1,14 @@
 @import "@{cesium-path}/build/Widgets/widgets.css";
 @import (inline) "npm://leaflet/dist/leaflet.css";
 
+#cesiumContainer{
+    -webkit-transition: bottom @explorer-panel-close-animation-length ease-out;
+    -moz-transition: bottom @explorer-panel-close-animation-length ease-out;
+    -ms-transition: bottom @explorer-panel-close-animation-length ease-out;
+    -o-transition: bottom @explorer-panel-close-animation-length ease-out;
+    transition: bottom @explorer-panel-close-animation-length ease-out;
+}
+
 #cesiumContainer .cesium-widget-credits {
     display: block;
     position: absolute;
@@ -92,5 +100,12 @@ button.cesium-infoBox-camera {
     }
     .cesium-infoBox {
         display: none;
+    }
+}
+
+// Don't displace the map on small screens like mobile phones.
+@media screen and (max-width: 520px), screen and (max-height: 420px) {
+    .map-displaced {
+        left: 0;
     }
 }

@@ -1,12 +1,17 @@
-<div class="explorer-panel" data-bind="css: { 'explorer-panel-collapsed': !isOpen }">
+<div class="explorer-panel" data-bind="css: { 'explorer-panel-collapsed': !isOpen }, swipeLeft: close, swipeRight: open">
     <div class="explorer-panel-header">
-        <div class="explorer-panel-tab-area" data-bind="foreach: tabs">
-          <div class="explorer-panel-tab" tabindex="1"
+        <div class="explorer-panel-tab-area" data-bind="foreach: tabs" role="tablist">
+          <div class="explorer-panel-tab"
               data-bind="visible: isVisible,
                          css: { 'explorer-panel-tab-active': isActive },
                          click: activate">
             <div class="explorer-panel-tab-content">
-              <div data-bind="text: name"></div>
+              <!-- ko if: typeof svgPath !== 'undefined' -->
+                <div class="explorer-panel-tab-icon-holder">
+                  <div class="explorer-panel-tab-icon" data-bind="cesiumSvgPath: { path: svgPath, width: svgPathWidth, height: svgPathHeight, 'fill-rule': svgPathFillRule }"></div>
+                </div>
+              <!-- /ko -->
+              <a class="explorer-panel-tab-label" data-bind="text: name, attr: { href: '#'+name.replace(/\s+/g, '-').toLowerCase(), title: name }"></a>
               <div class="explorer-panel-tab-badge" data-bind="text: badgeText, visible: typeof badgeText !== 'undefined', css: { 'explorer-panel-tab-badge-pop': badgeIsPopped }, event: { transitionend: unpopBadge }"></div>
             </div>
           </div>
@@ -16,7 +21,7 @@
         </div>
     </div>
     <div class="explorer-panel-body" data-bind="isOpen, foreach: tabs, css: { 'explorer-panel-body-collapsed': !$root.isOpen }">
-      <div class="explorer-panel-frame" data-bind="css: { 'explorer-panel-frame-inactive-left': !isActive && $index() < $root.activeTabIndex, 'explorer-panel-frame-inactive-right': !isActive && $index() > $root.activeTabIndex }">
+      <div class="explorer-panel-frame" data-bind="css: { 'explorer-panel-frame-inactive-left': !isActive && $index() < $root.getActiveTabIndex(), 'explorer-panel-frame-inactive-right': !isActive && $index() > $root.getActiveTabIndex() }">
         <div class="explorer-panel-body-pane" data-bind="embeddedComponent: $data">
         </div>
       </div>

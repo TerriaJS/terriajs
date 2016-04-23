@@ -1,0 +1,250 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "unstyled polygon"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              144.173583984375,
+              -38.706946051593846
+            ],
+            [
+              144.1571044921875,
+              -38.9380483825641
+            ],
+            [
+              144.4097900390625,
+              -38.736946065676
+            ],
+            [
+              144.173583984375,
+              -38.706946051593846
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "unstyled marker"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          144.9810791015625,
+          -38.882481197550796
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "unstyled line"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            144.4757080078125,
+            -38.86537485161164
+          ],
+          [
+            144.700927734375,
+            -38.86537485161164
+          ],
+          [
+            144.7064208984375,
+            -38.664067044569435
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke": "#ffe700",
+        "stroke-width": 5,
+        "stroke-opacity": 0.7,
+        "fill": "#ff4c00",
+        "fill-opacity": 0.4,
+        "name": "yellow 70% 5px border, red 40% fill"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              143.8330078125,
+              -39.58452390500422
+            ],
+            [
+              144.1680908203125,
+              -39.75787999202175
+            ],
+            [
+              144.25048828125,
+              -39.478605568922085
+            ],
+            [
+              143.8330078125,
+              -39.58452390500422
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke": "#00f900",
+        "stroke-width": 8,
+        "stroke-opacity": 0.3,
+        "name": "translucent thick green line"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            143.7286376953125,
+            -39.800095956348386
+          ],
+          [
+            144.854736328125,
+            -39.82119422647454
+          ],
+          [
+            144.8492431640625,
+            -39.44043541908485
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#ff41f4",
+        "marker-size": "medium",
+        "marker-symbol": "rocket",
+        "name": "large pink rocket"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          145.12939453125,
+          -39.61415207700264
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Unstyled diamond"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              143.85223388671875,
+              -38.719804742642374
+            ],
+            [
+              143.7451171875,
+              -38.820451107114714
+            ],
+            [
+              143.87969970703125,
+              -38.925229047140526
+            ],
+            [
+              143.98681640625,
+              -38.79904887985135
+            ],
+            [
+              143.85223388671875,
+              -38.719804742642374
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke": "#d32703",
+        "stroke-width": 15,
+        "stroke-opacity": 1,
+        "fill": "#555555",
+        "fill-opacity": 0,
+        "name": "15px scarlet solid border, 0% fill"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              143.41552734375,
+              -39.43195032116862
+            ],
+            [
+              143.2452392578125,
+              -39.63107677008365
+            ],
+            [
+              143.50341796875,
+              -39.77476948529546
+            ],
+            [
+              143.6846923828125,
+              -39.58029027440865
+            ],
+            [
+              143.41552734375,
+              -39.43195032116862
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#ffe400",
+        "marker-size": "small",
+        "marker-symbol": "rocket",
+        "name": "Small yellow rocket"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          144.97283935546872,
+          -39.612036199336934
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "marker-color": "#784aff",
+        "marker-size": "large",
+        "marker-symbol": "rocket",
+        "marker-opacity": "0.3",
+        "name": "Large translucent purple rocket"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          145.31616210937497,
+          -39.59933957529531
+        ]
+      }
+    }
+  ]
+}

@@ -1,3 +1,8 @@
+@settings-background-color: @panel-background-color;
+@settings-text-color: @panel-emphasized-text-color;
+@settings-header-background-color: @panel-section-background-color;
+@settings-header-text-color: @panel-emphasized-text-color;
+
 .settings-panel {
     .panel;
     background-color: @panel-background-color;
@@ -30,7 +35,7 @@
     width: 0px;
     height: 0px;
     position: absolute;
-    border-bottom: 10px solid @panel-section-background-color;
+    border-bottom: 10px solid @settings-header-background-color;
     border-left: 0.8em solid transparent;
     border-right: 0.8em solid transparent;
     border-top: 0.8em solid transparent;
@@ -47,8 +52,8 @@
 .settings-panel-section-header {
     font-size: 0.9em;
     padding: 8px;
-    background-color: @panel-section-background-color;
-    color: @panel-emphasized-text-color;
+    background-color: @settings-header-background-color;
+    color: @settings-header-text-color;
     border-bottom: @panel-element-border;
 }
 
@@ -59,8 +64,8 @@
 }
 
 #map-views {
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 #base-maps {
@@ -78,12 +83,12 @@
 
 .settings-panel-map-view-button-selected {
     background-color: @highlight-color;
-    color: @panel-emphasized-text-color;
+    color: @settings-text-color;
 }
 
 .settings-panel-base-map-label {
     padding-bottom: 10px;
-    color: @panel-emphasized-text-color;
+    color: @settings-text-color;
 }
 
 .settings-panel-base-map-choices {
@@ -92,6 +97,11 @@
 .settings-panel-base-map-button {
     .clickable;
     border: @panel-element-border;
+    box-sizing: border-box;
+    img{
+        width: 100%;
+        height: 100%;
+    }
 }
 
 .settings-panel-base-map-button-selected {
@@ -99,7 +109,7 @@
 }
 
 .settings-panel-base-map-button:hover {
-    border: 1px solid @panel-emphasized-text-color;
+    border: 1px solid @settings-text-color;
 }
 
 .settings-panel-close-button {
@@ -108,7 +118,7 @@
     top: 6px;
     cursor: pointer;
     font-size: 12pt;
-    color: @panel-emphasized-text-color;
+    color: @settings-header-text-color;
 }
 
 @media print {

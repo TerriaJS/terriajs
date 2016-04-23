@@ -9,13 +9,14 @@ TIP: You can also free orbit by holding the CTRL key and dragging the map." data
     <div class="compass-gyro" data-bind="cesiumSvgPath: { path: svgCompassGyro, width: 145, height: 145 }, css: { 'compass-gyro-active': isOrbiting }"></div>
 </div>
 <div class="navigation-controls">
-    <div class="navigation-control" data-bind="click: zoomIn" title="Zoom In">
-        <div class="navigation-control-icon-zoom-in">+</div>
+    <!-- ko foreach: controls -->
+    <div data-bind="click: activate, attr: { title: $data.name }, css: $root.isLastControl($data) ? 'navigation-control-last' : 'navigation-control' ">
+        <!-- ko if: $data.hasText -->
+        <div data-bind="text: $data.text, css: $data.isActive ?  'navigation-control-icon-active ' + $data.cssClass : $data.cssClass"></div>
+        <!-- /ko -->
+        <!-- ko ifnot: $data.hasText -->
+        <div data-bind="cesiumSvgPath: { path: $data.svgIcon, width: $data.svgWidth, height: $data.svgHeight }, css: $data.isActive ?  'navigation-control-icon-active ' + $data.cssClass : $data.cssClass"></div>
+        <!-- /ko -->
     </div>
-    <div class="navigation-control" data-bind="click: resetView" title="Reset View">
-        <div class="navigation-control-icon-reset" data-bind="cesiumSvgPath: { path: svgReset, width: 15, height: 15 }"></div>
-    </div>
-    <div class="navigation-control-last" data-bind="click: zoomOut" title="Zoom Out">
-        <div class="navigation-control-icon-zoom-out">–</div>
-    </div>
+    <!-- /ko -->
 </div>

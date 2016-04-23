@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities
+        version="1.3.0"
+        updateSequence="2015-10-19T06:08:31.586Z"
+        xmlns="http://www.opengis.net/wms"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
+        
+    <Service>
+        <Name>WMS</Name>
+    </Service>
+    <Capability>
+        <Request>
+            <GetCapabilities>
+                <Format>text/xml</Format>
+                <DCPType><HTTP><Get><OnlineResource xlink:type="simple" xlink:href="http://example.com/ereefs/tds/wms/ereefs/mwq_gridAgg_P1A"/></Get></HTTP></DCPType>
+            </GetCapabilities>
+            <GetMap>
+                <Format>image/png</Format>
+                <Format>image/png;mode=32bit</Format>
+                <Format>image/gif</Format>
+                <Format>image/jpeg</Format>
+                <Format>application/vnd.google-earth.kmz</Format>
+                <DCPType><HTTP><Get><OnlineResource xlink:type="simple" xlink:href="http://example.com/ereefs/tds/wms/ereefs/mwq_gridAgg_P1A"/></Get></HTTP></DCPType>
+            </GetMap>
+            <GetFeatureInfo>
+                <Format>image/png</Format>
+                <Format>text/xml</Format>
+                <DCPType><HTTP><Get><OnlineResource xlink:type="simple" xlink:href="http://example.com/ereefs/tds/wms/ereefs/mwq_gridAgg_P1A"/></Get></HTTP></DCPType>
+            </GetFeatureInfo>
+        </Request>
+        <Exception>
+            <Format>XML</Format>
+        </Exception>
+        <Layer>
+            <Title>Test Data Server</Title><CRS>EPSG:4326</CRS>
+            <CRS>CRS:84</CRS>
+            <CRS>EPSG:41001</CRS>
+            <CRS>EPSG:27700</CRS>
+            <CRS>EPSG:3408</CRS>
+            <CRS>EPSG:3409</CRS>
+            <CRS>EPSG:3857</CRS>
+            <CRS>EPSG:32661</CRS>
+            <CRS>EPSG:32761</CRS>
+            <Layer>
+                <Title>Test data</Title>
+                <Layer queryable="1">
+                    <Name>13_intervals</Name>
+                    <Title>number_of_observations</Title>
+                    <Abstract>spatial distribution</Abstract>
+                    <EX_GeographicBoundingBox>
+                        <westBoundLongitude>142.0050048828125</westBoundLongitude>
+                        <eastBoundLongitude>155.9949951171875</eastBoundLongitude>
+                        <southBoundLatitude>-25.4950008392334</southBoundLatitude>
+                        <northBoundLatitude>-9.505000114440918</northBoundLatitude>
+                    </EX_GeographicBoundingBox>
+                    <BoundingBox CRS="CRS:84" minx="142" maxx="156.0" miny="-25.5" maxy="-9.505"/>
+                    <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2014-01-01T00:00:00.000Z">
+                            2002-01-01T00:00:00.000Z,2003-01-01T00:00:00.000Z,2004-01-01T00:00:00.000Z,2005-01-01T00:00:00.000Z,2006-01-01T00:00:00.000Z,2007-01-01T00:00:00.000Z,2008-01-01T00:00:00.000Z,2009-01-01T00:00:00.000Z,2010-01-01T00:00:00.000Z,2011-01-01T00:00:00.000Z,2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z,2014-01-01T00:00:00.000Z</Dimension>
+                    <Style>
+                        <Name>boxfill/ncview</Name>
+                        <Title>boxfill/ncview</Title>
+                        <Abstract>boxfill style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://example.com/ereefs/tds/wms/ereefs/mwq_gridAgg_P1A?REQUEST=GetLegendGraphic&amp;LAYER=13_intervals&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+                </Layer>
+            </Layer>
+        </Layer>
+    </Capability>
+</WMS_Capabilities>

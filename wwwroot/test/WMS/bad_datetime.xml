@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WMT_MS_Capabilities version="1.1.1">
+    <Service>
+        <Name>OGC:WMS</Name>
+        <Title>wms Server</Title>
+        <Abstract></Abstract>
+        <KeywordList>
+
+            <Keyword></Keyword>
+
+        </KeywordList>
+        <OnlineResource href="http://example.com/wms/datasets/ugridtest?REQUEST=GetCapabilities" xlink:type="simple"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"/>
+        <ContactInformation>
+            <ContactPersonPrimary>
+                <ContactPerson></ContactPerson>
+                <ContactOrganization></ContactOrganization>
+            </ContactPersonPrimary>
+            <ContactPosition></ContactPosition>
+            <ContactAddress>
+                <AddressType>postal</AddressType>
+                <Address></Address>
+                <City></City>
+                <StateOrProvince></StateOrProvince>
+                <PostCode></PostCode>
+                <Country></Country>
+            </ContactAddress>
+            <ContactVoiceTelephone></ContactVoiceTelephone>
+            <ContactElectronicMailAddress></ContactElectronicMailAddress>
+        </ContactInformation>
+    </Service>
+    <Capability>
+        <Request>
+            <GetCapabilities>
+                <Format>application/vnd.ogc.wms_xml</Format>
+                <Format>text/xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource
+                                xlink:href="http://example.com/wms/datasets/ugridtest?REQUEST=GetCapabilities"
+                                xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetCapabilities>
+            <GetMap>
+                <Format>image/png</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource
+                                xlink:href="http://example.com/wms/datasets/ugridtest?REQUEST=GetCapabilities"
+                                xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetMap>
+            <GetFeatureInfo>
+                <Format>image/png</Format>
+                <Format>text/csv</Format>
+                <Format>text/javascript</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource
+                                xlink:href="http://example.com/wms/datasets/ugridtest?REQUEST=GetCapabilities"
+                                xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetFeatureInfo>
+            <GetLegendGraphic>
+                <Format>image/png</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource
+                                xlink:href="http://example.com/wms/datasets/ugridtest?REQUEST=GetCapabilities"
+                                xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetLegendGraphic>
+        </Request>
+        <Exception>
+            <Format>text/html</Format>
+        </Exception>
+        <Layer>
+            <Title>Test dataset</Title>
+            <Abstract>Test data set</Abstract>
+            <SRS>EPSG:3857</SRS>
+            <SRS>MERCATOR</SRS>
+
+            <Layer opaque="0" queryable="1">
+                <Name>single_period</Name>
+                <Title>average_data</Title>
+                <Abstract></Abstract>
+                <SRS>EPSG:3857</SRS>
+                <LatLonBoundingBox maxx="46.3841552734" maxy="-123.29158783" minx="46.0292739868"
+                                   miny="-124.177688599"/>
+                <BoundingBox SRS="EPSG:4326" maxx="46.3841552734" maxy="-123.29158783" minx="46.0292739868"
+                             miny="-124.177688599"/>
+                <Dimension name="time" units="ISO8601"/>
+
+                <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00/PBAD</Extent>
+
+                <Style>
+                    <Name>jet</Name>
+                    <Title>jet</Title>
+                    <Abstract></Abstract>
+                    <LegendURL width="72" height="72">
+                        <Format>image/gif</Format>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        xlink:type="simple"
+                                        xlink:href="http://www.example.com"/>
+                    </LegendURL>
+                </Style>
+            </Layer>
+
+        </Layer>
+    </Capability>
+</WMT_MS_Capabilities>

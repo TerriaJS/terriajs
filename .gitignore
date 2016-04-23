@@ -6,3 +6,8 @@ doc/
 error.log
 output.log
 npm-debug.log
+.DS_Store
+terria.lib.js
+
+# added by GitSavvy
+/wwwroot/schema/

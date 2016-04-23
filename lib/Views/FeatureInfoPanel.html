@@ -1,11 +1,24 @@
-<div class="feature-info-panel" data-bind="css: { 'feature-info-panel-hidden': !isVisible }, style: { 'max-width': maxWidth + 'px' }">
-    <div class="feature-info-panel-body">
-        <div class="feature-info-panel-section">
-            <div class="feature-info-panel-section-header">
-                <span class="feature-info-panel-section-label" data-bind="text: name"></span>
-                <div class="feature-info-panel-close-button" data-bind="click: close">&times;</div>
+<div class="feature-info-panel-holder" data-bind="css: { 'feature-info-panel-holder-hidden': !isVisible }, click: closeIfClickOnBackground">
+    <div class="feature-info-panel-holder-inner">
+        <div class="feature-info-panel" data-bind="style: { 'max-width': maxWidth + 'px' }">
+            <div class="feature-info-panel-body">
+                <div class="feature-info-panel-header">
+                    <span class="feature-info-panel-section-label" data-bind="text: name"></span>
+                    <div class="feature-info-panel-close-button" data-bind="click: close">&times;</div>
+                </div>
+                <div class="feature-info-panel-sections" id="feature-info-panel-sections"
+                     data-bind="style: { 'max-height': maxHeight + 'px' }">
+                    <div class="feature-info-panel-section" data-bind="if: message">
+                        <div class="feature-info-panel-section">
+                            <div class="feature-info-panel-section-content" data-bind="markdown: message"></div>
+                        </div>
+                    </div>
+                    <div class="feature-info-panel-section" data-bind="foreach: sections">
+                        <div data-bind="embeddedComponent: $data">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature-info-panel-section-content" data-bind="markdown: html, style: { 'max-height': maxHeight + 'px' }, css: { 'feature-info-panel-section-content-white-background': useWhiteBackground }"></div>
         </div>
     </div>
 </div>

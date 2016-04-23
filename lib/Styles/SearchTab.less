@@ -1,3 +1,6 @@
+@search-provider-header-background-color: rgba(0,0,0, 0.2);
+@search-provider-header-text-color: @panel-emphasized-text-color;
+
 .search-tab {
 }
 
@@ -53,7 +56,7 @@
     display: table;
     width: 100%;
     line-height: 40px;
-    background-color: rgba(0,0,0, 0.2);
+    background-color: @search-provider-header-background-color;
     border-bottom: @panel-element-border;
     cursor: pointer;
 }
@@ -62,7 +65,7 @@
     display: table-cell;
     padding-left: 16px;
     font-size: 15px;
-    color: @panel-emphasized-text-color;
+    color: @search-provider-header-text-color;
 }
 
 .search-tab-provider-icon-holder {

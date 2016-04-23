@@ -1,8 +1,8 @@
 <div class="modal-background" data-bind="click: closeIfClickOnBackground">
-    <div class="share-popup">
+    <div class="share-popup no-focus-outline" data-bind="hasFocus: true" tabindex="0" aria-hidden ='false'>
         <div class="modal-header">
-            <div class="modal-close-button" data-bind="click: close">&times;</div>
-            <h1>Share</h1>
+            <button class="modal-close-button" data-bind="click: close">&times;</button>
+            <h1 data-bind="text: title"></h1>
         </div>
         <div class="share-popup-content">
             <div class="share-popup-image">
@@ -11,7 +11,7 @@
             <div class="share-popup-right">
                 <div class="share-popup-label" data-bind="visible: itemsSkippedBecauseTheyHaveLocalData.length > 0">
                     The following data sources will NOT be shared because they include data from this local system.
-                    To share these data sources, publish their data on a web server and add them to National Map using
+                    To share these data sources, publish their data on a web server and add them using
                     the URL instead of by dragging/dropping or selecting a local file.
                     <ul data-bind="foreach: itemsSkippedBecauseTheyHaveLocalData">
                         <li data-bind="text: name"></li>
@@ -24,6 +24,11 @@
                 <div class="share-popup-label">
                     To <strong>embed</strong>, copy this code to embed this map into an HTML page:
                     <input readonly type="text" data-bind="value: embedCode" size="100" onclick="this.select();" />
+                </div>
+                <div>
+                    <label class="share-popup-checkbox" data-bind="visible: enableShortenUrl">
+                        <input type="checkbox" data-bind="checked: shortenUrl" />Shorten the share URL using a web service
+                    </label>
                 </div>
             </div>
         </div>

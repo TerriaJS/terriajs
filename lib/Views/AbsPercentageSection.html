@@ -1,0 +1,6 @@
+<div class="now-viewing-abs-controls">
+	<!-- ko if: catalogMember.canDisplayPercent -->
+	     <div class="now-viewing-abs-checkbox clickable" data-bind="click: function(data, event) { catalogMember.displayPercent = !catalogMember.displayPercent; }, cesiumSvgPath: { path: catalogMember.displayPercent ? svgCheckboxChecked : svgCheckboxUnchecked, width: 32, height: 32 }"></div>
+	    <div class="now-viewing-abs-percent">Display as percent of region population</div>
+    <!-- /ko -->
+</div>

@@ -1,7 +1,8 @@
 {
+  "asi": false,
   "bitwise": false,
   "camelcase": false,
-  "curly": true,
+  "curly": false,
   "eqeqeq": true,
   "forin": true,
   "immed": true,
@@ -28,7 +29,7 @@
   "funcscope": false,
   "globalstrict": true,
   "iterator": false,
-  "lastsemic": false,
+  "lastsemic": true,
   "laxbreak": true,
   "laxcomma": false,
   "loopfunc": false,
@@ -39,7 +40,8 @@
   "scripturl": false,
   "smarttabs": false,
   "shadow": false,
-  "sub": false,
+  "sub": true,
   "supernew": false,
-  "browser": true
+  "browser": true,
+  "jasmine": true
 }

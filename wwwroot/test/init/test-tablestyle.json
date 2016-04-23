@@ -1,0 +1,198 @@
+{
+  "homeCamera": {
+    "north": -36,
+    "east": 146,
+    "south": -38,
+    "west": 143
+  },
+  "catalog": [
+    {
+      "name": "CSV color maps and palettes",
+      "type": "group",
+      "isOpen": false,
+      "items": [
+        {
+          "name": "Green-orange postcodes",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorMap": "green-orange"
+          }
+        },
+        {
+          "name": "Color brewer 7-class Set3",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorPalette": "7-class Set3"
+          }
+        },
+        {
+          "name": "No color bins (linear scale)",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorBins": 0
+          }
+        },
+        {
+          "name": "50 color bins",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorBins": 50,
+            "colorMap": "black-red"
+          }
+        },
+        {
+          "name": "Color brewer 10-class Set3",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorPalette": "10-class Set3",
+            "colorBins": 10
+          }
+        },
+        {
+          "name": "NEXIS, Color brewer 10-class BrBG, quantile method",
+          "type": "csv",
+          "url": "test/NSW_LGA_NEXIS_201212.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorPalette": "10-class BrBG",
+            "colorBins": 10,
+            "dataVariable": "POPULATION ESTIMATE",
+            "colorBinMethod": "quantile",
+              "featureInfoFields": [ "LGA_NAME_2012", "POPULATION ESTIMATE" ]
+          }
+        },
+        {
+          "name": "NEXIS, Color brewer 10-class BrBG, ckmeans method",
+          "type": "csv",
+          "url": "test/NSW_LGA_NEXIS_201212.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorPalette": "10-class BrBG",
+            "colorBins": 10,
+            "dataVariable": "POPULATION ESTIMATE",
+            "featureInfoFields": [ "LGA_NAME_2012", "POPULATION ESTIMATE" ]
+          }
+        },
+        {
+          "name": "NEXIS, Color brewer 10-class BrBG, no method",
+          "type": "csv",
+          "url": "test/NSW_LGA_NEXIS_201212.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorPalette": "10-class BrBG",
+            "colorBins": 10,
+            "colorBinMethod": "none",
+            "dataVariable": "POPULATION ESTIMATE",
+            "featureInfoFields": [ "LGA_NAME_2012", "POPULATION ESTIMATE" ]
+          }
+        },
+        {
+          "name": "Color brewer 9-class Set1 stretched to 10",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorPalette": "9-class Set1",
+            "colorBins": 10
+          }
+        },
+        {
+          "name": "Color brewer 10-class BrBG",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorPalette": "10-class BrBG",
+            "colorBins": 10
+          }
+        },
+        {
+          "name": "Color brewer Spectral",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "tableStyle": {
+            "colorPalette": "Spectral"
+          },
+          "opacity": 1
+        },
+        {
+          "name": "More postcode testing",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
+          "tableStyle": {
+            "colorMap": "green-hsla(0,50%,50%,0.2)"
+          },
+          "opacity": 1
+
+        },
+        {
+          "name": "All Victorian postcodes",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorMap": "green-hsl(120,100%,70%)-white-hsl(0,100%,70%)-red",
+            "featureInfoFields": { "Value": true, "Mod10": true }
+          }
+        }
+      ]
+    },
+    {
+      "name": "CSV column-specific",
+      "type": "group",
+      "isOpen": false,
+      "items": [
+        {
+          "name": "Mod10 as enum, Mod100 Spectral",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorMap": "black-orange",
+            "columns": {
+              "Value": {
+                "name": "Postal code"
+              },
+              "Mod10": {
+                "type": "enum",
+                "colorBins": 10,
+                "name": "Last digit of postcode"
+              },
+              "Mod100": {
+                "colorPalette": "Spectral",
+                "name": "Last 2 digits of postcode"
+              }
+            }
+          }
+        },
+        {
+          "name": "Values formatted as numbers",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "columns": {
+              "Value": {
+                "name": "Formatted value",
+                "format": {
+                  "useGrouping": true,
+                  "minimumFractionDigits": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+    "services": [],
+    "catalog": [
+        {
+            "name": "Socrata data catalogues",
+            "type": "group",
+            "isPromoted": true,
+            "isOpen": true,
+            "items": [ 
+                {
+                    "type": "socrata",
+                    "name": "data.act.gov.au",
+                    "url": "http://www.data.act.gov.au"
+                }, {
+                    "type": "socrata",
+                    "name": "data.melbourne.vic.gov.au",
+                    "url": "https://data.melbourne.vic.gov.au"
+                }
+            ]
+
+        }
+    ]
+}
