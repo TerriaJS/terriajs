@@ -30,9 +30,9 @@ googleUrlShortenerKey| A Google API key for accessing the [Google URL Shortener 
     "text": "",
     "url": ""
 },
-"developerAttribution": { | This text is displayed somewhat less prominently at the bottom of the map.
-    "text": "Your organisation",
-    "link": "http://www.example.com"
+"developerAttribution": {<br/>"text": "Your organisation",<br/>"link": "http://www.example.com"<br/>} | This text is displayed somewhat less prominently at the bottom of the map.
+    
+    
 },
 "appName": "Terria Map", | This title serves as the HTML `<title>` of the page and in various user text.
 "supportEmail-CHANGETHIS": "help@example.com", | The email address shown when things go wrong.
