@@ -8,11 +8,10 @@ First, read [Deployment](/Documentation/Deployment) to get up and running.
 
 Location | Purpose
 ---------|---------
-`wwwroot/config.json` | Client-side configuration. Configures catalog (init) files to load, attribution, keys for Bing Maps and Google Analytics, the name of your application.
-`wwwroot/terria.json` | A sample catalog (init) file. You can add new datasets here.
-`devserverconfig.json` | Server-side configuration. Configures which domains the server will proxy for, and special locations of init files.
-`index.js`| Some "configuration-like" aspects are controlled through JavaScript in this file, such as the choices of base map. We try to progressively move these into the above files.
-
+`wwwroot/config.json` | [Config.json](/Documentation/Customizing/Config-JSON.md): Client-side configuration. Configures catalog (init) files to load, attribution, keys for Bing Maps and Google Analytics, the name of your application.
+`wwwroot/terria.json` | A sample [catalog (init) file](/Documentation/CatalogManagement/Initialization-File.md). You can add new datasets here.
+`devserverconfig.json` | Server-side configuration for [Terria Server](https://github.com/TerriaJS/TerriaJS-Server). Configures which domains the server will proxy for, and special locations of init files.
+`index.js`| The [index.js](https://github.com/TerriaJS/TerriaMap/blob/master/index.js) is an entry point for Terria Map. Some "configuration-like" aspects are controlled through JavaScript in this file, such as the choices of base map. We try to progressively move these into the above files.
 
 * [How to skin a Terria Map](How-to-skin-a-Terria-Map.md)
 * [TerriaJS URL parameters](TerriaJS-URL-parameters.md)
