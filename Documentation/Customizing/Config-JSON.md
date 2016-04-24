@@ -26,9 +26,9 @@ bingMapsKey | A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff4
 googleUrlShortenerKey| A Google API key for accessing the [Google URL Shortener service](https://developers.google.com/url-shortener/v1/getting_started#intro). This is required in order to generate short URLs on the "Share" page.
 "googleAnalyticsKey"| A Google API key for Google Analytics.
 "googleAnalyticsOptions"| Additional options that will be passed to the Google Analytics call.
-"disclaimer": { | This text will be displayed prominently at the bottom of the map, with a clickable link to the URL.
-    "text": "",
-    "url": ""
+"disclaimer": {<br/>"text": "",<br/>"url": ""<br/> | This text will be displayed prominently at the bottom of the map, with a clickable link to the URL.
+    
+    
 },
 "developerAttribution": {<br/>"text": "Your organisation",<br/>"link": "http://www.example.com"<br/>} | This text is displayed somewhat less prominently at the bottom of the map.
     
