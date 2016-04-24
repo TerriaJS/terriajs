@@ -51,6 +51,7 @@ More information: [Deploying your own Terria Map](https://github.com/NICTA/natio
 
 * **[Terria™](http://terria.io)** is the overall name for the spatial data platform, including closed-source spatial analytics developed by Data61.
 * **TerriaJS** is this JavaScript library consisting of the 2D/3D map, catalog management and many spatial data connectors.
+* **[Cesium](https://github.com/TerriaJS/Cesium)** is the 3D WebGL rendering library used by TerriaJS, which provides many low-level functions for loading and displaying imagery and spatial formats such as GeoJSON and KML.
 * **[TerriaMap](https://github.com/TerriaJS/TerriaMap)** is a complete website starting point, using TerriaJS.
 * **[TerriaJS-Server](https://github.com/TerriaJS/TerriaJS-Server)** is a NodeJS-based server that provides proxying and support services for TerriaJS.
 * **[NationalMap](https://github.com/NICTA/NationalMap)** is the flagship Terria deployment, and the origin of the TerriaJS library.
