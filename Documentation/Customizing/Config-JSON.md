@@ -20,7 +20,7 @@ It has this structure:
 
 Option | Meaning
 -------|--------
-Initialization URL | 
+`"initializationUrls"` | Each string `"foo"` refers to a catalog (init) file found at `/wwwroot/init/foo.json`. These define all the datasets that will be loaded into the catalog. See [Initialization File](/Documentation/Initialization-File.md). 
 `"parameters": {` | Key value pairs that configure Terria, as follows.
 `"bingMapsKey"` | A [Bing Maps API key](https://msdn.microsoft.com/en-us/library/ff428642.aspx) used for requesting Bing Maps base maps and using the Bing Maps geocoder for searching. It is your responsibility to request a key and comply with all terms and conditions.
 `"googleUrlShortenerKey"`| A Google API key for accessing the [Google URL Shortener service](https://developers.google.com/url-shortener/v1/getting_started#intro). This is required in order to generate short URLs on the "Share" page.
