@@ -30,15 +30,6 @@ gulp
 npm start
 ```
 
-# Configuring
-
-Location | Purpose
----------|---------
-`wwwroot/config.json` | Client-side configuration. Configures catalog (init) files to load, attribution, keys for Bing Maps and Google Analytics, the name of your application.
-`wwwroot/terria.json` | A sample catalog (init) file. You can add new datasets here.
-`devserverconfig.json` | Server-side configuration. Configures which domains the server will proxy for, and special locations of init files.
-`index.js`| Some "configuration-like" aspects are controlled through JavaScript in this file, such as the choices of base map. We try to progressively move these into the above files.
-
 ## Making changes
 
 Want to start tweaking? Proceed to the [Customizing Terria](/Documentation/Customizing/README.md).
