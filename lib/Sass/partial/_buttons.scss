@@ -313,7 +313,8 @@ folder-open;
     right: 5px;
     top: 8px;
   }
-  &:hover{
+  &:hover,
+  &:focus{
     background: $modal-highlight;
     color: #fff;
     .btn--group-indicator{
@@ -351,7 +352,8 @@ folder-open;
       position: absolute;
       right: 0;
   }
-  &:hover{
+  &:hover,
+  &:focus{
       color: $modal-highlight;
       &:before{
         opacity: 1;
